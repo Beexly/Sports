@@ -1,6 +1,13 @@
 /**
- * Fantasy & Injuries adapters — wires g-score, injury causal, and
- * related real exported functions into the engine.
+ * Fantasy & Injuries adapters — g-score and injury signals as Observations.
+ *
+ * HONESTY NOTE (SURF-16 provenance audit): every adapter below computes its
+ * value INLINE in this file. The old header claimed each adapter "wires
+ * g-score, injury causal, and related real exported functions", but this
+ * file's only engine import was type-only, so no such call site existed.
+ * Those claims were deleted. Each adapter now carries
+ * `engine-inline:fantasy-injury-adapters#<fn>`, naming the function that
+ * actually produced the number.
  */
 
 import type { Observation, FailClosedResult, AdapterResult } from "./universal-adapter.js";
@@ -27,7 +34,7 @@ export function playerMomentsAdapter(
   const mu = weeklyPoints.reduce((a, b) => a + b, 0) / n;
   const tau = Math.sqrt(weeklyPoints.reduce((a, b) => a + (b - mu) ** 2, 0) / n);
   return obs("fantasy:player-moments", Number(mu.toFixed(2)), Math.min(1, n / 10),
-    "packages/prediction-engine/src/fantasy/g-score.ts#playerMoments",
+    "engine-inline:fantasy-injury-adapters#playerMomentsAdapter",
     "FANTASY_DFS", { mu: Number(mu.toFixed(2)), tau: Number(tau.toFixed(2)), n });
 }
 
@@ -41,7 +48,7 @@ export function zValueAdapter(
   }
   const z = ((mu ?? 0) - (replacement ?? 0)) / (sigma ?? 1);
   return obs("fantasy:z-value", Number(z.toFixed(3)), 0.85,
-    "packages/prediction-engine/src/fantasy/g-score.ts#zValue",
+    "engine-inline:fantasy-injury-adapters#zValueAdapter",
     "FANTASY_DFS", { z: Number(z.toFixed(3)), mu, replacement, sigma });
 }
 
@@ -54,7 +61,7 @@ export function gPerDollarAdapter(
   }
   const gpd = (gScore ?? 0) / ((salary ?? 1) / 1000);
   return obs("fantasy:g-per-dollar", Number(gpd.toFixed(3)), 0.8,
-    "packages/prediction-engine/src/fantasy/g-score.ts#gPerDollar",
+    "engine-inline:fantasy-injury-adapters#gPerDollarAdapter",
     "FANTASY_DFS", { gPerDollar: Number(gpd.toFixed(3)), gScore, salary });
 }
 
@@ -71,7 +78,7 @@ export function attInjuryEffectAdapter(
   const controlMean = controlOutcomes.reduce((a, b) => a + b, 0) / controlOutcomes.length;
   const att = treatMean - controlMean;
   return obs("injuries:att-estimate", Number(att.toFixed(4)), 0.75,
-    "packages/prediction-engine/src/injuries/1705-03918-two-version-causal.ts#attEstimate",
+    "engine-inline:fantasy-injury-adapters#attInjuryEffectAdapter",
     "INJURY_AVAILABILITY", { att: Number(att.toFixed(4)), treatMean: Number(treatMean.toFixed(4)), controlMean: Number(controlMean.toFixed(4)) });
 }
 
@@ -84,11 +91,13 @@ export function hotHandAdapter(
   // Repetition contrast: is the player more likely to get the ball after getting the ball?
   let repeatCount = 0;
   for (let i = 1; i < touches.length; i++) {
-    if (touches[i] > 0 && touches[i - 1] > 0) repeatCount++;
+    const curr = touches[i] as number;
+    const prev = touches[i - 1] as number;
+    if (curr > 0 && prev > 0) repeatCount++;
   }
   const repeatRate = repeatCount / (touches.length - 1);
   return obs("injuries:hot-hand", Number(repeatRate.toFixed(4)), 0.72,
-    "packages/prediction-engine/src/injuries/1801-07104-hot-hand-repetition.ts#repetitionContrast",
+    "engine-inline:fantasy-injury-adapters#hotHandAdapter",
     "SCHEME_TENDENCY", { repeatRate: Number(repeatRate.toFixed(4)), n: touches.length });
 }
 

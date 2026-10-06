@@ -89,6 +89,72 @@ describe("extended signal adapters — all modules wired", () => {
     }
   });
 
+  // The -110/-110 case above cannot tell a correct de-vig from a wrong one:
+  // both sides are equal, so ANY normalisation of a negated implied
+  // probability cancels to 0.5. Every test below uses asymmetric American
+  // inputs, where reading American odds as decimal prices (the defect #965
+  // fixed) produces a different number and is therefore caught. Expected
+  // values are the multiplicative de-vig of decimal [1.909091, 1.8] etc.,
+  // cross-checked against devig/oracle.ts.
+  describe("devigAdapter: asymmetric American inputs", () => {
+    it("de-vigs -110/-125 to the favourite-underdog split, not 0.5319", () => {
+      const r = devigAdapter(-110, -125);
+      expect(isObservation(r)).toBe(true);
+      if (!isObservation(r)) return;
+      // Old code read 1/-110 and 1/-125 as implied probabilities (both
+      // negative) and returned 0.5319 for the home side.
+      expect(r.value).not.toBeCloseTo(0.5319, 3);
+      expect(r.value).toBeCloseTo(0.4853, 4);
+      const raw = r.raw as { homeFair: number; awayFair: number };
+      expect(raw.homeFair).toBeCloseTo(0.4853, 4);
+      expect(raw.awayFair).toBeCloseTo(0.5147, 4);
+    });
+
+    it("keeps a longer-priced side above the shorter-priced side", () => {
+      // -150 is a stronger favourite than +200. Reading the numbers as
+      // decimal prices instead returned 4.0 for the home side, a
+      // probability no de-vig can produce.
+      const r = devigAdapter(-150, 200);
+      expect(isObservation(r)).toBe(true);
+      if (!isObservation(r)) return;
+      const raw = r.raw as { homeFair: number; awayFair: number };
+      expect(raw.homeFair).toBeGreaterThan(0.5);
+      expect(raw.awayFair).toBeGreaterThan(0);
+      expect(raw.homeFair).toBeCloseTo(0.6429, 4);
+      expect(raw.awayFair).toBeCloseTo(0.3571, 4);
+      expect(raw.homeFair + raw.awayFair).toBeCloseTo(1, 6);
+    });
+
+    it("survives the sign-cancelling pair the old arithmetic divided by zero on", () => {
+      // 1/-105 + 1/105 === 0 exactly, so the old inline body produced
+      // Infinity/NaN rather than a probability.
+      const r = devigAdapter(-105, 105);
+      expect(isObservation(r)).toBe(true);
+      if (!isObservation(r)) return;
+      expect(Number.isFinite(r.value as number)).toBe(true);
+      expect(r.value).toBeCloseTo(0.5122, 4);
+    });
+
+    it("reports the book margin and the method actually used", () => {
+      const r = devigAdapter(-110, -125);
+      expect(isObservation(r)).toBe(true);
+      if (!isObservation(r)) return;
+      const raw = r.raw as { overround: number; method: string; homePrice: number; awayPrice: number };
+      expect(raw.method).toBe("multiplicative");
+      expect(raw.overround).toBeCloseTo(0.0794, 4);
+      expect(raw.homePrice).toBe(-110);
+      expect(raw.awayPrice).toBe(-125);
+    });
+
+    it("fails closed on a zero American price instead of returning a number", () => {
+      const r = devigAdapter(-110, 0);
+      expect(isFailClosed(r)).toBe(true);
+      if (isFailClosed(r)) {
+        expect(r.reason).toContain("American");
+      }
+    });
+  });
+
   it("propEdge computes real edge", () => {
     const r = propEdgeAdapter(0.58, 0.52, 45);
     expect(isObservation(r)).toBe(true);

@@ -124,7 +124,7 @@ export function buildModelProbOver(
 export {
   fitGroupPrior,
   posteriorRate,
-  propsHbProbOver as probOver,
+  probOver,
   probOverContinuous,
   shrinkageReport,
 };

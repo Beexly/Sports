@@ -1,0 +1,44 @@
+{
+  "source": "docs/research/2026-09-26/full-tables evening eight",
+  "publishes_pick": false,
+  "edge_unchanged": true,
+  "lac_buf_edge": 0.30259224777263855,
+  "measurements": [
+    {
+      "id": "behind_los_air_yards_lt_0",
+      "grain": "pbp.pass.air_yards",
+      "window": "2025 REG weeks 4-18, prior weeks only",
+      "n": 224,
+      "r": -0.11590183651984831,
+      "slope": -1.0584116226543658,
+      "se": 0.6087669069588114,
+      "r_vs_prior_margin": -0.10251055084928559,
+      "partial_r_given_margin": -0.08306958858802442,
+      "state": "STORED",
+      "family": "scheme_play_design"
+    },
+    {
+      "id": "drive_ended_with_score_rate",
+      "grain": "pbp.drive_ended_with_score",
+      "window": "2025 REG weeks 4-18, prior weeks only",
+      "n": 224,
+      "r": 0.11510893068979024,
+      "slope": 0.5963062023108585,
+      "se": 0.34537219665756613,
+      "r_vs_prior_margin": 0.6764396058621469,
+      "partial_r_given_margin": -0.13816522261269645,
+      "state": "DARK",
+      "family": "historical_strength",
+      "why": "duplicate of prior scoring"
+    }
+  ],
+  "not_recomputable_here": [
+    "12-personnel EPA: no offense_personnel column on the local pbp extract",
+    "ARBY ranks: StatRankings",
+    "RB route participation and TPRR: StatRankings",
+    "PFF pass-rush win rate"
+  ],
+  "board_defects": [
+    "gridironinfo-wr-separation-leading-by-team-week2.csv lists Jaylen Waddle on the Denver Broncos"
+  ]
+}

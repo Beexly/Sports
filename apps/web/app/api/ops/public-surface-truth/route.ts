@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+// isContestsPublic is still reported below. The contests SURFACE is gone, but
+// this endpoint is the operator truth surface: saying "contests is dark" is
+// exactly the fact an operator needs, and a silently-missing key would read as
+// "unknown" rather than "deliberately off". The gate itself stays in
+// public-surface-gate.ts for the same reason.
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
-import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
@@ -20,6 +24,7 @@ import {
 } from "@/lib/board/stale-pick-policy";
 import { loadMarketCoverage } from "@/lib/board/market-coverage";
 import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
+import { loadRankingBasisCensus } from "@/lib/calibration/ranking-basis-census";
 import {
   assessOddsLineArchiveFreshness,
   readOddsLineArchiveFreshnessInput,
@@ -721,6 +726,12 @@ export async function GET(request: Request) {
   // it (observed 2026-09-02: they did not). Both are read-only postures.
   const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
   const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
+  // Which branch of the ranking cascade actually orders published picks. This
+  // closes the open question in sort-key.ts: the public board payload nulls
+  // rankingP for non-premium viewers (GSE-SEC-026), so the public surface CANNOT
+  // answer whether the board ranks on the monotone key or falls through to the
+  // anti-predictive one. Read-only, reports, never gates.
+  const rankingBasis = isStubMode() ? null : await safeRead(() => loadRankingBasisCensus(db as never));
 
   // Line-archive freshness (see readOddsLineArchiveFreshnessSafely above).
   // Read-only, fail-closed, never gates anything on this surface.
@@ -806,7 +817,6 @@ export async function GET(request: Request) {
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },
-      contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
       waitlist,
       settlement,
@@ -1041,6 +1051,7 @@ export async function GET(request: Request) {
       },
       marketCoverage,
       confidenceTail,
+      rankingBasis,
       /**
        * odds_line_snapshots writer freshness (2026-09-19). Additive
        * observability only: see readOddsLineArchiveFreshnessSafely above.

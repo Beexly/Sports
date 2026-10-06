@@ -65,6 +65,10 @@ import {
   consensusEvidenceCaption,
   isBookmakerConsensusClaim,
 } from "@/lib/claims/public-consensus-claim";
+import {
+  consensusSliceFromResolved,
+  loadPublishTimeConsensusByPickId,
+} from "@/lib/claims/load-publish-time-consensus";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 // Per-viewer gating means this page can never be served from a shared static /
@@ -133,29 +137,6 @@ function bestPublishedPick(game: LoadedGame): LoadedGame["picks"][number] | null
   if (!game.picks.length) return null;
   const sorted = [...game.picks].sort(comparePicksByRanking);
   return sorted[0] ?? null;
-}
-
-async function loadConsensusProvider(
-  ingestionRunId: string | null,
-): Promise<string | null> {
-  if (!ingestionRunId || typeof db.ingestionRun?.findMany !== "function") {
-    return null;
-  }
-  const runs = await db.ingestionRun
-    .findMany({
-      where: { id: ingestionRunId },
-      select: {
-        sourceSnapshots: {
-          where: { sourceKind: "ODDS_EVENTS" },
-          orderBy: { fetchedAt: "desc" },
-          take: 1,
-          select: { provider: true },
-        },
-      },
-      take: 1,
-    })
-    .catch(() => []);
-  return runs[0]?.sourceSnapshots[0]?.provider ?? null;
 }
 
 function toMatchupInput(
@@ -291,8 +272,20 @@ export default async function PreviewPage({ params }: Props) {
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
   const pick = bestPublishedPick(game);
-  const consensusProvider = pick
-    ? await loadConsensusProvider(pick.ingestionRunId)
+  const consensusResolved = pick
+    ? (
+        await loadPublishTimeConsensusByPickId([
+          {
+            id: pick.id,
+            gameId: pick.gameId,
+            pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+            generatedAt: pick.generatedAt,
+            bookmakerCount:
+              pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount,
+            ingestionRunId: pick.ingestionRunId,
+          },
+        ])
+      ).get(pick.id) ?? null
     : null;
 
   const gameDate = new Date(game.commenceTime);
@@ -361,28 +354,47 @@ export default async function PreviewPage({ params }: Props) {
               </p>
             )}
             {/* Free teaser. Quantified "bookmaker consensus" claims only render
-                when bound to bookmakerCount + dataFreshnessAt (T-1 tripwire).
-                Non-consensus shorts still render as stored. Claim text is not
-                rewritten — evidence rides as a caption. */}
+                when bound to the mint-time book set (T-1 / #901). Bound path
+                shows claim + evidence caption (SOLVE); unbound suppresses the
+                claim only — confidence bars above stay. Non-consensus shorts
+                still render as stored. */}
             {(() => {
               const short = pick.reasoningShort?.trim() ?? "";
               if (!short) return null;
               if (isBookmakerConsensusClaim(short)) {
+                const bookmakerCount =
+                  pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
                 const bound = bindPublicConsensusClaim({
                   reasoningShort: short,
-                  consensusPct: pick.consensusPct,
-                  bookmakerCount:
-                    pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount,
-                  dataFreshnessAt: pick.dataFreshnessAt,
-                  consensusProvider,
+                  ...consensusSliceFromResolved(consensusResolved, {
+                    consensusPct: pick.consensusPct,
+                    bookmakerCount,
+                    dataFreshnessAt: pick.dataFreshnessAt,
+                  }),
                 });
                 if (!bound) return null;
                 return (
                   <>
                     <p className="text-sm mt-2 text-ion-white">{bound.claimText}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                    <p
+                      data-testid="preview-consensus-evidence"
+                      className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2"
+                    >
                       {consensusEvidenceCaption(bound)}
                     </p>
+                    {/* Evidence bar: bookmaker share of the mint-time set. */}
+                    <div
+                      data-testid="preview-consensus-bar"
+                      aria-label={`Bookmaker consensus ${Math.round(bound.consensusPct * 100)} percent of ${bound.bookmakerCount} books`}
+                      className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-titanium"
+                    >
+                      <div
+                        className="h-full bg-orbital-cyan/70"
+                        style={{
+                          width: `${Math.max(0, Math.min(100, Math.round(bound.consensusPct * 100)))}%`,
+                        }}
+                      />
+                    </div>
                   </>
                 );
               }

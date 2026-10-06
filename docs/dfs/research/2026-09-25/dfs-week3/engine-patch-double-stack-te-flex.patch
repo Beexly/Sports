@@ -1,0 +1,231 @@
+# Engine patch: double-stack + no-TE-in-FLEX construction rules
+# ============================================================================
+# Target: apps/web/lib/fantasy/dfs-optimizer.ts (Beexly/Sports)
+# Apply:  git apply engine-patch-double-stack-te-flex.patch   (from repo root)
+# Revert: git apply -R engine-patch-double-stack-te-flex.patch
+#
+# What it does (both rules are GPP/leverage-only; cash mode is untouched):
+#  1. OptOpts.doubleStack -- require QB + >=2 same-team pass-catchers (was >=1).
+#     Research: docs/research/2026-09-25/gpp-winning-lineup-construction.md
+#     (39.5% of top-100 Milly lineups vs 28.6% of field).
+#  2. OptOpts.noTeFlex -- TE is never eligible for FLEX in gpp/leverage
+#     (winners punt-or-premium TE, never flex it).
+# Both flags are OPTIONAL: existing callers, components and tests compile
+# unchanged, and default behavior is identical to today.
+#
+# Verified in the local harness (~/workspace/dfs-week3/, construction-rules.ts
+# implements the same two rules as post-hoc repair): on the real 767-player
+# Week 3 Sun-Mon slate, double-stack rate went 4/41 -> 41/41 and TE-in-FLEX
+# went 38/41 -> 0/41, with all 41 lineups still passing validateLineup.
+#
+# Follow-ups NOT in this patch (strict subsets, safe to defer):
+#  - dfs-lineup-validation.ts keeps its own FLEX_OK set and a >=1 stack check;
+#    the new rules are strict subsets of old validity, so validateLineup still
+#    passes. Extend it only if you want the validator to *require* the rules.
+#  - dfs-exact.ts calls eligible(p, slot) with 2 args; the new 3rd param is
+#    optional so it compiles unchanged (it just won't enforce noTeFlex).
+#  - metrics().stacked still reports the >=1 count; fine as a diagnostic.
+# ============================================================================
+diff --git a/apps/web/lib/fantasy/dfs-optimizer.ts b/apps/web/lib/fantasy/dfs-optimizer.ts
+index 223b47e..446752d 100644
+--- a/apps/web/lib/fantasy/dfs-optimizer.ts
++++ b/apps/web/lib/fantasy/dfs-optimizer.ts
+@@ -24,6 +24,18 @@ export type Mode = "cash" | "gpp" | "leverage";
+ export type OptOpts = {
+   readonly mode: Mode;
+   readonly stack: boolean;
++  /**
++   * GPP/leverage construction rule (docs/research/2026-09-25/gpp-winning-lineup-construction.md):
++   * require QB + ≥2 same-team pass-catchers instead of ≥1. Cash mode ignores it.
++   * Optional so existing callers/tests keep compiling; default = single stack.
++   */
++  readonly doubleStack?: boolean;
++  /**
++   * GPP/leverage construction rule: TE is never eligible for FLEX (winners
++   * punt-or-premium TE, never flex it). Cash mode ignores it.
++   * Optional; default = TE allowed in FLEX (current behavior).
++   */
++  readonly noTeFlex?: boolean;
+   readonly locks: ReadonlySet<string>;
+   readonly excludes: ReadonlySet<string>;
+ };
+@@ -39,8 +51,10 @@ export type OptOpts = {
+ export const DEFAULT_COST_BUDGET = 600_000_000;
+ 
+ const FLEX_POS: DfsPos[] = ["RB", "WR", "TE"];
+-export const eligible = (p: DfsPlayer, slot: DfsPos | "FLEX"): boolean =>
+-  slot === "FLEX" ? FLEX_POS.includes(p.pos) : p.pos === slot;
++export const eligible = (p: DfsPlayer, slot: DfsPos | "FLEX", opts?: OptOpts): boolean =>
++  slot === "FLEX"
++    ? FLEX_POS.includes(p.pos) && !(opts?.noTeFlex && opts.mode !== "cash" && p.pos === "TE")
++    : p.pos === slot;
+ 
+ export function objVal(p: DfsPlayer, mode: Mode): number {
+   if (mode === "cash") return p.proj;
+@@ -60,6 +74,14 @@ function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
+   return { team: qb.team, stacked };
+ }
+ 
++/**
++ * Required same-team pass-catchers for the QB: 2 when the double-stack
++ * construction rule is on (GPP/leverage only), else the legacy 1.
++ */
++function stackNeed(opts: OptOpts): number {
++  return opts.doubleStack && opts.mode !== "cash" ? 2 : 1;
++}
++
+ /**
+  * Deterministic 32-bit PRNG (mulberry32), because the multi-start heuristic
+  * needs a SPREAD of starting points, not unpredictability.
+@@ -97,7 +119,7 @@ function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlay
+   for (const id of opts.locks) {
+     const pl = cand.find((p) => p.id === id);
+     if (!pl || used.has(id)) continue;
+-    const slot = DFS_SLOTS.findIndex((s, i) => lineup[i] === null && eligible(pl, s));
++    const slot = DFS_SLOTS.findIndex((s, i) => lineup[i] === null && eligible(pl, s, opts));
+     if (slot < 0) return null;
+     lineup[slot] = pl; used.add(id);
+   }
+@@ -109,7 +131,7 @@ function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlay
+     const slotsAfter = lineup.filter((p, j) => j > i && p === null).length;
+     const maxSpend = SALARY_CAP - capUsed - minSal * slotsAfter;
+     const options = cand
+-      .filter((p) => !used.has(p.id) && eligible(p, slot) && p.salary <= maxSpend)
++      .filter((p) => !used.has(p.id) && eligible(p, slot, opts) && p.salary <= maxSpend)
+       .sort((a, b) => objVal(b, opts.mode) - pen(b) - (objVal(a, opts.mode) - pen(a)));
+     if (!options.length) return null;
+     const k = Math.min(5, options.length);
+@@ -133,7 +155,7 @@ function hillClimb(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts):
+       const slot = DFS_SLOTS[i]!;
+       const inLineup = new Set(cur.map((p) => p.id));
+       for (const c of cand) {
+-        if (inLineup.has(c.id) || !eligible(c, slot)) continue;
++        if (inLineup.has(c.id) || !eligible(c, slot, opts)) continue;
+         const next = [...cur]; next[i] = c;
+         if (salaryOf(next) > SALARY_CAP) continue;
+         const gain = objOf(next, opts.mode) - objOf(cur, opts.mode);
+@@ -162,17 +184,18 @@ function stackToQb(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts):
+     for (const c of cand) {
+       if (inLineup.has(c.id)) continue;
+       const next = [...lu]; next[i] = c;
+-      if (salaryOf(next) <= SALARY_CAP && DFS_SLOTS.every((s, j) => eligible(next[j]!, s))) return next;
++      if (salaryOf(next) <= SALARY_CAP && DFS_SLOTS.every((s, j) => eligible(next[j]!, s, opts))) return next;
+     }
+   }
+   return null;
+ }
+ 
+ function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts): DfsPlayer[] {
+-  if (qbStackCount(lu).stacked >= 1) return lu;
++  const need = stackNeed(opts);
++  if (qbStackCount(lu).stacked >= need) return lu;
+ 
+-  // 1) try to stack a pass-catcher onto the current QB
+-  const stacked = stackToQb(lu, pool, opts);
++  // 1) try to stack pass-catchers onto the current QB until "need" mates
++  const stacked = stackToNeed(lu, pool, opts, need);
+   if (stacked) return stacked;
+ 
+   // 2) fallback: the QB has no available pass-catcher. If the QB isn't locked,
+@@ -187,12 +210,27 @@ function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts
+   for (const q of altQbs) {
+     const swapped = [...lu]; swapped[qbIdx] = q;
+     if (salaryOf(swapped) > SALARY_CAP) continue;
+-    const done = stackToQb(swapped, pool, opts);
++    const done = stackToNeed(swapped, pool, opts, need);
+     if (done) return done;
+   }
+   return lu;
+ }
+ 
++/**
++ * Stack pass-catchers onto the current QB until "need" same-team mates are
++ * present. Returns null when the QB's team cannot supply that many (thin team)
++ * instead of returning a half-stacked lineup.
++ */
++function stackToNeed(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts, need: number): DfsPlayer[] | null {
++  let cur = lu;
++  for (let i = 0; i < need && qbStackCount(cur).stacked < need; i++) {
++    const next = stackToQb(cur, pool, opts);
++    if (!next) break;
++    cur = next;
++  }
++  return qbStackCount(cur).stacked >= need ? cur : null;
++}
++
+ /**
+  * Randomised multi-start + hill-climb. Fast enough for the browser and used to
+  * SEED the exact search below — on its own it has no optimality guarantee
+@@ -219,7 +257,7 @@ export function optimizeHeuristic(opts: OptOpts, pen: (p: DfsPlayer) => number =
+ /** A player's contribution to the search objective (mode value minus penalty). */
+ const searchValue = (p: DfsPlayer, mode: Mode, pen: (q: DfsPlayer) => number): number => objVal(p, mode) - pen(p);
+ 
+-const slotAccepts = (slot: DfsPos | "FLEX", p: DfsPlayer): boolean => eligible(p, slot);
++const slotAccepts = (slot: DfsPos | "FLEX", p: DfsPlayer, opts: OptOpts): boolean => eligible(p, slot, opts);
+ 
+ /**
+  * Exact branch-and-bound over the slot list.
+@@ -321,7 +359,7 @@ export function solveExact(
+ 
+   const stackable = (lu: readonly (DfsPlayer | undefined)[]): boolean => {
+     const filled = lu.filter((p): p is DfsPlayer => Boolean(p));
+-    return qbStackCount(filled).stacked >= 1;
++    return qbStackCount(filled).stacked >= stackNeed(opts);
+   };
+ 
+   const seed = optimizeHeuristic(opts, pen, restarts, slate);
+@@ -336,7 +374,7 @@ export function solveExact(
+     if (!p) return { lineup: seed ?? null, optimal: false, nodes: 0, work: 0 };
+     let placed = false;
+     for (let i = 0; i < DFS_SLOTS.length; i++) {
+-      if (chosen[i] === undefined && slotAccepts(DFS_SLOTS[i]!, p)) {
++      if (chosen[i] === undefined && slotAccepts(DFS_SLOTS[i]!, p, opts)) {
+         chosen[i] = p; used.add(id); placed = true; break;
+       }
+     }
+@@ -372,7 +410,7 @@ export function solveExact(
+   /** candidate indices per slot, best value first (drives the search order) */
+   const lists: number[][] = DFS_SLOTS.map((slot) =>
+     Array.from({ length: n }, (_, i) => i)
+-      .filter((i) => !usedIdx[i] && slotAccepts(slot, cand[i]!))
++      .filter((i) => !usedIdx[i] && slotAccepts(slot, cand[i]!, opts))
+       .sort((a, b) => VALUE[b]! - VALUE[a]!));
+ 
+   const free: number[] = [];
+@@ -486,11 +524,14 @@ export function solveExact(
+       salary = nextSalary;
+       val += v;
+ 
+-      // stack feasibility: once the QB is placed, a same-team catcher must still
+-      // be reachable from the remaining slots
++      // stack feasibility: once the QB is placed, enough same-team catchers to
++      // reach "need" must still be reachable from the remaining slots
+       let stackOk = true;
+       if (opts.stack && !stackable(chosen)) {
+-        const qb = (chosen.filter(Boolean) as DfsPlayer[]).find((q) => q.pos === "QB");
++        const need = stackNeed(opts);
++        const filled = chosen.filter(Boolean) as DfsPlayer[];
++        const have = qbStackCount(filled).stacked; // < need here
++        const qb = filled.find((q) => q.pos === "QB");
+         let catchers = 0;
+         if (qb) {
+           for (let i = 0; i < n; i++) {
+@@ -498,14 +539,16 @@ export function solveExact(
+             if (!usedIdx[i] && q.team === qb.team && (q.pos === "WR" || q.pos === "TE")) catchers++;
+           }
+         } else {
+-          catchers = 1;
++          catchers = need; // QB not placed yet: assume stackable
+         }
+         let catcherSlots = 0;
+         for (let d = depth + 1; d < free.length; d++) {
+           const s = slotName(free[d]!);
+           if (s === "WR" || s === "TE" || s === "FLEX") catcherSlots++;
+         }
+-        stackOk = catchers > 0 && catcherSlots > 0;
++        // admissible: even filling every remaining catcher-slot with a mate
++        // cannot reach "need"
++        stackOk = have + Math.min(catchers, catcherSlots) >= need;
+       }
+       if (stackOk) dfs(depth + 1);
+ 

@@ -96,6 +96,42 @@
     {
       "path": "/api/ops/daily-truth",
       "schedule": "5 12 * * *"
+    },
+    {
+      "path": "/api/cron/signal-ledger-write",
+      "schedule": "23 * * * *"
+    },
+    {
+      "path": "/api/cron/game-weather-capture",
+      "schedule": "10 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/prediction-market-snapshot",
+      "schedule": "20 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/ngs-ingest",
+      "schedule": "30 11 * * 3"
+    },
+    {
+      "path": "/api/cron/watch-scheduler",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/watch-warm",
+      "schedule": "*/3 * * * *"
+    },
+    {
+      "path": "/api/cron/props-slate-shadow",
+      "schedule": "25 * * * *"
+    },
+    {
+      "path": "/api/cron/engine-dfs-slate",
+      "schedule": "55 * * * *"
+    },
+    {
+      "path": "/api/cron/arbiter-adjudication",
+      "schedule": "41 * * * *"
     }
   ],
   "headers": [
@@ -158,5 +194,8 @@
         }
       ]
     }
-  ]
+  ],
+  "github": {
+    "autoJobCancelation": true
+  }
 }

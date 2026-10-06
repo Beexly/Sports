@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { associationTrace } from "./slate-trace-fixture.js";
 
 /**
  * Tripwire for the 2026-09-05 writer-collision fix.
@@ -98,7 +99,7 @@ function boardResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 }
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
 }
 
 beforeEach(() => {

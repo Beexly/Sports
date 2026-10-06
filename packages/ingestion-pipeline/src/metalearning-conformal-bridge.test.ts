@@ -2,11 +2,16 @@ import { describe, expect, it } from "vitest";
 import {
   evalAlpacaGate,
   evalBlrNll,
+  evalBoaUpdate,
+  evalEwaUpdate,
+  evalFixedSupportPools,
+  evalGpPosterior,
   evalLibrarian,
   evalOnlineBlr,
   evalRetrieveTopS,
   evalSplitQuality,
   evalSplitQualityScore,
+  evalUncertaintyMetaLoss,
 } from "./metalearning-conformal-bridge.js";
 
 describe("metalearning-conformal-bridge online BLR", () => {
@@ -149,5 +154,93 @@ describe("metalearning-conformal-bridge split quality", () => {
   it("fail-closes on too-few samples", () => {
     expect(evalSplitQuality({ train: [1], test: [1, 2] }).ok).toBe(false);
     expect(evalSplitQualityScore({ train: [1, 2], test: [] }).ok).toBe(false);
+  });
+});
+
+describe("metalearning-conformal-bridge metalearning residue", () => {
+  it("evalGpPosterior returns mean and variance", () => {
+    const r = evalGpPosterior({
+      X: [0, 1, 2, 3],
+      y: [0, 0.8, 1.2, 2.1],
+      xstar: 1.5,
+      lengthscale: 1.0,
+      sigmaF: 1.0,
+      sigmaN: 0.1,
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(Number.isFinite(r.data.mean)).toBe(true);
+      expect(r.data.variance).toBeGreaterThan(0);
+    }
+  });
+
+  it("evalUncertaintyMetaLoss weights by sigma", () => {
+    const r = evalUncertaintyMetaLoss({
+      losses: [0.5, 0.3, 0.8],
+      sigmas: [1.0, 0.5, 2.0],
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(Number.isFinite(r.data)).toBe(true);
+  });
+
+  it("evalEwaUpdate returns simplex weights", () => {
+    const r = evalEwaUpdate({
+      w: [0.5, 0.5],
+      losses: [0.3, 0.7],
+      eta: 0.5,
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data).toHaveLength(2);
+      const sum = r.data[0]! + r.data[1]!;
+      expect(sum).toBeCloseTo(1, 5);
+    }
+  });
+
+  it("evalBoaUpdate returns updated w and V", () => {
+    const r = evalBoaUpdate({
+      w: [0.5, 0.5],
+      losses: [0.3, 0.7],
+      V: [0, 0],
+      eta: 0.5,
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.w).toHaveLength(2);
+      expect(r.data.V).toHaveLength(2);
+    }
+  });
+
+  it("evalFixedSupportPools builds canonical and designed pools", () => {
+    const games = Array.from({ length: 10 }, (_, i) => ({
+      id: `g${i}`,
+      team: "KC",
+      season: 2025,
+      week: i + 1,
+      archetype: i % 2 === 0 ? "home_dog" : "away_fav",
+    })) as never;
+    const r = evalFixedSupportPools({
+      games,
+      team: "KC",
+      season: 2025,
+      k: 4,
+      archetypes: ["home_dog", "away_fav"],
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.canonical.length).toBeGreaterThan(0);
+      expect(r.data.designed.length).toBeGreaterThan(0);
+      expect(r.data.coverage).toBeGreaterThanOrEqual(0);
+      expect(r.data.coverage).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("fail-closes on missing team-season or bad params", () => {
+    expect(evalGpPosterior({ X: [], y: [], xstar: 1, lengthscale: 1, sigmaF: 1, sigmaN: 1 }).ok).toBe(false);
+    expect(evalUncertaintyMetaLoss({ losses: [1], sigmas: [] }).ok).toBe(false);
+    expect(evalEwaUpdate({ w: [1], losses: [1, 2], eta: 0.5 }).ok).toBe(false);
+    expect(
+      evalFixedSupportPools({ games: [], team: "KC", season: 2025 }).ok,
+    ).toBe(false);
   });
 });

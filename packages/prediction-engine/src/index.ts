@@ -33,6 +33,10 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult, selectGradingLine, selectionIsHomeSide } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Mint-time calibration history builder — pure mapper from settled picks to
+// CalibrationHistoryRow[] for calibrationHistoryWithholds. Fail-open on absence.
+export { buildCalibrationHistory } from "./calibration/build-calibration-history.js";
+export type { SettledPickHistorySource } from "./calibration/build-calibration-history.js";
 // The published-line rule: the customer-visible / locked / graded handicap is the
 // nearest line a book actually posted, never the raw consensus mean (which makes
 // PUSH structurally unreachable for spreads and totals). See published-line.ts.
@@ -96,6 +100,44 @@ export {
   SPEAK_EDGE,
   LEAN_EDGE,
 } from "./edge-engine.js";
+// Market-free source agreement for the no-book signal path. The signal slate
+// stamped `agreement` from a source COUNT (>= 2 -> CONFIRMS), so two estimators
+// reading opposite directions were recorded as corroborated and the pick
+// explainer printed that word to customers. See independent-agreement.ts.
+export {
+  sourceAgreement,
+  SOURCE_DIRECTION_EPSILON,
+} from "./independent-agreement.js";
+export type { SourceAgreement, AgreementInput } from "./independent-agreement.js";
+// The fantasy variance model — OUR projection. Deliberately separate from the
+// process grade, which is context and never a forecast. See fantasy-variance.ts
+// for the measured-CV snapshot and the McCaffrey spot-check falsifiers.
+export {
+  buildVarianceProjections,
+  recencyWeight,
+  classifyCvSource,
+  RECENCY_HALF_LIFE_WEEKS,
+  SHRINKAGE_KAPPA_GAMES,
+  SPEC_POSTED_POSITIONAL_CV,
+  POSITIONAL_CV_SNAPSHOT,
+  PROJECTION_BANDS,
+  DEFAULT_BAND_COVERAGE,
+  bandFor,
+  projectionInterval,
+  BAND_SUPPRESSED_POSITIONS,
+  POSITIONAL_BASELINE_LABEL,
+} from "./fantasy-variance.js";
+export type {
+  PlayerWeek,
+  VarianceModelInput,
+  ProjectionRow,
+  CvSource,
+  ModelPosition,
+  ProjectionBand,
+  ProjectionInterval,
+  BandKind,
+  ProcessGradeIsNeverPublishable,
+} from "./fantasy-variance.js";
 export type {
   IndependentEstimate,
   EdgeInput,
@@ -190,8 +232,14 @@ export {
   isPlausibleEntryOdds,
   ENTRY_ODDS_MIN_ABS,
   MARKET_FAIR_METHOD_TAG,
+  modelProbForReceipt,
+  featureHashForDisplay,
 } from "./pick-proof-receipt.js";
-export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
+export type {
+  PickProofInput,
+  PickProofReceipt,
+  ReceiptModelProbSource,
+} from "./pick-proof-receipt.js";
 // Slate commitment (commit-reveal) ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pre-register the whole population; kills cherry-picking.
 export {
   buildSlateCommitment,
@@ -988,6 +1036,143 @@ export type {
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 
+// The PRODUCER side of the ledger, and the weight tuner that scores it against
+// settled outcomes. #924 shipped both modules but exported neither, so they were
+// unreachable from outside this package; `signal-ledger-sources` is the adapter
+// that reads the four populated entity tables into candidates. All three stay
+// read-only and none is wired into the published score.
+export {
+  buildCandidate,
+  categoryPrior,
+  composeByEntity,
+  normalizeReading,
+  resolveWeight,
+  CATEGORY_PRIORS,
+} from "./signal-ledger-populator.js";
+export type {
+  LedgerCandidate,
+  CandidateSourceRow,
+  EntityType,
+  WeightSource,
+  ResolvedWeight,
+} from "./signal-ledger-populator.js";
+export {
+  projectPlayerGameStats,
+  projectSnapCounts,
+  projectNextGenStats,
+  projectInjuries,
+  projectAllSources,
+  explainProjection,
+} from "./signal-ledger-sources.js";
+export type {
+  AnchorTable,
+  MeasuredWeightTable,
+  SignalAnchor,
+  PlayerGameStatRow,
+  SnapCountRow,
+  NextGenStatRow,
+  InjuryRow,
+} from "./signal-ledger-sources.js";
+export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
+export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
+
+// The CALL SITE for `tuneSignalWeights` above. Until this module existed the
+// tuner had zero non-test callers, so every signal reaching the composer carried
+// the flat CATEGORY_PRIORS weight (HEALTH 1.0, PRODUCTION 1.0) — a uniform 1
+// asserted across ten keys whose raw readings span 103x in standard deviation.
+// This module calls the tuner and pays the evidence floor in DISTINCT FIXTURES,
+// because #924's row-counted floor was measured to be inflated by fixture
+// triplication (see tune-signal-weights-grouped.ts).
+export {
+  measureSignalWeights,
+  measuredWeightFor,
+  formatWeightReport,
+  MIN_FIXTURES,
+} from "./tune-signal-weights-table.js";
+export type {
+  FixtureKeyOutcome,
+  MeasuredKeyWeight,
+  MeasuredVerdict,
+  ReadingShape,
+  SignalWeightTable,
+  MeasureSignalWeightsOptions,
+} from "./tune-signal-weights-table.js";
+
+// The FAMILY-weight evidence census. Every signal in the registry carries a
+// hand-assigned `trustWeight`, and the hierarchical pool carries
+// `DEFAULT_FAMILY_PRIOR_WEIGHTS` (SITUATIONAL 0.12, NARRATIVE 0.05, …). Those
+// numbers move a published probability and had never been measured against a
+// settled outcome. This module measures them, stratified by pickType, and
+// refuses to report "no effect" when the honest answer is "we do not know".
+export {
+  censusFamilyWeights,
+  formatFamilyWeightReport,
+  familiesRestingOnPriors,
+  findCollinearFamilies,
+  pickTypeMixDistance,
+  stratifiedZ,
+  twoProportionZ,
+  twoTailedP,
+  EVIDENCE_SATURATION_MULTIPLE,
+  EVIDENCE_SATURATION_ROWS,
+  MAX_PICKTYPE_SHARE,
+  MIN_ABS_Z,
+  MIN_STRATUM_OBSERVATIONS,
+} from "./calibration/family-weight-evidence.js";
+export type {
+  FamilyStratum,
+  FamilyWeightMeasurement,
+} from "./calibration/family-weight-evidence.js";
+
+// The GROUP-aware tuner. #924's floors and scales its evidence by the ROW count,
+// but picks cluster by fixture (AGENTS.md: every NFL fixture is THREE `games`
+// rows; the same model-signal selection is published per-series with byte-
+// identical trueProb), so the row count is not the independent sample size.
+// This counts DISTINCT groups and reports the row-count figure alongside so the
+// inflation is visible rather than hidden. Same correlation, honest denominator.
+export { tuneGroupedWeights, multiplierFrom } from "./tune-signal-weights-grouped.js";
+export type { GroupedObservation, GroupedTunedWeight, GroupKey, TunedKey, TuneGroupsOptions } from "./tune-signal-weights-grouped.js";
+
+// The anchor CENSUS that feeds the anchors above. V3-350 requires an AnchorTable
+// and refuses to invent one, so without a measured population the whole chain
+// projects nothing. This measures it from the caller's own rows: no hardcoded
+// baseline, no wall clock, deterministic.
+export { censusAnchors, formatCensusReport, RunningStats, MIN_CENSUS_ROWS } from "./signal-anchor-census.js";
+export type {
+  AnchorCensusStatus,
+  CensusEntry,
+  CensusReport,
+  CensusObservation,
+} from "./signal-anchor-census.js";
+
+// Per-key SCALE + WEIGHT fit, and the committed table of the numbers it
+// produced on prod. This is what replaces the uniform `weight = 1` that shipped
+// on all 118,462 persisted rows: the raw values span a 103x range of standard
+// deviations, so a uniform weight over them was an arithmetic average of ten
+// different units. The fit is within-player (fixed effect removed) against a
+// settled outcome, because the between-player number is mostly player identity.
+export {
+  fitSignalScales,
+  formatScaleReport,
+  normalizeWithScale,
+  MIN_SCALE_FIXTURES,
+} from "./signal-scale-fit.js";
+export type {
+  SignalScale,
+  SignalScaleTable,
+  ScaleVerdict,
+  SignalScaleObservation,
+  SignalOutcomeObservation,
+  FitSignalScalesOptions,
+} from "./signal-scale-fit.js";
+export {
+  SIGNAL_SCALES,
+  SIGNAL_SCALE_KEYS,
+  signalScaleFor,
+  SIGNAL_SCALE_TABLE_VERSION,
+  SIGNAL_SCALE_TABLE_SOURCE,
+} from "./signal-scale-table.js";
+
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
 export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
@@ -1043,9 +1228,39 @@ export {
 } from "./edge-lab/standings-math.js";
 export type { TeamStandingRow, StandingsFacts } from "./edge-lab/standings-math.js";
 
-// Game row + as-of feature store types (schedule features input contract).
+// Game row + as-of feature store (schedule features input contract + leak wall).
 export type { GameRow as EdgeLabGameRow } from "./edge-lab/game-row.js";
-export type { AsOfFeatureStore } from "./edge-lab/asof-store.js";
+export {
+  AsOfFeatureStore,
+  AsOfViolationError,
+} from "./edge-lab/asof-store.js";
+export type {
+  FeatureObservation,
+  ServedRecord,
+  IngestOptions,
+} from "./edge-lab/asof-store.js";
+
+// Edge-lab placebo / walk-forward eval (distinct from honesty/placebo-leak).
+// shuffledTimePlacebo is renamed — honesty/placebo-leak already owns that name.
+export {
+  evVsClose,
+  walkForwardEval,
+  shuffledTimePlacebo as edgeLabShuffledTimePlacebo,
+  conditionalMiProbe,
+} from "./edge-lab/placebo.js";
+export type {
+  EvalRow as PlaceboEvalRow,
+  FiredPlay,
+  OofScore,
+  EvalReport as PlaceboEvalReport,
+  PlaceboOptions,
+  PlaceboReport as EdgeLabPlaceboReport,
+  MiProbeReport,
+} from "./edge-lab/placebo.js";
+export type {
+  TimedRow as EdgeLabTimedRow,
+  WalkForwardOptions,
+} from "./edge-lab/walk-forward.js";
 
 export {
   noVigFromAmericanPrices,
@@ -2432,12 +2647,31 @@ export {
   parseSubmissionCsv,
   REQUIRED_SUBMISSION_COLUMNS,
 } from "./eval/model-submission-schema.js";
+export type {
+  RequiredSubmissionColumn,
+  ThesisBlock,
+  SubmissionRow,
+  SubmissionPackage,
+  SubmissionValidationFailureCode,
+  SubmissionValidationFailure,
+  SubmissionValidationResult,
+} from "./eval/model-submission-schema.js";
 
 export {
   defineFeatureSpace,
   chronologicalSplit,
   fitAndReport,
   assertChronologicalIntegrity,
+} from "./eval/feature-construction-recipe.js";
+export type {
+  FeatureSpec,
+  FeatureSpace,
+  FeatureSpaceError,
+  FeatureSpaceResult,
+  Sample,
+  ChronologicalSplit,
+  FitReport,
+  PredictorFn,
 } from "./eval/feature-construction-recipe.js";
 
 export {
@@ -2460,6 +2694,12 @@ export {
   integrateEv,
   conditionalAnytimeTd,
   rollingRoleFeatures,
+} from "./props/anytime-td-mit.js";
+export type {
+  PlayerRoleContext,
+  RollingRoleFeatures,
+  AnytimeTdResult,
+  MarketPrice,
 } from "./props/anytime-td-mit.js";
 
 export {
@@ -2846,18 +3086,23 @@ export {
   type StratumCoverage,
 } from "./certificate/stratum-coverage.js";
 
-// Promotion: CLV non-inferiority, empirical Bernstein, walk-forward integrity
+// Promotion: CLV non-inferiority, empirical Bernstein, walk-forward integrity.
+// Leaf imports only — promotion/index.js re-exports window-hash.ts (node:crypto)
+// and must not be reached from the package root (client-bundle landmine).
+export { welchOneSidedNonInferiority } from "./promotion/clv-non-inferiority.js";
+export { pairedBrierLcb } from "./promotion/empirical-bernstein.js";
+export type { PairedBrierLcbResult } from "./promotion/empirical-bernstein.js";
 export {
-  welchOneSidedNonInferiority,
-  pairedBrierLcb,
   evaluatePromotion,
   recomputePromotionDecision,
-  validateWalkForwardIntegrity,
-  computeWindowHash,
-  type PromotionInput,
-  type PromotionDecision,
-  type PairedBrierLcbResult,
-} from "./promotion/index.js";
+} from "./promotion/evaluate.js";
+export { validateWalkForwardIntegrity } from "./promotion/integrity.js";
+export type {
+  PromotionInput,
+  PromotionDecision,
+} from "./promotion/types.js";
+// computeWindowHash is intentionally NOT re-exported here: it lives in
+// promotion/window-hash.ts and imports node:crypto. Deep-import it server-side.
 
 // Bayesian pairing: Bradley-Terry, ordinal structure select, bivariate Poisson
 export {
@@ -2898,6 +3143,7 @@ export {
 } from "./bayesian/2207-05114-wp-blender-beta-prior.js";
 export {
   poissonMle,
+  poissonSample,
   ingarchFilter,
   ingarchLogLik,
   cmpPmf,
@@ -2933,3 +3179,984 @@ export {
   type SizeResult,
   type DoctrineVerdict,
 } from "./symreg/sample-size-crossover.js";
+
+// RL residue: C51 optimal stopping, Sinkhorn DRL, CFCQL, thin-regime retrieval
+export {
+  stoppingBackwardInduction,
+  c51Project,
+  clvRegret,
+  type StoppingState,
+} from "./rl/2105-08877v2-c51-optimal-stopping.js";
+export {
+  wasserstein1d,
+  entropicTransportCost,
+  scalarizeReturn,
+  riskPriceUpdate,
+} from "./rl/2202-00769v1-sinkhorn-drl-staking.js";
+export {
+  counterfactualPenalty,
+  cfcqlAgentLoss,
+  lambdaPerAgent,
+  lowerBoundHolds,
+} from "./rl/cfcql-penalty.js";
+export {
+  regimeKey,
+  regimeHistogram,
+  fitPowerLaw,
+  thinRegimes,
+  perturbTransitions,
+  retrieveNeighbors,
+  buildRbCqlBatch,
+  type SlateState,
+  type PowerLawFit,
+  type Transition,
+  type WeightedBatch,
+} from "./rl/thin-regime-retrieval.js";
+
+// Metalearning residue: GP posterior, uncertainty-weighted meta-loss, EWA/BOA, fixed-support pools
+export {
+  rbfKernelGp,
+  gpPosterior1d,
+  rffFeatures,
+  krrFit,
+  uncertaintyMetaLoss,
+  ewaUpdate,
+  boaUpdate,
+  simplexProject,
+  smoothWeights,
+} from "./metalearning/2208-08135v1-uncertainty-weighted-metalearning.js";
+export {
+  canonicalPool,
+  archetypeCoverage,
+  designedPool,
+  sampleEpisode,
+  type Game,
+  type Episode,
+} from "./metalearning/fixed-support-pools.js";
+
+// Copula-HMM momentum: Gaussian copula sampling + joint
+export {
+  gaussCopulaSample,
+  gaussCopulaJoint,
+} from "./bayesian/2002-01193-copula-hmm-momentum.js";
+
+// Doubly-self-exciting scores: Hawkes grid fit (intensity/logLik already
+// aliased from generation-of-threat — do not duplicate)
+export {
+  hawkesGridFit,
+} from "./bayesian/2304-01538-doubly-self-exciting-scores.js";
+
+// ABC-SSM: approximate Bayesian computation on a state-space season model
+export {
+  makeRng,
+  simulateSeason,
+  auxiliaryScore,
+  scoreDistance,
+  type SsmParams,
+  type GameObs,
+} from "./bayesian/abc-ssm.js";
+
+// NMF target archetypes
+export {
+  nmfFrobenius,
+  nmfArchetypeAssign,
+  adjustedRandIndex,
+} from "./bayesian/1908-05745-nmf-target-archetypes.js";
+
+// Sparse-form HMM: LASSO + BIC selection (HMM fns already exported from dshdp)
+export {
+  softThreshold,
+  lassoCoordDescent,
+  bicScore,
+  lassoBicSelect,
+} from "./bayesian/1911-08138-sparse-form-hmm.js";
+
+// Workload availability: ridge/ARX/IRLS fits
+export {
+  solveLinear,
+  ridgeFit,
+  ridgePredict,
+  arxFit,
+  adjustedPlusMinus,
+  irlsFit,
+  logisticLogLoss,
+  stadiumFactorFit,
+} from "./bayesian/2005-09024v1-workload-availability-model.js";
+
+// Dynamic probit VB: AR(1) + OU forecasting
+export {
+  ar1Update,
+  ar1Forecast,
+  ouForecast,
+  ouWinProb,
+  type AR1State,
+} from "./bayesian/2104-07537-dynamic-probit-vb.js";
+
+// SymReg residue: AI Feynman Pareto pruning + vertical SR filters (shared
+// pure primitives; vertical-SR file duplicates the same functions).
+export {
+  paretoFrontier,
+  skeletonJaccard,
+  pairedPvalue,
+  hypothesisReject,
+  verticalFilter,
+  type ParetoPoint,
+} from "./symreg/2006-10782v2-aifeynman-pareto-pruning.js";
+
+// SymReg residue: DGSR-lite staged refinement
+export {
+  nmse,
+  hillClimbRefine,
+  stagedRefine,
+} from "./symreg/2401-00282v1-dgsr-lite-refinement.js";
+
+// SymReg residue: SINDy-SI side-information verification + sparse regression
+export {
+  leastSquaresActive,
+  stlsq,
+  verifySideInfo,
+  dropIntercept,
+  type SideInfoSpec,
+  type SideInfoReport,
+} from "./symreg/sindy-si.js";
+
+// Conformal residue: sports taxonomy for Mondrian partitions
+export {
+  restBucket,
+  tier1Categories,
+  tier2Intersections,
+  assignMondrianCategory,
+  parentCategory,
+  summarizeCategoryDiagnostics,
+  type TaxonomyCategory,
+  type SportsGameContext,
+  type RestBucket,
+  type CategoryDiagnostics,
+} from "./conformal/sports-taxonomy.js";
+
+// Conformal residue: LWT/MCPS greedy partition sketch + Mondrian manager
+export {
+  bestSplit,
+  assignLeafId,
+  greedyPartition,
+  leafQuantile,
+  ROOT_LEAF_ID,
+  UNMATCHED_LEAF_ID,
+  type SplitCandidate,
+  type LeafPathStep,
+  type LeafDefinition,
+  type PartitionSample,
+  type GreedyPartitionOptions,
+} from "./conformal/lwt-mcps-sketch.js";
+export {
+  MondrianResidualManager,
+  type MondrianResidualStoreOptions,
+  type QuantileLookupResult,
+} from "./conformal/mondrian.js";
+
+// Promotion residue: Acklam normal quantile + alpha-aware z critical value
+export {
+  standardNormalQuantile,
+  zCritOneSided,
+} from "./promotion/normal-quantile.js";
+
+// Certificate residue: gate-candidate to DecisionCertificate bridge
+export {
+  certificateFromGateCandidate,
+  certificatesFromGateCandidates,
+  type GateCandidateView,
+  type BridgeOptions as GateCertificateBridgeOptions,
+} from "./certificate/gate-certificate-bridge.js";
+
+// Weather physics: air density, ball behavior under temperature
+export {
+  fahrenheitToKelvin,
+  airDensityKgM3,
+  kickDistanceScale,
+  effectiveKickDistance,
+  venueEffectEstimate,
+  SEA_LEVEL_RHO,
+} from "./weather/air-density-fg.js";
+export {
+  pressureAtTemp,
+  pressureDrop,
+  restitutionAtTemp,
+  ballEffects,
+  fitLambda,
+  type BallEffects,
+} from "./weather/ball-physics.js";
+
+// Decision-calibrated weather: value of a forecast source, not its RMSE
+export {
+  thresholdDecision,
+  decisionValue,
+  rmse as weatherRmse,
+  selectWeatherSource,
+  type WeatherSource,
+} from "./weather/decision-calibrated-weather.js";
+
+// Honesty: Shin fair probability for a chosen side of a two-way book
+export { shinFairForSide } from "./honesty/devig-method-compare.js";
+
+// Calibration blend: parametric tail + isotonic middle, monotone envelope
+export {
+  applyBeta,
+  monotoneEnvelope,
+  tailBlendMap,
+  fitOofCalibration,
+  type CalibrationMap,
+  type BlendOptions,
+  type OofCalibrationFit,
+} from "./edge-lab/calibration-blend.js";
+
+// In-play: safe-lead survival under Brownian drift/diffusion
+export {
+  safeLeadProb,
+  diffusionWinProb,
+  leadSafetyFeature,
+  expectedLeadChangesRemaining,
+  type SafeLeadParams,
+} from "./inplay/safe-lead.js";
+
+// ── DFS batch: portfolio construction, dominance pruning, payout calibration ──
+// cluster-salary-screen.ts
+export {
+  kMeansClusters,
+  flagUndervalued,
+  teammateDifferential,
+  type SlatePlayer,
+  type ValueFlag,
+} from "./dfs/cluster-salary-screen.js";
+// dominance-pruning.ts — DfsPlayer aliased; ip-portfolio.ts owns the other one.
+export {
+  paretoFilter,
+  dominancePrune,
+  prunePool,
+  bruteForceOptimal,
+  verifyPruning,
+  type DfsPlayer as DominationDfsPlayer,
+  type Lineup,
+  type PruneVerification,
+} from "./dfs/dominance-pruning.js";
+// ip-portfolio.ts
+export {
+  stackBonus,
+  buildLineup,
+  shrinkVariance,
+  buildPortfolio,
+  type DfsPlayer as PortfolioDfsPlayer,
+  type PortfolioConfig,
+} from "./dfs/ip-portfolio.js";
+// payout-framework.ts
+export {
+  fitPowerLawAlpha,
+  powerLawShares,
+  bucketPayouts,
+  niceNumber,
+} from "./dfs/payout-framework.js";
+// tournament-variance.ts
+export {
+  calibrateLambdaFromLadder,
+  varianceBudgetPass,
+  bystanderEquityDonation,
+  requiredDeltaEV,
+} from "./dfs/tournament-variance.js";
+// value-tier.ts
+export {
+  quantizeToTiers,
+  tierErrorCost,
+  top3TierAccuracy,
+  flagMispriced,
+  type MispriceFlag,
+} from "./dfs/value-tier.js";
+
+// ── NFL batch: score-distribution blocks, season regression, progress metrics ──
+// block-poisson.ts — chance-rate MLE with Dawid-Sebastiani dispersion
+export {
+  logLambda,
+  poissonLogLik,
+  dawidSebastiani,
+  fitChanceRates,
+  type BlockObs,
+  type ChanceRateParams,
+} from "./nfl/block-poisson.js";
+// parsimonious-season.ts — schedule-adjusted wins regression against a null table
+export {
+  maeNullTable,
+  scheduleAdjustedDiff,
+  fitWinsRegression,
+  predictWins,
+  tableMae,
+  type EarlyGame,
+} from "./nfl/parsimonious-season.js";
+// progress-target.ts — play/drive progress + incremental R-squared
+export {
+  playProgress,
+  driveProgress,
+  incrementalRSquared,
+} from "./nfl/progress-target.js";
+// skellam-margin.ts — independent-Poisson margin distribution (lamdba \u2212 l2)
+export {
+  besselI,
+  skellamPMF,
+  skellamCDF,
+  marginProbs,
+  coverProb,
+  fitSkellamRegression,
+  predictMarginProbs,
+  type SkellamParams,
+  type SkellamObs,
+  type MarginProbs,
+  type SkellamRegression,
+} from "./nfl/skellam-margin.js";
+// ── Research surface: capital / DML / NB-RBPF / opponent-adjusted EPA ────────
+export {
+  stepCapital,
+  runCapital,
+  runNullSuite,
+  runPlantedComparison,
+  type CapitalPath,
+  type RunOptions,
+  type NullReport,
+  type PlantedReport,
+} from "./research/capital.js";
+export {
+  timeIndex,
+  generateDmlPanel,
+  DEFAULT_PANEL,
+  type QbStatus,
+  type DmlGameRow,
+  type PanelDesign,
+} from "./research/dml-panel.js";
+export {
+  TRIM_LOW,
+  TRIM_HIGH,
+  N_FOLDS,
+  FILTER_INTERVENTION_GAIN,
+  estimateQbOutAtt,
+  placeboAtt,
+  sensitivityInterval,
+  diagnoseQbOut,
+  type DmlEstimate,
+  type DmlDiagnostics,
+} from "./research/dml-qb-out.js";
+export {
+  R9_SNAPSHOT_VERSION,
+  FIXED_LAMBDA,
+  MAX_PARTICLES,
+  MAX_UNITS,
+  logNbPmf,
+  NbRbpf,
+  type NbRbpfOptions,
+  type NbRbpfSnapshot,
+  type NbRbpfDiagnostics,
+} from "./research/nb-rbpf.js";
+export {
+  DEFAULT_DESIGN,
+  drawNb,
+  generateSyntheticGames,
+  type SyntheticGame,
+  type SyntheticDesign,
+} from "./research/synthetic-nb.js";
+export {
+  computeOpponentAdjustedEpa,
+  type TeamGameEpaSplit,
+  type TeamEpaPrior,
+  type OpponentAdjustedEpaOptions,
+  type LeagueEpaAverages,
+  type OpponentAdjustedEpaRating,
+  type OpponentAdjustedEpaTeamResult,
+  type OpponentAdjustedEpaSolve,
+} from "./signals/opponent-adjusted-epa.js";
+
+// ── GSE-score calibration action policy ──────────────────────────────────────
+export {
+  calibrationActionCap,
+  calibrationRequiresHardPass,
+  calibrationRiskSeverity,
+} from "./gse-score/calibration-action-policy.js";
+
+// Edge-lab honesty: claim ceiling constants, council, selective gate, context
+// bind, Kaunitz types. collectCeilingDefects / assertClaimWithinCeiling /
+// PerformanceClaimInput are already exported above and are NOT repeated here.
+export {
+  BREAK_EVEN,
+  BLIND_ATS_CEILING,
+  SELECTIVE_CLAIM_FLOOR,
+  HonestCeilingError,
+  type SelectiveClaimFloor,
+  type PerformanceClaimScope,
+  type SelectiveClaimProof,
+} from "./edge-lab/honest-ceiling.js";
+export {
+  staticOpinion,
+  type EdgeLabAgentRole,
+  type EdgeLabContext,
+  type AgentOpinion,
+  type DebateRound,
+  type DebateSummary,
+  type EdgeLabAgent,
+  type EdgeLabCouncil,
+} from "./edge-lab/agent-roles.js";
+export {
+  DEFAULT_MAX_GUARDIAN_WIDTH,
+  marketMicrostructureAnalyst,
+  featureAnalyst,
+  placeboAnalyst,
+  calibrationAnalyst,
+  riskHonestyGuardian,
+  decisionAgent,
+  glassLedgerRecorder,
+  defaultAgents,
+  SequentialEdgeLabCouncil,
+} from "./edge-lab/edge-lab-council.js";
+export {
+  MIN_STRATUM_CALIBRATION,
+  vennAbersInterval,
+  applySelectiveGate,
+  coverageEdgeCurve,
+  tuneTau,
+  GateSetOverlapError,
+  type VennAbersInterval,
+  type MultiprobSource,
+  type MultiprobGateOptions,
+  type NoBetReason,
+  type GateDecisionRow,
+  type FiredDecision,
+  type SelectiveGateReport,
+  type CoverageEdgePoint,
+  type CoverageEdgeCurveOptions,
+  type TauSelection,
+  type TuneTauOptions,
+} from "./edge-lab/selective-gate.js";
+export {
+  CONTEXT_BIND_METHOD_TAG,
+  bindTeamContext,
+  bindTeamContextBatch,
+  type ContextField,
+  type ContextCell,
+  type ContextBindRequest,
+  type ContextRefuse,
+  type ContextBindResult,
+} from "./edge-lab/props-context-bind.js";
+export type {
+  KaunitzSide,
+  KaunitzResult,
+  KaunitzRefuse,
+  KaunitzDenied,
+} from "./edge-lab/kaunitz-outlier.js";
+
+// Experimental research surface. Four of these modules ship
+// `export const ENABLED = false` behind an unevaluated acceptance gate, so the
+// ENABLED constants are deliberately NOT re-exported (a barrel can bind only
+// one `ENABLED`); the bridges read them through the deep path and publish gate
+// status on every result instead.
+export {
+  effectiveBreadth,
+  entropyBreadth,
+  isTopHeavy,
+} from "./experimental/effective-breadth.js";
+export {
+  aggregateShap,
+  ashapStability,
+  topKFeatures,
+  type GroupContribution,
+} from "./experimental/ashap-aggregate.js";
+export {
+  fitITSPoisson,
+  scanBreaks,
+  itsGate,
+  type BreakScan,
+  type ITSFit,
+} from "./experimental/1805-01271v1-its-break-harness.js";
+// This module's normalCdf is its own ~5e-10 Abramowitz-Stegun approximation;
+// the barrel already binds `normalCdf` from ./performance-ci.js.
+export {
+  normalCdf as itsHarnessNormalCdf,
+} from "./experimental/1805-01271v1-its-break-harness.js";
+// experimental/1905-03628v1-nested-poisson-totals.ts is intentionally NOT
+// exported: byte-identical subset of the already-barrelled
+// ./bayesian/1911-08791-three-module-score-factorization.js.
+export {
+  cfovFeatures,
+  timeOrderedEval,
+  type CFOV,
+  type PlayerGame,
+} from "./experimental/1804-04226v1-cfov-decomposition.js";
+export {
+  volumeBuckets,
+  resiliencyRegression,
+  steamSignal,
+  scarceLiquidityFlag,
+  type FlowBucket,
+  type ResiliencyFit,
+  type Trade,
+} from "./experimental/1708-02715v1-order-flow-resiliency.js";
+
+// Props/DFS + metrics. The JOI block is taken from 2003-01712v1 only:
+// 1912-10417v1-regime-switching-synergy-network.ts carries a byte-identical
+// copy of PairSequence/joiPerDropback/synergyEdge/rankStackPairs plus its own
+// ENABLED, so exporting both would collide on five names.
+export {
+  completeMatrix,
+  specializationEmbedding,
+  imputationRmse,
+} from "./props-dfs/1505-01147v2-local-matrix-completion.js";
+export {
+  sesForecast,
+  trailingMean,
+  rollingOriginMae,
+  availabilityProb,
+  lineupForecastGain,
+} from "./props-dfs/1909-12938v1-ts-forecast-dfs-optimizer.js";
+export {
+  joiPerDropback,
+  synergyEdge,
+  rankStackPairs,
+  type PairSequence,
+} from "./props-dfs/2003-01712v1-joi-stack-metric.js";
+// softThreshold already binds from ./bayesian/1911-08138-sparse-form-hmm.js.
+export {
+  softThreshold as softThresholdLasso,
+  istaLasso,
+  tvDenoise1d,
+} from "./props-dfs/2004-08428v1-era-adjusted-features.js";
+// The first three already bind from ./bayesian/1908-05745-nmf-target-archetypes.js.
+export {
+  nmfFrobenius as propsNmfFrobenius,
+  nmfArchetypeAssign as propsNmfArchetypeAssign,
+  adjustedRandIndex as propsAdjustedRandIndex,
+  emGaussianMixture1d,
+  emMonotone,
+} from "./props-dfs/2006-07513-bayesian-shot-archetypes.js";
+export {
+  expectedMax2,
+  emaxPortfolioGreedy,
+} from "./props-dfs/2112-07002-emax-duel-optimizer.js";
+export {
+  buildMetricResidualRollups,
+  metricResidualRollupKey,
+  type MetricResidualMetricId,
+  type MetricResidualPlayInput,
+  type MetricResidualRollup,
+} from "./metrics/core/residual-rollup.js";
+export {
+  empiricalBayesShrink,
+  shrinkProbability,
+  shrinkWeightedMean,
+} from "./metrics/core/shrinkage.js";
+
+// Invention + tracking: equation separability, dual-margin bandit experiments,
+// SELA MCTS, case bank, meta-analytics, expected drive value, EPV bootstrap.
+// `Sample` already binds elsewhere in this barrel, hence the alias.
+export {
+  deltaSepAdditive,
+  deltaSepMultiplicative,
+  probeSeparability,
+  normalizeByPace,
+  recombine,
+  passesImprovementGate,
+  type Sample as FeynmanSample,
+  type FeatureGroup,
+  type SeparabilityResult,
+  type RecombinedEquation,
+} from "./invention/1905-11481v2-ai-feynman-separability.js";
+export {
+  NUM_ARMS,
+  initialArmState,
+  assignArm,
+  recordOutcome,
+  computeDualMargin,
+  passesDualMarginGate,
+  cateReplicatesLive,
+  defaultExperimentSpec,
+  type ExperimentSpec,
+  type BanditArmState,
+  type Assignment,
+  type DualMarginResult,
+} from "./invention/2409-00629v2-dualmargin-bandit-experiment.js";
+export {
+  makeRootNode,
+  meanValue,
+  ucbScore,
+  wideningLimit,
+  rollout,
+  runMCTSSearch,
+  runRoundRobin,
+  wastedRolloutRate,
+  spearman,
+  valueEstimateVsTruth,
+  passesSelaGate,
+  type HypothesisNode,
+  type MCTSNode,
+  type MCTSConfig,
+} from "./invention/2410-17238v1-sela-mcts.js";
+export {
+  cosineSimilarity,
+  retrieveTopK,
+  reviseRank,
+  retrieveCounterCase,
+  retainGate,
+  selectBestProductionCase,
+  type DiscoveryCase,
+} from "./invention/case-bank.js";
+export {
+  discriminationIndex,
+  stabilityIndex,
+  independenceIndices,
+  ebShrink,
+  reliabilityReport,
+  type MetricAudit,
+} from "./invention/meta-analytics.js";
+export {
+  edv,
+  attributeEdv,
+  riskAdjustedEdv,
+  type ScoringPlay,
+  type PlayActor,
+} from "./tracking/expected-drive-value.js";
+export {
+  bootstrapSe,
+  errorScaledThreshold,
+  actOnEpv,
+} from "./tracking/bootstrap-epv-scaling.js";
+
+// Sizing: stake solvers, drawdown governance, slate allocation.
+// Four names already bind elsewhere in this barrel and are aliased here:
+//   solveLinear          -> sizingSolveLinear        (bayesian/2005-09024)
+//   makeRng              -> sizingMakeRng            (already bound)
+//   quantileHuberLoss    -> sizingQuantileHuberLoss  (rl/1806-06923v2-iqn-critic)
+//   kellyStake           -> bayesianKellyStake       (already bound at index.ts:2542)
+// Three sizing modules each define their own `SlatePick` with different shapes
+// and three define `kellyFraction` with different failure modes, so those are
+// aliased per module. `maxDrawdown` exists in both drawdown-kelly (equity
+// fraction) and ced-drawdown (P&L path), hence the two aliases.
+export {
+  laplaceSmoothed,
+  kellyGrowthRate,
+  lMinGatePasses,
+  solveLinear as sizingSolveLinear,
+  solveGeneralizedKelly,
+  independentKellyFractions,
+  unsaturatedLogGrowth,
+  correlationHaircut,
+  sizeSlate,
+  type KellyPick,
+  type SizedSlate,
+} from "./sizing/0803-1364v2-generalized-kelly-solver.js";
+export {
+  projectKellySimplex,
+  kellyLogGrowth,
+  constrainedKellyWeights,
+  type ConstrainedKellyOptions,
+} from "./sizing/constrained-kelly.js";
+export {
+  riskAversionLambda,
+  solveRiskConstrainedKelly,
+  plainKelly,
+} from "./sizing/risk-constrained-kelly.js";
+export {
+  makeRng as sizingMakeRng,
+  sampleTrueProbs,
+  emcKellyStake,
+  pluginKelly,
+} from "./sizing/emc-kelly.js";
+export {
+  shrinkEdges,
+  edgeToProb,
+  shrinkageKellyStake,
+  shrinkageKellyStakes,
+} from "./sizing/shrinkage-kelly.js";
+export {
+  conformalKellyStake,
+  capBindingFrequency,
+  type ConformalKellyParams,
+  type ConformalKellyQuote,
+  type ConformalKellyResult,
+} from "./sizing/conformal-kelly.js";
+export {
+  newCategory,
+  updatePosterior,
+  posteriorMean,
+  posteriorVar,
+  kellyStake as bayesianKellyStake,
+  maxDrawdown as equityMaxDrawdown,
+  type CategoryPosterior,
+  type StakeQuote,
+} from "./sizing/drawdown-kelly.js";
+export {
+  maxDrawdown as pnlMaxDrawdown,
+  cumulative,
+  conditionalExpectedDrawdown,
+  eulerDrawdownAttribution,
+  rollingDrawdowns,
+  drawdownTriggerStakeScale,
+  type CategoryPnl,
+} from "./sizing/ced-drawdown.js";
+export {
+  independentKelly,
+  decoupledObjective,
+  decoupledSlateKelly,
+  type SlatePick as DecoupledSlatePick,
+} from "./sizing/decoupled-kelly.js";
+export {
+  kellyFraction as univariateKellyFraction,
+  simultaneousKelly,
+  adaptiveKellyScale,
+  simulateWealth,
+  type Edge as KellyEdge,
+} from "./sizing/multivariate-kelly.js";
+export {
+  simulateSlateLogReturns,
+  tailStats,
+  esGovernor,
+  meanEsFrontier,
+  type SlatePick as EsSlatePick,
+  type TailStats,
+  type GovernorResult,
+} from "./sizing/es-governor.js";
+export {
+  kellyFraction as tournamentKellyFraction,
+  simulateKellyFraction,
+  kellyTournament,
+  type BetResolution,
+  type TournamentResult,
+} from "./sizing/kelly-tournament.js";
+export {
+  projectCappedSimplex,
+  constrainedMaxDrawdownWeights,
+  drawdownAdaptiveBounds,
+  type MaxDdOptions,
+} from "./sizing/max-drawdown-portfolio.js";
+export {
+  isCoinFlip,
+  modulateStake,
+  type CoinFlipOptions,
+} from "./sizing/coin-flip-modulator.js";
+export {
+  selectiveFeasibilityCeiling,
+  breakevenKeepRate,
+  ceilingVolume,
+} from "./sizing/selective-feasibility-ceiling.js";
+export {
+  kellyFraction as mpcKellyFraction,
+  solveSlateMpc,
+  type SlatePick as MpcSlatePick,
+  type MpcConfig,
+} from "./sizing/slate-mpc-staker.js";
+export {
+  rollingVolatility,
+  classifyRegime,
+  stakeMultiplier,
+  scaleStake,
+  type VolRegime,
+  type ScalerConfig,
+} from "./sizing/volatility-regime-scaler.js";
+export {
+  decomposePath,
+  pathQualityScore,
+  bankrollRegimeAllowsRamp,
+  type PathDecomposition,
+} from "./sizing/path-form-features.js";
+export {
+  STAKE_ACTIONS,
+  quantileHuberLoss as sizingQuantileHuberLoss,
+  qrLoss,
+  greedyStake,
+  cvarStake,
+  interQuantileRange,
+} from "./sizing/qr-dqn.js";
+
+// Markets + odds: display, honesty gating, effective price, noise wedge,
+// informed flow, marginal-price oracle, excess movement, arb/promo scan,
+// de-vig methods, favourite-longshot audit, odds-history fusion, market
+// pooling, volume momentum, spread skill tables, Kelly policy, count models,
+// bandit policies.
+// Deliberately NOT re-exported (already bound elsewhere in this barrel, or
+// deliberate duplicates): benjaminiHochberg, BookOdds, devig, logLoss,
+// brierScore, kellyGrowthRate, poissonMle, poissonLogLik, poissonPmf,
+// negBinMoments, and every module-level `ENABLED` — a barrel can bind only
+// one `ENABLED`, so bridges read those through the deep path instead.
+// `spearman` already binds, hence the alias.
+export {
+  validateDisplay,
+  renderLabeledPick,
+  type DisplayPick,
+  type LabeledDisplay,
+} from "./markets/probability-display.js";
+export {
+  binomialP,
+  honestyGate,
+  fitRestDecay,
+  type SpotRecord,
+  type HonestyVerdict,
+} from "./markets/situational-honesty-filter.js";
+export {
+  postedEv,
+  effectiveEv,
+  isSignFlip,
+  signFlipRate,
+  bookFeeGap,
+  type PricedPick,
+} from "./markets/effective-price.js";
+export {
+  estimateEpsilon,
+  noiseWedge,
+  fairOddsNoisy,
+  longshotFilter,
+  type NoiseWedgeOpts,
+} from "./markets/noise-wedge-odds.js";
+export {
+  detectInformedFlow,
+  deltaAuc,
+  crossSectionalBar,
+  type FlowBet,
+  type SegmentFlow,
+  type InformedVerdict,
+  type DeltaAuc,
+} from "./markets/informed-flow.js";
+export {
+  fitLiquidity,
+  marginalPrice,
+  oracleMid,
+  flagMispricings,
+  impliedFeeGamma,
+  tightnessIndex,
+  type BookQuote,
+  type MispricingFlag,
+} from "./markets/marginal-price-oracle.js";
+export {
+  movement,
+  uncertaintyReduction,
+  excessMovement,
+  inGameSignal,
+  excessTTest,
+  calibrateCrossover,
+  type GameBlock,
+  type InGameSignal,
+} from "./markets/excess-movement-monitor.js";
+export {
+  americanToDecimal,
+  impliedProb,
+  scanArb,
+  evaluatePromo,
+  hedgedPromoValue,
+  type ArbResult,
+  type PromoTerms,
+} from "./markets/arb-lp-scanner.js";
+export {
+  multiplicativeNormalize,
+  ooEpc,
+  flGlm,
+} from "./odds/oo-epc.js";
+export {
+  bucketRoi,
+  flbSlope,
+  type OddsBucket,
+  type BucketRoi,
+} from "./odds/favorite-longshot-audit.js";
+export {
+  convexFuse,
+  fitFusionWeight,
+  fusionGate,
+  type FusionFit,
+} from "./markets/1802-08848v1-odds-history-fusion.js";
+export {
+  mixturePool,
+  productPool,
+  interpolatedPool,
+  updateWealth,
+  fitAlpha,
+  type ProbVector,
+  type AlphaFit,
+} from "./markets/1106-4509-ml-market-pooling.js";
+export {
+  ewma,
+  volumeMomentumFeature,
+  beatWriterSentiment,
+  totalsModelFeatures,
+  type TotalsFeatures,
+} from "./markets/1310-6998v1-twitter-volume-momentum.js";
+export {
+  rankedProbScore,
+  eceProbs,
+  pairedT,
+  spearman as spreadSpearman,
+  fbeta,
+  classWeightedBCE,
+  normalCdfLocal,
+} from "./markets/1910-08858v2-spread-win-probability-table.js";
+export {
+  kellyBinary,
+  kellySized,
+  drawdownGate,
+} from "./markets/2003-09384v2-static-theta-threshold-policy.js";
+export { zinbPmf } from "./markets/2112-13001v3-dcp-prop-framework.js";
+export {
+  epsilonGreedyStep,
+  ucb1Step,
+  decayEps,
+} from "./markets/2401-06086v1-imitation-inplay-betting.js";
+
+// Opponent-adjusted EPA tuning constants. computeOpponentAdjustedEpa and its
+// types are already exported above.
+//
+// A balanced schedule makes the opponent-weight matrix doubly stochastic.
+// The solver pins each split's play-weighted mean to the raw league average
+// so that constant mode cannot stall the iteration. A solve that still
+// reports converged:false is not a rating; the bridge refuses it.
+export {
+  OPPONENT_ADJUSTED_EPA_DEFAULT_TOLERANCE,
+  OPPONENT_ADJUSTED_EPA_DEFAULT_MAX_ITERATIONS,
+  OPPONENT_ADJUSTED_EPA_DEFAULT_DAMPING_FACTOR,
+  OPPONENT_ADJUSTED_EPA_DEFAULT_MIN_GAMES,
+  OPPONENT_ADJUSTED_EPA_WEEK1_OFFENSE_PRIOR_WEIGHT,
+  OPPONENT_ADJUSTED_EPA_WEEK1_DEFENSE_PRIOR_WEIGHT,
+  OPPONENT_ADJUSTED_EPA_SHRINKAGE_FADE_GAMES,
+} from "./signals/opponent-adjusted-epa.js";
+
+export {
+  aggregateSignals,
+  CONCLUSION_AGREEMENT_GAP,
+  STALENESS_WEIGHT_MULTIPLIER,
+  type AggregationTrace,
+  type AggregationEval,
+  type DisagreementState,
+  type SignalObservation,
+} from "./reasoning/aggregation-trace.js";
+export {
+  interpretSituation,
+  type SituationalReading,
+  type SituationalEval,
+  type GameContext,
+} from "./reasoning/situational-engine.js";
+export {
+  registerDeclarations,
+  SIGNAL_FAMILIES,
+  type SignalDeclaration,
+} from "./reasoning/signal-registry.js";
+export {
+  fitBridge,
+  predictBridge,
+  BRIDGE_FEATURES,
+  MIN_FIT_ROWS,
+  type BridgeModel,
+  type BridgePrediction,
+  type BridgeFeature,
+} from "./bridge/bridge-model.js";
+
+// CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01).
+export {
+  ARM_LEAD_MS,
+  STAND_DOWN_MS,
+  FALLBACK_WINDOW_MS,
+  windowStartFor,
+  windowEndFor,
+  eventToWindow,
+  fetchWindowsForDate,
+  chicagoYmd,
+  getActiveWindows,
+  nextWindow,
+  fetchUpcomingWindows,
+  type GameWindow,
+} from "./watch/watch-scheduler.js";

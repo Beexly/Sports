@@ -209,6 +209,8 @@ import {
   type ChangePointOptions,
   type ClimTrainRow,
   type GroupedClimatology,
+  type ScoredCase,
+  type ClimatologyScorecard,
 } from "@sports/prediction-engine";
 
 export type CeilingEval =
@@ -367,7 +369,7 @@ export type ClimatologyEval =
   | {
       readonly ok: true;
       readonly model: GroupedClimatology;
-      readonly skill: number | null;
+      readonly skill: ClimatologyScorecard | null;
     }
   | { readonly ok: false; readonly reason: string };
 
@@ -377,16 +379,16 @@ export type ClimatologyEval =
  */
 export function evalGroupedClimatology(
   train: readonly ClimTrainRow[] | null | undefined,
-  holdout?: readonly { readonly p: number; readonly y: 0 | 1 }[],
+  holdout?: readonly ScoredCase[],
 ): ClimatologyEval {
   if (!Array.isArray(train) || train.length === 0) {
     return { ok: false, reason: "climatology train rows empty — not imputed" };
   }
   try {
     const model = fitGroupedClimatology(train);
-    let skill: number | null = null;
+    let skill: ClimatologyScorecard | null = null;
     if (Array.isArray(holdout) && holdout.length > 0) {
-      skill = scoreAgainstClimatology(model, holdout as never);
+      skill = scoreAgainstClimatology(holdout, model);
     }
     return { ok: true, model, skill };
   } catch (err) {

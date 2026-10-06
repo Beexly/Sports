@@ -168,6 +168,8 @@ const globalForPrisma = globalThis as unknown as {
   prismaStubMode: boolean | undefined;
 };
 
+let pooledUrlWarned = false;
+
 function buildClient(): PrismaClient {
   // Resilience against env-var scope confusion: the Vercel↔Neon integration
   // manages POSTGRES_PRISMA_URL / DATABASE_URL_UNPOOLED, which are always present,
@@ -211,6 +213,35 @@ function buildClient(): PrismaClient {
       globalForPrisma.prismaStubMode = true;
     }
     return makeStubClient();
+  }
+
+  // Pooled-connection guard (Neon cost leverage, 2026-09-28): app traffic must
+  // go through the -pooler endpoint with ?pgbouncer=true; direct connections
+  // are reserved for migrations and pg_dump (DIRECT_URL). At 0.25 CU the
+  // direct path caps at ~104 connections while the pooler allows 10,000 —
+  // an unpooled DATABASE_URL is how a traffic spike becomes an outage (or a
+  // forced compute upsizing). Warn-only, never throw: env transitions happen
+  // at deploy time and a throw here would take the app down over a config
+  // preference. One warning per server instance.
+  if (process.env["NODE_ENV"] === "production" && !pooledUrlWarned) {
+    pooledUrlWarned = true;
+    const u = process.env["DATABASE_URL"] ?? "";
+    let host = "";
+    try {
+      host = new URL(u).host;
+    } catch {
+      host = "";
+    }
+    const looksPooled = host.includes("-pooler") || u.includes("pgbouncer");
+    if (!looksPooled) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[@sports/db] DATABASE_URL does not look pooled (expected a -pooler " +
+          "host with ?pgbouncer=true). App routes should use the pooled " +
+          "string; direct connections are reserved for migrations and " +
+          "pg_dump via DIRECT_URL.",
+      );
+    }
   }
 
   // Neon serverless HTTP/WebSocket driver (opt-in via NEON_SERVERLESS_DRIVER=true).

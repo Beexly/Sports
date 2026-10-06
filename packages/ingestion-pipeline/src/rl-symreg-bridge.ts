@@ -106,13 +106,13 @@ export function evalDistributionStats(input: {
 
 /**
  * Greedy stake index over a slate of categorical distributions.
- * mode = "cvar" (risk-averse, default) or "mean".
+ * mode = "cvar" (risk-averse, default) or "mean-minus-std".
  */
 export function evalGreedyStake(input: {
   readonly distributions: readonly (readonly number[])[];
   readonly vMin: number;
   readonly vMax: number;
-  readonly mode?: "cvar" | "mean";
+  readonly mode?: "cvar" | "mean-minus-std";
   readonly lambda?: number;
   readonly alpha?: number;
 }): RlEval<number> {
@@ -489,7 +489,7 @@ export function evalMineMotifs(input: {
 export function evalAllocateIslands(input: {
   readonly motifs: readonly unknown[];
   readonly nIslands: number;
-}): SymRegEval<readonly Island[]> {
+}): SymRegEval<{ readonly survivors: readonly string[]; readonly killed: readonly string[] }> {
   const { motifs, nIslands } = input;
   if (!Array.isArray(motifs) || motifs.length === 0) {
     return { ok: false, reason: "motifs must be non-empty" };
@@ -498,8 +498,12 @@ export function evalAllocateIslands(input: {
     return { ok: false, reason: "nIslands must be in (0, motifs.length]" };
   }
   try {
-    const islands = allocateIslands(motifs as never, nIslands);
-    return { ok: true, data: islands as Island[] };
+    // allocateIslands scores a fixed Island[] and returns survivor/killed ids.
+    // The second arg is the score quantile, not an island count — keep the
+    // default quantile and feed the motifs through as Island-shaped rows.
+    const islands = motifs as never;
+    const result = allocateIslands(islands);
+    return { ok: true, data: result };
   } catch (err) {
     return { ok: false, reason: err instanceof Error ? err.message : String(err) };
   }

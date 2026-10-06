@@ -154,6 +154,32 @@ describe("Banned-phrase scanner", () => {
     expect(scanForBannedPhrases("the matchup is a roadblock to unlock").some((h) => h.claimId === "banned.lock")).toBe(false);
   });
 
+  it("exempts Drew Lock / D.Lock proper nouns (trust-gate parity)", () => {
+    expect(scanForBannedPhrases("Leaderboard: Drew Lock 1.2").some((h) => h.claimId === "banned.lock")).toBe(false);
+    expect(scanForBannedPhrases("D.Lock 22.92%, T.Shough 23.33%.").some((h) => h.claimId === "banned.lock")).toBe(false);
+    // Residual slang on the same line still hits.
+    expect(
+      scanForBannedPhrases("Drew Lock SEA. Also: the Bills are a lock this week.").some(
+        (h) => h.claimId === "banned.lock",
+      ),
+    ).toBe(true);
+  });
+
+  it("lockDigestExempt skips bare Lock only on dated @handle digest lines", () => {
+    const digest =
+      "- @sfdata9ers, 2026-09-24 2:31 PM CDT — leaderboard: Allen 2.9, Purdy 2.8, Lock 2.77.\n";
+    expect(scanForBannedPhrases(digest).some((h) => h.claimId === "banned.lock")).toBe(true);
+    expect(
+      scanForBannedPhrases(digest, { lockDigestExempt: true }).some((h) => h.claimId === "banned.lock"),
+    ).toBe(false);
+    // Marketing-shaped copy with no digest markers still refuses, even with the flag.
+    expect(
+      scanForBannedPhrases("Lock of the day: PHI -3.", { lockDigestExempt: true }).some(
+        (h) => h.claimId === "banned.lock",
+      ),
+    ).toBe(true);
+  });
+
   // Tripwire (2026-09-02 automated review): the "AI picks" family only
   // covered plural "AI picks" and hyphenated "AI-generated picks" — the
   // singular and un-hyphenated variants slipped past the gate. All six

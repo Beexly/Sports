@@ -49,7 +49,14 @@ describe("props-player-bridge evalConditionalTd", () => {
 });
 
 describe("props-player-bridge catch prowess", () => {
-  const targets = [
+  const targets: readonly {
+    receiverId: string;
+    x: number;
+    depth: number;
+    airYards: number;
+    separation: number;
+    caught: 0 | 1;
+  }[] = [
     { receiverId: "r1", x: 2, depth: 8, airYards: 10, separation: 2.1, caught: 1 },
     { receiverId: "r1", x: -5, depth: 12, airYards: 14, separation: 1.4, caught: 0 },
     { receiverId: "r1", x: 0, depth: 4, airYards: 5, separation: 3.2, caught: 1 },

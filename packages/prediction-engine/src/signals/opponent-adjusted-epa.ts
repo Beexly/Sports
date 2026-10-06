@@ -96,7 +96,10 @@
  *    simultaneous update (standard successive-under-relaxation for a fixed
  *    point iteration). Default 0.5 was chosen because it collapses the
  *    period-2 cycle above to convergence in two iterations; it is an
- *    explicit, overridable option, not a hidden stability hack.
+ *    explicit, overridable option, not a hidden stability hack. Damping
+ *    does not contract the constant mode of a doubly stochastic schedule.
+ *    Each iteration pins the play-weighted mean of every split back to the
+ *    raw league average, which is the gauge the ratings are identified up to.
  *
  * PRE-REGISTERED KILL LINE (before any backtest, none has been run; this
  * file carries zero fitted parameters and zero measured results)
@@ -293,6 +296,46 @@ function playWeightedMean(pairs: ReadonlyArray<readonly [value: number, weight: 
   return sumW > 0 ? sumWV / sumW : 0;
 }
 
+function teamSplitPlays(gs: readonly TeamGameEpaSplit[], split: Split): number {
+  let plays = 0;
+  for (const g of gs) {
+    const [, w] = playsAndEpaFor(split, g);
+    if (Number.isFinite(w) && w > 0) plays += w;
+  }
+  return plays;
+}
+
+/**
+ * A balanced schedule makes the opponent-weight matrix doubly stochastic.
+ * Its constant mode has eigenvalue 1, and under-relaxation leaves that mode
+ * where it is, so the iteration stalls. The ratings are only identified up
+ * to that constant. Pinning each split's play-weighted mean to the raw
+ * league average removes the gauge without changing who is above whom.
+ */
+function pinSplitMean(
+  split: Split,
+  values: Map<string, number>,
+  byTeam: ReadonlyMap<string, readonly TeamGameEpaSplit[]>,
+  target: number,
+): void {
+  let sumW = 0;
+  let sumWV = 0;
+  for (const [team, gs] of byTeam) {
+    const w = teamSplitPlays(gs, split);
+    const v = values.get(team);
+    if (v === undefined || w <= 0) continue;
+    sumW += w;
+    sumWV += w * v;
+  }
+  if (!(sumW > 0)) return;
+  const shift = sumWV / sumW - target;
+  if (Math.abs(shift) < 1e-15) return;
+  for (const team of values.keys()) {
+    const v = values.get(team);
+    if (v !== undefined) values.set(team, v - shift);
+  }
+}
+
 /**
  * Linear fade from `week1Weight` (at gamesPlayed === 1) to 0 (at
  * gamesPlayed === fadeGames or beyond). Clamped to [0, week1Weight].
@@ -378,15 +421,21 @@ export function computeOpponentAdjustedEpa(
 
     let maxDelta = 0;
     for (const split of SPLITS) {
+      const beforeMap = new Map(adj[split]);
       for (const t of teams) {
-        const before = adj[split].get(t)!;
+        const before = beforeMap.get(t)!;
         const rawNext = next[split].get(t)!;
         // Under-relaxation: move only `dampingFactor` of the way toward the
         // raw simultaneous update (see "Under-relaxation" in the module header).
         const after = before + dampingFactor * (rawNext - before);
+        adj[split].set(t, after);
+      }
+      pinSplitMean(split, adj[split], byTeam, leagueAvg[split]);
+      for (const t of teams) {
+        const before = beforeMap.get(t)!;
+        const after = adj[split].get(t)!;
         const delta = Math.abs(after - before);
         if (delta > maxDelta) maxDelta = delta;
-        adj[split].set(t, after);
       }
     }
     iterations++;

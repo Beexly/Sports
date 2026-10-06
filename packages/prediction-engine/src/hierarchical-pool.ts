@@ -99,9 +99,16 @@ export function poolSignalsHierarchically(
     let sumPrecisionWeightedEdge = 0.0;
 
     for (const sig of familySignals) {
-      // Default variance: 0.04 (SE = 0.20) if unspecified, or inversely proportional to sample size
-      const sampleN = sig.sampleSize ?? 100;
-      const v = sig.variance && sig.variance > 0 ? sig.variance : Math.max(0.005, 4.0 / sampleN);
+      // A missing sample is not 100 observations. Without a sample and without
+      // a variance, the signal is wide (variance 4) so it cannot outvote a
+      // signal that actually named its sample.
+      const sampleN = sig.sampleSize;
+      const v =
+        sig.variance && sig.variance > 0
+          ? sig.variance
+          : sampleN !== undefined && sampleN > 0
+            ? Math.max(0.005, 4.0 / sampleN)
+            : 4.0;
       const prec = 1.0 / v;
 
       sumPrecision += prec;

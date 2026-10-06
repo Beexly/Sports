@@ -75,6 +75,10 @@ function bindPublicPickReasoning(
     bookmakerCount: pick.bookmakerCount,
     dataFreshnessAt: pick.dataFreshnessAt,
     consensusProvider: pick.consensusProvider,
+    consensusSourceId: pick.consensusSourceId,
+    consensusBooks: pick.consensusBooks,
+    consensusBookSetId: pick.consensusBookSetId,
+    consensusCapturedAt: pick.consensusCapturedAt,
   });
   if (isBookmakerConsensusClaim(reasoning) && !bound) {
     return { ...pick, reasoning: null, reasoningShort: null, consensusEvidence: null };

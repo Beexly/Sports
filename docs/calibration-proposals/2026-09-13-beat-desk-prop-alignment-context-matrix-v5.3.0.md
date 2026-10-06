@@ -6,6 +6,15 @@ author: motif
 supersedes: v5.2.7
 ---
 
+> **STATUS NOTE (2026-10-01, audit):** `v5.3.0` was consumed by the
+> 2026-09-27 narrative_contract promotion (`docs/calibration-proposals/2026-09-27-narrative-contract-live-v5.3.0.md`,
+> status IMPLEMENTED, shipped in PR #954, merged 2026-09-29). The five moves
+> proposed below — calibrated confidence, stronger thresholds, beat desk, prop
+> alignment, context matrix — are **NOT implemented** as of 2026-10-01 and are
+> **NOT part of shipped v5.3.0**. If pursued, they require a new model version
+> number and a recorded MODEL_VERSION decision. Do not cite this document as
+> evidence that v5.3.0 delivered any of them.
+
 # CalibrationProposal — Beat desk, prop alignment, context matrix, calibrated confidence (v5.2.7 → v5.3.0)
 
 ## The gap

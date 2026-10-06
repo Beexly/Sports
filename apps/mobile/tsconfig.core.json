@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": []
+  },
+  "include": [
+    "src/lib/format.ts",
+    "src/lib/trust.ts",
+    "src/lib/voice.ts",
+    "src/lib/calibration.ts",
+    "src/lib/entitlements.ts",
+    "src/lib/disclosures.ts",
+    "src/api/contracts.ts",
+    "src/api/cache.ts",
+    "src/api/client.ts",
+    "src/api/decoders.ts",
+    "src/api/endpoints.ts",
+    "src/theme/tokens.ts",
+    "src/theme/typography.ts"
+  ]
+}

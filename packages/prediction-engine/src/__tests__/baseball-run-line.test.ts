@@ -79,18 +79,21 @@ describe("scoreGame — a baseball spread off the run-line ladder is not publish
   });
 
   it("publishes the spread when every book agrees on the real run line", () => {
-    const picks = scoreGame(mlbInput([-1.5, -1.5, -1.5, -1.5]));
+    // Ten books: the post-market-echo confidence scale needs the full depth
+    // component (10 books = +20) to clear MIN_PUBLISH_CONFIDENCE; a four-book
+    // fixture no longer publishes for reasons unrelated to the ladder guard.
+    const picks = scoreGame(mlbInput([-1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5]));
     expect(picks.some((p) => p.pickType === "SPREAD")).toBe(true);
   });
 
   it("drops the spread when the mean lands between run lines", () => {
-    // -1.75 is a real published value (measured on production, 5 picks). Three
-    // books at the standard run line and one at the 2.5 alternate average to a
-    // number that sits BETWEEN two rungs of the ladder, so no book quotes it.
-    // Chosen deliberately as a NEAR miss: a wildly contaminated mean like -5.25
-    // is already refused by the dispersion and edge thresholds, so testing that
-    // would pass with or without this guard and prove nothing.
-    const picks = scoreGame(mlbInput([-1.5, -1.5, -1.5, -2.5]));
+    // A mean that sits BETWEEN two rungs of the ladder (nine books at the
+    // standard run line and one at the 2.5 alternate) is quoted by no book.
+    // Chosen deliberately as a NEAR miss: a wildly contaminated mean like
+    // -5.25 is already refused by the dispersion and edge thresholds, so
+    // testing that would pass with or without this guard and prove nothing.
+    // Ten books so the refusal comes from the ladder guard, not the floor.
+    const picks = scoreGame(mlbInput([-1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -2.5]));
     expect(picks.some((p) => p.pickType === "SPREAD")).toBe(false);
   });
 

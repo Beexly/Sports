@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #12140f;
+  --color-surface: #1b1e16;
+  --color-surface-2: #24281d;
+  --color-fg: #ece7d8;
+  --color-muted: #9a9486;
+  --color-line: #34392c;
+  --color-primary: #d6ef4a;
+  --color-primary-ink: #1a2208;
+  --color-accent: #e0a04a;
+  --color-accent-ink: #2a1c08;
+  --font-sans: "Fraunces", "Iowan Old Style", Palatino, "Palatino Linotype", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-fg);
+    min-height: 100%;
+    font-weight: 460;
+    line-height: 1.5;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: var(--color-primary);
+    color: var(--color-primary-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

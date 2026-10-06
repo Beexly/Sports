@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isApiRoutePublic, internalSurfaceBlockedResponse } from "@/lib/launch/internal-surface-fence";
 import {
   CONTEXT_INTELLIGENCE_SOURCES,
   DATA_SOURCE_STACK,
@@ -28,7 +29,18 @@ const STATUS_ORDER: readonly SourceStatus[] = [
 const COST_ORDER: readonly DataSourceCard["cost"][] = ["free", "low-cost", "paid-optional", "owned", "licensed"];
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  // Public, anonymous route that loads 4 large NFLverse datasets sequentially
+  // Public/private surface doctrine (2026-09-28): the source stack is internal.
+  // It discloses which sources are used AND which were refused, plus the envVar
+  // behind every provider. Checked before the rate limiter and before any load,
+  // so a dark route costs nothing and cannot leak through an error path.
+  if (!isApiRoutePublic("/api/sources/catalog")) {
+    return NextResponse.json(internalSurfaceBlockedResponse("/api/sources/catalog"), {
+      status: 404,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
+  // Loads 4 large NFLverse datasets sequentially
   // (each potentially fetching external provider data). IP-keyed rate limit
   // copied from the established pattern in apps/web/app/api/nflverse/injuries/route.ts
   // (consumeRateLimit + clientIp).

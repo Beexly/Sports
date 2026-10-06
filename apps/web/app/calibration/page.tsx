@@ -29,6 +29,8 @@ import { ProofExplorer } from "@/components/proof/proof-explorer";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
 import GateReading from "@/components/calibration/gate-reading";
+import { CalibrationStateCard } from "@/components/calibration/calibration-state-card";
+import { loadCalibrationPublicState } from "@/lib/calibration/public-state";
 
 export const dynamic = "force-dynamic";
 
@@ -89,6 +91,7 @@ function ProofCard({
 
 export default async function CalibrationProofRoomPage() {
   const { data: report } = await loadPublicCalibrationReport();
+  const calibrationState = await loadCalibrationPublicState();
 
   return (
     // Same Field atmosphere as /verify: one room, one look. proof-crystal
@@ -125,6 +128,17 @@ export default async function CalibrationProofRoomPage() {
             score has behaved, not as a rate we are claiming.
           </p>
         </header>
+
+        {/*
+          THE headline state, above everything else on the page.
+
+          Until this, a customer could read every number in the Proof Room and
+          still not be able to answer "so is your calibration any good?" The
+          verdict was scattered across a gate flag, a receipt, and a streak
+          counter. It now leads the page as a graded, sourced state, and it
+          carries its own limits so the state can never be read without them.
+        */}
+        <CalibrationStateCard state={calibrationState} className="mb-6" />
 
         {/* The gate reading: the numbers the calibration receipt is built on. */}
         <GateReading />

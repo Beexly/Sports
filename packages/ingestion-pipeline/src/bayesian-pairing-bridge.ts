@@ -31,6 +31,8 @@ import {
   bivPoissonPmf,
   bivPoissonSample,
   dixonColesTau,
+  mulberry32,
+  poissonSample,
 } from "@sports/prediction-engine";
 
 export type PairingEval<T> =
@@ -322,8 +324,12 @@ export function evalBivPoissonSample(input: {
     };
   }
   try {
-    const samples = bivPoissonSample(l1, l2, l3, n, seed);
-    return { ok: true, data: samples as [number, number][] };
+    const rand = mulberry32(seed ?? 1);
+    const samples: [number, number][] = [];
+    for (let i = 0; i < n; i++) {
+      samples.push(bivPoissonSample(rand, l1, l2, l3, poissonSample));
+    }
+    return { ok: true, data: samples };
   } catch (err) {
     return { ok: false, reason: err instanceof Error ? err.message : String(err) };
   }
