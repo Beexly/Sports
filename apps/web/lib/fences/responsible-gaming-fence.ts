@@ -1,16 +1,28 @@
 import { reviewResponsibleGaming } from "@/lib/revenue/responsible-gaming-policy";
-import type { RevenueOffer } from "@/lib/revenue/partner-types";
 
 import { block, pass, type FenceInput, type FencePlugin } from "./fence-types";
+import { readMetadataOffer } from "./revenue-metadata";
 
 const FENCE_ID = "responsible-gaming";
 
 export const responsibleGamingFence: FencePlugin = {
   description: "Fails closed for regulated sportsbook/DFS offers without responsible-gaming metadata.",
   evaluate(input) {
-    const offer = metadataOffer(input);
-    if (offer !== null) {
-      const review = reviewResponsibleGaming({ offer, userState: metadataString(input, "userState") });
+    const offer = readMetadataOffer(input);
+
+    // A malformed offer is NOT the same as no offer. Falling through to the
+    // text heuristic below would let an unparseable regulated offer pass on an
+    // empty `text`; the fence's contract is to fail closed instead.
+    if (offer.kind === "invalid") {
+      return block(
+        FENCE_ID,
+        ["Offer metadata is malformed and cannot be reviewed for responsible gaming."],
+        ["Correct the RevenueOffer metadata (category, approvalStatus, riskClass, allowedSurfaces) before use."],
+      );
+    }
+
+    if (offer.kind === "ok") {
+      const review = reviewResponsibleGaming({ offer: offer.value, userState: metadataString(input, "userState") });
       if (review.ok) return pass(FENCE_ID);
       return block(FENCE_ID, review.reasons, ["Add 21+ policy, responsible-gaming language, and state eligibility before use."]);
     }
@@ -32,25 +44,4 @@ export const responsibleGamingFence: FencePlugin = {
 function metadataString(input: FenceInput, key: string): string | undefined {
   const value = input.metadata[key];
   return typeof value === "string" ? value : undefined;
-}
-
-function metadataOffer(input: FenceInput): RevenueOffer | null {
-  const value = input.metadata.offer;
-  if (!isRecord(value)) return null;
-  if (
-    typeof value.id !== "string" ||
-    typeof value.partnerId !== "string" ||
-    typeof value.publicName !== "string" ||
-    typeof value.category !== "string" ||
-    typeof value.approvalStatus !== "string" ||
-    typeof value.riskClass !== "string" ||
-    !Array.isArray(value.allowedSurfaces)
-  ) {
-    return null;
-  }
-  return value as unknown as RevenueOffer;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
