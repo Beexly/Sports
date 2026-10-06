@@ -106,11 +106,11 @@ const scope = includeDev ? "all dependencies" : "production dependencies";
 if (!asJson) {
   for (const o of waived) {
     const a = acceptedByPkg.get(o.name);
-    console.log(`[dependency-audit] WAIVED  ${o.severity.toUpperCase()} ${o.name} — ${a.reason} (review by ${a.reviewBy})`);
+    console.log(`[dependency-audit] WAIVED  ${(o.severity || '').toUpperCase()} ${o.name} — ${a.reason} (review by ${a.reviewBy})`);
   }
   for (const o of blocking) {
-    console.error(`[dependency-audit] BLOCK   ${o.severity.toUpperCase()} ${o.name}  ${o.range}`);
-    for (const t of o.titles.slice(0, 3)) console.error(`                    - ${t}`);
+    console.error(`[dependency-audit] BLOCK   ${(o.severity || '').toUpperCase()} ${o.name}  ${o.range}`);
+    for (const t of (o.titles || []).slice(0, 3)) console.error(`                    - ${t}`);
   }
 }
 
