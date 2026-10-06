@@ -9411,3 +9411,6 @@ posts in window.
 - TE FPTS/target + separation pairing: efficiency-per-opportunity with
   separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
   2.19 FPTS/tgt, #7) (@DynatyzeFF).
+
+- `gse-ml-service/synth/`: Synthetic football-scene generator for CV training data.
+  Generates 22 players, 1 ball, 7 officials in 3D primitives projected to 2D with homography and standard COCO JSON output. Deterministic CLI generator included.
