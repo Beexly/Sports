@@ -57,11 +57,6 @@ export const INTERNAL_SURFACES = {
     env: "METHODOLOGY_PUBLIC",
     exposes: "factor list + three-stage scoring stack (how the model works)",
   },
-  /** "Glass box on every signal": named metrics with stability labels. */
-  "/intelligence/metrics": {
-    env: "METRICS_PUBLIC",
-    exposes: "named metric inventory with anchor/signal/noise labels",
-  },
   /** Live player-week rows: opportunities, target share, WOPR. */
   "/nflverse": {
     env: "NFLVERSE_PUBLIC",
@@ -76,18 +71,6 @@ export const INTERNAL_SURFACES = {
   "/parlay-mri": {
     env: "PARLAY_MRI_PUBLIC",
     exposes: "per-leg risk, survivability, expected value, house-edge compounding",
-  },
-  /**
-   * R&D exhibit whose premise names Next Gen Stats (reconstruction from NGS
-   * aggregates). NGS internal-only doctrine (Garrett, 2026-09-28, HARD):
-   * no NGS data, metric names, or discussion on the public site.
-   *
-   * PERMANENTLY dark: `env` is null, so no flag can re-expose this surface.
-   * isPagePublic() returns false unconditionally for it.
-   */
-  "/intelligence/reconstruction": {
-    env: null,
-    exposes: "separation-reconstruction exhibit naming Next Gen Stats",
   },
 } as const satisfies Readonly<Record<string, { env: string | null; exposes: string }>>;
 
@@ -202,14 +185,12 @@ export function internalSurfaceBlockedResponse(path: string): {
  */
 export const INTERNAL_SURFACE_POLICY = {
   "/methodology": "internal — factor list and engine stack (opt-in METHODOLOGY_PUBLIC)",
-  "/intelligence/metrics": "internal — named metric inventory (opt-in METRICS_PUBLIC)",
   "/nflverse": "internal — raw player-week rows (opt-in NFLVERSE_PUBLIC)",
   "/players": "internal — metric-explainer tables (opt-in PLAYERS_PUBLIC)",
   "/parlay-mri": "internal — per-leg risk and EV (opt-in PARLAY_MRI_PUBLIC)",
   "/api/calibration": "internal — calibration internals (opt-in CALIBRATION_JSON_PUBLIC)",
   "/api/gse/v1/truth": "internal — truth topology (opt-in TRUTH_TOPOLOGY_PUBLIC)",
   "/api/sources/catalog": "internal — source stack, refused-source status, provider envVar names (opt-in SOURCES_CATALOG_PUBLIC)",
-  "/intelligence/reconstruction": "internal — NGS-naming reconstruction exhibit (PERMANENTLY dark, no opt-in)",
   "/clv": "public — gated proof surface, 503 until canExposePerformanceStats (UNCHANGED)",
   "/stats": "public — gated proof surface, 404 until STATS_PUBLIC (UNCHANGED)",
   "/api/projections": "public — projections are the allowed surface (UNCHANGED)",

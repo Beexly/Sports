@@ -180,7 +180,6 @@ describe("P16-01 — homepage shell renders without awaiting nflverse loader", (
     // "The Lab" door label lives inside the suspended NflverseLabDoor
     // component — it does NOT appear in the shell text when the loader
     // hangs. The shell itself (doors grid, thesis, nav, footer) is present.
-    expect(text).toContain("Intelligence");
     expect(text).toContain("Fantasy & Daily");
   });
 

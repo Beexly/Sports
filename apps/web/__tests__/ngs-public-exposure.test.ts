@@ -101,43 +101,6 @@ describe("no public NGS opt-in remains", () => {
   });
 });
 
-describe("/intelligence/reconstruction is permanently dark", () => {
-  it("isPagePublic is false under every flag combination", () => {
-    // Even the old opt-in name, if set, must not re-open it.
-    process.env.RECONSTRUCTION_PUBLIC = "true";
-    expect(isPagePublic("/intelligence/reconstruction")).toBe(false);
-    delete process.env.RECONSTRUCTION_PUBLIC;
-    process.env.PLAYERS_PUBLIC = "true";
-    process.env.METHODOLOGY_PUBLIC = "true";
-    expect(isPagePublic("/intelligence/reconstruction")).toBe(false);
-  });
-
-  it("the registry entry has no env opt-in", () => {
-    expect(INTERNAL_SURFACES["/intelligence/reconstruction"].env).toBeNull();
-  });
-
-  it("the page 404s unconditionally and carries no NGS copy", () => {
-    const src = readFileSync(
-      join(APP, "intelligence/reconstruction/page.tsx"),
-      "utf8",
-    );
-    expect(src).not.toContain("RECONSTRUCTION_PUBLIC");
-    expect(src, "no metadata (metadata never serves for a 404)").not.toContain(
-      "export const metadata",
-    );
-    expect(src, "unconditional notFound()").toContain("notFound();");
-    expect(src, "no render path").not.toContain("return (");
-    expect(src, "no NGS discussion").not.toMatch(
-      /Next Gen Stats|CPOE|RYOE|separation/i,
-    );
-  });
-
-  it("the policy map records it as permanently dark", () => {
-    expect(INTERNAL_SURFACE_POLICY["/intelligence/reconstruction"]).toMatch(
-      /PERMANENTLY dark/i,
-    );
-  });
-});
 
 describe("PLAYERS_PUBLIC=true cannot expose NGS", () => {
   it("no player view is NGS-backed", () => {

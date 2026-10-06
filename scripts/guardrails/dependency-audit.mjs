@@ -41,6 +41,12 @@ const ACCEPTED = [
       "by the same next@16 major upgrade. The top-level postcss is already patched.",
     reviewBy: "2027-01-15",
   },
+  {
+    package: "source-map-js",
+    reason:
+      "source-map-js allows event-loop denial of service through indexed source-map section offsets. Tracked as its own migration.",
+    reviewBy: "2027-01-15",
+  }
 ];
 
 const args = new Set(process.argv.slice(2));
