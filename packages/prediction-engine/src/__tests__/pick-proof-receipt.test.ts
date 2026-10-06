@@ -3,6 +3,8 @@ import {
   buildPickProofReceipt,
   verifyPickProofReceipt,
   isPlausibleEntryOdds,
+  modelProbForReceipt,
+  featureHashForDisplay,
   ENTRY_ODDS_MIN_ABS,
   ENTRY_ODDS_MAX_ABS,
   type PickProofInput,
@@ -168,5 +170,131 @@ describe("entryOdds plausibility write-guard (P0-2, launch audit 2026-09-08)", (
     // with a poison-band price still re-derives to its own hash:
     const legacyShape = buildPickProofReceipt(base({ entryOdds: -3.5 }), testHash);
     expect(verifyPickProofReceipt(legacyShape, testHash)).toBe(true);
+  });
+});
+
+describe("modelProbForReceipt — the model probability a receipt may honestly commit", () => {
+  // A pick carrying an independent blend. Mirrors the shape scoreGames produces.
+  const withTrueProb = (
+    trueProb: number | null,
+    pickType = "MONEYLINE",
+    extra: Record<string, unknown> = {},
+  ) => ({
+    pickType,
+    factorBreakdown: {
+      rankingP: 0.7,
+      rankingSource: "blend_indep_conf",
+      independentEdge: { trueProb },
+      ...extra,
+    },
+  });
+
+  it("commits the independent blend — the gap that made learning impossible", () => {
+    // The whole point: this used to be hardcoded null at the mint.
+    expect(modelProbForReceipt(withTrueProb(0.6312))).toBe(0.6312);
+  });
+
+  it("never commits confidence/100, even when rankingP is available", () => {
+    // rankingP is confidence/100 when independents are absent. A confidence-sourced
+    // rankingP here is the market-echo the column has never been allowed to hold.
+    expect(
+      modelProbForReceipt({
+        pickType: "TOTAL",
+        factorBreakdown: { rankingP: 0.78, rankingSource: "confidence" },
+      }),
+    ).toBeNull();
+    expect(
+      modelProbForReceipt({
+        pickType: "MONEYLINE",
+        factorBreakdown: { rankingP: 0.78, rankingSource: "confidence", independentEdge: null },
+      }),
+    ).toBeNull();
+  });
+
+  it("refuses TOTAL: settlement grades over/under and no total model exists", () => {
+    // A P(win) graded against over/under is not a weak number — it is a number
+    // scored against an event it never predicted, and Brier would report
+    // confidently-wrong calibration while the engine "learned" from noise.
+    expect(modelProbForReceipt(withTrueProb(0.62, "TOTAL"))).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(0.62, "total"))).toBeNull(); // case-insensitive
+  });
+
+  it("keeps SPREAD (cover) and MONEYLINE (win) — both event-matched at settlement", () => {
+    expect(modelProbForReceipt(withTrueProb(0.54, "SPREAD"))).toBe(0.54);
+    expect(modelProbForReceipt(withTrueProb(0.54, "MONEYLINE"))).toBe(0.54);
+  });
+
+  it("returns null (commits 'none') when no estimate exists — never fabricates", () => {
+    expect(modelProbForReceipt({ pickType: "SPREAD", factorBreakdown: null })).toBeNull();
+    expect(modelProbForReceipt({ pickType: "SPREAD", factorBreakdown: undefined })).toBeNull();
+    expect(modelProbForReceipt({})).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(null))).toBeNull();
+  });
+
+  it("rejects degenerate probabilities — 0/1 is a broken estimator, not certainty", () => {
+    expect(modelProbForReceipt(withTrueProb(0))).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(1))).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(-0.2))).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(1.4))).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(Number.NaN))).toBeNull();
+    expect(modelProbForReceipt(withTrueProb(Number.POSITIVE_INFINITY))).toBeNull();
+    // The builder would throw on these anyway; refusing here keeps the receipt
+    // mintable as "none" rather than failing the whole pick.
+  });
+
+  it("a real modelProb reaches the committed payload AND the hash", () => {
+    // End-to-end: the value is not just returned, it is what the receipt freezes.
+    const r = buildPickProofReceipt(base({ modelProb: 0.6312 }), testHash);
+    expect(r.payload).toContain("modelProb=0.6312");
+    expect(r.payload).not.toContain("modelProb=none");
+    expect(verifyPickProofReceipt(r, testHash)).toBe(true);
+  });
+
+  it("legacy 'none' receipts still verify — the change is additive, not retroactive", () => {
+    // All 2,213 frozen receipts committed "none". They must keep re-deriving to
+    // their own hash, or every historical row would read as tampered.
+    const legacy = buildPickProofReceipt(base({ modelProb: null }), testHash);
+    expect(legacy.payload).toContain("modelProb=none");
+    expect(verifyPickProofReceipt(legacy, testHash)).toBe(true);
+    // And the two must NOT collide: a real value changes the committed leaf.
+    const real = buildPickProofReceipt(base({ modelProb: 0.6312 }), testHash);
+    expect(real.contentHash).not.toBe(legacy.contentHash);
+  });
+
+  it("a tampered modelProb is caught by the hash", () => {
+    const r = buildPickProofReceipt(base({ modelProb: 0.6312 }), testHash);
+    const tampered = { ...r, fields: { ...r.fields, modelProb: 0.99 } };
+    expect(verifyPickProofReceipt(tampered, testHash)).toBe(false);
+  });
+
+  it("the builder still rejects an out-of-range modelProb", () => {
+    expect(() => buildPickProofReceipt(base({ modelProb: 1.5 }), testHash)).toThrow();
+    expect(() => buildPickProofReceipt(base({ modelProb: Number.NaN }), testHash)).toThrow();
+  });
+
+  it("omitting featureHash leaves the payload unchanged, and null commits none", () => {
+    const before = buildPickProofReceipt(base(), testHash);
+    expect(before.payload).not.toContain("featureHash");
+    const none = buildPickProofReceipt(base({ featureHash: null }), testHash);
+    expect(none.payload).toContain("featureHash=none");
+    expect(none.contentHash).not.toBe(before.contentHash);
+    expect(verifyPickProofReceipt(none, testHash)).toBe(true);
+    expect(verifyPickProofReceipt(before, testHash)).toBe(true);
+  });
+
+  it("commits a sha256 feature hash and refuses anything else", () => {
+    const sha = "ab".repeat(32);
+    const r = buildPickProofReceipt(base({ featureHash: sha }), testHash);
+    expect(r.payload).toContain(`featureHash=${sha}`);
+    expect(() => buildPickProofReceipt(base({ featureHash: "not-a-hash" }), testHash)).toThrow();
+    const tampered = { ...r, fields: { ...r.fields, featureHash: "cd".repeat(32) } };
+    expect(verifyPickProofReceipt(tampered, testHash)).toBe(false);
+  });
+
+  it("does not display a feature hash unless the founder gate is open", () => {
+    const sha = "ab".repeat(32);
+    expect(featureHashForDisplay(sha, false)).toBeNull();
+    expect(featureHashForDisplay("none", true)).toBeNull();
+    expect(featureHashForDisplay(sha, true)).toBe(sha);
   });
 });

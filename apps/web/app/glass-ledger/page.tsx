@@ -57,6 +57,7 @@ import {
   type LedgerReliabilityBucket,
 } from "@/lib/ledger/ledger-view";
 import { renderableMetricOrNull, type SubstantiatedMetric } from "@/lib/ledger/display-guard";
+import { featureHashForDisplay } from "@sports/prediction-engine";
 import {
   formatClvBacking,
   formatCoverage,
@@ -478,6 +479,9 @@ export default async function LedgerPage(): Promise<JSX.Element> {
   const { seasons, calibration, significance, note } = view;
   const latestSeason = seasons[0];
   const buckets = calibration?.buckets ?? [];
+  const featureHashes = (view.preKickoffFeatureHashes ?? [])
+    .map((hash) => featureHashForDisplay(hash, true))
+    .filter((hash): hash is string => hash != null);
 
   return (
     <div className="flex min-h-screen flex-col bg-carbon text-ion">
@@ -537,6 +541,23 @@ export default async function LedgerPage(): Promise<JSX.Element> {
 
         {/* Season table — the nfelo shape (SU% / ATS vs. close / CLV), plus
             the coverage and lower-bound columns nfelo doesn't publish. */}
+        <section aria-labelledby="ledger-feature-hash-heading" className="mt-10">
+          <h2 id="ledger-feature-hash-heading" className="text-xl font-bold text-ion-white">
+            Pre-kickoff feature hash
+          </h2>
+          {featureHashes.length === 0 ? (
+            <p className="mt-3 text-sm text-ion-2">
+              No pre-kickoff feature hash is sealed yet.
+            </p>
+          ) : (
+            <ul className="mt-3 space-y-1 font-mono text-xs text-ion-1">
+              {featureHashes.map((hash) => (
+                <li key={hash}>{hash}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+
         <section aria-labelledby="ledger-seasons-heading" className="mt-10">
           <h2 id="ledger-seasons-heading" className="text-xl font-bold text-ion-white">
             By season

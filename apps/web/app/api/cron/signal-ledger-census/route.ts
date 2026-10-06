@@ -5,8 +5,10 @@
  * created and `composeLedger` had no production reader; the populator
  * (V3-350), the census (V3-351) and the grouped tuner (V3-352) were reachable
  * only from tests. This job is the reader: it loads the four populated entity
- * tables, measures the anchor per signal key, and reports what the ledger
- * could hold today.
+ * tables, measures the anchor per signal key, reports what the ledger could
+ * hold today — and runs the SHADOW compose (`composeLedgerShadow`), the first
+ * production execution of the composer. Shadow means shadow: the composed
+ * scores are computed and reported, never persisted, never promoted.
  *
  * LAWS OBSERVED:
  * - CRON_SECRET bearer auth only (`bearer_only`; this route is read-only but
@@ -34,6 +36,8 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
 import { loadSignalLedger, type LedgerLoadReport } from "@/lib/ops/signal-ledger-loader";
+import { composeLedgerShadow } from "@/lib/ops/signal-ledger-shadow";
+import { readStoredSignals } from "@/lib/ops/signal-ledger-store";
 import { captureError } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +65,38 @@ export async function GET(req: Request): Promise<NextResponse> {
 
   const { census, candidates, rowsRead, anchors } = report;
 
+  // SHADOW COMPOSE (Tier 1 #1 of the wiring backlog): run the loaded candidates
+  // through the production composer. Read-only — the numbers below are computed,
+  // never persisted, and never touch the published pick score. One clock read
+  // per run, injected for determinism (see signal-ledger-shadow.ts).
+  const nowIso = new Date().toISOString();
+  const shadow = composeLedgerShadow(candidates, nowIso);
+  const SHADOW_TOP_N = 250;
+
+  // SHADOW STORED (Tier 1 #2 of the wiring backlog): the same composer, run
+  // against the PERSISTED ledger (`signals`, filled hourly by the write cron)
+  // instead of a fresh projection of the entity tables. Same math, different
+  // fuel: a divergence between the two series is a finding (stale writes,
+  // dropped keys, a write cron that stopped). Still fully read-only — the
+  // select above is the only touch, and nothing is promoted or published.
+  const stored = await readStoredSignals(db);
+  const shadowStored = composeLedgerShadow(stored.candidates, nowIso);
+
+  const shapeShadow = (s: typeof shadow) => ({
+    now: s.now,
+    halfLifeDays: s.halfLifeDays,
+    summary: s.summary,
+    // Top-N by |score| for response size; summary carries the totals.
+    topEntities: s.entities.slice(0, SHADOW_TOP_N).map((e) => ({
+      entityType: e.entityType,
+      entityId: e.entityId,
+      score: e.score,
+      topSignals: e.topSignals,
+      candidateCount: e.candidateCount,
+    })),
+    topTruncated: s.entities.length > SHADOW_TOP_N,
+  });
+
   // What the ledger could hold TODAY, stated as a count rather than a claim.
   const measuredKeys = Object.keys(anchors).filter((k) => k !== "injury.availability");
 
@@ -83,9 +119,21 @@ export async function GET(req: Request): Promise<NextResponse> {
       })),
       skipped: census.skipped,
       censusText: report.censusText,
+      shadow: shapeShadow(shadow),
+      // The persisted ledger, composed with the identical math. `storedRows`
+      // and `storedDropped` expose the ledger's own health: rows the write
+      // cron persisted, and rows the reader refused to compose.
+      shadowStored: {
+        ...shapeShadow(shadowStored),
+        storedRows: stored.rowsRead,
+        storedDropped: stored.rowsDropped,
+      },
     },
     note:
-      "READ-ONLY census. Nothing was written to `signals` or any other table. " +
+      "READ-ONLY census + SHADOW compose. Nothing was written to `signals` or any other table. " +
+      "`shadow` composes a fresh projection of the entity tables; `shadowStored` composes the " +
+      "persisted `signals` rows with the identical math. Shadow scores are computed, never persisted, " +
+      "and never touch the published pick score. " +
       "A key listed as insufficient-rows has a measured row count below the floor, NOT a missing producer. " +
       "Sample a candidate with: /api/ops/signal-ledger-census.",
   });

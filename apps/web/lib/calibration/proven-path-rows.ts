@@ -12,6 +12,7 @@
  */
 
 import { isThreeWayMoneylineSport } from "@sports/prediction-engine";
+import { trueProbIsBackfill } from "@sports/types";
 import type { ProvenPathPickRow } from "@/lib/calibration/proven-path-engine";
 
 /**
@@ -101,6 +102,8 @@ export type FactorBreakdownLike = {
     readonly priced?: boolean | null;
     readonly marketFairProb?: number | null;
     readonly decision?: string | null;
+    readonly trueProbBasis?: string | null;
+    readonly rationale?: string | null;
   } | null;
 };
 
@@ -129,16 +132,19 @@ export function extractProvenPathProbs(fb: FactorBreakdownLike | null | undefine
       ? fb.rankingSource
       : null;
 
-  // Raw independent trueProb (preferred for independent_trueProb bake-off kind).
-  let pIndependent: number | null = finiteUnit(fb?.independentEdge?.trueProb ?? null);
+  // A post-settlement rewrite is not a training label. The book fair below
+  // stays. rankingP and fairProbability are not a side door: once the row was
+  // rewritten, its independent number is the backfill.
+  const backfill = trueProbIsBackfill(fb?.independentEdge);
+  let pIndependent: number | null = backfill
+    ? null
+    : finiteUnit(fb?.independentEdge?.trueProb ?? null);
 
-  // Only pure independent rankingP when source is independent_trueProb
-  // (not blend — that already mixed confidence).
-  if (pIndependent == null && rankingSource === "independent_trueProb") {
+  if (!backfill && pIndependent == null && rankingSource === "independent_trueProb") {
     pIndependent = finiteUnit(fb?.rankingP ?? null);
   }
-  // priced fairProbability when independents drove ranking (pure path)
   if (
+    !backfill &&
     pIndependent == null &&
     fb?.independentEdge?.priced === true &&
     rankingSource === "independent_trueProb"

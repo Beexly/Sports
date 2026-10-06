@@ -232,8 +232,14 @@ export {
   isPlausibleEntryOdds,
   ENTRY_ODDS_MIN_ABS,
   MARKET_FAIR_METHOD_TAG,
+  modelProbForReceipt,
+  featureHashForDisplay,
 } from "./pick-proof-receipt.js";
-export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
+export type {
+  PickProofInput,
+  PickProofReceipt,
+  ReceiptModelProbSource,
+} from "./pick-proof-receipt.js";
 // Slate commitment (commit-reveal) ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pre-register the whole population; kills cherry-picking.
 export {
   buildSlateCommitment,
@@ -1038,13 +1044,17 @@ export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 export {
   buildCandidate,
   categoryPrior,
+  composeByEntity,
   normalizeReading,
+  resolveWeight,
   CATEGORY_PRIORS,
 } from "./signal-ledger-populator.js";
 export type {
   LedgerCandidate,
   CandidateSourceRow,
   EntityType,
+  WeightSource,
+  ResolvedWeight,
 } from "./signal-ledger-populator.js";
 export {
   projectPlayerGameStats,
@@ -1056,6 +1066,7 @@ export {
 } from "./signal-ledger-sources.js";
 export type {
   AnchorTable,
+  MeasuredWeightTable,
   SignalAnchor,
   PlayerGameStatRow,
   SnapCountRow,
@@ -1064,6 +1075,28 @@ export type {
 } from "./signal-ledger-sources.js";
 export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
 export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
+
+// The CALL SITE for `tuneSignalWeights` above. Until this module existed the
+// tuner had zero non-test callers, so every signal reaching the composer carried
+// the flat CATEGORY_PRIORS weight (HEALTH 1.0, PRODUCTION 1.0) — a uniform 1
+// asserted across ten keys whose raw readings span 103x in standard deviation.
+// This module calls the tuner and pays the evidence floor in DISTINCT FIXTURES,
+// because #924's row-counted floor was measured to be inflated by fixture
+// triplication (see tune-signal-weights-grouped.ts).
+export {
+  measureSignalWeights,
+  measuredWeightFor,
+  formatWeightReport,
+  MIN_FIXTURES,
+} from "./tune-signal-weights-table.js";
+export type {
+  FixtureKeyOutcome,
+  MeasuredKeyWeight,
+  MeasuredVerdict,
+  ReadingShape,
+  SignalWeightTable,
+  MeasureSignalWeightsOptions,
+} from "./tune-signal-weights-table.js";
 
 // The FAMILY-weight evidence census. Every signal in the registry carries a
 // hand-assigned `trustWeight`, and the hierarchical pool carries
@@ -1111,6 +1144,34 @@ export type {
   CensusReport,
   CensusObservation,
 } from "./signal-anchor-census.js";
+
+// Per-key SCALE + WEIGHT fit, and the committed table of the numbers it
+// produced on prod. This is what replaces the uniform `weight = 1` that shipped
+// on all 118,462 persisted rows: the raw values span a 103x range of standard
+// deviations, so a uniform weight over them was an arithmetic average of ten
+// different units. The fit is within-player (fixed effect removed) against a
+// settled outcome, because the between-player number is mostly player identity.
+export {
+  fitSignalScales,
+  formatScaleReport,
+  normalizeWithScale,
+  MIN_SCALE_FIXTURES,
+} from "./signal-scale-fit.js";
+export type {
+  SignalScale,
+  SignalScaleTable,
+  ScaleVerdict,
+  SignalScaleObservation,
+  SignalOutcomeObservation,
+  FitSignalScalesOptions,
+} from "./signal-scale-fit.js";
+export {
+  SIGNAL_SCALES,
+  SIGNAL_SCALE_KEYS,
+  signalScaleFor,
+  SIGNAL_SCALE_TABLE_VERSION,
+  SIGNAL_SCALE_TABLE_SOURCE,
+} from "./signal-scale-table.js";
 
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
@@ -2448,6 +2509,26 @@ export type {
   OosSegment,
   SegmentedOosSplit,
 } from "./oos-split.js";
+
+export {
+  getMlbIndependentModelProb,
+  MLB_INDEPENDENT_MODEL_ENABLED,
+  MLB_INDEPENDENT_MODEL_MODE,
+  MLB_INDEPENDENT_MODEL_VERSION,
+} from "./mlb-independent-model.js";
+export type {
+  MlbIndependentModelInput,
+  MlbIndependentModelResult,
+  MlbLineupInput,
+  MlbLineupStatus,
+  MlbModelTarget,
+  MlbParkInput,
+  MlbPitcherInput,
+  MlbPrecipitationType,
+  MlbRoofStatus,
+  MlbTeamRatingInput,
+  MlbWeatherInput,
+} from "./mlb-independent-model.js";
 
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";
@@ -4083,3 +4164,19 @@ export {
   type BridgePrediction,
   type BridgeFeature,
 } from "./bridge/bridge-model.js";
+
+// CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01).
+export {
+  ARM_LEAD_MS,
+  STAND_DOWN_MS,
+  FALLBACK_WINDOW_MS,
+  windowStartFor,
+  windowEndFor,
+  eventToWindow,
+  fetchWindowsForDate,
+  chicagoYmd,
+  getActiveWindows,
+  nextWindow,
+  fetchUpcomingWindows,
+  type GameWindow,
+} from "./watch/watch-scheduler.js";

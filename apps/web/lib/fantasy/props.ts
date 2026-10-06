@@ -13,6 +13,8 @@
  * Without a quote, `edge` is 0 (unpriced) — we do not rank chalk as value.
  */
 
+import { applyToProp } from "@/lib/signals/apply";
+import type { SignalContext, SignalPos } from "@/lib/signals/spine";
 import { pricePropAgainstMarket } from "@sports/prediction-engine";
 
 export type Market = "Pass Yds" | "Rush Yds" | "Rec Yds" | "Receptions" | "Pass TD" | "Rush+Rec";
@@ -72,6 +74,13 @@ export function probOver(line: number, mean: number, sigma: number): number {
 
 export type Side = "over" | "under";
 
+/** Optional signal wiring for `readProp`. */
+export type PropReadOpts = {
+  readonly ctx?: SignalContext;
+  readonly opp?: string;
+  readonly pos?: SignalPos;
+};
+
 export type PropRead = {
   readonly prop: Prop;
   readonly pOver: number;
@@ -97,7 +106,22 @@ const pAtLine = (line: number, mean: number, sigma: number, side: Side): number 
   return side === "over" ? po : 1 - po;
 };
 
-export function readProp(prop: Prop): PropRead {
+/**
+ * Read one prop.
+ *
+ * `ctx` is the shared signal spine. A prop consumes the read as a damped MEAN
+ * SHIFT with a WIDENED sigma: a projection we have just moved is a projection we
+ * are less certain about, and narrowing the distribution here would make the
+ * engine most confident exactly when it has least right to be.
+ */
+export function readProp(prop0: Prop, opts?: PropReadOpts): PropRead {
+  // Options object, not positional args, and deliberately so. `PROPS.map(readProp)`
+  // is a natural thing to write, and with positional parameters the array INDEX
+  // lands in the second slot — the same arg-slot class that put /fantasy/dfs into
+  // a production 500. Property access on a number yields undefined, so under an
+  // options object that call is merely neutral instead of wrong.
+  const ctx = opts?.ctx;
+  const prop = ctx ? applyToProp(prop0, ctx, opts?.opp, opts?.pos ?? "WR") : prop0;
   const pOver = probOver(prop.line, prop.mean, prop.sigma);
   const side: Side = pOver >= 0.5 ? "over" : "under";
   const pSide = side === "over" ? pOver : 1 - pOver;

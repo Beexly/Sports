@@ -23,6 +23,17 @@ export {
   type IntelligenceReasoning,
 } from "./reasoning";
 
+// -- Shadow-only: count & report a family without letting it move the spine ---
+export {
+  shadowOnly,
+  assertValidShadowPolicy,
+  situationScalarFor,
+  shadowedFamilyTest,
+  InvalidShadowPolicyError,
+  SIGNAL_FAMILIES,
+  type SignalShadowPolicy,
+} from "./shadow";
+
 export {
   injuryObservations,
   ngsObservations,
@@ -52,6 +63,30 @@ export {
   type GameBundle,
   type IntelligenceResult,
 } from "./engine";
+
+// -- Situation: the scheduling/availability context the spine reads -----------
+export {
+  deriveSituation,
+  injuryImpactFromRows,
+  type GameScheduleContext,
+  type SituationInput,
+} from "./situation";
+
+// -- DB loaders: the real rows behind those surfaces ------------------------
+export {
+  loadBundleSurfaces,
+  loadInjuries,
+  loadRatings,
+  loadSnaps,
+  loadNgs,
+  loadPlayerStats,
+  loadGameSignals,
+  nflSeasonForDate,
+  nflSeasonWeekForDate,
+  type BundleLoaderInput,
+  type LoadedBundleSurfaces,
+  type BundleResolution,
+} from "./db-loaders";
 
 // -- Universal wiring: EVERY module ? all-knowing engine ----------------------
 export {

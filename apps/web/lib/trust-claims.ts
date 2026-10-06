@@ -571,8 +571,21 @@ function slugForPositioningPhrase(phrase: string): string {
 // Mirror scripts/guardrails/trust-gate.mjs LOCK_PROPER_NOUN_SAFE_CONTEXT:
 // Drew Lock / D.Lock are an NFL QB surname; "server-side lock" is mutex prose.
 // Blank-then-recheck so residual standalone "lock" slang still hits.
+//
+// BARE SURNAME, added 2026-10-01, kept in lock-step with trust-gate.mjs. The
+// Route-IQ digest in AGENTS.md is headed by a dated `@handle` line, but the
+// roster clause sits on a CONTINUATION line that carries the date and no
+// handle, so `isVerbatimSocialDigestLine` (which needs BOTH @handle and date on
+// the SAME line) does not exempt it. That is what turned `docs-public-copy-scan`
+// red on `af23ffc76` — "JSN — split spans two QBs (Lock started W2," — where
+// "Lock" is Drew Lock by surname. Fixed in the shared scanner rather than by
+// loosening the digest test, which would widen an exemption across every root
+// memory doc. The added patterns are anchored to SPORTS prose — `Lock` only
+// inside a "QB"/"QBs(" roster parenthetical or before a season-week verb — so
+// verified slang ("my LOCK of the day", "guaranteed profit", "beat the book", a
+// standalone "I picked that lock") still hits.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
-  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b/gi;
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
 
 /** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
 export function isVerbatimSocialDigestLine(line: string): boolean {

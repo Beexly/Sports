@@ -1,0 +1,32 @@
+# DST Lane — Phase 3 (Adversarial), fresh sweep 2026-09-19
+
+Every major Phase 1/2 read re-attacked with fresh 9/18-9/19 final-report searches. X-side scan via browser.search returned no fresh posts from the listed handles in the last 48h (stale 2019-2022 articles only); this subagent cannot reach X directly — parent should run the live X pass for @SumerSports (PRWR), @samhoppen (EPA splits), @benbbaldwin (ratings), @cmain7 (win probs).
+
+## Overturns and corrections
+
+1. **CAR DST: fantasyalarm's "fade" is STALE — flip to value target.** Fantasy Alarm (9/18, likely written Friday morning) faded CAR $2,700 assuming Michael Penix might start. Friday afternoon: Penix RULED OUT, Tua doubtful, **Cooper Rush named the starter** (Falcons Wire / NBC Sports 9/18). Rush's Wk1: 2.6 ESPN QBR (worst among all starters), 12-22/143/1/2. CAR generates 44.7% pressure (#3 in NFL) and faces the 29th-ranked offense (PFN 65.3). The counter — CAR gave up 59 points to CHI in Wk1 — is real, but at $2,700 vs a 2.6-QBR QB in a dome, the process now favors CAR. This is the biggest Phase 3 flip in the lane.
+2. **IND@KC is almost certainly NOT on the DK Classic main slate.** fantasyalarm (9/18): "deeper 13-game slate... eight-game early window and then five in the afternoon" (8+5=13, SNF excluded). The Huddle (9/19): "main slates exclude Sunday night." The Huddle's 31-player TE salary table contains NO Kelce and NO Colts TE — consistent with a 13-game DK player pool. **Consequence**: KC DST and IND DST should be treated as OFF-SLATE until the parent resolves the conflict with the 14-game briefing. All KC-DST pressure angles (56.3% generated) are moot for DK Classic.
+3. **LAC DST downgraded**: Molden OUT + Leonard questionable (secondary), LV allows the least pressure in the NFL (6.5% — Cousins gets it out), and LV generates 40.5% (#5) with Crosby at 26.7% PRWR vs a LAC line missing run support. The 18.5 implied total keeps LAC viable, but the sack ceiling is capped and the secondary is compromised. LAC is the most fragile of the "consensus" tier.
+4. **GB DST downgraded**: Brinson OUT + Hargrave DOUBTFUL (concussion) + Van Ness QUESTIONABLE (concussion) guts the interior rush; GB's own OL is also banged up (Bako-Bewele and Banks questionable), which matters less for DST. NYJ allows only 11.5% pressure (2nd-best) and Glenn confirmed McDonald plays. GB at an unverified salary is not the discount the 65.4% win prob implies.
+5. **DEN DST downgraded**: short rest (lost to KC on MNF 9/14), faces Trevor Lawrence who LED Wk1 in EPA/play (+0.79), and JAX's offense is rated 54.9 (mid-pack, not bad). DEN's 60.5 objective rating is the best on paper but the spot is the worst of the top-rated units.
+6. **Porter Jr. OUT confirmed by official Steelers final report** (steelerswire 9/18) — the briefing's baseline claim is now double-sourced. PIT DST's secondary is weakened; NE DST's outlook improves marginally (Pittman also a longshot).
+7. **MIN $2,600 — bull and bear**: Bull: ~80% blitz rate, ~50% pressure, 23 pressures/15 QB hits in Wk1 (fantasyalarm). Bear: road underdog, 48.5 total (highest non-WAS@DAL), +0.60 motion-def EPA (2nd-worst — and CHI runs an offensive scheme that attacks exactly that), and now Wentz (not a rookie) starts for MIN's offense, keeping CHI's offense on schedule. Tournament-only.
+
+## What could be wrong with the Phase 1/2 conclusions
+
+- **SF $3,800 as DST1**: most expensive DST on the slate; the thesis requires a blowout (89.3% win prob) but blowouts pull starters — SF's sack production could stall in the 2nd half vs a Willis-led offense that bleeds clock when trailing (MIA wants to run: Hafley "we have to run the football"). The 49ers also just flew back from Australia (NY Post 9/18 notes jet-lag as the one caveat, though the team claims to be over it).
+- **PHI DST**: only 1 sack vs WAS in Wk1 ("obviously wasn't the case" — fantasyalarm) despite the dream spot; TEN allows just 25.6% pressure (bottom-10). The TEN offense is bad (26.0 rating, Ward 24th EPA/play, 5.9 aDOT) but doesn't give up sacks — PHI's ceiling is points-allowed + turnovers, and Ward is INT-averse (low aDOT).
+- **TB DST**: TB's own objective rating is 41.9 (below average) and motion-def EPA is +0.03 (mediocre). The entire thesis is "CLE is the worst offense (20.1) and Watson took 5 sacks." If Watson's 16/22-205-1-1 line was rust, not terminal decline, TB is just a mediocre defense at $3,600.
+- **BAL DST**: NO got "off to an awfully slow start" then adjusted in the 2nd half vs DET (fantasyalarm) — Minter's 2nd-half adjustments are the thesis, but Shough at home in a dome is not Willis/Rush/Ward tier. NO's implied 19.0 is the highest among the "elite spot" group.
+- **JAX $2,400**: the pressure mismatch (50.0 vs 56.3) is the best on the slate, but DEN is favored (-2.5/-3) at home at elevation, and Lawrence is the hottest QB in football (+0.79 EPA/play). If JAX's offense keeps it close, DEN's dropbacks stay balanced and the sack ceiling drops. This is a ceiling play for tournaments, not a floor play.
+- **CIN DST**: road underdog (45.0% win prob), HOU is favored and at home in a dome. The -1.49 blitz EPA and 44.4% pressure are elite process, but game script can strand them (Stroud dinking-and-dunking with a lead). Also note CIN allows 32.4% pressure themselves — irrelevant to DST except via game script.
+- **Weather games**: wind/rain helps the DSTs (CHI, NE, NYJ) only if it creates turnovers; Wentz (100th career start) and Rodgers are veterans who have played in worse. Don't over-weight.
+
+## Fresh-news items that did NOT change DST reads
+- Zay Flowers DNP (hamstring) — affects BAL's offense, not DST; NO's implied total unchanged.
+- Kenneth Walker III to KC — KC off-slate; ignore for DK Classic.
+- Cam Jordan's season debut (NO) — marginal pass-rush boost vs BAL's elite offense; not enough to move NO DST off the bottom tier.
+- Jets backups (Cisco/Moore at safety for Fitzpatrick) — already priced into NYJ DST's low expectations.
+
+## Bottom line after adversarial review
+The SF/PHI/TB/BAL core survives but each has a real crack (price, sacks, own-team quality, matchup difficulty respectively). The two best Phase 3 additions: **CAR $2,700 flipped from fade to value** (Rush starting) and **CIN DST as the hidden process play** (44.4% pressure, -1.49 blitz EPA, Stroud 21% aggressive, HOU missing its RG). **JAX $2,400** is the best salary-adjusted ceiling. LAC/GB/DEN are the downgrades. KC/IND DST are off-slate pending parent resolution.

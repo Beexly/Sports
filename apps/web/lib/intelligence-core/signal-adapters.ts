@@ -198,8 +198,17 @@ export function ngsObservations(
       notes.push(`RYOE/att ${r.rushYardsOverExpectedPerAtt > 0 ? "+" : ""}${r.rushYardsOverExpectedPerAtt.toFixed(2)}`);
     }
     if (r.pctShareIntendedAirYards != null) {
-      lean += clamp01(r.pctShareIntendedAirYards) * 0.3;
-      notes.push(`aDOT share ${(r.pctShareIntendedAirYards * 100).toFixed(0)}%`);
+      // UNITS: this column is stored in PERCENTAGE POINTS, not a 0-1 fraction.
+      // Measured on prod (next_gen_stats, 2,856 rows): min -3.95, max 94.47,
+      // mean 29.02, with 1,493 rows above 1.0 — a percentage distribution.
+      // Passing the raw value to clamp01() saturated 99% of rows to 1.0, turning
+      // this term into a near-constant +0.298 lean on every NGS row, and the
+      // prose below rendered "aDOT share 9447%".
+      // NB: `targetShare` on the player-stat surface is a DIFFERENT field that
+      // IS a true 0-1 fraction (prod max 0.667) — do not generalize from the name.
+      const adotPct = r.pctShareIntendedAirYards;
+      lean += clamp01(adotPct / 100) * 0.3;
+      notes.push(`aDOT share ${adotPct.toFixed(1)}%`);
     }
     return {
       family: "PLAY_CHARTING" as SignalFamily,

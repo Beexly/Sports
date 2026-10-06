@@ -114,11 +114,15 @@ export {
   loadSportResultGamesForElo,
   sportKeyToKalshiLeague,
   guessKalshiTeamAbbr,
+  tryKalshiFairValue,
+  tryPolymarketIndependentFairValue,
 } from "./build-independent-fair-values.js";
 export type {
   IndependentFairValueBuildInput,
   EloRatingsCache,
 } from "./build-independent-fair-values.js";
+export { mintAfterMind } from "./mint-gate.js";
+export type { MindVerdict, MintAfterMind } from "./mint-gate.js";
 export {
   ESPN_POWERINDEX_LICENSE_ENV,
   isEspnPowerIndexCleared,
@@ -127,6 +131,11 @@ export {
   resolveKalshiTeamAbbr,
   normalizeTeamKey,
 } from "./kalshi-team-abbr.js";
+export {
+  NFL_NAME_TO_ABBR,
+  nflTeamAbbr,
+  isPlaceholderTeamName,
+} from "./nfl-team-abbr.js";
 
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
 export { slateAssociationTrace } from "./slate-association.js";
@@ -215,7 +224,17 @@ export {
   propMonteCarlo,
   type PropsSlateResult,
   type PropsSlateInput,
+  type PlayerProp,
 } from "./props-slate.js";
+export {
+  runPropsSlateShadow,
+  propsSlateShadowEnabled,
+  PROPS_SLATE_SHADOW_ENABLED_ENV,
+  type PropsSlateShadowSource,
+  type PropsSlateShadowResult,
+  type PropsSlateShadowOptions,
+  type ShadowPropLine,
+} from "./props-slate-shadow.js";
 export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
 
 // Prereg leakage gate (V1 probes live call site)

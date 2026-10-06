@@ -57,20 +57,6 @@ const MORE_ENGINES: readonly MoreEngine[] = [
     apiLabel: "Pro feed",
   },
   {
-    name: "QB Consensus",
-    summary: "Two public QB ratings side by side. When they disagree, we show it instead of averaging it away.",
-    api: "/api/intelligence/qb-consensus",
-    apiLabel: "Live feed",
-    board: "/players/qbr",
-  },
-  {
-    name: "Rushing Efficiency",
-    summary: "Yards over expected per carry, next to volume and stacked-box context: bell-cow, buy-low, or volume-dependent.",
-    api: "/api/intelligence/rushing-efficiency",
-    apiLabel: "Live feed",
-    board: "/players/opportunity",
-  },
-  {
     name: "Receiving Opportunity",
     summary: "Air yards and target share combined into one opportunity score, with a clear buy / sell read.",
     api: "/api/intelligence/receiving-opportunity",

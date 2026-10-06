@@ -55,6 +55,7 @@ import {
   buildPickProofReceipt,
   MARKET_FAIR_METHOD_TAG,
   isPlausibleEntryOdds,
+  modelProbForReceipt,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
 import {
@@ -1537,8 +1538,9 @@ export async function processSport(
       // Freeze a tamper-evident proof receipt — the pre-result, pre-kickoff commitment
       // to exactly what we claimed. Created ONCE (update:{}), never overwritten. Mints
       // only with HONEST inputs: a real devigged market fair prob + the labeled
-      // confidence heuristic; modelProb stays null until a calibrated one exists (never
-      // confidence/100). Non-fatal — a receipt failure must never block a pick.
+      // confidence heuristic, plus the independent model probability when one exists
+      // (never confidence/100 — see modelProbForReceipt). Non-fatal — a receipt failure
+      // must never block a pick.
       //
       // P0-2 write-guard (launch audit 2026-09-08): entryOdds must be a plausible
       // American price (|odds| >= 100). The old `entryOdds !== 0` check let a
@@ -1570,9 +1572,21 @@ export async function processSport(
               marketFairMethodTag: MARKET_FAIR_METHOD_TAG,
               confidence: pick.confidence,
               edgeScore: pick.edgeScore,
-              modelProb: null,
+              // The REAL model probability — the independent blend from estimators
+              // that never saw the book (Skellam cover for SPREAD, Poisson/Elo/
+              // Dixon-Coles/Kalshi for MONEYLINE). This was hardcoded `null`, so all
+              // 2,213 frozen receipts committed "none" and Brier/ECE could never be
+              // computed: the consumers (clv-report.mjs, db-calibration-pull.cjs)
+              // were already built and starved. Never confidence/100 — modelProbForReceipt
+              // returns null (-> commits "none") whenever no honest estimate exists.
+              modelProb: modelProbForReceipt(pick),
               modelVersion: pick.modelVersion,
               asOf: pick.dataFreshnessAt.toISOString(),
+              // Explicit null commits featureHash=none. Omitting the key would
+              // leave new receipts indistinguishable from pre-field receipts.
+              // There is no feature vector on this mint yet, so none is the
+              // honest seal. A later vector must be a sha256, not a label.
+              featureHash: null,
             },
             sha256Hex,
           );

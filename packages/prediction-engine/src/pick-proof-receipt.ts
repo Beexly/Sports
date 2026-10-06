@@ -59,6 +59,12 @@ export interface PickProofInput {
   readonly marketFairMethodTag?: string | null;
   /** ISO timestamp the pick + odds snapshot were frozen at (must be before kickoff). */
   readonly asOf: string;
+  /**
+   * SHA-256 of the mint-time feature vector. Omitted on receipts minted before
+   * the field existed, so those payloads re-derive unchanged. Passed as null
+   * when the mint has no feature vector: the receipt commits "none".
+   */
+  readonly featureHash?: string | null;
 }
 
 /**
@@ -132,7 +138,35 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
         ? "none"
         : String(i.marketFairMethodTag).trim(),
     asOf: i.asOf,
+    ...("featureHash" in i
+      ? { featureHash: featureHashCommitment(i.featureHash) }
+      : {}),
   };
+}
+
+function featureHashCommitment(value: string | null | undefined): string {
+  if (value == null || value.trim() === "" || value.trim() === "none") return "none";
+  const hash = value.trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(hash)) {
+    throw new Error("pick-proof-receipt: featureHash must be a sha256 hex digest or none");
+  }
+  return hash;
+}
+
+/**
+ * The only way a feature hash reaches a public surface. The founder gate is
+ * the Glass Ledger flag, passed in by the caller. A missing hash, the
+ * committed word "none", and a shut gate all render nothing.
+ */
+export function featureHashForDisplay(
+  committed: string | null | undefined,
+  founderGateOpen: boolean,
+): string | null {
+  if (!founderGateOpen) return null;
+  if (typeof committed !== "string") return null;
+  const hash = committed.trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(hash)) return null;
+  return hash;
 }
 
 /**
@@ -177,6 +211,67 @@ export function isPlausibleEntryOdds(entryOdds: unknown): entryOdds is number {
     Math.abs(entryOdds) >= ENTRY_ODDS_MIN_ABS &&
     Math.abs(entryOdds) <= ENTRY_ODDS_MAX_ABS
   );
+}
+
+/**
+ * The pick slice `modelProbForReceipt` reads. Structural rather than the
+ * @sports/types alias so this module stays pure and dependency-free.
+ */
+export type ReceiptModelProbSource = {
+  readonly pickType?: string | null;
+  readonly factorBreakdown?: {
+    readonly rankingP?: number | null;
+    readonly rankingSource?: string | null;
+    readonly independentEdge?: { readonly trueProb?: number | null } | null;
+  } | null;
+};
+
+/**
+ * The model probability a receipt may honestly commit — `independentEdge.trueProb`.
+ *
+ * Until this existed the mint wrote `modelProb: null`, so every one of the 2,213
+ * frozen receipts committed "none" and Brier/ECE were uncomputable forever: the
+ * consumers were already built and waiting (eval/edge-lab/clv-report.mjs,
+ * scripts/db-calibration-pull.cjs) with nothing to consume. This is the single
+ * value that closes it.
+ *
+ * WHY trueProb AND NOT rankingP (the trap this function exists to prevent):
+ * `rankingP` is confidence/100 whenever independents are absent, and a
+ * confidence-sourced blend otherwise. Committing either would be committing the
+ * confidence heuristic dressed as a probability — the one thing this column has
+ * never been allowed to hold ("Never pass confidence/100"). The independent
+ * blend is the only number here that never looked at the book, so it is the only
+ * one whose Brier says anything about OUR skill rather than echoing the market.
+ * This mirrors the ranking load law in apps/web/lib/calibration/proven-path-rows.ts.
+ *
+ * EVENT MATCHING — a probability is only meaningful against the outcome it
+ * actually predicts, and the scorer already segregates estimators by event:
+ *   - SPREAD: scoring.ts prices ONLY `skellam_cover`, a P(cover-the-spread) with
+ *     push mass removed. settlement.ts grades SPREAD on cover. They match.
+ *   - MONEYLINE: scoring.ts prices every NON-skellam source (poisson,
+ *     dixon_coles, elo, fpi, clubelo, kalshi) — P(win). settlement.ts grades
+ *     MONEYLINE on the game. They match.
+ *   - TOTAL: settlement grades OVER/UNDER. No total estimator exists, so
+ *     scoreTotalPick sets no independentEdge and trueProb is null.
+ * Writing a P(win) into a TOTAL receipt would not merely be a weak number, it
+ * would be a number graded against an event it never predicted — Brier would
+ * report confidently-wrong calibration and the engine would "learn" from noise.
+ * The TOTAL guard below makes that structurally impossible rather than incidental,
+ * so a future total estimator must be wired deliberately, not by accident.
+ *
+ * Absent or unusable estimate => null, which commits "none": the honest,
+ * hashable statement that we claimed no model probability. Never fabricated.
+ */
+export function modelProbForReceipt(pick: ReceiptModelProbSource): number | null {
+  // No total model exists; grading one against over/under would be a
+  // false-precision trap, so refuse by construction (see EVENT MATCHING).
+  if ((pick.pickType ?? "").toUpperCase() === "TOTAL") return null;
+
+  const trueProb = pick.factorBreakdown?.independentEdge?.trueProb;
+  if (typeof trueProb !== "number" || !Number.isFinite(trueProb)) return null;
+  // A probability of exactly 0 or 1 is a broken estimator, not certainty.
+  if (trueProb <= 0 || trueProb >= 1) return null;
+  return trueProb;
 }
 
 /**

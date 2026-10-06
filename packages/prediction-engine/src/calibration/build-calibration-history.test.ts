@@ -77,6 +77,20 @@ describe("buildCalibrationHistory", () => {
     expect(rows[0]!.p).toBeCloseTo(0.47, 10);
   });
 
+  it("does not train the withhold screen on a backfill trueProb", () => {
+    const rows = buildCalibrationHistory([
+      pick({
+        marketFairProb: null,
+        trueProb: 0.8,
+        confidence: 62,
+        factorBreakdown: {
+          independentEdge: { trueProb: 0.8, trueProbBasis: "backfill" },
+        },
+      }),
+    ]);
+    expect(rows[0]!.p).toBeCloseTo(0.62, 10);
+  });
+
   it("reads marketFairProb and trueProb from factorBreakdown when top-level is empty", () => {
     const rows = buildCalibrationHistory([
       pick({

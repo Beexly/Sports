@@ -25,6 +25,7 @@ import type {
   IndependentMarketFairValue,
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
+import { mintAfterMind } from "./mint-gate.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
 import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
 import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
@@ -73,6 +74,12 @@ export type SignalSlateResult = {
    * reduction and someone must be able to see its size.
    */
   readonly seriesRepeatsSkipped: number;
+  /**
+   * Games the mind was asked to cover and then withheld because analyze()
+   * was INVALID or a track was DATA-GAP. Zero when the mind was not asked.
+   * Never a count of games that were published at 0.5 instead.
+   */
+  readonly mindWithheld: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -187,6 +194,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       fixtureUnconfirmed: 0,
       skippedInPlay: 0,
       seriesRepeatsSkipped: 0,
+      mindWithheld: 0,
       errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
       note: "slate refused: no association trace",
     };
@@ -393,6 +401,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
    */
   const mintedMatchups = new Set<string>();
   let seriesRepeatsSkipped = 0;
+  let mindWithheld = 0;
 
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
@@ -488,6 +497,16 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     const blend = blendIndependentHomeFair(independents);
     if (!blend) {
       picksSkipped += 1;
+      continue;
+    }
+
+    // The mind is not asked unless this game is in the map. An absent entry
+    // passes, and the fair value below is the one that was already built.
+    const mindDecision = mintAfterMind(opts.mindByGameId?.get(game.id));
+    if (mindDecision.action === "withhold") {
+      picksSkipped += 1;
+      mindWithheld += 1;
+      console.warn(`${logPrefix} withheld ${game.id}: ${mindDecision.reason}`);
       continue;
     }
 
@@ -596,6 +615,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
+      trueProbBasis: "mint",
       rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
 
@@ -890,7 +910,8 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     `${logPrefix} ${note}` +
       (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
       (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "") +
-      (seriesRepeatsSkipped > 0 ? ` seriesRepeatsSkipped=${seriesRepeatsSkipped}` : ""),
+      (seriesRepeatsSkipped > 0 ? ` seriesRepeatsSkipped=${seriesRepeatsSkipped}` : "") +
+      (mindWithheld > 0 ? ` mindWithheld=${mindWithheld}` : ""),
   );
 
   return {
@@ -902,6 +923,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     fixtureUnconfirmed,
     skippedInPlay,
     seriesRepeatsSkipped,
+    mindWithheld,
     errors,
     note,
   };
