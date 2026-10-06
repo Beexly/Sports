@@ -9156,3 +9156,258 @@ D. Turner 35.7% Week 4).
 - No X rate-limiting this pass; no CAPTCHAs; read-only throughout, no
   interactions. Browser route recovered after the 2026-10-05 AM
   infrastructure failure.
+
+## X ANALYTICS SWEEP 2026-10-06 AM
+
+Window: posts after ~9:40 PM CDT Mon 2026-10-05 through ~8:35 AM CDT Tue
+2026-10-06 (~11h, overnight). Read-only sweep as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs). Login confirmed by both tasks; no
+CAPTCHAs or login walls. Two parallel browser tasks: Task A (home feed,
+~8 in-window posts, + 11 analytics accounts); Task B (22 accounts:
+metrics 10, news 5, market 3, scheme/film 2 + special checks). X relative
+timestamps were unreliable (±1–3h), so borderline posts were individually
+verified; approximate chart reads marked ~. Nothing inventoried without
+evidence.
+
+### NEW ITEMS
+
+1. @DynatyzeFF — "DAKOTA", "YBC", "Alpha Role" (2026-10-06 7:08 AM CDT,
+   pinned thread; quote-request from @KevinMassare "Can you do one where
+   its merged?" on the companion chart). NEW METRICS with stated
+   definitions, "Through 4 weeks in the NFL":
+   - DAKOTA = "an all-in-one quarterback efficiency score that measures
+     how well a passer runs their offense compared to expectations."
+     Leaders: Brock Purdy 0.57, Drew Lock 0.52, Michael Penix Jr. 0.48,
+     Lamar Jackson 0.45, Trevor Lawrence 0.38, Dak Prescott 0.33, Caleb
+     Williams 0.28, Jared Goff 0.27, Bryce Young 0.27, Josh Allen 0.27;
+     league average 0.07 (stated).
+   - YBC = "Yards Before Contact shows the total yards before a player is
+     first touched." Leaders: James Cook 250, Jahmyr Gibbs 211, Bijan
+     Robinson 182, Jaylen Warren 146, Kenneth Walker III 142, Aaron
+     Jones 133, Kyren Williams 132, Chuba Hubbard 125, Derrick Henry 124,
+     Jonathan Taylor 124; average 81 (stated).
+   - Alpha Role (WR) = "A single number measuring how completely a wide
+     receiver dominates their offense's targets, deep routes, and
+     red-zone chances." Leaders: JSN ~42.56, Carnell Tate ~39.89,
+     DeVonta Smith ~39.80, CeeDee Lamb ~38.12, Michael Wilson ~36.47,
+     Olave ~35.75, Tee Higgins ~34.64, Parker Washington ~34.10, Garrett
+     Wilson ~33.89, Denzel Boston ~33.53; average ~27.02 (stated; values
+     ~ approximate as read).
+   - Alpha Role (TE) = same composite for tight ends. Leaders: Bowers
+     ~33.23, McBride ~29.22, Likely ~27.98, Hockenson ~25.20, Andrews
+     ~20.96, Kittle ~20.56, Fannin Jr. ~19.41, Kincaid ~18.81, LaPorta
+     ~17.98, Otton ~17.84; average ~11.40 (stated; values ~ approximate
+     as read).
+   Data source: not stated in the pinned thread (attributed fact); account
+   is @DynatyzeFF (dynatyze.com/football/tape per prior inventory).
+   Caveats: none stated. Full tables in
+   `docs/dfs/research/2026-10-06/full-tables/dynatyzeff-dakota-leaders.csv`,
+   `dynatyzeff-ybc-leaders.csv`, `dynatyzeff-alpha-role-wr.csv`,
+   `dynatyzeff-alpha-role-te.csv`.
+
+2. @DynatyzeFF — TE FPTS/target leaders (2026-10-05 11:08 PM CDT).
+   Metric: fantasy points per target. Leaders: Mike Gesicki 2.97, George
+   Kittle 2.93, Juwan Johnson 2.54, Dalton Kincaid 2.42, Jake Ferguson
+   2.42, Travis Kelce 2.39, Harold Fannin Jr. 2.19, Darren Waller 2.10,
+   Brenton Strange 2.04, Pat Freiermuth 2.03, Brock Bowers 2.01; league
+   average 1.88 (stated); T.J. Hockenson 1.83, Sadiq 1.79, Michael Mayer
+   1.79. Companion note on Fannin: "5.8 average yards of separation
+   created. #1 among all tight ends...the targets are coming and already
+   #9 in TE fantasy." Data source: Dynatyze NFL Tape (stated on image).
+   Full table in
+   `docs/dfs/research/2026-10-06/full-tables/dynatyzeff-te-fpts-per-target.csv`.
+
+3. @PattonAnalytics — "Combined Number of Turnovers and Punts" /
+   "Change of possession after not scoring (2026)" (2026-10-06 7:28 AM
+   CDT). Metric: turnovers + punts per team, all 32 NFL teams, x-axis
+   0–30, values ~10 to ~29 (approximate; individual team values not
+   legible in this sweep). Data source: StatRankings (stated on chart).
+   Context: posted as "A more holistic view" replying to @KevinMassare's
+   merge request. Range recorded in
+   `docs/dfs/research/2026-10-06/full-tables/pattonanalytics-turnovers-punts.csv`.
+
+4. @ChrisWechtFF via @jmthrivept — RYOE/Att leaderboard sighting
+   (quoted post ~12:00 AM CDT; in-window repost 8h ago). Metric: Rush
+   Yards Over Expectation per Attempt (already inventoried; this is a new
+   leaderboard): JCM "has by far the worst Rush Yards Over Expectation
+   per Att in the league right now. No other RB is close" (min 50
+   carries); Rachaad White 0.15; Kaytron Allen -0.55; Austin Ekeler 2.70
+   "in his first game back." Data source: @FantasyPtsData (stated).
+   Full rows in
+   `docs/dfs/research/2026-10-06/full-tables/wechtff-ryoe-att.csv`.
+
+5. @FantasyPtsData — Bhayshul Tuten efficiency ranks (2026-10-05
+   10:38 PM CDT). "Among all 28 RBs with 50+ touches, Bhayshul Tuten
+   ranks: 4th in Rushing Success%, 4th in YAC/Rec, 5th in Explosive
+   Play%, 5th in MTF/Att, 6th in YACO/Att, 6th in EPA/Snap." Data source:
+   Fantasy Points hand-charted data (stated). Rows in
+   `docs/dfs/research/2026-10-06/full-tables/fantasypointsdata-tuten-rb-ranks.csv`.
+
+6. @FantasyPtsData — Derek Stingley yardage regression note (2026-10-06
+   12:45 AM CDT). "Derek Stingley didn't give up >65 yards to any
+   receiver through 17 games last year. This year, he's already given
+   up: + 101 yards to CeeDee Lamb + 78 yards to Dalton Kincaid + 67
+   yards to DJ Moore + 64 yards to Tee Higgins." Image: Fantasy Points
+   hand-charted matchup-data tool table (cells too small to read;
+   attributed limitation). Data source: Fantasy Points hand-charted
+   matchup data (attributed).
+
+7. @MagicSportsGuy — 2nd-half DK scoring splits (2026-10-05 ~9:45 PM
+   CDT, borderline at window edge). "Share of DK points scored in the
+   2nd half, Week 10 2025 to now": Tyler Shough — 1H total 70.7, 2H
+   total 155.3, 11 games, 68.7% 2H share; Chris Olave — 66.6, 145.3,
+   10 games, 68.6%. Split view (1H FPPG / 2H FPPG / Games): Shough 2025
+   Wk 10–18: 8.6 / 13.0 / 8; Shough 2026: 8.1 / 17.1 / 3; Olave 2025
+   Wk 10–18: 6.6 / 13.6 / 7; Olave 2026: 6.8 / 16.7 / 3. Caption: "Both
+   sit at essentially the same number, and both are league leaders in
+   the second-half split this season. Shough 1st of 490 at 17.1, Olave
+   2nd of 490 at 16.7." Data source: StatRankings, DraftKings FP Per
+   Game (stated). Full rows in
+   `docs/dfs/research/2026-10-06/full-tables/magicsportsguy-second-half-dk-splits.csv`.
+
+8. @SumerSports — Penix time to throw (2026-10-05 ~11h ago, borderline).
+   "Falcons are running wild on outside zone and getting rid of the
+   ball quickly in the pass game up 24-7 at the half. Michael Penix
+   Jr.'s 2.24 seconds to throw is 0.48 seconds below the league
+   average." Also: "Bijan Robinson and Brian Robinson Jr. both have two
+   rushing touchdowns before the fourth quarter. It's the first time a
+   pair of RB teammates have done that since Jordan Howard and Boston
+   Scott did it for the Eagles in Week 8 of the 2021 season." Game
+   context: MNF final ATL 45 - NO 24.
+
+9. @GridironInfo_ — (a) "Week 4: When did they move the chains. Shows
+   what down each team's offensive series actually picked up their first
+   downs on" (2026-10-06 ~8:30 AM CDT, down-of-first-down league chart;
+   individual values not captured in this sweep); (b) "2026 points
+   allowed per game" leaderboard (image; values not captured); (c)
+   "Game Recap: Atlanta Falcons at New Orleans Saints Week 4. ATL 45 -
+   NO 24" (4 images).
+
+10. @cmain7 — DFS showdown lineup stat (2026-10-05 ~11:30 PM CDT).
+    Winning DraftKings showdown lineup (MNF Falcons–Saints slate) with
+    six skill players — "something that's happened about 1.2% of the
+    time": CPT Chris Olave / Bijan Robinson / Devaughn Vele / Alvin
+    Kamara / Brian Robinson / Jahan Dotson.
+
+11. @ScottBarrettDFB — RB YPC consistency (2026-10-06 ~8:26 AM CDT).
+    "It's been over a year since the last time Quinshon Judkins averaged
+    at least 4.00 YPC in a game. James Cook has done that 14 times over
+    the same span."
+
+### NEWS (injury / roster / depth chart)
+
+- @AdamSchefter (2026-10-06 8:11 AM CDT): "More about Arizona Cardinals
+  starting left tackle Paris Johnson Jr. being out for the season after
+  tearing his left biceps in a 36-24 loss to the Giants on Sunday."
+  (ESPN card.)
+- @RapSheet (2026-10-06 6:28 AM CDT) headlines: "Penix cooks — Bigsby
+  headed to IR — Lamar's status is TBD — Pat Surtain avoids major
+  injury." (4 ESPN links; item-level details not in post.)
+- @RapSheet via @DonAtkinsonNFL (original 2026-10-05 12:29 PM CDT,
+  quoted in-window): "The #Broncos received some good news on both star
+  CB Pat Surtain II and on WR Pat Bryant from their MRIs today, sources
+  say. They avoided worst-case scenario on both of their ankle injuries
+  and both absences are expected to be short-term."
+- @RapSheet (2026-10-05 ~11:00 PM CDT): "Long-time NFL pass-rusher
+  Marcus Davenport has decided to retire, per me and @MikeGarafolo."
+- @hawkblogger / @DevyEusuf (in-window): "New Seahawks RB, Robert Henry
+  Jr., was signed off the Commanders PS, per @Schultz_Report. He will
+  be added to the 53 man roster tomorrow and there will be a
+  corresponding cut."
+- @JFowlerESPN (2026-10-06 6:51 AM CDT): "'That was our brand of
+  football' -Falcons HC Kevin Stefanski, who added that good teams
+  follow up a MNF win with a win the upcoming Sunday." (video)
+- @JFowlerESPN (2026-10-05 10:38 PM CDT): "The Falcons knew they had
+  found a new gear in Green Bay last week... Forty-five points later,
+  Atlanta is rolling -- and 8-1 in its last nine primetime games."
+
+### MARKET
+
+- @JacobBarzilla via John McClain repost (home feed, ~10h ago): "Texans
+  now have the 4th best Super Bowl odds via @Kalshi" (image). Direction/
+  prior number not stated.
+- @Covers (2026-10-05 10:15 PM CDT): "WHO SHOULD BE THE FAVORITE TO WIN
+  THE NFC SOUTH? Atlanta Falcons 33%, New Orleans Saints 30%, Carolina
+  Panthers 29%. The Falcons had as low as a 5.7% chance of winning the
+  division after Week 2, via @KalshiSports." Full rows in
+  `docs/dfs/research/2026-10-06/full-tables/kalshi-nfc-south-odds.csv`.
+- @Covers (~11:40 PM CDT): Saints "only have an 11% chance of winning
+  this football game at @KalshiSports" (live MNF probability).
+- @ActionNetworkHQ: cashed best-bet recaps (Falcons +1.5, Kyle Pitts
+  over 28.5 receiving yards, White Sox/Guardians over 6.5) — results
+  posts, no forward-looking lines.
+- No Week 6 opener/current/sharp-vs-public numbers were posted by any
+  market account this window (attributed observation).
+- NOTE: the @VSiN handle is an unrelated empty account; the real
+  network is @VSiNLive (4 posts this window, all show promos).
+
+### SCHEME / FILM
+
+- @Nate_Tice (2026-10-05 10:23 PM CDT): Saints defense "ended with 19
+  missed tackles with 88 yards allowed after" (per @NextGenStats).
+- @Nate_Tice (~12:55 AM CDT): "Duo is the perfect run concept for him"
+  (reply; antecedent not captured).
+- @DevyEusuf quoting @EaglesXsandOs: "-Pass on every 1st and 10+ in a
+  game / -Use your most athletic DL/Edge/LB at RB on short-yardage
+  runs."
+- @jmthrivept: Dohnte Meyers acceleration film note (6s video; "I
+  watched this video several times trying to figure out if it was sped
+  up").
+- Home feed: @fball_insights (reposted by John McClain) "Offense and
+  Defense efficiency after MNF" (efficiency chart image; values not
+  captured); @PFN365 (reposted by John McClain) "The #Cowboys will be
+  aggressive on 4th downs..." (5:58 video).
+
+### RECORD CORRECTIONS / STANDING NOTES
+
+- @FTNData: currently PROTECTED (1,276 posts; "These posts are
+  protected. Only approved followers can see @FTNData's posts.") — flip
+  from public (7,432 posts) as recorded 2026-10-05 PM. Read-only; no
+  follow requested. Duration of protected status unknown.
+- @NFLResearcher: timeline still empty — FIFTH straight sweep. Header
+  shows "4 posts" but page renders "@NFLResearcher hasn't posted" even
+  after reload.
+- @NerdingonNFL: header now shows "1 post" (was empty last sweep), but
+  the post does not render even after reload — effectively still empty.
+- @statyxio: pinned "Ask Statyx" (Oct 3) shows no meaningful development
+  (2 replies, 8 reposts, 16 likes, ~18.7K views).
+- @TomPelissero: first load showed a ~1h-ago "The #49ers have 18 players
+  listed on their first injury report for Thursday night's game. Only
+  one — LB Tatum Bethune — didn't practice. Everything else is rest or
+  limited." post and a ~12h-ago "The final play of MNF." video, but
+  three reloads + Videos tab + X search found nothing newer than 18h
+  ago — treated as an unverified rendering artifact and EXCLUDED from
+  confirmed results.
+- Borderline-flagged posts (MagicSportsGuy ~9:45 PM, SumerSports ~11h,
+  DevyEusuf ~11h items) were included with flags; X relative timestamps
+  cannot be resolved to the minute from profile pages (attributed
+  limitation).
+
+### RE-SIGHTINGS / NO NEW POSTS IN WINDOW
+
+@RyanPaganetti (EPA battery already inventoried), @sfdata9ers
+(penalty-yards differential already inventoried), @statyxio,
+@EstablishTheRun, @32BeatWriters, @MikeGarafolo, @benbbaldwin — no new
+posts in window.
+
+### INNOVATION KERNELS (attributed notes, not build orders)
+
+- DAKOTA: all-in-one QB efficiency vs expectations — expectation-delta
+  framing for quarterback evaluation (@DynatyzeFF).
+- YBC: pre-contact yards as a distinct signal from YAC — separates
+  blocking/scheme creation from tackle-breaking (@DynatyzeFF).
+- Alpha Role: single-number WR/TE dominance composite (targets + deep
+  routes + red-zone chances) (@DynatyzeFF).
+- 2H DK scoring splits: game-script / halftime-adjustment signal —
+  Shough/Olave both ~68.7% 2H share, league-leading (@MagicSportsGuy,
+  StatRankings).
+- Turnovers+punts merged: "change of possession after not scoring" as a
+  drive-failure composite (@PattonAnalytics, StatRankings).
+- Down-of-first-down distribution: series-level aggressiveness/
+  efficiency fingerprint (@GridironInfo_).
+- RYOE/Att as rotation/depth-chart signal: Ekeler 2.70 vs Rachaad White
+  0.15 in overlapping backfield context (@ChrisWechtFF via @jmthrivept,
+  data @FantasyPtsData).
+- TE FPTS/target + separation pairing: efficiency-per-opportunity with
+  separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
+  2.19 FPTS/tgt, #7) (@DynatyzeFF).
