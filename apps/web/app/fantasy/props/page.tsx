@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { PropsEdge } from "@/components/fantasy/props-edge";
+import { PickemRanker } from "@/components/fantasy/pickem-ranker";
 import { PROPS_DISCLAIMER } from "@/lib/fantasy/props";
 import { activePickemLines, isLivePickem } from "@/lib/integrations/pickem";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Pick'em Edge · Galaxy Fantasy",
+  title: "Pick'em Edge · Our number vs their line",
   description:
-    "An edge advisor on Underdog / DK Pick6-style lines: where our model disagrees with the posted line, the conviction behind every call, the most valuable alt line, and the true odds and EV of any Power-Play entry.",
+    "Where our model disagrees with the posted Underdog / DK Pick6 line. Every prop shows the side, the conviction, and the most valuable alt line. Build a Power-Play entry and see its true odds and EV before you stake a dollar.",
   alternates: { canonical: "/fantasy/props" },
   robots: { index: false, follow: true },
 };
@@ -24,12 +25,30 @@ export default function PropsPage() {
       eyebrow="Pick'em Edge"
       accent="ultraviolet"
       title={<>Their line. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>Our number</span>. Your edge.</>}
-      intro="We read the lines Underdog, DK Pick6, and PrizePicks post, and tell you where our model disagrees. Every prop shows the side, the conviction, and the single most valuable alt line: the line and multiplier where edge × payout pays best. Build a Power-Play entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
+      intro="Filter by market or team. Every prop shows the side we'd take, how strongly, and the single alt line where edge times payout pays best. Build a 2-to-6 leg entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
       note={note}
       wide
-      projectionsBadge={false}
+      // The illustrative badge was suppressed on the ONE page that most needs
+      // it. Every prop row here is a fictional player (lib/fantasy/players.ts:
+      // "~40 illustrative players") on a real team code, carrying a conviction
+      // percentage and an EV figure in the same visual language the real board
+      // uses. The only honesty text was PROPS_DISCLAIMER, rendered 11px mist
+      // grey below the fold. FantasyShell already defaults the badge ON with
+      // pool "illustrative"; letting the default stand puts the claim in the
+      // hero where a visitor actually reads it.
+      projectionsPool={isLivePickem() ? "real" : "illustrative"}
     >
-      <PropsEdge lines={lines} />
+      <PropsEdge lines={lines} live={isLivePickem()} />
+
+      <section aria-label="Ranked board" className="mt-8">
+        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-ultraviolet">The ranked board</p>
+        <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+          Every line, <span className="gse-editorial" style={{ fontSize: "1.08em" }}>strongest edge first.</span>
+        </h2>
+        <div className="mt-4">
+          <PickemRanker lines={lines} live={isLivePickem()} />
+        </div>
+      </section>
     </FantasyShell>
   );
 }

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { associationTrace } from "./slate-trace-fixture.js";
 
 /**
  * Tripwire for the 2026-09-05 writer-collision fix.
@@ -30,12 +31,16 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ canExposePublicPicks: true, canPersistCanonicalHistory: true }),
-  MODEL_VERSION: "vtest",
-  MIN_PUBLISH_CONFIDENCE: 50,
-  PREMIUM_CONFIDENCE_THRESHOLD: 70,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ canExposePublicPicks: true, canPersistCanonicalHistory: true }),
+    MODEL_VERSION: "vtest",
+    MIN_PUBLISH_CONFIDENCE: 50,
+    PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  };
+});
 
 vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,
@@ -94,7 +99,7 @@ function boardResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 }
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
 }
 
 beforeEach(() => {
@@ -282,6 +287,47 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.gameUpdate).not.toHaveBeenCalled();
     expect(out.fixtureUnconfirmed).toBe(1);
+  });
+
+  /**
+   * C-299 â€” the second clock, ours. The scanned-games query already filters
+   * `commenceTime: { gte: now }`, so on this path the kickoff guard is defence
+   * in depth rather than a live hole-closer: it holds even when a row reaches
+   * the loop in play, which is what a loosened query filter or a backwards
+   * correction would produce. `gameFindMany` is mocked here, so the row arrives
+   * exactly as such a regression would deliver it.
+   */
+  it("prices no signal for a row that reaches the loop already in play, and counts it", async () => {
+    espnFetch.mockImplementation(async () =>
+      boardResponse({ events: [espnEvent("406", "2026-09-05T19:30Z", "Cincinnati Bearcats", "Boston College Eagles")] }),
+    );
+    // Kickoff 14:00Z against NOW 15:00Z: an hour under way. ESPN still lists it
+    // at 19:30Z, so the C-111 guard CONFIRMS it â€” only our own clock refuses.
+    mocks.gameFindMany.mockResolvedValue([{ ...GAME, commenceTime: new Date("2026-09-05T14:00:00.000Z") }]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    // Neither half of the write: no new signal pick, and no rewrite of an
+    // existing PENDING one.
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out).toMatchObject({ skippedInPlay: 1, picksUpserted: 0 });
+    expect(warn.mock.calls.some((c) => /in-play, no pick/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("still prices a row five minutes from kickoff", async () => {
+    espnFetch.mockImplementation(async () =>
+      boardResponse({ events: [espnEvent("407", "2026-09-05T15:05Z", "Cincinnati Bearcats", "Boston College Eagles")] }),
+    );
+    mocks.gameFindMany.mockResolvedValue([{ ...GAME, commenceTime: new Date("2026-09-05T15:05:00.000Z") }]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+
+    const out = await runSlate();
+
+    expect(out).toMatchObject({ skippedInPlay: 0 });
   });
 
   it("writes no pick and no correction when the board lists the fixture but its ESPN kickoff is already behind the run clock", async () => {

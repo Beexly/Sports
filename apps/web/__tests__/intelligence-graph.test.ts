@@ -60,4 +60,36 @@ describe("Intelligence Graph v0", () => {
     expect(projectForLens(node, "BETTOR").canShowConfidence).toBe(true);
     expect(projectForLens(node, "ANALYST").canShowFactorBreakdown).toBe(true);
   });
+
+  it("each lens produces a GENUINELY DIFFERENT summary (ASTRA A-41)", () => {
+    // Before 2026-09-12, BETTOR / CREATOR / ANALYST all produced the identical
+    // string. Only FAN differed. That made the lens switcher look broken.
+    const node = buildGameIntelligenceNode({ game: fixtureGame, picks: [fixturePick], signals: fixtureSignals });
+
+    const fan = projectForLens(node, "FAN").visibleSummary;
+    const bettor = projectForLens(node, "BETTOR").visibleSummary;
+    const creator = projectForLens(node, "CREATOR").visibleSummary;
+    const analyst = projectForLens(node, "ANALYST").visibleSummary;
+
+    // All four must be distinct.
+    const all = [fan, bettor, creator, analyst];
+    expect(new Set(all).size).toBe(4);
+
+    // FAN: no Edge Index number, no evidence score. Plain English.
+    expect(fan).not.toMatch(/Edge Index/);
+    expect(fan).not.toMatch(/\/100/);
+
+    // BETTOR: has Edge Index, no evidence score.
+    expect(bettor).toMatch(/Edge Index/);
+    expect(bettor).not.toMatch(/\/100/);
+
+    // CREATOR: has evidence score and a story angle.
+    expect(creator).toMatch(/evidence/);
+    expect(creator).toMatch(/hook|Angle|Quiet/i);
+
+    // ANALYST: has everything.
+    expect(analyst).toMatch(/Edge Index/);
+    expect(analyst).toMatch(/evidence/);
+    expect(analyst).toMatch(/book/);
+  });
 });

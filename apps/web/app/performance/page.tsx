@@ -8,6 +8,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
+import { VerdictLine } from "@/components/performance/verdict-line";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -18,6 +19,7 @@ import {
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
+import { publicRateOrNull } from "@/lib/ledger/display-guard";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 // Reads settled picks and calibration state from the database on every request
@@ -199,14 +201,28 @@ export default async function PerformancePage() {
   const computedAt = latestComputedAt(summaries);
   const modelVersion = latestModelVersion(summaries);
 
-  // Minimum-sample floor (honesty guard) — mirrors /api/performance. The
-  // canExposePerformanceStats gate is a binary "publish stats at all" switch; it
-  // does NOT floor a THIN sample. winRatePct returns null only at zero decided
-  // picks, so a single settled pick would otherwise render a raw single-sample
-  // rate. Below the floor (MIN_SETTLED_PICKS_FOR_LEARNING, default 100) WITHHOLD every published
-  // rate — never fabricate one. Counts stay visible (they're factual); only the
-  // derived rate is suppressed, and the renderers already show STAT_PLACEHOLDER
-  // for a null rate. Above the floor, behavior is unchanged.
+  // A rate renders only through publicRateOrNull. This page has no CLV
+  // backing and no walk-forward stamp on these summaries, so the guard
+  // returns null and the percent does not render. Counts stay.
+  const rateOrNull = (
+    label: string,
+    wins: number,
+    losses: number,
+    totalPicks: number,
+    valuePct: number | null,
+  ): number | null => {
+    const decided = wins + losses;
+    const band = valuePct != null && decided > 0 ? wilsonInterval(wins, decided) : null;
+    return publicRateOrNull({
+      label,
+      valuePct,
+      fired: decided,
+      eligible: totalPicks,
+      lowerBound: band ? { method: "wilson", value: band.low } : null,
+      clv: null,
+      provenance: null,
+    });
+  };
   const minSettledFloor = Math.max(1, gates.minSettledPicksForLearning);
   const insufficientSample = overall.totalPicks < minSettledFloor;
   // Floor-aware win-rate: same allow-listed winRatePct helper, withheld below
@@ -220,11 +236,23 @@ export default async function PerformancePage() {
   // no denominator prominence, so it must clear the SAME floor on its OWN
   // decided count. (The recent-periods TABLE keeps the overall floor: each row
   // shows W/L right next to the rate, so the denominator is already honest.)
-  const flooredSliceWinRate = (wins: number, losses: number): number | null =>
-    insufficientSample || wins + losses < minSettledFloor ? null : winRatePct(wins, losses);
+  const flooredSliceWinRate = (wins: number, losses: number, totalPicks: number): number | null =>
+    rateOrNull(
+      "sport win rate",
+      wins,
+      losses,
+      totalPicks,
+      insufficientSample || wins + losses < minSettledFloor ? null : winRatePct(wins, losses),
+    );
   // overall.winRate is already winRatePct(overall.wins, overall.losses); withhold
   // it below the floor so the headline never publishes a thin-sample rate.
-  const publishedOverallWinRate = insufficientSample ? null : overall.winRate;
+  const publishedOverallWinRate = rateOrNull(
+    "all-time win rate",
+    overall.wins,
+    overall.losses,
+    overall.totalPicks,
+    insufficientSample ? null : overall.winRate,
+  );
 
   const SPORT_DISPLAY_NAMES: Record<string, string> = {
     nfl: "NFL",
@@ -343,11 +371,13 @@ export default async function PerformancePage() {
                       value={
                         publishedOverallWinRate !== null ? (
                           formatPercent(publishedOverallWinRate)
-                        ) : (
+                        ) : insufficientSample ? (
                           <WithheldStat
                             settled={overall.totalPicks}
                             floor={minSettledFloor}
                           />
+                        ) : (
+                          <UnsubstantiatedStat />
                         )
                       }
                       accent={
@@ -381,6 +411,11 @@ export default async function PerformancePage() {
                       </span>{" "}
                       finished live-engine picks. Win rate excludes pushes.
                     </p>
+                    <VerdictLine
+                      wins={overall.wins}
+                      losses={overall.losses}
+                      minSample={minSettledFloor}
+                    />
                   </div>
                 </div>
               </section>
@@ -408,7 +443,7 @@ export default async function PerformancePage() {
                           losses={l}
                           pushes={p}
                           totalPicks={total}
-                          winRate={flooredSliceWinRate(w, l)}
+                          winRate={flooredSliceWinRate(w, l, total)}
                         />
                       );
                     })}
@@ -450,7 +485,13 @@ export default async function PerformancePage() {
                       </thead>
                       <tbody>
                         {recentSummaries.slice(0, 30).map((s, i) => {
-                          const wr = flooredWinRate(s.wins, s.losses);
+                          const wr = rateOrNull(
+                            "period win rate",
+                            s.wins,
+                            s.losses,
+                            s.totalPicks,
+                            flooredWinRate(s.wins, s.losses),
+                          );
                           return (
                             <tr
                               key={s.id}
@@ -530,6 +571,22 @@ export default async function PerformancePage() {
  * purpose until the sample clears the honesty floor, and shows the live
  * progress toward it. Same "opens at N settled" framing as ClvGatedState.
  */
+function UnsubstantiatedStat() {
+  return (
+    <span
+      className="flex flex-col items-center gap-1"
+      title="Withheld: a public rate needs coverage, a Wilson or Clopper-Pearson lower bound, CLV backing, and walk-forward lineage."
+    >
+      <span className="inline-flex items-center gap-1.5 text-2xl font-bold text-ion-2">
+        Withheld
+      </span>
+      <span className="text-[11px] font-medium normal-case tracking-normal text-ion-2">
+        needs coverage, a lower bound, CLV, and walk-forward lineage
+      </span>
+    </span>
+  );
+}
+
 function WithheldStat({ settled, floor }: { settled: number; floor: number }) {
   return (
     <span

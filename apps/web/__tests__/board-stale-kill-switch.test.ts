@@ -63,15 +63,19 @@ vi.mock("@/lib/ops/scheduler-liveness", () => ({
   assessSchedulerLiveness: (nowMs: number) => mocks.assessSchedulerLiveness(nowMs),
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({
-    isBootstrapMode: false,
-    forceNoBetIfStale: mocks.forceNoBetIfStale,
-  }),
-  MODEL_VERSION: "v5.0.0",
-  toEdgeIndex: (v: number | null | undefined) =>
-    v == null || !Number.isFinite(v) ? null : Math.max(0, Math.min(100, Math.round(v))),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({
+      isBootstrapMode: false,
+      forceNoBetIfStale: mocks.forceNoBetIfStale,
+    }),
+    MODEL_VERSION: "v5.0.0",
+    toEdgeIndex: (v: number | null | undefined) =>
+      v == null || !Number.isFinite(v) ? null : Math.max(0, Math.min(100, Math.round(v))),
+  };
+});
 
 import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";

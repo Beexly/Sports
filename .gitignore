@@ -213,3 +213,16 @@ handoff/*.stderr
 handoff/*.json
 handoff/_*
 handoff/*.py
+
+# --- premium third-party scrapes (2026-09-30) ---
+# docs/fantasy/research/*/statrankings/ held 3 CSVs / 2,077 rows of scraped
+# provider data whose own column read free_full=no (nfl-advanced-players,
+# nfl-advanced-teams, nfl-coverage -- the last branded CoverageIQ+). This repo
+# is PUBLIC, so that data was world-readable while the DATA_LICENSE asserted
+# CC BY-NC rights over it -- a grant we do not hold. Removed in the same commit.
+# Keep provider output out of git; cite it instead. GSE's own generated metrics
+# still belong under data/ and are tracked normally.
+docs/fantasy/research/*/statrankings/
+**/statrankings/*.csv
+.venv/
+venv/

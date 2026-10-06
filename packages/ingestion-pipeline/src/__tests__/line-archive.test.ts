@@ -123,7 +123,7 @@ describe("captureLineSnapshots — phase classification (batched findMany)", () 
     // SINGLE findMany, not one count() per market
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: ["SPREAD"] },
+      where: { gameId: "game_1", market: { in: ["SPREAD"] } },
       select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
@@ -150,7 +150,7 @@ describe("captureLineSnapshots — phase classification (batched findMany)", () 
 
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: ["SPREAD"] },
+      where: { gameId: "game_1", market: { in: ["SPREAD"] } },
       select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
@@ -182,7 +182,7 @@ describe("captureLineSnapshots — phase classification (batched findMany)", () 
     // ONE findMany call with BOTH markets — not two count() calls
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: ["SPREAD", "MONEYLINE"] },
+      where: { gameId: "game_1", market: { in: ["SPREAD", "MONEYLINE"] } },
       select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;

@@ -31,7 +31,7 @@ interface Agent {
 const AGENT_COUNT = 24;
 const CONNECTION_DIST = 120;
 const COLORS = {
-  cyan: "0, 229, 255",
+  cyan: "255, 77, 46",
   violet: "122, 92, 255",
   magenta: "255, 45, 214",
   amber: "255, 180, 84",
@@ -179,7 +179,7 @@ export function AgentFleet({ className }: { className?: string }) {
           // Signal point
           ctx.beginPath();
           ctx.arc(2, 0, 2, 0, Math.PI * 2);
-          ctx.fillStyle = "#FF38C7";
+          ctx.fillStyle = "#FF4D2E";
           ctx.fill();
           ctx.restore();
         } else {

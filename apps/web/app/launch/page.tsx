@@ -12,7 +12,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Founding Launch: Galaxy Fantasy",
   description:
-    "Draft season is now. The Draft Assistant and Best Ball board run on real, cleared nflverse-graded data: roster ceiling, QB stacks, and bye structure, with the reasoning. Founding members keep the lowest rate we'll ever offer, for life.",
+    "DFS and season tools: Draft Assistant, Best Ball, Start/Sit, Waivers, Trade, and Pick'em. Opens now on sample players until a licensed projections feed is connected — never fake data as live advice. Founding members keep the lowest rate we'll ever offer, for life.",
   alternates: { canonical: "/launch" },
 };
 
@@ -26,7 +26,7 @@ const REAL_NOW = [
 
 const PREVIEW = [
   "Start-Sit, Waivers/FAAB, and Trade need forward weekly projections. We're building our own, and will publish it with its own calibration before it goes live",
-  "Anything labelled illustrative stays clearly labelled: it is never shown as live, and we never fabricate ADP",
+  "Anything labelled sample stays clearly labelled: it is never shown as live, and we never fabricate ADP",
 ] as const;
 
 export default function LaunchPage() {
@@ -45,19 +45,20 @@ export default function LaunchPage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                <span className="live-dot" /> Founding launch · Draft season is now
+                <span className="live-dot" /> Founding launch · DFS &amp; season
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-5 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.25rem, 6vw, 4.25rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}>
-                Draft season is here. Get the edge, <span className="gse-editorial" style={{ fontSize: "1.06em" }}>honestly</span>.
+                DFS and season tools. Get the edge, <span className="gse-editorial" style={{ fontSize: "1.06em" }}>honestly</span>.
               </h1>
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                The Draft Assistant and the new Best Ball board run on real, cleared nflverse-graded
-                data: roster ceiling, QB stacks, and bye structure, with the reasoning behind every
-                call. Founding members keep the lowest rate we&apos;ll ever offer, for life.
+                Draft Assistant, Best Ball, Start/Sit, Waivers, Trade, and Pick&apos;em —
+                all open now, clearly labelled on sample players until a licensed
+                projections feed is connected. Never fake data as live advice.
+                Founding members keep the lowest rate we&apos;ll ever offer, for life.
               </p>
             </Reveal>
             <Reveal delay={230}>
@@ -114,8 +115,9 @@ export default function LaunchPage() {
               </div>
             </div>
             <p className="mt-6 text-xs text-ink-500">
-              Why we lead with this: a tool on fabricated data isn&apos;t worth paying for. Everything you
-              pay for here is real, cleared, and attributed. See the <Link href="/integrations" className="underline" style={{ color: BRAND_COLORS.softUltraviolet }}>data status</Link>.
+              Why we lead with this: a tool on fabricated data isn&apos;t worth paying for. Tools that
+              are not on a licensed feed yet say so, clearly, and never present sample players as
+              live advice. See the <Link href="/integrations" className="underline" style={{ color: BRAND_COLORS.softUltraviolet }}>data status</Link>.
             </p>
           </div>
         </section>

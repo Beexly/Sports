@@ -43,7 +43,7 @@ export default async function Page() {
       <InsightCard
         eyebrow={`Proof Readiness · ${measured ? `${proofArchive.score} / 100` : "unmeasured"}`}
         headline="Predictions are logged, settled, and checked once live data flows"
-        body="Proof Readiness is computed from real settled/graded pick counts against the platform's own readiness floor, never hand-typed. It reads 'unmeasured' instead of a number whenever the database isn't reachable at render time, and it rises automatically as real picks settle — every pick is archived with the model version, input data snapshot, and outcome, making the calibration score auditable."
+        body="Proof Readiness is computed from real settled/graded pick counts against the platform's own readiness floor, never hand-typed. It reads 'unmeasured' instead of a number whenever the database isn't reachable at render time, and it rises automatically as real picks settle. Every pick is archived with the model version, input data snapshot, and outcome, making the calibration score auditable."
         tone="warn"
       />
       <div>
@@ -54,7 +54,7 @@ export default async function Page() {
           <>
             {hasFixtureRuns && (
               <p className="mb-2 border border-caution/40 bg-caution/5 px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-caution">
-                Fixture — not a production record. These rows demonstrate the proof-archive UI and scoring math; they are not real settled predictions.
+                Fixture, not a production record. These rows demonstrate the proof-archive UI and scoring math; they are not real settled predictions.
               </p>
             )}
             <DataTable

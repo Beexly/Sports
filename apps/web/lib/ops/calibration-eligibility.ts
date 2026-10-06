@@ -62,6 +62,14 @@ export interface DeployedVersionSlice {
    */
   readonly eceNoise?: number | null;
   readonly eceDebiased?: number | null;
+  /**
+   * C-298: 5th-percentile bootstrap lower bound of eceDebiased on the slice's
+   * own rows. When present the deployed-version floor reads it: a version
+   * fails only when its calibration error is demonstrably above the floor,
+   * not when a point estimate on a third of the pool lands a hair over it.
+   * Absent or null: the point estimate is read (stricter direction).
+   */
+  readonly eceDebiasedCi90Lo?: number | null;
 }
 
 export interface CalibrationEligibilityInput {
@@ -202,8 +210,23 @@ export function evaluateCalibrationEligibility(
       );
     }
     const deployedDebiased = deployed.eceDebiased ?? null;
+    const deployedLo = deployed.eceDebiasedCi90Lo ?? null;
     if (!Number.isFinite(deployed.ece)) {
       reasons.push(`Deployed ${deployed.key} ECE missing`);
+    } else if (deployedLo != null && Number.isFinite(deployedLo)) {
+      // C-298: a version slice is a fraction of the pool. Holding it to the
+      // pooled point-estimate floor fails it for sample size, not calibration
+      // (measured 2026-09-09: v5.2.7 debiased 0.052 at n 221 against a pool
+      // at 0.033 at n 344). The floor reads the slice's 5th-percentile
+      // bootstrap bound: the version fails when its calibration error is
+      // demonstrably above the floor. The point estimate, raw and noise stay
+      // in the reason and on the surface. The n floor on the slice is
+      // untouched: a bound on few rows is not evidence.
+      if (deployedLo > floors.ece) {
+        reasons.push(
+          `Deployed ${deployed.key} ECE debiased ${(deployedDebiased ?? Number.NaN).toFixed(4)} with 5th-percentile bound ${deployedLo.toFixed(4)} > ${floors.ece} on its own rows (raw ${deployed.ece.toFixed(4)}, noise ${(deployed.eceNoise ?? 0).toFixed(4)})`,
+        );
+      }
     } else if (deployedDebiased != null && Number.isFinite(deployedDebiased)) {
       // C-292: the slice is small by construction, so its raw ECE carries more
       // finite-sample bias than the pool's. The floor reads the same per-bin

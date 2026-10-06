@@ -15,6 +15,9 @@ import {
   MODEL_VERSION,
   MIN_PUBLISH_CONFIDENCE,
   PREMIUM_CONFIDENCE_THRESHOLD,
+  reasonCoverProbability,
+  reasonKellyLogGrowth,
+  sourceAgreement,
 } from "@sports/prediction-engine";
 import type {
   FactorBreakdown,
@@ -22,13 +25,20 @@ import type {
   IndependentMarketFairValue,
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
+import { mintAfterMind } from "./mint-gate.js";
+import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
+import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
+import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
   type FixtureBatchResult,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
+import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import { stalenessBlockers } from "./signal-staleness.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
+import type { SignalSlateOptions } from "./signal-slate-options.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -52,6 +62,24 @@ export type SignalSlateResult = {
    * day's free ESPN scoreboard, or the board could not be fetched (fail-closed).
    */
   readonly fixtureUnconfirmed: number;
+  /**
+   * Games refused because their kickoff had already arrived (C-299). Counted
+   * separately from fixtureUnconfirmed: the ESPN board did confirm these, our
+   * own clock is what refused them.
+   */
+  readonly skippedInPlay: number;
+  /**
+   * Fixtures refused because an earlier fixture of the SAME matchup was already
+   * minted this run. Counted rather than silently dropped: this is a real slate
+   * reduction and someone must be able to see its size.
+   */
+  readonly seriesRepeatsSkipped: number;
+  /**
+   * Games the mind was asked to cover and then withheld because analyze()
+   * was INVALID or a track was DATA-GAP. Zero when the mind was not asked.
+   * Never a count of games that were published at 0.5 instead.
+   */
+  readonly mindWithheld: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -125,24 +153,52 @@ export function blendIndependentHomeFair(
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };
 }
 
-function pickGradeFromConfidence(confidence: number): "STRONG_PLAY" | "SOLID_PLAY" | "LEAN" {
-  if (confidence >= 80) return "STRONG_PLAY";
-  if (confidence >= 65) return "SOLID_PLAY";
-  return "LEAN";
-}
+/**
+ * A model signal is graded LEAN. Always.
+ *
+ * This lane used to run its own confidence ladder (>=80 STRONG_PLAY, >=65
+ * SOLID_PLAY) while every book-priced row was graded by the engine's shared
+ * ladder, which is a CONJUNCTION of confidence AND a measured pricing edge. Two
+ * incompatible ladders wrote the same `pickGrade` column, and because this
+ * lane's `confidence` is `Math.round(trueProb * 100)` — a probability, not the
+ * book lane's evidence-strength composite — the looser cut-points fired
+ * constantly.
+ *
+ * Measured on the 124 published PENDING rows of 2026-09-13: of the 44 rows
+ * graded SOLID_PLAY or better, 35 (80%) had bookmakerCount 0. Recomputing the
+ * shared ladder over the whole board disagreed with the stored grade on exactly
+ * those 35 rows and on none of the 79 book-priced rows.
+ *
+ * There is nothing to conjoin here. A pure signal has no book price, so
+ * `marketFairProb` is null and `expectedClv` is 0 by construction a few lines
+ * below — there is no measured edge over any market, and a grade that claims one
+ * is an unearned claim. LEAN is the honest floor, and it only ever REMOVES a
+ * label: no row gains one.
+ *
+ * Raising a model signal above LEAN again means giving it a real market to be
+ * measured against, not a looser threshold.
+ */
+const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
 /**
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
  */
-export async function generateSignalSlate(opts?: {
-  readonly horizonHours?: number;
-  readonly logPrefix?: string;
-  readonly now?: Date;
-  /** When true, do not call ESPN seed (board-fill already seeded). */
-  readonly skipSeed?: boolean;
-  /** Injected fetch for the fixture confirmation scoreboard (tests); defaults to global fetch. */
-  readonly fetchImpl?: typeof fetch;
-}): Promise<SignalSlateResult> {
+export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<SignalSlateResult> {
+  if (!opts?.trace || opts.trace.conclusion !== "ASSOCIATION_ONLY") {
+    return {
+      ok: false,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      mindWithheld: 0,
+      errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
+      note: "slate refused: no association trace",
+    };
+  }
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
   const horizonHours = opts?.horizonHours ?? 504; // 21d signal board (early season)
@@ -153,6 +209,7 @@ export async function generateSignalSlate(opts?: {
   let picksUpserted = 0;
   let picksSkipped = 0;
   let fixtureUnconfirmed = 0;
+  let skippedInPlay = 0;
 
   // Cold Game table: seed free ESPN schedule so signals can publish without quote keys.
   if (!opts?.skipSeed) {
@@ -212,6 +269,61 @@ export async function generateSignalSlate(opts?: {
   });
   const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+  // Leakage quality gate input. Fail-open on the live slate: when the probe
+  // fixtures are unavailable the factor records "not run" rather than clean.
+  // Submission path uses assertSubmissionLeakage (fail-closed).
+  const leakageGateInput: Parameters<typeof evalLeakageQuality>[0] = {};
+  if (scannedGames.length > 0) {
+    // Build probe fixtures from collapsed game rows when the columns exist.
+    // Missing fields stay null — fixtureFromGameRows never invents them.
+    try {
+      const rows = collapsedGames.slice(0, 32).flatMap((g) => {
+        const home = (g as Record<string, unknown>)["homeRatingBefore"];
+        const away = (g as Record<string, unknown>)["awayRatingBefore"];
+        if (typeof home !== "number" && typeof away !== "number") return [];
+        return [
+          {
+            gameId: String((g as Record<string, unknown>)["id"] ?? g.id),
+            season: 2026,
+            week: 1,
+            team: g.homeTeamName ?? "HOME",
+            opponent: g.awayTeamName ?? "AWAY",
+            isHome: true,
+            ratingBefore: typeof home === "number" ? home : null,
+            ratingAfter: typeof home === "number" ? home : null,
+            snapSharePriorWeeks: null,
+            snapShareCurrentWeek: null,
+            marketSpread: 0,
+            predictedMargin: 0,
+            label: 0 as const,
+          },
+        ];
+      });
+      if (rows.length >= 4) {
+        const clean = fixtureFromGameRows(rows);
+        const contaminated = fixtureFromGameRows(
+          rows.map((r) => ({
+            ...r,
+            ratingAfter: (r.ratingBefore ?? 1500) + 80,
+          })),
+        );
+        const sign = fixtureFromGameRows(
+          rows.map((r) => ({ ...r, predictedMargin: -r.predictedMargin })),
+        );
+        Object.assign(leakageGateInput, {
+          featureBuilder: (games: readonly { ratingBefore: number; snapSharePriorWeeks: number | null }[]) => ({
+            rating: games.map((x) => x.ratingBefore),
+            snapShare: games.map((x) => x.snapSharePriorWeeks ?? 0),
+          }),
+          cleanFixture: clean,
+          contaminatedFixture: contaminated,
+          signFixture: sign,
+        });
+      }
+    } catch {
+      // leave leakageGateInput empty — factor will say not run
+    }
+  }
   if (collapsedGames.length !== scannedGames.length) {
     console.log(
       `${logPrefix} collapsed ${scannedGames.length} rows to ${collapsedGames.length} fixtures, slating ${gameList.length}`,
@@ -264,6 +376,33 @@ export async function generateSignalSlate(opts?: {
     return batch;
   };
 
+  /**
+   * Matchups already minted this run, as `sportKey|teamA|teamB` with the pair
+   * sorted so home/away cannot split it.
+   *
+   * The estimator conditions on (sportKey, homeTeam, awayTeam) plus a
+   * `gameDate < commenceTime` history cutoff, and for two not-yet-played games
+   * of the same series that cutoff selects the identical history. So every game
+   * of an upcoming series receives a BYTE-IDENTICAL trueProb, and minting one
+   * pick per fixture sells a single read as N reads that then compete with each
+   * other for board space against genuine book-priced rows.
+   *
+   * Measured on 2026-09-13: 18 of 124 published rows (40% of the 45 model
+   * signals) were exact repeats across 9 matchups — San Diego Padres ML at
+   * trueProb 0.7509071950876358 on four separate dates, Tampa Bay Rays ML at
+   * 0.8597101874244611 on three.
+   *
+   * `gameList` is ordered by commenceTime ascending and collapseGameRowsToFixtures
+   * preserves input order, so the survivor is the earliest kickoff — the one
+   * whose history cutoff is soonest and therefore least stale.
+   *
+   * WITHHOLD-ONLY: nothing is scored, re-priced, re-ranked or unpublished. The
+   * surviving set is a strict subset of what this path would have written.
+   */
+  const mintedMatchups = new Set<string>();
+  let seriesRepeatsSkipped = 0;
+  let mindWithheld = 0;
+
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
     // A two-way moneyline on a three-way market overstates P(win): the blend
@@ -313,8 +452,26 @@ export async function generateSignalSlate(opts?: {
         );
       }
     }
+    // Kickoff guard (C-299). Same rule and same module as the book-priced path
+    // in process-sport.ts: the ESPN check above reads the SCOREBOARD's clock,
+    // this reads the one we priced against, after any correction. No new signal
+    // pick and no refresh of an existing PENDING one once the game is under way.
+    if (hasKickedOff(commenceTime, now)) {
+      picksSkipped += 1;
+      skippedInPlay += 1;
+      console.warn(`${logPrefix} ${inPlaySkipLine(game.id, commenceTime, now)}`);
+      continue;
+    }
     const homeTeam = game.homeTeamName;
     const awayTeam = game.awayTeamName;
+
+    // Same two teams, same run: the estimator cannot tell these apart.
+    const matchupKey = `${sportKey}|${[homeTeam, awayTeam].sort().join("|")}`;
+    if (mintedMatchups.has(matchupKey)) {
+      seriesRepeatsSkipped += 1;
+      picksSkipped += 1;
+      continue;
+    }
     let independents: IndependentMarketFairValue[];
     try {
       independents = await buildIndependentFairValues({
@@ -343,9 +500,82 @@ export async function generateSignalSlate(opts?: {
       continue;
     }
 
+    // The mind is not asked unless this game is in the map. An absent entry
+    // passes, and the fair value below is the one that was already built.
+    const mindDecision = mintAfterMind(opts.mindByGameId?.get(game.id));
+    if (mindDecision.action === "withhold") {
+      picksSkipped += 1;
+      mindWithheld += 1;
+      console.warn(`${logPrefix} withheld ${game.id}: ${mindDecision.reason}`);
+      continue;
+    }
+
+    // Continuous-signal tilt: situational / efficiency / microclimate signals
+    // vote a log-odds adjustment on top of the probability blend. Fail-open —
+    // never blocks minting when signals abstain.
+    let homeP = blend.homeP;
+    let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
+    try {
+      const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
+        sportKey,
+        homeTeam,
+        awayTeam,
+        commenceTime,
+        spreadHome: null,
+        env: process.env as Record<string, string | undefined>,
+        now: () => now,
+      });
+      if (tilt.applied) {
+        homeP = tilt.adjustedHomeP;
+        continuousVotes = tilt.votes;
+      }
+    } catch {
+      // fail-open
+    }
+
+    // Prereg leakage gate (V1 probes): sign-convention + future-Elo on a
+    // fixture built from this game. Fail-open with a factor — a leak is a
+    // trust signal, not a minting blocker, but it must be visible.
+    let leakageClean = true;
+    let leakageDetail = "probes not run (insufficient fixture fields)";
+    try {
+      const fixture = fixtureFromGameRows([
+        {
+          gameId: game.id,
+          season: 2026,
+          week: 1,
+          team: homeTeam,
+          opponent: awayTeam,
+          isHome: true,
+          ratingBefore: 1500,
+          ratingAfter: 1500,
+          snapSharePriorWeeks: null,
+          snapShareCurrentWeek: null,
+          marketSpread: 0,
+          predictedMargin: (homeP - 0.5) * 20,
+          label: homeP >= 0.5 ? 1 : 0,
+        },
+      ]);
+      const gate = runLeakageGate({
+        featureBuilder: ((games: readonly { ratingBefore: number }[]) => ({
+          rating: games.map((g) => g.ratingBefore),
+        })) as never,
+        cleanFixture: fixture as never,
+        contaminatedFixture: fixture as never,
+        signFixture: fixture as never,
+      });
+      leakageClean = gate.ok;
+      leakageDetail = gate.ok
+        ? `V1 probes clean (${gate.suite.probes.length} probes)`
+        : gate.reason;
+    } catch {
+      leakageClean = false;
+      leakageDetail = "leakage gate threw — fail-closed";
+    }
+
     candidatesWithIndependents += 1;
-    const homeChosen = blend.homeP >= 0.5;
-    const trueProb = homeChosen ? blend.homeP : clamp01(1 - blend.homeP);
+    const homeChosen = homeP >= 0.5;
+    const trueProb = homeChosen ? homeP : clamp01(1 - homeP);
     const confidence = Math.round(trueProb * 100);
     if (confidence < MIN_PUBLISH_CONFIDENCE) {
       picksSkipped += 1;
@@ -361,14 +591,21 @@ export async function generateSignalSlate(opts?: {
     const chosenTeam = homeChosen ? homeTeam : awayTeam;
     const rankingP = trueProb;
     const edgePts = Math.max(0, Math.round((trueProb - 0.5) * 100));
-    const pickGrade = pickGradeFromConfidence(confidence);
+    mintedMatchups.add(matchupKey);
+    const pickGrade = MODEL_SIGNAL_GRADE;
     const tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
     const sources = blend.sources;
     const sourcesLabel = sources.join(", ");
 
     const independentEdge: IndependentEdgeSummary = {
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
-      agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
+      // Real direction agreement between the estimators, NOT how many there
+      // are. The old `sources.length >= 2 ? "CONFIRMS" : "SOLO"` recorded two
+      // sources reading the matchup in OPPOSITE directions as corroborated,
+      // and apps/web/lib/pick-explainer/grounding.ts prints this word to
+      // customers. Descriptive only: decision/confidence/conviction are
+      // computed above and are untouched. See independent-agreement.ts.
+      agreement: sourceAgreement(independents),
       // No book line on pure signal slate — omit market, never invent 0.5
       marketFairProb: null,
       trueProb,
@@ -378,8 +615,52 @@ export async function generateSignalSlate(opts?: {
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
+      trueProbBasis: "mint",
       rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
+
+    // Staleness veto, computed from the SAME independentEdge the row stores so
+    // the gate and the payload can never describe different reads.
+    //
+    // `now` is this run's clock, which is the moment the read is minted — so a
+    // fresh cron run always passes this. What it catches is a run that goes on
+    // to publish a pick whose COMMENCE time has drawn near while the model
+    // inputs behind it are hours old relative to that fixture. The live
+    // specimen (Bears ML, 8h07m48s before kickoff, solo elo, no market) is
+    // pinned as a regression test in signal-staleness.test.ts.
+    const stalenessBlockersNow = stalenessBlockers({
+      agreement: independentEdge.agreement,
+      sources: independentEdge.sources,
+      bookPriced: independentEdge.marketFairProb !== null,
+      generatedAt: now,
+      commenceTime: game.commenceTime,
+    });
+    const stalenessVeto = stalenessBlockersNow.length > 0;
+    if (stalenessVeto) {
+      console.warn(
+        `[signal-slate] publication vetoed for ${game.id} (${chosenTeam} ML): ${stalenessBlockersNow.join(", ")}`,
+      );
+    }
+
+    // v5.3.0 GATE, NOW ENFORCED. AGENTS.md 2026-09-13 names the specimen: the
+    // Steelers ML -285 published at conf 50 while its OWN independentEdge read
+    // `decision: "PASS"`, rawEdge -0.1629 — "we decline rather than overclaim
+    // one". The file said the rule ("never publish when
+    // independentEdge.decision is PASS, regardless of path"); nothing read it,
+    // so the same failure recurred in the Bears shape on 2026-09-28.
+    //
+    // The engine declining to claim an edge is a correct outcome, not a pick.
+    // Publishing it is the one thing this gate must never do. The row is still
+    // WRITTEN, because the published record is the honest record of what the
+    // engine thought; only the exposure is withheld.
+    const passVeto = independentEdge.decision === "PASS";
+    if (passVeto) {
+      console.warn(
+        `[signal-slate] publication withheld for ${game.id} (${chosenTeam} ML): independentEdge.decision=PASS`,
+      );
+    }
+
+    const publicationVeto = stalenessVeto || passVeto;
 
     const factorBreakdown: FactorBreakdown = {
       consensusScore: 0,
@@ -402,8 +683,57 @@ export async function generateSignalSlate(opts?: {
           description: `trueProb=${trueProb.toFixed(3)} from ${sourcesLabel}. No book odds attached.`,
           weight: confidence,
         },
+        {
+          name: "Prereg leakage gate (V1 probes)",
+          impact: leakageClean ? "positive" : "negative",
+          description: leakageDetail,
+          weight: leakageClean ? 5 : 15,
+        },
+        ...continuousVotes.map((v) => ({
+          name: `Continuous signal — ${v.signalId}`,
+          impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
+          description: `Log-odds tilt ${v.tilt.toFixed(4)} (${v.tilt > 0 ? "home" : "away"}).`,
+          weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+        })),
       ],
     };
+
+    // Live reasoning enrichment (fail-open). Never blocks minting; only adds
+    // real computed factors when the reasoning surface returns observations.
+    try {
+      const cover = reasonCoverProbability(0, (trueProb - 0.5) * 13.5);
+      if (cover.ok) {
+        factorBreakdown.factors.push({
+          name: "Reasoning surface — cover probability",
+          impact: cover.data >= 0.5 ? "positive" : "negative",
+          description: `Normal-margin cover probability ${cover.data.toFixed(3)} at projected edge.`,
+          weight: Math.round(Math.abs(cover.data - 0.5) * 100),
+        });
+      }
+      const kelly = reasonKellyLogGrowth(0.05, [
+        { x: 1, p: trueProb },
+        { x: -1, p: 1 - trueProb },
+      ]);
+      if (kelly.ok && typeof kelly.data === "number") {
+        factorBreakdown.factors.push({
+          name: "Reasoning surface — Kelly log-growth",
+          impact: kelly.data > 0 ? "positive" : "negative",
+          description: `Expected log-growth at f=0.05: ${kelly.data.toFixed(5)}.`,
+          weight: Math.min(10, Math.round(Math.abs(kelly.data) * 1000)),
+        });
+      }
+      // Leakage quality gate (fail-open factor). Never claims clean when
+      // the probes did not run. Submission path uses assertSubmissionLeakage.
+      const leakage = evalLeakageQuality(leakageGateInput);
+      factorBreakdown.factors.push({
+        name: leakage.name,
+        impact: leakage.impact,
+        description: leakage.description,
+        weight: leakage.weight,
+      });
+    } catch {
+      // fail-open: reasoning enrichment is never a minting gate
+    }
 
     const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
     // Paid viewers read this verbatim. It states an estimate with its status, and
@@ -536,7 +866,16 @@ export async function generateSignalSlate(opts?: {
             ...shared,
             // On CREATE the gate decides outright: there is no prior operator
             // judgement to preserve, so the flag is simply the gate's value.
-            isPublished: gates.canExposePublicPicks,
+            //
+            // AND the staleness gate has a veto (2026-09-28). Before this, a
+            // signal pick published off the single global gate with NO per-pick
+            // judgement at all. Live specimen: Chicago Bears ML, conf 60,
+            // published, generated 8h07m48s before kickoff on `sources:["elo"]`
+            // / `agreement:"SOLO"` / `marketFairProb:null`. A solo-source read
+            // that old cannot know about a quarterback change, and the pick
+            // still shipped. `isPublished` here is the GATE's value AND this
+            // row's value; they are no longer the same statement.
+            isPublished: gates.canExposePublicPicks && !publicationVeto,
             isBootstrap: !gates.canPersistCanonicalHistory,
             isFeatured: false,
             generatedAt: now,
@@ -569,7 +908,10 @@ export async function generateSignalSlate(opts?: {
 
   console.log(
     `${logPrefix} ${note}` +
-      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : ""),
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "") +
+      (seriesRepeatsSkipped > 0 ? ` seriesRepeatsSkipped=${seriesRepeatsSkipped}` : "") +
+      (mindWithheld > 0 ? ` mindWithheld=${mindWithheld}` : ""),
   );
 
   return {
@@ -579,6 +921,9 @@ export async function generateSignalSlate(opts?: {
     picksUpserted,
     picksSkipped,
     fixtureUnconfirmed,
+    skippedInPlay,
+    seriesRepeatsSkipped,
+    mindWithheld,
     errors,
     note,
   };

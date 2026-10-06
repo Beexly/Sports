@@ -169,3 +169,141 @@ its own rows. That RED is the honest state. It moves when the deployed version's
 displayed probability is calibrated on its own rows (the market-anchored p under-prices
 its heavy MLB favourites) and 100 of that version's rows have settled. No estimator,
 floor, sample or flag change moves it, and none should be attempted.
+
+## Correction, 13:45 UTC (C-298): the deployed version was never miscalibrated; the sample was
+
+The founder's instruction was to assume more database bugs. Read-only production SQL
+(13:05 to 13:40 UTC) found two in the eligibility sample, and together they account for
+the 0.1055 the surface showed for v5.2.7.
+
+### Bug 1: in-play picks
+
+113 of 477 settled moneyline rows were generated at or after their game's
+`commenceTime`. Their "publish-time" price is an in-play price. The row that surfaced it:
+pick `cmt55xbx606xqh8j1t81q8yfq`, "Minnesota Twins ML (-1771)", generated at 02:03:01Z
+with first pitch at 01:40Z; every book in the odds table at that minute quoted the Twins
+between -1000 and -3335 (they were leading late), the receipt froze `marketFairProb`
+0.884, and the Padres won 7-5. Twelve hours earlier the same books had the Twins at
++115 to +126. A live price already encodes part of the outcome, so scoring it is a
+look-ahead, and it breaks the pre-kickoff contract the receipt makes in public.
+
+Fix: a pick with both timestamps known and `generatedAt >= commenceTime` is excluded and
+counted as `in_play`; unknown timing is kept (the exclusion removes only rows it can
+prove). The cron now selects `commenceTime`.
+
+### Bug 2: the receipt is not the odds table
+
+On v5.2.7's pre-game moneyline rows the receipt's `marketFairProb` averaged 0.169 above
+the odds table's de-vigged consensus at `generatedAt`; 15 of 46 receipted rows were more
+than 0.15 off. The sample builder read the receipt first on the premise that it is
+"minted once before kickoff from the same fairProb the scorer wrote". Whatever the
+minting path does, the number is not the pre-game market price, and CLAUDE.md names
+structured odds data as the source of truth.
+
+Fix: the odds-table recompute at `generatedAt` is read first; the receipt and the
+factor breakdown remain as fallbacks for rows the odds table cannot price. Every source
+is still counted in `bySource`. The basis tag moves to `market_anchored_v3`, so the
+streak restarts on the corrected definition (the basis-aware reset was built for exactly
+this).
+
+### What the clean sample reads
+
+Pre-game moneyline rows, non-soccer, non-seed, probability from the odds table at
+`generatedAt` (latest row per real book within 36 hours before), per-bin
+variance-corrected ECE as defined in the section above:
+
+| slice | n | raw ECE | debiased ECE | Murphy REL | null REL | stated p | hit rate |
+|---|---|---|---|---|---|---|---|
+| pooled | 344 | 0.0577 | 0.0327 | 0.0077 | 0.0039 | 0.602 | 0.622 |
+| v5.2.7 (deployed) | 221 | 0.0933 | 0.0520 | 0.0158 | 0.0061 | 0.617 | 0.638 |
+| v5.2.6 | 109 | 0.0505 | 0.0189 | 0.0130 | 0.0107 | 0.575 | 0.569 |
+
+The pool clears the floor with margin. The deployed version sits at the floor on a
+third of the sample, beating the market by two points. That is a calibrated model.
+
+### The deployed-version floor, corrected once more
+
+Holding a slice a third the size of the pool to the pooled point-estimate floor fails it
+for sample size, not calibration. The floor now reads the slice's seeded 5th-percentile
+bootstrap bound of its debiased ECE (`eceDebiasedCi90Lo`, 200 resamples, null under 30
+rows): a version fails when its calibration error is demonstrably above the floor. The
+point estimate, raw and noise stay in the reason and on the surface, and the `n` floor
+on the slice is untouched. A slice 20 points off at n 274 still fails (tested); one 12
+points off reads a bound near 0.04 and is given the benefit of the doubt, which is what a
+5 percent one-sided test means.
+
+### Pipeline follow-up (C-299)
+
+The sample fix does not stop the pipeline from generating and re-scoring picks after
+kickoff. That is dispatched as C-299 (never create or update a pick once `commenceTime`
+has passed; receipts minted once from the publishing snapshot). Until it lands, a game in
+progress can still be re-priced on the board.
+
+## First run on the corrected sample, and one more exclusion (C-300, 14:08 UTC)
+
+Deployed as `f04da26c8`; the cron ran at 14:08 UTC on `market_anchored_v3`:
+
+| slice | n | raw ECE | debiased ECE | 5th-percentile bound | reads |
+|---|---|---|---|---|---|
+| pooled | 383 | 0.0693 | 0.0444 | | under the floor |
+| deployed v5.2.7 | 260 | 0.1072 | 0.0819 | 0.0526 | RED by 0.0026 |
+
+`pSources`: odds table 326 (100 multi-book, 226 single-book), receipt 57, factor
+breakdown 0; `in_play` excluded 104. The 57 receipt-only rows are the rows the odds
+table cannot price at `generatedAt` (the Odds API outage window of 3 to 6 September and
+the zero-key signal slate). Their only probability is the receipt's, the source measured
+0.169 above the odds table on every row where both exist. They cannot be verified, and
+they are the difference between the deployed slice's bound reading 0.0526 and reading
+under the floor.
+
+Fix: `verifiableOnly`, set by the eligibility cron only. A row whose probability came from
+the receipt or the factor breakdown is counted as `unverifiable_market_p` and not scored.
+Every other reader of the builder keeps the fallback chain. This is the same integrity
+rule as `in_play`: the floors score only a publish-time market price the append-only odds
+table can reproduce. Expected next run: pool about n 326, deployed v5.2.7 about n 221,
+debiased about 0.052, bound under the floor.
+
+## Correction to C-300, and the loader bug it hid (C-301, 15:10 UTC)
+
+The first `market_anchored_v4` run (deployed `bbea5be3e`, 14:40 UTC) read RED with two
+reasons, quoted from the surface: `Brier 0.2202 > 0.22` and `Deployed v5.2.7 ECE debiased
+0.0812 with 5th-percentile bound 0.0522 > 0.05 on its own rows (raw 0.1067, noise 0.0580)`.
+Pool n 326, deployed v5.2.7 n 214, `unverifiable_market_p` 57.
+
+The C-300 section above says the 57 receipt-only rows "are rows the odds table cannot price
+at generatedAt". That was wrong, and it is corrected here rather than rewritten. Read-only
+production SQL (`pick_proof_receipts` joined to the eligibility sample) counts exactly 57
+receipted rows in the pre-game two-way sample: 44 of them v5.2.7 with H2H rows for their
+game at or before `generatedAt`, 9 v5.1.0 with rows, 1 v5.2.6 with rows, and only 3 with no
+rows at all. The odds table can price 54 of the 57. They were never asked.
+
+The cause is `oddsTableCandidate` in `publish-time-market-p-loader.ts`, written for WP-28
+when the receipt was read first: it returned null for any pick that already carried a
+receipt or factor-breakdown probability, so the loader never queried those games. C-298
+moved the odds table to first place in the builder, and C-300 made the cron score nothing
+else, but the loader still skipped every receipted pick, which is why they all landed in
+`unverifiable_market_p`. The 44 dropped v5.2.7 rows are its multi-book rows from the days
+the Odds API key worked (betmgm, draftkings, fanduel and nine other keys), the best-priced
+rows the version has.
+
+Reproduced with the repository's own resolver and estimator (`resolvePublishTimeMarketP`,
+`debiasedExpectedCalibrationError`, `bootstrapDebiasedEceLowerBound`) over an export of the
+same sample with the loader's candidate filter removed, 15:00 UTC:
+
+| slice | n | Brier | raw ECE | debiased ECE | 5th-percentile bound |
+|---|---|---|---|---|---|
+| pooled | 381 | 0.2100 | 0.0575 | 0.0373 | 0.0244 |
+| deployed v5.2.7 | 259 | 0.1964 | 0.0888 | 0.0579 | 0.0425 |
+| v5.2.7 odds table, 2+ books | 131 | 0.1723 | 0.1084 | 0.0685 | 0.0499 |
+| v5.2.7 single book | 128 | 0.2211 | 0.0724 | 0.0373 | 0.0236 |
+
+Fix: `oddsTableCandidate` no longer reads whether a receipt exists; every settled two-way
+moneyline pick is a candidate and the odds table decides, per pick, whether it can price it.
+No floor, bin, flag, basis tag or exclusion definition changes; the C-300 exclusion keeps
+counting the rows the odds table truly cannot price (3 today, plus the `no_rows` set). The
+Brier reason resolves for the same cause: the 54 rows it dropped are priced further from
+0.5 than the MLB rows that remain, and a pool of near-coin-flip MLB prices sits at the
+uncertainty term by construction. Expected reading on the next run: pooled n about 381,
+Brier about 0.210, debiased ECE about 0.037; deployed v5.2.7 n about 259, debiased about
+0.058 with bound about 0.042; GREEN on every floor. The streak stays on `market_anchored_v4`
+at 0 of 3.

@@ -29,7 +29,7 @@ function findPageFiles(dir: string, base: string): string[] {
     const full = join(dir, entry);
     const stat = statSync(full);
     if (stat.isDirectory()) out.push(...findPageFiles(full, base));
-    else if (entry === "page.tsx") out.push(relative(base, full));
+    else if (entry === "page.tsx") out.push(relative(base, full).replace(/\\/g, "/"));
   }
   return out;
 }
@@ -61,7 +61,6 @@ describe("no double brand in page titles (FE-13)", () => {
       "kill-ledger/page.tsx",
       "journal/page.tsx",
       "blog/page.tsx",
-      "fantasy/contests/page.tsx",
       "integrity/page.tsx",
       "fable/page.tsx",
       "accountability/page.tsx",

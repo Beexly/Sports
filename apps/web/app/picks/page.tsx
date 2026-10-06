@@ -5,17 +5,24 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
+import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
-import { getEntitlements, type PublicPick, type DailySlate, type SubscriptionTier } from "@sports/types";
+import { getEntitlements, type DailySlate, type SubscriptionTier } from "@sports/types";
 import { getReadinessGates } from "@sports/prediction-engine";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import { GET as getPicks } from "@/app/api/picks/route";
 import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
+import {
+  bindPublicConsensusClaim,
+  consensusEvidenceCaption,
+  isBookmakerConsensusClaim,
+  type PublicConsensusPick,
+} from "@/lib/claims/public-consensus-claim";
 
 // Metadata follows the same gate the page follows, so the description never says
 // the board is dark while /api/picks serves it (or the reverse). The root layout
@@ -23,10 +30,10 @@ import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 export function generateMetadata(): Metadata {
   const publicPicksOpen = getReadinessGates().canExposePublicPicks;
   return {
-    title: "Today's Signals",
+    title: "Today's Picks",
     description: publicPicksOpen
-      ? "Today's picks from a deterministic factor model: two free picks a day with the public Edge Index. The full board, the confidence score and the factor trail are on Pro and Elite."
-      : "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark: no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
+      ? "What we're on today, with the line, the timing, and the reason. Free gets a daily teaser; Pro and Elite unlock the full set."
+      : "Picks open when our sample and gates allow. Until then this page stays dark, no invented slate, no fake certainty.",
     alternates: { canonical: "/picks" },
   };
 }
@@ -41,7 +48,7 @@ interface PicksPageProps {
 
 interface PicksResponse {
   success: boolean;
-  data: PublicPick[];
+  data: PublicConsensusPick[];
   meta: {
     tier: string;
     total: number;
@@ -54,6 +61,31 @@ interface PicksResponse {
     hint?: string;
     /** Which gate darkened the board: history-gated launch vs stale-data pause. */
     kind: "gated" | "stale";
+  };
+}
+
+function bindPublicPickReasoning(
+  pick: PublicConsensusPick,
+  canSeeFactorBreakdown: boolean,
+): PublicConsensusPick {
+  const reasoning = canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort;
+  const bound = bindPublicConsensusClaim({
+    reasoningShort: reasoning,
+    consensusPct: pick.consensusPct,
+    bookmakerCount: pick.bookmakerCount,
+    dataFreshnessAt: pick.dataFreshnessAt,
+    consensusProvider: pick.consensusProvider,
+    consensusSourceId: pick.consensusSourceId,
+    consensusBooks: pick.consensusBooks,
+    consensusBookSetId: pick.consensusBookSetId,
+    consensusCapturedAt: pick.consensusCapturedAt,
+  });
+  if (isBookmakerConsensusClaim(reasoning) && !bound) {
+    return { ...pick, reasoning: null, reasoningShort: null, consensusEvidence: null };
+  }
+  return {
+    ...pick,
+    consensusEvidence: bound ? consensusEvidenceCaption(bound) : null,
   };
 }
 
@@ -124,7 +156,7 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Today's Board is collecting live history.",
+          message: body.error ?? "Published picks are collecting live history.",
           hint: body.hint,
           kind,
         },
@@ -175,8 +207,15 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   ]);
 
   const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
-  const picks: PublicPick[] =
-    picksResult.status === "fulfilled" ? picksResult.value.data : [];
+  const picks: PublicConsensusPick[] =
+    picksResult.status === "fulfilled"
+      ? picksResult.value.data.map((pick) =>
+          bindPublicPickReasoning(
+            pick,
+            Boolean(entitlements.canSeeFactorBreakdown),
+          ),
+        )
+      : [];
   const bootstrapState =
     picksResult.status === "fulfilled" ? picksResult.value.bootstrap : null;
   const fetchError =
@@ -251,14 +290,18 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
+              Published picks
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
               Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-ion-2">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
+              Every pick we&apos;re on today, with the line, timing, risk, and the
+              reason.{" "}
+              <Link href="/board" className="underline hover:text-ion-1">
+                The board
+              </Link>{" "}
+              also shows what we passed on.
             </p>
           </div>
 
@@ -296,7 +339,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
-                        ? "border-orbital-cyan bg-orbital-cyan text-eclipse shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+                        ? "border-orbital-cyan bg-orbital-cyan text-eclipse shadow-[0_0_18px_rgba(255,77,46,0.35)]"
                         : "border-titanium bg-carbon text-ion-1 hover:border-orbital-cyan hover:text-ion-white",
                     ].join(" ")}
                   >
@@ -322,7 +365,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "border-plasma bg-plasma text-plasma-ink shadow-[0_0_18px_rgba(217,70,239,0.35)]"
+                        ? "border-plasma bg-plasma text-plasma-ink shadow-[0_0_18px_rgba(255,77,46,0.35)]"
                         : "border-titanium bg-carbon text-ion-1 hover:border-plasma hover:text-ion-white",
                     ].join(" ")}
                   >
@@ -340,7 +383,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Backend-outage state. A rejected fetch (network fault) or an
               unexpected non-2xx from /api/picks that ISN'T the deliberate
               bootstrap/stale gate lands here. Per the T-picks-outage doctrine
-              this is a CONNECTION problem, never a verdict on the board — so it
+              this is a CONNECTION problem, never a verdict on the board, so it
               is rendered as a calm, designed state that stays visually and
               textually DISTINCT from the "Signal gate collecting" gate below
               (caution amber vs the gate's cyan) and NEVER leaks the raw HTTP
@@ -376,7 +419,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 This is a connection problem on our side, not a verdict on the
-                board. Nothing is wrong with today&apos;s picks — refresh in a
+                board. Nothing is wrong with today&apos;s picks. Refresh in a
                 moment and the board will be back.
               </p>
             </div>
@@ -384,7 +427,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Empty state */}
           {!fetchError && bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-orbital-cyan/25 bg-orbital-cyan/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
+            <div className="rounded-xl border border-orbital-cyan/25 bg-orbital-cyan/10 p-8 text-center shadow-[0_0_28px_rgba(255,77,46,0.10)]">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-orbital-cyan/30 bg-orbital-cyan/10">
                 <svg
                   className="h-7 w-7 text-orbital-cyan"
@@ -408,14 +451,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
-                  ? "Quiet board — waiting on fresh odds (not broken)."
+                  ? "Quiet board, waiting on fresh odds (not broken)."
                   : "Public picks are still gated. The board is closed until the data checks pass."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
                   ? "This is the honesty guard: we hide picks when odds are past the refresh " +
                     "window or no games are insertable. The board reopens on the next real " +
-                    "odds insert — never on stale lines. Methodology and pricing stay available."
+                    "odds insert, never on stale lines. Methodology and pricing stay available."
                   : "We're building up odds and settlement history before we " +
                     "publish picks. That keeps the record clean and weak signals " +
                     "off the board."}
@@ -463,7 +506,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-lg bg-ultraviolet px-6 py-2.5 text-sm font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
+                className="mt-6 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -496,13 +539,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </div>
               <h2 className="text-base font-semibold text-white">
                 {activeSportLabel
-                  ? `No ${activeSportLabel} signals published for this date`
-                  : "No signals published for this date"}
+                  ? `No ${activeSportLabel} picks for this date`
+                  : "No picks for this date"}
               </h2>
               <p className="mt-2 text-sm text-ion-3">
                 {activeSportLabel
-                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date (quiet board / no published signals). Try another sport or date.`
-                  : "Quiet board for this date: no published signals cleared the gate. Awaiting fresh odds or eligible games — not an outage."}
+                  ? `Nothing on the ${activeSportLabel} slate today. Try another sport or date.`
+                  : "Quiet day. No picks published yet. Try another date."}
               </p>
             </div>
           )}
@@ -552,7 +595,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-ultraviolet px-6 py-2.5 text-sm font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
+                className="mt-4 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -584,16 +627,15 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
 function SlateBar({ slate }: { slate: DailySlate }) {
   const record = slate.recentRecord;
+  // Central. `timeZoneName` without `timeZone` prints whichever zone the
+  // formatter happened to run in — the server's (UTC on Vercel) during SSR —
+  // so it was labelling the wrong reading rather than fixing it.
   const lastUpdated = slate.lastUpdatedAt
-    ? new Date(slate.lastUpdatedAt).toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        timeZoneName: "short",
-      })
+    ? `${formatCentralTime(new Date(slate.lastUpdatedAt))} ${CT_SUFFIX}`
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
+    <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(194,46,26,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
         <StatPill label="Games Today" value={String(slate.totalGames)} />
@@ -623,7 +665,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(0,229,255,0.6)]" aria-hidden="true" />
+            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(255,77,46,0.6)]" aria-hidden="true" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
           </div>
         )}
@@ -728,7 +770,7 @@ function PaywallBanner({
         )}
         <Link
           href="/pricing"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-ultraviolet px-4 py-2 text-xs font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-4 py-2 text-xs font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
         >
           See plans
         </Link>

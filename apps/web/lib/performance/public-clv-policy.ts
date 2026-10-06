@@ -149,6 +149,51 @@ export function evaluatePublicClvPolicy(
   };
 }
 
+// ───────────────────────── CLV push doctrine (additive; no gate reads this) ─────────────────────────
+//
+// This repo's doctrine (AGENTS.md) is that a push is never averaged into a
+// published rate. MATCHED_CLOSE is the CLV analogue of a push: it is neither
+// a win nor a loss against the closing line. Whether beatCloseRatePct above
+// (computed as beatCloseCount / gradedSampleSize) should exclude
+// MATCHED_CLOSE the way a push is excluded from a win rate has never been
+// decided anywhere in this codebase. Separately, the ESTABLISHED gate's
+// 0.524 threshold is the break-even win rate at -110 odds, a DECIDED-only
+// quantity, so a rate computed one way may be getting compared against a
+// threshold defined the other way. Nobody has established which one the
+// gate means.
+//
+// The type and function below do not decide that question and never will.
+// They surface all three readings side by side, each with its own explicit
+// denominator, so a reader sees the ambiguity instead of one silently-chosen
+// number:
+//
+//   decidedClvBeatRate   = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE)
+//   allGradedClvBeatRate = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//   clvPushRate          = MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//
+// allGradedClvBeatRate is the identical computation as beatCloseRatePct
+// above, restated here under an explicit name next to the other two
+// readings, so nobody mistakes it for the only possible denominator.
+//
+// Purely additive reporting. Nothing here reads or writes canExposeClv, any
+// blocker, or any threshold: evaluatePublicClvPolicy above is untouched and
+// never calls this.
+
+// The three-reading helper lives in @sports/types (the boundary both the web
+// package and the prediction engine already import), so every surface that
+// reports a CLV beat rate shares ONE implementation and the readings cannot
+// drift between surfaces. Re-exported here so existing importers of this
+// module keep working unchanged.
+export { computeClvPushDoctrineRates } from "@sports/types";
+export type {
+  ClvVerdictCounts,
+  ClvPushDoctrineRates,
+} from "@sports/types";
+
+// (The local ClvPushDoctrineRates interface and computeClvPushDoctrineRates
+// implementation that used to live here moved verbatim to @sports/types and
+// are re-exported above.)
+
 export interface LoadableClvClient {
   pick: {
     count: (args: { where: Record<string, unknown> }) => Promise<number>;

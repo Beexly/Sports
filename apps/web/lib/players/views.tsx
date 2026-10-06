@@ -10,13 +10,9 @@ import {
 } from "@/lib/nflverse/player-lab";
 import { loadNflverseSnapShare, type SnapShareRow } from "@/lib/nflverse/snap-share";
 import { loadReceivingOpportunity } from "@/lib/intelligence/receiving-opportunity";
-import { loadRushingEfficiency } from "@/lib/intelligence/rushing-efficiency";
-import { loadNflverseNextGenStats } from "@/lib/nflverse/next-gen-stats";
 import { loadNflversePressureCoverage } from "@/lib/nflverse/pressure-coverage";
 import { loadNflverseCombine } from "@/lib/nflverse/combine";
 import { loadNflverseQbr } from "@/lib/nflverse/qbr";
-import { loadQbConsensus } from "@/lib/intelligence/qb-consensus";
-import { loadNflverseEdgeSignals } from "@/lib/nflverse/edge-signals";
 import { loadNflverseInjuryReport } from "@/lib/nflverse/injury-report";
 import { loadSleeperMarketSignal } from "@/lib/sleeper/market-signal";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
@@ -61,16 +57,10 @@ export type SectionKind =
   | "production-defense"
   | "snaps"
   | "opportunity-receiving"
-  | "opportunity-rushing"
-  | "nextgen-receiving"
-  | "nextgen-passing"
-  | "nextgen-rushing"
   | "trenches-qb"
   | "trenches-coverage"
   | "combine"
   | "qbr"
-  | "qbr-consensus"
-  | "edge"
   | "injuries"
   | "market"
   | "dfs";
@@ -257,7 +247,10 @@ async function loadSnapsView(): Promise<ViewResult> {
 // ── OPPORTUNITY ───────────────────────────────────────────────────────────────
 
 async function loadOpportunityView(): Promise<ViewResult> {
-  const [o, ru] = await Promise.all([loadReceivingOpportunity(), loadRushingEfficiency()]);
+  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): the backfield
+  // efficiency section used to ride on NGS rushing data (RYOE). Removed —
+  // no NGS data or metric names on the public site, under any flag.
+  const o = await loadReceivingOpportunity();
   if (o.status === "source-error") {
     return { status: "source-error", error: o.error ?? o.note ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
@@ -275,72 +268,12 @@ async function loadOpportunityView(): Promise<ViewResult> {
       minWidth: 920,
     },
   ];
-  if (ru.status !== "source-error" && ru.rows.length > 0) {
-    sections.push({
-      id: "rushing",
-      kind: "opportunity-rushing",
-      eyebrow: `Backfield · efficiency vs volume${ru.season ? ` · ${ru.season}` : ""}`,
-      title: "RB value is a different equation",
-      blurb: ru.note,
-      footnote: "Volume is the floor (sticky, coach-driven); RYOE is the regression-prone ceiling. Hover a row for the read.",
-      rows: ru.rows,
-      showRank: true,
-      minWidth: 820,
-    });
-  }
   return {
     status: "live",
     windowLabel: `Season ${o.season}${o.throughWeek ? ` through week ${o.throughWeek}` : ""}`,
     generatedAt: o.generatedAt,
     sourceIds: ["nflverse"],
     sections,
-  };
-}
-
-// ── NEXT GEN ──────────────────────────────────────────────────────────────────
-
-async function loadNextGenView(): Promise<ViewResult> {
-  const ngs = await loadNflverseNextGenStats();
-  if (ngs.status === "source-error") {
-    return { status: "source-error", error: ngs.error ?? ngs.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
-  }
-  return {
-    status: "live",
-    windowLabel: `Season ${ngs.season}`,
-    generatedAt: ngs.generatedAt,
-    sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "receiving",
-        kind: "nextgen-receiving",
-        eyebrow: "Receiving · tracking",
-        title: "Who gets open",
-        blurb: "Separation (space at the catch point), cushion (pre-snap space), and YAC over expected.",
-        rows: ngs.receiving,
-        showRank: true,
-        minWidth: 860,
-      },
-      {
-        id: "passing",
-        kind: "nextgen-passing",
-        eyebrow: "Passing · tracking",
-        title: "Who is accurate beyond expectation",
-        blurb: "CPOE (completion % over expected, given throw difficulty), time-to-throw, aggressiveness.",
-        rows: ngs.passing,
-        showRank: true,
-        minWidth: 860,
-      },
-      {
-        id: "rushing",
-        kind: "nextgen-rushing",
-        eyebrow: "Rushing · tracking",
-        title: "Who beats the blocking",
-        blurb: "Rush yards over expected per attempt: production above what the blocking and box gave them.",
-        rows: ngs.rushing,
-        showRank: true,
-        minWidth: 760,
-      },
-    ],
   };
 }
 
@@ -426,7 +359,10 @@ async function loadCombineView(): Promise<ViewResult> {
 // ── QBR ───────────────────────────────────────────────────────────────────────
 
 async function loadQbrView(): Promise<ViewResult> {
-  const [q, consensus] = await Promise.all([loadNflverseQbr(), loadQbConsensus()]);
+  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): the consensus
+  // section used to fuse ESPN QBR with NGS CPOE. The NGS half is removed —
+  // this view is QBR-only now. No NGS data or metric names, under any flag.
+  const q = await loadNflverseQbr();
   if (q.status === "source-error") {
     return { status: "source-error", error: q.error ?? q.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
@@ -443,61 +379,7 @@ async function loadQbrView(): Promise<ViewResult> {
       minWidth: 640,
     },
   ];
-  if (consensus.status !== "source-error" && consensus.rows.length > 0) {
-    sections.push({
-      id: "consensus",
-      kind: "qbr-consensus",
-      eyebrow: "Consensus · two independent lenses",
-      title: "Where the estimators agree, and where they don't",
-      blurb: consensus.note,
-      footnote: `Two independent estimators, each as a within-pool percentile. We surface disagreement (results vs accuracy) instead of averaging it into false precision.${!consensus.sources.ngs ? " CPOE feed unavailable; single-source reads only." : ""}`,
-      rows: consensus.rows,
-      showRank: true,
-      minWidth: 720,
-    });
-  }
   return { status: "live", windowLabel: `Season ${q.season}`, generatedAt: q.generatedAt, sourceIds: ["nflverse"], sections };
-}
-
-// ── EDGE ──────────────────────────────────────────────────────────────────────
-
-async function loadEdgeView(): Promise<ViewResult> {
-  const edge = await loadNflverseEdgeSignals();
-  if (edge.status === "source-error") {
-    return { status: "source-error", error: edge.error ?? edge.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
-  }
-  return {
-    status: "live",
-    windowLabel: `Season ${edge.season}`,
-    generatedAt: edge.generatedAt,
-    sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "buy-low",
-        kind: "edge",
-        variant: "buy",
-        eyebrow: "Buy-low · regression up",
-        title: "Underlying ahead of the box score",
-        blurb: "Tracking signal runs hotter than production. Ranked by the gap (underlying z minus production z).",
-        rows: edge.buyLow,
-        showRank: true,
-        minWidth: 940,
-        emptyTitle: "No players cleared the gap threshold in the source window.",
-      },
-      {
-        id: "sell-high",
-        kind: "edge",
-        variant: "sell",
-        eyebrow: "Sell-high · regression risk",
-        title: "Production ahead of the underlying",
-        blurb: "Output is outrunning the tracking signal. Ranked by the most negative gap.",
-        rows: edge.sellHigh,
-        showRank: true,
-        minWidth: 940,
-        emptyTitle: "No players cleared the gap threshold in the source window.",
-      },
-    ],
-  };
 }
 
 // ── INJURIES ──────────────────────────────────────────────────────────────────
@@ -675,7 +557,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
   {
     slug: "opportunity",
     label: "Opportunity",
-    tabTooltip: "WOPR / air yards (WR) & RYOE / volume (RB)",
+    tabTooltip: "WOPR / air yards (WR)",
     eyebrow: "Receiving opportunity",
     title: "Opportunity comes before production.",
     description:
@@ -687,22 +569,6 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     ],
     jsonHref: "/api/intelligence/receiving-opportunity",
     load: loadOpportunityView,
-  },
-  {
-    slug: "nextgen",
-    label: "Next Gen",
-    tabTooltip: "Separation, CPOE, RYOE (tracking data)",
-    eyebrow: "Next Gen Stats",
-    title: "The metrics that aren't in the box score.",
-    description:
-      "Player-tracking data from nflverse: how open a receiver gets (separation, YAC over expected), how accurate a QB is vs expectation (CPOE) and how fast he throws, and yards a back earns over the blocking (RYOE).",
-    explainer: [
-      { term: "Separation / Cushion", definition: "Yards of space at the catch point, and pre-snap cushion the defense gives." },
-      { term: "CPOE", definition: "Completion percentage over expected given throw difficulty: accuracy, not just results." },
-      { term: "RYOE/att", definition: "Rush yards over expected per attempt: production above what the blocking and box gave." },
-    ],
-    jsonHref: "/api/nflverse/next-gen-stats",
-    load: loadNextGenView,
   },
   {
     slug: "trenches",
@@ -738,34 +604,16 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
   {
     slug: "qbr",
     label: "QBR",
-    tabTooltip: "ESPN Total QBR + CPOE consensus",
+    tabTooltip: "ESPN Total QBR leaders",
     eyebrow: "Total QBR",
     title: "A second opinion on the quarterback.",
     description:
-      "ESPN's Total QBR (0-100), play-weighted across the season, via nflverse: one independent estimate to triangulate against CPOE (Next Gen) and pressure (PFR). When lenses agree, you trust the read more.",
+      "ESPN's Total QBR (0-100), play-weighted across the season, via nflverse: one independent estimate to read against pressure (PFR). Results-weighted, not just box score.",
     explainer: [
       { term: "Total QBR", definition: "ESPN's play-weighted 0-100 quarterback rating. Results/EPA-weighted." },
-      { term: "Consensus", definition: "QBR and CPOE as within-pool percentiles. We surface disagreement (results vs accuracy) rather than averaging it away." },
     ],
     jsonHref: "/api/nflverse/qbr",
     load: loadQbrView,
-  },
-  {
-    slug: "edge",
-    label: "Edge",
-    tabTooltip: "Buy-low / sell-high from tracking vs production",
-    eyebrow: "Edge Signals",
-    title: "Getting open, not yet getting paid.",
-    description:
-      "We standardize a receiver's tracking signal (separation, YAC over expected, air-yards share) and compare it to actual PPR production. Underlying hotter than the box score = buy-low; output outrunning it = sell-high.",
-    explainer: [
-      { term: "Underlying z", definition: "Standardized tracking signal (separation, YAC over expected, air-yards share) across the qualified pool." },
-      { term: "Production z", definition: "Standardized actual PPR production across the same pool." },
-      { term: "Gap", definition: "Underlying z minus production z. Positive = buy-low (regression up); negative = sell-high (regression risk)." },
-      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6-9, ○ under 6. Sample-size only; thin samples are where edge signals mislead most." },
-    ],
-    jsonHref: "/api/nflverse/edge-signals",
-    load: loadEdgeView,
   },
   {
     slug: "injuries",

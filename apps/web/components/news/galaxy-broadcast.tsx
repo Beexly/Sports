@@ -5,19 +5,19 @@
  *
  * The public face of the newsroom: two synthetic anchors, Nova works the field,
  * Orion holds the desk, trade the week's top signals, with a broadcast
- * lower-third, a teleprompter, a segment rundown, and a drop-cadence strip. It
- * is the lean, public cut of the studio broadcast. The persona bible and
- * publish-readiness gate stay in the producer view (/fantasy/studio). The
- * AI-presenter disclosure is always on screen.
+ * lower-third, a teleprompter, a segment rundown, and a drop-cadence strip.
  *
- * Audio is code-native and user-initiated: a Play control reads the active
- * segment aloud via the browser's speech synthesis (zero generation spend). No
- * photoreal likeness, the anchors are stylized brand marks, never generated
- * faces. Reduced-motion safe: the scene is CSS only. No media element plays on
- * load.
+ * Audio: the browser speech-synthesis Play control was removed 2026-09-12.
+ * It sounded robotic and nothing like a human read. The founder called it
+ * "horrible and nothing human-like." The segment script is still on screen;
+ * when a real TTS lane lands it can come back behind an explicit opt-in.
+ *
+ * No photoreal likeness. The anchors are stylized brand marks, never
+ * generated faces. Reduced-motion safe: the scene is CSS only. Nothing
+ * plays on load.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Broadcast } from "@/lib/fantasy/host";
 import { SCENES } from "@/lib/fantasy/host";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -43,46 +43,6 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
     return () => window.clearInterval(t);
   }, []);
 
-  // ── Code-native audio: speak the active segment on demand ────────────────
-  const [speaking, setSpeaking] = useState(false);
-  const supportsSpeech = useRef(false);
-  useEffect(() => {
-    supportsSpeech.current =
-      typeof window !== "undefined" && "speechSynthesis" in window;
-    return () => {
-      if (supportsSpeech.current) window.speechSynthesis.cancel();
-    };
-  }, []);
-
-  const stop = useCallback(() => {
-    if (supportsSpeech.current) window.speechSynthesis.cancel();
-    setSpeaking(false);
-  }, []);
-
-  const play = useCallback(() => {
-    if (!supportsSpeech.current || !seg) return;
-    window.speechSynthesis.cancel();
-    const text = [
-      onColdOpen ? broadcast.coldOpen : "",
-      seg.script,
-      onSignOff ? broadcast.signOff : "",
-    ]
-      .filter(Boolean)
-      .join(" ");
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.02;
-    u.pitch = reporter?.initial === "O" ? 0.92 : 1.06; // desk vs field, distinct read
-    u.onend = () => setSpeaking(false);
-    u.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(u);
-  }, [broadcast.coldOpen, broadcast.signOff, onColdOpen, onSignOff, reporter?.initial, seg]);
-
-  // Stop audio whenever the segment changes.
-  useEffect(() => {
-    stop();
-  }, [i, stop]);
-
   // Empty rundown → a calm placeholder instead of a crash (hooks run first).
   if (!seg || !scene || !reporter) {
     return (
@@ -105,10 +65,26 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
           <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: "#ff5a5a", animation: "pp-live-pulse 2s ease-in-out infinite" }} />
           On air
         </span>
+        {/* The week number came from league-twin.ts, where `currentWeek` is the
+            most common bye week in the FICTIONAL roster, not a calendar week.
+            It rendered "Week 10" on NFL Week 1 Sunday beside a live-pulsing ON
+            AIR dot. A wrong week stamped on a broadcast is a factual claim, so
+            it is gone rather than corrected: there is no real week to show. */}
         <p className="font-display text-sm font-semibold text-ion-white">
-          GSN Broadcast <span className="text-ion-3">· Week {broadcast.week}</span>
+          GSN Broadcast <span className="text-ion-3">· sample script</span>
         </p>
-        <span className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>
+        {/* Two badges, because they answer two different questions. "Synthetic
+            presenters" says who is reading. It does NOT say the reports are
+            invented, and a reader can take it as a synthetic voice reading real
+            news. On a Sunday this card reads out injury claims about named
+            players. The content badge goes first and carries the caution tone. */}
+        <span
+          className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+          style={{ background: "rgba(255,180,84,0.2)", color: "#FFB454" }}
+        >
+          Sample script · fictional reports
+        </span>
+        <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>
           Synthetic presenters
         </span>
       </div>
@@ -166,15 +142,6 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
         <div className="p-5">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Teleprompter · {reporter.name}</p>
-            <button
-              type="button"
-              aria-label={speaking ? "Stop reading this segment" : "Play this segment aloud"}
-              onClick={speaking ? stop : play}
-              className="inline-flex items-center gap-1.5 rounded-full border border-mineral px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-1 transition-colors hover:border-orbital-cyan/60 hover:text-ion-white"
-              aria-pressed={speaking}
-            >
-              {speaking ? "■ Stop" : "▶ Play"}
-            </button>
           </div>
           <p className="mt-3 text-[15px] leading-relaxed text-ion-white">
             {onColdOpen ? `${broadcast.coldOpen} ` : ""}
@@ -192,7 +159,6 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
               Next segment ›
             </button>
           </div>
-          <p className="mt-3 font-mono text-[10px] text-ion-3">Synthetic voice · plays only when you press play.</p>
         </div>
       </div>
 

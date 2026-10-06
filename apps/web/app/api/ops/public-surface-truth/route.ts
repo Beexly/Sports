@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+// isContestsPublic is still reported below. The contests SURFACE is gone, but
+// this endpoint is the operator truth surface: saying "contests is dark" is
+// exactly the fact an operator needs, and a silently-missing key would read as
+// "unknown" rather than "deliberately off". The gate itself stays in
+// public-surface-gate.ts for the same reason.
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
-import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
@@ -12,7 +16,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
-import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { loadPublicClvPolicy, computeClvPushDoctrineRates } from "@/lib/performance/public-clv-policy";
 import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
 import {
   STALE_PENDING_PICK_MAX_AGE_DAYS,
@@ -20,6 +24,13 @@ import {
 } from "@/lib/board/stale-pick-policy";
 import { loadMarketCoverage } from "@/lib/board/market-coverage";
 import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
+import { loadRankingBasisCensus } from "@/lib/calibration/ranking-basis-census";
+import {
+  assessOddsLineArchiveFreshness,
+  readOddsLineArchiveFreshnessInput,
+  type OddsLineArchiveFreshnessResult,
+  type OddsLineArchiveFreshnessThresholds,
+} from "@/lib/ops/odds-line-archive-freshness";
 
 /** A read-only posture field must never take the whole truth surface down: any
  *  throw (including a synchronous one from a partial client) reads as null. */
@@ -74,6 +85,28 @@ import {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+/**
+ * This route was DOWN in production before this was set.
+ *
+ * Measured 2026-09-13 18:5x UTC, seven consecutive requests: no response inside
+ * 45s (curl exit 28, HTTP 000) while / , /board and /picks all returned 200 and
+ * /api/board/state returned 200 in 14.7s. With no `maxDuration` export a Vercel
+ * Node function takes the account default, and this handler does 21 awaits —
+ * most of them database round trips — across 1000 lines. It was being killed
+ * mid-flight every time.
+ *
+ * 120s matches its sibling ops route, api/ops/settlement-rca. That is the
+ * precedent in this directory; every cron route sets its own ceiling too, and
+ * vercel.json declares no global `functions` config, so an unset export means
+ * the default and nothing else.
+ *
+ * Raising the ceiling is not a fix for the handler being slow. This is the
+ * surface that reports whether the product is telling the truth about itself,
+ * so it failing silently is the worst possible thing for it to do — the ceiling
+ * buys back visibility. If it starts returning 500 rather than timing out, the
+ * cause is memory, not duration, and that is a different fix.
+ */
+export const maxDuration = 120;
 
 /** Features expected on main that older deploys may lack — diagnose lag. */
 const MAIN_FEATURE_MARKERS = [
@@ -148,6 +181,54 @@ function hasOpsAuth(request: Request): boolean {
     return a.length === b.length && timingSafeEqual(a, b);
   } catch {
     return false;
+  }
+}
+
+/**
+ * 2026-09-19: read-only observability field. odds_line_snapshots silently
+ * stopped being written for three weeks (2026-08-22 to 2026-09-13, see
+ * AGENTS.md), and nothing here would have caught it: a grep proves nothing
+ * in the repo calls lib/ops/odds-line-archive-freshness.ts. This wires it in.
+ *
+ * ADDITIVE ONLY: this field reports a state, it never gates
+ * PUBLIC_PICKS / STATS_PUBLIC / LIVE_BOARD / PERFORMANCE_STATS or any other
+ * existing gate, floor, or published number on this surface.
+ *
+ * Thresholds are THIS CALL SITE'S OWN CHOICE, not a library default. The
+ * assessor deliberately refuses to default them (see that module's header).
+ * degradedAfterMinutes: 60, staleAfterMinutes: 360 (6h) are stated here.
+ */
+const ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS: OddsLineArchiveFreshnessThresholds = {
+  degradedAfterMinutes: 60,
+  staleAfterMinutes: 360,
+};
+
+/**
+ * Fail-closed read: stub mode (no live DB to read), a DB error inside the
+ * reader, or any unexpected synchronous throw all resolve to the same
+ * "absent" input, which the assessor's own rule 3 judges STALE, never
+ * healthy. Mirrors the `isMarketBoardOddsStale().catch(() => true)` pattern
+ * already used on this route: an absent reading must never render as
+ * "everything is fine".
+ */
+async function readOddsLineArchiveFreshnessSafely(): Promise<OddsLineArchiveFreshnessResult> {
+  if (isStubMode()) {
+    return assessOddsLineArchiveFreshness(
+      { mostRecentCapturedAt: null },
+      ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
+    );
+  }
+  try {
+    const read = await readOddsLineArchiveFreshnessInput({
+      db,
+      recentWindowMinutes: ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS.degradedAfterMinutes,
+    });
+    return assessOddsLineArchiveFreshness(read.input, ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS);
+  } catch {
+    return assessOddsLineArchiveFreshness(
+      { mostRecentCapturedAt: null },
+      ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
+    );
   }
 }
 
@@ -559,6 +640,18 @@ export async function GET(request: Request) {
     clvPolicy && clvPolicy.gradedSampleSize >= 25
       ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
       : null;
+  // The three push-doctrine readings (decided-only / all-graded / push rate),
+  // computed by the shared helper in @sports/types so every surface states the
+  // same numbers. Additive disclosure: evaluatePublicClvPolicy above is
+  // untouched and the gate's beatCloseRate keeps its existing denominator —
+  // which reading the ESTABLISHED 0.524 floor means remains a founder call.
+  const clvDoctrineRates = clvPolicy
+    ? computeClvPushDoctrineRates({
+        beatCloseCount: clvPolicy.beatCloseCount,
+        lostToCloseCount: clvPolicy.lostToCloseCount,
+        matchedCloseCount: clvPolicy.matchedCloseCount,
+      })
+    : null;
   // The rate feeds the pricing-ladder evaluator internally regardless; this is
   // a public endpoint, so the split counts and the rate are only PUBLISHED when
   // the CLV policy says they may be (canExposeClv). Gated → sample size and the
@@ -571,6 +664,12 @@ export async function GET(request: Request) {
           matchedCloseCount: clvPolicy.matchedCloseCount,
           lostToCloseCount: clvPolicy.lostToCloseCount,
           beatCloseRate: clvBeatCloseRate,
+          // The push-doctrine readings beside the system rate: a reader can
+          // reproduce every denominator from the three counts on this object.
+          decidedClvBeatRate: clvDoctrineRates?.decidedClvBeatRate ?? null,
+          decidedClvBeatDenominator: clvDoctrineRates?.decidedClvBeatDenominator ?? 0,
+          clvPushRate: clvDoctrineRates?.clvPushRate ?? null,
+          clvPushRateDenominator: clvDoctrineRates?.clvPushRateDenominator ?? 0,
           clearsBreakEven: clvPolicy.clearsBreakEven,
           canExposeClv: true as const,
           blockers: clvPolicy.blockers,
@@ -582,6 +681,10 @@ export async function GET(request: Request) {
           matchedCloseCount: null,
           lostToCloseCount: null,
           beatCloseRate: null,
+          decidedClvBeatRate: null,
+          decidedClvBeatDenominator: 0,
+          clvPushRate: null,
+          clvPushRateDenominator: 0,
           clearsBreakEven: null,
           canExposeClv: false as const,
           blockers: clvPolicy.blockers,
@@ -596,6 +699,7 @@ export async function GET(request: Request) {
     canonicalSettledPicks: sample?.canonicalSettled ?? 0,
     calibrationPublished,
     beatCloseRate: clvBeatCloseRate,
+    beatCloseRateDecided: clvDoctrineRates?.decidedClvBeatRate ?? null,
   });
 
   // Published PENDING picks on games that have not started whose row the
@@ -622,6 +726,16 @@ export async function GET(request: Request) {
   // it (observed 2026-09-02: they did not). Both are read-only postures.
   const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
   const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
+  // Which branch of the ranking cascade actually orders published picks. This
+  // closes the open question in sort-key.ts: the public board payload nulls
+  // rankingP for non-premium viewers (GSE-SEC-026), so the public surface CANNOT
+  // answer whether the board ranks on the monotone key or falls through to the
+  // anti-predictive one. Read-only, reports, never gates.
+  const rankingBasis = isStubMode() ? null : await safeRead(() => loadRankingBasisCensus(db as never));
+
+  // Line-archive freshness (see readOddsLineArchiveFreshnessSafely above).
+  // Read-only, fail-closed, never gates anything on this surface.
+  const oddsLineArchiveFreshness = await readOddsLineArchiveFreshnessSafely();
 
   // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
   // carry a `line` no bookmaker quoted. Read-only, writes nothing.
@@ -659,6 +773,7 @@ export async function GET(request: Request) {
     canonicalSettled: sample?.canonicalSettled ?? 0,
     calibrationPublished,
     clvBeatCloseRate,
+    clvBeatCloseRateDecided: clvDoctrineRates?.decidedClvBeatRate ?? null,
     settlementHealthy: settlement?.health === "HEALTHY",
     boardNotSuppressed:
       boardSurface.surface === "signal"
@@ -702,7 +817,6 @@ export async function GET(request: Request) {
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },
-      contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
       waitlist,
       settlement,
@@ -960,6 +1074,14 @@ export async function GET(request: Request) {
       },
       marketCoverage,
       confidenceTail,
+      rankingBasis,
+      /**
+       * odds_line_snapshots writer freshness (2026-09-19). Additive
+       * observability only: see readOddsLineArchiveFreshnessSafely above.
+       * verdict is "healthy" | "degraded" | "stale"; fail-closed on any
+       * error, stub mode, or absent data (never "healthy" by default).
+       */
+      oddsLineArchiveFreshness,
       lineIntegrity,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
       /**

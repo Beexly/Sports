@@ -134,9 +134,9 @@ export function buildLeagueTwin(
 
 export const SHOCK_HEX: Record<Shock, string> = {
   none: "#7b8794",
-  positive: "#00E5FF",
-  caution: "#E0A800",
-  critical: "#FF38C7",
+  positive: "#FF4D2E",
+  caution: "#FFB454",
+  critical: "#FF7A5C",
 };
 
 export { PLAYERS };

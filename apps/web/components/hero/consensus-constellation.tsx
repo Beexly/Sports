@@ -72,10 +72,10 @@ const FRAG = /* glsl */ `
   }
 `;
 
-const WHITE = new THREE.Color(0xf6f7fa);
-const CYAN = new THREE.Color(0x00e5ff);
-const UV = new THREE.Color(0x7a5cff);
-const MAGENTA = new THREE.Color(0xff2dd6);
+const WHITE = new THREE.Color(0xEDE8E0);
+const CYAN = new THREE.Color(0xFF4D2E);
+const UV = new THREE.Color(0xC9D4CE);
+const MAGENTA = new THREE.Color(0xFF4D2E);
 
 function radiusColor(t: number, out: InstanceType<typeof THREE.Color>): void {
   // t in [0,1]: white → cyan → ultraviolet → magenta as radius grows.
@@ -91,8 +91,8 @@ function makeCoreTexture(): InstanceType<typeof THREE.CanvasTexture> {
   const ctx = cv.getContext("2d")!;
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
   g.addColorStop(0, "rgba(246,247,250,0.95)");
-  g.addColorStop(0.18, "rgba(0,229,255,0.55)");
-  g.addColorStop(0.5, "rgba(123,97,255,0.18)");
+  g.addColorStop(0.18, "rgba(255,77,46,0.55)");
+  g.addColorStop(0.5, "rgba(60,45,110,0.18)");
   g.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);

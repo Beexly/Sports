@@ -83,13 +83,29 @@ describe("PickCard: market-implied win probability", () => {
     expect(container.textContent).toContain("70/100");
   });
 
-  it("never renders the label when the viewer cannot see confidence", () => {
-    const container = renderCard(
-      fixturePick({ marketImplied: { prob: 0.6142, bookmakerCount: 6 } }),
-      false,
-    );
+  it("renders the label for a viewer who cannot see confidence, and no percent beside it", () => {
+    // Phase 2: the card no longer gates this on canSeeConfidence. The API is
+    // the scope authority — it omits the field entirely where the number is not
+    // publishable — so the card renders whatever it is given.
+    const marketImplied = { prob: 0.6142, bookmakerCount: 6 };
+    const container = renderCard(fixturePick({ marketImplied }), false);
+    const node = container.querySelector('[data-testid="market-implied-win-probability"]');
+    expect(node?.textContent).toBe(formatMarketImpliedLabel(marketImplied));
+
+    // The invariant that must hold for this viewer: the ONLY percent on the
+    // card is the market-implied one. Confidence is hidden entirely and is
+    // never rendered as a percent at any tier.
+    const percents = container.textContent?.match(/\d+\s?%/g) ?? [];
+    expect(percents).toEqual(["61%"]);
+    expect(container.textContent).not.toContain("70/100");
+  });
+
+  it("renders no label when the API omitted the field", () => {
+    // Scope failures (signal slate, < 2 books, no receipt, SPREAD/TOTAL) all
+    // arrive as an absent key, for every tier.
+    const container = renderCard(fixturePick({}), false);
     expect(container.querySelector('[data-testid="market-implied-win-probability"]')).toBeNull();
-    expect(container.textContent).not.toMatch(/\d+%/);
+    expect(container.textContent).not.toMatch(/\d+\s?%/);
   });
 
   it("renders no percentage on a SPREAD pick", () => {

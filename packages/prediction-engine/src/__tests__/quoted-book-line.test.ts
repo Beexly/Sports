@@ -94,40 +94,63 @@ describe("isQuotedBookLine", () => {
 });
 
 /**
- * DELIVERABLE 1 — the answer to "does it still happen", pinned as a test so it
- * cannot be claimed without evidence. With the flag unset (production today),
- * every one of these publishes a line no book on the row quoted.
+ * DELIVERABLE 1 — the answer to "does it still happen".
+ *
+ * It no longer does, and NOT because of the flag below. These four fixtures
+ * were written to demonstrate the off-grid line reaching a member with
+ * LINE_INTEGRITY_PUBLISH_GUARD_ENABLED unset, and they did. Since PR #769,
+ * published-line.ts snaps the PUBLISHED artifact onto the posted book line
+ * nearest the consensus mean, so the member now sees a price a book actually
+ * offered whether or not the flag is set. `avgSpread` / `avgTotal` are still
+ * the raw arithmetic mean for every scoring computation (dispersion, edge, fair
+ * value) — only the published line moves — so no grade or rank changed and
+ * MODEL_VERSION is untouched.
+ *
+ * The assertions below are the same four fixtures inverted, and they are
+ * STRICTLY STRONGER than the ones they replace: where these used to pin
+ * `isQuotedBookLine(...) === false`, they now pin `true`. Keeping them pointed
+ * at the old behaviour would have meant asserting that a fixed defect is still
+ * broken, which is how this block went red on main.
  */
-describe("scoreGame with the guard OFF — the finding still reproduces today", () => {
-  it("SPREAD: publishes a football line that is between two quoted lines", () => {
+describe("scoreGame with the guard OFF — the published line is one a book quoted", () => {
+  it("SPREAD: football publishes -3.5, not the -3.25 mean between two quoted lines", () => {
+    const quoted = [-3, -3.5];
     const pick = spreadOf(spreadInput("americanfootball_nfl", [-3, -3, -3, -3.5, -3.5, -3.5]));
     expect(pick).toBeDefined();
-    expect(pick!.line).toBeCloseTo(-3.25, 12);
-    expect(isQuotedBookLine(pick!.line, [-3, -3.5])).toBe(false);
+    expect(pick!.line).toBeCloseTo(-3.5, 12);
+    expect(isQuotedBookLine(pick!.line, quoted)).toBe(true);
   });
 
-  it("SPREAD: reproduces the finding's own repeating-decimal signature", () => {
-    // The exact shape of 'Missouri Tigers -53.8' / -53.83333333333334: three
-    // real book lines on a blowout FCS fixture, averaged.
+  it("SPREAD: the finding's repeating-decimal signature is gone", () => {
+    // The exact shape of 'Missouri Tigers -53.8' / -53.83333333333334: real
+    // book lines on a blowout FCS fixture, averaged. The mean is still
+    // -53.83333333333334; the PUBLISHED line is -54, which a book quoted.
+    const quoted = [-53.5, -54];
     const pick = spreadOf(spreadInput("americanfootball_ncaaf", [-53.5, -54, -54, -53.5, -54, -54]));
     expect(pick).toBeDefined();
-    expect(String(pick!.line)).toMatch(/\.\d{6,}/);
+    expect(String(pick!.line)).not.toMatch(/\.\d{6,}/);
+    expect(pick!.line).toBeCloseTo(-54, 12);
+    expect(isQuotedBookLine(pick!.line, quoted)).toBe(true);
   });
 
-  it("TOTAL: publishes a total that is between two quoted totals", () => {
+  it("TOTAL: football publishes 44.5, not the 44.333… mean", () => {
+    const quoted = [44, 44.5];
     const pick = totalOf(totalInput("americanfootball_nfl", [44, 44.5, 44.5, 44, 44.5, 44.5]));
     expect(pick).toBeDefined();
-    expect(pick!.line).toBeCloseTo(44.333333333333336, 12);
-    expect(isQuotedBookLine(pick!.line, [44, 44.5])).toBe(false);
+    expect(pick!.line).toBeCloseTo(44.5, 12);
+    expect(isQuotedBookLine(pick!.line, quoted)).toBe(true);
   });
 
-  it("TOTAL: baseball has no run-line-ladder twin, so MLB totals go off-grid too", () => {
-    // isPublishableSpreadLine is SPREAD-only. There is no fixed ladder for MLB
-    // totals (8.5 and 9 are both real), so the ladder guard cannot be reused —
-    // the quoted-set rule is the only one that applies.
+  it("TOTAL: baseball has no run-line-ladder twin, and does not need one", () => {
+    // isPublishableSpreadLine is SPREAD-only, and there is no fixed ladder for
+    // MLB totals (8.5 and 9 are both real), so the ladder guard cannot be
+    // reused here. The quoted-set rule is the only one that applies — and the
+    // published-line snap satisfies it without a ladder.
+    const quoted = [8.5, 9];
     const pick = totalOf(totalInput("baseball_mlb", [8.5, 9, 9, 8.5, 9, 9]));
     expect(pick).toBeDefined();
-    expect(pick!.line).toBeCloseTo(8.833333333333334, 12);
+    expect(pick!.line).toBeCloseTo(9, 12);
+    expect(isQuotedBookLine(pick!.line, quoted)).toBe(true);
   });
 });
 

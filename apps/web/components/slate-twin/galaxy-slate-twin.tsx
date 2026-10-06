@@ -86,7 +86,7 @@ type StarTier = {
 };
 
 /** Hex for drift-moving state — matches text-plasma in market-fair-board. */
-const DRIFT_HEX = "#FF38C7";
+const DRIFT_HEX = "#FF4D2E";
 /** Hex for book-disagreement (argued) state — amber, distinct from all existing signals. */
 const ARGUED_HEX = "#FFB627";
 
@@ -237,7 +237,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
     const systems: System[] = [];
     for (const game of games) {
       const boardHex =
-        game.boardStatus === "PUBLISHED_TODAY" ? "#00E5FF" : game.boardStatus === "GATED_TODAY" ? "#FF38C7" : null;
+        game.boardStatus === "PUBLISHED_TODAY" ? "#FF4D2E" : game.boardStatus === "GATED_TODAY" ? "#FF4D2E" : null;
       const color = new THREE.Color(boardHex ?? VERDICT_HEX[game.verdict]);
       const group = new THREE.Group();
       const p = layout.positions.get(game.id) ?? (game.pos as Vec3);
@@ -267,7 +267,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       const satHalos: InstanceType<typeof THREE.Sprite>[] = [];
       for (let mi = 0; mi < game.markets.length; mi++) {
         const mk = game.markets[mi]!;
-        const haloM = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(mk.volatility > 0.55 ? 0xff2dd6 : 0x7a5cff), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+        const haloM = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(mk.volatility > 0.55 ? 0xFF4D2E : 0xC9D4CE), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
         const sh = new THREE.Sprite(haloM);
         const hs = 0.5 + mk.volatility * 1.3;
         sh.scale.set(hs, hs, 1);
@@ -306,7 +306,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       disposables.push(headMat);
 
       const pm = game.publicMoney ?? 0;
-      const pressMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(0xff2dd6), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const pressMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const pressure = new THREE.Sprite(pressMat);
       const ps = 1.5 + pm * 1.9;
       pressure.scale.set(ps, ps, 1);
@@ -314,20 +314,20 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       disposables.push(pressMat);
 
       const sharp = game.sharp ?? 0;
-      const sharpMat = new THREE.SpriteMaterial({ map: glow, color: new THREE.Color(0x00e5ff), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const sharpMat = new THREE.SpriteMaterial({ map: glow, color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const sharpNode = new THREE.Sprite(sharpMat);
       const sns = 0.7 + sharp * 1.0;
       sharpNode.scale.set(sns, sns, 1);
       group.add(sharpNode);
       disposables.push(sharpMat);
 
-      const lensMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0x00e5ff), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const lensMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const lensRing = new THREE.LineLoop(ringGeo, lensMat);
       group.add(lensRing);
       disposables.push(lensMat);
 
       const impact = game.impact ?? null;
-      const impMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xff2dd6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const impMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const impactRing = new THREE.LineLoop(ringGeo, impMat);
       group.add(impactRing);
       disposables.push(impMat);
@@ -1056,10 +1056,10 @@ function Inspector({ game, timeIndex, illustrative, marketIndex, onMarket }: { g
               className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
               style={
                 game.boardStatus === "PUBLISHED_TODAY"
-                  ? { color: "#00E5FF", border: "1px solid #00E5FF55", background: "#00E5FF12" }
+                  ? { color: "#FF4D2E", border: "1px solid #FF4D2E55", background: "#FF4D2E12" }
                   : game.boardStatus === "GATED_TODAY"
-                    ? { color: "#FF38C7", border: "1px solid #FF38C755", background: "#FF38C70f" }
-                    : { color: "#F5F7FF", border: "1px solid #F5F7FF44", background: "#F5F7FF10" }
+                    ? { color: "#FF4D2E", border: "1px solid #FF4D2E55", background: "#FF4D2E0f" }
+                    : { color: "#EDE8E0", border: "1px solid #EDE8E044", background: "#EDE8E010" }
               }
               title={game.gateReason ?? undefined}
             >

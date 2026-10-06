@@ -34,13 +34,34 @@ type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["
 type Bucket = CalibrationData["buckets"][number];
 type Discrimination = CalibrationData["discrimination"];
 
-// Brier score reads better with a plain-English band. Lower is better; 0.25 is
-// the coin-flip baseline for a binary outcome, so under it is meaningfully sharp.
+// Brier score reads better with a plain-English band. Lower is better; a
+// constant 0.5 forecast scores EXACTLY 0.25, which is the baseline.
+//
+// Two corrections here, both on the claim rather than the number.
+//
+// 1. The boundary was `<= 0.25` under a comment that said "under it". At
+//    exactly 0.25 a score TIES the constant-50% forecast, so "Better than a
+//    coin flip" was claiming a win for a draw. Strict `<` now, matching what
+//    the comment always said and what cockpit/calibration/page.tsx already
+//    prints ("0.25 = coin flip").
+//
+// 2. "Confidence tracks outcomes closely" asserted the one thing this repo has
+//    measured to be false. Over 2,385 settled published non-bootstrap picks
+//    with pushes excluded, confidence is non-monotone and anti-predictive at
+//    the top: the 80+ band claims about 87% and realizes about 52%. The live
+//    confidenceTail reads Brier 0.3616 at n 249. A band label must describe
+//    where the number sits against its baseline, never assert that the score
+//    tracks results.
+//
+// Naming the 0.25 baseline in the string is deliberate: a reader who is
+// checking whether we are honest can verify the comparison without knowing
+// what a Brier score is.
 function brierRead(brier: number | null): string {
   if (brier === null) return "Not enough settled picks yet.";
-  if (brier <= 0.18) return "Sharp. Confidence tracks outcomes closely.";
-  if (brier <= 0.25) return "Better than a coin flip. Calibration is holding.";
-  return "Above the coin-flip baseline. Calibration needs work.";
+  if (brier < 0.18) return "Well under the 0.25 a flat 50% forecast scores.";
+  if (brier < 0.25) return "Under the 0.25 a flat 50% forecast scores.";
+  if (brier === 0.25) return "Exactly the 0.25 a flat 50% forecast scores.";
+  return "Above the 0.25 a flat 50% forecast scores.";
 }
 
 const VERDICT_META: Record<

@@ -15,5 +15,5 @@ import { absoluteUrl } from "@/lib/seo/site-url";
 export const dynamic = "force-static";
 
 export function GET(): NextResponse {
-  return NextResponse.redirect(absoluteUrl("/brand/gse-emblem-64.png"), 308);
+  return NextResponse.redirect(absoluteUrl("/favicon.svg"), 308);
 }

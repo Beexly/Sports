@@ -9,7 +9,8 @@ import type {
   IndependentMarketFairValue,
   IndependentEdgeSummary,
 } from "@sports/types";
-import { computePickGrade } from "@sports/types";
+import { computePickGrade, pricesWorseThanMarket } from "@sports/types";
+import { calibrationHistoryWithholds } from "./calibration/pathwise-defect.js";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
@@ -23,6 +24,7 @@ import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
+import { snapToPostedLine, formatPublishedLine } from "./published-line.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -164,18 +166,60 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 // against the sportsbook's own de-vigged fair probability, via the edge engine.
 // After assess, deriveRankingProbability prices finite trueProb into rankingScore
 // even on PASS (MODEL_VERSION v5.2.1+). Edge SPEAK/LEAN remains the glass-box
-// claim only. Heuristic confidence stays market-echo for UX when we choose not
-// to overwrite it; ranking uses rankingScore.
+// claim only. Confidence no longer contains the market-probability channels:
+// the market-internal edgeComponent and the cross-market bonus are context-only
+// (market-echo guard), and ranking uses rankingScore — the honest edge is the
+// independent one.
 // Returns null when no independent estimate is available. We never manufacture an
 // edge from the market's own price.
 // ============================================================
 
+// ============================================================
+// Adverse-edge withhold gate.
+//
+// `assessIndependentEdge` can conclude that our own cover model prices the
+// chosen side WORSE than the sportsbook does. edge-engine.ts encodes that as a
+// negative signed `shrunkEdge`, mirrored into `expectedClv`, and reports
+// `decision: "PASS"` — the engine, in its own words, declining the bet.
+//
+// Until 2026-09-13 that verdict had exactly two consumers: a cosmetic factor
+// `impact` label, and `deriveRankingProbability`, whose one decision gate the
+// callers below disable with `rankOnAnyTrueProb: true`. Nothing read it as a
+// publish veto, so on 2026-09-13 seven rows shipped to production carrying the
+// engine's own refusal — Dodgers -1.5 at trueProb 0.208 against a market fair
+// value of 0.434 (expectedClv -0.1356), published at confidence 78 as PREMIUM.
+// Measured on the same pull: of the published PENDING rows, every PASS row was
+// adverse and no row read CONTRADICTS, so `expectedClv < 0` and
+// `decision === "PASS"` selected the identical set.
+//
+// This gate may only WITHHOLD. It does not score, rank, or alter a selection,
+// line or probability, so MODEL_VERSION stays v5.2.7 and the scoring math is
+// untouched. That asymmetry is the whole safety argument and must survive every
+// future edit: a wrong reading here costs us a pick we would have published,
+// never a pick we would not have. Anything that wants to ADD conviction from
+// this signal is a scoring change and needs a version bump plus a calibration
+// pass.
+//
+// No estimate means no vote. A null summary, or a non-finite expectedClv, is
+// silence — never read as agreement, disagreement, or zero.
+// ============================================================
 function assessIndependentEdge(
   fairValues: IndependentMarketFairValue[] | undefined,
   homeIsChosen: boolean,
   marketFairProb: number,
   dataQualityScore: number,
-  marketConsistent: boolean
+  marketConsistent: boolean,
+  /**
+   * OPTIONAL offline-fitted recalibrator for the published `trueProb`.
+   *
+   * This is the seam that makes the engine's calibration reachable in
+   * production. `edge-engine.ts` can apply a map, but nothing passed one, so the
+   * published probability stayed uncalibrated no matter how good the fits were.
+   * Optional on purpose: with no map this call is byte-identical to before, so
+   * every existing caller keeps its exact behaviour and the change cannot move a
+   * published number until a map is deliberately supplied.
+   */
+  calibrator?: { readonly predict: (p: number) => number },
 ): IndependentEdgeSummary | null {
   if (!fairValues || fairValues.length === 0) return null;
 
@@ -193,6 +237,7 @@ function assessIndependentEdge(
     // Real evidence health shrinks the edge; absent → edge engine's full default.
     evidenceScore: dataQualityScore > 0 ? dataQualityScore : undefined,
     marketConsistent,
+    calibrator,
   });
 
   return {
@@ -208,6 +253,22 @@ function assessIndependentEdge(
     priced: false, // surfaced in the glass box; not yet in the confidence math
     rationale: a.rationale,
   };
+}
+
+// ============================================================
+// Market-echo factor guard. Cross-market factors may remain in the
+// factorBreakdown as context, but their weight must read 0 once the
+// market-probability channels stop feeding the confidence sum — a nonzero
+// weight beside an excluded term would tell the customer the term still
+// drives the number.
+// ============================================================
+
+function zeroMarketEchoFactorWeights(factors: FactorDetail[]): FactorDetail[] {
+  return factors.map((f) =>
+    f.name === "Cross-Market Alignment" || f.name === "Cross-Market Divergence"
+      ? { ...f, weight: 0, impact: "neutral" as const }
+      : f,
+  );
 }
 
 // ============================================================
@@ -314,20 +375,25 @@ function computeEdgeScore(
   const score = normalized * WEIGHTS.EDGE_COMPONENT_MAX;
 
   const pctEdge = Math.round(rawEdge * 100 * 10) / 10;
-  const impact: FactorDetail["impact"] = rawEdge > 0.01 ? "positive" : rawEdge < -0.01 ? "negative" : "neutral";
-
+  // Weight is 0 and impact neutral because edgeComponentScore no longer feeds
+  // the confidence sum (market-echo guard): both inputs here are market
+  // quantities — the book's own de-vigged fair probability vs the offered
+  // price — so calling it a "model edge" was a mislabel, and keeping a
+  // nonzero weight would claim a contribution the number no longer has. The
+  // value itself still ships: edgeScore (the Edge Index) and the reasoning
+  // string carry it, labeled as what it is.
   return {
     rawEdge,
     score,
     factor: {
       name: "Pricing Edge",
-      impact,
+      impact: "neutral",
       description: rawEdge > 0.01
-        ? `Model estimates +${pctEdge}% edge vs market price`
+        ? `De-vigged market fair value sits +${pctEdge}% above the offered price (market-internal comparison, not a model edge; context only — not in confidence)`
         : rawEdge < -0.01
-        ? `Market price appears ${Math.abs(pctEdge)}% overvalued`
-        : "Near fair value — minimal pricing edge",
-      weight: score,
+        ? `Offered price sits ${Math.abs(pctEdge)}% above the de-vigged market fair value (market-internal comparison, not a model edge; context only — not in confidence)`
+        : "Near fair value — offered price matches the de-vigged market probability (context only — not in confidence)",
+      weight: 0,
     },
   };
 }
@@ -547,11 +613,52 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
+  // MARKET-ECHO GUARD (v5.2.7 rewire, owner-authorized 2026-09-27).
+  //
+  // Two channels previously moved this confidence number without any new
+  // information about the game, both measured in
+  // src/__tests__/confidence-market-independence.test.ts:
+  //
+  //   1. edgeComponentScore — computeEdgeScore(fairProb, avgPrice) compares the
+  //      book's own de-vigged fair probability against the offered price. Both
+  //      inputs are market quantities; there is no model anywhere in it. At a
+  //      fixed entry price, moving the OPPOSING side's price moved fairProb
+  //      0.5000 → 0.3957 and confidence 57 → 50. It is the vig asymmetry, not
+  //      an edge.
+  //   2. crossMarketScore — the H2H market's de-vigged probability added ±4/−3
+  //      into the same sum; flipping the H2H market on an identical bet moved
+  //      confidence 61 → 54.
+  //
+  // Both are now context-only: they stay visible in factorBreakdown with
+  // weight 0, and the honest edge lives in independentEdge (model fair values
+  // vs the market), which already gates publication through
+  // pricesWorseThanMarket and prices rankingScore. Confidence here is a
+  // board-quality composite — book agreement, depth, movement, volatility,
+  // game context — and is invariant to the market's probability of the
+  // outcome. The remaining market inputs are STRUCTURE (how many books, how
+  // aligned, how the line moved), never the market's probability.
+  //
+  // NOTE ON MONEYLINE: scoreMoneyline still anchors its confidence on the
+  // de-vigged win probability (consensusPct = fairProb) — for a moneyline
+  // pick that probability IS the pick's substance, the publication gate is
+  // fairProb >= 0.58, and its factor text says "Market implies a N% win
+  // probability" in plain words. That path is labeled market-anchored, not
+  // relabeled as model opinion.
+  //
+  // MODEL_VERSION stays v5.2.7 (founder-frozen constant, calibration table
+  // keyed to it); the version bump this scoring change requires per the
+  // repo's own law is recorded as an open founder decision in the red-team
+  // audit — the constant is not altered here without the number the founder
+  // issues.
+  // Context factors with any market-probability channel zeroed (see the
+  // market-echo guard above the confidence sum).
+  const marketEchoFactors = zeroMarketEchoFactorWeights(contextFactors);
+
   const confidence = Math.round(
     clamp(
-      consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
+      consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + crossMarketScore +
+      headToHeadScore + venueFormScore + uncertaintyPenalty +
       scheduleStressScore + 10,
       0, 100
     )
@@ -568,13 +675,21 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     fairProb,
     dataQualityScore,
     twoSidedImpliedSum >= 1,
+    input.context?.probabilityCalibrator,
   );
+
+  // Our own model prices this side worse than the book. Do not sell it.
+  if (pricesWorseThanMarket(independentEdgeRaw)) return null;
+  // A calm pooled calibration score hid a broken slice. Do not sell it.
+  // Absent history does not vote, and this line does not change a survivor's score.
+  if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
+
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
     rankOnAnyTrueProb: true,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
+    ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
     : null;
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
@@ -607,8 +722,21 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const riskLevel: RiskLevel = computeRiskLevel(pricedOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
+  // PUBLISHED handicap — the number the customer sees, the number we lock, and
+  // the number settlement grades against. `avgSpread` stays the raw mean for
+  // every scoring computation (dispersion, edge, fair value); only the published
+  // artifact snaps onto a line a book actually posted. Without this, the mean is
+  // an integer only when every book agrees, so `homeMargin + line === 0` almost
+  // never holds and PUSH is structurally unreachable (published-line.ts).
+  // `worseWhenHigher` is expressed in HOME perspective: laying the home team
+  // means a lower (more negative) line is worse for us; laying the away team
+  // means a higher line is.
+  const publishedSpread = snapToPostedLine(avgSpread, spreads, !homeIsChosen);
+  const chosenPublishedSpread = homeIsChosen ? publishedSpread : -publishedSpread;
   const spreadDisplay =
-    chosenSpread > 0 ? `+${chosenSpread.toFixed(1)}` : chosenSpread.toFixed(1);
+    chosenPublishedSpread > 0
+      ? `+${formatPublishedLine(chosenPublishedSpread)}`
+      : formatPublishedLine(chosenPublishedSpread);
   const selection = `${chosenTeam} ${spreadDisplay}`;
 
   // Build contextual reasoning clauses
@@ -628,16 +756,48 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
 
-  const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
-    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
-    contextNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
+  const firstContextClause = contextClauses.length > 0
+    ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.`
+    : "";
 
-  const reasoningShort =
-    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
-    (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
+  // Baseball's run line is a FIXED ladder (isPublishableSpreadLine above:
+  // 1.5 standard, 2.5/3.5 alternates only). Every book that prices this
+  // market posts one of those three numbers, so "N% bookmaker consensus"
+  // reads to a customer as independent books agreeing this side is the
+  // better bet, when what it actually measures — on this market only — is
+  // that the number itself has almost no room to differ. Measured on
+  // production 2026-09-13: all 14 published MLB SPREAD picks that day read
+  // consensusPct exactly 1.0000, while TOTAL (0.6364-1.0000) and MONEYLINE
+  // picks on the same board varied — the claim is honest for those markets
+  // and structurally hollow for this one (AGENTS.md, "consensusPct carries
+  // no information on MLB run lines").
+  //
+  // This changes ONLY the prose. `consensusPct`, `consensusScore` and every
+  // number that feeds `confidence` are untouched below — reweighting what
+  // book agreement is worth for a fixed-ladder market is a scoring change
+  // and needs its own MODEL_VERSION bump, not a copy fix. The raw number
+  // still ships on the pick (`consensusPct` field, `factorBreakdown`) —
+  // this only stops the SENTENCE from overclaiming what it means.
+  const isFixedLadderSpreadMarket = isBaseballSport(input.sport);
+
+  const reasoning = isFixedLadderSpreadMarket
+    ? `${chosenTeam} ${spreadDisplay}, the run line priced by ${pricedOdds.length} ` +
+      `bookmaker${pricedOdds.length === 1 ? "" : "s"}. The run line is a fixed number, so book ` +
+      `agreement on it is expected and not read as a signal here. Fair value: ${Math.round(fairProb * 100)}%. ` +
+      `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+      contextNote +
+      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
+    : `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
+      `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+      `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+      contextNote +
+      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
+
+  const reasoningShort = isFixedLadderSpreadMarket
+    ? `${pricedOdds.length} bookmaker${pricedOdds.length === 1 ? "" : "s"} price ${chosenTeam} ${spreadDisplay} ` +
+      `on the fixed run line.` + firstContextClause
+    : `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
+      firstContextClause;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -667,13 +827,17 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "SPREAD",
     selection,
-    // `line` is stored in HOME-team perspective (= avgSpread), matching the
+    // `line` is stored in HOME-team perspective (= publishedSpread), matching the
     // settlement convention (settlement.ts: `homeCoverMargin = homeMargin + line`),
     // the OpeningLine / Game.openingSpread fields, and the CLV helpers. The
     // chosen-side display number lives in `selection` (e.g. "Away Favs -6.0").
     // Storing chosenSpread here previously mis-graded AWAY-favored picks, because
     // chosenSpread is away-perspective for away picks while settlement reads home.
-    line: avgSpread,
+    //
+    // This is the SNAPPED, posted line — identical to the number rendered in
+    // `selection` — not the raw `avgSpread`. It is what process-sport.ts copies
+    // into the write-once `clvLockLine`, so display, lock and grade are one value.
+    line: publishedSpread,
     confidence,
     rankingScore: rank.rankingScore,
     edgeScore,
@@ -849,13 +1013,14 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const confidence = Math.round(
     clamp(
-      consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
+      consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + dataQualityPenalty + 10,
       0, 100
     )
   );
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -863,7 +1028,15 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const direction = overIsChosen ? "OVER" : "UNDER";
-  const selection = `${direction} ${avgTotal.toFixed(1)}`;
+  // PUBLISHED total — see published-line.ts and the SPREAD branch above.
+  // `avgTotal` stays the raw mean for scoring; the customer-visible and graded
+  // number snaps onto a total a book actually posted, so `total === line` (the
+  // only PUSH branch) can fire on the integer finals that really produce pushes.
+  // A HIGHER total is worse for an OVER, a LOWER one worse for an UNDER — that
+  // is how an exact tie is resolved, always against us.
+  const publishedTotal = snapToPostedLine(avgTotal, totals, overIsChosen);
+  const totalDisplay = formatPublishedLine(publishedTotal);
+  const selection = `${direction} ${totalDisplay}`;
 
   const movementNote = lineMovementScore > 5 ? " Total line moving in pick direction." :
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
@@ -876,7 +1049,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
+    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${totalDisplay}.`;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -900,7 +1073,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "TOTAL",
     selection,
-    line: avgTotal,
+    // SNAPPED posted total — same value as `selection`. `avgTotal` remains the
+    // scoring mean. See published-line.ts.
+    line: publishedTotal,
     confidence,
     rankingScore: confidence, // no independent ML edge on totals yet
     edgeScore,
@@ -1123,18 +1298,28 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
 
   // Independent-edge assessment (Kalshi / Poisson / Elo / FPI / ClubElo / Dixon–Coles).
   // rankingScore uses trueProb whenever finite (incl. PASS) — v5.2.1 ranking law.
-  // Heuristic confidence stays as the market-echo composite for UX continuity.
+  // Confidence is market-STRUCTURE (book depth/movement/context) plus the
+  // de-vigged win probability as the consensus term, which for a moneyline
+  // pick IS the pick's substance and is labeled as such in its factor text;
+  // the market-internal edgeComponent and any cross-market probability bonus
+  // are excluded from the sum (market-echo guard, see scoreGame).
+  const marketEchoFactors = zeroMarketEchoFactorWeights(contextFactors);
   const independentEdgeRaw = assessIndependentEdge(
     input.context?.independentFairValues?.filter((fv) => fv.source !== SKELLAM_COVER_SOURCE),
     homeIsChosen,
     fairProb,
     dataQualityScore,
-    twoSidedImpliedSum >= 1
+    twoSidedImpliedSum >= 1,
+    input.context?.probabilityCalibrator,
   );
+
+  // Our own model prices this side worse than the book. Do not sell it.
+  if (pricesWorseThanMarket(independentEdgeRaw)) return null;
+  if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
   const confidence = Math.round(
     clamp(
-      consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
+      consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
       headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
       0, 100
@@ -1148,7 +1333,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     rankOnAnyTrueProb: true,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
+    ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
     : null;
 
   const independentEdgeFactors: FactorDetail[] = independentEdge
@@ -1173,7 +1358,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     depthFactor,
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
+    ...marketEchoFactors,
     ...shadowEvidenceFactors,
     ...independentEdgeFactors,
   ];

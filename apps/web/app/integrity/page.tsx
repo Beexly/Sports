@@ -93,26 +93,26 @@ export default function IntegrityPage() {
         {/* Header */}
         <header className="border-b border-mineral pb-10">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan">
-            Integrity — Governed Decision Path
+            Integrity: Governed Decision Path
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
             How we govern our own automated agents.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-            Our platform&apos;s own agents make tool calls — starting invocations,
+            Our platform&apos;s own agents make tool calls, starting invocations,
             holding credit, dispatching work. Those calls are watched by an
             internal control plane that projects a live event ledger through
             the same abstract model our formal specs are checked against, and
             flags the runtime state that model says should be unreachable.
             This page is about that system, not about betting picks, odds,
-            or grading — see{" "}
+            or grading. See{" "}
             <Link href="/accountability" className="underline hover:text-orbital-cyan">
               /accountability
             </Link>{" "}
             for that.
           </p>
           <p className="mt-3 text-sm text-ion-2">
-            Every claim below links to something you can independently check —
+            Every claim below links to something you can independently check:
             a live receipt route, a published public key, or a document in
             this public repository. Nothing here is asserted without a way to
             verify it yourself.
@@ -128,7 +128,7 @@ export default function IntegrityPage() {
             <IntegrityCard
               eyebrow="Detection"
               title="A live projection, watched"
-              body="Every internal tool call folds the recent event ledger into an abstract state (claim phase, exposure phase, pending-attempt count) — the same shape our TLA+ specs reason over. Two forbidden states are watched for: two-or-more concurrently pending attempts on one invocation, and a rejected fingerprint with nothing binding it."
+              body="Every internal tool call folds the recent event ledger into an abstract state (claim phase, exposure phase, pending-attempt count), the same shape our TLA+ specs reason over. Two forbidden states are watched for: two-or-more concurrently pending attempts on one invocation, and a rejected fingerprint with nothing binding it."
               href={`${REPO_BLOB}/docs/formal/SRQC_STATUS.md#1-architecture-pipeline`}
               linkLabel="See the architecture pipeline"
               external
@@ -136,7 +136,7 @@ export default function IntegrityPage() {
             <IntegrityCard
               eyebrow="Posture"
               title="SHADOW is the only default"
-              body="Detecting a forbidden state does not block anything by default. SHADOW mode always admits and only ever writes an evidence row. An enforcement mode exists, but it is reachable only from an explicitly lab-gated code path — never from a production route, cron, or worker."
+              body="Detecting a forbidden state does not block anything by default. SHADOW mode always admits and only ever writes an evidence row. An enforcement mode exists, but it is reachable only from an explicitly lab-gated code path, never from a production route, cron, or worker."
               href={`${REPO_BLOB}/docs/formal/SRQC_STATUS.md#4-tlc-only-vs-runtime-detection-vs-enforcement`}
               linkLabel="See the enforcement posture"
               external
@@ -144,7 +144,7 @@ export default function IntegrityPage() {
             <IntegrityCard
               eyebrow="Evidence"
               title="Signed, publicly verifiable receipts"
-              body="When a gated tool call is refused (lab-only today), it produces a signed receipt: what was asked, why it was refused, and an ed25519 signature over a canonical payload. Anyone can fetch our published public key and verify a receipt themselves — no shared secret required."
+              body="When a gated tool call is refused (lab-only today), it produces a signed receipt: what was asked, why it was refused, and an ed25519 signature over a canonical payload. Anyone can fetch our published public key and verify a receipt themselves, no shared secret required."
               href="/.well-known/receipt-keys.json"
               linkLabel="View the public keyring"
             />
@@ -157,8 +157,7 @@ export default function IntegrityPage() {
             Shadow evidence &amp; active certificate
           </h2>
           <p className="text-sm leading-6 text-ion-1">
-            We do not publish a live shadow-would-refuse counter on this page —
-            a number here with no way for an outside reader to recompute it
+            We do not publish a live shadow-would-refuse counter on this page. A number here with no way for an outside reader to recompute it
             would just be a claim, not evidence. Instead, the honest,
             independently-reproducible numbers live in one place:
           </p>
@@ -166,7 +165,7 @@ export default function IntegrityPage() {
             <li className="flex items-start gap-3">
               <span aria-hidden className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
               <span>
-                Real TLC model-checking receipts, real state/depth counts —{" "}
+                Real TLC model-checking receipts, real state/depth counts.{" "}
                 <Link href={`${REPO_BLOB}/docs/formal/SRQC_STATUS.md#3-what-is-proved-real-receipts-real-numbers`} className="underline hover:text-orbital-cyan" target="_blank" rel="noopener noreferrer">
                   §3, &quot;What is PROVED&quot;
                 </Link>
@@ -177,8 +176,8 @@ export default function IntegrityPage() {
               <span aria-hidden className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
               <span>
                 Whether any certificate version is currently active (today:
-                no — activation is a human-only CLI action, never automated)
-                —{" "}
+                no, activation is a human-only CLI action, never automated).
+                {" "}
                 <Link href={`${REPO_BLOB}/docs/formal/SRQC_STATUS.md#10-active-certificate`} className="underline hover:text-orbital-cyan" target="_blank" rel="noopener noreferrer">
                   §10, &quot;Active certificate&quot;
                 </Link>
@@ -189,7 +188,7 @@ export default function IntegrityPage() {
               <span aria-hidden className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
               <span>
                 Seven concrete steps to verify all of this yourself, not just
-                trust it —{" "}
+                trust it.{" "}
                 <Link href={`${REPO_BLOB}/docs/formal/SRQC_STATUS.md#11-attack-checklist-for-outsiders`} className="underline hover:text-orbital-cyan" target="_blank" rel="noopener noreferrer">
                   §11, &quot;Attack checklist for outsiders&quot;
                 </Link>
@@ -208,7 +207,7 @@ export default function IntegrityPage() {
             <IntegrityCard
               eyebrow="90-second walkthrough"
               title="Force a REFUSE, verify the signature"
-              body="A scripted, end-to-end walkthrough: trigger a real violation, get a signed REFUSE receipt, open it over HTTP, fetch the public keyring, and verify the signature — all runnable from a clean checkout."
+              body="A scripted, end-to-end walkthrough: trigger a real violation, get a signed REFUSE receipt, open it over HTTP, fetch the public keyring, and verify the signature, all runnable from a clean checkout."
               href={`${REPO_BLOB}/docs/devrel/DEMO_SCRIPT.md`}
               linkLabel="Read the demo script"
               external
@@ -216,7 +215,7 @@ export default function IntegrityPage() {
             <IntegrityCard
               eyebrow="Full record"
               title="The single honest status document"
-              body="Architecture, what is actually proved (with real receipt numbers), enforcement posture, a full SHA-traceable receipts index, and every explicit non-claim — kept current against main, not a point-in-time snapshot."
+              body="Architecture, what is actually proved (with real receipt numbers), enforcement posture, a full SHA-traceable receipts index, and every explicit non-claim, kept current against main, not a point-in-time snapshot."
               href={`${REPO_BLOB}/docs/formal/SRQC_STATUS.md`}
               linkLabel="Read SRQC_STATUS.md"
               external
@@ -230,7 +229,7 @@ export default function IntegrityPage() {
             Two different things called &quot;integrity&quot;
           </h2>
           <p className="text-sm leading-6 text-ion-1">
-            This page is about one of them. Keeping them separate matters —
+            This page is about one of them. Keeping them separate matters:
             they share a value but not a subject, and merging them would let a
             strong claim about one imply an unearned claim about the other.
           </p>
@@ -258,7 +257,7 @@ export default function IntegrityPage() {
               </p>
               <p className="mt-2 text-sm leading-6 text-ion-1">
                 Whether a rate, edge, or record we display is backed by
-                coverage, a lower bound, CLV, and walk-forward provenance — and
+                coverage, a lower bound, CLV, and walk-forward provenance. It
                 is withheld when it is not. Subject:{" "}
                 <em>the claims we make about picks</em>.
               </p>
@@ -281,7 +280,7 @@ export default function IntegrityPage() {
           <p className="mt-4 text-sm text-ion-2">
             A signed receipt proves an agent decision happened as recorded. It
             says nothing about whether a betting claim is statistically
-            supported — that is the Glass Ledger&apos;s job, and it stays sealed
+            supported. That is the Glass Ledger&apos;s job, and it stays sealed
             until the evidence clears its own bar.
           </p>
         </section>
@@ -290,7 +289,7 @@ export default function IntegrityPage() {
           Seven structural failure modes.
 
           Placed directly after the two-integrities section because it belongs
-          to the SECOND one — whether a published number is substantiated — and
+          to the SECOND one, whether a published number is substantiated, and
           reading it as a claim about the agent control plane would be the same
           category error that section exists to prevent.
 
@@ -305,7 +304,7 @@ export default function IntegrityPage() {
           <p className="max-w-3xl text-sm leading-6 text-ion-1">
             Every one of these is available to anyone publishing predictions,
             ourselves included, and most of them happen without anyone deciding
-            to mislead — which is why each needs a structural guard rather than
+            to mislead, which is why each needs a structural guard rather than
             good intentions. We name no companies: these are mechanisms, and the
             useful question is not who does them but where each one is blocked.
             Each row links to somewhere you can check ours.
@@ -362,9 +361,9 @@ export default function IntegrityPage() {
             {[
               "Not a parameterized (∀N) proof. Every model-checking result behind this page is a fixed-constant, finite-cutoff check, not a machine-checked universal statement.",
               "Not a production enforce-by-default posture. SHADOW is the only default anywhere this admission check runs. Enforcement is reachable only from an explicitly lab-gated path, confirmed by direct code search, not assertion.",
-              "Not a claim about bet-settlement correctness or any user-facing betting logic. This entire surface is about internal AI/agent tool-call admission bookkeeping — nothing about odds, grading, or picks.",
+              "Not a claim about bet-settlement correctness or any user-facing betting logic. This entire surface is about internal AI/agent tool-call admission bookkeeping, nothing about odds, grading, or picks.",
               "Not a SOC 2, ISO 27001, or EU AI Act certification. Related internal alignment work exists and is documented separately, but nothing on this page is a certification claim.",
-              "Not autonomous. Certificate-version activation is a human-only, manually-run action — never triggered by CI, a cron job, or any automated caller.",
+              "Not autonomous. Certificate-version activation is a human-only, manually-run action, never triggered by CI, a cron job, or any automated caller.",
             ].map((line) => (
               <li key={line} className="flex items-start gap-3">
                 <span

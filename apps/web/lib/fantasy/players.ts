@@ -118,10 +118,10 @@ export const PLAYERS: readonly Player[] = [
 export const POSITIONS: readonly Pos[] = ["QB", "RB", "WR", "TE"];
 
 export const POS_HEX: Record<Pos, string> = {
-  QB: "#00E5FF",
-  RB: "#7B61FF",
-  WR: "#FF38C7",
-  TE: "#F5F7FF",
+  QB: "#FF4D2E",
+  RB: "#C9D4CE",
+  WR: "#FF7A5C",
+  TE: "#EDE8E0",
 };
 
 /** Replacement-level baseline per position (the Nth starter across a 12-team league). */

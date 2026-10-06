@@ -43,12 +43,12 @@ export function HolographicReceipt({
 
   const stampColor =
     stamp === "verified"
-      ? "#00E5FF"
+      ? "#FF4D2E"
       : stamp === "gated"
-        ? "#FF38C7"
+        ? "#FF4D2E"
         : stamp === "settled"
           ? "#5FD9A3"
-          : "#7B61FF";
+          : "#C9D4CE";
 
   return (
     <div
@@ -89,7 +89,7 @@ export function HolographicReceipt({
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
-              background: `radial-gradient(ellipse 80% 80% at ${sheen.x}% ${sheen.y}%, rgba(0,229,255,0.08) 0%, rgba(123,97,255,0.05) 40%, transparent 70%)`,
+              background: `radial-gradient(ellipse 80% 80% at ${sheen.x}% ${sheen.y}%, rgba(255,77,46,0.08) 0%, rgba(201,212,206,0.05) 40%, transparent 70%)`,
               mixBlendMode: "overlay",
             }}
           />
@@ -101,7 +101,7 @@ export function HolographicReceipt({
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-30"
             style={{
-              background: `linear-gradient(${105 + sheen.tilt * 2}deg, transparent 30%, rgba(0,229,255,0.06) 40%, rgba(255,56,199,0.06) 50%, rgba(123,97,255,0.06) 60%, transparent 70%)`,
+              background: `linear-gradient(${105 + sheen.tilt * 2}deg, transparent 30%, rgba(255,77,46,0.06) 40%, rgba(255,77,46,0.06) 50%, rgba(201,212,206,0.06) 60%, transparent 70%)`,
             }}
           />
         )}
@@ -116,7 +116,7 @@ export function HolographicReceipt({
               className="font-arch"
               style={{
                 fontSize: "clamp(3rem, 10vw, 6rem)",
-                color: "#F5F7FF",
+                color: "#EDE8E0",
                 transform: `rotate(${-sheen.tilt * 0.5}deg)`,
               }}
             >

@@ -1,6 +1,7 @@
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { CountUp } from "@/components/ui/count-up";
 import { getClaim } from "@/lib/trust-claims";
+import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
 
 /**
  * Methodology / Trust Surface
@@ -50,40 +51,40 @@ export interface TrustLedgerMetrics {
 
 const ITEMS: readonly MethodologyItem[] = [
   {
-    title: "Live odds ingestion",
+    title: "We pull live odds from real sportsbooks",
     claimId: "methodology.odds-ingestion",
     lane: "data",
   },
   {
-    title: "Bookmaker coverage as a transparency signal",
+    title: "More books pricing a game = more trust in the number",
     claimId: "methodology.bookmaker-coverage",
     lane: "data",
   },
   {
-    title: "Data freshness on every pick",
+    title: "Every pick shows when its data was last updated",
     claimId: "methodology.data-freshness",
     lane: "data",
   },
   {
-    title: "Calibrated confidence presentation",
+    title: "We don't fake confidence with decimal points",
     claimId: "methodology.confidence-presentation",
-    hint: "Until we have enough settled outcomes to calibrate against, confidence is shown as a label, not a number.",
+    hint: "Until we have enough settled games to calibrate against, confidence is a label, not a number.",
     lane: "model",
   },
   {
-    title: "Risk level on every pick",
+    title: "Every pick carries a risk level",
     claimId: "methodology.risk-levels",
     lane: "model",
   },
   {
-    title: "Factor breakdown for subscribers",
+    title: "Subscribers see exactly which factors moved a pick",
     claimId: "methodology.factor-breakdown",
     lane: "model",
   },
   {
-    title: "Public performance is gated, not advertised",
+    title: "We don't advertise win rates we can't back up",
     claimId: "performance.public-stats-gated",
-    hint: "When you see win-loss numbers on the Performance page, you'll also see the period, sample size, model version, and the exact win-rate definition.",
+    hint: "When you see win-loss numbers, you'll also see the period, sample size, model version, and the exact definition.",
     lane: "gate",
   },
 ];
@@ -220,10 +221,12 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
               >
                 Board data as-of{" "}
                 <time dateTime={metrics.lastRefresh}>
-                  {new Date(metrics.lastRefresh).toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
+                  {/* Central, and labelled. Without an explicit timeZone this
+                      formatted in the SERVER's zone (UTC on Vercel) and, with no
+                      timeZoneName either, printed a bare wrong clock face with
+                      nothing for the reader to correct by. This block renders on
+                      the homepage. */}
+                  {formatCentralTime(new Date(metrics.lastRefresh))} {CT_SUFFIX}
                 </time>
               </p>
             )}

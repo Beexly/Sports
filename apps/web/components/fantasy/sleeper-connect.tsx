@@ -147,16 +147,38 @@ export function SleeperConnect() {
 
       {error && <p role="alert" className="rounded-lg border border-alert/30 p-3 text-sm text-alert">{error}</p>}
 
-      {/* league picker */}
+      {/* league picker — the marquee moment: your leagues as a broadcast slate */}
       {leagues && leagues.length > 0 && !view && (
-        <div className="surface-card p-4">
-          <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">Pick a league</p>
-          <div className="space-y-2">
-            {leagues.map((l) => (
+        <div className="relative overflow-hidden rounded-2xl border border-orbital-cyan/20 bg-gradient-to-b from-white/[0.04] to-transparent p-5 sm:p-7">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% -10%, rgba(0,229,255,0.10), transparent 65%)",
+            }}
+          />
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orbital-cyan">
+            {leagues.length} {leagues.length === 1 ? "league" : "leagues"} found
+          </p>
+          <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+            Pick your arena.
+          </h3>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {leagues.map((l, i) => (
               <button key={l.id} type="button" onClick={() => pick(l)} disabled={busy}
-                className="flex w-full items-center justify-between rounded-lg border border-mineral p-3 text-left transition-colors hover:bg-white/5">
-                <span className="text-sm font-semibold text-ion-white">{l.name}</span>
-                <span className="text-xs text-ion-2">{l.size}-team · {l.status.replace(/_/g, " ")}</span>
+                className="group relative overflow-hidden rounded-xl border border-mineral/70 bg-black/30 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-orbital-cyan/60 hover:shadow-[0_8px_40px_-8px_rgba(0,229,255,0.35)] disabled:opacity-50">
+                <span aria-hidden className="pointer-events-none absolute -right-1 -top-4 font-display text-6xl font-bold text-white/[0.06] transition-colors group-hover:text-orbital-cyan/10">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="block font-display text-lg font-semibold text-ion-white">{l.name}</span>
+                <span className="mt-2 flex items-center gap-2 text-xs text-ion-2">
+                  <span className="rounded-full bg-white/5 px-2 py-0.5 font-mono uppercase tracking-wider">{l.size}-team</span>
+                  <span className="rounded-full bg-white/5 px-2 py-0.5 font-mono uppercase tracking-wider">{l.status.replace(/_/g, " ")}</span>
+                </span>
+                <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan opacity-0 transition-opacity group-hover:opacity-100">
+                  Enter league →
+                </span>
               </button>
             ))}
           </div>

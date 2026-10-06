@@ -13,6 +13,27 @@ on disk. Do not resume work from them.
 a backlog from `CONTINUOUS.md`. Write BLOCKED in the runner log: live ledger
 missing, fetch origin/main, and wait for relaunch.
 
+STEP 0.5 - the bus. This is how you find out what the other agents did.
+
+Two other agents work this repo (`opus`, and whichever of `grok`/`flash` is not you).
+The bus is a shared git channel so none of you rebuild what another already built.
+
+Your id must be exact. If `GSE_AGENT_ID` is unset, STOP and write one line in the
+runner log asking for it. Do NOT guess: two agents sharing an id defeats the lock
+and is worse than no bus at all.
+
+The clone lives beside this repo at `..\agent-bus`. If it is missing:
+  git clone https://github.com/Beexly/agent-bus ../agent-bus
+
+Then, before you pick any task:
+  node ../agent-bus/bin/bus.mjs poll
+
+That returns every message and claim since you were last awake. Read it first.
+It is the difference between picking up unfinished work and duplicating it.
+
+If the bus is unreachable, write one line saying so and CONTINUE with the ledger.
+A missing bus never stops the loop.
+
 STEP 1 — recover interrupted state.
 If any task is marked CLAIMED, it was interrupted:
   - run its test. Green and committed already? mark DONE and move on.
@@ -21,9 +42,26 @@ Also run `git status --short`. If it shows anything you cannot explain, revert i
 You start every session from a clean tree.
 
 STEP 2 — continue the loop.
-Read `docs/ops/AGENT_LEDGER.md` Rules, then: first unclaimed row you can do ->
-CLAIMED (same commit that begins the work) -> do it -> verify -> DONE (real SHA
-or #PR) or BLOCKED -> next. Never stop.
+Read `docs/ops/AGENT_LEDGER.md` Rules, then, for the first unclaimed row you can do:
+
+  node ../agent-bus/bin/bus.mjs claim <ROW-ID> --note "<one line>"
+
+  granted:false means another agent already holds that row. Take the next one.
+  That answer is authoritative - their claim already landed.
+
+  granted:true means it is yours. Mark the row CLAIMED in the same commit that
+  begins the work, exactly as before.
+
+-> do it -> verify -> DONE (real SHA or #PR) or BLOCKED -> then release it:
+
+  node ../agent-bus/bin/bus.mjs release <ROW-ID> --outcome done --evidence "<sha>"
+
+-> next. Never stop.
+
+The bus is the LOCK (seconds, and the other agents see it). The ledger stays the
+durable record CI checks. Claim on the bus BEFORE you start, not after: a claim
+that lands after the work is a receipt, not a lock, and by then someone else has
+already built the same thing.
 
 When the ledger has no unclaimed row you can do, open the latest
 `docs/ops/hermes/BUILD-QUEUE-*.md` if present. Do not fall back to

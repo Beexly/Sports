@@ -120,7 +120,7 @@ function inputClaim(mode: GateMode): { badge: string; body: JSX.Element } {
           , read from the database when you loaded this page. Prices are the
           captured quotes for each pick&apos;s own market, de-vigged from both
           sides. Calibration comes only from settled picks whose provenance
-          proves they were eligible to learn from — a pick without that proof is
+          proves they were eligible to learn from, a pick without that proof is
           excluded rather than assumed good.
         </>
       ),
@@ -132,11 +132,11 @@ function inputClaim(mode: GateMode): { badge: string; body: JSX.Element } {
       <>
         <strong className="text-ion-white">The decision logic is production code.</strong>{" "}
         Nothing here is mocked or written to produce a pleasing answer.{" "}
-        <strong className="text-ion-white">The input rows are illustrative</strong> — they
+        <strong className="text-ion-white">The input rows are illustrative</strong>: they
         are not today&apos;s slate. Feeding live picks in requires a data join
         whose behaviour we have not yet verified against real rows, and shipping
         an unverified join on a page about honesty would be the exact failure
-        this page argues against. Real gate, labelled inputs — never the reverse.
+        this page argues against. Real gate, labelled inputs, never the reverse.
       </>
     ),
   };
@@ -147,7 +147,7 @@ function nonClaims(mode: GateMode): string[] {
   const shared = [
     "No win rate, ROI, or performance result is asserted anywhere on this page.",
     "A fired decision here is a demonstration of the rule, not a recommendation.",
-    "Nothing here is persisted to the ledger — no receipt is created by loading this page.",
+    "Nothing here is persisted to the ledger, no receipt is created by loading this page.",
   ];
   if (mode === "live") {
     return [
@@ -162,6 +162,53 @@ function nonClaims(mode: GateMode): string[] {
     "The rows are illustrative inputs, not today's published picks.",
   ];
 }
+
+/**
+ * Estimator and first-class No-Bet, both turned ON 2026-09-18 (founder: "flip
+ * on the venn abers"). Until now this call passed `{}`, so the gate ran the
+ * legacy isotonic interval with the width veto DISABLED.
+ *
+ * `source: "ivap"` is the inductive Venn-Abers predictor. The old default is
+ * also a Venn-Abers interval, so this is a change of estimator, not a change
+ * of kind: measured on the illustrative slate the fired widths move 0.0050 to
+ * 0.0052 and not one outcome changes.
+ *
+ * `maxWidthForFire` is the part that can refuse. It is a CEILING on epistemic
+ * width: however good the lower bound looks, a calibrated interval this wide
+ * means the calibration set does not pin the probability down, and firing on
+ * it would publish a confident-sounding guess.
+ *
+ * WHERE THE NUMBER COMES FROM, measured 2026-09-18 on the illustrative slate
+ * (278 calibration rows, 8 candidates), widths of FIRED intervals as the
+ * calibration behind each stratum is thinned toward the gate's own n floor of
+ * MIN_STRATUM_CALIBRATION = 100:
+ *
+ *     calibration rows per stratum    max fired width
+ *              100 (the floor)             0.0909
+ *              110                         0.0909
+ *              125                         0.0887
+ *              150                         0.0735
+ *              278 (today)                 0.0052
+ *
+ * So width is a function of calibration DEPTH, not of the pick: a 17x spread
+ * between a well-calibrated stratum and one sitting on the n floor. 0.10 is a
+ * real ceiling the thinnest permitted stratum approaches (0.0909) and does not
+ * cross.
+ *
+ * STATE THIS PLAINLY RATHER THAN OVERSELL IT: on today's inputs, at full depth
+ * AND at the n floor, this cap vetoes ZERO rows. It is insurance against the
+ * regime we are heading into, not a filter that changes today's output. The
+ * regime is real and is already here for football: AGENTS.md records NFL at
+ * ~70 settled picks ever, below the n floor, so NFL strata are the ones that
+ * will sit at minimum depth and produce the widest intervals.
+ *
+ * 0.08 is the aggressive alternative: it starts refusing at floor depth today.
+ * It was NOT chosen because it is tuned to this illustrative set rather than
+ * derived, and over-fitting a refusal threshold to a demo slate is how a gate
+ * stops meaning anything. Changing it is this one line, and the table above is
+ * the evidence to change it against.
+ */
+const GATE_OPTIONS = { source: "ivap", maxWidthForFire: 0.1 } as const;
 
 export default async function GatePage(): Promise<JSX.Element> {
   // One call decides both the mode and the rows. See gate-page-mode.ts for why
@@ -181,7 +228,7 @@ export default async function GatePage(): Promise<JSX.Element> {
     source.calibration.rows,
     source.candidates.rows,
     TAU,
-    {},
+    GATE_OPTIONS,
     source.candidates.excluded,
   );
 
@@ -206,7 +253,7 @@ export default async function GatePage(): Promise<JSX.Element> {
           <p className="mt-4 text-base leading-7 text-ion-1">
             Everything below was decided by the product&apos;s real selective-gate
             code, run when you loaded this page. The reasons are the gate&apos;s
-            own — not copy written to sound careful. It does not yet decide the
+            own, not copy written to sound careful. It does not yet decide the
             published board; those refusals still come from a separate stored
             path, and saying otherwise would overstate where this is wired.
           </p>
@@ -237,6 +284,14 @@ export default async function GatePage(): Promise<JSX.Element> {
           <p className="mt-3 font-mono text-[11px] text-ion-3">
             edge threshold τ = {TAU} · fire when the calibrated lower bound
             clears the de-vigged price at all, with no added margin
+          </p>
+          {/* Both knobs disclosed, because a refusal the reader cannot check
+              the terms of is just an assertion. */}
+          <p className="mt-1 font-mono text-[11px] text-ion-3">
+            interval = {GATE_OPTIONS.source} · max width to fire ={" "}
+            {GATE_OPTIONS.maxWidthForFire} · an interval wider than that means the
+            calibration does not pin the probability down, so the row is refused
+            however good its lower bound looks
           </p>
           {source.degradedReason && (
             // Shown, not swallowed. A page that quietly degrades from live to
@@ -280,18 +335,18 @@ export default async function GatePage(): Promise<JSX.Element> {
           </h2>
           <ul className="flex flex-col gap-3 text-sm leading-6 text-ion-1">
             <li>
-              <strong className="text-ion-white">No bet</strong> — we evaluated this against
+              <strong className="text-ion-white">No bet</strong>: we evaluated this against
               real settled history and the lower bound did not clear the price
               after vig. A judgement.
             </li>
             <li>
-              <strong className="text-ion-white">Not judged</strong> — this category does not
+              <strong className="text-ion-white">Not judged</strong>: this category does not
               have enough settled history to calibrate against yet, so the model
               was never asked. Not a judgement, and we will not dress it up as
               one.
             </li>
             <li>
-              <strong className="text-ion-white">Not evaluated</strong> — an input was
+              <strong className="text-ion-white">Not evaluated</strong>: an input was
               missing, so nothing reached the model. Says nothing about the game.
             </li>
           </ul>
@@ -316,11 +371,11 @@ export default async function GatePage(): Promise<JSX.Element> {
             ))}
           </ul>
           <p className="mt-5 text-sm text-ion-2">
-            The governance side of this —{" "}
+            The governance side of this,{" "}
             <Link href="/integrity" className="underline hover:text-orbital-cyan">
               how our agents are governed
-            </Link>{" "}
-            — is a separate claim about a separate subject.
+            </Link>
+            , is a separate claim about a separate subject.
           </p>
         </section>
       </main>

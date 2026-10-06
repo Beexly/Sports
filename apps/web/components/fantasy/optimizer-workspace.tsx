@@ -62,14 +62,43 @@ export function OptimizerWorkspace({
         <p className="text-sm text-ion-1">{active.blurb}</p>
       </div>
 
-      {tab === "dfs" && <DfsOptimizer />}
-      {tab === "startsit" && <LineupOptimizer pool={pool} />}
+      {/* Dual-door fix (ASTRA A-7): the DFS tab is the same tool as /fantasy/dfs.
+          That page carries the salary board and the licensed-feed empty state
+          this tab never had. Link through instead of shipping two experiences. */}
+      {tab === "dfs" && (
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs leading-5 text-ion-1">
+              Build cash / GPP / leverage lineups against the slate: locks, fades, exposure, stacking.{" "}
+              The full page also carries the salary board and the licensed-feed status.
+            </p>
+            <Link href="/fantasy/dfs" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
+              Open full DFS page →
+            </Link>
+          </div>
+          <DfsOptimizer />
+        </div>
+      )}
+      {tab === "startsit" && (
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs leading-5 text-ion-1">
+              Season-long lineup by floor, median, and ceiling: who to start and why.{" "}
+              {pool ? "Live graded pool: real players." : "Sample players until a licensed projections feed is connected."}
+            </p>
+            <Link href="/fantasy/lineup" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
+              Open full page →
+            </Link>
+          </div>
+          <LineupOptimizer pool={pool} />
+        </div>
+      )}
       {tab === "draft" && (
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs leading-5 text-ion-1">
               Live draft board: tiers, value over replacement, positional scarcity, run alerts, and your
-              own ADP overlay. {pool ? "Live graded pool: real players." : "Illustrative pool until a licensed projections feed is connected."}
+              own ADP overlay. {pool ? "Live graded pool: real players." : "Sample players until a licensed projections feed is connected."}
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">Open full page →</Link>
           </div>

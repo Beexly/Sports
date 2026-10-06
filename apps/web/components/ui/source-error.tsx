@@ -27,13 +27,13 @@ const VARIANTS: Record<
 > = {
   paper: {
     wrap: "border-paper-border bg-paper-raised",
-    kicker: "text-alert-on-light",
+    kicker: "text-alarm-on-light",
     title: "text-ink",
     reason: "text-ink-1",
   },
   dark: {
     wrap: "border-mineral bg-eclipse",
-    kicker: "text-alert",
+    kicker: "text-alarm",
     title: "text-ion-white",
     reason: "text-ion-1",
   },

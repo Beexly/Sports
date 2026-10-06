@@ -1,5 +1,57 @@
 import { describe, expect, it } from "vitest";
-import { sliceCalibrationMetrics } from "@/lib/calibration/metric-slices";
+import { bootstrapDebiasedEceLowerBound, sliceCalibrationMetrics } from "@/lib/calibration/metric-slices";
+import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
+
+describe("C-298: per-slice bootstrap lower bound of the debiased ECE", () => {
+  function lcg(seed: number): () => number {
+    let s = seed >>> 0;
+    return () => {
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 4294967296;
+    };
+  }
+  function calibrated(n: number, seed: number) {
+    const r = lcg(seed);
+    return Array.from({ length: n }, () => {
+      const p = 0.5 + 0.45 * r();
+      return { p, y: (r() < p ? 1 : 0) as 0 | 1 };
+    });
+  }
+  it("is null under 30 rows, present and deterministic at 30 or more, and never above the point estimate", () => {
+    expect(bootstrapDebiasedEceLowerBound(calibrated(29, 1))).toBeNull();
+    const rows = calibrated(221, 7);
+    const lo = bootstrapDebiasedEceLowerBound(rows);
+    expect(lo).not.toBeNull();
+    expect(bootstrapDebiasedEceLowerBound(rows)).toBe(lo);
+    const point = debiasedExpectedCalibrationError(rows, 10, 0).debiased;
+    expect(lo!).toBeLessThanOrEqual(point);
+    expect(lo!).toBeGreaterThanOrEqual(0);
+  });
+  it("a slice built by sliceCalibrationMetrics carries the bound, and a small slice carries null", () => {
+    const big = calibrated(120, 3).map((s) => ({ ...s, modelVersion: "v5.2.7" }));
+    const small = calibrated(12, 4).map((s) => ({ ...s, modelVersion: "v5.2.8" }));
+    const slices = sliceCalibrationMetrics([...big, ...small], (s) => s.modelVersion);
+    const v527 = slices.find((s) => s.key === "v5.2.7")!;
+    const v528 = slices.find((s) => s.key === "v5.2.8")!;
+    expect(typeof v527.eceDebiasedCi90Lo).toBe("number");
+    expect(v527.eceDebiasedCi90Lo!).toBeLessThanOrEqual(v527.eceDebiased);
+    expect(v528.eceDebiasedCi90Lo).toBeNull();
+  });
+  it("a genuinely miscalibrated slice keeps its bound above the floor", () => {
+    // A 20-point gap everywhere at the deployed version's size. The bound is a
+    // 5th percentile, so a slice that is only marginally off (a 12-point gap
+    // at n 274 reads a bound near 0.04) is given the benefit of the doubt by
+    // design; one that is clearly off is not.
+    const r = lcg(11);
+    const rows = Array.from({ length: 274 }, () => {
+      const p = 0.6 + 0.35 * r();
+      return { p, y: (r() < p - 0.2 ? 1 : 0) as 0 | 1 };
+    });
+    const lo = bootstrapDebiasedEceLowerBound(rows)!;
+    expect(lo).toBeGreaterThan(0.05);
+    expect(debiasedExpectedCalibrationError(rows, 10, 0).debiased).toBeGreaterThan(lo);
+  });
+});
 
 /**
  * C-276. Every eligibility floor (n, Brier, ECE, murphyRel) measures calibration

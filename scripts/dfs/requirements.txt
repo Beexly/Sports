@@ -1,0 +1,15 @@
+# Python lane used by the DFS oracle only (dev-time verification, never shipped).
+#
+# Install:  python -m pip install -r scripts/dfs/requirements.txt
+# Run:      python scripts/dfs/oracle.py                # shipped illustrative slate
+#           python scripts/dfs/oracle.py --synthetic 12 # + generated slates
+#           npm run dfs:oracle                          # same thing, via npm
+#
+# ortools is CP-SAT: the independent optimum the DFS engine is measured against.
+# Nothing in apps/ imports anything from this lane.
+#
+# Interpreter note: verified against python 3.11 (this machine's `python`, where
+# the wheel resolves). `python3` on this box is 3.14, which is why the npm script
+# calls `python` explicitly rather than following the `python3` convention used by
+# scripts/statking_*.py.
+ortools>=9.15

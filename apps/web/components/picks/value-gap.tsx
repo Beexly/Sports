@@ -1,7 +1,10 @@
 /**
  * Value gap — the honest "GSE vs market" number.
  *
- * `p` (the model's calibrated ranking probability) and `q` (the market's
+ * `p` (the model's ranking probability — a sort key, NOT calibrated; the word
+ * was removed in v5.2.8 Phase 2 / CAL-11 because no fitted map is applied to
+ * it and measuring it against outcomes shows it over-confident through the
+ * upper middle) and `q` (the market's
  * de-vig fair probability) already render separately on every pick card
  * (see pick-card.tsx's "Ranking P" / "Market fair (de-vig)" lines). Nobody
  * subtracts them for the reader. This is that subtraction, made a first-class
@@ -72,7 +75,7 @@ export function ValueGapBadge({ rankingP, marketFairProb }: ValueGapInput) {
     <span
       data-testid="value-gap-badge"
       className={`ml-2 text-[10px] font-normal ${SIGN_CLASS[result.sign]}`}
-      title="Model ranking probability minus market fair (de-vig) probability. This is a disagreement with the market's price — it says nothing about whether the bet wins."
+      title="Model ranking probability minus the market's fair probability. This is a disagreement with the market's price — it says nothing about whether the bet wins."
     >
       {label}
     </span>

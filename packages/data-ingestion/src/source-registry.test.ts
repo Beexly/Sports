@@ -79,13 +79,21 @@ describe("legal source registry", () => {
   });
 
   it("refuses scrape-/non-commercial sources from the source dumps", () => {
-    for (const id of ["sports-reference", "fangraphs", "pff", "statsbomb-free", "ergast", "understat"]) {
+    // NOTE: "pff" is deliberately NOT in this refuse-list. Founder override
+    // 2026-09-18 (Garrett): grades embedded in PFF's own PUBLIC player pages
+    // (__NEXT_DATA__) are ingestible with per-ingestion citation (time/date/URL);
+    // only the paid PFF API stays off-limits. See the pff registry entry.
+    for (const id of ["sports-reference", "fangraphs", "statsbomb-free", "ergast", "understat"]) {
       expect(isIngestible(id)).toBe(false);
       expect(() => assertIngestible(id)).toThrow();
     }
     // The famous "free" traps are correctly non-commercial / forbidden.
     expect(getSource("statsbomb-free")?.commercialUse).toBe(false);
     expect(getSource("ergast")?.license.spdx).toBe("CC-BY-NC-4.0");
+    // PFF public page-embedded grades: caution-gated, attribution-required, non-commercial.
+    expect(getSource("pff")?.verdict).toBe("use-with-caution");
+    expect(getSource("pff")?.commercialUse).toBe(false);
+    expect(getSource("pff")?.attributionRequired).toBe(true);
   });
 
   it("partitions the registry into cleared vs forbidden/paid", () => {
@@ -121,6 +129,46 @@ describe("legal source registry", () => {
       expect(source.license.url).toMatch(/^https?:\/\//);
       expect(source.reason.length).toBeGreaterThan(10);
       expect(getSource(source.id)).toBe(source);
+    }
+  });
+
+  it("clears Firecrawl open sources and gates commercial/health vendors", () => {
+    // Open / free sources from the 2026-09-25 intelligence pack.
+    expect(isIngestible("openligadb")).toBe(true);
+    expect(getSource("openligadb")?.license.spdx).toBe("ODbL-1.0");
+    expect(attributionFor("openligadb")).toMatch(/OpenLigaDB/i);
+    expect(isIngestible("thesportsdb")).toBe(true);
+    expect(attributionFor("thesportsdb")).toMatch(/TheSportsDB/i);
+    expect(isIngestible("openf1")).toBe(true);
+    expect(getSource("openf1")?.verdict).toBe("use-with-caution");
+    expect(getSource("openf1")?.commercialUse).toBe(false);
+
+    // Commercial vendors are declared but founder-gated until a contract exists.
+    for (const id of [
+      "sportradar",
+      "genius-sports",
+      "stats-perform",
+      "api-sports",
+      "football-data-org",
+      "sportmonks",
+    ]) {
+      expect(getSource(id)?.verdict).toBe("paid-required");
+      expect(isIngestible(id)).toBe(false);
+      expect(() => assertIngestible(id)).toThrow(/paid-required/);
+    }
+
+    // Official public injury reports: facts-only, caution-gated.
+    for (const id of ["nba-official-injury", "nfl-official-injury", "mlb-injury-report"]) {
+      expect(getSource(id)?.verdict).toBe("use-with-caution");
+      expect(getSource(id)?.attributionRequired).toBe(true);
+      expect(isIngestible(id)).toBe(true);
+    }
+
+    // Sensitive health APIs: consent-gated, not auto-ingestible.
+    for (const id of ["whoop-api", "oura-api"]) {
+      expect(getSource(id)?.verdict).toBe("paid-required");
+      expect(isIngestible(id)).toBe(false);
+      expect(() => assertIngestible(id)).toThrow(/paid-required/);
     }
   });
 });

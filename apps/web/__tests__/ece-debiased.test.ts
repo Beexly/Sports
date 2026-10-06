@@ -257,3 +257,64 @@ describe("C-292: the deployed-version floor reads the same correction on the sli
     expect(r.reasons.join(" ")).toContain("Deployed v5.2.8 has 40 own settled rows < floor 100");
   });
 });
+
+describe("C-298: the deployed-version floor reads the slice's 5th-percentile bound when it has one", () => {
+  const pooledGreen = {
+    n: 344,
+    brier: 0.19,
+    ece: 0.0577,
+    eceNoise: 0.041,
+    eceDebiased: 0.0327,
+    mce: 0.3,
+    murphy: { reliability: 0.0077, resolution: 0.027, uncertainty: 0.235 },
+    modelVersion: "mixed",
+    dateRange: "2026-06-18…2026-09-09",
+    generatedAt: "2026-09-09T13:20:00.000Z",
+  };
+  const input = {
+    metrics: pooledGreen,
+    canonicalSettled: 1000,
+    minSettledForLearning: 100,
+    settlementHealthy: true,
+    consecutiveGreenPrior: 0,
+    streakRequired: 3,
+  };
+
+  it("passes when the point estimate sits a hair over the floor but the bound is under it (v5.2.7 on clean pre-game rows, 2026-09-09)", () => {
+    const r = evaluateCalibrationEligibility({
+      ...input,
+      deployedVersion: { key: "v5.2.7", n: 221, ece: 0.0933, eceNoise: 0.05, eceDebiased: 0.052, eceDebiasedCi90Lo: 0.031 },
+    });
+    expect(r.runMeetsFloors).toBe(true);
+    expect(r.deployedVersion?.eceDebiasedCi90Lo).toBe(0.031);
+  });
+
+  it("fails when even the bound is over the floor, and the reason carries point estimate, bound, raw and noise", () => {
+    const r = evaluateCalibrationEligibility({
+      ...input,
+      deployedVersion: { key: "v5.2.7", n: 274, ece: 0.1055, eceNoise: 0.05, eceDebiased: 0.09, eceDebiasedCi90Lo: 0.066 },
+    });
+    expect(r.runMeetsFloors).toBe(false);
+    expect(r.reasons.join(" ")).toContain(
+      "Deployed v5.2.7 ECE debiased 0.0900 with 5th-percentile bound 0.0660 > 0.05 on its own rows (raw 0.1055, noise 0.0500)",
+    );
+  });
+
+  it("with no bound (fewer than 30 rows, or an older artifact) the point estimate is read, the stricter direction", () => {
+    const r = evaluateCalibrationEligibility({
+      ...input,
+      deployedVersion: { key: "v5.2.8", n: 120, ece: 0.09, eceNoise: 0.05, eceDebiased: 0.052, eceDebiasedCi90Lo: null },
+    });
+    expect(r.runMeetsFloors).toBe(false);
+    expect(r.reasons.join(" ")).toContain("Deployed v5.2.8 ECE debiased 0.0520 > 0.05 on its own rows");
+  });
+
+  it("the bound can never clear the n floor for the deployed version", () => {
+    const r = evaluateCalibrationEligibility({
+      ...input,
+      deployedVersion: { key: "v5.2.8", n: 60, ece: 0.2, eceNoise: 0.1, eceDebiased: 0.1, eceDebiasedCi90Lo: 0.0 },
+    });
+    expect(r.runMeetsFloors).toBe(false);
+    expect(r.reasons.join(" ")).toContain("Deployed v5.2.8 has 60 own settled rows < floor 100");
+  });
+});

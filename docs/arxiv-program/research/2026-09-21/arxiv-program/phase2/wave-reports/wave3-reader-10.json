@@ -1,0 +1,191 @@
+{
+  "reader": 10,
+  "blocked": [
+    "0903.2243v5 (withdrawn 2026-02-28; three latest-PDF attempts returned withdrawal HTML; full v4 read and used for 1201 ledger)"
+  ],
+  "notes": "Reader 10 (kelly_sizing lane): all 12 assigned originals (ledgers 1198-1209) read in full from PDF. Tally: 5 ADAPT, 0 ADOPT, 7 REJECT. Six authorized replacement numbers (1354-1359) were each filled with a fully-read, deduplicated same-lane paper (all 6 verdict ADAPT). 1807.11729v3 (Expectation of the Largest Bet Size in Labouchere System, Han & Wang 2019) was fully read and judged ADAPT as the seventh replacement for 1207, but no seventh replacement number was authorized (allocation 1354-1359 is short by one; readers 11/12 own 1360-1371), so no ledger was written for it; a complete 14-section draft is staged at /tmp/w3r10/pending-7th-replacement-1207-1807.11729v3-LABOUCHERE-DRAFT.md awaiting coordinator numbering. 1805.04225v1 was fully read as an extra reserve and was not needed. BLOCKED: assigned 0903.2243v5 was withdrawn on 2026-02-28; three latest-PDF attempts returned withdrawal HTML, so v5 is blocked per the three-attempt rule; full v4 was obtained and read, and the 1201 REJECT ledger is from v4 (disclosed in the ledger). ASSIGNMENT CONFLICT: on 2026-09-21 23:25:47 UTC, /tmp/w3-readers/reader-10.json was observed containing a different ten-paper list (starting 2004.14048v2, 2005.11698v2) reusing ledger numbers 1198-1209; readers 11 and 12 already use those IDs as ledgers 1220-1221 and others, and no authorized explanation for abandoning the completed explicit 1198-1209 assignment was found, so the explicit assignment was kept and the conflict is reported here, not acted on. Replacement candidates were deduplicated against a rebuilt union corpus (942 base IDs from /tmp/w3-dedup.txt plus all arxiv-deep ledgers and wave reports) and verified fresh immediately before finalizing; 1354's composite-loss equation (L = L_next + L_goal, eq. 6, no lambda) and Table 3 vs Table 5 attribution were corrected during QA. No tracker edits, no commits, no pushes. Scratch PDFs/texts kept under /tmp/w3r10/ only; nothing raw committed to the repo.",
+  "papers": [
+    {
+      "arxiv_id": "2303.12385v2",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1198-optimal-selection-of-starting-lineup.md",
+      "replacements": [
+        "1354"
+      ],
+      "title": "Optimal selection of the starting lineup for a football team",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "2405.07030v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1199-lasso-ridge-xgboost-deep-lstm-tennis.md",
+      "replacements": [
+        "1355"
+      ],
+      "title": "Lasso-Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "0712.2771v3",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1200-analysis-of-kelly-optimal-portfolios.md",
+      "replacements": [],
+      "title": "Analysis of Kelly-optimal portfolios",
+      "verdict": "ADAPT"
+    },
+    {
+      "arxiv_id": "0903.2243v5",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1201-pragmatic-information-rates-kelly.md",
+      "replacements": [
+        "1356"
+      ],
+      "title": "Pragmatic Information Rates, Generalizations of the Kelly Criterion, and Financial Market Efficiency (assigned v5 withdrawn; ledger from v4)",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "0907.2196v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1202-a-path-guessing-game-with-wagering.md",
+      "replacements": [
+        "1357"
+      ],
+      "title": "A Path Guessing Game with Wagering",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "1311.2550v2",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1203-kelly-growth-optimal-with-stop-loss.md",
+      "replacements": [],
+      "title": "The Kelly growth optimal strategy with a stop-loss rule",
+      "verdict": "ADAPT"
+    },
+    {
+      "arxiv_id": "1411.3615v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1204-kelly-criterion-variable-payoff.md",
+      "replacements": [
+        "1358"
+      ],
+      "title": "Kelly criterion for variable pay-off",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "1506.00166v2",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1205-optimal-investment-minimize-drawdown.md",
+      "replacements": [],
+      "title": "Optimal Investment to Minimize the Probability of Drawdown",
+      "verdict": "ADAPT"
+    },
+    {
+      "arxiv_id": "1610.10029v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1206-meta-cta-trading-kelly-criterion.md",
+      "replacements": [
+        "1359"
+      ],
+      "title": "Meta-CTA Trading Strategies based on the Kelly Criterion",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "1707.00529v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1207-labouchere-betting-system.md",
+      "replacements": [
+        "PENDING-1807.11729v3-no-number-allocated"
+      ],
+      "title": "An Investigation into Labouchere's Betting System to Improve Odds of Favorable Outcomes to Generate a Positive Externality Empirically",
+      "verdict": "REJECT"
+    },
+    {
+      "arxiv_id": "1708.03813v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1208-weighted-entropy-optimal-portfolios-kelly.md",
+      "replacements": [],
+      "title": "Weighted entropy and optimal portfolios for risk-averse Kelly investments",
+      "verdict": "ADAPT"
+    },
+    {
+      "arxiv_id": "1710.01786v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1209-kelly-betting-too-conservative.md",
+      "replacements": [],
+      "title": "Kelly Betting Can Be Too Conservative",
+      "verdict": "ADAPT"
+    },
+    {
+      "arxiv_id": "2603.15212v2",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1354-modeling-matches-as-language-a-generative.md",
+      "replacements": [],
+      "title": "Modeling Matches as Language: A Generative Transformer Approach for Counterfactual Player Valuation in Football",
+      "verdict": "ADAPT",
+      "replaces_ledger": 1198
+    },
+    {
+      "arxiv_id": "2602.22527v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1355-predicting-tennis-serve-directions-with-machine.md",
+      "replacements": [],
+      "title": "Predicting Tennis Serve Directions with Machine Learning",
+      "verdict": "ADAPT",
+      "replaces_ledger": 1199
+    },
+    {
+      "arxiv_id": "2104.14277v2",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1356-kelly-bets-and-single-letter-codes.md",
+      "replacements": [],
+      "title": "Kelly Bets and Single-Letter Codes: Optimal Information Processing in Natural Systems",
+      "verdict": "ADAPT",
+      "replaces_ledger": 1201
+    },
+    {
+      "arxiv_id": "2406.04062v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1357-online-learning-in-betting-markets-profit.md",
+      "replacements": [],
+      "title": "Online Learning in Betting Markets: Profit versus Prediction",
+      "verdict": "ADAPT",
+      "replaces_ledger": 1202
+    },
+    {
+      "arxiv_id": "2507.05994v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1358-beating-the-best-constant-rebalancing-portfolio.md",
+      "replacements": [],
+      "title": "Beating the Best Constant Rebalancing Portfolio in Long-Term Investment: A Generalization of the Kelly Criterion and Universal Learning Algorithm for Markets with Serial Dependence",
+      "verdict": "ADAPT",
+      "replaces_ledger": 1204
+    },
+    {
+      "arxiv_id": "2601.20452v1",
+      "fulltext_source": "pdf",
+      "lane": "kelly_sizing",
+      "ledger_file": "1359-manipulation-in-prediction-markets-an-agent.md",
+      "replacements": [],
+      "title": "Manipulation in Prediction Markets: An Agent-based Modeling Experiment",
+      "verdict": "ADAPT",
+      "replaces_ledger": 1206
+    }
+  ]
+}

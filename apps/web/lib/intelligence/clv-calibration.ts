@@ -71,6 +71,12 @@ export interface ClvRollup {
   readonly meanClv: number; // mean probability-points beaten vs the close
   readonly beatCloseCount: number; // pairs with positive CLV
   readonly beatCloseRate: number; // 0..1
+  /**
+   * Decided-only reading beside beatCloseRate: exact-zero CLVs (ties) are
+   * excluded from both sides, mirroring the push-never-averaged doctrine.
+   * Null when every pair tied. Additive disclosure — nothing gates on it.
+   */
+  readonly decidedBeatCloseRate: number | null; // 0..1 or null
   /** Calibration: did higher model edge actually correspond to bigger CLV? */
   readonly calibration: {
     readonly meanModelProb: number;
@@ -107,6 +113,7 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
       meanClv: 0,
       beatCloseCount: 0,
       beatCloseRate: 0,
+      decidedBeatCloseRate: null,
       calibration: { meanModelProb: 0, meanClosingProb: 0, stdevClv: 0 },
       note: "No gradeable pairs: empty self-grade rather than a fabricated CLV.",
     };
@@ -116,6 +123,12 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
   const meanModelProb = sum(models) / count;
   const meanClosingProb = sum(closes) / count;
   const beatCloseCount = clvs.filter((c) => c > 0).length;
+  // Decided-only reading beside the all-graded rate: a CLV of exactly 0 is the
+  // tie (MATCHED_CLOSE analogue) and is excluded from both sides, mirroring the
+  // push-never-averaged doctrine. Null when every pair tied.
+  const matchedCount = clvs.filter((c) => c === 0).length;
+  const decidedDenominator = beatCloseCount + (count - beatCloseCount - matchedCount);
+  const decidedBeatCloseRate = decidedDenominator > 0 ? roundN(beatCloseCount / decidedDenominator) : null;
   const variance = count > 1 ? sum(clvs.map((c) => (c - meanClv) ** 2)) / count : 0;
   const stdevClv = Math.sqrt(variance);
 
@@ -131,6 +144,7 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
     meanClv: roundN(meanClv),
     beatCloseCount,
     beatCloseRate: roundN(beatCloseCount / count),
+    decidedBeatCloseRate,
     calibration: {
       meanModelProb: roundN(meanModelProb),
       meanClosingProb: roundN(meanClosingProb),

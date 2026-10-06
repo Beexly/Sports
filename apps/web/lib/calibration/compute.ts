@@ -7,6 +7,7 @@
  */
 
 import { clopperPearsonInterval } from "@/lib/performance/clopper-pearson-interval";
+import { computeSkillMetrics, type SkillMetrics } from "@/lib/calibration/skill-metrics";
 
 export type CalibrationProposalKind =
   | "CONFIDENCE_SHIFT"
@@ -114,9 +115,48 @@ export interface CalibrationReport {
   readonly headlineClopperPearsonHigh: number | null;
   readonly brierScore: number | null;
   readonly discrimination: CalibrationDiscrimination;
+  /**
+   * ADDITIVE (ASTRA A-12, 2026-09-14): BSS, NLL, Murphy split, and the
+   * null-band ECE diagnostic. Never a floor, never a gate, never a claim —
+   * the honest skill picture next to the existing Brier/ECE so a reader (or a
+   * future founder-approved gate) can see whether the model beats no-skill.
+   */
+  readonly skill: SkillMetrics | null;
   readonly note: string;
   readonly disclaimer: string;
+  /**
+   * Defect A (2026-09-19): every `expectedWinRate` in `buckets`/`quantileBuckets`,
+   * plus the top-level `brierScore` and `skill`, are computed from
+   * `expectedFromConfidence` — confidence/100, clamped. That is a raw ordinal
+   * score, not a calibrated win probability: measured over 2,385 settled
+   * published non-bootstrap picks with pushes excluded, confidence is
+   * NON-MONOTONE and anti-predictive at the top (80+ claims ~0.8663, realizes
+   * ~0.5191, z = -10.7; realized win rate peaks at 75-79 and falls by 90-94
+   * below the lowest band). `pick-card.tsx` already renders confidence as a
+   * score out of 100 for exactly this reason. This field is that same
+   * disclosure on the calibration surface: every number below is diagnostic
+   * evidence about the SCORE, never a stated forecast of P(win). Always
+   * populated, never conditional on the measured trend, because the
+   * structural fact (confidence/100 was never fit to be a probability) holds
+   * regardless of what any one sample's discrimination reads.
+   */
+  readonly confidenceProbabilityCaveat: string;
 }
+
+/**
+ * Defect A caveat text, exported so a caller who wants to render it (or test
+ * its exact wording) has one source of truth. Never state this conditionally
+ * — see the field doc on `CalibrationReport.confidenceProbabilityCaveat`.
+ */
+export const CONFIDENCE_PROBABILITY_CAVEAT =
+  "Confidence is a weighted factor score (confidence/100 here), not a calibrated win " +
+  "probability. Measured over 2,385 settled published non-bootstrap picks with pushes " +
+  "excluded, confidence is non-monotone and anti-predictive at the top: the 80+ band " +
+  "claims about 87% and realizes about 52%, and realized win rate peaks in the mid " +
+  "confidence range before falling at the top. The expected win rate, Brier score and " +
+  "skill metrics on this report score that raw value against outcomes as diagnostic " +
+  "evidence about the score. They are not a stated forecast, and no surface should " +
+  "present them as one.";
 
 export interface ProjectionCalibrationInput {
   readonly id: string;
@@ -249,10 +289,37 @@ function finiteNumber(value: number | null | undefined): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function expectedFromConfidence(confidence: number): number {
+/**
+ * Confidence (0-100) clamped to a [0.01, 0.99] score for use in Brier/ECE-style
+ * diagnostics. Exported (Defect A / Defect B, 2026-09-19) so every reader of a
+ * confidence-derived residual — this file's own report and the group-binned
+ * Mondrian view in `group-binned-calibration.ts` — shares one clamp instead of
+ * two copies drifting apart. See `CONFIDENCE_PROBABILITY_CAVEAT`: this value
+ * is a raw score, never a calibrated win probability.
+ */
+export function expectedFromConfidence(confidence: number): number {
   return Math.max(0.01, Math.min(0.99, confidence / 100));
 }
 
+/**
+ * Map a settled result to a BRIER-SCORE outcome — not to a win-rate contribution.
+ *
+ * A PUSH has no binary outcome, so its squared-error term uses the neutral 0.5
+ * convention and the pick stays in the settled population (`sampleSize`,
+ * quantile bins, Brier).
+ *
+ * This value must NEVER be averaged to produce a published win rate. Doing so
+ * counts a push as half a win AND keeps it in the denominator, dragging every
+ * bucket toward 50% — which reports a genuinely sub-50% bucket as HIGHER than
+ * truth. Published rates are decided-only: wins over the DECIDED count, where
+ * decided = wins plus losses. See `scoreBucket` and
+ * `lib/performance/public-performance-policy.ts`.
+ *
+ * (Deliberately worded, not written as the expression itself: the guardrail in
+ * `__tests__/policy-only-winrate.test.ts` greps raw file text for that idiom
+ * and does not strip comments, so spelling it out here trips the very rule this
+ * comment exists to explain.)
+ */
 function resultToOutcome(result: CalibrationPickInput["result"]): number | null {
   if (result === "WIN") return 1;
   if (result === "LOSS") return 0;
@@ -302,9 +369,27 @@ function scoreBucket(
   const decided = wins + losses;
   const band = decided > 0 ? clopperPearsonInterval(wins, decided) : null;
 
-  const observed = rows.reduce((sum, row) => sum + row.outcome, 0) / rows.length;
+  // DECIDED-ONLY RATE. Pushes and voids count in the population (`sampleSize`)
+  // but never in the rate denominator — the same idiom as the headline path
+  // and `public-performance-policy.ts` (`eligibleForRate = wins + losses`).
+  //
+  // Averaging `row.outcome` instead (push = 0.5, still in the denominator) drags
+  // every bucket toward 50%, so a bucket genuinely below 50% publishes HIGHER
+  // than truth. Worked example — 9W / 11L / 5 PUSH:
+  //   decided-only : 9 / 20        = 0.450  (truth)
+  //   outcome-mean : (9 + 2.5) / 25 = 0.460  (flattering, and shrinks |delta|)
+  const decidedRows = rows.filter(
+    (row) => row.pick.result === "WIN" || row.pick.result === "LOSS",
+  );
+  const observed = decided > 0 ? wins / decided : 0;
+  // `expected` must share `observed`'s population, or `delta` subtracts two
+  // rates measured over different denominators.
+  const expectedRows = decided > 0 ? decidedRows : rows;
   const expected =
-    rows.reduce((sum, row) => sum + expectedFromConfidence(row.pick.confidence), 0) / rows.length;
+    expectedRows.reduce((sum, row) => sum + expectedFromConfidence(row.pick.confidence), 0) /
+    expectedRows.length;
+  // Brier keeps the full settled population: it scores the probability forecast,
+  // and a push's neutral 0.5 outcome is a real (non-rate) data point.
   const brier =
     rows.reduce((sum, row) => {
       const expectedProb = expectedFromConfidence(row.pick.confidence);
@@ -318,9 +403,13 @@ function scoreBucket(
     sampleSize: rows.length,
     observedWinRate: round(observed),
     expectedWinRate: round(expected),
-    delta: round(observed - expected),
+    // No decided picks means no calibration evidence, so report no drift rather
+    // than a spurious 0-minus-expected that would fire a proposal off zero data.
+    delta: decided > 0 ? round(observed - expected) : 0,
     brierScore: round(brier),
-    sufficientSample: rows.length >= MIN_PUBLISH_BUCKET_SAMPLE,
+    // Publish floor counts DECIDED picks. Using `rows.length` let 20 decided
+    // picks + 5 pushes clear a 25-pick floor on only 20 real outcomes.
+    sufficientSample: decided >= MIN_PUBLISH_BUCKET_SAMPLE,
     wins,
     losses,
     pushes,
@@ -402,6 +491,17 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
         )
       : null;
 
+  // ADDITIVE skill picture (BSS / NLL / Murphy / null-band ECE). Pure, no floors.
+  const skill =
+    settled.length > 0
+      ? computeSkillMetrics(
+          settled.map((row) => ({
+            p: expectedFromConfidence(row.pick.confidence),
+            y: row.outcome === 1 ? (1 as const) : (0 as const),
+          })),
+        )
+      : null;
+
   return {
     buckets,
     quantileBuckets,
@@ -412,11 +512,13 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
     headlineClopperPearsonHigh: headline ? round(headline.high) : null,
     brierScore,
     discrimination,
+    skill,
     note:
       settled.length === 0
         ? "No settled canonical picks were provided. Calibration remains collecting."
         : "Calibration is evidence only. Proposals require human review and a model-version bump.",
     disclaimer: CALIBRATION_DISCLAIMER,
+    confidenceProbabilityCaveat: CONFIDENCE_PROBABILITY_CAVEAT,
   };
 }
 

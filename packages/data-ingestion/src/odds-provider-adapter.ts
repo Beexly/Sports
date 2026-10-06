@@ -20,14 +20,30 @@
 
 import type { NormalizedOdds, OddsApiEvent } from "@sports/types";
 import { OddsApiClient, OddsApiError } from "./odds-api-client.js";
+import {
+  OddsPapiClient,
+  OddsPapiError,
+  ODDSPAPI_NFL_SPORT_ID,
+  ODDSPAPI_NFL_TOURNAMENT_ID,
+  dedupeHeartbeatSnapshots,
+  deriveClosingSnapshot,
+  type OddsPapiHistoricalSnapshot,
+} from "./oddspapi-client.js";
+import {
+  normalizeOddsPapiOdds,
+  buildOddsPapiCatalog,
+  type OddsPapiCatalog,
+} from "./oddspapi-normalizer.js";
+import { resolveOddsPapiKey } from "./oddspapi-key.js";
 import { DataNormalizer } from "./normalizer.js";
 import type { Market, SupportedSportKey } from "./config.js";
 import { MARKETS } from "./config.js";
 import type { OddsProvider, OddsProviderResult } from "./odds-failover.js";
+import { mergeNormalizedOdds } from "./odds-failover.js";
 import { fetchEspnOddsForSport } from "./espn-odds-client.js";
 import { getOddsPaymentCircuitBreaker, type OddsCircuitState } from "./odds-api-circuit-breaker.js";
 
-export type OddsProviderId = "the-odds-api" | "offline" | "galaxy-sports-api";
+export type OddsProviderId = "the-odds-api" | "offline" | "galaxy-sports-api" | "oddspapi";
 
 export interface OddsProviderCapabilities {
   /** True when the source can return multiple independent bookmakers. */
@@ -288,4 +304,252 @@ export function createOddsQuoteProvider(
 /** True when the provider may back live-gate certifiable quotes. */
 export function isCertifiableOddsProvider(provider: OddsQuoteProvider): boolean {
   return provider.capabilities.certifiableForLiveGate === true;
+}
+
+/* ------------------------------------------------------------------ */
+/* OddsPapi secondary provider (55 Tech, oddspapi.io)                  */
+/* ------------------------------------------------------------------ */
+
+const ODDSPAPI_CAPABILITIES: OddsProviderCapabilities = {
+  multiBook: true,
+  markets: ["H2H", "SPREADS", "TOTALS"],
+  supportsLiveQuotes: true,
+  // CONFIRMED at https://oddspapi.io/en/legal/terms (2026-09-18): terms forbid
+  // reselling / repackaging / redistributing the data as a standalone product.
+  // Internal analytics (CLV reconstruction, prop discovery, disagreement
+  // checks) is fine; public display of OddsPapi-derived quotes needs a legal
+  // read first — so this provider is NOT certifiable for the live gate yet.
+  certifiableForLiveGate: false,
+};
+
+/**
+ * GSE sportKey → OddsPapi IDs. NFL is the only sport wired today
+ * (sportId 14 / tournamentId 31, CONFIRMED 2026-09-18). NCAA tournamentId
+ * 27653 is a future option once the mapping is verified live.
+ */
+const ODDSPAPI_SPORT_MAP: Record<string, { sportId: number; tournamentId: number }> = {
+  americanfootball_nfl: {
+    sportId: ODDSPAPI_NFL_SPORT_ID,
+    tournamentId: ODDSPAPI_NFL_TOURNAMENT_ID,
+  },
+};
+
+const ODDSPAPI_CATALOG_TTL_MS = 24 * 60 * 60 * 1000;
+
+export interface OddsPapiOddsProviderOptions {
+  readonly client?: OddsPapiClient;
+  /**
+   * Bookmaker slugs to request per fixture. Default ["pinnacle"] — the sharp
+   * reference. Slug names beyond "pinnacle" are UNVERIFIED against the live
+   * /v4/bookmakers list; add more only after verifying slugs live.
+   */
+  readonly bookmakers?: readonly string[];
+  /**
+   * Cap on fixtures per fetch. Each fixture costs 1 billable /odds call (the
+   * /fixtures list and /markets catalog cost 1 each); the free tier is 250/mo
+   * (~8/day), so the default 3 keeps one fetch at ~5 calls.
+   */
+  readonly maxFixturesPerFetch?: number;
+  readonly tournamentId?: number;
+  /** Injected clock for tests. */
+  readonly now?: () => Date;
+}
+
+/**
+ * Secondary odds adapter: OddsPapi → NormalizedOdds (game lines only).
+ *
+ * GSE role is COMPLEMENT, not replacement: The Odds API stays primary for
+ * live US/NFL quotes. This provider's highest-value job is (a) historical
+ * line movement + CLV reconstruction via the free unmetered
+ * /v4/historical-odds endpoint (see fetchPinnacleLineMovement), and (b)
+ * bookmaker breadth for disagreement checks. Pinnacle prices NFL game lines
+ * only — zero props — so the NFL prop board never comes through this path.
+ */
+export class OddsPapiOddsProvider implements OddsQuoteProvider {
+  readonly id = "oddspapi" as const;
+  readonly name = "oddspapi";
+  readonly capabilities = ODDSPAPI_CAPABILITIES;
+
+  private readonly client: OddsPapiClient;
+  private readonly bookmakers: readonly string[];
+  private readonly maxFixturesPerFetch: number;
+  private readonly tournamentIdOverride?: number;
+  private readonly now: () => Date;
+  private catalogCache: { readonly at: number; readonly catalog: OddsPapiCatalog } | null = null;
+
+  constructor(apiKey: string, options: OddsPapiOddsProviderOptions = {}) {
+    this.client = options.client ?? new OddsPapiClient(apiKey);
+    this.bookmakers = options.bookmakers ?? ["pinnacle"];
+    this.maxFixturesPerFetch = options.maxFixturesPerFetch ?? 3;
+    this.tournamentIdOverride = options.tournamentId;
+    this.now = options.now ?? (() => new Date());
+  }
+
+  private async getCatalog(): Promise<OddsPapiCatalog> {
+    const nowMs = this.now().getTime();
+    if (
+      this.catalogCache &&
+      nowMs - this.catalogCache.at < ODDSPAPI_CATALOG_TTL_MS
+    ) {
+      return this.catalogCache.catalog;
+    }
+    const { data } = await this.client.getMarkets();
+    const catalog = buildOddsPapiCatalog(data);
+    this.catalogCache = { at: nowMs, catalog };
+    return catalog;
+  }
+
+  async fetchNormalized(sportKey: string): Promise<OddsProviderResult> {
+    const fetchedAt = this.now();
+    try {
+      const mapping = ODDSPAPI_SPORT_MAP[sportKey];
+      if (!mapping) {
+        return {
+          provider: this.name,
+          odds: [],
+          healthy: false,
+          error: `oddspapi: unsupported sportKey "${sportKey}" (only americanfootball_nfl is wired)`,
+        };
+      }
+      const tournamentId = this.tournamentIdOverride ?? mapping.tournamentId;
+      const catalog = await this.getCatalog();
+      const { data: fixtures } = await this.client.getFixtures({
+        tournamentId,
+        statusId: 0,
+        hasOdds: true,
+      });
+
+      const odds: NormalizedOdds[] = [];
+      for (const fixture of fixtures.slice(0, this.maxFixturesPerFetch)) {
+        const { data: board } = await this.client.getOdds({
+          fixtureId: fixture.fixtureId,
+          bookmakers: [...this.bookmakers],
+        });
+        odds.push(...normalizeOddsPapiOdds(board, catalog, fetchedAt));
+      }
+
+      return {
+        provider: this.name,
+        odds,
+        healthy: odds.length > 0,
+        error: odds.length === 0 ? "oddspapi returned no usable game-line quotes" : undefined,
+      };
+    } catch (err) {
+      const status = err instanceof OddsPapiError ? err.status : undefined;
+      const message = err instanceof Error ? err.message : String(err);
+      // 401/403 = key problem (auth class); 429 = rate-limited (stop, don't spin).
+      const paymentOrAuth = status === 401 || status === 403;
+      return {
+        provider: this.name,
+        odds: [],
+        healthy: false,
+        error: paymentOrAuth
+          ? `oddspapi auth failure (${status}): ${message}`
+          : message,
+      };
+    }
+  }
+
+  /**
+   * Flagship free-tier job: Pinnacle line movement + closing price for one
+   * fixture, via the UNMETERED /historical-odds endpoint. Heartbeats (repeated
+   * identical snapshots) are deduped; the close is the last active snapshot
+   * before kickoff. Returns null when the board carries no usable history.
+   */
+  async fetchPinnacleLineMovement(
+    fixtureId: string,
+    bookmakers: readonly string[] = ["pinnacle"],
+  ): Promise<{
+    readonly snapshots: readonly OddsPapiHistoricalSnapshot[];
+    readonly closingPrice: number | null;
+  } | null> {
+    const { data } = await this.client.getHistoricalOdds({ fixtureId, bookmakers });
+    const markets = data.bookmakers[bookmakers[0] ?? ""]?.markets;
+    if (!markets) return null;
+    const all: OddsPapiHistoricalSnapshot[] = [];
+    for (const market of Object.values(markets)) {
+      for (const outcome of Object.values(market.outcomes)) {
+        for (const snaps of Object.values(outcome.players)) {
+          all.push(...snaps);
+        }
+      }
+    }
+    if (all.length === 0) return null;
+    const snapshots = dedupeHeartbeatSnapshots(
+      [...all].sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)),
+    );
+    return { snapshots, closingPrice: snapshots[snapshots.length - 1]?.price ?? null };
+  }
+
+  /**
+   * Derive a true closing price given the fixture's kickoff: last active
+   * snapshot with createdAt < startTime (snapshots may continue in-play).
+   */
+  deriveClose(
+    snapshots: readonly OddsPapiHistoricalSnapshot[],
+    startTimeIso: string,
+  ): OddsPapiHistoricalSnapshot | null {
+    return deriveClosingSnapshot(snapshots, startTimeIso);
+  }
+
+  async probe(): Promise<OddsProviderHealth> {
+    try {
+      // /account is unmetered and stays available after exhaustion — the
+      // correct cheap probe for this vendor.
+      const { data } = await this.client.getAccount();
+      return {
+        available: true,
+        remainingCredits: Math.max(0, data.request_limit - data.request_count),
+      };
+    } catch (err) {
+      const status = err instanceof OddsPapiError ? err.status : undefined;
+      return {
+        available: false,
+        statusCode: status,
+        reason: err instanceof Error ? err.message : String(err),
+      };
+    }
+  }
+}
+
+/**
+ * Resolve the secondary (OddsPapi) provider from env. Returns null when
+ * ODDSPAPI_KEY is absent — the primary path proceeds alone. Never invents a key.
+ */
+export function createSecondaryOddsProvider(
+  options: {
+    readonly env?: Record<string, string | undefined>;
+    readonly oddspapiOptions?: OddsPapiOddsProviderOptions;
+  } = {},
+): OddsPapiOddsProvider | null {
+  const env = options.env ?? process.env;
+  const key = resolveOddsPapiKey(env);
+  if (!key) return null;
+  return new OddsPapiOddsProvider(key, options.oddspapiOptions);
+}
+
+/**
+ * Dual-source fetch: primary first, secondary adds bookmakers the primary did
+ * not already quote (mergeNormalizedOdds — primary wins on conflict).
+ * Healthy when either side is healthy; the error only fires when BOTH failed.
+ */
+export async function fetchDualProviderOdds(
+  primary: OddsQuoteProvider,
+  secondary: OddsQuoteProvider,
+  sportKey: string,
+): Promise<OddsProviderResult> {
+  const [p, s] = await Promise.all([
+    primary.fetchNormalized(sportKey),
+    secondary.fetchNormalized(sportKey),
+  ]);
+  const merged = mergeNormalizedOdds(p.odds, s.odds);
+  const bothFailed = !p.healthy && !s.healthy;
+  return {
+    provider: `${p.provider}+${s.provider}`,
+    odds: merged,
+    healthy: p.healthy || s.healthy,
+    error: bothFailed
+      ? [p.error, s.error].filter(Boolean).join(" | ")
+      : undefined,
+  };
 }

@@ -129,6 +129,166 @@ with `marketFairProb: null` every cycle (fixed in 31564d9), and the loaders neve
 receipt copy (fixed in 8a8f292). n=28 is far too small to state a Brier; the number above
 is recorded as an observation, not a result.
 
+## 3b. Evidence refresh (read-only SQL, 2026-09-13 19:30 UTC)
+
+Section 3 recorded `confidenceTail ... n=167 winRate=0.4371 claimedRate=0.8619
+verdict=inverted` and `marketFairProb n=408 brier=0.234 ece=0.053 coverage=0.34`. Both hold
+on a much larger sample, and one structural fact is added that the section above does not
+state. Population throughout: `isPublished`, not `isBootstrap`, `result` in (WIN, LOSS) so
+pushes are never averaged in, `modelVersion <> 'founder-v1'`.
+
+**1. `confidence` against outcomes, n 2,385.** The number `expectedFromConfidence`
+(`apps/web/lib/calibration/compute.ts:260`) publishes as the forecast probability on
+/calibration:
+
+```
+conf    n     claimed  realized   gap
+50-54   483   0.5175   0.5280   +0.0105
+55-59   312   0.5689   0.4968   -0.0721
+60-64   456   0.6206   0.5702   -0.0504
+65-69   443   0.6695   0.5305   -0.1390
+70-74   294   0.7170   0.5918   -0.1252
+75-79   192   0.7704   0.6146   -0.1558
+80-84   104   0.8184   0.4423   -0.3761
+85-89    73   0.8708   0.5479   -0.3229
+90-94    28   0.9179   0.4643   -0.4536
+```
+
+Banded: conf 80+ reads n 235, claimed 0.8663, realized 0.5191, gap -0.3472, standard error
+0.0326, **z = -10.7**. Conf 50-79 reads n 2,180, claimed 0.6265, realized 0.5491,
+z = -7.3. The Brier score of confidence-as-probability on the 80+ band is **0.3617**. A
+constant 0.5 forecast scores 0.25, so on its most confident picks this forecast is worse
+than saying nothing.
+
+**2. The structural fact, which is the reason this cannot be fixed by calibrating harder.**
+`confidence` is not merely overstated, it is NOT MONOTONE in outcome: realized win rate
+peaks around conf 75-79 at 0.6146 and falls to 0.4643 by conf 90-94, below the 0.5280 of
+the lowest band. The display calibrator
+(`packages/prediction-engine/src/calibration-apply.ts:70,80`) is isotonic regression
+(PAVA), which is monotone non-decreasing BY CONSTRUCTION. It can flatten the top of a
+curve; it can never invert one. So applying it to `confidence` converts a score inversion
+into a stated win-probability inversion, and no amount of additional sample changes that.
+The fix is not a better calibrator. It is to stop treating this number as a probability,
+which is exactly what section 1 proposes.
+
+**3. `rankingP`, for comparison, n 1,390.** Monotone and therefore calibratable:
+
+```
+rankingP     n     claimed  realized   gap
+0.21-0.39    48    0.3209   0.4583   +0.1374
+0.40-0.49    38    0.4559   0.5526   +0.0967
+0.49-0.58   307    0.5348   0.5049   -0.0299
+0.58-0.68   514    0.6339   0.5875   -0.0464
+0.68-0.76   314    0.7138   0.5828   -0.1310
+0.77-0.85   134    0.7960   0.6119   -0.1841
+0.86-0.95    35    0.8934   0.8286   -0.0648
+```
+
+**4. `marketFairProb`, the number section 1 proposes publishing, n 622** (book-priced,
+bookmakerCount >= 2):
+
+```
+marketFairProb   n    claimed  realized   gap      brier
+0.30-0.40        73   0.3695   0.3014   -0.0681   0.2163
+0.40-0.50       196   0.4682   0.4592   -0.0090   0.2475
+0.50-0.60       247   0.5161   0.4980   -0.0181   0.2496
+0.71-0.80        30   0.7563   0.7000   -0.0563   0.2004
+0.81-0.90        26   0.8609   0.9231   +0.0622   0.0778
+0.90-0.99        50   0.9399   0.8800   -0.0599   0.1047
+```
+
+Monotone, and every gap within 0.07. Against the same outcomes the three candidates rank
+unambiguously: marketFairProb (monotone, tight), rankingP (monotone, over-confident in the
+upper middle), confidence (inverted at the top). That is the proposal's thesis, measured on
+15x the sample section 3 had.
+
+**Honest limits.** The top marketFairProb bands are thin (26 and 50 rows) and the 0.60-0.71
+band did not reach the 25-row floor, so it is absent rather than zero. This is a
+retrospective sample over settled picks, not a forward test. Nothing here measures the Shin
+consensus switch that Phase 2 also proposes; it measures the PROPORTIONAL value receipts
+carry today, which is the number a reader can recompute. And this section changes no floor,
+no gate and no status: `status:` above stays PROPOSED and `model-freeze.mjs` keeps guarding
+the bump until a founder flips it.
+
+## 3c. The Shin swap is measured, and it is not justified (2026-09-13)
+
+Section 4's Phase 2 engine bullet was written before section 1 was revised at 19:05 UTC,
+and the two contradict. Section 1 decides that the published number is the PROPORTIONAL
+de-vig the receipts already carry, and says so explicitly ("It is NOT the Shin-per-book
+median (`consensusNoVig`)"); the Phase 2 bullet says to recompute `marketFairProb` from
+`consensusNoVig` and relabel it `shin_consensus`. Section 1 is the founder decision record
+and it is later, so it governs — but the disagreement deserved a measurement rather than an
+argument from ordering.
+
+Both values are already persisted on every scored pick: `marketFairProb` (proportional) and
+`marketFairShinProb` (Shin), the latter display-only since the de-vig honesty pass. So the
+question is directly answerable on settled outcomes. Read-only SQL, 2026-09-13, population
+`isPublished`, not `isBootstrap`, `result` in (WIN, LOSS), `modelVersion <> 'founder-v1'`,
+`bookmakerCount >= 2`, both fields present:
+
+```
+pickType     n     realized  mean_prop  mean_shin  brier_prop  brier_shin  mean|gap|  max|gap|
+ALL         621    0.5362    0.5443     0.5421     0.22259     0.22044     0.00844    0.56500
+SPREAD      333    0.4655    0.4620     0.4603     0.23590     0.23584     0.00390    0.03264
+TOTAL       186    0.5161    0.5252     0.5270     0.24500     0.24495     0.00181    0.02868
+MONEYLINE   102    0.8039    0.8476     0.8371     0.13828     0.12547     0.03535    0.56500
+```
+
+Shin looks better on moneylines — 0.1255 against 0.1383 — and that reading does not survive
+a paired test:
+
+```
+scope                n     mean paired Brier diff (prop - shin)    t
+ALL                 621    +0.002151                             1.798
+MONEYLINE           102    +0.012808                             1.797
+MONEYLINE, |gap| <= 0.1   91    -0.001361                       -1.125
+```
+
+Neither figure reaches significance, and the whole moneyline advantage lives in the **11
+rows where the two methods disagree by more than 10 percentage points** — degenerate or
+wildly lopsided books, not a systematic favourite–longshot correction. Drop those 11 and
+Shin is *slightly worse* than proportional. The 0.565 maximum gap is the signature of a
+book the Shin solver should have refused, not of a better price.
+
+**Decision: do not swap.** The published number stays proportional. This is also the only
+number section 3b actually measured against outcomes (n 622, monotone, every gap within
+0.07), the only one a reader can recompute from the receipt payload by hand, and the one
+`market-read.ts`'s `sameMethodOrRefuse` CLV continuity already assumes. Swapping to an
+unmeasured method while publishing a calibration claim derived from the measured one would
+be precisely the failure this product exists to avoid.
+
+What Phase 2 takes from that bullet instead is the part that was right regardless of the
+method: **the receipt must name the method it used.** `MARKET_FAIR_METHOD_TAG =
+"proportional_devig_v1"` is now committed with every new receipt, so a verifier compares
+like with like and a future swap is detectable rather than silent.
+
+### Why MODEL_VERSION stays v5.2.7
+
+The bump in the Phase 2 bullet was a consequence of the Shin swap. With no swap, **no
+scoring path changes**: selection, line, confidence, edgeScore, rankingP, marketFairProb and
+every factor weight are byte-identical. Phase 2 as built is display, API shape, receipt
+metadata and copy.
+
+Bumping anyway would cost something real. The PROVEN/ESTABLISHED gate reads a
+**deployed-version slice** (C-292): v5.2.8 would start at n 0 and could not clear the n 100
+floor for weeks, deferring the exact milestone this proposal exists to unlock — in exchange
+for a version label that describes no change in the math. `model-freeze.mjs` requires an
+`IMPLEMENTED` doc *to permit* a bump; it does not require one to happen. So `status:` below
+stays PROPOSED for the Shin/ingestion work that is still unbuilt, and the freeze guard stays
+green on v5.2.7.
+
+### Deferred from Phase 2, and why
+
+- **`generate-signal-slate.ts` confidence rework.** The bullet says "a confidence derived
+  from the same selection rules as book picks" without naming those rules, and a signal-slate
+  row has no book price to derive them from. It also changes which rows land PREMIUM (the
+  threshold is confidence 70), so it is a live tier change on a path AGENTS.md already
+  records as not carrying information (six NFL model-signal picks on 2026-09-13, six home
+  teams, three on the identical consensusPct 0.6036). That needs its own measurement and its
+  own proposal, not a paragraph in this one. Until then the honest mitigation already holds:
+  signal-slate rows publish NO probability at all.
+- **Shin as the committed fair.** Measured above; not justified.
+
 ## 4. Phases
 
 ### Phase 0, shipped (bug fixes, no MODEL_VERSION change)
@@ -156,15 +316,20 @@ number is still the honest one) but the copy must say "not yet at our floor".
 ### Phase 2, proposed (MODEL_VERSION v5.2.7 to v5.2.8)
 
 Engine (`packages/prediction-engine`):
-- `scoring.ts` (all three scorers): compute the picked side's fair from `consensusNoVig`
-  over per-book two-way prices and persist it as `marketFairProb` with
-  `marketFairMethod: "shin_consensus"`; keep the current proportional value in a separate
-  field (`marketFairProportional`) for CLV continuity (`market-read.ts` methodTag /
-  sameMethodOrRefuse). Widen the union at `packages/types/src/index.ts:96`.
-- `pick-proof-receipt.ts`: pass `marketFairMethodTag` (already supported at :55-60) so a
-  receipt verifier can tell which method produced the committed number.
-- `constants.ts`: `MODEL_VERSION = "v5.2.8"`; this doc flips to `status: IMPLEMENTED` in the
-  same commit (model-freeze requirement).
+- ~~`scoring.ts` (all three scorers): recompute the fair from `consensusNoVig` and persist it
+  as `marketFairProb` with `marketFairMethod: "shin_consensus"`.~~ **WITHDRAWN — see section
+  3c.** Measured on 621 settled book-priced picks, the swap is not supported (paired Brier
+  difference +0.0022, t = 1.80; the entire moneyline advantage comes from 11 pathological
+  books, and excluding them Shin is worse). It also contradicts section 1, which is the
+  founder decision record and is later. The published fair stays proportional; `scoring.ts`
+  is untouched.
+- **DONE** `pick-proof-receipt.ts`: `MARKET_FAIR_METHOD_TAG = "proportional_devig_v1"` is
+  committed with every receipt minted from `process-sport.ts`, so a verifier can tell which
+  method produced the committed number instead of assuming one. Additive — an older receipt
+  still verifies against its own payload, where an absent tag commits as "none".
+- ~~`constants.ts`: `MODEL_VERSION = "v5.2.8"`.~~ **NOT BUMPED — see section 3c.** The bump
+  was a consequence of the withdrawn swap; no scoring path changes, and a gratuitous bump
+  resets the deployed-version calibration slice to n 0 and defers PROVEN.
 
 Ingestion (`packages/ingestion-pipeline`):
 - `generate-signal-slate.ts`: stop writing `confidence = round(trueProb*100)`; write a
@@ -174,19 +339,29 @@ Ingestion (`packages/ingestion-pipeline`):
   on rankingP only).
 
 Types and API (`packages/types`, `apps/web`):
-- `PublicPick` gains `winProbability: { value, basis: "market_devig" | "independent_estimate", books, method } | null`.
-- `/api/picks` maps it from `factorBreakdown.marketFairProb` when `bookmakerCount >= 2`,
-  else `null` (never from confidence; FREE viewers get it too: it is public arithmetic).
-- `/api/v1/probabilities`: rename `pModel` (today confidence/100) to `confidenceScore` or
-  set it null; expose `marketFairProb` with its method (CAL-06).
-- `lib/proof/load-proof-of-record.ts`: model-vs-market uses `independentEdge.trueProb`,
-  never confidence/100 (CAL-07).
+- **DONE** `PublicPick` gains `winProbability: { value, basis: "market_devig" |
+  "independent_estimate", books, method } | null`. `independent_estimate` is reserved and
+  NEVER emitted (a test pins it): no estimator here has been shown to carry information at
+  publish time, and a labeled guess is still a guess.
+- **DONE** `/api/picks` maps it when `bookmakerCount >= 2`, else omits the key — **for every
+  tier**, never from confidence. Source is the immutable **receipt**, not `factorBreakdown`,
+  which a refresh cycle can rewrite; `N` is the mint-time snapshot count. Phase 1's
+  `canSeeConfidence` gate is removed and `resolveMarketImplied` no longer takes a viewer at
+  all, so it cannot be re-gated silently. Confidence, `confidenceCalibrated` and the factor
+  trail stay paid; the Edge Index was already free by separate design.
+- **DONE** `/api/v1/probabilities`: `pModel` is retired and pinned to `null` (kept so no
+  integrator breaks on a missing key, valueless so none can read a wrong number); the score
+  ships as `confidenceScore` on its own 0-100 scale; `marketFairMethod` names the de-vig
+  (CAL-06).
+- **ALREADY DONE** `lib/proof/load-proof-of-record.ts`: `modelVsMarketPp` is already pinned
+  to `null` with the reasoning in place. Verified, not re-fixed (CAL-07).
 
 UI and copy (`apps/web/components`, `apps/web/app`):
-- Pick card: "Market-implied win probability NN% (de-vigged, N books)" for all tiers;
-  confidence stays "NN/100 selection score"; remove "calibrated" from the Edge Index copy
-  (`components/home/annotated-sample-signal.tsx:35`) and from `value-gap.tsx:4` (CAL-08,
-  CAL-11).
+- **DONE** Pick card renders the verified label for all tiers; confidence stays "NN/100".
+  `annotated-sample-signal.tsx` was already clean (CAL-08 done earlier); `value-gap.tsx:4`
+  no longer calls the ranking probability "calibrated" (CAL-11).
+- **OPEN** `/calibration` and `/methodology` restatement, and the
+  `CONFIDENCE_DISPLAY_MODE` wiring (CAL-10).
 - `/calibration` and `/methodology`: the restated claim from section 1, plus the per-market
   table from `scoreBakeoffByMarket`.
 - Wire `CONFIDENCE_DISPLAY_MODE` (default "labels") into the confidence badge so the raw

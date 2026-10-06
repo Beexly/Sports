@@ -11,17 +11,14 @@ function read(path: string): string {
 describe("data-first public surfaces", () => {
   it("homepage is data-first — every number from a real loader, no fabricated rows", () => {
     const page = read("apps/web/app/page.tsx");
-    // The concise home routes the four doors and shows only live, real-sourced
-    // counts; demo suppression happens in the loaders, so the home renders no
-    // public board rows at all (nothing to fake).
+    const labDoor = read("apps/web/components/landing/nflverse-lab-door.tsx");
     expect(page).toMatch(/loadBoardState/);
     expect(page).toMatch(/loadPublicCalibrationReport/);
-    expect(page).toMatch(/loadNflverseUsagePulse/);
+    expect(labDoor).toMatch(/loadNflverseUsagePulse/);
     expect(page).toMatch(/calibration\.sampleSize/);
-    expect(page).toMatch(/Pick the decision you came to make/);
+    expect(page).toMatch(/What are you here to decide\?/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
     expect(page).not.toMatch(/sample-data-banner-home/);
-    // No fabricated demo arrays defined inline on the front door.
     expect(page).not.toMatch(/FALLBACK_PICKS/);
   });
 
@@ -89,21 +86,14 @@ describe("data-first public surfaces", () => {
   });
 
   it("fantasy tool routes resolve directly — no middleware bounce — and stay honest at page level", () => {
-    // Owner doctrine update (2026-06): the old FANTASY_PUBLIC_TOOLS_ENABLED
-    // middleware redirect made every fantasy tab land on the generic hub
-    // (and looped against the hub's legacy ?tool= redirect). Data-first
-    // honesty now lives ON each tool page (illustrative/live status notes),
-    // not in a router-level wall.
     const middleware = read("apps/web/middleware.ts");
     const fantasy = read("apps/web/app/fantasy/page.tsx");
     expect(middleware).not.toMatch(/PUBLIC_FANTASY_GATED_ROUTES/);
     expect(middleware).not.toMatch(/searchParams\.set\("tool"/);
-    // hub still honors old deep-links and stays data-first in copy
     expect(fantasy).toMatch(/LEGACY_TOOL_ROUTES/);
     expect(fantasy).toMatch(/Real roster first/);
     expect(fantasy).toMatch(/No fake projections/);
     expect(fantasy).toMatch(/Connect your league/);
-    // each public tool page carries its own honest status note
     const dfs = read("apps/web/app/fantasy/dfs/page.tsx");
     expect(dfs).toMatch(/Illustrative classic-format sample pool|feed not connected/);
     const trade = read("apps/web/app/fantasy/trade/page.tsx");

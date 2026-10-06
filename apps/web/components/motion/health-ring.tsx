@@ -14,11 +14,11 @@ export function HealthRing({
   size = 200,
   health = 0.87,
   segments = [
-    { label: "Data intake", value: 0.92, color: "#00E5FF" },
-    { label: "Model inference", value: 0.85, color: "#7B61FF" },
-    { label: "Board state", value: 0.78, color: "#00E5FF" },
-    { label: "Media pipeline", value: 0.91, color: "#7B61FF" },
-    { label: "Trust ledger", value: 0.96, color: "#00E5FF" },
+    { label: "Data intake", value: 0.92, color: "#FF4D2E" },
+    { label: "Model inference", value: 0.85, color: "#C9D4CE" },
+    { label: "Board state", value: 0.78, color: "#FF4D2E" },
+    { label: "Media pipeline", value: 0.91, color: "#C9D4CE" },
+    { label: "Trust ledger", value: 0.96, color: "#FF4D2E" },
   ],
 }: {
   size?: number;
@@ -78,7 +78,7 @@ export function HealthRing({
       </svg>
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-numerals text-3xl font-bold text-ion-white" style={{ textShadow: "0 0 20px rgba(0,229,255,0.3)" }}>
+        <span className="font-numerals text-3xl font-bold text-ion-white" style={{ textShadow: "0 0 20px rgba(255,77,46,0.3)" }}>
           {Math.round(health * 100)}%
         </span>
         <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">

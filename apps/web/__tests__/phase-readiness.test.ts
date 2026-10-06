@@ -37,4 +37,30 @@ describe("evaluatePhaseAdvance", () => {
     expect(r.eligible).toBe(false);
     expect(r.rationale).toContain("top rung");
   });
+
+  describe("decided-rate passthrough (additive disclosure, gate untouched)", () => {
+    it("carries the decided-only reading beside the rate the floor reads", () => {
+      const r = evaluatePhaseAdvance(
+        {
+          canonicalSettledPicks: 9999,
+          calibrationPublished: true,
+          beatCloseRate: 0.234,
+          beatCloseRateDecided: 0.4084,
+        },
+        "PROVEN",
+      );
+      expect(r.beatCloseRateDecided).toBe(0.4084);
+      // The floor still reads the all-graded rate only:
+      expect(r.eligible).toBe(false);
+    });
+
+    it("is null when the caller does not provide the decided reading", () => {
+      const r = evaluatePhaseAdvance(
+        { canonicalSettledPicks: 9999, calibrationPublished: true, beatCloseRate: 0.6 },
+        "PROVEN",
+      );
+      expect(r.beatCloseRateDecided).toBeNull();
+      expect(r.eligible).toBe(true);
+    });
+  });
 });

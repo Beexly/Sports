@@ -118,7 +118,7 @@ export function parseEspnScoreboardForSeed(
     if (!home || !away) continue;
     const state = toState(ev.status?.type?.state);
     out.push({
-      externalId: `espn:${short}:${id}`,
+      externalId: `espn:${meta.key}:${id}`,
       sportKey: meta.key,
       sportName: meta.name,
       sportDisplayName: meta.displayName,

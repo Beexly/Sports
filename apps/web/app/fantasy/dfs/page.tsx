@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
+import { TournamentLab } from "@/components/fantasy/tournament-lab";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
 
 export const metadata: Metadata = {
-  title: "DFS Suite: Salary Board + Optimizer · Galaxy Fantasy",
+  title: "DFS Optimizer",
   description:
-    "DFS salaries and the glass-box optimizer in one room: reconciled DraftKings salaries feed cash, GPP, and leverage objectives with QB stacking, locks/fades, and real exposure control.",
+    "Build cash, tournament, and leverage lineups. QB stacking, locks, fades, exposure control. CSV export for DraftKings.",
   alternates: { canonical: "/fantasy/dfs" },
   robots: { index: false, follow: true },
 };
@@ -29,11 +30,20 @@ export default async function DfsSuitePage() {
 
   return (
     <FantasyShell
-      eyebrow="DFS Suite · Salary Board + Optimizer"
+      eyebrow="DFS Optimizer"
       accent="cyan"
-      title={<>Solve the slate. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
-      intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups: QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
-      note="Illustrative classic-format sample pool drives the optimizer until a licensed salary feed is connected. Salary-cap optimization, stacking, exposure, and leverage are computed live in your browser."
+      title={<>Build the lineup. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
+      intro="Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
+      // Derived from `live`, never a constant. This used to be a hardcoded
+      // string, so the "sample slate" disclosure rendered over LIVE salaries
+      // too — telling a paying customer their real board was fake. Law 8 is
+      // about not presenting fabricated data as real; the mirror failure is
+      // just as bad, and it was what this actually did.
+      note={
+        live
+          ? "Live salary feed connected. Salaries and player pool are real; lineup math is ours."
+          : "Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
+      }
       wide
     >
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}
@@ -94,6 +104,8 @@ export default async function DfsSuitePage() {
       </section>
 
       <DfsOptimizer />
+
+      <TournamentLab />
     </FantasyShell>
   );
 }

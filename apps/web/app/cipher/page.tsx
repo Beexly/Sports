@@ -50,7 +50,7 @@ export default function CipherPage() {
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
             style={{
               background:
-                "radial-gradient(60% 80% at 50% 0%, rgba(123, 97, 255, 0.13), transparent 70%), radial-gradient(40% 60% at 75% 10%, rgba(0, 229, 255, 0.08), transparent 70%)",
+                "radial-gradient(60% 80% at 50% 0%, rgba(201, 212, 206, 0.13), transparent 70%), radial-gradient(40% 60% at 75% 10%, rgba(255, 77, 46, 0.08), transparent 70%)",
             }}
           />
           <div className="mx-auto max-w-5xl text-center">
@@ -71,7 +71,7 @@ export default function CipherPage() {
                   style={{
                     fontSize: "1.1em",
                     backgroundImage:
-                      "linear-gradient(115deg, #00E5FF, #7B61FF 50%, #FF38C7)",
+                      "linear-gradient(115deg, #FF4D2E, #C9D4CE 50%, #FF4D2E)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
@@ -135,7 +135,7 @@ export default function CipherPage() {
                     <span
                       aria-hidden="true"
                       className="font-display text-3xl tabular-nums text-ultraviolet"
-                      style={{ textShadow: "0 0 22px rgba(123, 97, 255, 0.33)" }}
+                      style={{ textShadow: "0 0 22px rgba(201, 212, 206, 0.33)" }}
                     >
                       {r.n}
                     </span>

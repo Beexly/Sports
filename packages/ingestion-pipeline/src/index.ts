@@ -114,11 +114,15 @@ export {
   loadSportResultGamesForElo,
   sportKeyToKalshiLeague,
   guessKalshiTeamAbbr,
+  tryKalshiFairValue,
+  tryPolymarketIndependentFairValue,
 } from "./build-independent-fair-values.js";
 export type {
   IndependentFairValueBuildInput,
   EloRatingsCache,
 } from "./build-independent-fair-values.js";
+export { mintAfterMind } from "./mint-gate.js";
+export type { MindVerdict, MintAfterMind } from "./mint-gate.js";
 export {
   ESPN_POWERINDEX_LICENSE_ENV,
   isEspnPowerIndexCleared,
@@ -127,8 +131,14 @@ export {
   resolveKalshiTeamAbbr,
   normalizeTeamKey,
 } from "./kalshi-team-abbr.js";
+export {
+  NFL_NAME_TO_ABBR,
+  nflTeamAbbr,
+  isPlaceholderTeamName,
+} from "./nfl-team-abbr.js";
 
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
+export { slateAssociationTrace } from "./slate-association.js";
 export type { SignalSlateResult } from "./generate-signal-slate.js";
 
 export { runBoardFillPipeline } from "./board-fill.js";
@@ -186,3 +196,719 @@ export type {
 export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
 export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";
 
+export {
+  SIGNAL_REGISTRY,
+  buildMissingContextEvidenceFromRegistry,
+} from "./signal-registry-definitions.js";
+export { runSignalRegistry } from "./signal-registry-runner.js";
+export {
+  checkArchiveStaleness,
+  DEFAULT_STALENESS_WINDOW_HOURS,
+} from "./archive-staleness-monitor.js";
+export type {
+  ArchiveStalenessCheckArgs,
+  ArchiveStalenessReport,
+} from "./archive-staleness-monitor.js";
+
+
+// Live-path modules: continuous-signal tilt + GSE 4-Beat props slate
+export {
+  applyContinuousSignalTilt,
+  type ContinuousVote,
+  type ContinuousTiltResult,
+} from "./continuous-signal-tilt.js";
+export {
+  runPropsSlate,
+  devigPropBook,
+  propKellyStake,
+  propMonteCarlo,
+  type PropsSlateResult,
+  type PropsSlateInput,
+  type PlayerProp,
+} from "./props-slate.js";
+export {
+  runPropsSlateShadow,
+  propsSlateShadowEnabled,
+  PROPS_SLATE_SHADOW_ENABLED_ENV,
+  type PropsSlateShadowSource,
+  type PropsSlateShadowResult,
+  type PropsSlateShadowOptions,
+  type ShadowPropLine,
+} from "./props-slate-shadow.js";
+export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
+
+// Prereg leakage gate (V1 probes live call site)
+export {
+  runLeakageGate,
+  assertLeakageGate,
+  fixtureFromGameRows,
+  type LeakageGateResult,
+} from "./leakage-gate.js";
+
+// Walk-forward vs closing line (W2 live call site)
+export {
+  runWalkForwardEval,
+  walkForwardShipGate,
+  type WalkForwardEvalResult,
+} from "./walk-forward-eval.js";
+
+// Ensemble learning bridge (logit-pool + residual GBM)
+export {
+  evalLogitPool,
+  trainResidualModel,
+  logitPoolShipGate,
+  type LogitPoolEval,
+  type ResidualGbmTrain,
+} from "./ensemble-bridge.js";
+
+// Continual learning bridge (online metrics + EWC + AdaER)
+export {
+  evalOnlineMetrics,
+  evalEwcAnchor,
+  evalAdaErSelect,
+  settledBrier,
+  type OnlineMetricsEval,
+  type EwcAnchorEval,
+  type AdaErSelectEval,
+} from "./continual-learning-bridge.js";
+
+// Monitoring bridge (ECDD + drift ensemble + Hawkes threat)
+export {
+  runEcdd,
+  runDriftEnsemble,
+  runHawkesThreat,
+  type EcddRun,
+  type DriftRun,
+  type HawkesRun,
+} from "./monitoring-bridge.js";
+
+// In-play bridge (antipersistent scoring + Markov WP + mixed-tier)
+export {
+  evalNextScore,
+  evalInPlayWp,
+  evalMixedTier,
+  buildTeamBalance,
+  type NextScoreEval,
+  type InPlayWpEval,
+  type MixedTierEval,
+} from "./inplay-bridge.js";
+
+// Props-player bridge (conditional-td, catch-prowess, player-similarity, xflag)
+export {
+  evalConditionalTd,
+  evalConditionalFirstDown,
+  evalCatchProwess,
+  evalCatchProb,
+  evalClosestComps,
+  evalXFlags,
+  type PlayerEval,
+  type CatchProwessFit,
+  type XFlagSummary,
+} from "./props-player-bridge.js";
+
+// Continual: teacher-student + forgetting + natural grad + coreset
+export {
+  evalTeacherStudent,
+  evalForgetting,
+  evalRwalkPenalty,
+  evalNaturalGrad,
+  evalSteinCoreset,
+  type TeacherStudentEval,
+  type ForgettingAudit,
+  type RwalkPenaltyEval,
+  type NaturalGradEval,
+  type CoresetEval,
+} from "./continual-learning-bridge.js";
+
+// Edge-lab honesty bridge (close-distillation, trials, taxonomy source)
+export {
+  evalCloseDistillation,
+  evalPredictedMoveEdge,
+  evalFeatureAdmission,
+  evalTaxonomyRow,
+  evalGameContext,
+  type HonestEval,
+  type CloseDistillationResult,
+  type FeatureAdmissionOutcome,
+} from "./edge-lab-honesty-bridge.js";
+
+// Certificate bridge (display substantiation, No-Bet/Fire certs, Kelly lower endpoint)
+export {
+  evalDisplaySubstantiation,
+  evalDisplayIfSubstantiated,
+  evalWilsonLowerBound,
+  evalNoBetCertificate,
+  evalFireCertificate,
+  evalParseCertificate,
+  evalCertificateHash,
+  evalKellyLowerEndpoint,
+  type CertEval,
+} from "./certificate-bridge.js";
+
+// Bayesian bridge (hierarchical shrinkage, dirichlet pool, match priors, EP-probit)
+export {
+  evalPartialPool,
+  evalEbTau2,
+  evalOpinionPool,
+  evalFitPoolingWeight,
+  evalDirichletPredictive,
+  evalBlendAnalystView,
+  evalCumulativeProbit,
+  evalRollForwardPriors,
+  evalEpProbitFit,
+  evalEpProbitPredict,
+  type BayesEval,
+} from "./bayesian-bridge.js";
+
+// RL + SymReg bridge (distributional slate, CQL stake policy, LM prior, SINDy)
+export {
+  evalDistributionStats,
+  evalGreedyStake,
+  evalIqnGate,
+  evalExpectile,
+  evalConsistencyGate,
+  evalCqlPenalty,
+  evalEss,
+  evalDoublyRobust,
+  evalRankByPrior,
+  evalSindy,
+  type RlEval,
+  type DistributionStats,
+} from "./rl-symreg-bridge.js";
+
+// Metalearning + Conformal bridge (ALPACA BLR, librarian, Levene/Welch)
+export {
+  evalOnlineBlr,
+  evalAlpacaGate,
+  evalBlrNll,
+  evalLibrarian,
+  evalRetrieveTopS,
+  evalSplitQuality,
+  evalSplitQualityScore,
+  type MetaEval,
+  type LibrarianResult,
+  type SplitQualityResult,
+} from "./metalearning-conformal-bridge.js";
+
+// Publish-guards bridge (abstention, stratum coverage, reliability, promotion)
+export {
+  evalReliability,
+  evalAbstention,
+  evalChowAbstain,
+  evalStratumGate,
+  evalFloorStrata,
+  evalPromotion,
+  evalPairedBrierLcb,
+  evalClvNonInferiority,
+  type GuardEval,
+  type AbstentionDecision,
+  type StratumDecision,
+} from "./publish-guards-bridge.js";
+
+// Bayesian pairing bridge (Bradley-Terry, ordinal structure, bivariate Poisson)
+export {
+  evalBradleyTerry,
+  evalOrdinalStructure,
+  evalOrdinalPredict,
+  evalBivPoisson,
+  evalDixonColesTau,
+  evalBivPoissonSample,
+  type PairingEval,
+  type BradleyTerryResult,
+  type OrdinalStructureResult,
+  type BivPoissonResult,
+} from "./bayesian-pairing-bridge.js";
+
+// Score-model bridge (HMM regimes, WP blender, Poisson/NB/CMP factorization)
+export {
+  evalHmmRegimes,
+  evalHamiltonFilter,
+  evalWpBlend,
+  evalGammaShrink,
+  evalScoreFactorization,
+  evalCmpPmf,
+  evalNegBinPmf,
+  type ScoreEval,
+  type HmmRegimeResult,
+  type WpBlendResult,
+  type ScoreFactorizationResult,
+} from "./score-model-bridge.js";
+
+// SymReg residue on the rl-symreg bridge
+export {
+  evalMineMotifs,
+  evalAllocateIslands,
+  evalSelectByNed,
+  evalNed,
+  evalCrossoverN,
+  evalTreeEditDistance,
+  type SymRegEval,
+} from "./rl-symreg-bridge.js";
+
+// RL residue bridge (C51 optimal stopping, Sinkhorn DRL, CFCQL, thin-regime)
+export {
+  evalOptimalStopping,
+  evalC51Project,
+  evalSinkhornStaking,
+  evalRiskPriceUpdate,
+  evalCfcql,
+  evalThinRegimeRetrieval,
+  evalRegimeKey,
+  type RlResidueEval,
+  type StoppingResult,
+  type SinkhornResult,
+  type CfcqlResult,
+  type ThinRegimeResult,
+} from "./rl-residue-bridge.js";
+
+// Metalearning residue (GP posterior, uncertainty meta-loss, EWA/BOA, fixed-support pools)
+export {
+  evalGpPosterior,
+  evalUncertaintyMetaLoss,
+  evalEwaUpdate,
+  evalBoaUpdate,
+  evalFixedSupportPools,
+} from "./metalearning-conformal-bridge.js";
+
+// Bayesian residue bridge (copula-HMM, NMF archetypes, sparse HMM, workload, AR1/OU, ABC-SSM, Hawkes)
+export {
+  evalGaussCopulaJoint,
+  evalNmfArchetypes,
+  evalLassoBic,
+  evalRidgeFit,
+  evalArxFit,
+  evalAr1Forecast,
+  evalOuWinProb,
+  evalAbcSsm,
+  evalHawkesGridFit,
+  type BayesResidueEval,
+  type NmfArchetypeResult,
+  type LassoBicResult,
+  type WorkloadFitResult,
+  type Ar1ForecastResult,
+  type AbcSsmResult,
+} from "./bayesian-residue-bridge.js";
+
+// SymReg/Conformal/Promotion/Kernel/Certificate residue bridge
+export {
+  evalParetoPrune,
+  evalSkeletonJaccard,
+  evalPairedPvalue,
+  evalVerticalFilter,
+  evalNmse,
+  evalStagedRefine,
+  evalHillClimb,
+  evalStlsq,
+  evalVerifySideInfo,
+  evalDropIntercept,
+  evalTaxonomy,
+  evalCategoryDiagnostics,
+  evalGreedyPartition,
+  evalBestSplit,
+  evalAssignLeafId,
+  evalStandardNormalQuantile,
+  evalZCritOneSided,
+  evalRbfKernel,
+  evalRffKrr,
+  evalGateCertificate,
+  ROOT_LEAF,
+  type ResidueEval,
+  type ParetoPruneResult,
+  type TaxonomyAssignment,
+  type PartitionResult,
+  type RefineResult,
+} from "./symreg-conformal-residue-bridge.js";
+
+// Props/DFS + metrics bridge (matrix completion, TS forecast, JOI stack, era
+// LASSO, NMF archetypes, Emax portfolio, metric residual rollups, shrinkage).
+// evalLocalMatrixCompletion tags every cell OBSERVED | IMPUTED so an imputed
+// value is never presented as a measurement.
+export {
+  type PropsEval,
+  type MatrixCellOrigin,
+  type MatrixCompletionCell,
+  type LocalMatrixCompletionResult,
+  type TsForecastBacktestResult,
+  type RankedJoiPair,
+  type JoiStackResult,
+  type LassoResult,
+  type GaussianMixtureResult,
+  type EmaxPortfolioResult,
+  type MetricResidualRollupsResult,
+  type ShrinkResult,
+  type PairSequence,
+  type MetricResidualMetricId,
+  type MetricResidualPlayInput,
+  type MetricResidualRollup,
+  type MetricUncertaintyBand,
+  evalLocalMatrixCompletion,
+  evalImputationHoldoutRmse,
+  evalTsForecastBacktest,
+  evalAvailabilityProb,
+  evalLineupForecastGain,
+  evalJoiStackMetric,
+  evalSynergyEdge,
+  evalSoftThreshold,
+  evalIstaLasso,
+  evalTvDenoise1d,
+  evalGaussianMixture1d,
+  evalAdjustedRandIndex,
+  evalExpectedMax2,
+  evalEmaxPortfolioGreedy,
+  evalMetricResidualRollups,
+  evalEmpiricalBayesShrink,
+  evalShrinkProbability,
+  evalShrinkWeightedMean,
+} from "./props-metrics-bridge.js";
+
+// Invention + tracking bridge (equation separability, dual-margin bandit, SELA
+// MCTS, case bank, meta-analytics, expected drive value, EPV bootstrap).
+export {
+  evalSeparabilityProbe,
+  evalDeltaSep,
+  evalRecombineGroups,
+  evalPaceNormalization,
+  evalImprovementGate,
+  evalBanditExperiment,
+  evalCateReplication,
+  evalSelaSearch,
+  evalUcBalance,
+  evalCaseRetrieval,
+  evalCaseGate,
+  evalMetricQuality,
+  evalCopulaIndependence,
+  evalMetricReliability,
+  evalEbShrinkage,
+  evalDriveExpectedValue,
+  evalDriveAttribution,
+  evalEpvBootstrap,
+  type InventEval,
+  type SeparabilityProbeResult,
+  type DeltaSepResult,
+  type RecombineResult,
+  type PaceRow,
+  type PaceNormalizationResult,
+  type ImprovementGateResult,
+  type BanditOutcomeContext,
+  type BanditOutcome,
+  type BanditGateThresholds,
+  type ArmSummary,
+  type BanditExperimentResult,
+  type CateReplicationResult,
+  type SelaSearchResult,
+  type UcBalanceResult,
+  type RetrievedCase,
+  type CaseRetrievalResult,
+  type CaseGateResult,
+  type MetricQualityResult,
+  type CopulaIndependenceResult,
+  type ReliabilityReportResult,
+  type EbShrinkageResult,
+  type DriveValueResult,
+  type EdvPlay,
+  type DriveAttributionResult,
+  type EpvBootstrapResult,
+} from "./invention-tracking-bridge.js";
+
+// Edge-lab honesty bridge #2 (claim ceiling, Venn-Abers, selective gate,
+// council debate, context bind, Kaunitz outlier, grouped climatology)
+export {
+  evalPerformanceClaim,
+  evalVennAbersInterval,
+  evalSelectiveGate,
+  evalTuneTau,
+  evalEdgeLabDebate,
+  evalPropsContextBind,
+  evalKaunitzScan,
+  evalFitGroupedClimatology,
+  evalScoreAgainstClimatology,
+  evalBrierSkill,
+  type EdgeLab2Eval,
+  type PerformanceClaimReport,
+  type SelectiveGateReportOut,
+  type MultiprobIntervalOut,
+  type TauTuningOut,
+  type CouncilOverride,
+  type EdgeLabDebateOut,
+  type PropsContextBindOut,
+  type KaunitzScanOut,
+  type ClimatologyCellOut,
+  type ClimatologyFitOut,
+  type ClimatologyScoreOut,
+  type BrierSkillOut,
+} from "./edge-lab-honesty2-bridge.js";
+
+// Experimental models bridge (effective breadth, aSHAP, ITS break scan,
+// nested-Poisson totals, CFOV decomposition, order-flow resiliency).
+// Gate-evaluated modules publish `gateEvaluated: false` on every result.
+export {
+  type ExpEval,
+  type ExpGateStatus,
+  ITS_GATE,
+  POISSON_GATE,
+  CFOV_GATE,
+  ORDER_FLOW_GATE,
+  UNGATED,
+  evalEffectiveBreadth,
+  evalAshapAggregate,
+  evalAshapStability,
+  evalNormalCdf,
+  evalItsFit,
+  evalItsBreakScan,
+  evalPoissonTotals,
+  evalIngarchTotals,
+  evalNestedScoreSim,
+  evalCfovFeatures,
+  evalCfovTimeOrdered,
+  evalVolumeBuckets,
+  evalResiliencyRegression,
+  evalSteamSignal,
+  evalScarceLiquidity,
+  type EffectiveBreadthResult,
+  type AshapResult,
+  type AshapStabilityResult,
+  type ItsFitResult,
+  type ItsScanResult,
+  type PoissonTotalsResult,
+  type IngarchResult,
+  type CmpPmfResult,
+  type NestedScoreSimResult,
+  type CfovFeaturesResult,
+  type CfovTimeOrderedResult,
+  type VolumeBucketsResult,
+  type ResiliencyResult,
+  type SteamResult,
+  type ScarceLiquidityResult,
+} from "./experimental-models-bridge.js";
+
+// Sizing bridge (generalized Kelly, constrained/risk-constrained/shrinkage/
+// conformal Kelly, drawdown governance, decoupled + multivariate Kelly, ES
+// governor, tournament, MPC, volatility regime, path features, QR-DQN).
+// A negative stake, a stake above the caller cap, a zero edge, and a non-finite
+// edge all fail closed. `bet: false` (no bet) is structurally distinct from
+// `ok: false` (could not compute).
+export {
+  evalGeneralizedKellySlate,
+  evalKellyPosteriorGate,
+  evalConstrainedKelly,
+  evalProjectKellySimplex,
+  evalRiskConstrainedKelly,
+  evalEmcKelly,
+  evalShrinkageKelly,
+  evalConformalKelly,
+  evalDrawdownKelly,
+  evalEquityMaxDrawdown,
+  evalCedDrawdown,
+  evalDecoupledKelly,
+  evalMultivariateKelly,
+  evalSimulateWealth,
+  evalEsGovernor,
+  evalMeanEsFrontier,
+  evalKellyTournament,
+  evalMaxDrawdownPortfolio,
+  evalCoinFlipModulator,
+  evalSelectiveFeasibility,
+  evalSlateMpc,
+  evalVolatilityRegime,
+  evalPathForm,
+  evalQrDqn,
+  type SizingEval,
+  type GeneralizedSlatePickInput,
+  type GeneralizedKellyInput,
+  type GeneralizedKellyData,
+  type ConstrainedKellyInput,
+  type ConstrainedKellyData,
+  type RiskConstrainedKellyInput,
+  type RiskConstrainedKellyData,
+  type EmcKellyInput,
+  type EmcKellyData,
+  type ShrinkageKellyInput,
+  type ShrinkageKellyData,
+  type ConformalKellyInput,
+  type ConformalKellyData,
+  type DrawdownKellyInput,
+  type DrawdownKellyData,
+  type CedDrawdownInput,
+  type CedDrawdownData,
+  type DecoupledKellyInput,
+  type DecoupledKellyData,
+  type MultivariateKellyInput,
+  type MultivariateKellyData,
+  type EsGovernorInput,
+  type EsGovernorData,
+  type KellyTournamentInput,
+  type KellyTournamentData,
+  type MaxDrawdownPortfolioInput,
+  type MaxDrawdownPortfolioData,
+  type CoinFlipModulatorInput,
+  type CoinFlipModulatorData,
+  type SelectiveFeasibilityInput,
+  type SelectiveFeasibilityData,
+  type SlateMpcInput,
+  type SlateMpcData,
+  type VolatilityRegimeInput,
+  type VolatilityRegimeData,
+  type PathFormInput,
+  type PathFormData,
+  type QrDqnInput,
+  type QrDqnData,
+} from "./sizing-bridge.js";
+
+// Markets + odds bridge (display, honesty gate, effective price, noise wedge,
+// informed flow, marginal-price oracle, excess movement, arb/promo, de-vig,
+// favourite-longshot audit, odds fusion, market pooling, volume momentum,
+// spread skill, Kelly policy, count models, bandit policies).
+// A negative edge is a PASS, never a bet. A score is never readable as a
+// probability. Kernel p-values are checked against a named
+// NORMAL_APPROX_P_SLACK because the Abramowitz-Stegun normal CDF these
+// kernels use can exceed 1 by ~3e-7 on a legitimate zero-difference series.
+export {
+  DEVIG_SUM_TOLERANCE,
+  NORMAL_APPROX_P_SLACK,
+  evalProbabilityDisplay,
+  evalSituationalHonestyGate,
+  evalEffectivePrice,
+  evalNoiseWedgeFairOdds,
+  evalInformedFlow,
+  evalInformedFlowCrossSection,
+  evalMarginalPriceOracle,
+  evalExcessMovement,
+  evalArbScan,
+  evalPromoExtraction,
+  evalOoeDevig,
+  evalFavoriteLongshotAudit,
+  evalOddsHistoryFusion,
+  evalMarketPooling,
+  evalVolumeMomentum,
+  evalSpreadSkill,
+  evalKellySizing,
+  evalCountModel,
+  evalBanditPolicies,
+  type MarketsEval,
+  type ProbabilityDisplayResult,
+  type HonestyGateInput,
+  type HonestyGateResult,
+  type PricedPickRow,
+  type EffectivePriceResult,
+  type NoiseWedgeResult,
+  type InformedFlowResult,
+  type InformedCrossSectionResult,
+  type MarginalOracleResult,
+  type ExcessMovementRow,
+  type ExcessMovementResult,
+  type ArbScanResult,
+  type PromoExtractionResult,
+  type OoeDevigResult,
+  type FlbAuditResult,
+  type FusionResult,
+  type MarketPoolingResult,
+  type VolumeMomentumResult,
+  type SpreadSkillResult,
+  type KellySizingResult,
+  type CountModelResult,
+  type BanditPolicyResult,
+} from "./markets-odds-bridge.js";
+
+// Signals bridge (efficiency, environment, tactical, situational, narrative,
+// bio, biomechanical, chemistry, discipline, schematic, trench, turnover).
+// Every result carries a `readingKind` discriminant — PROBABILITY | RATE |
+// PHYSICAL_MODIFIER | SIGNED_TILT | INDEX | CATEGORICAL — so a score can never
+// be read as a win probability. Five upstream kernels return a field literally
+// named `confidence` in [0,1]; the bridge renames it `signalConfidenceScore`
+// on every result, per this repo's doctrine that confidence is not a win rate.
+export {
+  type SignalEval,
+  type SignalReadingKind,
+  MIN_RZ_LEVERAGE_GAMES,
+  MIN_QB_RX_SHARED_GAMES,
+  MIN_TWP_PASS_ATTEMPTS,
+  MIN_TARGET_SHARE_GAMES,
+  MIN_EARLY_DOWN_PLAYS,
+  MIN_TWO_MINUTE_DRIVES,
+  MIN_CREW_GAMES,
+  MIN_COACH_GAMES,
+  MIN_ROSTER_AGE_GAMES,
+  MIN_ROOKIE_GAMES,
+  MIN_PENALTY_GAMES,
+  evalRedZoneTeLeverage,
+  evalManZoneReceiverArchetype,
+  evalQbTwpRegression,
+  evalBackupQbTargetDistribution,
+  evalWr1OutRedistribution,
+  evalTemperaturePrecipitationDecay,
+  evalHighAltitudeFatigueDecay,
+  evalLinearWindPassImpact,
+  evalWindElasticity,
+  evalEarlyDownProeMomentum,
+  evalRedZonePersonnelGrouping,
+  evalTwoMinuteHurryUpEfficiency,
+  evalRefereeCrewTendencies,
+  evalCoachingTendencies,
+  evalFourthDownCoachingAggressiveness,
+  evalLopezSecondAndTenTendency,
+  evalShortWeekRoadDeficit,
+  evalCircadianTravelFatigue,
+  evalAgeConditionedRest,
+  evalQbReceiverContinuity,
+  evalPenaltyDifferentialMomentum,
+  evalContractMilestones,
+  evalRookieBreakoutCohort,
+  evalByeWeekDefensiveInstallation,
+  evalOffensiveLineTrench,
+  evalInjuryTrajectory,
+  evalTurfSurfaceFatigue,
+  evalTurnoverLuck,
+  evalExpectedTurnoverDiff,
+  evalOpponentAdjustedEpa,
+  SIGNALS_BRIDGE_MODULES,
+  type RedZoneTeLeverageEval,
+  type ManZoneReceiverArchetypeEval,
+  type QbTwpRegressionEval,
+  type BackupQbTargetDistributionEval,
+  type Wr1OutRedistributionEval,
+  type TemperaturePrecipitationDecayEval,
+  type HighAltitudeFatigueDecayEval,
+  type LinearWindPassImpactEval,
+  type WindElasticityEval,
+  type EarlyDownProeMomentumEval,
+  type RedZonePersonnelGroupingEval,
+  type TwoMinuteHurryUpEfficiencyEval,
+  type RefereeCrewTendenciesEval,
+  type CoachingTendenciesEval,
+  type FourthDownCoachingAggressivenessEval,
+  type LopezSecondAndTenEval,
+  type ShortWeekRoadDeficitEval,
+  type CircadianTravelFatigueEval,
+  type AgeConditionedRestEval,
+  type QbReceiverContinuityEval,
+  type PenaltyDifferentialMomentumEval,
+  type ContractMilestonesEval,
+  type RookieBreakoutCohortEval,
+  type ByeWeekDefensiveInstallationEval,
+  type OffensiveLineTrenchEval,
+  type InjuryTrajectoryEval,
+  type TurfSurfaceFatigueEval,
+  type TurnoverLuckEval,
+  type ExpectedTurnoverDiffEval,
+  type OpponentAdjustedEpaEval,
+  type OpponentAdjustedEpaRatingRow,
+} from "./signals-bridge.js";
+
+export {
+  evalGseActionScore,
+  type GseScoreEval,
+  type GseActionBridgeData,
+} from "./gse-score-bridge.js";
+
+export {
+  reasonAbout,
+  DEFAULT_DISAGREEMENT,
+  type ReasoningTrace,
+  type ReasoningEval,
+  type ReasoningPremise,
+  type ReasoningQuestion,
+  type ReasoningConclusion,
+  type BlockedKernel,
+  type DerivedMetrics,
+} from "./reasoning-trace.js";
+export { traceHoldoutGame, type HoldoutScheduleRow } from "./reasoning-trace/from-bridge.js";

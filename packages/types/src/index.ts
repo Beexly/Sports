@@ -19,6 +19,7 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
+export * from "./ranking-candidates.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -57,6 +58,61 @@ export interface IndependentEdgeSummary {
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
   priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
+  /**
+   * Where `trueProb` was written. `mint` is the publish-time value.
+   * `backfill` was written after settlement and is not a training label.
+   * Absent on rows minted before the stamp existed.
+   */
+  trueProbBasis?: "mint" | "backfill";
+}
+
+export type TrueProbBasis = NonNullable<IndependentEdgeSummary["trueProbBasis"]>;
+
+const RETROSPECTIVE_TRUEPROB_PREFIX = "Retrospective independent blend";
+
+/**
+ * A post-settlement rewrite. Stamped `backfill`, or the older prose marker
+ * on rows written before the stamp. A `mint` stamp wins over that prose:
+ * the basis field is the contract, the sentence is only the legacy trail.
+ */
+export function trueProbIsBackfill(edge: {
+  readonly trueProbBasis?: string | null;
+  readonly rationale?: string | null;
+} | null | undefined): boolean {
+  if (edge == null) return false;
+  if (edge.trueProbBasis === "backfill") return true;
+  if (edge.trueProbBasis === "mint") return false;
+  return (edge.rationale ?? "").startsWith(RETROSPECTIVE_TRUEPROB_PREFIX);
+}
+
+/**
+ * True when the engine's own estimate prices the chosen side WORSE than the
+ * book is offering: a bet we should not be selling.
+ *
+ * It lives here, beside the type it reads, because both gates that enforce it
+ * need the identical spelling and neither may own it:
+ *   - the MINT gate, packages/prediction-engine/src/scoring.ts, which refuses
+ *     to create such a row; and
+ *   - the DISPLAY gate, apps/web/lib/picks/adverse-edge-suppression.ts, which
+ *     hides rows minted before that gate existed (nine were still published on
+ *     2026-09-13, worst -0.1742).
+ *
+ * Two gates restating one rule is how they drift, and a drift in this direction
+ * publishes a bet the engine said to withhold. It is NOT exported from the
+ * engine, because nineteen web test files replace @sports/prediction-engine
+ * with a partial mock that defines only the few symbols they need; importing it
+ * from there resolved to undefined under those mocks and collapsed the board
+ * lane to empty. @sports/types is the boundary both sides already cross intact.
+ *
+ * NO ESTIMATE MEANS NO VOTE. A null summary or a non-finite expectedClv is
+ * silence, never read as agreement, disagreement, or zero. Exactly zero is "no
+ * edge either way" and is kept. If that asymmetry ever inverts, a parse bug
+ * becomes a silent board wipe.
+ */
+export function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
+  if (!edge) return false;
+  if (!Number.isFinite(edge.expectedClv)) return false;
+  return edge.expectedClv < 0;
 }
 
 export interface FactorBreakdown {
@@ -116,6 +172,7 @@ export interface FactorDetail {
 export type EvidenceActivationStatus =
   | "ACTIVE"
   | "SHADOW_ONLY"
+  | "DARK"
   | "BLOCKED_MISSING_SOURCE"
   | "BLOCKED_STALE"
   | "BLOCKED_LOW_TRUST"
@@ -389,6 +446,42 @@ export interface GameContextInput {
   // are async I/O) so the PURE, synchronous scorer can run the edge engine
   // against them. Home/away perspective. Absent → scorer is unchanged.
   independentFairValues?: IndependentMarketFairValue[];
+  /**
+   * Settled forecast/outcome rows for this market family. The scorer may only
+   * withhold on them. Absent or empty does not vote, so a pick with no history
+   * publishes exactly as before. A history the screen cannot read withholds.
+   */
+  calibrationHistory?: CalibrationHistoryRow[];
+  /**
+   * OPTIONAL offline-fitted probability recalibrator for this market family.
+   *
+   * THE GAP THIS CLOSES. Measured on 1,823 settled prod picks (2026-09-30): the
+   * engine DISCRIMINATES (realized win rate rises monotonically with stated
+   * probability — 43.4% / 58.2% / 61.8% across low/mid/high buckets, an 18.4pt
+   * spread) but is ~5.2pt OVERCONFIDENT in the high bucket (states 0.618, reality
+   * 0.5666). Ranking is real; the scale is not. The fix is a calibration map, and
+   * this repo already fits them properly (`selectCalibrator` / `plattScaling` /
+   * `betaCalibration`), but that machinery sat DOWNSTREAM of the published
+   * number — `edge-engine.ts`, the sole producer of `independentEdge.trueProb`,
+   * imported none of it. A perfect fit could not move a single published
+   * probability.
+   *
+   * A fitted map is passed here so the published `trueProb` — and therefore the
+   * edge, the conviction ladder and the ranking derived from it — is calibrated
+   * rather than merely reportable.
+   *
+   * LAWS:
+   * - ABSENT = UNCHANGED. No map means byte-identical output to before this
+   *   field existed. Nothing moves until a map is deliberately supplied.
+   * - FITTED OFFLINE from settled history, never here. A map fitted on the same
+   *   picks it is scored against is a self-fulfilling number, not a measurement.
+   * - A map that throws or returns a non-finite / out-of-range value is REFUSED
+   *   and the uncalibrated probability is published unchanged.
+   */
+  probabilityCalibrator?: {
+    /** Map a stated probability in [0,1] to its calibrated equivalent. */
+    readonly predict: (p: number) => number;
+  };
   // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
   // "strict": only books whose over/under prices DISCRIMINATE
   // (overPrice !== underPrice) count as consensus votes; equal-juice books
@@ -396,6 +489,14 @@ export interface GameContextInput {
   // `overPrice <= underPrice` rule, under which the standard -110/-110 quote
   // counts as an OVER vote at every book.
   totalsTiebreak?: "legacy" | "strict";
+}
+
+/** One settled forecast. `path` is the order the screen splits. `y` is the outcome. */
+export interface CalibrationHistoryRow {
+  readonly p: number;
+  readonly y: 0 | 1;
+  readonly stratum: string;
+  readonly path: number;
 }
 
 /**
@@ -627,13 +728,46 @@ export interface PublicPick {
    */
   hasBookPrice?: boolean;
   /**
-   * Market-implied win probability for the picked side, 0..1, read from the
-   * pick's immutable proof receipt, with the bookmaker count it was averaged
-   * across. Present ONLY on book-priced two-way MONEYLINE picks that carry a
-   * receipt AND for viewers entitled to see confidence; the key is omitted
-   * otherwise (v5.2.8 display side, apps/web/lib/picks/market-implied-display.ts).
+   * @deprecated Phase 1 shape, superseded by `winProbability`. Kept so existing
+   * consumers do not break; both are resolved from ONE call to
+   * `resolveWinProbability` so they can never disagree. New code reads
+   * `winProbability`.
    */
   marketImplied?: { prob: number; bookmakerCount: number } | null;
+  /**
+   * The ONLY probability this API publishes on a pick (v5.2.8 Phase 2).
+   *
+   * `value` is the picked side's market-implied win probability, 0..1, read
+   * from the pick's immutable proof receipt: each book's quoted price for each
+   * side converted to an implied probability, averaged across the books in the
+   * mint-time snapshot, and the two-sided average normalised to sum to one.
+   * It is fixed at publish time and never recomputed.
+   *
+   * Present on book-priced two-way MONEYLINE picks carrying a receipt and at
+   * least two books, **for every tier** — it is arithmetic on quoted prices a
+   * reader can redo by hand, not a model output, and the public calibration
+   * claim is about this number, so the people reading that claim must be able
+   * to see it. The key is omitted when any scope rule fails.
+   *
+   * It is NEVER derived from `confidence`. `confidence` is a 0-100 selection
+   * score, rendered "NN/100", and is measurably anti-predictive at its top end
+   * (proposal section 3b: conf 80+ claims 0.8663, realizes 0.5191, z = -10.7).
+   *
+   * `basis: "independent_estimate"` is reserved for a future signal-slate
+   * estimate and is NEVER emitted today — no independent estimator in the
+   * engine has been shown to carry information at publish time, and a labeled
+   * guess is still a guess. A test pins that the API emits only "market_devig".
+   */
+  winProbability?: {
+    /** Picked side's win probability, 0..1, exclusive of 0 and 1. */
+    value: number;
+    /** Where the number came from. Only "market_devig" is emitted today. */
+    basis: "market_devig" | "independent_estimate";
+    /** Books in the mint-time snapshot the implied probabilities were averaged across (>= 2). */
+    books: number;
+    /** The de-vig method that produced `value`. */
+    method: "proportional";
+  } | null;
 
   // Gated by subscription
   confidence: number | null;         // null for FREE
@@ -826,4 +960,95 @@ export interface PublicBlogPost {
   seoDescription: string | null;
   publishedAt: string | null;
   isFeatured: boolean;
+}
+
+export * from "./signal-registry.js";
+
+// Canonical model version boundary constant
+export const CANONICAL_MODEL_VERSION = "v5.3.0";
+
+// ── CLV push-doctrine rates: three denominators, side by side ────────────────
+//
+// This repo's doctrine (AGENTS.md) is that a push is never averaged into a
+// published rate. MATCHED_CLOSE is the CLV analogue of a push: it is neither a
+// win nor a loss against the closing line. Whether a beat-close rate should
+// exclude MATCHED_CLOSE the way a push is excluded from a win rate has never
+// been decided anywhere in this codebase. Separately, the ESTABLISHED gate's
+// 0.524 threshold is the break-even win rate at -110 odds, a DECIDED-only
+// quantity, so a rate computed one way may be getting compared against a
+// threshold defined the other way. Nobody has established which one the gate
+// means.
+//
+// These types and this function do not decide that question and never will.
+// They surface all three readings side by side, each with its own explicit
+// denominator, so a reader sees the ambiguity instead of one silently-chosen
+// number:
+//
+//   decidedClvBeatRate   = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE)
+//   allGradedClvBeatRate = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//   clvPushRate          = MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//
+// Purely additive reporting. No gate reads a specific reading as "the" rate;
+// each consumer states which reading it applies and why, beside the others.
+
+export interface ClvVerdictCounts {
+  readonly beatCloseCount: number;
+  readonly lostToCloseCount: number;
+  readonly matchedCloseCount: number;
+}
+
+export interface ClvPushDoctrineRates {
+  /**
+   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE). MATCHED_CLOSE, the push, is
+   * excluded from both the numerator and the denominator, mirroring the
+   * push-never-averaged doctrine. Null when there are zero decided rows: a
+   * real state, never coerced to 0.
+   */
+  readonly decidedClvBeatRate: number | null;
+  readonly decidedClvBeatDenominator: number;
+  /**
+   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The push is
+   * counted in the denominator, not the numerator. Null when there are zero
+   * graded rows.
+   */
+  readonly allGradedClvBeatRate: number | null;
+  readonly allGradedClvBeatDenominator: number;
+  /**
+   * MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The CLV
+   * analogue of a push rate. Null when there are zero graded rows.
+   */
+  readonly clvPushRate: number | null;
+  readonly clvPushRateDenominator: number;
+}
+
+/**
+ * Pure. Computes the three readings from the verdict counts. Negative or
+ * non-finite counts are floored to 0 defensively, so a count is always a
+ * count. Shared by every surface that reports a CLV beat rate, so the three
+ * readings can never drift apart between surfaces.
+ */
+export function computeClvPushDoctrineRates(counts: ClvVerdictCounts): ClvPushDoctrineRates {
+  const beat = nonNegativeCount(counts.beatCloseCount);
+  const lost = nonNegativeCount(counts.lostToCloseCount);
+  const matched = nonNegativeCount(counts.matchedCloseCount);
+
+  const decidedDenominator = beat + lost;
+  const gradedDenominator = beat + lost + matched;
+
+  return {
+    decidedClvBeatRate: decidedDenominator > 0 ? round4(beat / decidedDenominator) : null,
+    decidedClvBeatDenominator: decidedDenominator,
+    allGradedClvBeatRate: gradedDenominator > 0 ? round4(beat / gradedDenominator) : null,
+    allGradedClvBeatDenominator: gradedDenominator,
+    clvPushRate: gradedDenominator > 0 ? round4(matched / gradedDenominator) : null,
+    clvPushRateDenominator: gradedDenominator,
+  };
+}
+
+function nonNegativeCount(value: number): number {
+  return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
+}
+
+function round4(value: number): number {
+  return Math.round(value * 10000) / 10000;
 }

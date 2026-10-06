@@ -16,28 +16,60 @@ describe("homepage doctrine hero", () => {
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
-  it("loads the doctrine font families through next/font and binds the CSS vars", () => {
-    // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3),
-    // bound to both the heavy archetype slams and the standard headlines.
-    expect(layout).toMatch(/Exo_2/);
-    expect(layout).toMatch(/Inter/);
-    expect(tokens).toMatch(/--f-body: "Geist", "Inter"/);
-    expect(layout).toMatch(/JetBrains_Mono/);
-    expect(layout).toMatch(/Instrument_Serif/);
-    for (const cssVar of [
-      "--f-display",
-      "--f-body",
+  it("keeps evidence single-family with tabular figures; display faces are headlines-only (NEBULA v7)", () => {
+    // Law 1 — evidence sets the rendering. A figure and its sample size must sit
+    // at the same optical size at n=10-29, which is unachievable across two
+    // families: a mono figure beside a sans caption reads as machine output
+    // annotated by a human. Inter carries every DATA role, and "tnum" replaces the
+    // half of the mono role that was load-bearing (column alignment).
+    //
+    // NEBULA v7 (owner-approved 2026-09-10) narrows — not repeals — this law:
+    // display headlines and the wordmark may use approved display faces
+    // (Barlow Condensed, Chakra Petch), because headlines never carry evidence.
+    // Figures, captions, numerals and body stay Inter. If you are here because
+    // this test failed, the question is "did evidence leave Inter", not
+    // "how do I make it pass".
+    //
+    // Supersedes the previous Exo 2 / JetBrains Mono / Instrument Serif doctrine.
+
+    // Inter is fetched exactly once; the only other allowed fetches are the
+    // two approved display faces.
+    expect(layout.match(/Inter\(/g)).toHaveLength(1);
+    for (const retired of ["Exo_2", "JetBrains_Mono", "Instrument_Serif"]) {
+      expect(layout).not.toMatch(new RegExp(retired));
+    }
+    for (const approved of ["Barlow_Condensed", "Chakra_Petch"]) {
+      expect(layout).toContain(approved);
+    }
+
+    // next/font binds --f-body, --f-cond and --f-word; every other family derives.
+    for (const bound of ["--f-body", "--f-cond", "--f-word"]) {
+      expect(layout).toContain(`variable: "${bound}"`);
+    }
+    for (const derived of [
+      "--f-arch",
+      "--f-display-tech",
       "--f-numerals",
+      "--f-mono",
       "--f-editorial",
     ]) {
-      expect(layout).toContain(`variable: "${cssVar}"`);
+      expect(layout).not.toContain(`variable: "${derived}"`);
+      // ...and each one resolves back to --f-body in the token file.
+      expect(tokens).toMatch(new RegExp(`${derived}:\\s*var\\(--f-body`));
     }
-    // Each family is fetched exactly once: --f-arch and --f-mono are aliases
-    // of their canonical vars in design-tokens.css, not second font loads.
-    expect(layout.match(/Exo_2\(/g)).toHaveLength(1);
-    expect(layout.match(/JetBrains_Mono\(/g)).toHaveLength(1);
-    expect(tokens).toMatch(/--f-arch: var\(--f-display\)/);
-    expect(tokens).toMatch(/--f-mono: var\(--f-numerals\)/);
+    // --f-display is the single exception: headlines resolve to the condensed
+    // display face, never to a data role.
+    expect(tokens).toMatch(/--f-display:\s*var\(--f-cond/);
+
+    // --f-body is owned by next/font and must NOT be redeclared in :root, or the
+    // element-level binding and the token file fight over the cascade.
+    expect(tokens).not.toMatch(/^\s*--f-body:/m);
+
+    // Tabular figures, globally. This is the numerals role now.
+    expect(tokens).toMatch(/font-feature-settings:\s*"tnum"\s*1/);
+
+    // The Tailwind utilities still resolve through the vars, which is why the
+    // 245 files using font-display / font-mono / font-numerals needed no edit.
     for (const cssVar of [
       "--f-arch",
       "--f-display",
@@ -53,10 +85,22 @@ describe("homepage doctrine hero", () => {
 
   it("uses the noise-to-signal thesis headline, one cold-open, no legacy hero", () => {
     expect(page).toContain("The market is full of");
-    expect(page).toContain("Galaxy turns it into");
+    // Was "Galaxy turns it into". The FIELD rebuild rewrote the second half of
+    // the thesis to "We find the signal", which is the SAME noise-to-signal
+    // structure this test is named for and matches AGENTS.md's stated hero
+    // thesis (Noise. / Signal. Closer: We detect. You decide.). Pin the thesis,
+    // not the retired clause.
+    expect(page).toContain("We find the");
+    expect(page).toMatch(/>noise</);
+    expect(page).toMatch(/>signal</);
     expect(page).toContain("We detect. You decide.");
-    // ONE cold-open: the montage stays, the slow doctrine intro is retired.
-    expect(page).toContain("MontageEntrance");
+    // ONE cold-open: the Field intro replaced the montage (96e505471 hero,
+    // 417fa6ae3 strip) with a lighter canvas sting that downloads no video
+    // (F-24 media weight). The intent of this line is unchanged — exactly one
+    // self-gating cold-open — so it pins the live intro and keeps the retired
+    // ones retired.
+    expect(page).toContain("FieldCinematicIntro");
+    expect(page).not.toContain("MontageEntrance");
     expect(page).not.toContain("CinematicEntrance");
     expect(page).not.toContain("We&apos;re not AI");
     expect(page).not.toMatch(/data-testid="homepage-arch-headline"/);

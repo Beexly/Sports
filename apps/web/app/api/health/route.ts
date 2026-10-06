@@ -10,7 +10,7 @@ import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
 // x-vercel-cache: HIT, age ~3h). A health check must reflect live state.
 export const dynamic = "force-dynamic";
 
-export async function GET(request?: Request): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
   // `?strict=1` is for external uptime monitors (UptimeRobot / Better Stack /
   // Cronitor) that can only alert on the HTTP status: in strict mode a
   // degraded settlement capability also fails the request. The default keeps

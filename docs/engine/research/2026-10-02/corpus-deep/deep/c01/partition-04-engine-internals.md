@@ -1,0 +1,98 @@
+# Partition 04 — GSE Engine Internals + Ops/Methodology (Adversarial Verification)
+
+**Analyst pass:** 2026-10-02. Sources are the slice's briefs (44 brief files: 9 named core + ~35 additional ops/intelligence/math/predictions swept) checked against read-only repo sources in `~/workspace/vendor/Sports/docs/` and the lab CSVs in `~/workspace/gse-research/nfl-2026/`. 24 load-bearing numbers traced; 4 independently recomputed from primary artifacts. INFERENCE is marked where used. No building, no repo writes.
+
+---
+
+## 1. Verified claims
+
+| # | Number | Source file (docs/) | Confidence | Verification note |
+|---|---|---|---|---|
+| 1 | 1.867% INT per dropback (2025 baseline) | `props/research/2026-09-17/props-consensus/our-metric-stack.md:57` | **HIGH** | **Recomputed independently: 1.8666%** from `defense_detail_2025.csv` (sum int_forced / sum n_dropbacks_def). Doc statement and recomputation agree to the 4th decimal. |
+| 2 | 0.640% fumble-lost per play (2025 baseline) | `props/research/2026-09-17/props-consensus/our-metric-stack.md:57` | **HIGH** | **Recomputed independently: 0.6396%** from `turnover_luck_2025.csv` (sum own_fumbles×(1−retained_share) / sum n_plays). Agreement to 0.0004pp. |
+| 3 | 11.2% of 2025 plays removed as garbage time (4Q, WP>0.95 or <0.05) | `our-metric-stack.md:32` | MEDIUM | Source-quoted verbatim; internally consistent with the stated 46,452 → 29,239 filter pipeline and the 535 kneel/spike removals. Not recomputed (no local raw pbp); INFERENCE that "of 2025 plays" means the pre-filter REG play set. |
+| 4 | Filter sieve: 46,452 REG plays → 29,239 after filters; 453 kneels + 82 spikes; Success = EPA>0 (100% nflverse match, zero mismatches) | `our-metric-stack.md:20,31` | MEDIUM | Source-quoted; cross-consistent with `turnover_luck_2025.csv` summing to exactly 29,239 plays. |
+| 5 | TWP rate ~3.0% of dropbacks flagged; 52.3% of flagged throws became actual INTs | `our-metric-stack.md:58` | MEDIUM | Source-quoted verbatim; FTN `is_interception_worthy` join at 100% coverage stated. Cannot recompute (FTN charting not local). |
+| 6 | Brier 0.247 vs GREEN ≤ 0.22 | `intelligence/LEVERAGE_STATUS.md:189,212` | MEDIUM | Source-quoted from the 2026-09-04/05 leverage audit. Caveat: single snapshot, no sample size, no CI, no market split stated in the doc (see Challenges). |
+| 7 | TOTAL CLV decided-only beat 176/301 = 58.5%, Wilson 95% CI [52.8%, 63.9%] | `ops/calibration/2026-08-19-l9-clv-slices/RESULTS.md:25-26` | **HIGH (math)** | Source-quoted AND **recomputed independently: p=0.5847, CI [0.5283, 0.6390]** — exact match. Sub-slices also recomputed exact: Jun TOTAL 73/118=61.9% [52.9,70.1]; Jul TOTAL 103/183=56.3% [49.0,63.3]. Arithmetic is clean; the data underneath it is not (see Challenges). |
+| 8 | Opp-adjusted blend: 55% adj pass EPA / 15% adj rush EPA / 15% CPOE / 10% explosive pass rate (20+ air yds) / 5% INT luck (sign-flipped); shrinkage 80 pass att / 40 carries | `reasoning/competitive-intel-intake-2026-09-26.md:14-20` | HIGH | Source-quoted verbatim, with shrinkage and 2025-defense baseline rules. Trench representative: qb_hit/dropback (2025 walk-forward r=0.241) also stated. |
+| 9 | GSE-CPOE/RYOE/xYAC graduation bars: cpoe minSample 12 / grad 0.60 / prov 0.35; xyac 12 / 0.50 / 0.25; ryoe 12 / 0.40 / 0.20; floors 200 plays; qualifiers 100 dropbacks / 50 carries / 30 catches | `math/GSE_EXPECTED_METRICS.md:192-201,78-134` | HIGH | Source-quoted verbatim from the thresholds table; exact formulas, feature counts (10/9/6), deterministic fit specs, honesty-gate rules all present as stated. |
+| 10 | Passing efficiency vs wins corr ~0.53–0.61 vs rushing ~0.13–0.19 | `ops/AGENTS-history-main-2026-09-26.md:1470,1548,1751,1799` | **LOW** | Source-quoted (appears 4×) but **no cited study, no sample size, no window, no correlation target defined**; the same doc admits "No peer-reviewed EPA forward-validity study exists (v2's biggest literature gap)". Labeled "provider/analyst evidence". This is the weakest-sourced of the load-bearing numbers. |
+| 11 | ARBY RB Matchup Rating: 65% ARBY / 35% RB YPC per side, 50/50 offense-defense, 65% 2025 / 35% 2026 season blend; validation ARBY-YBC r=0.70, YBC-YPC r=0.77, team ARBY-ALY r=0.47, ARBY-YBC r=0.66 | `ops/AGENTS-history-main-2026-09-26.md:3541,3552` | MEDIUM (as quote) | Source-quoted **verbatim from the competitor's own chart footer** (@MagicSportsGuy/@StatRankings X posts, 2026-09-19). It is a third-party claim, not a GSE lab result; validation correlations are the author's own. |
+| 12 | Baldwin Pass Protection Ratings Composite: 40% PFF grade / 40% SIS blown-block% / 20% ESPN PBWR, each re-scaled 0–100 (SF #1 88 … MIA #32 6) | `ops/AGENTS-history-main-2026-09-26.md:3953` | MEDIUM (as quote) | Source-quoted from @benbbaldwin's thread, incl. the "massive disagreements between the systems" reaction. Third-party formula, not lab-derived. |
+| 13 | Staleness gate: 90-minute bound inside 12h pre-kickoff window; Bears specimen 8h 07m 48.338s stale; 158 picks simulated → 1 vetoed (0.6%); pending picks avg 1,695h before fixture; 30% solo-source haircut (rawEdge 0.1036 → shrunkEdge 0.0725) | `predictions/research/2026-09-28/signal-staleness-gate.md:19,73,84-99` | HIGH | Source-quoted verbatim; internal arithmetic consistent (1/158=0.6%; the two self-caught bugs and their fixes documented). |
+| 14 | Fantasy half-life: H=6 MAPE 0.4949 (medAE 28.37) vs best-pooled H=8 0.4838 (26.22), n=1892; band z=1 → 92.5% coverage; QB per-player volatility r=+0.0636 (n=48) vs RB +0.6251 / WR +0.5699 / TE +0.2957 | `fantasy/research/2026-09-28/half-life-and-band-calibration.md:17-18,60,88-90` | HIGH | Source-quoted verbatim from the walk-forward tables (33,962 player-weeks, 2020–2026). The self-corrections (McCaffrey n=1, CV/SD ratio artifact) are documented in the same file. |
+| 15 | PROVEN suite 2026-09-09: pool n=380 Brier 0.2099, debiased ECE 0.0374; deployed v5.2.7 n=258, debiased ECE 0.0582, bound 0.0438; eligibility = 3 consecutive GREEN runs | `ops/AGENTS-history-main-2026-09-26.md:842-843` | HIGH | Source-quoted verbatim. Note: the ECE debiasing (max(0, raw−noise), C-290/C-292) is documented in the same file. |
+| 16 | Market-calibration walk-forward (reproduced): pooled Brier 0.2106 CI [0.2050,0.2172] n=2,750 (2016–2025); isotonic +0.00007 best; confidence AUC 0.4965 (p=0.41, n=13,646); 11 market slices — zero cleared break-even on Wilson lower bound | `ops/CHAOS_CAMPAIGN_2026-09-04.md:38-44`, `ops/HERMES_NIGHT_LOG_2026-09-04.md:8` | HIGH | Verified in-repo; the 2026-09-04 re-audit **re-ran the script and reproduced every number exactly** (rerun log pinned). Sourcing note: the c01 brief for AGENTS-history folded these numbers in without naming CHAOS_CAMPAIGN/HERMES_NIGHT_LOG — real numbers, imprecise brief provenance. |
+| 17 | King Standard Scorecard: 546 seeded sources, 800 candidate records, 500,000 capacity, 2,200 discovery queries, 800 metric definitions | `king-standard-scorecard.md:12` | MEDIUM | Source-quoted verbatim. But: StatKing-era product inventory from 2026-06-13 (~3.5 months stale), not engine performance numbers. |
+| 18 | Inverted book-path confidence: conf 80+ claims 0.8663, realizes 0.5191, gap −0.3472, z=−10.7, Brier 0.3617 on that band (n=2,385); win rate peaks at 75–79 (0.6146), falls to 0.4643 by 90–94 | `ops/AGENTS-history-main-2026-09-26.md:3718` | HIGH | Source-quoted verbatim (research audit). The non-monotonicity finding (isotonic/PAVA cannot fix inversion) is the stated reason for v5.3.0's book-path rebuild. |
+| 19 | Calibration claim-gate numbers: ECE 0.0044 "publishable, FTC-safe" (2026-08-19 competitive intel brief) | `docs/ops/edge/2026-08-19-competitive-intel-brief.md` (via brief) | LOW | Source-quoted from the brief. Contradicted by contemporaneous numbers (see Challenges §3). |
+| 20 | Live class (2026-08-09): Brier ~0.275, ECE ~0.112, Murphy RES ~0.002 vs floors 0.22/0.05 | via briefs for `ops/WORKING_LOG_2026-08-09_WORLD_CLASS.md`, `ops/MATRIX_COMPLETION_AUDIT_2026-08-09.md` | MEDIUM | Brief-sourced (numbers stated as measured). Consistent direction with the Sept 4 Brier 0.247 snapshot. |
+| 21 | Drive stats 2025: 2.10 pts/drive, 24.0% TD, 20.4% 3-and-out; league INT-over-expected: CLE +7.11, LV +7.74, MIA +6.82, MIN +5.74 unlucky / DAL −5.24, CHI −4.33 lucky; league fumble recovery 2025: 46.3% | `ops/AGENTS-history-main-2026-09-26.md` (via brief) | MEDIUM | Brief-sourced, cross-consistent with the 1.867% INT baseline family and Dallas 4.6-INTs-below-expected textbook case. |
+| 22 | Gate floors: n≥100, Brier≤0.22, ECE≤0.05 | `ops/AGENTS-history-main-2026-09-26.md` (via brief) | MEDIUM | Brief-sourced; consistent with LEVERAGE_STATUS 0.22 threshold and the 0.05 ECE floor in the Aug 9 audit. |
+| 23 | Pressure-to-sack conversion R²<0.005 → explicit veto on individual sack props | `our-metric-stack.md` (via brief) + AGENTS-history | MEDIUM | Brief-sourced; the doc's stated basis is PFF research. Tension with the QB-level trait finding noted in the map (kept as level-of-analysis distinction). |
+| 24 | 52.4% CLV threshold | `ops/calibration/2026-08-19-l9-clv-slices/RESULTS.md:27` | LOW (as documented) | **Never derived anywhere in-repo.** Stated as the ESTABLISHED blocker. INFERENCE: it is 110/210 = 52.38%, the standard -110 vig break-even beat rate — applied uniformly across markets including moneylines where it does not apply. Unverified as a deliberate choice. |
+
+---
+
+## 2. Syntheses — the engine's measurement stack as one system
+
+**Layer 0 — The metric bible (our-metric-stack).** Everything rests on the filter sieve: REG only, pass/run only, kneels/spikes out (453/82), 4Q WP>0.95/<0.05 garbage out (11.2%), overtime kept, Success = EPA>0, dropback = attempt + scramble. The two baselines (1.867% INT/db, 0.640% fumble-lost/play) are league rates computed on THIS filtered sample — and they recompute exactly from the lab's CSVs. This layer is the most trustworthy in the stack because it is deterministic computation on frozen data with exact reproduction.
+
+**Layer 1 — Over-expected grading (GSE_EXPECTED_METRICS).** CPOE/RYOE/xYAC add model-based residuals on top of Layer 0: fit-on-load logistic/ridge, deterministic, provenance (featureSchemaHash), honesty gates (return null on degenerate input, never guess), and pre-registered Pearson graduation bars vs NGS-as-referee (never served). The honesty-gate pattern is the connective tissue: the same "null rather than guess" discipline appears in the metric bible (unsupported rows NULL with a one-line reason) and the staleness gate.
+
+**Layer 2 — Calibration discipline.** Platt IRLS scaling (held OFF until Murphy RES improves — "Platt is not a PROVEN unlock"), equal-width reliability bins, debiased ECE (max(0, raw−noise) per C-290/C-292), Brier ≤0.22 / ECE ≤0.05 / n≥100 floors, and eligibility = 3 consecutive GREEN six-hourly runs. This layer is measurement-complete and honest — it keeps telling the engine it is RED.
+
+**Layer 3 — Production QC (staleness gate).** The 90-minute age bound inside the 12h pre-kickoff window is the first gate that vetoes *publication*, not just grades it. Its own incident postmortem names the structural gaps: `isPublished` has no provenance column (C-158), and the personnel/news source (QB changes/injuries) is queued, not built. The file's own lesson — "a finding that lives in a markdown file changes nothing" — is the meta-doctrine for this whole partition.
+
+**Layer 4 — Validation.** Market-calibration walk-forward (Brier 0.2106, closing line already calibrated, no calibrator beats identity), the 11-slice Wilson-lower-bound falsification screen (zero cleared), Minerva (Seal ≥80 for production entry), and the D/S/I metric audit. The research culture is gate-heavy: nearly every brief carries a numeric acceptance gate.
+
+**The honest shape of the system:** Layer 0–1 measure the game well. Layer 2–4 measure the engine well — and consistently report failure (Brier 0.247–0.275 vs 0.22; CLV 23–41% vs 52.4%; AUC 0.4965; inverted confidence). The stack's real product is not calibration but *calibrated awareness of miscalibration*: it suppresses what it cannot defend (sack props NULLed, QB-specific bands suppressed, PASS picks unpublished). The missing piece is the forward direction — gates veto and measure, but nothing in this partition shows a gate *fixing* the model (v5.3.0 book-path rebuild is the attempt in flight).
+
+---
+
+## 3. Challenges — numbers that don't verify, CIs that don't hold, stale windows, contradictions
+
+1. **The TOTAL 58.5% "validated signal" is arithmetically clean and evidentially hollow.** My recomputation confirms the math exactly. But the source doc itself flags as BLOCKED: **909/909 locks have no `odds_batch` row — every lock price is model-derived, not book-captured**; 59/140 ML locks sit below −1000 (min −21200, one impossible +105). The "beats" are measured against the model's own generated prices. The lower CI bound (52.8%) clears the 52.4% bar by **0.4pp**; the July sub-slice alone (103/183, CI [49.0%,63.3%]) fails the bar; the denominator is decided-only (pushes excluded). And all of it was measured while the line archive was dead (2026-08-22 → 2026-09-13). Cite this number only with the provenance asterisk.
+
+2. **The 0.53–0.61 vs 0.13–0.19 correlation gap is the most-cited and least-sourced number in the partition.** It appears 4× in AGENTS-history as "the single most actionable number in the dossier for feature weighting," yet carries no study citation, no sample, no window, no defined target (wins? future wins? at what aggregation?). The same document explicitly admits no peer-reviewed EPA forward-validity study exists — "v2's biggest literature gap." Feature weights are being set on an orphan number.
+
+3. **ECE has four values in one month.** 0.112 (Aug 9 live audit, RED) → 0.0044 (Aug 19 competitive intel brief, "publishable, FTC-safe") → debiased 0.0374 (Sep 9 PROVEN pool n=380) → 0.0582 (Sep 9 deployed v5.2.7 n=258). The 0.0044 claim is two orders of magnitude below the Aug 9 measurement and predates the debiasing corrections (C-290/C-292); it is not sample-labeled. Any public calibration claim must name its sample and estimator version.
+
+4. **"The engine's Brier" depends on which artifact you ask.** LEVERAGE_STATUS says 0.247 (Sep 4, no sample/CI). The Aug 9 working log says ~0.275. The conf-80+ band reads 0.3617 (n=2,385, z=−10.7). The PROVEN pool reads 0.2099 (n=380). The 0.247-vs-0.22 framing understates the true spread and the worst readings.
+
+5. **The n=12 graduation gate is statistically weak.** Pearson r on a 12-player join: r=0.60 carries a 95% CI of roughly [0.04, 0.87]. A "graduated" verdict can be noise. The honesty gates are excellent at the input side (null on degenerate) but the exit bar needs a CI-width or shrinkage condition.
+
+6. **ARBY 65/35 and Baldwin 40/40/20 are competitor formulas, not lab results.** Both are verbatim quotes from third-party X threads (StatRankings' @MagicSportsGuy; @benbbaldwin). Treating them as the "lab metric inventory" (as the slice map does) mislabels their epistemic status. Worse, the ARBY formula **changed between posts** — Sep 19: 65/35 with 2025/35-2026 season blend; Sep 23 TNF edition: 7-game window with 5/2 game-weighting. Version drift in a quoted formula.
+
+7. **Baselines are 2025-anchored in a moving season.** The 1.867%/0.640% baselines and all 29,239-play CSVs are the 2025 REG filtered sample. The 2026 W1 lab run already caught structural breaks (Montgomery→HOU, DJ Moore→BUF) that 2025 baselines misprice. Nothing in the partition schedules re-anchoring; turnover-luck projections built on 2025 rates drift further every week.
+
+8. **The 52.4% threshold is never derived in-repo.** It is the standard −110 vig break-even (INFERENCE), but it is applied as a uniform blocker across markets where break-even differs (moneylines). The ESTABLISHED blocker inherits this unexamined uniformity.
+
+9. **Pressure→sack tension is unresolved, not just leveled.** The metric bible vetoes sack props on R²<0.005 (team/season level, PFF basis) while the same corpus documents pressure-to-sack as a YoY-moving QB trait (~18% baseline, <2.5s split). The map's level-of-analysis resolution is plausible but the veto permanently closes a lane the trait finding could price — no experiment is queued to test the QB-level version.
+
+10. **Brief-provenance imprecision.** The c01 AGENTS-history brief's "replay corpus" numbers (Brier 0.2106, AUC 0.4965, 11 slices) actually live in `ops/CHAOS_CAMPAIGN_2026-09-04.md` and `ops/HERMES_NIGHT_LOG_2026-09-04.md`. The numbers verify; the attribution doesn't. Downstream analysts citing "AGENTS-history" for these would mis-cite.
+
+---
+
+## 4. Buildable systems — what to code/adopt from the internals
+
+1. **Lock-provenance QC rule (highest priority).** From the CLV RESULTS blocked items: at capture time, flag any lock with no matching `odds_batch` row, any ML lock < −1000, any ML lock with a wrong-sign price. Quarantine before CLV grading; this single rule would have invalidated both the 23.0% blocker panic and the 58.5% celebration. Directly buildable; the fingerprints are documented.
+
+2. **Metric-bible filters as a shared library.** The sieve (garbage-time WP rule, kneel/spike exclusion, dropback convention, Success=EPA>0) currently lives as prose + lab scripts + (partially) engine code. One tested module consumed by lab CSVs, engine features, and projections eliminates drift. The recomputation in §1 shows the outputs are exactly reproducible — the contract is stable enough to freeze.
+
+3. **Expected-metrics graduation template for every new signal family.** Fit-on-load + provenance (featureSchemaHash drift detection) + honesty gates (null, never guess) + pre-registered Pearson bars + NGS-as-referee validation. Adopt as the standard intake contract; fix the n=12 weakness with a CI-width condition before reusing.
+
+4. **Staleness-gate pattern generalized + the two named gaps closed.** Age×window gating (90-min bound inside 12h window) is a reusable shape for any time-decaying signal. The file's own punch list: add the provenance column to `isPublished` (C-158) and build the personnel/news source — still the highest-leverage pick-quality fix.
+
+5. **Wilson-lower-bound falsification gate as standing CI.** The market-calibration study's screen — no signal family promotes unless the Wilson lower bound clears break-even on held-out data — should be a CI check, not a one-off analysis. It is the only acceptance test in the corpus that has ever killed claims at scale (11/11 slices failed).
+
+6. **Debiased ECE + per-bin variance correction as the display path.** C-290/C-292's estimator (max(0, raw−noise)) is documented and measured; wire it wherever calibration is shown so the 0.0044-style mislabeling can't recur. Pair with mandatory sample+estimator-version labels on any published calibration claim.
+
+7. **Adopt the measured suppressions as standing rules.** Pressure-to-sack R²<0.005 → no individual sack props; QB-specific uncertainty bands suppressed (r=+0.0636 vs +0.57–0.63 for RB/WR); z=1 bands contain 92.5% (say "maybe" about everyone equally) — wire the measured z-coverage curve into band display. These are rare cases where the lab *finished* the argument.
+
+8. **Re-anchor cadence for baselines.** Schedule the 2025-anchored baselines (INT/fumble rates, luck meters) for recomputation on a rolling window as 2026 accumulates, with the structural-break detector (team-change flags like Montgomery/Moore) as the trigger.
+
+---
+
+*Partition complete. Files: 44 briefs swept (9 named core + 35 ops/intelligence/math/predictions), 9 source files + lab CSVs checked, 4 numbers independently recomputed.*

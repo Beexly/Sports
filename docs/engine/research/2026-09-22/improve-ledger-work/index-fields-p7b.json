@@ -1,0 +1,1205 @@
+[
+ {
+  "arxiv_id": "2607.08199",
+  "title": "Volatility in Prediction Markets: A Structural Approach",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT the structural forecaster if, on the 2025 NFL holdout, DR-AS improves on the GARCH(1,1) baseline by \u226515% in volume-weighted interval score with the paired-bootstrap difference significant at 5%."
+ },
+ {
+  "arxiv_id": "2607.09505v1",
+  "title": "Objective and subjective entropy measures of portfolio suboptimality",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "DECIDE",
+   "MODEL"
+  ],
+  "numeric_gate": "Simulated GBM (\u03b8 = 0.4, \u03c3 = 0.2, T = 1, 100k paths): for \u03b1 = 0.5, the analytic gap \u00bd(1\u2212\u03b1)\u00b2\u2016\u03b8\u2016\u00b2 must match the Monte Carlo mean log-wealth ratio within \u00b12 standard errors \u2014 verifying the identity numerically before trusting it as a diagnostic."
+ },
+ {
+  "arxiv_id": "2607.11432v1",
+  "title": "Generalizing Preference-based Reinforcement Learning: a Rationality Model for Incomparability",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT the multi-objective selection layer if on 2025 H1 the MOBT model achieves \u22650.05 nats/comparison better test log-likelihood than the scalar BT baseline (showing incomparability/abstention is informative, not noise) AND the Pareto-frontier filter on 2025 H2 yields posted-pick CLV \u2265 the scalar-ranking baseline's\u2026"
+ },
+ {
+  "arxiv_id": "2607.11548v1",
+  "title": "Training-Free Off-Screen Player Imputation for Broadcast-Based Spatial Football Analytics",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "Adopt B4 (or a better learned variant) into the GSE tracking pipeline if it cuts the decision-relevant NFL metric error to \u226450% of the ignore policy on the held-out weeks; reject broadcast-video tracking for that metric (stick to play-by-play sources) if the ignore-policy error is"
+ },
+ {
+  "arxiv_id": "2607.12248v2",
+  "title": "When Directional Accuracy Lies: A Base-Rate-Honest Benchmark for LoRA-Adapted TimesFM on Equity Forecasting",
+  "normalized_lane": "timeseries_foundation",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the honesty harness as mandatory for all future GSE model evaluations if it successfully reproduces the paper's base-rate demonstration on the sanity dataset AND flags \u22651 currently-believed GSE edge as a base-rate ..."
+ },
+ {
+  "arxiv_id": "2607.14430v1",
+  "title": "Prices, Probabilities, and Parlays: Systematic Bias in Sports Prediction Markets",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT the TTE-conditional calibration into GSE's market-implied pipeline if, on one held-out NFL season: (a) the [0,10)-minute bucket \u03b3\u0302 (or Platt slope) differs from the pooled estimate with p < 0.05 AND applying the TTE-conditional map improves log-loss..."
+ },
+ {
+  "arxiv_id": "2607.15483v1",
+  "title": "Risk-Aware Preference Learning for Stochastic Outcomes",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT"
+  ],
+  "numeric_gate": "ADAPT into the EV pipeline if: (a) fitted \u03b3 < 1 with 95% CI excluding 1 on the training window (market distortion confirmed, not assumed); AND (b) the CPT-adjusted edge selector beats the naive edge selector by \u22652pp ROI on the 2024\u20132025 holdout. REJECT if \u03b3 \u2248 1 (no distortion detectable \u2014 market already corrects) or\u2026"
+ },
+ {
+  "arxiv_id": "2607.15899v1",
+  "title": "ContinuityBench: A Benchmark and Systems Study of Stateful Failover in Multi-Provider LLM Routing",
+  "normalized_lane": "data_infra",
+  "verdict": "ADAPT",
+  "doctrine_tag": "INFRA",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT if: (a) the continuitybench harness runs to completion from the tagged commit and reproduces the treatment-vs-baseline CPR gap (treatment \u2265 95%, baseline \u2264 5%) on the synthetic suite; (b) the retry-storm repro shows fixed-interval retries destabilizing and jittered backoff stabilizing (mechanism check); (c) judge"
+ },
+ {
+  "arxiv_id": "2607.17525v1",
+  "title": "FailureAtlas: A Taxonomy of Failure Modes in Multi-Provider LLM Serving Infrastructure",
+  "normalized_lane": "data_infra",
+  "verdict": "ADAPT",
+  "doctrine_tag": "INFRA",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADAPT if: (a) all three released reproduction scripts reproduce their claimed failure mechanisms on the lab VM (shared-state turn loss; synchronized-retry saturation vs jitter success; index=0 emission), and (b) the grid classifies every surveyed LiteLLM issue example without forcing (no entry ambiguous between cells)"
+ },
+ {
+  "arxiv_id": "2607.17991",
+  "title": "Optimal Market Making in Prediction Markets",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL",
+   "MONITOR"
+  ],
+  "numeric_gate": "**Adapt** the volatility specification and the skew/penalty rules if \u03c3(t,x) beats constant-volatility on GSE's win-probability paths (AIC) \u2014 these are cheap, model-free wins. **Do not** implement the full HJB quoter\u2026"
+ },
+ {
+  "arxiv_id": "2607.18009v1",
+  "title": "Bayesian Conway-Maxwell-Poisson model with spike-and-slab priors for dispersed count data with application to football scores",
+  "normalized_lane": "tracking",
+  "verdict": "ADOPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT into the GSE totals pipeline if CMP-SAS beats the Poisson-Maher baseline on out-of-sample IGN for totals in \u22652 of 3 seasons AND identifies \u22653 teams/season with P(Z_i=1)>0.5 (dispersion heterogeneity exists in NFL scoring); REJECT if no team crosses the 0.5 threshold in any season"
+ },
+ {
+  "arxiv_id": "2607.18084v2",
+  "title": "WorldCupArena: Fine-Grained Evaluation of Language Models and Deep-Research Agents on Football Forecasting",
+  "normalized_lane": "nlp",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "Best LLM 70.7% result accuracy vs human fans 69.7% (+1.0pp) and BetVictor 68.3% (+2.4pp); Scoreline 68.49 vs 53.35 (+15.14 display points)..."
+ },
+ {
+  "arxiv_id": "2607.18269v2",
+  "title": "Ledger 0797 \u2014 Wisdom of LLM Crowds: Aggregation and Contamination in Language Model Ensembles",
+  "normalized_lane": "ensembles",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": null
+ },
+ {
+  "arxiv_id": "2607.18299",
+  "title": "APMM: Automated Parlay Market Maker",
+  "normalized_lane": "props_dfs",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "Rebuild the independence baseline: for a sample of real SGP offerings, compute the independence-implied price (product of leg marginals) and compare against the hierarchy price; confirm the ratio declines with order (target: pooled ratio \u2248 0.97\u20130.99 on 2-leg, lower at higher orde\u2026"
+ },
+ {
+  "arxiv_id": "2607.18461v1",
+  "title": "The triumphs and tragedies of fandom: Emotional arcs in NFL tweets",
+  "normalized_lane": "nlp",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "- Adopt the features if they add \u22652pp of out-of-sample R\u00b2 to the viewership baseline on 2024 data; adopt the geography if replicated radii rank-correlate (Spearman \u22650.7) with an independent fanbase measure; reject otherwise."
+ },
+ {
+  "arxiv_id": "2607.19783v2",
+  "title": "Do In-Match Hydration Breaks Alter Match Momentum? A Within-Match Case-Crossover Analysis of the 2026 FIFA World Cup",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT the case-crossover module if: (a) the placebo battery shows the naive before/after estimator has mean-reversion bias \u22650.05 EPA/drive while the case-crossover bias is <0.02 EPA/drive; AND (b) at least one stoppage-type ATT (weather delay or injury timeout) has |effect| \u22650.05 EPA/drive with cluster-robust 95% CI\u2026"
+ },
+ {
+  "arxiv_id": "2607.22221v1",
+  "title": "Convergence analysis of a family of Zermelo-type iterations for the Bradley\u2013Terry model",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT"
+  ],
+  "numeric_gate": "ADOPT if the async \u03b1=0 fitter reaches tolerance in strictly fewer full passes than Zermelo on the CFB dataset (\u22651.5\u00d7 fewer) AND produces identical MLEs to 1e-9 log-ratio; REJECT if no pass-count reduction on either league \u2014 Zermelo stays. Hard rejection if the async \u03b1=0 variant ever fails to increase likelihood\u2026"
+ },
+ {
+  "arxiv_id": "2607.23509v1",
+  "title": "Topological Data Analysis and Graph-Theoretic Approaches for Tennis Match Prediction",
+  "normalized_lane": "experimental",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "REJECT the lower-star TDA pipeline (cost-benefit fails on the authors' own numbers)"
+ },
+ {
+  "arxiv_id": "2607.24573",
+  "title": "LLM-SoccerArena: Benchmarking LLMs on Real-World Predictions in Sports",
+  "normalized_lane": "nlp",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "CALIBRATE",
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the harness if (a) the open-vs-closed book effect replicates at \u22650.02 Brier on NFL games AND (b) an LLM+engine opinion pool improves mean Brier over the engine alone by \u22650.005 on the test season."
+ },
+ {
+  "arxiv_id": "2607.24875v1",
+  "title": "FinAbstain: Uncertainty-Calibrated Multimodal RAG for Selective Financial Forecasting",
+  "normalized_lane": "abstention",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "DECIDE",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT if 2025 held-out shows the hybrid U beats temperature-scaling-only and MC-Dropout-only baselines on selective hit rate at 80% coverage by \u22651 pp with positive fitted weights on disagreement/contradiction terms (w_D, w_C > 0)..."
+ },
+ {
+  "arxiv_id": "2607.26061v1",
+  "title": "Sim2Win: A Team-Agnostic, Event-Based Pre-Match Outcome Prediction and Tactical Profiling System for Football",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "*Adopt the recipe if the rolling-profile + volatility feature set beats the Elo-only baseline by \u22650.015 log loss on mean LO-season-out log loss over 2022\u20132025 AND shows positive flat-stake ROI on at least 3 of 4 test seasons; reject otherwise (keep current feature set; the paper's in-distribution gains may be\u2026"
+ },
+ {
+  "arxiv_id": "2607.27143v1",
+  "title": "Cost-Sensitive Conformal Prediction and Human-in-the-Loop Abstention for Imbalanced High-Stakes Decision Support: A Multi-Domain Benchmark",
+  "normalized_lane": "abstention",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "DECIDE",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT if Mondrian restores minority-class coverage on GSE's rare-outcome picks and cost-controlled deferral beats the current threshold gate by \u226520% expected cost..."
+ },
+ {
+  "arxiv_id": "2607.28178",
+  "title": "An Interval\u2013Score ROC Curve for Assessment, Calibration and Ensembling of Probabilistic Forecasts",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT IS\u2013ROC calibration as the engine's standard interval-diagnostic if (a) at least one sub-model pair shows crossing curves (regime-specific dominance the scalars hid), or (b) tangent calibration reduces 90% interval\u2026"
+ },
+ {
+  "arxiv_id": "2608.00127",
+  "title": "1627 Drawdown Risk Beyond Brownian Motion",
+  "normalized_lane": "sizing",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT if the block-bootstrap 90th-percentile max drawdown exceeds the Brownian prediction by \u226515% (confirming the paper's non-Gaussian warning applies to GSE's returns) \u2014 then the archetype tables become the sizing\u2026"
+ },
+ {
+  "arxiv_id": "2608.00666",
+  "title": "Executable Arbitrage and Market Efficiency in Prediction Markets",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL",
+   "MONITOR",
+   "INGEST"
+  ],
+  "numeric_gate": "**Adapt** the executable-edge framework (Eqs. 2\u20134, depth-aware, fee-adjusted, direction-aware) as GSE's standard for cross-market arb monitoring \u2014 it replaces any naive mid-price-sum bound check, which this paper shows\u2026"
+ },
+ {
+  "arxiv_id": "2608.01494v1",
+  "title": "Conformal Kelly: Conformal Prediction Intervals as the Scale in Fractional Kelly Position Sizing",
+  "normalized_lane": "sizing",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT if lockbox max drawdown is lower than 0.25-Kelly at ROI within 1 pp; REJECT if, as in the paper, the uncertainty-width sizing adds nothing once caps bind (check cap-binding frequency \u2014 if >90% of days, the rule is decorative)."
+ },
+ {
+  "arxiv_id": "2608.02081v1",
+  "title": "Isotonic Bradley-Terry Model for Paired Comparison Data",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADOPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT"
+  ],
+  "numeric_gate": "ADOPT if IBT beats logistic-BT on D_tes by \u22650.003 Brier (or \u22650.5% log-loss) AND Kendall's \u03c4 is not worse (\u0394\u03c4 \u2265 \u22120.01), on 2023\u20132024 NFL. REJECT otherwise \u2014 a fixed logistic link stays, and the tie-rate/Borda machinery is dropped."
+ },
+ {
+  "arxiv_id": "2608.02285v1",
+  "title": "Sen-Cap: Sensor-Flexible and Noise-Resilient Human Motion Capture via LiDAR-Camera Integration",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "MONITOR"
+  ],
+  "numeric_gate": "REJECT for any betting/modeling purpose (no path to edge)"
+ },
+ {
+  "arxiv_id": "2608.03416",
+  "title": "1724 AI World Cup 2026: benchmarking large language models for end-to-end football tournament prediction",
+  "normalized_lane": "nlp",
+  "verdict": "ADOPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "CALIBRATE",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT the protocol (frozen snapshot + common schema + additive scoring + audit) \u2014 it is the rare evaluation paper whose method transfers wholesale."
+ },
+ {
+  "arxiv_id": "2608.05207",
+  "title": "When Do Corrective Features Help? An Agent for Corrective Feature Discovery on Black-Box Forecasters (CRAFTER)",
+  "normalized_lane": "auto_feature_eng",
+  "verdict": "ADOPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "INVENT",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT if: \u22650.003 held-out NFL log-loss improvement on 2025 games versus both the RAW engine and the covariate-only corrector, with the NONE floor holding (no shipped corrector worse than \"do nothing\" on validation), no p..."
+ },
+ {
+  "arxiv_id": "2608.05560v1",
+  "title": "SPRINT: Sports Hazard MLLM Benchmark",
+  "normalized_lane": "experimental",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the video lane for continued investment iff the pilot clears D1 \u2265 0.80 at FPR \u2264 0.25 on held-out plays with video-stratified splits..."
+ },
+ {
+  "arxiv_id": "2608.06635v2",
+  "title": "Modelling Athletic Ageing Relative to an Estimated Performance Envelope",
+  "normalized_lane": "mixed",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT STAR age curves if rolling-origin RMSE on age-30+ WR seasons beats the static age-curve baseline by \u22655% AND the near-linearity diagnostic is computed and reported (no silent \u03b3 fitting)."
+ },
+ {
+  "arxiv_id": "2608.07168v1",
+  "title": "A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League",
+  "normalized_lane": "experimental",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the technique (not the soccer model) if the test in \u00a712 passes on NFL data with GSE features; keep the H\u2192A vs A\u2192H directional diagnostic as a standing check whenever joint scoreline models are compared"
+ },
+ {
+  "arxiv_id": "2608.07513",
+  "title": "Democratizing Ski Safety: Real-Time Turn Segmentation with Smartphone IMU and Causal LSTM Networks",
+  "normalized_lane": "causal_injury",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "MONITOR"
+  ],
+  "numeric_gate": "Accepted: genuine injury-prevention research (ACL), strictly causal real-time architecture with sub-millisecond inference, rigorous LOSO validation explicitly designed against identity bias, open data/code/weights, and\u2026"
+ },
+ {
+  "arxiv_id": "2608.07932v2",
+  "title": "SportsGrounder: Proposal-Aided Interleaved Grounding for Dense Sports Video Reasoning",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT further (toward production pilot) if IGF-style fusion beats prompt injection by \u22655 pp on coverage-ID and route-ID accuracy AND action accuracy \u2265 55%; PARK if overall accuracy < 45% or if the fusion model cannot beat prompt injection \u2014 the architecture advantage must survive"
+ },
+ {
+  "arxiv_id": "2608.08600v1",
+  "title": "Population-Scalable Multi-Agent World Modeling (Khora)",
+  "normalized_lane": "world_models_simulators",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "INVENT"
+  ],
+  "numeric_gate": "ADOPT the architecture if: (a) +2s mean player position error \u2264 1.5 yards on held-out 2024 plays, AND (b) counterfactual re-rolls with \u00b11 defender produce outcome-rate shifts (conversion/sack/turnover) that match held-ou..."
+ },
+ {
+  "arxiv_id": "2608.09586",
+  "title": "ICM Out! Better Tournament Strategy from Computed Continuations, vs. Solvers and LLMs",
+  "normalized_lane": "props_dfs",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "Adopt the expected-prize objective if on 2024 GPP backtests the max-expected-prize lineups beat max-expected-score lineups on realized prize by \u226515% across \u226515 GPPs AND the simulation shows the gap comes from payout-ladder positioning (not just variance); reject if the fiel\u2026"
+ },
+ {
+  "arxiv_id": "2608.09824",
+  "title": "Longitudinal Bayesian networks for assessing team performance in the National Basketball Association",
+  "normalized_lane": "bayesian",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT the dynamic-LBN-with-AR-usage pattern and the participation submodel if the AR variant beats static on 2025 held-out log-likelihood AND predictive intervals calibrate; REJECT the hidden-Markov variant unless it\u2026"
+ },
+ {
+  "arxiv_id": "2608.09887v1",
+  "title": "Space-Creating versus Dead Possession: An Off-Ball Possession-Quality Index for Broadcast Football",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the NFL junk-offense index for GSE matchup content if: leave-one-week-out team mean junk-open predicts next-game point differential with |r| \u2265 0.15 AND the joint regression shows junk-open significant (p < 0.05) controlling for EPA/play; REJECT if the index adds nothing beyond EPA (p >"
+ },
+ {
+  "arxiv_id": "2608.10045v1",
+  "title": "Finding the Signal in the Spam: Jointly Learning Rewards and Worker Reliability from Pairwise Comparisons",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT the reliability-fusion layer if BoRaEM beats plain BT by \u22650.002 Brier (or \u22650.02 log-loss nat improvement) on the held-out 2025 season AND learned \u03b2\u209b values are stable across two independent train windows (rank correlation \u22650.8), without degrading calibration (ECE change within \u00b10.005). REJECT if no Brier\u2026"
+ },
+ {
+  "arxiv_id": "2608.10620",
+  "title": "Probabilistic Forecasting via Post-Processing Prediction Errors: In- or Out-of-Sample?",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT HS_in post-processing as the engine's default uncertainty layer if CRPSS >0 vs. current intervals on the 2022\u20132024 backtest AND 90% coverage lands in [0.87,0.93]; if QR beats HS on any market by >1pp CRPSS, adopt\u2026"
+ },
+ {
+  "arxiv_id": "2608.11203v1",
+  "title": "Capturing Uncertainty in Human Motion for Representation Learning in Soccer",
+  "normalized_lane": "selfsupervised_tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT if: (a) GTN+DDL motion-prediction error \u2265 10% lower than GTN-only at the 1.0 s horizon on held-out weeks, AND (b) pretrained reps beat from-scratch by \u2265 5pp accuracy on route-family classification."
+ },
+ {
+  "arxiv_id": "2608.11505v1",
+  "title": "Does a Structural Model Add Anything to the Closing Price?",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "Adopt the pooling-weight protocol if on 2023\u20132024 validation the fitted \u0175 for GSE engine vs close is stable across two independent 20-week folds and the loss-profile minimum is interior (not a boundary artefact)..."
+ },
+ {
+  "arxiv_id": "2608.12291v1",
+  "title": "When should one stop the most exciting game? Sequential Inference for win-martingales",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "DECIDE",
+   "MONITOR"
+  ],
+  "numeric_gate": "Adopt the timed-decision module if, on a holdout season of live-bet backtests, the optimal-stopping policy achieves \u2265 10% lower realized Bayes risk than the best fixed-threshold baseline AND the estimated \u03c3(\u03c0) is stable across seasons (per-decile quadratic-variation estimates within \u00b125% year over year)"
+ },
+ {
+  "arxiv_id": "2608.12998",
+  "title": "WIRED: Weighted Adaptive Prediction with Structured Dependence for Probabilistic Multiseries Forecasting",
+  "normalized_lane": "ensembles",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE",
+   "MONITOR",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT the CRPS-weighted mixture layer if, over the two-season test window, it beats equal-weight mixture by \u22652% mean CRPS AND holds 80% interval coverage within [0.76, 0.84]; REJECT adaptive weighting (keep equal\u2026"
+ },
+ {
+  "arxiv_id": "2608.13886",
+  "title": "A Forecast Combination Framework for Hierarchical and Grouped Time Series Reconciliation",
+  "normalized_lane": "ensembles",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE",
+   "INGEST"
+  ],
+  "numeric_gate": "ADAPT if the held-out 2026 test shows the shrunk Bates\u2013Granger combination beating both equal weights and the best single source by \u22650.002 Brier in at least 2 of 3 markets \u2014 then wire it as the engine's final\u2026"
+ },
+ {
+  "arxiv_id": "2608.14683",
+  "title": "One Score, Two Decisions: Selective Prediction on the Rare-Disease Tail",
+  "normalized_lane": "abstention",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "DECIDE",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADAPT accepted if margin-gating beats top-score gating by \u2265 2 points of selective hit-rate at the posted-card coverage on walk-forward seasons (respecting Prop. 1: decided empirically, not assumed); the feasibility check is adopted unconditionally (it's arithmetic)."
+ },
+ {
+  "arxiv_id": "2608.14696",
+  "title": "The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE",
+   "MONITOR",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT the two-surface architecture if on nflverse data: (a) exact-martingale WP shows the same over-dispersion signature (fitted surface beats it on ECE by \u2265 0.02 on held-out), AND (b) the permutation decomposition\u2026"
+ },
+ {
+  "arxiv_id": "2608.15688v1",
+  "title": "Training-Free Long-Term Multi-Object Tracking for Sports Video Analytics",
+  "normalized_lane": "tracking",
+  "verdict": "ADOPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT for the content/analytics pipeline if McByte++ reduces ID switches vs ByteTrack by \u226540% at \u22658 FPS on the 50-play set; REJECT if IDF1 is within 5 points of ByteTrack (no meaningful long-term gain) or FPS < 5 on available hardware"
+ },
+ {
+  "arxiv_id": "2608.16814v1",
+  "title": "Prediction market visualizations, betting, and uncertainty: A study of Reddit Posts and Comments",
+  "normalized_lane": "mixed",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the display rules if the labeled format reduces clarification-question replies by \u226525% vs control with no drop in engagement rate."
+ },
+ {
+  "arxiv_id": "2608.19454",
+  "title": "Dummy RAPM: Representing Low-Minute Players in Regularized Adjusted Plus-Minus",
+  "normalized_lane": "props_dfs",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "Replicate the paper's pipeline on one NBA season of GSE data with the chronological split; target: Dummy RAPM RMSE < Filtered RAPM RMSE on the outer test, with the improvement direction matching in \u2265 70% of seasons tested. - Unit test: adding a 5th excluded player to a side must \u2026"
+ },
+ {
+  "arxiv_id": "2608.20511",
+  "title": "EDGE: a closed-form directed test for the calibration of probabilistic binary classifiers",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE",
+   "MONITOR",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT into the weekly QC pipeline if Test B rejects the distorted copy at p<0.05 AND the directed test fires on the real engine at least once on a known-bad historical window (e.g., any season where the reliability\u2026"
+ },
+ {
+  "arxiv_id": "2608.21591",
+  "title": "Reaching the Tail: Calibration Diversity Drives Conformal Coverage under Data Scarcity",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE",
+   "MONITOR",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT the diversity selector for early-season calibration if on 2022\u20132024 it raises 90%-interval coverage \u22655 points vs. trailing-window baseline with mean width increase \u226430%; otherwise keep trailing windows and log the\u2026"
+ },
+ {
+  "arxiv_id": "2608.22389v1",
+  "title": "KONTOGRAPH: Verified Point-in-Time Feature Consistency and Amortised Explanation for Real-Time Anti-Money Laundering under a 200 ms Decision Budget",
+  "normalized_lane": "data_infra",
+  "verdict": "ADAPT",
+  "doctrine_tag": "INFRA",
+  "buckets": [
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT the invariant-testing mechanism iff: (i) the harness catches all three injected defect classes (3/3 recall), AND (ii) batch-vs-online agreement is 100% on the 2024 season replay, AND (iii) any serving-format conver..."
+ },
+ {
+  "arxiv_id": "2608.23393",
+  "title": "KellyBoost: Growth-Optimal Portfolio Construction with Gradient-Boosted Trees",
+  "normalized_lane": "sizing",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "DECIDE",
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "Dataset: GSE engine pick history (or reconstructed 2023\u20132025 NFL SPREAD/MONEYLINE/TOTAL picks with closing lines)."
+ },
+ {
+  "arxiv_id": "2608.23776v1",
+  "title": "Disentangled Skill Representations for Predictive Human Modeling",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the SAIL-NFL architecture for prop-model conditioning if on the 2023\u20132024 WR test: test\u2013retest \u2265 0.90, in-context RMSE beats the AE baseline by \u226515% relative, and AR \u2265 2.0 (slices align to intended metrics at 2\u00d7 non-target); REJECT if embeddings are no more stable than"
+ },
+ {
+  "arxiv_id": "2608.23808v2",
+  "title": "Equity Strategy Backtesting: Luck or Edge? The MinervaScore as a Statistical Robustness Grade",
+  "normalized_lane": "signal_discovery_alpha_mining",
+  "verdict": "ADOPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "INVENT",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT if on permuted-label nulls the sports MinervaScore achieves AUROC \u2265 0.95 separating null from historically-profitable signals AND the Seal's pass rate on null signals is \u2264 5% (false-seal control). REJECT (fall back..."
+ },
+ {
+  "arxiv_id": "2608.23859",
+  "title": "Ranking by points and ordinal models",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the AC ordinal head for GSE's spread/total engine if on 2020\u20132024 NFL seasons the AC model's out-of-sample log loss on (cover/push/no-cover) is \u2264 the best single binary baseline and the fitted slopes are within 2\u2026"
+ },
+ {
+  "arxiv_id": "2608.25126v1",
+  "title": "Multimodal Injury Risk Prediction in Tennis",
+  "normalized_lane": "causal_injury",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT the four-sub-model + learned-integration architecture now. ADOPT for live availability discounting only if the out-of-sample ARS\u2013missed-games correlation \u2265 0.25 and the style-exposure penalty improves it over the unpenalized score..."
+ },
+ {
+  "arxiv_id": "2608.25770v2",
+  "title": "HypoForge: A Self-Improving Multi-Agent Framework for Automated Hypothesis Generation and Testing",
+  "normalized_lane": "llm_agents_ai_scientist",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INVENT",
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT if: arm B's batch hit-rate \u2265 2\u00d7 arm A's per-hypothesis rate (distribution-level feedback beats instance-level, mirroring the paper's 0.648 vs 0.491 Hit@K gap), the testing playbook accumulates \u22655 distinct, non-dupl..."
+ },
+ {
+  "arxiv_id": "2608.25940v2",
+  "title": "A Statistical Audit of Physical AI Benchmark Redundancy",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE",
+   "INGEST",
+   "MODEL",
+   "INVENT"
+  ],
+  "numeric_gate": "ADOPT the pruned metric core if: (a) the core (\u22646 metrics) achieves \u226595% of the full suite's out-of-sample predictive correlation on the 2023\u20132025 window, and (b) \u22652 substitute pairs with \u03c1>0.8 are identified and collapsing them moves \u22653 teams by \u22653 places in the power rating (demonstrating the redundancy is\u2026"
+ },
+ {
+  "arxiv_id": "2608.27362v1",
+  "title": "How Exceptional Was the Big Three Era? Extremes and Persistence in Men's Professional Tennis",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT"
+  ],
+  "numeric_gate": "Accept the module if on 2000\u20132025 NFL: (i) out-of-sample (even seasons) Brier \u2264 static BT/Elo baseline after Platt calibration; (ii) calibration slope within [0.9, 1.1] post-fit (no systematic overconfidence); (iii) component correlation \u03c1\u0302 significantly > 0 by prequential likelihood; (iv) dynasty summaries use\u2026"
+ },
+ {
+  "arxiv_id": "2608.28116v1",
+  "title": "Generalized Gibbs Ensemble Weighting",
+  "normalized_lane": "ensembles",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the online Gibbs weighter if it beats plain exponential weighting by \u22650.003 log-loss on 2025 walk-forward (DM p<0.05) and beats or ties the batch Gibbs stacker; if it beats plain EW but loses to the batch stacker, adopt only the Local-UCB \u03b7-adaptation as a\u2026"
+ },
+ {
+  "arxiv_id": "2608.28482v2",
+  "title": "How Proper Scoring Rules Shape LLM Forecasting",
+  "normalized_lane": "nlp",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT beta-weighted objectives and BIN diagnostics if any non-log variant beats the log-loss champion by \u22650.003 Brier on 2025 weeks 1\u20138 AND the BIN decomposition attributes the gain primarily to the information component (\u226550% of the implied Brier..."
+ },
+ {
+  "arxiv_id": "2608.28598",
+  "title": "OhmicFlow: Forecasting transit passenger flow under extreme weather disruptions via Ohm's law",
+  "normalized_lane": "weather",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT weather-neutral ratings if counterfactual ratings predict next-game margin with \u2265 0.3 points lower MAE than factual ratings on 2024 holdout (stability wins), AND the weather-edge term has the correct sign on \u2265 60% of extreme-weather games."
+ },
+ {
+  "arxiv_id": "2609.00905v1",
+  "title": "When Metropolis and Hastings Meet Bradley and Terry: Exact MCMC From Preference Voting",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "DECIDE",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADAPT (adopt as GSE's slate sampler) if: Pref-MH slates achieve \u2265 15% higher realized mean score at equal-or-better diversity than i.i.d"
+ },
+ {
+  "arxiv_id": "2609.01337v1",
+  "title": "LEAP: Likelihood Elicitation and Aggregation for LLM-based Probabilistic Forecasting",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT if on the 2024\u20132025 window the posterior achieves Brier improvement \u22650.010 over the engine-only forecast AND ECE improves by \u226525% relative (mirroring the paper's halving of ECE), with no accuracy degradation. ADAPT-fallback: if Brier is flat but overconfidence drops \u226530% relative with accuracy preserved, adopt\u2026"
+ },
+ {
+  "arxiv_id": "2609.02854v1",
+  "title": "MuyBridge: Mobile Human Center-of-Mass Estimation from Monocular Video via Sparse Fusion",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "INFRA",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT (adopt the NFL port) if: analytic fusion achieves \u2265 30% relative reduction in range AbsRel vs. monocular-depth-only and vertical CoM error < 60 mm on held-out games; reject otherwise (the anchors don't buy enough over raw depth at NFL broadcast ranges)"
+ },
+ {
+  "arxiv_id": "2609.03790v2",
+  "title": "When Minute-Resolution Monitoring Meets Session-Level Injury Labels: Landmark-Based Discrimination in Elite Women's Football",
+  "normalized_lane": "causal_injury",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT the landmark/unit-alignment framework and the robustness battery as mandatory evaluation discipline for all GSE injury/availability modeling. ADOPT TabPFN as a benchmark candidate only..."
+ },
+ {
+  "arxiv_id": "2609.04754v1",
+  "title": "A Fairness Audit of the Duckworth-Lewis-Stern Method: Format-Specific and Gender-Differential Bias, with an Interpretable Calibration Layer for Cricket Target Revision",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT the calibration-layer approach if, on the 2024\u20132025 test window: (a) the layer reduces mean |bias| per state-bucket by \u226515% on totals without increasing overall RMSE vs the uncorrected engine, and (b) WFR_5 improves by \u22652 percentage points vs baseline. REJECT if RMSE increases on the test window, or if the\u2026"
+ },
+ {
+  "arxiv_id": "2609.05561",
+  "title": "Rollcast: Proper-Score Gated Rolling Anchors for Adaptive Probabilistic Time-Series Forecasting",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADAPT the anchor/persistence components if the prototype's CRPS is within 10% of the engine's current distributions on stable-team stretches AND the persistence rule demonstrably reacts faster to regime shocks\u2026"
+ },
+ {
+  "arxiv_id": "2609.06005",
+  "title": "Price Dislocations, News Citations, and Epistemic Leverage on Polymarket",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL",
+   "MONITOR",
+   "INGEST"
+  ],
+  "numeric_gate": "**Adopt** the dislocation + impact pipeline as GSE's sharp-flow sensor if, on 2025 NFL Polymarket data, dislocations flagged by the detector predict next-day line direction (sportsbook consensus move) with hit rate \u226555%\u2026"
+ },
+ {
+  "arxiv_id": "2609.06739v1",
+  "title": "The profit-bias identity in sports betting: bookmaker profit as the public's prediction error",
+  "normalized_lane": "markets",
+  "verdict": "ADOPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the decomposition framework if, on 2024\u20132025 NFL spreads/totals: (a) the pipeline reproduces the paper's qualitative pattern..."
+ },
+ {
+  "arxiv_id": "2609.07512",
+  "title": "Statistical versus machine learning-based spatial interpolation of post-processed ensemble weather forecasts",
+  "normalized_lane": "weather",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT if semi-local or regional models beat local models by \u2265 5% CRPSS on the 6 unobserved stadiums, replicating the paper's transferability gap \u2014 then adopt the pooling design rule."
+ },
+ {
+  "arxiv_id": "2609.07559v1",
+  "title": "Scoring Without the Engine: Validating a Deterministic, Manipulation-Resistant Content Score for Generative Engines, End to End",
+  "normalized_lane": "data_infra",
+  "verdict": "ADAPT",
+  "doctrine_tag": "INFRA",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADAPT if: (a) the paper's 163-assertion consistency audit passes on a fresh clone/run on GSE's lab VM, AND (b) the held-out gate matrix (sqrt 5/5; raw-linear fails dose-response) reproduces from the released captures"
+ },
+ {
+  "arxiv_id": "2609.07617v1",
+  "title": "Forecasting the Winner of a Live Tennis Match",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "MONITOR"
+  ],
+  "numeric_gate": "*Adopt the hybrid if the Trace-port beats the best single baseline (nflfastR wp) by \u22650.01 log loss at \u22652 of 3 progress checkpoints on the 2024\u20132025 test window AND is at least as well calibrated (ECE within 0.005); reject otherwise (fall back to the structural WP + temperature scaling, per the existing calibration\u2026"
+ },
+ {
+  "arxiv_id": "2609.08060v1",
+  "title": "Pre-game paired-comparison modeling of professional League of Legends map outcomes",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "Accept the port if: the combined stable+dynamic model beats both boundaries on walk-forward Brier with paired p<0.05 AND calibration slope \u2208 [0.9,1.1] AND the market-parity CI condition holds"
+ },
+ {
+  "arxiv_id": "2609.10357v1",
+  "title": "A Later Test Set Is Not a New Domain: Pretraining Familiarity Survives a Contamination-Free Hold-Out",
+  "normalized_lane": "timeseries_foundation",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADOPT the disclosure+holdout protocol as mandatory: no sports-TSFM result is reported internally without (i) a corpus manifest, (ii) both temporal and domain holdout numbers, (iii) rank-interval (not decimal) comparisons..."
+ },
+ {
+  "arxiv_id": "2609.10498v1",
+  "title": "Field Converter: Geometry-Initialized Temporal Residual Refinement for World-Grounded Player Pose Estimation from Soccer Broadcasts",
+  "normalized_lane": "tracking",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT (adopt the NFL port) if: on held-out games, the residual-refined root error is < 50% of the geometry-only error AND < 25 cm absolute; reject otherwise (geometry alone or direct regression suffices, or broadcast calibration noise dominates)"
+ },
+ {
+  "arxiv_id": "2609.10589",
+  "title": "Halo: Improving Forecast Accuracy through Heteroscedastic Estimation",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT dual-head Halo on any engine component where \u03b2-NLL training cuts held-out MSE by \u22652% across \u22653 seeds AND the scale head's intervals show monotone coverage behavior (wider scale \u2194 higher |error| rank correlation\u2026"
+ },
+ {
+  "arxiv_id": "2609.12878",
+  "title": "The Favorite\u2013Longshot Bias in Prediction Markets: Evidence from Polymarket",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT the FLB audit as a standing GSE check if the replication finds a statistically significant two-sided pattern (week-clustered CI excluding zero) under at least the equal-market aggregation \u2014 then build a\u2026"
+ },
+ {
+  "arxiv_id": "2609.13100",
+  "title": "A Ranking Approach for Measuring Calibration",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE"
+  ],
+  "numeric_gate": "ADOPT rankECE as the headline calibration number if on the 2022\u20132024 backtest it is stable across two independent halves (split-half |\u0394| < 0.005) AND the asymptotic test rejects the deliberately-distorted copy at\u2026"
+ },
+ {
+  "arxiv_id": "2609.13564v1",
+  "title": "When Greedy Sampling Explores: KL-Regularized Contextual Bandits without Eluder-Dimension Dependence",
+  "normalized_lane": "experimental",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT the greedy-Gibbs selection layer only if it beats the \u03b5-greedy baseline by \u22652% cumulative CLV on the full 2024\u20132025 replay with \u2265500 decisions; otherwise REJECT"
+ },
+ {
+  "arxiv_id": "2609.15309v1",
+  "title": "When Agents Slow Down: Understanding LLM Agents' Test-Time Strategies via Elo-per-token Analysis",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "INGEST",
+   "MODEL",
+   "CALIBRATE",
+   "INVENT",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADAPT-accept if the GSE arena yields stable cross-week model rankings (bootstrap 95% CI width < 150 Elo on version gaps) AND the sampling-reference check matches within \u00b120% on the restart experiment; then adopt the restart-allocation rule into the optimizer. REJECT for GSE use if pairwise model ratings are unstable\u2026"
+ },
+ {
+  "arxiv_id": "2609.19035",
+  "title": "Calibrated Predictive Distributions from Sample-Based Generators",
+  "normalized_lane": "calibration",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE",
+   "INGEST"
+  ],
+  "numeric_gate": "ADOPT CPIT as the engine's post-processing layer if on the 2022\u20132024 holdout it reduces PIT CvM \u226550% vs. raw samples AND improves mean CRPS \u22653% AND 90% central coverage lands in [0.87, 0.93]; otherwise keep it as a\u2026"
+ },
+ {
+  "arxiv_id": "2609.20017",
+  "title": "Who Aggregates Information? Screening, Rent, and the Coexistence of CLOB and AMM Prediction Markets",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT is confirmed if inside-band book moves beat screened-book moves on close-direction prediction by \u22654pp (p < 0.05) on the 2024 sample \u2014 i.e., the screening/pickoff distinction is real in sportsbook data."
+ },
+ {
+  "arxiv_id": "2609.21674v1",
+  "title": "Match forecasts in UEFA club competitions: Elo ratings versus Transfermarkt valuations",
+  "normalized_lane": "markets",
+  "verdict": "ADAPT",
+  "doctrine_tag": "BASELINE",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "Numeric gate: ADOPT the pooled blend iff the equal-weight pool beats GSE-Elo-only by \u2265 0.10 RPS\u00d7100 with Diebold\u2013Mariano p < 0.05 (clustered by matchup-season) on the 2023\u20132025 test window; REJECT (keep single best) otherwise..."
+ },
+ {
+  "arxiv_id": "2609.22048",
+  "title": "Available Guardrails: Certifying Selective Prediction across ML Systems",
+  "normalized_lane": "abstention",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "CALIBRATE",
+   "DECIDE",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT the availability calculator iff \u226580% of per-market certificates granted on historical data hold on the forward 4-week window (validity), and the method flags \u22651 market as uncertifiable that indeed underperforms (it must bite, not rubber-stamp)."
+ },
+ {
+  "arxiv_id": "2609.22632",
+  "title": "Classification with Abstention under Class-Conditional Error Constraints",
+  "normalized_lane": "abstention",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "DECIDE",
+   "MONITOR"
+  ],
+  "numeric_gate": "ADAPT accepted if per-class gating holds all market types under their caps with \u2265 15% lower abstention than the global gate on walk-forward seasons; else REJECT."
+ },
+ {
+  "arxiv_id": "2609.22641v1",
+  "title": "ConsistWorld: Evidence Routing for Consistent Multi-Agent World Models",
+  "normalized_lane": "world_models_simulators",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "INVENT"
+  ],
+  "numeric_gate": "ADOPT if on held-out 2024 plays: (a) fused cross-view player-position disagreement \u2264 0.5 yards mean (vs \u22650.8 yards for naive averaging), AND (b) retrieval-based handoff reconstruction error \u2264 1.0 yard, AND (c) ablation s..."
+ },
+ {
+  "arxiv_id": "physics/0505118",
+  "title": "The Effects of Temperature, Pressure, and Humidity Variations on 100 Meter Sprint Performances",
+  "normalized_lane": "weather",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the density-altitude feature if it is statistically significant with the correct sign in the NGS regression AND improves kick-distance model RMSE on 2024 holdout (kicks are where the physics bites hardest)."
+ },
+ {
+  "arxiv_id": "physics/0512143",
+  "title": "What is the most competitive sport?",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT: q is a single, interpretable, empirically grounded number with a direct moneyline-calibration use and a cheap standings-based estimator."
+ },
+ {
+  "arxiv_id": "physics/0601166v3",
+  "title": "How many independent bets are there?",
+  "normalized_lane": "sizing",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "DECIDE"
+  ],
+  "numeric_gate": "ADOPT as a pre-sizing diagnostic if effective breadth is consistently < 70% of \u221aN on real GSE slates (confirming the paper's halving); REJECT if GSE pick correlations are near-zero (then N_effective \u2248 N and the diagnostic is unnecessary)."
+ },
+ {
+  "arxiv_id": "physics/0606016v1",
+  "title": "Football Fever: Goal Distributions and Non-Gaussian Statistics",
+  "normalized_lane": "win_spread_total",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "ADOPT the shootout winner as GSE's score-distribution family if it beats both Poisson and Gaussian baselines by \u22650.01 nats/game out-of-sample on 2025 (paired p<0.05) AND improves extreme-line calibration (ECE in the tail decile cut by \u226520%); REJECT (stay with current distributional assumption) otherwise."
+ },
+ {
+  "arxiv_id": "physics/0607064",
+  "title": "A Bayesian Mean-Value Approach with a Self-Consistently Determined Prior Distribution for the Ranking of College Football Teams (physics/0607064)",
+  "normalized_lane": "bayesian",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL",
+   "CALIBRATE"
+  ],
+  "numeric_gate": "Gate (ADAPT\u2192keep): |\u0394\u03c1| \u2264 0.01 in \u226580% of NFL seasons 2000\u20132024 AND self-consistent prior beats fixed-variance prior by \u2265 0.005 log-loss on weeks 1\u20134 (2015\u20132024)."
+ },
+ {
+  "arxiv_id": "physics/0607166",
+  "title": "Kelly Criterion revisited: optimal bets",
+  "normalized_lane": "sizing",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "DECIDE",
+   "INGEST"
+  ],
+  "numeric_gate": "ADAPT if the \u00bd-Kelly backtest on the engine's historical picks shows log-wealth \u2265 flat staking with no worse max drawdown \u2014 then wire fractional-Kelly units into the posted-pick pipeline."
+ },
+ {
+  "arxiv_id": "physics/0608007v1",
+  "title": "Parity and Predictability of Competitions",
+  "normalized_lane": "team_ratings",
+  "verdict": "ADAPT",
+  "doctrine_tag": "PROPRIETARY_EDGE",
+  "buckets": [
+   "MODEL"
+  ],
+  "numeric_gate": "Adopt the q-index as a standing GSE parity diagnostic if Test A passes (stable q, std < 0.03) AND Test B achieves MARE \u2264 10%..."
+ },
+ {
+  "arxiv_id": "q-bio/0406024v1",
+  "title": "Projective geometry for human motion, with an application to injury risk",
+  "normalized_lane": "mixed",
+  "verdict": "ADAPT",
+  "doctrine_tag": "SITUATIONAL",
+  "buckets": [
+   "INGEST",
+   "MODEL"
+  ],
+  "numeric_gate": "ADAPT bar: bottom-decile redundancy drops must associate with elevated subsequent injury incidence (OR > 1 with 95% CI excluding 1, workload-adjusted) on a hold-out season; if no signal, keep the metric as descriptive\u2026"
+ }
+]

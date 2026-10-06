@@ -52,6 +52,12 @@ type Site = {
  * looked. Anything here that has NOT been looked at says so in its own `why`.
  */
 const REGISTRY: Readonly<Record<string, readonly Site[]>> = {
+  "apps/web/lib/intelligence-core/schedule-team-index.ts": [
+    {
+      kind: "unbounded",
+      why: "Read-only schedule lookup, one findMany on games for the as-of week, used to resolve which club a player belonged to. No cap is applied because the caller needs EVERY fixture in that week to attribute a team unambiguously; the set is one NFL week, not a growing table. Read-only: this file issues no writes.",
+    },
+  ],
   "apps/web/lib/board/market-coverage.ts": [
     { kind: "unbounded", why: "Coverage counts every canonical fixture; no cap to truncate." },
   ],
@@ -87,6 +93,18 @@ const REGISTRY: Readonly<Record<string, readonly Site[]>> = {
   ],
   "apps/web/app/api/admin/dashboard/route.ts": [
     { kind: "capped-by-design", why: "Admin-only listing, take 30. Operator surface, not a public claim. C-166 lists it." },
+  ],
+  "apps/web/app/api/cron/game-weather-capture/route.ts": [
+    { kind: "unbounded", why: "Cron reads NFL games in the upcoming window to attach weather; no cap, one weather row per game, no per-fixture collapse needed." },
+  ],
+  "apps/web/app/api/cron/prediction-market-snapshot/route.ts": [
+    { kind: "capped-by-design", why: "Cron snapshots prediction markets for the next MAX_GAMES by kickoff; cap bounds the batch, earliest games first, deliberate." },
+  ],
+  "apps/web/app/api/ops/odds-backfill/route.ts": [
+    { kind: "unbounded", why: "Backfill reads all NFL games in the date range to check existing snapshot phases for idempotency; not a display query, no cap to truncate." },
+  ],
+  "apps/web/app/api/ops/props-slate/route.ts": [
+    { kind: "capped-by-design", why: "Props slate builds for the next MAX_GAMES scheduled NFL games; cap bounds the slate, earliest kickoffs first, deliberate." },
   ],
   "packages/ingestion-pipeline/src/freeze-slate-commitments.ts": [
     { kind: "unbounded", why: "Commits the whole slate; no cap to truncate." },
@@ -135,7 +153,10 @@ function inventory(): Record<string, number> {
   for (const file of files) {
     const matches = readFileSync(file, "utf8").match(CALL);
     if (!matches) continue;
-    found[file.slice(REPO_ROOT.length + 1)] = matches.length;
+    // Normalize separators: slice() keeps Windows backslashes, and the registry
+    // below is keyed with forward slashes, so a Windows run would otherwise
+    // compare two identical inventories and call them different.
+    found[file.slice(REPO_ROOT.length + 1).replace(/\\/g, "/")] = matches.length;
   }
   return found;
 }

@@ -65,9 +65,11 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to pro/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
+      // These three tests used to fill a date-of-birth field before clicking.
+      // The age-21 checkout gate was removed on purpose and AGENTS.md lists
+      // "never restore the age-21 checkout gate" under do-not-regress, so the
+      // setup step asserted a feature that must not exist. Guard that instead.
+      expect(screen.queryByLabelText(/date of birth/i)).toBeNull();
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("upgrade_cta_click", {
@@ -89,9 +91,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to elite/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("checkout_start", {
@@ -111,9 +110,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to fantasy/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         const calls = mocks.track.mock.calls;

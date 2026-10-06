@@ -46,8 +46,8 @@ const HEALTH: Record<Health, { word: string; read: string; accent: string; glow:
   UNKNOWN: {
     word: "Standby",
     read: "Awaiting a live signal.",
-    accent: "#00E5FF", // --orbital-cyan
-    glow: "rgba(0,229,255,0.20)",
+    accent: "#FF4D2E", // --orbital-cyan
+    glow: "rgba(255,77,46,0.20)",
     ring: "border-orbital-cyan/40",
     chip: "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan",
   },
@@ -157,7 +157,7 @@ export function CockpitPulse({
       {/* ── Owner / Claude / risk lanes ──────────────────────── */}
       <div className="relative mt-5 grid gap-4 lg:grid-cols-3">
         <Lane title="Owner decisions" items={assessment.ownerDecisions} empty="No owner decisions queued." dot="#FFB454" />
-        <Lane title="Claude review" items={assessment.claudeReview} empty="No Claude review items queued." dot="#00E5FF" />
+        <Lane title="Claude review" items={assessment.claudeReview} empty="No Claude review items queued." dot="#FF4D2E" />
         <Lane title="Top risks" items={assessment.topRisks} empty="No critical runtime risks." dot={h.accent} />
       </div>
 

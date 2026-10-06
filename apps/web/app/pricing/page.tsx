@@ -37,6 +37,23 @@ import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytic
 
 const phase = getCurrentPricingPhase();
 
+/**
+ * Phase-aware hero copy. The headline names the current phase from the
+ * ladder; the sub-line states only the milestone that phase's trigger
+ * establishes (indexed by phase.order, see pricing-phases.ts), never a
+ * comparison with anyone else. The fixed-price promise and grandfathering
+ * are the same in every phase.
+ */
+const HERO_SUB_BY_ORDER: readonly string[] = [
+  "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later.",
+  "Start free. The calibration report is live and gated in public. Your price is fixed the day you join; earlier members keep theirs.",
+  "Start free. Closing-line value is measured in public over a meaningful sample. Your price is fixed the day you join; earlier members keep theirs.",
+  "Start free. The public record now spans multiple seasons. Your price is fixed the day you join; earlier members keep theirs.",
+];
+const HERO_HEADLINE =
+  phase.id === "FOUNDING" ? "Claim the founding rate." : `Claim the ${phase.name} rate.`;
+const HERO_SUB = HERO_SUB_BY_ORDER[phase.order] ?? HERO_SUB_BY_ORDER[0]!;
+
 export const metadata: Metadata = {
   title: "Pricing: Founding-Member Rates, Locked For Life",
   description:
@@ -55,9 +72,8 @@ export const metadata: Metadata = {
 
 const FREE_FEATURES = [
   // Honesty: public picks board is founder-gated until calibration is published.
-  // Free still delivers tools, Academy, and transparent process — not invented free picks.
+  // Free still delivers tools and transparent process — not invented free picks.
   { label: "Free calculators & intelligence tools (no account wall)", included: true },
-  { label: "The Academy: full training floor", included: true },
   { label: "Public methodology + calibration status (building honestly)", included: true },
   { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
   { label: "Founding waitlist for early operator updates", included: true },
@@ -78,8 +94,8 @@ const PRO_FEATURES = [
   { label: "No-Bet reasoning: the code, model version, and evidence behind every pass we make", included: true },
   { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
   { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
-  { label: "Recompute any claim yourself — the verifier is named, not hand-waved", included: true },
-  { label: "The Academy + public record", included: true },
+  { label: "Recompute any claim yourself, the verifier is named, not hand-waved", included: true },
+  { label: "Public record + methodology", included: true },
   { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
@@ -94,8 +110,11 @@ const PRO_FEATURES = [
 
 const ELITE_FEATURES = [
   { label: "Email + push alerts when a pick you follow settles", included: true },
-  { label: "Line-value tracker: your glass-box bet tracker", included: true },
+  { label: "Line-value tracker: your private bet log, graded against the close", included: true },
   { label: "Staking calculator: Kelly-aware sizing", included: true },
+  { label: "Deeper market-movement context", included: true },
+  { label: "Advanced filters and saved watchlists", included: true },
+  { label: "Calibration reports: how confidence has matched outcomes", included: true },
   { label: "First access to new intelligence surfaces", included: true },
   { label: "Every signal, every day: all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
@@ -103,16 +122,15 @@ const ELITE_FEATURES = [
   { label: "Ask the model why + line-movement intel", included: true },
   { label: "Trend Lab: full cohort workbench", included: true },
   { label: "Parlay MRI: the portfolio surgeon", included: true },
-  { label: "The Academy + public record", included: true },
 ] as const;
 
 const FANTASY_FEATURES = [
-  { label: "Draft Assistant + Best Ball, on real, cleared data", included: true },
+  { label: "Draft Assistant + Best Ball on sample players until a licensed feed lands", included: true },
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
   { label: "Bye-week fragility + roster-construction guidance", included: true },
+  { label: "Start/Sit, Waivers, Trade, and Pick'em tools", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
   { label: "Everything free plus Fantasy depth tools", included: true },
-  { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Graded-pick alerts (Elite)", included: false },
@@ -126,7 +144,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "Tools, Academy, and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
+    description: "Tools and transparent process first. Full board on paid tiers when gates open with proof, not promises.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -138,8 +156,8 @@ const PLANS: PlanView[] = [
     annual: phase.fantasy.annual,
     annualSavingsPct: annualSavingsPct(phase.fantasy),
     annualMonthly: annualMonthlyEquivalent(phase.fantasy),
-    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data. Roster construction, stacks, and bye structure, with the reasoning.",
-    badge: "Draft season",
+    description: "The fantasy suite: Start/Sit, Waivers, Trade, DFS, Pick'em, Draft Assistant and Best Ball. Opens now on sample players; real the moment a licensed projections feed is connected.",
+    badge: "DFS & season",
     cta: "Subscribe to Fantasy",
     features: [...FANTASY_FEATURES],
   },
@@ -150,7 +168,7 @@ const PLANS: PlanView[] = [
     annual: phase.pro.annual,
     annualSavingsPct: annualSavingsPct(phase.pro),
     annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
+    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself, plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
     badge: "Recommended",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
@@ -162,8 +180,8 @@ const PLANS: PlanView[] = [
     annual: phase.elite.annual,
     annualSavingsPct: annualSavingsPct(phase.elite),
     annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "The professional toolkit: everything in Pro, plus graded-pick alerts and a line-value tracker for post-close review.",
-    badge: "The professional toolkit",
+    description: "Act sooner and grade the timing: graded-pick alerts when a followed pick settles, plus a private line-value tracker that scores every entry price against the close.",
+    badge: "Alerts + tracker",
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
   },
@@ -278,7 +296,7 @@ const productJsonLd = {
   "@type": "Product",
   name: `${BRAND_NAME} Membership`,
   description:
-    "Sports decision intelligence: free calculators, methodology, and paper contests now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
+    "Free calculators, methodology, and paper contests. Paid tiers unlock the full board, confidence ratings, factor trails, and alerts.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
     "@type": "Offer",
@@ -334,13 +352,12 @@ export default function PricingPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-                Claim the founding rate.
+                {HERO_HEADLINE}
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
-                Start free. Back us before the record exists and your price never moves,
-                even as it rises for everyone who joins later.
+                {HERO_SUB}
               </p>
             </Reveal>
             <Reveal delay={260}>
@@ -413,7 +430,7 @@ export default function PricingPage() {
               The price ladder is public
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
-              Prices only rise when a verified proof milestone is met — never on a marketing
+              Prices only rise when a verified proof milestone is met, never on a marketing
               calendar. Join at any phase and your rate is locked for the life of your
               subscription.
             </p>
@@ -567,7 +584,7 @@ export default function PricingPage() {
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
                   {getFeature("confidence")?.customerExplanation ??
-                    "A 0 to 100 ranking score of how strongly the model likes a pick. It is not a win probability and is not part of the market-implied measurement. It is an input to your judgment, not a promise."}
+                    "A 0 to 100 ranking score of how strongly the model likes a pick. It is not a win probability. On spreads and totals it is built from board signals: book agreement, market depth, line movement, and game context. It does not include the market's probability of the outcome. On moneylines it is anchored on the market's win probability, labeled as such. It is an input to your judgment, not a promise."}
                 </p>
               </div>
               <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
@@ -585,7 +602,7 @@ export default function PricingPage() {
 
             Sits immediately after "Built to protect you from hype", where a
             reader is closest to asking what the money is actually for. The lead
-            line deliberately does not promise results — see the module
+            line deliberately does not promise results. See the module
             docstring. Four of the seven structural failure modes, projected
             from the same source list the /integrity page renders in full, so
             the two surfaces cannot drift into different wording.

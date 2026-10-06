@@ -17,13 +17,17 @@ vi.mock("@sports/db", () => ({
   isStubMode: () => false,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ isBootstrapMode: false }),
-  MODEL_VERSION: "v5.0.0",
-  // Real clamp behavior — the board must never surface an Edge Index > 100.
-  toEdgeIndex: (v: number | null | undefined) =>
-    v == null || !Number.isFinite(v) ? null : Math.max(0, Math.min(100, Math.round(v))),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ isBootstrapMode: false }),
+    MODEL_VERSION: "v5.0.0",
+    // Real clamp behavior — the board must never surface an Edge Index > 100.
+    toEdgeIndex: (v: number | null | undefined) =>
+      v == null || !Number.isFinite(v) ? null : Math.max(0, Math.min(100, Math.round(v))),
+  };
+});
 
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadBoardState } from "@/lib/board/state";

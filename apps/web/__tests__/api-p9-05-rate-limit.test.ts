@@ -46,6 +46,15 @@ const predictionEngineMocks = vi.hoisted(() => ({
     canLearnFromOutcomes: true,
   })),
   merkleRootFromLeafHashes: vi.fn(() => "mock-root"),
+  // Reached only through the statically-traced call graph from
+  // @/lib/proof/receipt-proof (real file imports and calls both), which this
+  // file mocks wholesale below (`proofMocks.verifyReceiptIntegrity`), so the
+  // real hashLeaf/parseCanonicalPayload code never runs at runtime under this
+  // test. Inert placeholder values, shape-correct against proof-of-record.ts:
+  // hashLeaf returns a string (a labeled placeholder, not a fabricated hash),
+  // parseCanonicalPayload returns an empty field map (no invented pick data).
+  hashLeaf: vi.fn(() => "mock-leaf-hash"),
+  parseCanonicalPayload: vi.fn(() => ({})),
   verifyReceiptIntegrity: vi.fn(() => ({
     verified: true,
     frozenAt: "2026-09-14T16:00:00.000Z",
@@ -108,6 +117,8 @@ vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: predictionEngineMocks.getReadinessGates,
   merkleRootFromLeafHashes: predictionEngineMocks.merkleRootFromLeafHashes,
   bootstrapGateResponse: predictionEngineMocks.bootstrapGateResponse,
+  hashLeaf: predictionEngineMocks.hashLeaf,
+  parseCanonicalPayload: predictionEngineMocks.parseCanonicalPayload,
 }));
 
 vi.mock("@/lib/proof/receipt-proof", () => ({

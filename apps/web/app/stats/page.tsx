@@ -17,7 +17,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 const SURFACES: Array<{ label: string; href: string; note: string }> = [
-  { label: "Players",          href: "/stats/players",      note: "GPI rankings" },
+  { label: "Players",          href: "/stats/players",      note: "GPI" },
   { label: "Teams",            href: "/stats/teams",        note: "Environment" },
   { label: "Compare",          href: "/stats/compare",      note: "Side-by-side" },
   { label: "Comps",            href: "/stats/comps",        note: "Similar players" },
@@ -124,7 +124,7 @@ export default async function Page() {
         tone="warn"
       />
 
-      <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings", href: "/stats/players" }} />
+      <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full list", href: "/stats/players" }} />
       <p className="-mt-3 mb-4 max-w-2xl text-sm text-ion-2">{glossaryEntry("gpi")?.plain}</p>
       <BarChart items={top5.map(p => ({ label: p.name, value: p.galaxy_player_index, max: maxGpi }))} />
 

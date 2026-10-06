@@ -38,7 +38,7 @@ import { loadEloVsMarketBacktest } from "@/lib/calibration/elo-backtest";
 export const metadata: Metadata = {
   title: { absolute: `Market calibration baseline · ${BRAND_NAME}` },
   description:
-    "The closing line's own Brier score, ECE, and reliability curve over the full historical archive — the efficient-market baseline the platform model must beat, and an Elo-vs-market comparison. No picks, no fabricated stats.",
+    "The closing line's own forecast error and calibration curve over the full historical archive, the efficient-market baseline the platform model must beat, and an Elo-vs-market comparison. No picks, no fabricated stats.",
   alternates: { canonical: "/calibration/market" },
 };
 
@@ -86,10 +86,10 @@ function MarketSection({
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard label="Brier score" value={market.brier.toFixed(4)} sub="lower is better calibrated" />
-            <StatCard label="Reliability" value={market.reliability.toFixed(4)} sub="distance from perfect (0)" />
-            <StatCard label="Resolution" value={market.resolution.toFixed(4)} sub="discriminative power (higher)" />
-            <StatCard label="ECE" value={(market.ece * 100).toFixed(2)} sub="expected calibration error %" />
+            <StatCard label="Forecast error" value={market.brier.toFixed(4)} sub="lower means better predicted" />
+            <StatCard label="Miscalibration" value={market.reliability.toFixed(4)} sub="gap from perfect, lower is better" />
+            <StatCard label="Sharpness" value={market.resolution.toFixed(4)} sub="higher means more decisive" />
+            <StatCard label="Avg gap" value={(market.ece * 100).toFixed(2)} sub="predicted vs actual %, lower is better" />
           </div>
 
           <div className="max-w-xs">
@@ -136,12 +136,12 @@ function EloSection({
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard label="Market Brier" value={elo.market.brier.toFixed(4)} sub="de-vigged closing line" />
-            <StatCard label="Elo Brier" value={elo.elo.brier.toFixed(4)} sub={`Elo (n=${elo.elo.teamsRated} teams)`} />
+            <StatCard label="Market error" value={elo.market.brier.toFixed(4)} sub="de-vigged closing line" />
+            <StatCard label="Elo error" value={elo.elo.brier.toFixed(4)} sub={`Elo (n=${elo.elo.teamsRated} teams)`} />
             <StatCard
-              label="Better calibrated"
+              label="Better predicted"
               value={elo.betterCalibrated.toUpperCase()}
-              sub={elo.betterCalibrated === "tie" ? "Brier scores are equal" : "Lower Brier wins"}
+              sub={elo.betterCalibrated === "tie" ? "Error scores are equal" : "Lower error wins"}
             />
             <StatCard
               label="Elo accuracy"
@@ -217,7 +217,7 @@ export default async function MarketCalibrationPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
             The closing line is the market&apos;s most efficient forecast. Here it is de-vigged and calibrated
-            against actual outcomes over the full historical archive — the denominator every future GSE claim must
+            against actual outcomes over the full historical archive, the denominator every future GSE claim must
             beat. Below, a results-only Elo is scored on the <em>same</em> games to show whether a simple
             independent model can match the market. Neither number is a GSE pick; both are honest baselines.
           </p>
@@ -230,8 +230,8 @@ export default async function MarketCalibrationPage() {
 
         <div className="mt-12">
           <MetricHonesty
-            measures="How well the MARKET's own de-vigged closing prices are calibrated against real outcomes - the ECE and Brier on this page belong to the market baseline, not to any GSE model."
-            doesNotMeasure="Any independent forecasting skill by GSE. A market ECE near zero says the closing line is honest about itself; it says nothing about whether anyone can beat it."
+            measures="How well the MARKET's own de-vigged closing prices predicted real outcomes - the error scores on this page belong to the market baseline, not to any GSE model."
+            doesNotMeasure="Any independent forecasting skill by GSE. A market error near zero says the closing line is honest about itself; it says nothing about whether anyone can beat it."
             caveat="This baseline exists so every future model claim has something honest to be measured against."
           />
         </div>
@@ -242,21 +242,21 @@ export default async function MarketCalibrationPage() {
           </h2>
           <div className="space-y-3 text-sm leading-relaxed text-ion-1">
             <p>
-              This page publishes the market&apos;s <em>own</em> calibration curve — Brier, ECE, and a reliability
-              diagram computed from the de-vigged closing moneyline. It needs no platform track record because it
+              This page publishes the market&apos;s <em>own</em> calibration curve, forecast error and a
+              predicted-vs-actual diagram computed from the de-vigged closing moneyline. It needs no platform track record because it
               makes no claim about any model. A latecomer cannot fake 25 seasons of nflverse outcomes, which is
               why this baseline is the first proof every future edge claim is measured against.
             </p>
             <p>
               This is a baseline, not a tip sheet. No picks are published here, no fabricated stats are
               ever shown, and when there is no data the loaders return an explicit no-data state that this
-              page surfaces verbatim — never a zero-filled chart.
+              page surfaces verbatim, never a zero-filled chart.
             </p>
             <p>
               The data is computed by two live public endpoints (
               <code>/api/calibration/market-backtest</code> and{" "}
               <code>/api/calibration/elo-backtest</code>). When the historical-games backfill has not yet run, the
-              loaders return an explicit no-data state — surfaced here as plain text, never a fabricated or
+              loaders return an explicit no-data state, surfaced here as plain text, never a fabricated or
               zero-filled chart.
             </p>
           </div>
