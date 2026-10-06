@@ -164,8 +164,7 @@
   },
   "dependencies": {
     "ioredis": "^5.10.1",
-    "pg": "^8.21.0",
-    "source-map-js": "^1.2.2"
+    "pg": "^8.21.0"
   },
   "allowScripts": {
     "prisma@5.22.0": true,
@@ -176,10 +175,5 @@
     "esbuild@0.21.5": true,
     "esbuild@0.28.1": true,
     "fsevents": false
-  },
-  "overrides": {
-    "postcss": {
-      "source-map-js": "^1.2.2"
-    }
   }
 }
