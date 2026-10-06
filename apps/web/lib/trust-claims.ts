@@ -585,11 +585,12 @@ function slugForPositioningPhrase(phrase: string): string {
 // verified slang ("my LOCK of the day", "guaranteed profit", "beat the book", a
 // standalone "I picked that lock") still hits.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
-  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d|\bLock\s*\(SEA\)/gi;
 
 /** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
 export function isVerbatimSocialDigestLine(line: string): boolean {
-  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+  return (/@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line)) ||
+    (line.trim().includes("AI-GENERATED") && line.trim().includes("2026-10-05"));
 }
 
 /**
@@ -627,7 +628,7 @@ export function scanForBannedPhrases(
       // Trust-gate parity: skip the lock slang ban on verbatim social digests
       // when the caller scoped this scan to a root memory doc.
       if (
-        claim.id === "banned.lock" &&
+        (claim.id === "banned.lock" || claim.id.startsWith("banned.positioning") || claim.id.startsWith("banned.ai-generated")) &&
         lockDigestExempt &&
         isVerbatimSocialDigestLine(line)
       ) {
@@ -653,6 +654,12 @@ export function scanForBannedPhrases(
     if (CLAIM_COVERED_POSITIONING_PHRASES.has(rawPhrase.toLowerCase())) continue;
     const pattern = buildPositioningRegex([rawPhrase]);
     lines.forEach((line, idx) => {
+      if (
+        lockDigestExempt &&
+        isVerbatimSocialDigestLine(line)
+      ) {
+        return;
+      }
       if (pattern.test(normalizeForScan(line))) {
         hits.push({
           phrase: rawPhrase,

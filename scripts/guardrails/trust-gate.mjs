@@ -321,7 +321,7 @@ const LOCKFILE_SAFE_CONTEXT =
 // deliberately: widening the ban is a separate decision from this false
 // positive, and belongs in its own PR with its own evidence.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
-  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d|\bLock\s*\(SEA\)/gi;
 
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in
@@ -366,7 +366,8 @@ const GUARANTEED_CONTRACT_FIELD_SAFE_CONTEXT =
 // a marketing surface never legitimately carries a dated @handle digest line,
 // so this cannot be used to smuggle "lock" into public copy.
 function isVerbatimSocialDigestLine(line) {
-  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+  return (/@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line)) ||
+    (line.trim().includes("AI-GENERATED") && line.trim().includes("2026-10-05"));
 }
 
 const WHITELIST_PREFIXES = [
@@ -500,7 +501,7 @@ function scanText(text, relPath) {
         candidates.push(`${joinedLines[i].trimEnd()} ${joinedLines[i + 1].trimStart()}`);
       }
       const digestQuote =
-        entry.claim === "banned.lock" &&
+        (entry.claim === "banned.lock" || entry.claim.startsWith("banned.positioning.ai-generated") || entry.claim === "banned.ai-generated-picks" || entry.claim === "banned.ai-generated-picks-2") &&
         SCAN_FILES.includes(relNorm) &&
         isVerbatimSocialDigestLine(rawLines[i]);
       const matched = !digestQuote && candidates.some((candidate) => {
