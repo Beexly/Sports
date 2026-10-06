@@ -30,7 +30,7 @@ describe("Fantasy competitive baseline", () => {
       "value-plays",
       "breaking-news-injuries",
       "props-ev",
-      "rankings-cheatsheets",
+      "draft-cheatsheets",
       "analysis-strategy",
       "community-support",
       "multi-sport",
@@ -46,7 +46,7 @@ describe("Fantasy competitive baseline", () => {
     expect(summary["csv-import-ready"]).toBeGreaterThan(0);
     expect(summary["gated-data"]).toBeGreaterThan(0);
     expect(FANTASY_BASELINE_MODULES.some((module) => module.currentTruth.includes("gated"))).toBe(true);
-    expect(FANTASY_BASELINE_MODULES.some((module) => module.currentTruth.includes("No public projection claims"))).toBe(true);
+    expect(FANTASY_BASELINE_MODULES.some((module) => module.currentTruth.includes("No public projection claims are live."))).toBe(true);
   });
 
   it("makes the baseline route and navigation discoverable", () => {
