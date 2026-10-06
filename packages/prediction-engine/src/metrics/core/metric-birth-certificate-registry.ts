@@ -733,4 +733,39 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    allowedInputs: [
+      "play-by-play drive outcomes"
+    ],
+    failureModes: [
+      "a high failure rate might reflect one heavily disrupted game (e.g., weather) in a small window",
+      "special teams fumbles on punts can skew possession metrics"
+    ],
+    family: "situational",
+    forbiddenInputs: [
+      "game outcomes",
+      "model fitting"
+    ],
+    formulaClass: "pure_measurement",
+    formulaSummary: "Share of drives that die without scoring (punt, turnover, turnover on downs, missed FG, safety), excluding end of half/game or other.",
+    historicalPrecedent: [
+      {
+        name: "Turnovers and Punts Combined",
+        reason: "How often drives die tells you things EPA-per-play smooths over. It reads directly into spread/total context and game-script reasoning."
+      }
+    ],
+    internalName: "drive_failure_rate_shadow",
+    metricId: "drive-failure-rate",
+    protectedComponents: [],
+    publicExposure: "score_band",
+    publicName: "Drive Failure Rate",
+    sourceRightsRequired: [
+      "derived play-level stats only",
+      "no raw nflverse pbp rows exposed"
+    ],
+    status: "SHADOW",
+    targetQuestion: "How often do offensive drives die without scoring, and how often does the defense kill opponent drives?",
+    targetVariable: "drive failure rate",
+    validationMethods: ["drift_test"],
+  },
 ] as const;

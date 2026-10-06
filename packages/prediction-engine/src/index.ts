@@ -4160,3 +4160,5 @@ export {
   fetchUpcomingWindows,
   type GameWindow,
 } from "./watch/watch-scheduler.js";
+
+export { computeDriveFailureRates, type DriveFailureRates } from "./expected-metrics/drive-failure-rate.js";

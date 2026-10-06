@@ -159,3 +159,5 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+export { computeDriveFailureRates } from "./drive-failure-rate.js";
+export type { DriveFailureRates } from "./drive-failure-rate.js";

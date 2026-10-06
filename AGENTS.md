@@ -9411,3 +9411,9 @@ posts in window.
 - TE FPTS/target + separation pairing: efficiency-per-opportunity with
   separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
   2.19 FPTS/tgt, #7) (@DynatyzeFF).
+
+### JULES - TASK COMPLETED (2026-10-06)
+- Built `packages/prediction-engine/src/expected-metrics/drive-failure-rate.ts` computing independent drive-failure rates for offense and defense over 8-game, 16-game, and season rolling windows with strict point-in-time discipline.
+- Registered metric in `metric-birth-certificate-registry.ts` with SHADOW status (new signal: no fit, no published use) and appropriate source policy checks.
+- Exported module via `packages/prediction-engine/src/expected-metrics/index.ts` and `packages/prediction-engine/src/index.ts`.
+- Included synthetic unit tests covering fraction math, safety handling, zero-rated scenarios, and exclusion logic. Did not wire into covariates due to uncertainty about routing. No changes to CI/CD workflows.
