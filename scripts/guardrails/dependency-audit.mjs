@@ -28,6 +28,13 @@ const FAIL_ON = new Set(["critical", "high"]);
  */
 const ACCEPTED = [
   {
+    package: "source-map-js",
+    reason:
+      "Only the copy bundled inside next/node_modules is affected; it is remediated " +
+      "by the same next@16 major upgrade.",
+    reviewBy: "2027-01-15",
+  },
+  {
     package: "next",
     reason:
       "Fix requires next@16.3.0, a semver-major jump from the pinned 14.2.x line. " +
