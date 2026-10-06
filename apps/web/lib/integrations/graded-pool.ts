@@ -39,6 +39,21 @@
  * deliberate go-live decision.
  */
 
+export { buildVarianceProvider } from "./variance-provider.js";
+export {
+  loadVarianceProjections,
+  derivePositionalStats,
+  assertFreshTrainingWindow,
+  absoluteWeek,
+  StaleTrainingWindowError,
+  REG_WEEKS,
+} from "./variance-projections.js";
+export type {
+  PlayerWeekClient,
+  PlayerWeekStat,
+  TrainingWindow,
+  VarianceProjectionResult,
+} from "./variance-projections.js";
 import { registerProjectionsProvider, type PlayerProjection, type ProjectionsProvider } from "./projections";
 import type { Player } from "../fantasy/players";
 import { loadPlayerModel, type PlayerProfile } from "../intelligence/player-model";

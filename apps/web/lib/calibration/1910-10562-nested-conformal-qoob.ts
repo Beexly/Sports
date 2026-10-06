@@ -34,7 +34,7 @@ export function conformalQuantile(scores: readonly number[], alpha: number): num
   if (n === 0) return Number.POSITIVE_INFINITY;
   const sorted = [...scores].sort((a, b) => a - b);
   const k = Math.min(n, Math.ceil((1 - alpha) * (n + 1)));
-  return sorted[k - 1];
+  return sorted[k - 1]!;
 }
 
 /**
@@ -73,7 +73,7 @@ export function crossConformalInterval(
   const scores: number[] = [];
   for (const fm of foldModels) {
     for (const i of fm.heldOut) {
-      scores.push(Math.abs(ys[i] - fm.predict(xs[i])));
+      scores.push(Math.abs(ys[i]! - fm.predict(xs[i]!)));
     }
   }
   const { lo, hi } = nestedSetInterval(fullPredict(xNew), scores, alpha);
@@ -95,15 +95,15 @@ export function qoobCalibrate(
   const n = ys.length;
   // conformity: how far outside the band each point falls, normalized by width
   const scores = ys.map((y, i) => {
-    const w = Math.max(oobHi[i] - oobLo[i], 1e-9);
-    if (y < oobLo[i]) return (oobLo[i] - y) / w;
-    if (y > oobHi[i]) return (y - oobHi[i]) / w;
+    const w = Math.max(oobHi[i]! - oobLo[i]!, 1e-9);
+    if (y < oobLo[i]!) return (oobLo[i]! - y) / w;
+    if (y > oobHi[i]!) return (y - oobHi[i]!) / w;
     return 0;
   });
   const expansion = conformalQuantile(scores, alpha);
   const covered = ys.filter((y, i) => {
-    const w = Math.max(oobHi[i] - oobLo[i], 1e-9);
-    return y >= oobLo[i] - expansion * w && y <= oobHi[i] + expansion * w;
+    const w = Math.max(oobHi[i]! - oobLo[i]!, 1e-9);
+    return y >= oobLo[i]! - expansion * w && y <= oobHi[i]! + expansion * w;
   }).length;
   return { expansion, coverage: n > 0 ? covered / n : 0 };
 }

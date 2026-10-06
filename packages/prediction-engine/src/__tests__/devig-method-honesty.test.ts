@@ -75,7 +75,7 @@ describe("shinFairForSide", () => {
 
 describe("scoring reports the de-vig method it actually used", () => {
   it("labels marketFairProb proportional and carries the Shin alternative", () => {
-    const pick = ml(scoreGame(h2hInput(-350, 290)))!;
+    const pick = ml(scoreGame(h2hInput(-800, 650)))!;
     const b = pick.factorBreakdown;
     expect(b.marketFairMethod).toBe("proportional");
     expect(typeof b.marketFairShinProb).toBe("number");
@@ -85,9 +85,9 @@ describe("scoring reports the de-vig method it actually used", () => {
   });
 
   it("does not disturb the number scoring already published", () => {
-    const pick = ml(scoreGame(h2hInput(-350, 290)))!;
-    const hi = americanToImpliedProbability(-350);
-    const ai = americanToImpliedProbability(290);
+    const pick = ml(scoreGame(h2hInput(-800, 650)))!;
+    const hi = americanToImpliedProbability(-800);
+    const ai = americanToImpliedProbability(650);
     // marketFairProb is still exactly the proportional de-vig, unchanged.
     expect(pick.factorBreakdown.marketFairProb).toBeCloseTo(hi / (hi + ai), 9);
   });

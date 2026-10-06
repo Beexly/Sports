@@ -36,10 +36,10 @@ export function variogramScore(
   let s = 0;
   for (let i = 0; i < d; i++) {
     for (let j = i + 1; j < d; j++) {
-      const obsTerm = Math.pow(Math.abs(obs[i] - obs[j]), p);
+      const obsTerm = Math.pow(Math.abs(obs[i]! - obs[j]!), p);
       let ensTerm = 0;
       for (let k = 0; k < m; k++) {
-        ensTerm += Math.pow(Math.abs(ensemble[k][i] - ensemble[k][j]), p);
+        ensTerm += Math.pow(Math.abs(ensemble[k]![i]! - ensemble[k]![j]!), p);
       }
       ensTerm /= Math.max(m, 1);
       s += (obsTerm - ensTerm) * (obsTerm - ensTerm);
@@ -88,7 +88,7 @@ export function empiricalQuantileGrid(
   const n = sorted.length;
   const quantiles = FQ_QUANTILE_GRID.map((tau) => {
     const k = Math.min(n - 1, Math.floor(tau * n));
-    return sorted[k];
+    return sorted[k]!;
   });
   return { taus: [...FQ_QUANTILE_GRID], quantiles };
 }
@@ -102,11 +102,11 @@ export function marginalCdf(
   x: number,
 ): number {
   const { taus, quantiles } = grid;
-  if (x <= quantiles[0]) return taus[0] * (x / quantiles[0] || 0);
+  if (x <= quantiles[0]!) return taus[0]! * (x / quantiles[0]! || 0);
   for (let i = 1; i < quantiles.length; i++) {
-    if (x <= quantiles[i]) {
-      const t = (x - quantiles[i - 1]) / (quantiles[i] - quantiles[i - 1] || 1);
-      return taus[i - 1] + t * (taus[i] - taus[i - 1]);
+    if (x <= quantiles[i]!) {
+      const t = (x - quantiles[i - 1]!) / (quantiles[i]! - quantiles[i - 1]! || 1);
+      return taus[i - 1]! + t * (taus[i]! - taus[i - 1]!);
     }
   }
   return 1;
@@ -126,18 +126,18 @@ export function gaussianCopulaDraw(
     Math.sqrt(2) * inverseErf(2 * Math.min(Math.max(u, 1e-9), 1 - 1e-9) - 1),
   );
   const correlated = chol.map((row) =>
-    row.reduce((a, c, j) => a + c * z[j], 0),
+    row.reduce((a, c, j) => a + c * z[j]!, 0),
   );
   const phi = (v: number) => 0.5 * (1 + erfApprox(v / Math.SQRT2));
   return correlated.map((v, i) => {
     const u = phi(v);
     // invert the marginal CDF by bisection on the quantile grid range
-    const { quantiles } = marginals[i];
-    let lo = quantiles[0] - 3 * Math.abs(quantiles[0] || 1);
-    let hi = quantiles[quantiles.length - 1] + 3 * Math.abs(quantiles[quantiles.length - 1] || 1);
+    const { quantiles } = marginals[i]!;
+    let lo = quantiles[0]! - 3 * Math.abs(quantiles[0]! || 1);
+    let hi = quantiles[quantiles.length - 1]! + 3 * Math.abs(quantiles[quantiles.length - 1]! || 1);
     for (let it = 0; it < 40; it++) {
       const mid = (lo + hi) / 2;
-      if (marginalCdf(marginals[i], mid) < u) lo = mid;
+      if (marginalCdf(marginals[i]!, mid) < u) lo = mid;
       else hi = mid;
     }
     return (lo + hi) / 2;

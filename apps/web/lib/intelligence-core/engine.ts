@@ -20,6 +20,7 @@ import {
   type SignalObservation,
   type MarketBelief,
 } from "./reasoning";
+import type { SignalShadowPolicy } from "./shadow";
 import {
   allObservations,
   computeModelProb,
@@ -82,6 +83,13 @@ export interface GameBundle {
   readonly statedConfidence: number | null;
   readonly grade?: "LEAN" | "SOLID_PLAY" | "STRONG_PLAY" | "ELITE_PLAY";
 
+  /**
+   * SHADOW-ONLY switch, forwarded verbatim to `reason()`. Omit it and every
+   * observation feeds calibration exactly as before. Build it with
+   * `shadowOnly([...], "justification")` — see ./shadow.ts.
+   */
+  readonly shadowPolicy?: SignalShadowPolicy;
+
   readonly now?: Date;
 }
 
@@ -113,6 +121,12 @@ export interface IntelligenceResult {
   readonly situationalShift: number;
   readonly knowability: number;
   readonly evidenceHealth: number;
+  /**
+   * SHADOW-ONLY accounting, lifted from the reasoning spine. `observationCount`
+   * above counts EVERY observation including shadowed ones; this is what tells
+   * a caller how many of those were actually allowed to move the number.
+   */
+  readonly shadowReport: IntelligenceReasoning["shadowReport"];
 }
 
 // ---------------------------------------------------------------------------
@@ -142,6 +156,11 @@ export function buildSituationalContext(bundle: GameBundle): SituationalContext 
     gameId: bundle.gameId,
     sport: bundle.sport,
     selection: bundle.selection,
+    // Carried so reason() can tell which side of the home/away frame the pick
+    // is on and re-express the leans in that frame. Without these the engine
+    // is selection-blind and every away pick inherits the home sign.
+    homeTeam: bundle.homeTeam,
+    awayTeam: bundle.awayTeam,
     pickType: bundle.pickType,
     commenceTime: bundle.commenceTime,
     observations,
@@ -150,6 +169,10 @@ export function buildSituationalContext(bundle: GameBundle): SituationalContext 
     modelVersion: bundle.modelVersion,
     statedConfidence: bundle.statedConfidence,
     grade: bundle.grade,
+    // Forwarded verbatim. `undefined` (the default) means "no family is
+    // shadowed" and reason() behaves exactly as it did before shadow mode
+    // existed — observations are still built and still reported either way.
+    shadowPolicy: bundle.shadowPolicy,
   };
 }
 
@@ -187,6 +210,7 @@ export function runIntelligence(bundle: GameBundle): IntelligenceResult {
     situationalShift: reasoning.situationalShift,
     knowability: reasoning.knowability,
     evidenceHealth: reasoning.evidenceHealth,
+    shadowReport: reasoning.shadowReport,
   };
 }
 

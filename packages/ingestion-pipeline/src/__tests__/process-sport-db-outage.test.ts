@@ -1,0 +1,143 @@
+/**
+ * DB-outage containment for processSport — the regression test for the
+ * production incident where an unreachable Postgres made ingestion fail
+ * SILENTLY.
+ *
+ * The bug: `db.ingestionRun.create()` was the first write in processSport and
+ * sat ABOVE the try that records failures, so with the database down it threw
+ * outside the catch. No IngestionRun row of any status, getOdds() never
+ * reached, zero credits spent, credit governor healthy, and no owner alert —
+ * the one durable record that would have made it self-diagnosing was the record
+ * the outage prevented from existing.
+ *
+ * The fix guards the run-open and the catch's own FAILED write, reporting
+ * through the DB-independent channels (console + notifyOwner) and STOPPING
+ * rather than continuing, because Odds.ingestionRunId is NOT NULL and every
+ * downstream write needs a real run id.
+ *
+ * Design note: these tests assert the CONTAINED behaviour. See
+ * docs/ops/ingestion-outage-proof/outage.proof.test.ts for the harness that
+ * asserts the pre-fix DEFECT (it now fails against this source, by design).
+ */
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ReadinessGates } from "@sports/prediction-engine";
+
+const mocks = vi.hoisted(() => ({
+  ingestionRunCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  ingestionRunUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  sportUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  notifyOwner: vi.fn<(m: string) => Promise<boolean>>(),
+  consoleError: vi.fn(),
+}));
+
+vi.mock("@sports/db", () => ({
+  db: {
+    ingestionRun: { create: mocks.ingestionRunCreate, update: mocks.ingestionRunUpdate },
+    sport: { upsert: mocks.sportUpsert },
+    game: {
+      upsert: vi.fn().mockResolvedValue({ id: "g-1" }),
+      findUnique: vi.fn().mockResolvedValue(null),
+      findMany: vi.fn().mockResolvedValue([]),
+      update: vi.fn().mockResolvedValue({}),
+    },
+    odds: { createMany: vi.fn().mockResolvedValue({ count: 0 }) },
+    pick: {
+      create: vi.fn().mockResolvedValue({ id: "p-1" }),
+      updateMany: vi.fn().mockResolvedValue({ count: 0 }),
+      findUnique: vi.fn().mockResolvedValue(null),
+      upsert: vi.fn().mockResolvedValue({ id: "p-1" }),
+    },
+    pickSignalSnapshot: { upsert: vi.fn().mockResolvedValue({}) },
+    gateDecision: { createMany: vi.fn().mockResolvedValue({ count: 0 }) },
+  },
+}));
+
+// The owner alert is the DB-independent channel the fix relies on; isolate it
+// so the assertions are about the CALL, never about Telegram credentials.
+vi.mock("../owner-alert.js", () => ({ notifyOwner: mocks.notifyOwner }));
+
+import { processSport } from "../process-sport.js";
+
+const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" };
+const gates: ReadinessGates = { canPersistCanonicalHistory: true } as ReadinessGates;
+
+/** The exact production error: Prisma P1001 against the unreachable host. */
+const OUTAGE = Object.assign(new Error("Can't reach database server at gse-postgres"), {
+  code: "P1001",
+});
+
+describe("processSport DB-outage containment", () => {
+  beforeEach(() => {
+    for (const m of Object.values(mocks)) m.mockReset();
+    mocks.notifyOwner.mockResolvedValue(true);
+    // Silence the expected error logging; the calls are asserted directly.
+    vi.spyOn(console, "error").mockImplementation((...a) => mocks.consoleError(...a));
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.spyOn(console, "log").mockImplementation(() => {});
+  });
+
+  it("returns a failed envelope instead of throwing when the run cannot be opened", async () => {
+    mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
+
+    // The regression itself: pre-fix this REJECTED and escaped processSport.
+    const res = await processSport(SPORT as never, "key", gates);
+
+    expect(res.status).toBe("failed");
+    expect(res.error).toContain("run_open_failed");
+    expect(res.error).toContain("Can't reach database server");
+  });
+
+  it("alerts the owner when the run cannot be opened", async () => {
+    mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
+
+    await processSport(SPORT as never, "key", gates);
+
+    // Pre-fix: zero calls. The outage was invisible to every dashboard.
+    expect(mocks.notifyOwner).toHaveBeenCalledTimes(1);
+    const [firstCall] = mocks.notifyOwner.mock.calls;
+    const msg = firstCall?.[0] ?? "";
+    expect(msg).toContain("americanfootball_nfl");
+    expect(msg).toContain("run_open_failed");
+  });
+
+  it("spends no credits and writes no odds when the run cannot be opened", async () => {
+    mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
+
+    const res = await processSport(SPORT as never, "key", gates);
+
+    // We STOP rather than continue: Odds.ingestionRunId is NOT NULL, so a
+    // fabricated run id would produce unattributable writes.
+    expect(res.games).toBe(0);
+    expect(res.picks).toBe(0);
+    expect(res.oddsInserted).toBe(0);
+    expect(res.paidRequestCount).toBeUndefined();
+    expect(mocks.sportUpsert).not.toHaveBeenCalled();
+  });
+
+  it("still returns the failed envelope when the catch's own FAILED write ALSO fails", async () => {
+    // DB up at open, then it dies: the body write AND the FAILED write both
+    // fail. Pre-fix the FAILED write's throw skipped the owner alert and the
+    // failed envelope, losing the record precisely when the outage is real.
+    mocks.ingestionRunCreate.mockResolvedValue({ id: "run-1" });
+    mocks.sportUpsert.mockRejectedValue(new Error("body write failed"));
+    mocks.ingestionRunUpdate.mockRejectedValue(OUTAGE);
+
+    const res = await processSport(SPORT as never, "key", gates);
+
+    expect(res.status).toBe("failed");
+    expect(res.error).toContain("body write failed");
+    // The alert survives the failed FAILED-recording write.
+    expect(mocks.notifyOwner).toHaveBeenCalledTimes(1);
+    expect(mocks.ingestionRunUpdate).toHaveBeenCalledTimes(1);
+  });
+
+  it("a dead alert channel does not stop the failure from being returned", async () => {
+    mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
+    mocks.notifyOwner.mockResolvedValue(false); // Telegram down, same as the DB
+
+    const res = await processSport(SPORT as never, "key", gates);
+
+    expect(res.status).toBe("failed");
+    expect(res.error).toContain("run_open_failed");
+  });
+});

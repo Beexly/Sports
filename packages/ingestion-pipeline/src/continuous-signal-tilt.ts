@@ -14,7 +14,7 @@
 
 import type { SignalDefinition, SignalContinuousValue } from "@sports/types";
 import type { SignalEvaluationContext, SignalFamily } from "@sports/types";
-import { poolSignalsHierarchically } from "@sports/prediction-engine";
+import { poolSignalsHierarchically } from "@sports/prediction-engine/src/hierarchical-pool.js";
 
 export interface ContinuousVote {
   readonly signalId: string;
@@ -27,6 +27,7 @@ export interface ContinuousVote {
 
 export interface ContinuousTiltResult {
   readonly votes: readonly ContinuousVote[];
+  readonly refused: readonly { signalId: string; reason: string }[];
   readonly netTilt: number;
   readonly adjustedHomeP: number;
   readonly applied: boolean;
@@ -34,13 +35,20 @@ export interface ContinuousTiltResult {
 }
 
 /**
- * Map a raw continuous value to a signed log-odds tilt in roughly [-0.35, 0.35].
- * Sign convention: positive raw value favors home. Values are squashed with
- * tanh so extreme outliers cannot dominate the blend.
+ * A continuous scalar moves the home probability only when the value itself
+ * says which side a positive number favors. `metadata.homeSign` is 1 when a
+ * positive value favors home and -1 when a positive value favors away.
+ * Anything else is unsigned. An unsigned EPA, wind, or index is not a nudge.
  */
-function valueToTilt(value: number, trustWeight: number): number {
-  if (!Number.isFinite(value) || value === 0) return 0;
-  const squashed = Math.tanh(value) * 0.35;
+function homeSignOf(metadata: Record<string, unknown> | undefined): 1 | -1 | null {
+  const sign = metadata?.homeSign;
+  if (sign === 1 || sign === -1) return sign;
+  return null;
+}
+
+function valueToTilt(signedHomeValue: number, trustWeight: number): number {
+  if (!Number.isFinite(signedHomeValue) || signedHomeValue === 0) return 0;
+  const squashed = Math.tanh(signedHomeValue) * 0.35;
   return squashed * Math.min(1, Math.max(0, trustWeight));
 }
 
@@ -54,7 +62,17 @@ export async function applyContinuousSignalTilt(
   ctx: SignalEvaluationContext,
 ): Promise<ContinuousTiltResult> {
   const votes: ContinuousVote[] = [];
-  // tilt accumulation replaced by hierarchical pool
+  const refused: { signalId: string; reason: string }[] = [];
+  if (!Number.isFinite(homeP) || homeP <= 0 || homeP >= 1) {
+    return {
+      votes,
+      refused: [{ signalId: "*", reason: `homeP ${homeP} is not inside (0, 1) and was not clamped` }],
+      netTilt: 0,
+      adjustedHomeP: homeP,
+      applied: false,
+      pooledEdge: null,
+    };
+  }
 
   for (const signal of signals) {
     if (signal.outputKind !== "CONTINUOUS_VALUE") continue;
@@ -73,9 +91,20 @@ export async function applyContinuousSignalTilt(
       if (val == null) continue;
       if ("homeFairProb" in val) continue; // probability path, not ours
       const continuous = val as SignalContinuousValue;
-      if (!Number.isFinite(continuous.value)) continue;
-
-      const tilt = valueToTilt(continuous.value, signal.trustWeight);
+      if (!Number.isFinite(continuous.value)) {
+        refused.push({ signalId: signal.id, reason: "continuous value is not finite" });
+        continue;
+      }
+      const homeSign = homeSignOf(continuous.metadata);
+      if (homeSign === null) {
+        refused.push({
+          signalId: signal.id,
+          reason: "unsigned continuous value. metadata.homeSign must be 1 or -1 before it can move a probability",
+        });
+        continue;
+      }
+      const signed = continuous.value * homeSign;
+      const tilt = valueToTilt(signed, signal.trustWeight);
       if (tilt === 0) continue;
 
       votes.push({
@@ -85,14 +114,16 @@ export async function applyContinuousSignalTilt(
         rawValue: continuous.value,
         tilt: Number(tilt.toFixed(6)),
       });
-    } catch {
-      // silent abstain â€” never let one signal break the slate
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      refused.push({ signalId: signal.id, reason: message });
     }
   }
 
   if (votes.length === 0) {
     return {
       votes,
+      refused,
       netTilt: 0,
       adjustedHomeP: homeP,
       applied: false,
@@ -110,7 +141,6 @@ export async function applyContinuousSignalTilt(
       family: v.family as SignalFamily,
       estimatedEdge: v.tilt,
       variance: Math.max(0.01, 1 - v.trustWeight),
-      sampleSize: 100,
       isEligible: true,
     })),
     homeP,
@@ -119,12 +149,13 @@ export async function applyContinuousSignalTilt(
   const netTilt = pooled.blendedEdge ?? votes.reduce((s, v) => s + v.tilt, 0);
 
   // Convert homeP to log-odds, add tilt, convert back.
-  const p = Math.min(1 - 1e-6, Math.max(1e-6, homeP));
+  const p = homeP;
   const logOdds = Math.log(p / (1 - p)) + netTilt;
   const adjusted = 1 / (1 + Math.exp(-logOdds));
 
   return {
     votes,
+    refused,
     netTilt: Number(netTilt.toFixed(6)),
     adjustedHomeP: Number(adjusted.toFixed(6)),
     applied: netTilt !== 0,

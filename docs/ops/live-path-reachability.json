@@ -1,0 +1,353 @@
+{
+  "generatedAt": "2026-09-29",
+  "method": "TypeScript program over every vercel.json cron route plus the admin trigger. checker.getAliasedSymbol resolves a name through re-export chains to the DECLARING file, so the 4,085-line engine barrel cannot manufacture liveness. `import type` is excluded because it is erased at compile time. An import closure is an UPPER BOUND on a call graph, not a call graph.",
+  "entryPoints": [
+    "apps/web/app/api/cron/refresh-odds/route.ts",
+    "apps/web/app/api/cron/board-fill/route.ts",
+    "apps/web/app/api/cron/settle-picks/route.ts",
+    "apps/web/app/api/cron/deliver-settlement-alerts/route.ts",
+    "apps/web/app/api/cron/generate-signal-slate/route.ts",
+    "apps/web/app/api/cron/generate-drafts/route.ts",
+    "apps/web/app/api/cron/reconcile-entitlements/route.ts",
+    "apps/web/app/api/cron/ingest-player-stats/route.ts",
+    "apps/web/app/api/cron/hydrate-cold-plane/route.ts",
+    "apps/web/app/api/cron/drain-ai-telemetry-recovery/route.ts",
+    "apps/web/app/api/cron/prune-rate-limits/route.ts",
+    "apps/web/app/api/cron/repair-checkout-attempts/route.ts",
+    "apps/web/app/api/cron/run-formal-receipt/route.ts",
+    "apps/web/app/api/cron/jarvis-snapshot/route.ts",
+    "apps/web/app/api/cron/free-spine-health/route.ts",
+    "apps/web/app/api/cron/health-alert/route.ts",
+    "apps/web/app/api/cron/autonomy-cycle/route.ts",
+    "apps/web/app/api/cron/calibration-metrics/route.ts",
+    "apps/web/app/api/cron/backfill-independent-trueprob/route.ts",
+    "apps/web/app/api/cron/refresh-player-stats/route.ts",
+    "apps/web/app/api/cron/backfill-team-efficiency/route.ts",
+    "apps/web/app/api/ops/daily-truth/route.ts",
+    "apps/web/app/api/cron/signal-ledger-write/route.ts",
+    "apps/web/app/api/admin/trigger-refresh/route.ts",
+    "packages/prediction-engine/src/scoring.ts"
+  ],
+  "engineFiles": 900,
+  "reachedByScheduledRoutesOnly": 482,
+  "evaluated": 482,
+  "used": 481,
+  "neverEvaluated": 418,
+  "neverUsed": 419,
+  "neverEvaluatedButTested": 382,
+  "unresolvedSpecifierClasses": 1,
+  "largestNeverEvaluated": [
+    {
+      "file": "packages/prediction-engine/src/market/steam-curvature.ts",
+      "bytes": 26942
+    },
+    {
+      "file": "packages/prediction-engine/src/decision/kelly-portfolio.ts",
+      "bytes": 25936
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/kernel/contract.ts",
+      "bytes": 23682
+    },
+    {
+      "file": "packages/prediction-engine/src/engine/extended-signal-adapters.ts",
+      "bytes": 21687
+    },
+    {
+      "file": "packages/prediction-engine/src/engine/real-signal-adapters.ts",
+      "bytes": 20871
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/features/nfl-team-form.ts",
+      "bytes": 17639
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/loaders/weather-edge.ts",
+      "bytes": 16742
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/features/nfl-regime-detector.ts",
+      "bytes": 15747
+    },
+    {
+      "file": "packages/prediction-engine/src/decision/drawdown-governors.ts",
+      "bytes": 15595
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/features/nfl-ladder-boost.ts",
+      "bytes": 15504
+    },
+    {
+      "file": "packages/prediction-engine/src/decision/no-bet-filters.ts",
+      "bytes": 15199
+    },
+    {
+      "file": "packages/prediction-engine/src/calibration/multicalib-audit-patch.ts",
+      "bytes": 14596
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/loaders/statcast-features.ts",
+      "bytes": 14374
+    },
+    {
+      "file": "packages/prediction-engine/src/decision/2411-18374-analytic-drawdown-pricer.ts",
+      "bytes": 13429
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/loaders/nfl-games.ts",
+      "bytes": 12975
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/features/nfl-regime-change.ts",
+      "bytes": 12681
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/loaders/mlb-platoon-splits.ts",
+      "bytes": 12345
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/decision-time-price-archive.ts",
+      "bytes": 12283
+    },
+    {
+      "file": "packages/prediction-engine/src/edge-lab/features/nfl-incentive-calendar.ts",
+      "bytes": 12112
+    },
+    {
+      "file": "packages/prediction-engine/src/decision/forecast-aggregation.ts",
+      "bytes": 11984
+    }
+  ],
+  "evidence": {
+    "packages/types/src/index.ts": [
+      "packages/prediction-engine/src/scoring.ts -> @sports/types",
+      "packages/prediction-engine/src/scoring.ts -> computePickGrade",
+      "packages/prediction-engine/src/scoring.ts -> pricesWorseThanMarket"
+    ],
+    "packages/prediction-engine/src/calibration/pathwise-defect.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./calibration/pathwise-defect.js",
+      "packages/prediction-engine/src/scoring.ts -> calibrationHistoryWithholds"
+    ],
+    "packages/prediction-engine/src/edge-engine.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./edge-engine.js",
+      "packages/prediction-engine/src/scoring.ts -> assessEdge",
+      "packages/prediction-engine/src/index.ts -> ./edge-engine.js"
+    ],
+    "packages/prediction-engine/src/constants.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./constants.js",
+      "packages/prediction-engine/src/scoring.ts -> MODEL_VERSION",
+      "packages/prediction-engine/src/scoring.ts -> PREMIUM_CONFIDENCE_THRESHOLD"
+    ],
+    "packages/prediction-engine/src/game-context.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./game-context.js",
+      "packages/prediction-engine/src/scoring.ts -> computeGameContext",
+      "packages/prediction-engine/src/index.ts -> ./game-context.js"
+    ],
+    "packages/prediction-engine/src/ranking-prob.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./ranking-prob.js",
+      "packages/prediction-engine/src/scoring.ts -> deriveRankingProbability",
+      "packages/prediction-engine/src/index.ts -> ./ranking-prob.js"
+    ],
+    "packages/prediction-engine/src/skellam.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./skellam.js",
+      "packages/prediction-engine/src/scoring.ts -> SKELLAM_COVER_SOURCE",
+      "packages/prediction-engine/src/index.ts -> ./skellam.js"
+    ],
+    "packages/prediction-engine/src/honesty/devig-method-compare.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./honesty/devig-method-compare.js",
+      "packages/prediction-engine/src/scoring.ts -> shinFairForSide",
+      "packages/prediction-engine/src/index.ts -> ./honesty/devig-method-compare.js"
+    ],
+    "packages/prediction-engine/src/published-line.ts": [
+      "packages/prediction-engine/src/scoring.ts -> ./published-line.js",
+      "packages/prediction-engine/src/scoring.ts -> snapToPostedLine",
+      "packages/prediction-engine/src/scoring.ts -> formatPublishedLine"
+    ],
+    "packages/prediction-engine/src/scoring.ts": [
+      "packages/prediction-engine/src/honesty/devig-method-compare.ts -> ../scoring.js",
+      "packages/prediction-engine/src/honesty/devig-method-compare.ts -> removeVig",
+      "packages/prediction-engine/src/game-context.ts -> ./scoring.js"
+    ],
+    "packages/prediction-engine/src/shin-devig.ts": [
+      "packages/prediction-engine/src/honesty/devig-method-compare.ts -> ../shin-devig.js",
+      "packages/prediction-engine/src/honesty/devig-method-compare.ts -> gotoConversion",
+      "packages/prediction-engine/src/honesty/devig-method-compare.ts -> shinDevig"
+    ],
+    "packages/prediction-engine/src/poisson.ts": [
+      "packages/prediction-engine/src/skellam.ts -> ./poisson.js",
+      "packages/prediction-engine/src/skellam.ts -> poissonPmf",
+      "packages/prediction-engine/src/team-rates.ts -> ./poisson.js"
+    ],
+    "packages/prediction-engine/src/team-rates.ts": [
+      "packages/prediction-engine/src/skellam.ts -> ./team-rates.js",
+      "packages/prediction-engine/src/skellam.ts -> isPoissonValidSport",
+      "packages/prediction-engine/src/index.ts -> ./team-rates.js"
+    ],
+    "packages/types/src/ladder.ts": [
+      "packages/types/src/index.ts -> ./ladder.js",
+      "packages/prediction-engine/src/index.ts -> RUNG_REQUIREMENTS",
+      "packages/prediction-engine/src/ladder/heartbeat.ts -> RUNG_REQUIREMENTS"
+    ],
+    "packages/types/src/heartbeat.ts": [
+      "packages/types/src/index.ts -> ./heartbeat.js",
+      "packages/prediction-engine/src/ladder/heartbeat.ts -> GAME_SETTLED_STAGES"
+    ],
+    "packages/types/src/signal-registry.ts": [
+      "packages/types/src/index.ts -> ./signal-registry.js",
+      "packages/data-ingestion/src/source-atlas-harvester.ts -> SignalFamily",
+      "packages/prediction-engine/src/hierarchical-pool.ts -> SignalFamily"
+    ],
+    "apps/web/lib/auth.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @/lib/auth",
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> auth",
+      "apps/web/lib/auth/actor.ts -> @/lib/auth"
+    ],
+    "apps/web/lib/api/rate-limit.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @/lib/api/rate-limit",
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> consumeRateLimit"
+    ],
+    "packages/db/src/index.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @sports/db",
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> db",
+      "apps/web/lib/odds/paid-odds-governor.ts -> @sports/db"
+    ],
+    "packages/data-ingestion/src/index.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @sports/data-ingestion",
+      "apps/web/lib/odds/paid-odds-governor.ts -> @sports/data-ingestion",
+      "packages/ingestion-pipeline/src/process-sport.ts -> @sports/data-ingestion"
+    ],
+    "packages/data-ingestion/src/config.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> getInSeasonSports",
+      "packages/data-ingestion/src/espn-schedule-seed.ts -> ./config.js",
+      "packages/data-ingestion/src/espn-schedule-seed.ts -> SUPPORTED_SPORTS"
+    ],
+    "packages/prediction-engine/src/index.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @sports/prediction-engine",
+      "packages/ingestion-pipeline/src/process-sport.ts -> @sports/prediction-engine",
+      "packages/ingestion-pipeline/src/load-calibration-history.ts -> @sports/prediction-engine"
+    ],
+    "packages/prediction-engine/src/readiness.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> getReadinessGates",
+      "packages/prediction-engine/src/index.ts -> ./readiness.js",
+      "packages/prediction-engine/src/index.ts -> getReadinessGates"
+    ],
+    "packages/ingestion-pipeline/src/index.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @sports/ingestion-pipeline",
+      "apps/web/app/api/cron/backfill-independent-trueprob/route.ts -> @sports/ingestion-pipeline",
+      "apps/web/app/api/cron/calibration-metrics/route.ts -> @sports/ingestion-pipeline"
+    ],
+    "packages/ingestion-pipeline/src/paid-run-accounting.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> governedDecision",
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> isLowQuota",
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> recordPaidRunAccounting"
+    ],
+    "packages/ingestion-pipeline/src/process-sport.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> processSport",
+      "packages/ingestion-pipeline/src/index.ts -> ./process-sport.js",
+      "packages/ingestion-pipeline/src/index.ts -> processSport"
+    ],
+    "apps/web/lib/odds/paid-odds-governor.ts": [
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> @/lib/odds/paid-odds-governor",
+      "apps/web/app/api/admin/trigger-refresh/route.ts -> buildPaidOddsGovernor",
+      "apps/web/app/api/cron/refresh-odds/route.ts -> @/lib/odds/paid-odds-governor"
+    ],
+    "packages/data-ingestion/src/paid-odds-governor.ts": [
+      "apps/web/lib/odds/paid-odds-governor.ts -> buildLedgerBackedGovernor",
+      "apps/web/lib/odds/paid-odds-governor.ts -> espnScoreboardDateRange",
+      "apps/web/lib/odds/paid-odds-governor.ts -> STARTED_GRACE_HOURS"
+    ],
+    "packages/data-ingestion/src/odds-credit-governor.ts": [
+      "apps/web/lib/odds/paid-odds-governor.ts -> EVENT_HORIZON_HOURS",
+      "packages/data-ingestion/src/paid-odds-governor.ts -> ./odds-credit-governor.js",
+      "packages/data-ingestion/src/paid-odds-governor.ts -> evaluatePaidOddsCall"
+    ],
+    "apps/web/lib/data-sources/free-adapters/espn-scores.ts": [
+      "apps/web/lib/odds/paid-odds-governor.ts -> @/lib/data-sources/free-adapters/espn-scores",
+      "apps/web/lib/odds/paid-odds-governor.ts -> fetchEspnScoreboard",
+      "apps/web/lib/data-sources/multi-source-scores.ts -> ./free-adapters/espn-scores"
+    ],
+    "packages/data-ingestion/src/odds-credit-ledger.ts": [
+      "packages/data-ingestion/src/paid-odds-governor.ts -> ./odds-credit-ledger.js",
+      "packages/data-ingestion/src/paid-odds-governor.ts -> loadLatestCreditObservation",
+      "packages/data-ingestion/src/paid-odds-governor.ts -> loadLatestPaidCallAnyPurposeAt"
+    ],
+    "packages/data-ingestion/src/espn-schedule-seed.ts": [
+      "packages/data-ingestion/src/paid-odds-governor.ts -> ./espn-schedule-seed.js",
+      "packages/data-ingestion/src/paid-odds-governor.ts -> ESPN_SCOREBOARD_LIMIT",
+      "packages/data-ingestion/src/paid-odds-governor.ts -> parseEspnScoreboardForSeed"
+    ],
+    "packages/db/node_modules/@neondatabase/serverless/index.d.mts": [
+      "packages/db/src/index.ts -> @neondatabase/serverless",
+      "packages/db/src/index.ts -> NeonPool",
+      "packages/db/src/index.ts -> neonConfig"
+    ],
+    "packages/db/node_modules/@prisma/adapter-neon/dist/index.d.mts": [
+      "packages/db/src/index.ts -> @prisma/adapter-neon",
+      "packages/db/src/index.ts -> PrismaNeon"
+    ],
+    "node_modules/@types/ws/index.d.mts": [
+      "packages/db/src/index.ts -> ws",
+      "packages/db/src/index.ts -> ws",
+      "node_modules/@types/ws/index.d.mts -> WebSocket"
+    ],
+    "packages/db/src/sample-picks.ts": [
+      "packages/db/src/index.ts -> ./sample-picks.js",
+      "packages/db/src/index.ts -> getSamplePicks",
+      "packages/db/src/index.ts -> isDemoPicksEnabled"
+    ],
+    "packages/db/src/durable-write-guard.ts": [
+      "packages/db/src/index.ts -> ./durable-write-guard.js",
+      "packages/db/src/index.ts -> DURABLE_WRITE_CAPABILITIES",
+      "packages/db/src/index.ts -> DurableWriteStoreUnavailableError"
+    ],
+    "packages/db/src/neon-pool-monitor.ts": [
+      "packages/db/src/index.ts -> ./neon-pool-monitor.js",
+      "packages/db/src/index.ts -> probeNeonPool",
+      "packages/db/src/index.ts -> getNeonPoolCounters"
+    ],
+    "packages/data-ingestion/src/odds-api-client.ts": [
+      "packages/data-ingestion/src/index.ts -> ./odds-api-client.js",
+      "packages/data-ingestion/src/index.ts -> OddsApiClient",
+      "packages/data-ingestion/src/index.ts -> OddsApiError"
+    ],
+    "packages/data-ingestion/src/kalshi-client.ts": [
+      "packages/data-ingestion/src/index.ts -> ./kalshi-client.js",
+      "packages/data-ingestion/src/index.ts -> KalshiClient",
+      "packages/data-ingestion/src/index.ts -> KalshiError"
+    ]
+  },
+  "islandStructure": {
+    "measured": "2026-09-29",
+    "note": "An import closure is an upper bound on a call graph, not a call graph. 419 never-evaluated modules is NOT one research island needing a few root wires: they are ~405 independent islands, so each needs its own decision.",
+    "neverEvaluatedModules": 418,
+    "trueOrphans_noNonTestImporterAnywhere": 407,
+    "importedOnlyByOtherUnwiredModules": 11,
+    "alreadyImportedByALiveModule_expectZero": 0,
+    "weaklyConnectedIslands": 405,
+    "largestIslandSize": 4,
+    "arxivStylePaperModulesInEngine": 306,
+    "whyThePaperCountMatters": "Roughly a third of the engine is literature implementations (diffusion, Mamba, panel-DML, ...). Wiring those into ingestion would put research code on the published path with no measured justification. They are offline by design, not unfinished. The actionable set is the non-paper decision logic: 19 of the 20 largest never-evaluated modules are non-paper.",
+    "largestNeverEvaluatedNonPaper": [
+      "packages/prediction-engine/src/team-ratings/upset-parity-prior.ts",
+      "packages/prediction-engine/src/team-ratings/win-strength-diagnostic.ts",
+      "packages/prediction-engine/src/team-ratings/q-index-parity.ts",
+      "packages/prediction-engine/src/win-spread-total/in-game-volatility.ts",
+      "packages/prediction-engine/src/timeseries/lag-covariates.ts",
+      "packages/prediction-engine/src/props-dfs/lineup-roles.ts",
+      "packages/prediction-engine/src/experimental/velo.ts",
+      "packages/prediction-engine/src/calibration/base-rate-honesty.ts",
+      "packages/prediction-engine/src/weather/density-altitude.ts",
+      "packages/prediction-engine/src/props-dfs/fractional-tackles.ts",
+      "packages/prediction-engine/src/automl/greedy-portfolio.ts",
+      "packages/prediction-engine/src/edge-lab/features/weather-edge-adapter.ts",
+      "packages/prediction-engine/src/win-spread-total/pi-ratings.ts",
+      "packages/prediction-engine/src/ensemble/dampened-log-odds.ts",
+      "packages/prediction-engine/src/weather/inverse-far-blending.ts",
+      "packages/prediction-engine/src/ensemble/decision-weighted-pinball.ts",
+      "packages/prediction-engine/src/calibration/temporal-conformal.ts",
+      "packages/prediction-engine/src/props/fractional-contribution.ts",
+      "packages/prediction-engine/src/automl/successive-halving.ts",
+      "packages/prediction-engine/src/ensemble/corrected-forecast-combination.ts"
+    ]
+  }
+}

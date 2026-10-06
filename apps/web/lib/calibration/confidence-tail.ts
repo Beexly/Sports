@@ -173,7 +173,7 @@ export function summarizeConfidenceTail(
  * is served on a public endpoint, so a bootstrap or seed pick must never move
  * the verdict in either direction.
  */
-const SEED_MODEL_VERSION = "v5.0.0-seed";
+export const SEED_MODEL_VERSION = "v5.0.0-seed";
 
 /**
  * Narrow read surface so the loader stays testable without a Prisma client.

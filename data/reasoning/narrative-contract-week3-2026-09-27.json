@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-09-27T05:14:29.609Z",
+  "application_roster": {
+    "path": "data/gse-dataset/rosters-2026.jsonl",
+    "rows_kept": 2997,
+    "refused": {
+      "missing_gsis_id": 2
+    },
+    "note": "2026 is AFTER the holdout and is never added to INGEST_SEASONS, so it cannot reach a fit. It exists only to supply the application row."
+  },
+  "fit_train": {
+    "slope": 0.15808219460661174,
+    "intercept": 0.5414884844705745,
+    "r": 0.2787686304021436,
+    "se": 0.012364355433120588,
+    "n": 1942
+  },
+  "fit_holdout": {
+    "slope": 0.05123545985987233,
+    "intercept": 0.5339101284544006,
+    "r": 0.11223167517940649,
+    "se": 0.026965559008299653,
+    "n": 285
+  },
+  "honesty_bars": {
+    "r_clears": true,
+    "slope_clears": true
+  },
+  "application": {
+    "game_id": "2026_03_LAC_BUF",
+    "home_team": "BUF",
+    "away_team": "LAC",
+    "home_roster_mean_apy_millions": 0.000005311087280701753,
+    "away_roster_mean_apy_millions": 0.000005441898588235294,
+    "home_players_with_contract": 57,
+    "away_players_with_contract": 51,
+    "x_apy_gap_millions": -1.308113075335404e-7,
+    "p_home": 0.520809545896312,
+    "signed": 0.04161909179262402,
+    "signed_source": "clip((intercept + slope * (mean home roster APY - mean away roster APY)) - 0.5) * 2, -1, 1); intercept and slope fitted on seasons 2018-2024 and scored on the 2025 holdout; roster means from data/gse-dataset/rosters-YYYY.jsonl; APY from data/gse-dataset/contracts.jsonl restricted to deals signed in 2024 or earlier"
+  }
+}

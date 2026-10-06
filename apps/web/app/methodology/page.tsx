@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { Footer } from "@/components/ui/footer";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -78,6 +80,10 @@ const MARKET_READS = [
 const ACCENTS = [BRAND_COLORS.orbitalCyan, BRAND_COLORS.softUltraviolet, BRAND_COLORS.ionMagenta];
 
 export default function MethodologyPage(): JSX.Element {
+  // Public/private surface doctrine: the factor list and the three-stage
+  // scoring stack are methodology, which is internal. Default dark.
+  if (!isPagePublic("/methodology")) notFound();
+
   return (
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />

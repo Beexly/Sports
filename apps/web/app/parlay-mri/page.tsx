@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
@@ -18,6 +20,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ParlayMriPage() {
+  // Public/private surface doctrine: per-leg risk, survivability, expected
+  // value and house-edge compounding are the model internals behind the
+  // output, not the output. Internal.
+  if (!isPagePublic("/parlay-mri")) notFound();
+
   const viewer = await getViewerEntitlements();
   const plate = getPlate("no-bet-stillness");
   if (!viewer.canUseParlayMri) {

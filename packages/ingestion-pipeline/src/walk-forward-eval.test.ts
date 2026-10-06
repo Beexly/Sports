@@ -7,11 +7,11 @@ import {
 import type { SeasonGame, ClosingLines, PredictFn } from "@sports/prediction-engine";
 
 const games: SeasonGame[] = [
-  { gameId: "g1", season: 2024, week: 1, homeTeam: "A", awayTeam: "B", homeScore: 21, awayScore: 17, spreadHome: -3 },
-  { gameId: "g2", season: 2024, week: 2, homeTeam: "C", awayTeam: "D", homeScore: 10, awayScore: 28, spreadHome: -1 },
-  { gameId: "g3", season: 2025, week: 1, homeTeam: "A", awayTeam: "D", homeScore: 24, awayScore: 20, spreadHome: -2 },
-  { gameId: "g4", season: 2025, week: 2, homeTeam: "B", awayTeam: "C", homeScore: 13, awayScore: 31, spreadHome: 3 },
-] as SeasonGame[];
+  { gameId: "g1", season: 2024, label: 1, features: { spreadHome: -3, margin: 4 } },
+  { gameId: "g2", season: 2024, label: 0, features: { spreadHome: -1, margin: -18 } },
+  { gameId: "g3", season: 2025, label: 1, features: { spreadHome: -2, margin: 4 } },
+  { gameId: "g4", season: 2025, label: 0, features: { spreadHome: 3, margin: -18 } },
+];
 
 const closingLines: ClosingLines = {
   "g1": 0.58,

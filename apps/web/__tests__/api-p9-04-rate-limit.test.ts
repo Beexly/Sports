@@ -131,14 +131,19 @@ function makeRequest(url: string): Request {
 // ─── /api/sources/catalog ─────────────────────────────────────────────────
 
 describe("/api/sources/catalog — rate limiting", () => {
+  const ORIGINAL_ENV = { ...process.env };
   beforeEach(() => {
     vi.resetModules();
     resetRateLimits();
+    // Internal-surface fence (2026-09-28): the catalog is dark by default.
+    // Open it here so these tests exercise the rate limiter, not the 404.
+    process.env["SOURCES_CATALOG_PUBLIC"] = "true";
     catalogMocks.loadSourceLiveEvidence.mockResolvedValue({ status: "ok" });
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    process.env = { ...ORIGINAL_ENV };
   });
 
   it("allows requests within the 60/min quota", async () => {

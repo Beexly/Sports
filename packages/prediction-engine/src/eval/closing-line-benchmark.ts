@@ -57,7 +57,7 @@ export function walkForwardSeasons(
   const results: WalkForwardSeasonResult[] = [];
 
   for (let i = 1; i < seasons.length; i++) {
-    const testSeason = seasons[i];
+    const testSeason = seasons[i] as number;
     const trainGames = games.filter((g) => g.season < testSeason);
     const testGames = games.filter((g) => g.season === testSeason);
 
@@ -72,7 +72,7 @@ export function walkForwardSeasons(
     let graded = 0;
 
     for (let j = 0; j < testGames.length; j++) {
-      const game = testGames[j];
+      const game = testGames[j] as SeasonGame;
       const pred = predictions[j] ?? 0.5;
       const closing = closingLines[game.gameId];
 

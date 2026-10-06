@@ -46,6 +46,9 @@ export function sealLastSeason(games: readonly SeasonGame[]): SealedDataset {
   }
   const seasons = Array.from(new Set(games.map((g) => g.season))).sort((a, b) => a - b);
   const holdoutSeason = seasons[seasons.length - 1];
+  if (typeof holdoutSeason !== "number") {
+    throw new HoldoutLeakError("Cannot seal an empty dataset");
+  }
   const train = games.filter((g) => g.season < holdoutSeason);
   const holdout = games.filter((g) => g.season === holdoutSeason);
 

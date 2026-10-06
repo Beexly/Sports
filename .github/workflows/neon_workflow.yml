@@ -5,8 +5,20 @@ on:
     types:
       - opened
       - reopened
-      - synchronize
       - closed
+
+# `synchronize` was removed 2026-09-29. It fired on EVERY push to an open PR,
+# creating a paid preview branch held 14 days (deleted only on `closed`). With 35
+# open PRs that is ~10.6 branch creations/day, and the measured Sept bill shows
+# 87% of the $61.95 branch-hour charge came from branches already deleted --
+# churn, not standing state. Nothing consumed the branch: the migrate and
+# schema-diff steps below are all commented out, and no other workflow reads
+# these outputs. So the branches were billed and unused.
+#
+# If you re-enable the migration or schema-diff steps, re-add `synchronize` at
+# the same time -- those steps need the branch to match the PR head. Do not
+# re-add it on its own: that restores the cost with none of the benefit.
+# Measured in docs/ops/cost-neon.md.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

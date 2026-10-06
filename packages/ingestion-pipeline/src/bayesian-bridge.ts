@@ -225,7 +225,8 @@ export function evalBlendAnalystView(input: {
 }
 
 /**
- * Cumulative-probit predict: P(Y <= k | x).
+ * Cumulative-probit predict: P(Y <= k | x) for each x.
+ * Uses cumulativeProbitPredict(strengthDiff=x, h=0, cutpoints=thresholds).
  */
 export function evalCumulativeProbit(input: {
   readonly thresholds: readonly number[];
@@ -243,12 +244,15 @@ export function evalCumulativeProbit(input: {
     return { ok: false, reason: "thresholds/beta/x must be non-empty" };
   }
   try {
-    const probs = cumulativeProbitPredict(
-      thresholds as number[],
-      beta as number[],
-      x as number[],
+    // beta is carried for API compatibility with the ordinal model; the
+    // cumulative-probit helper takes a scalar strength difference. Scale x
+    // by the first beta coefficient when present so the ordinal slope is
+    // not silently dropped.
+    const slope = beta.length > 0 && Number.isFinite(beta[0]) ? (beta[0] as number) : 1;
+    const probs = x.flatMap((xi) =>
+      cumulativeProbitPredict(xi * slope, 0, thresholds as number[]),
     );
-    return { ok: true, data: probs as number[] };
+    return { ok: true, data: probs };
   } catch (err) {
     return { ok: false, reason: err instanceof Error ? err.message : String(err) };
   }

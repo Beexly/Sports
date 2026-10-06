@@ -55,6 +55,7 @@ import {
   buildPickProofReceipt,
   MARKET_FAIR_METHOD_TAG,
   isPlausibleEntryOdds,
+  modelProbForReceipt,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
 import {
@@ -90,6 +91,7 @@ import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import { loadCalibrationHistoryForSport } from "./load-calibration-history.js";
 import {
   RUNDOWN_RATE_LIMIT_COOLDOWN_MS,
   isRundownCoolingDown,
@@ -336,9 +338,34 @@ export async function processSport(
   // This is the single gating point for bootstrap provenance.
   const isBootstrap = !gates.canPersistCanonicalHistory;
 
-  const run = await db.ingestionRun.create({
-    data: { sport: sport.key, status: "RUNNING" },
-  });
+  // The IngestionRun row is the only durable record that this cycle ran, and
+  // this is the FIRST write — so a database outage lands right here, above the
+  // try that records failures. Left unguarded the throw escapes processSport
+  // and the owner is never told. Open the run under its own guard and report
+  // through the DB-independent channels. We STOP rather than continue: every
+  // write below needs a real run id (Odds.ingestionRunId is NOT NULL).
+  let run: { id: string };
+  try {
+    run = await db.ingestionRun.create({
+      data: { sport: sport.key, status: "RUNNING" },
+    });
+  } catch (openErr) {
+    const message = openErr instanceof Error ? openErr.message : String(openErr);
+    console.error(
+      `${logPrefix} ${sport.key} failed: ingestion run could not be opened — ${message}`,
+    );
+    await notifyOwner(`GSE ingestion FAILED\nsport: ${sport.key}\nrun_open_failed: ${message}`);
+    return {
+      sport: sport.key,
+      status: "failed",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+      eventsCount: 0,
+      error: `run_open_failed: ${message}`,
+      skippedInPlay: 0,
+    };
+  }
 
   // Paid Odds API accounting for the result envelope (contract with the odds
   // client, C-109). Declared outside the try so the failed envelope carries
@@ -956,6 +983,10 @@ export async function processSport(
     // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
     const eloCache: EloRatingsCache = new Map();
 
+    // Settled pick history for the mint-time calibration blind-spot screen.
+    // Loaded once per sport; fail-open — undefined is silence, never a veto.
+    const calibrationHistory = await loadCalibrationHistoryForSport(sport.key);
+
     // gameId -> per-kind book-line dispersion at lock, filled in the game loop
     // and read at pick creation (a separate loop over scoredPicks below).
     // MONEYLINE is stored per side (home/away are not complementary).
@@ -1191,6 +1222,9 @@ export async function processSport(
         shadowEvidence: buildMissingContextEvidence(fetchedAt),
         ...(independentFairValues.length > 0
           ? { independentFairValues }
+          : {}),
+        ...(calibrationHistory && calibrationHistory.length > 0
+          ? { calibrationHistory }
           : {}),
       };
 
@@ -1504,8 +1538,9 @@ export async function processSport(
       // Freeze a tamper-evident proof receipt — the pre-result, pre-kickoff commitment
       // to exactly what we claimed. Created ONCE (update:{}), never overwritten. Mints
       // only with HONEST inputs: a real devigged market fair prob + the labeled
-      // confidence heuristic; modelProb stays null until a calibrated one exists (never
-      // confidence/100). Non-fatal — a receipt failure must never block a pick.
+      // confidence heuristic, plus the independent model probability when one exists
+      // (never confidence/100 — see modelProbForReceipt). Non-fatal — a receipt failure
+      // must never block a pick.
       //
       // P0-2 write-guard (launch audit 2026-09-08): entryOdds must be a plausible
       // American price (|odds| >= 100). The old `entryOdds !== 0` check let a
@@ -1537,9 +1572,21 @@ export async function processSport(
               marketFairMethodTag: MARKET_FAIR_METHOD_TAG,
               confidence: pick.confidence,
               edgeScore: pick.edgeScore,
-              modelProb: null,
+              // The REAL model probability — the independent blend from estimators
+              // that never saw the book (Skellam cover for SPREAD, Poisson/Elo/
+              // Dixon-Coles/Kalshi for MONEYLINE). This was hardcoded `null`, so all
+              // 2,213 frozen receipts committed "none" and Brier/ECE could never be
+              // computed: the consumers (clv-report.mjs, db-calibration-pull.cjs)
+              // were already built and starved. Never confidence/100 — modelProbForReceipt
+              // returns null (-> commits "none") whenever no honest estimate exists.
+              modelProb: modelProbForReceipt(pick),
               modelVersion: pick.modelVersion,
               asOf: pick.dataFreshnessAt.toISOString(),
+              // Explicit null commits featureHash=none. Omitting the key would
+              // leave new receipts indistinguishable from pre-field receipts.
+              // There is no feature vector on this mint yet, so none is the
+              // honest seal. A later vector must be a sha256, not a label.
+              featureHash: null,
             },
             sha256Hex,
           );
@@ -1643,10 +1690,21 @@ export async function processSport(
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
-    await db.ingestionRun.update({
-      where: { id: run.id },
-      data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
-    });
+    // The database that failed the body is the one most likely to fail THIS
+    // write too. Unguarded it throws, and the throw skips the owner alert and
+    // the failed envelope below — losing the failure record precisely when the
+    // outage is real. Record what we can, then keep going.
+    try {
+      await db.ingestionRun.update({
+        where: { id: run.id },
+        data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
+      });
+    } catch (recordErr) {
+      console.error(
+        `${logPrefix} ${sport.key}: FAILED run not recorded (database unreachable) — ` +
+          `${recordErr instanceof Error ? recordErr.message : String(recordErr)}`,
+      );
+    }
     // Push the failure to the owner's phone (free Telegram bot; no-op until
     // TELEGRAM_BOT_TOKEN/CHAT_ID are set; never throws, never blocks).
     await notifyOwner(
