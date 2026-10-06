@@ -1,0 +1,195 @@
+{
+  "factorId": "A2",
+  "runAt": "2026-09-15T22:28:26.554Z",
+  "runSha": "a62e5f378ba947203e709af31e8c041469bf7a55",
+  "holdoutId": "PICKS-H1",
+  "sourcePath": "packages/verifier/fixtures/picks-h1.json",
+  "fromFixture": true,
+  "exportSha256": "c72b0938f6eee356c991a30f7c7a4481cfdb82e22fbbac141fd82a72f476640f",
+  "exportGeneratedAt": "2026-09-15T00:00:00.000Z",
+  "nHoldout": 33,
+  "formula": "p = market + w * (model - market)",
+  "primaryW": 0.1,
+  "keepRule": "ΔBrier < 0 AND P(better) ≥ 0.75 on identical PICKS-H1 rows vs marketFairProb",
+  "killLine": "validate-era ΔBrier >= 0 or P(better) < 0.75 on PICKS-H1",
+  "status": "BLOCKED",
+  "primary": {
+    "w": 0.1,
+    "n": 33,
+    "candidateBrier": 0.23549369696969702,
+    "marketBrier": 0.23222424242424242,
+    "deltaBrier": 0.003269454545454603,
+    "candidateLogLoss": 0.6630221164459352,
+    "marketLogLoss": 0.656340272163383,
+    "deltaLogLoss": 0.006681844282552252,
+    "pBetter": 0.036,
+    "pBetterResamples": 1000,
+    "pBetterSeed": 20260915,
+    "bySport": [
+      {
+        "sport": "MLB",
+        "n": 15,
+        "candidateBrier": 0.2286916666666667,
+        "marketBrier": 0.22004000000000004,
+        "deltaBrier": 0.008651666666666676,
+        "pBetter": 0
+      },
+      {
+        "sport": "NFL",
+        "n": 18,
+        "candidateBrier": 0.24116205555555556,
+        "marketBrier": 0.24237777777777778,
+        "deltaBrier": -0.0012157222222222252,
+        "pBetter": 0.691
+      }
+    ],
+    "wilson": {
+      "successes": 17,
+      "n": 33,
+      "point": 0.5151515151515151,
+      "low": 0.3521837544891414,
+      "high": 0.674959578918663,
+      "z": 1.959963984540054
+    },
+    "pairedDeltaCi": {
+      "delta": 0.0032694545454545476,
+      "se": 0.0017030037973781217,
+      "ci95": [
+        -0.00006837156294151872,
+        0.006607280653850614
+      ],
+      "mde80": 0.004771110265124798
+    },
+    "passesKeepRule": false
+  },
+  "footballSubset": {
+    "w": 0.1,
+    "n": 18,
+    "candidateBrier": 0.24116205555555556,
+    "marketBrier": 0.24237777777777778,
+    "deltaBrier": -0.0012157222222222153,
+    "pBetter": 0.691,
+    "bySport": [
+      {
+        "sport": "NFL",
+        "n": 18,
+        "candidateBrier": 0.24116205555555556,
+        "marketBrier": 0.24237777777777778,
+        "deltaBrier": -0.0012157222222222252,
+        "pBetter": 0.691
+      }
+    ],
+    "passesKeepRule": false
+  },
+  "rawModel": {
+    "w": 1,
+    "n": 33,
+    "candidateBrier": 0.274769696969697,
+    "marketBrier": 0.23222424242424242,
+    "deltaBrier": 0.04254545454545458,
+    "pBetter": 0.006
+  },
+  "byW": [
+    {
+      "w": 0.05,
+      "n": 33,
+      "candidateBrier": 0.23383160606060605,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.001607363636363629,
+      "pBetter": 0.037,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.06,
+      "n": 33,
+      "candidateBrier": 0.23415964606060607,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.0019354036363636584,
+      "pBetter": 0.036,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.07,
+      "n": 33,
+      "candidateBrier": 0.23448987515151515,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.0022656327272727317,
+      "pBetter": 0.036,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.08,
+      "n": 33,
+      "candidateBrier": 0.23482229333333335,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.002598050909090932,
+      "pBetter": 0.036,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.09,
+      "n": 33,
+      "candidateBrier": 0.2351569006060606,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.0029326581818181763,
+      "pBetter": 0.036,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.1,
+      "n": 33,
+      "candidateBrier": 0.23549369696969702,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.003269454545454603,
+      "pBetter": 0.036,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.11,
+      "n": 33,
+      "candidateBrier": 0.23583268242424246,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.003608440000000046,
+      "pBetter": 0.034,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.12,
+      "n": 33,
+      "candidateBrier": 0.23617385696969703,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.003949614545454616,
+      "pBetter": 0.034,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.13,
+      "n": 33,
+      "candidateBrier": 0.23651722060606056,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.004292978181818147,
+      "pBetter": 0.034,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.14,
+      "n": 33,
+      "candidateBrier": 0.23686277333333328,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.00463853090909086,
+      "pBetter": 0.034,
+      "passesKeepRule": false
+    },
+    {
+      "w": 0.15,
+      "n": 33,
+      "candidateBrier": 0.2372105151515151,
+      "marketBrier": 0.23222424242424242,
+      "deltaBrier": 0.004986272727272673,
+      "pBetter": 0.034,
+      "passesKeepRule": false
+    }
+  ],
+  "markdown": "## A2 shrinkage w=0.1\n\nn=33 · P(better)=0.036 · resamples=1000 · seed=20260915\n\n| arm | Brier | log-loss |\n|---|---|---|\n| candidate | 0.23549 | 0.66302 |\n| market | 0.23222 | 0.65634 |\n| Δ (cand − mkt) | 0.00327 | 0.00668 |\n\noutcome Wilson 95%: 17/33 = 51.5% [35.2, 67.5]\n\n| sport | n | cand Brier | mkt Brier | Δ | P(better) |\n|---|---|---|---|---|---|\n| MLB | 15 | 0.22869 | 0.22004 | 0.00865 | 0.000 |\n| NFL | 18 | 0.24116 | 0.24238 | -0.00122 | 0.691 |\n\nPASS — scorecard (no harness expectation): ΔBrier=0.00327 P(better)=0.036 n=33",
+  "note": "Scored on the committed C-362 fixture (synthetic). A real verifier/picks-h1.json export is required before the model-version PR (D20)."
+}
