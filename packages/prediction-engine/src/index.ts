@@ -2327,6 +2327,9 @@ export type { InjuryPracticeReport, InjuryTrajectoryAnalysis, OfficialGameStatus
 export { evaluateRedZoneTeLeverage } from "./signals/efficiency/redzone-te-leverage.js";
 export type { RedZoneEfficiencyContext, RedZoneTeLeverageResult } from "./signals/efficiency/redzone-te-leverage.js";
 
+export { evaluateDefensivePassRush } from "./signals/trench/defensive-pass-rush-win-rate.js";
+export type { DefensivePassRushInput, DefensivePassRushResult } from "./signals/trench/defensive-pass-rush-win-rate.js";
+
 export { evaluateOffensiveLineTrench } from "./signals/trench/offensive-line-continuity.js";
 export type { OffensiveLineTrenchInput, OffensiveLineTrenchResult } from "./signals/trench/offensive-line-continuity.js";
 
