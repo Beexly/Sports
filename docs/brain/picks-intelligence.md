@@ -187,7 +187,7 @@ tiers.
 
 | Field | FREE | PRO | ELITE |
 |---|---|---|---|
-| Pick direction | ✅ (1/day max) | ✅ | ✅ |
+| Pick direction | ✅ (daily teaser cap) | ✅ | ✅ |
 | Confidence score | ❌ | ✅ | ✅ |
 | Evidence chain summary | ❌ | ✅ | ✅ |
 | Risk annotation | ❌ | ✅ | ✅ |
@@ -198,8 +198,10 @@ tiers.
 | Alerts | ❌ | ❌ | ✅ |
 
 **Free tier rules**:
-- One pick per day maximum. This is a server-side count, not a frontend gate.
-- The pick shown is selected by highest confidence + freshest evidence.
+- A capped daily teaser. The cap is a server-side count, not a frontend gate, and
+  its value is owned by `packages/types/src/index.ts` (`dailyPickLimit`) — read it
+  there rather than restating a number here.
+- The picks shown are selected by highest confidence + freshest evidence.
 - No confidence score is shown. No evidence chain is shown.
 - The pick direction and line are shown.
 - A freshness timestamp is shown: "Based on data as of [timestamp]".

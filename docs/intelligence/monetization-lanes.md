@@ -13,14 +13,21 @@
 
 ## Current Subscription Tiers (Implemented)
 
-| Tier | Price | Access |
+| Tier | Price (FOUNDING) | Access |
 |---|---|---|
-| Free | $0 | 1 pick/day, no confidence scores |
-| Pro | $19/mo | All picks, confidence scores, line movement |
-| Elite | $49/mo | All Pro + early access, analytics, alerts |
+| Free | $0 | daily pick teaser, no confidence scores |
+| Fantasy | $4.99/mo · $49/yr | fantasy suite; free teaser on the betting board |
+| Pro | $14.99/mo · $99/yr | All picks, confidence scores, line movement |
+| Elite | $24.99/mo · $179/yr | All Pro + CLV ledger, analytics, alerts |
 
 These are the live tiers. They are enforced server-side. They must not be
 changed without a Stripe price ID update, schema migration, and owner approval.
+
+The amounts above are the FOUNDING rung of a proof-gated ladder that advances by
+operator action (`PRICING_PHASE`). **Do not treat this table as authoritative** —
+`apps/web/lib/pricing/pricing-phases.ts` is the single source of truth for every
+amount, and `packages/types/src/index.ts` (`dailyPickLimit`) owns the free daily
+pick allowance.
 
 ---
 

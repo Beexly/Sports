@@ -35,9 +35,10 @@ Use this as the consumer-facing wedge. Do not reposition the product as a genera
 
 ## Tier Narrative
 
-- Free: See it. One pick a day plus public surfaces.
+- Free: See it. The daily pick teaser plus public surfaces.
+- Fantasy: Play it. The fantasy suite; the same free teaser on the betting board.
 - Pro: Bet it. Every pick, confidence, reasoning, factor breakdown, and alerts.
-- Elite: Master it. Full analysis, advanced tools, weekly learning digest, and early access.
+- Elite: Master it. Full analysis, advanced tools, CLV ledger, weekly learning digest, and early access.
 
 ## Public Methodology Rule
 
