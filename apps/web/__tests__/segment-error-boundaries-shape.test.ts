@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 /**
  * Source-pin test for the three segment error boundaries shipped this
- * run (stats / fantasy / intelligence). Mirrors critical-routes-shape's
+ * run (stats / fantasy). Mirrors critical-routes-shape's
  * readFileSync + regex idiom — NOT render-based — so it never depends on
  * Nav / next-navigation mounting in a test environment.
  *
@@ -19,7 +19,6 @@ const repoRoot = resolve(__dirname, "..");
 const SEGMENT_BOUNDARIES = [
   { file: "app/stats/error.tsx", segment: "stats", recoveryHref: "/stats" },
   { file: "app/fantasy/error.tsx", segment: "fantasy", recoveryHref: "/fantasy" },
-  { file: "app/intelligence/error.tsx", segment: "intelligence", recoveryHref: "/intelligence" },
 ] as const;
 
 describe("segment error boundaries — shape and observability wiring", () => {

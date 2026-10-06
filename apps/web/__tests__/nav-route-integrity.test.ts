@@ -57,13 +57,8 @@ describe("Nav route integrity", () => {
     }
   });
 
-  it("the four doors + The Beat are present on desktop and mobile, and Intelligence is NOT", () => {
-    // This list used to include "/intelligence/engines". The 2026-09-12 nav trim
-    // cut the bar to four doors and AGENTS.md now states plainly: "Do NOT restore
-    // Intelligence as a top-bar item." The assertion had become a guard AGAINST
-    // current doctrine - it would have failed the moment the bar was correct.
-    // So it is inverted rather than deleted, which makes it a live guard instead
-    // of a stale one.
+  it("the four doors + The Beat are present on desktop and mobile", () => {
+    // Desktop parity: the five primary doors are reachable.
     for (const route of ["/board", "/players", "/fantasy", "/calibration", "/the-beat"]) {
       expect(desktop.includes(`"${route}"`), `desktop missing ${route}`).toBe(true);
     }

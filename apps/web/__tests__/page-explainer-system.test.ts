@@ -18,7 +18,7 @@ const read = (rel: string) => readFileSync(resolve(webRoot, rel), "utf8");
 
 describe("Page-explainer registry", () => {
   it("covers the primary public surfaces", () => {
-    for (const route of ["/", "/board", "/players", "/intelligence/engines", "/calibration", "/fantasy", "/the-beat"]) {
+    for (const route of ["/", "/board", "/players", "/calibration", "/fantasy", "/the-beat"]) {
       expect(getExplainer(route), `missing explainer for ${route}`).toBeTruthy();
     }
   });

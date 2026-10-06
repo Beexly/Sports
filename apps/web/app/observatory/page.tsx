@@ -113,9 +113,6 @@ export default async function ObservatoryPage() {
                 <Link href="/methodology" className="btn btn-primary">
                   How it works →
                 </Link>
-                <Link href="/intelligence" className="btn btn-ghost">
-                  Inside the signal
-                </Link>
               </div>
             </Reveal>
           </div>

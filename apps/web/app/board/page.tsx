@@ -233,12 +233,6 @@ export default async function BoardPage(): Promise<JSX.Element> {
               >
                 Record
               </Link>
-              <Link
-                href="/intelligence"
-                className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
-              >
-                Method
-              </Link>
             </div>
           </div>
         </section>

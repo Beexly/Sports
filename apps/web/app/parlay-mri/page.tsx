@@ -118,9 +118,6 @@ export default async function ParlayMriPage() {
                 <Link href="/responsible-play" className="btn btn-primary">
                   Play responsibly
                 </Link>
-                <Link href="/intelligence" className="btn btn-ghost">
-                  Inside the engine
-                </Link>
               </div>
             </div>
           </Reveal>

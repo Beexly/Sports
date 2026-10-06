@@ -221,7 +221,6 @@ export default function AcademyPage() {
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <Link href="/fantasy/academy" className="btn btn-ghost">GM Academy: fantasy drills</Link>
-                <Link href="/intelligence" className="btn btn-ghost">Inside the engine</Link>
                 <Link href="/parlay-mri" className="btn btn-ghost">Parlay MRI</Link>
               </div>
             </div>

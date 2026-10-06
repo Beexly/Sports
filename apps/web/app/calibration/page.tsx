@@ -13,7 +13,6 @@
  *   - /fable                FABLE Evidence Lab (source rights + AWS gates)
  *   - /accountability       Loss autopsies + the full public record
  *   - /track                CLV Tracker (track your own bets)
- *   - /intelligence/metrics How we read every metric, in plain terms
  *
  * Full content consolidation + redirects from the legacy routes land in a
  * follow-up; today this is the durable destination behind the "Proof" door.
@@ -253,22 +252,6 @@ export default async function CalibrationProofRoomPage() {
             />
           </div>
         </details>
-
-        <section className="rounded-2xl border border-mineral bg-eclipse/30 p-6">
-          <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
-            Read the metrics in plain terms
-          </h2>
-          <p className="max-w-2xl text-sm leading-6 text-ion-1">
-            Not sure what a number means? The metrics guide explains every stat the engines
-            report. What it measures, when it matters, and how to read it. Without the jargon.
-          </p>
-          <Link
-            href="/intelligence/metrics"
-            className="mt-4 inline-block rounded-lg border border-orbital-cyan/40 px-4 py-2 text-sm font-semibold text-orbital-cyan hover:bg-orbital-cyan/10"
-          >
-            How we read metrics
-          </Link>
-        </section>
 
         <RiskDisclosure variant="compact" includePastPerformance className="text-center" />
       </main>

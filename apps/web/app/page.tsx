@@ -216,19 +216,6 @@ export default async function HomePage(): Promise<JSX.Element> {
               </Suspense>
               <DoorCard
                 index={3}
-                label="Intelligence"
-                decides="Why the engine reads a game the way it does."
-                stat={
-                  settled > 0
-                    ? `Graded on ${settled} settled picks`
-                    : "Calibration sample building"
-                }
-                action="Open the engines"
-                href="/intelligence/engines"
-                accent
-              />
-              <DoorCard
-                index={4}
                 label="Fantasy & Daily"
                 decides="Start-sit, waivers, trades and DFS, in one read."
                 stat={`${scoring > 0 ? `${scoring} scoring now · ` : ""}Season + daily tools`}

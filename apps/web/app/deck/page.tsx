@@ -254,12 +254,6 @@ export default function DeckPage(): JSX.Element {
                 <Link href="/the-beat" className="btn-primary px-5 py-2.5">
                   Hear The Beat
                 </Link>
-                <Link
-                  href="/intelligence"
-                  className="inline-flex items-center gap-2 rounded-xl border border-mineral px-5 py-2.5 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
-                >
-                  Intelligence docs
-                </Link>
               </div>
             </div>
             <div className="relative h-80 lg:h-96">

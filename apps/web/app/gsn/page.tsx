@@ -99,9 +99,6 @@ export default async function GSNPage() {
                 <Link href="/academy" className="btn btn-ghost">
                   Train in the Academy
                 </Link>
-                <Link href="/intelligence" className="btn btn-ghost">
-                  Inside the engine
-                </Link>
               </div>
             </div>
           </Reveal>

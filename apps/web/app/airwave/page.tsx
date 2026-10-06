@@ -190,7 +190,6 @@ export default async function AirwavePage() {
                 </p>
               </div>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Link href="/intelligence" className="btn btn-ghost">Inside the engine</Link>
                 <Link href="/academy" className="btn btn-ghost">The Academy</Link>
                 <Link href="/ledger" className="btn btn-ghost">Trust Ledger</Link>
               </div>
