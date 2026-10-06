@@ -7,6 +7,7 @@ import {
   TOTAL_DROP_SIGNAL_SOURCE,
   type TotalDropReason,
 } from "@sports/prediction-engine";
+import type { SignalCategory } from "@sports/types";
 
 export interface TotalDropSignalPlan {
   readonly gameId: string;
@@ -57,7 +58,7 @@ export interface TotalDropSignalDb {
       where: { gameId_sourceName_signalKey: { gameId: string; sourceName: string; signalKey: string } };
       create: {
         gameId: string;
-        sourceCategory: "OTHER";
+        sourceCategory: SignalCategory;
         sourceName: string;
         signalKey: string;
         signalValue: { reason: TotalDropReason };
@@ -93,7 +94,7 @@ export async function persistTotalDropSignals(
           },
           create: {
             gameId: plan.gameId,
-            sourceCategory: "OTHER",
+            sourceCategory: "ODDS",
             sourceName: TOTAL_DROP_SIGNAL_SOURCE,
             signalKey: TOTAL_DROP_SIGNAL_KEY,
             signalValue: { reason: plan.reason },

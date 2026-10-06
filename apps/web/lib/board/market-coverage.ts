@@ -57,9 +57,7 @@ export interface MarketCoverageReport {
 export interface MarketCoverageInput {
   readonly games: ReadonlyArray<{ readonly sportKey: string }>;
   readonly picks: ReadonlyArray<{ readonly sportKey: string; readonly pickType: string }>;
-  readonly totalDropReasons?: Readonly<
-    Record<string, Readonly<Partial<Record<TotalDropReason, number>>>>
-  >;
+  readonly totalDropReasons?: Partial<Record<string, Partial<Record<TotalDropReason, number>>>>;
 }
 
 function isMarketKey(value: string): value is MarketKey {
