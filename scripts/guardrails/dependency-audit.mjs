@@ -41,13 +41,6 @@ const ACCEPTED = [
       "by the same next@16 major upgrade. The top-level postcss is already patched.",
     reviewBy: "2027-01-15",
   },
-  {
-    package: "source-map-js",
-    reason:
-      "Vulnerability is in a transitive dependency that requires a major upgrade to resolve. " +
-      "Tracked as part of larger upgrade path.",
-    reviewBy: "2027-01-15",
-  },
 ];
 
 const args = new Set(process.argv.slice(2));
