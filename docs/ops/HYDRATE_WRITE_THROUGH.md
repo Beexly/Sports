@@ -9,7 +9,10 @@
 ## Code
 - `packages/stats-api/src/hydration/write-through.ts`
 - `hydratePlayerGameStatsToMemory(store, rows)`
-- Worker: `workers/data-refresh/src/hydrate-cold-plane.ts` (no Odds API key required)
+- Cron (the live path, no Odds API key required): `apps/web/app/api/cron/hydrate-cold-plane/route.ts`, scheduled `30 9 * * *`
+- Worker (NOT deployed): `workers/data-refresh/src/hydrate-cold-plane.ts`. Its
+  `hydrateColdPlaneFromDb()` export is imported by nothing, and the cron above
+  re-implements the identical row mapping inline. See `workers/README.md`.
 - Web: `hydrateLocalNflverseMemory` in `apps/web/lib/gse-stats/value-provider.ts`
 
 ## Session tier on /values
