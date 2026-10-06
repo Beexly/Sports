@@ -30,7 +30,7 @@ describe("Fantasy competitive baseline", () => {
       "value-plays",
       "breaking-news-injuries",
       "props-ev",
-      "draft-cheatsheets",
+      "rankings-cheatsheets",
       "analysis-strategy",
       "community-support",
       "multi-sport",

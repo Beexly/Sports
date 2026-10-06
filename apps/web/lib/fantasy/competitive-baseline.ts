@@ -134,7 +134,7 @@ export const FANTASY_BASELINE_MODULES: readonly FantasyBaselineModule[] = [
   },
   {
     key: "props-ev",
-    module: "Props math / EV edges",
+    module: "Props AI / EV edges",
     competitorBaseline: ["LineStar"],
     gseSurface: "/fantasy/props",
     status: "gated-data",
