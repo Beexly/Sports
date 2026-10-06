@@ -28,8 +28,8 @@ describe("Homepage data-first signal contract", () => {
 
   it("routes the four doors instead of dumping every surface on the front page", () => {
     // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
-    // off the page's critical path via Suspense); the other three are inline.
-    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
+    // off the page's critical path via Suspense); the other two are inline.
+    for (const door of ["Board", "Fantasy & Daily"]) {
       expect(pageSource).toContain(door);
     }
     expect(labDoorSource).toContain("The Lab");

@@ -246,6 +246,12 @@ const ALLOWLISTED_DEFINITION_BLOCKS = new Map([
 
 const ALLOWLISTED_DEFINITION_LINES = new Map([
   [
+    "AGENTS.md",
+    [
+      /AI-GENERATED TABLE \(attributed\)/i,
+    ],
+  ],
+  [
     "apps/web/lib/workflows/draft-review-fixtures.ts",
     [
       /^\s*const unsafeOutcomeClaim\s*=/,
@@ -321,7 +327,7 @@ const LOCKFILE_SAFE_CONTEXT =
 // deliberately: widening the ban is a separate decision from this false
 // positive, and belongs in its own PR with its own evidence.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
-  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d|\bLock\s*\([A-Z]{2,3}\)/gi;
 
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in

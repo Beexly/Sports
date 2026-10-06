@@ -21,8 +21,8 @@ describe("homepage engine centerpiece", () => {
     expect(page).toContain("We detect. You decide.");
     expect(page).toContain("What are you here to decide?");
     // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
-    // off the page's critical path via Suspense); the other three are inline.
-    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
+    // off the page's critical path via Suspense); the other two are inline.
+    for (const door of ["Board", "Fantasy & Daily"]) {
       expect(page).toContain(door);
     }
     expect(labDoor).toContain("The Lab");

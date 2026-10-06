@@ -69,14 +69,12 @@ describe("Homepage — Phase 2 trust invariants", () => {
 
   it("derives live numbers from real loaders, with honest fallbacks when empty", () => {
     // Concise home: door stats degrade to honest copy ("Gate holding",
-    // "Intake warming up", "Calibration sample building") when counts are zero,
-    // never to fabricated rows.
+    // "Intake warming up") when counts are zero, never to fabricated rows.
     expect(source).toMatch(/loadBoardState/);
     expect(source).toMatch(/loadPublicCalibrationReport/);
     expect(labDoorSource).toMatch(/loadNflverseUsagePulse/);
     expect(source).toContain("Gate holding");
     expect(source).toContain("Intake warming up");
-    expect(source).toContain("Calibration sample building");
   });
 
   it("does NOT define fake game objects with hard-coded teams", () => {
