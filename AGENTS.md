@@ -7610,7 +7610,7 @@ inventoried without verbatim evidence.
    as an in-window leaderboard. Full 31-row leaderboard (PLAYER, TEAM,
    PASSER_RATING) in
    `docs/dfs/research/2026-10-03/full-tables/gridironinfo-qb-passer-rating-2026.csv`:
-   Lock (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
+   Drew Lock (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
    (NYG) 55.6. Data source: same header/footer credits as item 2.
    https://x.com/GridironInfo_/status/2106379300622520472
 

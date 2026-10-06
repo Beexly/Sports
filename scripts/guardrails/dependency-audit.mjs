@@ -35,6 +35,12 @@ const ACCEPTED = [
     reviewBy: "2027-01-15",
   },
   {
+    package: "source-map-js",
+    reason:
+      "Bundled inside postcss / next.js; remediated by the same next@16 major upgrade.",
+    reviewBy: "2027-01-15",
+  },
+  {
     package: "postcss",
     reason:
       "Only the copy bundled inside next/node_modules is affected; it is remediated " +
