@@ -31,7 +31,7 @@ def test_no_lookahead_multi_season():
     dates2_gap = pd.date_range(start="2025-09-01", periods=50, freq="D")
 
     df_nogap = pd.DataFrame({
-        "time": dates1.append(dates2_nogap),
+        "time": dates1.union(dates2_nogap),
         "season": ["2024"]*50 + ["2025"]*50,
         "feature_1": np.random.randn(100),
         "feature_1_as_of": pd.Timestamp("2024-01-01"),
@@ -44,7 +44,7 @@ def test_no_lookahead_multi_season():
         harness.get_partitions(df_nogap)
 
     df_gap = pd.DataFrame({
-        "time": dates1.append(dates2_gap),
+        "time": dates1.union(dates2_gap),
         "season": ["2024"]*50 + ["2025"]*50,
         "feature_1": np.random.randn(100),
         "feature_1_as_of": pd.Timestamp("2024-01-01"),
