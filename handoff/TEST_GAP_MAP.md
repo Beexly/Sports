@@ -107,7 +107,7 @@ Live-consumer files measured at 0 test mentions, by size:
 | `packages/prediction-engine/src/metrics/core/metric-historical-distribution-adapter.ts` | 345 | `metrics/core/index.ts` barrel |
 | `packages/ingestion-pipeline/src/backfill-independent-trueprob.ts` | 305 | cron route `/api/cron/backfill-independent-trueprob`, ops manifest |
 | `apps/web/lib/ops/watch-ingest.ts` | 219 | `/api/ops/watch-ingest` route |
-| `apps/web/lib/board/market-label.ts` | 61 | `app/board/page.tsx`, `app/page.tsx`, `lib/slate/slate.ts` — customer-facing board labels |
+| `apps/web/lib/board/market-label.ts` | 61 | `app/board/page.tsx`, `app/page.tsx`, `lib/slate/slate.ts` — customer-facing board labels — **DONE 2026-10-07 (SO-1g), 29 invariant tests** |
 
 **Pre-existing failure recorded (NOT repaired here, one task one commit):**
 `packages/ingestion-pipeline/src/__tests__/fixture-confirmation.test.ts` fails
@@ -116,3 +116,31 @@ Live-consumer files measured at 0 test mentions, by size:
 `espn:ncaaf:<id>`. Proved unrelated to SO-1f (identical 6/23 with the new
 settlement test file stashed). Stale-test repair candidate: confirm which key
 namespace is correct at current main before touching the assertions.
+
+## SO-1g notes (2026-10-07) — market-label.ts, 29 invariant tests
+
+Three display functions keep the loader's ALL_MARKETS sentinel off three
+customer surfaces (board page, homepage ticker, slate). Suite:
+`apps/web/__tests__/market-label.test.ts`.
+
+1. **Equivalent mutant exists and is unfixable by testing.** Removing
+   `trimmed === ""` from the compound check is output-equivalent (both branches
+   return the empty string), so no input-class test can detect that clause's
+   removal. The 10/10 red-check covered the other mutation sites (sentinel
+   literal, null guard, trim, both ticker copy strings, `?.trim()`, the ternary
+   inversion); the empty-string half of the compound is intent-explicit code,
+   and the whitespace-only test passes with or without it. Recorded so a future
+   agent does not claim a false 11/11.
+2. **Case-sensitivity pinned as-is.** `boardMarketLabel("all_markets")` returns
+   the input verbatim: the sentinel match is byte-exact by construction, and a
+   differently-cased emission from the loader would fail loudly at the labeler
+   seam instead of silently leaking.
+3. **"held" not "passed" pinned with its doc.** The FIELD copy doctrine's
+   "passed" rule yields to pass-reason.ts on the fallback path (those rows were
+   never evaluated); the test pins the wording with the citation so a copy
+   sweep cannot flip it silently.
+4. **tsc on apps/web is pre-existing red: 64 errors, proved unrelated.**
+   Identical 64-error set with the test file present and removed (byte-equal
+   erroring-file lists); all errors sit in `.next/types/**` (stale generated
+   types) and `app/api/mobile/v1/**` routes. Not a regression from this lane;
+   stale-generated-types repair candidate for whoever runs a Next build next.
