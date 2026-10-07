@@ -76,6 +76,7 @@ import type {
   OddsApiEvent,
 } from "@sports/types";
 import { CANONICAL_MODEL_VERSION } from "@sports/types";
+import { isFeaturedPromotionEligible } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import {
   resolveCanonicalGame,
@@ -1314,10 +1315,13 @@ export async function processSport(
 
       // Featured promotion gate: only auto-promote when explicitly enabled.
       // In bootstrap mode, no pick is featured — grades are uncalibrated.
+      // The pick-quality half now lives in `isFeaturedPromotionEligible`
+      // (@sports/types), which carries the reachability caveat: the grades it
+      // requires sit above the Edge Index's honest-market ceiling, so on a
+      // correctly priced market this half is unsatisfiable. That is asserted,
+      // not assumed — see grade-ladder-reachability.test.ts.
       const isFeatured =
-        gates.canPromoteFeaturedPicks &&
-        (pick.pickGrade === "ELITE_PLAY" ||
-          (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
+        gates.canPromoteFeaturedPicks && isFeaturedPromotionEligible(pick);
 
       // A SETTLED pick is frozen: once it has a WIN/LOSS/PUSH result, the
       // refresh cycle must never rewrite its selection/line/confidence/grade/
