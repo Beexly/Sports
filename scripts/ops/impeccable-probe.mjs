@@ -46,10 +46,14 @@ const strictSpine = hasFlag("--strict-spine") || process.env.GSE_STRICT_SPINE ==
 const strictMoney = hasFlag("--strict-money") || process.env.GSE_STRICT_MONEY === "1";
 const maxIngestionAge = Number(arg("--max-ingestion-age") ?? process.env.GSE_MAX_INGESTION_AGE ?? 240);
 
-async function getJson(path) {
+async function getJson(path, { operator = false } = {}) {
   const url = `${base}${path}`;
+  const secret = operator ? process.env.CRON_SECRET?.trim() : "";
   const res = await fetch(url, {
-    headers: { accept: "application/json" },
+    headers: {
+      accept: "application/json",
+      ...(secret ? { authorization: `Bearer ${secret}` } : {}),
+    },
     signal: AbortSignal.timeout(12_000),
   });
   const text = await res.text();
@@ -73,7 +77,18 @@ let picksStatus;
 
 try {
   const [h, t, p] = await Promise.all([
-    getJson("/api/health"),
+    // /api/health now grades its disclosure — capabilityGraph (which this
+    // script's money-leaf invariant reads) is operator-only, since each entry's
+    // reasons[] republished the leaf probe reason verbatim, including live
+    // Stripe misconfiguration text and raw probe errors. Pass CRON_SECRET when
+    // the operator has it so the money-leaf check keeps running; without it the
+    // graph is simply absent and that check self-skips, exactly as it already
+    // did before the graph shipped.
+    getJson("/api/health", { operator: true }),
+    // Deliberately left ANONYMOUS. public-surface-truth's operator branch adds
+    // stripeWebhookHosts, which would newly arm a HARD check here and could
+    // flip this script's exit code — a change to the go/no-go verdict that has
+    // nothing to do with the health disclosure fix.
     getJson("/api/ops/public-surface-truth"),
     fetch(`${base}/api/picks`, { signal: AbortSignal.timeout(12_000) }).then((r) => r.status),
   ]);
