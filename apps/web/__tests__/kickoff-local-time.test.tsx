@@ -1,60 +1,74 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { renderToStaticMarkup } from "react-dom/server";
 import { render, screen } from "@testing-library/react";
+import type { PublicPick } from "@sports/types";
+import { PickCard } from "@/components/picks/pick-card";
 import { LocalTime } from "@/components/ui/local-time";
 import { formatLocalTime } from "@/lib/time/local-time";
 
 /**
- * Kickoff times must never render the server's bare UTC wall clock.
+ * Kickoff times must render on the VIEWER's clock, never the server's.
  *
- * The defect this pins: timestamps were formatted during SERVER render with
+ * The defect this pins: every kickoff was formatted during SERVER render with
  * `toLocaleString("en-US", { …, timeZoneName: "short" })` and NO `timeZone`
  * option. Nothing sets `TZ` for the Node runtime (not `next.config.mjs`, not
  * `vercel.json`, not any Docker config), so Node resolved to UTC and baked the
  * UTC wall clock into the HTML for every visitor on earth. A bettor in New York
  * opening /picks for a 1:00 PM ET kickoff read "Sun, Sep 7, 5:00 PM UTC".
  *
- * Two honest idioms now cover the surfaces, and this suite pins both:
- *   1. Headline surfaces (/picks, /board, pick cards) pin Central explicitly
- *      (`timeZone: CENTRAL_TZ` + CT suffix) — a labelled, deterministic zone.
- *   2. Secondary surfaces (preview, game room) defer to <LocalTime>, resolving
- *      on the VIEWER's clock after mount.
- * What must never reappear is the defect itself: a server-rendered wall clock
- * with no `timeZone` option and no zone label.
+ * It produced no hydration warning and no flash, so nothing surfaced it: it was
+ * simply, consistently wrong for essentially the entire US audience, on the one
+ * number a bettor cannot afford to have wrong.
  *
  * The concrete case pinned throughout: 2025-09-07T17:00:00.000Z.
  *   UTC wall clock (the bug)     -> "Sun, Sep 7, 5:00 PM UTC"
- *   New York (viewer resolution) -> "Sun, Sep 7, 1:00 PM EDT"
+ *   New York (what a bettor sees)-> "Sun, Sep 7, 1:00 PM EDT"
  */
 
 const KICKOFF_ISO = "2025-09-07T17:00:00.000Z";
+const UTC_WALL_CLOCK = "5:00 PM";
+const ET_WALL_CLOCK = "1:00 PM";
 
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
 const WEB = resolve(REPO_ROOT, "apps/web");
 const readWeb = (rel: string): string => readFileSync(resolve(WEB, rel), "utf8");
 
-/**
- * Strip comments before scanning for the banned call shapes. Fixed sites carry
- * comments naming the call that used to be there — that prose is the record of
- * the defect, not the defect.
- */
-function stripComments(source: string): string {
-  return source
-    .replace(/\/\*[\s\S]*?\*\//g, " ")
-    .replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
-}
+const SAMPLE_PICK: PublicPick = {
+  id: "pick-tz-1",
+  game: {
+    homeTeam: "Dallas Cowboys",
+    awayTeam: "Philadelphia Eagles",
+    commenceTime: KICKOFF_ISO,
+    sport: "NFL",
+  },
+  pickType: "SPREAD",
+  selection: "Philadelphia Eagles -2.5",
+  line: -2.5,
+  lineMovement: null,
+  confidence: null,
+  edgeScore: null,
+  factorBreakdown: null,
+  dataQualityScore: 82,
+  tier: "FREE",
+  pickGrade: "LEAN",
+  riskLevel: "MODERATE",
+  reasoning: "Illustrative fixture row; never published.",
+  reasoningShort: "Illustrative fixture row.",
+  isFeatured: false,
+  isAuditAvailable: false,
+  generatedAt: "2025-09-07T12:00:00.000Z",
+  dataFreshnessAt: "2025-09-07T12:00:00.000Z",
+  result: "PENDING",
+};
 
-/** Surfaces that pin Central explicitly at server render. */
-const CENTRAL_SURFACES = [
+/** Every surface fixed here, and the timestamp each one renders. */
+const FIXED_SURFACES = [
   "components/picks/pick-card.tsx",
   "app/board/page.tsx",
-  "app/picks/page.tsx",
-];
-
-/** Surfaces that defer to <LocalTime> (viewer's clock). */
-const LOCALTIME_SURFACES = [
   "app/preview/[sport]/[slug]/page.tsx",
+  "app/picks/page.tsx",
   "app/room/[gameId]/page.tsx",
 ];
 
@@ -64,29 +78,49 @@ afterEach(() => {
   else process.env["TZ"] = originalTZ;
 });
 
-describe("headline surfaces pin an explicit zone at server render", () => {
-  for (const rel of CENTRAL_SURFACES) {
-    it(`${rel} never formats with an unzoned toLocale* call`, () => {
-      const src = stripComments(readWeb(rel));
-      // The exact call shape that produced the UTC wall clock: a toLocale*
-      // with timeZoneName but no timeZone. Pinning CENTRAL_TZ (or any
-      // explicit timeZone) is the fix; the bare shape must not return.
-      for (const m of src.matchAll(/toLocale(?:Date|Time)String\s*\(/g)) {
-        const call = src.slice(m.index!, m.index! + 400);
-        expect(call).toMatch(/timeZone\s*:/);
-      }
-    });
-  }
+describe("server render never bakes a UTC wall clock into a kickoff", () => {
+  it("PickCard emits the ISO instant, not the server's UTC formatting", () => {
+    // The suite runs with the same UTC default the production Node runtime has,
+    // so this render is byte-for-byte the one a visitor's browser receives.
+    expect(Intl.DateTimeFormat().resolvedOptions().timeZone).toBe("UTC");
 
-  it("the Central pin carries a visible zone label", () => {
-    for (const rel of CENTRAL_SURFACES) {
-      const src = readWeb(rel);
-      expect(src).toMatch(/CT_SUFFIX|timeZoneName/);
-    }
+    const html = renderToStaticMarkup(
+      <PickCard
+        pick={SAMPLE_PICK}
+        canSeeConfidence={false}
+        canSeeEdgeScore={false}
+        canSeeFactorBreakdown={false}
+      />,
+    );
+
+    // The concrete failure: a 1:00 PM ET kickoff served as 5:00 PM UTC.
+    expect(html).not.toContain(UTC_WALL_CLOCK);
+    expect(html).not.toContain("UTC");
+    expect(html).not.toContain("Sun, Sep 7, 5:00 PM UTC");
+    // ...and no other zone is guessed at on the server either.
+    expect(html).not.toContain(ET_WALL_CLOCK);
+
+    // What DOES cross the boundary is the instant itself.
+    expect(html).toContain(KICKOFF_ISO);
+    expect(html.toLowerCase()).toContain(`datetime="${KICKOFF_ISO.toLowerCase()}"`);
+  });
+
+  it("labels the deferred kickoff for screen readers instead of leaving a bare blank", () => {
+    const html = renderToStaticMarkup(
+      <PickCard
+        pick={SAMPLE_PICK}
+        canSeeConfidence={false}
+        canSeeEdgeScore={false}
+        canSeeFactorBreakdown={false}
+      />,
+    );
+    // The meaning of the value is never carried by position alone.
+    expect(html).toContain("Kickoff:");
+    expect(html).toContain('data-localtime="pending"');
   });
 });
 
-describe("the viewer's clock is what resolves the deferred kickoff", () => {
+describe("the viewer's clock is what resolves the kickoff", () => {
   it("formats a known instant against the viewer's zone, not the server's", () => {
     expect(formatLocalTime(KICKOFF_ISO, "kickoff", "America/New_York")).toBe(
       "Sun, Sep 7, 1:00 PM EDT",
@@ -122,8 +156,8 @@ describe("the viewer's clock is what resolves the deferred kickoff", () => {
   });
 });
 
-describe("deferred surfaces carry the instant, not a server wall clock", () => {
-  for (const rel of LOCALTIME_SURFACES) {
+describe("no customer-facing surface formats a timestamp during server render", () => {
+  for (const rel of FIXED_SURFACES) {
     it(`${rel} defers its timestamps to <LocalTime>`, () => {
       const src = readWeb(rel);
       // The exact call shape that produced the UTC wall clock. Any of these
@@ -151,5 +185,10 @@ describe("deferred surfaces carry the instant, not a server wall clock", () => {
     const helper = readWeb("lib/time/local-time.ts");
     expect(helper.trimStart().startsWith('"use client"')).toBe(false);
     expect(helper).not.toMatch(/from\s+"react"/);
+  });
+
+  it("pick-card stays a server component", () => {
+    const src = readWeb("components/picks/pick-card.tsx");
+    expect(src).not.toContain('"use client"');
   });
 });
