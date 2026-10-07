@@ -334,8 +334,12 @@ export async function passesPublicSelectiveFilterAsync(
   pick: PublicPickLike,
   env: Record<string, string | undefined> = process.env,
 ): Promise<boolean> {
-  const plan = await getCachedProvenPathPlan();
-  const durable = await getCachedRankingPauseDurable();
+  // Both flights in parallel: on a cold isolate this is the difference between
+  // two serial durable reads and one round of two.
+  const [plan, durable] = await Promise.all([
+    getCachedProvenPathPlan(),
+    getCachedRankingPauseDurable(),
+  ]);
   return passesPublicSelectiveFilter(pick, env, plan, durable);
 }
 
@@ -360,7 +364,9 @@ export function selectiveRuntimePosture(
 export async function selectiveRuntimePostureAsync(
   env: Record<string, string | undefined> = process.env,
 ) {
-  const plan = await getCachedProvenPathPlan();
-  const durable = await getCachedRankingPauseDurable();
+  const [plan, durable] = await Promise.all([
+    getCachedProvenPathPlan(),
+    getCachedRankingPauseDurable(),
+  ]);
   return selectiveRuntimePosture(env, plan, durable);
 }

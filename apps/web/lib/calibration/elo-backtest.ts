@@ -45,7 +45,51 @@ const EMPTY_ELO: EloBacktestReport = {
   sampleSize: 0, accuracy: 0, brier: 0, reliability: 0, resolution: 0, ece: 0, baseRate: 0, curve: [], teamsRated: 0,
 };
 
-export async function loadEloVsMarketBacktest(): Promise<EloVsMarketReport> {
+/**
+ * Cost bound for a PUBLIC, unauthenticated route — see the twin note in
+ * `market-backtest.ts`. This loader is the more expensive of the two: an
+ * unbounded `historical_games` read (no `take`, no pagination) AND a full Elo
+ * simulation over every game in JS. Hour-memoised + single-flight so a
+ * concurrent burst costs one full-table read, not one per request. Stays
+ * PUBLIC by design (aggregate proof surface) — bounded, not gated.
+ */
+const OK_CACHE_TTL_MS = 60 * 60 * 1000;
+const NO_DATA_CACHE_TTL_MS = 60_000;
+
+let cache: { readonly expiresAt: number; readonly value: EloVsMarketReport } | null = null;
+let inFlight: Promise<EloVsMarketReport> | null = null;
+
+/** Test-only: drop the memoised report so suites stay deterministic. */
+export function resetEloBacktestCacheForTests(): void {
+  cache = null;
+  inFlight = null;
+}
+
+export function loadEloVsMarketBacktest({
+  cacheTtlMs = OK_CACHE_TTL_MS,
+}: { cacheTtlMs?: number } = {}): Promise<EloVsMarketReport> {
+  if (cacheTtlMs <= 0) return computeEloVsMarketBacktest();
+
+  const now = Date.now();
+  if (cache && cache.expiresAt > now) return Promise.resolve(cache.value);
+  if (inFlight) return inFlight;
+
+  const flight = computeEloVsMarketBacktest()
+    .then((value) => {
+      const ttl = value.status === "ok" ? cacheTtlMs : Math.min(cacheTtlMs, NO_DATA_CACHE_TTL_MS);
+      cache = { expiresAt: Date.now() + ttl, value };
+      return value;
+    })
+    .finally(() => {
+      // A rejected read must not pin the endpoint to an error for the life of
+      // the isolate.
+      if (inFlight === flight) inFlight = null;
+    });
+  inFlight = flight;
+  return flight;
+}
+
+async function computeEloVsMarketBacktest(): Promise<EloVsMarketReport> {
   const generatedAt = new Date().toISOString();
 
   const games = await db.historicalGame.findMany({
