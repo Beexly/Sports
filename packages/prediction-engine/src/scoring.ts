@@ -664,7 +664,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const skellamIndependents = (input.context?.independentFairValues ?? []).filter(
     (fv) => fv.source === SKELLAM_COVER_SOURCE,
@@ -1326,7 +1329,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
