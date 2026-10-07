@@ -154,7 +154,7 @@ export function bindYacSamples(
         airYards: req.airYac.airYards,
         yac: req.airYac.yac,
         // Weekly NGS mean yards-after-catch per reception, week t for game t+1.
-        avgYac: { value: v, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" },
+        avgYac: cell,
       },
     });
   }
