@@ -1,3 +1,8 @@
+import {
+  EqualizedCoverageManager,
+  type PregameFeatures as EqualizedCoveragePregameFeatures,
+} from "./calibration/1908-05428-equalized-coverage.js";
+
 export interface ConformalProjectionSample {
   readonly sampleId: string;
   readonly season: number;
@@ -5,6 +10,7 @@ export interface ConformalProjectionSample {
   readonly position: string;
   readonly predictedMean: number;
   readonly actualFantasyPoints: number;
+  readonly pregameFeatures?: EqualizedCoveragePregameFeatures;
 }
 
 export interface RollingConformalOptions {
@@ -12,6 +18,8 @@ export interface RollingConformalOptions {
   readonly calibrationWeeks?: number;
   readonly targetCoverage?: number;
   readonly learningRate?: number;
+  readonly equalizedCoverageStrataKeys?: readonly string[];
+  readonly equalizedCoverageMinSamples?: number;
 }
 
 export interface RollingConformalWindow {
@@ -83,23 +91,41 @@ function stateAfterCalibration(
   samples: readonly ConformalProjectionSample[],
   targetCoverage: number,
   learningRate: number,
-): ReadonlyMap<string, { readonly alpha: number; readonly residuals: readonly number[] }> {
-  const state = new Map<string, { alpha: number; residuals: number[] }>();
+  options?: RollingConformalOptions,
+): {
+  readonly alphaByPosition: ReadonlyMap<string, number>;
+  readonly equalizedManager: EqualizedCoverageManager;
+  readonly residualsByPosition: ReadonlyMap<string, number[]>;
+} {
+  const alphaByPosition = new Map<string, number>();
+  const residualsByPosition = new Map<string, number[]>();
   const targetError = 1 - targetCoverage;
+
+  const equalizedManager = new EqualizedCoverageManager({
+    minSamples: options?.equalizedCoverageMinSamples,
+    stratumKeys: options?.equalizedCoverageStrataKeys,
+  });
+
   for (const sample of samples) {
-    const current = state.get(sample.position) ?? { alpha: targetError, residuals: [] };
-    const residualQuantile = quantile(current.residuals, 1 - current.alpha);
+    const currentAlpha = alphaByPosition.get(sample.position) ?? targetError;
+    const currentResiduals = residualsByPosition.get(sample.position) ?? [];
+    const residual = Math.abs(sample.actualFantasyPoints - sample.predictedMean);
+
+    if (sample.pregameFeatures) {
+      equalizedManager.add(sample.pregameFeatures, residual);
+    }
+
+    const residualQuantile = quantile(currentResiduals, 1 - currentAlpha);
     const lower = Math.max(0, sample.predictedMean - residualQuantile);
     const upper = sample.predictedMean + residualQuantile;
     const covered = sample.actualFantasyPoints >= lower && sample.actualFantasyPoints <= upper;
     const miss = covered ? 0 : 1;
-    const alpha = Math.min(0.5, Math.max(0.02, current.alpha + learningRate * (targetError - miss)));
-    state.set(sample.position, {
-      alpha,
-      residuals: [...current.residuals, Math.abs(sample.actualFantasyPoints - sample.predictedMean)],
-    });
+    const nextAlpha = Math.min(0.5, Math.max(0.02, currentAlpha + learningRate * (targetError - miss)));
+
+    alphaByPosition.set(sample.position, nextAlpha);
+    residualsByPosition.set(sample.position, [...currentResiduals, residual]);
   }
-  return state;
+  return { alphaByPosition, equalizedManager, residualsByPosition };
 }
 
 export function buildRollingConformalWindows(
@@ -137,10 +163,19 @@ export function runRollingMondrianConformal(
   const learningRate = options.learningRate ?? 0.05;
   const windows = buildRollingConformalWindows(samples, options);
   const intervals = windows.flatMap((window) => {
-    const state = stateAfterCalibration(window.calibrationSamples, targetCoverage, learningRate);
+    const { alphaByPosition, equalizedManager, residualsByPosition } = stateAfterCalibration(window.calibrationSamples, targetCoverage, learningRate, options);
     return window.testSamples.map((sample) => {
-      const current = state.get(sample.position) ?? { alpha: 1 - targetCoverage, residuals: [] };
-      const residualQuantile = quantile(current.residuals, 1 - current.alpha);
+      const currentAlpha = alphaByPosition.get(sample.position) ?? (1 - targetCoverage);
+
+      let residualQuantile = 0;
+      if (sample.pregameFeatures && options.equalizedCoverageStrataKeys) {
+        const res = equalizedManager.quantile(sample.pregameFeatures, 1 - currentAlpha);
+        residualQuantile = res.quantile;
+      } else {
+        const currentResiduals = residualsByPosition.get(sample.position) ?? [];
+        residualQuantile = quantile(currentResiduals, 1 - currentAlpha);
+      }
+
       const lower = Math.max(0, sample.predictedMean - residualQuantile);
       const upper = sample.predictedMean + residualQuantile;
       return {
@@ -151,7 +186,7 @@ export function runRollingMondrianConformal(
         lower: round4(lower),
         upper: round4(upper),
         residualQuantile: round4(residualQuantile),
-        alpha: round4(current.alpha),
+        alpha: round4(currentAlpha),
         covered: sample.actualFantasyPoints >= lower && sample.actualFantasyPoints <= upper,
       };
     });

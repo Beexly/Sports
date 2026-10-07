@@ -41,7 +41,38 @@ describe("buildRollingConformalWindows", () => {
       return window.calibrationWeekKeys.every((key) => !fit.has(key));
     })).toBe(true);
   });
+
+  it("uses Equalized Coverage strata when pregameFeatures are provided", () => {
+    const featureSamples = samples.map(s => ({
+      ...s,
+      pregameFeatures: {
+        weekBucket: s.week < 6 ? "early" : "late",
+        qbChange: false
+      }
+    }));
+
+    // Make one WR sample highly deviant but give it a specific feature
+    featureSamples[0] = {
+      ...featureSamples[0],
+      actualFantasyPoints: 30,
+      pregameFeatures: { weekBucket: "early", qbChange: true }
+    } as ConformalProjectionSample;
+
+    const report = runRollingMondrianConformal(featureSamples, {
+      fitWeeks: 3,
+      calibrationWeeks: 2,
+      targetCoverage: 0.8,
+      learningRate: 0.1,
+      equalizedCoverageStrataKeys: ["qbChange"]
+    });
+
+    // The WR with qbChange: true will be a miss but it shouldn't globally inflate
+    // since we stratified by qbChange.
+    expect(report.sampleSize).toBe(10);
+    expect(report.coverage).toBeGreaterThan(0.5);
+  });
 });
+
 
 describe("runRollingMondrianConformal", () => {
   it("builds Mondrian position intervals with rolling recalibration", () => {

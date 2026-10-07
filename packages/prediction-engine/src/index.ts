@@ -35,6 +35,14 @@ export { calculatePickResult, selectGradingLine, selectionIsHomeSide } from "./s
 export type { SettlementResult } from "./settlement.js";
 // Mint-time calibration history builder — pure mapper from settled picks to
 // CalibrationHistoryRow[] for calibrationHistoryWithholds. Fail-open on absence.
+export {
+  EqualizedCoverageManager,
+  assignStratum,
+  type PregameFeatures as EqualizedCoveragePregameFeatures,
+  type EqualizedCoverageOptions,
+  type QuantileLookupResult as EqualizedCoverageQuantileLookupResult,
+} from "./calibration/1908-05428-equalized-coverage.js";
+
 export { buildCalibrationHistory } from "./calibration/build-calibration-history.js";
 export type { SettledPickHistorySource } from "./calibration/build-calibration-history.js";
 // The published-line rule: the customer-visible / locked / graded handicap is the
