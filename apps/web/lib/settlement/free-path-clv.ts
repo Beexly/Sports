@@ -15,6 +15,8 @@ import {
   cancelPostSettlementWork,
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
+  retryablePostSettlementWorkWhere,
+  type PostSettlementWorkClaimWhere,
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
 import { CLV_WITHDRAWN_RESULT } from "@/lib/clv/clv-sample-policy";
@@ -143,14 +145,20 @@ export async function gradeFreePathClv(
 }
 
 /**
- * Repair drain: grade PENDING CLV_GRADE work for already-settled picks.
+ * Repair drain: grade owed CLV_GRADE work for already-settled picks.
  * Call at end of free settle cycle to clear backlog without waiting for re-settle.
+ *
+ * Claims PENDING rows AND FAILED rows still under the attempt cap. FAILED used
+ * to be terminal here, so one transient Postgres blip during a grade
+ * permanently abandoned that pick and punched a silent hole in the Elite
+ * CLV/line-value ledger. Rows at/over the cap are never re-selected; that is the
+ * terminal state. See @sports/ingestion-pipeline post-settlement-work.
  */
 export async function drainPendingClvGrades(
   db: FreePathClvDb & {
     postSettlementWork: {
       findMany: (args: {
-        where: { status: string; kind: string };
+        where: PostSettlementWorkClaimWhere;
         take: number;
         orderBy: { createdAt: "asc" };
         select: { subjectId: true };
@@ -177,7 +185,7 @@ export async function drainPendingClvGrades(
   const take = options.take ?? 80;
   const settledAt = options.now ?? new Date();
   const pending = await db.postSettlementWork.findMany({
-    where: { status: "PENDING", kind: "CLV_GRADE" },
+    where: retryablePostSettlementWorkWhere("CLV_GRADE"),
     take,
     orderBy: { createdAt: "asc" },
     select: { subjectId: true },
