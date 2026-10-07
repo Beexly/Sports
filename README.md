@@ -209,7 +209,10 @@ packages/prediction-engine  Core scoring + readiness gates
 packages/data-ingestion     The Odds API adapter + normalizer
 packages/ingestion-pipeline Shared per-sport ingestion entry point
 packages/types              Shared TypeScript types
-workers/                    BullMQ workers (data-refresh, picks, content)
+workers/                    Standalone long-running workers (setTimeout loops,
+                            not a broker queue). NOT deployed: absent from
+                            docker-compose and run only via npm run workers:*.
+                            Production scheduling is 21 Vercel crons.
 docker/                     Postgres + Redis compose, app Dockerfile
 docs/                       Architecture + ops runbook
 ```
