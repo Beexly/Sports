@@ -12,31 +12,31 @@ import {
  * 2026-09-05: /api/picks, daily-slate and the board selected picks by the day
  * they were generated; book-priced picks never re-stamp generatedAt, so 80 of
  * today's 91 book-priced NCAAF picks were invisible (read-only production SQL).
- * The slate is now the Eastern calendar day the GAME starts in, on rows the
+ * The slate is now the Central calendar day the GAME starts in, on rows the
  * pipeline still refreshes.
  */
 describe("slate window", () => {
-  it("is the US Eastern calendar day: NFL Sunday runs 04:00Z Sunday to 04:00Z Monday in September (EDT)", () => {
+  it("is the US Central calendar day: NFL Sunday runs 05:00Z Sunday to 05:00Z Monday in September (CDT)", () => {
     const w = slateWindowForDay("2026-09-13");
-    expect(w.start.toISOString()).toBe("2026-09-13T04:00:00.000Z");
-    expect(w.end.toISOString()).toBe("2026-09-14T04:00:00.000Z");
-    // Sunday Night Football (8:20pm ET) is Monday in UTC and still Sunday's slate.
+    expect(w.start.toISOString()).toBe("2026-09-13T05:00:00.000Z");
+    expect(w.end.toISOString()).toBe("2026-09-14T05:00:00.000Z");
+    // Sunday Night Football (7:20pm CT) is Monday in UTC and still Sunday's slate.
     const snf = new Date("2026-09-14T00:20:00.000Z");
     expect(snf >= w.start && snf < w.end).toBe(true);
     expect(slateDayKey(snf)).toBe("2026-09-13");
   });
 
-  it("follows the DST change (EST in December: 05:00Z)", () => {
+  it("follows the DST change (CST in December: 06:00Z)", () => {
     const w = slateWindowForDay("2026-12-13");
-    expect(w.start.toISOString()).toBe("2026-12-13T05:00:00.000Z");
-    expect(w.end.toISOString()).toBe("2026-12-14T05:00:00.000Z");
+    expect(w.start.toISOString()).toBe("2026-12-13T06:00:00.000Z");
+    expect(w.end.toISOString()).toBe("2026-12-14T06:00:00.000Z");
     // The night of the fall-back (2026-11-01) is 25 hours long.
     const fallBack = slateWindowForDay("2026-11-01");
     expect(fallBack.end.getTime() - fallBack.start.getTime()).toBe(25 * 60 * 60 * 1000);
   });
 
-  it("names today's Eastern day when ?date= is missing or malformed, never an Invalid Date", () => {
-    const now = new Date("2026-09-06T02:30:00.000Z"); // 10:30pm ET Saturday
+  it("names today's Central day when ?date= is missing or malformed, never an Invalid Date", () => {
+    const now = new Date("2026-09-06T02:30:00.000Z"); // 9:30pm CT Saturday
     expect(resolveSlateWindow(null, now).dayKey).toBe("2026-09-05");
     expect(resolveSlateWindow("garbage", now).dayKey).toBe("2026-09-05");
     expect(resolveSlateWindow("2026-09-06T00:00:00Z", now).dayKey).toBe("2026-09-05");
