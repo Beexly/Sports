@@ -13,6 +13,8 @@ import {
 } from "@/lib/nflverse/birthday-usage-trend";
 import { loadQbAgeRbTrendReport } from "@/lib/nflverse/qb-age-rb-trend";
 import { loadNflverseUsagePulse, type NflverseQbAgeRow } from "@/lib/nflverse/usage-pulse";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const dynamic = "force-dynamic";
 
