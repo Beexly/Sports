@@ -125,6 +125,12 @@ export {
   type CpoeTruth,
 } from "./nflverse-ngs.js";
 export {
+  parsePfrDef,
+  pfrDefToCovariateRows,
+  type PfrDefRow,
+  type PfrDefCovariateRow,
+} from "./nflverse-pfr-def.js";
+export {
   NFLVERSE_TREND_PLANS,
   getNflverseTrendPlan,
   datasetsForTrendPlans,
