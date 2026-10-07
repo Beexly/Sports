@@ -98,11 +98,47 @@ export type CovariateField =
  * single-frame measurement. Honest header on every emitted cell. */
 export type CovariateGrain = "week_t_for_tplus1";
 export type CovariateProvenance = "weekly_ngs_mean" | "expected_metric_v1";
+/** Masterplan §3.1 / doctrine H0.1 — layer on every p-side cell. */
+export type CovariateLayer = "L0" | "L1" | "L2" | "L3" | "MARKET_GAME" | "MARKET_PROP";
 
 export interface CovariateCell {
   readonly value: number;
   readonly grain: CovariateGrain;
   readonly provenance: CovariateProvenance;
+  /** L0 box … L3 frame. MARKET_PROP is forbidden on p. */
+  readonly layer: CovariateLayer;
+  /** Last completed NFL week this value is legal as a prior. Must be < kickoffWeek. */
+  readonly knownAtWeek: number;
+}
+
+/**
+ * Every field the bus may emit into independent p. CI walks this list;
+ * MARKET_PROP fails the build (masterplan §6 q-contamination test).
+ */
+export const P_SIDE_COVARIATE_REGISTRY: readonly {
+  readonly field: CovariateField;
+  readonly layer: CovariateLayer;
+  readonly honesty: CovariateProvenance;
+}[] = [
+  { field: "avgSeparation", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgCushion", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "airYardsShare", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgTimeToThrow", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "aggressiveness", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgIntendedAirYards", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "pctAttemptsGte8Defenders", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgTimeToLos", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgYac", layer: "L2", honesty: "weekly_ngs_mean" },
+] as const;
+
+export function assertPSideHasNoMarketProp(
+  registry: readonly { readonly layer: CovariateLayer }[] = P_SIDE_COVARIATE_REGISTRY,
+): void {
+  for (const e of registry) {
+    if (e.layer === "MARKET_PROP") {
+      throw new Error("q-contamination: MARKET_PROP is forbidden on the p-side covariate registry");
+    }
+  }
 }
 
 /** Stable row key for dedup / join. */
@@ -147,6 +183,25 @@ export function latestPriorRow(
  * `null` (fail-closed — does not impute, does not cross the same-week
  * boundary).
  */
+/**
+ * Look up the registry entry for a covariate field. The registry is the
+ * single source of truth for `layer` and `provenance` — `nextGameCovariate`
+ * must never hardcode these, or CI's q-contamination walk and the runtime
+ * cell can drift (Codacy finding).
+ */
+export function lookupFieldMeta(
+  field: CovariateField,
+): { readonly layer: CovariateLayer; readonly honesty: CovariateProvenance } {
+  const hit = P_SIDE_COVARIATE_REGISTRY.find((e) => e.field === field);
+  if (hit === undefined) {
+    // Every CovariateField must be registered. Fail-closed if it's not —
+    // a missing registration is a q-contamination hazard (a field with no
+    // declared layer could silently default to MARKET_PROP upstream).
+    throw new Error(`covariate field "${field}" is not registered in P_SIDE_COVARIATE_REGISTRY`);
+  }
+  return hit;
+}
+
 export function nextGameCovariate(
   rows: readonly CovariateRow[],
   gsisId: string,
@@ -159,7 +214,14 @@ export function nextGameCovariate(
   if (row === null) return null; // no history before kickoff — fail closed
   const raw = row[field];
   if (raw === null || !Number.isFinite(raw)) return null;
-  return { value: raw, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+  const meta = lookupFieldMeta(field);
+  return {
+    value: raw,
+    grain: "week_t_for_tplus1",
+    provenance: meta.honesty,
+    layer: meta.layer,
+    knownAtWeek: row.week,
+  };
 }
 
 /**
