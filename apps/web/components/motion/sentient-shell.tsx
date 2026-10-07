@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { GhostJarvis } from "./ghost-jarvis";
 import { DreamSequence } from "./dream-sequence";
 import { GlitchTruth } from "./glitch-truth";
-import { ThermalVision } from "./thermal-vision";
+import { ThermalVision, shouldMountThermalVision } from "./thermal-vision";
 
 export function SentientShell() {
   const [thermalActive, setThermalActive] = useState(false);
@@ -36,7 +36,12 @@ export function SentientShell() {
       <GhostJarvis />
       <DreamSequence />
       <GlitchTruth trigger={glitchTrigger} level={glitchLevel} />
-      <ThermalVision active={thermalActive} onToggle={setThermalActive} />
+      {/* Dev-only: the data-thermal binding the heatmap needs does not exist
+          yet, so in production this would only be a floating debug-style pill
+          over the bottom-left of every page. See shouldMountThermalVision(). */}
+      {shouldMountThermalVision() ? (
+        <ThermalVision active={thermalActive} onToggle={setThermalActive} />
+      ) : null}
     </>
   );
 }
