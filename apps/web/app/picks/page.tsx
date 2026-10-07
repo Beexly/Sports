@@ -484,13 +484,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/methodology"
-                  className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
                 >
                   Read methodology
                 </Link>
                 <Link
                   href="/vault"
-                  className="rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
                 >
                   View The Vault
                 </Link>
@@ -524,7 +524,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"              >
+                className="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
+              >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
             </div>
@@ -612,7 +613,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"              >
+                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
+              >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
             </div>
