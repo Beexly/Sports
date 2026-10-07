@@ -173,7 +173,7 @@ export default function VsToutServicesPage() {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/methodology"
+                href="/intelligence"
                 className="btn-primary px-7 py-3.5 text-base"
               >
                 See the methodology →

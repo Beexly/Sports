@@ -116,7 +116,7 @@ export default function AboutPage() {
               . Replies typically within one business day.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/methodology" className="btn btn-primary">
+              <Link href="/intelligence" className="btn btn-primary">
                 Read the methodology →
               </Link>
               <Link href="/contact" className="btn btn-ghost">

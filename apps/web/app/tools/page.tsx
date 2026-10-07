@@ -187,7 +187,7 @@ export default function ToolsHubPage(): JSX.Element {
                 itself reads the board.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/methodology" className="btn btn-primary">
+                <Link href="/intelligence" className="btn btn-primary">
                   Read the methodology
                 </Link>
                 <Link href="/board" className="btn btn-ghost">

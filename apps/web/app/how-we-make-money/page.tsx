@@ -235,7 +235,7 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
               <Link href="/accountability" className="btn btn-ghost">
                 Read accountability
               </Link>
-              <Link href="/methodology" className="btn btn-ghost">
+              <Link href="/intelligence" className="btn btn-ghost">
                 Read methodology
               </Link>
             </div>

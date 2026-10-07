@@ -211,7 +211,7 @@ export default function IntelligencePage() {
             </Reveal>
             <Reveal delay={260}>
               <div className="pointer-events-auto mt-9 flex flex-wrap gap-3">
-                <Link href="/methodology" className="btn btn-primary">
+                <Link href="/intelligence" className="btn btn-primary">
                   The full methodology →
                 </Link>
                 <Link href="/picks" className="btn btn-ghost">
@@ -366,7 +366,7 @@ export default function IntelligencePage() {
                 this is the part we can show you in full: the method.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/methodology" className="btn btn-primary">
+                <Link href="/intelligence" className="btn btn-primary">
                   How it works
                 </Link>
                 <Link href="/responsible-play" className="btn btn-ghost">

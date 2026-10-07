@@ -51,7 +51,7 @@ export default function VaultPage() {
                 <Link href="/proof" className="btn btn-ghost">
                   The settled record
                 </Link>
-                <Link href="/methodology" className="btn btn-ghost">
+                <Link href="/intelligence" className="btn btn-ghost">
                   How the calibration works
                 </Link>
                 <Link href="/performance" className="btn btn-ghost">

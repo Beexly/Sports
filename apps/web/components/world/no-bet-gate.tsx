@@ -75,7 +75,7 @@ export function NoBetGateChapter(): JSX.Element {
           <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
             See today&apos;s gate decisions ▸
           </Link>
-          <Link href="/methodology" className="text-sm font-semibold text-ion-1 hover:text-ion-white">
+          <Link href="/intelligence" className="text-sm font-semibold text-ion-1 hover:text-ion-white">
             How the gates work
           </Link>
         </div>

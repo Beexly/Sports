@@ -488,7 +488,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-ion-white">Questions worth mining first</h2>
             </div>
-            <Link href="/methodology" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+            <Link href="/intelligence" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
               Methodology
             </Link>
           </div>

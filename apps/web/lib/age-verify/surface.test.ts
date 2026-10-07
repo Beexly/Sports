@@ -17,7 +17,7 @@ describe("isAgeGatedSurface", () => {
 
   it("leaves marketing, legal, account, and API paths open", () => {
     for (const p of [
-      "/", "/about", "/methodology", "/responsible-play", "/account",
+      "/", "/about", "/intelligence", "/responsible-play", "/account",
       "/api/picks/daily-slate", "/auth/signin", "/age-verify",
     ]) {
       expect(isAgeGatedSurface(p)).toBe(false);

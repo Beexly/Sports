@@ -209,7 +209,7 @@ export const LAYER_3_TOUT_AND_BAIT: ComplianceRule[] = [
  * LAYER 4 — Payments-processor underwriting vocabulary.
  *
  * Warn-only scan for gambling/betting-coded copy on paid-product surfaces
- * (`/pricing`, `/clv`, `/methodology`, `/dashboard`) that a processor
+ * (`/pricing`, `/clv`, `/dashboard`) that a processor
  * underwriter could read as sports-betting risk. NEVER `block` — this
  * layer must not change Studio / Journal / waitlist / bot-outbox gates.
  *

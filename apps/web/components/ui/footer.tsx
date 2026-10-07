@@ -6,7 +6,6 @@ import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/bran
 const FOOTER_LINKS = [
   { label: "Board", href: "/board" },
   { label: "Record", href: "/performance" },
-  { label: "Method", href: "/methodology" },
   { label: "Verify", href: "/verify" },
   { label: "Plans", href: "/pricing" },
 ] as const;

@@ -42,7 +42,7 @@ describe("Game Intelligence Room v0", () => {
     expect(page).toContain("Where This Goes Next");
     expect(page).toContain('href="/ledger"');
     expect(page).toContain('href="/performance"');
-    expect(page).toContain('href="/methodology"');
+    expect(page).toContain('href="/intelligence"');
     expect(page).toContain('href="/responsible-play"');
   });
 

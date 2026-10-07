@@ -52,11 +52,6 @@ function truthy(raw: string | undefined): boolean {
  * `env` is the founder-owned opt-in. None are set by this module.
  */
 export const INTERNAL_SURFACES = {
-  /** Full methodology: the factor list and the three-stage engine stack. */
-  "/methodology": {
-    env: "METHODOLOGY_PUBLIC",
-    exposes: "factor list + three-stage scoring stack (how the model works)",
-  },
   /** "Glass box on every signal": named metrics with stability labels. */
   "/intelligence/metrics": {
     env: "METRICS_PUBLIC",
@@ -201,7 +196,6 @@ export function internalSurfaceBlockedResponse(path: string): {
  * registries can be read together. The doctrine verdict per surface.
  */
 export const INTERNAL_SURFACE_POLICY = {
-  "/methodology": "internal — factor list and engine stack (opt-in METHODOLOGY_PUBLIC)",
   "/intelligence/metrics": "internal — named metric inventory (opt-in METRICS_PUBLIC)",
   "/nflverse": "internal — raw player-week rows (opt-in NFLVERSE_PUBLIC)",
   "/players": "internal — metric-explainer tables (opt-in PLAYERS_PUBLIC)",

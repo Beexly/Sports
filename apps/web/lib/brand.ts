@@ -177,13 +177,6 @@ export const SURFACES = {
       "The published record: wins, losses, pushes, ROI, and model calibration. Gated until the data can honestly support a number.",
     route: "/performance",
   },
-  methodology: {
-    label: "Methodology",
-    tagline: "The deterministic scoring framework.",
-    blurb:
-      "How the signal is built: pipeline, scoring, calibration, and readiness gates.",
-    route: "/methodology",
-  },
   cockpit: {
     label: "Cockpit",
     tagline: "Operator controls.",

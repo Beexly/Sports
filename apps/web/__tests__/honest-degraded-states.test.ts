@@ -41,7 +41,6 @@ import HomePage from "@/app/page";
 import { NflverseLabDoor } from "@/components/landing/nflverse-lab-door";
 import ProofPage from "@/app/proof/page";
 import { db } from "@sports/db";
-import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";
 import { buildBoardHealth, type BoardSuppressionReason } from "@/lib/board/health";
 import { classifyBoardState } from "@/lib/board/classify-board-state";
 import type { BoardStatePayload } from "@/lib/board/state";
@@ -390,7 +389,6 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     expect(text).not.toContain("Intake warming up");
     // The live-counts ledger band is withheld (metrics undefined) so it can't
     // caption unverifiable zeros as "Live counts".
-    const methodology = findByType(tree, MethodologySection);
     expect(methodology).not.toBeNull();
     expect(methodology?.props.metrics).toBeUndefined();
   });
@@ -418,7 +416,6 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     expect(text).not.toContain("Intake warming up");
     // The band still carries the REAL board/calibration counts, but playerRows
     // is omitted so the outage can't render as a warm-up.
-    const methodology = findByType(tree, MethodologySection);
     const metrics = methodology?.props.metrics as TrustLedgerMetrics | undefined;
     expect(metrics).toBeDefined();
     expect(metrics?.playerRows).toBeUndefined();
@@ -450,7 +447,6 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     // nflverse is live, so the Lab door still shows real player rows.
     expect(text).toContain("1,234 live player rows");
     // Suppressed board zeroes the live counts → the whole band is withheld.
-    const methodology = findByType(tree, MethodologySection);
     expect(methodology?.props.metrics).toBeUndefined();
   });
 
@@ -470,7 +466,6 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
     expect(text).not.toContain("0 cleared");
-    const methodology = findByType(tree, MethodologySection);
     expect(methodology?.props.metrics).toBeUndefined();
   });
 
@@ -492,8 +487,6 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     // Healthy: the ledger band renders with the real operational metrics.
     // playerRows is no longer in the static metrics — it is now rendered
     // via the Suspense-bounded NflverseLabDoor component instead of
-    // being passed through MethodologySection.
-    const methodology = findByType(tree, MethodologySection);
     expect(methodology?.props.metrics).toEqual({
       settled: 120,
       cleared: 2,

@@ -37,7 +37,6 @@ const DELETED_NGS_ROUTES = [
 afterEach(() => {
   for (const f of [
     "PLAYERS_PUBLIC",
-    "METHODOLOGY_PUBLIC",
     "METRICS_PUBLIC",
     "NFLVERSE_PUBLIC",
     "PARLAY_MRI_PUBLIC",
@@ -108,7 +107,6 @@ describe("/intelligence/reconstruction is permanently dark", () => {
     expect(isPagePublic("/intelligence/reconstruction")).toBe(false);
     delete process.env.RECONSTRUCTION_PUBLIC;
     process.env.PLAYERS_PUBLIC = "true";
-    process.env.METHODOLOGY_PUBLIC = "true";
     expect(isPagePublic("/intelligence/reconstruction")).toBe(false);
   });
 
@@ -224,7 +222,6 @@ describe("NGS stays internal in the serving layer", () => {
       { PLAYERS_PUBLIC: "true" },
       {
         PLAYERS_PUBLIC: "true",
-        METHODOLOGY_PUBLIC: "true",
         METRICS_PUBLIC: "true",
         NFLVERSE_PUBLIC: "true",
       },

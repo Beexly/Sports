@@ -465,7 +465,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
-                  href="/methodology"
+                  href="/intelligence"
                   className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
                 >
                   Read methodology
@@ -805,7 +805,7 @@ function PicksTrustStrip() {
           </p>
         </div>
         <Link
-          href="/methodology"
+          href="/intelligence"
           className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
         >
           Read methodology

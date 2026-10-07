@@ -72,7 +72,7 @@ export default function EdgeIndexMarketingPage(): JSX.Element {
               The board
             </Link>{" "}
             and{" "}
-            <Link href="/methodology" className="text-orbital-cyan hover:text-ion-white">
+            <Link href="/intelligence" className="text-orbital-cyan hover:text-ion-white">
               Methodology
             </Link>
             .

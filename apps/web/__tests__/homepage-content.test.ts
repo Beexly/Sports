@@ -53,8 +53,6 @@ describe("Homepage — Phase 2 trust invariants", () => {
     expect(source).not.toMatch(/\bguaranteed\b/);
   });
 
-  it("renders the MethodologySection component", () => {
-    expect(source).toMatch(/\bMethodologySection\b/);
     expect(source).toMatch(
       /from\s+["']@\/components\/ui\/methodology-section["']/
     );

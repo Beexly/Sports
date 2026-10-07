@@ -296,7 +296,7 @@ export function SignalPreviewQueue() {
           the slate doesn&apos;t earn it.
         </p>
         <a
-          href="/methodology"
+          href="/intelligence"
           style={{
             font: "600 12px/1 var(--f-mono)",
             letterSpacing: "0.16em",

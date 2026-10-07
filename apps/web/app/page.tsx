@@ -15,7 +15,6 @@ import {
   NflverseLabDoorPlaceholder,
 } from "@/components/landing/nflverse-lab-door";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
 import { WorldSection } from "@/components/world/world-section";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
@@ -360,25 +359,6 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* The live-counts ledger band is a real operational readout. During a
-            board outage/suppression its cleared/gated counts are zeroed, so we
-            withhold the whole band rather than caption unverifiable zeros as
-            "Live counts". The player-rows metric moved to the Suspense-bounded
-            NflverseLabDoor above (P16-01): nflverse errors surface there, not
-            here. The methodology cards below stay; they explain method, not
-            live numbers. */}
-        <MethodologySection
-          metrics={
-            boardUnavailable
-              ? undefined
-              : {
-                  settled,
-                  cleared,
-                  gated,
-                  lastRefresh: state.lastRefresh,
-                }
-          }
-        />
 
         <section
           data-testid="homepage-responsible-close"

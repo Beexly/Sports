@@ -268,7 +268,7 @@ export default async function MarketCalibrationPage() {
               Back to the Proof Room →
             </Link>
             <Link
-              href="/methodology"
+              href="/intelligence"
               className="rounded-lg border border-mineral px-4 py-2 text-sm text-ion-1 hover:bg-eclipse/80"
             >
               Methodology →

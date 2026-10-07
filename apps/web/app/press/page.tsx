@@ -143,7 +143,7 @@ export default function PressPage() {
               . Include outlet, deadline, and angle for a useful reply.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/methodology" className="btn btn-primary">
+              <Link href="/intelligence" className="btn btn-primary">
                 Methodology →
               </Link>
               <Link href="/about" className="btn btn-ghost">

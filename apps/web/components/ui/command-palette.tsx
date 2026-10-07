@@ -27,7 +27,6 @@ const COMMANDS: Command[] = [
   { label: "FABLE Evidence Lab", href: "/fable", group: "Intelligence", keywords: "proof evidence source rights claims aws gates fable" },
   { label: "CLV Tracker", href: "/track", group: "Intelligence", keywords: "bets clv closing line value calibration roi" },
   { label: "The Cipher", href: "/cipher", group: "Intelligence", keywords: "puzzle hunt easter egg" },
-  { label: "Methodology", href: "/methodology", group: "Intelligence", keywords: "how method" },
   { label: "Pricing", href: "/pricing", group: "Intelligence", keywords: "plans subscribe cost" },
   // Fantasy
   { label: "Fantasy Home", href: "/fantasy", group: "Fantasy", keywords: "football roster" },

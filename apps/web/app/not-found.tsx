@@ -51,7 +51,7 @@ export default function NotFound() {
               Back to home
             </Link>
             <Link
-              href="/methodology"
+              href="/intelligence"
               className="btn-secondary px-6 py-3 text-sm"
             >
               See methodology

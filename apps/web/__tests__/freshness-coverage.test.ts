@@ -58,7 +58,6 @@ describe("freshness-truth coverage audit", () => {
   });
 
   describe("/ (home) renders a freshness signal", () => {
-    it("homepage passes lastRefresh to MethodologySection which renders a freshness stamp", () => {
       const page = readWeb("app/page.tsx");
       const section = readWeb("components/ui/methodology-section.tsx");
       expect(page).toContain("lastRefresh");

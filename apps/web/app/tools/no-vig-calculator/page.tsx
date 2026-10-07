@@ -71,7 +71,7 @@ export default function NoVigCalculatorPage(): JSX.Element {
                 This is the same proportional convention the pick engine
                 itself uses as its house default for de-vigging a market —
                 see{" "}
-                <Link href="/methodology" className="underline">
+                <Link href="/intelligence" className="underline">
                   the methodology page
                 </Link>
                 . It is deliberately the simpler of two documented methods:

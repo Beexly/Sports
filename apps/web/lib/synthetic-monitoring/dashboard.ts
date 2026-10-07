@@ -280,7 +280,6 @@ const ARTIFACT_TO_CHECK_ID: Readonly<Record<string, string>> = {
 
 const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {
   "/": "CHECK-V1",
-  "/methodology": "CHECK-V2",
   "/pricing": "CHECK-V3",
 };
 

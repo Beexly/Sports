@@ -13,7 +13,7 @@ import {
 } from "@/lib/launch/internal-surface-fence";
 
 const FLAGS = [
-  "METHODOLOGY_PUBLIC",
+  "NFLVERSE_PUBLIC",
   "METRICS_PUBLIC",
   "NFLVERSE_PUBLIC",
   "PLAYERS_PUBLIC",
@@ -53,24 +53,23 @@ describe("internal surfaces default dark", () => {
 
 describe("founder opt-in", () => {
   it("re-opens exactly one surface per flag, not the others", () => {
-    process.env.METHODOLOGY_PUBLIC = "true";
-    expect(isPagePublic("/methodology")).toBe(true);
+    process.env.NFLVERSE_PUBLIC = "true";
+    expect(isPagePublic("/nflverse")).toBe(true);
     // The independence matters: one flag must never open a second surface.
-    expect(isPagePublic("/nflverse")).toBe(false);
     expect(isPagePublic("/players")).toBe(false);
   });
 
   it("rejects falsey values", () => {
     for (const v of ["false", "0", "no", "off", "", "  "]) {
-      process.env.METHODOLOGY_PUBLIC = v;
-      expect(isPagePublic("/methodology")).toBe(false);
+      process.env.NFLVERSE_PUBLIC = v;
+      expect(isPagePublic("/nflverse")).toBe(false);
     }
   });
 
   it("accepts the truthy spellings the existing gates use", () => {
     for (const v of ["1", "true", "TRUE", "yes", "on", " true "]) {
-      process.env.METHODOLOGY_PUBLIC = v;
-      expect(isPagePublic("/methodology")).toBe(true);
+      process.env.NFLVERSE_PUBLIC = v;
+      expect(isPagePublic("/nflverse")).toBe(true);
     }
   });
 });
