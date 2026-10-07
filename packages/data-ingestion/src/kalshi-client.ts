@@ -94,6 +94,18 @@ export interface KalshiSideFairValue {
   readonly rawImpliedProb: number | null;
   /** De-vigged fair probability (the two sides sum to 1); null if unquoted. */
   readonly fairProb: number | null;
+  /**
+   * ask − bid on this leg, probability units; null when unquoted. Measured by the
+   * listing gate and kept, not discarded: `rawImpliedProb` alone cannot tell a
+   * penny-wide book from a ten-point one.
+   */
+  readonly quoteSpread: number | null;
+  /** Best YES bid on this leg, unit interval; null when unquoted. */
+  readonly quoteBid: number | null;
+  /** Best (or complemented) YES ask on this leg, unit interval; null when unquoted. */
+  readonly quoteAsk: number | null;
+  /** How the two-way was formed, or the gate's refusal reason when unusable. */
+  readonly quoteSource: string | null;
 }
 
 export interface KalshiFairValue {
@@ -156,12 +168,38 @@ function isLiveMarket(market: KalshiMarketRaw): boolean {
   return market.status != null && LIVE_KALSHI_STATUSES.has(market.status.toLowerCase());
 }
 
+/** A usable two-way quote plus the quality signals the gate measured for it. */
+export interface KalshiImpliedQuote {
+  /** Two-way midpoint YES probability; null when there is no usable quote. */
+  readonly prob: number | null;
+  /** Best YES bid, unit interval; null when unquoted. */
+  readonly bid: number | null;
+  /** Best (or complemented) YES ask, unit interval; null when unquoted. */
+  readonly ask: number | null;
+  /**
+   * ask − bid, in probability units. THE liquidity/noise signal: a 0.10-wide book
+   * carries ±0.05 of quote uncertainty around `prob`. Null when unquoted.
+   */
+  readonly spread: number | null;
+  /** How the two-way was formed ("yes_bid_ask" | "yes_bid_no_bid_complement"). */
+  readonly quoteSource: string | null;
+  /** Gate refusal reason when unusable (e.g. "wide_spread", "last_trade_only"). */
+  readonly refuse: string | null;
+}
+
 /**
- * Market-implied YES probability from a listing. Two-way mid only:
- * yes_bid+yes_ask, or yes_bid + (1 − no_bid). Never last_price (a trade
- * print). Returns null when there is no interior two-way quote.
+ * Market-implied YES quote from a listing, WITH the quality signals the gate
+ * already computed. Two-way mid only: yes_bid+yes_ask, or yes_bid + (1 − no_bid).
+ * Never last_price (a trade print).
+ *
+ * `gateKalshiListing` measures bid, ask and spread on every row. Reducing that to
+ * a bare midpoint at the call site destroys the only evidence that separates a
+ * thin, noisy quote from a deep one — and the midpoint of a wide book is the
+ * number that later gets a vote in the agreement multiplier. So the quality
+ * travels with the price; callers that only need the price use
+ * `impliedYesProbability`.
  */
-export function impliedYesProbability(market: KalshiMarketRaw): number | null {
+export function impliedYesQuote(market: KalshiMarketRaw): KalshiImpliedQuote {
   const g = gateKalshiListing({
     yesBid: market.yes_bid_dollars ?? market.yes_bid,
     yesAsk: market.yes_ask_dollars ?? market.yes_ask,
@@ -169,7 +207,21 @@ export function impliedYesProbability(market: KalshiMarketRaw): number | null {
     last: market.last_price_dollars ?? market.last_price,
     status: market.status,
   });
-  return g.usable ? g.q : null;
+  if (!g.usable) {
+    // Refused rows still carry what was measured (e.g. the spread that was too
+    // wide) — that is the diagnostic, and discarding it is the bug.
+    return { prob: null, bid: g.bid, ask: g.ask, spread: g.spread, quoteSource: null, refuse: g.refuse };
+  }
+  return { prob: g.q, bid: g.bid, ask: g.ask, spread: g.spread, quoteSource: g.source, refuse: null };
+}
+
+/**
+ * Market-implied YES probability from a listing. Two-way mid only:
+ * yes_bid+yes_ask, or yes_bid + (1 − no_bid). Never last_price (a trade
+ * print). Returns null when there is no interior two-way quote.
+ */
+export function impliedYesProbability(market: KalshiMarketRaw): number | null {
+  return impliedYesQuote(market).prob;
 }
 
 /**
@@ -403,16 +455,24 @@ export class KalshiClient {
         let score = 0;
         const occ = legs.find((l) => l.occurrence_datetime)?.occurrence_datetime;
         if (occ && Number.isFinite(commenceMs)) {
+          // Fail CLOSED. `Date.parse` returns NaN for an unparseable timestamp and
+          // EVERY comparison against NaN is false — so the old
+          // `delta > MAX_MARKET_START_SKEW_MS` was false for a NaN delta and this
+          // 12h guard ADMITTED the record it exists to reject. The NaN `score`
+          // then latched the argmax below (`candidate > NaN` is false forever), so
+          // one unparseable timestamp could bind a game to the wrong event. A
+          // start time we cannot verify is not a start time.
           const delta = Math.abs(Date.parse(occ) - commenceMs);
           // sports-skills: drop next-game / far-future attach (12h skew).
-          if (delta > MAX_MARKET_START_SKEW_MS) continue;
+          if (!(Number.isFinite(delta) && delta <= MAX_MARKET_START_SKEW_MS)) continue;
           score = -delta;
         } else if (Number.isFinite(commenceMs)) {
           // Fallback: parse ET start from ticker tail when occurrence missing.
           const parsed = parseKalshiEventTail(et);
           if (parsed?.startUtcMs != null) {
             const delta = Math.abs(parsed.startUtcMs - commenceMs);
-            if (delta > MAX_MARKET_START_SKEW_MS) continue;
+            // Same fail-closed form: a non-finite delta rejects, never admits.
+            if (!(Number.isFinite(delta) && delta <= MAX_MARKET_START_SKEW_MS)) continue;
             score = -delta;
           }
         }
@@ -431,6 +491,11 @@ export class KalshiClient {
         }
         // Prefer canonical AWAYHOME event order over HOMEAWAY.
         if (et.includes(`${awayU}${homeU}`)) score += 1e10;
+        // Belt-and-braces on the argmax itself: a non-finite score must never
+        // become `best`, because `candidate > NaN` is false for every candidate
+        // that follows — including candidates from later series. One poisoned
+        // record would otherwise freeze the winner for the rest of the search.
+        if (!Number.isFinite(score)) continue;
         if (!best || score > best.score) {
           best = { eventTicker: et, score };
         }
@@ -455,19 +520,34 @@ export class KalshiClient {
     const moneyline = detailed.filter((m) => !isTieSide(m));
     const use = moneyline.length >= 2 ? moneyline : detailed;
 
-    const raws = use.map((m) => (isLiveMarket(m) ? impliedYesProbability(m) : null));
+    // Keep the whole gated quote per leg — the spread is measured here and is
+    // the only record of how noisy this price is. A non-live market yields no
+    // quote at all (its residual bid/ask is not a live price).
+    const quotes = use.map((m): KalshiImpliedQuote =>
+      isLiveMarket(m)
+        ? impliedYesQuote(m)
+        : { prob: null, bid: null, ask: null, spread: null, quoteSource: null, refuse: "not_live" },
+    );
+    const raws = quotes.map((q) => q.prob);
     const { fairA, fairB, overround } =
       use.length >= 2
         ? devigTwoSided(raws[0] ?? null, raws[1] ?? null)
         : { fairA: null, fairB: null, overround: raws[0] ?? null };
     const fairs = [fairA, fairB];
 
-    const sides: KalshiSideFairValue[] = use.map((m, i) => ({
-      team: m.yes_sub_title ?? m.ticker,
-      ticker: m.ticker,
-      rawImpliedProb: raws[i] ?? null,
-      fairProb: i < 2 ? (fairs[i] ?? null) : null,
-    }));
+    const sides: KalshiSideFairValue[] = use.map((m, i) => {
+      const q = quotes[i];
+      return {
+        team: m.yes_sub_title ?? m.ticker,
+        ticker: m.ticker,
+        rawImpliedProb: raws[i] ?? null,
+        fairProb: i < 2 ? (fairs[i] ?? null) : null,
+        quoteSpread: q?.spread ?? null,
+        quoteBid: q?.bid ?? null,
+        quoteAsk: q?.ask ?? null,
+        quoteSource: q?.quoteSource ?? q?.refuse ?? null,
+      };
+    });
 
     return {
       eventTicker,
@@ -548,6 +628,18 @@ export function toIndependentFairValue(
   const away = fairValue.sides.find((s) => tail(s.ticker) === awayAbbr.toUpperCase());
   const homeFair = home?.fairProb ?? null;
   const awayFair = away?.fairProb ?? null;
+  // Quote quality measured upstream travels WITH the price. Without it, a
+  // ten-point-wide book and a penny-wide book bridge to identical records, and
+  // downstream agreement (which multiplies confidence) cannot tell them apart —
+  // nor can anyone reconstruct which it was after the fact. Carried verbatim:
+  // no smoothing, no defaults, null where the market did not quote.
+  const quote = {
+    homeSpread: home?.quoteSpread ?? null,
+    awaySpread: away?.quoteSpread ?? null,
+    overround: fairValue.overround ?? null,
+    homeQuoteSource: home?.quoteSource ?? null,
+    awayQuoteSource: away?.quoteSource ?? null,
+  };
   // Polarity law: never publish one-sided moneyline fair (invented complement).
   // Both sides must map by ticker suffix; null pair = honest miss.
   if (
@@ -556,11 +648,13 @@ export function toIndependentFairValue(
     !Number.isFinite(homeFair) ||
     !Number.isFinite(awayFair)
   ) {
+    // Still report the quote: on an honest miss it is the diagnostic for WHY.
     return {
       source: "kalshi",
       homeFairProb: null,
       awayFairProb: null,
       capturedAt: fairValue.capturedAt,
+      quote,
     };
   }
   return {
@@ -568,6 +662,7 @@ export function toIndependentFairValue(
     homeFairProb: homeFair,
     awayFairProb: awayFair,
     capturedAt: fairValue.capturedAt,
+    quote,
   };
 }
 

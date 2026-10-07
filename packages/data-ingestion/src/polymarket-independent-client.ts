@@ -175,6 +175,16 @@ export function gammaMarketToIndependent(
     homeFairProb: Number((rawH / sum).toFixed(4)),
     awayFairProb: Number((rawA / sum).toFixed(4)),
     capturedAt,
+    // `sum` IS the overround — already computed to de-vig, previously discarded
+    // in the same expression. Gamma quotes a single price per outcome, so there
+    // is no bid/ask spread to report: null, not a stand-in.
+    quote: {
+      homeSpread: null,
+      awaySpread: null,
+      overround: sum,
+      homeQuoteSource: null,
+      awayQuoteSource: null,
+    },
   };
 }
 
