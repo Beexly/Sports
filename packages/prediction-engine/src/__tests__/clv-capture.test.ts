@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  MAX_CLOSE_AGE_MS,
   deriveClosingSnapshotFromOdds,
   gradePickClv,
   type ClosingOddsRow,
@@ -28,6 +29,8 @@ describe("deriveClosingSnapshotFromOdds", () => {
     expect(snap.capturedAt).toBeNull();
     expect(snap.mlHomePrice).toBeNull();
     expect(snap.bookmakerCount).toBe(0);
+    // No pre-kickoff rows at all → closeAgeMs null (distinct from a stale refusal).
+    expect(snap.closeAgeMs).toBeNull();
   });
 
   it("uses the latest pre-kickoff batch and averages across books", () => {
@@ -58,6 +61,61 @@ describe("deriveClosingSnapshotFromOdds", () => {
     );
     expect(snap.capturedAt?.getTime()).toBe(COMMENCE.getTime());
     expect(snap.mlHomePrice).toBe(-110);
+    expect(snap.closeAgeMs).toBe(0);
+  });
+
+  it("M-F7: a batch older than the close-age bound is NOT a close — empty snapshot, no fabricated CLV", () => {
+    // The feed died 7 hours before kickoff; its last batch is market state from
+    // hours earlier, not a closing line. Grading against it would invent a close.
+    const snap = deriveClosingSnapshotFromOdds(
+      [row({ market: "H2H", fetchedAt: t("2026-04-15T11:00:00Z"), homePrice: -150, awayPrice: 130 })],
+      COMMENCE,
+    );
+    expect(snap.capturedAt).toBeNull();
+    expect(snap.mlHomePrice).toBeNull();
+    expect(snap.bookmakerCount).toBe(0);
+    // ...but the refusal is RECORDED, not censored (C-29 lesson): the stale
+    // batch's actual age survives in the snapshot, distinguishing "stale close
+    // refused" from "no pre-kickoff odds at all".
+    expect(snap.closeAgeMs).toBe(7 * 60 * 60 * 1000);
+  });
+
+  it("M-F7: a batch exactly at the close-age bound is still eligible (<=)", () => {
+    const atBound = new Date(COMMENCE.getTime() - MAX_CLOSE_AGE_MS);
+    const snap = deriveClosingSnapshotFromOdds(
+      [row({ market: "H2H", fetchedAt: atBound, homePrice: -120, awayPrice: 100 })],
+      COMMENCE,
+    );
+    expect(snap.capturedAt?.getTime()).toBe(atBound.getTime());
+    expect(snap.mlHomePrice).toBe(-120);
+    expect(snap.closeAgeMs).toBe(MAX_CLOSE_AGE_MS);
+  });
+
+  it("M-F7: the close-age bound is overridable per call", () => {
+    const twoHoursOld = new Date(COMMENCE.getTime() - 2 * 60 * 60 * 1000);
+    const rows = [row({ market: "H2H", fetchedAt: twoHoursOld, homePrice: -120, awayPrice: 100 })];
+    expect(
+      deriveClosingSnapshotFromOdds(rows, COMMENCE, { maxCloseAgeMs: 60 * 60 * 1000 }).capturedAt,
+    ).toBeNull();
+    expect(
+      deriveClosingSnapshotFromOdds(rows, COMMENCE, { maxCloseAgeMs: 3 * 60 * 60 * 1000 })
+        .capturedAt?.getTime(),
+    ).toBe(twoHoursOld.getTime());
+  });
+
+  it("M-F7: a stale latest batch does not resurrect an older in-bound batch as the close", () => {
+    // The LATEST pre-kickoff batch is over-age (8h out), and an even OLDER
+    // batch (14h out) exists. The close is defined as the latest batch — when
+    // it is refused as stale, the derivation must NOT quietly fall back to a
+    // yet-older batch and call THAT the close.
+    const rows = [
+      row({ market: "H2H", fetchedAt: t("2026-04-15T04:00:00Z"), homePrice: -105, awayPrice: -115 }), // 14h out
+      row({ market: "H2H", fetchedAt: t("2026-04-15T10:00:00Z"), homePrice: -150, awayPrice: 130 }), // 8h out — latest, stale
+    ];
+    const snap = deriveClosingSnapshotFromOdds(rows, COMMENCE);
+    expect(snap.capturedAt).toBeNull();
+    expect(snap.mlHomePrice).toBeNull();
+    expect(snap.closeAgeMs).toBe(8 * 60 * 60 * 1000);
   });
 });
 
@@ -69,6 +127,7 @@ describe("gradePickClv", () => {
     mlAwayPrice: 170,
     capturedAt: COMMENCE,
     bookmakerCount: 6,
+    closeAgeMs: 0,
   };
 
   it("moneyline HOME: locking a longer price than the close BEATS the close", () => {
