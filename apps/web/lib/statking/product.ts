@@ -74,9 +74,22 @@ export function loadArchetypes() { return readJson<{rows:Array<{player_id:string
 
 export function getPlayer(id: string): StatKingPlayer | undefined { return loadPlayers().find((p) => p.player_id === id); }
 export function rankPlayers(sort: keyof StatKingPlayer = "galaxy_player_index"): StatKingPlayer[] { return [...loadPlayers()].sort((a,b) => Number(b[sort]) - Number(a[sort])); }
+/**
+ * Side-by-side comparison of two players.
+ *
+ * Returns `null` when the snapshot cannot supply two players at all. The
+ * stand-in fallback below is `loadPlayers()[0]` / `[1]` — on an empty or
+ * single-row snapshot those are `undefined`, and the `categories` map then
+ * threw `Cannot read properties of undefined`, taking /stats/compare to the
+ * error boundary instead of an honest empty state. Callers render the empty
+ * state on `null`; a fabricated stand-in player is never invented to fill the
+ * gap (CLAUDE.md rule #1).
+ */
 export function comparePlayers(aId: string, bId: string) {
   const requestedA = getPlayer(aId); const requestedB = getPlayer(bId);
-  const a = requestedA ?? loadPlayers()[0]!; const b = requestedB ?? loadPlayers()[1]!;
+  const roster = loadPlayers();
+  const a = requestedA ?? roster[0]; const b = requestedB ?? roster[1];
+  if (a === undefined || b === undefined) return null;
   const categories = ["galaxy_player_index","usage_score","efficiency_score","fantasy_edge","volatility_score","data_confidence"] as const;
   // Resolution behaviour is deliberately UNCHANGED (DO_NOT_BREAK: player ID
   // resolution + product loader contracts). What is new is purely REPORTING:

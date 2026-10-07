@@ -3,7 +3,7 @@ import { Shell, Cards, Badge, BarChart, StatusRibbon, InsightCard } from "../_co
 import { comparePlayers } from "@/lib/statking/product";
 
 /** Name the slots that fell back, so the notice is specific rather than vague. */
-function unresolvedLabel(c: ReturnType<typeof comparePlayers>): string {
+function unresolvedLabel(c: NonNullable<ReturnType<typeof comparePlayers>>): string {
   const missing: string[] = [];
   if (!c.aResolved) missing.push(`Player A "${c.requestedAId}"`);
   if (!c.bResolved) missing.push(`Player B "${c.requestedBId}"`);
@@ -17,6 +17,27 @@ export const metadata = {
 };
 export default function Page({ searchParams }: { searchParams?: { a?: string; b?: string; scoring?: string } }) {
   const c = comparePlayers(searchParams?.a ?? "p001", searchParams?.b ?? "p002");
+
+  // The snapshot cannot supply two players (empty or single-row roster). Say so
+  // rather than throwing into the error boundary, and never invent a stand-in.
+  if (c === null) {
+    return (
+      <Shell title="Player Compare">
+        <StatusRibbon status="fixture" label="Comparison snapshot updated every sync cycle" />
+        <p
+          data-testid="stats-compare-unavailable"
+          className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1"
+        >
+          Comparison needs two players and the current snapshot does not have
+          them yet. Nothing is broken — this page opens as soon as the player
+          snapshot lands.
+        </p>
+        <Link href="/stats/players" className="text-sm text-orbital-cyan underline hover:text-ion-white">
+          Browse the player database →
+        </Link>
+      </Shell>
+    );
+  }
 
   const insightBody = c.categories.map(x => {
     const winner = x.winner ?? "Tied";
