@@ -30,6 +30,13 @@ const CALLOUTS_RIGHT = [
     label: "04 · Factor trail",
     body: "Every factor the model weighed: market consensus, line movement, book depth, freshness, intelligence layers. You read what the model read.",
   },
+  // Copy-truth note (source: packages/prediction-engine/src/scoring.ts).
+  // The chip below this callout renders the Edge Index, not the confidence
+  // score, so the label says Edge Index. `toEdgeIndex` is identity-with-clamp:
+  // nothing fits the index to settled results, which is why the
+  // fitted-sounding adjective is gone. No code maps an index value to a win or
+  // loss rate, so the variance line must not quantify one.
+  // See apps/web/__tests__/edge-index-copy-truth.test.ts.
   {
     label: "05 · Confidence rating",
     body: "A 0-100 Edge Index. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
