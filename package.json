@@ -56,6 +56,8 @@
     "guard:no-raw-ngs": "node scripts/guardrails/no-raw-ngs-export.mjs",
     "guard:partner-offers": "node scripts/guardrails/partner-offer-compliance-scan.mjs",
     "guard:api-payload-rights": "node scripts/guardrails/api-payload-rights-scan.mjs",
+    "guard:ingestion-clearance": "node scripts/guardrails/ingestion-source-clearance.mjs",
+    "test:ingestion-clearance": "node --test scripts/guardrails/ingestion-source-clearance.test.mjs",
     "guard:openapi-security": "node scripts/guardrails/openapi-security-scan.mjs",
     "guard:aws-compatibility-index": "node scripts/guardrails/aws-compatibility-index-scan.mjs",
     "guard:no-zk-overclaim": "node scripts/guardrails/no-zk-overclaim.mjs",
