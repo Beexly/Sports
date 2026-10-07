@@ -1,4 +1,25 @@
 /**
+ * ⚠ SUPERSEDED PATH — READ THIS FIRST (audit signpost, nothing removed).
+ *
+ * `dispatchWatchlistAlert` has ZERO production callers. Its only caller is
+ * settlement-hook.ts, which itself has zero production callers. The live
+ * graded-alert path is the transactional outbox:
+ *   packages/ingestion-pipeline/src/settle-sport.ts appends a
+ *   PickSettlementEvent in the settlement transaction →
+ *   apps/web/app/api/cron/deliver-settlement-alerts/route.ts →
+ *   apps/web/lib/settlement-outbox/worker.ts (expansion, lease fencing,
+ *   per-channel idempotency, retry/dead-letter, health).
+ * The outbox worker imports exactly ONE symbol from this module —
+ * `isWatchlistAlertsEnabled` — and nothing else.
+ *
+ * The gating doctrine described below is still the most prominent write-up
+ * of the rules in the repo, which is precisely the hazard: it documents a
+ * path that no longer runs. Read worker.ts for how alerts actually reach a
+ * subscriber. This module and its 25 tests are retained (standing
+ * no-removals rule), not resurrected.
+ *
+ * ── original module doc follows ────────────────────────────────────────
+ *
  * Watchlist — alert dispatch (the send seam).
  *
  * INERT BY DEFAULT. `dispatchWatchlistAlert` no-ops (zero I/O) unless
