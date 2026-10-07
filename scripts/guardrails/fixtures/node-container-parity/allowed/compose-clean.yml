@@ -1,0 +1,9 @@
+services:
+  mock:
+    image: node:20-alpine
+  quoted:
+    image: "node:20"
+  unrelated:
+    image: postgres:16-alpine
+  registry-qualified:
+    image: docker.io/library/node:20-bookworm

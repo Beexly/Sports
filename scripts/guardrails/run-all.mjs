@@ -74,6 +74,11 @@ const GUARDS = [
   ["actor-minting-boundary", ["node", "scripts/guardrails/actor-minting-boundary.mjs"]],
   ["client-ip-boundary", ["node", "scripts/guardrails/client-ip-boundary.mjs"]],
   ["ai-control-plane-sealing", ["node", "scripts/guardrails/ai-control-plane-sealing.mjs"]],
+  ["node-container-parity", ["node", "scripts/guardrails/node-container-parity.mjs"]],
+  [
+    "node-runtime-pin-test",
+    ["node", "--test", "scripts/lib/node-runtime-pin.test.mjs", "scripts/guardrails/node-container-parity.test.mjs"],
+  ],
   ["skipped-pg-integration-honesty", ["node", "scripts/guardrails/skipped-pg-integration-honesty.mjs"]],
   ["ai-council", ["node", "scripts/guardrails/ai-council-ci.mjs"]],
   ["aws-compatibility-index-scan", ["node", "scripts/guardrails/aws-compatibility-index-scan.mjs"]],
