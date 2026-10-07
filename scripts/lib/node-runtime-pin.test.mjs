@@ -98,7 +98,7 @@ test("readPinnedMajor names the missing file when there is no pin anywhere above
 test("requireNodeFeature throws a message naming feature, required major, running major and pin", () => {
   const error = thrownBy(() =>
     requireNodeFeature({
-      feature: "registerHook" + "s",
+      feature: "module.registerHooks",
       minMajor: 22,
       remedy: "use module.register()",
       running: 20,
@@ -106,7 +106,7 @@ test("requireNodeFeature throws a message naming feature, required major, runnin
     }),
   );
   assert.equal(error.code, "FEATURE_UNAVAILABLE");
-  assert.match(error.message, /module\\.registerHook" + "s/);
+  assert.match(error.message, /module\.registerHooks/);
   assert.match(error.message, /needs Node >= 22/);
   assert.match(error.message, /this process is Node 20/);
   assert.match(error.message, /pins Node 20 \(\.node-version\)/);
@@ -116,7 +116,7 @@ test("requireNodeFeature throws a message naming feature, required major, runnin
 
 test("requireNodeFeature is a no-op when the runtime is new enough", () => {
   const result = requireNodeFeature({
-    feature: "registerHook" + "s",
+    feature: "module.registerHooks",
     minMajor: 22,
     running: 22,
     pin: { major: 22, file: ".node-version" },
@@ -131,7 +131,7 @@ test("requireNodeFeature rejects a malformed spec instead of silently passing", 
 
 test("formatFeatureFailure distinguishes 'the pin is too old' from 'you are off the pin'", () => {
   const pinTooOld = formatFeatureFailure({
-    feature: "node:sq" + "lite",
+    feature: "node:sqlite",
     minMajor: 22,
     running: 20,
     pinned: 20,
@@ -140,7 +140,7 @@ test("formatFeatureFailure distinguishes 'the pin is too old' from 'you are off 
   assert.match(pinTooOld, /cannot pass CI/);
 
   const developerBehind = formatFeatureFailure({
-    feature: "node:sq" + "lite",
+    feature: "node:sqlite",
     minMajor: 22,
     running: 20,
     pinned: 22,

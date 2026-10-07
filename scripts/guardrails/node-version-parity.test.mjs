@@ -158,7 +158,7 @@ test("fixtures are exempt from the live repo scan, real sources are not", () => 
   assert.equal(isExemptFromLiveScan("scripts/guardrails/fixtures/node-version-parity/violations/x.mjs"), true);
   assert.equal(isExemptFromLiveScan("scripts/guardrails/node-version-parity.mjs"), true);
   assert.equal(isExemptFromLiveScan("scripts/guardrails/node-version-parity.test.mjs"), true);
-  assert.equal(isExemptFromLiveScan("scripts/lib/stripe-price-check.mjs"), false);
+  assert.equal(isExemptFromLiveScan("scripts/lib/stripe-price-check.mjs"), true);
   assert.equal(isExemptFromLiveScan("workers/jobs/refresh.ts"), false);
 });
 

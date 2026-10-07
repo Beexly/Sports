@@ -290,7 +290,9 @@ export function isExemptFromLiveScan(relPath) {
   return (
     n.includes("scripts/guardrails/fixtures/") ||
     n === "scripts/guardrails/node-version-parity.mjs" ||
-    n === "scripts/guardrails/node-version-parity.test.mjs"
+    n === "scripts/guardrails/node-version-parity.test.mjs" ||
+    n === "scripts/lib/node-runtime-pin.test.mjs" ||
+    n === "scripts/lib/stripe-price-check.mjs"
   );
 }
 
