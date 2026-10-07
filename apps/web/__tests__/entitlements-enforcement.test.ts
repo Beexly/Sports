@@ -66,6 +66,30 @@ describe("getUserEntitlements — production DB path", () => {
     expect(ent.canGetAlerts).toBe(false);
   });
 
+  /**
+   * The literal pin for the dunning grace window.
+   *
+   * PAST_DUE_GRACE_DAYS decides how long a member with a FAILED PAYMENT keeps
+   * paid access. ADR-003 (docs/adr/003-server-side-paywall-hardening.md) fixes
+   * it: "getUserEntitlements() now honors PAST_DUE subscriptions whose
+   * pastDueSince is within PAST_DUE_GRACE_DAYS (7) ... The operator chose 7 days
+   * to match Stripe's recommended dunning flow."
+   *
+   * Mutation testing found nothing held the number: changing it to 700 left 36
+   * tests passing. Every other assertion about the window — here and in
+   * billing-notice.test.ts — computes its expectation FROM the exported
+   * constant, so the expectation moves with the mutation and the suite stays
+   * green while a failed-payment account keeps premium access for two years.
+   *
+   * Those derived assertions are still the right way to test the WIRING (they
+   * prove the cutoff is actually built from this constant, not a stray literal).
+   * This pin is what makes them load-bearing: it is the one assertion about the
+   * window that does not move when the constant does.
+   */
+  it("pins the dunning grace window at the 7 days ADR-003 documents", () => {
+    expect(PAST_DUE_GRACE_DAYS).toBe(7);
+  });
+
   it("honors ACTIVE/TRIALING, plus PAST_DUE only within the grace window", async () => {
     mocks.subscriptionFindFirst.mockResolvedValue(null);
     const before = Date.now() - PAST_DUE_GRACE_DAYS * 24 * 60 * 60 * 1000;

@@ -17,9 +17,9 @@
  *   2. Body validation  — strict schema; unknown fields (including any
  *                         client-supplied fingerprint) → 400.
  *   3. Source identity  — deployment-aware, fail closed:
- *                         on Vercel (VERCEL env set) the platform OVERWRITES
- *                         x-real-ip / x-forwarded-for, so x-real-ip (else the
- *                         XFF first hop) is trusted; OFF Vercel those headers
+ *                         on Vercel (VERCEL env set) the platform SETS
+ *                         x-real-ip, so x-real-ip (else the XFF LAST hop) is
+ *                         trusted; OFF Vercel those headers
  *                         follow append semantics (the first hop is
  *                         attacker-supplied), so NOTHING is trusted unless ops
  *                         explicitly names the proxy-set header via
@@ -106,8 +106,25 @@ export interface AnonymousReportHandlerDeps {
  * does):
  *
  *   - ON VERCEL (`VERCEL` env var set, as the platform always does): the edge
- *     OVERWRITES `x-real-ip` and `x-forwarded-for`, so `x-real-ip` (else the
- *     XFF FIRST hop) is platform truth and cannot be client-spoofed.
+ *     SETS `x-real-ip` itself, so `x-real-ip` is platform truth and cannot be
+ *     client-spoofed. The `x-forwarded-for` fallback below takes the LAST hop,
+ *     not the first.
+ *
+ *     WHY (this comment previously asserted that the edge OVERWRITES
+ *     `x-forwarded-for`, so the first hop was platform truth): that claim
+ *     contradicted lib/api/rate-limit.ts, whose `clientIp()` treats the
+ *     leftmost XFF entry as client-controlled under APPEND semantics. Nothing
+ *     in this repo can settle which is true of Vercel's edge, and the two
+ *     readings are not symmetric in cost: if XFF is overwritten the chain holds
+ *     exactly one entry and first === last (reading the last hop changes
+ *     nothing), whereas if it is appended to, reading the FIRST hop hands every
+ *     forged header its own per-source quota. The last hop is therefore correct
+ *     under both models, and it is what this same function already does for the
+ *     off-Vercel `x-forwarded-for` case below — the two branches used to
+ *     disagree with each other. Reachability note: on Vercel `x-real-ip` is
+ *     always present, so this fallback is effectively dead code there; it
+ *     matters when `VERCEL` is set in an environment that is not actually
+ *     behind Vercel's edge.
  *   - OFF VERCEL: standard proxies APPEND to `x-forwarded-for`, which makes
  *     the first hop attacker-supplied (one source could rotate fingerprints
  *     per request and bypass the per-source quota). Therefore NO header is
@@ -132,8 +149,10 @@ export function deriveTrustedSourceIp(
     if (realIp) return realIp;
     const forwarded = request.headers.get("x-forwarded-for");
     if (forwarded) {
-      const firstHop = forwarded.split(",")[0]?.trim();
-      if (firstHop) return firstHop;
+      // LAST hop — safe under both trust models (see the note above).
+      const hops = forwarded.split(",");
+      const lastHop = hops[hops.length - 1]?.trim();
+      if (lastHop) return lastHop;
     }
     return null;
   }

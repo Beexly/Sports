@@ -28,7 +28,7 @@ import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
 
 export const metadata: Metadata = {
-  title: { absolute: `Kill Ledger · ${BRAND_NAME}` },
+  title: `Kill Ledger · ${BRAND_NAME}`,
   description:
     "We test the strategies this industry sells. When they fail, we publish the failure.",
   alternates: { canonical: "/kill-ledger" },
@@ -237,6 +237,14 @@ export default function KillLedgerPage(): JSX.Element {
             None of them survived our tests.
           </p>
         </header>
+
+        <section data-testid="kill-ledger-provenance-line" className="rounded-2xl border border-mineral bg-eclipse/40 p-4">
+          <p className="text-xs leading-5 text-ion-2">
+            These figures are transcribed from an internal study whose raw
+            computation is not published. They are not an independent audit of
+            the named sportsbooks.
+          </p>
+        </section>
 
         <section data-testid="kill-ledger-entries">
           {ENTRIES.map((entry) => (

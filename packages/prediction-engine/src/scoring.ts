@@ -8,8 +8,9 @@ import type {
   FactorDetail,
   IndependentMarketFairValue,
   IndependentEdgeSummary,
+  IndependentSourceQuote,
 } from "@sports/types";
-import { computePickGrade, pricesWorseThanMarket } from "@sports/types";
+import { computePickGrade, pricesWorseThanMarket, edgeIndexFromRawEdge, EDGE_INDEX_MIN, EDGE_INDEX_MAX } from "@sports/types";
 import { calibrationHistoryWithholds } from "./calibration/pathwise-defect.js";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
@@ -52,17 +53,118 @@ export function impliedProbabilityToAmerican(p: number): number {
 }
 
 /**
- * Average a set of same-side American prices CORRECTLY: convert each to implied
- * probability, average the probabilities, convert the mean back to a
- * representative American price. Averaging American prices directly across books
- * that straddle pick'em produces invalid prices that map to absurd implied
- * probabilities and poison CLV. Returns null for an empty set.
+ * Widest magnitude any mainstream US book actually posts on a two-way market
+ * (±10000 ≈ 99.01% / 0.99% implied). Beyond this a "price" is an artifact of
+ * the math, not a market.
+ *
+ * This bound exists because `impliedProbabilityToAmerican` only clamps the
+ * PROBABILITY to [1e-6, 1-1e-6], which still admits prices near ∓100,000,000,
+ * and because `clv-capture.ts` (`gradePickClv`) takes whatever `lockPrice` it
+ * is handed with no bound of its own. An unbounded artifact therefore lands
+ * straight in the CLV ledger and biases the beat-close rate — observed as
+ * recorded lock prices near −21200 against closes that never left ±390.
  */
-export function averageAmericanPrices(prices: readonly number[]): number | null {
-  if (prices.length === 0) return null;
-  const meanImplied =
-    prices.reduce((s, price) => s + americanToImpliedProbability(price), 0) / prices.length;
-  return impliedProbabilityToAmerican(meanImplied);
+export const MAX_ABS_AMERICAN_PRICE = 10_000;
+
+/**
+ * Plausibility bound for a computed American price. Clamps magnitude to
+ * `MAX_ABS_AMERICAN_PRICE` so no pathological input can ever be *recorded* as
+ * a price. Clamping (rather than returning null) is deliberate: callers treat
+ * a non-null price as "we have a quote", and several assert non-null by
+ * construction — silently turning a quote into null would move the failure
+ * downstream instead of containing it here.
+ */
+export function boundAmericanPrice(price: number): number {
+  if (!Number.isFinite(price)) return -MAX_ABS_AMERICAN_PRICE;
+  return clamp(price, -MAX_ABS_AMERICAN_PRICE, MAX_ABS_AMERICAN_PRICE);
+}
+
+function meanOf(values: readonly number[]): number {
+  return values.reduce((s, v) => s + v, 0) / values.length;
+}
+
+/**
+ * Average a set of same-side American prices CORRECTLY.
+ *
+ * Two separate things are going on here; keep them apart when reading:
+ *
+ * 1. AVERAGING HAPPENS IN PROBABILITY SPACE, NOT AMERICAN SPACE. American odds
+ *    are discontinuous across ±100, so averaging books that straddle pick'em
+ *    produces invalid prices (`avg(-102, +105) = +2` is not a price) that map
+ *    to absurd implied probabilities and poison CLV. This is deliberate and
+ *    load-bearing — do not "simplify" it back to a plain mean.
+ *
+ * 2. THE AVERAGE IS TAKEN OVER *FAIR* (DE-VIGGED) PROBABILITIES when the
+ *    counterpart side is available. With-vig probabilities carry each book's
+ *    hold, so a plain mean of them is hold-weighted: high-hold books drag the
+ *    consensus toward the favourite, inflating heavy-favourite prices. We
+ *    de-vig each book's two-way pair with `removeVig`, average in fair space,
+ *    and then re-apply the mean observed overround.
+ *
+ * The re-apply step is NOT a no-op and NOT an oversight. De-vig → average →
+ * re-vig differs from a raw mean exactly when books differ in hold, which is
+ * the bias being corrected. It is required because the return value is
+ * consumed as an OFFERED market price, not as a fair probability:
+ * `computeEdgeScore(pickedSideFairProb, pickedSideAvgPrice)` computes
+ * `fairProb - impliedProbability(avgPrice)`, so returning a de-vigged price
+ * would make every moneyline edge identically ~0, and `entryPrice` /
+ * the rendered price would stop being a price anyone could actually bet.
+ *
+ * Without `counterpartPrices` the overround is simply not observable — one
+ * side of a two-way market cannot reveal its own vig — so that path CANNOT
+ * de-vig and does not pretend to. It keeps the probability-space mean and
+ * relies on `boundAmericanPrice`. Callers that hold both sides should pass
+ * them; callers that legitimately hold only one side (e.g. a display-only
+ * consensus) get the bound as the guard.
+ *
+ * Either way the result passes through `boundAmericanPrice`, so a pathological
+ * book quote can never be recorded as a lock price.
+ *
+ * Returns null when no finite price is supplied (empty set, or all non-finite).
+ */
+export function averageAmericanPrices(
+  prices: readonly number[],
+  counterpartPrices?: readonly number[]
+): number | null {
+  const side = prices.filter((p) => Number.isFinite(p));
+  if (side.length === 0) return null;
+
+  const sideImplied = side.map(americanToImpliedProbability);
+  const counterpart = (counterpartPrices ?? []).filter((p) => Number.isFinite(p));
+
+  // No counterpart → vig is unobservable → bound only (see docblock).
+  if (counterpart.length === 0) {
+    return boundAmericanPrice(impliedProbabilityToAmerican(meanOf(sideImplied)));
+  }
+
+  const counterpartImplied = counterpart.map(americanToImpliedProbability);
+
+  // Pair per book when both sides line up 1:1 (the normal case: one row per
+  // bookmaker carries both prices). When they don't — a book quoting only one
+  // side gets filtered out of one array — fall back to de-vigging the two
+  // means. Coarser, still fair-space, never mispairs two different books.
+  const fairProbs: number[] = [];
+  const overrounds: number[] = [];
+  if (sideImplied.length === counterpartImplied.length) {
+    for (let i = 0; i < sideImplied.length; i++) {
+      const p = sideImplied[i]!;
+      const q = counterpartImplied[i]!;
+      fairProbs.push(removeVig(p, q).home);
+      overrounds.push(p + q);
+    }
+  } else {
+    const p = meanOf(sideImplied);
+    const q = meanOf(counterpartImplied);
+    fairProbs.push(removeVig(p, q).home);
+    overrounds.push(p + q);
+  }
+
+  const meanFairProb = meanOf(fairProbs);
+  const meanOverround = meanOf(overrounds);
+  // Back onto the market scale (see docblock). A sub-1.0 overround is an
+  // inconsistent market; `computeEdgeScore`'s twoSidedImpliedSum guard is what
+  // refuses to credit edge there, so we do not silently "fix" it here.
+  return boundAmericanPrice(impliedProbabilityToAmerican(meanFairProb * meanOverround));
 }
 
 // ============================================================
@@ -88,27 +190,30 @@ export function clamp(value: number, min: number, max: number): number {
 // ============================================================
 
 /**
- * Maps a pick's engine `edgeScore` (already on a 0–100 scale — see
- * `ScoredPick.edgeScore`) to the public 0–100 "Edge Index" rendered on the
- * board / Gate Cam / Pass List.
+ * Renders a stored/computed `edgeScore` as the public "Edge Index" shown on the
+ * board / Gate Cam / Pass List / embed.
  *
- * This is the SINGLE source of truth for the Edge Index scale. The mapping is
- * intentionally identity-with-clamp: the engine value is already normalized to
- * 0–100 in `computeEdgeScore` callers, so the only job here is to:
- *   1. Round to a whole number for display.
- *   2. Hard-clamp to [0, 100] so no upstream scale mistake (e.g. a stray ×10,
- *      or a raw-edge fraction persisted to `Game.currentEdgeIndex` /
- *      `GateDecision.edgeIndex`) can ever surface an Edge Index above 100.
+ * The SCALE itself is defined once, in `@sports/types`' `edge-index.ts`
+ * (`edgeIndexFromRawEdge`), which every scoring path calls. This function is
+ * only the render step: round, and hard-clamp so no upstream scale fault (a
+ * stray ×10, or a raw-edge fraction persisted straight into
+ * `Game.currentEdgeIndex` / `GateDecision.edgeIndex`) can surface out of range.
  *
  * Returns `null` for nullish input so callers can render "Edge Index pending".
  *
- * A two-way market that is internally consistent can only reach an Edge Index
- * of 100 when the de-vigged fair edge is genuinely ≥ +5% (see computeEdgeScore);
- * a vanilla -110/-110 total maps to ~26, never 100.
+ * Reading the number (see `edge-index.ts` for the derivation): it is a
+ * PRICE-QUALITY reading, not a forecast. 100 is a perfectly fair price, 50 is an
+ * ordinary −110/−110 two-way, 0 is roughly a 10% two-way hold. Cheaper books
+ * read higher, and nothing here is fitted to settled results.
+ *
+ * Values stamped with a model version at or before
+ * `LEGACY_HALF_SCALE_THROUGH_MODEL_VERSION` are on the retired half scale
+ * (50 = fair price); convert them with `legacyHalfScaleToCurrent` before
+ * comparing them against anything produced since.
  */
 export function toEdgeIndex(edgeScore: number | null | undefined): number | null {
   if (edgeScore == null || !Number.isFinite(edgeScore)) return null;
-  return clamp(Math.round(edgeScore), 0, 100);
+  return clamp(Math.round(edgeScore), EDGE_INDEX_MIN, EDGE_INDEX_MAX);
 }
 
 // ============================================================
@@ -224,10 +329,26 @@ function assessIndependentEdge(
   if (!fairValues || fairValues.length === 0) return null;
 
   const independents: IndependentEstimate[] = [];
+  // Quote quality of the sources that ACTUALLY contributed, resolved to the side
+  // being scored. Agreement between sources multiplies conviction (SOLO ×0.6 →
+  // CONFIRMS ×1.0), so whether an agreeing source was a deep book or a wide,
+  // noisy one is exactly the thing a later review needs — and it used to be
+  // discarded at ingestion, leaving the question unanswerable. Carried, not
+  // scored: nothing below reads these values.
+  const sourceQuotes: IndependentSourceQuote[] = [];
   for (const fv of fairValues) {
     const prob = homeIsChosen ? fv.homeFairProb : fv.awayFairProb;
     if (prob == null || !Number.isFinite(prob) || prob < 0 || prob > 1) continue;
     independents.push({ source: fv.source, prob });
+    const q = fv.quote;
+    if (q) {
+      sourceQuotes.push({
+        source: fv.source,
+        spread: (homeIsChosen ? q.homeSpread : q.awaySpread) ?? null,
+        overround: q.overround ?? null,
+        quoteSource: (homeIsChosen ? q.homeQuoteSource : q.awayQuoteSource) ?? null,
+      });
+    }
   }
   if (independents.length === 0) return null;
 
@@ -252,6 +373,10 @@ function assessIndependentEdge(
     sources: independents.map((e) => e.source),
     priced: false, // surfaced in the glass box; not yet in the confidence math
     rationale: a.rationale,
+    // Omitted entirely when no contributing source is a quoted market (a pure
+    // model blend has no bid/ask) — an empty array would imply we looked and
+    // found nothing quotable, which is a different claim.
+    ...(sourceQuotes.length > 0 ? { sourceQuotes } : {}),
   };
 }
 
@@ -370,7 +495,12 @@ function computeEdgeScore(
     rawEdge = 0;
   }
 
-  // Normalize: edge of +5% = full score, edge of 0% = half score
+  // Normalize: edge of +5% = full score, edge of 0% = half score.
+  // DELIBERATELY UNCHANGED by the Edge Index rescale. This value feeds the
+  // CONFIDENCE composite, and re-anchoring it would move confidence, tier,
+  // MIN_PUBLISH_CONFIDENCE and every ranking that reads them. The rescale
+  // touches only the PUBLISHED index (see edgeIndexFromRawEdge), which reuses
+  // this same ±0.05 domain rather than inventing a new one.
   const normalized = clamp((rawEdge + 0.05) / 0.10, 0, 1);
   const score = normalized * WEIGHTS.EDGE_COMPONENT_MAX;
 
@@ -664,7 +794,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const skellamIndependents = (input.context?.independentFairValues ?? []).filter(
     (fv) => fv.source === SKELLAM_COVER_SOURCE,
@@ -717,7 +850,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ...independentEdgeFactors,
   ];
 
-  const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
+  const edgeScore = edgeIndexFromRawEdge(rawEdge, twoSidedImpliedSum);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(pricedOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
@@ -1022,7 +1155,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
   if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
-  const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
+  const edgeScore = edgeIndexFromRawEdge(rawEdge, twoSidedImpliedSum);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(pricedTotals.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
@@ -1257,8 +1390,14 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   // averaging American prices across the ±100 discontinuity mints an invalid
   // entry price that would then mis-grade CLV against the close. Non-null by
   // construction — h2hOdds is non-empty here and every price is present.
+  // The counterpart side is passed so the average is taken over DE-VIGGED
+  // probabilities (see averageAmericanPrices): a plain mean of with-vig
+  // probabilities is hold-weighted and inflates heavy favourites, and the
+  // result is bounded so a pathological book quote can never be recorded as
+  // the lock price the CLV ledger grades against.
   const avgPrice = averageAmericanPrices(
     h2hOdds.map((o) => (homeIsChosen ? o.homePrice! : o.awayPrice!)),
+    h2hOdds.map((o) => (homeIsChosen ? o.awayPrice! : o.homePrice!)),
   )!;
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct, "win-probability");
@@ -1326,7 +1465,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
@@ -1363,7 +1505,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ...independentEdgeFactors,
   ];
 
-  const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
+  const edgeScore = edgeIndexFromRawEdge(rawEdge, twoSidedImpliedSum);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(h2hOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";

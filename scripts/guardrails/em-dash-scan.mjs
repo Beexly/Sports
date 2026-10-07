@@ -14,6 +14,7 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 // Curated user-facing copy. Extend this list as more surfaces are cleaned.
 const FILES = [
@@ -30,6 +31,7 @@ const FILES = [
 
 const root = process.cwd();
 const offenders = [];
+let scanned = 0;
 
 for (const rel of FILES) {
   let src;
@@ -38,6 +40,7 @@ for (const rel of FILES) {
   } catch {
     continue;
   }
+  scanned++;
   const lines = src.split("\n");
   lines.forEach((line, i) => {
     if (/[—–]/.test(line)) {
@@ -46,10 +49,23 @@ for (const rel of FILES) {
   });
 }
 
+// Same silent-skip hole as the tree-walking guards, in list form: the
+// `catch { continue }` above drops a renamed/moved curated file, and the OK
+// line reported FILES.length (what was CONFIGURED) rather than what was
+// actually read — so the count could not reveal the gap either. Every curated
+// path must still resolve, and the count below is now the real one.
+assertScanFloor({
+  guard: "em-dash-scan",
+  root,
+  roots: FILES,
+  scanned,
+  floor: FILES.length,
+});
+
 if (offenders.length > 0) {
   console.error(`[em-dash-scan] FAIL - ${offenders.length} em/en-dash hit(s):`);
   for (const o of offenders) console.error("  " + o);
   process.exit(1);
 }
 
-console.log(`[em-dash-scan] OK - scanned ${FILES.length} copy file(s); no em/en-dashes.`);
+console.log(`[em-dash-scan] OK - scanned ${scanned} copy file(s); no em/en-dashes.`);

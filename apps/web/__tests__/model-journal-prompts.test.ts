@@ -80,11 +80,57 @@ describe("Model Journal prompts", () => {
     const prompt = buildJournalDraftPromptUser(weekData);
     // Qualitative bands, not the raw values (confidence 72 / edge 6.4).
     expect(prompt).toContain("conviction: solid conviction");
-    expect(prompt).toContain("edge: a slim edge");
+    expect(prompt).toContain("price vs fair value: an expensive price vs fair value");
     expect(prompt).not.toContain("confidence 72");
     expect(prompt).not.toContain("edge 6.4");
     // Market/public data (consensus %, book count) is still fine to include.
     expect(prompt).toContain("consensus 64%");
     expect(prompt).toContain("12 books");
+  });
+});
+
+/**
+ * The Edge Index is a PRICE-QUALITY reading: the de-vigged fair probability of
+ * the picked side minus the probability implied by the price offered on it. It
+ * is not a measure of OUR advantage, and nothing fits it to settled results.
+ *
+ * On the retired half scale the index could never exceed 50, so the drafting
+ * prompt's upper bands never fired and the wording "a strong edge" was harmless
+ * only by accident. On the current full scale an ordinary -110/-110 market reads
+ * ~52 and a sharp one ~76, so that wording would start telling the drafting
+ * model that routine markets carry a strong edge we never measured.
+ */
+describe("the Edge Index band describes the price, not an advantage we claim", () => {
+  const withEdge = (edgeScore: number): JournalWeekData => ({
+    ...weekData,
+    picks: [{ ...weekData.picks[0]!, edgeScore }],
+  });
+
+  it("never calls an ordinary or cheap price an 'edge' we hold", () => {
+    // 52 = a vanilla -110/-110 two-way. 76 = roughly a 2% hold.
+    for (const edgeScore of [0, 30, 49, 52, 65, 76, 95, 100]) {
+      const prompt = buildJournalDraftPromptUser(withEdge(edgeScore));
+      expect(prompt, `edgeScore ${edgeScore}`).not.toMatch(/\ba (?:strong|moderate|slim) edge\b/);
+    }
+  });
+
+  it("bands the ordinary market as ordinary, not as a strong edge", () => {
+    expect(buildJournalDraftPromptUser(withEdge(52))).toContain(
+      "price vs fair value: an ordinary price vs fair value",
+    );
+  });
+
+  it("bands a genuinely cheap price as cheap, and an expensive one as expensive", () => {
+    expect(buildJournalDraftPromptUser(withEdge(76))).toContain(
+      "price vs fair value: a cheap price vs fair value",
+    );
+    expect(buildJournalDraftPromptUser(withEdge(20))).toContain(
+      "price vs fair value: an expensive price vs fair value",
+    );
+  });
+
+  it("still withholds the raw index value from the public prompt", () => {
+    const prompt = buildJournalDraftPromptUser(withEdge(76));
+    expect(prompt).not.toContain("76");
   });
 });

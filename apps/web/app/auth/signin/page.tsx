@@ -16,6 +16,16 @@ export const metadata: Metadata = {
   title: "Sign in",
 };
 
+/**
+ * Distinct page title (WCAG 2.4.2). Without one this page inherited the root
+ * layout default and announced identically to the homepage — indistinguishable
+ * in a tab strip, in browser history, or to a screen reader switching windows
+ * mid-signup. The layout's robots:noindex still applies; only the title is added.
+ */
+export const metadata: Metadata = {
+  title: "Sign in",
+};
+
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
@@ -36,7 +46,13 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const errorMessage = getErrorMessage(searchParams.error);
 
   return (
-    <div
+    // <main id="main-content">, not a bare <div>: the root layout renders a
+    // "Skip to content" link (href="#main-content") as the first focusable
+    // element on EVERY page. Without this anchor the very first Tab stop on the
+    // login surface moved focus nowhere (WCAG 2.4.1, bypass blocks). <main> and
+    // <div> are both display:block and the flex class sets display anyway, so
+    // this is a semantics-only change with no visual delta.
+    <main
       id="main-content"
       className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-obsidian px-4 py-12"
     >
@@ -148,7 +164,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       >
         &larr; Back to {BRAND_NAME}
       </Link>
-    </div>
+    </main>
   );
 }
 

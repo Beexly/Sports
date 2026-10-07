@@ -38,6 +38,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const DEFAULT_ROOT = resolve(process.cwd());
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
@@ -218,6 +219,17 @@ export async function collectAffiliateStructuralSeparationViolations(root = DEFA
 
 async function main() {
   const root = parseRootArg(process.argv.slice(2));
+  // walkFiles() returns [] for a directory it cannot read, so a renamed
+  // FORWARD_SOURCE_DIRS entry would leave the forward half of this guard
+  // scanning nothing and still printing OK. This guard reports no file count,
+  // so the root-existence half of the check is what closes that hole; it is
+  // skipped for --root fixture runs (see min-scan-floor.mjs), which are
+  // supposed to scan a tiny synthetic tree.
+  assertScanFloor({
+    guard: "affiliate-structural-separation",
+    root,
+    roots: FORWARD_SOURCE_DIRS,
+  });
   const hits = await collectAffiliateStructuralSeparationViolations(root);
 
   if (hits.length === 0) {

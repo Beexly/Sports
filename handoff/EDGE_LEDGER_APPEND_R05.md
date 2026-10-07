@@ -1,0 +1,9 @@
+[swarm-R05] SPECIAL-TEAMS BEYOND K11 (audit of real data paths, 2026-08-23)
+Punt-return yards / punt-return edge: NO DATA PATH — drives.ts:55 (PUNT terminal outcome only); nflverse-pbp-mapper only records play_type=punt + drive result; no return-yard column. Not computable from current ingestion.
+Punter net average (net punt yards): NO DATA PATH — no punter-level aggregation table in packages/data-ingestion/src; only per-play yardline_100 difference would approximate, but no explicit punter-stats feed ingested.
+Field-position battle (starting field position delta): COMPUTABLE — drives.ts:70 (startYardline100) and :131 (finalized startYardline100 per drive) joined to kickoff-return-yards-bind.ts:56 (game-script WP) gives pre/post-drive field-position delta; can aggregate delta per team-week.
+Blocked kicks (blocked punt / FG / PAT): NO DATA PATH — grep of packages/ shows BLOCKED as a status/activation concept (evidence-readiness-matrix.ts, remote-model-client), not a special-teams event; no blocked_kick event table in nflverse ingestion.
+Fake-punt / fake-FG tendency: NO DATA PATH — no formation/play-type column beyond punt/field_goal/field_goal_result; no fake-flag in nflverse-pbp-mapper or data-ingestion feeds; public-consensus angle only.
+Weather interaction on ST units (wind/temp/rain effect on punt/FG): NO DATA PATH — no weather feed in data-ingestion/src or prediction-engine/src; climate references only window/calendar, not meteorological.
+Kickoff-return-yards edge (existing H1 #5): COMPUTABLE (bind line 56/89/128/260; kickoff-return-yards-bind.ts + kickoff-return-yards.ts). Not extended by R05.
+VERDICT: 2 COMPUTABLE (field-position delta via drives startYardline; H1 #5 existing); 5 NO DATA PATH (punt return, punter net, blocked kicks, fake tendency, weather). No fabricated backtests; priced:false preserved; no market-echo confidence/100 used.

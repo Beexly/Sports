@@ -58,6 +58,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const DEFAULT_ROOT = resolve(process.cwd());
 const SCAN_TARGETS = ["apps", "packages", "workers", "scripts"];
@@ -374,6 +375,12 @@ export async function collectPedersenOpenerViolations(root = DEFAULT_ROOT) {
 
 async function main() {
   const root = parseRootArg(process.argv.slice(2));
+  // walk() returns [] for a directory it cannot read, so a renamed SCAN_TARGET
+  // would leave this guard scanning nothing and still printing OK. This guard
+  // reports no file count, so the root-existence half of the check is what
+  // closes that hole; it is skipped for --root fixture runs (see
+  // min-scan-floor.mjs), which are supposed to scan a tiny synthetic tree.
+  assertScanFloor({ guard: "pedersen-opener-boundary", root, roots: SCAN_TARGETS });
   const hits = await collectPedersenOpenerViolations(root);
 
   if (hits.length === 0) {

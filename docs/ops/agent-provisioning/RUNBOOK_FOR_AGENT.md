@@ -142,7 +142,8 @@ folded into ChatGPT agent mode) and **Google Project Mariner** (shut down May 4,
 **P0 — kills cash spend.** OpenRouter first (`headless_first`, and its
 provisioning API makes every later key free). Then Cerebras and Groq via the
 founder's Chrome. One free lane armed flips `contentPlanPrimary` to
-`cerebras_free` and `freeLaneConfigured` to true.
+`free_lane` (Cerebras or the configured secondary — either one) and
+`freeLaneConfigured` to true.
 
 **P1 — Claude off cash.** A cloud only counts when creds **and** its model map are
 both set; `CLAUDE_PROVIDER=auto` with nothing configured still bills cash, and the

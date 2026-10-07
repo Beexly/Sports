@@ -101,7 +101,7 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     evidenceRefs: ["apps/web/lib/workers/orchestration-policy.ts", "apps/web/__tests__/orchestration-policy.test.ts"],
     lastVerifiedAt: V,
     failureMode: "a retried settlement double-settles without an idempotency key.",
-    nextAction: "wire idempotencyKey + retryDecision + failure ledger into the BullMQ workers.",
+    nextAction: "wire idempotencyKey + retryDecision + failure ledger into the cron and worker entry points (there is no job queue to wire it into — no queue library is installed).",
   },
 
   // ── cache ──

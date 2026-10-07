@@ -76,6 +76,7 @@ import type {
   OddsApiEvent,
 } from "@sports/types";
 import { CANONICAL_MODEL_VERSION } from "@sports/types";
+import { isFeaturedPromotionEligible } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import {
   resolveCanonicalGame,
@@ -107,6 +108,11 @@ import {
   type FixtureProbe,
 } from "./fixture-confirmation.js";
 import { persistGateDecisions, type GateDecisionInput } from "./gate-decision-sink.js";
+import {
+  americanToDecimalOrNull,
+  appendPickToChain,
+  isLedgerChainEnabled,
+} from "./ledger-chain-store.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -178,6 +184,10 @@ export interface ProcessSportResult {
    * request the vendor answered with an error is still counted.
    */
   paidRequestCount?: number;
+  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
+  lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  lineArchiveErrors?: number;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -602,8 +612,7 @@ export async function processSport(
           events = rd.events;
           oddsProviderTag = "therundown";
           console.log(
-            `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
-              (rd.error ? ` (note: ${rd.error})` : ""),
+            `${logPrefix} ${sport.key}: rundown free path ${events.length} events`,
           );
         } else {
           oddsProviderTag = "therundown-empty";
@@ -992,6 +1001,11 @@ export async function processSport(
     // MONEYLINE is stored per side (home/away are not complementary).
     const dispersionByGame = new Map<string, GameDispersion>();
 
+    // Glass-Ledger line-archive outcome for this cycle. Surfaced on the result
+    // so refresh-odds reports it instead of silently swallowing archive errors.
+    let lineSnapshotsPersisted = 0;
+    let lineArchiveErrors = 0;
+
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
@@ -1088,12 +1102,22 @@ export async function processSport(
       // new Odds API calls.
       const propSnap = eventOddsByExternalId.get(game.externalId);
       const propRows = propSnap ? toPropLineSnapshotRows(propSnap as PropEventLike) : [];
-      await captureLineSnapshotsIfEnabled({
+      const lineArchive = await captureLineSnapshotsIfEnabled({
         db,
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
         rows: [...toLineSnapshotRows(gameOdds), ...propRows],
       });
+      lineSnapshotsPersisted += lineArchive.persisted;
+      if (lineArchive.error) {
+        // The callee never throws; it reports failure in `error`. Discarding it
+        // meant a broken archive looked byte-identical to a disabled one.
+        lineArchiveErrors++;
+        console.warn(
+          `${logPrefix} ${sport.key}: line-archive capture failed for game ` +
+          `${gameRecord.id} — ${lineArchive.error}`,
+        );
+      }
 
       // Capture the book-line dispersion (max−min across books) per kind NOW,
       // while every book's line for this game is in hand. It is the CLV
@@ -1314,10 +1338,13 @@ export async function processSport(
 
       // Featured promotion gate: only auto-promote when explicitly enabled.
       // In bootstrap mode, no pick is featured — grades are uncalibrated.
+      // The pick-quality half now lives in `isFeaturedPromotionEligible`
+      // (@sports/types), which carries the reachability caveat: the grades it
+      // requires sit above the Edge Index's honest-market ceiling, so on a
+      // correctly priced market this half is unsatisfiable. That is asserted,
+      // not assumed — see grade-ladder-reachability.test.ts.
       const isFeatured =
-        gates.canPromoteFeaturedPicks &&
-        (pick.pickGrade === "ELITE_PLAY" ||
-          (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
+        gates.canPromoteFeaturedPicks && isFeaturedPromotionEligible(pick);
 
       // A SETTLED pick is frozen: once it has a WIN/LOSS/PUSH result, the
       // refresh cycle must never rewrite its selection/line/confidence/grade/
@@ -1607,6 +1634,42 @@ export async function processSport(
             },
             update: {}, // immutable — a frozen receipt is never rewritten
           });
+
+          // Glass Ledger chain append (F-9 / B-6a). Default OFF — zero DB
+          // when LEDGER_CHAIN_ENABLED is not the literal "true". Fail-open:
+          // a chain skip must never block the receipt or the pick.
+          if (isLedgerChainEnabled()) {
+            try {
+              const priceDecimal = americanToDecimalOrNull(entryOdds);
+              const kickoff = oddsInputs.find((o) => o.gameId === pick.gameId)?.commenceTime;
+              const decisionAt = pick.dataFreshnessAt;
+              if (priceDecimal && kickoff && decisionAt) {
+                const chained = await appendPickToChain(db, {
+                  pickId: upsertedPick.id,
+                  sport: sport.name,
+                  market: String(pick.pickType),
+                  selection: pick.selection,
+                  priceDecimal,
+                  book: "consensus",
+                  decisionAt: new Date(decisionAt).toISOString(),
+                  kickoffAt: new Date(kickoff).toISOString(),
+                  modelVersion: pick.modelVersion,
+                  featureSnapshotHash: receipt.contentHash,
+                });
+                if (!chained.ok && chained.skipped !== "already_present" && chained.skipped !== "flag_off") {
+                  console.warn(
+                    `${logPrefix} Ledger chain pick-append skipped for ${upsertedPick.id}: ` +
+                      `${chained.skipped}${chained.message ? ` (${chained.message})` : ""}`,
+                  );
+                }
+              }
+            } catch (chainErr) {
+              console.warn(
+                `${logPrefix} Ledger chain pick-append failed for pick ${upsertedPick.id}: ` +
+                  `${chainErr instanceof Error ? chainErr.message : chainErr}`,
+              );
+            }
+          }
         }
       } catch (receiptErr) {
         // Non-fatal: proof-receipt failure must never kill a pick
@@ -1686,6 +1749,10 @@ export async function processSport(
       note: fixtureNote ?? emptyNote,
       skippedInPlay,
       ...paidAccounting(),
+  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
+  lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  lineArchiveErrors?: number;
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

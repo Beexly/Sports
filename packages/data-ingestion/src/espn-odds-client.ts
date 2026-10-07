@@ -88,6 +88,20 @@ export const ESPN_ODDS_SPORT_MAP: Record<
 
 type Loose = Record<string, unknown>;
 
+/**
+ * Per-request ceiling for every ESPN public call.
+ *
+ * `fetch` has no default timeout that is short enough to matter here, and one
+ * sport fetch issues up to 5 scoreboard calls plus one odds call per candidate
+ * event, all SERIALLY. A single hung socket therefore held the whole ingest
+ * cron open until the platform killed the function — and a killed cron job
+ * writes nothing, logs nothing, and reports nothing, which is strictly worse
+ * than a loud failure. Every other upstream client in this package already
+ * caps its calls at 12–15s; these two were the hole. Kept slightly tighter
+ * than the 15s siblings because of the serial fan-out.
+ */
+const ESPN_ODDS_TIMEOUT_MS = 10_000;
+
 function americanNum(v: unknown): number | null {
   if (typeof v === "number" && Number.isFinite(v) && v !== 0) return Math.round(v);
   if (typeof v === "string" && v.trim()) {
@@ -394,6 +408,7 @@ export async function fetchEspnOddsForSport(
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
+  const timeoutMs = Math.max(1, options?.timeoutMs ?? ESPN_ODDS_TIMEOUT_MS);
   const errors: string[] = [];
   const now = new Date();
   const dateParams = scoreboardDateParams(now, horizonDays);
@@ -453,7 +468,12 @@ export async function fetchEspnOddsForSport(
   }
 
   const out: OddsApiEvent[] = [];
-  const lastUpdate = new Date().toISOString();
+  // NO `last_update` is emitted anywhere below. ESPN's public odds JSON carries
+  // no upstream update timestamp, and stamping the local clock would make every
+  // ESPN row "fresh" by construction — defeating the anti-tautology freshness
+  // gate (`DataNormalizer.freshGameIds`) that exists to catch stale lines.
+  // Omitting the field makes these rows not-provably-fresh, which is the correct
+  // fail-safe. See packages/data-ingestion/src/normalizer.ts.
   const nowMs = now.getTime();
 
   for (let i = 0; i < candidates.length; i++) {
@@ -504,7 +524,6 @@ export async function fetchEspnOddsForSport(
       const markets: OddsApiMarket[] = [
         {
           key: "h2h",
-          last_update: lastUpdate,
           outcomes: [
             { name: ev.away, price: awayMl },
             { name: ev.home, price: homeMl },
@@ -529,7 +548,6 @@ export async function fetchEspnOddsForSport(
       ) {
         markets.push({
           key: "spreads",
-          last_update: lastUpdate,
           outcomes: [
             { name: ev.away, price: awaySpreadPx, point: awaySpreadPt },
             { name: ev.home, price: homeSpreadPx, point: homeSpreadPt },
@@ -548,7 +566,6 @@ export async function fetchEspnOddsForSport(
       ) {
         markets.push({
           key: "totals",
-          last_update: lastUpdate,
           outcomes: [
             { name: "Over", price: overOdds, point: ou },
             { name: "Under", price: underOdds, point: ou },
@@ -559,7 +576,7 @@ export async function fetchEspnOddsForSport(
       const book: OddsApiBookmaker = {
         key: "espn_public",
         title: `ESPN/${providerName}`,
-        last_update: lastUpdate,
+        // no last_update: ESPN exposes no upstream timestamp (see note above)
         markets,
       };
 

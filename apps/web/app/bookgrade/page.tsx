@@ -22,7 +22,7 @@ const BOOKGRADE_DESCRIPTION =
   "Per-book price quality vs consensus close and book update reliability, from the 241-game MLB clean-close corpus.";
 
 export const metadata: Metadata = {
-  title: { absolute: `BookGrade · ${BRAND_NAME}` },
+  title: `BookGrade · ${BRAND_NAME}`,
   description: BOOKGRADE_DESCRIPTION,
   alternates: { canonical: "/bookgrade" },
   openGraph: {
@@ -90,6 +90,14 @@ export default function BookGradePage(): JSX.Element {
           <p className="text-sm font-semibold text-ion-1">
             A quality score, not a betting signal. It tells you what a price
             historically cost at a book, not which side to take.
+          </p>
+        </section>
+
+        <section data-testid="bookgrade-provenance-line" className="rounded-2xl border border-mineral bg-eclipse/40 p-4">
+          <p className="text-xs leading-5 text-ion-2">
+            These figures are transcribed from an internal study whose raw
+            computation is not published. They are not an independent audit of
+            the named sportsbooks.
           </p>
         </section>
 

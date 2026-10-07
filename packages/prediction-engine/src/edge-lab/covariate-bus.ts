@@ -24,19 +24,24 @@
  * NEVER as p (these are y-axis, excluded from the bus):
  *   - `expectedCompletionPct`        (passing NGS proprietary model)
  *   - `avgExpectedYac`               (receiving NGS proprietary model)
- *   - `expectedRushYards` / `ryoe`   (rushing NGS proprietary model)
+ *   - `expectedRushYards` / `ryoe`   (rushing NGS proprietary TOTAL)
  *   - vendor `cpoe`                  (published CPOE)
  * The bus exposes none of the above; it only emits the covariate fields
  * listed under `CovariateField` (avgYac included — it is the per-reception
  * YAC mean, a process/scheme signal, not the per-target arrival YAC the y-axis
  * model fits).
  *
+ * NOTE: `ryoePerAtt` (RYOE per attempt, a weekly NGS MEAN rate) is promoted
+ * to a covariate — see props-hb-ryoe-bind. It is a leak-safe efficiency signal
+ * (week t for t+1), NOT a y-axis prediction. `expectedRushYards` (the total
+ * RYOE) remains y-axis only above.
+ *
  * Pure. No I/O. No Prisma. No model inference.
  */
 
 export const COVARIATE_BUS_METHOD_TAG = "covariate_bus_v1" as const;
 
-export type StatType = "receiving" | "passing" | "rushing";
+export type StatType = "receiving" | "passing" | "rushing" | "defense";
 
 /**
  * Normalized NGS weekly-mean row. The data-ingestion parsers
@@ -62,13 +67,42 @@ export interface CovariateRow {
   readonly avgIntendedAirYards: number | null; // yards per attempt, weekly mean
   readonly avgCompletedAirYards: number | null; // yards per completion, weekly mean
   readonly avgAirYardsDifferential: number | null; // intended minus completed, weekly mean
+  /** Weekly NGS mean: intended air yards to the sticks (distance past LOS to line to gain). H2 Edge. */
+  readonly avgAirYardsToSticks: number | null; // yards past LOS to the line to gain, weekly mean
   // ── rushing ─────────────────────────────────────────────────────────────
   /** % of rushing attempts facing 8+ defenders in the box. */
   readonly pctAttemptsGte8Defenders: number | null;
   readonly avgTimeToLos: number | null; // seconds from snap to LOS crossing, weekly mean
+  /** Weekly NGS mean: rush yards over expected per attempt (RYOE/att). Efficiency. H2 Edge. */
+  readonly ryoePerAtt: number | null;
+  /** Weekly NGS mean: % of rushing attempts that exceeded expected yards (RYOE > 0). Hole-hit / efficiency signal; books price rush TDs on volume but miss this. H2 Edge. */
+  readonly rushPctOverExpected: number | null;
   // ── yac (receiving, covariate) ─────────────────────────────────────────────
   /** Average yards-after-catch per reception (weekly NGS mean). NOT per-target arrival YAC. */
   readonly avgYac: number | null;
+  // ── defense (PFR advstats def) ──────────────────────────────────────────────
+  /** Weekly PFR mean: pressures (hurries + hits + sacks) per dropback faced. H1 Edge #1. */
+  readonly pressureRate: number | null;
+  /** Weekly PFR defensive snap share: fraction of team defensive snaps the player appeared in. H1 Edge #4. */
+  readonly snapShare: number | null;
+  /** Weekly PFR mean: TFL (tackles for loss) rate per defensive game. H1 Edge #2. */
+  readonly tflRate: number | null;
+  /** Weekly PFR mean: pass deflections (PD) rate per target faced. H1 Edge #3. */
+  readonly pdRate: number | null;
+  /** Weekly PFR mean: INT rate per target faced. H2 Edge. */
+  readonly intRate: number | null;
+  /** Weekly PFR mean: fumble rate per touch. H2 Edge. */
+  readonly fumbleRate: number | null;
+  /** Weekly PFR mean: missed-tackle rate (missed tackles / tackles attempted), week t for game t+1. H2 Edge — rec TDs. */
+  readonly missedTackleRate: number | null;
+  /** Weekly NGS mean: air yards per attempt (passer). H2 Edge. */
+  readonly airYardsPerAttempt: number | null;
+  /** Weekly PFR def mean: opponent passer rating allowed (0–158.3). Lower =
+   * stingier coverage; higher (e.g. 100+) → opposing QBs get the ball out
+   * faster → fewer pressures available to generate. H2 Edge (pressures). */
+  readonly passerRatingAllowed: number | null;
+  /** Weekly NGS mean: passer rating — public NFL formula (0–158.3). H2 Edge. */
+  readonly passerRating: number | null;
   // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
   /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
   readonly avgExpectedYac: number | null;
@@ -90,19 +124,84 @@ export type CovariateField =
   | "avgIntendedAirYards"
   | "avgCompletedAirYards"
   | "avgAirYardsDifferential"
+  | "avgAirYardsToSticks"
   | "pctAttemptsGte8Defenders"
   | "avgTimeToLos"
-  | "avgYac";
+  | "avgYac"
+  | "pressureRate"
+  | "snapShare"
+  | "tflRate"
+  | "pdRate"
+  | "intRate"
+  | "fumbleRate"
+  | "missedTackleRate"
+  | "airYardsPerAttempt"
+  | "ryoePerAtt"
+  | "rushPctOverExpected"
+  | "passerRating"
+  | "passerRatingAllowed";
 
 /** Grain + provenance tag so callers never mistake a weekly mean for a
  * single-frame measurement. Honest header on every emitted cell. */
 export type CovariateGrain = "week_t_for_tplus1";
-export type CovariateProvenance = "weekly_ngs_mean" | "expected_metric_v1";
+export type CovariateProvenance = "weekly_ngs_mean" | "weekly_pfr_def_mean" | "expected_metric_v1";
+/** Masterplan §3.1 / doctrine H0.1 — layer on every p-side cell. */
+export type CovariateLayer = "L0" | "L1" | "L2" | "L3" | "MARKET_GAME" | "MARKET_PROP";
 
 export interface CovariateCell {
   readonly value: number;
   readonly grain: CovariateGrain;
   readonly provenance: CovariateProvenance;
+  /** L0 box … L3 frame. MARKET_PROP is forbidden on p. */
+  readonly layer: CovariateLayer;
+  /** Last completed NFL week this value is legal as a prior. Must be < kickoffWeek. */
+  readonly knownAtWeek: number;
+}
+
+/**
+ * Every field the bus may emit into independent p. CI walks this list;
+ * MARKET_PROP fails the build (masterplan §6 q-contamination test).
+ */
+export const P_SIDE_COVARIATE_REGISTRY: readonly {
+  readonly field: CovariateField;
+  readonly layer: CovariateLayer;
+  readonly honesty: CovariateProvenance;
+}[] = [
+  { field: "avgSeparation", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgCushion", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "airYardsShare", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgTimeToThrow", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "aggressiveness", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgIntendedAirYards", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "pctAttemptsGte8Defenders", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgTimeToLos", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgYac", layer: "L2", honesty: "weekly_ngs_mean" },
+  // ── H1/H2 edge-lab fields (rebased): weekly means, L2, honesty per source ──
+  { field: "avgCompletedAirYards", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgAirYardsDifferential", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "avgAirYardsToSticks", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "airYardsPerAttempt", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "ryoePerAtt", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "rushPctOverExpected", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "passerRating", layer: "L2", honesty: "weekly_ngs_mean" },
+  { field: "pressureRate", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "snapShare", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "tflRate", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "pdRate", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "intRate", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "fumbleRate", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "missedTackleRate", layer: "L2", honesty: "weekly_pfr_def_mean" },
+  { field: "passerRatingAllowed", layer: "L2", honesty: "weekly_pfr_def_mean" },
+] as const;
+
+export function assertPSideHasNoMarketProp(
+  registry: readonly { readonly layer: CovariateLayer }[] = P_SIDE_COVARIATE_REGISTRY,
+): void {
+  for (const e of registry) {
+    if (e.layer === "MARKET_PROP") {
+      throw new Error("q-contamination: MARKET_PROP is forbidden on the p-side covariate registry");
+    }
+  }
 }
 
 /** Stable row key for dedup / join. */
@@ -119,6 +218,17 @@ export function covariateKey(gsisId: string, season: number, week: number, statT
  *
  * Returns the single latest qualifying row (by week), or `null` when no
  * per-game history exists before kickoff (fail-closed).
+ *
+ * NON-FINITE WEEKS FAIL CLOSED, and that needs its own test rather than falling
+ * out of the ordering comparison. Every comparison against NaN is false, so
+ * `r.week >= kickoffWeek` does not REJECT a NaN week — it ADMITS it. A guard
+ * written only as an ordering test is fail-OPEN on precisely the values that
+ * carry no ordering, so a poisoned week (a parser emitting NaN, a rate divided
+ * by a zero snap count) would walk through the leak wall and become evidence
+ * for a game it may postdate. Both sides are therefore checked for finiteness
+ * up front: a non-finite `kickoffWeek` has no defined "before", so nothing is
+ * eligible; a non-finite `r.week` cannot be located in time, so it is never
+ * evidence for anything.
  */
 export function latestPriorRow(
   rows: readonly CovariateRow[],
@@ -127,11 +237,13 @@ export function latestPriorRow(
   statType: StatType,
   kickoffWeek: number,
 ): CovariateRow | null {
+  if (!Number.isFinite(kickoffWeek)) return null;
   let best: CovariateRow | null = null;
   for (const r of rows) {
     if (r.gsisId !== gsisId) continue;
     if (r.season !== season) continue;
     if (r.statType !== statType) continue;
+    if (!Number.isFinite(r.week)) continue; // poisoned row — never evidence
     if (r.week === 0) continue; // season aggregate — never a next-game X
     if (r.week <= 0 || r.week >= kickoffWeek) continue; // leak-safe: strictly prior
     if (best === null || r.week > best.week) best = r;
@@ -147,6 +259,25 @@ export function latestPriorRow(
  * `null` (fail-closed — does not impute, does not cross the same-week
  * boundary).
  */
+/**
+ * Look up the registry entry for a covariate field. The registry is the
+ * single source of truth for `layer` and `provenance` — `nextGameCovariate`
+ * must never hardcode these, or CI's q-contamination walk and the runtime
+ * cell can drift (Codacy finding).
+ */
+export function lookupFieldMeta(
+  field: CovariateField,
+): { readonly layer: CovariateLayer; readonly honesty: CovariateProvenance } {
+  const hit = P_SIDE_COVARIATE_REGISTRY.find((e) => e.field === field);
+  if (hit === undefined) {
+    // Every CovariateField must be registered. Fail-closed if it's not —
+    // a missing registration is a q-contamination hazard (a field with no
+    // declared layer could silently default to MARKET_PROP upstream).
+    throw new Error(`covariate field "${field}" is not registered in P_SIDE_COVARIATE_REGISTRY`);
+  }
+  return hit;
+}
+
 export function nextGameCovariate(
   rows: readonly CovariateRow[],
   gsisId: string,
@@ -159,7 +290,14 @@ export function nextGameCovariate(
   if (row === null) return null; // no history before kickoff — fail closed
   const raw = row[field];
   if (raw === null || !Number.isFinite(raw)) return null;
-  return { value: raw, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+  const meta = lookupFieldMeta(field);
+  return {
+    value: raw,
+    grain: "week_t_for_tplus1",
+    provenance: meta.honesty,
+    layer: meta.layer,
+    knownAtWeek: row.week,
+  };
 }
 
 /**

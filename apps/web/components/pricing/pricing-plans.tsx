@@ -102,8 +102,7 @@ export function PricingPlans({
                   <span
                     className={[
                       "rounded-full px-3 py-0.5 text-xs font-semibold",
-                      isPro ? "bg-brand-600 text-white" : "bg-plasma text-plasma-ink",
-                    ].join(" ")}
+                      isPro ? "bg-brand-600 text-white" : "bg-plasma text-plasma-ink",                    ].join(" ")}
                   >
                     {plan.badge}
                   </span>
@@ -156,7 +155,11 @@ export function PricingPlans({
                 {plan.id === "FREE" ? (
                   <Link
                     href="/auth/signin?callbackUrl=/dashboard"
-                    className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
+                    // min-h-11 + flex centering: the Free CTA is the sign-up door
+                    // on the pricing page and sat under the 44px touch-target
+                    // floor that ToggleButton above and SubscribeButton beside it
+                    // already hold. Still full-width and centered on desktop.
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
                   >
                     {plan.cta}
                   </Link>
@@ -200,7 +203,7 @@ function ToggleButton({
       aria-pressed={active}
       className={[
         "min-h-11 rounded-full px-5 py-1.5 text-sm font-semibold transition-colors",
-        active ? "bg-brand-600 text-white" : "text-ion-2 hover:text-ion-1",
+        active ? "bg-brand-700 text-white" : "text-ion-2 hover:text-ion-1",
       ].join(" ")}
     >
       {children}
@@ -208,6 +211,19 @@ function ToggleButton({
   );
 }
 
+/*
+ * The ✓ / ✗ markers are the ONLY thing distinguishing an included feature from
+ * an excluded one in a plan card. While they were `aria-hidden`, a screen-reader
+ * user heard "Real-time push alerts" on the Pro card exactly as they heard it on
+ * the Elite card — the feature list read as if every plan had everything. On the
+ * page that takes the money that is not a nicety, it is a misrepresentation
+ * (WCAG 1.1.1 / 1.3.1: information conveyed by shape alone).
+ *
+ * `role="img"` + `aria-label` is the same treatment ComparisonCell already
+ * applies to the identical glyphs in the "Side by side" table on
+ * app/pricing/page.tsx, so the two surfaces now announce consistently. Zero
+ * visual change — classes and path data are untouched.
+ */
 function CheckIcon() {
   return (
     <svg
@@ -216,7 +232,8 @@ function CheckIcon() {
       viewBox="0 0 24 24"
       strokeWidth={2.5}
       stroke="currentColor"
-      aria-hidden="true"
+      role="img"
+      aria-label="Included"
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
     </svg>
@@ -231,7 +248,8 @@ function DashIcon() {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      aria-hidden="true"
+      role="img"
+      aria-label="Not included"
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
     </svg>

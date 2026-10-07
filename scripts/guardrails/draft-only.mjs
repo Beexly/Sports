@@ -14,8 +14,16 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const ROOT = resolve(process.cwd());
+
+// Minimum-coverage floor. Observed on origin/main @ bb0e7dfc0 (2026-08-25):
+// this guard scans 2085 files. Set at roughly half — well below refactor churn,
+// well above what survives a SCAN_DIRS root disappearing. See min-scan-floor.mjs:
+// without it, the `catch { continue }` below turns a renamed root into
+// "scanned 0 file(s), OK, exit 0".
+const MIN_SCANNED_FILES = 1000;
 
 const SCAN_DIRS = [
   "apps/web/app",
@@ -31,8 +39,12 @@ const WHITELIST_FILES = new Set([
   "packages/db/prisma/schema.prisma",
   "packages/db/prisma/seed.ts",
   "scripts/guardrails/draft-only.mjs",
-  // Founder-approved exception (see CLAUDE.md's Elite tier — "real-time
-  // email & push alerts"): this is a per-USER transactional notification
+  // Founder-approved exception (see CLAUDE.md's Elite tier — "graded-pick
+  // email & push alerts"). The earlier "real-time email & push alerts" wording
+  // this comment cited was retired by ff4626fec / PR #587 as an unbacked
+  // delivery-speed claim. The exception does NOT rest on that wording; it rests
+  // on the substantive grounds below, which are unchanged:
+  // this is a per-USER transactional notification
   // channel, not the autonomous social/email/SMS content-publishing path
   // this guardrail exists to catch. It is triple-gated (WATCHLIST_ALERTS_ENABLED
   // kill switch, GRADED-only picks, Elite-only recipients — see
@@ -272,6 +284,14 @@ async function main() {
       }
     }
   }
+
+  assertScanFloor({
+    guard: "draft-only",
+    root: ROOT,
+    roots: SCAN_DIRS,
+    scanned,
+    floor: MIN_SCANNED_FILES,
+  });
 
   if (hits.length === 0) {
     console.log("[draft-only] OK - scanned " + scanned + " file(s); no publish/send paths.");

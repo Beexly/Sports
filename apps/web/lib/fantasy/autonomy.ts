@@ -13,8 +13,9 @@
  * autonomously here. Honors no-autonomous-action. Pure, illustrative.
  */
 
-import { optimize, rosterFromIds, DEFAULT_ROSTER_IDS } from "./lineup";
+import { optimize, rosterFromIds, sampleRoster, DEFAULT_ROSTER_IDS } from "./lineup";
 import { waiverTargets, bidDollars, dropCandidates } from "./waivers";
+import type { Player } from "./players";
 
 export type AutonomyLevel = 0 | 1 | 2 | 3 | 4;
 
@@ -56,8 +57,13 @@ export type ProposedAction = {
   readonly reversible: boolean;
 };
 
-function lineupAction(): ProposedAction {
-  const opt = optimize(rosterFromIds(DEFAULT_ROSTER_IDS));
+function lineupAction(pool?: readonly Player[]): ProposedAction {
+  // With a LIVE pool the illustrative DEFAULT_ROSTER_IDS don't resolve, so mirror
+  // buildLeagueTwin/lineup: draw a labelled sample roster from the real pool rather
+  // than proposing against an empty roster. Never invents a player.
+  let roster = rosterFromIds(DEFAULT_ROSTER_IDS, pool);
+  if (roster.length === 0 && pool && pool.length > 0) roster = sampleRoster(pool);
+  const opt = optimize(roster);
   const close = opt.starters.filter((s) => s.verdict === "close");
   return {
     id: "act-lineup",
@@ -72,8 +78,8 @@ function lineupAction(): ProposedAction {
   };
 }
 
-function waiverActions(): ProposedAction[] {
-  return waiverTargets().slice(0, 2).map((r, i) => ({
+function waiverActions(pool?: readonly Player[]): ProposedAction[] {
+  return waiverTargets(pool).slice(0, 2).map((r, i) => ({
     id: `act-waiver-${i}`,
     type: "waiver" as const,
     title: `Claim ${r.player.name} · ${r.tier}`,
@@ -84,8 +90,8 @@ function waiverActions(): ProposedAction[] {
   }));
 }
 
-function dropAction(): ProposedAction[] {
-  const d = dropCandidates()[0];
+function dropAction(pool?: readonly Player[]): ProposedAction[] {
+  const d = dropCandidates(pool)[0];
   if (!d) return [];
   return [{
     id: "act-drop",
@@ -110,10 +116,17 @@ function tradeAction(): ProposedAction {
   };
 }
 
-/** What the Autopilot would propose at a given level (nothing at Manual). */
-export function proposeActions(level: AutonomyLevel): ProposedAction[] {
+/**
+ * What the Autopilot would propose at a given level (nothing at Manual).
+ *
+ * `pool` is EXPLICIT and entitlement-gated by the caller. It is deliberately NOT
+ * defaulted to `activePlayerPool()`: this runs in a client component, and a default
+ * that reached for the live registry would put the paid graded pool behind an
+ * ungated surface the moment PROJECTIONS_PROVIDER is set. Omitted → illustrative.
+ */
+export function proposeActions(level: AutonomyLevel, pool?: readonly Player[]): ProposedAction[] {
   if (level === 0) return [];
-  const actions = [lineupAction(), ...waiverActions(), ...dropAction()];
+  const actions = [lineupAction(pool), ...waiverActions(pool), ...dropAction(pool)];
   if (level >= 4) actions.push(tradeAction());
   return actions;
 }

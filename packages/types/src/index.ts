@@ -20,6 +20,9 @@ export type RiskLevel =
 export * from "./ladder.js";
 export * from "./heartbeat.js";
 export * from "./ranking-candidates.js";
+// The Edge Index scale and the pick-grade ladder each live in exactly one file.
+export * from "./edge-index.js";
+export * from "./pick-grade.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -64,6 +67,36 @@ export interface IndependentEdgeSummary {
    * Absent on rows minted before the stamp existed.
    */
   trueProbBasis?: "mint" | "backfill";
+  /**
+   * Quote quality of each contributing source that is a QUOTED MARKET, for the
+   * side this summary is about. Omitted when no contributing source is a quoted
+   * market (a pure model blend — Elo/Poisson/FPI have no bid/ask).
+   *
+   * Why it is here: agreement drives a confidence multiplier (SOLO vs CONFIRMS),
+   * so a thin, wide-spread quote that happens to agree can promote a pick on
+   * noise. These are MEASURED values carried from ingestion, never derived; they
+   * do not change any score today. Because FactorBreakdown is persisted to the
+   * `factorBreakdown` Json column, they make that question answerable AFTER the
+   * fact instead of being destroyed at ingestion.
+   */
+  sourceQuotes?: IndependentSourceQuote[];
+}
+
+/**
+ * Measured quote quality for one independent source, on one side of one game.
+ * Every field is a value the ingestion layer already computed — nothing here is
+ * derived, smoothed, or defaulted. Null means "this source does not publish it",
+ * not "assume it is fine".
+ */
+export interface IndependentSourceQuote {
+  /** Matches the estimator's `source` tag, e.g. "kalshi". */
+  source: string;
+  /** Two-way bid/ask spread on this side's leg, in probability units (0–1). */
+  spread?: number | null;
+  /** Sum of the source's raw implied probabilities BEFORE de-vig (1.0 = balanced). */
+  overround?: number | null;
+  /** How the two-way quote was formed, e.g. "yes_bid_ask". Provenance only. */
+  quoteSource?: string | null;
 }
 
 export type TrueProbBasis = NonNullable<IndependentEdgeSummary["trueProbBasis"]>;
@@ -270,15 +303,76 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
 // ============================================================
 // Pick grade helpers
 // ============================================================
+//
+// `computePickGrade`, `GRADE_THRESHOLDS`, `isFeaturedPromotionEligible` and
+// `UNPRICED_MAX_GRADE` moved to ./pick-grade.ts and are re-exported above.
+// They used to live here as bare literals duplicated against a `GRADE_THRESHOLDS`
+// constant in @sports/prediction-engine that nothing read. One ladder now.
 
-export function computePickGrade(
-  confidence: number,
-  edgeScore: number
-): PickGrade {
-  if (confidence >= 85 && edgeScore >= 80) return "ELITE_PLAY";
-  if (confidence >= 75 && edgeScore >= 65) return "STRONG_PLAY";
-  if (confidence >= 65 && edgeScore >= 50) return "SOLID_PLAY";
-  return "LEAN";
+/**
+ * The highest Edge Index an internally consistent two-way market can produce.
+ *
+ * Derivation (every step traceable to `@sports/prediction-engine`'s `scoring.ts`):
+ *
+ *   EdgeIndex   = clamp(round((edgeComponentScore / EDGE_COMPONENT_MAX) * 100), 0, 100)
+ *   edgeComponentScore = clamp((rawEdge + 0.05) / 0.10, 0, 1) * EDGE_COMPONENT_MAX
+ *   ⇒ EdgeIndex = clamp(round(50 + 1000 * rawEdge), 0, 100)
+ *
+ *   rawEdge = pickedSideFairProb − offeredProb, where `pickedSideFairProb` is
+ *   the PROPORTIONAL de-vig p/S of the same books' mean implied probability p
+ *   and `offeredProb` is that same side's WITH-vig implied probability. For an
+ *   overround S ≥ 1 (every honest two-way market charges vig):
+ *
+ *       rawEdge = p/S − p = −p·(S−1)/S  ≤  0
+ *
+ * So the Edge Index cannot EXCEED 50 on an honest market: 50 is a ceiling, not a
+ * midpoint, and it is touched only in the limit of zero hold (S = 1), which no
+ * real book offers. (Integer rounding inside `impliedProbabilityToAmerican` can
+ * wobble an observed value to 51; that is rounding noise, not edge.)
+ *
+ * This constant is a DERIVED FACT about the current Edge Index definition. It is
+ * not a tunable. Rescaling the Edge Index is an owner decision — see the Edge
+ * Index invariant work — and this number moves only if that formula moves.
+ */
+export const HONEST_MARKET_EDGE_INDEX_MAX = 50;
+
+/** Minimum confidence a STRONG_PLAY needs before Featured promotion. */
+export const FEATURED_STRONG_PLAY_MIN_CONFIDENCE = 80;
+
+/**
+ * Does this pick qualify for Featured promotion on grade/edge grounds?
+ *
+ * The operator gate (`ReadinessGates.canPromoteFeaturedPicks`) is a SEPARATE,
+ * caller-side condition; this function only answers the pick-quality half.
+ *
+ * ⚠️ READ THIS BEFORE "FIXING" A FEATURED BOARD THAT NEVER FILLS.
+ *
+ * The grade clause requires ELITE_PLAY or STRONG_PLAY, and both of those rungs
+ * require an Edge Index of 65 or 80 — above `HONEST_MARKET_EDGE_INDEX_MAX`.
+ * On a correctly priced market the engine cannot produce either grade, so this
+ * predicate is currently unsatisfiable by design rather than by accident, and
+ * `grade-ladder-reachability.test.ts` asserts exactly that against the real
+ * scorer. It is NOT a bug to be patched by loosening a number here: whether the
+ * ladder gets re-based against the real Edge Index scale (making these rungs
+ * reachable again) or the top rungs are retired is an owner decision.
+ *
+ * The `edgeScore` clause is a guard, not a threshold: an Edge Index above the
+ * honest ceiling means the pick's edge came from an inconsistently priced or
+ * mis-averaged market, so its "elite" grade is an artefact of bad pricing.
+ * Featuring is the loudest claim the product makes about a pick; it must never
+ * be spent on the one pick whose price arithmetic is provably broken.
+ */
+export function isFeaturedPromotionEligible(pick: {
+  readonly pickGrade: PickGrade;
+  readonly confidence: number;
+  readonly edgeScore: number;
+}): boolean {
+  const gradeQualifies =
+    pick.pickGrade === "ELITE_PLAY" ||
+    (pick.pickGrade === "STRONG_PLAY" &&
+      pick.confidence >= FEATURED_STRONG_PLAY_MIN_CONFIDENCE);
+  if (!gradeQualifies) return false;
+  return Number.isFinite(pick.edgeScore) && pick.edgeScore <= HONEST_MARKET_EDGE_INDEX_MAX;
 }
 
 export const PICK_GRADE_LABELS: Record<PickGrade, { label: string; color: string; bgColor: string }> = {
@@ -324,7 +418,18 @@ export interface OddsApiOutcome {
 
 export interface OddsApiMarket {
   key: "h2h" | "spreads" | "totals";
-  last_update: string;
+  /**
+   * UPSTREAM market timestamp — NEVER the local clock.
+   *
+   * Optional because free-path adapters (ESPN public JSON, TheRundown v1 blobs)
+   * expose no per-market update time. Those adapters MUST omit this field rather
+   * than substitute `new Date()`: a locally-stamped timestamp is always "fresh"
+   * by construction, which defeats the anti-tautology freshness gate in
+   * `DataNormalizer.freshGameIds` and can resurrect a days-stale primary book as
+   * a fresh 2-book consensus. `undefined` correctly reads as
+   * not-provably-fresh (fail-safe).
+   */
+  last_update?: string;
   outcomes: OddsApiOutcome[];
 }
 
@@ -335,6 +440,8 @@ export interface OddsApiBookmaker {
    * Optional in practice: real payloads have arrived without the
    * bookmaker-level timestamp. Consumers must fall back to the market-level
    * `last_update` (also upstream truth) before treating a row as unparseable.
+   *
+   * UPSTREAM truth only — never the local clock (see `OddsApiMarket.last_update`).
    */
   last_update?: string;
   markets: OddsApiMarket[];
@@ -509,6 +616,32 @@ export interface IndependentMarketFairValue {
   homeFairProb?: number | null;
   awayFairProb?: number | null;
   capturedAt?: string;            // ISO; the CLV "as-of" timestamp
+  /**
+   * Quote quality MEASURED at ingestion, carried through instead of discarded.
+   * Absent for model estimators (Elo/Poisson/FPI have no bid/ask). Present for a
+   * quoted market so a thin, wide-spread quote stays distinguishable from a deep
+   * one after the bridge — the two are otherwise identical here, and agreement
+   * between sources drives a confidence multiplier. Never fabricated: a field is
+   * null when the source does not publish it.
+   */
+  quote?: IndependentFairValueQuote | null;
+}
+
+/**
+ * Per-side quote quality for one independent market fair value. Pure carriage of
+ * values the ingestion layer already computed — no derivation, no defaults.
+ */
+export interface IndependentFairValueQuote {
+  /** Two-way bid/ask spread on the HOME leg, probability units; null if unquoted. */
+  homeSpread?: number | null;
+  /** Two-way bid/ask spread on the AWAY leg, probability units; null if unquoted. */
+  awaySpread?: number | null;
+  /** Sum of the two raw implied probabilities BEFORE de-vig (1.0 = balanced book). */
+  overround?: number | null;
+  /** How the home leg's two-way quote was formed, e.g. "yes_bid_ask". */
+  homeQuoteSource?: string | null;
+  /** How the away leg's two-way quote was formed, e.g. "yes_bid_no_bid_complement". */
+  awayQuoteSource?: string | null;
 }
 
 // ============================================================

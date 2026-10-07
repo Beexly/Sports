@@ -119,7 +119,11 @@ export async function GET(req: Request): Promise<NextResponse> {
         pModel: null,
         /** The 0-100 selection score, as a score. Never divide this by 100. */
         confidenceScore: typeof p.confidence === "number" ? p.confidence : null,
-        rankingP,
+        // Field gate: rankingP is PRO-gated ("Free — 2 picks/day teaser, NO
+        // confidence scores"). A free-scope key gets null even on the FREE-tier
+        // rows the row filter above lets it see. The key is kept and set to null
+        // rather than dropped: this is a published response shape.
+        rankingP: scope === "premium" ? rankingP : null,
         rankingSource,
         marketFairProb,
         /** De-vig method behind marketFairProb. Proportional on every path today. */

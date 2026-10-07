@@ -13,6 +13,9 @@ import { useState } from "react";
 import { staking } from "@/lib/tracker/staking";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 
+/** Stable id so the visible "Kelly fraction" caption can label the range input. */
+const KELLY_SLIDER_ID = "staking-kelly-fraction";
+
 export function StakingCalculator() {
   const [prob, setProb] = useState("55");
   const [odds, setOdds] = useState("-110");
@@ -37,10 +40,23 @@ export function StakingCalculator() {
 
       <div className="mt-4">
         <div className="flex items-center justify-between text-xs text-ion-1">
-          <span>Kelly fraction</span>
+          {/* The visible caption is the slider's programmatic label. Without the
+              htmlFor/id pair a screen reader announced this range input as an
+              unnamed "slider, 25 percent" — adjacency is not association. */}
+          <label htmlFor={KELLY_SLIDER_ID}>Kelly fraction</label>
           <span className={`font-mono text-ion-white ${NUMERIC_TEXT_CLASS}`}>{Math.round(frac * 100)}% {frac === 1 ? "(full: high variance)" : frac <= 0.25 ? "(conservative)" : ""}</span>
         </div>
-        <input type="range" min={0.1} max={1} step={0.05} value={frac} onChange={(e) => setFrac(Number(e.target.value))} className="mt-1 w-full accent-orbital-cyan" />
+        <input
+          id={KELLY_SLIDER_ID}
+          type="range"
+          min={0.1}
+          max={1}
+          step={0.05}
+          value={frac}
+          onChange={(e) => setFrac(Number(e.target.value))}
+          aria-valuetext={`${Math.round(frac * 100)} percent of full Kelly`}
+          className="mt-1 w-full accent-orbital-cyan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbital-cyan"
+        />
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4" aria-live="polite" aria-label="Stake recommendation">
@@ -63,8 +79,15 @@ function Input({ label, value, onChange, suffix }: { label: string; value: strin
   return (
     <label className="text-xs text-ion-1">
       {label}
-      <div className="mt-1 flex items-center rounded-md border border-mineral bg-transparent px-3">
-        <input value={value} onChange={(e) => onChange(e.target.value)} className="w-full bg-transparent py-2 text-sm text-ion-white outline-none" />
+      <div className="mt-1 flex items-center rounded-md border border-mineral bg-transparent px-3 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-orbital-cyan">
+        {/* `outline-none` with no replacement left keyboard users with no
+            visible focus target on a public tool. The ring is drawn on the
+            wrapper via focus-within so the token border stays intact. */}
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full bg-transparent py-2 text-sm text-ion-white outline-none"
+        />
         {suffix && <span className="text-xs text-ion-2">{suffix}</span>}
       </div>
     </label>

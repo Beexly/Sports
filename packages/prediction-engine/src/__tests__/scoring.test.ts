@@ -19,7 +19,7 @@ import {
   computeScheduleStressScore,
 } from "../game-context.js";
 import type { OddsInput } from "@sports/types";
-import { MODEL_VERSION } from "../constants.js";
+import { MODEL_VERSION, PREMIUM_CONFIDENCE_THRESHOLD, RISK_THRESHOLDS } from "../constants.js";
 import { buildPickProofReceipt, verifyPickProofReceipt } from "../pick-proof-receipt.js";
 
 // Deterministic non-crypto hash for the receipt contract test (prod injects sha256).
@@ -135,7 +135,14 @@ describe("toEdgeIndex", () => {
 // ============================================================
 // Edge score sanity: a consistent two-way market cannot fabricate a max edge.
 // A vanilla -110/-110 total de-vigs to ~0.5 fair vs ~0.524 offered → rawEdge
-// is slightly NEGATIVE, so the Edge Index lands near ~26, never 100.
+// is slightly NEGATIVE, so the Edge Index lands near ~52, never 100.
+//
+// SCALE NOTE (v5.2.7 → v5.3.0). The Edge Index is now published across the whole
+// range an honest market can produce: EdgeIndex = clamp(round(100 + 2000 *
+// rawEdge), 0, 100), so 100 is a fair price and ~50 an ordinary -110/-110
+// two-way. It used to be 50 + 1000 * rawEdge, which put a fair price at 50 and
+// left the published 50-100 half unreachable. The numbers below moved with the
+// axis; the PROPERTY each one protects — no fabricated maximum — did not.
 // ============================================================
 
 const makeTwoWayTotalInput = (
@@ -159,42 +166,80 @@ const makeTwoWayTotalInput = (
 });
 
 describe("scoreTotalPick — edge score of a realistic two-way total", () => {
-  it("a -110/-110 total scores a modest edge (~26), never the 100 max", () => {
+  it("a -110/-110 total scores a modest edge (~52), never the 100 max", () => {
     const total = scoreGame(makeTwoWayTotalInput(-110, -110)).find(
       (p) => p.pickType === "TOTAL",
     );
     expect(total).toBeTruthy();
     expect(total!.edgeScore).toBeGreaterThan(0);
-    expect(total!.edgeScore).toBeLessThan(40);
+    // A fair price is 100. This market charges ~2.4 points of juice on the
+    // picked side, so it must land clearly short of the maximum.
+    expect(total!.edgeScore).toBeLessThan(80);
     // And the public Edge Index derived from it is well under 100.
-    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(40);
+    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(80);
   });
 
   it("no two-way American price combo drives the Edge Index to 100", () => {
     const prices = [-200, -150, -120, -110, 100, 120, 150, 170];
+    let vigged = 0;
+    let inconsistent = 0;
     for (const over of prices) {
       for (const under of prices) {
         const total = scoreGame(makeTwoWayTotalInput(over, under)).find(
           (p) => p.pickType === "TOTAL",
         );
         if (!total) continue;
-        // Whether the book is vigged (sum > 1, real) or sub-vig (sum < 1,
-        // inconsistent), the engine never fabricates a maxed-out edge.
-        expect(total.edgeScore).toBeLessThanOrEqual(50);
+        const overround =
+          americanToImpliedProbability(over) + americanToImpliedProbability(under);
+
+        if (overround < 1) {
+          // Sub-vig: internally inconsistent, no trustworthy price. A
+          // price-quality reading we cannot vouch for fails closed at the
+          // BOTTOM of the axis, never the top.
+          inconsistent++;
+          expect(total.edgeScore, `${over}/${under} overround ${overround}`).toBe(0);
+          continue;
+        }
+        if (overround === 1) {
+          // Exactly zero hold (e.g. -200/+200). This is a genuinely fair price,
+          // and 100 is the truthful reading of it on a price-quality axis. It is
+          // an artefact of exact integer fixtures, not something a book offers.
+          expect(total.edgeScore, `${over}/${under} is zero-hold`).toBe(100);
+          continue;
+        }
+        // The real case: the book charges vig, so the picked side pays juice,
+        // rawEdge < 0, and the index MUST fall short of the maximum. This is
+        // the property the original "never 100" guard was protecting.
+        vigged++;
+        expect(
+          total.edgeScore,
+          `${over}/${under} charges hold ${(overround - 1).toFixed(4)} yet published a fair-price index`,
+        ).toBeLessThan(100);
       }
     }
+    // Non-vacuity: both branches must actually have been exercised.
+    expect(vigged).toBeGreaterThan(0);
+    expect(inconsistent).toBeGreaterThan(0);
   });
 
   it("an inconsistent sub-vig book (-120/+170, implied sum 0.92) does NOT fabricate a max edge", () => {
     // This is the exact shape behind the reported bug: de-vigging a negative-hold
     // book inflated the chosen-side fair prob to +5% over the offered price and
-    // maxed the Edge Index. The overround guard now neutralizes the positive edge.
+    // maxed the Edge Index. The overround guard neutralizes the positive edge.
+    //
+    // On the retired half scale the neutralized value rendered as 50 — the top
+    // of what an honest market could reach, but only the MIDDLE of the published
+    // axis, so it read as unremarkable. On the current scale rawEdge = 0 is 100,
+    // the loudest number the product prints, so passing the clamped value
+    // through would turn a refusal-to-vouch into a claim of a perfect price.
+    // An inconsistent market therefore publishes the BOTTOM of the axis.
     const total = scoreGame(makeTwoWayTotalInput(-120, 170)).find(
       (p) => p.pickType === "TOTAL",
     );
     expect(total).toBeTruthy();
-    expect(total!.edgeScore).toBeLessThanOrEqual(50);
-    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(100);
+    expect(total!.edgeScore).toBe(0);
+    expect(toEdgeIndex(total!.edgeScore)).toBe(0);
+    expect(total!.pickGrade).toBe("LEAN");
   });
 });
 
@@ -345,10 +390,13 @@ describe("scoreGame — precision fields", () => {
       expect(typeof pick.consensusPct).toBe("number");
       expect(typeof pick.bookmakerCount).toBe("number");
 
-      // Classification
-      expect(["FREE", "PREMIUM"]).toContain(pick.tier);
-      expect(["ELITE_PLAY", "STRONG_PLAY", "SOLID_PLAY", "LEAN"]).toContain(pick.pickGrade);
-      expect(["LOW_RISK", "MODERATE", "HIGH_VARIANCE", "INJURY_RISK", "LINE_STEAM"]).toContain(pick.riskLevel);
+      // Classification — tier is a pure function of confidence, so assert the
+      // rule itself. Listing the entire PickTier / PickGrade / RiskLevel
+      // domain in a toContain() asserts nothing: the type already guarantees
+      // membership, so such a check cannot fail for any input.
+      expect(pick.tier).toBe(
+        pick.confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE"
+      );
 
       // Explainability
       expect(pick.reasoning.length).toBeGreaterThan(30);
@@ -361,6 +409,27 @@ describe("scoreGame — precision fields", () => {
       expect(pick.modelVersion).toBe(MODEL_VERSION);
       expect(pick.dataFreshnessAt).toBeInstanceOf(Date);
     }
+
+    // The fixture is deterministic, so pin the classification it MUST produce
+    // together with the inputs that force it.
+    const spread = picks.find((p) => p.pickType === "SPREAD");
+    expect(spread).toBeDefined();
+    // 5 spread books, 100% consensus on the home side.
+    expect(spread!.bookmakerCount).toBe(5);
+    expect(spread!.consensusPct).toBeGreaterThanOrEqual(
+      RISK_THRESHOLDS.HIGH_VARIANCE_CONSENSUS_THRESHOLD
+    );
+    // Depth 5 < LOW_RISK_BOOK_THRESHOLD (7) → cannot be LOW_RISK; consensus is
+    // above the HIGH_VARIANCE floor and the line is not steaming → MODERATE.
+    expect(spread!.riskLevel).toBe("MODERATE");
+    // SOLID_PLAY needs confidence >= 65 AND edgeScore >= 50; this fixture
+    // clears neither band, so the grade must be LEAN.
+    expect(spread!.confidence).toBeLessThan(65);
+    expect(spread!.edgeScore).toBeLessThan(50);
+    expect(spread!.pickGrade).toBe("LEAN");
+    // Same confidence is below the premium cutoff → free-tier pick.
+    expect(spread!.confidence).toBeLessThan(PREMIUM_CONFIDENCE_THRESHOLD);
+    expect(spread!.tier).toBe("FREE");
   });
 
   it("confidence is in range 0–100", () => {
@@ -456,13 +525,15 @@ describe("scoreGame — precision fields", () => {
 // ============================================================
 
 describe("scoreGame — risk level", () => {
-  it("deep market with strong consensus = LOW_RISK or MODERATE", () => {
+  it("deep market with strong consensus = MODERATE (5 books is below the LOW_RISK depth floor)", () => {
     const picks = scoreGame(makeOddsInput());
     const spread = picks.find((p) => p.pickType === "SPREAD");
-    // 5 books, 80% consensus = should be at most MODERATE
-    if (spread) {
-      expect(["LOW_RISK", "MODERATE"]).toContain(spread.riskLevel);
-    }
+    // Previously guarded by `if (spread)`, which made the whole assertion
+    // disappear whenever the engine stopped emitting a spread pick.
+    expect(spread).toBeDefined();
+    expect(spread!.bookmakerCount).toBe(5);
+    expect(spread!.bookmakerCount).toBeLessThan(RISK_THRESHOLDS.LOW_RISK_BOOK_THRESHOLD);
+    expect(spread!.riskLevel).toBe("MODERATE");
   });
 
   it("thin market (2 books) = HIGH_VARIANCE", () => {

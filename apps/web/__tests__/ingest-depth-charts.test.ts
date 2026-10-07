@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   transaction: vi.fn((ops: unknown[]) => Promise.all(ops)),
 }));
 vi.mock("@sports/db", () => ({ db: {
+  $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
   depthChartEntry: { deleteMany: mocks.deleteMany, createMany: mocks.createMany },
   player: { findMany: mocks.playerFindMany },
   $transaction: mocks.transaction,

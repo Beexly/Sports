@@ -60,14 +60,14 @@ zero dependencies — and the repo already proves it uses hook enforcement (`.gi
 | Blueprint name | What it wanted | You already have |
 |---|---|---|
 | A3M Router | Route work to the right model tier | `claude-api/model-router.ts` — per-surface `SURFACE_TIER`, pure & testable |
-| ClawRouter | Failover across backends | `claude-api/jynx.ts` — Bedrock → Azure → Vertex → Anthropic + `cerebras_free` lane |
+| ClawRouter | Failover across backends | `claude-api/jynx.ts` — Bedrock → Azure → Vertex → Anthropic + `free_lane` (Cerebras or secondary) |
 | MTRouter | Multi-provider dispatch | `claude-api/provider-dispatch.ts` + `openai-compat.ts` |
 | ParetoBandit | Budget pacing | `ai-control-plane/budget.ts` — 1,164-line reserve/settle ledger, integer micros |
 | AgentGuard (3-layer) | Validate AI-written code | `typecheck` + `lint` + `test` + 24 `guardrails` scripts, all CI jobs |
 | TEIA (SHA-256 / Merkle) | Audit sealing | `lib/performance/proof-hash.ts`, Merkle across 16 files, Pedersen ledger in `packages/crypto` |
 | Basilisk | Adversarial prompt testing | `promptfoo` 0.122.0, already at `eval/promptfoo` |
 | OPA fail-closed policy | Policy enforcement | `ai-control-plane/policy-registry.ts` + `enforce-gate.ts` |
-| obsidian-skills | Agent-loadable runbooks | `.claude/skills/` — 8 SKILL.md files + `npm run agent:eval` |
+| obsidian-skills | Agent-loadable runbooks | `docs/agent-skills/` — 8 SKILL.md files + `npm run agent:eval` |
 | Prime Agent | Top-level coordinator | `lib/autonomy/operating-kernel.ts` — *pure, deterministic*, stamps `requiresOwner` per action |
 | Evolution Engine | Propose→adopt improvements | `cti-miner.ts` + `accept-proposal.ts` + `CalibrationProposal` + promotion-gate contract |
 | Semantic cache (partial) | Don't pay twice | Anthropic native prompt caching already live at `claude-api/messages.ts:64-68` |

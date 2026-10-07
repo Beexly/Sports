@@ -14,6 +14,8 @@ import { settleGameLogs } from "@sports/data-ingestion";
 import {
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
+  retryablePostSettlementWorkWhere,
+  type PostSettlementWorkClaimWhere,
   type PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
 
@@ -31,7 +33,7 @@ export type TeamGameLogRepairGame = {
 export type TeamGameLogRepairDb = {
   postSettlementWork: PostSettlementWorkDelegate & {
     findMany: (args: {
-      where: { status: string; kind: string };
+      where: PostSettlementWorkClaimWhere;
       take: number;
       orderBy: { createdAt: "asc" };
       select: { subjectId: true };
@@ -56,8 +58,13 @@ export type TeamGameLogRepairGates = {
 };
 
 /**
- * Repair drain: complete PENDING TEAM_GAME_LOG work for games that already
- * have final scores. Call at end of free-path and paid-path settlement cycles.
+ * Repair drain: complete owed TEAM_GAME_LOG work for games that already have
+ * final scores. Call at end of free-path and paid-path settlement cycles.
+ *
+ * Claims PENDING rows AND FAILED rows still under the attempt cap — a FAILED
+ * row used to be terminal here, so a single transient error permanently
+ * abandoned that game's log. Rows at/over the cap are never re-selected; that
+ * is the terminal state. See post-settlement-work.ts.
  */
 export async function drainPendingTeamGameLogs(
   db: TeamGameLogRepairDb,
@@ -66,7 +73,7 @@ export async function drainPendingTeamGameLogs(
 ): Promise<{ attempted: number; done: number; failed: number }> {
   const take = options.take ?? 80;
   const pending = await db.postSettlementWork.findMany({
-    where: { status: "PENDING", kind: "TEAM_GAME_LOG" },
+    where: retryablePostSettlementWorkWhere("TEAM_GAME_LOG"),
     take,
     orderBy: { createdAt: "asc" },
     select: { subjectId: true },

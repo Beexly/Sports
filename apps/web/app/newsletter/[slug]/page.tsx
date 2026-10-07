@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { LocalTime } from "@/components/ui/local-time";
 import { getIssue, listIssues } from "@/lib/newsletter/issues";
 
 export function generateStaticParams() {
@@ -33,7 +34,12 @@ export default function NewsletterIssuePage({ params }: { params: { slug: string
           </Link>
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-ion-2">
             Issue {String(issue.number).padStart(3, "0")} ·{" "}
-            {new Date(issue.publishedAt).toLocaleDateString()}
+            {/*
+              Was a bare `toLocaleDateString()` during SERVER render: no locale
+              AND no timeZone, so every reader got the server's calendar date in
+              the server's default locale. <LocalTime> resolves it on theirs.
+            */}
+            <LocalTime iso={issue.publishedAt} format="date-short" label="Published" />
           </p>
           <h1 className="mt-3 font-display text-4xl text-ion-white">{issue.title}</h1>
           <p className="mt-4 text-lg text-ion-1">{issue.lede}</p>

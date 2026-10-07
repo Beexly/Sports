@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -12,7 +13,6 @@ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
-
 export const metadata: Metadata = {
   title: "Board",
   description:
@@ -44,8 +44,7 @@ export const dynamic = "force-dynamic";
 function timeLabel(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Unavailable";
-  return `${formatCentralTime(date)} ${CT_SUFFIX}`;
-}
+  return `${formatCentralTime(date)} ${CT_SUFFIX}`;}
 
 export default async function BoardPage(): Promise<JSX.Element> {
   // Entitlement resolves BEFORE the query so the refusal trail is withheld
@@ -292,8 +291,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
           <StateTile label="Passed on" value={String(state.gatedToday)} />
-          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
-          <StateTile label="Model" value={state.modelVersion} />
+          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />          <StateTile label="Model" value={state.modelVersion} />
         </section>
 
         <section className="grid gap-10 lg:grid-cols-3">
@@ -314,8 +312,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             empty={
               stateResult.meta.boardClass.refusePublicFire
                 ? "Nothing published right now. The board is paused until data checks pass."
-                : "No picks published yet today."
-            }
+                : "No picks published yet today."            }
           />
           <BoardLane
             index="03"
@@ -371,8 +368,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               <Link href="/calibration" className="font-semibold text-orbital-cyan hover:text-ion-white">
                 How to read this →
               </Link>
-            </p>
-          </div>
+            </p>          </div>
         </section>
 
         <RiskDisclosure variant="compact" className="text-center" />
@@ -384,7 +380,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
   );
 }
 
-function StateTile({ label, value, dataTestid }: { label: string; value: string; dataTestid?: string }): JSX.Element {
+function StateTile({ label, value, dataTestid }: { label: string; value: ReactNode; dataTestid?: string }): JSX.Element {
   return (
     <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2" {...(dataTestid ? { "data-testid": dataTestid } : {})}>
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>

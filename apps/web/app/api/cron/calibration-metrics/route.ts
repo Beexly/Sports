@@ -23,10 +23,12 @@ import {
   expectedCalibrationError,
   reliabilityCurve,
   getReadinessGates,
+  MODEL_VERSION,
   type CalibrationSample,
 } from "@sports/prediction-engine";
 import { captureError } from "@/lib/observability/sentry";
 import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
+import { deployedVersionMapHoldout } from "@/lib/calibration/deployed-map-holdout";
 import { db, isStubMode } from "@sports/db";
 import {
   evaluateAndPersistEligibility,
@@ -350,6 +352,13 @@ export async function GET(request: Request): Promise<NextResponse> {
       // bySport / byModelVersion (same functions as the pooled numbers) and the
       // seeded bootstrap intervals; deterministic for this sample.
       const breakdowns = computeCalibrationBreakdowns(taggedSamples);
+      // C-297: projection only. Would the DEPLOYED version's displayed
+      // probability clear the ECE floor on rows it never saw, if it were
+      // passed through a calibration map fitted on its own earlier rows?
+      // Written to the artifact and the truth surface for an operator to
+      // read; deliberately NOT handed to evaluateCalibrationEligibility, and
+      // no map is fitted or applied anywhere in the product by this call.
+      const mapHoldout = deployedVersionMapHoldout(taggedSamples, MODEL_VERSION);
 
       const filePayload = {
         generatedAt,
@@ -367,6 +376,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         byMarket: breakdowns.byMarket,
         brierCi95: breakdowns.brierCi95,
         eceCi95: breakdowns.eceCi95,
+        deployedVersionMapHoldout: mapHoldout,
         overall: {
           brier: decomp.brier,
           murphy: {
@@ -431,6 +441,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         byMarket: breakdowns.byMarket,
         brierCi95: breakdowns.brierCi95,
         eceCi95: breakdowns.eceCi95,
+        deployedVersionMapHoldout: mapHoldout,
         notes: filePayload.notes,
       };
     }
@@ -443,7 +454,16 @@ export async function GET(request: Request): Promise<NextResponse> {
       ).catch(() => undefined);
     }
 
-    await persistCalibrationMetrics(payload);
+    // Capture the durable-write outcome so a 200 body carries the truth: a
+    // failed persist used to be indistinguishable from a healthy cycle.
+    const persist = await persistCalibrationMetrics(payload);
+    if (persist === "error") {
+      console.error(
+        `[cron:calibration-metrics] durable metrics persist FAILED — ` +
+        `n=${payload.n} status=${payload.status} generatedAt=${payload.generatedAt}; ` +
+        `eligibility streak cannot advance this cycle`,
+      );
+    }
 
     // C-319: /performance renders its record section from performance_summaries,
     // and nothing in this repo has ever written a row to it — measured 2026-09-11,
@@ -624,6 +644,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           }
         : null,
       skippedDuplicate,
+      /** Durable-write outcome for this cycle: "ok" | "stub" | "error". */
+      persist,
       artifact: "durable:ops.calibration.metrics",
       provenPathRows: provenRows.length,
       pBasis: payload.pBasis ?? null,

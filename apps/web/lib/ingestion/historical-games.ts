@@ -93,15 +93,37 @@ export async function ingestHistoricalGames(
     };
   }
 
-  // Idempotent full refresh: historical games are immutable; the current season
-  // fills in as it plays. Replace the table, then chunk the insert.
-  await db.historicalGame.deleteMany({});
-  let rowsWritten = 0;
+  // ATOMIC FULL-ARCHIVE REPLACE — the wipe and EVERY insert chunk commit
+  // together or not at all.
+  //
+  // This is the widest-blast-radius replace in the ingestion layer: the delete
+  // is unscoped (`{}`), so it drops the ENTIRE multi-season archive that
+  // calibration and backtests read from. Run as a bare delete followed by a
+  // loop of awaited chunks, a failure on chunk k leaves the table holding only
+  // chunks 0..k-1 — a SILENTLY TRUNCATED archive, which is strictly worse than
+  // an empty one: calibration still finds rows, computes over a partial
+  // history, and publishes a track record derived from data that was never
+  // meant to be a sample. A retry re-enters the same delete-first path, so it
+  // cannot self-heal.
+  //
+  // The batch (array) form is deliberate over the interactive form: it carries
+  // no client-side interactive-transaction timeout, and every statement is
+  // prepared up front from data ALREADY IN MEMORY — the upstream fetch
+  // completed long before this point, so no network call is held open inside
+  // the transaction. Chunking is preserved unchanged (Postgres bound-parameter
+  // limit); it now bounds statement size WITHIN one transaction instead of
+  // splitting the archive across several.
+  //
+  // Element type is inferred from the delete (deleteMany and createMany return
+  // the same PrismaPromise<BatchPayload>), so this needs no `Prisma.*` import.
+  const ops = [db.historicalGame.deleteMany({})];
   for (let i = 0; i < data.length; i += CREATE_CHUNK) {
-    const chunk = data.slice(i, i + CREATE_CHUNK);
-    const created = await db.historicalGame.createMany({ data: chunk });
-    rowsWritten += created?.count ?? chunk.length;
+    ops.push(db.historicalGame.createMany({ data: data.slice(i, i + CREATE_CHUNK) }));
   }
+  const results = await db.$transaction(ops);
+  // results[0] is the delete; the inserts follow in chunk order. The delete's
+  // count must never be summed into rowsWritten.
+  const rowsWritten = results.slice(1).reduce((sum, r) => sum + (r?.count ?? 0), 0);
 
   return { status: "ok", rowsWritten, seasons: seasons.size };
 }

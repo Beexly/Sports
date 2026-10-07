@@ -5,8 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
-import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
-import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
@@ -15,6 +14,7 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
+import { copyClientIpHeaders } from "@/lib/api/rate-limit";
 import { GET as getPicks } from "@/app/api/picks/route";
 import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 import {
@@ -37,7 +37,6 @@ export function generateMetadata(): Metadata {
     alternates: { canonical: "/picks" },
   };
 }
-
 // ─────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────
@@ -56,9 +55,26 @@ interface PicksResponse {
     totalAvailableToday?: number;
     hitDailyLimit?: boolean;
   };
+  /**
+   * The gate state the customer-facing empty block renders from.
+   *
+   * It deliberately does NOT carry the API's `hint`. That field is an operator
+   * diagnostic — `bootstrapGateResponse()` fills it with
+   * "Founder-gated closed (e.g. PUBLIC_PICKS_ENABLED / PERFORMANCE_STATS_ENABLED)
+   * ... see /api/ops/public-surface-truth gates" — and this object is one
+   * `{bootstrapState.hint}` away from putting that in front of every visitor to
+   * the primary nav destination. Nothing here read it: not rendered, not logged,
+   * not branched on. So it is not carried at all, which is a stronger guarantee
+   * than a rule about not printing it — a field that is not in the render state
+   * cannot be printed by accident, and adding it back is now a type change
+   * someone has to make on purpose.
+   *
+   * If an operator diagnostic is ever wanted, log it where it is READ (in the
+   * route handler, which already has the whole gate response) rather than
+   * routing it through the object the page renders from.
+   */
   bootstrap?: {
     message: string;
-    hint?: string;
     /** Which gate darkened the board: history-gated launch vs stale-data pause. */
     kind: "gated" | "stale";
   };
@@ -102,12 +118,11 @@ function bindPublicPickReasoning(
 function buildRequest(pathname: string, params: URLSearchParams): NextRequest {
   const h = headers();
   const initHeaders = new Headers();
-  // Forward the forwarded-for / real-ip so the route handler's rate-limiter
-  // (consumeRateLimit + clientIp) sees the real client, not "anon".
-  const fwdFor = h.get("x-forwarded-for");
-  const realIp = h.get("x-real-ip");
-  if (fwdFor) initHeaders.set("x-forwarded-for", fwdFor);
-  if (realIp) initHeaders.set("x-real-ip", realIp);
+  // Relay the forwarding headers verbatim so the route handler's rate limiter
+  // (consumeRateLimit + clientIp) sees the real client, not "anon". The header
+  // names live in lib/api/rate-limit.ts with clientIp() itself — one module
+  // decides what a client IP is, and this is a copy, never a parse.
+  copyClientIpHeaders(h, initHeaders);
   const cookie = h.get("cookie");
   if (cookie) initHeaders.set("cookie", cookie);
   const url = `http://localhost${pathname}${params.toString() ? `?${params}` : ""}`;
@@ -127,11 +142,13 @@ async function fetchPicks(
   const req = buildRequest("/api/picks", params);
   const res = await getPicks(req);
   if (!res.ok) {
+    // Only the fields this page actually consumes are declared. The gate
+    // response also carries an operator `hint` naming the closed flags; it is
+    // deliberately left off so `body.hint` does not even compile here.
     const body = (await res.json().catch(() => null)) as {
       error?: string;
       bootstrapMode?: boolean;
       reason?: string;
-      hint?: string;
     } | null;
     // Graceful dark states: bootstrap history, feature gate (PUBLIC_PICKS off),
     // or stale-data kill switch. Never throw an error page for intentional dark.
@@ -156,8 +173,10 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
+          // The API error body's `hint` is an operator diagnostic naming closed
+          // flags — it is deliberately NOT carried into the customer-facing
+          // render state (see picks-gate-hint-containment.test.ts).
           message: body.error ?? "Published picks are collecting live history.",
-          hint: body.hint,
           kind,
         },
       };
@@ -452,8 +471,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
                   ? "Quiet board, waiting on fresh odds (not broken)."
-                  : "Public picks are still gated. The board is closed until the data checks pass."}
-              </h2>
+                  : "Public picks are still gated. The board is closed until the data checks pass."}              </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
                   ? "This is the honesty guard: we hide picks when odds are past the refresh " +
@@ -466,13 +484,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/methodology"
-                  className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
                 >
                   Read methodology
                 </Link>
                 <Link
                   href="/vault"
-                  className="rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
                 >
                   View The Vault
                 </Link>
@@ -490,7 +508,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               data-testid="picks-locked-upgrade"
               className="rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-8 text-center"
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ultraviolet">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ultraviolet-glow">
                 Full board is a Pro feature
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
@@ -506,7 +524,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
+                className="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -583,19 +601,19 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               entitlements.dailyPickLimit, not a hardcoded absolute. */}
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-6 text-center">
-              <p className="text-sm font-semibold text-ultraviolet">
+              <p className="text-sm font-semibold text-ultraviolet-glow">
                 {hasAccount
                   ? entitlements.tier !== "FREE"
                     ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
                     : `You're on Free: a daily teaser of up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
                   : `Today's free teaser: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`}
               </p>
-              <p className="mt-1 text-xs text-ultraviolet">
+              <p className="mt-1 text-xs text-ultraviolet-glow">
                 Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
+                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -605,7 +623,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* PRO conversion teaser for elite features */}
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
             <div className="mt-8 rounded-xl border border-ultraviolet/30 bg-ultraviolet/10 p-4 text-center">
-              <p className="text-xs text-ultraviolet">
+              <p className="text-xs text-ultraviolet-glow">
                 Want email + push alerts when your followed picks grade?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
                   {`Upgrade to Elite · $${phase.elite.monthly}/mo`}
@@ -633,7 +651,6 @@ function SlateBar({ slate }: { slate: DailySlate }) {
   const lastUpdated = slate.lastUpdatedAt
     ? `${formatCentralTime(new Date(slate.lastUpdatedAt))} ${CT_SUFFIX}`
     : null;
-
   return (
     <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(194,46,26,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
@@ -663,11 +680,10 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         )}
 
         {/* Last updated */}
-        {lastUpdated && (
+        {lastUpdatedIso && (
           <div className="ml-auto flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(255,77,46,0.6)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
-          </div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>          </div>
         )}
       </div>
 
@@ -770,8 +786,7 @@ function PaywallBanner({
         )}
         <Link
           href="/pricing"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-4 py-2 text-xs font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
-        >
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-4 py-2 text-xs font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"        >
           See plans
         </Link>
       </div>

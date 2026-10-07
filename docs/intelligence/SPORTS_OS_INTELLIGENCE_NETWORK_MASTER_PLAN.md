@@ -220,7 +220,7 @@ npm run db:generate
 npm run lint
 npm run typecheck
 npm run test
-npm run test:smoke
+npm run guardrails
 npm run build
 ```
 

@@ -107,8 +107,14 @@ export async function ingestRushTendencies(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.playerRushProfile.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.playerRushProfile.createMany({ data }) : null;
+  // ATOMIC SEASON REPLACE — see snap-counts.ts for the full rationale. As two
+  // separate awaits, a failure between them leaves the season DELETED and never
+  // re-inserted, and a retry re-enters the same delete-first path so it cannot
+  // self-heal.
+  const [, created] = await db.$transaction([
+    db.playerRushProfile.deleteMany({ where: { season } }),
+    db.playerRushProfile.createMany({ data }),
+  ]);
 
   return { status: "ok", season, rowsWritten: created?.count ?? data.length };
 }

@@ -2,11 +2,19 @@
 
 ## Tiers
 
-| Tier | Price | Picks | Confidence | Line Movement | Alerts |
-|------|-------|-------|------------|---------------|--------|
-| Free | $0 | 1/day (confidence hidden) | No | No | No |
-| Pro | $19/mo | All picks | Yes | Yes | No |
-| Elite | $49/mo | All picks + early access | Yes | Yes | Yes |
+| Tier | Price (FOUNDING) | Picks | Confidence | Line Movement | Alerts |
+|------|------------------|-------|------------|---------------|--------|
+| Free | $0 | daily teaser, 2/day (confidence hidden) | No | No | No |
+| Fantasy | $4.99/mo · $49/yr | fantasy suite; same teaser on the betting board | No | No | No |
+| Pro | $14.99/mo · $99/yr | All picks | Yes | Yes | No |
+| Elite | $24.99/mo · $179/yr | All picks + CLV ledger | Yes | Yes | Yes |
+
+**Do not quote a price from this table without checking it first.** The amounts
+above are the live FOUNDING rung of a proof-gated ladder, and the ladder advances
+by operator action (`PRICING_PHASE`). The single source of truth for every amount
+is `apps/web/lib/pricing/pricing-phases.ts`. The free daily pick allowance is
+owned by `packages/types/src/index.ts` (`dailyPickLimit`) — read it there rather
+than from prose.
 
 ## Architecture: Server-Side Enforcement ONLY
 
@@ -19,8 +27,29 @@ Request → API Route → Auth Middleware → Entitlement Check → Filter Data 
 ## Stripe Integration
 
 ### Products and Prices
-- Pro: `STRIPE_PRO_PRICE_ID` (monthly recurring)
-- Elite: `STRIPE_ELITE_PRICE_ID` (monthly recurring)
+
+Checkout resolves a price id **per tier and per interval**
+(`apps/web/lib/billing/price-ids.ts`):
+
+- Pro: `STRIPE_PRO_MONTHLY_PRICE_ID` · `STRIPE_PRO_ANNUAL_PRICE_ID`
+- Elite: `STRIPE_ELITE_MONTHLY_PRICE_ID` · `STRIPE_ELITE_ANNUAL_PRICE_ID`
+- Fantasy: `STRIPE_FANTASY_MONTHLY_PRICE_ID` · `STRIPE_FANTASY_ANNUAL_PRICE_ID`
+
+Only the two **monthly** vars fall back to the legacy `STRIPE_PRO_PRICE_ID` /
+`STRIPE_ELITE_PRICE_ID`. The annual vars and both Fantasy vars have no fallback:
+leave one unset and that plan is unbuyable.
+
+The amount on each Stripe price must equal the advertised phase amount.
+`apps/web/lib/stripe.ts` fails **closed** on a mismatch (GSE-SEC-024) — the
+checkout route answers 503 rather than charging a figure the site never
+advertised. So a price created off a stale number does not undercharge; it takes
+the whole tier offline. Confirm the amount against
+`apps/web/lib/pricing/pricing-phases.ts` before creating the price.
+
+Each var may also hold a **comma-separated list**. The first entry is what
+checkout charges; every entry is still recognised when classifying an existing
+subscription back to a tier, which is how founding members stay grandfathered.
+**Prepend a new id — never replace the list.**
 
 ### Webhooks Handled
 - `customer.subscription.created` → activate subscription
@@ -47,20 +76,22 @@ User downgrades → access until period end → then new tier
 
 ## Entitlement Check (server-side)
 
+The real implementation is `getEntitlements()` in `packages/types/src/index.ts`.
+It owns every flag and the daily pick allowance, and it covers a tier this
+document predates (FANTASY) and flags it never had (`canUseTrendLab`,
+`canUseClvLedger`, `canUseFantasyDraftSuite`, …). **Call it — do not reimplement
+it from a snippet.**
+
 ```typescript
-async function getEntitlements(userId: string): Promise<Entitlements> {
-  const subscription = await db.subscription.findFirst({
-    where: { userId, status: { in: ['active', 'trialing'] } }
-  })
-  return {
-    tier: subscription?.tier ?? 'FREE',
-    canSeePremiumPicks: ['PRO', 'ELITE'].includes(subscription?.tier ?? ''),
-    canSeeConfidence: ['PRO', 'ELITE'].includes(subscription?.tier ?? ''),
-    canSeeLineMovement: ['PRO', 'ELITE'].includes(subscription?.tier ?? ''),
-    canGetAlerts: subscription?.tier === 'ELITE',
-    dailyPickLimit: subscription ? null : 1,  // null = unlimited
-  }
-}
+// Sketch of the CALL SITE, not of the entitlement values.
+import { getEntitlements } from "@sports/types";
+
+const subscription = await db.subscription.findFirst({
+  where: { userId, status: { in: ['active', 'trialing'] } },
+});
+const entitlements = getEntitlements(subscription?.tier ?? 'FREE');
+// entitlements.dailyPickLimit — null means unlimited; the FREE value is defined
+// in packages/types/src/index.ts, never in this document.
 ```
 
 ## Customer Portal

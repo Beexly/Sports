@@ -5,7 +5,11 @@ import {
   latestPriorRow,
   nextGameCovariate,
   sepForKickoff,
+  P_SIDE_COVARIATE_REGISTRY,
+  assertPSideHasNoMarketProp,
+  lookupFieldMeta,
   type CovariateRow,
+  type CovariateLayer,
 } from "../covariate-bus.js";
 
 function rx(o: Partial<CovariateRow>): CovariateRow {
@@ -25,6 +29,19 @@ function rx(o: Partial<CovariateRow>): CovariateRow {
     pctAttemptsGte8Defenders: 0.54,
     avgTimeToLos: 2.2,
     avgYac: 4.3,
+    pressureRate: 0.18,
+    snapShare: 0.62,
+    tflRate: 0.18,
+    pdRate: null,
+    intRate: 0.045,
+    fumbleRate: 0.012,
+    airYardsPerAttempt: 6.5,
+    avgAirYardsToSticks: null,
+    missedTackleRate: null,
+    passerRating: null,
+    ryoePerAtt: null,
+    rushPctOverExpected: null,
+    passerRatingAllowed: null,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,
@@ -172,5 +189,100 @@ describe("avgYac covariate", () => {
     const rows = [rx({ week: 0, avgYac: 99 })];
     const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 1, "receiving", "avgYac");
     expect(cell).toBeNull();
+  });
+});
+
+describe("H0.1 known_at + q-contamination", () => {
+  it("stamps layer L2 and knownAtWeek strictly before kickoff", () => {
+    const rows = [rx({ week: 3, avgSeparation: 2.2 })];
+    const kickoffWeek = 5;
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, kickoffWeek, "receiving", "avgSeparation");
+    expect(cell).not.toBeNull();
+    expect(cell!.layer).toBe("L2");
+    expect(cell!.knownAtWeek).toBe(3);
+    expect(cell!.knownAtWeek).toBeLessThan(kickoffWeek);
+  });
+
+  it("p-side registry contains no MARKET_PROP layer", () => {
+    expect(() => assertPSideHasNoMarketProp()).not.toThrow();
+    for (const e of P_SIDE_COVARIATE_REGISTRY) {
+      expect(e.layer).not.toBe("MARKET_PROP");
+    }
+  });
+
+  it("q-contamination test fails the build if MARKET_PROP is registered as p", () => {
+    const poisoned: readonly { readonly layer: CovariateLayer }[] = [
+      ...P_SIDE_COVARIATE_REGISTRY,
+      { layer: "MARKET_PROP" },
+    ];
+    expect(() => assertPSideHasNoMarketProp(poisoned)).toThrow(/MARKET_PROP/);
+  });
+
+  it("nextGameCovariate stamps layer/provenance from the registry, not a hardcoded literal", () => {
+    // The cell's layer + provenance must come from P_SIDE_COVARIATE_REGISTRY.
+    // This prevents registry/runtime drift (Codacy finding).
+    const rows = [rx({ week: 3, avgSeparation: 2.2 })];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 5, "receiving", "avgSeparation");
+    expect(cell).not.toBeNull();
+    const meta = lookupFieldMeta("avgSeparation");
+    expect(cell!.layer).toBe(meta.layer);
+    expect(cell!.provenance).toBe(meta.honesty);
+    // And the registry must agree with the cell.
+    expect(cell!.layer).toBe("L2");
+    expect(cell!.provenance).toBe("weekly_ngs_mean");
+  });
+
+  it("registry covers every CovariateField (no unregistered covariate)", () => {
+    // Every field in the CovariateField union must have a registry entry;
+    // otherwise lookupFieldMeta throws (fail-closed against q-contamination).
+    expect(() => P_SIDE_COVARIATE_REGISTRY.forEach((e) => lookupFieldMeta(e.field))).not.toThrow();
+
+describe("latestPriorRow — non-finite weeks fail CLOSED (leak wall)", () => {
+  // Regression: the ordering guard `week >= kickoffWeek` cannot reject a NaN,
+  // because every comparison against NaN is false. Before the finite checks
+  // were added, a NaN/undefined kickoffWeek ADMITTED week-17 rows as
+  // "strictly prior" — future data leaking into a pre-kickoff covariate.
+  const future = rx({ week: 17, avgSeparation: 99 });
+
+  it("rejects every row when kickoffWeek is NaN", () => {
+    expect(latestPriorRow([future], future.gsisId, 2024, "receiving", NaN)).toBeNull();
+  });
+
+  it("rejects every row when kickoffWeek is undefined at runtime", () => {
+    const kickoff = undefined as unknown as number;
+    expect(latestPriorRow([future], future.gsisId, 2024, "receiving", kickoff)).toBeNull();
+  });
+
+  it("rejects every row when kickoffWeek is Infinity", () => {
+    // Infinity would otherwise admit the whole season as "prior".
+    expect(
+      latestPriorRow([future], future.gsisId, 2024, "receiving", Number.POSITIVE_INFINITY),
+    ).toBeNull();
+  });
+
+  it("skips a poisoned NaN-week row but still returns a legitimate prior row", () => {
+    const poisoned = rx({ week: NaN, avgSeparation: 99 });
+    const legit = rx({ week: 3, avgSeparation: 2.2 });
+    const row = latestPriorRow([poisoned, legit], legit.gsisId, 2024, "receiving", 5);
+    expect(row?.week).toBe(3);
+    expect(row?.avgSeparation).toBe(2.2);
+  });
+
+  it("a NaN-week row alone yields null rather than becoming the best row", () => {
+    const poisoned = rx({ week: NaN, avgSeparation: 99 });
+    expect(latestPriorRow([poisoned], poisoned.gsisId, 2024, "receiving", 5)).toBeNull();
+  });
+
+  it("nextGameCovariate inherits the closed wall (no future value surfaces)", () => {
+    const cell = nextGameCovariate(
+      [future],
+      future.gsisId,
+      2024,
+      NaN,
+      "receiving",
+      "avgSeparation",
+    );
+    expect(cell).toBeNull();
+
   });
 });

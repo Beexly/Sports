@@ -15,6 +15,15 @@ import { applyKalshiTakerFeeToBookmakers } from "./kalshi-fee.js";
 const RUNDOWN_BASE = "https://therundown.io/api/v2";
 
 /**
+ * Per-request ceiling. `fetch` does not impose one that is short enough for a
+ * cron path, and this client fans out one request per day of the span, all
+ * serially — so a single hung socket held the ingest job open until the
+ * platform killed it, which silently produces no board at all. Matches the
+ * 12–15s ceiling every other upstream client in this package already uses.
+ */
+const RUNDOWN_TIMEOUT_MS = 12_000;
+
+/**
  * Sport key (Odds API style) → TheRundown sport_id.
  * IDs from GET /api/v2/sports (no auth) as published in docs.therundown.io
  * OpenAPI 3.1, retrieved 2026-08-22. NHL is 6, NCAAB is 5 — the previous map
@@ -234,7 +243,6 @@ function lineBlobToBookmaker(
     if (home != null && away != null) {
       markets.push({
         key: "h2h",
-        last_update: new Date().toISOString(),
         outcomes: [
           { name: homeTeam, price: home },
           { name: awayTeam, price: away },
@@ -252,7 +260,6 @@ function lineBlobToBookmaker(
     if (Number.isFinite(point) && homeP != null && awayP != null) {
       markets.push({
         key: "spreads",
-        last_update: new Date().toISOString(),
         outcomes: [
           { name: homeTeam, price: homeP, point },
           { name: awayTeam, price: awayP, point: -point },
@@ -270,7 +277,6 @@ function lineBlobToBookmaker(
     if (Number.isFinite(point) && over != null && under != null) {
       markets.push({
         key: "totals",
-        last_update: new Date().toISOString(),
         outcomes: [
           { name: "Over", price: over, point },
           { name: "Under", price: under, point },
@@ -281,10 +287,14 @@ function lineBlobToBookmaker(
 
   if (markets.length === 0) return null;
   const bookKey = affiliateBookKey(key);
+  // NO `last_update`: the v1 line blob carries no upstream update timestamp.
+  // Stamping the local clock here made every v1 book fresh by construction and
+  // let a thin-filled, days-stale primary book pass the freshness gate as half
+  // of a 2-book consensus. Omitted == not-provably-fresh (the correct fail-safe),
+  // matching the v2 path below. See normalizer.ts `toUpstreamDate`.
   return {
     key: bookKey,
     title: bookKey,
-    last_update: new Date().toISOString(),
     markets,
   };
 }
@@ -309,6 +319,9 @@ function v2MarketsToBookmakers(
   awayTeam: string,
 ): OddsApiBookmaker[] {
   type MarketKey = "h2h" | "spreads" | "totals";
+  // `last` is the UPSTREAM `updated_at` for this book+market, or "" when the
+  // payload omitted it. "" is NOT backfilled with the local clock — it becomes
+  // an omitted `last_update`, i.e. not-provably-fresh.
   type Acc = { outcomes: Map<string, { name: string; price: number; point?: number }>; last: string };
   const byAff = new Map<string, Map<MarketKey, Acc>>();
 
@@ -359,7 +372,11 @@ function v2MarketsToBookmakers(
           const pr = blob as Loose;
           const price = americanFromPrice(pr["price"]);
           if (price == null) continue;
-          const updated = String(pr["updated_at"] ?? new Date().toISOString());
+          // UPSTREAM timestamp only. A missing `updated_at` stays empty — never
+          // the local clock, which would be fresh by construction and defeat the
+          // anti-tautology freshness gate in normalizer.freshGameIds.
+          const rawUpdated = pr["updated_at"];
+          const updated = typeof rawUpdated === "string" ? rawUpdated : "";
           touch(aff, marketKey, outcomeName, price, marketKey === "h2h" ? undefined : point, updated);
         }
       }
@@ -369,14 +386,15 @@ function v2MarketsToBookmakers(
   const out: OddsApiBookmaker[] = [];
   for (const [aff, marketsMap] of byAff) {
     const apiMarkets: OddsApiMarket[] = [];
-    let last = new Date().toISOString();
+    let last: string | undefined;
     for (const [mkey, acc] of marketsMap) {
       const outcomes = [...acc.outcomes.values()];
       if (outcomes.length < 2) continue;
       last = acc.last || last;
       apiMarkets.push({
         key: mkey,
-        last_update: acc.last,
+        // Omitted when upstream gave no `updated_at` (see Acc note above).
+        last_update: acc.last || undefined,
         outcomes,
       });
     }
@@ -412,21 +430,32 @@ export async function fetchRundownEventsForSport(
      */
     readonly daySpan?: number;
     readonly fetchImpl?: typeof fetch;
+    /** Per-request ceiling (default RUNDOWN_TIMEOUT_MS). Test seam. */
+    readonly timeoutMs?: number;
   },
 ): Promise<RundownFetchResult> {
   assertIngestible("therundown");
   const sportId = RUNDOWN_SPORT_IDS[sportKey];
   if (sportId == null) {
-    return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };
+    return {
+      events: [],
+      remaining: null,
+      error: `rundown: no sport_id map for ${sportKey}`,
+      complete: false,
+      failedDays: [],
+    };
   }
   const startDate = options?.date ?? todayIsoUtc();
   const envSpanRaw = Number(process.env["RUNDOWN_DAY_SPAN"] ?? "");
   const defaultSpan = Number.isFinite(envSpanRaw) && envSpanRaw > 0 ? envSpanRaw : 2;
   const daySpan = Math.min(10, Math.max(1, options?.daySpan ?? defaultSpan));
   const fetchImpl = options?.fetchImpl ?? fetch;
+  const timeoutMs = Math.max(1, options?.timeoutMs ?? RUNDOWN_TIMEOUT_MS);
   const all: OddsApiEvent[] = [];
   const seen = new Set<string>();
   const errors: string[] = [];
+  // Every requested day we did NOT successfully read. Drives `complete` below.
+  const failedDays: string[] = [];
   let rateLimited = false;
 
   for (let i = 0; i < daySpan; i++) {
@@ -448,14 +477,22 @@ export async function fetchRundownEventsForSport(
           "X-TheRundown-Key": apiKey,
         },
         cache: "no-store",
+        signal: AbortSignal.timeout(timeoutMs),
       });
       if (!res.ok) {
         if (res.status === 429) {
           rateLimited = true;
           errors.push(`${date}:HTTP 429 rate_limited (abort remaining days)`);
+          // This day AND every remaining day of the span go unread.
+          for (let j = i; j < daySpan; j++) {
+            const d2 = new Date(`${startDate}T00:00:00.000Z`);
+            d2.setUTCDate(d2.getUTCDate() + j);
+            failedDays.push(d2.toISOString().slice(0, 10));
+          }
           break;
         }
         errors.push(`${date}:HTTP ${res.status}`);
+        failedDays.push(date);
         continue;
       }
       const body = (await res.json()) as Loose;
@@ -469,9 +506,14 @@ export async function fetchRundownEventsForSport(
         }
       }
     } catch (err) {
+      // Transport failure, timeout, or a 2xx whose body would not parse — the
+      // day is unread either way, so it counts against completeness.
       errors.push(`${date}:${err instanceof Error ? err.message : String(err)}`);
+      failedDays.push(date);
     }
   }
+
+  const complete = failedDays.length === 0;
 
   if (all.length === 0) {
     return {

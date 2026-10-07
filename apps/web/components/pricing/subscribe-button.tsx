@@ -43,10 +43,17 @@ type Props = {
   priceAnnual?: number | null;
 };
 
+// Mobile ergonomics: `py-2.5 text-sm` alone leaves the checkout CTA short of the
+// 44px minimum touch target, and this is the highest-value control on the site.
+// `min-h-11` (2.75rem = 44px) is the same floor already used by the billing
+// toggle directly above it (pricing-plans.tsx ToggleButton) and by every
+// picks-board control. The flex centering keeps the label — and the loading
+// spinner row — centered now that the box can be taller than its content.
+// Desktop only grows by the gap between the content height and the 44px floor.
 const PRIMARY_CLASSES =
-  "w-full rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_CLASSES =
-  "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 
 /**
  * Per-click checkout-intent id, with a fallback.
@@ -100,6 +107,9 @@ export function SubscribeButton({
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
   const disclosureId = useId();
+  // Same reasoning for the error banner: it has to be addressable so the date
+  // field can point at it with aria-describedby.
+  const errorId = useId();
   // Per-visit checkout-intent HINT (Phase 1P). The server owns the durable
   // CheckoutAttempt — this UUID only lets it recognize "same click retried"
   // (double-click, network blip, reload-and-retry within this mount) and hand
@@ -205,11 +215,20 @@ export function SubscribeButton({
         <Link href="/terms" className="underline hover:text-ion-2">
           Terms
         </Link>
+        {" · "}
+        {/* Privacy sits on the SAME proximate line as Terms: this is the
+            control that starts the paid relationship, and /pricing's <Footer />
+            links Privacy far below the fold, nowhere near the point of
+            commitment. */}
+        <Link href="/privacy" className="underline hover:text-ion-2">
+          Privacy
+        </Link>
         .
       </p>
 
       {error && (
         <p
+          id={errorId}
           role="alert"
           className="rounded-lg border border-alert/60 bg-alert/10 px-3 py-2 text-xs text-alert"
         >

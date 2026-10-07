@@ -26,6 +26,8 @@
 // Roster-level 2025 holdout cleared both honesty bars (n=285, r=+0.112232,
 // slope=+0.051235, se=+0.026966). Edge +0.0012 on LAC@BUF. Heuristic
 // confidence / composite weights UNCHANGED. Maps still OFF.
+// v5.3.0 (2026-08-25, superseded note): Edge Index full honest range —
+// EdgeIndex = clamp(round(100 + 2000 × rawEdge), 0, 100). See branch claude/decide-edge-index-scale.
 export const MODEL_VERSION = "v5.3.0";
 
 // ============================================================
@@ -37,12 +39,13 @@ export const MIN_PUBLISH_CONFIDENCE = 50;
 // ============================================================
 // Pick grade thresholds
 // ============================================================
-export const GRADE_THRESHOLDS = {
-  ELITE_PLAY:  { confidence: 85, edge: 80 },
-  STRONG_PLAY: { confidence: 75, edge: 65 },
-  SOLID_PLAY:  { confidence: 65, edge: 50 },
-  // Below these = LEAN
-} as const;
+// SINGLE SOURCE OF TRUTH: the ladder lives in `@sports/types`' `pick-grade.ts`,
+// beside `computePickGrade` — the one function that turns a (confidence,
+// Edge Index) pair into a grade. It was declared here too, with the same numbers
+// duplicated as bare literals inside `computePickGrade`; nothing ever read this
+// copy, so editing it changed no grade. Re-exported, not redeclared, so the
+// historical import path resolves to the one live definition.
+export { GRADE_THRESHOLDS } from "@sports/types";
 
 // ============================================================
 // Scoring component weights (sum to 100 max)

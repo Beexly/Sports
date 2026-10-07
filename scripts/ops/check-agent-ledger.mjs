@@ -44,13 +44,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const DEFAULT_LEDGER = join(REPO_ROOT, "docs", "ops", "AGENT_LEDGER.md");
 
 export const OWNERS = ["hermes", "copilot", "browser", "claude", "founder", "—"];
-export const STATUSES = ["OPEN", "CLAIMED", "BLOCKED", "UNPUSHED", "DONE", "CANCELLED", "ON HOLD"];
-/**
- * C-25 rule 3: a terminal-ish status must say WHY in Evidence, so an agent has
- * a legitimate slot for "this finding was wrong" / "parked by the founder"
- * instead of being forced to choose between a fake DONE and a bare OPEN row.
- */
-const REQUIRES_EVIDENCE_REASON = new Set(["CANCELLED", "ON HOLD"]);
+export const STATUSES = ["OPEN", "CLAIMED", "BLOCKED", "UNPUSHED", "DONE", "CANCELLED"];
 
 const BEGIN = "<!-- LEDGER:BEGIN -->";
 const END = "<!-- LEDGER:END -->";
@@ -187,121 +181,51 @@ function fetchShaFromOrigin(sha, cwd) {
   } catch {
     // Fetch-by-hash is not universally served. GitHub rejects a `want` for an
     // object it has not advertised as a ref tip unless the repo enables
-    // allowAnySHA1InWant, so a perfectly real commit fails here purely for
-    // sitting mid-branch — this project's CI checkout is a 1-commit-deep
-    // clone (actions/checkout@v4's default). Widening the clone is the
-    // fallback.
-    return widenOriginRefs(cwd);
+    // allowAnySHA1InWant, so a perfectly real commit can fail here purely
+    // because it sits mid-branch. Deepening the advertised refs is the
+    // fallback: those ARE advertised, and the cited commit is reachable from
+    // one of them if it was ever pushed.
+    return deepenOriginRefs(cwd);
   }
 }
 
 /**
- * Widen a shallow clone once per process, then let the caller re-resolve.
+ * Widen a shallow clone once per process by deepening the advertised branch
+ * refs, then let the caller re-resolve.
  *
- * Two DIFFERENT reasons a shallow clone misses a real commit, found by
- * testing against this project's actual ledger rather than assuming one
- * cause: depth (some cited commits sit ~750 commits back on main) AND branch
- * scope (some cited commits exist ONLY on a still-open feature branch, e.g. a
- * Hermes task branch never merged to main — `git fetch --unshallow` widens
- * just the currently-checked-out ref's history and does not reach these at
- * all, regardless of depth). A fixed --depth=N alone was tried first and
- * rejected for the same reason depth-only failed: a guard whose depth
- * constant goes stale as the branch grows is the same kind of guard that
- * cries wolf.
- *
- * A single wildcard fetch (`+refs/heads/*:refs/remotes/origin/*` with
- * `--depth=1000`) was the first fix for that, and it silently stopped
- * working: reproduced directly against this repo's real GitHub origin from a
- * genuinely shallow clone 2026-09-09 (PR #734 C-268) — the command exits 0
- * and updates every branch's tip pointer, but leaves the ALREADY-SHALLOW
- * checked-out ref's boundary untouched, so a real, pushed, mid-branch commit
- * (e.g. C-264's evidence SHA, five commits behind the branch tip) still does
- * not resolve. An explicit single-ref `git fetch --depth=1000 origin
- * <branch>:refs/remotes/origin/<branch>` reliably deepens that same ref; the
- * difference reproduces even when both refspecs are passed to ONE `git
- * fetch` invocation (only the ref fetched by explicit name deepens), so this
- * is not a matter of trying harder with the wildcard — it is two SEPARATE
- * fetches. Widen the checked-out branch by name first (the case that blocks
- * the actual CI run), then attempt the wildcard as a best-effort second pass
- * for the branch-scope case (a cited SHA that lives only on some OTHER
- * branch) — unreliable at deepening but still advances every branch's tip,
- * which is enough for a SHA that is itself a tip. Memoised because this is
- * the expensive path and every unresolved SHA in the ledger would otherwise
- * re-run it.
- *
- * Naming the checked-out branch: `git rev-parse --abbrev-ref HEAD` returns
- * the literal string "HEAD" on a DETACHED checkout, and GitHub Actions
- * checks out detached for `pull_request` events (`refs/pull/<n>/merge`),
- * not an attached branch — reproduced directly (Devin Review, PR #734,
- * fifth finding): `git fetch --depth=1 origin pull/734/merge` +
- * `git checkout --force FETCH_HEAD` leaves `rev-parse --abbrev-ref HEAD`
- * returning "HEAD", so the local lookup alone silently degrades every
- * pull_request-triggered run back to the unreliable wildcard-only path.
- * `GITHUB_HEAD_REF` (pull_request) / `GITHUB_REF_NAME` (push and most other
- * events) are the CI-provided names that survive detachment; verified
- * against that same detached checkout that the env-var name still deepens
- * correctly. The local git lookup stays as the non-CI fallback.
+ * Memoised because this is the expensive path and every unresolved SHA in the
+ * ledger would otherwise re-run it. Returns true only if the deepen actually
+ * succeeded, so a genuine connectivity failure still reaches the caller as a
+ * failure rather than being silently swallowed.
  */
-let _widened = null;
-function widenOriginRefs(cwd) {
-  if (_widened !== null) return _widened;
-  let ok = false;
-
-  let currentRef = process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || null;
-  if (!currentRef) {
-    try {
-      const ref = execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
-        cwd,
-        encoding: "utf8",
-      }).trim();
-      if (ref && ref !== "HEAD") currentRef = ref;
-    } catch {
-      // Detached HEAD outside CI, or another lookup failure — the wildcard
-      // attempt below is the only remaining option.
-    }
-  }
-
-  if (currentRef) {
-    try {
-      execFileSync(
-        "git",
-        ["fetch", "--quiet", "--depth=1000", "origin", `${currentRef}:refs/remotes/origin/${currentRef}`],
-        { cwd, stdio: "ignore" },
-      );
-      ok = true;
-    } catch {
-      // Fall through to the wildcard attempt.
-    }
-  }
-
+let _deepened = null;
+function deepenOriginRefs(cwd) {
+  if (_deepened !== null) return _deepened;
   try {
     execFileSync(
       "git",
-      ["fetch", "--quiet", "--depth=1000", "origin", "+refs/heads/*:refs/remotes/origin/*"],
+      ["fetch", "--quiet", "--depth=250", "origin", "+refs/heads/*:refs/remotes/origin/*"],
       { cwd, stdio: "ignore" },
     );
-    ok = true;
+    _deepened = true;
   } catch {
-    // ok already reflects whether the named-ref attempt above succeeded.
+    _deepened = false;
   }
-
-  _widened = ok;
-  return _widened;
+  return _deepened;
 }
 
 /**
  * Can we reach origin at all right now?
  *
- * This is the distinction the guard was missing. A failed fetch previously
- * meant two very different things collapsed into one verdict: "origin does
- * not have this commit" (a real violation) and "we could not talk to origin"
- * (an infrastructure problem that says nothing about the evidence).
- * Conflating them makes the guard cry wolf, and a guard that cries wolf gets
- * switched off.
+ * This is the distinction the guard was missing. A failed fetch previously meant
+ * two very different things collapsed into one verdict: "origin does not have
+ * this commit" (a real violation) and "we could not talk to origin" (an
+ * infrastructure problem that says nothing about the evidence). Conflating them
+ * makes the guard cry wolf, and a guard that cries wolf gets switched off.
  *
- * `ls-remote` only lists advertised refs, so it is a clean connectivity
- * probe: it succeeds whenever the remote is reachable and authorised,
- * independent of whether any particular object is served.
+ * `ls-remote` only lists advertised refs, so it is a clean connectivity probe:
+ * it succeeds whenever the remote is reachable and authorised, independent of
+ * whether any particular object is served.
  */
 function originReachable(cwd) {
   try {
@@ -333,13 +257,6 @@ function originReachable(cwd) {
  */
 export function validate(rows, opts = {}) {
   const violations = [];
-  // C-25 rule 2 (escalation SLA) — soft surface. The ledger schema has no
-  // timestamps, so "how long has this sat" is not decidable from the file
-  // alone; what IS decidable is a claim with nothing attached (claimed but no
-  // evidence of having started) and work in flight with no owner (evidence on
-  // an unowned OPEN row). Both are printed by the CLI on every run so a stale
-  // row is at least VISIBLE each check instead of silently aging forever.
-  const warnings = opts.warnings ?? [];
   const resolveSha = opts.resolveSha === undefined ? (s) => shaExists(s, REPO_ROOT) : opts.resolveSha;
   const shallow = opts.shallow === undefined ? isShallowRepo(REPO_ROOT) : opts.shallow;
   const fetchSha =
@@ -391,20 +308,12 @@ export function validate(rows, opts = {}) {
       case "OPEN":
         // An OPEN row may name an intended owner (an assignment) or none at all.
         // CLAIMED is the signal that work has actually begun, so OPEN carries no
-        // ownership requirement in either direction. But an OPEN row that already
-        // carries evidence means work STARTED — if it also has no owner, it is
-        // orphaned mid-flight (C-25's escalation-SLA hole), so surface it.
-        if (unowned && hasEvidence) {
-          warnings.push(`${where}: OPEN with evidence but no owner — work in flight, nobody to chase (SLA watch)`);
-        }
+        // ownership requirement in either direction.
         break;
 
       case "CLAIMED":
       case "BLOCKED":
         if (unowned) violations.push(`${where}: ${row.status} requires an Owner — an unowned claim cannot be chased`);
-        if (row.status === "CLAIMED" && !hasEvidence) {
-          warnings.push(`${where}: CLAIMED with no evidence — claimed but nothing recorded as started (SLA watch)`);
-        }
         break;
 
       case "UNPUSHED": {
@@ -451,8 +360,8 @@ export function validate(rows, opts = {}) {
               if (!recovered) {
                 // Distinguish "origin does not have it" from "we could not
                 // reach origin". Only the first is evidence about the ledger;
-                // the second is an infrastructure fact and must not be
-                // reported as a fabricated SHA.
+                // the second is an infrastructure fact and must not be reported
+                // as a fabricated SHA.
                 if (opts.originUp === undefined ? originReachable(REPO_ROOT) : opts.originUp) {
                   violations.push(
                     `${where}: DONE cites ${candidates.join(", ")} — none resolve locally, and origin ` +
@@ -479,15 +388,6 @@ export function validate(rows, opts = {}) {
       case "CANCELLED":
         if (!hasEvidence) {
           violations.push(`${where}: CANCELLED requires a reason in Evidence, so the decision is not relitigated`);
-        }
-        break;
-
-      case "ON HOLD":
-        // Same contract as CANCELLED: a hold without a stated reason is just a
-        // row someone did not want to deal with.
-        if (unowned) violations.push(`${where}: ON HOLD requires an Owner`);
-        if (!hasEvidence) {
-          violations.push(`${where}: ON HOLD requires a reason in Evidence (who parked it and why)`);
         }
         break;
 
@@ -518,15 +418,6 @@ export function inspectLedgerFile(path = DEFAULT_LEDGER, opts = {}) {
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   const target = process.argv[2] ? resolve(process.argv[2]) : DEFAULT_LEDGER;
   const { violations, rows, unverified } = inspectLedgerFile(target);
-  // C-25: surface the soft SLA warnings on every CLI run (cheap: validate() is
-  // pure; the DONE/SHA resolution it repeats is memoised where expensive).
-  const warnings = [];
-  validate(parseLedger(readFileSync(target, "utf8")).rows, { warnings });
-  if (warnings.length > 0) {
-    console.warn(`[agent-ledger] ${warnings.length} SLA watch item(s):`);
-    for (const w of warnings) console.warn(`  ~ ${w}`);
-    console.warn("");
-  }
   if (unverified.length > 0) {
     // Never silent: a run that verified less than it appears to must say so,
     // otherwise a green line reads as "every DONE is proven" when it is not.

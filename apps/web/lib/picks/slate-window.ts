@@ -14,13 +14,12 @@
  *
  * The slate is now the set of picks on games that START inside the day, and
  * only rows the pipeline still refreshes (stale-pick-policy.ts freshPickWhere).
- * The day is the US Eastern calendar day, the same convention the settlement
- * scoreboards use (settlement-score-dates.ts): a 7:00pm ET kickoff is Sunday's
- * game even though it is Monday in UTC. `?date=YYYY-MM-DD` names that Eastern
+ * The day is the US Central calendar day (Garrett's ruling 2026-10-06): a 6:00pm CT kickoff is Sunday's
+ * game even though it is Monday in UTC. `?date=YYYY-MM-DD` names that Central
  * day. Pure; no I/O.
  */
 
-export const SLATE_TZ = "America/New_York";
+export const SLATE_TZ = "America/Chicago";
 
 const YMD = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -79,8 +78,8 @@ export type SlateWindow = { readonly dayKey: string; readonly start: Date; reado
 
 /**
  * Resolve the slate window for a request. `dateParam` is the raw `?date=`
- * value: a YYYY-MM-DD names that Eastern day; anything else (missing,
- * malformed, a full ISO timestamp) resolves to the Eastern day containing
+ * value: a YYYY-MM-DD names that Central day; anything else (missing,
+ * malformed, a full ISO timestamp) resolves to the Central day containing
  * `now`, so a bad value can never produce an Invalid Date query.
  */
 export function resolveSlateWindow(dateParam: string | null | undefined, now: Date = new Date()): SlateWindow {
