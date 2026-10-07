@@ -19,30 +19,18 @@
  * unset (see each module's `isXConfigured`) — this function never claims
  * `sent: true` for a channel that actually didn't send.
  *
- * Gating (ALL required, independent, fail-closed):
+ * Gating (ALL required, independent, fail-closed, unchanged from before
+ * real channels existed):
  *   1. WATCHLIST_ALERTS_ENABLED=true (global kill switch).
- *   2. Event doctrine (alert-eligibility.ts) — GRADED-only for picks
- *      (never an ungraded tip); a C-413 status change is a published fact
- *      and skips that check while still clearing the two gates below.
+ *   2. GRADED-only doctrine (alert-eligibility.ts) — never an ungraded tip.
  *   3. The recipient's `Entitlements.canGetAlerts` — Elite-exclusive, per
  *      CLAUDE.md's tier table ("real-time email & push alerts").
  * None of these gates change: a channel failure or absence past this point
  * only affects whether the eligible alert was actually delivered, never
  * whether it was allowed to be attempted.
- *
- * Production callers:
- *   - settlement-hook.ts  — graded picks (settlement outbox worker)
- *   - status-alert-hook.ts — watched-player injury / depth-chart changes
- *     (injury refresh cron, C-413)
- *   - wire-alert-hook.ts — reporter-wire reports on a watched player
- *     (refresh-wire cron, C-417)
  */
 
-import {
-  evaluateAlertEligibility,
-  isStatusChangeEvent,
-  type WatchlistAlertEventInput,
-} from "./alert-eligibility";
+import { evaluateAlertEligibility, type GradedEventInput } from "./alert-eligibility";
 import type { WatchlistEntityType } from "./types";
 import { listPushSubscriptionsForUser } from "@/lib/push/subscription-db";
 import {
@@ -56,10 +44,7 @@ export interface WatchlistAlertPayload {
   readonly userId: string;
   readonly entityType: WatchlistEntityType;
   readonly entityId: string;
-  /** Graded pick (settlement) OR a watched player's published status change
-   *  (C-413). Both clear the same alerts-enabled + Elite gates; only the
-   *  graded-only doctrine differs (status changes are facts, not tips). */
-  readonly event: WatchlistAlertEventInput;
+  readonly event: GradedEventInput;
   /** Plain-language, data-backed summary only — no fabricated stats
    *  (CLAUDE.md rule #2). Callers must derive this from the graded pick
    *  itself, never invent it. Used as both the push notification body and
@@ -111,16 +96,10 @@ export function isWatchlistAlertsEnabled(
 }
 
 function buildPushPayload(payload: WatchlistAlertPayload): { title: string; body: string } {
-  if (isStatusChangeEvent(payload.event)) {
-    return { title: "GalaxySportsEdge — player status update", body: payload.message };
-  }
   return { title: "GalaxySportsEdge — pick graded", body: payload.message };
 }
 
-function buildEmailSubject(payload: WatchlistAlertPayload): string {
-  if (isStatusChangeEvent(payload.event)) {
-    return "GalaxySportsEdge — your watchlist player status changed";
-  }
+function buildEmailSubject(): string {
   return "GalaxySportsEdge — your watchlist pick graded";
 }
 
@@ -205,7 +184,7 @@ export async function dispatchWatchlistAlert(
     if (recipient.verifiedEmail) {
       const result = await sendAlertEmail(
         recipient.verifiedEmail,
-        buildEmailSubject(payload),
+        buildEmailSubject(),
         payload.message,
       );
       channels.push({ channel: "email", sent: result.sent, detail: result.detail });

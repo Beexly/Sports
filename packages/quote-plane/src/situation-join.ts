@@ -1,5 +1,5 @@
 /**
- * SituationEventRecord ↔ MarketQuote join (eventId fill-only).
+ * SituationSnapshot ↔ MarketQuote join (eventId fill-only).
  *
  * Destined for packages/quote-plane or packages/data-ingestion when Beexly applies.
  * Mirrors /workspace/situation-join/lib/join-situation-quote.mjs
@@ -28,7 +28,7 @@ export const PRICE_KEYS = [
   "totals",
 ] as const;
 
-export type SituationEventRecord = {
+export type SituationSnapshotLike = {
   sport: string;
   eventId?: string | null;
   home: string;
@@ -88,11 +88,11 @@ export function withinHours(
  * Requires both commenceTimes parseable (withinHours fail-closed).
  */
 export function joinSituationToMarketQuote(
-  snapshot: SituationEventRecord,
+  snapshot: SituationSnapshotLike,
   quote: QuoteJoinKeys,
   abbrToFull: Record<string, string> = {},
   opts: { toleranceHours?: number } = {}
-): { snapshot: SituationEventRecord | null; matched: boolean; reason?: string } {
+): { snapshot: SituationSnapshotLike | null; matched: boolean; reason?: string } {
   if (!snapshot || !quote) {
     return { snapshot: null, matched: false, reason: "missing snapshot or quote" };
   }
@@ -135,7 +135,7 @@ export function joinSituationToMarketQuote(
     };
   }
 
-  const out: SituationEventRecord = { ...snapshot };
+  const out: SituationSnapshotLike = { ...snapshot };
   if (quote.eventId) out.eventId = quote.eventId;
   else if (out.eventId === undefined) out.eventId = null;
 
@@ -147,11 +147,11 @@ export function joinSituationToMarketQuote(
 
 /** Unique match only; ambiguous → null (never invent eventId). */
 export function findSituationForQuote(
-  snapshots: SituationEventRecord[],
+  snapshots: SituationSnapshotLike[],
   quote: QuoteJoinKeys,
   abbrToFull: Record<string, string> = {},
   opts: { toleranceHours?: number } = {}
-): SituationEventRecord | null {
+): SituationSnapshotLike | null {
   if (!Array.isArray(snapshots) || !quote) return null;
   const sport = quote.sport || "americanfootball_nfl";
   const toleranceHours = opts.toleranceHours ?? COMMENCE_TOLERANCE_HOURS;

@@ -4,10 +4,11 @@ import numpy as np
 try:
     import pandas as pd
     from prophet import Prophet
-    from app.models.prophet_preset import ProphetSportsPredictor
     HAVE_PROPHET = True
 except ImportError:
     HAVE_PROPHET = False
+
+from app.models.prophet_preset import ProphetSportsPredictor
 
 @pytest.mark.skipif(not HAVE_PROPHET, reason="Prophet/pandas not installed")
 def test_prophet_sports_predictor_presets():
@@ -115,3 +116,26 @@ def test_prophet_regressors():
     # Specifically, it should learn roughly a 10 point drop
     diff = pred0["fcst"].mean() - pred1["fcst"].mean()
     assert 9.0 < diff < 11.0, f"Regressor effect {diff} is not correctly captured"
+
+@pytest.mark.skipif(not HAVE_PROPHET, reason="Prophet/pandas not installed")
+def test_prophet_pandas3_no_make_future_dataframe():
+    """Test ProphetModel extra regressors without make_future_dataframe."""
+    from app.models.kats.models.prophet import ProphetModel
+    from app.models.kats.consts import TimeSeriesData
+
+    dates = pd.date_range("2020-01-01", "2020-01-10")
+    df = pd.DataFrame({"ds": dates, "y": 100.0, "reg1": 1.0, "reg2": 0.0})
+    ts = TimeSeriesData(df=df, time_col_name="ds")
+
+    from app.models.kats.models.prophet import ProphetParams
+    params = ProphetParams(extra_regressors=[{"name": "reg1"}, {"name": "reg2"}])
+
+    model = ProphetModel(ts, params)
+    model.fit()
+
+    future_dates = pd.date_range("2020-01-11", "2020-01-12")
+    future_df = pd.DataFrame({"ds": future_dates, "reg1": 1.0, "reg2": 0.0})
+
+    # We call predict directly to ensure the _future_validation path works
+    pred = model.predict(steps=2, future=future_df)
+    assert len(pred) == 2

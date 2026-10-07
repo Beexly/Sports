@@ -8,8 +8,6 @@
  */
 
 import { vor, type Player } from "./players";
-import { applyToFantasy } from "@/lib/signals/apply";
-import type { SignalContext } from "@/lib/signals/spine";
 import { activePlayerPool } from "@/lib/integrations/projections";
 import { gseScore } from "./gse-score";
 
@@ -17,15 +15,7 @@ import { gseScore } from "./gse-score";
  *  the primary input — it is the real process grade on a live feed. VOR and
  *  trend/injury adjust it. Values stay correct on a live feed because GSE
  *  Score reads processGrade when present. */
-/**
- * Trade value.
- *
- * `ctx` is the shared signal spine. With it, a vacated role or an airwave
- * consensus moves trade value the same way it moves a waiver claim and a DFS
- * projection, instead of each surface having its own private opinion.
- */
-export function tradeValue(p0: Player, pool: readonly Player[] = activePlayerPool(), ctx?: SignalContext): number {
-  const p = ctx ? applyToFantasy(p0, ctx) : p0;
+export function tradeValue(p: Player, pool: readonly Player[] = activePlayerPool()): number {
   const gse = gseScore(p, pool);
   // GSE Score (0-100) is the spine. VOR adds positional scarcity on top.
   // On a live feed GSE is the process grade; on sample it is a pool percentile.

@@ -115,119 +115,6 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
-**UPDATED 2026-09-15 (NATIVE iOS CLIENT BUILT — `apps/mobile` now exists; read this
-before touching mobile, the mobile API surface, or the X transport).**
-
-**What landed.** `apps/mobile/` is a new Expo SDK 57 / React Native 0.86.3 / React 19.2.3
-iOS client, plus a small `apps/web/app/api/mobile/v1/*` server surface, a bearer-auth helper at
-`apps/web/lib/mobile/bearer-auth.ts`, and an X transport at `workers/twitter-bot/`.
-Full context in `docs/mobile/` (README, PLAN, REVIEW_AND_AUDIT, research round 1).
-
-**`apps/mobile` IS DELIBERATELY EXCLUDED FROM THE npm WORKSPACES.** The root `workspaces`
-array now carries `"!apps/mobile"`. Reason, and do not undo it casually: `apps/web` is on
-React 18.3 while the mobile client is on React 19.2.3 (React Native 0.86 requires it). npm
-hoists to one root `node_modules`, so a shared workspace either fails the install or silently
-gives one of the two apps the wrong React — the second outcome is far more likely and much
-harder to diagnose. The mobile app therefore installs with its own lockfile and is driven from
-the root by `npm run mobile:start` / `mobile:verify` / `mobile:test`, which use `npm --prefix`.
-
-**NEVER publish `confidence` as a percentage on a mobile surface either.** The template
-carries the rule as a linter check (`apps/mobile/scripts/lint-rules.js`) because a client has
-no server to correct it. Same measurement as the web: the 80+ band claims 0.8663 and realizes
-0.5191 (z = −10.7). The app renders `72/100`.
-
-**Client mirroring rule — the mobile app may only ever REMOVE rows, never add them.**
-`apps/mobile/src/lib/trust.ts` mirrors `adverse-edge-suppression` and the stale-pick policy
-defensively. If you change either predicate on the server, change the mirror in the same PR or
-the client will resurrect rows the server stopped sending. The mirror preserves the upstream
-asymmetry exactly: absence is silence, and silence KEEPS the row. A parse failure must never
-become a board wipe, and there is a negative-control test pinning that.
-
-**Entitlements on the client are PRESENTATIONAL ONLY.** `apps/mobile/src/lib/entitlements.ts`
-picks labels for fields the server already redacted. It must never be used to reveal data that
-arrived in a payload — that is CLAUDE.md rule 3 and there is a test asserting the module
-imports no components and holds no state. If a future change reads a `canSee*` flag to show
-something, reject it in review regardless of how convenient it is.
-
-**TypeScript is NOT a reliable gate on the iOS-side dev host.** `tsc` there intermittently
-exits 0 with EMPTY output when it was actually killed by a ~180s process cap. Measured: a
-one-file project importing `react-native` took 182s and died silently; the same configuration
-later completed and reported real errors. `apps/mobile/scripts/typecheck.js` writes its report
-with `fsync` and prints its own summary line — **a missing summary line means the run was
-killed, not that the code is clean.** Before trusting any check, feed it a known-bad input.
-
-**Do not treat the typecheck as a gate for `apps/mobile`.** It completed several times with 0
-diagnostics and later failed to complete on every attempt, including a two-file project. The
-gates are `scripts/lint-rules.js` (9 rules, self-tested on every run) and the test suite. Run
-`tsc --noEmit` on a reliable host before believing the type layer.
-
-**The X transport now EXISTS** at `workers/twitter-bot/` (OAuth 1.0a signer, API v2 client,
-send pipeline). It is tested and NOT wired up: it needs credentials, a real ledger over
-`BotOutboxRecord`, and a cron entry. Read `workers/twitter-bot/README.md` before touching it.
-
-**TWO LINES FROM THAT README ARE LOAD-BEARING, so they are repeated here:**
-
-- **`MUTE_BOT` is checked at SEND time, not at schedule time**, and only the literal `"true"`
-  mutes. A mute that takes effect next cycle is not a mute.
-- **A lost response is classified `UNKNOWN` and MUST NOT be retried.** The failure mode that
-  matters is not "posted never", it is "posted twice after a timeout". A duplicate post to a
-  public account is worse than a missing one.
-
-**`XClient` has exactly ONE mutating method: `postTweet`.** There is no follow, like, retweet,
-unfollow, unlike or delete, because the voice spec says the bot does none of those and a
-capability that does not exist cannot be called. There is a test asserting the prototype
-surface. Adding one of those methods is a product decision, not a refactor.
-
-**One template defect is FIXED and one question is still OPEN.**
-
-Fixed 2026-09-15, found by EXECUTING the template rather than reading it:
-`pick-publication.ts` rendered the pick line TWICE (`BOS @ NYK BOS -3.5` in production,
-`BOS -3.5 -3.5` in any test whose fixture followed the field names instead of the adapter —
-the `matchup`/`line` split is not what the field names suggest). It also rendered confidence as
-a percent. Both are corrected, with a test that asserts the exact rendered line and counts the
-side occurrences so the duplication cannot return.
-
-Still OPEN, and it is an OWNER decision: `docs/product/twitter-bot-voice-spec.md` permits
-✅/❌/⚖️ while `DESIGN.md` mandates W/L/P/V monograms and forbids emoji. Both cannot be right.
-The proposed resolution is in `docs/mobile/X_COMMUNITY_STRATEGY.md` section 3: the settlement
-glyph is a single-use exception on the settlement lead post only. It was NOT changed
-unilaterally, because it would override an explicit product decision and break pinned tests.
-
-**Upstream findings an agent should carry forward** (full detail in
-`docs/mobile/REVIEW_AND_AUDIT.md` §4):
-
-- The FIELD revision collapsed the four-band confidence ladder to two effective colours —
-  `--conf-strong`, `--conf-solid` and `--conf-lean` all resolve to `#C4BFB6`. `DESIGN.md` still
-  specifies four hues. Either accept two bands or reintroduce two tints; do not invent a third
-  palette at a call site.
-- `DESIGN.md`'s YAML front matter and `design-system/colors_and_type.css` are STALE and still
-  document the pre-FIELD palette. `BRAND_AND_DESIGN_SYSTEM.md` flagged this in June; it is still
-  true, and this build had to choose between two files that disagree. Generate one from the
-  other with Style Dictionary rather than keeping two mirrors in sync by hand.
-- `/api/push/subscribe` is Web Push only (it validates `PushSubscription.toJSON()`); native
-  devices need `/api/mobile/v1/devices`, which is additive and does not loosen that validator.
-- React Native 0.86's bundled TypeScript definitions omit `ListHeaderComponent` and
-  `ListFooterComponent` from `VirtualizedListProps`. Use `ScrollView` or augment locally.
-- `expo-iap` v3 renamed `E_USER_CANCELLED` to `ErrorCode.UserCancelled`; comparing against the
-  v2 name compiles and makes every user cancellation render a purchase error.
-
-**DO NOT `finishTransaction` BEFORE THE SERVER ACKNOWLEDGES.** `apps/mobile/app/paywall.tsx`
-currently does, and it is the most expensive defect in the client. `finishTransaction` tells
-StoreKit the app has handled the transaction, so StoreKit will never re-deliver it. If the
-subsequent server call fails, the customer has been charged and the server has no record — they
-see the free tier and StoreKit will not help. The fix: finish only after the server confirms, set
-`appAccountToken` on the purchase so a signed-out purchase is still reconcilable to an account,
-and reconcile `getAvailablePurchases()` against the server on every foreground. Full reasoning in
-`docs/mobile/research/round-02-repositories.md`. **Do not build a client-side retry queue for
-this** — StoreKit already has a durable one, and a second queue is how a purchase gets recorded
-twice.
-
-**The mobile client has never been built or run.** There is no Xcode on the host it was written
-on. Treat every runtime claim in `docs/mobile/` as unverified until someone runs
-`npx expo start --ios` on a Mac. The typecheck passes; the build does not exist yet.
-
----
-
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
 data outages found, conviction gate built). PR #808, branch
 `claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the
@@ -4147,7 +4034,7 @@ Window: posts after ~9:00 PM CDT Wed 2026-09-23 through ~9:10 AM CDT Thu 2026-09
 
 - @GridironInfo_, 2026-09-24 8:45 AM CDT — WR success-rate definition (author's wording, verbatim): "A play counts as successful when the receiver is targeted and: 1st down: the target gains ≥40% of the yards-to-go; 2nd down: the target gains ≥60% of the yards-to-go; 3rd/4th down: the target converts the first down." Quotes author's 21h-ago "WR Success Rate Leaders (After Week 2)" post (out of window per sweep): Mike Evans (SF) 90% success rate, Keon Coleman (BUF) 75%. No data-source line. No CSV (the leaders post itself is out of window). https://x.com/GridironInfo_/status/2103118721715736830.
 
-- @PattonAnalytics (Steven Patton, Data Scientist @ StatRankings), 2026-09-24 9:10 AM CDT — "Quarterback Efficiency Throwing to the First Read": scatter plot, x-axis "EPA per Pass Attempt", y-axis "First Read Rate". Author subtitle: "First read throws include screens, minimum of 25 dropbacks (2026)". Footer: "Plot: @PattonAnalytics"; StatRankings branding; no data-source line. Visible QBs (APPROXIMATE visual estimates): D.L_ck (SEA) ~+0.65 EPA / ~80% FRR; J.Allen (BUF) ~+0.88 / ~67%; L.Jackson (BAL) ~+0.85 / ~62%; J.Dart (NYG) ~+0.62 / ~73%; B.Purdy (SF) ~+0.62 / ~56%; B.Young (CAR) ~+0.55 / ~66%; D.Prescott (DAL) ~+0.50 / ~72%; G.Smith (NYJ) ~+0.50 / ~52%; J.Hurts (PHI) ~+0.42 / ~64%; J.Goff (DET) ~+0.45 / ~57%; T.Shough (NO) ~+0.42 / ~58%; T.Lawrence (JAX) ~+0.50 / ~63%; C.Wentz (MIN) ~+0.50 / ~65%; J.Daniels (WAS) ~+0.32 / ~68%; M.Stafford (LAR) ~+0.28 / ~70%; J.Brissett (ARI) ~+0.25 / ~75%; P.Mahomes (KC) ~+0.15 / ~68%; C.Rush (ATL) ~−0.38 / ~73%; J.Winston (NYG) ~−0.60 / ~69%; A.Rodgers (PIT) ~−0.35 / ~67%; D.Maye (NE) ~−0.22 / ~61%; B.Nix (DEN) ~−0.08 / ~55%; B.Mayfield (TB) ~+0.02 / ~67%; J.Love (GB) ~+0.02 / ~65%; C.Williams (CHI) ~+0.48 / ~48%; M.Willis (GB) ~+0.05 / ~48%; D.Watson (CLE) ~+0.30 / ~64%; D.Jones (IND) ~+0.05 / ~74%; J.Herbert (LAC) ~−0.05 / ~69%; K.Cousins (ATL) ~+0.18 / ~71%; C.Stroud (HOU) ~+0.18 / ~63%; C.Ward (TEN) ~+0.22 / ~62%; J.Burrow (CIN) ~−0.10 / ~67%. Red dashed league-average reference lines at ~+0.25 EPA/attempt and 65% FRR. No thread critiques observed. https://x.com/PattonAnalytics/status/2103124816886710668. CSV: pattonanalytics-qb-first-read-efficiency-week2-partial.csv (all values approximate — scatter had no labeled values).
+- @PattonAnalytics (Steven Patton, Data Scientist @ StatRankings), 2026-09-24 9:10 AM CDT — "Quarterback Efficiency Throwing to the First Read": scatter plot, x-axis "EPA per Pass Attempt", y-axis "First Read Rate". Author subtitle: "First read throws include screens, minimum of 25 dropbacks (2026)". Footer: "Plot: @PattonAnalytics"; StatRankings branding; no data-source line. Visible QBs (APPROXIMATE visual estimates): D.Lock (SEA) ~+0.65 EPA / ~80% FRR; J.Allen (BUF) ~+0.88 / ~67%; L.Jackson (BAL) ~+0.85 / ~62%; J.Dart (NYG) ~+0.62 / ~73%; B.Purdy (SF) ~+0.62 / ~56%; B.Young (CAR) ~+0.55 / ~66%; D.Prescott (DAL) ~+0.50 / ~72%; G.Smith (NYJ) ~+0.50 / ~52%; J.Hurts (PHI) ~+0.42 / ~64%; J.Goff (DET) ~+0.45 / ~57%; T.Shough (NO) ~+0.42 / ~58%; T.Lawrence (JAX) ~+0.50 / ~63%; C.Wentz (MIN) ~+0.50 / ~65%; J.Daniels (WAS) ~+0.32 / ~68%; M.Stafford (LAR) ~+0.28 / ~70%; J.Brissett (ARI) ~+0.25 / ~75%; P.Mahomes (KC) ~+0.15 / ~68%; C.Rush (ATL) ~−0.38 / ~73%; J.Winston (NYG) ~−0.60 / ~69%; A.Rodgers (PIT) ~−0.35 / ~67%; D.Maye (NE) ~−0.22 / ~61%; B.Nix (DEN) ~−0.08 / ~55%; B.Mayfield (TB) ~+0.02 / ~67%; J.Love (GB) ~+0.02 / ~65%; C.Williams (CHI) ~+0.48 / ~48%; M.Willis (GB) ~+0.05 / ~48%; D.Watson (CLE) ~+0.30 / ~64%; D.Jones (IND) ~+0.05 / ~74%; J.Herbert (LAC) ~−0.05 / ~69%; K.Cousins (ATL) ~+0.18 / ~71%; C.Stroud (HOU) ~+0.18 / ~63%; C.Ward (TEN) ~+0.22 / ~62%; J.Burrow (CIN) ~−0.10 / ~67%. Red dashed league-average reference lines at ~+0.25 EPA/attempt and 65% FRR. No thread critiques observed. https://x.com/PattonAnalytics/status/2103124816886710668. CSV: pattonanalytics-qb-first-read-efficiency-week2-partial.csv (all values approximate — scatter had no labeled values).
 
 - @DynatyzeFF, 2026-09-24 7:26 AM CDT (thread, parent https://x.com/DynatyzeFF/status/2103098645327364414) — "Carry share — Leaders" (Dynatyze Usage Lab · Targets · 2026, W1–W2; chart: "12 players on this board · W1–W2 sample"; only top 3 visible): Jahmyr Gibbs (DET) 84.9% carry share / 78.2% snap rate / 45 carries; Jonathan Taylor (IND) 82.7% / 91.6% / 43; Chase Brown (CIN) 72% / 71% / 36. Footer: dynatyze.com/football/usage-lab; no separate source line. Five in-window thread replies with backfield charts: GB Snap Distribution (139-team-snaps context): Chris Brooks (RB·Alpha) 51.2% / 65; MarShawn Lloyd 36.2% / 46; Kaleb Johnson 12.6% / 16; top-3 concentration 100.0% (league avg 54.1%); Team PROE +0.0%; red-zone alpha Brooks 61% RZ TGT share; author text: Lloyd led in carries Week 1, Johnson in Week 2, Brooks led in snaps and owns the 3rd-down role. WAS: Rachaad White (RB·Alpha) 46.8% / 66; Jacory Croskey-Merritt 42.6% / 60; Kaytron Allen 9.2% / 13; others 1.4%; top-3 98.6%; Team PROE +0.0%; RZ alpha White 56%; 3.9 AVG/GP; text: White led backfield target share both games and is ahead of JCM in snaps. DEN weekly carry split (28 team carries): J.K. Dobbins 58% (18 carries, 0 TD); Jonah Coleman 32% (10 carries, 1 TD); text: Coleman had 40.3% snap share in W2 and "can step in as the #1 while Dobbins is hurt." NE Snap Distribution (129 team snaps): TreVeyon Henderson (RB·Alpha) 58.1% / 75; Rhamondre Stevenson 34.9% / 45; Terrell Jennings 7.8% / 10; top-3 100.0%; Team PROE +0.0%; RZ alpha Henderson 83%; 4.0 AVG/GP; text: season debut, led NE in Snap%, Carry%, Opp%. SEA Carry Distribution (2026, W1–W2, 58 CAR): Jadarian Price (RB·Alpha) 37.1% / 23; Emanuel Wilson 37.1% / 23; George Holani 19.4% / 12; others 6.4%; top-3 93.6%; Team PROE +0.0%; RZ alpha Price 45%; carries by week W1=10, W2=13; 11.5 AVG/GP; text: Price currently questionable to play but "has shown lead back abilities through 2 weeks." CSVs: dynatyzeff-carry-share-leaders-week2-partial.csv (top 3 of 12) + dynatyzeff-backfield-snap-carry-distributions-week2.csv.
 
@@ -5888,7 +5775,7 @@ home feed + Latest-tab term searches. TNF tonight: Steelers @ Browns.
    PLAYER, TEAM, DROPBACKS, EPA_PER_DROPBACK) in
    `docs/dfs/research/2026-10-01/full-tables/gridironinfo-season-epa-per-dropback-leaders.csv`:
    1. Brock Purdy (SF) 83 dropbacks +0.62; 2. Jaxson Dart (NYG) 36 +0.58;
-   3. Drew L_ck (SEA) 50 +0.45; 4. Lamar Jackson (BAL) 79 +0.32; 5. Dak
+   3. Drew Lock (SEA) 50 +0.45; 4. Lamar Jackson (BAL) 79 +0.32; 5. Dak
    Prescott (DAL) 109 +0.31; 6. Jared Goff (DET) 116 +0.27; 7. Trevor
    Lawrence (JAX) 84 +0.27; 8. Josh Allen (BUF) 95 +0.25; 9. Patrick
    Mahomes (KC) 102 +0.24; 10. Geno Smith (NYJ) 112 +0.22. Data source
@@ -5904,7 +5791,7 @@ home feed + Latest-tab term searches. TNF tonight: Steelers @ Browns.
    brewing in Seattle" (+ image). Chart: X = early-downs EPA/dropback,
    Y = late-downs EPA/dropback; footer/definition as given: "A minimum
    of 25 dropbacks (2026). Data: @nflreadr | Plot: @PattonAnalytics"
-   (statrankings branding). Framing (attributed): Drew L_ck (SEA) plots
+   (statrankings branding). Framing (attributed): Drew Lock (SEA) plots
    high (~+0.42 early, ~+0.68 late) vs Sam Darnold (~+0.2 early, ~-0.42
    late) — hence "controversy". Scatter points are team-logo labels
    without printed numbers, so all values below are APPROXIMATE
@@ -7731,7 +7618,7 @@ inventoried without verbatim evidence.
    as an in-window leaderboard. Full 31-row leaderboard (PLAYER, TEAM,
    PASSER_RATING) in
    `docs/dfs/research/2026-10-03/full-tables/gridironinfo-qb-passer-rating-2026.csv`:
-   L_ck (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
+   Drew Lock (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
    (NYG) 55.6. Data source: same header/footer credits as item 2.
    https://x.com/GridironInfo_/status/2106379300622520472
 
@@ -9027,7 +8914,7 @@ posts). Nothing inventoried without evidence.
 
 42. @MagicSportsGuy — "Asked the AI Connector @StatRankings for Saints
     RB usage in the 4th quarter of week 3 (after Travis Etienne got
-    hurt)" (2026-10-05). A_I-GENERATED TABLE (attributed): New Orleans
+    hurt)" (2026-10-05). A.I.-GENERATED TABLE (attributed): New Orleans
     RBs - Week 3 - 4th quarter - 11 snaps RB carries; cols RB/Carries/RB
     rush share/Routes/Targets/Tgt share. Full 4-row table in
     `docs/dfs/research/2026-10-05/full-tables/magicsportsguy-saints-rb-q4-week3-ai.csv`:
@@ -9269,258 +9156,3 @@ D. Turner 35.7% Week 4).
 - No X rate-limiting this pass; no CAPTCHAs; read-only throughout, no
   interactions. Browser route recovered after the 2026-10-05 AM
   infrastructure failure.
-
-## X ANALYTICS SWEEP 2026-10-06 AM
-
-Window: posts after ~9:40 PM CDT Mon 2026-10-05 through ~8:35 AM CDT Tue
-2026-10-06 (~11h, overnight). Read-only sweep as @GalaxySportsHQ (no
-likes/reposts/replies/follows/DMs). Login confirmed by both tasks; no
-CAPTCHAs or login walls. Two parallel browser tasks: Task A (home feed,
-~8 in-window posts, + 11 analytics accounts); Task B (22 accounts:
-metrics 10, news 5, market 3, scheme/film 2 + special checks). X relative
-timestamps were unreliable (±1–3h), so borderline posts were individually
-verified; approximate chart reads marked ~. Nothing inventoried without
-evidence.
-
-### NEW ITEMS
-
-1. @DynatyzeFF — "DAKOTA", "YBC", "Alpha Role" (2026-10-06 7:08 AM CDT,
-   pinned thread; quote-request from @KevinMassare "Can you do one where
-   its merged?" on the companion chart). NEW METRICS with stated
-   definitions, "Through 4 weeks in the NFL":
-   - DAKOTA = "an all-in-one quarterback efficiency score that measures
-     how well a passer runs their offense compared to expectations."
-     Leaders: Brock Purdy 0.57, Drew Lock 0.52, Michael Penix Jr. 0.48,
-     Lamar Jackson 0.45, Trevor Lawrence 0.38, Dak Prescott 0.33, Caleb
-     Williams 0.28, Jared Goff 0.27, Bryce Young 0.27, Josh Allen 0.27;
-     league average 0.07 (stated).
-   - YBC = "Yards Before Contact shows the total yards before a player is
-     first touched." Leaders: James Cook 250, Jahmyr Gibbs 211, Bijan
-     Robinson 182, Jaylen Warren 146, Kenneth Walker III 142, Aaron
-     Jones 133, Kyren Williams 132, Chuba Hubbard 125, Derrick Henry 124,
-     Jonathan Taylor 124; average 81 (stated).
-   - Alpha Role (WR) = "A single number measuring how completely a wide
-     receiver dominates their offense's targets, deep routes, and
-     red-zone chances." Leaders: JSN ~42.56, Carnell Tate ~39.89,
-     DeVonta Smith ~39.80, CeeDee Lamb ~38.12, Michael Wilson ~36.47,
-     Olave ~35.75, Tee Higgins ~34.64, Parker Washington ~34.10, Garrett
-     Wilson ~33.89, Denzel Boston ~33.53; average ~27.02 (stated; values
-     ~ approximate as read).
-   - Alpha Role (TE) = same composite for tight ends. Leaders: Bowers
-     ~33.23, McBride ~29.22, Likely ~27.98, Hockenson ~25.20, Andrews
-     ~20.96, Kittle ~20.56, Fannin Jr. ~19.41, Kincaid ~18.81, LaPorta
-     ~17.98, Otton ~17.84; average ~11.40 (stated; values ~ approximate
-     as read).
-   Data source: not stated in the pinned thread (attributed fact); account
-   is @DynatyzeFF (dynatyze.com/football/tape per prior inventory).
-   Caveats: none stated. Full tables in
-   `docs/dfs/research/2026-10-06/full-tables/dynatyzeff-dakota-leaders.csv`,
-   `dynatyzeff-ybc-leaders.csv`, `dynatyzeff-alpha-role-wr.csv`,
-   `dynatyzeff-alpha-role-te.csv`.
-
-2. @DynatyzeFF — TE FPTS/target leaders (2026-10-05 11:08 PM CDT).
-   Metric: fantasy points per target. Leaders: Mike Gesicki 2.97, George
-   Kittle 2.93, Juwan Johnson 2.54, Dalton Kincaid 2.42, Jake Ferguson
-   2.42, Travis Kelce 2.39, Harold Fannin Jr. 2.19, Darren Waller 2.10,
-   Brenton Strange 2.04, Pat Freiermuth 2.03, Brock Bowers 2.01; league
-   average 1.88 (stated); T.J. Hockenson 1.83, Sadiq 1.79, Michael Mayer
-   1.79. Companion note on Fannin: "5.8 average yards of separation
-   created. #1 among all tight ends...the targets are coming and already
-   #9 in TE fantasy." Data source: Dynatyze NFL Tape (stated on image).
-   Full table in
-   `docs/dfs/research/2026-10-06/full-tables/dynatyzeff-te-fpts-per-target.csv`.
-
-3. @PattonAnalytics — "Combined Number of Turnovers and Punts" /
-   "Change of possession after not scoring (2026)" (2026-10-06 7:28 AM
-   CDT). Metric: turnovers + punts per team, all 32 NFL teams, x-axis
-   0–30, values ~10 to ~29 (approximate; individual team values not
-   legible in this sweep). Data source: StatRankings (stated on chart).
-   Context: posted as "A more holistic view" replying to @KevinMassare's
-   merge request. Range recorded in
-   `docs/dfs/research/2026-10-06/full-tables/pattonanalytics-turnovers-punts.csv`.
-
-4. @ChrisWechtFF via @jmthrivept — RYOE/Att leaderboard sighting
-   (quoted post ~12:00 AM CDT; in-window repost 8h ago). Metric: Rush
-   Yards Over Expectation per Attempt (already inventoried; this is a new
-   leaderboard): JCM "has by far the worst Rush Yards Over Expectation
-   per Att in the league right now. No other RB is close" (min 50
-   carries); Rachaad White 0.15; Kaytron Allen -0.55; Austin Ekeler 2.70
-   "in his first game back." Data source: @FantasyPtsData (stated).
-   Full rows in
-   `docs/dfs/research/2026-10-06/full-tables/wechtff-ryoe-att.csv`.
-
-5. @FantasyPtsData — Bhayshul Tuten efficiency ranks (2026-10-05
-   10:38 PM CDT). "Among all 28 RBs with 50+ touches, Bhayshul Tuten
-   ranks: 4th in Rushing Success%, 4th in YAC/Rec, 5th in Explosive
-   Play%, 5th in MTF/Att, 6th in YACO/Att, 6th in EPA/Snap." Data source:
-   Fantasy Points hand-charted data (stated). Rows in
-   `docs/dfs/research/2026-10-06/full-tables/fantasypointsdata-tuten-rb-ranks.csv`.
-
-6. @FantasyPtsData — Derek Stingley yardage regression note (2026-10-06
-   12:45 AM CDT). "Derek Stingley didn't give up >65 yards to any
-   receiver through 17 games last year. This year, he's already given
-   up: + 101 yards to CeeDee Lamb + 78 yards to Dalton Kincaid + 67
-   yards to DJ Moore + 64 yards to Tee Higgins." Image: Fantasy Points
-   hand-charted matchup-data tool table (cells too small to read;
-   attributed limitation). Data source: Fantasy Points hand-charted
-   matchup data (attributed).
-
-7. @MagicSportsGuy — 2nd-half DK scoring splits (2026-10-05 ~9:45 PM
-   CDT, borderline at window edge). "Share of DK points scored in the
-   2nd half, Week 10 2025 to now": Tyler Shough — 1H total 70.7, 2H
-   total 155.3, 11 games, 68.7% 2H share; Chris Olave — 66.6, 145.3,
-   10 games, 68.6%. Split view (1H FPPG / 2H FPPG / Games): Shough 2025
-   Wk 10–18: 8.6 / 13.0 / 8; Shough 2026: 8.1 / 17.1 / 3; Olave 2025
-   Wk 10–18: 6.6 / 13.6 / 7; Olave 2026: 6.8 / 16.7 / 3. Caption: "Both
-   sit at essentially the same number, and both are league leaders in
-   the second-half split this season. Shough 1st of 490 at 17.1, Olave
-   2nd of 490 at 16.7." Data source: StatRankings, DraftKings FP Per
-   Game (stated). Full rows in
-   `docs/dfs/research/2026-10-06/full-tables/magicsportsguy-second-half-dk-splits.csv`.
-
-8. @SumerSports — Penix time to throw (2026-10-05 ~11h ago, borderline).
-   "Falcons are running wild on outside zone and getting rid of the
-   ball quickly in the pass game up 24-7 at the half. Michael Penix
-   Jr.'s 2.24 seconds to throw is 0.48 seconds below the league
-   average." Also: "Bijan Robinson and Brian Robinson Jr. both have two
-   rushing touchdowns before the fourth quarter. It's the first time a
-   pair of RB teammates have done that since Jordan Howard and Boston
-   Scott did it for the Eagles in Week 8 of the 2021 season." Game
-   context: MNF final ATL 45 - NO 24.
-
-9. @GridironInfo_ — (a) "Week 4: When did they move the chains. Shows
-   what down each team's offensive series actually picked up their first
-   downs on" (2026-10-06 ~8:30 AM CDT, down-of-first-down league chart;
-   individual values not captured in this sweep); (b) "2026 points
-   allowed per game" leaderboard (image; values not captured); (c)
-   "Game Recap: Atlanta Falcons at New Orleans Saints Week 4. ATL 45 -
-   NO 24" (4 images).
-
-10. @cmain7 — DFS showdown lineup stat (2026-10-05 ~11:30 PM CDT).
-    Winning DraftKings showdown lineup (MNF Falcons–Saints slate) with
-    six skill players — "something that's happened about 1.2% of the
-    time": CPT Chris Olave / Bijan Robinson / Devaughn Vele / Alvin
-    Kamara / Brian Robinson / Jahan Dotson.
-
-11. @ScottBarrettDFB — RB YPC consistency (2026-10-06 ~8:26 AM CDT).
-    "It's been over a year since the last time Quinshon Judkins averaged
-    at least 4.00 YPC in a game. James Cook has done that 14 times over
-    the same span."
-
-### NEWS (injury / roster / depth chart)
-
-- @AdamSchefter (2026-10-06 8:11 AM CDT): "More about Arizona Cardinals
-  starting left tackle Paris Johnson Jr. being out for the season after
-  tearing his left biceps in a 36-24 loss to the Giants on Sunday."
-  (ESPN card.)
-- @RapSheet (2026-10-06 6:28 AM CDT) headlines: "Penix cooks — Bigsby
-  headed to IR — Lamar's status is TBD — Pat Surtain avoids major
-  injury." (4 ESPN links; item-level details not in post.)
-- @RapSheet via @DonAtkinsonNFL (original 2026-10-05 12:29 PM CDT,
-  quoted in-window): "The #Broncos received some good news on both star
-  CB Pat Surtain II and on WR Pat Bryant from their MRIs today, sources
-  say. They avoided worst-case scenario on both of their ankle injuries
-  and both absences are expected to be short-term."
-- @RapSheet (2026-10-05 ~11:00 PM CDT): "Long-time NFL pass-rusher
-  Marcus Davenport has decided to retire, per me and @MikeGarafolo."
-- @hawkblogger / @DevyEusuf (in-window): "New Seahawks RB, Robert Henry
-  Jr., was signed off the Commanders PS, per @Schultz_Report. He will
-  be added to the 53 man roster tomorrow and there will be a
-  corresponding cut."
-- @JFowlerESPN (2026-10-06 6:51 AM CDT): "'That was our brand of
-  football' -Falcons HC Kevin Stefanski, who added that good teams
-  follow up a MNF win with a win the upcoming Sunday." (video)
-- @JFowlerESPN (2026-10-05 10:38 PM CDT): "The Falcons knew they had
-  found a new gear in Green Bay last week... Forty-five points later,
-  Atlanta is rolling -- and 8-1 in its last nine primetime games."
-
-### MARKET
-
-- @JacobBarzilla via John McClain repost (home feed, ~10h ago): "Texans
-  now have the 4th best Super Bowl odds via @Kalshi" (image). Direction/
-  prior number not stated.
-- @Covers (2026-10-05 10:15 PM CDT): "WHO SHOULD BE THE FAVORITE TO WIN
-  THE NFC SOUTH? Atlanta Falcons 33%, New Orleans Saints 30%, Carolina
-  Panthers 29%. The Falcons had as low as a 5.7% chance of winning the
-  division after Week 2, via @KalshiSports." Full rows in
-  `docs/dfs/research/2026-10-06/full-tables/kalshi-nfc-south-odds.csv`.
-- @Covers (~11:40 PM CDT): Saints "only have an 11% chance of winning
-  this football game at @KalshiSports" (live MNF probability).
-- @ActionNetworkHQ: cashed best-bet recaps (Falcons +1.5, Kyle Pitts
-  over 28.5 receiving yards, White Sox/Guardians over 6.5) — results
-  posts, no forward-looking lines.
-- No Week 6 opener/current/sharp-vs-public numbers were posted by any
-  market account this window (attributed observation).
-- NOTE: the @VSiN handle is an unrelated empty account; the real
-  network is @VSiNLive (4 posts this window, all show promos).
-
-### SCHEME / FILM
-
-- @Nate_Tice (2026-10-05 10:23 PM CDT): Saints defense "ended with 19
-  missed tackles with 88 yards allowed after" (per @NextGenStats).
-- @Nate_Tice (~12:55 AM CDT): "Duo is the perfect run concept for him"
-  (reply; antecedent not captured).
-- @DevyEusuf quoting @EaglesXsandOs: "-Pass on every 1st and 10+ in a
-  game / -Use your most athletic DL/Edge/LB at RB on short-yardage
-  runs."
-- @jmthrivept: Dohnte Meyers acceleration film note (6s video; "I
-  watched this video several times trying to figure out if it was sped
-  up").
-- Home feed: @fball_insights (reposted by John McClain) "Offense and
-  Defense efficiency after MNF" (efficiency chart image; values not
-  captured); @PFN365 (reposted by John McClain) "The #Cowboys will be
-  aggressive on 4th downs..." (5:58 video).
-
-### RECORD CORRECTIONS / STANDING NOTES
-
-- @FTNData: currently PROTECTED (1,276 posts; "These posts are
-  protected. Only approved followers can see @FTNData's posts.") — flip
-  from public (7,432 posts) as recorded 2026-10-05 PM. Read-only; no
-  follow requested. Duration of protected status unknown.
-- @NFLResearcher: timeline still empty — FIFTH straight sweep. Header
-  shows "4 posts" but page renders "@NFLResearcher hasn't posted" even
-  after reload.
-- @NerdingonNFL: header now shows "1 post" (was empty last sweep), but
-  the post does not render even after reload — effectively still empty.
-- @statyxio: pinned "Ask Statyx" (Oct 3) shows no meaningful development
-  (2 replies, 8 reposts, 16 likes, ~18.7K views).
-- @TomPelissero: first load showed a ~1h-ago "The #49ers have 18 players
-  listed on their first injury report for Thursday night's game. Only
-  one — LB Tatum Bethune — didn't practice. Everything else is rest or
-  limited." post and a ~12h-ago "The final play of MNF." video, but
-  three reloads + Videos tab + X search found nothing newer than 18h
-  ago — treated as an unverified rendering artifact and EXCLUDED from
-  confirmed results.
-- Borderline-flagged posts (MagicSportsGuy ~9:45 PM, SumerSports ~11h,
-  DevyEusuf ~11h items) were included with flags; X relative timestamps
-  cannot be resolved to the minute from profile pages (attributed
-  limitation).
-
-### RE-SIGHTINGS / NO NEW POSTS IN WINDOW
-
-@RyanPaganetti (EPA battery already inventoried), @sfdata9ers
-(penalty-yards differential already inventoried), @statyxio,
-@EstablishTheRun, @32BeatWriters, @MikeGarafolo, @benbbaldwin — no new
-posts in window.
-
-### INNOVATION KERNELS (attributed notes, not build orders)
-
-- DAKOTA: all-in-one QB efficiency vs expectations — expectation-delta
-  framing for quarterback evaluation (@DynatyzeFF).
-- YBC: pre-contact yards as a distinct signal from YAC — separates
-  blocking/scheme creation from tackle-breaking (@DynatyzeFF).
-- Alpha Role: single-number WR/TE dominance composite (targets + deep
-  routes + red-zone chances) (@DynatyzeFF).
-- 2H DK scoring splits: game-script / halftime-adjustment signal —
-  Shough/Olave both ~68.7% 2H share, league-leading (@MagicSportsGuy,
-  StatRankings).
-- Turnovers+punts merged: "change of possession after not scoring" as a
-  drive-failure composite (@PattonAnalytics, StatRankings).
-- Down-of-first-down distribution: series-level aggressiveness/
-  efficiency fingerprint (@GridironInfo_).
-- RYOE/Att as rotation/depth-chart signal: Ekeler 2.70 vs Rachaad White
-  0.15 in overlapping backfield context (@ChrisWechtFF via @jmthrivept,
-  data @FantasyPtsData).
-- TE FPTS/target + separation pairing: efficiency-per-opportunity with
-  separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
-  2.19 FPTS/tgt, #7) (@DynatyzeFF).

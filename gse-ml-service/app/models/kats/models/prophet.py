@@ -309,13 +309,13 @@ class ProphetModel(Model[ProphetParams]):
         self, steps: int, future: Optional[pd.DataFrame]
     ) -> pd.DataFrame:
         non_future = future is None
-        if future is None or (self.params.extra_regressors and len(self.params.extra_regressors) > 0 and future is not None):
+        if future is None:
             # Prophet removes nulls from the data. If we encounter nulls in the
             # end of the time series, Prophet won't have that in its history and
             # we won't generate enough steps.
             count_trailing_nulls = 0
             nulls = self.data.value.isnull()
-            while nulls.iloc[-1 - count_trailing_nulls].any():
+            while nulls.iloc[-1 - count_trailing_nulls].any() if isinstance(nulls.iloc[-1 - count_trailing_nulls], pd.Series) else nulls.iloc[-1 - count_trailing_nulls]:
                 count_trailing_nulls += 1
             # pyre-fixme
             future = self.model.make_future_dataframe(
@@ -323,8 +323,6 @@ class ProphetModel(Model[ProphetParams]):
                 freq=self.freq,
                 include_history=self.include_history,
             )
-            if non_future == False:
-                future = self.raw_future_df_hack
         # pyrefly: ignore [missing-attribute]
         if "ds" not in future.columns:
             msg = "`future` should be specified and `future` should contain a column named 'ds' representing the timestamps."

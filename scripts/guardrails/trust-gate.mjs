@@ -566,11 +566,7 @@ async function main() {
         continue;
       }
       const hits = scanText(text, relPath);
-
-    for (const hit of hits) {
-      if (hit.snippet.includes("Lock (SEA) 127.3 #1")) continue;
-      if (hit.snippet.includes("AI-GENERATED TABLE")) continue;
-
+      for (const hit of hits) {
         allHits.push({ file: relPath, ...hit });
       }
     }
@@ -596,11 +592,7 @@ async function main() {
       continue;
     }
     const hits = scanText(text, relPath);
-
     for (const hit of hits) {
-      if (hit.snippet.includes("Lock (SEA) 127.3 #1")) continue;
-      if (hit.snippet.includes("AI-GENERATED TABLE")) continue;
-
       allHits.push({ file: relPath, ...hit });
     }
   }

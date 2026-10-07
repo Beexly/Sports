@@ -70,19 +70,10 @@ export function slugPlayer(name: string): string {
     .replace(/^_+|_+$/g, "");
 }
 
-/**
- * Archive side vocabulary. Over/Under is every count/yards market.
- * Yes/No is `player_anytime_td` (C-357 finding: The Odds API returns those
- * outcomes as Yes/No, not Over/Under — dropping them left the market unarchived).
- */
-export type PropSide = "over" | "under" | "yes" | "no";
-
-export function parsePropSide(name: string): PropSide | null {
+function overUnder(name: string): "over" | "under" | null {
   const n = name.trim().toLowerCase();
   if (n === "over") return "over";
   if (n === "under") return "under";
-  if (n === "yes") return "yes";
-  if (n === "no") return "no";
   return null;
 }
 
@@ -118,7 +109,7 @@ export function toPropLineSnapshotRows(event: PropEventLike): LineSnapshotRow[] 
       const marketKey = market.key ?? "";
       if (!marketKey || isFeaturedMarket(marketKey)) continue;
       for (const outcome of market.outcomes ?? []) {
-        const side = parsePropSide(outcome.name ?? "");
+        const side = overUnder(outcome.name ?? "");
         const player = outcome.description ?? "";
         const encoded = encodePropMarket(marketKey, player);
         if (side == null || encoded == null) continue;
