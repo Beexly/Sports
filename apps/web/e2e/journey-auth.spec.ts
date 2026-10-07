@@ -65,7 +65,18 @@ function expectNoErrorBoundary(html: string): void {
  *  - "///evil.com"        → triple-slash, browser normalizes to //evil.com
  *  - "/\\evil.com"        → backslash variant, some browsers treat as //evil.com
  *  - "http://evil.com"    → plain http absolute
+ *  - "/<TAB>/evil.com"    → control-character smuggling: the WHATWG URL parser
+ *                            DELETES tab/LF/CR before parsing, so this reads as
+ *                            a single-slash path to a naive prefix scan and as
+ *                            "//evil.com" to the browser. Node accepts a tab
+ *                            inside a Location header value, so it travels
+ *                            intact. Guarded by safeCallbackUrl (unit-tested in
+ *                            __tests__/callback-url-guard.test.ts).
+ *  - "/<TAB>\\evil.com"   → same trick, backslash variant.
  */
+const TAB = String.fromCharCode(0x09);
+const LF = String.fromCharCode(0x0a);
+
 const MALICIOUS_CALLBACK_URLS: ReadonlyArray<{ input: string; description: string }> = [
   { input: "//evil.com", description: "protocol-relative" },
   { input: "//evil.com/path", description: "protocol-relative with path" },
@@ -74,6 +85,9 @@ const MALICIOUS_CALLBACK_URLS: ReadonlyArray<{ input: string; description: strin
   { input: "http://evil.com", description: "absolute http" },
   { input: "///evil.com", description: "triple-slash" },
   { input: "/\\evil.com", description: "backslash variant" },
+  { input: `/${TAB}/evil.com`, description: "tab-smuggled protocol-relative" },
+  { input: `/${TAB}\\evil.com`, description: "tab-smuggled backslash" },
+  { input: `/${LF}/evil.com`, description: "newline-smuggled protocol-relative" },
 ];
 
 // ── Test group ────────────────────────────────────────────────────────────
