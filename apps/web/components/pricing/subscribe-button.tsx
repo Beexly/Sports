@@ -43,10 +43,17 @@ type Props = {
   priceAnnual?: number | null;
 };
 
+// Mobile ergonomics: `py-2.5 text-sm` alone leaves the checkout CTA short of the
+// 44px minimum touch target, and this is the highest-value control on the site.
+// `min-h-11` (2.75rem = 44px) is the same floor already used by the billing
+// toggle directly above it (pricing-plans.tsx ToggleButton) and by every
+// picks-board control. The flex centering keeps the label — and the loading
+// spinner row — centered now that the box can be taller than its content.
+// Desktop only grows by the gap between the content height and the 44px floor.
 const PRIMARY_CLASSES =
-  "w-full rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_CLASSES =
-  "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 
 /**
  * Per-click checkout-intent id, with a fallback.
