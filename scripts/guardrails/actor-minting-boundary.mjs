@@ -40,14 +40,24 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
 import ts from "typescript";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const argv = process.argv.slice(2);
 const scanRootFlag = argv.indexOf("--scan-root");
 const FIXTURE_MODE = scanRootFlag !== -1;
 const ROOT = resolve(process.cwd());
+const DEFAULT_SCAN_DIRS = ["apps", "packages", "workers", "scripts"];
 const SCAN_ROOTS = FIXTURE_MODE
   ? [resolve(ROOT, argv[scanRootFlag + 1] ?? ".")]
-  : ["apps", "packages", "workers", "scripts"].map((d) => resolve(ROOT, d));
+  : DEFAULT_SCAN_DIRS.map((d) => resolve(ROOT, d));
+
+// Minimum-coverage floor for the DEFAULT repo scan (never fixture mode, which
+// deliberately scans a handful of fixture files). Observed on origin/main @
+// bb0e7dfc0 (2026-08-25): this guard scans 2126 files. Set at roughly half —
+// well below refactor churn, well above what survives a scan root
+// disappearing. See min-scan-floor.mjs: walk() returns [] for a directory it
+// cannot read, so without this a renamed root yields "scanned 0 files, OK".
+const MIN_SCANNED_FILES = 1000;
 
 const SCAN_EXTS = new Set([".ts", ".tsx", ".mts", ".cts"]);
 const SKIP_DIRS = new Set(["node_modules", ".next", "dist", "build", "coverage", ".git", ".turbo"]);
@@ -289,6 +299,15 @@ async function main() {
       }
     }
   }
+
+  assertScanFloor({
+    guard: "actor-minting-boundary",
+    root: ROOT,
+    roots: DEFAULT_SCAN_DIRS,
+    scanned,
+    floor: MIN_SCANNED_FILES,
+    skip: FIXTURE_MODE,
+  });
 
   if (hits.length > 0) {
     console.error(`[actor-minting-boundary] FAIL — ${hits.length} violation(s):`);

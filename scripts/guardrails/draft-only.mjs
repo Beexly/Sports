@@ -14,8 +14,16 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const ROOT = resolve(process.cwd());
+
+// Minimum-coverage floor. Observed on origin/main @ bb0e7dfc0 (2026-08-25):
+// this guard scans 2085 files. Set at roughly half — well below refactor churn,
+// well above what survives a SCAN_DIRS root disappearing. See min-scan-floor.mjs:
+// without it, the `catch { continue }` below turns a renamed root into
+// "scanned 0 file(s), OK, exit 0".
+const MIN_SCANNED_FILES = 1000;
 
 const SCAN_DIRS = [
   "apps/web/app",
@@ -272,6 +280,14 @@ async function main() {
       }
     }
   }
+
+  assertScanFloor({
+    guard: "draft-only",
+    root: ROOT,
+    roots: SCAN_DIRS,
+    scanned,
+    floor: MIN_SCANNED_FILES,
+  });
 
   if (hits.length === 0) {
     console.log("[draft-only] OK - scanned " + scanned + " file(s); no publish/send paths.");
