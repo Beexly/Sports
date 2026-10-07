@@ -127,7 +127,6 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - No DONE.md STOP. Watchdog stays live.
 - Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) OPEN/GREEN on main. Do NOT start a second TPRR bind.
 
-<<<<<<< HEAD
 ## Now (2026-09-03 15:48 CT)
 ### 2026-09-03 15:48 CT | Hermes (verified-fixes session) | CLEAN
 - Dual-audit verified bug batch shipped as PR #689 (draft, claude/verified-fixes-2026-09-03 → main), one commit per fix: C-64 settle-backfill SCORE_MISMATCH no-clobber guard + regression test (47037c6d1); C-65 capReached decidable — fetch cap+1, > cap, exactly-cap now false (cd0c6adc1); C-66 backfill-team-efficiency + ingest-player-stats fall back to floor only on UNPUBLISHED signals (404/zero-rows) via shared isUnpublishedSeasonSignal — 5xx outage recorded failed, never masked (968c49522); C-67 merge score-pair fill && → ||, partial canonical pairs fill from clean FINAL alias, pure rules extracted to scripts/ops/game-merge-score-fill.ts + 10 node:tests via test:merge-score-fill (ea893d5a8); C-68 PickConflict.canonicalPickId → referencePickId (f4709df22); C-69 smoke-prod cold-start retry — one 2s-settle retry per non-200, cap 8, LAST_CODE global after subshell counter bug caught in self-test (5ba852598).
@@ -156,7 +155,6 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Resilience: host reloaded mid-run (~3 h wall clock lost, background jobs killed); Hermes re-ran in foreground with incremental saves, nothing lost.
 - State: both mirrors + AGENT.md local and UNCOMMITTED on Minis host — push awaits Garrett's word. Supersedes 2026-09-14 13:45 CT block's "Next": no IC9 admission runner — no survivors to admit. Props branch closed.
 - Next: (1) Garrett decides on push; (2) close O-1 (sync gate file to Minis host); (3) redirect Minis to next lane.
-=======
 ### 2026-08-22 11:16 CT | Grok CLI | CLEAN (steer)
 - Pasted `docs/ops/hermes/DEEP-STATS-OX-ALPHA.md` into the live Ox Alpha query-file (`RESUME-OX-ALPHA.md`). E-queue aborted; E1–E7 already green/merged.
 - Watchdog pid 24188 stays. Recycle Hermes child only so the next same-watchdog session loads deep-stats. No second process.
@@ -225,9 +223,6 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Fleet drafts parked `tmp/fleet/` (C4.NFL.1–6, C5.NFL.1–4). Verifier/catalog rewrite not started. `Sports-h01` left clean (untracked fleet removed).
 - Next: squash-merge #555, then 557/556 if green, then EDGE_CATALOG from a new origin/main worktree. Stay off ingest/shin/Sports cwd/Hermes.
 
-<<<<<<< HEAD
->>>>>>> 01a07c2cd (feat(edge-lab): H2 Edge wave — 6 covariate binds (aggressiveness, CAY, passer-rating, RYOE, separation, RPOE) + backtest suite)
-=======
 
 ### 2026-08-23 ~11:55 CT | Hermes / ox-alpha | CLEAN
 - Edge wave salvage commit `01a07c2c` on hermes/h1-qb-pressures-edge, PUSHED.
@@ -236,4 +231,3 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Verified: typecheck 0 errors, lint PASS, edge-lab 1120/1120 green. Also landed earlier: d993ca2a H2-ayd bind, fd688f17 promptfoo pin.
 - Research artifact: handoff/EDGE_RESEARCH_NEXT_5.md (next edges: tackles, pass attempts, QB hits, completions-allowed, missed tackles).
 - Lesson: max ~3 concurrent Nous :free children — larger fan-outs die at ~60K ctx on Cloudflare 120s timeout.
->>>>>>> c6c533fbc (docs(ops): log edge-wave salvage + 524 lesson)

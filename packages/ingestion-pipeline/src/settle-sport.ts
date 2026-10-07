@@ -24,10 +24,9 @@
  * sport cannot abort the remaining sports in the caller's loop.
  */
 
-import { db, isStubMode } from "@sports/db";
+import { db } from "@sports/db";
 import {
   OddsApiClient,
-  OddsApiError,
   DataNormalizer,
   settleGameLogs,
   NFL_PRESEASON_ODDS_KEY,
@@ -35,16 +34,8 @@ import {
   isNflPreseasonFetchWindow,
   remapPreseasonRows,
   mergeFeedRowsById,
-  evaluatePaidOddsCall,
-  loadLatestCreditObservation,
-  loadLatestPaidCallAt,
-  loadLatestPaidCallAnyPurposeAt,
-  recordCreditObservation,
-  reservePaidCallSlot,
-  PAID_CALL_MIN_INTERVAL_MS,
-  PAID_CALL_PURPOSES,
 } from "@sports/data-ingestion";
-import type { SupportedSportKey, OddsCreditLedgerDb, OddsIngestKey } from "@sports/data-ingestion";
+import type { SupportedSportKey } from "@sports/data-ingestion";
 import {
   calculatePickResult,
   deriveClosingSnapshotFromOdds,
@@ -72,7 +63,6 @@ import {
   type PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
 import { markClosingSnapshotsIfEnabled } from "./line-archive.js";
-import { resolveCanonicalGame, type GameIdentityDb } from "./game-identity.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -115,15 +105,6 @@ export interface SettleSportConfig {
  *  UTC hour bucket is used — still stable across rapid retries. */
 export interface SettleSportOptions {
   readonly scheduledWindow?: string;
-  /**
-   * C-109: sports whose free settlement pass left overdue PENDING picks with
-   * reason NO_FINAL this cycle. The spend guard refuses paid scores for every
-   * sport the free sources cover; only an explicit justification here (built
-   * by the settle-picks route from the free pass RCA) lets the paid getScores
-   * run for that sport, and then at most once per sport per hour across every
-   * caller (durable ledger). Omitted or empty: no paid scores call is made.
-   */
-  readonly paidScoresJustifiedSports?: ReadonlySet<string>;
 }
 
 export interface SettleSportResult {
@@ -189,159 +170,46 @@ export async function settleSport(
   let anomaliesResolved = 0;
   let outboxAppended = 0;
 
-  const skipped = (note: string): SettleSportResult => ({
-    sport: sport.key,
-    status: "success",
-    gamesSettled: 0,
-    picksSettled: 0,
-    observationsRecorded: 0,
-    anomaliesOpened: 0,
-    anomaliesReopened: 0,
-    anomaliesPromoted: 0,
-    anomaliesResolved: 0,
-    outboxAppended: 0,
-    note,
-  });
-
   try {
     // GSE-SEC-039: spend guard — call paidCallJustified before any paid fetch.
     // For "scores" the guard returns false (ESPN + nflverse cover scores free+cleared),
-    // so the paid getScores() is refused UNLESS the caller justified it for this
-    // sport: the free pass ran first and left overdue PENDING picks with reason
-    // NO_FINAL (C-109; until 2026-09-06 this branch logged and proceeded, which
-    // fetched paid scores for all seven sports five times an hour).
-    const explicitlyJustified = options.paidScoresJustifiedSports?.has(sport.key) === true;
-    const scoresJustified = paidCallJustified("scores", sport.key) || explicitlyJustified;
+    // so the paid getScores() IS justified to be refused. settleSport is the explicitly
+    // paid path (the caller passed a real API key), so when the guard flags a free
+    // alternative we log an audit warning; the caller's free-path settlement
+    // (runFreePathSettlement) handles scores coverage when the key is absent.
+    const scoresJustified = paidCallJustified("scores", sport.key);
     if (!scoresJustified) {
-      console.info(
-        `${logPrefix} ${sport.key}: paid scores fetch skipped, spend guard: free sources ` +
-          `cover scores and the free pass reported no overdue NO_FINAL picks for this sport.`,
+      console.warn(
+        `${logPrefix} ${sport.key}: paid scores fetch not justified by spend guard — ` +
+          `free sources cover scores; paid getScores proceeding on paid path (key present).`,
       );
-      return skipped("spend_guard");
     }
-
-    // C-109 pacing: at most one paid scores call per VENDOR SPORT KEY per hour
-    // across every caller (the hourly cron and the autonomy cycle both reach
-    // here), read from the durable ledger, plus the credit reserve rule. Each
-    // HTTP request is its own governed call: the NFL preseason feed below is
-    // decided, marked and credited under its own key, never under the regular
-    // season's marker. See odds-credit-ledger.ts for why the JarvisMemoryEvent
-    // marker was chosen over the settlement run.
-    const ledger = db as unknown as OddsCreditLedgerDb;
-    // A header-less response (remaining null) is not a reading: never recorded.
-    const recordCredits = (remaining: number | null, used: number | null): Promise<unknown> =>
-      remaining == null
-        ? Promise.resolve("skipped")
-        : recordCreditObservation(ledger, {
-            remaining,
-            used,
-            observedAt: new Date().toISOString(),
-            source: "settle-sport",
-          });
-    type ScoresResponse = Awaited<ReturnType<typeof client.getScores>>;
-    type GovernedScores =
-      | { readonly allowed: true; readonly response: ScoresResponse }
-      | { readonly allowed: false; readonly reason: string };
-    const governedScoresFetch = async (vendorKey: OddsIngestKey): Promise<GovernedScores> => {
-      const now = new Date();
-      const [lastPaidScoresAt, lastPaidAnyPurposeAt, latestCredits] = await Promise.all([
-        loadLatestPaidCallAt(ledger, "scores", vendorKey),
-        loadLatestPaidCallAnyPurposeAt(ledger, vendorKey),
-        loadLatestCreditObservation(ledger),
-      ]);
-      const { decision, slot } = evaluatePaidOddsCall({
-        remaining: latestCredits?.remaining ?? null,
-        now,
-        purpose: "scores",
-        hasEventWithin48h: null,
-        freeCoversPurpose: false,
-        lastPaidCallAt: lastPaidScoresAt,
-        lastPaidCallAnyPurposeAt: lastPaidAnyPurposeAt,
-        observedAt: latestCredits?.observedAt ?? null,
-      });
-      if (!decision.allow) return { allowed: false, reason: decision.reason };
-      // Atomic hourly reservation BEFORE the request: advisory mutex, marker
-      // read and marker write in one transaction, so the :20 cron and the :22
-      // autonomy cycle cannot both pass the hourly rule for the same sport. A
-      // stale-zero probe reserves across purposes (one probe per sport per hour).
-      // The stub client (DATABASE_URL unset) answers $transaction with a no-op,
-      // so the ledger is told it cannot serialize there (warned, non-atomic).
-      const reservation = await reservePaidCallSlot(ledger, {
-        sport: vendorKey,
-        purpose: "scores",
-        now,
-        intervalMs: PAID_CALL_MIN_INTERVAL_MS,
-        checkPurposes: slot === "any-purpose" ? PAID_CALL_PURPOSES : ["scores"],
-        atomicCapable: !isStubMode(),
-      });
-      if (!reservation.reserved) {
-        return {
-          allowed: false,
-          reason:
-            `paid scores slot for this sport already reserved by a concurrent caller ` +
-            `at ${reservation.lastAt.toISOString()}`,
-        };
-      }
-      let response: ScoresResponse;
-      try {
-        response = await client.getScores(vendorKey, PAID_SCORES_DAYS_FROM);
-      } catch (fetchErr) {
-        // A 402/429 still carries BOTH quota headers: persist them so a probe
-        // against a stale zero lands its reading even when the call fails, and
-        // so a failed run does not silently drop x-requests-used (the counter
-        // the burn measurement reads). usedRequests stays null when the header
-        // was absent; it is never coerced to 0.
-        if (fetchErr instanceof OddsApiError && fetchErr.remainingRequests != null) {
-          await recordCredits(fetchErr.remainingRequests, fetchErr.usedRequests ?? null);
-        }
-        throw fetchErr;
-      }
-      await recordCredits(response.remainingRequests, response.usedRequests);
-      return { allowed: true, response };
-    };
-
-    const regular = await governedScoresFetch(sport.key);
-    if (!regular.allowed) {
-      console.info(
-        `${logPrefix} ${sport.key}: paid scores fetch skipped, credit governor: ${regular.reason}`,
-      );
-      return skipped(`credit_governor: ${regular.reason}`);
-    }
-    let scores = regular.response.data;
+    let scores = (await client.getScores(sport.key, PAID_SCORES_DAYS_FROM)).data;
     if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow()) {
       try {
-        // Second paid request, governed on its own vendor key: held by its own
-        // hourly marker or the reserve rule, it is skipped ALONE and the
-        // regular-season scores above still settle.
-        const preseason = await governedScoresFetch(NFL_PRESEASON_ODDS_KEY);
-        if (!preseason.allowed) {
-          console.info(
-            `${logPrefix} ${sport.key}: preseason scores fetch skipped, credit governor: ${preseason.reason}`,
+        const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, PAID_SCORES_DAYS_FROM);
+        const existingRows = await db.game.findMany({
+          where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
+          select: {
+            externalId: true,
+            homeTeamName: true,
+            awayTeamName: true,
+            commenceTime: true,
+          },
+        });
+        const candidates = existingRows.map((g) => ({
+          externalId: g.externalId,
+          homeTeam: g.homeTeamName,
+          awayTeam: g.awayTeamName,
+          commenceTime: g.commenceTime,
+        }));
+        const { remapped, unmatched } = remapPreseasonRows(preseason.data, candidates);
+        if (unmatched > 0) {
+          console.warn(
+            `${logPrefix} ${sport.key}: preseason score map skipped ${unmatched} unmatched rows`,
           );
-        } else {
-          const existingRows = await db.game.findMany({
-            where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
-            select: {
-              externalId: true,
-              homeTeamName: true,
-              awayTeamName: true,
-              commenceTime: true,
-            },
-          });
-          const candidates = existingRows.map((g) => ({
-            externalId: g.externalId,
-            homeTeam: g.homeTeamName,
-            awayTeam: g.awayTeamName,
-            commenceTime: g.commenceTime,
-          }));
-          const { remapped, unmatched } = remapPreseasonRows(preseason.response.data, candidates);
-          if (unmatched > 0) {
-            console.warn(
-              `${logPrefix} ${sport.key}: preseason score map skipped ${unmatched} unmatched rows`,
-            );
-          }
-          scores = mergeFeedRowsById(scores, remapped);
         }
+        scores = mergeFeedRowsById(scores, remapped);
       } catch (preseasonErr) {
         console.warn(
           `${logPrefix} ${sport.key}: preseason scores fetch failed — ` +
@@ -369,77 +237,13 @@ export async function settleSport(
     });
     const settlementRunId = run.id;
 
-    // Raw feed rows keyed by id — normalizeScores drops home_team/away_team/
-    // commence_time, which the identity fallback below needs.
-    const rawScoreById = new Map<string, (typeof scores)[number]>();
-    for (const raw of scores) {
-      if (raw?.id) rawScoreById.set(raw.id, raw);
-    }
-    // Sport row id, resolved lazily and once — only the fallback needs it.
-    let sportRowId: string | null | undefined;
-    const resolveSportRowId = async (): Promise<string | null> => {
-      if (sportRowId === undefined) {
-        const row = await db.sport.findUnique({
-          where: { key: sport.key },
-          select: { id: true },
-        });
-        sportRowId = row?.id ?? null;
-      }
-      return sportRowId;
-    };
-
     for (const score of normalized) {
       if (!score.completed) continue;
 
-      let game = await db.game.findUnique({
+      const game = await db.game.findUnique({
         where: { externalId: score.externalId },
         include: { picks: { where: { result: "PENDING" } } },
       });
-
-      // The row for this contest may carry ANOTHER feed's externalId (ESPN seed
-      // id / TheRundown event_id) because that feed created it first. Resolve by
-      // team pair + commence time so the paid path can still settle it. Failure
-      // isolated — a fallback error must never abort settlement of the slate.
-      if (!game) {
-        try {
-          const raw = rawScoreById.get(score.externalId);
-          const commenceTime = raw ? new Date(raw.commence_time) : null;
-          const sportId = raw && commenceTime && !Number.isNaN(commenceTime.getTime())
-            ? await resolveSportRowId()
-            : null;
-          if (raw && commenceTime && sportId) {
-            const resolved = await resolveCanonicalGame(db as unknown as GameIdentityDb, {
-              sportId,
-              sportKey: sport.key,
-              externalId: score.externalId,
-              homeTeamName: raw.home_team,
-              awayTeamName: raw.away_team,
-              commenceTime,
-            });
-            // Any resolution counts: a twin, or an externalId row another
-            // ingestion created between the two lookups (reload by id so its
-            // picks settle this cycle instead of waiting for the next).
-            if (resolved) {
-              game = await db.game.findUnique({
-                where: { id: resolved.game.id },
-                include: { picks: { where: { result: "PENDING" } } },
-              });
-              if (game) {
-                console.info(
-                  `${logPrefix} ${sport.key}: identity fallback settled feed id ` +
-                    `${score.externalId} onto existing game ${game.externalId} ` +
-                    `("${raw.home_team}" vs "${raw.away_team}")`,
-                );
-              }
-            }
-          }
-        } catch (identityErr) {
-          console.warn(
-            `${logPrefix} ${sport.key}: identity fallback failed for ${score.externalId} — ` +
-              `${identityErr instanceof Error ? identityErr.message : identityErr}`,
-          );
-        }
-      }
       if (!game) continue;
 
       const bothScores = score.homeScore !== null && score.awayScore !== null;
@@ -622,7 +426,17 @@ export async function settleSport(
           const closingOdds = await db.odds.findMany({
             where: { gameId: game.id, fetchedAt: { lte: game.commenceTime } },
             orderBy: { fetchedAt: "desc" },
-            take: 80,
+            // Must cover the ENTIRE closing batch (all rows sharing the max
+            // fetchedAt): rows are bookmaker x market, and wide coverage can
+            // exceed 80 rows in ONE batch (27+ books x 3 markets), which the old
+            // take:80 truncated arbitrarily mid-batch — a consensus close missing
+            // whichever books fell past the cap (M-F7). 240 covers 80 books x 3
+            // markets while keeping the read bounded; older batches beyond the
+            // cap are irrelevant (only the latest batch is the close). NOTE: the
+            // where clause deliberately has NO lower time bound — stale batches
+            // must reach the deriver so their age is RECORDED when refused
+            // (closeAgeMs), never censored at the SQL layer (C-29 finding 1).
+            take: 240,
             select: {
               market: true,
               fetchedAt: true,
@@ -688,26 +502,6 @@ export async function settleSport(
                 result,
                 settledAt,
                 status: "PENDING",
-                // SETTLE-TIME EVIDENCE (C-120), same contract as the free
-                // lanes: the score this grade was computed from, recorded
-                // inside the settlement transaction. Nothing else records it,
-                // so once a game row is overwritten there is no way to tell a
-                // MIS-GRADED pick from one graded correctly against a score
-                // that later changed.
-                //
-                // `sources` is empty on purpose: the paid path grades from the
-                // odds provider's normalized score, which carries no per-score
-                // source ids, and inventing one would put a fact in the
-                // evidence record that nothing observed. The lane is
-                // identified by `path`.
-                payload: {
-                  settledWith: {
-                    homeScore: score.homeScore,
-                    awayScore: score.awayScore,
-                    sources: [],
-                    path: "paid",
-                  },
-                },
               },
             });
             // Durable post-settlement work-state (6.10): the CLV grade and
