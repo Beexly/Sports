@@ -1,4 +1,27 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { SubscriptionTier } from "@sports/types";
+
+/**
+ * Mutable viewer for the entitlement-gate tests. `vi.hoisted` so the (hoisted)
+ * vi.mock factories below can close over it without a TDZ error.
+ */
+const state = vi.hoisted(() => ({
+  viewer: null as { userId: string; tier: string } | null,
+}));
+const setViewer = (v: { userId: string; tier: SubscriptionTier } | null): void => {
+  state.viewer = v;
+};
+
+vi.mock("@/lib/auth", () => ({
+  auth: async () => (state.viewer ? { user: { id: state.viewer.userId } } : null),
+}));
+vi.mock("@/lib/entitlements", () => ({
+  getUserEntitlements: async () => {
+    const { getEntitlements } = await import("@sports/types");
+    return getEntitlements((state.viewer?.tier ?? "FREE") as SubscriptionTier);
+  },
+}));
+
 import {
   loadSleeperMarketSignal,
   resetSleeperMarketSignalCacheForTests,
@@ -65,7 +88,8 @@ describe("sleeper market signal", () => {
     expect(signal.canPublishPicks).toBe(false);
   });
 
-  it("serves the market-signal API", async () => {
+  it("serves the market-signal API to an entitled (PRO) caller", async () => {
+    setViewer({ userId: "u-pro", tier: "PRO" });
     vi.stubGlobal("fetch", mockFetch());
     vi.resetModules();
     const mod = await import("@/app/api/sleeper/market-signal/route");
@@ -74,5 +98,51 @@ describe("sleeper market signal", () => {
     expect(response.status).toBe(200);
     expect(body["success"]).toBe(true);
     expect((body["data"] as Record<string, unknown>)["canPublishPicks"]).toBe(false);
+  });
+});
+
+/**
+ * Regression (entitlement gap): this route is the Player Lab "Market" view's
+ * JSON and sits alongside eleven /api/nflverse/* views that are all premium.
+ * It shipped with NEITHER an entitlement gate nor a rate limit, so the Market
+ * tab's data could be pulled straight off the URL with no subscription.
+ */
+describe("sleeper market-signal API entitlement gate", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    resetSleeperMarketSignalCacheForTests();
+  });
+
+  it("denies an anonymous caller with 401 and leaks no data", async () => {
+    setViewer(null);
+    vi.stubGlobal("fetch", mockFetch());
+    vi.resetModules();
+    const mod = await import("@/app/api/sleeper/market-signal/route");
+    const response = (await mod.GET()) as Response;
+    const body = (await response.json()) as Record<string, unknown>;
+    expect(response.status).toBe(401);
+    expect(body["error"]).toBe("authentication_required");
+    expect(body["data"]).toBeUndefined();
+  });
+
+  it("denies a signed-in FREE caller with 403 and leaks no data", async () => {
+    setViewer({ userId: "u-free", tier: "FREE" });
+    vi.stubGlobal("fetch", mockFetch());
+    vi.resetModules();
+    const mod = await import("@/app/api/sleeper/market-signal/route");
+    const response = (await mod.GET()) as Response;
+    const body = (await response.json()) as Record<string, unknown>;
+    expect(response.status).toBe(403);
+    expect(body["error"]).toBe("insufficient_tier");
+    expect(body["data"]).toBeUndefined();
+  });
+
+  it("denies a FANTASY caller — fantasy is not the betting-analytics tier", async () => {
+    setViewer({ userId: "u-fantasy", tier: "FANTASY" });
+    vi.stubGlobal("fetch", mockFetch());
+    vi.resetModules();
+    const mod = await import("@/app/api/sleeper/market-signal/route");
+    const response = (await mod.GET()) as Response;
+    expect(response.status).toBe(403);
   });
 });
