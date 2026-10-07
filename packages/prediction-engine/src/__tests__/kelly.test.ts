@@ -129,6 +129,14 @@ describe("unitsFromKelly", () => {
   });
 });
 
+/**
+ * SCALE NOTE (v5.2.7 -> v5.3.0). `edgeScore` is the published Edge Index, and
+ * the axis moved: a fair price is now 100, an ordinary -110/-110 two-way ~50.
+ * `MIN_EDGE_FOR_STAKE` moved with it (50 -> EDGE_INDEX_MAX), preserving its
+ * meaning exactly — "only size a stake on a price at or better than fair".
+ * Fixtures that intend to CLEAR the gate now say `MIN_EDGE_FOR_STAKE` rather
+ * than a literal from the retired axis, so they cannot drift again.
+ */
 describe("recommendStake", () => {
   it("returns null when confidence below threshold", () => {
     const pick = makePick({ confidence: MIN_CONFIDENCE_FOR_STAKE - 1 });
@@ -141,7 +149,7 @@ describe("recommendStake", () => {
   });
 
   it("returns a stake recommendation for a qualifying pick", () => {
-    const pick = makePick({ confidence: 85, edgeScore: 75 });
+    const pick = makePick({ confidence: 85, edgeScore: MIN_EDGE_FOR_STAKE });
     const stake = recommendStake(pick);
     expect(stake).not.toBeNull();
     expect(stake!.units).toBeGreaterThan(0);
@@ -149,19 +157,19 @@ describe("recommendStake", () => {
   });
 
   it("rounds units to the nearest 0.25", () => {
-    const stake = recommendStake(makePick({ confidence: 80, edgeScore: 70 }));
+    const stake = recommendStake(makePick({ confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE }));
     expect(stake).not.toBeNull();
     expect(stake!.units * 4).toBeCloseTo(Math.round(stake!.units * 4), 5);
   });
 
   it("uses quarter-Kelly strategy", () => {
-    const stake = recommendStake(makePick({ confidence: 80, edgeScore: 70 }));
+    const stake = recommendStake(makePick({ confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE }));
     expect(stake).not.toBeNull();
     expect(stake!.strategy).toBe("quarter-kelly");
   });
 
   it("includes a plain-English rationale", () => {
-    const stake = recommendStake(makePick({ confidence: 80, edgeScore: 70 }));
+    const stake = recommendStake(makePick({ confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE }));
     expect(stake).not.toBeNull();
     expect(stake!.rationale).toMatch(/quarter-kelly/i);
     expect(stake!.rationale).toMatch(/units/i);
@@ -170,10 +178,10 @@ describe("recommendStake", () => {
 
   it("uses pick.line as American odds for MONEYLINE picks", () => {
     const stakePlus = recommendStake(
-      makePick({ pickType: "MONEYLINE", line: 150, confidence: 80, edgeScore: 70 })
+      makePick({ pickType: "MONEYLINE", line: 150, confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE })
     );
     const stakeMinus = recommendStake(
-      makePick({ pickType: "MONEYLINE", line: -150, confidence: 80, edgeScore: 70 })
+      makePick({ pickType: "MONEYLINE", line: -150, confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE })
     );
     expect(stakePlus).not.toBeNull();
     expect(stakeMinus).not.toBeNull();
@@ -183,7 +191,7 @@ describe("recommendStake", () => {
 
   it("uses standard -110 vig for SPREAD picks", () => {
     const stake = recommendStake(
-      makePick({ pickType: "SPREAD", line: -3.5, confidence: 80, edgeScore: 70 })
+      makePick({ pickType: "SPREAD", line: -3.5, confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE })
     );
     expect(stake).not.toBeNull();
     expect(stake!.decimalOdds).toBeCloseTo(1.909, 2);
@@ -191,15 +199,16 @@ describe("recommendStake", () => {
 
   it("uses standard -110 vig for TOTAL picks", () => {
     const stake = recommendStake(
-      makePick({ pickType: "TOTAL", line: 47.5, confidence: 80, edgeScore: 70 })
+      makePick({ pickType: "TOTAL", line: 47.5, confidence: 80, edgeScore: MIN_EDGE_FOR_STAKE })
     );
     expect(stake).not.toBeNull();
     expect(stake!.decimalOdds).toBeCloseTo(1.909, 2);
   });
 
   it("never recommends more than MAX_UNITS_PER_PICK", () => {
-    // Build a pathologically high-confidence/edge pick
-    const stake = recommendStake(makePick({ confidence: 99, edgeScore: 99 }));
+    // Build a pathologically high-confidence/edge pick. MIN_EDGE_FOR_STAKE is
+    // EDGE_INDEX_MAX, so this is the largest edge the axis admits.
+    const stake = recommendStake(makePick({ confidence: 99, edgeScore: MIN_EDGE_FOR_STAKE }));
     expect(stake).not.toBeNull();
     expect(stake!.units).toBeLessThanOrEqual(MAX_UNITS_PER_PICK);
   });
@@ -208,7 +217,7 @@ describe("recommendStake", () => {
     // Verifies the refactor — recommendStake should accept just these 4 fields
     const stake = recommendStake({
       confidence: 80,
-      edgeScore: 70,
+      edgeScore: MIN_EDGE_FOR_STAKE,
       pickType: "MONEYLINE",
       line: -150,
     });
