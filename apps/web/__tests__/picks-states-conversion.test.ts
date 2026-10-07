@@ -154,6 +154,11 @@ describe("/picks — empty/gated state fabricates nothing (item 2)", () => {
   });
 
   it("the gated empty state is honest and carries no invented record/number", () => {
+    // Pins the shipped gate disclosure: the board is deliberately dark.
+    // (An earlier wording of this sentence leaked the env-var name LIVE_BOARD
+    // and the internal phrase "founder enable"; see the internal-identifier
+    // rule in public-copy-scanner.test.ts. The leak is gone, the disclosure
+    // stays.)
     expect(gateBlock).toMatch(/still gated/i);
     // No fabricated win rate / record / accuracy number in the dark state.
     expect(gateBlock).not.toMatch(/\d{1,3}\s*%/);
