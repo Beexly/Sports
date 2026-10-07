@@ -10,6 +10,7 @@
  * logged and never reach the client bundle.
  */
 
+import { constantTimeStringEqual } from "@/lib/api-auth/constant-time";
 import { waitlistGated } from "@/lib/env/flags";
 
 export type GateResult =
@@ -56,9 +57,14 @@ export function checkWaitlistGate(authHeader: string | null): GateResult {
   const user = decoded.slice(0, colonIdx);
   const pass = decoded.slice(colonIdx + 1);
 
-  // Constant-time-ish comparison: compare both fields before short-circuiting.
-  const userMatch = user === expectedUser;
-  const passMatch = pass === expectedPass;
+  // Both fields go through the length-checked constant-time comparator, and
+  // BOTH are evaluated before the branch. `===` was wrong here twice over: it
+  // short-circuits on the first differing byte (a per-byte timing oracle), and
+  // the old comment called that "constant-time-ish", which asserted a property
+  // the code did not have. Edge runtime, so this is the pure-JS twin of
+  // node:crypto's timingSafeEqual — see lib/api-auth/constant-time.ts.
+  const userMatch = constantTimeStringEqual(user, expectedUser);
+  const passMatch = constantTimeStringEqual(pass, expectedPass);
   if (!userMatch || !passMatch) {
     return { allowed: false, reason: "wrong_credentials" };
   }

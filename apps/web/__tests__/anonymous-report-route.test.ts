@@ -77,8 +77,10 @@ const ENABLED_ENV = {
   ANONYMOUS_MODERATION_REPORTS_ENABLED: "true",
   MODERATION_REPORT_HMAC_SECRET: "test-secret-of-adequate-length",
   NODE_ENV: "test",
-  // Vercel deployment marker: the platform overwrites x-real-ip / XFF, which
-  // is the precondition for trusting them (see deriveTrustedSourceIp).
+  // Vercel deployment marker: the platform SETS x-real-ip, which is the
+  // precondition for trusting it (see deriveTrustedSourceIp). x-real-ip alone
+  // is platform truth — the x-forwarded-for fallback is read from the RIGHT,
+  // because nothing in this repo rules out append semantics on that header.
   VERCEL: "1",
 } as const;
 
@@ -203,7 +205,19 @@ describe("anonymous-fingerprint spoof resistance", () => {
     expect(persisted).toHaveLength(0);
   });
 
-  it("ON Vercel: deriveTrustedSourceIp prefers x-real-ip and falls back to the first x-forwarded-for hop", () => {
+  /**
+   * SPEC CHANGE (security): the ON-Vercel x-forwarded-for fallback used to
+   * return the FIRST hop, on the claim that Vercel's edge OVERWRITES the
+   * header. That claim contradicted lib/api/rate-limit.ts (`clientIp()` treats
+   * the leftmost entry as client-controlled under APPEND semantics), and
+   * nothing in this repo can settle which is true of the platform. The two
+   * readings are not symmetric in cost: under OVERWRITE the chain has exactly
+   * one entry so first === last and reading the last hop changes nothing, while
+   * under APPEND reading the first hop hands every forged header its own
+   * per-source quota. The LAST hop is therefore correct under BOTH models — and
+   * it is already what the off-Vercel branch of this same function does.
+   */
+  it("ON Vercel: deriveTrustedSourceIp prefers x-real-ip and falls back to the LAST x-forwarded-for hop", () => {
     const env = { VERCEL: "1" };
     const withBoth = new Request("https://x.test", {
       headers: { "x-real-ip": "203.0.113.7", "x-forwarded-for": "198.51.100.1, 10.0.0.1" },
@@ -212,8 +226,32 @@ describe("anonymous-fingerprint spoof resistance", () => {
     const xffOnly = new Request("https://x.test", {
       headers: { "x-forwarded-for": "198.51.100.1, 10.0.0.1" },
     });
-    expect(deriveTrustedSourceIp(xffOnly, env)).toBe("198.51.100.1");
+    expect(deriveTrustedSourceIp(xffOnly, env)).toBe("10.0.0.1");
     expect(deriveTrustedSourceIp(new Request("https://x.test"), env)).toBeNull();
+  });
+
+  it("ON Vercel: a rotating forged leftmost XFF entry cannot mint a fresh source key", () => {
+    const env = { VERCEL: "1" };
+    const forged = (attacker: string): Request =>
+      new Request("https://x.test", {
+        headers: { "x-forwarded-for": `${attacker}, 10.0.0.1` },
+      });
+    const keys = new Set([
+      deriveTrustedSourceIp(forged("1.1.1.1"), env),
+      deriveTrustedSourceIp(forged("2.2.2.2"), env),
+      deriveTrustedSourceIp(forged("3.3.3.3"), env),
+    ]);
+    expect(keys).toEqual(new Set(["10.0.0.1"]));
+  });
+
+  it("ON Vercel: a single-entry chain is unchanged by the right-hand read (OVERWRITE model)", () => {
+    // If the edge really does overwrite x-forwarded-for, the chain holds one
+    // entry and first === last: the hardened read costs nothing.
+    const env = { VERCEL: "1" };
+    const single = new Request("https://x.test", {
+      headers: { "x-forwarded-for": "198.51.100.1" },
+    });
+    expect(deriveTrustedSourceIp(single, env)).toBe("198.51.100.1");
   });
 
   it("OFF Vercel with no trusted-header config: forwarding headers are NOT trusted (spoofable first hop rejected)", () => {
