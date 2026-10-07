@@ -456,6 +456,7 @@ export {
   lookupMlbWinPct,
   fetchMlbCompletedGamesForDate,
   fetchMlbRecentCompletedGames,
+  MlbStatsApiError,
 } from "./mlb-statsapi-client.js";
 export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";
 

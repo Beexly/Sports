@@ -88,6 +88,20 @@ export const ESPN_ODDS_SPORT_MAP: Record<
 
 type Loose = Record<string, unknown>;
 
+/**
+ * Per-request ceiling for every ESPN public call.
+ *
+ * `fetch` has no default timeout that is short enough to matter here, and one
+ * sport fetch issues up to 5 scoreboard calls plus one odds call per candidate
+ * event, all SERIALLY. A single hung socket therefore held the whole ingest
+ * cron open until the platform killed the function — and a killed cron job
+ * writes nothing, logs nothing, and reports nothing, which is strictly worse
+ * than a loud failure. Every other upstream client in this package already
+ * caps its calls at 12–15s; these two were the hole. Kept slightly tighter
+ * than the 15s siblings because of the serial fan-out.
+ */
+const ESPN_ODDS_TIMEOUT_MS = 10_000;
+
 function americanNum(v: unknown): number | null {
   if (typeof v === "number" && Number.isFinite(v) && v !== 0) return Math.round(v);
   if (typeof v === "string" && v.trim()) {
@@ -394,6 +408,7 @@ export async function fetchEspnOddsForSport(
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
+  const timeoutMs = Math.max(1, options?.timeoutMs ?? ESPN_ODDS_TIMEOUT_MS);
   const errors: string[] = [];
   const now = new Date();
   const dateParams = scoreboardDateParams(now, horizonDays);

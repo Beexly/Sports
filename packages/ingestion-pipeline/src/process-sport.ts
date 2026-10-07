@@ -603,8 +603,7 @@ export async function processSport(
           events = rd.events;
           oddsProviderTag = "therundown";
           console.log(
-            `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
-              (rd.error ? ` (note: ${rd.error})` : ""),
+            `${logPrefix} ${sport.key}: rundown free path ${events.length} events`,
           );
         } else {
           oddsProviderTag = "therundown-empty";
