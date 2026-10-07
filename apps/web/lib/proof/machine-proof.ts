@@ -138,7 +138,6 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
   ];
 
   const references: readonly ProofLink[] = [
-    { rel: "methodology", url: `${base}/methodology`, description: "How the engine scores signals and what the confidence numbers mean." },
     { rel: "calibration", url: `${base}/calibration`, description: "Reliability / calibration track record once substantiated entries exist." },
     { rel: "how-we-make-money", url: `${base}/how-we-make-money`, description: "Revenue model and disclosed-conflict affiliate posture." },
     { rel: "data-rights", url: `${base}/data`, description: "Data sourcing and rights posture: facts only, attributed, rights-gated extraction." },

@@ -74,10 +74,10 @@ describe("buildMachineProof — verification map", () => {
     }
   });
 
-  it("references methodology, data-rights, and responsible-play surfaces", () => {
+  it("references data-rights, and responsible-play surfaces", () => {
     const doc = buildMachineProof({ now: FIXED_NOW, siteUrl: TEST_BASE });
     const rels = new Set(doc.references.map((r) => r.rel));
-    expect(rels.has("methodology")).toBe(true);
+    expect(rels.has("methodology")).toBe(false);
     expect(rels.has("data-rights")).toBe(true);
     expect(rels.has("responsible-play")).toBe(true);
   });

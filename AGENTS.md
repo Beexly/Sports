@@ -9412,3 +9412,4 @@ posts in window.
   separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
   2.19 FPTS/tgt, #7) (@DynatyzeFF).
 - 2026-10-07: Removed /methodology page and its dependencies. See agent-bus note for details.
+- 2026-10-07: V2 removed /methodology public routes and remaining links (including machine-proof.ts) per zero-public-methodology doctrine.
