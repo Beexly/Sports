@@ -10,6 +10,7 @@ import {
   tierFromPriceRef,
   advertisedPhaseUnitAmountCents,
   stripePriceAmountMatchesAd,
+  stripePriceIntervalMatchesAd,
 } from "./price-ids";
 
 describe("splitPriceIds", () => {
@@ -186,6 +187,60 @@ describe("GSE-SEC-024 — stripePriceAmountMatchesAd", () => {
     ).toBe(false);
     expect(
       stripePriceAmountMatchesAd({ unit_amount: null }, "ELITE", "year"),
+    ).toBe(false);
+  });
+});
+
+describe("GSE-SEC-024 — stripePriceIntervalMatchesAd", () => {
+  it("returns TRUE when the Stripe recurring interval is the one being sold", () => {
+    expect(
+      stripePriceIntervalMatchesAd(
+        { unit_amount: 1499, recurring: { interval: "month" } },
+        "month",
+      ),
+    ).toBe(true);
+    expect(
+      stripePriceIntervalMatchesAd(
+        { unit_amount: 9900, recurring: { interval: "year" } },
+        "year",
+      ),
+    ).toBe(true);
+  });
+
+  it("returns FALSE when the intervals disagree — the $99/yr-page, $14.99/mo-charge bug", () => {
+    // A monthly price id wired into STRIPE_PRO_ANNUAL_PRICE_ID. The amount is a
+    // legitimate advertised PRO amount, so the amount guard alone says nothing.
+    expect(
+      stripePriceIntervalMatchesAd(
+        { unit_amount: 1499, recurring: { interval: "month" } },
+        "year",
+      ),
+    ).toBe(false);
+    // Mirror: an annual price in a _MONTHLY_ slot.
+    expect(
+      stripePriceIntervalMatchesAd(
+        { unit_amount: 9900, recurring: { interval: "year" } },
+        "month",
+      ),
+    ).toBe(false);
+  });
+
+  it("returns FALSE for a one-time price and for unknown Stripe intervals (fail-closed)", () => {
+    expect(stripePriceIntervalMatchesAd({ unit_amount: 9900 }, "year")).toBe(false);
+    expect(
+      stripePriceIntervalMatchesAd({ unit_amount: 9900, recurring: null }, "year"),
+    ).toBe(false);
+    expect(
+      stripePriceIntervalMatchesAd(
+        { unit_amount: 9900, recurring: { interval: null } },
+        "year",
+      ),
+    ).toBe(false);
+    expect(
+      stripePriceIntervalMatchesAd(
+        { unit_amount: 9900, recurring: { interval: "week" } },
+        "year",
+      ),
     ).toBe(false);
   });
 });
