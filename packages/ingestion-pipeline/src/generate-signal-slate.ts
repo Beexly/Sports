@@ -23,7 +23,9 @@ import type {
   FactorBreakdown,
   IndependentEdgeSummary,
   IndependentMarketFairValue,
+  PickGrade,
 } from "@sports/types";
+import { computePickGrade } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
 import { mintAfterMind } from "./mint-gate.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";

@@ -20,6 +20,9 @@ export type RiskLevel =
 export * from "./ladder.js";
 export * from "./heartbeat.js";
 export * from "./ranking-candidates.js";
+// The Edge Index scale and the pick-grade ladder each live in exactly one file.
+export * from "./edge-index.js";
+export * from "./pick-grade.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -300,39 +303,11 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
 // ============================================================
 // Pick grade helpers
 // ============================================================
-
-/**
- * THE pick-grade ladder. One definition, consulted by `computePickGrade` below.
- *
- * Both axes must clear for a rung to be awarded:
- *  - `confidence` — the engine's 0–100 composite score.
- *  - `edge`       — the published **Edge Index** (`ScoredPick.edgeScore`), where
- *                   50 is fair value, NOT a raw probability edge and NOT a
- *                   0–100 scale with 50 as its midpoint.
- *
- * These numbers used to exist twice: as bare literals inside `computePickGrade`
- * and as `GRADE_THRESHOLDS` in `@sports/prediction-engine`'s `constants.ts`,
- * which no caller read. Two sources of truth, one of them inert — editing the
- * named constant changed nothing. `constants.ts` now re-exports this object, so
- * the ladder lives in exactly one place and every grade provably reads it.
- */
-export const GRADE_THRESHOLDS = {
-  ELITE_PLAY:  { confidence: 85, edge: 80 },
-  STRONG_PLAY: { confidence: 75, edge: 65 },
-  SOLID_PLAY:  { confidence: 65, edge: 50 },
-  // Below these = LEAN
-} as const;
-
-export function computePickGrade(
-  confidence: number,
-  edgeScore: number
-): PickGrade {
-  const t = GRADE_THRESHOLDS;
-  if (confidence >= t.ELITE_PLAY.confidence && edgeScore >= t.ELITE_PLAY.edge) return "ELITE_PLAY";
-  if (confidence >= t.STRONG_PLAY.confidence && edgeScore >= t.STRONG_PLAY.edge) return "STRONG_PLAY";
-  if (confidence >= t.SOLID_PLAY.confidence && edgeScore >= t.SOLID_PLAY.edge) return "SOLID_PLAY";
-  return "LEAN";
-}
+//
+// `computePickGrade`, `GRADE_THRESHOLDS`, `isFeaturedPromotionEligible` and
+// `UNPRICED_MAX_GRADE` moved to ./pick-grade.ts and are re-exported above.
+// They used to live here as bare literals duplicated against a `GRADE_THRESHOLDS`
+// constant in @sports/prediction-engine that nothing read. One ladder now.
 
 /**
  * The highest Edge Index an internally consistent two-way market can produce.
