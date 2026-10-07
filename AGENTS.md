@@ -10409,3 +10409,243 @@ timestamp. Nothing inventoried without evidence.
 - @RyanPaganetti early-down shotgun/under-center run-rate posts verified
   at 7:15 PM — out of window, PM-sweep territory. @GridironInfo_ 9:02 PM
   sacks-allowed table already inventoried in the 2026-10-06 PM section.
+
+## X ANALYTICS SWEEP 2026-10-07 AM (2)
+
+Window: posts after ~1:10 AM CDT through ~9:10 AM CDT Wed 2026-10-07
+(~8h, post-overnight). Read-only sweep as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs). Login confirmed by both tasks;
+no CAPTCHAs, login walls, or rate-limiting. Two parallel browser
+tasks: Task A (home feed + 11 analytics accounts); Task B (10 metrics,
+5 scheme/news, 3 market accounts + record checks). Note: the overnight
+x-intel run already landed a `## X ANALYTICS SWEEP 2026-10-07 AM`
+section covering 9:10 PM–1:10 AM; this section covers the window after
+it. Home feed timeline is non-chronological — Step 1 was a sampled
+scan (~7 scroll batches), not an exhaustive audit.
+
+### NEW ITEMS
+
+1. @PattonAnalytics — "Quarterback Efficiency while Accounting for
+   Drops" (2026-10-07 8:45 AM CDT). NEW COMPOSITE METRIC. Definition
+   as stated: "Sum of air & expected yac EPA minus actual EPA, drops
+   in parentheses (2026)". Post text (verbatim): "The QBs most impacted
+   by drops: 1. Aaron Rodgers (+0.30) 2. Justin Herbert (+0.28)
+   3. Trevor Lawrence (+0.23) 4. Cam Ward (+0.23) 5. Jordan Love
+   (+0.21) 6. Marcus Mariota (+0.21) 7. Matthew Stafford (+0.15)
+   8. Drew Lock (+0.15) 9. Josh Allen (+0.14) 10. Jared Goff (+0.14)".
+   Drops counts (in parentheses) read for all 36 QBs on chart: D.Lock
+   (2), B.Purdy (3), T.Lawrence (6), M.Penix (0), L.Jackson (4),
+   D.Prescott (6), J.Goff (7), C.Williams (3), J.Allen (5), M.Mariota
+   (3), K.Cousins (7), J.Love (11), B.Young (3), A.Rodgers (9),
+   P.Mahomes (4), G.Smith (6), J.Burrow (5), J.Herbert (8), C.Ward
+   (4), J.Daniels (2), C.Wentz (0), M.Stafford (9), D.Watson (3),
+   T.Bagent (0), C.Stroud (1), J.Brissett (4), B.Nix (4), S.Darnold
+   (3), T.Shough (4), D.Maye (2), J.Hurts (1), D.Jones (5), M.Willis
+   (2), J.Winston (2), B.Mayfield (6), K.Murray (3). Chart footer:
+   "Plot: @PattonAnalytics" + StatRankings logo. Data home: StatRankings
+   (see ENDPOINTS). Full table in
+   `docs/dfs/research/2026-10-07/full-tables/pattonanalytics-drops-qb-efficiency-week4.csv`.
+
+2. @DynatyzeFF — "Opportunity Share vs. Yards/Touch" scatter (2026-10-07
+   7:17 AM CDT). DYNATYZE Gridiron Mind branding; 2026 season; 28
+   qualifying players. Labeled values: Jaylen Warren 32.6% opp share /
+   6.65 yds/touch ("paces the field in Yards/Touch"); Kenneth Walker
+   III 44.9 / 6.27; Kyren Williams 30.3 / 6.23; Bijan Robinson 44.4 /
+   6.2; James Cook 36 / 5.86. Chart footer: "dynatyze.com/football/
+   scatterplot". Post text: "While Bijan Robinson, Kenneth Walker III,
+   and Jahmyr Gibbs are the top 3 RBs, there are 9 other players that
+   will finish as RB1. Here are 3 players outside the current top 12
+   that could finish as RB1 on a per game basis". Same-hour thread
+   replies name them: Jaylen Warren (RB16), Bhayshul Tuten (RB17),
+   Aaron Jones (RB18). Data home: dynatyze.com/football (see ENDPOINTS).
+   Table in
+   `docs/dfs/research/2026-10-07/full-tables/dynatyzeff-opp-share-vs-yards-per-touch-week4.csv`.
+
+3. @PFF — five in-window posts. (a) 8:47 AM: "No one is getting after
+   the passer AND stopping the run like Will Anderson Jr this year" —
+   Pass Rush Grade vs Run Defense Grade scatter (NFL Players, EDs, 2026
+   Regular + Post); no per-player numeric labels (Anderson Jr. top-right
+   ~91 pass rush, ~90+ run defense, approximate as read); PFF watermark.
+   (b) 8:31 AM: "Highest run defense grade this season" — T.J. Watt
+   92.8, Tykee Smith 92.5, Will Anderson Jr. 92.2, Jamel Dean 91.3,
+   Jevon Holland 90.8 (values in post text). CSV:
+   `docs/dfs/research/2026-10-07/full-tables/pff-run-defense-grades-week4.csv`.
+   (c) 7:40 AM: "TOP DEFENSIVE GRADE AMONG CORNERBACKS THIS SEASON" —
+   Denzel Ward 89.5, Trent McDuffie 89.1, Isaiah Rodgers 85.7,
+   Amik Robertson 84.6, Mansoor Delane 84.5 (PFF logo footer). CSV:
+   `docs/dfs/research/2026-10-07/full-tables/pff-cb-defensive-grades-week4.csv`.
+   (d) ~8:10 AM: "2. Bears / 4. Lions / 16. Eagles — Offensive Line
+   Rankings ahead of Week 5" (partial ranks in post only; links pff.com
+   article "2026 NFL offensive line rankings: Lions rise, Eagles fall
+   without Lane Johnson"). (e) via Latest search: "Bryce Young, Michael
+   Penix up / Jalen Hurts, Justin Herbert down — QB Rankings Ahead of
+   Week 5" (links pff.com article; values not transcribed). Data source:
+   PFF (see ENDPOINTS).
+
+4. @benbbaldwin — "2026 True Pass Set Grade" chart (2026-10-07 9:00 AM
+   CDT). Columns: T, G, C, AVG grades by rank 1–32 (AVG: 70, 67, 66,
+   65, 64, 64, 63, 61, 60, 59, 59, 59, 58, 58, 58, 57, 57, 57, 57, 56,
+   56, 55, 55, 55, 53, 52, 48, 48, 48, 47, 46, 46). Team identities
+   logo-read (approximate; rank 5 unclear — "roundel, possibly Titans"):
+   1 49ers, 2 Bucs, 3 Bears, 4 Browns, 5 unclear, 6 Steelers, 7 Lions,
+   8 Raiders, 9 Giants, 10 Bills, 11 Vikings, 12 Seahawks, 13 Eagles,
+   14 Texans, 15 Bengals, 16 Colts, 17 Patriots, 18 Rams, 19 Falcons,
+   20 Cowboys, 21 Saints, 22 Commanders, 23 Chargers, 24 Cardinals,
+   25 Jets, 26 Broncos, 27 Ravens, 28 Panthers, 29 Dolphins, 30 Chiefs,
+   31 Jaguars, 32 Packers. Footer (verbatim): "Notes: Data: PFF |
+   @benbbaldwin | 2026-10-07. Position grade weighted by playing time
+   of each player. Overall grade made up of 1/2 T, 1/3 G, 1/6 C."
+   Post text: "Pass block grade of offensive linemen in true pass sets
+   only — Mahomes/Trevor good — What happened to the Broncos' OL??".
+   Full table in
+   `docs/dfs/research/2026-10-07/full-tables/benbbaldwin-true-pass-set-grade-week4.csv`.
+
+5. @GridironInfo_ — four in-window analytics posts. (a) "Week 4 WR
+   Success Rate Leaders" (8:44 AM): header "2026 NFL Season · Week 4
+   Only · Success Rate %"; footer "Data: nflverse (nflreadr)". Rows:
+   1. Malik Washington (MIA) 100%, 5 targets; 2. Malik Nabers (NYG)
+   86%, 7; 3. Tetairoa McMillan (CAR) 81%, 16; T4. Kayshon Boutte
+   (NE per one read / HOU per another — flagged) 75%, 4; T4. Mack
+   Hollins (NE) 75%, 4; T4. Jameson Williams (DET) 75%, 8; T4. Nico
+   Collins (HOU) 75%, 8; T4. Dyami Brown (WAS) 75%, 4; T9. Keon Coleman
+   (BUF) 71%, 7; T9. Rome Odunze (CHI) 71%, 7. CSV:
+   `gridironinfo-wr-success-rate-week4.csv`. (b) "Week 4 RB Success
+   Rate Leaders" (8:38 AM), footer "Data: nflverse (nflreadpy)":
+   1. James Cook (BUF) 67%, 12 carries; 2. Brian Robinson (ATL) 64%,
+   14; 3. Bijan Robinson (ATL) 58%, ~18–19 (two tasks read 18 / 19);
+   4. Braelon Allen (NYJ) 57%, 14; 5. Omarion Hampton (LAC) 56%, 9;
+   6. Jonathan Taylor (IND) 55%, 20; 7. Rhamondre Stevenson (NE) 54%,
+   13; 8. D'Andre Swift (CHI) 53%, 15; 9. Jaylen Warren (PIT) 53%,
+   15–17 (two tasks read 15 / 17); 10. Jeremiyah Love (ARI) 50%, 14.
+   CSV: `gridironinfo-rb-success-rate-week4.csv`. (c) "Current NFL odds
+   to win the 1 seed in each conference after Week 4" (8:08 AM),
+   footer "Data: Kalshi" (5%+ only): AFC — Chiefs 26%, Bills 21%,
+   Ravens 17%, Jaguars 14%, Broncos 9%, Patriots 6%, Bengals 5%; NFC —
+   49ers 27%, Seahawks 16%, Vikings 14%, Rams 13%, Bears 6%. CSV:
+   `gridironinfo-1seed-odds-kalshi-week4.csv`. (d) "Current NFL odds to
+   win each division after Week 4" (8:06 AM), footer "Data: Kalshi"
+   (small-font chart — values approximate): AFC East — Bills 69%,
+   Patriots 27%, Jets 3%, Dolphins 0%; NFC East — Cowboys 52%, Eagles
+   39%, Giants ~14%, Commanders ~7%; AFC North — Ravens 58%, Bengals
+   27%, Browns 19%, Steelers 6%; NFC North — Vikings 39%, Bears 29%,
+   Lions 27%, Packers 8%; AFC South — Jaguars 69%, Colts 18%, Texans
+   13%, Titans 0%; NFC South — Falcons 39%, Panthers 29%, Saints 21%,
+   Buccaneers 9%; AFC West — Chiefs 64%, Broncos 23%, Raiders 9%,
+   Chargers 11%; NFC West — 49ers 49%, Seahawks 39%, Rams 28%,
+   Cardinals 9%. CSV: `gridironinfo-division-odds-kalshi-week4.csv`.
+   (e) "Week 4 RYOE Leaders" (profile-visible text only; table image
+   unopened): 1. Kenneth Walker III (KC — as posted) +71 RYOE;
+   2. Chuba Hubbard (CAR) +55; 3. Bijan Robinson (ATL, truncated).
+   CSV (partial): `gridironinfo-ryoe-leaders-week4-partial.csv`.
+
+6. @cmain7 (2026-10-07 8:45 AM CDT) — analytics text (image is a reaction
+   meme, no chart): "Tampa Bay offense: 32nd in EPA/dropback / Dallas
+   defense: 32nd in EPA/dropback allowed". Source not stated.
+
+7. @nflrums (2026-10-07 8:08 AM CDT) — narrative, no chart: Marvin
+   Harrison Jr. "could have a breakout game this week as he goes
+   against the Lions who have given up the most passing yards to
+   teams" (image is a player photo; no values). Logged for completeness.
+
+### DIFFERENT-ANGLE NOTES (already inventoried, new angle)
+
+- @PattonAnalytics's drops-attributed QB efficiency (item 1) is a second
+  angle on drop-attribution: the overnight sweep logged a catchable/
+  dropped split as a charting-data build target; this is the
+  expected-YAC-decomposition version of the same question.
+- @GridironInfo_'s nflverse success-rate leaderboards are the
+  week-level leader cut of the nflverse-derived leaderboards already
+  inventoried (e.g. @sfdata9ers scrimmage-yards table, 10-06 PM).
+- @benbbaldwin's PFF-derived true-pass-set OL grades are a PFF-derived
+  cut posted alongside PFF's own leaderboards (item 3) — the same
+  underlying grades repackaged with stated position weighting.
+
+### DATA ENDPOINTS DOCUMENTED
+
+- StatRankings (statrankings.com; @PattonAnalytics's data home — chart
+  logo; Steven Patton listed as Head of DFS Strategy in site footer):
+  400+ free NFL stat pages; statrankings+ premium ($139.99/yr or
+  $34.99/mo) with AI connectors; NFL Stats Archive downloadable CSVs
+  (+$60/yr add-on or $179.99/yr standalone).
+- statyx.io (@statyxio, bio link): Rush IQ definition RESOLVED via
+  statyx.io/llms.txt — "Rush IQ: Rushing role, carry share and run
+  defense matchup context". Companion: "Route IQ: Receiving yards
+  research from targets, routes, target areas and coverage looks".
+  Publicly accessible: Data Lab (FREE sortable NFL advanced stat
+  leaderboards + chart exports), Depth Chart (free). Paid ($14.99/mo
+  All Access, 7-day free trial): Prop Detailer, Coverage Engine,
+  Route IQ, Rush IQ, End Zone, Coaching DNA, QB Hub, Player Index,
+  Fantasy Board. Business API docs: https://api.statyx.io/llms.txt;
+  tool summary: https://statyx.io/llms-full.txt.
+- dynatyze.com/football (@DynatyzeFF, bio link; chart footer cites
+  /football/scatterplot): public NFL player rankings board +
+  machine-readable llms.txt / markdown board index; billed as a
+  predictive fantasy football engine; trade calculator links present.
+- pff.com: public articles/rankings (NFL QB rankings, OL rankings,
+  team tiers data review), scores & odds match centers; player-grade
+  databases and Premium Stats behind PFF+ (premium content labeled).
+- @benbbaldwin: charts carry "Data: PFF" footer; bio link is
+  theathletic.com/author/ben-bal... (The Athletic sports writer).
+- @MagicSportsGuy: StatRankings.com (bio: "Founder, @StatRankings &
+  FTN Fantasy/Data"); pinned post: StatRankings+ subscription now
+  connects the whole @StatRankings site to Claude/ChatGPT/Grok AI
+  agents.
+- @ScottBarrettDFB: fantasypointsdata.com (bio: "Free Premium Stats &
+  Tools → fantasypointsdata.com"); posts cite @FantasyPtsData.
+- @SumerSports: SumerPass research platform via bio link
+  bit.ly/getsumerpass ("Start free").
+
+### INNOVATION KERNELS (attributed notes, not build orders)
+
+(a) Drops-attributed QB efficiency: air EPA + expected-YAC EPA minus
+    actual EPA as the drop-impact decomposition (@PattonAnalytics).
+(b) Rush IQ / Route IQ: role-context composites (rushing role + carry
+    share + run-defense matchup; targets/routes/areas + coverage
+    looks) — definitions now on the record (@statyxio).
+(c) StatRankings+ AI connectors: the whole @StatRankings stat site
+    wired to Claude/ChatGPT/Grok agents as a subscription tier
+    (@MagicSportsGuy).
+(d) dynatyze.com llms.txt + markdown board index: machine-readable
+    public rankings endpoint for the Dynatyze engine (@DynatyzeFF).
+
+### RECORD NOTES
+
+- @FTNData: still PROTECTED — unchanged, no follow requested (one task
+  recorded header "1,276 posts"; the other recorded "5 posts, 6,077
+  followers" — header display varies, account still protected).
+- @NFLResearcher: empty 8th consecutive sweep (header "4 posts", renders
+  none).
+- @NerdingonNFL: still broken (header "1 post", renders none).
+- @TomPelissero alleged 49ers/Bethune 18-player injury-report post: NOT
+  FOUND — X Latest search "from:TomPelissero 49ers" returned only
+  unrelated posts (Oct 3 Week 3 fines, Oct 2 Jed York suspension news,
+  Sep 23, Sep 16, Sep 11, Aug 30, May 27, May 7). 4th exclusion;
+  follow-up CLOSED as non-existent.
+- @TerryMcCormick: WRONG ACCOUNT — resolves to Terence McCormick
+  (fixed-income portfolio manager; 5 posts from 2009; 12 followers).
+  X user search "Terry McCormick Titans" returned no user results; the
+  correct Titans beat-writer handle was not located. REMOVE from future
+  sweep target lists.
+- @GridironInfo_ down-of-first-down chart + points-allowed leaderboard:
+  no new posts since last night (scrolled 1h back through 20h).
+- 2026-09-20 PM "Bryce Young map": no new appearance via Latest search
+  (recent mentions: PFF QB-rankings movers, fantasy lists, film clips;
+  @PattonAnalytics's drops chart lists B. Young (3) drops).
+- Out-of-window analytics seen in home feed: @RyanPaganetti 21h "EPA per
+  rush vs EPA per dropback, Week 4" chart; Jacob Gibbs 19h "catchable
+  air yards". Pull at the next sweep if in-window.
+- News new to the record (non-metric, brief): Schefter — NFL rescinded
+  the $14,926 Juszczyk fine; "most accepted penalties through Week 4
+  since play-by-play data became available". RapSheet — Colts signed
+  Carl Lawson to the practice squad; Bears QB situation "more clear
+  cut" this week. Garafolo — Lane Johnson retired (mental health;
+  14-year, future-HOF Eagles career); Commanders worked out QB Jack
+  Plummer. VSiNLive — "An 8-point Ravens-Falcons line swing" (A Numbers
+  Game show description); 0-4 team in Circa Survivor discussion. No new
+  Mixon/Seahawks or Titans news since ~1 AM.
+- @Nate_Tice: in-window NBA jokes only (no scheme content).
+- No new posts in-window from @RyanPaganetti, @jmthrivept, @sfdata9ers,
+  @hawkblogger (promos only), @MagicSportsGuy, @SumerSports, @statyxio,
+  @ScottBarrettDFB, @EstablishTheRun, @FantasyPtsData, @DonAtkinsonNFL,
+  @nfl_simulator, @32BeatWriters, @VSiNLive (show promos only),
+  @Covers (CFB/MLB/NHL betting), @ActionNetworkHQ (CFB/MLB).
