@@ -1,3 +1,4 @@
+from typing import Any
 # VENDORED FROM: https://github.com/facebookresearch/Kats/ (MIT License)
 
 # Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -18,12 +19,12 @@ the time horizon, under the assumption that longer horizon has larger S.E.
 import logging
 from typing import List, Optional, Tuple, Type
 
-import matplotlib.pyplot as plt
+
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from kats.consts import Params, TimeSeriesData
-from kats.utils.backtesters import BackTesterRollingWindow
+from .consts import Params, TimeSeriesData
+from .backtesters import BackTesterRollingWindow
 from scipy import stats
 
 
@@ -219,14 +220,14 @@ class EmpConfidenceInt:
 
     def diagnose(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Any = None,
         figsize: Optional[FigSize] = None,
         linecolor: str = "b",
         linelabel: str = "Fitted",
         secolor: str = "r",
         selabel: str = "Empirical S.E.",
         legend: bool = True,
-    ) -> plt.Axes:
+    ) -> Any:
         """Diagnose the linear model fit for SE.
 
         Plot the OLS fit: SE ~ Horizon
@@ -269,7 +270,7 @@ class EmpConfidenceInt:
 
     def plot(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Any = None,
         figsize: Optional[FigSize] = None,
         linecolor: str = "k",
         fcstcolor: str = "#4267B2",
@@ -278,7 +279,7 @@ class EmpConfidenceInt:
         modelcolor: str = "r",
         modelalpha: float = 0.2,
         grid: bool = True,
-    ) -> plt.Axes:
+    ) -> Any:
         """Make plot for model fitting with new uncertainty intervals.
 
         Args:

@@ -21,20 +21,26 @@ describe("Fantasy competitive baseline", () => {
     ]);
     expect(FANTASY_BASELINE_MODULES.length).toBeGreaterThanOrEqual(16);
 
+
     for (const key of [
       "daily-dashboard",
       "projections",
+      "draft-cheatsheets",
       "dfs-optimizer",
       "multi-lineup-manager",
       "ownership",
       "value-plays",
+      "locks-fades-exposures",
+      "social-sentiment",
       "breaking-news-injuries",
       "props-ev",
-      "rankings-cheatsheets",
+      "live-scoring-status",
       "analysis-strategy",
+      "odds-markets",
       "community-support",
       "multi-sport",
     ]) {
+
       expect(FANTASY_BASELINE_MODULES.some((module) => module.key === key)).toBe(true);
     }
   });

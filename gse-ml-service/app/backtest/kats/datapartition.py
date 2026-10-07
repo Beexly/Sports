@@ -23,7 +23,7 @@ from typing import Any, cast, Dict, List, NamedTuple, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-from kats.consts import TimeSeriesData
+from .consts import TimeSeriesData
 
 Timestamp = Union[str, pd.Timestamp, datetime]
 DataPartition = Union[
