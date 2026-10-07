@@ -185,13 +185,16 @@ describe("Phase 9 guardrails", () => {
     expect(pkg.scripts["guard:partner-offers"]).toContain("partner-offer-compliance-scan.mjs");
     expect(pkg.scripts["guard:api-payload-rights"]).toContain("api-payload-rights-scan.mjs");
     expect(pkg.scripts["guard:openapi-security"]).toContain("openapi-security-scan.mjs");
-    const chain = guardrailsChain();
-    expect(chain).toContain("commercial-copy-scan.mjs");
-    expect(chain).toContain("no-unsupported-performance-claims.mjs");
-    expect(chain).toContain("no-raw-ngs-export.mjs");
-    expect(chain).toContain("partner-offer-compliance-scan.mjs");
-    expect(chain).toContain("api-payload-rights-scan.mjs");
-    expect(chain).toContain("openapi-security-scan.mjs");
+    // The `guardrails` script delegates to run-all.mjs — the suite is defined
+    // in that manifest, so assert each guard is listed there.
+    expect(pkg.scripts.guardrails).toContain("scripts/guardrails/run-all.mjs");
+    const runAll = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
+    expect(runAll).toContain("commercial-copy-scan.mjs");
+    expect(runAll).toContain("no-unsupported-performance-claims.mjs");
+    expect(runAll).toContain("no-raw-ngs-export.mjs");
+    expect(runAll).toContain("partner-offer-compliance-scan.mjs");
+    expect(runAll).toContain("api-payload-rights-scan.mjs");
+    expect(runAll).toContain("openapi-security-scan.mjs");
   });
 
   it("sealed-holdout-open-scan exits 0 with the seal opened only inside edge-lab (FIX 6)", () => {
@@ -207,7 +210,10 @@ describe("Phase 9 guardrails", () => {
   it("root guardrails chain includes the sealed-holdout-open-scan check", () => {
     const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
     expect(pkg.scripts["guard:sealed-holdout-open-scan"]).toContain("sealed-holdout-open-scan.mjs");
-    expect(guardrailsChain()).toContain("sealed-holdout-open-scan.mjs");
+    // The `guardrails` script delegates to run-all.mjs — assert against that manifest.
+    expect(pkg.scripts.guardrails).toContain("scripts/guardrails/run-all.mjs");
+    const runAll = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
+    expect(runAll).toContain("sealed-holdout-open-scan.mjs");
   });
 });
 
