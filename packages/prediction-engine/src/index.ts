@@ -1501,6 +1501,35 @@ export {
 export type { PickCommitment, PickCommitmentBody } from "./honesty/commit-reveal.js";
 
 // Fire authority ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â dual-asOf + cal + LIVE_BOARD + selective composition (pure)
+// Glass Ledger hash-chain math (pure; persistence is ingestion-pipeline)
+export {
+  GENESIS_HASH,
+  LedgerIntegrityError,
+  appendPick,
+  appendSettlement,
+  mintPickEntry,
+  mintSettlementEntry,
+  pickCommittedPayload,
+  settlementCommittedPayload,
+  nextLinkage,
+  verifyChain,
+  chainDigest,
+  computeClvBps,
+  isSettlement,
+} from "./edge-lab/ledger-chain.js";
+export type {
+  LedgerPickEntry,
+  LedgerSettlement,
+  LedgerEntry,
+  LedgerChain,
+  PickEntryInput,
+  SettlementEntryInput,
+  ChainLinkage,
+  ChainVerification,
+  ChainDigest,
+} from "./edge-lab/ledger-chain.js";
+
+// Fire authority — dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 export {
   evaluateFireAuthority,
   topologyScore,
