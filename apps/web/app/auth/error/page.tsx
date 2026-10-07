@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { BRAND_NAME } from "@/lib/brand";
@@ -33,7 +34,11 @@ export default function AuthErrorPage({
     errorMessages["Default"]!;
 
   return (
-    <div
+    // <main id="main-content"> — the root layout's "Skip to content" link
+    // targets #main-content on every page; without the anchor the first Tab
+    // stop here moved focus nowhere (WCAG 2.4.1). Semantics only: <main> and
+    // <div> are both display:block and the flex class sets display anyway.
+    <main
       id="main-content"
       className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-4 py-12"
     >
@@ -79,6 +84,6 @@ export default function AuthErrorPage({
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
