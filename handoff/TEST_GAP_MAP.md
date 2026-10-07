@@ -83,3 +83,36 @@ files, they were the files whose accessors feed a CUSTOMER-FACING surface with
 no test beneath them — `sports-data-candidates.ts` published its counts to the
 Sources cockpit and the resource-intelligence API through five untested
 functions. Prefer a file with live consumers over a file that is merely large.
+
+## Fresh lane 2026-10-07 (SO-1f) — eight new directories, corrected corpus
+
+Per the closeout above, the lane re-measured 1,330 source files over eight NEW
+roots (`apps/web/lib/{ops,calibration,data-sources,picks,board,weather}`,
+`packages/prediction-engine/src`, `packages/ingestion-pipeline/src`).
+
+**Corpus correction (the SO-1c lesson, again):** the first pass walked only
+`apps/web/__tests__` + `packages` for test mentions and reported the whole
+calibration lane as zero-coverage. Walking the FULL repo (colocated
+`*.test.ts` included) moved every calibration file with tests out of the zero
+list — `ranking-power-control.ts`, `skill-metrics.ts`, `holdout-significance.ts`
+all have colocated suites. **Zero mentions is only a finding after a corpus
+that includes colocated tests.**
+
+Live-consumer files measured at 0 test mentions, by size:
+
+| File | Lines | Live consumers (verified by grep, non-test) |
+|---|---:|---|
+| `packages/ingestion-pipeline/src/settlement-snapshots.ts` | 151 | `settle-sport.ts`, `settlement-evidence.ts` — **DONE 2026-10-07 (SO-1f), 32 invariant tests** |
+| `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts` | 737 | `metric-birth-certificate.ts` (single consumer) |
+| `packages/prediction-engine/src/metrics/core/metric-historical-distribution-adapter.ts` | 345 | `metrics/core/index.ts` barrel |
+| `packages/ingestion-pipeline/src/backfill-independent-trueprob.ts` | 305 | cron route `/api/cron/backfill-independent-trueprob`, ops manifest |
+| `apps/web/lib/ops/watch-ingest.ts` | 219 | `/api/ops/watch-ingest` route |
+| `apps/web/lib/board/market-label.ts` | 61 | `app/board/page.tsx`, `app/page.tsx`, `lib/slate/slate.ts` — customer-facing board labels |
+
+**Pre-existing failure recorded (NOT repaired here, one task one commit):**
+`packages/ingestion-pipeline/src/__tests__/fixture-confirmation.test.ts` fails
+6/23 on the current branch — the source resolves ESPN fixture externalIds as
+`espn:americanfootball_ncaaf:<id>` while the assertions expect
+`espn:ncaaf:<id>`. Proved unrelated to SO-1f (identical 6/23 with the new
+settlement test file stashed). Stale-test repair candidate: confirm which key
+namespace is correct at current main before touching the assertions.
