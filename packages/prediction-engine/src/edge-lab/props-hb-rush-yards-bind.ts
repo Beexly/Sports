@@ -31,9 +31,10 @@
  *  - `pctAttemptsGte8Defenders` is a weekly MEAN share, NOT a per-carry
  *    frame measurement. Every emitted cell carries its grain and provenance
  *    so the y-axis model can tell the difference.
- *  - `expectedRushYards` / `ryoePerAtt` (vendor / vendor-residual): y-axis
- *    only, GSE-RYOE referee. The bus never emits them; the bind never reads
- *    them.
+ *  - `expectedRushYards` (vendor / vendor-residual): y-axis only, GSE-RYOE
+ *    referee. The bus never emits it; this bind never reads it.
+ *  - `ryoePerAtt` (RYOE per attempt): H2 Edge efficiency covariate — see
+ *    props-hb-ryoe-bind. Promoted from y-axis-only to a p-path covariate.
  *
  * The bind forwards the weekly means verbatim and never crosses the same-week
  * boundary.
@@ -133,7 +134,11 @@ export type RushYardsBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+  grain: "week_t_for_tplus1",
+  provenance: "weekly_ngs_mean",
+  layer: "L2",
+};
 
 export function bindRushYardsSamples(
   rows: readonly CovariateRow[],
@@ -192,9 +197,9 @@ export function bindRushYardsSamples(
         yards: req.rush.yards,
         // Weekly NGS mean share of rush attempts vs 8+ in the box — cell
         // metadata forwarded from the bus contract template.
-        pctAttemptsGte8Defenders: { ...BUS_CELL, value: boxShare },
+        pctAttemptsGte8Defenders: { ...BUS_CELL, value: boxShare, knownAtWeek: row.week },
         // Weekly NGS mean time-to-LOS (seconds).
-        avgTimeToLos: { ...BUS_CELL, value: tlos },
+        avgTimeToLos: { ...BUS_CELL, value: tlos, knownAtWeek: row.week },
       },
     });
   }
