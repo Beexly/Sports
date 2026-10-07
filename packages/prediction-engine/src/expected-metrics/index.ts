@@ -159,3 +159,11 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Game-script half splits (deterministic; SHADOW-only metric).
+export {
+  computeGameScriptSplits,
+  GAME_SCRIPT_SPLITS_MODEL_VERSION,
+  GAME_SCRIPT_SPLITS_FEATURE_KEYS,
+  type TeamHalfSplits,
+} from "./game-script-splits.js";
