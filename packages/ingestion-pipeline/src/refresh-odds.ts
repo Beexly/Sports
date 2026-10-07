@@ -70,6 +70,10 @@ export interface RefreshOddsSportResult {
   readonly ok: boolean;
   readonly error?: string;
   readonly oddsInserted?: number;
+  /** Line-archive snapshot rows persisted this cycle. */
+  readonly lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  readonly lineArchiveErrors?: number;
   readonly provider?: string;
   readonly eventsCount?: number;
   readonly games?: number;
@@ -269,6 +273,8 @@ export async function refreshOdds(
                 sport: sport.key,
                 ok: true,
                 oddsInserted: res.oddsInserted ?? 0,
+                lineSnapshotsPersisted: res.lineSnapshotsPersisted ?? 0,
+                lineArchiveErrors: res.lineArchiveErrors ?? 0,
                 provider: res.provider,
                 eventsCount: res.eventsCount,
                 games: res.games,
@@ -282,6 +288,8 @@ export async function refreshOdds(
                 ok: false,
                 error: res.error ?? "ingestion failed",
                 oddsInserted: res.oddsInserted ?? 0,
+                lineSnapshotsPersisted: res.lineSnapshotsPersisted ?? 0,
+                lineArchiveErrors: res.lineArchiveErrors ?? 0,
                 provider: res.provider,
                 eventsCount: res.eventsCount,
                 note: res.note,
@@ -349,6 +357,8 @@ export async function refreshOdds(
               sport: sport.key,
               ok: true,
               oddsInserted: res.oddsInserted ?? 0,
+              lineSnapshotsPersisted: res.lineSnapshotsPersisted ?? 0,
+              lineArchiveErrors: res.lineArchiveErrors ?? 0,
               provider: res.provider,
               eventsCount: res.eventsCount,
               games: res.games,
@@ -360,6 +370,8 @@ export async function refreshOdds(
               ok: false,
               error: res.error ?? "ingestion failed",
               oddsInserted: res.oddsInserted ?? 0,
+              lineSnapshotsPersisted: res.lineSnapshotsPersisted ?? 0,
+              lineArchiveErrors: res.lineArchiveErrors ?? 0,
               provider: res.provider,
               eventsCount: res.eventsCount,
               note: res.note,
