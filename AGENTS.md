@@ -10271,3 +10271,141 @@ inventoried without evidence.
 - @DonAtkinsonNFL: nothing new in-window (latest 14h ago, out of window).
 - @EstablishTheRun: promos only (Rest of Season Top 150 questions;
   Week 5 waiver wire).
+
+## X ANALYTICS SWEEP 2026-10-07 AM
+
+Window: posts after ~9:10 PM CDT Tue 2026-10-06 through ~1:10 AM CDT Wed
+2026-10-07 (~4h, overnight). Read-only sweep as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs). Login confirmed by both tasks; no
+CAPTCHAs or login walls. Two parallel browser tasks: Task A (home feed +
+11 analytics accounts); Task B (20 accounts: metrics 10, news 5, market
+3, scheme/film 2 + account-health/record checks). X relative timestamps
+proved unreliable in BOTH directions this window (understating elapsed
+time ~1-1.5h); every borderline post verified against its absolute
+timestamp. Nothing inventoried without evidence.
+
+### NEW ITEMS
+
+20. @DynatyzeFF — "Age atlas" (2026-10-06 10:51 PM CDT). NEW METRIC.
+    Chart header: "RB · ALL ERAS (1999-2026) · VALUE = PPR POINTS ·
+    MIN 4 SEASONS · AS OF 2026-10-06". Post text states: "Lead backs
+    lose 38% of their peak PPR value from age 28 to 30. Saquon Barkley
+    is in the cliff zone right now." Cohort: "the lead back — three-down
+    and bell-cow workloads"; cohort box 84 players / 679 seasons; typical
+    peak age 23; red "cliff" region ages 28-30. Series: "Barkley — his own
+    path" (solid; peaks ~85% ~age 27, drops steeply ~age 28-29, axis-read)
+    vs "Cohort typical" (dashed). Labeled avatar points (axis-read, ~):
+    Taylor ~27, Barkley ~29, McCaffrey 30, Jones ~31, Kamara ~31,
+    Henry 32. No external data source stated; no caveats stated.
+    Dynatyze's own aging-atlas model. Full stated values in
+    `docs/dfs/research/2026-10-07/full-tables/dynatyzeff-age-atlas-week4.csv`.
+
+21. @hawkblogger — "SCREEN TEST" screen-efficiency graphic (2026-10-06
+    10:43 PM CDT). NEW METRIC CUT. Definition as stated: offense EPA per
+    screen; defense EPA allowed per screen. Offense columns: Team ·
+    Screens · % of dropbacks (rank) · EPA per screen (rank). Defense
+    columns: Team · Screens faced · EPA allowed per screen (rank).
+    Values: Seahawks offense — 13 screens, 10% of dropbacks (7th),
+    +0.723 EPA/screen, 1st; 49ers offense — 12 screens, 10% (9th),
+    +0.454, 3rd; 49ers defense — 15 screens faced, +0.028 allowed, 21st;
+    Seahawks defense — 14 screens faced, +0.278 allowed, 30th. Labeled
+    scatter dots (one screen each): E. Wilson 23 TD, Barner 32,
+    Kittle 56 TD, Washington (MIA) 12, Lane (WAS) 21. Stated why-it-matters
+    panel: "3rd (other dropbacks) → 30th (screens): Seattle's D is 3rd in
+    EPA on every dropback that isn't a screen. Screens are where offenses
+    have hurt it. One roughing call on a 3rd & 24 screen drives a lot of
+    that rank. Without it, Seattle would be 23rd." Data sources as
+    stated: "Screens: FTN charting | EPA: nflverse". Caveats as stated:
+    "2026 REGULAR SEASON, WEEKS 1-4 | SMALL SAMPLE: 12-15 SCREENS PER
+    TEAM | SOLID = GAINED EPA, HOLLOW = LOST IT | GOLD RING = TD |
+    FLAG = PENALTY". Full table in
+    `docs/dfs/research/2026-10-07/full-tables/hawkblogger-screen-efficiency-week4.csv`
+    (+ `hawkblogger-screen-dots-week4.csv`).
+
+22. @statyxio — Brock Purdy QB dashboard matrices (2026-10-06 9:21 PM
+    CDT, quoting @Kaz_cbk). New visible cut of known metrics; source not
+    stated in post (Statyx-branded images). Core: EPA/dropback +0.566
+    (P100, #1/32); CPOE +4.5% (P75, #8); success 62.3% (P100, #1);
+    first downs/dropback 46.7% (P100, #1); sack rate 0.0% (P100, #1,
+    lower-is-better); explosive completions 11.5% (P85, #5). By-target-depth
+    (107 charted attempts): Behind LOS 15/18 83.3% #22/32 116 yds 1 TD
+    15.9% share; Short 0-9 43/53 81.1% #9/32 440 yds 5 TD 46.9%; Mid 10-19
+    16/26 61.5% #13/32 312 yds 3 TD 23.0%; Deep 20+ 5/10 50.0% Unranked
+    139 yds 2 TD 8.8%. Pressure/blitz: pressured comp% 51.7% (P84, #5);
+    clean-pocket 76.2% (P67, #11); vs blitz 77.1% (P94, #3); no blitz
+    66.7% (P63, #11). Safety-look panel (weeks 1-3): Single high (SEA
+    shows 46%): Purdy 23/28 82.1% 10.6 YPA 4 TD/1 INT; SEA allowed 52.6%
+    3.8 YPA (38 att, Def #9/32). Two high (SEA shows 54%): Purdy 37/55
+    67.3% 9.0 YPA 5 TD/0 INT; SEA allowed 72.2% 5.8 YPA (54 att,
+    Def #8/32). TNF matchup panel (@ SEA): Deep comp% Purdy 33.3% vs
+    Seattle 23.1% allowed (Strong, #4); EPA/DB +0.566 vs -0.078 allowed
+    (Elite, #3); Rush 1D% 64.7% vs 20.0% allowed (Elite, #2); RZ pass TD
+    33.3% vs 55.6% allowed (Unranked); Sack rate 0.0% vs 8.1% generated
+    (Strong, #7). Innovation kernel (attributed note, not build order):
+    QB-vs-shell splits paired with opponent-allowed rates as a matchup
+    layer. Full tables in
+    `docs/dfs/research/2026-10-07/full-tables/statyxio-purdy-*.csv`
+    (core, by-depth, safety-looks, matchup-vs-sea).
+
+23. @jmthrivept — rookie RB usage cut quoting @GuruFantasyWrld
+    (2026-10-06 9:46 PM CDT). Known metrics, new cut; values partially
+    visible in quote embed (quoted post not opened). Snap-Rate: Omarion
+    Hampton 48.2%, Jacory Croskey-Merritt 46.5%; Route-Share: Omarion
+    Hampton 23 (truncated; further values not visible). Source not
+    stated. Transcribed in
+    `docs/dfs/research/2026-10-07/full-tables/jmthrivept-rookie-rb-usage-partial-week4.csv`
+    (partial, marked). Injury-method note from same account (9:41 PM):
+    post-knee-scope hamstring timeline — AJ Brown (Jan 2021 double knee
+    scopes → Wk3 hamstring 12 snaps → returned Wk5) vs Rashee Rice
+    (May 2026 knee scope → Wk4 hamstring 10 snaps, Wk5 bye).
+
+24. @ScottBarrettDFB — market note (2026-10-06 10:36 PM CDT): Texans
+    (0-4) are 7.5-point ROAD favorites at the Titans, Week 6 opener.
+    No line moves/steam/splits from @VSiNLive, @Covers, @ActionNetworkHQ
+    in-window.
+
+25. Home feed finds (in-window): @nflrums (~9:21 PM CDT) — QBs with 10+
+    TD passes and 0 sacks taken through first 4 games of a season:
+    Brock Purdy (2026), Dan Marino (1984). @TerryMcCormick (~11:21 PM) —
+    Titans have lost 10 straight games to AFC South opponents.
+
+26. News roundup — nothing in-window from the five news accounts. New to
+    this record, verified OUT of window (PM sweep's Task B window ended
+    ~5:10 PM; these fell in the gap): Braxton Berrios (Giants WR/returner)
+    done for the season — surgery announced via his Instagram (orig.
+    @charlottecrrll, quote-posted @MikeGarafolo 6:37 PM CDT); Tank Bigsby
+    (Eagles RB) placed on injured reserve (@AdamSchefter 6:50 PM);
+    Seahawks declined to sign Joe Mixon to practice squad due to
+    "troublesome foot issue" (@RapSheet / NFL Network, 6:51 PM);
+    Lamar Jackson sprained ankle — "slim chance to return for Week 5"
+    (Schefter evening post; previously recorded as TBD). Covers
+    8:45 PM (out of window): oddsmakers value Lamar at 9 points —
+    Ravens-Falcons line swing.
+
+27. Innovation kernels (attributed notes, not build orders): (a) Screen-
+    vs-non-screen EPA decomposition as a matchup input — one penalty
+    swung Seattle's screen-defense rank from 23rd to 30th (@hawkblogger).
+    (b) Per-position cohort aging curves with player-path overlay —
+    84 lead backs / 679 seasons, 1999-2026, PPR points (@DynatyzeFF).
+    (c) Percentile-rank QB dashboards with by-target-depth, pressure/blitz
+    splits, and QB-vs-shell × opponent-allowed-rate matchup panels
+    (@statyxio).
+
+### RECORD NOTES
+
+- @FTNData: still PROTECTED (1,276 posts), unchanged — no follow
+  requested.
+- @NFLResearcher: empty 7th consecutive sweep (header "4 posts", renders
+  none).
+- @NerdingonNFL: still broken ("1 post", renders none).
+- @TomPelissero alleged 49ers/Bethune 18-players injury-report post: NOT
+  FOUND — X Latest search "from:TomPelissero 49ers Bethune" returned zero
+  results; 3rd exclusion, follow-up CLOSED as non-existent.
+- @Nate_Tice: 2 in-window posts, both NBA jokes — no scheme content.
+- @DevyEusuf 10:38 PM opinion post on Mixon — not analytics, not
+  inventoried. @hawkblogger 10:38/10:49 PM posts were blog/newsletter
+  promos (no metrics). @PFF 9:02 PM Ward video + 8:43 PM contested-catch
+  posts verified OUT of window.
+- @RyanPaganetti early-down shotgun/under-center run-rate posts verified
+  at 7:15 PM — out of window, PM-sweep territory. @GridironInfo_ 9:02 PM
+  sacks-allowed table already inventoried in the 2026-10-06 PM section.
