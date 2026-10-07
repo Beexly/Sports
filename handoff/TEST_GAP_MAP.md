@@ -105,7 +105,7 @@ Live-consumer files measured at 0 test mentions, by size:
 | `packages/ingestion-pipeline/src/settlement-snapshots.ts` | 151 | `settle-sport.ts`, `settlement-evidence.ts` — **DONE 2026-10-07 (SO-1f), 32 invariant tests** |
 | `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts` | 737 | `metric-birth-certificate.ts` (single consumer) |
 | `packages/prediction-engine/src/metrics/core/metric-historical-distribution-adapter.ts` | 345 | `metrics/core/index.ts` barrel |
-| `packages/ingestion-pipeline/src/backfill-independent-trueprob.ts` | 305 | cron route `/api/cron/backfill-independent-trueprob`, ops manifest |
+| `packages/ingestion-pipeline/src/backfill-independent-trueprob.ts` | 305 | cron route `/api/cron/backfill-independent-trueprob`, ops manifest — **DONE 2026-10-07 (SO-1h), 45 orchestrator tests** |
 | `apps/web/lib/ops/watch-ingest.ts` | 219 | `/api/ops/watch-ingest` route |
 | `apps/web/lib/board/market-label.ts` | 61 | `app/board/page.tsx`, `app/page.tsx`, `lib/slate/slate.ts` — customer-facing board labels — **DONE 2026-10-07 (SO-1g), 29 invariant tests** |
 
@@ -116,6 +116,65 @@ Live-consumer files measured at 0 test mentions, by size:
 `espn:ncaaf:<id>`. Proved unrelated to SO-1f (identical 6/23 with the new
 settlement test file stashed). Stale-test repair candidate: confirm which key
 namespace is correct at current main before touching the assertions.
+
+**SO-1h re-proof + delta (2026-10-07):** the 6/23 re-proven identical on the
+pre-merge tree (25c4623eb, junction-farm worktree run, same six externalId
+assertion failures). The merge surfaced TWO MORE failures in the same file
+(now 8/23): "fetches once per ESPN group per sport per run (CFB: 80 and 81)"
+and "treats a full page (events at the ESPN limit) as not confirmable:
+fetch_failed, never not_listed" — both FixtureConfirmer batch tests, with the
+test file unchanged by the merge. Classified merge-surfaced-untriaged in the
+SO-1h section below.
+
+## SO-1h notes (2026-10-07) — orchestrator tests, main syntax repair, 44-failure provenance classification
+
+Suite: `packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts`
+(45 tests, first coverage of the 272-line orchestrator body). Decision-rule
+pins written against the real rule (line 237: `trueProb >= 0.58 ? "LEAN" :
+"PASS"`); red-checked by mutating the threshold to 0.99 — exactly the two LEAN
+pins fail, source restored byte-identical.
+
+**origin/main was syntactically broken** (sheriff rebase `68ba1c410`, PR #610):
+`process-sport.ts` carried the ProcessSportResult interface declarations for
+`lineSnapshotsPersisted`/`lineArchiveErrors` pasted INSIDE the return object
+literal (~line 1751) — an esbuild parse error that blocked collection of every
+suite in the package. Fixed at `58c7fa7aa` (value shorthand; the fields are
+real locals accumulated at 1006-1007/1111/1115, consumed by refresh-odds.ts at
+four `res.lineSnapshotsPersisted ?? 0` sites). STILL PRESENT on origin/main as
+of this run (tip 021263a04).
+
+**Full-package provenance classification (44 failed / 1567 passed / 6 skipped,
+8 failing files), measured by running the same suites on two junction-farm
+worktrees — origin/main tip 021263a04 and the pre-merge tree 25c4623eb —
+both verified to resolve @sports/* inside the worktree (farm = root
+node_modules junctions + packages/*/node_modules junctions; the nested farm is
+REQUIRED because packages/db/node_modules holds @neondatabase/serverless — a
+root-only farm fails collection with "Failed to load url
+@neondatabase/serverless"). Probe worktrees removed after use.**
+
+- **32 MAIN-INHERITED** (main's own red, merged in as-is; not introduced by
+  the merge):
+  - `settle-sport.test.ts` 21 — IDENTICAL failures on main's own tree: C-109
+    spend-guard/credit-governor scope assertions read `[]` where
+    `["ops.odds.paidScores","ops.odds.credits"]` is expected, getScores called
+    when the guard says skip, preseason double-call, `resetPaidCallReservationWarning
+    is not a function`, outbox payload without settledWith/settledAt-match.
+  - `props-hb-bridge.test.ts` 1 — `fitIntPerAttemptPrior is not a function`,
+    identical on main's tree.
+  - `generate-signal-slate.test.ts` 4 — `gradeSignalPick is not a function`;
+    grep proves gradeSignalPick appears in NO module of src (only in main's
+    own test file). On main's tree the suite cannot even load (parse break).
+  - `process-sport.test.ts` 5 + `process-sport-db-outage.test.ts` 1 — main's
+    merged tests vs main's code; unloadable on main's own tree (parse break),
+    so verified only on the fixed merge tree.
+- **6 BRANCH-PRE-EXISTING** — fixture-confirmation 6 (espn:ncaaf convention,
+  above; already recorded at SO-1f).
+- **6 MERGE-SURFACED, UNTRIAGED** (passed pre-merge, fail post-merge, test
+  files unchanged; the merge brought main's newer
+  `packages/data-ingestion/src/kalshi-client.ts` + `espn-odds-client.ts`):
+  fixture-confirmation +2 (named above), `exchange-tape-capture.test.ts` 1
+  (C-396 KXNFL capture), `galaxy-two-book-acceptance.test.ts` 3 (C-104).
+  Stale-test-repair candidates; do NOT repair in a test-writing lane.
 
 ## SO-1g notes (2026-10-07) — market-label.ts, 29 invariant tests
 
