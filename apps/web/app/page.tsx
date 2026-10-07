@@ -25,13 +25,16 @@ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 
 export const dynamic = "force-dynamic";
 
+// The description names only always-on free surfaces. It used to promise
+// "paper contests" (Contest Bay) — that surface has since been removed from
+// the site entirely, so the description must not advertise it at all.
+// Pinned by apps/web/__tests__/free-tier-gate-coupling.test.ts.
 export const metadata: Metadata = {
   // FE-13: the layout's title template appends the brand, and this title is
   // already the brand, so it must be absolute.
   title: { absolute: "Galaxy Sports Edge" },
   description:
-    "A scored board, a public record, and the guts to show what we passed on. We detect. You decide.",
-  alternates: { canonical: "/" },
+    "A scored board, a public record, and the guts to show what we passed on. We detect. You decide.",  alternates: { canonical: "/" },
 };
 
 export default async function HomePage(): Promise<JSX.Element> {
