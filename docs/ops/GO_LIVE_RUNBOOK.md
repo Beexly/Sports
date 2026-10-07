@@ -26,17 +26,25 @@ the code is ready; these are the real-world accounts, secrets, and switches only
 ---
 
 ## Phase 1 — Provision + set env vars
-Set these 15 required vars in Vercel (Production) — the readiness script checks every one:
+Set these 20 required vars in Vercel (Production) — this is exactly the `REQUIRED` list in
+`scripts/check-deploy-readiness.mjs`, which checks every one:
 
 ```
 DATABASE_URL  DIRECT_URL  NEXTAUTH_SECRET  NEXTAUTH_URL
 GOOGLE_CLIENT_ID  GOOGLE_CLIENT_SECRET
 THE_ODDS_API_KEY  ANTHROPIC_API_KEY  REDIS_URL
 STRIPE_SECRET_KEY  STRIPE_WEBHOOK_SECRET  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-STRIPE_PRO_PRICE_ID  STRIPE_ELITE_PRICE_ID  NEXT_PUBLIC_APP_URL
+STRIPE_PRO_MONTHLY_PRICE_ID     STRIPE_PRO_ANNUAL_PRICE_ID
+STRIPE_ELITE_MONTHLY_PRICE_ID   STRIPE_ELITE_ANNUAL_PRICE_ID
+STRIPE_FANTASY_MONTHLY_PRICE_ID STRIPE_FANTASY_ANNUAL_PRICE_ID
+NEXT_PUBLIC_APP_URL  CRON_SECRET
 ```
-Plus the **gate flags** (all start `false` — see Phase 4) and a strong **`CRON_SECRET`**
-(the cron routes require `Authorization: Bearer <CRON_SECRET>` — verified enforced).
+The six `STRIPE_*_PRICE_ID` vars are the ones checkout reads; the legacy `STRIPE_PRO_PRICE_ID` /
+`STRIPE_ELITE_PRICE_ID` are **monthly-only fallbacks** and are not sufficient on their own — see
+Phase 5, which is where you actually create the prices and fill these in.
+
+`CRON_SECRET` must be strong (the cron routes require `Authorization: Bearer <CRON_SECRET>` —
+verified enforced). Plus the **gate flags** (all start `false` — see Phase 4).
 
 Then initialize the database:
 ```
@@ -48,8 +56,18 @@ npm run db:seed                              # seeds bootstrap/demo scaffolding
 ```
 node scripts/check-deploy-readiness.mjs
 ```
-Green = DB reachable, Odds/Stripe/Anthropic keys valid, Stripe price IDs resolve, Redis pings,
-vercel.json crons + security headers present, gate sequencing sane. **Do not deploy on red.**
+Green = DB reachable, Odds/Stripe keys valid, **every Stripe price resolves *and* charges the
+advertised phase amount, at the advertised interval, in the advertised currency** (all six vars —
+pro/elite/fantasy × monthly/annual — compared against `apps/web/lib/pricing/pricing-phases.ts`;
+a mismatch is a hard failure, not a warning), Redis pings, `apps/web/vercel.json` crons +
+security headers present, gate sequencing sane. **Do not deploy on red.**
+
+Two honest caveats about what green does *not* mean: a failed **Anthropic** ping is only a
+warning while `PUBLIC_BLOG_ENABLED=false` (no runtime path uses the key then), and vars marked
+"Sensitive" in Vercel are write-only, so a local `vercel env pull` reports them as warnings —
+run the script in the Vercel build or CI, with the env injected, for an authoritative check.
+The price check requires **Node ≥ 22.18** (it loads the TypeScript billing helper directly); on
+older Node it reports a failure rather than skipping.
 
 ## Phase 3 — First deploy (still fully dark)
 Deploy to Vercel with **all gate flags `false`**. The public site renders its honest
@@ -65,6 +83,8 @@ CANONICAL_HISTORY_ENABLED          ← root; must be on before anything downstre
        └─ PUBLIC_PICKS_ENABLED      ← picks become public
             ├─ PERFORMANCE_STATS_ENABLED   ← track record / calibration visible
             │    └─ OUTCOME_LEARNING_ENABLED
+            │         └─ CALIBRATION_ADJUSTMENTS_ENABLED  ← also needs the audited
+            │                                               MODEL_VERSION step (Phase 4b)
             └─ PUBLIC_BLOG_ENABLED          ← only if you turn the content engine on
 ```
 **Let real picks settle and accumulate before opening `PERFORMANCE_STATS_ENABLED`** — the
@@ -145,7 +165,12 @@ wire auto-posting. Rotate `ANTHROPIC_API_KEY` before ever enabling content.
 - [ ] `npm run typecheck && npm test && npm run guardrails && npm run build` → green
 - [ ] Domain + `NEXTAUTH_URL`/`NEXT_PUBLIC_APP_URL` set; Google OAuth redirect URIs added
 - [ ] `CRON_SECRET` set; GitHub-Actions cron secret matches; ingestion confirmed running
+- [ ] All **six** `STRIPE_*_PRICE_ID` vars set (pro/elite/fantasy × monthly/annual), amounts
+      taken from `apps/web/lib/pricing/pricing-phases.ts` and confirmed green by the readiness
+      script — **not** copied from any doc
 - [ ] Stripe TEST cycle passed; webhook verified; then LIVE keys
+- [ ] Existing price ids **prepended**, never replaced, if a pricing phase was advanced
+      (replacing downgrades grandfathered members to FREE)
 - [ ] Gates opened in order, with real settled picks before performance stats
 - [ ] `DEV_FAKE_ADMIN` / `DEMO_PICKS_ENABLED` = false in prod
 - [ ] Responsible-gaming + methodology reachable site-wide (already in the global footer)
