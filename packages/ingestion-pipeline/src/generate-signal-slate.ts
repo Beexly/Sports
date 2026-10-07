@@ -181,6 +181,39 @@ export function blendIndependentHomeFair(
 const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
 /**
+ * The one sentence that keeps a signal-board grade from being read as a market-
+ * board grade. Written onto the pick's `reasoning`, which is customer-visible.
+ */
+export function signalGradeDisclosure(grade: SignalGrade): string {
+  return (
+    `Grade "${grade}" is confidence-only: with no book line there is no Edge Index, ` +
+    `so this pick is NOT graded on the market board's confidence+Edge Index ladder.`
+  );
+}
+
+/**
+ * The customer-visible `reasoning` string for a signal-board pick. Extracted so
+ * the grade disclosure is testable at runtime rather than asserted by grepping
+ * this file — a wiring claim nobody executes is a wiring claim nobody keeps.
+ */
+export function buildSignalReasoning(input: {
+  readonly chosenTeam: string;
+  readonly trueProb: number;
+  readonly sourcesLabel: string;
+  readonly rankingP: number;
+  readonly grade: SignalGrade;
+}): string {
+  const pct = Math.round(input.trueProb * 100);
+  return (
+    `Model signal (no book line): ${input.chosenTeam} priced at ${pct}% ` +
+    `by independent sources [${input.sourcesLabel}]. Not a sportsbook quote. ` +
+    `RankingP=${input.rankingP.toFixed(3)}. ` +
+    `Eligibility RED forbids PROVEN/performance claims. ` +
+    signalGradeDisclosure(input.grade)
+  );
+}
+
+/**
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
  */
 export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<SignalSlateResult> {
