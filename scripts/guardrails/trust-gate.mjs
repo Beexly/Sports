@@ -24,6 +24,7 @@ import { readFileSync } from "node:fs";
 import { dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { collapseStringJoins, normalizeScanLine } from "./scan-normalize.mjs";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const ROOT = resolve(process.cwd());
 
@@ -39,6 +40,12 @@ const POSITIONING_VOCAB_PATH = resolve(
   "apps/web/lib/positioning-vocab.json",
 );
 const POSITIONING_VOCAB = JSON.parse(readFileSync(POSITIONING_VOCAB_PATH, "utf8"));
+// Minimum-coverage floor. Observed on origin/main @ bb0e7dfc0 (2026-08-25):
+// this guard scans 2062 files. The floor is set at roughly half that, which is
+// far below any plausible refactor churn but far above what remains if a whole
+// SCAN_DIRS root disappears — the failure this closes, where `catch { continue }`
+// swallowed a missing root and the gate reported "scanned 0 file(s)" and exit 0.
+const MIN_SCANNED_FILES = 1000;
 
 // BS-023 (brand-safety-rules-v2): "sharp money" / "smart money" framing claims a
 // factor the platform does not source yet, so it is banned on marketing and
@@ -604,6 +611,13 @@ async function main() {
       allHits.push({ file: relPath, ...hit });
     }
   }
+  assertScanFloor({
+    guard: "trust-gate",
+    root: ROOT,
+    roots: SCAN_DIRS,
+    scanned,
+    floor: MIN_SCANNED_FILES,
+  });
 
   if (allHits.length === 0) {
     console.log("[trust-gate] OK - scanned " + scanned + " file(s); no banned phrases.");

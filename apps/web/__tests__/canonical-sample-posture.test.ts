@@ -165,6 +165,96 @@ describe("loadCanonicalSampleBySport", () => {
   });
 });
 
+/**
+ * The FILTERS are the gate.
+ *
+ * loadPublicPerformancePolicy -> canonicalSettledCount -> canExposePerformanceStats
+ * is the decision to publish performance numbers at all, and two clauses carry it:
+ * `isPublished: true` and the seed exclusion `NOT: { modelVersion: "v5.0.0-seed" }`
+ * (public-performance-policy.ts:315-325, whose comment reads "Seed/demo picks must
+ * NEVER count toward a public win rate").
+ *
+ * Mutation testing showed that sentence was the ENTIRE enforcement. Deleting
+ * `isPublished: true` from settledFilter: 483 tests passed. Replacing the seed
+ * exclusion with `{}`: 483 tests passed. Both at once: 483 passed. The only test
+ * that reached this loader was the parity test above, whose fixtureDb keys solely
+ * on where.game.sport.key / isBootstrap / generatedAt / result — it never looks at
+ * isPublished or NOT, so removing them changed no count it returns.
+ *
+ * These assertions capture the where-clauses and pin them, the same way
+ * clv-coverage.test.ts:105-112 and settlement-health.test.ts:75-84 already do for
+ * the two sibling readers two doors down in lib/performance/.
+ */
+describe("loadPublicPerformancePolicy count filters", () => {
+  const SEED_EXCLUSION = { NOT: { modelVersion: "v5.0.0-seed" } };
+
+  async function capturedWheres(): Promise<Array<Record<string, unknown>>> {
+    const calls: Array<Record<string, unknown>> = [];
+    const db = {
+      pick: {
+        count: async ({ where }: { where: Record<string, unknown> }) => {
+          calls.push(where);
+          return 0;
+        },
+      },
+    };
+    await loadPublicPerformancePolicy(db as never, {
+      canExposePerformanceStats: true,
+      minSettledPicksForLearning: 1,
+    });
+    return calls;
+  }
+
+  /** Classify by WHERE shape, never by call order. */
+  function isSettledIn(where: Record<string, unknown>): boolean {
+    const result = where["result"] as { in?: unknown } | string | undefined;
+    return !!result && typeof result === "object" && Array.isArray(result.in);
+  }
+
+  it("counts only PUBLISHED picks and excludes the v5.0.0-seed model on every canonical query", async () => {
+    const calls = await capturedWheres();
+
+    // The canonical population: settled-in-list plus the five single-result
+    // queries, all of them non-bootstrap. These are the numerator/denominator
+    // of the published win rate.
+    const canonical = calls.filter((w) => w["isBootstrap"] === false);
+    expect(canonical).toHaveLength(6);
+
+    for (const where of canonical) {
+      expect(where["isPublished"]).toBe(true);
+      expect(where["NOT"]).toEqual(SEED_EXCLUSION.NOT);
+    }
+
+    // Named explicitly so a query silently disappearing is a failure too.
+    const settled = canonical.find(isSettledIn)!;
+    expect(settled["result"]).toEqual({ in: ["WIN", "LOSS", "PUSH"] });
+    for (const result of ["WIN", "LOSS", "PUSH", "VOID", "PENDING"]) {
+      const query = canonical.find((w) => w["result"] === result);
+      expect(query, `missing canonical count query for result=${result}`).toBeDefined();
+    }
+  });
+
+  it("keeps the published filter on the bootstrap comparison count", async () => {
+    const calls = await capturedWheres();
+    // bootstrapCount spreads the same settledFilter, so deleting `isPublished`
+    // from settledFilter silently widens this query too.
+    const bootstrap = calls.find((w) => w["isBootstrap"] === true && isSettledIn(w))!;
+    expect(bootstrap).toBeDefined();
+    expect(bootstrap["isPublished"]).toBe(true);
+    expect(bootstrap["result"]).toEqual({ in: ["WIN", "LOSS", "PUSH"] });
+  });
+
+  it("issues the full nine-query set the policy evaluator expects", async () => {
+    const calls = await capturedWheres();
+    expect(calls).toHaveLength(9);
+    // Six canonical + one bootstrap-settled carry the published filter; the two
+    // recent-window volume counts deliberately do not (they measure raw intake).
+    expect(calls.filter((w) => w["isPublished"] === true)).toHaveLength(7);
+    expect(calls.filter((w) => w["NOT"] !== undefined)).toHaveLength(6);
+    expect(calls.filter((w) => w["generatedAt"] !== undefined)).toHaveLength(2);
+  });
+});
+
 describe("isCalibrationPublished", () => {
   it("defaults false and only true on exact env true", () => {
     expect(isCalibrationPublished({})).toBe(false);
