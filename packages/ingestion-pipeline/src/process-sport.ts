@@ -178,6 +178,10 @@ export interface ProcessSportResult {
    * request the vendor answered with an error is still counted.
    */
   paidRequestCount?: number;
+  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
+  lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  lineArchiveErrors?: number;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -992,6 +996,11 @@ export async function processSport(
     // MONEYLINE is stored per side (home/away are not complementary).
     const dispersionByGame = new Map<string, GameDispersion>();
 
+    // Glass-Ledger line-archive outcome for this cycle. Surfaced on the result
+    // so refresh-odds reports it instead of silently swallowing archive errors.
+    let lineSnapshotsPersisted = 0;
+    let lineArchiveErrors = 0;
+
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
@@ -1088,12 +1097,22 @@ export async function processSport(
       // new Odds API calls.
       const propSnap = eventOddsByExternalId.get(game.externalId);
       const propRows = propSnap ? toPropLineSnapshotRows(propSnap as PropEventLike) : [];
-      await captureLineSnapshotsIfEnabled({
+      const lineArchive = await captureLineSnapshotsIfEnabled({
         db,
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
         rows: [...toLineSnapshotRows(gameOdds), ...propRows],
       });
+      lineSnapshotsPersisted += lineArchive.persisted;
+      if (lineArchive.error) {
+        // The callee never throws; it reports failure in `error`. Discarding it
+        // meant a broken archive looked byte-identical to a disabled one.
+        lineArchiveErrors++;
+        console.warn(
+          `${logPrefix} ${sport.key}: line-archive capture failed for game ` +
+          `${gameRecord.id} — ${lineArchive.error}`,
+        );
+      }
 
       // Capture the book-line dispersion (max−min across books) per kind NOW,
       // while every book's line for this game is in hand. It is the CLV
@@ -1686,6 +1705,10 @@ export async function processSport(
       note: fixtureNote ?? emptyNote,
       skippedInPlay,
       ...paidAccounting(),
+  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
+  lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  lineArchiveErrors?: number;
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
