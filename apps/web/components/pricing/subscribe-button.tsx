@@ -100,6 +100,9 @@ export function SubscribeButton({
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
   const disclosureId = useId();
+  // Same reasoning for the error banner: it has to be addressable so the date
+  // field can point at it with aria-describedby.
+  const errorId = useId();
   // Per-visit checkout-intent HINT (Phase 1P). The server owns the durable
   // CheckoutAttempt — this UUID only lets it recognize "same click retried"
   // (double-click, network blip, reload-and-retry within this mount) and hand
@@ -210,6 +213,7 @@ export function SubscribeButton({
 
       {error && (
         <p
+          id={errorId}
           role="alert"
           className="rounded-lg border border-alert/60 bg-alert/10 px-3 py-2 text-xs text-alert"
         >

@@ -24,6 +24,7 @@ import type {
   AuditPayloadSummary,
 } from "@sports/types";
 import Link from "next/link";
+import { useModalFocus } from "@/lib/a11y/use-modal-focus";
 
 interface EvidenceAuditDrawerProps {
   pickId: string;
@@ -70,6 +71,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState<LoadState>({ status: "idle" });
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const handleOpen = useCallback(async () => {
     setOpen(true);
@@ -114,16 +116,18 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
   const handleClose = useCallback(() => setOpen(false), []);
 
-  // Escape key to close + focus management
+  // Trap Tab inside the drawer and hand focus back to the trigger on close.
+  // aria-modal="true" (below) tells assistive tech the board behind is inert;
+  // without this the keyboard walked straight into it. See the hook's docstring.
+  useModalFocus(open, dialogRef, closeBtnRef);
+
+  // Escape to close + body-scroll lock while the drawer is open.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
-    // Focus the close button on open for keyboard users
-    closeBtnRef.current?.focus();
-    // Lock body scroll while drawer is open
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -146,6 +150,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
       {open && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Evidence audit"
