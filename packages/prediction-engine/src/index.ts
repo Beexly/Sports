@@ -1976,6 +1976,11 @@ export {
 export type { SnapSample, SnapShare, SnapDenied } from "./edge-lab/props-hb-snap-exposure.js";
 
 // Intelligence cockpit ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ log-only player features. priced:false until hold-out.
+// Est-routes / TPRR proxy from CC-BY snaps + PBP dropbacks. L1 exposure. priced:false.
+export { EST_ROUTES_METHOD_TAG, estRoutesTprr } from "./edge-lab/est-routes-tprr.js";
+export type { EstRoutesInput, EstRoutesResult } from "./edge-lab/est-routes-tprr.js";
+
+// Intelligence cockpit → log-only player features. priced:false until hold-out.
 export { RESEARCH_LOG_METHOD_TAG, playerResearchLog } from "./edge-lab/player-research-log.js";
 export type { ResearchFeatureInput, ResearchLog, ResearchDenied } from "./edge-lab/player-research-log.js";
 
