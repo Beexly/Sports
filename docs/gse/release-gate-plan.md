@@ -29,7 +29,11 @@ the remaining gates below are the human/owner ones.
 
 1. `GET /waitlist` renders the no-claim copy + transparency line + form.
 2. Submit without consent → blocked (422); with valid data + consent → "thank you".
-3. Duplicate email → safe `already_queued` (no 500, no second row).
+3. Duplicate email → response is BYTE-IDENTICAL to a first-time submit
+   (`{ ok: true, status: "queued" }`, same status code), no 500, no second row,
+   no second welcome email. The old `already_queued` reply was an
+   email-enumeration oracle — the duplicate distinction now stays server-side.
+   Pinned by `apps/web/__tests__/waitlist-enumeration-oracle.test.ts`.
 4. No external network call other than same-origin `POST /api/waitlist`.
 5. No email is sent; no analytics provider call fires.
 6. Page returns `noindex` until the public gate is explicitly opened.
