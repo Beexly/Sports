@@ -709,6 +709,25 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     validationMethods: ["bucket_lift", "walk_forward", "drift_test", "clv"],
   },
   {
+    internalName: "drive_failure_rate_shadow",
+    metricId: "drive-failure-rate",
+    status: "SHADOW",
+    family: "team",
+    targetQuestion: "How often does this offense end drives without scoring or retaining possession?",
+    failureModes: ["garbage-time distortion", "opponent-strength blindness", "small-window noise"],
+    publicName: "Drive Failure Rate",
+    targetVariable: "drive failure probability",
+    historicalPrecedent: [{ name: "Drive-level efficiency", reason: "Punts and turnovers represent the same absolute failure to sustain possession." }],
+    allowedInputs: ["drive outcome"],
+    forbiddenInputs: ["individual play context within the drive"],
+    formulaClass: "linear",
+    formulaSummary: "Percentage of drives ending in PUNT, TURNOVER, or TURNOVER_ON_DOWNS.",
+    protectedComponents: ["window sizing", "sample floors"],
+    validationMethods: ["walk_forward"],
+    publicExposure: "hidden",
+    sourceRightsRequired: ["clean source data"],
+  },
+  {
     // `allowedInputs` enumerates the eight always-present component inputs. gseSignalScore
     // (metrics/decision/gse-signal-score.ts) additionally consumes six inputs not listed here that
     // each materially move the score: a strongly-weighted calibration-debt penalty plus five

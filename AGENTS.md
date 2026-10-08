@@ -11259,3 +11259,4 @@ Jacob Gibbs "catchable air yards" still not resurfaced. GridironInfo_
 points-allowed leaderboard not seen. RyanPaganetti EPA/rush-vs-EPA/
 dropback chart not seen.
 
+\n- Added drive_failure_rate_shadow metric to prediction-engine expected-metrics per 2026-10-07 PM intel sweep.
