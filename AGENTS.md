@@ -4024,7 +4024,7 @@ Window: posts after ~10:30 PM CDT 2026-09-21 through ~10:00 AM CDT 2026-09-22 (o
 - Kalshi (prediction-market odds) — new endpoint surfacing this pass: @GridironInfo_ playoff probabilities (AFC chart + NFC pinned); @benbbaldwin objective power ratings (blends near-term game lines with Kalshi division/conference/Super Bowl/playoff/#1 seed futures).
 - @GridironInfo_ recap footer: "Data: nflverse (nflready) ptp + FTN charting + Next Gen Stats | aDOT excludes throwaways | 9YOE shown only where NGS charted the back | 2026-09-22".
 - @SamHoppen footers: "Data: @nflfastR" (all four posts); PROE chart: expected pass rate "based on nflfastR's model".
-- statrankings.com / @StatRankings — StatRankings+ subscription page advertises Claude/ChatGPT/Grok A-I-agent access ("Your StatRankings+ subscription now connects to the world's most powerful AIs").
+- statrankings.com / @StatRankings — StatRankings+ subscription page advertises Claude/ChatGPT/Grok AI-agent access ("Your StatRankings+ subscription now connects to the world's most powerful AIs").
 - Statyx is the data provider for @32BeatWriters (from @statyxio's pinned partnership post: "Stoked to partner with @32BeatWriters as the data provider...").
 - SumerSports own tracking via SumerPass (bit.ly/getsumerpass); YBC update (see item 3) now includes MNF.
 - Fantasy Points Data (fantasypointsdata.com) — cited by @DevyEusuf (Expected Fantasy Points, Fantasy Points Over Expectation) and @RyanJ_Heath (backfield XFP).
@@ -9290,7 +9290,7 @@ evidence.
    definitions, "Through 4 weeks in the NFL":
    - DAKOTA = "an all-in-one quarterback efficiency score that measures
      how well a passer runs their offense compared to expectations."
-     Leaders: Brock Purdy 0.57, Drew L_ck 0.52, Michael Penix Jr. 0.48,
+     Leaders: Brock Purdy 0.57, Drew Lock 0.52, Michael Penix Jr. 0.48,
      Lamar Jackson 0.45, Trevor Lawrence 0.38, Dak Prescott 0.33, Caleb
      Williams 0.28, Jared Goff 0.27, Bryce Young 0.27, Josh Allen 0.27;
      league average 0.07 (stated).
@@ -10054,7 +10054,7 @@ inventoried without evidence.
      FANTASY WAR, TOP-12 WK%, TD, YDS, FPTS/G. Qualifier: 40+ dropbacks,
      37 qualified. League averages (stated): 0.07 / 0.06 / 10.8% / -0.10 /
      33.6% / 5 / 784 / 15.56. Top 10: Purdy 0.57 (0.53, 6.3%, 0.41, 100%,
-     11, 1007, 25.12); L_ck 0.52 (0.45, 12%, -0.01, 50%, 4, 422, 17.09);
+     11, 1007, 25.12); Lock 0.52 (0.45, 12%, -0.01, 50%, 4, 422, 17.09);
      Penix 0.48 (0.43, 4.3%, -0.16, 0%, 2, 479, 13.38);
      Lamar 0.45 (0.36, 13.9%, 0.10, 75%, 6, 967, 19.77); Lawrence 0.38;
      Dak 0.33; Caleb Williams 0.28; Goff 0.27; Bryce Young 0.27;
@@ -10588,7 +10588,7 @@ scan (~7 scroll batches), not an exhaustive audit.
   theathletic.com/author/ben-bal... (The Athletic sports writer).
 - @MagicSportsGuy: StatRankings.com (bio: "Founder, @StatRankings &
   FTN Fantasy/Data"); pinned post: StatRankings+ subscription now
-  connects the whole @StatRankings site to Claude/ChatGPT/Grok A-I
+  connects the whole @StatRankings site to Claude/ChatGPT/Grok AI
   agents.
 - @ScottBarrettDFB: fantasypointsdata.com (bio: "Free Premium Stats &
   Tools → fantasypointsdata.com"); posts cite @FantasyPtsData.
@@ -10772,7 +10772,7 @@ quarterback-receiver partnership." Tool links stated in posts.
   Penix Jr. (ATL) 62% (67 db), 2. Brock Purdy (SF) 60% (112),
   3. Tyson Bagent (CHI) 57% (44), 4. Lamar Jackson 56% (101),
   5. Trevor Lawrence 53% (112), 6. Jared Goff 52% (108),
-  T7. Cousins/L_ck/Prescott/Watson 50%. Distinct cut from the AM
+  T7. Cousins/Lock/Prescott/Watson 50%. Distinct cut from the AM
   section's week-only table (carries/dropbacks differ). CSV:
   `gridironinfo-qb-success-rate-season-week4.csv`. Post:
   https://x.com/GridironInfo_/status/2107867355191669218
@@ -11259,4 +11259,5 @@ Jacob Gibbs "catchable air yards" still not resurfaced. GridironInfo_
 points-allowed leaderboard not seen. RyanPaganetti EPA/rush-vs-EPA/
 dropback chart not seen.
 
-- Built expected-metrics/game-script-splits.ts (shadow) implementing 1H/2H point-in-time differentials.
+
+- Added game_script_splits_shadow metric to prediction-engine expected-metrics per 2026-10-07 PM intel sweep.

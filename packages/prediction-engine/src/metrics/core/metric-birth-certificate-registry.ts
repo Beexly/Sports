@@ -8,7 +8,6 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     family: "team",
     targetQuestion: "Does this team improve or fade after halftime, and by how much?",
     failureModes: ["small-sample halves", "opponent-quality confounds", "garbage-time distortion"],
-    // Default required fields for Birth Certificate compliance.
     allowedInputs: ["play-by-play quarters", "EPA per play", "points per drive"],
     forbiddenInputs: [],
     formulaClass: "composite_score",
