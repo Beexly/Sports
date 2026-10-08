@@ -149,6 +149,14 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Game script half splits (SHADOW).
+export {
+  gameScriptSplits,
+  type GameScriptSplitPlay,
+  type GameScriptSplitTeamResult,
+  type GameScriptSplitsOptions,
+} from "./game-script-splits.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {
