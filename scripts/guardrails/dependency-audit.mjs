@@ -82,13 +82,19 @@ const ACCEPTED = [
     package: "next",
     reviewBy: "2027-01-15",
     reason: "Fix requires next@16.3.0, a semver-major jump from the pinned 14.2.x line. Tracked as its own migration (docs/ops/OPERATOR_TASKS.md -> NEXT-MAJOR); not shippable as a patch bump.",
-    maxSeverity: "critical",
+    maxSeverity: "high",
+  },
+  {
+    package: "source-map-js",
+    reason: "Blocked by dependency graph constraints; waiting for upstream package updates. Covers the tailwindcss v4 upgrade path (separate task) and GHSA-68fv-2mgg-jv7q (high) source-map section offsets, which only impact build-time source map generation, not production runtime.",
+    reviewBy: "2027-01-15",
+    maxSeverity: "high",
   },
   {
     package: "postcss",
     reviewBy: "2027-01-15",
     reason: "Only the copy bundled inside next/node_modules is affected; it is remediated by the same next@16 major upgrade. The top-level postcss is already patched.",
-    maxSeverity: "critical",
+    maxSeverity: "high",
   },
 ];
 
