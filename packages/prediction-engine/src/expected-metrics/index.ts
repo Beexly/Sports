@@ -149,6 +149,13 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Drive failure rate (SHADOW metric).
+export {
+  driveFailureRate,
+  type DriveFailureRateOptions,
+  type DriveFailureRateResult,
+} from "./drive-failure-rate.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {
