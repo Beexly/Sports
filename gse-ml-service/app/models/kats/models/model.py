@@ -87,7 +87,7 @@ class Model(Generic[ParamsType]):
         Args:
             ax: optional Matplotlib Axes to use.
         Returns:
-            The matplotlib Axes object.
+            The Axes object.
         """
         fcst_df = self.fcst_df
         if fcst_df is None:

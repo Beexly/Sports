@@ -1117,7 +1117,7 @@ class TimeSeriesData:
             plot_kwargs: optional additional arguments to pass to pandas.plot().
             grid_kwargs: optional additional arguments to pass to Axes.grid().
         Returns:
-            The matplotlib Axes.
+            The Axes.
         """
         if self.is_empty():
             raise ValueError("No data to plot")

@@ -401,7 +401,7 @@ class MultivariateAnomalyDetector(Detector):
         Args:
             figsize: figure size. If None, use (15, 16).
         Returns:
-            The matplotlib Axes.
+            The Axes.
         """
         anomaly_score_df = self.anomaly_score_df
         if anomaly_score_df is None:
