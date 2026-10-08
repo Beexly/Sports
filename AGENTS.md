@@ -11114,3 +11114,148 @@ quarterback-receiver partnership." Tool links stated in posts.
   "catchable air yards" did not resurface; @GridironInfo_
   down-of-first-down chart DID resurface in-window (the "move the
   chains" cut above); points-allowed leaderboard not seen in-window.
+
+
+## X ANALYTICS SWEEP 2026-10-07 PM (2)
+
+Window: posts after ~4:40 PM CDT through ~9:08 PM CDT Wed 2026-10-07
+(~4.5h, evening). Read-only sweep as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs). Login confirmed by both tasks;
+no CAPTCHAs, login walls, or rate-limiting. Two parallel browser
+tasks: Task A (home feed + 11 analytics accounts); Task B (10 analytics
+accounts + @benbbaldwin + record checks + X term searches
+"EPA"/"pass rush win rate"/"CPOE" for thin accounts). X relative
+timestamps understated elapsed time ~40–60 min this window; every
+borderline post was opened and verified against its absolute timestamp
+(browser tz UTC+2 = CDT+7h, converted by both tasks). Previous sections
+today: `## X ANALYTICS SWEEP 2026-10-07 AM` (9:10 PM–1:10 AM),
+`## X ANALYTICS SWEEP 2026-10-07 AM (2)` (1:10 AM–9:10 AM), and
+`## X ANALYTICS SWEEP 2026-10-07 PM` (9:10 AM–4:40 PM).
+
+### NEW ITEMS
+
+1. @jmthrivept — "JSN '25 vs. BOWERS '26 — USAGE & EFFICIENCY PROFILE"
+(2026-10-07 6:27 PM CDT). NOVEL CROSS-SEASON / CROSS-PLAYER /
+CROSS-POSITION FRAMING. Author text: "Klint Kubiak has been lucky
+enough to coach two elite weapons. How does Brock Bowers' 2026 season
+compare to Jaxon Smith-Njigba's elite 2025 season so far? Bowers is an
+elite big slot WR option." 8-metric panel, columns: 2025 (JSN) |
+METRIC | 2026 (BOWERS). Values as read: TGT% 32.6 / 27.1; TPRR 0.33 /
+0.29; YPRR 3.74 / 2.56; AY SHARE 49.1% / 37.1%; TM YDS% 44.1% / 33.0%;
+1D/RR 0.165 / 0.152; 1READ% 44.6% / 38.8%; XFP/G 19.41 / 20.35.
+Definition: none given. Data source: "Data via @FantasyPtsData" (chart
+footer). Caveats: none stated. Innovation kernel: cross-season
+comparison across two seasons of two different players at two
+positions (2025 WR vs 2026 TE), linked by shared OC (Kubiak) — a
+framing angle not seen in prior sweeps. Table in
+`docs/dfs/research/2026-10-07/full-tables/jmthrivept-bowers-jsn-usage-efficiency-week4.csv`.
+
+2. @GridironInfo_ — Nico Collins "Route Chart" (2026-10-07 5:12 PM
+CDT). NFL Next Gen Stats route-path visualization. Post text: "Nico
+Collins Week 4 receptions." Chart header: "NICO COLLINS / 2026 VS
+COWBOYS"; stat line: TARGETS-REC 8-7, YARDS 118, TD 2, YAC 35.
+Legend: INCOMPLETE ROUTE / ROUTE / AFTER CATCH / TOUCHDOWN / LOS
+(LINE OF SCRIMMAGE). Definition: none given. Data source: NFL Next
+Gen Stats (image branding); not stated in post text. Caveats: none
+stated. Innovation kernel: none — standard NGS route chart (no
+metric table; kept in section text only).
+
+3. @statyxio — "Fantasy Points Allowed by Position" (2026-10-07 6:14
+PM CDT). Author text: "Week 5 Fantasy Points Allowed by Position is
+here. Find the sheets with all the tools, download the CSV, and build
+a visual. It's all there for you data nerds to play with." Chart
+labels: "2026 season, PPR, Through Week 4, Points allowed per game";
+legend: "Compared within each position, Rank 1 = fewest allowed."
+Columns: Rank | Defense | Opponent | GP | QB | RB | WR | TE | Total.
+Sample rows as read: 32 DET @ ARI (GP 4): QB 27.9, RB 21.7, WR 44.0,
+TE 28.4, Total 122.0; 31 BUF @ LAR: 21.3 / 27.9 / 41.0 / 11.3 /
+101.5; 30 WAS vs NYG: 22.5 / 16.1 / 40.3 / 18.3 / 97.2; 2 CHI @ GB:
+14.9 / 16.9 / 24.9 / 6.7 / 63.4; 1 MIN @ NO: 10.5 / 14.2 / 30.1 / 7.7
+/ 62.5. Definition: as quoted above. Data source: statyx.io (chart
+branded; footer "Verified Oct 7, 2026 at 5:25 PM EDT"). Caveats: none
+stated. Innovation kernel: per-position matchup matrix ranked within
+position, published with downloadable sheets/CSV for user-built
+visuals — a distribution angle (not a new metric). Partial
+transcription (5 of 32 rows read); kept in section text only, not
+CSV'd.
+
+4. @PFF — "Highest defensive grade among rookie safeties this season"
+(2026-10-07 8:05 PM CDT; https://x.com/PFF/status/2108000674826821734).
+Image leaderboard, columns: player / defensive grade. Values as read:
+Zakee Wheatley 82.6; Genesis Smith 82.3; E. McNeil-Warren 76.2;
+Dillon Thieneman 71.2; Caleb Downs 69.6. Definition: none given.
+Data source: not stated. Caveats: none stated (no minimum-snaps
+qualifier in post). Innovation kernel: none. Table in
+`docs/dfs/research/2026-10-07/full-tables/pff-rookie-safeties-defensive-grade-week4.csv`.
+
+5. @PFF — "Most red zone touches this season" (2026-10-07 6:07 PM
+CDT; https://x.com/PFF/status/2107970978978435095). Simple volume
+count, not a rate/advanced metric. Image leaderboard, columns: player
+/ red zone touches. Values as read: Jahmyr Gibbs 26; Derrick Henry
+23; Kenneth Walker 23; Javonte Williams 21; Ashton Jeanty 20.
+Definition: none given. Data source: not stated. Caveats: none
+stated. Post links a pff.com fantasy article and promotes "our
+INCREDIBLE new red zone report" product (attributed fact: new PFF
+product surface for red-zone data). Innovation kernel: none — plain
+touch count. Table in
+`docs/dfs/research/2026-10-07/full-tables/pff-red-zone-touches-week4.csv`.
+
+6. @PFF — "Highest run-stop rate this season (min 50 run d snaps)"
+(2026-10-07 5:39 PM CDT; https://x.com/PFF/status/2107963932321452540).
+Image leaderboard, columns: player / run-stop rate. Values as read:
+John Franklin-Myers 16.7%; Will Anderson Jr 16.0%; Kobie Turner
+15.6%; Ventrell Miller 14.9%; DaVon Hamilton 14.8%. Definition: none
+given beyond metric name and qualifier. Data source: not stated.
+Caveat: "(min 50 run d snaps)" (as stated). Innovation kernel: none —
+standard PFF leaderboard. Table in
+`docs/dfs/research/2026-10-07/full-tables/pff-run-stop-rate-week4.csv`.
+
+7. @PFF — "Highest % of dropbacks under pressure this season (min 4
+starts)" (2026-10-07 5:05 PM CDT;
+https://x.com/PFF/status/2107955376612155615). Image leaderboard,
+columns: player / % dropbacks under pressure. Values as read: Bryce
+Young 47.2%; Justin Herbert 45.9%; Drake Maye 44.3%; Malik Willis
+43.7%; Jalen Hurts 43.2%. Definition: none given beyond metric name
+and qualifier. Data source: not stated. Caveat: "(min 4 starts)" (as
+stated). Innovation kernel: none — standard PFF leaderboard. Table
+in
+`docs/dfs/research/2026-10-07/full-tables/pff-qb-pressure-rate-week4.csv`.
+
+### ALREADY INVENTORIED — DIFFERENT ANGLE (attributed notes, not build orders)
+
+- @statyxio "Fantasy Points Allowed by Position": their standing
+per-position matchup matrix; tonight's angle is the open-distribution
+format — downloadable sheets/CSV with an explicit invitation to
+"build a visual" (attributed: author's own words). Distribution
+strategy worth noting; no new metric.
+- @benbbaldwin (no in-window posts; newest 11–12h old): his adjusted
+EPA + PFF composite (inventoried PM 2026-10-07) not reposted tonight.
+- @PFF red-zone report product: a new PFF commercial surface covering
+red-zone data, promoted in item 5's post (attributed: post text). The
+metric shown is a plain volume count; the product itself is a data
+endpoint to watch, not a metric.
+
+### RECORD CHECKS
+
+- @FTNData: still protected/private ("These posts are protected. Only
+approved followers can see @FTNData's posts."), confirmed 10th+ sweep.
+- @NFLResearcher: still zero visible recent posts (header shows 4
+posts; timeline renders nothing but "Who to follow" placeholders).
+- @NerdingonNFL: page NOW LOADS (previously broken) but shows "1
+post" with no retrievable posts in Posts/Replies/Media tabs.
+- @32BeatWriters: newest post Oct 6, 7:38 PM CDT (beat-writer curation)
+— out of window.
+- Supplemental X searches ("EPA", "pass rush win rate", "CPOE",
+latest tab): no genuinely new metric posts from NFL analytics
+accounts in-window (fan debates; @SharpFBAnalysis Eagles second-half
+EPA citation in a promo; @MLFootball Kayvon Thibodeaux 0% PRWR
+citation; @BaizeJack Week 4 CPOE charts citing @NextGenStats from
+Oct 6; @Rob__Paul college draft-prospect pressure stats — college,
+not NFL).
+
+### NEXT-SWEEP WATCH
+
+Jacob Gibbs "catchable air yards" still not resurfaced. GridironInfo_
+points-allowed leaderboard not seen. RyanPaganetti EPA/rush-vs-EPA/
+dropback chart not seen.
+
