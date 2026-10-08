@@ -27,7 +27,6 @@ import numpy.typing as npt
 import pandas as pd
 from app.models.kats.consts import Params, TimeSeriesData
 from app.models.kats.models.model import Model
-from matplotlib import pyplot as plt
 from statsmodels.tsa.api import VAR
 from statsmodels.tsa.vector_ar.var_model import VARResults
 
@@ -217,7 +216,7 @@ class VARModel(Model[VARParams]):
 
     def plot(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Optional[Any] = None,
         figsize: Optional[Tuple[int, int]] = None,
         dpi: int = 120,
         forecast_color: str = "#4267B2",
@@ -225,7 +224,7 @@ class VARModel(Model[VARParams]):
         grid: bool = True,
         xlabel: str = "time",
         **kwargs: Any,
-    ) -> plt.Axes:
+    ) -> Any:
         """Plot forecasted results from VAR model"""
         fcst_dict = self.fcst_dict
         if fcst_dict is None:

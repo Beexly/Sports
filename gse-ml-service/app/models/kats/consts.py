@@ -28,7 +28,6 @@ from enum import auto, Enum, unique
 from typing import Any, cast, Dict, List, Literal, Optional, Tuple, Union
 
 import dateutil
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
@@ -1100,12 +1099,12 @@ class TimeSeriesData:
     def plot(
         self,
         cols: Optional[List[str]] = None,
-        ax: Optional[plt.Axes] = None,
+        ax: Optional[Any] = None,
         grid: bool = True,
         figsize: Optional[FigSize] = None,
         plot_kwargs: Optional[Dict[str, Any]] = None,
         grid_kwargs: Optional[Dict[str, Any]] = None,
-    ) -> plt.Axes:
+    ) -> Any:
         """Plots the time series.
 
         Args:

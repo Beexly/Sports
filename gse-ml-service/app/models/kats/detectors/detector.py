@@ -18,7 +18,6 @@ try:
     Figure = go.Figure
 except ImportError:
     Figure = object
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from app.models.kats.consts import (
@@ -125,7 +124,7 @@ class Detector(ABC):
         ts_out = TimeSeriesData(df_final)
         return ts_out
 
-    def plot(self, **kwargs: Any) -> Union[plt.Axes, Sequence[plt.Axes], Figure]:
+    def plot(self, **kwargs: Any) -> Union[Any, Sequence[Any], Figure]:
         raise NotImplementedError()
 
 

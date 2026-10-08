@@ -19,7 +19,6 @@ from enum import Enum
 from importlib import import_module
 from typing import Any, cast, Dict, List, Optional, Tuple, Union
 
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
@@ -394,7 +393,7 @@ class MultivariateAnomalyDetector(Detector):
 
     def plot(
         self, figsize: Optional[Tuple[int, int]] = None, **kwargs: Any
-    ) -> Tuple[plt.Axes, plt.Axes]:
+    ) -> Tuple[Any, Any]:
         """
         Plot overall anomaly score of system of metrics at each instant.
         Useful for threshold selection

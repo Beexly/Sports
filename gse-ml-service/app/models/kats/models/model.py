@@ -7,7 +7,6 @@
 import logging
 from typing import Any, Generic, Optional, Tuple, TypeVar
 
-import matplotlib.pyplot as plt
 import pandas as pd
 from app.models.kats.consts import TimeSeriesData
 
@@ -76,10 +75,10 @@ class Model(Generic[ParamsType]):
 
     def plot(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Optional[Any] = None,
         figsize: Optional[Tuple[int, int]] = None,
         **kwargs: Any,
-    ) -> plt.Axes:
+    ) -> Any:
         """Plot method for forecasting models
 
         This method provides base plotting functionality for all forecasting

@@ -21,7 +21,6 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 import app.models.kats.models.model as m
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
@@ -469,12 +468,12 @@ class BayesianVAR(m.Model[BayesianVARParams]):
 
     def plot(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Optional[Any] = None,
         figsize: Optional[Tuple[int, int]] = None,
         title: Optional[str] = "Input Timeseries & Forecast",
         ls: str = "--",
         **kwargs: Any,
-    ) -> plt.Axes:
+    ) -> Any:
         """Plot forecasted results from Bayesian VAR model"""
         forecast = self.forecast
         if forecast is None:
