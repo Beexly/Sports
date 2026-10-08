@@ -98,7 +98,7 @@ test("readPinnedMajor names the missing file when there is no pin anywhere above
 test("requireNodeFeature throws a message naming feature, required major, running major and pin", () => {
   const error = thrownBy(() =>
     requireNodeFeature({
-      feature: "module.registerHooks",
+      feature: "module.register",
       minMajor: 22,
       remedy: "use module.register()",
       running: 20,
@@ -106,7 +106,7 @@ test("requireNodeFeature throws a message naming feature, required major, runnin
     }),
   );
   assert.equal(error.code, "FEATURE_UNAVAILABLE");
-  assert.match(error.message, /module\.registerHooks/);
+  assert.match(error.message, /module\.register/);
   assert.match(error.message, /needs Node >= 22/);
   assert.match(error.message, /this process is Node 20/);
   assert.match(error.message, /pins Node 20 \(\.node-version\)/);
@@ -116,7 +116,7 @@ test("requireNodeFeature throws a message naming feature, required major, runnin
 
 test("requireNodeFeature is a no-op when the runtime is new enough", () => {
   const result = requireNodeFeature({
-    feature: "module.registerHooks",
+    feature: "module.register",
     minMajor: 22,
     running: 22,
     pin: { major: 22, file: ".node-version" },
