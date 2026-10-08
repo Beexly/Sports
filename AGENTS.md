@@ -11749,3 +11749,245 @@ aggregations, no metrics). Searches "EPA"/"aggressiveness"/
 "pass rush win rate"/"TPRR"/"CPOE" run; only the finds above
 surfaced in-window.
 
+
+## X ANALYTICS SWEEP 2026-10-08 PM
+
+Window: posts after ~10:00 AM CDT through ~4:40 PM CDT Thu 2026-10-08
+(~6.5h, midday). Read-only sweep as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs). Login confirmed by both tasks; no
+CAPTCHAs or login walls. Two parallel browser tasks: Task A (home feed +
+21 analytics accounts, 59 in-window posts); Task B (5 news, 3 market, 2
+scheme/film accounts + beat-writer checks). X relative timestamps
+understated elapsed time ~25-65 min; all borderline posts verified
+against absolute timestamps. Nothing inventoried without evidence. TNF
+tonight: Buccaneers @ Cowboys in Dallas (~7:15 PM CT; Jalon Daniels
+starting for TB with Mayfield out — resolved this sweep: @SumerSports
+TNF preview pairs "Jalon Daniels has scrambled on 17.5% of his
+dropbacks" (the QB Dallas faces) with "Dak Prescott has thrived in a
+clean pocket" (Dallas's QB); sfdata9ers checkdown chart lists
+"J. Daniels 7.8%" as an NFL QB).
+
+### NEW ITEMS
+
+1. @GridironInfo_ — "Total yards by size of play" (2026-10-08 2:58 PM
+   CDT, x.com/GridironInfo_/status/2108285815151345964). NEW TABLE: team
+   total yards decomposed by play-size bucket, 2026 Weeks 1-4. Columns:
+   TEAM, YDS_LOSS, YDS_1_5, YDS_6_10, YDS_11_20, YDS_21_PLUS, YDS_TOTAL.
+   32 rows. Extremes: most yards lost on negative plays — Jets -134,
+   Steelers -126, Saints -122; most 21+ yard-play yards — Chiefs 715,
+   Bills 647, Panthers 616; total leaders — Bears 1716, Rams 1668,
+   Chiefs 1648. Stated source: nflverse. CSV:
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-yards-by-play-size-wk1-4-2026.csv.
+2. @GridironInfo_ — "Number of players on injured reserve by team"
+   (2026-10-08 3:48 PM CDT,
+   x.com/GridironInfo_/status/2108298444427170096). NEW TABLE: IR count
+   per team as of Oct 8, league average 9.2. Columns: TEAM, IR_COUNT.
+   32 rows: SF 16 (most), HOU 15, NO/ARI/NE/NYG/NYJ 11, BAL/CHI/DAL 10 …
+   CIN/TB 4, BUF 2 (fewest). Stated source: ESPN. CSV:
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-ir-count-by-team-2026-10-08.csv.
+3. @GridironInfo_ — "Tampa vs Dallas cheat sheet. Stats through Week 4"
+   (2026-10-08 1:00 PM CDT,
+   x.com/GridironInfo_/status/2108256242258858193). NEW TABLE: TNF
+   matchup sheet, per-game through Week 4. Market rows: spread DAL -8.5
+   (ATS TB 0-3-1, DAL 2-1-1); O/U 47.5 (TB 2-2, DAL 4-0); ML TB +360 /
+   DAL -470; implied TB 19.5 / DAL 28.0. Offense-vs-defense rows with
+   ranks: DAL offense 30.5 pts (2nd) vs TB defense 24.0 (19th); DAL pass
+   yds 266.2 (7th) vs TB 214.2 (8th); DAL WR rec 213.5 (1st) vs TB 105.8
+   allowed (2nd); TB offense 19.0 pts (24th) vs DAL defense 28.0 (28th);
+   TB RB rush 69.2 (27th) vs DAL 97.2 (18th); TB QB rush 32.2 (4th) vs
+   DAL 47.0 allowed (32nd). Stated source: nflreadr. CSV:
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-tnf-cheat-sheet-tb-dal-2026.csv.
+4. @GridironInfo_ — "Defensive EPA per play: 2026 vs. 2025" (2026-10-08
+   12:47 PM CDT, x.com/GridironInfo_/status/2108252836123255181).
+   Scatter (Data: nflverse, through Week 4): good both years — MIN
+   (~+0.18 2026, ~+0.10 2025), SEA (~+0.15, ~+0.11); bad both years —
+   DAL (~-0.19, ~-0.165); notable movers — HOU good→worse (~-0.02,
+   ~+0.13), NO good→worse (~-0.13, ~+0.05). All coordinates
+   scatter-estimated (approximate). Relation note: the AM2 section holds
+   the OFFENSIVE EPA/play 2026-vs-2025 scatter; this is the defensive
+   mirror. CSV (approximate coords flagged):
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-defensive-epa-2026-vs-2025.csv.
+5. @sfdata9ers — "Sacks Taken on Third Down", 2026 Wks 1-4 (2026-10-08
+   4:26 PM CDT, x.com/sfdata9ers/status/2108307949211029661). Chart
+   values read: SF 0; Titans?/Bears/Packers 1; Rams/Broncos/Seahawks/
+   Patriots/Jaguars/Colts/Ravens/Bills 2; Lions/Raiders/Giants/Commanders/
+   Chiefs/Cowboys/Bengals 3; Falcons/Cardinals/Browns/Chargers 4;
+   Saints/Eagles 5; Jets/Dolphins/Panthers 6; Vikings 7;
+   Buccaneers/Steelers 8. Rank-2 logo identity UNCERTAIN (flagged, not
+   guessed). Stated source: none. CSV (uncertainty flagged):
+   docs/dfs/research/2026-10-08/full-tables/sfdata9ers-sacks-taken-3rd-down-2026.csv.
+6. @sfdata9ers — "EPA/Dropback vs. Single & Two-High (min. 80 dropbacks)"
+   (2026-10-08 4:17 PM CDT,
+   x.com/sfdata9ers/status/2108305684303679717). Scatter (Data:
+   @FantasyPtsData): Lamar Jackson leads vs single-high (~+0.47) and
+   top-2 vs two-high (~+0.32, alongside B. Mayfield ~+0.34); bottom
+   quadrant (approximate, scatter-estimated): T. Bagent, T. Shough,
+   D. Watson, M. Penix, J. Winston. CSV (approximate coords flagged):
+   docs/dfs/research/2026-10-08/full-tables/sfdata9ers-epa-dropback-vs-coverage-shell-2026.csv.
+7. @sfdata9ers — "How often are QBs taking the checkdown", min. 40
+   attempts (2026-10-08 3:28 PM CDT,
+   x.com/sfdata9ers/status/2108293353171263570). NEW TABLE: checkdown
+   rate, 35 QBs. Columns: QB, CHECKDOWN_PCT. Leaders: C. Williams 16.4%,
+   J. Brissett 13.8%, J. Goff 13.7%, J. Allen 13.4%, B. Nix 13.3%;
+   trailers: T. Lawrence 4.8%, T. Bagent 4.7%, M. Penix 4.4%,
+   C. Stroud 4.0%, L. Jackson 3.1%. Full 35 rows in CSV. Stated source:
+   @FantasyPtsData. CSV:
+   docs/dfs/research/2026-10-08/full-tables/sfdata9ers-qb-checkdown-rate-2026.csv.
+8. @sfdata9ers — "How often defenses are blitzing, and how many rushers
+   they send" (2026-10-08 3:43 PM CDT,
+   x.com/sfdata9ers/status/2108297127830921516). Chart (Data:
+   @FTNFantasy): % of pass plays with No Blitzer / 1 Blitzer / 2+
+   Blitzers. Read rows: Vikings 26.0/51.4/22.6, Commanders 51.0/39.2/9.8,
+   Buccaneers 58.5/26.2/15.4, Packers 58.7/24.8/16.5, Eagles
+   59.4/28.1/12.5, Bears 81.2/14.6/4.2, Bengals? 83.0/12.4/4.6 (bottom
+   two orange-logo rows UNCERTAIN identity — flagged). Cross-check:
+   @SumerSports TNF preview independently notes "Bucs have struggled to
+   generate pressure through 4 weeks, despite blitzing at a high rate"
+   (Bucs blitz ~41.6% of pass plays per this chart, 3rd-most). CSV
+   (uncertainty flagged):
+   docs/dfs/research/2026-10-08/full-tables/sfdata9ers-blitz-rate-rushers-sent-2026.csv.
+9. @sfdata9ers — "Where do teams start their drives on average" (own
+   yard line) (2026-10-08 3:58 PM CDT,
+   x.com/sfdata9ers/status/2108300902738038861). Chart values read: top
+   — Raiders 36.52, Eagles 33.88, Panthers 33.85, Seahawks 33.19, Bills
+   32.84; bottom — Rams 26.85, Texans 26.69, Chargers 26.19; rows 8/23/30
+   logos UNCERTAIN (flagged). Stated source: none. CSV (uncertainty
+   flagged):
+   docs/dfs/research/2026-10-08/full-tables/sfdata9ers-avg-drive-start-2026.csv.
+10. @PattonAnalytics — "X WR Alignment % Leaders per @StatRankings"
+    (2026-10-08 3:20 PM CDT,
+    x.com/PattonAnalytics/status/2108291339683029260). NEW TABLE:
+    77.1% - George Pickens, 75.8% - Denzel Boston, 75.1% - DK Metcalf,
+    72.3% - Michael Wilson, 72.3% - Tee Higgins, 72.2% - Jameson
+    Williams, 71.9% - Davante Adams, 71.8% - Garrett Wilson, 70.2% -
+    Jaxon Smith-Njigba, 69.4% - Jordan Addison. Stated source:
+    @StatRankings. CSV:
+    docs/dfs/research/2026-10-08/full-tables/pattonanalytics-x-wr-alignment-leaders-2026.csv.
+11. @PattonAnalytics — "Quick Pressure Leaders per @FTNFantasy"
+    (2026-10-08 2:33 PM CDT,
+    x.com/PattonAnalytics/status/2108279511855038751). NEW TABLE:
+    pressures with rate denominator: 26 - Dallas Turner (21.1%), 20 -
+    Maxx Crosby (15.7%), 15 - R Mason Thomas (15.2%), 14 - Aidan
+    Hutchinson (8.4%), 14 - Byron Young (14.4%), 13 - Abdul Carter
+    (10.5%), 12 - Will Anderson (9.1%), 11 - Boye Mafe (9.3%), 10 -
+    Maason Smith (11%), 10 - Donovan Ezeiruaku (12.7%). Stated source:
+    @FTNFantasy charting. CSV:
+    docs/dfs/research/2026-10-08/full-tables/pattonanalytics-quick-pressure-leaders-2026.csv.
+12. @PattonAnalytics — "Forced Missed Tackle Leaders per @StatRankings"
+    (2026-10-08 1:22 PM CDT,
+    x.com/PattonAnalytics/status/2108261644052648347). NEW TABLE: 37 -
+    Kenneth Walker III, 37 - Bijan Robinson, 25 - Jahmyr Gibbs, 18 -
+    Kyren Williams, 17 - Cam Skattebo, 16 - James Cook, 16 - Omarion
+    Hampton, 15 - D'Andre Swift, 15 - Bhayshul Tuten, 15 - Christian
+    McCaffrey. Stated source: @StatRankings. CSV:
+    docs/dfs/research/2026-10-08/full-tables/pattonanalytics-forced-missed-tackle-leaders-2026.csv.
+13. @PattonAnalytics — "80.6% of dropbacks from under center this season
+    have been play action" (2026-10-08 11:34 AM CDT, boundary-verified,
+    x.com/PattonAnalytics/status/2108234521724244281; quotes own post on
+    "Burrow's aversion to playing under center"). Single stat, no table.
+14. @FantasyPtsData — "WR Leaders in Target Share on 3rd Down"
+    (2026-10-08 2:14 PM CDT,
+    x.com/FantasyPtsData/status/2108274730365055401). NEW TABLE:
+    1. Mike Evans - 44.8% (vs. 13.1% on all other downs),
+    2. Jaxon Smith-Njigba - 43.8%, 3. Puka Nacua - 42.1%,
+    4. Parker Washington - 39.1%, 5. Amon-Ra St. Brown - 36.1%.
+    Stated source: Fantasy Points Data (hand-charted). CSV:
+    docs/dfs/research/2026-10-08/full-tables/fantasypointsdata-wr-3rd-down-target-share-2026.csv.
+15. @PFF — "The 49ers are getting a lot of explosives on offense, and
+    limiting them on defense" (2026-10-08 4:10 PM CDT,
+    x.com/PFF/status/2108303922742075619). PFF Pro scatter: explosive
+    play rate vs explosive play rate allowed — SF outlier (~17.5%
+    explosive rate, ~6.2% allowed; both best-in-class quadrant; all
+    coordinates scatter-estimated).
+16. @PFF — "Highest explosive plays passing percentage (15+ yards) this
+    season" (2026-10-08 3:44 PM CDT,
+    x.com/PFF/status/2108297379526910451). NEW TABLE: Ravens 18.5%,
+    Bengals 18.0%, Seahawks 17.3%, Bills 17.1%, Panthers 16.6%.
+    Stated source: PFF. CSV:
+    docs/dfs/research/2026-10-08/full-tables/pff-explosive-pass-play-pct-2026.csv.
+17. @PFF — "Highest red zone carry share this season" (2026-10-08 2:13
+    PM CDT, x.com/PFF/status/2108274478593810451). NEW TABLE: Jahmyr
+    Gibbs 91.3%, Derrick Henry 82.1%, Ashton Jeanty 78.9%, Bijan Robinson
+    77.3%, Kenneth Walker 76.0%. Stated source: PFF (red zone report).
+    CSV:
+    docs/dfs/research/2026-10-08/full-tables/pff-red-zone-carry-share-2026.csv.
+18. @statyxio — CeeDee Lamb TNF matchup (2026-10-08 3:34 PM CDT,
+    x.com/statyxio/status/2108294906519474623): "No Baker. No Winfield
+    Jr. CeeDee on Statyx vs TB: 31.9% target share (P98), 81.5% snap
+    share. TB allows 14.5 WR targets/game (#30) and 7.29 yds/target
+    (#28)." Companion post (3:10 PM): Lamb vs zone — 14 receptions on 17
+    targets across 62 routes; TB playing ~70% zone (quotes
+    @AlexpropsHQ INSIDER PROP CEEDEE LAMB OVER 6.5 RECEPTIONS). Stated
+    source: Statyx (statyx.io).
+19. @MagicSportsGuy — WR/CB+ launch (2026-10-08 4:20 PM CDT,
+    x.com/MagicSportsGuy/status/2108306476360188121): "ICYMI, WR/CB+
+    went live last week" — @StatRankings coverage-splits/heat-maps/
+    player-&-team-cards/projection product (statrankings.com/nfl/wr-cb).
+    Companion (12:56 PM): "130 FREE advanced CFB stats … EPA, success
+    rate, havoc, PROE" now free on @StatRankings (220 total / 130
+    advanced / 90 base / 148 team / 72 player); statrankings+ AI
+    connector plugs into Claude/ChatGPT/Grok.
+20. @SumerSports — TNF previews (2026-10-08): 2:39 PM — "The Cowboys
+    have allowed the second-most scramble yards in the league through 4
+    weeks, and Jalon Daniels has scrambled on 17.5% of his dropbacks"
+    (x.com/SumerSports/status/2108281257608241387); 12:54 PM — "The Bucs
+    have struggled to generate pressure through 4 weeks, despite
+    blitzing at a high rate. Dak Prescott has thrived in a clean pocket
+    and against the blitz"
+    (x.com/SumerSports/status/2108254760629625125). Stated source:
+    Sumer Sports.
+21. @cmain7 — Survivor ownership (Establish The Run) (2026-10-08 3:01
+    PM CDT, x.com/cmain7/status/2108286643761209461): "Our Survivor
+    ownership projections are updated. Dallas leads the way in the
+    Splash World Championship" (~28% ownership per reply thread, "27.7%
+    TNF adjustment"); 12:35 PM field-concentration post: "Just 71 users
+    with 21+ entries but they control 61% of all live entries. 70.7% of
+    users have 1 live entry remaining, accounting for 16.1% of the
+    field." Stated source: Establish The Run.
+22. @32BeatWriters — "Matt Nagy sees some Travis Kelce in Malik Nabers.
+    Good sign for his target share." (2026-10-08 4:23 PM CDT,
+    x.com/32BeatWriters/status/2108307219645350258; quotes @rydunleavy,
+    links nypost.com/2026/10/08 article).
+
+### RE-SIGHTINGS / ENRICHMENTS (already inventoried; new angle noted, not
+re-inventoried)
+
+- @GridironInfo_ defensive EPA/play 2026-vs-2025 scatter: the AM2 section
+  holds the OFFENSIVE version; this is the defensive mirror (item 4
+  above is inventoried as its own table since the framing is new, with
+  the relation noted).
+- @statyxio Man/Zone matchup reads (Week 5): weekly recurring format;
+  CeeDee Lamb TNF application captured in item 18.
+
+### RECORD CHECKS
+
+- @FTNData: still PROTECTED (1,276 posts, 2,555 followers) — no change.
+- @NFLResearcher: still renders zero posts (header "4 posts") — no change.
+- @NerdingonNFL: still broken — timeline renders nothing (header "1
+  post", Joined July 2026, 41 followers).
+- @benbbaldwin: zero in-window posts (newest Oct 7). @DevyEusuf: 1
+  in-window post, non-metrics. @Nate_Tice: 5 in-window posts, all
+  meme/quote content, no substantive scheme analysis.
+- In-window counts Task A: @cmain7 4, @RyanPaganetti 3, @jmthrivept 4,
+  @sfdata9ers 5, @hawkblogger 4, @MagicSportsGuy 3, @SumerSports 2,
+  @GridironInfo_ 6, @DevyEusuf 1, @statyxio 4, @ScottBarrettDFB 2,
+  @PattonAnalytics 6, @EstablishTheRun 1, @FantasyPtsData 1,
+  @DonAtkinsonNFL 4, @DynatyzeFF 3, @PFF 5, @FTNData 0 (protected),
+  @32BeatWriters 1, @NFLResearcher 0, @NerdingonNFL 0. Task B:
+  @AdamSchefter 6, @RapSheet 5, @TomPelissero 1, @JFowlerESPN 3,
+  @MikeGarafolo 3, @VSiNLive 0 (show promos only), @Covers 2,
+  @ActionNetworkHQ 2, @Nate_Tice 5, @benbbaldwin 0, @jonmachota 5.
+- Boundary calls (absolute-timestamp verified): @RyanPaganetti Jurgens
+  10:08 AM IN / Payton 10:32 AM IN; @DonAtkinsonNFL 49ers/Xavier Smith
+  10:33 AM IN; @DynatyzeFF rookie-WR 10:20 AM IN; @PattonAnalytics
+  play-action 11:34 AM IN; @EstablishTheRun Thorman rankings 9:53 AM OUT;
+  @TomPelissero mailbag 10:06 AM IN; @Covers pinned "Cowboys = the Over"
+  8:52 AM OUT; @Covers_Football "THURSDAY NIGHT POINTS" 9:36 AM OUT.
+- Chart values unreadable (flagged, not guessed): @cmain7 Survivor Week 5
+  reference card image; sfdata9ers scatter coordinates are
+  scatter-estimated (marked approximate in CSVs).
+- Market: NO line-move / steam / sharp-vs-public posts found in-window
+  from any market account or via X searches (searches returned stale
+  2023/2025 posts only). TNF market rows captured from @GridironInfo_
+  cheat sheet (item 3) and @Covers/@ActionNetworkHQ promos (see
+  x-intel-2026-10-08-16.md).
