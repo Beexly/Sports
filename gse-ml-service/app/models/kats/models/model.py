@@ -3,12 +3,10 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-strict
 
 import logging
 from typing import Any, Generic, Optional, Tuple, TypeVar
 
-import matplotlib.pyplot as plt
 import pandas as pd
 from app.models.kats.consts import TimeSeriesData
 
@@ -77,10 +75,10 @@ class Model(Generic[ParamsType]):
 
     def plot(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Optional[Any] = None,
         figsize: Optional[Tuple[int, int]] = None,
         **kwargs: Any,
-    ) -> plt.Axes:
+    ) -> Any:
         """Plot method for forecasting models
 
         This method provides base plotting functionality for all forecasting
@@ -89,7 +87,7 @@ class Model(Generic[ParamsType]):
         Args:
             ax: optional Matplotlib Axes to use.
         Returns:
-            The matplotlib Axes object.
+            The Axes object.
         """
         fcst_df = self.fcst_df
         if fcst_df is None:

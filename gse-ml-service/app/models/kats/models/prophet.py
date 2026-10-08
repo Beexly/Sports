@@ -3,7 +3,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-strict
 
 import logging
 from typing import Any, cast, Dict, List, Optional, Tuple, Union
@@ -317,7 +316,6 @@ class ProphetModel(Model[ProphetParams]):
             nulls = self.data.value.isnull()
             while nulls.iloc[-1 - count_trailing_nulls].any():
                 count_trailing_nulls += 1
-            # pyre-fixme
             future = self.model.make_future_dataframe(
                 periods=steps + count_trailing_nulls,
                 freq=self.freq,
@@ -353,7 +351,6 @@ class ProphetModel(Model[ProphetParams]):
             if self.include_history:
                 # pyrefly: ignore [missing-attribute]
                 future = future.merge(
-                    # pyre-fixme
                     self.model.history,
                     on=(
                         ["ds"]
@@ -458,8 +455,6 @@ class ProphetModel(Model[ProphetParams]):
             )
         logging.info("Fitted Prophet model. ")
 
-    # pyre-fixme[15]: `predict` overrides method defined in `Model` inconsistently.
-    # pyre-fixme[14]: `predict` overrides method defined in `Model` inconsistently.
     def predict(
         self,
         steps: int,
@@ -525,7 +520,6 @@ class ProphetModel(Model[ProphetParams]):
         return "Prophet"
 
     @staticmethod
-    # pyre-fixme[15]: `get_parameter_search_space` overrides method defined in
     #  `Model` inconsistently.
     def get_parameter_search_space() -> List[Dict[str, object]]:
         """get default parameter search space for Prophet model"""
@@ -810,7 +804,6 @@ def sample_model_vectorized(
     # pyrefly: ignore [missing-attribute]
     beta = prophet_model.params["beta"][iteration]
     Xb_a = (
-        # pyre-fixme[16]: `ndarray` has no attribute `values`.
         np.matmul(seasonal_features.values, beta * s_a.values) * prophet_model.y_scale
     )
     Xb_m = np.matmul(seasonal_features.values, beta * s_m.values)
@@ -884,7 +877,6 @@ def sample_posterior_predictive(
                 for sim in sims:
                     sim_values[key].append(sim[key].values)
     for k, v in sim_values.items():
-        # pyre-fixme[6]: For 2nd argument expected `List[Any]` but got `ndarray[Any,
         #  dtype[Any]]`.
         sim_values[k] = np.vstack(v)
     return cast(Dict[str, np.ndarray], sim_values)
@@ -1033,7 +1025,6 @@ def sample_linear_predictive_trend_vectorize(
         mask = np.random.uniform(
             0, max_possion_num, max_possion_num * sample_size
         ).reshape(sample_size, -1)
-        # pyre-fixme[61]: `possion_sample` is undefined, or not always defined.
         mask = mask < possion_sample[:, None]
 
         # Sample deltas
