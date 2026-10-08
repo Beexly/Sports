@@ -176,6 +176,73 @@ root-only farm fails collection with "Failed to load url
   (C-396 KXNFL capture), `galaxy-two-book-acceptance.test.ts` 3 (C-104).
   Stale-test-repair candidates; do NOT repair in a test-writing lane.
 
+## SO-1i notes (2026-10-08) — the "8 merge-surfaced" fixture failures + 2 runtime defects REPAIRED, not tests rewritten
+
+**Root cause overturned.** The 6 merge-surfaced + 2 branch-pre-existing
+fixture-confirmation failures were NOT all stale tests. Two real defects rode
+in with the merge:
+
+1. **The sheriff(pass2) rebase wave dropped the branch's entire data-ingestion
+   barrel surface** (`packages/data-ingestion/src/index.ts`, 804 → 341 lines):
+   34 modules lost ALL re-exports (galaxy-kalshi-book, kalshi-fee, all four
+   oddspapi modules, odds-credit-governor/-ledger, paid-odds-governor,
+   thesportsdb-client, calibration-weights, galaxy-devig,
+   odds-api-circuit-breaker, the WIRE-40 client family, …) plus line-level
+   losses (`fetchNflversePlayerStatsWeek`, `RegRowsProbe`,
+   `createGalaxySecondBook`, `PredExonKalshiCatalog`,
+   `parseKalshiSpreadLine/TotalLine`, `ESPN_ODDS_SPORT_MAP`, …). Verified
+   absent from main at `021263a04` — the rebase silently discarded committed
+   work; the merge then inherited main's short barrel. Restored as a verified
+   union (341 → 814 lines): every restored symbol checked to exist in its
+   target module, 0 missing; plus current-only additions (`impliedYesQuote`,
+   `KalshiImpliedQuote`, `MlbStatsApiError`, `nflverse-pfr-def` block).
+2. **A real runtime bug in main's newer `espn-odds-client.ts`**: the upstream
+   no-`last_update` freshness policy removed `const lastUpdate` but left
+   `eventFromInlineOdds(sportKey, meta.title, ev, lastUpdate)` referencing the
+   deleted variable → `ReferenceError: lastUpdate is not defined` on every
+   ESPN inline-odds fetch. Aligned with the policy (param + 4 emissions
+   removed, 3-arg call site).
+
+**Result:** exchange-tape-capture 1/1 (C-396), galaxy-two-book-acceptance 3/3
+(C-104), fixture-confirmation **23/23** (was 6 failures branch-pre-existing +
+2 merge-surfaced) — 29/29 green in BOTH the junction-farm worktree and the
+Sports-live checkout itself. 8 of the 9 failures were real defects; only the
+remaining 6 externalId assertions were genuinely stale tests: C-85
+(`a666f0f8f`, #882) unified the schedule-seed externalId to the odds-key form
+(`espn:${meta.key}` → `espn:americanfootball_ncaaf:<id>`, verified in source
+at `espn-schedule-seed.ts:121`) while the test still asserted the pre-C-85
+short form. Fixed as test expectations (`espn:ncaaf:` →
+`espn:americanfootball_ncaaf:`, 8 sites).
+
+**Provenance re-classification (supersedes part of the SO-1h 44-failure
+classification):**
+- The "32 MAIN-INHERITED" bucket shrinks. settle-sport's
+  `resetPaidCallReservationWarning is not a function` was the SAME
+  dropped-barrel class as the merge-surfaced failures — with the barrel
+  restored, that crash class is ELIMINATED (0 "is not a function" errors in
+  the suite) and 45/66 settle-sport tests now pass. The remaining 21
+  settle-sport failures are pure behavioral main-inherited drift (C-109
+  spend-guard spy/counter assertions: getScores called when the guard says
+  skip, scopes read [] etc.) — no crash, different defect owner, still not
+  repaired here.
+- `props-hb-bridge.test.ts` 1 (`fitIntPerAttemptPrior is not a function`) is
+  ALSO sheriff(pass2) rebase loss, but in prediction-engine, NOT the
+  data-ingestion barrel: `9e2891ed2` (PR #1101) removed the old-name estimator
+  API (`fitIntPerAttemptPrior`/`posteriorIntPerAttempt`/`probIntGivenAttempts`,
+  added by `2bc911516` #543 with a 37-line index block) and shipped a renamed
+  `props-hb-int.ts` (`fitIntPrior`/`intPosterior`/`probOverInt`), while
+  main's `props-hb-bridge.ts` still imports the stale names. REPAIR CANDIDATE
+  with an owner decision: which API version is canonical (the original
+  old-name API vs the renamed one) before touching bridge or module.
+- `generate-signal-slate.test.ts` 4 (`gradeSignalPick is not a function`)
+  stands as recorded: the symbol exists in NO src module — real missing
+  function, main's tests vs main's code.
+- process-sport 5 + db-outage 1 stand as recorded (behavioral, verified
+  post-parse-repair).
+
+**NOT done here:** the 21 + 1 + 4 + 6 main-inherited behavioral failures; the
+props-hb rename repair; the barrel smoke-test pin (optional, next lane).
+
 ## SO-1g notes (2026-10-07) — market-label.ts, 29 invariant tests
 
 Three display functions keep the loader's ALL_MARKETS sentinel off three
