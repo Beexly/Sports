@@ -1,0 +1,68 @@
+NO PLAY
+
+=== prisma migrate diff --from-url DIRECT_URL --to-schema-datamodel prisma/schema.prisma ===
+
+[-] Removed tables
+  - agent_run_logs
+  - closing_lines
+  - film_shadow_ledger
+  - gse_anomaly_events
+  - gse_contest_entries
+  - gse_contest_settlements
+  - gse_ml_experiments
+  - gse_player_sentiment
+  - gse_user_settings
+  - gse_waitlist_leads
+  - ledger_chain_entries
+  - pick_memories
+  - product_events
+  - watch_games
+  - watch_plays
+
+[*] Changed the `SourceSnapshotKind` enum
+  [-] Removed variant `RESEARCH_ARTIFACT`
+
+[*] Changed the `closing_lines` table
+  [-] Removed foreign key on columns (gameId)
+
+[*] Changed the `ind_inv_proposal` table
+  [*] Altered column `ctiCandidateIds` (default changed from `Some(Value(List([])))` to `None`)
+  [*] Altered column `predicateKeys` (default changed from `Some(Value(List([])))` to `None`)
+  [*] Altered column `updatedAt` (default changed from `Some(Now)` to `None`)
+
+[*] Changed the `ingestion_runs` table
+  [-] Removed column `remainingRequests`
+  [-] Removed column `usedRequests`
+
+[*] Changed the `pick_memories` table
+  [-] Removed foreign key on columns (pickId)
+
+[*] Changed the `pick_signal_snapshots` table
+  [-] Removed column `hadNgsSignal`
+  [-] Removed column `lineAtPrediction`
+  [-] Removed column `selectionAtPrediction`
+
+[*] Changed the `picks` table
+  [-] Removed column `closingLine`
+  [-] Removed column `closingPrice`
+  [-] Removed column `clvCents`
+  [-] Removed column `clvComputedAt`
+  [-] Removed column `clvPoints`
+  [-] Removed column `clvPositive`
+
+[*] Changed the `product_events` table
+  [-] Removed foreign key on columns (userId)
+
+[*] Changed the `source_snapshots` table
+  [-] Removed unique index on columns (provider, sourceKind, externalId)
+
+[*] Changed the `watch_plays` table
+  [-] Removed foreign key on columns (game_id)
+
+=== prisma migrate status ===
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-summer-moon-apv5ccys.c-7.us-east-1.aws.neon.tech"
+
+3 migrations found in prisma/migrations
+
+Database schema is up to date!
