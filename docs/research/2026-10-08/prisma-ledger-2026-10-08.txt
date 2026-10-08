@@ -1,0 +1,42 @@
+NO PLAY
+
+The diff is not "No difference detected". Migration actions stopped. migrate deploy was not run. migrate resolve was not run. DIRECT_URL was not printed.
+
+## npx prisma migrate status --schema prisma/schema.prisma
+exit 1
+
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database
+Error: Prisma schema validation - (get-config wasm)
+Error code: P1012
+error: Environment variable not found: DIRECT_URL.
+  -->  prisma\schema.prisma:16
+   |
+15 |   url       = env("DATABASE_URL")
+16 |   directUrl = env("DIRECT_URL")
+   |
+
+Validation Error Count: 1
+[Context: getConfig]
+
+Prisma CLI Version : 5.22.0
+
+## npx prisma migrate diff --from-url <DIRECT_URL> --to-schema-datamodel prisma/schema.prisma --schema prisma/schema.prisma
+exit 1
+
+DIRECT_URL was unset in this shell, so the option was passed with no argument.
+
+Error:
+option requires argument: --from-url
+
+Usage
+
+  $ prisma migrate diff [options]
+
+From and To inputs (1 `--from-...` and 1 `--to-...` must be provided):
+  --from-url               A datasource URL
+  --to-url
+  --from-schema-datamodel  Path to a Prisma schema file, uses the datamodel for the diff
+  --to-schema-datamodel
+
+Prisma did not report "No difference detected".
