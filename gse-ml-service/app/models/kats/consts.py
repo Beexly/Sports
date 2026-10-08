@@ -3,7 +3,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-strict
 
 """
 This module contains some of the key data structures in the Kats library,
@@ -531,7 +530,6 @@ class TimeSeriesData:
 
     def __getitem__(
         self,
-        # pyre-fixme[24]: Generic type `slice` expects 3 type parameters.
         sliced: Union[str, Iterable, builtins.slice],
     ) -> TimeSeriesData:
         if isinstance(sliced, str) or (
@@ -554,7 +552,6 @@ class TimeSeriesData:
         return self.to_dataframe().__repr__()
 
     def _repr_html_(self) -> str:
-        # pyre-fixme[7]: Expected `str` but got `Optional[str]`.
         return self.to_dataframe()._repr_html_()
 
     def _set_univariate_values_to_series(self) -> None:
@@ -795,7 +792,6 @@ class TimeSeriesData:
           :class:`TimeSeriesData`.
         """
 
-        # pyre-fixme[6]: For 1st argument expected `None` but got `Optional[str]`.
         return pd.Timedelta(to_offset(pd.infer_freq(self.time_to_index())))
 
     def tz(
@@ -1157,7 +1153,6 @@ class TimeSeriesData:
         return ax
 
     def is_timezone_aware(self) -> bool:
-        # pyre-fixme[16]: `DatetimeIndex` has no attribute `tzinfo`.
         if pd.DatetimeIndex(self.time).tzinfo is None:
             return False
         else:
@@ -1310,8 +1305,6 @@ class IntervalAnomaly:
 
     @property
     def second_len(self) -> int:
-        # pyre-fixme[7]: Expected `int` but got `floating[_64Bit]`.
-        # pyre-fixme[58]: `/` is not supported for operand types `Timedelta` and
         #  `timedelta64`.
         return (self.end - self.start) / np.timedelta64(1, "s")
 

@@ -11114,3 +11114,10 @@ quarterback-receiver partnership." Tool links stated in posts.
   "catchable air yards" did not resurface; @GridironInfo_
   down-of-first-down chart DID resurface in-window (the "move the
   chains" cut above); points-allowed leaderboard not seen in-window.
+
+### JULES - KATS VAR v4 IMPLEMENTATION
+- Vendored Facebook's Kats VAR and Outlier detector models into `gse-ml-service/app/models/kats/` under `models/` and `detectors/`.
+- Updated all inner-package imports to reflect local paths (`app.models.kats`) avoiding any PyPI dependency.
+- Maintained strict environment constraints: explicitly refactored `attr` references in `detector_consts.py` to use pure standard library `dataclasses` so no new packages would be required.
+- Wrapped VAR logic in `app/models/gse_var.py` providing `fit_var` and `forecast` hooks native to the app context.
+- Tests (3) added and verified covering multiseries prediction shape, outlier detection behavior, and strict import isolation.
