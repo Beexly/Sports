@@ -14,6 +14,10 @@
       "schedule": "*/15 * * * *"
     },
     {
+      "path": "/api/cron/calibration-metrics",
+      "schedule": "40 */6 * * *"
+    },
+    {
       "path": "/api/cron/board-fill",
       "schedule": "2,17,32,47 * * * *"
     },
@@ -78,10 +82,6 @@
       "schedule": "7,22,37,52 * * * *"
     },
     {
-      "path": "/api/cron/calibration-metrics",
-      "schedule": "40 */6 * * *"
-    },
-    {
       "path": "/api/cron/backfill-independent-trueprob",
       "schedule": "10 */4 * * *"
     },
@@ -115,11 +115,11 @@
     },
     {
       "path": "/api/cron/watch-scheduler",
-      "schedule": "*/10 * * * *"
+      "schedule": "*/15 * * * *"
     },
     {
       "path": "/api/cron/watch-warm",
-      "schedule": "*/3 * * * *"
+      "schedule": "*/15 * * * *"
     },
     {
       "path": "/api/cron/props-slate-shadow",
