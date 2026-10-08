@@ -499,9 +499,9 @@ import {
   fitCompletionPrior,
   posteriorCompletion,
   betaBinomialProbOverCompletions,
-  fitIntPerAttemptPrior,
-  posteriorIntPerAttempt,
-  probIntGivenAttempts,
+  fitIntPrior,
+  intPosterior,
+  probOverInt,
   fitPassTdPerAttemptPrior,
   posteriorPassTdPerAttempt,
   probPassTdGivenAttempts,
@@ -568,15 +568,12 @@ export function estimateIntOver(input: {
     return { ok: false, reason: "attemptsNextGame must be > 0" };
   }
   try {
-    const prior = fitIntPerAttemptPrior(samples as never);
-    if (!prior) return { ok: false, reason: "fitIntPerAttemptPrior returned null" };
-    const post = posteriorIntPerAttempt(prior, {
-      attempts: playerAttempts,
-      ints: playerInts,
-    } as never);
-    const pAtLeast = probIntGivenAttempts(post, attemptsNextGame);
+    const prior = fitIntPrior(samples);
+    if (!prior) return { ok: false, reason: "fitIntPrior returned null" };
+    const post = intPosterior(prior, playerInts, playerAttempts);
+    const pAtLeast = probOverInt(post, line, attemptsNextGame);
     if (!Number.isFinite(pAtLeast) || pAtLeast < 0 || pAtLeast > 1) {
-      return { ok: false, reason: "probIntGivenAttempts out of [0,1]" };
+      return { ok: false, reason: "probOverInt out of [0,1]" };
     }
     // line=0.5 is the anytime-INT (P(>=1)) market; higher lines stay fail-closed
     // until a dedicated NB CDF is wired.
