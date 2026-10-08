@@ -241,7 +241,6 @@ function eventFromInlineOdds(
   sportKey: string,
   title: string,
   ev: Candidate,
-  lastUpdate: string,
 ): OddsApiEvent | null {
   const blk = ev.inlineOdds;
   if (!blk) return null;
@@ -253,7 +252,6 @@ function eventFromInlineOdds(
   const markets: OddsApiMarket[] = [
     {
       key: "h2h",
-      last_update: lastUpdate,
       outcomes: [
         { name: ev.away, price: awayMl },
         { name: ev.home, price: homeMl },
@@ -278,7 +276,6 @@ function eventFromInlineOdds(
       const awayPx = inlineSidePrice(blk, "pointSpread", "away", awayTeamOdds?.["spreadOdds"]);
       markets.push({
         key: "spreads",
-        last_update: lastUpdate,
         outcomes: [
           { name: ev.home, point: s, ...(homePx != null ? { price: homePx } : {}) },
           { name: ev.away, point: -s, ...(awayPx != null ? { price: awayPx } : {}) },
@@ -293,7 +290,6 @@ function eventFromInlineOdds(
       const underPx = inlineSidePrice(blk, "total", "under", blk["underOdds"]);
       markets.push({
         key: "totals",
-        last_update: lastUpdate,
         outcomes: [
           { name: "Over", point: ou, ...(overPx != null ? { price: overPx } : {}) },
           { name: "Under", point: ou, ...(underPx != null ? { price: underPx } : {}) },
@@ -307,7 +303,7 @@ function eventFromInlineOdds(
   const book: OddsApiBookmaker = {
     key: "espn_public",
     title: `ESPN/${providerName}`,
-    last_update: lastUpdate,
+    // no last_update: ESPN exposes no upstream timestamp (see note above)
     markets,
   };
   return {
@@ -482,7 +478,7 @@ export async function fetchEspnOddsForSport(
       await new Promise((r) => setTimeout(r, interEventMs));
     }
 
-    const inline = eventFromInlineOdds(sportKey, meta.title, ev, lastUpdate);
+    const inline = eventFromInlineOdds(sportKey, meta.title, ev);
     if (inline) {
       out.push(inline);
       continue;

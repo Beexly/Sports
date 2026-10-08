@@ -149,13 +149,13 @@ describe("findListedFixture", () => {
 
   it("confirms a listed fixture, in either home/away orientation", () => {
     const board = parseBoard(CFB_BOARD);
-    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:ncaaf:402");
+    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:402");
     const flipped: FixtureProbe = {
       ...LISTED,
       homeTeamName: LISTED.awayTeamName,
       awayTeamName: LISTED.homeTeamName,
     };
-    expect(findListedFixture(flipped, board, NCAAF)?.externalId).toBe("espn:ncaaf:402");
+    expect(findListedFixture(flipped, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:402");
   });
 
   it("keeps college matching exact: Washington never confirms Washington State", () => {
@@ -181,7 +181,7 @@ describe("findListedFixture", () => {
       awayTeamName: "Stanford Cardinal",
       commenceTime: new Date("2026-09-05T23:00:00.000Z"),
     };
-    expect(findListedFixture(probe, board, NCAAF)?.externalId).toBe("espn:ncaaf:10");
+    expect(findListedFixture(probe, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:10");
   });
 
   it("rejects a same-teams candidate on a shared date key more than 12 hours from our clock", () => {
@@ -204,7 +204,7 @@ describe("findListedFixture", () => {
         board,
         NCAAF,
       )?.externalId,
-    ).toBe("espn:ncaaf:11");
+    ).toBe("espn:americanfootball_ncaaf:11");
   });
 });
 
@@ -271,12 +271,12 @@ describe("requiresReconfirmation and commenceTimeCorrection", () => {
     const board = parseBoard({
       events: [espnEvent("21", startedAt.toISOString(), "Cincinnati Bearcats", "Boston College Eagles")],
     });
-    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:ncaaf:21");
+    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:21");
     expect(commenceTimeCorrection(LISTED, startedAt, NOW)).toBeNull();
     const out = confirmFixturesAgainstScoreboard([LISTED], board, NCAAF, NOW);
     expect(out.get(LISTED.id)).toMatchObject({
       status: "event_already_started",
-      event: { externalId: "espn:ncaaf:21" },
+      event: { externalId: "espn:americanfootball_ncaaf:21" },
     });
     expect(out.get(LISTED.id)).not.toHaveProperty("correctedCommenceTime");
     // Exactly now is not after now either.
@@ -453,7 +453,7 @@ describe("FixtureConfirmer", () => {
     if (out.status === "ok") {
       expect(out.byGameId.get("g-fcs")).toMatchObject({
         status: "confirmed",
-        event: { externalId: "espn:ncaaf:777" },
+        event: { externalId: "espn:americanfootball_ncaaf:777" },
       });
       expect(out.byGameId.get("g-cincy")?.status).toBe("confirmed");
       // Merged board: four FBS events plus one FCS event, none duplicated.
@@ -486,7 +486,7 @@ describe("FixtureConfirmer", () => {
     if (out.status === "ok") {
       expect(out.byGameId.get("g-cincy-stale")).toMatchObject({
         status: "event_already_started",
-        event: { externalId: "espn:ncaaf:402" },
+        event: { externalId: "espn:americanfootball_ncaaf:402" },
       });
     }
   });
