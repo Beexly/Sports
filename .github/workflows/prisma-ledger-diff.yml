@@ -1,0 +1,24 @@
+name: prisma-ledger-diff
+on:
+  workflow_dispatch:
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: diff only
+        working-directory: packages/db
+        env:
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          if [ -z "$DIRECT_URL" ]; then echo "DIRECT_URL secret missing"; exit 1; fi
+          npm install
+          npx prisma migrate diff --from-url "$DIRECT_URL" --to-schema-datamodel prisma/schema.prisma > ledger-diff.txt || true
+          npx prisma migrate status > ledger-status.txt || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prisma-ledger
+          path: packages/db/ledger-*.txt
