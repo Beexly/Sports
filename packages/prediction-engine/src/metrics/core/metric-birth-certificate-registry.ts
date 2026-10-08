@@ -2,6 +2,26 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    internalName: "game_script_splits_shadow",
+    metricId: "game-script-splits",
+    status: "SHADOW",
+    family: "team",
+    targetQuestion: "Does this team improve or fade after halftime, and by how much?",
+    failureModes: ["small-sample halves", "opponent-quality confounds", "garbage-time distortion"],
+    // Default required fields for Birth Certificate compliance.
+    allowedInputs: ["play-by-play quarters", "EPA per play", "points per drive"],
+    forbiddenInputs: [],
+    formulaClass: "composite_score",
+    formulaSummary: "1H vs 2H expected points added and points per drive differentials.",
+    historicalPrecedent: [],
+    protectedComponents: [],
+    publicExposure: "hidden",
+    publicName: "Game Script Splits",
+    sourceRightsRequired: [],
+    targetVariable: "halftime adjustment",
+    validationMethods: ["walk_forward"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",

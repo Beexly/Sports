@@ -50,6 +50,7 @@ describe("GSE metric assets and graduation", () => {
     const ids = GSE_METRIC_ASSETS.map((asset) => asset.metricId);
 
     expect(ids).toEqual([
+      "game-script-splits",
       "data-reliability-index",
       "market-gravity-index",
       "stale-line-risk-score",
