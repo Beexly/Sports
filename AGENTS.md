@@ -11991,3 +11991,396 @@ re-inventoried)
   2023/2025 posts only). TNF market rows captured from @GridironInfo_
   cheat sheet (item 3) and @Covers/@ActionNetworkHQ promos (see
   x-intel-2026-10-08-16.md).
+## X ANALYTICS SWEEP 2026-10-08 PM (2)
+
+Window: posts after ~4:40 PM CDT through ~10:55 PM CDT Thu 2026-10-08
+(~6.25h, evening; TNF Buccaneers @ Cowboys gamenight, kickoff 7:15 PM
+CT). Read-only sweep as @GalaxySportsHQ (no likes/reposts/replies/
+follows/DMs). Login confirmed by both tasks; no CAPTCHAs or login
+walls. Two parallel browser tasks: Task A (home feed + 11 accounts +
+searches) and Task B (10 accounts + searches + record checks). X
+relative timestamps understated elapsed time ~25-65 min; all in-window
+posts verified against absolute timestamps. Nothing inventoried
+without evidence. Three genuinely new metrics (ARBY, Showdown
+ownership-model eval, xFPG-vs-air-yards composite) plus a heavy TNF
+gamenight crop.
+
+### NEW ITEMS
+
+1. @GridironInfo_ — "Week 4 Dropback Outcome by QB"
+   (2026-10-08 ~6:00 PM CDT,
+   x.com/GridironInfo_/status/2108331714002977088). NEW TABLE: share of
+   each starting QB's Week 4 dropbacks ending in completion /
+   incompletion / scramble / sack / INT (min 15 dropbacks). Columns:
+   PLAYER, PCT_COMPLETE, PCT_INCOMPLETE, PCT_SCRAMBLE, PCT_SACK,
+   PCT_INT. 32 rows: J. Love 73.3/23.3/0.0/0.0/3.3 (highest complete
+   share); M. Penix 71.4/23.8/0.0/4.8/0.0; T. Bagent 69.4/22.2/2.8/2.8/
+   2.8; J. Burrow 67.2/22.4/3.4/3.4/3.4; L. Jackson 65.2/21.7/4.3/8.7/
+   0.0; D. Watson 64.9/21.6/5.4/5.4/2.7; B. Young 64.4/26.7/2.2/6.7/0.0;
+   T. Lawrence 64.3/17.9/0.0/14.3/0.0; D. Prescott 64.0/26.0/4.0/6.0/
+   0.0; J. Allen 63.9/25.0/2.8/2.8/2.8; C. Stroud 63.6/24.2/6.1/6.1/0.0;
+   K. Murray 62.8/23.3/4.7/9.3/0.0; K. Cousins 62.0/34.0/0.0/0.0/2.0;
+   J. Goff 60.4/37.7/0.0/1.9/0.0; M. Stafford 59.3/31.5/3.7/1.9/3.7;
+   T. Shough 58.6/35.3/2.0/3.9/0.0; B. Purdy 57.6/30.3/12.1/0.0/0.0
+   (highest scramble share); B. Nix 56.8/38.6/4.5/0.0/0.0; C. Ward
+   54.1/27.0/10.8/2.7/2.7; J. Brissett 53.8/28.2/5.1/5.1/7.7;
+   J. Winston 52.9/26.5/0.0/11.8/5.9; D. Jones 52.8/38.9/0.0/5.6/2.8;
+   J. Daniels 52.8/16.7/16.7/8.3/5.6; D. Maye 51.2/32.6/9.3/2.3/2.3;
+   S. Darnold 50.0/30.8/3.8/11.5/3.8; A. Rodgers 47.8/34.8/0.0/10.9/4.3;
+   J. Herbert 47.5/25.0/12.5/10.0/5.0; M. Willis 45.0/40.0/5.0/10.0/0.0;
+   G. Smith 44.4/38.9/0.0/16.7/0.0 (highest sack share); P. Mahomes
+   44.1/44.1/2.9/5.9/0.0; A. Kaliakmanis 41.7/47.2/5.6/2.8/2.8;
+   J. Hurts 37.5/46.9/3.1/12.5/0.0 (lowest complete share). Stated
+   source: nflverse (chart footer; dated 2026-10-06). Framing:
+   per-QB dropback-outcome composition, sortable comparison. CSV:
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-qb-dropback-outcome-wk4-2026.csv.
+   (T. Shough complete-share cell: Task B read 58.6, Task A 58.8 —
+   flagged in Discrepancies.)
+2. @GridironInfo_ — "Top 10 defensive tackles by pressures in 2026"
+   (2026-10-08 ~5:58 PM CDT,
+   x.com/GridironInfo_/status/2108331117157970370). NEW TABLE:
+   pressures, 2026 through Week 3, with sacks and games. Rows: T1
+   Leonard Williams (Seahawks) 6 — 3 sacks, 3 games; T1 Jeffery
+   Simmons (Titans) 6 — 2 sacks, 3 games; T1 Jonathan Allen
+   (Bengals, as rendered) 6 — 2 sacks, 3 games; T1 Dexter Lawrence
+   (Bengals, as rendered) 6 — 2 sacks, 3 games; T1 Alim McNeill
+   (Lions) 6 — 2 sacks, 3 games; T1 Osa Odighizuwa (49ers) 6 — 0
+   sacks, 3 games; T7 Mason Graham (Browns) 5 — 4 sacks, 3 games; T7
+   Deone Walker (Bills) 5 — 1 sack, 3 games; T7 Brandon Dorlus
+   (Falcons) 5 — 0 sacks, 3 games; T7 DaRon Payne (Commanders) 5 — 0
+   sacks, 3 games. Thread addendum (same thread): "Ed Oliver (BUF)
+   also has 5 pressures" (text note, no sacks/games stated). Stated
+   source: Pro Football Reference via nflreadpy (chart footer).
+   Framing: interior pass-rush leaderboard. Team names/abbreviations
+   as rendered by the account. CSV:
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-dt-pressure-leaders-2026.csv.
+3. @GridironInfo_ — "2026 Worst EPA per Play Leaders"
+   (2026-10-08 ~5:00 PM CDT,
+   x.com/GridironInfo_/status/2108316616354103760). NEW TABLE: lowest
+   EPA per dropback, 2026 season (data as of 2026-10-06). Columns:
+   RANK, PLAYER, TEAM, DROPBACKS, EPA_PER_PLAY. 10 rows: 1 Cooper Rush
+   (ATL) 44, -0.64; 2 Baker Mayfield (TB) 109, -0.30; 3 Kyler Murray
+   (MIN) 78, -0.22; 4 Jameis Winston (NY) 88, -0.21; 5 Daniel Jones
+   (IND) 140, -0.21; 6 Malik Willis (MIA) 114, -0.19; 7 Justin Herbert
+   (LAC) 131, -0.16; 8 Aaron Rodgers (PIT) 166, -0.14; 9 Cam Ward (TEN)
+   126, -0.13; 10 Drake Maye (NE) 128, -0.10. Stated source: nflverse
+   via nflreadpy (chart footer). Framing: worst-first efficiency
+   leaderboard. Team abbreviations as rendered by the account
+   (tweet/chart agree: Murray (MIN)). CSV:
+   docs/dfs/research/2026-10-08/full-tables/gridironinfo-worst-epa-per-play-2026.csv.
+4. @PFF — TNF gamenight set, Buccaneers @ Cowboys (2026-10-08
+   evening), all stated source PFF (own charting/grades):
+   a. "Buccaneers-Cowboys first half drive results" (8:40 PM CDT,
+      x.com/PFF/status/2108372089233350780): halftime drive sequence
+      — TOUCHDOWN, TOUCHDOWN, PUNT, PUNT, PUNT, PUNT, PUNT, FIELD
+      GOAL, HALF END. CSV:
+      docs/dfs/research/2026-10-08/full-tables/pff-tnf-first-half-drive-results-2026.csv.
+   b. "Jalon Daniels first drive vs Cowboys" (7:49 PM CDT,
+      x.com/PFF/status/2108359083770397049): 8/8 comp/att, 60 total
+      yards, 1 pass TD (name as posted by PFF).
+   c. "Both team's first offensive drive" (7:47 PM CDT,
+      x.com/PFF/status/2108358735554916528): Cowboys 4:09 TOP, TD;
+      Buccaneers 10:58 TOP, TD. CSV:
+      docs/dfs/research/2026-10-08/full-tables/pff-tnf-opening-drives-tb-dal-2026.csv.
+   d. "George Pickens catches" (7:23 PM CDT,
+      x.com/PFF/status/2108352506049053068): Week 4: 2; Week 5 (1st
+      drive): 2 — live milestone tracker.
+   e. "Highest offensive grade among WR heading into Week 5" (6:30 PM
+      CDT, x.com/PFF/status/2108339157978468383): PFF proprietary
+      0-100 offensive grade — CeeDee Lamb 92.1, Jaxon Smith-Njigba
+      92.0, Tee Higgins 91.3, Zay Flowers 90.8, Mike Evans 90.6. CSV:
+      docs/dfs/research/2026-10-08/full-tables/pff-wr-offensive-grade-wk5-leaders.csv.
+5. @statyxio — TNF run-defense matchup: Javonte Williams vs Tampa
+   (2026-10-08 ~6:24 PM CDT,
+   x.com/statyxio/status/2108337798722064676). NEW: lane-by-lane
+   rush-path tool. Image 1 "Rush Path" (62 mapped carries, 100%
+   coverage; circle = run share, ring = opponent lane rank, 1 =
+   toughest): LE 6%/1st, LT 11%/2nd, LG 15%/4th, MID 32%/8th, RG
+   21%/7th, RT 13%/28th, RE 2%/25th (RE lane: TB success allowed
+   57.1%, 8th softest). Grouped: Interior 67.74%/3-32/Tougher, Left
+   17.74%/1-32/Tougher, Right 14.52%/26-32/Softer. Runner evidence
+   2026 (metric / season / RB percentile): YAC/att 2.73/46th, evaded
+   tackles/att 0.10/25th, RYOE/att 0.02/50th, rush success
+   45.2%/76th, 10+ run rate 6.5%/42nd, breakaway 15+ 4.8%/72nd.
+   Run-type matchup (usage / TB YPC-allowed rank): Zone 51.6%/16-32/
+   Balanced, Inside Zone 33.8%/20-32/Balanced, Outside Zone 17.8%/
+   13-32/Balanced, Gap 41.9%/1-32/Tougher. Image 2 matchup table
+   (player / TB / defense rank / context): down-to-down 45.2%/28.9%/
+   1st toughest/Tougher; explosive access 6.5%/6.6%/9th toughest/
+   Tougher; breakaway access 4.8%/2.6%/12th toughest/Balanced;
+   negative plays 80.7%/22.4%/5th toughest/Tougher; creation 2.73/
+   2.18/2nd toughest/Tougher; tackle evasion 0.10/0.13/7th toughest/
+   Tougher. Stated source: Statyx (statyx.io; chart branded Statyx).
+   Framing: strength-on-weakness read — "soft spot is the right
+   side"; Williams runs inside on 67.7% of carries vs Tampa 3rd
+   toughest there. CSVs:
+   docs/dfs/research/2026-10-08/full-tables/statyxio-javonte-williams-rush-path-tnf.csv,
+   statyxio-javonte-williams-rush-path-grouped-tnf.csv,
+   statyxio-javonte-williams-runner-evidence-2026.csv,
+   statyxio-williams-vs-tb-run-type-matchup-tnf.csv,
+   statyxio-williams-vs-tb-matchup-table-tnf.csv. (RT lane rank:
+   28th vs 26th across two reads — flagged in Discrepancies.)
+6. @csv_enjoyer (Ray Carpenter; found via CPOE search) — "NFL
+   Quarterbacks: CPOE vs EPA per pass attempt" (2026-10-08 7:22 PM
+   CDT, x.com/csv_enjoyer/status/2108322042244366343). Scatter: x =
+   CPOE, y = EPA per pass attempt; 2026 Weeks 1-4, min 80 dropbacks.
+   Bilingual chart ("NFL最佳四分卫"); quadrants labeled
+   efficient-but-inaccurate / accurate-and-efficient / struggling /
+   accurate-but-inefficient (Chinese labels as rendered). Notables
+   (approximate, dot positions not labeled): Lawrence highest EPA/a
+   (~0.58); Jackson high CPOE (~8.3); Prescott ~0.20 EPA/a;
+   Burrow/Smith accurate-but-inefficient quadrant; Mayfield lowest
+   (~-0.31). Stated source: nflfastR (chart footer; also credits
+   TheSpade.Substack.com). Author says in replies he is making a
+   series of it. Framing: QB efficiency x accuracy composite. No
+   per-point CSV possible (scatter, coordinates not labeled) —
+   recorded as described read.
+7. @cmain7 — "Survivor Week 5 reference card" (2026-10-08 6:07 PM
+   CDT, x.com/cmain7/status/2108303280023413029). NEW TABLE: "2026
+   SURVIVOR — WEEK 5 REFERENCE CARD — Splash World Championship:
+   Week 5 win probability, usable weeks, top-5 weeks, and
+   full-season peak win probability." Columns: RANK, TEAM,
+   WK5_WIN_PCT, USABLE_WEEKS_65_PLUS, TOP5_WEEKS, PEAK_PCT, PEAK_WK.
+   32 rows: 1 DAL 81.0/4/4/81.0 W5; 2 HOU 78.3/4/3/78.3 W5; 3 JAX
+   76.7/7/5/81.4 W12; 4 CIN 73.7/7/5/80.2 W8; 5 DET 70.3/6/4/76.7
+   W14; 6 NE 64.6/5/4/82.8 W18; 7 DEN 63.0/4/3/83.9 W13; 8 WAS
+   62.4/0/0/62.4 W5; 9 ATL 61.7/0/0/61.7 W5; 10 LAR 59.9/8/8/87.4 W6;
+   11 SEA 58.8/5/4/85.8 W9; 12 PIT 56.7/1/1/69.7 W8; 13 MIN
+   55.5/3/3/69.2 W12; 14 CHI 54.5/4/2/76.4 W14; 15 NYJ 53.5/1/1/66.8
+   W7; 16 CLE 46.5/0/0/48.1 W14; 17 GB 45.5/1/1/77.7 W15; 18 NO
+   44.5/0/0/64.6 W9; 19 IND 43.3/3/4/81.5 W10; 20 SF 41.2/6/4/78.3
+   W6; 21 BUF 40.1/5/5/89.7 W11 (highest peak win probability);
+   22 BAL 38.3/5/3/82.0 W16; 23 NYG 37.6/0/1/62.3 W15; 24 LAC
+   37.0/2/1/70.9 W11; 25 LV 35.4/0/0/64.7 W16; 26 ARI 29.7/0/0/55.1
+   W15; 27 MIA 26.3/0/0/46.6 W12; 28 PHI 23.3/1/0/68.1 W9; 29 TEN
+   21.7/0/0/57.1 W7; 30 TB 19.0/0/0/61.4 W15; 31 CAR BYE/0/0/59.6
+   W14; 32 KC BYE/5/4/83.4 W11. Stated source: Establish The Run
+   (ETR; cmain7 bio: Director of Niche Sports @EstablishTheRun).
+   Framing: weekly survivor reference combining win-prob, future
+   usability, and peak-win% planning columns. CSV:
+   docs/dfs/research/2026-10-08/full-tables/cmain7-survivor-wk5-reference-card-2026.csv.
+8. @cmain7 — TNF Showdown ownership misses (2026-10-08 9:36 PM CDT,
+   x.com/cmain7/status/2108356000264663048). NEW: ETR projected-vs-
+   actual ownership scatter ("NFL Showdown Ownership: Total
+   Ownership | Players with ≥1% actual total ownership"). Model-eval
+   regression stats: r 0.985, R² 0.970, MAE 2.84 pp, RMSE 3.53 pp,
+   bias -0.06 pp, N 25. Biggest misses: Cade Otton (27.8% projected,
+   34.6% actual), Jake Ferguson (20.2%, 27.7%). Other labeled
+   outliers: Jalon Daniels, Brandon Aubrey, Ted Hurst III (values
+   not stated). Stated source: Establish The Run (projected
+   ownership). Framing: ownership-model accuracy check + biggest
+   projection misses, TNF gamenight. CSVs:
+   docs/dfs/research/2026-10-08/full-tables/cmain7-tnf-showdown-ownership-model-eval-2026.csv,
+   docs/dfs/research/2026-10-08/full-tables/cmain7-tnf-showdown-ownership-misses-2026.csv.
+9. @RyanPaganetti — 32nd-ranked EPA/play defense as big favorites
+   (2026-10-08 8:23 PM CDT,
+   x.com/RyanPaganetti/status/2108337584565018720). NEW historical
+   trend (text-only, no chart): "Cowboys favored by nearly 10 points.
+   It is very uncommon for a team that ranks last in EPA per play on
+   defense to be more than a TD favorite (just 14 times in 392 games
+   since 2000). Those last EPA per play defense teams only covered a
+   more than touchdown spread 30% of the time." Data source:
+   Paganetti's own research (n = 392 games since 2000; n = 14
+   subset). Framing: TNF gamenight EPA-rank spread inefficiency.
+10. @sfdata9ers — "Average Time to Throw vs. Target Depth"
+   (2026-10-08 6:49 PM CDT,
+   x.com/sfdata9ers/status/2108313759454523695). NEW composite: x =
+   average time to throw (2.5–3.3 s), y = average depth of target
+   (6–10 yds); red dotted mean lines ~2.87 s / ~8.1 aDOT. Notables
+   (scatter-estimated): J. Love fastest release (~2.4 s) with deep
+   aDOT (~8.7); S. Darnold slowest release (~3.25 s) with shallow
+   aDOT (~7.2); J. Hurts ~3.2 s / ~8.6 aDOT; C. Stroud, L. Jackson,
+   M. Willis aDOT ≥10 at ~2.95–3.0 s; D. Jones shortest aDOT (~6.0);
+   D. Watson ~6.7 aDOT. Stated source: @NextGenStats (min 60
+   attempts; 2026 Weeks 1–4). Framing: QB style composite — release
+   speed vs downfield aggressiveness. CSV (approximate coords
+   flagged):
+   docs/dfs/research/2026-10-08/full-tables/sfdata9ers-ttt-vs-adot-2026-approx.csv.
+11. @MagicSportsGuy — "Notable Adjusted Run Blocking (ARBY)
+   Matchups for Week 5" (2026-10-08 7:56 PM CDT,
+   x.com/MagicSportsGuy/status/2108330747216138658). NEW METRIC: ARBY
+   = Adjusted Run Blocking Yards (StatRankings proprietary), with
+   offensive and defensive team ranks. Tiers from post text (image is
+   a logo/joke graphic, not a data table): TB @ DAL spotlight — TB
+   D-1st ARBY, 3rd RB YPC allowed vs DAL O-27th ARBY, 21st RB YPC;
+   Smash: BUF (O-1st) vs LAR (D-26th); Bad vs bad: GB (O-32nd) vs
+   CHI (D-32nd), NE (31st) vs LV (28th), LV (30th) vs NE (29th), WAS
+   (28th) vs NYG (31st); Stacked: LAR (O-2nd) vs BUF (D-8th), SF
+   (3rd) vs SEA (6th), ATL (4th) vs BAL (14th), BAL (9th) vs ATL
+   (3rd). Stated source: StatRankings (statrankings.com). Framing:
+   OL-vs-DL matchup tiers ("Smash", "Bad vs bad", "Stacked"), TNF
+   spotlight. CSV (values from post text):
+   docs/dfs/research/2026-10-08/full-tables/magicsportsguy-arby-matchups-wk5-2026.csv.
+12. @SumerSports — TNF gamenight set (2026-10-08 evening), stated
+   source SumerSports (own tracking):
+   a. "Script flipped" (10:42 PM CDT,
+      x.com/SumerSports/status/2108372496869380140): Buccaneers
+      generating tons of pressure; Dak Prescott struggling against
+      the blitz — live inversion of their pregame preview ("The Bucs
+      have struggled to generate pressure through 4 weeks, despite
+      blitzing at a high rate. Dak Prescott has thrived in a clean
+      pocket and against the blitz").
+   b. Bucs 15-play TD drive record (9:55 PM CDT,
+      x.com/SumerSports/status/2108360619401543903): 10:58 TOP —
+      2nd-longest drive of the 2026 season by time of possession;
+      longest is the Jets' 19-play field-goal drive vs Tennessee in
+      Week 1 (11:48). CSV:
+      docs/dfs/research/2026-10-08/full-tables/sumersports-tnf-longest-drives-2026.csv.
+   c. Dak vs single-high preview (7:04 PM CDT,
+      x.com/SumerSports/status/2108317528263217394): "Dak Prescott
+      has carved up single-high coverage since the start of last
+      season, and Tampa Bay has played single-high at the
+      third-highest rate through 4 weeks." Image: "Dak Prescott
+      EPA/DB vs. Single-High Coverage — 2025-2026 seasons (through
+      Week 4) — 4th highest among qualified QBs" (scatter, no
+      per-point values — recorded as described read). Framing: QB
+      strength vs defensive tendency matchup collision.
+   d. TNF scramble preview — ENRICHMENT of PM-sweep item 20 (same
+      URL x.com/SumerSports/status/2108281257608241387, posted 2:39
+      PM CDT): full image transcription — Jalon Daniels: 7 scrambles
+      on 40 dropbacks, 17.5% scramble rate (1st of 41 QBs, min 30
+      dropbacks; league average 5.1%); Cowboys defense vs scrambles
+      2026 Weeks 1–4 (rank 1 = least allowed): 14 scrambles allowed
+      (30th of 32), 128 scramble yards (31st), 9.1 yards/scramble
+      (26th), +0.54 EPA/scramble (18th), 64.3% success rate allowed
+      (21st). CSV:
+      docs/dfs/research/2026-10-08/full-tables/sumersports-tnf-scramble-matchup-full-2026.csv.
+13. @DrewDavenportFF (found via EPA search) — TB defense / Dak vs
+   blitz stat pack (2026-10-08 8:45 PM CDT,
+   x.com/DrewDavenportFF/status/2108343168802406645): Tampa rush EPA
+   3rd (rbsdm.com); TB blitz rate 36.8% (7th most); opponent PROE
+   (pass rate over expected) vs TB 4.4% (6th-highest); Dak Prescott
+   EPA/play vs blitz 7th (QBs with 50+ dropbacks). Stated source:
+   rbsdm.com. Framing: TNF preview stat pack. CSV:
+   docs/dfs/research/2026-10-08/full-tables/drewdavenportff-tb-defense-dak-blitz-tnf.csv.
+14. @DrewDavenportFF (found via EPA search) — "How do Air Yards
+   compare to Expected Fantasy Points Per Game?" (2026-10-08 8:27 PM
+   CDT, x.com/DrewDavenportFF/status/2108338575674835376). NEW
+   COMPOSITE: scatter of x = expected fantasy points per game
+   (10.0–27.5) vs y = air yards (0–700), top 50 pass catchers
+   through 4 weeks; reference lines ~14.7 xFPG / ~287 air yards.
+   Notables (scatter-estimated): CeeDee Lamb ~26/480, Chris Olave
+   ~24/610, Davante Adams ~17.5/625, Jaxon Smith-Njigba ~22.5/415,
+   Tee Higgins ~16.5/510, Michael Wilson ~18/420, Brock Bowers
+   ~21.5/250 (high xFPG, low air yards), Amon-Ra St. Brown ~19.5/360.
+   Stated source: @FantasyPtsData. Framing: air-yard vs
+   expected-point efficiency composite — re-sighting of the Week 1
+   air-yards metric family in composite form. CSV (approximate
+   coords flagged):
+   docs/dfs/research/2026-10-08/full-tables/drewdavenportff-xfpg-vs-air-yards-approx.csv.
+
+### OUT-OF-WINDOW CATCH-UPS (missed by the PM sweep; new metrics, never inventoried)
+
+15. @DhananiZain (found via TPRR search) — George Pickens coverage
+   splits (posted 3:50 PM CDT — before this window, not captured by
+   the PM sweep; x.com/DhananiZain/status/2108299046498501113). Text
+   table, Pickens since 2025: single-high — 28% TPRR, 3.24 YPRR (281
+   routes); two-high — 17% TPRR, 1.56 YPRR (474 routes); blitz —
+   26% TPRR, 2.78 YPRR. TNF context: TB plays single-high on 65% of
+   dropbacks (5th most), blitzes 40% (3rd most). Data source:
+   unspecified in post (bio: former ESPN/Bucks analytics,
+   @MBFantasyLife). Framing: TNF matchup coverage-split read. CSV:
+   docs/dfs/research/2026-10-08/full-tables/dhananizain-pickens-coverage-splits-2026.csv.
+16. @StartSitEmFF (found via TPRR search) — elite WR filter (posted
+   3:17 PM CDT — before this window, not captured by the PM sweep;
+   x.com/StartSitEmFF/status/2108290584787955714). Text-only: "The
+   ONLY receivers that have 2.5> YPRR & 30% TPRR: Zay Flowers, Jaxon
+   Smith Njigba, CeeDee Lamb, Justin Jefferson, Puka Nacua, Mike
+   Evans." Metrics: YPRR > 2.5 AND TPRR ≥ 30% (as stated). Data
+   source: unspecified. Framing: elite-receiver threshold composite.
+   CSV:
+   docs/dfs/research/2026-10-08/full-tables/startsitemff-elite-wr-yprr-tprr-filter-2026.csv.
+17. @saulfutbolscout (found via CPOE search) — TNF preview (posted
+   3:47 PM CDT — before this window, not captured by the PM sweep;
+   x.com/saulfutbolscout context per search read): Dak +0.35
+   EPA/play, +5.5% CPOE, ~+0.32 dropback EPA/play; Jalon Daniels
+   mentioned (no numbers given). Data source: unspecified. CSV:
+   docs/dfs/research/2026-10-08/full-tables/saulfutbolscout-tnf-preview-dak-daniels-2026.csv.
+
+### BRIEF MENTIONS (in-window, no embedded data)
+
+- @RyanPaganetti — TNF thoughts post (7:14 PM CDT,
+  x.com/RyanPaganetti/status/2108320246365061316): qualitative
+  gamenight matchup analysis (Bucs closer than expected; Lamb
+  100-yard game; Otton 30+ receiving yards; J. Daniels rushing
+  over; Javonte Williams efficiency concern). Plus a one-line EPA
+  reaction later in the game: "32nd EPA per play defense looking
+  like a 32nd EPA per play defense."
+- @NFLosophy (EPA search) — "Daron Bland has the highest EPA for the
+  Bucs so far tonight" — gamenight EPA mention, no numbers.
+- @ScottBarrettDFB — "Week 5 Game-by-Game Breakdown & Start/Sit"
+  article link (7:08 PM CDT,
+  x.com/ScottBarrettDFB/status/2108243059360338247) — article promo,
+  no embedded metrics.
+- @SumerSports — the 10:42 PM "script flipped" post re-quotes the
+  PM-sweep 12:54 PM pressure preview verbatim.
+
+### DUPS (seen, already inventoried — PM sweep unless noted)
+
+- @PattonAnalytics five chart posts (X-WR alignment, quick
+  pressures, forced missed tackles, CFB data drop, play-action
+  80.6%).
+- @sfdata9ers 3rd-down sacks, EPA/dropback vs coverage shell,
+  checkdown rate (35 QBs), blitz rate/rushers, avg drive start.
+- @FantasyPtsData WR 3rd-down target share (Evans 44.8%, JSN 43.8%,
+  Puka 42.1%, Washington 39.1%, Amon-Ra 36.1%).
+- @statyxio Man/Zone reads.
+- @MagicSportsGuy WR/CB+ launch + 130 free CFB advanced stats
+  (product news).
+- @SumerSports TNF previews — item 12d enriches the 2:39 PM
+  scramble preview with full image transcription.
+- @cmain7 survivor ownership (Dallas ~28% Splash WC; 71 users w/
+  21+ entries = 61% of live entries) — PM sweep item 21.
+- @GridironInfo_ IR-count-by-team table (SF 16 most, BUF 2 fewest)
+  — PM sweep item 2.
+
+### RECORD CHECKS
+
+- @FTNData: still PROTECTED (1,276 posts; 2,555 followers).
+- @NFLResearcher: still empty (4 posts on header; "...Sometimes a
+  parody.").
+- @NerdingonNFL: still broken — profile header loads ("NFL Nerd",
+  1 post, bio "Follow @ProGridSports", Joined July 2026, 1
+  Following, 41 Followers) but the Posts region renders nothing.
+
+### SEARCH COVERAGE
+
+- "EPA": fan chatter only (Cowboys 32nd EPA/play defense talk);
+  captured @DrewDavenportFF stat pack + @NFLosophy mention.
+- "aggressiveness": nothing in-window.
+- "pass rush win rate": fan replies only.
+- "TPRR": @DhananiZain splits + @StartSitEmFF filter (items 15,
+  16); fan replies otherwise.
+- "CPOE": @csv_enjoyer scatter (item 6) + @saulfutbolscout preview
+  (item 17); fan replies otherwise.
+- "Kalshi NFL": NO @GridironInfo_/@statyxio award-odds posts
+  tonight — the daily Kalshi series did not appear in this window.
+  Only in-window Kalshi item: @Covers TNF live odds ("Bucs ML 35%
+  at Kalshi, was 22%") — not an analytics account.
+
+### DISCREPANCIES FLAGGED (unresolved)
+
+- Task A independently read four of these posts with timestamps ~2h
+  later than Task B (dropback outcome 8:00 vs 6:00 PM, DT pressures
+  7:58 vs 5:58 PM, worst EPA 7:00 vs 5:00 PM, statyx run-defense
+  8:24 vs 6:24 PM CDT). Section records Task B's readings (Task B
+  explicitly calibrated the browser's 7h VM-timezone offset; Task A
+  appears to have treated displayed local time as UTC). All posts
+  are in-window under either reading; post URLs are the stable
+  keys.
+- Dropback outcome, T. Shough complete share: Task B 58.6 vs Task A
+  58.8 (single cell, 0.2 pp).
+- statyxio RT lane rank: Task B 28th vs Task A 26th (single lane).
+- Timestamps for @DhananiZain/@StartSitEmFF/@saulfutbolscout items
+  (15-17) are Task B's verified out-of-window readings (3:50 /
+  3:17 / 3:47 PM CDT); Task A displayed unconverted browser-local
+  times for the same posts.
+
+### NEXT-SWEEP WATCH
+
+- @GridironInfo_ Kalshi award-odds series: no batch tonight —
+  expect it back for the AM sweep.
+- TNF final: Bucs @ Cowboys result and any postgame advanced
+  charts (EPA, success rate) land overnight.
+- Friday practice reports (Lamar Jackson SNF availability) land
+  tomorrow.
