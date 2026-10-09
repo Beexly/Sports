@@ -151,6 +151,11 @@ def sigma_interval_audit(n, sigma, ci):
     return {"se": se, "pasted_half": pasted_half, "rough_half": rough_half, "ratio": rough_half / pasted_half}
 
 
+def zero_wind_baseline(intercept, per_mph, mph):
+    """Uncentered OLS intercept is the prediction at 0 mph, not the sample mean."""
+    return intercept + per_mph * mph
+
+
 def tau_interval_audit(k, tau, ci):
     """Rough SE of a standard deviation from k team effects: tau/sqrt(2(k-1))."""
     se = tau / math.sqrt(2.0 * (k - 1))
@@ -252,11 +257,17 @@ def self_check():
     assert sig_audit["ratio"] > 10.0
     assert tau_audit["ratio"] > 8.0
     wind10 = PASTED["wind_per_mph"] * 10.0
+    at_8 = zero_wind_baseline(PASTED["intercept"], PASTED["wind_per_mph"], 8.0)
     print(
-        "pasted wind %.3f pts/mph = %.2f per 10 mph, R2=%.4f. Packet published addend stays -1.0 per 10 mph, not a fit. Not substituted."
+        "pasted wind %.3f pts/mph = %.2f per 10 mph, R2=%.4f. Not re-fit. Not a -0.25 engine constant. Published addend stays -1.0 per 10 mph."
         % (PASTED["wind_per_mph"], wind10, PASTED["weather_r2"])
     )
+    print(
+        "pasted intercept %+.3f is the 0 mph outdoor baseline. At 8 mph it is %+.3f, not a +1.74 average miss."
+        % (PASTED["intercept"], at_8)
+    )
     assert abs(wind10 - (-1.97)) < 0.02
+    assert abs(at_8 - 0.159) < 0.01
 
     synth = _synthetic_games(8, 480, 2.0, 3.0, 10.0, seed=3)
     fit = gibbs(synth, 8, iters=600, burn=200, seed=11)
