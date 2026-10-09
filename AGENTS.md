@@ -12384,3 +12384,141 @@ gamenight crop.
   charts (EPA, success rate) land overnight.
 - Friday practice reports (Lamar Jackson SNF availability) land
   tomorrow.
+
+
+## X ANALYTICS SWEEP 2026-10-09 (00:20 CDT)
+
+Window: posts after ~4:40 PM CDT Thu 2026-10-08 through ~1:58 AM CDT
+Fri 2026-10-09 (~9.3h, overnight; TNF Buccaneers @ Cowboys postgame,
+final Bucs 24-16). Read-only sweep as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs). Login confirmed by both tasks; no
+CAPTCHAs or login walls. Two parallel browser tasks: Task A (home
+feed + 21 analytics accounts) and Task B (5 news + 3 market + 2
+scheme/film accounts + beat-writer checks). X relative timestamps
+understated elapsed time ~25-95 min; all near-boundary posts verified
+against absolute timestamps. Eight genuinely new metrics items this
+window (PFF drive-scoring leaderboards x2, PFF QB-hits-allowed, PFF WR
+offensive grades, statyxio LaPorta/ARI zone, SumerSports DAL 20:39
+TOP, Paganetti 4th-down model comparison, WillKunkelV Texans CB
+press-rate decline). Eleven boundary posts excluded after absolute-
+timestamp verification.
+
+### NEW ITEMS
+
+1. @PFF — "Highest % of drives ending with a score this season"
+   (2026-10-08 5:30 PM CDT,
+   x.com/PFF/status/2108331714002977088-note-posted-image). NEW
+   LEADERBOARD (headline-only 5 rows as posted): Cowboys 61.1%,
+   49ers 52.6%, Jaguars 51.3%, Bills 50.0%, Lions 50.0%. Stated
+   source: PFF. Definition as given: percent of a team's offensive
+   drives that end in a score, full 2026 season. CSV:
+   docs/dfs/research/2026-10-09/full-tables/pff-drive-score-pct-
+   highest-2026.csv.
+2. @PFF — "Lowest % of drives ending in a score this season"
+   (2026-10-08 6:14 PM CDT). NEW LEADERBOARD (headline-only 5 rows
+   as posted): Titans 26.3%, Patriots 26.8%, Dolphins 27.0%, Chargers
+   27.7%, Steelers 29.8%. Stated source: PFF. Same definition, other
+   tail. CSV: docs/dfs/research/2026-10-09/full-tables/
+   pff-drive-score-pct-lowest-2026.csv.
+3. @PFF — "Most QB hits allowed this season" (2026-10-08 5:05 PM
+   CDT). NEW LEADERBOARD (6 rows as posted): Packers 30, Raiders
+   26, Panthers 23, Cowboys 23, Steelers 23, Bengals 23. Stated
+   source: PFF. CSV: docs/dfs/research/2026-10-09/full-tables/
+   pff-qb-hits-allowed-2026.csv.
+4. @PFF — "Highest offensive grade among WR heading into Week 5"
+   (2026-10-08 6:30 PM CDT). NEW LEADERBOARD (5 rows as posted):
+   CeeDee Lamb 92.1, Jaxon Smith-Njigba 92.0, Tee Higgins 91.3,
+   Zay Flowers 90.8, Mike Evans 90.6. Stated source: PFF offensive
+   grade. CSV: docs/dfs/research/2026-10-09/full-tables/
+   pff-wr-offensive-grade-wk5-2026.csv.
+5. @statyxio — TE zone-matchup composite (2026-10-08 10:53 PM CDT).
+   NEW composite datum: Arizona uses 81% zone on classified
+   dropbacks; Sam LaPorta caught 15 of 18 classified zone targets;
+   Arizona allows tight ends 9.4 yards per target against Cover 3,
+   ranking 30th; LaPorta 6th in EPA/target among TEs (min. 15
+   targets) at 0.583. Stated source: not stated. Innovation kernel:
+   scheme-specific receiving matchup layer — coverage-usage rate +
+   position-vs-coverage YPT allowed + player zone-target efficiency.
+6. @SumerSports — extreme possession-low datum (2026-10-08 10:29 PM
+   CDT): Cowboys' 20:39 time of possession vs Tampa Bay is their
+   second-lowest in a game since 2016. NEW datum. Stated source:
+   not stated (supporting image chart of their lowest-TOP games).
+   Innovation kernel: drive/TOP extremes as pace and method-of-
+   victory descriptors.
+7. @RyanPaganetti — 4th-down model comparison (2026-10-08 9:54 PM
+   CDT): Q4 8:36, Bucs up 14, 4th & 1 at DAL 1 — his tool: Win %
+   FG 98.6%, Go 98.7%, recommendation "(+0.1%) Go", decision: Go.
+   ESPN broadcast model had it "almost exactly even." NEW datum
+   (aggressive-coaching calibration reference). Stated source: ESPN
+   (broadcast model); image is Paganetti's own 4th-down tool.
+8. @WillKunkelV (Houston beat, home feed) — coverage-technique
+   trend (2026-10-08 8:57 PM CDT, verified absolute): Texans CBs
+   Derek Stingley Jr. and Kamari Lassiter have pressed opposing
+   receivers on career-low 11.0% and 7.5% of snaps this season;
+   cushions of 7.8 and 8.1 yards from the line of scrimmage are
+   higher than last season. NEW trend datum. Stated source: not
+   stated. Innovation kernel: press-rate/cushion trends as matchup
+   signals for WR projection vs specific secondaries.
+
+### RE-SIGHTINGS (already inventoried, new angle noted)
+
+- @MagicSportsGuy — ARBY (Adjusted Run Blocking) Week 5 matchup
+  board (2026-10-08 5:56 PM CDT): TB D-1st vs DAL O-27th (extreme
+  split; TB also 3rd in RB YPC allowed, DAL 21st in RB YPC allowed);
+  BUF O-1st vs LAR D-26th; GB O-32nd vs CHI D-32nd ("bad vs bad");
+  NE 31st vs LV 28th; LV 30th vs NE 29th; WAS 28th vs NYG 31st.
+  Already inventoried (pm2 headline #1); new angle: full board
+  ranks published pre-game. Stated source: StatRankings (author's
+  own platform; no explicit "Data:" line).
+- @RyanPaganetti — last-in-defensive-EPA/play favored by >TD:
+  14/392 games since 2000, 30% cover (2026-10-08 6:23 PM CDT,
+  pre-game). Already inventoried (pm2 headline #6). Postgame note:
+  Cowboys (-9.5) lost 24-16 — the 30% bucket held.
+- @statyxio — Javonte Williams vs TB run-defense mismatch
+  (2026-10-08 6:24 PM CDT): Tampa allows 28.9% rush success
+  (1st-toughest), 3rd-toughest vs inside runs; Javonte runs inside
+  on 67.7% of carries; soft spot right side, barely used. Already
+  inventoried (pm2 headline #7).
+- @GridironInfo_ — "Week 4 Dropback Outcome by QB" 32-QB five-bucket
+  table (2026-10-08 ~6:00 PM CDT). Already inventoried (pm2).
+- @GridironInfo_ — "2026 Worst EPA per Play Leaders" (nflverse)
+  and "Top 10 defensive tackles by pressures in 2026" (PFR,
+  through Week 3) + Ed Oliver addendum. Already inventoried (pm2).
+- @sfdata9ers — avg time-to-throw vs target depth (NGS, min 60
+  attempts; 2026-10-08 4:49 PM CDT). Already inventoried (pm2
+  headline #4).
+- @SumerSports — Bucs 15-play TD drive 10:58 (2nd-longest of 2026
+  season; Jets 19-play FG drive 11:48 longest) and "script flipped"
+  halftime note (7:55 PM / 8:42 PM CDT). Already inventoried (pm2).
+- @cmain7 — TNF Showdown ownership misses (Otton 27.8 projected ->
+  34.6 actual; Ferguson 20.2 -> 27.7) (2026-10-08 7:36 PM CDT).
+  Already inventoried (pm2 headline #2).
+- @SumerSports — Bucs 3x+ yards-after-contact vs Cowboys rushing
+  yards through 3Q (9:42 PM CDT). Covered by pm2's TNF crop;
+  re-sighting.
+
+### NO-CONTENT / FAILED ACCOUNTS THIS RUN
+
+- @FTNData — protected (no content accessible; following would
+  violate no-interaction rule).
+- @NFLResearcher — timeline renders empty (4 posts total, X search
+  "No results").
+- @NerdingonNFL — header loads, timeline empty.
+- No in-window posts: @PattonAnalytics, @ScottBarrettDFB,
+  @EstablishTheRun, @FantasyPtsData, @DynatyzeFF, @DevyEusuf,
+  @TomPelissero, @benbbaldwin, @jmthrivept (metrics lane; posted
+  injury items only), @hawkblogger (one TNF joke, no metrics).
+- @VSiN — resolves to an empty/abandoned handle (0 posts); the live
+  account @VSiNLive was NOT scanned (out of scope; flag for next
+  sweep's list update).
+
+### NEXT-SWEEP WATCH
+
+- @GridironInfo_ Kalshi award-odds daily series: absent again —
+  still owed.
+- Postgame advanced charts (EPA, success rate) for TNF land
+  overnight.
+- Friday practice reports (Lamar Jackson SNF availability) land
+  today.
+- TNF follow-ups: CeeDee Lamb quad status; Jerry Jones "significant
+  move" posture.
