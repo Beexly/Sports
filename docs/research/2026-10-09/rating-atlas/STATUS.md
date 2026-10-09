@@ -28,6 +28,9 @@ Printed by `python3 engine_math.py`, `glicko2.py`, `props_optimizer.py`, `verify
 - Skellam P(0; λ=1, μ=1) = 0.308508.
 - Dixon-Coles tau identities. An absent team (Ipswich) gets attack/defense 0, not a KeyError. No EPL showdown was scored.
 - 2-state Gaussian HMM log-likelihood rose on the toy series (−29.1 → −7.0).
+- Pasted Gibbs intervals are not posterior intervals. On n = 2025 and sigma = 13.36, the hfa interval 1.54..1.59 has half-width 0.025 against an iid sampling half-width 0.582 (ratio 23). The sigma interval half-width 0.015 against a Gaussian-sd half-width about 0.41 (ratio ~27). The tau interval half-width 0.045 against a 32-team sd half-width 0.95 (ratio 21).
+- Gibbs refit on `data/gse-dataset/games.jsonl`: 2019+, settled, non-neutral, OAK merged into LV, n = 1950, seed 7, 2000 draws, 500 burn-in. hfa 1.58 (0.98..2.16), sigma 13.41 (12.99..13.83), tau 3.47 (2.61..4.53). Not the pasted n = 2025. Top of this draw is BUF, BAL, KC, SF, GB, LA. Not a pick. Ladder sd stays 13.45.
+- Totals residual on the same file, 2006–2018, n = 3471, mean(actual − close) = +0.67. Dome mean +1.82, outdoors +0.55. No wind or temperature column, so the weather regression was not re-fit.
 
 ## Re-derived here
 
@@ -47,6 +50,7 @@ Derived in this folder and printed. Not copied from a dossier table.
 - Platt, temperature, and beta calibration. Seed 21 overconfident demo: Brier 0.2325 → 0.2139 after temperature refit. That drop is this seed, not a backtest.
 - Deflated Sharpe falls as the trial count rises (0.50 SR, 80 observations: trials 1 → 1.000, trials 50 → 0.972).
 - PAV isotonic, log-odds stack, scalar Kalman with process noise q.
+- Conjugate Gibbs for `margin = hfa + a_home − a_away + noise`, team effects sum to zero. Synthetic recovery is in `hier_margins.py`. The NFL numbers above are this sampler on this file, not the pasted chain.
 
 ## Dossier-only
 
@@ -64,3 +68,6 @@ Not re-run. Not claimed.
 - Bot battery, 0 handler errors, daemon heartbeat.
 - EPL Dixon-Coles showdown, 21.58 nats/match vs Pinnacle 0.97, and any +2062% gap. Not run. A score-matrix log-likelihood is not a 1X2 log-loss. Karlis-Ntzoufras EM collapsing lambda3 to 0.001 was not re-fit and is not called identified.
 - The xi grid was not swept. xi is not in `engine_math.py`.
+- Pasted Gibbs print: n = 2025, tau 3.82 [3.77, 3.86], sigma 13.36 [13.34, 13.37], hfa 1.56 [1.54, 1.59], and the team vector BUF 6.69 through NYJ −5.85. Point estimates sit near this file's refit. The intervals do not. They were not copied into the ladder or the published home-field addend (still +2.5, labeled not a fit).
+- Pasted weather/roof fit, 2006–2018, n = 2472, R² = 0.007, wind −0.197 per mph, temp deviation −0.0247 per °F, dome +0.000, intercept +1.735. Wind and temperature are not in `games.jsonl`. Not re-fit. The published wind addend stays −1.0 points per 10 mph, not −1.97, and it stays labeled not a fit.
+
