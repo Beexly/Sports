@@ -1,3 +1,5 @@
+> Read READ-FIRST.md first.
+
 @AGENTS.md
 
 # Galaxy Sports Edge (GSE) — CLAUDE.md

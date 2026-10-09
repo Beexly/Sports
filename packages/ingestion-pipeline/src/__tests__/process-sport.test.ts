@@ -367,9 +367,15 @@ describe("processSport", () => {
       skippedWellCovered: 0,
     }));
     mocks.confirmBatch.mockImplementation(confirmAll);
+    // Default provider selection: the paid Odds API leg is explicit opt-in
+    // (ODDS_PROVIDER=odds-api). Every paid-path test below runs under it.
+    process.env["ODDS_PROVIDER"] = "odds-api";
     // The 429 cooldown is module state in a long-lived worker; each test starts
     // from a clean one or the previous test's back-off leaks into this one.
     resetRundownCooldowns();
+  });
+  afterEach(() => {
+    delete process.env["ODDS_PROVIDER"];
   });
 
   describe("fixture confirmation guard (C-111)", () => {
@@ -735,12 +741,14 @@ describe("processSport", () => {
       warn.mockRestore();
     });
 
-    it("paid circuit CLOSED with a key: the paid leg still runs first (no behaviour change when paid works)", async () => {
+    it("ESPN-first: the keyless path runs BEFORE the paid leg; paid follows only on empty ESPN (ODDS_PROVIDER=odds-api, circuit closed)", async () => {
       mocks.circuitState.mockReturnValue("closed");
       await processSport(SPORT, "real-paid-key", gates());
+      expect(vi.mocked(fetchEspnOddsForSport)).toHaveBeenCalledTimes(1);
       expect(mocks.getOdds).toHaveBeenCalledTimes(1);
-      // Paid returned an event, so the keyless path is never consulted.
-      expect(fetchEspnOddsForSport).not.toHaveBeenCalled();
+      const espnOrder = vi.mocked(fetchEspnOddsForSport).mock.invocationCallOrder[0]!;
+      const paidOrder = mocks.getOdds.mock.invocationCallOrder[0]!;
+      expect(espnOrder).toBeLessThan(paidOrder);
     });
 
     it("paid empty AND keyless empty: Rundown is consulted only after the Galaxy/ESPN attempt", async () => {

@@ -421,12 +421,49 @@ export async function processSport(
       apiKey === "absent";
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
     const eventOddsByExternalId = new Map<string, unknown>();
+    // Grok ESPN-first: the paid Odds API leg runs only when the deployment
+    // explicitly selects it (ODDS_PROVIDER=odds-api) and its circuit is closed.
+    const oddsProviderIsOddsApi =
+      (process.env["ODDS_PROVIDER"] ?? "").trim().toLowerCase() === "odds-api";
+
+    // Galaxy/ESPN keyless FIRST (Grok ESPN-first lane): the free path runs
+    // before any paid call. Registry-gated inline scoreboard odds; the second
+    // book (Kalshi via PredExon) attaches inside the fetch when PREDEXON_INGEST
+    // is on. Never invents — soft-fails empty. (Product path per ledger C-104;
+    // Rundown is at most a bridge.)
+    let rundownAttemptNote: string | null = null;
+    let espnAttemptNote: string | null = null;
+    if (events.length === 0) {
+      try {
+        // One PredExon catalog per sport per cycle (cached inside; undefined
+        // while PREDEXON_INGEST is off, which is the default).
+        const espn = await fetchEspnOddsForSport(sport.key, {
+          secondBook: createGalaxySecondBook(),
+        });
+        if (espn.events.length > 0) {
+          events = espn.events;
+          oddsProviderTag = "espn_public";
+          console.log(
+            `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
+              (espn.error ? ` (note: ${espn.error})` : ""),
+          );
+        } else {
+          espnAttemptNote = espn.error ?? "espn odds empty";
+          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+        }
+      } catch (espnErr) {
+        espnAttemptNote =
+          espnErr instanceof Error ? espnErr.message : String(espnErr);
+        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
+      }
+    }
 
     // WP-27 step 2: while the HTTP 402 payment circuit is OPEN the paid client
     // refuses every call anyway (fail-closed, no upstream request). Skip the
-    // paid leg outright so the cycle goes straight to the keyless Galaxy path
-    // and no phantom paid request is counted. half_open still probes upstream
-    // (one call at a time) so a recovered key is noticed on its own.
+    // paid leg outright so no phantom paid request is counted. half_open still
+    // probes upstream (one call at a time) so a recovered key is noticed on
+    // its own. The paid leg also requires ODDS_PROVIDER=odds-api (explicit
+    // deployment opt-in); otherwise the cycle stays on the free paths.
     const paidCircuitOpen = !oddsKeyIsSentinel && getOddsPaymentCircuitBreaker().getState() === "open";
     if (paidCircuitOpen) {
       oddsProviderTag = "paid-circuit-open";
@@ -436,7 +473,7 @@ export async function processSport(
       );
     }
 
-    if (!oddsKeyIsSentinel && !paidCircuitOpen) {
+    if (events.length === 0 && oddsProviderIsOddsApi && !oddsKeyIsSentinel && !paidCircuitOpen) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
       // covers the need. For "odds" the guard passes today (no free odds source
       // is cleared), so the paid call proceeds. If a free odds source is cleared
@@ -549,40 +586,7 @@ export async function processSport(
       }
     }
 
-    // Galaxy/ESPN keyless (inline scoreboard odds, registry-gated) is the
-    // product path when the paid feed yields nothing (key absent, circuit open,
-    // or an empty/failed paid response). It runs BEFORE Rundown: we are the
-    // provider, Rundown is at most a bridge (ledger C-103/C-104). Never invents
-    // — soft-fails empty. The second book (Kalshi via PredExon) is attached
-    // inside the fetch when PREDEXON_INGEST is on.
-    let rundownAttemptNote: string | null = null;
-    let espnAttemptNote: string | null = null;
-    if (events.length === 0) {
-      try {
-        // One PredExon catalog per sport per cycle (cached inside; undefined
-        // while PREDEXON_INGEST is off, which is the default).
-        const espn = await fetchEspnOddsForSport(sport.key, {
-          secondBook: createGalaxySecondBook(),
-        });
-        if (espn.events.length > 0) {
-          events = espn.events;
-          oddsProviderTag = "espn_public";
-          console.log(
-            `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
-              (espn.error ? ` (note: ${espn.error})` : ""),
-          );
-        } else {
-          espnAttemptNote = espn.error ?? "espn odds empty";
-          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
-        }
-      } catch (espnErr) {
-        espnAttemptNote =
-          espnErr instanceof Error ? espnErr.message : String(espnErr);
-        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
-      }
-    }
-
-    // TheRundown: full replace when primary AND the keyless path are empty;
+    // TheRundown: full replace when the keyless path AND the paid leg are empty;
     // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
     // fully covered slate.
     const rundownKey = resolveRundownApiKey();
