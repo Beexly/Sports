@@ -16,11 +16,11 @@ A box is checked only when the command printed, or the file on this branch conta
 
 ## Open — next accuracy work
 
-- [ ] `FULL_STACK_DELIVERY.md` still contains the old `def ci()`. The replacement is `ci_fix.py`. The delivery file itself was not rewritten.
-- [ ] Part 5 still prints sigma 13.36 [13.34, 13.37]. Same object as the retired home-field band. Do not cite.
-- [ ] Kalman docstring in the delivery still cites home-field [1.54, 1.59]. Branch `engine_math.py` does not.
-- [ ] Weather table in the delivery still says +1.74 means actuals beat closes by ~1.7. Contradicts LOOP6_DELTA in the same file.
-- [ ] Manifest still says Glicko-2 matches the paper exactly.
+- [x] `FULL_STACK_DELIVERY.md` rewritten on this branch (2026-10-10): `ci()` is now `ci_of_mean` marked do-not-cite; printed Gibbs intervals come from `draws_interval` (2.5/97.5 of draws).
+- [x] Part 5 sigma row corrected: point ~13.4, ladder stays 13.45; the mean-CI band is retired in the table row itself.
+- [x] Kalman docstring corrected: draws interval [1.01, 2.18] cited; mean-CI retired; production 0.025 EPA/play untouched.
+- [x] Weather intercept row corrected: +1.74 is the 0 mph / 70 F baseline, not the average miss, not an addend.
+- [x] Manifest corrected: Glicko-2 canonical to rounding, 1464.05 vs paper 1464.06.
 - [ ] Wind −0.197 not re-fit. `games.jsonl` has no wind column.
 - [ ] EPL showdown not re-run here. `research.db` is not in this checkout.
 - [ ] No market in the 2025 weeks 1–6 backtest. 55.8%, Brier 0.2868 → 0.2464 after T = 7.512. Overconfident. Not a 100% engine.

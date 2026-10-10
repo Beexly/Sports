@@ -8,6 +8,7 @@ package, no Stripe, no MODEL_VERSION.
     python3 run_cycle.py
 """
 
+import os
 import subprocess
 import sys
 
@@ -15,10 +16,15 @@ CYCLE = [
     "glicko2.py",
     "engine_math.py",
     "props_optimizer.py",
+    "verify_claims.py",
 ]
 
 
 def main():
+    # Keep __pycache__ out of the research tree (bytecode from imported
+    # siblings once swept a .pyc into a commit).
+    env = dict(os.environ)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
     failures = []
     for script in CYCLE:
         print("== %s" % script)
@@ -27,6 +33,7 @@ def main():
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
+            env=env,
         )
         sys.stdout.write(proc.stdout)
         if proc.stdout and not proc.stdout.endswith("\n"):
