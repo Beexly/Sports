@@ -159,22 +159,3 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
-
-
-// Receiver Usage -> GSE target dominance (SHADOW)
-export {
-  computeReceiverUsage,
-  computeMetricsForWindow,
-  applyShrinkage,
-  filterPointInTime,
-  TARGET_SHARE_WEIGHT,
-  DEEP_TARGET_SHARE_WEIGHT,
-  RZ_TARGET_SHARE_WEIGHT,
-  MIN_TARGETS_FLOOR,
-  POSITION_MEAN_TARGET_SHARE,
-  POSITION_MEAN_DEEP_SHARE,
-  POSITION_MEAN_RZ_SHARE,
-  type ReceiverTarget,
-  type ReceiverUsageMetrics,
-  type ReceiverUsageRecord,
-} from "./receiver-usage.js";

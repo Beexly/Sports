@@ -4492,21 +4492,3 @@ export {
   fetchUpcomingWindows,
   type GameWindow,
 } from "./watch/watch-scheduler.js";
-
-
-export {
-  computeReceiverUsage,
-  computeMetricsForWindow,
-  applyShrinkage,
-  filterPointInTime,
-  TARGET_SHARE_WEIGHT,
-  DEEP_TARGET_SHARE_WEIGHT,
-  RZ_TARGET_SHARE_WEIGHT,
-  MIN_TARGETS_FLOOR,
-  POSITION_MEAN_TARGET_SHARE,
-  POSITION_MEAN_DEEP_SHARE,
-  POSITION_MEAN_RZ_SHARE,
-  type ReceiverTarget,
-  type ReceiverUsageMetrics,
-  type ReceiverUsageRecord,
-} from "./expected-metrics/index.js";
