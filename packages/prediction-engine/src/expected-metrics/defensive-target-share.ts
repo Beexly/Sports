@@ -18,9 +18,15 @@ export interface DefensiveTargetShare {
   readonly rbShareAllowed: number | null;
 }
 
-export function loadRosterPositions(season: number, maxWeek: number): Map<string, string> {
+interface RosterRow {
+  week: number;
+  gsisId: string;
+  position: string;
+}
+
+function loadRosterRows(season: number): RosterRow[] {
   const filePath = path.join(process.cwd(), `packages/data-ingestion/data/rosters-${season}.jsonl`);
-  const result = new Map<string, string>();
+  const result: RosterRow[] = [];
   if (!fs.existsSync(filePath)) return result;
 
   const content = fs.readFileSync(filePath, 'utf-8');
@@ -28,20 +34,31 @@ export function loadRosterPositions(season: number, maxWeek: number): Map<string
     if (!line.trim()) continue;
     try {
       const row = JSON.parse(line);
-      // Ensure we only use rosters from before maxWeek
-      if (row.week && parseInt(row.week, 10) >= maxWeek) continue;
-
       const gsis = row.gsis_id;
       let pos = row.position;
       if (pos === 'Offense' || pos === 'Defense' || !pos) {
         pos = row.depth_chart_position || pos;
       }
       if (gsis && pos) {
-        result.set(gsis, pos);
+        result.push({
+          week: row.week ? parseInt(row.week, 10) : 0,
+          gsisId: gsis,
+          position: pos,
+        });
       }
-    } catch (e) {
+    } catch {
       // Ignore parse errors on individual lines
     }
+  }
+  return result;
+}
+
+function buildPositionMap(rosterRows: RosterRow[], maxWeek: number): Map<string, string> {
+  // Point-in-time: only roster rows from before maxWeek
+  const result = new Map<string, string>();
+  for (const r of rosterRows) {
+    if (r.week >= maxWeek) continue;
+    result.set(r.gsisId, r.position);
   }
   return result;
 }
@@ -49,28 +66,6 @@ export function loadRosterPositions(season: number, maxWeek: number): Map<string
 export function computeDefensiveTargetShares(
   rows: readonly PbpRow[],
 ): DefensiveTargetShare[] {
-  // 1. Group rows by season and defteam and find all weeks.
-
-  interface TeamSeasonData {
-    playedWeeks: Set<number>;
-    targetsByWeek: Map<number, { wr: number; te: number; rb: number }>;
-  }
-
-  const dataByTeamSeason = new Map<string, TeamSeasonData>();
-
-  const getTeamData = (team: string, season: number) => {
-    const key = `${season}-${team}`;
-    let data = dataByTeamSeason.get(key);
-    if (!data) {
-      data = {
-        playedWeeks: new Set(),
-        targetsByWeek: new Map(),
-      };
-      dataByTeamSeason.set(key, data);
-    }
-    return data;
-  };
-
   const allWeeksBySeason = new Map<number, Set<number>>();
   const rowsBySeason = new Map<number, PbpRow[]>();
 
@@ -109,15 +104,15 @@ export function computeDefensiveTargetShares(
 
     const maxWeek = sortedWeeks[sortedWeeks.length - 1]!;
 
+    // Load roster file once per season; filter point-in-time per snapshot week.
+    const rosterRows = loadRosterRows(season);
+
     // For each target week we calculate the shares
     for (let snapshotWeek = 1; snapshotWeek <= maxWeek + 1; snapshotWeek++) {
        // We can only use roster data up to snapshotWeek - 1
-       const rosterPositions = loadRosterPositions(season, snapshotWeek);
+       const rosterPositions = buildPositionMap(rosterRows, snapshotWeek);
 
        // Calculate everything for this snapshot week
-       const tempTeamData = new Map<string, { gamesPlayed: number, wr: number, te: number, rb: number }>();
-
-       // Better: compute targets properly for this snapshot
        const gamesPlayedByTeam = new Map<string, Set<string>>(); // team -> set of game_ids
        const targetsByTeam = new Map<string, { wr: number, te: number, rb: number }>();
 
