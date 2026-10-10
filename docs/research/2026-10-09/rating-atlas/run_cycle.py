@@ -44,6 +44,27 @@ def main():
     if failures:
         print("run_cycle FAILED: %s" % ", ".join("%s (%d)" % f for f in failures))
         return 1
+
+    # Regression gate: the delivery rewrite must stay fixed. These strings are
+    # killed claims; if they reappear, the rewrite regressed.
+    delivery = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            "FULL_STACK_DELIVERY.md")
+    if os.path.exists(delivery):
+        text = open(delivery, encoding="utf-8").read()
+        banned = [
+            "matches Glickman's published example exactly",
+            "def ci(",
+            "tighten to 13.4",
+            "hfa=1.56 [1.54,1.59]",
+            "sigma=13.36 [13.34,13.37]",
+            "13.36 [13.34, 13.37]",
+        ]
+        hits = [b for b in banned if b in text]
+        if hits:
+            print("run_cycle FAILED: delivery regression gate hit: %s" % hits)
+            return 1
+        print("delivery regression gate ok")
+
     print("run_cycle ok: %s" % ", ".join(CYCLE))
     return 0
 

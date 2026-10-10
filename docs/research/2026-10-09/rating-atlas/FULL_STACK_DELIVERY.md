@@ -6558,7 +6558,7 @@ if __name__ == "__main__":
 | Backtest 2025 NFL wks 1-6 (real ESPN data, leakage-free) | Brier 0.2868 -> 0.2464 after temperature refit, PIT GOOD | re-run: `/backtest 2025 6` |
 | Model vs Pinnacle close (held-out EPL 2024-25) | 1.0470 vs 0.9664; 30/70 pool 0.9795 | re-run: rebuild DB + `data/fit_engines.py` |
 | Modern NFL home advantage (Gibbs posterior, 2,025 games) | 1.56 pts, 95% posterior interval [1.01, 2.18] (draws sd 0.30; a [1.54,1.59]-style print is the CI of the posterior MEAN — do not cite as the interval) | re-run: `data/analyze_nfl.py` |
-| Game noise sigma (posterior) | 13.36 [13.34, 13.37] — MEASURED | re-run: `data/analyze_nfl.py` |
+| Game noise sigma (posterior) | point ~13.4; ladder stays 13.45 — the [13.34, 13.37] mean-CI is retired (~20x too narrow); print draws percentiles | re-run: `data/analyze_nfl.py` (`draws_interval`) |
 | Wind effect on totals vs real closes (2,472 games) | -0.197 pts/mph (se 0.027), R2=0.007 — small covariate | re-run: `data/analyze_nfl.py` |
 | Shin devig balanced book | z = 0.0476, probs 0.5/0.5 | self-check + `/predict shin` |
 | Pick6/PrizePicks structural hold (fair legs) | 25-40.6% power; Flex5/6 player-positive -> legs shaded to 52%+ | `python3 pick6_hold.py` |
