@@ -117,3 +117,10 @@
 - THE DFS PIPELINE: pull_entries.py (cookies) → entries_{contest}.jsonl → consensus.py → consensus_{contest}.json. Ready for tomorrow's single-entry 20k tournament
 - Metric universe agent closed (catalog already reconciled + pushed). All three exploration lanes closed.
 - Next: tomorrow AM = user cookie export → pull → consensus → leverage report before 12pm lock
+
+### [23:45] HERMES PC LANE LIVE — code review shipped to the bus
+- Hermes (PC) running compute_missing_metrics.py; reviewed vs actual nflfastR schema
+- 2 real bugs flagged: merge on play_id alone (cross-game collision — must be [game_id,play_id]); success recompute overwrites native nflfastR column (renamed success_recomputed + agree-rate = free validation)
+- 2 flags: no REG filter; team_efficiency play-type filter mismatch vs our tables
+- Opportunity: cpoe_proxy vs native cpoe correlation = the item-2 validation seed (r>=0.8 target) — added to their DIAGNOSTIC.json contract
+- REVIEW_HERMES_compute_missing_metrics.md pushed to bus (Hermes reads the same branch)
