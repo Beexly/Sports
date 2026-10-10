@@ -13169,3 +13169,127 @@ press-rate decline) appeared in-window this morning.
   (stats.hawkblogger.com) — deeper method capture for a future read.
 - @VSiN remains a dead handle (0 posts); @VSiNLive NOT scanned
   (out of this sweep's scope; flag for list update).
+
+## X ANALYTICS SWEEP 2026-10-10 (OVERNIGHT)
+
+Window: posts after ~21:00 CDT Fri 2026-10-09 through ~00:30 CDT
+Sat 2026-10-10 (~3.5h, overnight before Week 5 Sunday). Read-only
+sweep as @GalaxySportsHQ (no likes/reposts/replies/follows/DMs).
+Login confirmed; no CAPTCHAs or login walls. Single browser task:
+home feed + 21 analytics accounts + term searches (EPA, CPOE,
+TPRR, pass rush win rate, aggressiveness, DT Impact) +
+injury/market/scheme accounts. X absolute timestamps verified on
+post pages. THIN WINDOW: most accounts went quiet by ~20:30-21:00
+CDT Friday. @FTNData still protected (no follow requested).
+@NerdingonNFL (1 post) and @NFLResearcher (4 posts) timelines
+would not render — effectively empty/unverifiable. @VSiN resolves
+to an unrelated 0-post account (@VSiNLive used instead).
+@JohnMcClainDST no longer exists — prior-sweep PFN365 repost
+replaced by capturing the original @PFN365 post directly.
+
+### NEW ITEMS
+
+1. @GridironInfo_ — "Avg. Separation (Leading Receiver by Team)"
+   (2026-10-09 10:00 PM CDT, verified absolute,
+   x.com/GridironInfo_/status/2108754519706231290). NEW TABLE:
+   each team's leading receiver in average separation from the
+   nearest defender, 2026 season through Week 4. Definition as
+   given (quote): "Shows each team's leading receiver in average
+   separation from the nearest defender." Columns: division, team,
+   player, avg separation (yards). All 32 rows captured —
+   AFC EAST: Caleb Douglas MIA 5.3; Khalil Shakir BUF 4.4;
+   DeMario Douglas NE 3.8; Isaiah Williams NYJ 3.0.
+   AFC NORTH: Dohnte Meyers CIN 4.3; Rashad Bateman BAL 3.4;
+   KC Concepcion CLE 3.4; Roman Wilson PIT 2.6.
+   AFC SOUTH: Laquon Treadwell IND 3.6; Jared Wayne HOU 3.2;
+   Carnell Tate TEN 3.1; Jakobi Meyers JAX 3.0.
+   AFC WEST: Rashee Rice KC 4.3; Jaylen Waddle DEN 4.2;
+   Ladd McConkey LAC 3.1; Jalen Nailor LV 2.7.
+   NFC EAST: Dyami Brown WAS 3.7; Ryan Flournoy DAL 3.3;
+   Malik Nabers NYG 3.1; Dontayvion Wicks PHI 3.0.
+   NFC NORTH: Skyy Moore GB 4.3; Kalif Raymond CHI 4.2;
+   Isaac TeSlaa DET 3.7; Justin Jefferson MIN 3.0.
+   NFC SOUTH: Chris Godwin Jr. TB 4.2; Drake London ATL 3.6;
+   Chris Olave NO 2.9; Tetairoa McMillan CAR 2.9.
+   NFC WEST: Deebo Samuel Sr. SF 4.6; Cooper Kupp SEA 3.7;
+   Kendrick Bourne ARI 3.4; Konata Mumpfield LAR 2.7.
+   Stated source (chart footer): "nflreadpy | 2026-10-06".
+   Caveats: none stated (chart titled "Through Week 4"). CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   gridironinfo-avg-separation-leading-receiver-2026.csv.
+   Innovation kernel (attributed, not a build order): per-team
+   WR1 separation leaderboard as a direct matchup input; pairs
+   with shadow-coverage notes (cf. @statyxio Pop Douglas /
+   Taron Johnson).
+
+2. @PFN365 — "DT Impact" top-10 (2026-10-09 3:30 PM CDT,
+   verified absolute,
+   x.com/PFN365/status/2108656283108659294; owed from the
+   2026-10-09 evening sweep). NEW METRIC SIGHTING (definition
+   unstated): "The top 10 NFL defensive tackles through 4 weeks,
+   per PFN's DT Impact metric": 1. DeForest Buckner 95.4;
+   2. Mason Graham 95.0; 3. Jeffery Simmons 93.9; 4. Dexter
+   Lawrence 92.8; 5. Leonard Williams 91.2; 6. Deone Walker 91.0;
+   7. Alim McNeill 89.8; 8. Malcolm Roach 88.0; 9. Sheldon
+   Rankins 87.7; 10. Jonathan Allen 87.0. Stated source:
+   "PFN's DT Impact metric" (chart header "PFN'S NFL IMPACT
+   PLAYER GRADES", pfsn.app/nflimpact). Definition: NOT STATED —
+   no formula/criteria in post or image; NOT inventoried as a
+   defined metric. Caveats: none stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   pfn365-dt-impact-top10-2026.csv. Relation note: young players
+   grade with veterans (rookie Mason Graham #2, Deone Walker #6).
+
+### PARTIAL SIGHTINGS (owed next sweep)
+
+- @MagicSportsGuy — ARBY (Adjusted Run Blocking Yards) Matchup
+  Ratings, Week 5 (~4:20 PM CDT Fri, before window): partial
+  values visible on profile only — TB @ DAL: TB D-1st;
+  BUF (O-1st) vs LAR (D-26th); GB (O-32nd) vs CHI (D-32nd);
+  NE (O-31st)... Definition not captured; not opened.
+- @statyxio (8:42 PM CDT, ~18 min before window):
+  "Pop Douglas actually has the best separation from NEP WR room.
+  One problem, he is projected to be mostly shadowed by Taron
+  Johnson." Cross-reference: DeMario Douglas NE 3.8 in the
+  GridironInfo_ chart. Innovation kernel (attributed): separation
+  leader x shadow-coverage collision as WR matchup flag.
+
+### RE-SIGHTINGS / NO NEW ANGLE
+
+- @ScottBarrettDFB: Titans/Pokemon joke 9:35 PM CDT — fluff,
+  no metric.
+- @DonAtkinsonNFL: Kay Adams joke quote 11:14 PM CDT + Kittle
+  birthday post — fluff, no metric.
+- @jmthrivept in-window posts non-sports; sports posts (Caleb
+  Williams 8:27 PM, Zay Flowers "4h ago") just before window.
+- Term searches: "EPA" noise only; "CPOE" — gambling reply 1h,
+  "Daniels has a higher EPA & CPOE than Baker" 7h (outside);
+  "TPRR" — Roblox noise; @AhaanRungta 6h "Cardinals #2 in 2-high
+  shell usage" (outside); "pass rush win rate" — unverified fan
+  reply @OneShiftDale 10:51 PM "second-highest interior pass-rush
+  win rate at 33% through two games" (fan content, NOT verified —
+  do not repeat); @pdubyaa Traore draft video 3h; "aggressiveness"
+  — nothing NFL-relevant; "DT Impact" — led to @PFN365 (captured).
+- Nothing in-window: @cmain7; @RyanPaganetti (go-for-2-down-8
+  re-sight: 53 uses by 23 franchises since 2018, 7h ago);
+  @sfdata9ers; @hawkblogger; @SumerSports (Oct 8);
+  @PattonAnalytics (Oct 8); @EstablishTheRun (Sunday injury list
+  7h, outside); @FantasyPtsData; @DevyEusuf (Johnston out 8h);
+  @DynatyzeFF (14h); @PFF (13h); @32BeatWriters (10h).
+- No in-window posts from @AdamSchefter, @RapSheet,
+  @TomPelissero, @JFowlerESPN, @MikeGarafolo; no in-window NFL
+  Week 5 line moves/steam/splits from @VSiNLive, @Covers,
+  @ActionNetworkHQ (CFB-only market content: FSU-Louisville opened
+  LOU -7.5 closed -5 toward FSU; live Kalshi FSU 83% -> 22%;
+  Action Network CFB Week 6 bet/money % — public USC 77% bet% vs
+  Texas 88% money% divergence); no scheme content from @Nate_Tice
+  or @benbbaldwin.
+- @GridironInfo_: no new Kalshi award-odds content (series last
+  ran Sep 27 per search).
+
+### DATA-SOURCE EVIDENCE (this sweep)
+
+- "nflreadpy | 2026-10-06" — NEW source sighting (@GridironInfo_
+  chart footer).
+- "PFN's DT Impact metric" / pfsn.app/nflimpact — NEW grading
+  product sighting (@PFN365).
