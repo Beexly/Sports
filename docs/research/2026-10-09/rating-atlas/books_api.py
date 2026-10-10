@@ -108,6 +108,36 @@ Underdog: app.underdogsports.com pickem = LOGIN WALL (2026-10-09). api.underdogf
 Future: harvest with a logged-in session (performance-entry capture then replay).
 """
 
+CAESARS_RECIPE = """
+Caesars (2026-10-10 status): NO public API. The community caesars "apex"
+markets endpoint exists but is fragile and auth-gated — do NOT shell-fetch it;
+it 403s keyless and breaks without notice.
+Lane: browser-session capture (performance-entry replay from a logged-in tab,
+same recipe shape as DK/FD) or an aggregator lane as the primary source.
+Warehouse key rule: rows keyed (game_id, book="caesars", market, observed_at),
+observed_at = capture clock, and observed_at <= decision time t.
+"""
+
+BETMGM_RECIPE = """
+BetMGM (2026-10-10 status): browser-lane. sportsbook-nash.api.betmgm.com style
+JSON (markets by evId/subId, mirrors DK's shape) is reachable only with
+session headers from a logged-in tab; keyless curl 403s. Recipe: open
+sportsbook.betmgm.com in a browser tab, capture the XHR for the event's
+markets (performance-entry replay), then store per the warehouse key rule:
+rows keyed (game_id, book="betmgm", market, observed_at), observed_at <= t.
+No keyless shell fetch is implemented — do not add one that 403s.
+"""
+
+FANATICS_RECIPE = """
+Fanatics (2026-10-10 status): browser-lane only, no public odds API. The
+sportsbook is a white-labeled Massachusetts-regulated app; its private
+endpoints require an authenticated session and rotate. Recipe: logged-in tab,
+XHR capture (same shape as DK/FD), store per the warehouse key rule: rows
+keyed (game_id, book="fanatics", market, observed_at), observed_at <= t.
+Aggregator lane (e.g. a licensed odds aggregator with a key) is the preferred
+first attempt; do not shell-fetch the private endpoints keyless.
+"""
+
 def snapshot():
     """One-command snapshot: shell lanes now + recipes for browser lanes."""
     out = {"stamp": STAMP, "pinnacle": {}, "espn_scoreboard": None, "espn_injuries_summary": None, "errors": []}
@@ -249,3 +279,4 @@ if __name__ == "__main__":
         print("HARVEST:", json.dumps(rows))
     elif mode == "recipes":
         print(DK_RECIPE); print(FD_RECIPE); print(PP_RECIPE); print(UNDERDOG_NOTE)
+        print(CAESARS_RECIPE); print(BETMGM_RECIPE); print(FANATICS_RECIPE)

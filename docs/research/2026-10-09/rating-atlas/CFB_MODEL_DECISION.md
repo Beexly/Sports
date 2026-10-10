@@ -48,3 +48,4 @@ Until that fit prints, college is a separate model that has not been built. It i
 - Intake exists on main (`cfbfastr-intake.ts`); no college model exists in `packages/prediction-engine`, and none was added.
 - Saturday's slate is not scored until sigma and home field are fit on college rows only — against a real college close, with last season sealed. NFL 13.45 and HFA 1.56 (and the production 0.025 EPA/play) are NFL constants and stay out of college.
 - The 2026-10-10 point-in-time warehouse (`WAREHOUSE_SCHEMA.md`) is where a college close join would land once a college close source exists.
+- Saturday slate is not scored from this packet.

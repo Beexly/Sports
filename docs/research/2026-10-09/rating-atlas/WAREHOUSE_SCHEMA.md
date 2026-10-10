@@ -132,3 +132,45 @@ than 0.4 σ is a FLAG, not a pick. It says the market disagrees with us enough
 to look again; it never emits a bet and never replaces the close. The DK
 sigma values are diagnostics of how the book prices its own distribution —
 they are not written into production scoring.
+
+## Novig public CSV harvest (keyless, no de-vig needed)
+
+Command:
+
+```
+python3 warehouse_ingest.py novig [--date YYYY-MM-DD]   # default: latest published
+```
+
+- Index `https://data.novig.com/reporting/trade-data/index.json` (keyless,
+  no signed endpoints) lists the published days. On 2026-10-10 the latest was
+  **2026-10-08** (today's file not yet published — the harvest returns a
+  clean-fail message and exits 0 for unpublished days; verified).
+- First measured harvest: **168,559 market rows** for 2026-10-08, stored in
+  `novig_snapshots` keyed `(observed_at, market_id, market)`;
+  `observed_at` = the trading day end `2026-10-08T23:59:59Z`.
+- Execution tape: **602,056 trades** downloaded alongside
+  (`snapshots/novig/trades_2026-10-08.csv`, gitignored); first row recorded
+  in the harvest output. The tape stays research-only.
+- Diagnostic price = **OHLC mid**: mean(open, high, low, close) when all four
+  print, else NULL. No de-vig — these are matched-trade pregame prices, not a
+  two-sided book.
+- Leakage rule unchanged: `observed_at <= t`; the harvest self-checks that
+  every stored row satisfies it (raises on violation), and `leaktest`
+  still fails closed on any post-t join.
+
+## Book-lane status (2026-10-10)
+
+| Lane | Status | Where |
+|---|---|---|
+| Pinnacle (guest arcadia) | LIVE, keyless, retry ×3 | books_api.py shell lane |
+| ESPN scoreboard + injuries | LIVE, keyless | books_api.py shell lane |
+| DK | LIVE, browser recipe | DK_RECIPE (browser tab) |
+| FanDuel / PrizePicks | LIVE, browser recipe | FD_RECIPE / PP_RECIPE |
+| Underdog | LOGIN WALL; API alive, pickem 404 keyless | UNDERDOG_NOTE |
+| Caesars | NO public API; apex pattern fragile/auth-gated — browser or aggregator lane | CAESARS_RECIPE |
+| BetMGM | browser-lane (session headers; keyless 403) | BETMGM_RECIPE |
+| Fanatics | browser-lane only; aggregator preferred | FANATICS_RECIPE |
+| Novig | LIVE, keyless public CSV reports | `warehouse_ingest.py novig` |
+
+Every lane stores under the same key rule: (game_id, book, market,
+observed_at), `observed_at <= decision time t`.

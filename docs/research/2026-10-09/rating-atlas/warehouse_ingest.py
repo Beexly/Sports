@@ -86,6 +86,20 @@ CREATE TABLE IF NOT EXISTS injury_snapshots (
     source_file TEXT NOT NULL,
     PRIMARY KEY (observed_at, book, team, player_id, raw_key)
 );
+CREATE TABLE IF NOT EXISTS novig_snapshots (
+    observed_at TEXT NOT NULL,
+    market_id TEXT NOT NULL,
+    book TEXT NOT NULL,
+    market TEXT NOT NULL,
+    league TEXT,
+    market_type TEXT,
+    contract_series TEXT,
+    open REAL, high REAL, low REAL, close REAL, mid REAL,
+    daily_volume REAL, open_interest REAL, status TEXT,
+    raw_key TEXT NOT NULL,
+    source_file TEXT NOT NULL,
+    PRIMARY KEY (observed_at, market_id, market)
+);
 """
 
 
@@ -316,6 +330,103 @@ def leaktest(db=DEFAULT_DB, snapshots_dir=None):
 
 # ---------------- Gaussian-close CRPS baseline (frozen week list) ----------------
 
+# ---------------- Novig public CSV harvest (keyless, warehouse-compatible) ----------------
+
+NOVIG_INDEX = "https://data.novig.com/reporting/trade-data/index.json"
+NOVIG_BASE = "https://data.novig.com/reporting/trade-data"
+NOVIG_SNAP = os.path.join(HERE, "snapshots", "novig")
+
+
+def _http_get(url, dest, timeout=300):
+    import urllib.request
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    with urllib.request.urlopen(url, timeout=timeout) as r, open(dest, "wb") as f:
+        f.write(r.read())
+    return dest
+
+
+def novig_harvest(date=None, db=DEFAULT_DB):
+    """Keyless harvest of Novig's public daily trade-data reports.
+
+    Downloads the latest published day's trades.csv (execution tape; recorded
+    as a count + sample, the tape itself stays in snapshots/novig/) and
+    markets.csv (per-market daily OHLC), parsed into append-only rows keyed
+    (market_id, 'novig', ticker, observed_at) where observed_at = the trading
+    day END (T23:59:59Z). Diagnostic price = OHLC mid (mean of open/high/low/
+    close when all four print; else NULL). No de-vig: these are matched-trade
+    pregame prices, not a two-sided book. No signed endpoint, no key, no spend.
+
+    Fails CLEANLY when the requested day is not yet published (prints and
+    returns instead of raising). Leakage rule unchanged: observed_at <= t.
+    """
+    import urllib.request
+    os.makedirs(NOVIG_SNAP, exist_ok=True)
+    try:
+        with urllib.request.urlopen(NOVIG_INDEX, timeout=60) as r:
+            index = json.load(r)
+    except Exception as e:
+        return {"status": "clean-fail", "reason": "index unreachable: %s" % e}
+    days = index.get("dates") or []
+    if not days:
+        return {"status": "clean-fail", "reason": "index has no dates"}
+    day = date or days[-1]
+    if day not in days:
+        return {"status": "clean-fail", "reason": "%s not published (latest %s)" % (day, days[-1])}
+    markets_csv = _http_get("%s/%s/markets.csv" % (NOVIG_BASE, day),
+                            os.path.join(NOVIG_SNAP, "markets_%s.csv" % day))
+    trades_csv = _http_get("%s/%s/trades.csv" % (NOVIG_BASE, day),
+                           os.path.join(NOVIG_SNAP, "trades_%s.csv" % day))
+    observed_at = day + "T23:59:59Z"
+    con = connect(db)
+    rows, tape_n, tape_first = [], 0, None
+    with open(trades_csv, encoding="utf-8", newline="") as f:
+        for r in csv.DictReader(f):
+            tape_n += 1
+            if tape_first is None:
+                tape_first = {k: r.get(k) for k in ("timestamp", "marketId", "marketType", "cost")}
+    # marketId -> league/marketType/contractSeries from the tape (first seen)
+    meta = {}
+    with open(trades_csv, encoding="utf-8", newline="") as f:
+        for r in csv.DictReader(f):
+            mid = r.get("marketId")
+            if mid and mid not in meta:
+                meta[mid] = (r.get("league"), r.get("marketType"), r.get("contractSeries"))
+    with open(markets_csv, encoding="utf-8", newline="") as f:
+        for r in csv.DictReader(f):
+            def num(k):
+                v = r.get(k)
+                try:
+                    return float(v) if v not in (None, "") else None
+                except ValueError:
+                    return None
+            o, h, l, c = num("open"), num("high"), num("low"), num("close")
+            mid = sum(v for v in (o, h, l, c) if v is not None) / \
+                len([v for v in (o, h, l, c) if v is not None]) \
+                if all(v is not None for v in (o, h, l, c)) else None
+            lg, mt, cs = meta.get(r.get("marketId"), (None, None, None))
+            rows.append((
+                observed_at, r.get("marketId"), "novig", r.get("reportTicker"),
+                lg, mt, cs, o, h, l, c, mid,
+                num("dailyVolume"), num("openInterest"), r.get("status"),
+                str(r.get("marketId")), os.path.basename(markets_csv),
+            ))
+    con.executemany(
+        "INSERT OR IGNORE INTO novig_snapshots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+    con.commit()
+    total = con.execute("SELECT COUNT(*) FROM novig_snapshots").fetchone()[0]
+    at_latest = con.execute(
+        "SELECT COUNT(*) FROM novig_snapshots WHERE observed_at <= ?",
+        (observed_at,)).fetchone()[0]
+    con.close()
+    if at_latest != total:
+        raise AssertionError("LEAK: novig rows exist with observed_at > t")
+    return {"status": "ok", "day": day, "observed_at": observed_at,
+            "rows_this_day": len(rows), "novig_rows_total": total,
+            "tape_rows": tape_n, "tape_first_row": tape_first,
+            "markets_csv": os.path.basename(markets_csv),
+            "trades_csv": os.path.basename(trades_csv)}
+
+
 def crps_baseline(games_path, con=None):
     """Gaussian-close baseline on the FROZEN week list (2025 wks 1-6, settled,
     spread_line and total_line present). No model change: the close is the
@@ -359,11 +470,12 @@ def crps_baseline(games_path, con=None):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["ingest", "leaktest", "crps-baseline", "all"])
+    ap.add_argument("mode", choices=["ingest", "leaktest", "crps-baseline", "novig", "all"])
     ap.add_argument("--snapshots-dir", default=None)
     ap.add_argument("--db", default=DEFAULT_DB)
     ap.add_argument("--games", default=os.path.join(
         HERE, "..", "..", "..", "..", "data", "gse-dataset", "games.jsonl"))
+    ap.add_argument("--date", default=None, help="Novig report day (YYYY-MM-DD); default latest published")
     a = ap.parse_args()
     if a.mode in ("ingest", "all"):
         if not a.snapshots_dir:
@@ -373,6 +485,8 @@ def main():
         print(json.dumps(leaktest(a.db, a.snapshots_dir), indent=1))
     if a.mode in ("crps-baseline", "all"):
         print(json.dumps(crps_baseline(a.games), indent=1))
+    if a.mode == "novig":
+        print(json.dumps(novig_harvest(a.date, a.db), indent=1))
 
 
 if __name__ == "__main__":
