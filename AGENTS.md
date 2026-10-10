@@ -13555,3 +13555,327 @@ post pages. X term searches skipped per the thin-window brief
   ko-fi.com/sfdata9ers (@sfdata9ers support link).
 - @sfdata9ers post bodies cite @FantasyPtsData and @FTNFantasy
   as their data sources (their own attribution).
+
+## X ANALYTICS SWEEP 2026-10-10 (AFTERNOON)
+
+Window: posts after ~08:55 AM CDT through ~04:30 PM CDT Sat
+2026-10-10 (~7.5h, Saturday afternoon before Week 5 Sunday).
+Read-only sweep as @GalaxySportsHQ (no likes/reposts/replies/
+follows/DMs). Login confirmed; no CAPTCHAs, login walls, or
+rate limits. Single browser task: home feed + 21 analytics
+accounts + term searches (EPA, CPOE, TPRR, pass rush win rate,
+aggressiveness, both quiet) + injury/market/scheme accounts.
+Absolute timestamps verified on post pages for opened items.
+@FTNData still protected (no follow requested). @NerdingonNFL
+(1 post total) and @NFLResearcher (4 posts total) timelines
+render empty. Market read via @VSiNLive (bare @VSiN is an
+unrelated 0-post account).
+
+### NEW ITEMS
+
+1. @sfdata9ers — "Negative Play %" (team) (2026-10-10 1:11 PM
+   CDT, absolute). Metric definition (stated): share of
+   offensive plays gaining negative yards, Weeks 1–4 2026;
+   penalties and QB kneels EXCLUDED. Samples: SF 2.3%, DEN
+   3.5%, LAR 4.9% … TB 10.5%, NYJ 11.6%, PHI 12.3%. Data
+   source: NOT STATED (own calc). Caveats: none stated. Kernel
+   (attributed, not a build order): negative-play rate as a
+   one-number run-game/offense stability read, week-over-week
+   comparable.
+
+2. @hawkblogger — "Top 20 Defensive Linemen (DT+Edge), through
+   Week 4" (2026-10-10 1:30 PM CDT, absolute). Metric
+   definition (stated): combined run+pass grade with 70% pass
+   rush / 30% run defense weighting; uses @SumerSports matchup
+   data and ADJUSTS FOR QUALITY OF OPPOSITION faced. Caveat
+   (stated): "4 plus 1 of 10 Week 4 games" — partial Week 4
+   charting. Kernel (attributed, not a build order):
+   fixed-weight (70/30) pass+rush grade with explicit
+   opposition-quality adjustment, built on SumerSports matchup
+   data rather than raw PFF grades.
+
+3. @PFF — "Highest red-zone carry share among QBs this season"
+   (2026-10-10 ~2:20 PM CDT). Metric: red-zone carry share,
+   Weeks 1–4 2026. Values: Josh Allen 41.7%, Bo Nix 40.0%,
+   Joe Burrow 37.5%, Jalen Hurts 26.1%, Justin Herbert 22.7%.
+   Caveats: none stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   pff-qb-redzone-carry-share-through-week4-2026.csv.
+   Kernel (attributed, not a build order): QB red-zone carry
+   share as a design metric — QB rushing role priced by carry
+   share inside the 20, not raw rushing yards.
+
+4. @sfdata9ers — QB blitz rate vs EPA/dropback when blitzed
+   (2026-10-10 ~12:10 PM CDT). Scatter, Weeks 1–4 2026, min.
+   40 dropbacks. Data source: STATED — @FantasyPtsData. Caveat:
+   none stated. Kernel (attributed, not a build order):
+   blitz-resilience board — pressure rate taken vs efficiency
+   under pressure as a two-dimensional QB read.
+
+5. @sfdata9ers — RB early-contact rate vs yards after contact
+   (2026-10-10 12:06 PM CDT, absolute). Scatter of "Hit % at or
+   behind LOS" (x-axis) vs "YAC/Attempt" (y-axis), Weeks 1–4
+   2026, min. 36 carries. Data source: STATED —
+   @fantasypoints. Outliers (approx from chart): K.Walker
+   (KC) ~3.35 YAC/att; K.Williams (LAR) lowest hit rate ~15%;
+   B.Hall (NYJ) lowest YAC ~1.5; A.Jeanty highest hit rate
+   ~47%. Caveat (stated by poster): post text says
+   "early-contact rate", chart labels it "Hit % at or behind
+   LOS". Kernel (attributed, not a build order): blocking vs
+   tackle-breaking split — contact rate isolates blocking,
+   YAC/att isolates the back.
+
+6. @PFF — "Highest offensive grade among QBs this season" (min.
+   100 dropbacks) (2026-10-10 ~12:35 PM CDT). Values: Lamar
+   Jackson 91.4, Bryce Young 88.6, Brock Purdy 88.4, Patrick
+   Mahomes 87.8, Dak Prescott 85.9, Jared Goff 85.8, Joe Burrow
+   85.8, C.J. Stroud 81.2, Jacoby Brissett 79.0, Josh Allen
+   78.4. PFF's own grades; no method detail posted. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   pff-qb-offensive-grades-through-week4-2026.csv.
+
+7. @ScottBarrettDFB — "Average Separation Score 2026 by route
+   (Fantasy Points Data Suite 2.0)", Marvin Harrison Jr.
+   (2026-10-10 ~3:45 PM CDT, posted as MHJ trade-value
+   commentary). Values: Corner -0.231 (15th pct), Go 0.235
+   (69th pct), Post 0.000, Hitch 0.000, Slant -0.133, Crosser
+   -0.500. Caveats: none stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   scottbarrettdfb-mhj-separation-by-route-2026.csv.
+
+8. @GridironInfo_ — "Baltimore vs Atlanta Matchup Card"
+   (2026-10-10 4:20 PM CDT, absolute). Same mirrored format as
+   the CHI-GB / CIN-MIA cards this morning; no metric
+   definition, no advanced metrics. Headline rows: ATL -3;
+   O/U 43.5; BAL +142 / ATL -175; implied BAL 20.2 / ATL 23.2.
+   Footer: "@GridironInfo_ | Data: nflreadpy | 2026-10-08" —
+   THIRD nflreadpy sighting in this lane (9:00 AM card read
+   "nflreadr.org" per its footer; overnight/5:30 AM cards read
+   "nflreadpy"). Opener/current move direction not stated.
+
+### INJURY/ROSTER (attributed, new since morning sweep)
+
+- @AdamSchefter (10:02 AM CDT, embedded post): Cardinals
+  FINALIZING DEAL to trade WR Marvin Harrison Jr.; team
+  informed him this morning; INACTIVE Sunday vs Lions (DET).
+- @AdamSchefter / @RapSheet (~10:30–11 AM CDT): Texans in the
+  mix on MHJ (Stroud reunion); Arizona wanted first-round
+  value.
+- @RapSheet via @RyanPaganetti (opened 3:08 PM CDT): Raiders
+  RB Ashton Jeanty QUESTIONABLE (foot and ankle); Raiders
+  elevated RB Roman Hemby. (@RyanPaganetti:
+  "Thursday injury + DNP Friday + Saturday position elevation
+  #probablynotplaying".)
+- @AdamSchefter (~3:40 PM CDT): Patriots placed FB Reggie
+  Gilliam and WR Mack Hollins on IR.
+- @AdamSchefter + @JFowlerESPN (~1h): Steelers placed WR
+  Michael Pittman Jr. (foot) on IR, minimum four games
+  (short-term IR).
+- @MikeGarafolo (~3:45 PM CDT): Commanders — WR Stefon Diggs
+  OUT, WR Terry McLaurin QUESTIONABLE Sunday vs Giants;
+  elevated WR Van Jefferson and S Darren Hall; activated DE
+  Deatrich Wise Jr. off PUP.
+- @AdamSchefter (~1h): Commanders ruled out CB Trey Amos
+  (ankle) and RB Jeremy McNichols (quad) Sunday vs Giants.
+- @TomPelissero (~2:40 PM CDT): Vikings elevating WR Odell
+  Beckham Jr. from practice squad Sunday at Saints; Justin
+  Jefferson and Jordan Addison QUESTIONABLE.
+- @hawkblogger (~4 PM CDT): 49ers ACTIVATED DL Mykel Williams —
+  questionable status REMOVED (morning sweep had him "set to
+  make his season debut"; this confirms).
+- @AdamSchefter (~1h): Seahawks signed CB Trevon Diggs off
+  practice squad; rookie CB Julian Neal to IR (hamstring);
+  elevated DL Ogbo Okoronkwo and TE Jack Stoll.
+- @AdamSchefter (~1h): Chargers activated FB/DL Scott Matlock
+  and G/T Branson Taylor from IR; placed QB Trey Lance and OL
+  Trevor Penning on IR.
+- @AdamSchefter (~1h): Rams expect DL Aaron Donald, TE Colby
+  Parkinson, CB Jaylen Watson to play Monday night vs Bills.
+- @AdamSchefter (~1h): Packers placed RB Chris Brooks on IR.
+- @AdamSchefter (~1h): Jets activated WR Tim Patrick from IR;
+  no game-status designation Sunday vs Broncos.
+- @AdamSchefter (~1h): Dolphins activated DL Kenneth Grant off
+  IR; waived QB Brady Cook.
+- Sunday weather: none observed — no concerns noted.
+
+### MARKET (in-window)
+
+- NO opener→current line moves, steam, or sharp-vs-public
+  splits posted by @VSiNLive, @Covers, or @ActionNetworkHQ in-
+  window (all three college/NHL focused Saturday afternoon).
+- Current moneylines from X NFL scores widget (~4:35 PM CDT;
+  current numbers only, openers NOT stated): PHI +310 @ JAX
+  -375; CIN -325 @ MIA +270; NYG +155 @ WAS -190; LV +160 @
+  NE -190; IND +125 @ PIT -150; CHI -125 @ GB +105; CLE +120
+  @ NYJ -145; HOU -375 @ TEN +290; MIN -135 @ NO +115; DEN
+  -190 @ LAC +155; DET -250 @ ARI +200; SF +138 @ SEA -165;
+  BAL +145 @ ATL -175; BUF +150 @ LAR -185 (Mon).
+
+### WATCH ITEMS (still open)
+
+- ARBY computation still unstated; full X boards leave X after
+  Week 5 → statrankings.com subscribers (standing). SUPLEX
+  differential definition still absent. @GridironInfo_ Kalshi
+  award-odds series still absent (last Sep 27).
+
+## X ANALYTICS SWEEP 2026-10-10 (AFTERNOON)
+
+Window: posts after ~08:55 AM CDT through ~04:30 PM CDT Sat
+2026-10-10 (~7.5h, Saturday afternoon before Week 5 Sunday).
+Read-only sweep as @GalaxySportsHQ (no likes/reposts/replies/
+follows/DMs). Login confirmed; no CAPTCHAs, login walls, or
+rate limits. Single browser task: home feed + 21 analytics
+accounts + term searches (EPA, CPOE, TPRR, pass rush win rate,
+aggressiveness, both quiet) + injury/market/scheme accounts.
+Absolute timestamps verified on post pages for opened items.
+@FTNData still protected (no follow requested). @NerdingonNFL
+(1 post total) and @NFLResearcher (4 posts total) timelines
+render empty. Market read via @VSiNLive (bare @VSiN is an
+unrelated 0-post account).
+
+### NEW ITEMS
+
+1. @sfdata9ers — "Negative Play %" (team) (2026-10-10 1:11 PM
+   CDT, absolute). Metric definition (stated): share of
+   offensive plays gaining negative yards, Weeks 1–4 2026;
+   penalties and QB kneels EXCLUDED. Samples: SF 2.3%, DEN
+   3.5%, LAR 4.9% … TB 10.5%, NYJ 11.6%, PHI 12.3%. Data
+   source: NOT STATED (own calc). Caveats: none stated. Kernel
+   (attributed, not a build order): negative-play rate as a
+   one-number run-game/offense stability read, week-over-week
+   comparable.
+
+2. @hawkblogger — "Top 20 Defensive Linemen (DT+Edge), through
+   Week 4" (2026-10-10 1:30 PM CDT, absolute). Metric
+   definition (stated): combined run+pass grade with 70% pass
+   rush / 30% run defense weighting; uses @SumerSports matchup
+   data and ADJUSTS FOR QUALITY OF OPPOSITION faced. Caveat
+   (stated): "4 plus 1 of 10 Week 4 games" — partial Week 4
+   charting. Kernel (attributed, not a build order):
+   fixed-weight (70/30) pass+rush grade with explicit
+   opposition-quality adjustment, built on SumerSports matchup
+   data rather than raw PFF grades.
+
+3. @PFF — "Highest red-zone carry share among QBs this season"
+   (2026-10-10 ~2:20 PM CDT). Metric: red-zone carry share,
+   Weeks 1–4 2026. Values: Josh Allen 41.7%, Bo Nix 40.0%,
+   Joe Burrow 37.5%, Jalen Hurts 26.1%, Justin Herbert 22.7%.
+   Caveats: none stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   pff-qb-redzone-carry-share-through-week4-2026.csv.
+   Kernel (attributed, not a build order): QB red-zone carry
+   share as a design metric — QB rushing role priced by carry
+   share inside the 20, not raw rushing yards.
+
+4. @sfdata9ers — QB blitz rate vs EPA/dropback when blitzed
+   (2026-10-10 ~12:10 PM CDT). Scatter, Weeks 1–4 2026, min.
+   40 dropbacks. Data source: STATED — @FantasyPtsData. Caveat:
+   none stated. Kernel (attributed, not a build order):
+   blitz-resilience board — pressure rate taken vs efficiency
+   under pressure as a two-dimensional QB read.
+
+5. @sfdata9ers — RB early-contact rate vs yards after contact
+   (2026-10-10 12:06 PM CDT, absolute). Scatter of "Hit % at or
+   behind LOS" (x-axis) vs "YAC/Attempt" (y-axis), Weeks 1–4
+   2026, min. 36 carries. Data source: STATED —
+   @fantasypoints. Outliers (approx from chart): K.Walker
+   (KC) ~3.35 YAC/att; K.Williams (LAR) lowest hit rate ~15%;
+   B.Hall (NYJ) lowest YAC ~1.5; A.Jeanty highest hit rate
+   ~47%. Caveat (stated by poster): post text says
+   "early-contact rate", chart labels it "Hit % at or behind
+   LOS". Kernel (attributed, not a build order): blocking vs
+   tackle-breaking split — contact rate isolates blocking,
+   YAC/att isolates the back.
+
+6. @PFF — "Highest offensive grade among QBs this season" (min.
+   100 dropbacks) (2026-10-10 ~12:35 PM CDT). Values: Lamar
+   Jackson 91.4, Bryce Young 88.6, Brock Purdy 88.4, Patrick
+   Mahomes 87.8, Dak Prescott 85.9, Jared Goff 85.8, Joe Burrow
+   85.8, C.J. Stroud 81.2, Jacoby Brissett 79.0, Josh Allen
+   78.4. PFF's own grades; no method detail posted. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   pff-qb-offensive-grades-through-week4-2026.csv.
+
+7. @ScottBarrettDFB — "Average Separation Score 2026 by route
+   (Fantasy Points Data Suite 2.0)", Marvin Harrison Jr.
+   (2026-10-10 ~3:45 PM CDT, posted as MHJ trade-value
+   commentary). Values: Corner -0.231 (15th pct), Go 0.235
+   (69th pct), Post 0.000, Hitch 0.000, Slant -0.133, Crosser
+   -0.500. Caveats: none stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   scottbarrettdfb-mhj-separation-by-route-2026.csv.
+
+8. @GridironInfo_ — "Baltimore vs Atlanta Matchup Card"
+   (2026-10-10 4:20 PM CDT, absolute). Same mirrored format as
+   the CHI-GB / CIN-MIA cards this morning; no metric
+   definition, no advanced metrics. Headline rows: ATL -3;
+   O/U 43.5; BAL +142 / ATL -175; implied BAL 20.2 / ATL 23.2.
+   Footer: "@GridironInfo_ | Data: nflreadpy | 2026-10-08" —
+   THIRD nflreadpy sighting in this lane (9:00 AM card read
+   "nflreadr.org" per its footer; overnight/5:30 AM cards read
+   "nflreadpy"). Opener/current move direction not stated.
+
+### INJURY/ROSTER (attributed, new since morning sweep)
+
+- @AdamSchefter (10:02 AM CDT, embedded post): Cardinals
+  FINALIZING DEAL to trade WR Marvin Harrison Jr.; team
+  informed him this morning; INACTIVE Sunday vs Lions (DET).
+- @AdamSchefter / @RapSheet (~10:30–11 AM CDT): Texans in the
+  mix on MHJ (Stroud reunion); Arizona wanted first-round
+  value.
+- @RapSheet via @RyanPaganetti (opened 3:08 PM CDT): Raiders
+  RB Ashton Jeanty QUESTIONABLE (foot and ankle); Raiders
+  elevated RB Roman Hemby. (@RyanPaganetti:
+  "Thursday injury + DNP Friday + Saturday position elevation
+  #probablynotplaying".)
+- @AdamSchefter (~3:40 PM CDT): Patriots placed FB Reggie
+  Gilliam and WR Mack Hollins on IR.
+- @AdamSchefter + @JFowlerESPN (~1h): Steelers placed WR
+  Michael Pittman Jr. (foot) on IR, minimum four games
+  (short-term IR).
+- @MikeGarafolo (~3:45 PM CDT): Commanders — WR Stefon Diggs
+  OUT, WR Terry McLaurin QUESTIONABLE Sunday vs Giants;
+  elevated WR Van Jefferson and S Darren Hall; activated DE
+  Deatrich Wise Jr. off PUP.
+- @AdamSchefter (~1h): Commanders ruled out CB Trey Amos
+  (ankle) and RB Jeremy McNichols (quad) Sunday vs Giants.
+- @TomPelissero (~2:40 PM CDT): Vikings elevating WR Odell
+  Beckham Jr. from practice squad Sunday at Saints; Justin
+  Jefferson and Jordan Addison QUESTIONABLE.
+- @hawkblogger (~4 PM CDT): 49ers ACTIVATED DL Mykel Williams —
+  questionable status REMOVED (morning sweep had him "set to
+  make his season debut"; this confirms).
+- @AdamSchefter (~1h): Seahawks signed CB Trevon Diggs off
+  practice squad; rookie CB Julian Neal to IR (hamstring);
+  elevated DL Ogbo Okoronkwo and TE Jack Stoll.
+- @AdamSchefter (~1h): Chargers activated FB/DL Scott Matlock
+  and G/T Branson Taylor from IR; placed QB Trey Lance and OL
+  Trevor Penning on IR.
+- @AdamSchefter (~1h): Rams expect DL Aaron Donald, TE Colby
+  Parkinson, CB Jaylen Watson to play Monday night vs Bills.
+- @AdamSchefter (~1h): Packers placed RB Chris Brooks on IR.
+- @AdamSchefter (~1h): Jets activated WR Tim Patrick from IR;
+  no game-status designation Sunday vs Broncos.
+- @AdamSchefter (~1h): Dolphins activated DL Kenneth Grant off
+  IR; waived QB Brady Cook.
+- Sunday weather: none observed — no concerns noted.
+
+### MARKET (in-window)
+
+- NO opener→current line moves, steam, or sharp-vs-public
+  splits posted by @VSiNLive, @Covers, or @ActionNetworkHQ in-
+  window (all three college/NHL focused Saturday afternoon).
+- Current moneylines from X NFL scores widget (~4:35 PM CDT;
+  current numbers only, openers NOT stated): PHI +310 @ JAX
+  -375; CIN -325 @ MIA +270; NYG +155 @ WAS -190; LV +160 @
+  NE -190; IND +125 @ PIT -150; CHI -125 @ GB +105; CLE +120
+  @ NYJ -145; HOU -375 @ TEN +290; MIN -135 @ NO +115; DEN
+  -190 @ LAC +155; DET -250 @ ARI +200; SF +138 @ SEA -165;
+  BAL +145 @ ATL -175; BUF +150 @ LAR -185 (Mon).
+
+### WATCH ITEMS (still open)
+
+- ARBY computation still unstated; full X boards leave X after
+  Week 5 → statrankings.com subscribers (standing). SUPLEX
+  differential definition still absent. @GridironInfo_ Kalshi
+  award-odds series still absent (last Sep 27).
