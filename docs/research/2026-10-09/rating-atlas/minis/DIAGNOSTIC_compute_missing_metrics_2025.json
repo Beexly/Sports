@@ -1,0 +1,22 @@
+{
+  "script": "compute_missing_metrics.py",
+  "run_at": "2026-10-10T22:27:02.191756+00:00",
+  "season": 2025,
+  "fixes_applied": [
+    "BUG1: composite merge key [game_id, play_id]",
+    "BUG2: success_recomputed (native success untouched)",
+    "FLAG1: season_type == REG filter",
+    "FLAG2: team_efficiency on run/pass only; cpoe_proxy + native kept"
+  ],
+  "n_raw": 48771,
+  "n_reg": 46452,
+  "n_pass_plays": 18741,
+  "success_agree_rate": 1.0,
+  "n_success_compare": 45908,
+  "cpoe_proxy_vs_native_r": 0.9659,
+  "n_cpoe_compare": 16609,
+  "air_yards_coverage": 0.9262,
+  "team_efficiency_rows": 32,
+  "role": "diagnostic",
+  "promotion": "none \u2014 diagnostic only, no frozen gate passed"
+}

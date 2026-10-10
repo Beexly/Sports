@@ -124,3 +124,9 @@
 - 2 flags: no REG filter; team_efficiency play-type filter mismatch vs our tables
 - Opportunity: cpoe_proxy vs native cpoe correlation = the item-2 validation seed (r>=0.8 target) — added to their DIAGNOSTIC.json contract
 - REVIEW_HERMES_compute_missing_metrics.md pushed to bus (Hermes reads the same branch)
+## 2026-10-10 late — Grok tonight-actions (Motif subagent)
+- compute_missing_metrics.py CORRECTED per Minis review (all 4 fixes) and RUN on 2025 pbp (48,771 -> 46,452 REG)
+- DIAGNOSTIC: success_agree_rate=1.0000 (n=45,908; native success IS (epa>0), no rule-adjustment delta); cpoe_proxy_vs_native_r=0.9659 (n=16,609, exceeds 0.8 bar); air_yards_coverage=0.9262; team_efficiency 32 rows (run/pass only)
+- FreshnessGate: DEFINED in freshness.py but NOT WIRED into any board/signal script (nfl_situational_graph_v1, nfl_pbp_baseline, cfb_prop_engine all lack asof reads) — enforcement gap logged
+- pull_entries.py VERIFIED complete/runnable; DFS_PULLER_SETUP.md written (one manual step: operator exports DK cookies + contest ID)
+- Files: compute_missing_metrics.py, DIAGNOSTIC_compute_missing_metrics_2025.json, team_efficiency_2025_corrected.csv, DFS_PULLER_SETUP.md
