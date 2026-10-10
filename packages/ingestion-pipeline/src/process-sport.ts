@@ -1749,10 +1749,6 @@ export async function processSport(
       note: fixtureNote ?? emptyNote,
       skippedInPlay,
       ...paidAccounting(),
-  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
-  lineSnapshotsPersisted?: number;
-  /** Games whose line-archive capture reported an error this cycle. */
-  lineArchiveErrors?: number;
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

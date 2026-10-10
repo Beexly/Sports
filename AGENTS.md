@@ -12945,3 +12945,5 @@ press-rate decline) appeared in-window this morning.
   (stats.hawkblogger.com) — deeper method capture for a future read.
 - @VSiN remains a dead handle (0 posts); @VSiNLive NOT scanned
   (out of this sweep's scope; flag for list update).
+
+- 2026-10-09: Built the new Receiver Usage (target dominance) composite module under `packages/prediction-engine/src/expected-metrics/receiver-usage.ts` for SHADOW usage. Computes target share, deep target share, red-zone target share, and a weighted target dominance composite with a 15-target floor and shrinkage toward positional means. Followed strict point-in-time constraints by enforcing limits prior to the target game's kick boundary. Added `receiver_player_name` and `air_yards` to `nflverse-pbp-mapper.ts` allowlist for extraction. Extracted `isTargetInRedZone` from `redzone-te-leverage.ts` for DRY compliance.
