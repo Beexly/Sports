@@ -80,3 +80,9 @@
 - **Coarse-bin retest CLOSED — REFUSED**: 3-level + shrinkage = 3/5 sign consistency < 70% bar; leverage stays research; reopen at n≥100 cells
 - **Freshness protocol ✅ (freshness.py)**: FreshnessGate(decision_t) = the only live-pull read path; verified on all 3 feeds
 - **LIVE_PRODUCT_READINESS.md**: 3 CLOSED, 1 GATED-with-path, 1 DEFERRED-WITH-RISK, honest label = "baseline + partial invention"
+
+### [19:00] POOLED PPD TEST — REFUSED (honest), fix documented
+- Pooled 2026 wks2-6 (n=195): close+PPD 9.4427 vs close 8.0626 — close holds by 1.38; t=+0.13 NOT CLEARED
+- Failure mode identified: weeks 2-3 rolling PPD = 1-2-game noise used as team quality (+4.06/+2.87 CRPS); wk-6 single-week PROMOTED verdict STANDS (7.3852 vs 7.5057); both facts true
+- Pre-registered fix: hierarchical carry-in (prior-season PPD as week-1 prior, shrinkage k=20 — same machinery as leverage retest)
+- Ledger #10 recorded; candidate stays diagnostic; no silent upgrades

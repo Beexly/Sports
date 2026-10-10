@@ -21,3 +21,8 @@ A live pull TODAY is **baseline + partial invention**: full baseline matrix (ite
 4. Weekly cadence accumulating: flow snapshots (steam/velocity), prop-drift, injury latency
 
 *Risk ledger: kill_ledger.jsonl (9 entries, chain intact) + RUNNING_LOG.md are the audit trail. Nothing is promoted that did not beat the close on a frozen list.*
+
+## UPDATE — pooled PPD verdict (2026-10-10 late)
+Pooled multi-week PPD test executed (n=195): **REFUSED** — close+PPD 9.4427 vs close 8.0626, t=+0.13.
+Single-week wk-6 PROMOTED verdict stands; pooled t-bar not cleared. Flip condition updated:
+prior-season PPD carry-in (hierarchical shrinkage) then re-pool. Candidate remains diagnostic.
