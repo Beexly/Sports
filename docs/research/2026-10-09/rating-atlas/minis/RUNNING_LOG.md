@@ -66,3 +66,10 @@
 - **Invented metric #1 — MICRO-STATE SITUATIONAL GRAPH (nfl_situational_graph.py)**: 133,431 plays → 17,458 drives → **216 distinct states** (down × dist × ytg × score-leverage × qtr × timing). Outputs: situational_ep_states CSV + leverage-conditional EP (43 cells). **The novel delta: drive EP conditioned on score state at identical (down,dist,ytg) — top spread +0.61 (1st&7-10 at opp 11-20: down-8-20 outearns blowout leaders)**. Standard EP models stop at down/dist/ytg; this is the leverage layer
 - Bug found+fixed: nflfastR has NO `distance` column — it's `ydstogo` (also: kickoff rows carry down=''; qtr parses as float-string)
 - Item 2 🟡→ next: independent EPA re-derivation + validation; Item 5 🟡: usage×prop-σ join next
+
+### [17:00] GRAPH v1 — transitions + aggression payoff + verification stamps
+- **Transitions**: 7,953 rows, 2,887 states w/ n≥30 (state_transitions_2023_2025.csv) — the walkable graph
+- **Aggression payoff equation**: dEV(go−punt) by FULL state, 8 cells qualified (n≥12/12): −0.85..+0.68; FG arm sparse. Pooled deltas: down8-20 −0.00, tied −0.30, up1-7 +0.68 (small-n caveat)
+- **Stamps**: per-cell n in CSVs; season stability avg spread 0.72/0.85/0.76 (magnitude stable); **sign consistency 2/6 — per-state leverage deltas NOT stable → coarser bins or pooling before any promotion**; residual vs standard EP = 110→216 states
+- Bug fixes: punt play_type is lowercase; FG arm needed play_type=='field_goal'
+- Gate remains closed pending residual-vs-close CRPS (model layer, items 9-12)
