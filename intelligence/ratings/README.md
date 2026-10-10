@@ -10,6 +10,7 @@ SYS-10, SYS-26; syntheses.md Pipeline 2).
 | `qb_decomp.py` | INFERENCE extension: u_i = τ_team + q_QB(i) — QB changes move the rating without refitting |
 | `relativize.py` | 0049 rule: relative (difference/ratio) form tested against the TWO-feature absolute form (never the straw-man single absolute); honest +5%-scale deltas |
 | `_dgp.py` | Seeded synthetic NFL DGP (32 teams, weekly skill drift, HFA/rest/travel/QB-out covariates, heavy-tail t margins) — NOT real data |
+| `engine_math.py` | Pure-stdlib reference kernels (landed 2026-10-10, draft): Bradley-Terry/Elo, Dixon-Coles grid, Normal-margin alt ladder, Skellam, Brier (Murphy) decomposition, isotonic PAV, Kelly, Shin devig, Kalman ratings, teaser MC, CRPS/PIT, deflated Sharpe, market-implied strengths, 2-state HMM. Not wired into any pipeline. Tests: `tests/test_engine_math.py` (unittest, stdlib only) |
 
 **Gates (tests/e2e/test_research_gates_e2e.py):** G-Elo ΔLS ≥ 0.005 and accuracy
 +1pp (2019–2023); covariate-BT beats plain BT + Elo on 2022–2024 rolling
