@@ -73,3 +73,10 @@
 - **Stamps**: per-cell n in CSVs; season stability avg spread 0.72/0.85/0.76 (magnitude stable); **sign consistency 2/6 — per-state leverage deltas NOT stable → coarser bins or pooling before any promotion**; residual vs standard EP = 110→216 states
 - Bug fixes: punt play_type is lowercase; FG arm needed play_type=='field_goal'
 - Gate remains closed pending residual-vs-close CRPS (model layer, items 9-12)
+
+### [18:00] READINESS GAPS CLOSED + FIRST PROMOTED VERDICT
+- **Usage × prop-σ join (item 5) ✅**: 266 player-markets; DK premium +34.1±41; QB/WR share-mapping fixed; residual bands live
+- **Residual-vs-close stamp ✅ — FIRST PROMOTED VERDICT**: drive-PPD close-anchored CRPS 7.3852 vs close 7.5057 on frozen wk-6 folds (graph_vs_close_stamp.py); production awaits pooled multi-week + CLV (ledger #9)
+- **Coarse-bin retest CLOSED — REFUSED**: 3-level + shrinkage = 3/5 sign consistency < 70% bar; leverage stays research; reopen at n≥100 cells
+- **Freshness protocol ✅ (freshness.py)**: FreshnessGate(decision_t) = the only live-pull read path; verified on all 3 feeds
+- **LIVE_PRODUCT_READINESS.md**: 3 CLOSED, 1 GATED-with-path, 1 DEFERRED-WITH-RISK, honest label = "baseline + partial invention"
