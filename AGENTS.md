@@ -9682,6 +9682,230 @@ Turner 26 (21.1%), Maxx Crosby 20 (15.7%); forced missed tackles
 (injury commentary only), @DonAtkinsonNFL (qualitative only),
 @benbbaldwin (last Oct 7).
 
+## X ANALYTICS SWEEP 2026-10-09 (EVENING)
+
+Window: posts after ~5:10 PM CDT Fri 2026-10-09 through ~9:50 PM CDT
+Fri 2026-10-09 (~4.7h, Friday evening before Week 5 Sunday). Read-only
+sweep as @GalaxySportsHQ (no likes/reposts/replies/follows/DMs).
+Login confirmed; no CAPTCHAs or login walls. Single browser task:
+home feed + 21 analytics accounts + term searches (EPA,
+aggressiveness, pass rush win rate, TPRR, CPOE). X absolute
+timestamps verified on post pages; borderline items checked against
+them. @FTNData still protected (no follow requested). @NerdingonNFL
+(1 post) and @NFLResearcher (4 posts, parody bio) timelines would not
+render — effectively empty/unverifiable.
+
+### NEW ITEMS
+
+1. @sfdata9ers — "Plays in Opponent Territory" (2026-10-09
+   5:17 PM CDT, verified absolute,
+   x.com/sfdata9ers/status/2108683171730776494). NEW TABLE:
+   offensive snaps in opponent territory, 2026 season Weeks 1-4,
+   plays with penalties excluded. Columns: rank, team, snaps. All
+   32 rows captured: 1. CHI 157; 2. DET 137; 3. IND 130; 4. DAL
+   129; 5. NO 129; 6. DEN 127; 7. NYG 127; 8. KC 124; 9. WSH
+   123; 10. ATL 123; 11. TB 121; 12. PHI 120; 13. ARI 119;
+   14. BUF 118; 15. BAL 116; 16. LAR 111; 17. HOU 110; 17. MIN
+   110; 19. GB 109; 20. TEN 108; 21. LV 102; 22. NE 101;
+   22. CLE 101; 22. SEA 101; 25. PIT 99; 26. CAR 97; 27. SF 96;
+   28. CIN 95; 29. JAX 95; 30. LAC 92; 31. NYJ 92; 32. MIA 87.
+   Stated source: none (watermark @sfdata9ers only, no data
+   footer). Caveat as observed: chart x-axis label reads
+   "Offensive Snaps while Leading" while the title/subtitle say
+   opponent territory — appears mislabeled; reported as observed,
+   not corrected. CSV: docs/dfs/research/2026-10-09/full-tables/
+   sfdata9ers-plays-opponent-territory-2026.csv. Innovation kernel
+   (attributed, not a build order): opponent-territory snap counts
+   as a field-position/pace descriptor.
+
+2. @hawkblogger — "DRAFT CLASS VOR" (2026-10-09 5:55 PM CDT,
+   verified absolute,
+   x.com/hawkblogger/status/2108692933394464903). NEW METRIC
+   APPLICATION: VOR (value over replacement) repurposed as a
+   draft-class/round-group comparison. As stated: "Average VOR of
+   drafted rookies with 50+ snaps" in Weeks 1-4 of each rookie
+   season; baseline "100 = REPLACEMENT LEVEL"; compares the
+   2022-2026 classes. Legible values — Rounds 1-3 (Day 1-2):
+   2023 110.2, 2024 109.6, 2026 106.9, 2025 105.5, 2022 100.2;
+   Rounds 4-7 (Day 3): 2026 105.7, 2024 105.4, 2023 101.5,
+   2025 101.3, 2022 93.6; Overall: 2024 108.4, 2026 106.5,
+   2023 105.3, 2025 104.0, 2022 100.7. Author's stated read:
+   "2ND-BEST CLASS SINCE 2022... Only 2024 started faster. The
+   late rounds rank higher than the early ones." Bottom strip:
+   "2026 DAY 3 — 19 OF 31 ABOVE REPLACEMENT"; leader names
+   partially legible (CAMERON 165, GILL-HOWARD 148, JOHNSON
+   143). Stated source (chart footer): "VOR from Sumer charting +
+   fit metrics, same inputs every year." Caveats as stated:
+   "WEEKS 1-4 ONLY | SMALL SAMPLE: 25-110 ROOKIES PER GROUP."
+   CSV: docs/dfs/research/2026-10-09/full-tables/
+   hawkblogger-draft-class-vor-2022-2026.csv. Innovation kernel
+   (attributed): VOR — an established player-value concept —
+   applied to rookie-cohort comparison.
+
+3. @hawkblogger — "FIRST-ROUND VOR" (2026-10-09 6:00 PM CDT,
+   verified absolute,
+   x.com/hawkblogger/status/2108694212762120254). NEW TABLE:
+   first-round VOR, Weeks 1-4 of each rookie season, classes
+   2022-2026. Columns: CLASS | PICKS 1-10 | PICKS 11-32 | GAP |
+   ROUND 1. Legible GAP/ROUND-1 values: 2024 +6.6/115.9;
+   2023 +5.5/110.9; 2025 +0.0/108.7; 2022 -9.0/108.6;
+   2026 +18.4/107.3. Per-group lollipop values partially
+   legible (2026: 120.3 and 101.8 visible; other classes not
+   fully readable). Author's stated read: "The top 10 trails
+   only 2024. Picks 11-32 rank last of five. Together, the round
+   ranks 5th of 5." Bottom strip "2026 TOP-10 LEADERS"
+   partially legible (REESE 164, STYLES 151, FANO 124). Stated
+   source: "VOR from Sumer charting + fit metrics, same inputs
+   every year..." (remainder illegible). Caveats as stated:
+   "AVERAGE VOR, ROOKIES WITH 50+ SNAPS | SMALL SAMPLE: 7-20
+   PER GROUP." CSV: docs/dfs/research/2026-10-09/full-tables/
+   hawkblogger-first-round-vor-2022-2026.csv.
+
+4. @GridironInfo_ — "Dallas Cowboys Defensive Report Card"
+   (2026-10-09 6:58 PM CDT, verified absolute,
+   x.com/GridironInfo_/status/2108708620330263008). NEW TABLE:
+   2026 regular season team-defense report card, ranks of 32.
+   Rows: 26th Points Allowed/Game 27.2; 30th Total Yards
+   Allowed/Game 400.2; 18th Pass Yards Allowed/Game 231.8;
+   32nd Rush Yards Allowed/Game 168.4; 28th Sacks 5;
+   30th Takeaways 2; 32nd EPA/Play Allowed +0.20. Stated source
+   (chart footer): "Data: nflready" — NEW data-source sighting.
+   CSV: docs/dfs/research/2026-10-09/full-tables/
+   gridironinfo-cowboys-defense-report-card-2026.csv. Relation
+   note: EPA/Play Allowed as a team-defense report-card axis.
+
+5. @statyxio — WR separation + shadow-coverage note
+   (2026-10-09 8:42 PM CDT, verified absolute,
+   x.com/statyxio/status/2108734823942754674). NEW DATUM:
+   "Pop Douglas actually has the best separation from NEP WR
+   room. One problem, he is projected to be mostly shadowed by
+   Taron Johnson." (reply to @YANGS1K.) Stated source: none.
+   Innovation kernel (attributed, not a build order):
+   separation x shadow-coverage collision as a WR matchup flag.
+
+6. @BrandonThornNFL via @EstablishTheRun — Week 5 OL/DL
+   mismatch rankings (2026-10-09 6:22 PM CDT, verified absolute,
+   x.com/EstablishTheRun/status/2108699596088087023). NEW DATUM:
+   "Lions DL > Cardinals OL" is @BrandonThornNFL's biggest
+   OL/DL mismatch for Week 5; full rankings for every squad at
+   establishtherun.com ("Thorn: Biggest OL vs. DL Mismatches,
+   Week 5"; link card not opened). Stated source: Establish
+   The Run (establishtherun.com).
+
+### PRE-CUTOFF FIRST-SIGHTINGS
+
+Published 4:25-5:02 PM CDT — inside the PM sweep's window but
+missed by it; captured this evening with verified absolute
+timestamps.
+
+7. @sfdata9ers — "Sack Yards Lost (min. 40 dropbacks)"
+   (2026-10-09 4:50 PM CDT,
+   x.com/sfdata9ers/status/2108676605417529428). NEW DATUM:
+   sack yards lost leaderboard. Captured endpoints: 1. Brock
+   Purdy 0; 2. Jayden Daniels 1; 3. Michael Penix 8;
+   4. Marcus Mariota 13 ... 36. Tyler Shough 89; 37. Geno
+   Smith 94; 38. Aaron Rodgers 107. Stated source (chart
+   footer): "Data: @FantasyPtsData." Full table not captured
+   (endpoints only). CSV: docs/dfs/research/2026-10-09/
+   full-tables/sfdata9ers-sack-yards-lost-2026.csv (endpoints
+   captured; partial noted in row NOTE).
+
+8. @sfdata9ers — "Box Defenders vs. Rushing Success" scatter
+   (2026-10-09 4:33 PM CDT,
+   x.com/sfdata9ers/status/2108672118976102609). NEW DATUM:
+   scatter of box-defender counts vs rushing success; author
+   note: "HOU: heaviest boxes, lowest success." Stated source
+   (chart footer): "Data: @FTNFantasy." No tabular transcription
+   possible from a scatter; not CSV'd.
+
+9. @sfdata9ers — "Red Zone Takeaways" through Week 4
+   (2026-10-09 4:25 PM CDT,
+   x.com/sfdata9ers/status/2108670240166957487). NEW DATUM:
+   "JAX leads the league with 3, all INTs: Bo Nix, Drake Maye,
+   Joe Burrow." Stated source: not stated. Full table not
+   captured.
+
+10. @TheNumbersDesk — NFL power ratings through Week 4
+    (2026-10-09 5:02 PM CDT,
+    x.com/TheNumbersDesk/status/2108679473075753088). NEW
+    ACCOUNT SIGHTING + NEW TABLE: "Net EPA/play,
+    opponent-adjusted, garbage time removed." Captured top 10:
+    1. SF +0.31; 2. JAX +0.28; 3. CHI +0.23; 4. KC +0.17;
+    5. BAL +0.14; 6. CAR +0.13; 7. LA +0.11; 8. LV +0.10;
+    9. DEN +0.09; 10. CIN +0.08. Stated source: none (own
+    computation). CSV: docs/dfs/research/2026-10-09/
+    full-tables/thenumbersdesk-net-epa-power-ratings-wk4-
+    2026.csv. Innovation kernel (attributed): EPA/play
+    repackaged as opponent-adjusted power ratings — a
+    different-angle re-sighting of EPA/play as a rating system.
+
+### RE-SIGHTINGS / NO NEW ANGLE
+
+- @RyanPaganetti: "go for 2 down 8" strategy data (4:23 PM CDT,
+  pre-cutoff; x.com/RyanPaganetti/status/2108669679623623087):
+  "53 times by 23 different franchises since 2018... Dallas
+  was the largest favorite (9.5) to ever try the strategy" —
+  re-sighting of his 2-pt decision lane, no new metric.
+- @sfdata9ers: ANY/A definition re-sighted pre-cutoff (formula
+  already inventoried in the 2026-10-09 PM section).
+- @jmthrivept (8:27 PM CDT; x.com/jmthrivept/status/
+  2108731227117387831): Caleb Williams likely OUT Week 5 —
+  one Limited practice in weeks, aiming Week 6 — injury note,
+  no metric. Also: Zay Flowers expected to play (foot) (quoted
+  @jamisonhensley; Ravens without Lamar Jackson and Trey
+  Hill). Quotes @BearsPR final injury report.
+- @jmthrivept (8:00 PM CDT; x.com/jmthrivept/status/
+  2108724356595745121): quotes @FantasyPtsData's Cover-1 post
+  (pre-cutoff, inventoried in PM section) — "Brock Bowers and
+  Michael Mayer performing worse against Cover 1 won't matter
+  a single bit this week" given the Patriots injury report.
+- @DonAtkinsonNFL (5:13 PM CDT; x.com/DonAtkinsonNFL/status/
+  2108682257968066697): Nick Bosa (calf) "pretty darn likely"
+  for Week 6 (quoting @OurSf49ers) — injury note, no metric.
+- In-window stat notes via term searches (no charts):
+  @YANGS1K: "Drake would be #1 in the NFL in combined EPA/Play
+  if we remove the jaguars game"; @EvvRathe: Kirk Cousins
+  tied for NFL lead in passing TDs; Raiders 6th in EPA per
+  play. Attributed datums; no definitions or sources stated.
+- aggressiveness / pass rush win rate / TPRR / CPOE searches:
+  no genuinely new in-window NFL items (results 5h+ old or
+  Oct 6-8).
+- Nothing in-window: @cmain7; @MagicSportsGuy (NBA promo);
+  @SumerSports (23h ago); @DevyEusuf (injury notes only);
+  @ScottBarrettDFB; @PattonAnalytics (last posts Oct 8; data
+  notes: cites @StatRankings and @FTNFantasy, bio
+  "Data Scientist... @StatRankings", nflcoachprofiles.com);
+  @DynatyzeFF (last posts Oct 8); @PFF (Cowboys pass-defense
+  ranks re-sighted, 12h ago); @32BeatWriters (8h ago).
+- @PFN365 "DT Impact" top-10 metric via John McClain repost
+  (~5h ago, pre-cutoff): flagged only, no detail captured —
+  not inventoried; owed for the next sweep.
+- No notable Week 5 line moves observed in-window. Sunday
+  QUESTIONABLE list (pre-cutoff, @EstablishTheRun): Ja'Marr
+  Chase, Tee Higgins, Colbie Young, Justin Jefferson, Jordan
+  Addison.
+
+### DATA-SOURCE EVIDENCE (this sweep)
+
+- "Data: nflready" — NEW source sighting (@GridironInfo_
+  footer).
+- "VOR from Sumer charting + fit metrics, same inputs every
+  year" (@hawkblogger footer).
+- @sfdata9ers charts cite "Data: @FantasyPtsData" and
+  "Data: @FTNFantasy" on the pre-cutoff charts.
+- @PattonAnalytics cites @StatRankings and @FTNFantasy; bio:
+  "Data Scientist... @StatRankings" (nflcoachprofiles.com).
+- @FantasyPtsData bio: "Hand-charted NFL analytics... 750+
+  data points" (browser truncated the tail);
+  fantasypointsdata.com (pinned: "Data Suite 2.0").
+- @SumerSports bio: "Measuring football, play by play...
+  SumerPass" (bit.ly/getsumerpass).
+- @FTNData bio: "The most advanced NFL charted data, custom &
+  data feeds" (ftnfantasy.com; account protected).
+- Statyxio bio: "Enterprise data" (statyx.io).
+  MagicSportsGuy bio: "Founder, @StatRankings & FTN
+  Fantasy/Data."
+
 ## Knowledge Bases
 
 - **Claude Academy corpus**: `docs/CLAUDE-ACADEMY-PLAYBOOK.md` (this repo) — indexed
