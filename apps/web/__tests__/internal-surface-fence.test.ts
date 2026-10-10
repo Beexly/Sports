@@ -13,7 +13,6 @@ import {
 } from "@/lib/launch/internal-surface-fence";
 
 const FLAGS = [
-  "NFLVERSE_PUBLIC",
   "METRICS_PUBLIC",
   "NFLVERSE_PUBLIC",
   "PLAYERS_PUBLIC",
