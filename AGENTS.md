@@ -13442,3 +13442,116 @@ unrelated 0-post account).
   PM CDT overnight); Open-Meteo NEW as weather source.
 - "statrankings.com" — ARBY board footer; @StatRankings
   paywalling full ARBY boards after Week 5.
+## X ANALYTICS SWEEP 2026-10-10 (AM)
+
+Window: posts after ~08:55 AM CDT through ~09:30 AM CDT Sat
+2026-10-10 (~35 min, delta since the morning sweep). Read-only
+sweep as @GalaxySportsHQ (no likes/reposts/replies/follows/DMs).
+Login confirmed; no CAPTCHAs or login walls. Single browser task:
+home feed + 21 analytics accounts; absolute timestamps verified on
+post pages. X term searches skipped per the thin-window brief
+(feed/accounts yielded new posts).
+
+### NEW ITEMS
+
+1. @GridironInfo_ — "Chicago vs Green Bay Matchup Card / Stats
+   through Week 4" (2026-10-10 9:00 AM CDT, absolute,
+   x.com/GridironInfo_/status/2108920560872816822). Same
+   mirrored format as the 5:30 AM PHI-JAX card: per-game box-
+   score stats, rank of 32, offense columns vs mirrored
+   defense-allowed columns. Metric definition: NONE STATED —
+   no advanced metrics on the card (points / pass yards / rush
+   yards by RB-QB / receiving yards by WR-TE-RB, per game only).
+   Headline rows: spread CHI -2.5 (ATS CHI 3-1 | GB 0-3-1);
+   total O/U 45.5 (CHI 1-3 | GB 2-2); moneyline CHI -130
+   (ML 3-1) / GB -110 (ML 2-2); implied CHI 24.0 / GB 21.5;
+   weather 73F sunny, 9 mph, 0% rain. Notable ranks as posted:
+   CHI rush-by-RB offense 2nd (162.8) vs GB rush-by-RB allowed
+   29th (113.8); CHI points allowed 4th (16.2); GB pass offense
+   8th (260.2) vs CHI pass-allowed 3rd (194.0). Stated source
+   (chart footer): "Data: nflreadr.org | Weather: NWS |
+   2026-10-08" — FIRST nflreadr.org sighting in this lane
+   (overnight + 5:30 AM cards read "nflreadpy"; NWS replaces
+   Open-Meteo as the stated weather source). CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   gridironinfo-chi-gb-matchup-card-week5-2026.csv (all rows).
+
+2. @GridironInfo_ — "Cincinnati vs Miami Matchup Card / Stats
+   through Week 4" (2026-10-10 9:11 AM CDT, absolute,
+   x.com/GridironInfo_/status/2108923341440520356). Same format
+   and footer ("Data: nflreadr.org | Weather: NWS |
+   2026-10-08"); no metric definition, no advanced metrics.
+   Headline rows: spread CIN -6.5 (ATS CIN 2-2 | MIA 1-3);
+   total O/U 42.5; moneyline CIN -325 (ML 2-2) / MIA +260
+   (ML 1-3); implied CIN 24.5 / MIA 18.0; weather 89F
+   (temperature only). Notable ranks as posted: CIN pass
+   offense 5th (292.8) vs MIA pass-allowed 19th (235.0);
+   MIA points offense 32nd (11.5); CIN TE-allowed 32nd (102.2)
+   vs MIA TE offense 29th (27.2). CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   gridironinfo-cin-mia-matchup-card-week5-2026.csv (all rows).
+
+3. @RyanPaganetti (verified) — go-for-2 down-8 analytics thread
+   (2026-10-10 9:08 AM CDT, absolute,
+   x.com/RyanPaganetti/status/2108922527259213934). Quote-post
+   of his own 16h-old data post; no new metric defined
+   ("win probability modeling" mentioned, not defined). Data
+   cited in the quoted thread (attributed, his numbers): go-for-
+   2 down-8 strategy used 53 times by 23 franchises since 2018;
+   in 2025 teams went for 2 in 4th-quarter down-8 spots roughly
+   half the time; Dallas largest favorite (9.5) to try it.
+   Framing quote (his words): "50% chance of being down 6 and
+   50% chance of being down 8, or a 96% chance of being down 7
+   and 4% chance of being down 8. Win probability modeling
+   defines that." He also states he does not believe in
+   "assuming you get a stop." Innovation kernel (attributed,
+   not a build order): evaluating the down-8 go-for-2 as an
+   expected-differential distribution rather than
+   conversion-then-stop compounding.
+
+### HOME FEED
+
+- In-window For-you posts (newest 1m–59m) were College
+  GameDay / Pat McAfee / @NFL content only — no analytics
+  posts, no metric charts.
+
+### NOTHING SEEN (checked, outside window)
+
+- @cmain7 (2h); @jmthrivept (11h); @sfdata9ers (15h);
+  @hawkblogger (2 new posts in-window, non-metric: ticket
+  promo, "HB Daily" link — newest metric-flavored post VOR of
+  rookies 15h, outside); @MagicSportsGuy (15h; ARBY posts
+  17h/Oct 8, outside); @SumerSports (Oct 8); @DevyEusuf
+  (timeline renders EMPTY — header shows 1,127 posts, no posts
+  render; new state); @statyxio (16h); @ScottBarrettDFB (11h);
+  @PattonAnalytics (Oct 8); @EstablishTheRun (3h, show-
+  schedule promo); @FantasyPtsData (16h); @DonAtkinsonNFL
+  (10h); @DynatyzeFF (7:30 AM CDT, before window);
+  @NerdingonNFL (renders empty, 1 post header — unchanged);
+  @PFF (22h); @FTNData (PROTECTED — no follow requested);
+  @32BeatWriters (19h); @NFLResearcher (renders empty, 4
+  posts header — unchanged).
+
+### DATA-SOURCE EVIDENCE (this sweep)
+
+- "Data: nflreadr.org | Weather: NWS | 2026-10-08" —
+  @GridironInfo_ footer on both cards; first nflreadr.org
+  sighting (replaces nflreadpy and Open-Meteo from
+  overnight/morning cards).
+- Bio-link endpoints surfaced by this sweep (site + access as
+  shown in bios, not independently tested): StatRankings.com
+  (@MagicSportsGuy, ARBY matchup ratings, subscription;
+  @PattonAnalytics data scientist there); statyx.io
+  (@statyxio, "Ask Statyx" public, no account);
+  fantasypointsdata.com (@FantasyPtsData / @ScottBarrettDFB,
+  Data Suite 2.0, hand-charted, paid); ftnfantasy.com
+  (@FTNData, protected account); bit.ly/getsumerpass
+  (@SumerSports, free tier); dynatyze.com/football
+  (@DynatyzeFF, free sync/trade wire); establishtherun.com
+  and subscribe.establishtherun.com/nfl (@EstablishTheRun);
+  32beatwriters.com (@32BeatWriters, Fantasy Grid);
+  pff.com (@PFF, PFF+); nflcoachprofiles.com
+  (@PattonAnalytics); devyathletes.com (@DevyEusuf);
+  ko-fi.com/sfdata9ers (@sfdata9ers support link).
+- @sfdata9ers post bodies cite @FantasyPtsData and @FTNFantasy
+  as their data sources (their own attribution).
