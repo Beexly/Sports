@@ -103,3 +103,11 @@
 - **PFF verdict**: JS-rendered+Cloudflare — shell/jina can't see grades; BROWSER-LANE-QUEUED (pff.com/nfl/grades + team pages exact URLs documented in deep_books/)
 - **LANES RUNNING**: DFS RE (entry enumeration + winning patterns + consensus puller), METRIC UNIVERSE catalog (150+ metrics target), deep-books (FD marketIds, Kalshi trade tape, DK live/SGP, Circa)
 - Bus 494c4530a (work order) → next push batch-18
+
+### [22:00] DFS CONSENSUS PIPELINE READY + METRIC UNIVERSE CATALOG
+- **DK DFS probed live**: getavailableplayers OPEN from shell (200, full playerList); api.draftkings.com 403 Akamai; gamecenter/leaderboard LOGIN-GATED (redirects to signup — measured). DFS web lobby = marketing shell; real lobby in app/login
+- **The answer**: pre-lock = live ownership% + entry counts (aggregates); post-lock = full entry lineups via leaderboardfull/v3 pagination (~50/page → 20k entries ≈ 400 pages ≈ 4-7 min at 2req/s)
+- **Deliverables built**: dfs/ENTRY_ENUMERATION_PLAN.md + dfs/pull_entries.py (cookie-authenticated, resumable, 0.6s jitter, backoff, syntax-verified). Tomorrow's 2-min step: user's logged-in browser → contest page → export cookies (get_cookies) → contest id + draftGroupId → run puller
+- **METRIC_UNIVERSE.md (1,002 lines, 433 rows)**: 127 NFL + 110 CFB metrics, 28 equations, 20 situational factors, 138 gap items. STATUS RECONCILE: agent's top-10 'missing' = EPA/WPA/YAC/CPOE/NGS → ALREADY HAVE in pbp columns + ngs_2024 files (data-not-computed ≠ missing); real remaining = derivation validation, separation/cushion extraction, DVOA-style adjustments, special-teams EPA
+- PFF verdict confirmed: browser-lane queued
+- Bus push batch-19
