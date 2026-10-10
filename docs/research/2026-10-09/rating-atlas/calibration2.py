@@ -102,6 +102,32 @@ def temperature_apply(p, temperature):
     return expit(logit(p) / temperature)
 
 
+def research_wire_temperature(pairs):
+    """RESEARCH PATH ONLY. Not published. No MODEL_VERSION bump. No gate flip.
+
+    The 3-line application of the existing fit, per the 2026-10-10 pack:
+        T = temperature_fit(probs, outcomes)
+        calibrated = [temperature_apply(p, T) for p in probs]
+        before/after ECE and Brier reported, never wired anywhere else.
+    Founder gate unchanged: n >= 100, Brier <= 0.22, ECE <= 0.05, three
+    consecutive green runs. This helper only measures the drop.
+    """
+    probs = [p for p, _ in pairs]
+    outcomes = [float(o) for _, o in pairs]
+    T = temperature_fit(probs, outcomes)
+    calibrated = [temperature_apply(p, T) for p in probs]
+    b_before = sum((p - o) ** 2 for p, o in zip(probs, outcomes)) / len(pairs)
+    b_after = sum((p - o) ** 2 for p, o in zip(calibrated, outcomes)) / len(pairs)
+    return {
+        "T": T,
+        "n": len(pairs),
+        "ece_before": ece(probs, outcomes),
+        "ece_after": ece(calibrated, outcomes),
+        "brier_before": b_before,
+        "brier_after": b_after,
+    }
+
+
 def beta_map(p, a, b, c):
     """logit(p') = c + a log p + b log(1-p). Identity is a=1, b=-1, c=0."""
     p = clip(p)

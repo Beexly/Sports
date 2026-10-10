@@ -41,3 +41,10 @@ Saturday 2026-10-10 is a college slate. No NFL. The research packet cannot score
 5. Only then decide whether a rating (Glicko-2 or otherwise) adds anything the close does not have.
 
 Until that fit prints, college is a separate model that has not been built. It is not a config flag on the NFL engine.
+
+## Readiness — 2026-10-10
+
+- Separate model required. College is not a flag on the NFL engine and never becomes one.
+- Intake exists on main (`cfbfastr-intake.ts`); no college model exists in `packages/prediction-engine`, and none was added.
+- Saturday's slate is not scored until sigma and home field are fit on college rows only — against a real college close, with last season sealed. NFL 13.45 and HFA 1.56 (and the production 0.025 EPA/play) are NFL constants and stay out of college.
+- The 2026-10-10 point-in-time warehouse (`WAREHOUSE_SCHEMA.md`) is where a college close join would land once a college close source exists.
