@@ -60,3 +60,9 @@
 ### STATE
 - Kill ledger: 8 entries, chain intact · Registry: 9 features declared, margin_head_inputs()=[] · Bus chain: 10 commits (…→d121d2c7d)
 - 20-item build order status: 1 ✅ 2 🟡(derived, ESPN validation pending) 3 ✅ 4 ✅ 5 🟡(join next) 6 🟡(snaps done; NGS/combine/contracts/QBR/FPI = feeds lane report) 7-20 queued
+
+### [16:00] ITEMS 3+5+6 CLOSED + INVENTED METRIC #1 LIVE
+- **Item 3 ✅**: NGS 2024 (passing/receiving/rushing), combine (all years), historical contracts, officials.parquet, injuries 2025, snap counts 2025 — nflverse-data releases (2025 NGS not yet published)
+- **Invented metric #1 — MICRO-STATE SITUATIONAL GRAPH (nfl_situational_graph.py)**: 133,431 plays → 17,458 drives → **216 distinct states** (down × dist × ytg × score-leverage × qtr × timing). Outputs: situational_ep_states CSV + leverage-conditional EP (43 cells). **The novel delta: drive EP conditioned on score state at identical (down,dist,ytg) — top spread +0.61 (1st&7-10 at opp 11-20: down-8-20 outearns blowout leaders)**. Standard EP models stop at down/dist/ytg; this is the leverage layer
+- Bug found+fixed: nflfastR has NO `distance` column — it's `ydstogo` (also: kickoff rows carry down=''; qtr parses as float-string)
+- Item 2 🟡→ next: independent EPA re-derivation + validation; Item 5 🟡: usage×prop-σ join next
