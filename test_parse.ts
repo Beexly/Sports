@@ -1,1 +1,0 @@
-const nflverseStr = "hello world";

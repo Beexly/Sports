@@ -9524,6 +9524,164 @@ posts in window.
 - TE FPTS/target + separation pairing: efficiency-per-opportunity with
   separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
   2.19 FPTS/tgt, #7) (@DynatyzeFF).
+## X ANALYTICS SWEEP 2026-10-09 PM
+
+Window: posts after ~1:58 AM CDT Fri 2026-10-09 through ~5:10 PM CDT
+Fri 2026-10-09 (~15.2h, Friday Week 5 injury-report day). Read-only
+sweep as @GalaxySportsHQ (no likes/reposts/replies/follows/DMs).
+Login confirmed by both tasks; no CAPTCHAs or login walls. Two
+parallel browser tasks: Task A (home feed + 21 analytics accounts);
+Task B (13 accounts: news/injury 7, market 4, scheme/film 2).
+@FTNData still protected (no follow requested). @NerdingonNFL and
+@NFLResearcher still effectively empty (no posts render).
+CORRECTION to the 2026-10-09 00:20 CDT section: the @WillKunkelV
+Texans-CB post does NOT claim a Week 4 highest press rate per NGS.
+Verified actual post (x.com/WillKunkelV/status/2108376298003247315,
+last edited 8:57 PM CDT Oct 8) says career-LOW press rates
+(Stingley 11.0%, Lassiter 7.5%) and increased pre-snap cushions
+(7.8/8.1 yds), with no NGS attribution anywhere; the prior
+sweep's home-feed recollection was wrong. @GridironInfo_'s Kalshi
+award-odds series is still not posted (most recent Kalshi content:
+Sep 27) — still owed.
+
+### NEW ITEMS
+
+1. @sfdata9ers — "Adjusted Net Yards per Attempt" leaderboard
+   (min 60 att) (2026-10-09 ~4:01 PM CDT). NEW TABLE: adjusted net
+   yards per attempt. Formula as posted: ANY/A = (PassingYards +
+   20*TDs - 45*INTs - SackYards) / (Attempts + Sacks). Top 5
+   captured: 1. Brock Purdy 10.46, 2. Lamar Jackson 9.50,
+   3. Patrick Mahomes 8.13, 4. Jared Goff 7.86, 5. Trevor
+   Lawrence 7.74. Stated data source: @FantasyPtsData. No caveats
+   stated. CSV: docs/dfs/research/2026-10-09/full-tables/
+   sfdata9ers-any-a-wk5-2026.csv. Relation note: ANY/A is a
+   pass-efficiency composite; GSE's passing-efficiency inputs are
+   per-play EPA/CPOE-family, not ANY/A as a composite — benchmark
+   gap noted neutrally.
+2. @sfdata9ers — "offensive-minus-defensive snaps/game" board
+   (2026-10-09 ~3:34 PM CDT). NEW TABLE: per-game snap
+   differential (offense snaps minus defense snaps). Captured rows:
+   1. CHI +28.0, 2. NO +11.0, 3. LAR +10.5 … 30. SF -9.0,
+   31. PHI -9.2, 32. TEN -11.0. Stated source: none (own
+   computation). Author note: "For SF and BUF, the culprit might
+   actually be scoring TOO FAST." CSV: docs/dfs/research/
+   2026-10-09/full-tables/sfdata9ers-snap-differential-2026.csv.
+   Innovation kernel (attributed, not a build order): snap
+   differential as a pace/possession descriptor, with the
+   fast-scoring-negative artifact as a stated caveat.
+3. @GridironInfo_ — "why NFL teams go for 2 when down 14"
+   (2026-10-09 ~2:20 PM CDT). NEW DATUM: going for 2 first =
+   58.9% chance to win once both TDs scored; kicking first =
+   46.1%. Stated source: none (own computation). No caveats
+   stated. CSV: docs/dfs/research/2026-10-09/full-tables/
+   gridironinfo-go-for-2-down-14-2026.csv. Innovation kernel
+   (attributed): 2-point-decision EV reference table for
+   late-game state handling.
+4. @GridironInfo_ — "2026 Fantasy PPG leaders by team"
+   (2026-10-09 ~4:30 PM CDT). NEW TABLE: fantasy points per game
+   through Week 4. Captured: 1. Jaxon Smith-Njigba (SEA) 29.2,
+   2. Jahmyr Gibbs (DET) 29.0, 3. Josh Allen (BUF) 28.1. Scoring
+   format not stated (PPR implied). CSV: docs/dfs/research/
+   2026-10-09/full-tables/gridironinfo-fantasy-ppg-leaders-wk4-
+   2026.csv. Companion table "Through-Week-4 Fantasy WR leaders"
+   (~3:20 PM CDT, PPR): JSN 116.7, CeeDee Lamb 112.2, Amon-Ra
+   St. Brown 91.3. CSV: docs/dfs/research/2026-10-09/full-tables/
+   gridironinfo-fantasy-wr-leaders-wk4-2026.csv. Stated source:
+   none for either.
+5. @PFF — "Cowboys pass defense ranks" (2026-10-09 ~11:05 AM
+   CDT). NEW TABLE: Dallas ranks across pass-defense axes —
+   EPA/pass play allowed 32nd, pass success rate allowed 32nd,
+   yards/attempt allowed 30th, completion pct allowed 30th,
+   passer rating allowed 32nd, passing TD allowed 28th,
+   interceptions 32nd. Stated source: PFF (own grading). CSV:
+   docs/dfs/research/2026-10-09/full-tables/pff-cowboys-pass-
+   defense-ranks-2026.csv. Relation note: "highest passer rating
+   allowed this season" list (DAL 120.9, ARI 120.8, MIA 110.9,
+   DET 110.4, NO 105.5, ~9:05 AM CDT) re-sights the AM sweep
+   board; no new values.
+6. @RyanPaganetti — 4th-and-goal-from-1 analysis (~1:25 PM CDT).
+   NEW DATUM: conversion-rate estimate 57.6% (his model) vs 57%
+   empirical league average. Stated source: none. Companion
+   game-theory notes (Thu night): Bowles 4th-and-1 go decision —
+   cumulative non-sneak conversion rate tilted toward kicking,
+   ESPN had it ~even; down-8 Dallas should play more tempo than
+   down-7 (price in 50% fail rate on 2-pt). Innovation kernel
+   (attributed): goal-line/4th-down conversion calibration
+   reference points for in-game decision modeling.
+7. @RyanPaganetti (~2:20 PM CDT) — Patriots' 4-out CB cluster
+   not priced by market (Gonzalez traveling with Bowers,
+   man-heavy plan vs Raiders). Innovation kernel (attributed,
+   not a build order): injury-adjusted secondary strength as a
+   matchup-model input; note this pairs with @FantasyPtsData's
+   Cover-1 scheme note (item 9) on the same Patriots game.
+8. @statyxio — Raiders coverage-scheme/WR matchup (~2:33 PM
+   CDT). NEW DATUM: Raiders play zone on 73% of plays ("one of
+   the highest in the league"); Romeo Doubs vs zone 2.1 YPRR.
+   Stated source: none. Innovation kernel (attributed): same
+   scheme-specific receiving-matchup kernel as the 10-08 PM
+   LaPorta/ARI composite — coverage-usage rate x player
+   vs-coverage rate.
+9. @statyxio — Purdy/Seattle pressure collision (~12:33 PM CDT).
+   NEW DATUM: Brock Purdy 0.0% sack rate this season vs Seattle
+   D getting home on 8.1% of dropbacks; Purdy EPA/dropback
+   +0.566 (#1), success rate 62.3% (#1) — "Something has to give."
+   Stated source: none. Innovation kernel (attributed):
+   pressure-vs-elusiveness collision flagged as a matchup signal.
+10. @FantasyPtsData (~4:45 PM CDT) — Cover-1 schematic matchup:
+    Brock Bowers and Michael Mayer perform worse against Cover-1;
+    Jalen Nailor gets the biggest bump based on the schematic
+    matchup. Quotes @FB_FilmAnalysis: "NE play cover 1 at the
+    4th highest rate in the league… they're very also very small
+    at CB." Stated source: none beyond the quoted film account.
+    Innovation kernel (attributed): coverage-rate x
+    player-vs-coverage split as a TE/WR weekly adjustment.
+11. @MagicSportsGuy — "Adjusted Run Blocking Yards (ARBY)
+    Matchup Ratings for Week 5" (~3:41 PM CDT). Re-sighting of
+    ARBY (inventoried 2026-10-08 PM / 10-09 00:20); first board
+    explicitly paywalled: "last time the full board goes on X,
+    @StatRankings subscribers only moving forward." New captured
+    rows: smash BUF (O-1st) vs LAR (D-26th); bad-vs-bad GB (O-32nd)
+    vs CHI (D-32nd); TB D-ARBY 1st / 3rd in RB YPC allowed vs
+    DAL O-ARBY 27th / 21st in RB YPC. CSV: docs/dfs/research/
+    2026-10-09/full-tables/magicsportsguy-arby-matchup-board-
+    wk5-2026.csv. Attribution note: the paywall shift is the
+    author's stated policy; treat ARBY as StatRankings-sourced
+    going forward.
+12. @Nate_Tice — SUPLEX differential (~11:10 AM CDT). NEW METRIC
+    DATUM: teams winning the "SUPLEX differential" by 10%+ in a
+    game are 13-2 this year, 207-39 all-time; Cowboys added to
+    the list from Thursday. Definition of SUPLEX not stated in
+    the post — no guessing; inventory is the name, the stated
+    win-loss facts, and the source (@Nate_Tice) only. Companion
+    note (~10:10 AM CDT): Vikings using shotgun to run the ball
+    at the highest rate of the Kevin O'Connell era (attempt to
+    merge Kyler's skillset with the offense); suggests leaning
+    into puller-heavy run scheme and boom-bust offense. Scheme
+    kernel (attributed): shotgun-run-rate and puller-heavy
+    concepts as team tendency descriptors.
+13. @DynatyzeFF (pinned, ~11 AM CDT) — individual 1-on-1 WR/TE
+    battles for Week 5 "smash weeks" (link post; no numbers in
+    text). Innovation kernel (attributed, not a build order):
+    individual 1-on-1 matchup layer for weekly projections.
+14. @jmthrivept (pinned, Oct 6 — out of window, re-sighted via
+    injury lane) — @FantasyPts Injury Tracker: >=63 key-player
+    injuries, >29% of an 18-round 12-team draft, >5 full rounds.
+    NEW DATUM, stated source: FantasyPts Injury Tracker.
+    Innovation kernel (attributed): injury-load index for
+    season-level context.
+
+### NO METRICS IN-WINDOW
+
+@ScottBarrettDFB, @PattonAnalytics (latest Oct 8: X WR
+alignment% leaders — Pickens 77.1%, Denzel Boston 75.8%, Metcalf
+75.1%, Michael Wilson 72.3%; quick pressure leaders — Dallas
+Turner 26 (21.1%), Maxx Crosby 20 (15.7%); forced missed tackles
+— Kenneth Walker III 37, Bijan Robinson 37), @SumerSports,
+@EstablishTheRun (NBA promo only), @cmain7 (fantasy banter only),
+@hawkblogger (Seahawks-49ers injury report only), @DevyEusuf
+(injury commentary only), @DonAtkinsonNFL (qualitative only),
+@benbbaldwin (last Oct 7).
+
 ## Knowledge Bases
 
 - **Claude Academy corpus**: `docs/CLAUDE-ACADEMY-PLAYBOOK.md` (this repo) — indexed

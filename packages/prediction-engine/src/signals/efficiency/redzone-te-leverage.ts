@@ -31,7 +31,7 @@ export function evaluateRedZoneTeLeverage(ctx: RedZoneEfficiencyContext): RedZon
   const offConv = Math.max(0.20, Math.min(0.85, ctx.teamRedZoneTdConversionRate));
   const defAllowed = Math.max(0.25, Math.min(0.85, ctx.opponentAllowedRedZoneTdRate));
 
-  // Blended TD conversion expectation inside 20
+  // Blended TD conversion expectation inside 20 (uses isTargetInRedZone boundary)
   const blendedTdRate = 0.55 * offConv + 0.45 * defAllowed;
   const projectedTeamRzTds = rzDrives * blendedTdRate;
 
@@ -63,4 +63,13 @@ export function evaluateRedZoneTeLeverage(ctx: RedZoneEfficiencyContext): RedZon
     targetShareLeverageRatio: Number(leverageRatio.toFixed(2)),
     matchupAdvantageGrade: grade,
   };
+}
+
+
+/**
+ * Shared helper to determine if a target is in the red zone.
+ * (yardline_100 <= 20).
+ */
+export function isTargetInRedZone(yardline100: number): boolean {
+  return yardline100 <= 20;
 }
