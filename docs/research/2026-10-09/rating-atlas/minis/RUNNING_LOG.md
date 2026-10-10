@@ -95,3 +95,11 @@
 - **Reconciliation seed (item 7) ✅**: games_all vs pbp final scores 816 games, 0.00% mismatch; quarter-curve internal consistency verified
 - **REA intel**: open-source RE agent stack (67.9k★) cloned + assessed for Underdog/DK/Novig lanes
 - pandas+numpy installed on iSH (apk py3-pandas py3-numpy); eq agent's pandas version OOMs on multi-season — stdlib rewrite shipped
+
+### [21:30] ENGINE STACK RESTORED + k-sweep + quick-win metrics + DFS/deep-books lanes fired
+- **Old engine stack restored from shared mirror → engine/**: engine_math (45 fns: Shin/Kalman/teaser-MC/CRPS), ratings2 (8 systems), calibration2 (Brier/ECE/isotonic/temp/conformal), gap_engines (middles/arbs/IRLS/copulas/steam), kelly2, clv, divergence, ladder_inverse, pick6_hold — ALL IMPORT CLEAN on this machine
+- **k-sweep delivered**: K monotone improves PPD pooled CRPS (8.98→8.61) but t declines (0.52→0.37) — never clears; PPD dead standalone at ANY shrinkage; dampening demo: K=20→2.77, 50→2.50, 100→2.32, 200→2.18 (36 drives @3.2 PPD, prior 2.0)
+- **Quick-win canon metrics computed (quickwin_metrics_2025.json)**: HAVOC-lite 2025 (DEN 14.98% … NYJ 5.70%), air-yards/attempt (LA 9.31 top)
+- **PFF verdict**: JS-rendered+Cloudflare — shell/jina can't see grades; BROWSER-LANE-QUEUED (pff.com/nfl/grades + team pages exact URLs documented in deep_books/)
+- **LANES RUNNING**: DFS RE (entry enumeration + winning patterns + consensus puller), METRIC UNIVERSE catalog (150+ metrics target), deep-books (FD marketIds, Kalshi trade tape, DK live/SGP, Circa)
+- Bus 494c4530a (work order) → next push batch-18
