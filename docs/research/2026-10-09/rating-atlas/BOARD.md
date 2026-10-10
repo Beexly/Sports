@@ -29,3 +29,9 @@ A box is checked only when the command printed, or the file on this branch conta
 ## Rule
 
 A metric does not emit a pick. The pick carries the market, the residual against the close, and a situational fact the close does not already contain.
+
+- [x] Idle step called from glicko2.py for zero-game players
+- [x] CFB_MODEL_DECISION.md landed. College is a separate model. Not started.
+- [ ] v7 paste still has old ci(). Delivery file not rewritten.
+- [ ] Market still missing from the 2025 weeks 1-6 backtest
+- [x] Kill ledger current. Do not rebuild a killed row.

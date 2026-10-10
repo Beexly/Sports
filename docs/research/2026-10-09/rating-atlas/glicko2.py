@@ -110,6 +110,33 @@ def glicko2_sequential(rating, rd, sigma, games, tau=TAU):
     return {"rating": rating, "rd": rd, "sigma": sigma}
 
 
+def glicko2_idle(rating, rd, sigma):
+    """Zero games this period. The idle step from glicko2_idle.py, inlined.
+
+    Rating unchanged. Sigma unchanged. No volatility solve, no division by v:
+    phi' = sqrt(phi^2 + sigma^2), rd' = phi' * SCALE.
+    """
+    phi = rd / SCALE
+    phi_star = math.sqrt(phi * phi + sigma * sigma)
+    return {"rating": rating, "rd": phi_star * SCALE, "sigma": sigma}
+
+
+def period_with_byes(roster, tau=TAU):
+    """One period over players present at period start.
+
+    roster: {name: (rating, rd, sigma, games)}. A player with zero games
+    takes the idle step. A player with games takes the period-parallel
+    update. No other path changes.
+    """
+    out = {}
+    for name, (rating, rd, sigma, games) in roster.items():
+        if len(games) == 0:
+            out[name] = glicko2_idle(rating, rd, sigma)
+        else:
+            out[name] = glicko2_parallel(rating, rd, sigma, games, tau)
+    return out
+
+
 def _false_position_cubic(iters=20):
     """Plain false position, no halving. Right endpoint of [2, 3] stays at 3."""
 
@@ -207,6 +234,23 @@ def self_check():
     )
     assert b_stuck == 3.0
     assert abs(root - 2.0945514815) < 1e-6
+
+    idle = glicko2_idle(1500.0, 200.0, 0.06)
+    print(
+        "idle one period: RD %.2f rating %.1f sigma %.2f   (expect 200.27 / 1500 / 0.06)"
+        % (idle["rd"], idle["rating"], idle["sigma"])
+    )
+    assert abs(idle["rd"] - 200.2714) < 1e-3
+    assert idle["rating"] == 1500.0
+    assert idle["sigma"] == 0.06
+    roster = {
+        "bye": (1500.0, 200.0, 0.06, []),
+        "player": (1500.0, 200.0, 0.06, games),
+    }
+    after = period_with_byes(roster)
+    assert after["bye"]["rd"] == idle["rd"]
+    assert after["player"]["rating"] == par["rating"]
+    assert after["player"]["rd"] == par["rd"]
     print("glicko2 self_check ok")
 
 
