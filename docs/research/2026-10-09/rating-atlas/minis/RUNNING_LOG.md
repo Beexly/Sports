@@ -86,3 +86,12 @@
 - Failure mode identified: weeks 2-3 rolling PPD = 1-2-game noise used as team quality (+4.06/+2.87 CRPS); wk-6 single-week PROMOTED verdict STANDS (7.3852 vs 7.5057); both facts true
 - Pre-registered fix: hierarchical carry-in (prior-season PPD as week-1 prior, shrinkage k=20 — same machinery as leverage retest)
 - Ledger #10 recorded; candidate stays diagnostic; no silent upgrades
+
+### [20:30] LANE EXECUTION ROUND — PPD v2, equations, FTN z, officials, reconciliation, REA
+- **PPD v2 carry-in (ppd_v2_carryin.py) — REFUSED**: pooled 9.2836 vs close 7.9450, t=-0.01. Carry-in fixed wks2-3 but signal doesn't clear; PPD-as-standalone dead in this form; PPA pooled (t=1.83) stays best challenger. Ledger #11
+- **Items 9-12 equations measured (invented_equations_stdlib.py, 2025)**: EQ-1 pressure gradient real (low +0.19 → high −0.06 EPA/dropback), leverage interaction ≈ null (−0.023); EQ-2 strong drivestart×tempo gradient (1.45→4.35 pts/drive) w/ tempo×situation inversion; EQ-3 league must-score delta ≈0 (t=−0.41, market prices clutch) BUT team dispersion huge (BUF +0.28 → IND −0.75) = behavioral identity feature pending stability
+- **FTN team z-scores (item 5/rule 5 lane) ✅**: 47,316 plays, 9 flags × 32 teams (combined side — file lacks posteam/defteam); extremes: WAS no-huddle z=+38.5, KC RPO z=+8.4, CIN no-huddle z=−8.2. data/ftn_team_z_2025.csv + FTN_TEAM_Z_RESULTS.md
+- **Officials crews — BLOCKED on iSH** (CSV embedded-comma + memory ceiling): deferred to PC lane; documented
+- **Reconciliation seed (item 7) ✅**: games_all vs pbp final scores 816 games, 0.00% mismatch; quarter-curve internal consistency verified
+- **REA intel**: open-source RE agent stack (67.9k★) cloned + assessed for Underdog/DK/Novig lanes
+- pandas+numpy installed on iSH (apk py3-pandas py3-numpy); eq agent's pandas version OOMs on multi-season — stdlib rewrite shipped
