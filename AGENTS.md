@@ -13293,3 +13293,152 @@ replaced by capturing the original @PFN365 post directly.
   chart footer).
 - "PFN's DT Impact metric" / pfsn.app/nflimpact — NEW grading
   product sighting (@PFN365).
+
+## X ANALYTICS SWEEP 2026-10-10 (MORNING)
+
+Window: posts after ~00:30 CDT through ~08:55 CDT Sat 2026-10-10
+(~8.5h, overnight before Week 5 Sunday). Read-only sweep as
+@GalaxySportsHQ (no likes/reposts/replies/follows/DMs). Login
+confirmed; no CAPTCHAs or login walls. Single browser task: home
+feed + 21 analytics accounts + term searches (EPA, CPOE, TPRR,
+pass rush win rate, aggressiveness, DT Impact, ARBY) +
+injury/market/scheme accounts. X absolute timestamps verified on
+post pages. OVERNIGHT WINDOW: analytics accounts almost entirely
+quiet overnight; the two metric captures are a 5:30 AM matchup
+card and an 8:01 AM analytics-commentary post. @FTNData still
+protected (no follow requested). @NerdingonNFL (1 post total) and
+@NFLResearcher (4 posts total) timelines render empty — nothing
+to scan. @VSiNLive used for market (bare @VSiN resolves to an
+unrelated 0-post account).
+
+### NEW ITEMS
+
+1. @GridironInfo_ — "Philadelphia vs Jacksonville Matchup Card
+   Stats through Week 4" (2026-10-10 5:30 AM CDT,
+   verified absolute; post URL not captured in this sweep).
+   NEW TABLE FORMAT: full per-game matchup card — header "2026
+   NFL Week 5 Preview · Thru Week 4 · Per Game · Rank of 32".
+   Market block: SPREAD JAX -7.5 (ATS PHI 0-4 | JAX 3-3-1);
+   TOTAL O/U 41.5 (O/U PHI 3-1 | JAX 1-3); MONEYLINE PHI +310 /
+   JAX -395 (ML PHI 2-2 | JAX 3-1); IMPLIED SCORE PHI 17.0 /
+   JAX 24.5; WEATHER 56°F — Overcast · 6 mph · 0% rain.
+   Team columns as rank-of-32 + per-game value, mirrored:
+   PHI offense — Points 26th (18.8), Pass Yards 30th (178.2),
+   Rush Yards by RB 21st (81.0), Rush Yards by QB 10th (26.2),
+   Rec Yards by WR 21st (139.0), by TE 28th (28.8), by RB 32nd
+   (10.5). JAX offense — Points 12th (26.0), Pass Yards 20th
+   (210.8), Rush Yards by RB 7th★ (107.5), Rush Yards by QB 24th
+   (7.8), Rec Yards by WR 17th (143.0), by TE 17th (49.5), by RB
+   30th (16.2). Defense-allowed columns mirror the same
+   categories (JAX allowed: Points 2nd / Pass Yards 31st /
+   Rush by RB 1st / Rush by QB 20th / WR 32nd / TE 5th / RB
+   31st; PHI allowed: Points 16th / Pass Yards 15th / Rush by RB
+   26th / Rush by QB 13th / WR 20th / TE 10th / RB 12th).
+   Stated source (chart footer): "@GridironInfo_ | Data:
+   nflreadpy | Weather: Open-Meteo | 2026-10-08". Caveats: none
+   stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   gridironinfo-phi-jax-matchup-card-week5-2026.csv.
+   Innovation kernel (attributed, not a build order): symmetric
+   offense-vs-allowed-defense card in per-game ranks as a
+   single-screen matchup read — the mirrored layout (same
+   categories both sides) makes the mismatch legible instantly.
+   Second sighting of nflreadpy in this lane; first sighting of
+   Open-Meteo as a weather-data source.
+
+2. @MagicSportsGuy — "Adjusted Run Blocking Yards (ARBY)
+   Matchup Ratings for Week 5" (2026-10-09 3:29 PM CDT, verified
+   absolute; owed from the 2026-10-09 evening sweep — full
+   capture now). METRIC SIGHTING (computation UNSTATED — NOT
+   inventoried as a defined metric, do not guess). Definition
+   as stated: ARBY = "Adjusted Run Blocking Yards" (matchup
+   ratings board). Board lists O-LINE vs/at D-LINE matchup
+   RANKINGS 1–30 only (NO numeric ARBY values posted), ordered
+   by "statrankings ARBY matchup rank 2026 to date"; byes KC,
+   CAR; source footer "statrankings.com". Rankings (O-line team
+   first): 1 Bills @ Rams · 2 Rams vs Bills · 3 Falcons vs
+   Ravens · 4 Bears @ Packers · 5 Steelers vs Colts · 6 Jaguars
+   vs Eagles · 7 Vikings @ Saints · 8 Colts @ Steelers ·
+   9 Cardinals vs Lions · 10 Lions @ Cardinals · 11 49ers @
+   Seahawks · 12 Chargers vs Broncos · 13 Broncos @ Chargers ·
+   14 Buccaneers @ Cowboys · 15 Browns @ Jets · 16 Seahawks vs
+   49ers · 17 Ravens @ Falcons · 18 Commanders vs Giants ·
+   19 Eagles @ Jaguars · 20 Raiders @ Patriots · 21 Dolphins vs
+   Bengals · 22 Titans vs Texans · 23 Patriots vs Raiders ·
+   24 Packers vs Bears · 25 Jets vs Browns · 26 Bengals @
+   Dolphins · 27 Giants @ Commanders · 28 Texans @ Titans ·
+   29 Saints vs Vikings · 30 Cowboys vs Buccaneers. SOURCE
+   MIGRATION NOTE (poster verbatim): "Last time the full board
+   goes on X, @StatRankings subscribers only moving forward!"
+   — ARBY full boards leave X after Week 5; future capture
+   needs a statrankings.com path. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   magicsportsguy-arby-matchup-rankings-week5-2026.csv.
+
+3. @RyanPaganetti — analytics commentary on Detroit's 4th-and-20
+   go-for-it (2026-10-10 8:01 AM CDT, verified absolute).
+   No formal metric name beyond "analytics models"; poster
+   states the models "preferred a field goal" even down 13 late,
+   and calls the lateral play "maybe the most underutilized
+   concept in the sport in these low probability long distance
+   situations," adding that 4th-down planning should price in
+   what you would do if a 5- or 10-yard penalty arrives
+   (Detroit took 2 consecutive penalties before the play).
+   Innovation kernel (attributed, not a build order): lateral
+   concepts in long-distance late-game 4th downs as an
+   explicitly underpriced tactic; 4th-down decision models
+   pricing penalty-yardage contingency branches.
+
+### NEWS (in-window)
+
+- @JFowlerESPN (2026-10-10 7:04 AM CDT, post page verified):
+  "49ers DE Mykel Williams set to make his season debut Sunday
+  vs Seattle (and Nick Bosa getting closer)" — ESPN link card:
+  "49ers DE Williams set for season debut after tearing ACL
+  last November" (espn.com). Depth-chart news for Sunday's
+  49ers-Seahawks Week 5 game.
+- No Sunday-game weather concerns noted by any news account.
+  Only kickoff-weather figure in coverage: @GridironInfo_
+  matchup card — PHI @ JAX (London): 56°F, Overcast, 6 mph,
+  0% rain.
+
+### MARKET (in-window)
+
+- NO in-window NFL Week 5 line moves, steam, or sharp-vs-public
+  splits. @VSiNLive in-window posts were promos only
+  (@WesReynolds1 Week 5 best bets; Sports Gambling Podcast
+  anytime-TD promo — no numbers). @Covers: in-window posts
+  college football/Kalshi promo; newest NFL content 11h ago.
+  @Covers_Football 10h+ ago (college). @ActionNetworkHQ 10h+
+  ago (college/WNBA). Nothing with opener/current/direction
+  to quote. Note for the Sunday brain: no NFL line moves or
+  splits posted by these accounts as of Sat 8:55 AM CDT.
+
+### SCHEME (in-window)
+
+- None. @Nate_Tice newest posts 13h ago; @benbbaldwin newest
+  non-pinned posts Oct 7.
+
+### NOTHING SEEN (checked, outside window)
+
+- @cmain7 (last post ~1h ago, non-metric fantasy banter);
+  @jmthrivept (10–11h ago); @sfdata9ers (15h ago);
+  @hawkblogger (14h ago); @MagicSportsGuy (newest 4h ago,
+  non-metric); @SumerSports (Oct 8); @DevyEusuf (15h ago);
+  @statyxio (11h ago); @ScottBarrettDFB (10h ago);
+  @PattonAnalytics (Oct 8); @EstablishTheRun (in-window 2h
+  post was a show-schedule notice, no metrics); @FantasyPtsData
+  (15h ago); @DonAtkinsonNFL (9h ago); @DynatyzeFF (22h ago);
+  @PFF (21h ago); @32BeatWriters (18h ago); @AdamSchefter
+  (12h ago); @RapSheet (13h ago); @TomPelissero (Oct 8);
+  @MikeGarafolo (17h ago). Term searches (EPA, CPOE, TPRR,
+  "pass rush win rate", "aggressiveness", "DT Impact", ARBY):
+  no in-window metric content — noise or empty results.
+
+### DATA-SOURCE EVIDENCE (this sweep)
+
+- "Data: nflreadpy | Weather: Open-Meteo | 2026-10-08" — second
+  @GridironInfo_ sighting of nflreadpy (first 2026-10-09 10:00
+  PM CDT overnight); Open-Meteo NEW as weather source.
+- "statrankings.com" — ARBY board footer; @StatRankings
+  paywalling full ARBY boards after Week 5.
