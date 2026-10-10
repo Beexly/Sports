@@ -1,18 +1,55 @@
 {
- "registry": {
-  "ppa_net_close_anchored": "diagnostic",
-  "ppa_pooled_2026": "diagnostic (near-signal t=1.83)",
-  "colley_margin_v1": "diagnostic (ratings backbone)",
-  "travel_gt_1000mi": "diagnostic (t=1.92)",
-  "altitude_home_4000ft": "diagnostic (t=1.88)",
-  "blowout_tax_31plus": "diagnostic (resid +2.84, n=198)",
-  "key_number_ladder": "diagnostic (structural, 18.6% on 3/7)"
- },
- "gate_baseline": {
-  "cfb_gate_2026_w6": {
-   "close_crps": 7.6174
+ "frozen": true,
+ "gate_id": "cfb_gate_2026_w6_registry",
+ "manifest_sha": "c4df145b70c6f0e890a83f5d69f0a881ce471998d2d27911328211e08b94b14c",
+ "features": {
+  "cfb_blowout_mu_shift": {
+   "role": "diagnostic",
+   "condition": "31+ favorites beat close +2.84 (n=198)/+3.08 (n=86 median spine); sigma invariant. PROMOTE only: conditional mu-shift model beats Gaussian-close CRPS on frozen walk-forward + CLV check",
+   "rule": "diagnostic"
+  },
+  "cfb_travel_gt_1000mi": {
+   "role": "context",
+   "condition": "+1.20 pts, t=1.92, n=581. Context ONLY. PROMOTE only: travel x altitude interaction measured, then walk-forward + CLV",
+   "rule": "context"
+  },
+  "cfb_ppa_precomputed": {
+   "role": "diagnostic",
+   "condition": "CFBD /ppa teams+games; close-anchored pooled win -0.0432 (t=1.83); frozen-manifest loss by 0.026. PROMOTE only: pooled t>=1.96 on locked folds (cold-start overlay variant wks1-3 first)",
+   "rule": "diagnostic"
+  },
+  "cfb_closing_total_bias_regime": {
+   "role": "context",
+   "condition": "wk-by-wk -1.05..+3.20 (regime, not constant). Context only; EWMA tracker candidate. PROMOTE only: bias-decay feature beats close on frozen folds + CLV",
+   "rule": "context"
+  },
+  "book_hold_diagnostics": {
+   "role": "context",
+   "condition": "DK 4.19% engineered hold, Caesars/WH sharpest (CRPS 8.335). CalibrationLedger WEIGHTS ONLY. Volume weighting remains refused; pools require recorded calibration history",
+   "rule": "context"
+  },
+  "cfb_altitude_home": {
+   "role": "diagnostic",
+   "condition": "+2.11, t=1.88, n=190. PROMOTE only: with travel interaction, walk-forward + CLV",
+   "rule": "diagnostic"
+  },
+  "cfb_key_number_ladder": {
+   "role": "diagnostic",
+   "condition": "|3|+|7| = 18.6% of games; empirical residual Gaussian to <0.6% pooled. PROMOTE only: alt-line prices from empirical class distributions beat book ladders out-of-sample",
+   "rule": "diagnostic"
+  },
+  "cfb_pbp_tendencies": {
+   "role": "diagnostic",
+   "condition": "aggression z, tempo, penalty rates, halftime adjustment (126,362 plays). All diagnostic. PROMOTE only: residual-vs-close framing + t>=1.96 + walk-forward",
+   "rule": "diagnostic"
+  },
+  "adp_panel": {
+   "role": "diagnostic",
+   "condition": "cross-source z-deviations feed rankings_diagnostic ONLY (ADPGuard enforces in code)",
+   "rule": "diagnostic"
   }
  },
- "kill_ledger_entries": 5,
+ "margin_head_inputs": [],
+ "kill_ledger_entries": 7,
  "chain_intact": true
 }
