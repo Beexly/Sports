@@ -159,3 +159,8 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+export {
+  computeDefensiveTargetShares,
+  type DefensiveTargetShare,
+} from "./defensive-target-share.js";
