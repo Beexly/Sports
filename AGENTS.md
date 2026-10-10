@@ -12787,3 +12787,5 @@ press-rate decline) appeared in-window this morning.
   (stats.hawkblogger.com) — deeper method capture for a future read.
 - @VSiN remains a dead handle (0 posts); @VSiNLive NOT scanned
   (out of this sweep's scope; flag for list update).
+
+9. @Jules — `defensive-target-share` module (2026-10-09). Created `computeDefensiveTargetShares` allowing shadow evaluation of WR/TE/RB defensive target shares. Enforces 4-game week floor and point-in-time constraints.
