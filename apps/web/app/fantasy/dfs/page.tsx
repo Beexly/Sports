@@ -4,6 +4,7 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { TournamentLab } from "@/components/fantasy/tournament-lab";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
+import { getUnifiedDfsSlate } from "@/lib/dfs/unified-slate";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const metadata: Metadata = {

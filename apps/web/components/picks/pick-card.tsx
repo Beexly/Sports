@@ -382,7 +382,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         <div className="mt-2 rounded-md border border-orbital-cyan/30 bg-orbital-cyan/5 p-2">
           <div className="mb-0.5 flex items-center gap-1.5">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-orbital-cyan">
-              Ranking P
+              Model Edge Rating
             </span>
             <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
               {breakdown.rankingSource ?? "unspecified"} · sort key
@@ -397,14 +397,10 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
             <>
               <p className="mt-1 text-[10px] text-ion-3">
-                Market fair:{" "}
+                Fair Market Value:{" "}
                 {(breakdown.marketFairProb * 100).toFixed(1)}%
                 <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
               </p>
-              <DevigMethodDisclosure
-                proportional={breakdown.marketFairProb}
-                shin={breakdown.marketFairShinProb}
-              />
             </>
           )}
         </div>
@@ -434,7 +430,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           {typeof breakdown.independentEdge.trueProb === "number" &&
             Number.isFinite(breakdown.independentEdge.trueProb) && (
               <p className="mt-1 font-mono text-[10px] text-ion-2">
-                trueProb {(breakdown.independentEdge.trueProb * 100).toFixed(1)}%
+                Win Probability: {(breakdown.independentEdge.trueProb * 100).toFixed(1)}%
               </p>
             )}
         </div>

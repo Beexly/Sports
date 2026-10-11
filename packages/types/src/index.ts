@@ -239,6 +239,9 @@ export interface Entitlements {
   canUseTrendLab: boolean;          // PRO+ — full cohort workbench
   canUseParlayMri: boolean;         // PRO+ — full parlay genome
   canUseClvLedger: boolean;         // ELITE — bet ledger + staking toolkit
+  canUseDfsOptimizer150: boolean;   // ELITE — 150-Max DFS multi-lineup generation
+  canUseSgpCorrelation: boolean;    // ELITE — full situational & SGP correlation matrix
+  canGetSteamAlerts: boolean;       // ELITE — real-time steam alerts
   // ── Fantasy suite gates — FANTASY tier ($49/yr) + PRO/ELITE; FREE = depth-limited trial ──
   canUseFantasyDraftSuite: boolean; // draft + best-ball kit
   canUseFantasyFull: boolean;       // the full fantasy suite
@@ -261,14 +264,15 @@ export interface Entitlements {
 }
 
 export function getEntitlements(tier: SubscriptionTier): Entitlements {
-  const isPro = tier === "PRO" || tier === "ELITE";
+  const isElite = tier === "ELITE";
+  const isPro = tier === "PRO" || isElite;
   const isPaid = tier !== "FREE"; // FANTASY, PRO, or ELITE — the paid fantasy line
   return {
     tier,
     // Thread 1 REVERSED (docs/strategy/ENTITLEMENT_REMAP_SPEC.md): the picks are
     // the paid product again. Ahead of football season the top of funnel is won
     // on content + engagement, not by giving picks away at the moment demand
-    // peaks. FREE gets a small daily TEASER (a couple of picks, no confidence
+    // peaks. FREE gets a small daily TEASER (a single daily pick, no confidence
     // number); the paid betting line — full board, confidence, depth, tools,
     // alerts — unlocks with PRO/ELITE. FANTASY is a separate product line (the
     // fantasy suite), not the betting picks.
@@ -279,12 +283,15 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     // Edge Index stays public on every pick — the free trust/transparency signal
     // that makes the teaser credible and pulls visitors toward the paid board.
     canSeeEdgeScore: true,
-    canGetAlerts: tier === "ELITE",
-    // FREE + FANTASY see a small betting-picks teaser; PRO/ELITE get the full board.
-    dailyPickLimit: isPro ? null : 2,
+    canGetAlerts: isElite,
+    // FREE + FANTASY see a 1-pick teaser; PRO/ELITE get the full board.
+    dailyPickLimit: isPro ? null : 1,
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
-    canUseClvLedger: tier === "ELITE",
+    canUseClvLedger: isElite,
+    canUseDfsOptimizer150: isElite,
+    canUseSgpCorrelation: isElite,
+    canGetSteamAlerts: isElite,
     // Fantasy suite — the FANTASY tier unlocks it; PRO/ELITE include it. FREE's
     // trial is depth-limited at the page/API level, never a flag flip.
     canUseFantasyDraftSuite: isPaid,

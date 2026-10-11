@@ -80,7 +80,7 @@ export function BetTracker() {
         <Metric label="Personal return" value={`${p.roi >= 0 ? "+" : ""}${p.roi}%`} tone={signTone(p.roi)} />
         <Metric label="Avg CLV" value={`${p.avgClv >= 0 ? "+" : ""}${p.avgClv}`} tone={signTone(p.avgClv)} />
         <Metric label="Beat close" value={`${p.clvWinRate}%`} tone="text-ultraviolet-glow" />
-        <Metric label="Brier" value={`${p.brier}`} />
+        <Metric label="Calibration Error" value={`${p.brier}`} />
       </div>
       <p className="-mt-3 text-[11px] leading-relaxed text-ion-2">
         <strong className="text-ultraviolet-glow">Beat close</strong>, how often you got a better number than the market closed at, is the leading indicator. The record follows the CLV, not the other way around.

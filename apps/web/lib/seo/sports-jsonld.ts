@@ -93,7 +93,7 @@ export function buildBreadcrumbJsonLd(input: MatchupPreviewInput): Record<string
   // an invalid trail search engines drop. Collapse to a clean two-level
   // Picks → matchup path so every position resolves to a distinct URL.
   const items = [
-    { name: "Picks", path: "/picks" },
+    { name: "The Board", path: "/board" },
     { name: `${input.awayTeam} vs ${input.homeTeam}`, path: matchupPath(input.sport, input.awayTeam, input.homeTeam) },
   ];
   return {

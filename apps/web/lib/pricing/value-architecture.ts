@@ -19,7 +19,7 @@
 
 import { getPricingPhase } from "./pricing-phases";
 
-export type ValueTierId = "FREE" | "PRO" | "ELITE" | "OPERATOR";
+export type ValueTierId = "FREE" | "FANTASY" | "PRO" | "ELITE" | "OPERATOR";
 export type ValueTierStatus = "live" | "waitlist" | "hidden";
 
 export interface ValueTierPrice {
@@ -74,7 +74,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     forWho: "Curious fans deciding whether Galaxy earns their trust.",
     status: "live",
     ctaLabel: "Preview the system",
-    price: { monthly: 0, annual: 0, note: "free forever" },
+    price: { monthly: null, annual: 0, note: "free forever" },
     unlocks: [
       "How Galaxy works: the methodology preview",
       "Glossary and education (how to read confidence, movement, and No-Bet)",
@@ -95,9 +95,34 @@ export const VALUE_TIERS: readonly ValueTier[] = [
       "Pro opens the full reasoning and factor trail behind every signal, line-movement intel, and the tools - the depth, not just the call.",
   },
   {
+    id: "FANTASY",
+    name: "Fantasy Season",
+    order: 1,
+    promise: "Win your seasonal leagues with live decision intelligence.",
+    forWho: "Fantasy football and baseball managers wanting live seasonal tools.",
+    status: "live",
+    ctaLabel: "Get Fantasy Tools",
+    price: { monthly: 19, annual: 149, note: "$19/mo seasonal tools" },
+    unlocks: [
+      "Live seasonal tools: Start-Sit, Waivers, Draft Assistant, Trade Analyzer",
+      "Draft Assistant and Best Ball suite",
+      "Player projections and opportunity share metrics",
+      "Bye-week fragility and roster-construction guidance",
+      "ADP overlays and value gap discovery",
+    ],
+    gated: [
+      "The full daily betting board and signal reasoning (Pro)",
+      "Confidence ratings and factor trails (Pro)",
+      "High-leverage DFS 150-Max Optimizer and SGP Correlation (Elite)",
+      "Real-time line steam alerts and CLV tracking (Elite)",
+    ],
+    whyNextTier:
+      "Pro opens the full betting board, confidence ratings, and factor trails across all 7 sports.",
+  },
+  {
     id: "PRO",
     name: "Edge Board",
-    order: 1,
+    order: 2,
     promise: "Read today's board with confidence.",
     forWho: "Serious fans and bettors who want daily clarity they can act on.",
     status: "live",
@@ -126,7 +151,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
   {
     id: "ELITE",
     name: "Galaxy IQ",
-    order: 2,
+    order: 3,
     promise: "Act sooner, and see whether the timing paid.",
     forWho: "Bettors who want alerts on settled picks and a private tracker that grades every entry price.",
     status: "live",
@@ -152,7 +177,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
   {
     id: "OPERATOR",
     name: "Command",
-    order: 3,
+    order: 4,
     promise: "Run a serious workflow.",
     forWho: "Power users running a full sports-intelligence workflow.",
     // Hidden from public surfaces per owner decision — kept in config for
@@ -171,7 +196,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     gated: [],
     whyNextTier: null,
   },
-] as const;
+];
 
 export function getValueTier(id: ValueTierId): ValueTier {
   const tier = VALUE_TIERS.find((t) => t.id === id);

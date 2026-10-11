@@ -84,6 +84,8 @@ const nextConfig = {
     // /pricing SubscribeButton → POST /api/subscriptions/checkout. Soft alias so
     // capability graph + human muscle-memory never 404 the revenue entry.
     return [
+      // R1: Surface unification — /picks permanently redirected to authoritative /board
+      { source: "/picks", destination: "/board", permanent: true },
       { source: "/signup", destination: "/auth/signin", permanent: false },
       { source: "/register", destination: "/auth/signin", permanent: false },
       { source: "/login", destination: "/auth/signin", permanent: false },

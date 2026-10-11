@@ -119,7 +119,7 @@ export const SURFACES = {
     tagline: "Published picks with reasoning attached.",
     blurb:
       "Published signals that cleared the board, price, timing, and discipline checks.",
-    route: "/picks",
+    route: "/board",
   },
   observatory: {
     label: "Edge Map",

@@ -9,6 +9,7 @@
  * buries, surfaced. Illustrative slate.
  */
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
@@ -21,7 +22,12 @@ const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: low-owned upside." },
 ];
 
-export function DfsOptimizer() {
+export interface DfsOptimizerProps {
+  canUseDfsOptimizer150?: boolean;
+}
+
+export function DfsOptimizer({ canUseDfsOptimizer150 = false }: DfsOptimizerProps = {}) {
+  const maxLineups = canUseDfsOptimizer150 ? 150 : 20;
   const [mode, setMode] = useState<Mode>("gpp");
   const [stack, setStack] = useState(true);
   const [count, setCount] = useState(3);
@@ -95,8 +101,27 @@ export function DfsOptimizer() {
         </label>
         <label className="flex items-center gap-2 text-sm text-ion-1">
           Lineups
-          <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="accent-orbital-cyan" />
-          <span className="w-6 font-mono text-sm text-ion-white">{count}</span>
+          <input
+            type="range"
+            min={1}
+            max={maxLineups}
+            value={count}
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              setCount(Math.min(maxLineups, Math.max(1, val)));
+            }}
+            className="accent-orbital-cyan"
+          />
+          <span className="w-8 font-mono text-sm text-ion-white">{count}</span>
+          {!canUseDfsOptimizer150 && (
+            <Link
+              href="/pricing"
+              className="text-xs text-plasma hover:underline"
+              title="Elite unlocks up to 150 lineups"
+            >
+              (Max 20 · Upgrade to Elite for 150)
+            </Link>
+          )}
         </label>
         <label className="flex items-center gap-2 text-sm text-ion-1" title="No player appears in more than this share of lineups">
           Max exposure

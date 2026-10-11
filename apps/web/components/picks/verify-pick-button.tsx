@@ -85,7 +85,7 @@ export function VerifyPickButton({ receiptHash }: VerifyPickButtonProps): JSX.El
 
               {state.modelVersion && (
                 <>
-                  <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-ion-2">Model version</p>
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-ion-2">Audit Receipt Build</p>
                   <p className="mt-1 font-mono text-ion-1">{state.modelVersion}</p>
                 </>
               )}

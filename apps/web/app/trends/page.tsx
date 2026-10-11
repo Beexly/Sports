@@ -136,7 +136,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                 href="/api/trends/nflverse-readiness"
                 className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
               >
-                JSON
+                View Audit Receipt
               </Link>
             </div>
             <p className="mt-4 text-sm leading-6 text-ion-1">
@@ -224,7 +224,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                 href="/api/nflverse/qb-age-rb-trend"
                 className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
               >
-                JSON
+                View Audit Receipt
               </Link>
             </div>
             {qbAge34Trend ? (
@@ -300,7 +300,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                 href="/api/nflverse/birthday-usage-trend"
                 className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
               >
-                JSON
+                View Audit Receipt
               </Link>
             </div>
             {birthdayResult ? (

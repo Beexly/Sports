@@ -70,67 +70,62 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  // Honesty: public picks board is founder-gated until calibration is published.
-  // Free still delivers tools and transparent process — not invented free picks.
-  { label: "Free calculators & intelligence tools (no account wall)", included: true },
-  { label: "Public methodology + calibration status (building honestly)", included: true },
-  { label: "Founding waitlist for early operator updates", included: true },
-  { label: "The full daily board, every signal (Pro)", included: false },
-  { label: "Confidence rating on every pick (Pro)", included: false },
-  { label: "Factor trail & evidence audit (Pro)", included: false },
-  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
-  { label: "Graded-pick alerts (Elite)", included: false },
-  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
+  { label: "1 daily teaser pick with public Edge Index", included: true },
+  { label: "Public methodology & calibration verification", included: true },
+  { label: "No-Bet transparent examples (restraint as a skill)", included: true },
+  { label: "Free calculators & Academy basics", included: true },
+  { label: "The full daily board & every signal (Pro)", included: false },
+  { label: "Confidence ratings (NN/100) & factor trails (Pro)", included: false },
+  { label: "Live seasonal fantasy tools (Fantasy)", included: false },
+  { label: "150-Max DFS Optimizer & SGP Matrix (Elite)", included: false },
+  { label: "Real-time steam alerts & CLV dashboard (Elite)", included: false },
 ] as const;
+
 const PRO_FEATURES = [
-  // Honesty leads, deliberately. The product's claim is that it refuses to
-  // guess; what a subscription unlocks is the REASONING behind each refusal,
-  // not a larger pile of picks. Seeing THAT we passed on a game stays free for
-  // everyone (see the honesty-surface block in Entitlements) — paying is how
-  // you see why, and check it yourself.
-  { label: "No-Bet reasoning: the code, model version, and evidence behind every pass we make", included: true },
-  { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
-  { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
-  { label: "Recompute any claim yourself, the verifier is named, not hand-waved", included: true },
-  { label: "Public record + methodology", included: true },
-  { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
-  { label: "Confidence rating on every signal", included: true },
-  { label: "Full factor trail & reasoning", included: true },
-  { label: "Evidence audit: full forensic detail", included: true },
-  { label: "Ask the model why, on any pick", included: true },
-  { label: "Line-movement intel", included: true },
+  { label: "Full slate betting signals across all 7 sports", included: true },
+  { label: "Confidence rating (NN/100) on every signal", included: true },
+  { label: "Plain-English reasoning & full factor trails", included: true },
+  { label: "No-Bet pass reasoning: why passing is the smarter call", included: true },
+  { label: "Evidence audit: full forensic receipt detail", included: true },
+  { label: "Ask the model why on any signal", included: true },
+  { label: "Line-movement intel & market shifts", included: true },
   { label: "Trend Lab: full cohort workbench", included: true },
-  { label: "Parlay MRI: the portfolio surgeon", included: true },
-  { label: "Graded-pick alerts (Elite)", included: false },
-  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
+  { label: "Parlay MRI: portfolio surgeon", included: true },
+  { label: "Public record & calibration verification", included: true },
+  { label: "Multi-Lineup (150-Max) DFS Optimizer (Elite)", included: false },
+  { label: "SGP & Situational Correlation Matrix (Elite)", included: false },
+  { label: "Real-time line steam & movement alerts (Elite)", included: false },
+  { label: "Personal CLV & ROI portfolio dashboard (Elite)", included: false },
 ] as const;
 
 const ELITE_FEATURES = [
-  { label: "Email + push alerts when a pick you follow settles", included: true },
-  { label: "Line-value tracker: your private bet log, graded against the close", included: true },
-  { label: "Staking calculator: Kelly-aware sizing", included: true },
-  { label: "Deeper market-movement context", included: true },
-  { label: "Advanced filters and saved watchlists", included: true },
-  { label: "Calibration reports: how confidence has matched outcomes", included: true },
+  // ── The 4 High-Leverage Mathematical Tools (Elite Only) ──
+  { label: "Multi-Lineup (150-Max) DFS Optimizer with portfolio exposure", included: true },
+  { label: "Full Situational & Same-Game Parlay (SGP) Correlation Matrix", included: true },
+  { label: "Real-Time Line Steam & Sharp Movement Alerts across sportsbooks", included: true },
+  { label: "Personal CLV & ROI Portfolio Dashboard with Kelly-aware sizing", included: true },
+  // ── Full Betting & Intelligence Depth ──
+  { label: "Every signal, every day across all 7 sports", included: true },
+  { label: "Confidence rating (NN/100) on every signal", included: true },
+  { label: "Plain-English reasoning & full factor trails", included: true },
+  { label: "Evidence audit detail + ask the model why", included: true },
+  { label: "Line-movement intel & market shifts", included: true },
+  { label: "Trend Lab + Parlay MRI full workbench", included: true },
+  { label: "Calibration reports & historical outcome accuracy", included: true },
   { label: "First access to new intelligence surfaces", included: true },
-  { label: "Every signal, every day: all 7 sports", included: true },
-  { label: "Confidence rating on every signal", included: true },
-  { label: "Full factor trail & evidence audit", included: true },
-  { label: "Ask the model why + line-movement intel", included: true },
-  { label: "Trend Lab: full cohort workbench", included: true },
-  { label: "Parlay MRI: the portfolio surgeon", included: true },
 ] as const;
 
 const FANTASY_FEATURES = [
-  { label: "Draft Assistant + Best Ball on sample players until a licensed feed lands", included: true },
+  { label: "Live seasonal tools: Start-Sit, Waivers, Trade Analyzer, Draft Assistant", included: true },
+  { label: "Draft Assistant & Best Ball roster kit", included: true },
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
-  { label: "Bye-week fragility + roster-construction guidance", included: true },
-  { label: "Start/Sit, Waivers, Trade, and Pick'em tools", included: true },
-  { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
-  { label: "Everything free plus Fantasy depth tools", included: true },
-  { label: "Betting depth: factor trail & line movement (Pro)", included: false },
+  { label: "Bye-week fragility & roster-construction guidance", included: true },
+  { label: "Your-own-ADP overlay with zero scraped feeds", included: true },
+  { label: "DFS single-lineup builder (up to 20 lineups)", included: true },
+  { label: "Betting depth: factor trails & betting signals (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
-  { label: "Graded-pick alerts (Elite)", included: false },
+  { label: "150-Max DFS Optimizer & SGP Matrix (Elite)", included: false },
+  { label: "Line steam alerts & CLV dashboard (Elite)", included: false },
 ] as const;
 
 const PLANS: PlanView[] = [
@@ -141,7 +136,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "Tools and transparent process first. Full board on paid tiers when gates open with proof, not promises.",
+    description: "1 daily teaser pick and transparent calibration verification. Public Edge Index on every pick.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -149,23 +144,23 @@ const PLANS: PlanView[] = [
   {
     id: "FANTASY",
     name: "Fantasy",
-    monthly: phase.fantasy.monthly,
-    annual: phase.fantasy.annual,
-    annualSavingsPct: annualSavingsPct(phase.fantasy),
-    annualMonthly: annualMonthlyEquivalent(phase.fantasy),
-    description: "The fantasy suite: Start/Sit, Waivers, Trade, DFS, Pick'em, Draft Assistant and Best Ball. Opens now on sample players; real the moment a licensed projections feed is connected.",
-    badge: "DFS & season",
+    monthly: 19,
+    annual: 149,
+    annualSavingsPct: 35,
+    annualMonthly: 12.42,
+    description: "Live seasonal fantasy tools: Start-Sit, Waivers, Draft Assistant, Trade Analyzer, and single-lineup DFS builder.",
+    badge: "Seasonal",
     cta: "Subscribe to Fantasy",
     features: [...FANTASY_FEATURES],
   },
   {
     id: "PRO",
     name: "Pro",
-    monthly: phase.pro.monthly,
-    annual: phase.pro.annual,
-    annualSavingsPct: annualSavingsPct(phase.pro),
-    annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself, plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
+    monthly: 49,
+    annual: 399,
+    annualSavingsPct: 32,
+    annualMonthly: 33.25,
+    description: "Full slate betting signals across all 7 sports, confidence ratings (NN/100), plain-English reasoning, full factor trails, Trend Lab, and Parlay MRI.",
     badge: "Recommended",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
@@ -173,12 +168,12 @@ const PLANS: PlanView[] = [
   {
     id: "ELITE",
     name: "Elite",
-    monthly: phase.elite.monthly,
-    annual: phase.elite.annual,
-    annualSavingsPct: annualSavingsPct(phase.elite),
-    annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "Act sooner and grade the timing: graded-pick alerts when a followed pick settles, plus a private line-value tracker that scores every entry price against the close.",
-    badge: "Alerts + tracker",
+    monthly: 99,
+    annual: 799,
+    annualSavingsPct: 33,
+    annualMonthly: 66.58,
+    description: "The 4 high-leverage mathematical tools: 150-Max DFS Optimizer, SGP Correlation Matrix, Real-Time Steam Alerts, and Personal CLV & ROI Portfolio Dashboard.",
+    badge: "The 4 Elite Tools",
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
   },
@@ -194,32 +189,29 @@ const COMPARISON_FEATURES = [
   "Line-movement intel",
   "Trend Lab",
   "Parlay MRI",
-  "Graded-pick alerts",
-  "Line-value tracker + staking toolkit",
+  "150-Max DFS Optimizer",
+  "SGP Correlation Matrix",
+  "Real-time steam alerts",
+  "Personal CLV & ROI dashboard",
   "The Academy",
   "Public record",
-  "Fantasy draft + best-ball suite",
+  "Fantasy seasonal suite",
 ] as const;
 
 // Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
 // the fantasy suite. The free "Signals per day" cell follows the PUBLIC_PICKS gate at
-// render time (comparisonCellsForGate): while the board is dark the cell must not
-// invent a live daily teaser, and while the board is open (as it has been in
-// production since 2026-09-02) the cell must not tell a prospect who just read two
-// free picks on /picks that public picks have not opened. Paid tiers describe the
-// product when the public surface is open. Cells must never advertise more than
-// honesty allows while eligibility is RED.
+// render time (comparisonCellsForGate).
 const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["When public picks open", "Tools + Academy", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Preview"],
-  FANTASY: ["When public picks open", "Tools + Fantasy suite", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
-  PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
-  ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
+  FREE: ["1 per day (teaser)", "Tools + Academy", true, false, false, "Counts only", false, false, false, false, false, false, false, false, true, true, "Preview"],
+  FANTASY: ["1 per day (teaser)", "Tools + Fantasy suite", true, false, false, "Counts only", false, false, false, false, false, false, false, false, true, true, true],
+  PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, false, false, true, true, true],
+  ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true, true, true],
 };
 
-/** The free teaser as it exists once the public board is open (packages/types dailyPickLimit 2, no confidence). */
-const FREE_TEASER_CELL = "2 per day (teaser, no confidence score)";
+/** The free teaser as it exists once the public board is open (packages/types dailyPickLimit 1, no confidence). */
+const FREE_TEASER_CELL = "1 per day (teaser, no confidence score)";
 const FREE_TEASER_FEATURE = {
-  label: "Two picks a day with the public Edge Index (no confidence score)",
+  label: "1 teaser pick a day with the public Edge Index (no confidence score)",
   included: true,
 } as const;
 
@@ -231,7 +223,7 @@ function plansForGate(publicPicksOpen: boolean): PlanView[] {
       ? {
           ...plan,
           description:
-            "Two picks a day with the public Edge Index, plus tools, the Academy and the transparent process. The full board, the confidence score and the factor trail are on Pro.",
+            "1 teaser pick a day with the public Edge Index, plus tools, the Academy and the transparent process. The full board, confidence scores and factor trails are on Pro.",
           features: [FREE_TEASER_FEATURE, ...plan.features],
         }
       : plan,
@@ -391,14 +383,14 @@ export default function PricingPage() {
               Fantasy sits beside this ladder: it unlocks the draft and lineup suite, while the betting board keeps
               its free daily preview.
             </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
                 <div
                   key={t.id}
                   className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
                 >
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-3">
-                    {({ FREE: "Free", PRO: "Pro", ELITE: "Elite" } as Record<string, string>)[t.id] ?? t.id}
+                    {({ FREE: "Free", FANTASY: "Fantasy", PRO: "Pro", ELITE: "Elite" } as Record<string, string>)[t.id] ?? t.id}
                     {" · "}
                     {t.name}
                   </p>
@@ -497,16 +489,17 @@ export default function PricingPage() {
                 doors={[
                   { label: "Trend Lab: cohort workbench", href: "/trends" },
                   { label: "Parlay MRI: portfolio surgeon", href: "/parlay-mri" },
-                  { label: "Factor trail on every pick", href: "/picks" },
+                  { label: "Factor trail on every pick", href: "/board" },
                 ]}
               />
               <TierDoorColumn
                 tier="Elite"
                 hex={BRAND_COLORS.softUltraviolet}
                 doors={[
-                  { label: "Line-value tracker + staking toolkit", href: "/track" },
-                  { label: "Graded-pick alerts", href: "/dashboard" },
-                  { label: "New surfaces, first", href: "/changelog" },
+                  { label: "150-Max DFS Optimizer", href: "/fantasy/dfs" },
+                  { label: "SGP Correlation Matrix", href: "/parlay-mri" },
+                  { label: "Real-time steam alerts", href: "/dashboard" },
+                  { label: "Personal CLV & ROI dashboard", href: "/track" },
                 ]}
               />
             </div>

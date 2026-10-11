@@ -253,7 +253,7 @@ function Interlock(): JSX.Element {
         <Link href="/verify" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
           Check a single receipt →
         </Link>
-        <Link href="/picks" className="btn btn-primary whitespace-nowrap">
+        <Link href="/board" className="btn btn-primary whitespace-nowrap">
           See today&apos;s board
         </Link>
       </div>

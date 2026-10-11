@@ -3,51 +3,63 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
- * L3 — Board vs Picks route equivalence / differentiation contract.
+ * Architectural Consolidation: Board vs Picks Single-Route Architecture.
  *
- * /board and /picks are different jobs, not two doors to the same room:
- * Board = the full scored pipeline (scoring now, cleared, held with reasons,
- * gated today, calibration); Picks = today's published picks with reasoning
- * under a daily limit. The failure this locks out: two surfaces that never
- * acknowledge each other, so a first-time visitor cannot tell them apart or
- * move between them. Each page therefore cross-links the other with its job
- * named, while keeping its own data source, canonical, and tier behavior.
+ * In accordance with ASTRA Milestone 1:
+ * /picks is consolidated into the authoritative /board route:
+ * 1. next.config.mjs issues a 301 permanent redirect /picks -> /board.
+ * 2. /board is the authoritative canonical route for all signals.
+ * 3. /board houses two distinct tabs: "Actionable Signals" and "Gated & Held Games".
+ * 4. Desktop and mobile navigation menus show only "The Board" for primary signals.
+ * 5. app/picks/page.tsx executes a runtime redirect to /board.
  */
 
 const webRoot = resolve(__dirname, "..");
 const read = (rel: string) => readFileSync(resolve(webRoot, rel), "utf8");
 
-const board = read("app/board/page.tsx");
-const picks = read("app/picks/page.tsx");
-const nav = read("components/ui/nav.tsx");
+describe("Board and Picks single-board architectural consolidation", () => {
+  it("redirects /picks to /board via permanent 301 redirect in next.config.mjs", async () => {
+    const configPath = resolve(webRoot, "next.config.mjs");
+    expect(existsSync(configPath)).toBe(true);
+    const configModule = await import(configPath);
+    const config = configModule.default ?? configModule;
+    const redirects = typeof config.redirects === "function" ? await config.redirects() : [];
+    const picksRedirect = redirects.find((r: { source: string }) => r.source === "/picks");
+    expect(picksRedirect).toBeDefined();
+    expect(picksRedirect?.destination).toBe("/board");
+    expect(picksRedirect?.permanent).toBe(true);
+  });
 
-describe("Board vs Picks differentiation", () => {
-  it("both routes exist as independent pages with distinct canonicals, no redirect", () => {
+  it("/board is the single authoritative signals route with canonical /board", () => {
     expect(existsSync(resolve(webRoot, "app/board/page.tsx"))).toBe(true);
-    expect(existsSync(resolve(webRoot, "app/picks/page.tsx"))).toBe(true);
+    const board = read("app/board/page.tsx");
     expect(board).toContain('canonical: "/board"');
-    expect(picks).toContain('canonical: "/picks"');
-    expect(board).not.toMatch(/redirect\(["']\/picks["']/);
-    expect(picks).not.toMatch(/redirect\(["']\/board["']/);
+    expect(board).not.toMatch(/href=["']\/picks["']/);
   });
 
-  it("each page keeps its own job and data source", () => {
-    expect(board).toContain("loadBoardState");
-    expect(board).toMatch(/Gated today|gatedToday/);
-    expect(picks).toContain("daily-slate");
-    expect(picks).toMatch(/dailyPickLimit|hitDailyLimit/);
+  it("/board provides two distinct tabs: Actionable Signals and Gated & Held Games", () => {
+    const board = read("app/board/page.tsx");
+    expect(board).toMatch(/Actionable Signals/i);
+    expect(board).toMatch(/Gated\s*(&|and)\s*Held\s*Games/i);
+    expect(board).toMatch(/tab.*signals/i);
+    expect(board).toMatch(/tab.*held/i);
   });
 
-  it("the nav names them as different jobs", () => {
+  it("desktop and mobile navigation menus feature 'The Board' and contain no /picks links", () => {
+    const nav = read("components/ui/nav.tsx");
+    const mobileNav = read("components/ui/mobile-nav.tsx");
+
     expect(nav).toContain('href: "/board"');
-    expect(nav).toContain('href: "/picks"');
-    const boardLabel = nav.match(/label:\s*"([^"]+)",\s*href:\s*"\/board"/)?.[1] ?? "";
-    const picksLabel = nav.match(/label:\s*"([^"]+)",\s*href:\s*"\/picks"/)?.[1] ?? "";
-    expect(boardLabel).not.toBe(picksLabel);
+    expect(nav).toMatch(/label:\s*"The [Bb]oard"/);
+    expect(nav).not.toMatch(/href:\s*["']\/picks["']/);
+
+    expect(mobileNav).toMatch(/href:\s*["']\/board["']/);
+    expect(mobileNav).not.toMatch(/href:\s*["']\/picks["']/);
   });
 
-  it("each page cross-links the other with its job named", () => {
-    expect(board).toMatch(/href="\/picks"/);
-    expect(picks).toMatch(/href="\/board"/);
+  it("app/picks/page.tsx executes a runtime redirect to /board", () => {
+    expect(existsSync(resolve(webRoot, "app/picks/page.tsx"))).toBe(true);
+    const picks = read("app/picks/page.tsx");
+    expect(picks).toMatch(/redirect\(\s*.*["']\/board/);
   });
 });

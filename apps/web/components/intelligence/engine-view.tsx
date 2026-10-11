@@ -159,12 +159,12 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
   ];
   if (isQb) {
     cols.push(
-      { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA (EPA+CPOE composite)", sortValue: (r) => r.dakota, render: (r) => (r.dakota == null ? "—" : r.dakota.toFixed(2)) },
+      { key: "dakota", label: "Pass Efficiency", align: "right", numeric: true, tooltip: "Quarterback efficiency combining EPA and completion quality", sortValue: (r) => r.dakota, render: (r) => (r.dakota == null ? "—" : r.dakota.toFixed(2)) },
       { key: "pacr", label: "PACR", align: "right", numeric: true, tooltip: "passing air conversion ratio", sortValue: (r) => r.pacr, render: (r) => (r.pacr == null ? "—" : r.pacr.toFixed(2)) },
     );
   } else {
     cols.push(
-      { key: "wopr", label: "WOPR", align: "right", numeric: true, tooltip: "weighted opportunity rating", sortValue: (r) => r.wopr, render: (r) => (r.wopr == null ? "—" : r.wopr.toFixed(2)) },
+      { key: "wopr", label: "Opportunity Share", align: "right", numeric: true, tooltip: "Combined target and air-yards share", sortValue: (r) => r.wopr, render: (r) => (r.wopr == null ? "—" : r.wopr.toFixed(2)) },
       { key: "touches", label: "Touch", align: "right", numeric: true, tooltip: "touches: carries + targets", render: (r) => r.touches },
     );
   }
@@ -327,10 +327,10 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
     { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "pass attempts", render: (r) => r.attempts },
-    { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA EPA + CPOE composite", render: (r) => r.dakota.toFixed(3) },
-    { key: "anyA", label: "ANY/A", align: "right", numeric: true, tooltip: "adjusted net yards per attempt", render: (r) => r.anyA.toFixed(2) },
-    { key: "dakotaPct", label: "DAK%", align: "right", numeric: true, tooltip: "DAKOTA percentile within QB pool", render: (r) => r.dakotaPct.toFixed(0) },
-    { key: "anyaPct", label: "ANY/A%", align: "right", numeric: true, tooltip: "ANY/A percentile within QB pool", render: (r) => r.anyaPct.toFixed(0) },
+    { key: "dakota", label: "Pass Efficiency", align: "right", numeric: true, tooltip: "Quarterback efficiency combining EPA and completion quality", render: (r) => r.dakota.toFixed(3) },
+    { key: "anyA", label: "Adj Yds/Att", align: "right", numeric: true, tooltip: "Adjusted net yards per attempt", render: (r) => r.anyA.toFixed(2) },
+    { key: "dakotaPct", label: "Pass Eff %", align: "right", numeric: true, tooltip: "Pass efficiency percentile within QB pool", render: (r) => r.dakotaPct.toFixed(0) },
+    { key: "anyaPct", label: "Adj Yds %", align: "right", numeric: true, tooltip: "Adjusted pass yards percentile within QB pool", render: (r) => r.anyaPct.toFixed(0) },
     { key: "forwardGrade", label: "Grade", align: "right", numeric: true, tooltip: "mean of the two percentiles", render: (r) => r.forwardGrade },
     { key: "agreement", label: "Agmt", align: "right", numeric: true, tooltip: "how closely the two priors agree", render: (r) => r.agreement.toFixed(2) },
     {

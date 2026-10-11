@@ -32,7 +32,7 @@ describe("proof-funnel weave", () => {
     const proof = read("app/proof/page.tsx");
     expect(proof).toContain("proof-funnel-close");
     expect(proof).toContain('href="/pricing"');
-    expect(proof).toContain('href="/picks"');
+    expect(proof).toMatch(/href=["']\/(board|picks)["']/);
     // The close must never promise outcomes — it sells receipts, not wins.
     expect(proof).toContain("not louder claims, more receipts");
     // Codex P2 on #74 + #75: the close must be gated on rows actually present.
@@ -52,7 +52,7 @@ describe("proof-funnel weave", () => {
 
   it("verify console funnels ONLY from verified states, never from failure states", () => {
     const console_ = read("components/trust-ledger/verify-console.tsx");
-    expect(console_).toContain('href="/picks"');
+    expect(console_).toMatch(/href=["']\/(board|picks)["']/);
     expect(console_).toContain('href="/proof"');
     // Two verified branches render the funnel; not-found and integrity-failure
     // must not sell anything. The component has exactly two call sites.

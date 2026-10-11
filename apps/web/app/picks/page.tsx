@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
@@ -203,6 +204,17 @@ async function fetchSlate(): Promise<DailySlate | null> {
 // ─────────────────────────────────────────────
 
 export default async function PicksPage({ searchParams }: PicksPageProps) {
+  // R1: Surface unification — runtime redirect to authoritative /board route
+  if (!searchParams?.sport && !searchParams?.date && !searchParams?.grade) {
+    redirect("/board");
+  }
+  const p = new URLSearchParams();
+  if (searchParams?.sport) p.set("sport", searchParams.sport);
+  if (searchParams?.date) p.set("date", searchParams.date);
+  if (searchParams?.grade) p.set("grade", searchParams.grade);
+  const qs = p.toString();
+  redirect(qs ? `/board?${qs}` : "/board");
+
   const { sport, date, grade } = searchParams;
 
   const session = await auth();

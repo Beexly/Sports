@@ -45,7 +45,7 @@ export interface FeatureGate {
  * the three tier vocabularies stop disagreeing. FANTASY sits between FREE and
  * PRO: it unlocks the fantasy suite, not the betting depth tools.
  */
-const TIER_ORDER: Record<ValueTierId | "FANTASY", number> = {
+const TIER_ORDER: Record<ValueTierId, number> = {
   FREE: 0,
   FANTASY: 1,
   PRO: 2,
@@ -204,8 +204,29 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "clv-tracking",
     displayName: "CLV tracking",
     customerExplanation: "Did your number beat the market by close? CLV helps measure whether your process is improving.",
-    internalNote: "CLV only where data supports it; preview otherwise.",
-    minTier: "ELITE", status: "preview", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
+    internalNote: "Personal CLV ledger and ROI tracking.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
+  },
+  {
+    key: "dfs-optimizer-150",
+    displayName: "150-Max DFS Optimizer",
+    customerExplanation: "Multi-lineup portfolio builder up to 150 lineups with correlation, stack rules, and exposure caps.",
+    internalNote: "Elite-exclusive high-leverage multi-lineup optimizer.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
+  },
+  {
+    key: "sgp-correlation-matrix",
+    displayName: "SGP Correlation Matrix",
+    customerExplanation: "Full situational copula correlation matrix for same-game parlays and multi-leg dependencies.",
+    internalNote: "Elite-exclusive copula correlation matrix.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
+  },
+  {
+    key: "alerts-steam",
+    displayName: "Steam & Sharp Movement Alerts",
+    customerExplanation: "Real-time alerts on market steam moves and sharp syndication flow across all major books.",
+    internalNote: "Elite-exclusive real-time line steam alerts.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
   },
   {
     key: "academy-advanced",
@@ -251,14 +272,14 @@ export function getFeature(key: string): FeatureGate | undefined {
 }
 
 /** True when `tier` fully unlocks the feature. FANTASY is billable and sits between FREE and PRO. */
-export function isFeatureUnlocked(tier: ValueTierId | "FANTASY", key: string): boolean {
+export function isFeatureUnlocked(tier: ValueTierId, key: string): boolean {
   const f = getFeature(key);
   if (!f) return false;
   return TIER_ORDER[tier] >= TIER_ORDER[f.minTier];
 }
 
 /** Features fully unlocked at a tier, in registry order. */
-export function featuresForTier(tier: ValueTierId | "FANTASY"): readonly FeatureGate[] {
+export function featuresForTier(tier: ValueTierId): readonly FeatureGate[] {
   return FEATURE_GATES.filter((f) => TIER_ORDER[tier] >= TIER_ORDER[f.minTier]);
 }
 

@@ -145,7 +145,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         aria-label="Open evidence audit for this pick"
       >
         <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
-        {label ?? "View evidence"}
+        {label ?? "View Audit Receipt"}
       </button>
 
       {open && (
@@ -373,7 +373,7 @@ function DetailedAudit({
         <SectionHeader title="Pick lineage" />
         <dl className="mt-3 space-y-2 text-xs">
           <Row
-            k="Model version"
+            k="Audit Receipt Build"
             v={audit.modelVersion || "—"}
             mono
           />

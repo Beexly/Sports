@@ -171,7 +171,7 @@ function productionLeaderColumns(tok: Tok): ReadonlyArray<Column<PlayerSeasonLin
     { key: "receivingYardsPerGame", label: "RecYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receivingYardsPerGame) },
     { key: "rushingYardsPerGame", label: "RushYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.rushingYardsPerGame) },
     { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
-    { key: "wopr", label: "WOPR", align: "right", numeric: true, sortValue: (r) => r.wopr, render: (r) => fmtDecimal(r.wopr, 2) },
+    { key: "wopr", label: "Opp Share", align: "right", numeric: true, tooltip: "Target and air-yards opportunity share", sortValue: (r) => r.wopr, render: (r) => fmtDecimal(r.wopr, 2) },
   ];
 }
 
@@ -218,7 +218,7 @@ function opportunityColumns(tok: Tok): ReadonlyArray<Column<ReceivingOpportunity
     { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
     { key: "position", label: "Pos" },
     { key: "targets", label: "Tgt", align: "right", numeric: true },
-    { key: "wopr", label: "WOPR", align: "right", numeric: true, tooltip: "1.5·target share + 0.7·air-yards share", render: (r) => r.wopr.toFixed(2) },
+    { key: "wopr", label: "Opp Share", align: "right", numeric: true, tooltip: "Target and air-yards opportunity share", render: (r) => r.wopr.toFixed(2) },
     { key: "targetShare", label: "Tgt%", align: "right", numeric: true, tooltip: "target share", render: (r) => fmtPctRounded(r.targetShare) },
     { key: "airYardsShare", label: "AY%", align: "right", numeric: true, tooltip: "air-yards share", render: (r) => fmtPctRounded(r.airYardsShare) },
     { key: "aDOT", label: "aDOT", align: "right", numeric: true, tooltip: "avg depth of target", render: (r) => r.aDOT.toFixed(1) },

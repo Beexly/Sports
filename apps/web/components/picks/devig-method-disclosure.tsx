@@ -37,12 +37,12 @@ export function DevigMethodDisclosure({
 
   return (
     <p className="mt-0.5 text-[10px] text-ion-3">
-      Shin de-vig: {(shin! * 100).toFixed(1)}%{" "}
+      Adjusted Market Consensus: {(shin! * 100).toFixed(1)}%{" "}
       <span className="text-ion-2">
         ({delta > 0 ? "+" : "−"}
         {Math.abs(delta * 100).toFixed(1)}pt)
       </span>{" "}
-      — this price depends on de-vig method; we rank on the proportional number.
+      — adjusted for bookmaker margin using Shin's method; ranked by standard market consensus.
     </p>
   );
 }

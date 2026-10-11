@@ -373,7 +373,7 @@ export default async function ProofOfRecordPage() {
                   See plans
                 </Link>
                 <Link
-                  href="/picks"
+                  href="/board"
                   className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
                 >
                   Today&apos;s board →

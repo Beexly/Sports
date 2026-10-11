@@ -175,7 +175,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                       <th scope="col" className="px-4 py-3">Car</th>
                       <th scope="col" className="px-4 py-3">Tgt share</th>
                       <th scope="col" className="px-4 py-3">Air share</th>
-                      <th scope="col" className="px-4 py-3">WOPR</th>
+                      <th scope="col" className="px-4 py-3">Opp Share</th>
                       <th scope="col" className="px-4 py-3">PPR</th>
                       <th scope="col" className="px-4 py-3">Age</th>
                     </tr>

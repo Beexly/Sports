@@ -233,3 +233,44 @@ export async function requireFantasyApiRateLimited(
   }
   return null;
 }
+
+const ELITE_MESSAGE = "This high-leverage tool requires an Elite subscription.";
+const isElite = (e: Entitlements): boolean => e.tier === "ELITE";
+
+/**
+ * Elite floor: ELITE only. Gates high-leverage mathematical tools:
+ * 150-Max DFS Optimizer, SGP Correlation Matrix, Real-Time Steam Alerts,
+ * and personal CLV ledger.
+ */
+export function requireEliteApi(): Promise<NextResponse | null> {
+  return gateApi(isElite, ELITE_MESSAGE);
+}
+
+/**
+ * Rate-limited Elite entitlement gate.
+ */
+export async function requireEliteApiRateLimited(
+  bucketId: string
+): Promise<NextResponse | null> {
+  const gate = await evaluateGate(isElite, ELITE_MESSAGE);
+  if (gate.denied) return gate.denied;
+  if (!gate.userId) return null;
+
+  const limit = consumeRateLimit(
+    bucketId,
+    gate.userId,
+    PREMIUM_ANALYTICS_RATE_MAX,
+    PREMIUM_ANALYTICS_RATE_WINDOW_MS
+  );
+  if (!limit.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "rate-limited",
+        message: "Too many requests. Please wait a moment before trying again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } }
+    );
+  }
+  return null;
+}

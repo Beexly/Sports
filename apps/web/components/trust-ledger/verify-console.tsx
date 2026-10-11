@@ -199,7 +199,7 @@ function VerifiedNextSteps() {
   return (
     <p className="mt-4 border-t border-mineral pt-3 text-xs leading-5 text-ion-2">
       The live board publishes with this same pre-kickoff seal.{" "}
-      <Link href="/picks" className="font-semibold text-orbital-cyan hover:text-ion-white">
+      <Link href="/board" className="font-semibold text-orbital-cyan hover:text-ion-white">
         See today&apos;s board
       </Link>{" "}
       or{" "}

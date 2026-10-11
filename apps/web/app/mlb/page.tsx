@@ -49,7 +49,7 @@ export default async function MlbPage(): Promise<JSX.Element> {
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/board" className="btn-primary min-h-11 px-5 py-3">See today&apos;s board</Link>
-              <Link href="/api/mlb/teams" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">View as JSON</Link>
+              <Link href="/api/mlb/teams" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">View Data Feed</Link>
               <Link href="/data" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">How we source data</Link>
             </div>
           </div>
