@@ -29,7 +29,7 @@ BLOCKED (data absent, condition stated). "RVC reopen" = exact condition to run r
 | B4 Officials crews | BLOCKED (iSH memory) → PC lane | officials.parquet on bus (item 3 ✅) | officials.parquet READY | crew-level penalty-rate residual vs close, 2022-25 frozen |
 | B5 FTN team z-scores | MEASURED | 47,316 plays, 9 flags × 32 teams; WAS no-huddle +38.5 | data/ftn_team_z_2025.csv | residual-vs-close framing before any weight (doc says so) |
 | B6 FTN fingerprints | MEASURED | league-level fingerprint CSV | ftn_fingerprint_league_2025.csv | same gate |
-| B7 QB form/pressure/familiarity/trust | NOT-RUN as equations; CPOE-proxy r=0.9659 vs native (DIAGNOSTIC contract met) | cpoe_proxy_vs_native_r=0.9659 (n=16,609) | pbp parquets | CPOE-persistence → next-week completion% residual vs close |
+| B7 QB form/pressure/familiarity/trust | INFRASTRUCTURE PASS / result REFUSED (ATS RVC run 2026-10-11, dfs/b7_cpoe_rvc/) | cpoe_proxy_vs_native_r=0.9659 (n=16,609; minis/RUNNING_LOG.md:129); persistence r=+0.107 (n=1,614); next-week ATS resid on last-wk CPOE diff: in-sample slope +0.084 t=2.21 (n=807), walk-forward 2024-25 CRPS-delta t=+0.71 (<1.96) | nfl_rvc_manifest.json + pbp native cpoe | completion-prop closes on a frozen manifest (CPOE p vs book p), or 2026 frozen folds with pooled CRPS-delta t≥1.96 |
 | B8 Distribution truth — Laplace/σ(T)/skew | MEASURED (EDGE#1b) | Laplace CRPS 5.475 vs Normal 8.133 (32.7% better); cells σ 10.0-13.7, P|3| 0.08-0.26 | 855 game cell grid | CRPS on frozen 2026 weeks (close-anchored) — THE strongest candidate |
 | B9 OT equation | MEASURED (EDGE#2) | P(OT)=0.054; OT +5.2±2.9; fav OT win 0.711 (z=2.8 provisional) | 855-game OT sample | OT-conditioned margin CRPS on frozen manifest |
 | B10 FG curve (EDGE#3) | MEASURED | 4,713 attempts; 99%→62.6% by distance | local pbp | kicker-prop RVC via nash alt subcats |
@@ -55,3 +55,31 @@ Stale-open item: B1's wk-6 single-week PROMOTED verdict needs its pooled multi-w
 - **B16 totals σ(T)**: resid sd 11.59-14.08 by closing-total bin (mid-total tightest 11.59); totals skew +0.359; totals CRPS Gaussian 14.27 vs Laplace 13.90.
 - **B16 over-rates by total bin**: 52.7/46.2/54.2/46.5 — no monotonic bias (no free over/under lean).
 - Remaining blockers: B4 officials crew RVC, B7 CPOE persistence, B1 pooled multi-week, OL/injury source.
+
+## B7 RVC STAMP (2026-10-11) — CPOE persistence → next-week ATS residual vs close
+
+**Stamp: INFRASTRUCTURE PASS. Result: REFUSED. DIAGNOSTIC: not a live edge, nothing promoted.**
+
+- Manifest: dfs/nfl_rvc_manifest.json (855 games 2023-25, sha256_16 bec543fc83a63ed7), read through FreshnessGate v2 `read_fresh` (PASS, age 1.7h). CPOE: native nflfastR `cpoe` from intelligence/coaching/data/play_by_play_2023-2025.parquet (the parquets the manifest was frozen from; the gate can't read .parquet). Proxy-vs-native r=0.9659 (n=16,609) is recorded at docs/research/2026-10-09/rating-atlas/minis/RUNNING_LOG.md:129 and minis/DIAGNOSTIC_compute_missing_metrics_2025.json.
+- Residual: home ATS residual = (home_score − away_score) − spread_line (nflverse: spread_line > 0 = home favoured). Features use prior games only: the last game's CPOE diff (home − away) and the attempt-weighted season-to-date CPOE diff.
+- Persistence (team, prior game → next game): r=+0.107, slope 0.107, t=4.33, n=1614. Consecutive weeks only: r=+0.111, n=1512. This matches the NGS b2b r=0.106.
+- In-sample OLS, all 3 seasons, n=807: last-week diff slope +0.0835 pts per CPOE pt, t=2.207, 95% CI [0.0093, 0.1576]. Season-to-date diff slope +0.1365, t=1.966, CI [0.0004, 0.2726]. The in-sample pooled t is carried by 2024 alone.
+- Per season (last / season-to-date t): 2023 0.631 / -0.441; 2024 2.576 / 3.043; 2025 0.643 / 0.935. Each season n=269.
+- Walk-forward HonestyGate (minis/doctrine.py; fit on prior seasons, test 2024 and 2025, n=538 folds, close-anchored Gaussian CRPS). Last-week: close 7.077 vs candidate 7.0601 (raw gate output lower CRPS), paired delta t=0.712, won 279/538. Season-to-date: close 7.077 vs 7.0854, t=-0.455. Neither reaches the t≥1.96 bar. **REFUSED.**
+- Manifest defect (flagged, not fixed here): the precomputed `margin_residual_vs_home` and `spread_cover_home` fields in nfl_rvc_manifest.json are wrong. `final_diff` is the last-play posteam-relative score_differential (equal to the home margin in only 60% of games), and the formula adds spread_line when it should subtract it. `spread_cover_home` agrees with the true cover only 40% of the time. B7 recomputed the residual from the manifest's own scores and closes. Any slot that consumed those two fields needs a re-check.
+- Artifacts: dfs/b7_cpoe_rvc/b7_cpoe_rvc.py, residual_table.csv (807 game rows), per_week.csv, result.json.
+- **Reopen condition:** (a) completion-prop closes (DK completion-% / completions ladders) captured on a frozen manifest, then CPOE-based p vs book-implied p residual; or (b) 2026 frozen weekly folds added, with pooled paired CRPS-delta t≥1.96 on locked walk-forward folds.
+
+## DK ENGINE CONFIG VAULT LESSONS — DIAGNOSTIC (none is a live edge)
+
+Source: dfs/dk_engine_config_vault.json and docs/research/2026-10-09/rating-atlas/minis/RUNNING_LOG.md entry "[04:45] DK ENGINE CONFIG VAULT" (commit 8c08ddd8). Nothing found in Beexly/agent-bus (code search: 0 hits).
+
+| # | Lesson | Source | Status |
+|---|---|---|---|
+| D1 | 49 boolean switches in the client engine config | RUNNING_LOG [04:45] (vault JSON lists only a subset) | DIAGNOSTIC |
+| D2 | 500ms SGP recalc rhythm (1000ms pre-live) | vault LESSON_1 / sgp_timeouts | DIAGNOSTIC |
+| D3 | Longshot starvation: longshot initial data off | vault LESSON_2 / longshot_initial_data=false | DIAGNOSTIC |
+| D4 | Simplebet as a separate (third) pricing engine | vault LESSON_4 / simplebet_enabled | DIAGNOSTIC |
+| D5 | MoveTheLine 15s blink | vault LESSON_5 / micro_markets_blink_ms=15000 | DIAGNOSTIC |
+| D6 | Two protocols (odds WS vs my-bets WS) | vault LESSON_6 | DIAGNOSTIC |
+| D7 | Three third-party vendors behind one brand | RUNNING_LOG [04:45] item 6 (the source says "engines") | DIAGNOSTIC |

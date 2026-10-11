@@ -1,0 +1,218 @@
+{
+ "observed_at": "2026-10-11T05:19:42Z",
+ "test": "B7 CPOE persistence -> next-week ATS residual vs close (frozen NFL manifest)",
+ "stamp": "INFRASTRUCTURE PASS",
+ "stamp_basis": "manifest read via FreshnessGate v2 read_fresh PASS; all 855 manifest games joined to native pbp cpoe (both teams); point-in-time features; repo HonestyGate ran on walk-forward folds. INFRASTRUCTURE PASS is not an edge.",
+ "result_verdict": "REFUSED \u2014 no CPOE->next-week ATS residual signal at t>=1.96 on walk-forward folds",
+ "manifest": {
+  "path": "dfs/nfl_rvc_manifest.json",
+  "sha256_16": "bec543fc83a63ed7",
+  "gate_audit": {
+   "path": "/workspace/sports/dfs/nfl_rvc_manifest.json",
+   "stamp": "2026-10-11T03:37:51Z",
+   "age_hours": 1.7,
+   "fresh": true,
+   "failure_mode": null,
+   "label": "FRESH"
+  },
+  "n_games": 855,
+  "spread_sign_check_corr_spread_vs_home_margin": 0.4673
+ },
+ "manifest_defect": {
+  "manifest_margin_residual_vs_home_equals_true": 0.004678362573099415,
+  "manifest_spread_cover_home_agrees_with_true": 0.4023,
+  "final_diff_equals_home_margin_share": 0.6023,
+  "note": "build_nfl_rvc_manifest.py takes final_diff = last-play score_differential, which is posteam-relative (matches home margin only ~60%), and computes final_diff + spread_line although nflverse spread_line>0 means HOME favoured. Use (home_score-away_score)-spread_line."
+ },
+ "cpoe_source": "native nflfastR cpoe, pbp 2023-25; proxy-vs-native r=0.9659 (n=16,609) at docs/research/2026-10-09/rating-atlas/minis/RUNNING_LOG.md:129",
+ "persistence": {
+  "prev_game_to_next_game": {
+   "n": 1614,
+   "slope": 0.1075,
+   "se": 0.0248,
+   "t": 4.33,
+   "r": 0.1072,
+   "ci95": [
+    0.0588,
+    0.1562
+   ]
+  },
+  "consecutive_weeks_only": {
+   "n": 1512,
+   "slope": 0.1104,
+   "se": 0.0255,
+   "t": 4.334,
+   "r": 0.1108,
+   "ci95": [
+    0.0605,
+    0.1603
+   ]
+  }
+ },
+ "n_games_with_prior_cpoe": 807,
+ "in_sample_ols_ats_resid_home_on_cpoe_diff": {
+  "last_week_cpoe_diff": {
+   "n": 807,
+   "slope": 0.0835,
+   "se": 0.0378,
+   "t": 2.207,
+   "r": 0.0775,
+   "ci95": [
+    0.0093,
+    0.1576
+   ]
+  },
+  "season_to_date_cpoe_diff": {
+   "n": 807,
+   "slope": 0.1365,
+   "se": 0.0694,
+   "t": 1.966,
+   "r": 0.0691,
+   "ci95": [
+    0.0004,
+    0.2726
+   ]
+  }
+ },
+ "per_season": {
+  "2023": {
+   "last": {
+    "n": 269,
+    "slope": 0.0436,
+    "se": 0.0692,
+    "t": 0.631,
+    "r": 0.0386,
+    "ci95": [
+     -0.0919,
+     0.1792
+    ]
+   },
+   "std": {
+    "n": 269,
+    "slope": -0.0558,
+    "se": 0.1265,
+    "t": -0.441,
+    "r": -0.027,
+    "ci95": [
+     -0.3038,
+     0.1922
+    ]
+   }
+  },
+  "2024": {
+   "last": {
+    "n": 269,
+    "slope": 0.1699,
+    "se": 0.066,
+    "t": 2.576,
+    "r": 0.1557,
+    "ci95": [
+     0.0406,
+     0.2992
+    ]
+   },
+   "std": {
+    "n": 269,
+    "slope": 0.3789,
+    "se": 0.1245,
+    "t": 3.043,
+    "r": 0.1831,
+    "ci95": [
+     0.1349,
+     0.623
+    ]
+   }
+  },
+  "2025": {
+   "last": {
+    "n": 269,
+    "slope": 0.0398,
+    "se": 0.062,
+    "t": 0.643,
+    "r": 0.0393,
+    "ci95": [
+     -0.0817,
+     0.1614
+    ]
+   },
+   "std": {
+    "n": 269,
+    "slope": 0.1032,
+    "se": 0.1104,
+    "t": 0.935,
+    "r": 0.0571,
+    "ci95": [
+     -0.1132,
+     0.3197
+    ]
+   }
+  }
+ },
+ "walk_forward_gate": {
+  "x_last": {
+   "gate_id": "b7_cpoe_x_last_wf_2024_2025",
+   "verdict_raw": "PROMOTED",
+   "n_folds": 538,
+   "close_crps": 7.077,
+   "cand_crps": 7.0601,
+   "mean_delta_close_minus_cand": 0.01687,
+   "t_delta": 0.712,
+   "folds_won": 279,
+   "manifest_sha": "7d1d8f3238726022",
+   "fits": {
+    "2024": {
+     "k": 0.0436,
+     "shift": 0.559,
+     "close_sigma": 13.009,
+     "n_train": 269
+    },
+    "2025": {
+     "k": 0.1092,
+     "shift": -0.0369,
+     "close_sigma": 12.86,
+     "n_train": 538
+    }
+   }
+  },
+  "x_std": {
+   "gate_id": "b7_cpoe_x_std_wf_2024_2025",
+   "verdict_raw": "REFUSED",
+   "n_folds": 538,
+   "close_crps": 7.077,
+   "cand_crps": 7.0854,
+   "mean_delta_close_minus_cand": -0.00841,
+   "t_delta": -0.455,
+   "folds_won": 254,
+   "manifest_sha": "d6e6b82ba9fd29c6",
+   "fits": {
+    "2024": {
+     "k": -0.0558,
+     "shift": 0.0651,
+     "close_sigma": 13.009,
+     "n_train": 269
+    },
+    "2025": {
+     "k": 0.1563,
+     "shift": 0.0893,
+     "close_sigma": 12.86,
+     "n_train": 538
+    }
+   }
+  }
+ },
+ "bar": "pooled walk-forward gate PROMOTED and paired CRPS-delta t >= 1.96",
+ "max_abs_in_sample_t": 2.207,
+ "proposed_kill_ledger_row": {
+  "feature": "b7_cpoe_persistence_ats",
+  "test": "frozen NFL manifest 2023-25, walk-forward 2024+2025",
+  "result": "REFUSED \u2014 no CPOE->next-week ATS residual signal at t>=1.96 on walk-forward folds",
+  "reopen_condition": "REOPEN: (a) completion-prop closes (DK completion-% / completions ladders) captured on a frozen manifest -> CPOE-based p vs book-implied p residual; or (b) 2026 frozen weekly folds added and pooled paired CRPS-delta t >= 1.96"
+ },
+ "artifacts": [
+  "dfs/b7_cpoe_rvc/b7_cpoe_rvc.py",
+  "dfs/b7_cpoe_rvc/residual_table.csv",
+  "dfs/b7_cpoe_rvc/per_week.csv",
+  "dfs/b7_cpoe_rvc/result.json"
+ ],
+ "label": "DIAGNOSTIC \u2014 not a live edge, no promotion"
+}
