@@ -96,7 +96,6 @@
 - **REA intel**: open-source RE agent stack (67.9k★) cloned + assessed for Underdog/DK/Novig lanes
 - pandas+numpy installed on iSH (apk py3-pandas py3-numpy); eq agent's pandas version OOMs on multi-season — stdlib rewrite shipped
 
-<<<<<<< HEAD
 ### [21:30] ENGINE STACK RESTORED + k-sweep + quick-win metrics + DFS/deep-books lanes fired
 - **Old engine stack restored from shared mirror → engine/**: engine_math (45 fns: Shin/Kalman/teaser-MC/CRPS), ratings2 (8 systems), calibration2 (Brier/ECE/isotonic/temp/conformal), gap_engines (middles/arbs/IRLS/copulas/steam), kelly2, clv, divergence, ladder_inverse, pick6_hold — ALL IMPORT CLEAN on this machine
 - **k-sweep delivered**: K monotone improves PPD pooled CRPS (8.98→8.61) but t declines (0.52→0.37) — never clears; PPD dead standalone at ANY shrinkage; dampening demo: K=20→2.77, 50→2.50, 100→2.32, 200→2.18 (36 drives @3.2 PPD, prior 2.0)
