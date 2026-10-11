@@ -1,0 +1,53 @@
+{
+ "observed_at": "2026-10-11T00:10:12Z",
+ "source": "direct GET of 8 user-supplied DFS optimizer URLs (raw HTML saved in this dir)",
+ "purpose": "map DFS optimizer landscape: which tools expose data without auth, which gate everything behind login \u2014 feeds item-7 (DFS contest/ownership internals) reopen conditions",
+ "findings": [
+  {
+   "site": "rotowire.com/daily/nfl/optimizer",
+   "access": "OPEN page (334KB, no paywall markers)",
+   "data_in_page": "optimizer UI shell; 217 'projection' mentions; player data loaded via XHR not embedded; also has CFB optimizer",
+   "lane": "free UI; XHR endpoints not yet mapped"
+  },
+  {
+   "site": "thesolver.com",
+   "access": "marketing shell; subscription:8, subscribe:4 \u2014 tool gated",
+   "data_in_page": "none; api/auth/login referenced",
+   "lane": "ETR product; needs paid account"
+  },
+  {
+   "site": "fantasypros yahoo optimizer",
+   "access": "page loads (946KB) but NO embedded player data (0 player markers, 0 salary strings)",
+   "premium_refs": 88,
+   "lane": "premium-gated; try=true is a trial funnel"
+  },
+  {
+   "site": "fantasysportsedge comparison",
+   "access": "OPEN article; product matrix: SaberSim x10, RotoWire x9, Stokastic x9, DK/FD x4; no prices in text",
+   "lane": "free intel on landscape"
+  },
+  {
+   "site": "rotogrinders lineuphq",
+   "access": "page shell; premium:17, subscribe:11 \u2014 tools gated",
+   "lane": "needs account"
+  },
+  {
+   "site": "ftnfantasy optimizer",
+   "access": "page + api.ftnfantasy.com referenced; subscription:49, paywall:12",
+   "lane": "FTN API exists; projections/ownership behind subscription (matches FTN charting vendor wall)"
+  },
+  {
+   "site": "dfsarmy",
+   "access": "marketing; subscription:57",
+   "api": "api/v1/banner, news, promotion \u2014 CMS only, no DFS data",
+   "lane": "content marketing"
+  },
+  {
+   "site": "establishtherun solver",
+   "access": "article page; subscribe:34, membership:16",
+   "lane": "paid product"
+  }
+ ],
+ "conclusion": "ALL full optimizer/projection/ownership surfaces are account-gated. Free-est lanes: RotoWire UI (XHR mapping untried) + DK getavailableplayers (verified OPEN earlier, salaries no ownership). Ownership history + projections still BLOCKED pending account (user DK cookie export path already documented in DFS_PULLER_SETUP.md)",
+ "missingness": "no player-level data extracted this pass \u2014 boundary mapping only"
+}

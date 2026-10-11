@@ -1,0 +1,1025 @@
+<!DOCTYPE html><html><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width"/><meta name="twitter:site" content="TheSolverSports"/><meta name="twitter:creator" content="TheSolverSports"/><meta property="og:url" content="https://thesolver.com/"/><meta property="og:image" content="https://thesolver.com/logos/thesolver.png"/><link rel="canonical" href="https://thesolver.com/"/><title>THE SOLVER: DFS Optimizer, Simulator, Bankroll Tracker &amp; Best Ball Tools</title><meta name="robots" content="index,follow"/><meta name="description" content="THE SOLVER is a set of tools for daily fantasy sports and best ball. Build lineups with the DFS Optimizer, test them in the DFS Simulator, track results with the free Bankroll Tracker, and draft better with the Draft Assistant. DraftKings, FanDuel, Underdog, and more."/><meta property="og:title" content="THE SOLVER: DFS Optimizer, Simulator, Bankroll Tracker &amp; Best Ball Tools"/><meta property="og:description" content="THE SOLVER is a set of tools for daily fantasy sports and best ball. Build lineups with the DFS Optimizer, test them in the DFS Simulator, track results with the free Bankroll Tracker, and draft better with the Draft Assistant. DraftKings, FanDuel, Underdog, and more."/><meta property="og:type" content="website"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is THE SOLVER?","acceptedAnswer":{"@type":"Answer","text":"THE SOLVER is a set of software tools for daily fantasy sports (DFS) and best ball. For salary-cap DFS on DraftKings, FanDuel, Yahoo, and DraftStars, the DFS Optimizer builds lineups, the DFS Simulator shows how those lineups perform in a real contest before it locks, and the free DFS Bankroll Tracker keeps track of your results. For best ball on Underdog and DraftKings, the Draft Assistant helps you pick while you draft and the free Best Ball Explorer tracks your portfolio after you draft. It supports NFL, NBA, MLB, NHL, Golf, and 10+ sports across dozens of leagues. The NFL Optimizer starts at $37.99/month; the Bankroll Tracker and Best Ball Explorer are free with a SOLVER account."}},{"@type":"Question","name":"Which SOLVER product do I need?","acceptedAnswer":{"@type":"Answer","text":"It depends on what you play and what you want help with. If you play salary-cap DFS on DraftKings or FanDuel and want to build lineups , you want the DFS Optimizer . If you want to test lineups before you enter them, you want the DFS Simulator . Most Simulator users build their lineups in the Optimizer first. If you want to track your results , the DFS Bankroll Tracker is free. If you play best ball on Underdog or DraftKings, the Draft Assistant helps you during the draft and the free Best Ball Explorer helps you manage your teams after. Still not sure? Answer two quick questions and we&apos;ll point you to the right tool."}},{"@type":"Question","name":"What is the difference between the Optimizer and the Simulator?","acceptedAnswer":{"@type":"Answer","text":"The Optimizer is a tool for creating new lineups based on criteria you define. The Simulator is a tool for seeing how lineups perform in a DraftKings or FanDuel contest. In practice, most people use them together: build a pool of lineups in the Optimizer, then sim that pool in the Simulator and enter only the lineups that rate well. Neither product requires the other. Read the full comparison ."}},{"@type":"Question","name":"Is any of it free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The DFS Bankroll Tracker and the Best Ball Explorer are free. All you need is a SOLVER account, and no credit card is required. The DFS Optimizer, DFS Simulator, and Draft Assistant are paid subscriptions."}},{"@type":"Question","name":"How much does THE SOLVER cost?","acceptedAnswer":{"@type":"Answer","text":"Each paid product is priced per sport, so you only pay for what you play. The NFL Optimizer starts at $37.99/month, with other sports priced individually and an All Sports bundle available. The DFS Simulator starts at $25.99/month for the Single Lineup Simulator. The Draft Assistant starts at $34.99/month for NFL. Monthly and longer-term plans are available. See the pricing page for every option."}},{"@type":"Question","name":"Which sites and sports does THE SOLVER support?","acceptedAnswer":{"@type":"Answer","text":"The DFS Optimizer builds lineups for DraftKings, FanDuel, Yahoo, DraftStars, and SuperDraft, and supports NFL, NBA, MLB, NHL, Golf, and 10+ sports across dozens of leagues. The DFS Simulator works with DraftKings and FanDuel contests for NFL and Golf. The Bankroll Tracker syncs DraftKings, FanDuel, and Yahoo results (SuperDraft and Draftstars by file upload). The Draft Assistant and Best Ball Explorer work with Underdog and DraftKings drafts; the Explorer also supports Drafters."}},{"@type":"Question","name":"Do I need an Establish The Run subscription?","acceptedAnswer":{"@type":"Answer","text":"No. The DFS Simulator was built in partnership with Establish The Run and uses ETR&apos;s analysis, but no ETR subscription is required to use it. The DFS Optimizer comes with our own Default projections for most sports, and you can also upload your own projections or sync a partner&apos;s. The Draft Assistant can optionally sync ETR rankings and projections, which does require a separate ETR subscription."}},{"@type":"Question","name":"Who is behind THE SOLVER?","acceptedAnswer":{"@type":"Answer","text":"A group of longtime fantasy sports players including the founders at Establish The Run and an experienced group of software developers created these products. The goal is to create software tools that make it easy for fantasy sports players to compete at a high level. To be clear, this is a separate product and company from Establish The Run. THE SOLVER plans to work with as many fantasy sports content sites as possible."}}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"THE SOLVER","description":"THE SOLVER is a set of software tools for daily fantasy sports (DFS) and best ball. For salary-cap DFS on DraftKings, FanDuel, Yahoo, and DraftStars, the DFS Optimizer builds lineups, the DFS Simulator shows how those lineups perform in a real contest before it locks, and the free DFS Bankroll Tracker keeps track of your results. For best ball on Underdog and DraftKings, the Draft Assistant helps you pick while you draft and the free Best Ball Explorer tracks your portfolio after you draft. It supports NFL, NBA, MLB, NHL, Golf, and 10+ sports across dozens of leagues. The NFL Optimizer starts at $37.99/month; the Bankroll Tracker and Best Ball Explorer are free with a SOLVER account.","applicationCategory":"SportsApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"37.99","priceCurrency":"USD"}}</script><meta name="next-head-count" content="15"/><link rel="icon" href="/images/favicon.ico"/><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JTLWPV0VTP"></script><script>
+                                    window.dataLayer = window.dataLayer || [];
+                                    function gtag(){dataLayer.push(arguments);}
+                                    gtag('js', new Date());
+                                    gtag('config', 'G-JTLWPV0VTP');
+                                    </script><script src="https://script.tapfiliate.com/tapfiliate.js" type="text/javascript" async=""></script><script>
+                            (function(t,a,p){t.TapfiliateObject=a;t[a]=t[a]||function(){ (t[a].q=t[a].q||[]).push(arguments)}})(window,'tap');
+
+                            tap('create', '35068-425a87', { integration: "javascript" });
+                            tap('detect');
+                            </script><link rel="preload" href="/_next/static/css/15b7143d2c5646a6.css" as="style"/><link rel="stylesheet" href="/_next/static/css/15b7143d2c5646a6.css" data-n-g=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script><script src="/_next/static/chunks/webpack-04f73ddf78df1de7.js" defer=""></script><script src="/_next/static/chunks/framework-430363ab07c76237.js" defer=""></script><script src="/_next/static/chunks/main-547e49e261be57b0.js" defer=""></script><script src="/_next/static/chunks/pages/_app-6207f4b1e025e409.js" defer=""></script><script src="/_next/static/chunks/cb1608f2-ae35e10f564210c3.js" defer=""></script><script src="/_next/static/chunks/8710b798-30bab0e8781efe80.js" defer=""></script><script src="/_next/static/chunks/a9a7754c-9de6379d08a3e608.js" defer=""></script><script src="/_next/static/chunks/9442-d090aa1ff5d28805.js" defer=""></script><script src="/_next/static/chunks/2555-58cc8b2e9d5686d4.js" defer=""></script><script src="/_next/static/chunks/4927-7dcbffb64b5c2e15.js" defer=""></script><script src="/_next/static/chunks/1802-ae0bf63e3d50749b.js" defer=""></script><script src="/_next/static/chunks/1116-9a1b934c2f90eaaf.js" defer=""></script><script src="/_next/static/chunks/6314-894e6d08055ef487.js" defer=""></script><script src="/_next/static/chunks/6085-a4d422cfac5368b9.js" defer=""></script><script src="/_next/static/chunks/6332-c656620383d072e9.js" defer=""></script><script src="/_next/static/chunks/pages/index-1dcbb084b1e31550.js" defer=""></script><script src="/_next/static/JbNkVdwLkNNPShsogMukd/_buildManifest.js" defer=""></script><script src="/_next/static/JbNkVdwLkNNPShsogMukd/_ssgManifest.js" defer=""></script><style id="server-side-styles">.section-0-2-96 {
+  color: #9da9bb;
+  padding: 48px 0 64px;
+  background-color: #00020B;
+}
+.shell-0-2-97 {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  text-align: center;
+}
+.heading-0-2-98 {
+  color: #ffffff;
+  margin: 0 0 28px;
+  font-size: 30px;
+  font-weight: 800;
+}
+@media (max-width: 769px) {
+  .heading-0-2-98 {
+    font-size: 26px;
+  }
+}
+  .item-0-2-99 {
+    border: 1px solid rgba(214, 232, 255, 0.12);
+    overflow: hidden;
+    text-align: left;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-color: #061325;
+  }
+  .questionButton-0-2-100 {
+    gap: 12px;
+    color: #ffffff;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    padding: 16px 20px;
+    font-size: 15px;
+    background: none;
+    text-align: left;
+    align-items: center;
+    font-weight: 700;
+    justify-content: space-between;
+  }
+  .answer-0-2-101 {
+    color: #9da9bb;
+    padding: 0 20px 18px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .answer-0-2-101 a {
+    color: #2C7BE5;
+  }
+  .answer-0-2-101 strong {
+    color: #d8e2ef;
+  }
+  .answer-0-2-101 p {
+    margin-bottom: 10px;
+  }
+  .answer-0-2-101 ul {
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+  .answer-0-2-101 li {
+    margin-bottom: 6px;
+  }
+  .fullFaqLink-0-2-102 {
+    color: #2C7BE5;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 16px;
+    font-weight: 700;
+  }
+  .fullFaqLink-0-2-102:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .section-0-2-27 {
+    color: #9da9bb;
+    padding: 48px 0;
+    background-color: #00020B;
+  }
+  .panel-0-2-28 {
+    width: min(920px, calc(100% - 32px));
+    border: 1px solid rgba(214, 232, 255, 0.08);
+    margin: 0 auto;
+    padding: 40px 48px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+    text-align: center;
+    border-radius: 16px;
+    background-color: #061325;
+  }
+@media (max-width: 600px) {
+  .panel-0-2-28 {
+    padding: 24px 16px;
+  }
+}
+  .heading-0-2-29 {
+    color: #ffffff;
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 800;
+  }
+@media (max-width: 769px) {
+  .heading-0-2-29 {
+    font-size: 26px;
+  }
+}
+  .intro-0-2-30 {
+    margin: 0 auto 28px;
+    font-size: 15px;
+    max-width: 680px;
+    line-height: 1.6;
+  }
+  .stepGrid-0-2-31 {
+    gap: 20px;
+    display: grid;
+    margin-bottom: 24px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+@media (max-width: 769px) {
+  .stepGrid-0-2-31 {
+    grid-template-columns: 1fr;
+  }
+}
+  .step-0-2-32 {
+    text-align: left;
+  }
+  .stepNumber-0-2-33 {
+    color: #00d27a;
+    width: 32px;
+    border: 1px solid #00d27a;
+    height: 32px;
+    display: inline-flex;
+    font-size: 15px;
+    align-items: center;
+    font-weight: 800;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    justify-content: center;
+    background-color: rgba(0, 210, 122, 0.12);
+  }
+  .stepTitle-0-2-34 {
+    color: #ffffff;
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .stepBody-0-2-35 {
+    color: #9da9bb;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .closing-0-2-36 {
+    color: #d8e2ef;
+    border: 1px solid rgba(0, 210, 122, 0.3);
+    margin: 0;
+    padding: 14px 18px;
+    font-size: 15px;
+    text-align: left;
+    line-height: 1.6;
+    border-radius: 8px;
+    background-color: rgba(0, 210, 122, 0.08);
+  }
+  .closing-0-2-36 a {
+    color: #00d27a;
+    font-weight: 700;
+  }
+  .buttonAction-0-2-10 {
+    margin: 8px;
+    display: flex;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-style: normal;
+    align-items: center;
+    line-height: 22px;
+    border-radius: 12px;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .buttonAction-0-2-10 svg {
+    margin-right: 4px;
+  }
+  .buttonAction-0-2-10 img {
+    margin-right: 4px;
+  }
+  .buttonPrimary-0-2-11 {
+    color: #ffffff;
+    border: 1px solid #00854D;
+    background-color: #00854D;
+  }
+  .buttonPrimary-0-2-11:hover {
+    color: #ffffff;
+    border: 1px solid #fff;
+    text-decoration: none;
+  }
+  .buttonSecondary-0-2-12 {
+    color: #00854D;
+    border: 1px solid #00854D;
+  }
+  .buttonSecondary-0-2-12:hover {
+    color: #030303;
+    border: 1px solid #030303;
+    text-decoration: none;
+  }
+  .buttonDark-0-2-13 {
+    color: #ffffff;
+    border: 1px solid #003789;
+    background-color: #161324;
+  }
+  .buttonDark-0-2-13:hover {
+    color: #ffffff;
+    border: 1px solid #2C7BE5;
+    box-shadow: 0 0 1px 1px #2C7BE5;
+    text-decoration: none;
+  }
+  .section-0-2-1 {
+    color: #9da9bb;
+    padding: 56px 0 0;
+    background-color: #00020B;
+  }
+@media (max-width: 769px) {
+  .section-0-2-1 {
+    padding: 36px 0 0;
+  }
+}
+  .shell-0-2-2 {
+    gap: 40px;
+    width: min(1200px, calc(100% - 32px));
+    margin: 0 auto;
+    display: grid;
+    align-items: center;
+    padding-bottom: 48px;
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+@media (max-width: 769px) {
+  .shell-0-2-2 {
+    gap: 28px;
+    text-align: center;
+    grid-template-columns: 1fr;
+  }
+}
+  .eyebrow-0-2-3 {
+    color: #00d27a;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .title-0-2-4 {
+    color: #ffffff;
+    margin: 0 0 18px;
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+@media (max-width: 769px) {
+  .title-0-2-4 {
+    font-size: 32px;
+  }
+}
+  .titleAccent-0-2-5 {
+    color: #00d27a;
+  }
+  .subhead-0-2-6 {
+    margin: 0 0 28px;
+    font-size: 18px;
+    max-width: 460px;
+    line-height: 1.55;
+  }
+@media (max-width: 769px) {
+  .subhead-0-2-6 {
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+  .trustLine-0-2-7 {
+    color: #9da9bb;
+    margin: 0 0 28px;
+    font-size: 13.5px;
+    max-width: 460px;
+    line-height: 1.5;
+  }
+@media (max-width: 769px) {
+  .trustLine-0-2-7 {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+  .ctaRow-0-2-8 {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -8px;
+    margin-bottom: 26px;
+  }
+@media (max-width: 769px) {
+  .ctaRow-0-2-8 {
+    justify-content: center;
+  }
+}
+  .screenshotFrame-0-2-9 {
+    border: 1px solid rgba(214, 232, 255, 0.1);
+    padding: 8px;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    border-radius: 14px;
+    background-color: #061325;
+  }
+  .screenshotFrame-0-2-9 img {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+  }
+  .section-0-2-83 {
+    color: #9da9bb;
+    padding: 48px 0;
+    background-color: #00020B;
+  }
+  .shell-0-2-84 {
+    width: min(920px, calc(100% - 32px));
+    margin: 0 auto;
+    text-align: center;
+  }
+  .heading-0-2-85 {
+    color: #ffffff;
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 800;
+  }
+@media (max-width: 769px) {
+  .heading-0-2-85 {
+    font-size: 26px;
+  }
+}
+  .intro-0-2-86 {
+    margin: 0 auto 28px;
+    font-size: 15px;
+    max-width: 680px;
+    line-height: 1.6;
+  }
+  .cardGrid-0-2-87 {
+    gap: 20px;
+    display: grid;
+    margin-bottom: 20px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+@media (max-width: 769px) {
+  .cardGrid-0-2-87 {
+    grid-template-columns: 1fr;
+  }
+}
+  .card-0-2-88 {
+    border: 1px solid rgba(214, 232, 255, 0.12);
+    display: flex;
+    padding: 20px 22px;
+    text-align: left;
+    border-radius: 8px;
+    flex-direction: column;
+    background-color: #061325;
+  }
+  .tierName-0-2-89 {
+    color: #ffffff;
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .tierPrice-0-2-90 {
+    color: #ffffff;
+    margin: 0 0 10px;
+    font-size: 26px;
+    font-weight: 800;
+  }
+  .tierPrice-0-2-90 span {
+    color: #9da9bb;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .tierBlurb-0-2-91 {
+    margin: 0 0 12px;
+    flex-grow: 1;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .tierLink-0-2-92 {
+    color: #2C7BE5;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .tierLink-0-2-92:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .freePanel-0-2-93 {
+    color: #d8e2ef;
+    border: 1px solid rgba(0, 210, 122, 0.3);
+    margin: 0 0 24px;
+    padding: 14px 18px;
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.6;
+    border-radius: 8px;
+    background-color: rgba(0, 210, 122, 0.08);
+  }
+  .freePanel-0-2-93 strong {
+    color: #00d27a;
+  }
+  .freePanel-0-2-93 a {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .ctaRow-0-2-94 {
+    display: flex;
+    margin-bottom: 12px;
+    justify-content: center;
+  }
+  .finderLink-0-2-95 {
+    color: #2C7BE5;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .finderLink-0-2-95:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .section-0-2-37 {
+    color: #9da9bb;
+    padding: 48px 0;
+    background-color: #00020B;
+  }
+  .shell-0-2-38 {
+    gap: 40px;
+    width: min(1200px, calc(100% - 32px));
+    margin: 0 auto;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 0.75fr 1.25fr;
+  }
+@media (max-width: 769px) {
+  .shell-0-2-38 {
+    gap: 28px;
+    grid-template-columns: 1fr;
+  }
+}
+  .shellReversed-0-2-39 {
+    grid-template-columns: 1.25fr 0.75fr;
+  }
+@media (max-width: 769px) {
+  .shellReversed-0-2-39 {
+    grid-template-columns: 1fr;
+  }
+}
+  .copy-0-2-40 {
+    text-align: left;
+  }
+  .copyReversed-0-2-41 {
+    order: 2;
+  }
+@media (max-width: 769px) {
+  .copyReversed-0-2-41 {
+    order: 0;
+  }
+}
+  .eyebrow-0-2-42 {
+    color: #00d27a;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .heading-0-2-43 {
+    color: #ffffff;
+    margin: 0 0 8px;
+    font-size: 30px;
+    font-weight: 800;
+  }
+@media (max-width: 769px) {
+  .heading-0-2-43 {
+    font-size: 26px;
+  }
+}
+  .tagline-0-2-44 {
+    color: #d8e2ef;
+    margin: 0 0 18px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .bulletList-0-2-45 {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+  }
+  .bullet-0-2-46 {
+    gap: 10px;
+    display: flex;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .bulletCheck-0-2-47 {
+    color: #00d27a;
+    flex-shrink: 0;
+    font-weight: 800;
+  }
+  .note-0-2-48 {
+    color: #d8e2ef;
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .priceAnchor-0-2-49 {
+    color: #ffffff;
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .ctaRow-0-2-50 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-left: -8px;
+  }
+  .secondaryLinks-0-2-51 {
+    margin: 14px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .secondaryLinks-0-2-51 a {
+    color: #2C7BE5;
+    font-weight: 700;
+  }
+  .secondaryLinks-0-2-51 a:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .screenshotFrame-0-2-52 {
+    border: 1px solid rgba(214, 232, 255, 0.08);
+    padding: 12px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+    border-radius: 16px;
+    background-color: #061325;
+  }
+  .screenshotFrame-0-2-52 img {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+  }
+  .section-0-2-14 {
+    color: #9da9bb;
+    padding: 48px 0;
+    background-color: #00020B;
+  }
+  .shell-0-2-15 {
+    width: min(1080px, calc(100% - 32px));
+    margin: 0 auto;
+    text-align: center;
+  }
+  .heading-0-2-16 {
+    color: #ffffff;
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 800;
+  }
+@media (max-width: 769px) {
+  .heading-0-2-16 {
+    font-size: 26px;
+  }
+}
+  .intro-0-2-17 {
+    margin: 0 auto 28px;
+    font-size: 15px;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+  .cardGrid-0-2-18 {
+    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+@media (max-width: 1300px) {
+  .cardGrid-0-2-18 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 769px) {
+  .cardGrid-0-2-18 {
+    grid-template-columns: 1fr;
+  }
+}
+  .card-0-2-19 {
+    border: 1px solid rgba(214, 232, 255, 0.12);
+    display: flex;
+    padding: 20px 22px;
+    text-align: left;
+    border-radius: 8px;
+    flex-direction: column;
+    background-color: #061325;
+  }
+  .cardMeta-0-2-20 {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
+  }
+  .groupLabel-0-2-21 {
+    color: #9da9bb;
+    font-size: 11px;
+    flex-shrink: 0;
+    font-weight: 800;
+    white-space: nowrap;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .priceBadge-0-2-22 {
+    color: #d8e2ef;
+    padding: 3px 9px;
+    font-size: 11px;
+    text-align: right;
+    font-weight: 700;
+    border-radius: 5px;
+    background-color: #132238;
+  }
+  .priceBadgeFree-0-2-23 {
+    color: #00d27a;
+    background-color: rgba(0, 210, 122, 0.14);
+  }
+  .cardTitle-0-2-24 {
+    color: #ffffff;
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .cardBody-0-2-25 {
+    color: #9da9bb;
+    margin: 0 0 14px;
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .link-0-2-26 {
+    color: #00d27a;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .link-0-2-26:hover {
+    color: #00d27a;
+    text-decoration: underline;
+  }
+  .section-0-2-53 {
+    color: #9da9bb;
+    background-color: #00020B;
+  }
+  .panel-0-2-54 {
+    width: min(920px, calc(100% - 32px));
+    border: 1px solid rgba(214, 232, 255, 0.08);
+    margin: 0 auto;
+    padding: 40px 48px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+    border-radius: 16px;
+    background-color: #061325;
+  }
+@media (max-width: 600px) {
+  .panel-0-2-54 {
+    padding: 24px 16px;
+  }
+}
+  .eyebrow-0-2-55 {
+    color: #00d27a;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .title-0-2-56 {
+    color: #ffffff;
+    margin: 0 0 32px;
+    text-align: center;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+  .questionLabel-0-2-57 {
+    color: #ffffff;
+    margin: 0 0 12px;
+    font-size: 16px;
+    text-align: left;
+    font-weight: 700;
+  }
+  .pillGrid-0-2-58 {
+    gap: 12px;
+    display: grid;
+    margin-bottom: 28px;
+  }
+  .resultGrid-0-2-59 {
+    gap: 20px;
+    display: grid;
+  }
+  .cols1-0-2-60 {
+    grid-template-columns: 1fr;
+  }
+  .cols2-0-2-61 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+@media (max-width: 769px) {
+  .cols2-0-2-61 {
+    grid-template-columns: 1fr;
+  }
+}
+  .cols3-0-2-62 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+@media (max-width: 769px) {
+  .cols3-0-2-62 {
+    grid-template-columns: 1fr;
+  }
+}
+  .pill-0-2-63 {
+    color: #ffffff;
+    border: 1px solid rgba(214, 232, 255, 0.2);
+    cursor: pointer;
+    padding: 14px 20px;
+    text-align: center;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    border-radius: 8px;
+    background-color: #132238;
+  }
+  .pill-0-2-63:hover {
+    border-color: #00d27a;
+  }
+  .pillSelected-0-2-64 {
+    border-color: #00d27a;
+    background-color: rgba(0, 210, 122, 0.12);
+  }
+  .pillLabel-0-2-65 {
+    display: block;
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .pillSublabel-0-2-66 {
+    color: #9da9bb;
+    display: block;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .resultNote-0-2-67 {
+    color: #d8e2ef;
+    border: 1px solid rgba(0, 210, 122, 0.3);
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: left;
+    border-radius: 8px;
+    background-color: rgba(0, 210, 122, 0.08);
+  }
+  .videoSection-0-2-68 {
+    border-top: 1px solid rgba(214, 232, 255, 0.08);
+    margin-top: 32px;
+    padding-top: 28px;
+  }
+  .videoTitle-0-2-69 {
+    color: #ffffff;
+    margin: 0 0 6px;
+    font-size: 18px;
+    text-align: left;
+    font-weight: 800;
+  }
+  .videoBlurb-0-2-70 {
+    color: #9da9bb;
+    margin: 0 0 16px;
+    font-size: 14px;
+    text-align: left;
+  }
+  .videoFrame-0-2-71 {
+    width: 100%;
+    border: 1px solid rgba(214, 232, 255, 0.12);
+    overflow: hidden;
+    position: relative;
+    padding-top: 56.25%;
+    border-radius: 12px;
+    background-color: #000;
+  }
+  .videoFrame-0-2-71 iframe {
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 0;
+    height: 100%;
+    position: absolute;
+  }
+  .videoLink-0-2-72 {
+    color: #2C7BE5;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 12px;
+    font-weight: 700;
+  }
+  .videoLink-0-2-72:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .comparisonLink-0-2-73 {
+    color: #2C7BE5;
+    display: block;
+    font-size: 14px;
+    margin-top: 24px;
+    text-align: center;
+    font-weight: 700;
+  }
+  .comparisonLink-0-2-73:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .section-d1-0-2-74 {
+    padding: 32px 0;
+  }
+  .title-d2-0-2-75 {
+    font-size: 24px;
+  }
+  .section-0-2-76 {
+    color: #9da9bb;
+    padding: 48px 0;
+    background-color: #00020B;
+  }
+  .shell-0-2-77 {
+    width: min(1080px, calc(100% - 32px));
+    margin: 0 auto;
+    text-align: center;
+  }
+  .heading-0-2-78 {
+    color: #ffffff;
+    margin: 0 0 6px;
+    font-size: 30px;
+    font-weight: 800;
+  }
+@media (max-width: 769px) {
+  .heading-0-2-78 {
+    font-size: 26px;
+  }
+}
+  .subheading-0-2-79 {
+    margin: 0 auto 28px;
+    font-size: 15px;
+    max-width: 680px;
+    line-height: 1.6;
+  }
+  .grid-0-2-80 {
+    gap: 20px;
+    display: grid;
+    margin-bottom: 24px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+@media (max-width: 1300px) {
+  .grid-0-2-80 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .grid-0-2-80 {
+    grid-template-columns: 1fr;
+  }
+}
+  .card-0-2-81 {
+    border: 1px solid rgba(214, 232, 255, 0.12);
+    padding: 10px;
+    border-radius: 12px;
+    background-color: #061325;
+  }
+  .card-0-2-81 img {
+    width: 100%;
+    height: 420px;
+    display: block;
+    object-fit: cover;
+    object-position: left top;
+  }
+@media (max-width: 600px) {
+  .card-0-2-81 img {
+    height: auto;
+    max-height: 90vh;
+    object-fit: contain;
+    object-position: center top;
+  }
+}
+  .moreLink-0-2-82 {
+    color: #2C7BE5;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .moreLink-0-2-82:hover {
+    color: #2C7BE5;
+    text-decoration: underline;
+  }
+  .footer-0-2-103 {
+    padding-top: 48px;
+  }
+  .grid-0-2-104 {
+    gap: 32px;
+    display: grid;
+    grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
+  }
+@media (max-width: 1068px) {
+  .grid-0-2-104 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .grid-0-2-104 {
+    gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1068px) {
+  .brand-0-2-105 {
+    grid-column: 1 / -1;
+  }
+}
+  .brand-0-2-105 img {
+    height: 24px;
+    margin-bottom: 12px;
+  }
+  .tagline-0-2-106 {
+    color: #9da9bb;
+    margin: 0 0 16px;
+    font-size: 14px;
+    max-width: 300px;
+    line-height: 1.6;
+  }
+  .contact-0-2-107 {
+    gap: 8px;
+    color: #d8e2ef;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .contact-0-2-107:hover {
+    color: #ffffff;
+    text-decoration: none;
+  }
+  .columnTitle-0-2-108 {
+    color: #9da9bb;
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .link-0-2-109 {
+    color: #d8e2ef;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    margin-bottom: 10px;
+  }
+  .link-0-2-109:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+  .sports-0-2-110 {
+    gap: 12px;
+    display: flex;
+    border-top: 1px solid rgba(214, 232, 255, 0.12);
+    margin-top: 36px;
+    padding-top: 20px;
+    flex-direction: column;
+  }
+  .sportsRow-0-2-111 {
+    gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .sportsLabel-0-2-112 {
+    color: #9da9bb;
+    font-size: 12px;
+    font-weight: 800;
+    margin-right: 6px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sport-0-2-113 {
+    color: #9da9bb;
+    border: 1px solid rgba(214, 232, 255, 0.12);
+    padding: 2px 10px;
+    font-size: 12px;
+    border-radius: 999px;
+  }
+  .bottom-0-2-114 {
+    gap: 8px;
+    color: #9da9bb;
+    display: flex;
+    padding: 16px 0 20px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    border-top: 1px solid rgba(214, 232, 255, 0.12);
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+  .legal-0-2-115 {
+    gap: 16px;
+    display: flex;
+  }
+  .legal-0-2-115 a {
+    color: #9da9bb;
+  }
+  .legal-0-2-115 a:hover {
+    color: #ffffff;
+  }</style></head><body style="background-color:#061325!important"><div id="__next"><div style="width:100%;display:flex;flex-direction:column;justify-content:space-between;line-height:22px !important" class="main" id="top"><div style="margin-top:45px"><nav style="height:50px" class="navbar-glass font-weight-semi-bold py-2 px-2 px-md-4 navbar navbar-expand-xxl navbar-light fixed-top"><div class="container-fluid"><div class="toggle-icon-wrapper mr-md-3 mr-2 d-xxl-none"><button type="button" class="navbar-toggler-humburger-icon btn btn-link d-flex flex-center" id="burgerMenu"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button></div><a href="/" class="navbar-brand"><div class="d-flex"><img class="d-none d-md-inline" src="/logos/thesolver.png" height="30" alt="Logo"/><img class="d-md-none" src="/logos/thesolver.png" height="18" alt="Logo"/></div></a></div></nav><div style="flex:1" class="container-fluid p-0" data-layout="container"><div class="section-0-2-1"><div class="shell-0-2-2"><div><div class="eyebrow-0-2-3">THE SOLVER</div><h1 class="title-0-2-4">No matter where you play fantasy sports,<!-- --> <span class="titleAccent-0-2-5">we have the product for you</span></h1><p class="subhead-0-2-6">THE SOLVER is a set of tools for daily fantasy sports and best ball. Whether you’re playing DFS on DraftKings or FanDuel or you’re drafting Best Ball teams on Underdog, we’ve got you covered. Everything runs in your browser. A detailed description of each product is below.</p><p class="trustLine-0-2-7">Built by longtime fantasy players and software engineers. Used by DFS and best ball players at every level, including winners of million-dollar tournaments on DraftKings and FanDuel.</p><div class="ctaRow-0-2-8"><a href="/api/auth/login?signUp=true" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">Get started free</a><a href="#products" class="buttonAction-0-2-10 buttonDark-0-2-13 " type="button">See the products</a></div></div><div class="screenshotFrame-0-2-9"><img src="/images/marketing/optimizer/optimizer.png" alt="THE SOLVER DFS Optimizer building NFL lineups for DraftKings with projections, rules, and exposure settings"/></div></div></div><div class="section-0-2-14" id="products"><div class="shell-0-2-15"><h2 class="heading-0-2-16">What does THE SOLVER do?</h2><p class="intro-0-2-17">Each tool does one job. Here is what each one is for, in plain terms.</p><div class="cardGrid-0-2-18"><div class="card-0-2-19" style="border-top:3px solid #2c7be5"><div class="cardMeta-0-2-20"><span class="groupLabel-0-2-21">Salary-cap DFS</span><span class="priceBadge-0-2-22 ">NFL from $37.99/mo</span></div><h3 class="cardTitle-0-2-24">DFS Optimizer</h3><p class="cardBody-0-2-25">A tool for building lineups. You choose the projections and the rules, and the Optimizer builds one lineup or up to 1,000 and exports them to DraftKings, FanDuel, Yahoo, and more.</p><a class="link-0-2-26" href="/optimizer">Learn more about the <!-- -->DFS Optimizer<!-- --> →</a></div><div class="card-0-2-19" style="border-top:3px solid #00d27a"><div class="cardMeta-0-2-20"><span class="groupLabel-0-2-21">Salary-cap DFS</span><span class="priceBadge-0-2-22 ">From $25.99/mo</span></div><h3 class="cardTitle-0-2-24">DFS Simulator</h3><p class="cardBody-0-2-25">A tool for seeing how lineups perform in a DraftKings or FanDuel contest before you enter. It shows each lineup’s projected ROI, cash rate, and finish position. NFL and Golf.</p><a class="link-0-2-26" href="/simulator">Learn more about the <!-- -->DFS Simulator<!-- --> →</a></div><div class="card-0-2-19" style="border-top:3px solid #8ac4ff"><div class="cardMeta-0-2-20"><span class="groupLabel-0-2-21">Salary-cap DFS</span><span class="priceBadge-0-2-22 ">Included with 40 &amp; 3000 Lineup Simulator plans</span></div><h3 class="cardTitle-0-2-24">Post-Lock Sim Dashboard</h3><p class="cardBody-0-2-25">A tool for reviewing a DraftKings contest after it completes. It re-sims the contest with the lineups that actually entered, so you can see which builds deserved to win.</p><a class="link-0-2-26" href="/contests">Learn more about the <!-- -->Post-Lock Sim Dashboard<!-- --> →</a></div><div class="card-0-2-19" style="border-top:3px solid #f7d13f"><div class="cardMeta-0-2-20"><span class="groupLabel-0-2-21">Salary-cap DFS</span><span class="priceBadge-0-2-22 priceBadgeFree-0-2-23">Free</span></div><h3 class="cardTitle-0-2-24">DFS Bankroll Tracker</h3><p class="cardBody-0-2-25">A tool for keeping track of your results. It imports your contest history from DraftKings, FanDuel, and Yahoo and shows your profit and ROI by sport, site, and contest type.</p><a class="link-0-2-26" href="/tracker/home">Learn more about the <!-- -->DFS Bankroll Tracker<!-- --> →</a></div><div class="card-0-2-19" style="border-top:3px solid #8ac4ff"><div class="cardMeta-0-2-20"><span class="groupLabel-0-2-21">Best ball</span><span class="priceBadge-0-2-22 ">From $34.99/mo</span></div><h3 class="cardTitle-0-2-24">Draft Assistant</h3><p class="cardBody-0-2-25">A browser extension for Underdog and DraftKings drafts. While you draft, it shows a SOLVER Score for every player, recommends picks, and tracks your ownership.</p><a class="link-0-2-26" href="/draft-assistant">Learn more about the <!-- -->Draft Assistant<!-- --> →</a></div><div class="card-0-2-19" style="border-top:3px solid #00d27a"><div class="cardMeta-0-2-20"><span class="groupLabel-0-2-21">Best ball</span><span class="priceBadge-0-2-22 priceBadgeFree-0-2-23">Free</span></div><h3 class="cardTitle-0-2-24">Best Ball Explorer</h3><p class="cardBody-0-2-25">A tool for managing your best ball teams after you draft. It combines Underdog, DraftKings, and Drafters drafts into one portfolio and shows your exposure to every player.</p><a class="link-0-2-26" href="/best-ball-explorer/marketing">Learn more about the <!-- -->Best Ball Explorer<!-- --> →</a></div></div></div></div><div class="section-0-2-27" id="how-it-works"><div class="panel-0-2-28"><h2 class="heading-0-2-29">How the tools fit together</h2><p class="intro-0-2-30">You can use any one tool on its own. Most DFS players use them in this order.</p><div class="stepGrid-0-2-31"><div class="step-0-2-32"><span class="stepNumber-0-2-33">1</span><h3 class="stepTitle-0-2-34">Build your lineups</h3><p class="stepBody-0-2-35">Start in the Optimizer. Pick a projection set, set the rules you want (stacks, exposure, how many lineups), and it builds the lineups for you.</p></div><div class="step-0-2-32"><span class="stepNumber-0-2-33">2</span><h3 class="stepTitle-0-2-34">Test them before you enter</h3><p class="stepBody-0-2-35">Send those lineups to the Simulator. It runs them through tens of thousands of simulated contests and tells you which ones are worth the entry fee.</p></div><div class="step-0-2-32"><span class="stepNumber-0-2-33">3</span><h3 class="stepTitle-0-2-34">Review and track</h3><p class="stepBody-0-2-35">After the contest, the Post-Lock Sim Dashboard shows what the winning builds did differently, and the Bankroll Tracker keeps a running record of your profit and ROI.</p></div></div><p class="closing-0-2-36">Play best ball instead? The<!-- --> <a href="/draft-assistant">Draft Assistant</a> helps you pick while you draft, and the free<!-- --> <a href="/best-ball-explorer/marketing">Best Ball Explorer</a> helps you manage your teams after. Both work with Underdog and DraftKings.</p></div></div><div class="section-0-2-37" id="optimizer"><div class="shell-0-2-38 "><div class="copy-0-2-40 "><div class="eyebrow-0-2-42">Build lineups</div><h2 class="heading-0-2-43">DFS Optimizer</h2><p class="tagline-0-2-44">The Optimizer is a tool for building lineups. You tell it which projections and rules to use, and it builds the lineups for you.</p><ul class="bulletList-0-2-45"><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Build one lineup or up to 1,000 at a time, then export them to DraftKings, FanDuel, Yahoo, DraftStars, and more</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Use our Default projections (available for most sports), upload your own, or sync a partner’s</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Set stacks, correlations, and player exposure with one-click Quick Rules or advanced rules</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Late swap your lineups in one click when news breaks</span></li></ul><p class="note-0-2-48">Works for NFL, NBA, MLB, NHL, Golf, and 10+ sports across dozens of leagues.</p><p class="priceAnchor-0-2-49">NFL from $37.99/mo</p><div class="ctaRow-0-2-50"><a href="/optimizer" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">Learn more about the Optimizer</a></div><p class="secondaryLinks-0-2-51"><a href="/pricing/optimizer">View Optimizer pricing</a> | <a href="/tutorials/solver-intro">Tutorial: How to use the Optimizer</a></p></div><div class="screenshotFrame-0-2-52"><img src="/images/marketing/optimizer/optimizer.png" alt="THE SOLVER DFS Optimizer building optimized NFL lineups with custom rules and projections"/></div></div></div><div class="section-0-2-37" id="simulator"><div class="shell-0-2-38 shellReversed-0-2-39"><div class="copy-0-2-40 copyReversed-0-2-41"><div class="eyebrow-0-2-42">Test lineups</div><h2 class="heading-0-2-43">DFS Simulator</h2><p class="tagline-0-2-44">The Simulator is a tool for seeing how lineups perform in a DraftKings or FanDuel contest before you enter them.</p><ul class="bulletList-0-2-45"><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Sim one lineup or up to 1,000 at once against a realistic field for the exact contest you’re entering</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>See each lineup’s SIM ROI, SIM Cash Rate, and where it usually finishes</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>After the contest completes, the Post-Lock Sim Dashboard re-sims it with the lineups that actually entered (DraftKings only)</span></li></ul><p class="note-0-2-48">Available for NFL and Golf. Built in partnership with Establish The Run. No ETR subscription required.</p><p class="priceAnchor-0-2-49">From $25.99/mo</p><div class="ctaRow-0-2-50"><a href="/simulator" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">Learn more about the Simulator</a></div><p class="secondaryLinks-0-2-51"><a href="/pricing/simulator">View Simulator pricing</a> | <a href="/contests">Post-Lock Sim Dashboard</a> | <a href="/tutorials/optimizer-vs-simulator">Optimizer vs Simulator</a></p></div><div class="screenshotFrame-0-2-52"><img src="/images/marketing/simulator/simulator-results.png" alt="THE SOLVER DFS Simulator results showing SIM ROI, SIM Cash Rate, and finish distribution for an NFL lineup"/></div></div></div><div class="section-0-2-37" id="tracker"><div class="shell-0-2-38 "><div class="copy-0-2-40 "><div class="eyebrow-0-2-42">Track results</div><h2 class="heading-0-2-43">DFS Bankroll Tracker</h2><p class="tagline-0-2-44">The Bankroll Tracker is a tool for keeping track of how you are doing. It imports your contest history and shows your profit and ROI.</p><ul class="bulletList-0-2-45"><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Sync your DraftKings, FanDuel, and Yahoo results in one click with our Firefox extension (SuperDraft and Draftstars by file upload)</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>See profit, ROI, and finish positions by sport, site, contest type, or entry fee</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Look up your head-to-head record against a specific opponent</span></li></ul><p class="priceAnchor-0-2-49">Free with a SOLVER account. No credit card required.</p><div class="ctaRow-0-2-50"><a href="/tracker/home" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">Learn more about the Tracker</a></div><p class="secondaryLinks-0-2-51"><a href="/api/auth/login?signUp=true&amp;returnTo=/tracker">Open the Tracker</a> | <a href="/tutorials/bankroll-tracker">Tutorial: Bankroll Tracker</a></p></div><div class="screenshotFrame-0-2-52"><img src="/images/marketing/tracker/image2.png" alt="THE SOLVER DFS Bankroll Tracker showing profit and ROI across DraftKings and FanDuel contests"/></div></div></div><div class="section-0-2-37" id="draft-assistant"><div class="shell-0-2-38 shellReversed-0-2-39"><div class="copy-0-2-40 copyReversed-0-2-41"><div class="eyebrow-0-2-42">Best ball · during the draft</div><h2 class="heading-0-2-43">Draft Assistant</h2><p class="tagline-0-2-44">The Draft Assistant is a browser extension that helps you make picks while you draft on Underdog and DraftKings.</p><ul class="bulletList-0-2-45"><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>See a SOLVER Score for every available player, right on the draft board</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Get smart recommendations based on your roster and who is still available</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Track your own ownership across all of your drafts</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Optionally sync Establish The Run rankings and projections (separate ETR subscription)</span></li></ul><p class="note-0-2-48">Works for Underdog and DraftKings Best Ball, Underdog Battle Royale, and daily NBA, Golf, WNBA, and FIFA drafts.</p><p class="priceAnchor-0-2-49">NFL from $34.99/mo</p><div class="ctaRow-0-2-50"><a href="/draft-assistant" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">Learn more about the Draft Assistant</a></div><p class="secondaryLinks-0-2-51"><a href="/pricing/bestball">View Draft Assistant pricing</a> | <a href="/tutorials/draft-assistant-setup">Tutorial: Quick setup guide</a></p></div><div class="screenshotFrame-0-2-52"><img src="/images/marketing/draft-assistant/draft-assistant.png" alt="THE SOLVER Draft Assistant overlaying SOLVER Scores and recommendations on an Underdog best ball draft board"/></div></div></div><div class="section-0-2-37" id="best-ball-explorer"><div class="shell-0-2-38 "><div class="copy-0-2-40 "><div class="eyebrow-0-2-42">Best ball · after the draft</div><h2 class="heading-0-2-43">Best Ball Explorer</h2><p class="tagline-0-2-44">The Best Ball Explorer is a tool for seeing all of your best ball teams in one place after you draft.</p><ul class="bulletList-0-2-45"><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Combine your Underdog, DraftKings, and Drafters drafts into one portfolio</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>See your exposure to every player, by share of drafts or share of entry fees</span></li><li class="bullet-0-2-46"><span class="bulletCheck-0-2-47">✓</span><span>Grade every draft with ADP and Draft Capital Closing Line Value (CLV)</span></li></ul><p class="priceAnchor-0-2-49">Free with a SOLVER account. No credit card required.</p><div class="ctaRow-0-2-50"><a href="/best-ball-explorer/marketing" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">Learn more about the Explorer</a></div><p class="secondaryLinks-0-2-51"><a href="/api/auth/login?signUp=true&amp;returnTo=/best-ball-explorer">Open the Explorer</a></p></div><div class="screenshotFrame-0-2-52"><img src="/images/marketing/best-ball/overview.png" alt="THE SOLVER Best Ball Explorer portfolio exposure view showing player exposure and fee percentages across platforms"/></div></div></div><div id="product-finder"><div class="section-0-2-53 section-d1-0-2-74"><div class="panel-0-2-54"><h2 class="title-0-2-56 title-d2-0-2-75">Not sure which product you need?</h2><p class="questionLabel-0-2-57">1. What style of game do you play?</p><div class="pillGrid-0-2-58 cols2-0-2-61"><button type="button" aria-pressed="false" class="pill-0-2-63 "><span class="pillLabel-0-2-65">Salary-cap DFS</span><span class="pillSublabel-0-2-66">DraftKings · FanDuel · Yahoo · DraftStars</span></button><button type="button" aria-pressed="false" class="pill-0-2-63 "><span class="pillLabel-0-2-65">Draft-style Best Ball</span><span class="pillSublabel-0-2-66">Underdog · DraftKings</span></button></div><a class="comparisonLink-0-2-73" href="/which-product">See the full product comparison →</a></div></div></div><div class="section-0-2-76"><div class="shell-0-2-77"><h2 class="heading-0-2-78">Don’t take our word for it</h2><p class="subheading-0-2-79">SOLVER subscribers are winning the biggest contests in DFS and best ball — and posting the tickets.</p><div class="grid-0-2-80"><div class="card-0-2-81"><img src="/images/marketing/testimonials/testimonial-brian.png" alt="Subscriber testimonial showing a $1,000,920 contest win with a shoutout to THE SOLVER and Establish The Run" width="100%" style="cursor:pointer;border-radius:8px;transition:0.2s ease-in-out"/></div><div class="card-0-2-81"><img src="/images/marketing/testimonials/testimonial-million.png" alt="THE SOLVER subscriber sharing a million-dollar DFS tournament win built with the Optimizer" width="100%" style="cursor:pointer;border-radius:8px;transition:0.2s ease-in-out"/></div><div class="card-0-2-81"><img src="/images/marketing/draft-assistant/testimonials/testimonial-2.png" alt="THE SOLVER Draft Assistant subscriber celebrating a $2,000,000 first-place finish in the DraftKings NFL Best Ball $15M Millionaire" width="100%" style="cursor:pointer;border-radius:8px;transition:0.2s ease-in-out"/></div></div><a class="moreLink-0-2-82" href="/pricing">See more on the pricing page →</a></div></div><div class="section-0-2-83"><div class="shell-0-2-84"><h2 class="heading-0-2-85">Simple pricing</h2><p class="intro-0-2-86">Each paid product is a separate subscription, so you only pay for the tools you use.</p><div class="cardGrid-0-2-87"><div class="card-0-2-88" style="border-top:3px solid #2c7be5"><h3 class="tierName-0-2-89">DFS Optimizer</h3><p class="tierPrice-0-2-90"><span>NFL from </span>$37.99<span>/mo</span></p><p class="tierBlurb-0-2-91">Other sports priced individually. An All Sports bundle covers every sport we support.</p><a class="tierLink-0-2-92" href="/pricing/optimizer">View <!-- -->DFS Optimizer<!-- --> pricing →</a></div><div class="card-0-2-88" style="border-top:3px solid #00d27a"><h3 class="tierName-0-2-89">DFS Simulator</h3><p class="tierPrice-0-2-90"><span>From </span>$25.99<span>/mo</span></p><p class="tierBlurb-0-2-91">Single Lineup Simulator to start. 40 and 3000 Lineup plans include the Post-Lock Sim Dashboard.</p><a class="tierLink-0-2-92" href="/pricing/simulator">View <!-- -->DFS Simulator<!-- --> pricing →</a></div><div class="card-0-2-88" style="border-top:3px solid #8ac4ff"><h3 class="tierName-0-2-89">Draft Assistant</h3><p class="tierPrice-0-2-90"><span>NFL from </span>$34.99<span>/mo</span></p><p class="tierBlurb-0-2-91">NFL best ball plans by entry fee, plus daily NBA and Golf drafts.</p><a class="tierLink-0-2-92" href="/pricing/bestball">View <!-- -->Draft Assistant<!-- --> pricing →</a></div></div><p class="freePanel-0-2-93"><strong>Free:</strong> the<!-- --> <a href="/tracker/home">DFS Bankroll Tracker</a> and the<!-- --> <a href="/best-ball-explorer/marketing">Best Ball Explorer</a> are free with a SOLVER account. No credit card required.</p><div class="ctaRow-0-2-94"><a href="/pricing" class="buttonAction-0-2-10 buttonPrimary-0-2-11 " type="button">View all pricing</a></div><a class="finderLink-0-2-95" href="/which-product">Not sure which product you need? Take the 2-question finder →</a></div></div><div class="section-0-2-96"><div class="shell-0-2-97"><h2 class="heading-0-2-98">Common questions</h2><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="true">What is THE SOLVER?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-up" class="svg-inline--fa fa-caret-up " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M9.39 265.4l127.1-128C143.6 131.1 151.8 128 160 128s16.38 3.125 22.63 9.375l127.1 128c9.156 9.156 11.9 22.91 6.943 34.88S300.9 320 287.1 320H32.01c-12.94 0-24.62-7.781-29.58-19.75S.2333 274.5 9.39 265.4z"></path></svg></button><div class="answer-0-2-101"><p>THE SOLVER is a set of software tools for daily fantasy sports (DFS) and best ball. For salary-cap DFS on DraftKings, FanDuel, Yahoo, and DraftStars, the DFS Optimizer builds lineups, the DFS Simulator shows how those lineups perform in a real contest before it locks, and the free DFS Bankroll Tracker keeps track of your results. For best ball on Underdog and DraftKings, the Draft Assistant helps you pick while you draft and the free Best Ball Explorer tracks your portfolio after you draft. It supports NFL, NBA, MLB, NHL, Golf, and 10+ sports across dozens of leagues. The NFL Optimizer starts at $37.99/month; the Bankroll Tracker and Best Ball Explorer are free with a SOLVER account.</p></div></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">Which SOLVER product do I need?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">What is the difference between the Optimizer and the Simulator?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">Is any of it free?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">How much does THE SOLVER cost?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">Which sites and sports does THE SOLVER support?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">Do I need an Establish The Run subscription?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><div class="item-0-2-99"><button type="button" class="questionButton-0-2-100" aria-expanded="false">Who is behind THE SOLVER?<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"><path fill="currentColor" d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z"></path></svg></button></div><a class="fullFaqLink-0-2-102" href="/faq">Read the full FAQ →</a></div></div><div class="bg-dark"><div class="container"><div class="content"><section class="bg-dark footer-0-2-103 border-top"><div class="container-fluid"><div class="grid-0-2-104"><div class="brand-0-2-105"><img src="/logos/thesolver.png" alt="THE SOLVER"/><p class="tagline-0-2-106">DFS and best ball tools to optimize, simulate, draft, and track your results.</p><a class="contact-0-2-107" href="https://www.twitter.com/TheSolverSports" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" class="svg-inline--fa fa-twitter " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16"><path fill="currentColor" d="M459.4 151.7c.325 4.548 .325 9.097 .325 13.65 0 138.7-105.6 298.6-298.6 298.6-59.45 0-114.7-17.22-161.1-47.11 8.447 .974 16.57 1.299 25.34 1.299 49.06 0 94.21-16.57 130.3-44.83-46.13-.975-84.79-31.19-98.11-72.77 6.498 .974 12.99 1.624 19.82 1.624 9.421 0 18.84-1.3 27.61-3.573-48.08-9.747-84.14-51.98-84.14-102.1v-1.299c13.97 7.797 30.21 12.67 47.43 13.32-28.26-18.84-46.78-51.01-46.78-87.39 0-19.49 5.197-37.36 14.29-52.95 51.65 63.67 129.3 105.3 216.4 109.8-1.624-7.797-2.599-15.92-2.599-24.04 0-57.83 46.78-104.9 104.9-104.9 30.21 0 57.5 12.67 76.67 33.14 23.72-4.548 46.46-13.32 66.6-25.34-7.798 24.37-24.37 44.83-46.13 57.83 21.12-2.273 41.58-8.122 60.43-16.24-14.29 20.79-32.16 39.31-52.63 54.25z"></path></svg> @TheSolverSports</a><a class="contact-0-2-107" href="mailto:support@thesolver.com"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="envelope" class="svg-inline--fa fa-envelope " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16"><path fill="currentColor" d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"></path></svg> support@thesolver.com</a></div><nav aria-label="Products"><h5 class="columnTitle-0-2-108">Products</h5><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/optimizer">DFS Optimizer</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/simulator">DFS Simulator</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/draft-assistant">Draft Assistant</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/best-ball-explorer/marketing">Best Ball Explorer</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/tracker/home">Bankroll Tracker</a></nav><nav aria-label="Pricing"><h5 class="columnTitle-0-2-108">Pricing</h5><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/pricing">All plans</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/pricing/optimizer">Optimizer plans</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/pricing/simulator">Simulator plans</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/pricing/bestball">Draft Assistant plans</a></nav><nav aria-label="Learn"><h5 class="columnTitle-0-2-108">Learn</h5><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/tutorials">Tutorials</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/which-product">Which product do I need?</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/tutorials/optimizer-vs-simulator">Optimizer vs Simulator</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/faq">FAQ</a></nav><nav aria-label="Company"><h5 class="columnTitle-0-2-108">Company</h5><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/about">About</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/terms">Terms of Use</a><a role="link" tabindex="0" class="link-0-2-109" style="text-decoration:none" href="/privacy">Privacy Policy</a></nav></div><div class="sports-0-2-110"><div class="sportsRow-0-2-111"><span class="sportsLabel-0-2-112">DFS Optimizer sports</span><span class="sport-0-2-113">NFL</span><span class="sport-0-2-113">NBA</span><span class="sport-0-2-113">MLB</span><span class="sport-0-2-113">NHL</span><span class="sport-0-2-113">Golf</span><span class="sport-0-2-113">MMA</span><span class="sport-0-2-113">NASCAR</span><span class="sport-0-2-113">WNBA</span><span class="sport-0-2-113">F1</span><span class="sport-0-2-113">Soccer</span><span class="sport-0-2-113">College Football</span><span class="sport-0-2-113">College Basketball</span><span class="sport-0-2-113">Tennis</span><span class="sport-0-2-113">UFL</span><span class="sport-0-2-113">CFL</span><span class="sport-0-2-113">AFL</span><span class="sport-0-2-113">NRL</span><span class="sport-0-2-113">NBL</span><span class="sport-0-2-113">Cricket</span><span class="sport-0-2-113">CS:GO</span><span class="sport-0-2-113">League of Legends</span><span class="sport-0-2-113">Call of Duty</span><span class="sport-0-2-113">Valorant</span></div><div class="sportsRow-0-2-111"><span class="sportsLabel-0-2-112">DFS Simulator sports</span><span class="sport-0-2-113">NFL</span><span class="sport-0-2-113">Golf</span></div></div><div class="bottom-0-2-114"><span>© <!-- -->2026<!-- --> Sports Solver, LLC. All rights reserved.</span><span class="legal-0-2-115"><a role="link" tabindex="0" style="text-decoration:none" href="/terms">Terms</a><a role="link" tabindex="0" style="text-decoration:none" href="/privacy">Privacy</a></span></div></div></section></div></div></div></div></div></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{},"__N_SSP":true},"page":"/","query":{},"buildId":"JbNkVdwLkNNPShsogMukd","isFallback":false,"gssp":true,"scriptLoader":[]}</script></body></html>
