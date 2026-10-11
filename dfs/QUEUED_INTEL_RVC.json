@@ -1,0 +1,86 @@
+{
+ "observed_at": "2026-10-11T14:35:34Z",
+ "items": [
+  {
+   "item": "Q8 FG-miss luck",
+   "verdict": "INFRASTRUCTURE PASS",
+   "n_pairs": 1179,
+   "corr": 0.0217,
+   "held_out": {
+    "mse_naive": 246.93,
+    "mse_metric": 247.64,
+    "adds": false
+   },
+   "survives": false
+  },
+  {
+   "item": "Q11 drive TD-rate",
+   "verdict": "INFRASTRUCTURE PASS",
+   "n_pairs": 1512,
+   "corr": -0.0778,
+   "held_out": {
+    "mse_naive": 271.37,
+    "mse_metric": 271.19,
+    "adds": true
+   },
+   "survives": false
+  },
+  {
+   "item": "Q21 EPA/play persistence",
+   "verdict": "INFRASTRUCTURE PASS",
+   "n_pairs": 1512,
+   "corr": -0.1272,
+   "held_out": {
+    "mse_naive": 271.37,
+    "mse_metric": 268.4,
+    "adds": true
+   },
+   "survives": false,
+   "bootstrap": {
+    "delta": 2.97,
+    "ci95": [
+     -1.04,
+     7.06
+    ],
+    "significant": false
+   }
+  },
+  {
+   "item": "Q23 big-play rate",
+   "verdict": "INFRASTRUCTURE PASS",
+   "n_pairs": 1512,
+   "corr": -0.0562,
+   "held_out": {
+    "mse_naive": 271.37,
+    "mse_metric": 271.14,
+    "adds": true
+   },
+   "survives": false
+  },
+  {
+   "item": "Q27 ANY/A",
+   "verdict": "INFRASTRUCTURE PASS",
+   "n_pairs": 1512,
+   "corr": -0.103,
+   "held_out": {
+    "mse_naive": 271.37,
+    "mse_metric": 269.11,
+    "adds": true
+   },
+   "survives": false
+  },
+  {
+   "item": "Q32 negative-play rate",
+   "verdict": "INFRASTRUCTURE PASS",
+   "n_pairs": 1512,
+   "corr": 0.0687,
+   "held_out": {
+    "mse_naive": 271.37,
+    "mse_metric": 270.26,
+    "adds": true
+   },
+   "survives": false
+  }
+ ],
+ "label": "DIAGNOSTIC"
+}

@@ -569,3 +569,15 @@
 - **dfs/INGEST_STATUS.json**: snap counts wk1-5 + injuries wk1-5 fresh; advstats wk1-4; officials 2026 lags at wk1 (release-side, re-pull verified).
 - **Firecrawl/ESPN**: no MCP artifact exists; the wired nflverse mirror is the equivalent public freshness source. Direct-ESPN reopen = browser lane.
 - DIAGNOSTIC. Nothing promoted.
+
+### [15:00] QUEUED INTEL BUILD Q8/Q11/Q21/Q23/Q27/Q32 — all six run, NONE survives the close
+- **dfs/QUEUED_INTEL_RVC.json** (147,928 pbp rows 2023-25, 1,710 team-week ATS rows frozen):
+  - Q8 FG-miss luck: 1,179 pairs, corr +0.02, held-out adds nothing. Special-teams luck is noise.
+  - Q11 drive TD-rate: 1,512 pairs, corr −0.08, held-out +0.2 MSE (point, sub-threshold).
+  - Q21 EPA/play persistence: 1,512 pairs, corr −0.13 (REGRESSION TO MEAN the market already prices), held-out +2.97 MSE but bootstrap CI [−1.04, +7.06] NOT significant.
+  - Q23 big-play rate: −0.06, marginal point.
+  - Q27 ANY/A: −0.10, held-out +2.3 (same regression story).
+  - Q32 negative-play rate: +0.07, marginal.
+- **THE UNIFIED READING**: every within-week efficiency metric correlates NEGATIVELY with next-week ATS — the mean-reversion the market prices. None survives held-out + bootstrap. The queued intel-build items are all describe-only at team level.
+- Column audit: all six had their required columns (Q11 partial — drive_yards missing, worked around with fixed_drive_result; Q23 missing run_length — big_play proxy used).
+- DIAGNOSTIC. Nothing promoted.
