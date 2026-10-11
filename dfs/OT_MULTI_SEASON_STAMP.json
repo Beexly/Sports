@@ -1,0 +1,24 @@
+{
+ "observed_at": "2026-10-11T07:01:59Z",
+ "test": "OT favorite-win rate multi-season (EDGE#2 provisional confirmation)",
+ "n_ot_games": 46,
+ "by_fav_status": [
+  {
+   "home_fav": 0,
+   "count": 27,
+   "mean": 0.741
+  },
+  {
+   "home_fav": 1,
+   "count": 19,
+   "mean": 0.316
+  }
+ ],
+ "home_ot_win_rate": 0.5652,
+ "ci95": [
+  0.421,
+  0.71
+ ],
+ "finding": "n=46 is too small for a coin-flip rejection; favorite status does NOT separate (home-fav 31.6% vs home-dog 74.1% \u2014 small-n noise, but note the DIRECTION: dogs won OT more). EDGE#2 stays provisional; multi-season n still under 60.",
+ "verdict": "DIAGNOSTIC \u2014 provisional holds, no confirmation at n=46"
+}

@@ -499,3 +499,8 @@
 - **Coaching aggression index** per team in clear-punt cells = the behavior residual surface (who over/under-go vs the utility map).
 - This + the 2pt table + nfl4th's WP models = the complete special-teams decision stack, priced from our own data.
 - DIAGNOSTIC. Nothing promoted.
+
+### [10:00] OT MULTI-SEASON CHECK — EDGE#2 stays provisional at n=46
+- **dfs/OT_MULTI_SEASON_STAMP.json**: 46 OT games 2023-25. Home OT win rate 56.5%, 95% CI [0.42, 0.71] — CONTAINS 0.5, coin-flip holds.
+- Direction note (small-n): home-favorites won OT 31.6% vs home-dogs 74.1% — dogs winning OT more is either noise or a real 'favorites lead → visitors equalize → dog momentum' effect. Needs n>100 (re-open: 3 more seasons of data).
+- DIAGNOSTIC. Nothing promoted.
