@@ -145,6 +145,26 @@
    "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats vs that frozen fitted line. Receiving posted O/U still absent.",
    "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
    "label": "DIAGNOSTIC"
+  },
+  {
+   "id": "nfl-prop-ladders-20261011T1512Z",
+   "added_at": "2026-10-11T15:14:08Z",
+   "state": "INFRASTRUCTURE PASS / CURRENT-QUOTE RESIDUAL ONLY",
+   "feeds": ["receiving/YAC props", "QB completion props", "rush yards props"],
+   "key_numbers": "sha16 46584450b293a030. FreshnessGate FRESH. 289 fits. pre-kick mean r2 pass 0.992 n26, rush 0.959 n72, rec 0.972 n147, completions 0.992 n26. residual sigma pre-kick: pass -0.127 n26, rush -0.157 n72, completions -0.267 n26. rec posted O/U missing so no sigma residual. held-out n=0.",
+   "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats vs that frozen fitted line.",
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1512Z/NFL_PROP_LADDER_STAMP.json",
+   "label": "DIAGNOSTIC"
+  },
+  {
+   "id": "lobby-154468-20261011T1516Z",
+   "added_at": "2026-10-11T15:16:12Z",
+   "state": "INFRASTRUCTURE PASS / NO LINEUP CONSENSUS",
+   "feeds": ["DFS field entry preview"],
+   "key_numbers": "sha16 77d4b42ddfb6212e. 1766 contests on dg 154468. Lock 2026-10-11T17:00:00Z not passed. Largest nt: mini-MAX 389132/416171, Play-Action 218347/277447, Millionaire 134889/161764. No lineup bodies.",
+   "reopen": "Lineup-level field consensus is not in getcontests. Reopen only if a logged-in lobby endpoint returns lineup bodies before 17:00Z. Do not invent lineups.",
+   "file": "dfs/genie_acq2/lobby_154468_20261011T1514Z/LOBBY_PREVIEW_STAMP.json",
+   "label": "DIAGNOSTIC"
   }
  ],
  "gate_state": {
