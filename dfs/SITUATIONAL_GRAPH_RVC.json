@@ -1,0 +1,64 @@
+{
+ "observed_at": "2026-10-11T07:06:43Z",
+ "test": "situational graph v1 \u2014 pooled multi-week close-anchored CRPS on frozen NFL manifest",
+ "nodes": [
+  "roof_outdoors",
+  "week_phase(early/mid/late)",
+  "rest_diff(up/down/even)"
+ ],
+ "n_fit": 432,
+ "n_eval": 423,
+ "crps": {
+  "close_only": 8.1514,
+  "close_plus_graph": 8.0842,
+  "delta": 0.0672,
+  "verdict": "GRAPH ADDS"
+ },
+ "cell_adjustments": [
+  {
+   "node_key": "1|late|rest_even",
+   "mean": 4.154,
+   "count": 78,
+   "adj": 3.306
+  },
+  {
+   "node_key": "1|mid|rest_even",
+   "mean": 1.312,
+   "count": 72,
+   "adj": 1.027
+  },
+  {
+   "node_key": "1|early|rest_even",
+   "mean": 1.174,
+   "count": 86,
+   "adj": 0.953
+  },
+  {
+   "node_key": "0|mid|rest_even",
+   "mean": 1.761,
+   "count": 23,
+   "adj": 0.942
+  },
+  {
+   "node_key": "0|early|rest_even",
+   "mean": 1.262,
+   "count": 40,
+   "adj": 0.842
+  },
+  {
+   "node_key": "0|late|rest_even",
+   "mean": -1.648,
+   "count": 27,
+   "adj": -0.947
+  }
+ ],
+ "label": "DIAGNOSTIC",
+ "bootstrap": {
+  "delta": 0.0672,
+  "ci95": [
+   -0.0192,
+   0.1556
+  ],
+  "significant": false
+ }
+}

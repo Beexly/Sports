@@ -524,3 +524,10 @@
 - **THE STRUCTURAL FINDING**: with no game state, the closing spread IS the attractor; a process built on the same prior adds noise, not signal. The crossover is real: **Q1 = close, Q2+ = OU v2. Final live spec. No blending.**
 - Lane closed. Reopen: only a fundamentally different Q1 signal (injury/lineup news pre-kick) can move it.
 - DIAGNOSTIC. Nothing promoted.
+
+### [10:45] SITUATIONAL GRAPH RVC — point estimate positive, bootstrap NOT significant
+- **dfs/SITUATIONAL_GRAPH_RVC.json**: graph v1 (roof × week-phase × rest-diff nodes), close-anchored Gaussian CRPS on frozen manifest, held-out (432 fit / 423 eval).
+- **CRPS close-only 8.1514 vs close+graph 8.0842 → +0.0672 (point: graph adds)**. BUT bootstrap 2000×: 95% CI [−0.019, +0.156] — **NOT significant**.
+- The +3.3 late|outdoors|rest_even cell carries the point estimate (December-outdoors motivation?) — honest verdict: suggestive, not stamped-signal. Node expansion with expected-metric residuals stays REOPEN (needs the player-level join first).
+- **Master lesson extends**: 5th situational axis (after weather, rest, officials, OT) that shrinks to noise against the close.
+- DIAGNOSTIC. Nothing promoted.
