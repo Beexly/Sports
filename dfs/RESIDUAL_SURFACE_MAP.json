@@ -135,6 +135,16 @@
    "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 inside minutes_to_kickoff<=10 or after Final, freeze that pull, grade settled stats vs the frozen fitted line. Receiving posted O/U still absent (nav returned 16570 milestones).",
    "file": "dfs/genie_acq2/nash_nfl_props_2026-10-11/NFL_PROP_LADDER_STAMP.json",
    "label": "DIAGNOSTIC"
+  },
+  {
+   "id": "nfl-prop-ladders-20261011T1503Z",
+   "added_at": "2026-10-11T15:03:25Z",
+   "state": "INFRASTRUCTURE PASS / RVC REFUSE",
+   "feeds": ["receiving/YAC props", "QB completion props", "rush yards props"],
+   "key_numbers": "sha16 07993b543342ca7d. FreshnessGate FRESH. 14 events, 1 STARTED, 13 pre-kick. Fits 289. pre-kick mean r2 pass 0.992 n26, rush 0.959 n72, rec 0.971 n147, completions 0.992 n26. Watchlist 5/5. CPOE completion quotes 25. Held-out n=0. Kill ledger NFL_PROP_LADDER_RVC REFUSED 15:03:48Z.",
+   "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats vs that frozen fitted line. Receiving posted O/U still absent.",
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
+   "label": "DIAGNOSTIC"
   }
  ],
  "gate_state": {
@@ -144,7 +154,7 @@
   "enforcement": "every producer reads through freshnessgate_wiring; STALE/MISSING -> close-only + kill ledger"
  },
  "label": "DIAGNOSTIC",
- "updated_at": "2026-10-11T14:59:23Z",
+ "updated_at": "2026-10-11T15:03:25Z",
  "updates": {
   "receiver-watchlists": {
    "prop_feed_status": "CONFIRMED MISSING \u2014 bus audit found only machinery calibration (reports/edge-lab/props-hb-validation.json explicitly notes \"archived prop-price history this repo does not yet have\")",

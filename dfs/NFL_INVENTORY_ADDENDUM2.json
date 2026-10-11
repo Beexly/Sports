@@ -400,5 +400,24 @@
   "reopen": "Re-pull subcats 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats against that frozen fitted line. Receiving posted O/U still needs a subcategory that returns O/U.",
   "file": "dfs/genie_acq2/nash_nfl_props_2026-10-11/NFL_PROP_LADDER_STAMP.json",
   "label": "DIAGNOSTIC"
+ },
+ "NFL_PROP_LADDERS_20261011T1503Z": {
+  "observed_at": "2026-10-11T15:03:25Z",
+  "sha16": "07993b543342ca7d",
+  "infrastructure": "PASS",
+  "rvc": "REFUSE",
+  "held_out_n": 0,
+  "reason": "Second logged-in CDP pull. Quotes are current, not closes. PHI@JAX STARTED. Frozen manifest has no prop close. Kill ledger row NFL_PROP_LADDER_RVC at 2026-10-11T15:03:48Z. Nothing promoted.",
+  "key_numbers": {
+   "events": 14,
+   "fits": 289,
+   "pre_kick_mean_r2": {"pass_yards": 0.992, "rush_yards": 0.959, "rec_yards": 0.971, "completions": 0.992},
+   "watchlist_on_slate": "5/5",
+   "cpoe_qbs_with_completion_quote": 25,
+   "gate": "read_fresh FRESH"
+  },
+  "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats against that frozen fitted line. Receiving posted O/U still missing.",
+  "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
+  "label": "DIAGNOSTIC"
  }
 }
