@@ -191,3 +191,9 @@
 - Bug: consensus snapshot labeled DK ENTRANT USERNAMES (tsirinsky, Ruby3108...) ambiguously — read as player names. They were never players; they are the contest's entrant list (people who entered).
 - Fix: correction + fully-verified lineup pushed to Telegram; every player cross-checked against DK draftables pool dg-154468 (587 players). All 9 valid incl. DST-by-team-name convention ('Vikings' = Vikings DST, DK's own naming).
 - Message contract hardened: ENTRANTS=people/usernames, LINEUP=pool-verified players, ENTRIES=live count. All future bot pushes carry explicit labels + provenance.
+
+### [22:20] CENSUS MECHANISM — DEFINITIVE (measured against live DK)
+- Pre-lock per-user lineups DO NOT EXIST on any DK surface: entrants grid = usernames only (data-un attrs, no lineup cols), pop has 2 tabs (Details/Rules), profile URLs dead, per-user lineup APIs 403/404 pre-lock, my-entries shows own lineups only. This is DK-by-design.
+- At-lock census path verified: gamecenter/leaderboardfull renders for ENTERED contests → enter Millionaire ($20, balance $60.19) → leaderboardfull/v3 paginated enumeration at lock → consensus.py
+- Entered-contest test pending user decision (spending $20 of their balance needs their go)
+- Telegram updated with the honest mechanism + what's real now (live counts, 1,079-player pool, payout ladders, 25 ILP portfolios)

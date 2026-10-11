@@ -1,0 +1,5 @@
+fail /contest/lineups/196403752/tsirinsky HTTP Error 404: Not Found
+fail /contests/v1/contests/196403752/entries/tsirinsky HTTP Error 403: Forbidden
+fail /contest/userentries/196403752?username=tsirinsky HTTP Error 404: Not Found
+fail /lineups/v1/users/tsirinsky?contestKey=196403752 HTTP Error 403: Forbidden
+fail /lineups/v1/lateDraftEntries/baxleylu?format=json HTTP Error 403: Forbidden
