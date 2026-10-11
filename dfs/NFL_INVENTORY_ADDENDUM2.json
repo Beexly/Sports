@@ -3,5 +3,27 @@
  "EDGE5_crossbook": "INFRASTRUCTURE PASS \u2014 +5.1pp ML divergence, +1.0pt total divergence, computed from real prices both books",
  "prop_conditional": "INFRASTRUCTURE PASS (CFB reconstruction proof exists); NFL player-prop tables REFUSED (data gap)",
  "JEV": "REFUSED (no graded outcomes on bus)",
- "structural_gap_status": "NFL RVC manifest CLOSED. Cross-book residuals COMPUTED. Prop conditional tables AWAITING NFL ladder pulls."
+ "structural_gap_status": "NFL RVC manifest CLOSED. Cross-book residuals COMPUTED. Prop conditional tables AWAITING NFL ladder pulls.",
+ "updated_at": "2026-10-11T07:06:03Z",
+ "OU_LIVE_WP": {
+  "final_spec": "v2 empirical attractor (theta 0.000046/s, sigma 0.2963/sqrt(s), 4-bucket attractor curve)",
+  "overall_brier": "0.1896 vs close 0.2167 \u2014 OU wins Q2/Q3/Q4 (+0.005/+0.046/+0.084)",
+  "Q1": "structural: pure close optimal (blend sweep monotone); process adds zero info pre-game-state",
+  "tested_and_refused": [
+   "v3 sigma-by-bucket (wash, <0.001)",
+   "v4 Q1 blended attractor (worse, double-counts)",
+   "nflfastR exp kernel EQ004 (0.2095 best, loses to empirical)",
+   "linear decay v1 (0.2283, superseded)"
+  ],
+  "live_spec": "Q1 = close; Q2+ = OU v2. No blending.",
+  "reopen": "fundamentally different Q1 signal only (pre-kick injury/lineup news)",
+  "files": [
+   "dfs/OU_EMPIRICAL_ATTRACTOR_STAMP.json",
+   "dfs/EQ004_EXP_KERNEL_TEST.json",
+   "dfs/OU_V3_SCALED_DIFFUSION.json",
+   "dfs/OU_V4_Q1_ATTRACTOR.json",
+   "dfs/OU_LANE_FINAL_VERDICT.json"
+  ],
+  "label": "DIAGNOSTIC \u2014 lane closed at structural limit"
+ }
 }
