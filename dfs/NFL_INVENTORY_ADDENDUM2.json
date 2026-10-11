@@ -757,5 +757,184 @@
   "lineups": "absent from getcontests payload; nothing invented",
   "top_by_nt": "mini-MAX 403054/416171; Play-Action 230975/277447; Millionaire 144105/161764",
   "label": "DIAGNOSTIC"
+ },
+ "GATE_INVENTORY_2026_10_11": {
+  "observed_at": "2026-10-11T16:05:49Z",
+  "artifact": "dfs/GATE_INVENTORY_2026-10-11.json",
+  "md": "dfs/GATE_INVENTORY_2026-10-11.md",
+  "wiring_commit": "2623137b6278068b31bf202ed1ff23bdefb91fbf",
+  "source": {
+   "path": "docs/research/2026-10-09/rating-atlas/minis/GSE_ENGINE_GATE_INVENTORY.md",
+   "commit": "f77ac2f",
+   "claimed": {
+    "live": 14,
+    "partial": 5,
+    "documented_only": 11,
+    "total": 30
+   },
+   "source_internal_inconsistency": "Its own Summary lists 15 names under LIVE(14), 1 name under PARTIAL(5), and 4 names + \"21-30\" (=14) under DOCUMENTED-NOT-WIRED(11); 15+1+14=30. Items 21-27 are code with call sites, not documentation."
+  },
+  "totals": {
+   "source_30_recount_before_pass": {
+    "LIVE": 16,
+    "PARTIAL": 6,
+    "DOCUMENTED-ONLY": 8
+   },
+   "source_30_recount_after_pass": {
+    "LIVE": 18,
+    "PARTIAL": 5,
+    "DOCUMENTED-ONLY": 7
+   },
+   "all_49_before_pass": {
+    "LIVE": 21,
+    "PARTIAL": 20,
+    "DOCUMENTED-ONLY": 8
+   },
+   "all_49_after_pass": {
+    "LIVE": 23,
+    "PARTIAL": 19,
+    "DOCUMENTED-ONLY": 7
+   }
+  },
+  "differences_vs_14_5_11": [
+   "Injury Pull Gate: LIVE claimed, PARTIAL found (zero call sites) -> wired this pass",
+   "Selective Abstention: LIVE claimed, PARTIAL found (TS functions only re-exported) -> Python live_board default wired this pass; TS remains uncalled",
+   "Proper Scoring Gate: LIVE claimed, PARTIAL found (evalReliability uncalled)",
+   "DFS Lineup Validation: LIVE claimed, PARTIAL found (validateLineup has no non-test caller)",
+   "Banned Language Filter: LIVE claimed, DOCUMENTED-ONLY found (docstring only)",
+   "Prediction-engine acceptance gates (#7): DOCUMENTED claimed and at f508934; PARTIAL at tip 66b0c4a (upstream harness for 20/179 modules at 66b0c4a, untested)",
+   "Items 21-26: DOCUMENTED claimed, LIVE found (code + call sites); item 27 Evidence Guard: PARTIAL (tested, uncalled)"
+  ],
+  "wired": {
+   "selective_abstention": {
+    "call_site": "docs/research/2026-10-09/rating-atlas/minis/live_board.py:live_board -> _rvc_abstain_default",
+    "existing_function": "minis/doctrine.py:FeatureRegistry (promote requires HonestyGate PROMOTED verdict)",
+    "test": "docs/research/2026-10-09/rating-atlas/minis/test_live_board_abstain.py",
+    "result": "3 passed",
+    "behavior": "every row with a residual and no valid (HonestyGate, Verdict) clearance gets abstain=True, rvc_cleared=False, render=\"ABSTAIN — diagnostic only (residual-versus-close not cleared)\"; status labels unchanged; board[\"n_abstain\"] added. JSON warehouses cannot carry a Verdict object, so every residual row from the CLI abstains.",
+    "not_touched": "minis/api/live_board.py copy (served by api.py) left unchanged — now diverges; reopen: mirror the call site there with the same test."
+   },
+   "injury_pull_gate": {
+    "call_site": "dfs/nfl_prop_resid_sigma_2026-10-11/prop_resid_sigma.py:pull_wk5_injuries (main calls it before the live nflverse injuries pull)",
+    "existing_function": "intelligence/providers/injury_gate.py:require_injury_published",
+    "test": "dfs/nfl_prop_resid_sigma_2026-10-11/test_injury_gate_callsite.py",
+    "result": "2 passed",
+    "note": "prop_resid_sigma.py was not re-run; PROP_RESID_SIGMA_STAMP.json is unchanged (its 15:2xZ pull was after Fri 18:00 ET, so the gate would have passed)."
+   },
+   "model_promotion": {
+    "shadow_lane_exists": "apps/web/lib/ops/shadow-evaluation-pass.ts (ShadowSignal via cron refresh-odds) — filter-engine shadow only; no challenger ShadowPick/CLV lane; no NFL shadow residual table",
+    "verdict": "REFUSE",
+    "reopen": {
+     "path": "dfs/shadow_residual_table/nfl_prop_shadow_resid.csv (+ SHADOW_STAMP.json) built on a frozen manifest with prop CLOSES (none exist: see LR-20261011-PRS-03-NO-CLOSE)",
+     "function": "doctrine.HonestyGate(frozen_folds).evaluate(candidate) -> promotion_check(verdict, CLVLedger, FounderGate)",
+     "test": "dfs/shadow_residual_table/test_shadow_resid.py: manifest sha pinned; tamper voids; held-out n>=500 paired events before evalPromotion eligibility"
+    }
+   }
+  },
+  "documented_only_reopens": [
+   {
+    "n": 12,
+    "gate": "JEV 5-Gate Mathematical Sieve",
+    "file": "frontier/sports/universal_jev_signal_scanner.py (copy from Windows C:/Users/Garrett/onejev/frontier/sports/)",
+    "function": "five_gate_sieve(signal)",
+    "proving_test": "frontier/sports/test_universal_jev_signal_scanner.py: a synthetic signal failing gate 1 (CQR width) is excluded"
+   },
+   {
+    "n": 13,
+    "gate": "JEV Epistemic Arbitration Oracle",
+    "file": "JEV decisions API reachable from the box (Windows jev ask) or a committed client",
+    "function": "jev_ask(signal) -> verdict",
+    "proving_test": "test asserting TRAP_OR_PASS/ABSTAIN_HIGH_VARIANCE verdicts block a row (recorded response fixture)"
+   },
+   {
+    "n": 14,
+    "gate": "GSE Engine Fail-Closed Mandate",
+    "file": "minis/live_board.py (or the DIAGNOSTIC_BOARD producer, not on branch)",
+    "function": "_fail_closed(board): refuse any row lacking an engine verdict id",
+    "proving_test": "minis/test_live_board_fail_closed.py: row without verdict -> board refuses row"
+   },
+   {
+    "n": 20,
+    "gate": "Banned Language Filter",
+    "file": "minis/live_board.py",
+    "function": "_banned_language_check(board): raise on pick/bet/edge/play in any rendered string",
+    "proving_test": "minis/test_live_board_banned_language.py: a row with \"edge\" in render text raises"
+   },
+   {
+    "n": 28,
+    "gate": "Calibration Gate Scale",
+    "file": "apps/web/lib/ops/per-market-gate.ts (already the code home for calibration floors)",
+    "function": "function implementing the scale tiers in docs/ops/CALIBRATION_GATE_SCALE_2026-09-06.md",
+    "proving_test": "apps/web/__tests__/per-market-gate.test.ts case per tier"
+   },
+   {
+    "n": 29,
+    "gate": "Release Gate Plan",
+    "file": "scripts/guardrails/release-gate.mjs (new) + .github/workflows/ci.yml job",
+    "function": "release gate per docs/gse/release-gate-plan.md",
+    "proving_test": "apps/web/__tests__/guardrails.test.ts case that a failing release criterion exits non-zero"
+   },
+   {
+    "n": 30,
+    "gate": "Independence Gates",
+    "file": "scripts/guardrails/independence-gate.mjs (new)",
+    "function": "independence checks per docs/ops/INDEPENDENCE_GATES.md",
+    "proving_test": "apps/web/__tests__/guardrails.test.ts case"
+   }
+  ],
+  "tests_run": {
+   "minis/doctrine_selfcheck.py": "19/19 PASS",
+   "dfs/freshnessgate_wiring.py:self_test (ledger redirected to /tmp)": "5/5 PASS",
+   "intelligence/trust/tests/test_trust.py": "40 passed",
+   "intelligence/gates/": "9 passed",
+   "minis/test_live_board_abstain.py": "3 passed",
+   "dfs/nfl_prop_resid_sigma_2026-10-11/test_injury_gate_callsite.py": "2 passed",
+   "TypeScript (vitest)": "NOT RUN — no node_modules on the box; listed test files exist but results are unverified here"
+  },
+  "ledger_rows": [
+   "LR-20261011-GINV-01-ABSTAIN-WIRED",
+   "LR-20261011-GINV-02-INJURY-GATE-WIRED",
+   "LR-20261011-GINV-03-MODEL-PROMOTION",
+   "LR-20261011-GINV-04-TS-ABSTENTION-SCORING",
+   "LR-20261011-GINV-05-DFS-LINEUP-VALIDATION",
+   "LR-20261011-GINV-06-EVIDENCE-GUARD",
+   "LR-20261011-GINV-07-GATE-ENFORCE-MTIME",
+   "LR-20261011-GINV-08-DOCTRINE-PARTIALS",
+   "LR-20261011-GINV-09-INTELLIGENCE-GATES",
+   "LR-20261011-GINV-11-ACCEPTANCE-HARNESS",
+   "LR-20261011-GINV-10-TRUST-PARTIALS",
+   "LR-20261011-GINV-D12",
+   "LR-20261011-GINV-D13",
+   "LR-20261011-GINV-D14",
+   "LR-20261011-GINV-D20",
+   "LR-20261011-GINV-D28",
+   "LR-20261011-GINV-D29",
+   "LR-20261011-GINV-D30"
+  ],
+  "step0": {
+   "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/DIAGNOSTIC_BOARD_STAMP.json",
+   "sha256": "ccb376162d60d1c39531f11b183a389df96932747f9caba22fa9ba3dd5cda4ea",
+   "claimed_sha16": "5ca43967ee7f972c",
+   "match": false,
+   "note": "claimed sha16 does not match the file sha256 prefix (ccb376162d60d1c3), nor sha256 of the rows/stamp-minus-sha16 under 18 common JSON serializations, nor DIAGNOSTIC_BOARD.csv (12ba411b6af0e541). A file cannot contain its own hash; the value is unverifiable from the branch.",
+   "rows": 289,
+   "rows_label": "all 289 = \"DIAGNOSTIC — residual-versus-close not cleared — Reasoning Doctrine overlay applied\"",
+   "read_fresh": "PASS",
+   "ledger_refusal": "dfs/kill_ledger_freshness.jsonl line 84: NFL_PROP_LADDER_RVC REFUSED, ledger_ts 2026-10-11T15:45:05Z, cites this artifact + sha16 5ca43967ee7f972c (the stamp itself carries no ledger id)",
+   "doctrine_unchanged": "dfs/freshnessgate_wiring.py, minis/freshness_gate.py, minis/doctrine.py, minis/live_board.py byte-identical 5bcfd61 -> f508934 (before this pass's live_board edit)"
+  },
+  "read_fresh_confirmation": [
+   {
+    "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/DIAGNOSTIC_BOARD_STAMP.json",
+    "path": "read_fresh",
+    "result": "PASS (FRESH, stamp 15:45:05Z, age 0.1h)"
+   },
+   {
+    "file": "synthetic temp lines.json / sg.json in test_live_board_abstain.py",
+    "path": "load_stamped (via live_board)",
+    "result": "PASS (test fixtures, not branch data)"
+   }
+  ],
+  "label": "DIAGNOSTIC — nothing promoted"
  }
 }

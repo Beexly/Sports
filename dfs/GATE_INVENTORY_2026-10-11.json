@@ -1,0 +1,724 @@
+{
+ "observed_at": "2026-10-11T16:05:49Z",
+ "title": "GATE INVENTORY 2026-10-11 — NFL research packet + source 30",
+ "label": "DIAGNOSTIC — nothing promoted",
+ "source": {
+  "path": "docs/research/2026-10-09/rating-atlas/minis/GSE_ENGINE_GATE_INVENTORY.md",
+  "commit": "f77ac2f",
+  "claimed": {
+   "live": 14,
+   "partial": 5,
+   "documented_only": 11,
+   "total": 30
+  },
+  "source_internal_inconsistency": "Its own Summary lists 15 names under LIVE(14), 1 name under PARTIAL(5), and 4 names + \"21-30\" (=14) under DOCUMENTED-NOT-WIRED(11); 15+1+14=30. Items 21-27 are code with call sites, not documentation."
+ },
+ "definitions": {
+  "LIVE": "runnable code with a call site on a real path",
+  "PARTIAL": "function exists but uncalled, untested, or only partly wrapped",
+  "DOCUMENTED-ONLY": "markdown claim with no function"
+ },
+ "scope": "Source 30 re-verified + every gate in minis/doctrine.py, dfs freshness/gate files, intelligence/gates, intelligence/trust, intelligence honest-refusal. NOT enumerated: ~100 apps/web product/security guard/gate test files (auth, billing, entitlement, blog, etc.) outside the engine scope of the source list.",
+ "tests_run_this_pass": {
+  "minis/doctrine_selfcheck.py": "19/19 PASS",
+  "dfs/freshnessgate_wiring.py:self_test (ledger redirected to /tmp)": "5/5 PASS",
+  "intelligence/trust/tests/test_trust.py": "40 passed",
+  "intelligence/gates/": "9 passed",
+  "minis/test_live_board_abstain.py": "3 passed",
+  "dfs/nfl_prop_resid_sigma_2026-10-11/test_injury_gate_callsite.py": "2 passed",
+  "TypeScript (vitest)": "NOT RUN — no node_modules on the box; listed test files exist but results are unverified here"
+ },
+ "totals": {
+  "source_30_recount_before_pass": {
+   "LIVE": 16,
+   "PARTIAL": 6,
+   "DOCUMENTED-ONLY": 8
+  },
+  "source_30_recount_after_pass": {
+   "LIVE": 18,
+   "PARTIAL": 5,
+   "DOCUMENTED-ONLY": 7
+  },
+  "all_49_before_pass": {
+   "LIVE": 21,
+   "PARTIAL": 20,
+   "DOCUMENTED-ONLY": 8
+  },
+  "all_49_after_pass": {
+   "LIVE": 23,
+   "PARTIAL": 19,
+   "DOCUMENTED-ONLY": 7
+  }
+ },
+ "differences_vs_14_5_11": [
+  "Injury Pull Gate: LIVE claimed, PARTIAL found (zero call sites) -> wired this pass",
+  "Selective Abstention: LIVE claimed, PARTIAL found (TS functions only re-exported) -> Python live_board default wired this pass; TS remains uncalled",
+  "Proper Scoring Gate: LIVE claimed, PARTIAL found (evalReliability uncalled)",
+  "DFS Lineup Validation: LIVE claimed, PARTIAL found (validateLineup has no non-test caller)",
+  "Banned Language Filter: LIVE claimed, DOCUMENTED-ONLY found (docstring only)",
+  "Prediction-engine acceptance gates (#7): DOCUMENTED claimed and at f508934; PARTIAL at tip 66b0c4a (upstream harness for 20/179 modules at 66b0c4a, untested)",
+  "Items 21-26: DOCUMENTED claimed, LIVE found (code + call sites); item 27 Evidence Guard: PARTIAL (tested, uncalled)"
+ ],
+ "gates": [
+  {
+   "n": 1,
+   "name": "FreshnessGate",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "dfs/freshnessgate_wiring.py:read_fresh; minis/freshness_gate.py:load_stamped/freshness_ok",
+   "call_sites": "read_fresh: 16 dfs .py files (rvc_grade.py, b7_cpoe_rvc.py, ou_live_wp.py, prop_resid_sigma.py, ...); load_stamped: 22 files incl. minis/live_board.py",
+   "test": "dfs/freshnessgate_wiring.py:self_test (5/5 PASS this pass); doctrine_selfcheck.py rule 1",
+   "note": "Source says load_stamped raises RuntimeError; read_fresh returns audit + close-only fallback instead."
+  },
+  {
+   "n": 2,
+   "name": "Injury Pull Gate",
+   "source_status": "LIVE",
+   "status_before_pass": "PARTIAL",
+   "status": "LIVE",
+   "impl": "intelligence/providers/injury_gate.py:require_injury_published",
+   "call_sites": "BEFORE: none on the branch. NOW: dfs/nfl_prop_resid_sigma_2026-10-11/prop_resid_sigma.py:pull_wk5_injuries (called by main before the live nflverse injuries pull)",
+   "test": "dfs/nfl_prop_resid_sigma_2026-10-11/test_injury_gate_callsite.py (2/2 PASS)",
+   "note": "Source said LIVE; zero call sites before this pass. Wired this pass."
+  },
+  {
+   "n": 3,
+   "name": "CollegeGuard",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "minis/live_board.py:_college_guard_check (+ minis/doctrine.py:CollegeGuard)",
+   "call_sites": "live_board.live_board(); minis/api/live_board.py; dfs/build_the_floor.py; cfb_engine.py; cfb_model_v1.py",
+   "test": "doctrine_selfcheck.py rule 3 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 4,
+   "name": "Signal Spine",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/signals/spine.ts",
+   "call_sites": "8 importers (fantasy/props.ts, dfs-solve.ts, trade.ts, ...)",
+   "test": "apps/web/lib/signals/spine.test.ts (not run: no node deps on box)",
+   "note": ""
+  },
+  {
+   "n": 5,
+   "name": "Contest-Shape Guard (adviseMode)",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/fantasy/dfs-signals.ts:adviseMode",
+   "call_sites": "apps/web/lib/fantasy/dfs-solve.ts:110",
+   "test": "apps/web/lib/fantasy/dfs-signals.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 6,
+   "name": "Per-Market Calibration Gate",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/ops/per-market-gate.ts",
+   "call_sites": "apps/web/lib/ops/compute-live-calibration-metrics.ts -> app/api/cron/calibration-metrics/route.ts",
+   "test": "apps/web/__tests__/per-market-gate.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 7,
+   "name": "Prediction-Engine Acceptance Gates (179 modules)",
+   "source_status": "DOCUMENTED-NOT-WIRED",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "PARTIAL",
+   "impl": "minis/gates/prediction_engine/*.py (harness + eval code for modules 9-12, 37-40, 49-60 = 20 of 179 at 66b0c4a; landed upstream 155ac67..66b0c4a during this pass; parallel lane still adding); spec docs/gates/GATE-SPECS.md",
+   "call_sites": "own __main__ only; no importer",
+   "test": "none (no test_ functions in minis/gates/prediction_engine/)",
+   "note": "Was DOCUMENTED-ONLY at f508934; became PARTIAL via parallel upstream commits during this pass (not by this executor). 159 modules still have no eval code; 9-12 emit SPEC_PENDING (fail-closed)."
+  },
+  {
+   "n": 8,
+   "name": "Model Promotion Gate (Champion/Challenger)",
+   "source_status": "PARTIAL",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "packages/prediction-engine/src/promotion/evaluate.ts:evaluatePromotion; packages/ingestion-pipeline/src/publish-guards-bridge.ts:evalPromotion; minis/doctrine.py:promotion_check",
+   "call_sites": "none outside index re-exports (prediction-engine/src/index.ts, ingestion-pipeline/src/index.ts) and doctrine_selfcheck.py",
+   "test": "packages/prediction-engine/src/promotion/__tests__/ (9 test files; not run); publish-guards-bridge.test.ts; doctrine_selfcheck rule 9 (PASS)",
+   "note": "Shadow lane: apps/web/lib/ops/shadow-evaluation-pass.ts writes ShadowSignal rows from cron refresh-odds (a filter-engine shadow, not a challenger ShadowPick/CLV lane). MODEL_PROMOTION_GATE_CONTRACT.md:71-73 still says Workstream E router / ShadowPick storage absent. No shadow residual table on a frozen NFL manifest exists."
+  },
+  {
+   "n": 9,
+   "name": "Selective Abstention Gate",
+   "source_status": "LIVE (in publish-guards-bridge)",
+   "status_before_pass": "PARTIAL",
+   "status": "LIVE",
+   "impl": "TS: packages/prediction-engine/src/certificate/selective-abstention.ts (chowStyleShouldAbstain, npStyleLowerEndpointFire, sampleFloorAbstain) + stratum-coverage.ts:refuseIfEmptyStratum, wrapped by publish-guards-bridge.ts evalAbstention/evalChowAbstain/evalStratumGate/evalFloorStrata. Python board default: minis/live_board.py:_rvc_abstain_default using minis/doctrine.py:FeatureRegistry",
+   "call_sites": "TS: none outside index re-exports. NOW: minis/live_board.py:live_board() returns _rvc_abstain_default(board, warehouse.get(\"rvc_clearances\"))",
+   "test": "minis/test_live_board_abstain.py (3/3 PASS); TS certificate-modules.test.ts / publish-guards-bridge.test.ts (not run)",
+   "note": "Source said LIVE; TS functions have no real call site. Wired this pass on the Python live_board output path via the existing doctrine refusal primitive (FeatureRegistry.promote requires a HonestyGate PROMOTED verdict). TS functions remain uncalled."
+  },
+  {
+   "n": 10,
+   "name": "Proper Scoring Gate",
+   "source_status": "LIVE",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "packages/ingestion-pipeline/src/publish-guards-bridge.ts:evalReliability",
+   "call_sites": "none outside ingestion-pipeline/src/index.ts re-export",
+   "test": "packages/ingestion-pipeline/src/publish-guards-bridge.test.ts (not run)",
+   "note": "Source said LIVE; no call site."
+  },
+  {
+   "n": 11,
+   "name": "JEV 10K Correlated Monte Carlo",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/fantasy/dfs-correlation.ts",
+   "call_sites": "apps/web/lib/fantasy/dfs-solve.ts, dfs-optimizer-edge.ts",
+   "test": "apps/web/lib/fantasy/dfs-correlation.test.ts (not run)",
+   "note": "Python path frontier/sports/gpp_game_stack_optimizer.py is ABSENT on the branch."
+  },
+  {
+   "n": 12,
+   "name": "JEV 5-Gate Mathematical Sieve",
+   "source_status": "DOCUMENTED-NOT-WIRED",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none on branch (Windows-only universal_jev_signal_scanner.py)",
+   "call_sites": "none",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 13,
+   "name": "JEV Epistemic Arbitration Oracle",
+   "source_status": "DOCUMENTED-NOT-WIRED",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none on branch (Windows-only jev ask)",
+   "call_sites": "none",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 14,
+   "name": "GSE Engine Fail-Closed Mandate",
+   "source_status": "DOCUMENTED-NOT-WIRED",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none",
+   "call_sites": "none",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 15,
+   "name": "DFS Lineup Validation",
+   "source_status": "LIVE",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "apps/web/lib/fantasy/dfs-lineup-validation.ts:validateLineup/validateOptimizerInput",
+   "call_sites": "only dfs-lineup-repair.ts, which itself has no non-test importer; validateLineup has no non-test caller",
+   "test": "apps/web/lib/fantasy/dfs-lineup-validation.test.ts; __tests__/dfs-lineup-repair.test.ts (not run)",
+   "note": "Source said LIVE; no real call site."
+  },
+  {
+   "n": 16,
+   "name": "Board Gate Rows",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/board/gate-rows.ts + gate-consumer.ts",
+   "call_sites": "app/board/gate/page.tsx; lib/board/load-gate-slate.ts; gate-page-mode.ts; gate-certificates.ts",
+   "test": "apps/web/__tests__/board-gate-rows.test.ts, board-gate-consumer.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 17,
+   "name": "Live Board Honesty Labels",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "minis/live_board.py:live_board",
+   "call_sites": "minis/api/api.py:85 (calls api/live_board.py copy)",
+   "test": "BEFORE: none. NOW: minis/test_live_board_abstain.py asserts baseline/diagnostic overlay labels (PASS)",
+   "note": ""
+  },
+  {
+   "n": 18,
+   "name": "Kill Ledger",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "dfs/freshnessgate_wiring.py:_ledger_append; minis/doctrine.py:KillLedger",
+   "call_sites": "read_fresh (every refusal); KillLedger: registry_bootstrap.py, ppd_pooled_test.py, graph_vs_close_stamp.py, ppd_v2_carryin.py, cfb_ppa_model.py",
+   "test": "doctrine_selfcheck.py rule 16 (PASS); freshness self_test (PASS)",
+   "note": "Source says 12 entries; dfs/kill_ledger_freshness.jsonl had 84 lines before this pass."
+  },
+  {
+   "n": 19,
+   "name": "GSE Score Honesty",
+   "source_status": "LIVE",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/fantasy/gse-score.ts",
+   "call_sites": "components/fantasy/trade-analyzer.tsx, draft-assistant.tsx, bestball-board.tsx (+1)",
+   "test": "apps/web/lib/fantasy/gse-score.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 20,
+   "name": "Banned Language Filter",
+   "source_status": "LIVE",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none — only the live_board.py docstring line 8 (\"NEVER outputs pick/bet/edge/play\")",
+   "call_sites": "none",
+   "test": "none",
+   "note": "Source said LIVE; no function filters board text."
+  },
+  {
+   "n": 21,
+   "name": "Age Gate",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/auth/age-gate.ts",
+   "call_sites": "app/api/subscriptions/checkout/route.ts",
+   "test": "apps/web/lib/auth/age-gate.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 22,
+   "name": "CSRF Origin Guard",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/auth/csrf-origin-guard.ts",
+   "call_sites": "app/api/mobile/v1/devices, push/subscribe, push/unsubscribe routes",
+   "test": "apps/web/__tests__/csrf-origin-guard.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 23,
+   "name": "In-Play Guard",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "packages/ingestion-pipeline/src/in-play-guard.ts",
+   "call_sites": "process-sport.ts, generate-signal-slate.ts",
+   "test": "packages/ingestion-pipeline/src/__tests__/in-play-guard.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 24,
+   "name": "Durable Write Guard",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "packages/db/src/durable-write-guard.ts:requireDurableWriteStore",
+   "call_sites": "app/api/subscriptions/checkout, webhooks/stripe, lib/billing/reconcile-entitlements.ts, checkout-attempt.ts",
+   "test": "apps/web/__tests__/repair-checkout-attempts-cron-route.test.ts (references; not run)",
+   "note": ""
+  },
+  {
+   "n": 25,
+   "name": "Numeric Guard",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "apps/web/lib/claude-api/numeric-guard.ts",
+   "call_sites": "9 importers (lib/studio/claude.ts, build-assets.ts, calibration-training/claude.ts, ...)",
+   "test": "apps/web/__tests__/numeric-guard.test.ts, numeric-guard-invariants.test.ts (not run)",
+   "note": ""
+  },
+  {
+   "n": 26,
+   "name": "Trust Gate",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "scripts/guardrails/trust-gate.mjs",
+   "call_sites": "package.json \"guard:trust\"; .github/workflows/ci.yml:183",
+   "test": "apps/web/__tests__/guardrails.test.ts (references; not run)",
+   "note": ""
+  },
+  {
+   "n": 27,
+   "name": "Evidence Guard",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/trust/evidence_guard.py:evaluate/publish",
+   "call_sites": "none outside intelligence/trust/__init__.py",
+   "test": "intelligence/trust/tests/test_trust.py (40/40 PASS this pass)",
+   "note": ""
+  },
+  {
+   "n": 28,
+   "name": "Calibration Gate Scale",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none (docs/ops/CALIBRATION_GATE_SCALE_2026-09-06.md)",
+   "call_sites": "none",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 29,
+   "name": "Release Gate Plan",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none (docs/gse/release-gate-plan.md)",
+   "call_sites": "none",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 30,
+   "name": "Independence Gates",
+   "source_status": "DOCUMENTED-NOT-WIRED (21-30 bucket)",
+   "status_before_pass": "DOCUMENTED-ONLY",
+   "status": "DOCUMENTED-ONLY",
+   "impl": "none (docs/ops/INDEPENDENCE_GATES.md)",
+   "call_sites": "none",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 31,
+   "name": "HonestyGate (rule 19, frozen walk-forward CRPS vs close)",
+   "source_status": "not in source list",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "minis/doctrine.py:HonestyGate.evaluate",
+   "call_sites": "dfs/b7_cpoe_rvc/b7_cpoe_rvc.py, dfs/expected_metric_conditional_rvc/em_conditional_rvc.py, minis/graph_vs_close_stamp.py, ppd_pooled_test.py (+CFB files)",
+   "test": "doctrine_selfcheck.py rule 19 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 32,
+   "name": "FeatureRegistry (diagnostic stays diagnostic; rules 4/5/8/12-14)",
+   "source_status": "not in source list",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "minis/doctrine.py:FeatureRegistry.promote/margin_head_inputs",
+   "call_sites": "registry_bootstrap.py (CFB), ppd_pooled_test.py, cfb_context.py; NOW also minis/live_board.py:_rvc_abstain_default",
+   "test": "doctrine_selfcheck.py rules 4/5/8/12-14 (PASS); test_live_board_abstain.py (PASS)",
+   "note": ""
+  },
+  {
+   "n": 33,
+   "name": "Warehouse point-in-time (rule 1)",
+   "source_status": "not in source list",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "minis/doctrine.py:Warehouse",
+   "call_sites": "minis/snapshot_pump.py, pump/snapshot_pump.py, freshness.py, cfb_engine.py",
+   "test": "doctrine_selfcheck.py rule 1 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 34,
+   "name": "Close-only fallback (freshness refusal surface)",
+   "source_status": "not in source list",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "dfs/freshnessgate_wiring.py:close_only_fallback",
+   "call_sites": "dfs/rvc_grade.py, rvc_grading_path.py, rvc_edge5_grade.py",
+   "test": "freshnessgate_wiring.self_test (PASS)",
+   "note": ""
+  },
+  {
+   "n": 35,
+   "name": "Anchor (rules 2/11: mu = Pinnacle close until PROMOTED)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "minis/doctrine.py:Anchor.propose_mu/propose_sigma",
+   "call_sites": "doctrine_selfcheck.py only",
+   "test": "doctrine_selfcheck.py rules 2/11/18 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 36,
+   "name": "FounderGate (rule 15)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "minis/doctrine.py:FounderGate.can_flip_production",
+   "call_sites": "doctrine_selfcheck.py only",
+   "test": "doctrine_selfcheck.py rule 15 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 37,
+   "name": "CLVLedger + promotion_check (rule 9)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "minis/doctrine.py:CLVLedger, promotion_check",
+   "call_sites": "doctrine_selfcheck.py only",
+   "test": "doctrine_selfcheck.py rule 9 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 38,
+   "name": "ADPGuard (rule 10)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "minis/doctrine.py:ADPGuard",
+   "call_sites": "doctrine_selfcheck.py only (registry_bootstrap.py names it in a string)",
+   "test": "doctrine_selfcheck.py rule 10 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 39,
+   "name": "CalibrationLedger (rule 6 pooling)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "minis/doctrine.py:CalibrationLedger",
+   "call_sites": "doctrine_selfcheck.py only (registry_bootstrap.py names it in a string)",
+   "test": "doctrine_selfcheck.py rule 6 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 40,
+   "name": "LatencyTracker (rules 7/17)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "minis/doctrine.py:LatencyTracker",
+   "call_sites": "minis/freshness.py (module with no importer)",
+   "test": "doctrine_selfcheck.py rules 7/17 (PASS)",
+   "note": ""
+  },
+  {
+   "n": 41,
+   "name": "gate_enforce audit (GATE_AUDIT.json)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "dfs/gate_enforce.py:gated_audit/enforce",
+   "call_sites": "its own __main__ only; judges freshness by file mtime, imports read_fresh but does not call it",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 42,
+   "name": "Injury gate wiring registration (GATE_AUDIT #12)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "dfs/injury_gate_wiring.py (module-level script)",
+   "call_sites": "none; mtime-based sha registration, no read_fresh",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 43,
+   "name": "Held-out check",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/gates/heldout_check.py:check",
+   "call_sites": "none (no CI workflow or importer)",
+   "test": "intelligence/gates/test_heldout_check.py (PASS, gates/ 9/9)",
+   "note": ""
+  },
+  {
+   "n": 44,
+   "name": "Manifest check",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/gates/manifest_check.py:missing_manifest",
+   "call_sites": "none (own __main__)",
+   "test": "none",
+   "note": ""
+  },
+  {
+   "n": 45,
+   "name": "Claim matrix",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/gates/claim_matrix.py:check",
+   "call_sites": "none (own __main__)",
+   "test": "intelligence/gates/test_claim_matrix.py (PASS, gates/ 9/9)",
+   "note": ""
+  },
+  {
+   "n": 46,
+   "name": "Honest refusal (DATA-GAP / checklist UNCHECKED at L3+)",
+   "source_status": "not in source list",
+   "status_before_pass": "LIVE",
+   "status": "LIVE",
+   "impl": "intelligence/integration/api.py:analyze (DataGapError -> DATA-GAP); intelligence/reasoning/checklist.py",
+   "call_sites": "intelligence/reasoning_engine/run_game.py <- emit_trace.py",
+   "test": "intelligence/tests/e2e/test_t1_real_e2e.py (not run this pass)",
+   "note": ""
+  },
+  {
+   "n": 47,
+   "name": "NNTD selective-classification abstention (SYS-25)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/trust/abstention.py:abstain_decision",
+   "call_sites": "none outside trust/__init__.py",
+   "test": "intelligence/trust/tests/test_trust.py (PASS)",
+   "note": "intelligence/doctrine/honest-refusal.md: synthetic backtest, NOT the live refusal gate."
+  },
+  {
+   "n": 48,
+   "name": "Leak-wall fail-closed (S3/SYS-28)",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/trust/leakwall.py",
+   "call_sites": "none outside trust/__init__.py",
+   "test": "intelligence/trust/tests/test_trust.py (PASS)",
+   "note": ""
+  },
+  {
+   "n": 49,
+   "name": "Proof-ledger Wilson floor",
+   "source_status": "not in source list",
+   "status_before_pass": "PARTIAL",
+   "status": "PARTIAL",
+   "impl": "intelligence/trust/proofledger.py",
+   "call_sites": "intelligence/trust/evidence_guard.py (itself uncalled)",
+   "test": "intelligence/trust/tests/test_trust.py (PASS)",
+   "note": ""
+  }
+ ],
+ "documented_only_reopens": [
+  {
+   "n": 12,
+   "gate": "JEV 5-Gate Mathematical Sieve",
+   "file": "frontier/sports/universal_jev_signal_scanner.py (copy from Windows C:/Users/Garrett/onejev/frontier/sports/)",
+   "function": "five_gate_sieve(signal)",
+   "proving_test": "frontier/sports/test_universal_jev_signal_scanner.py: a synthetic signal failing gate 1 (CQR width) is excluded"
+  },
+  {
+   "n": 13,
+   "gate": "JEV Epistemic Arbitration Oracle",
+   "file": "JEV decisions API reachable from the box (Windows jev ask) or a committed client",
+   "function": "jev_ask(signal) -> verdict",
+   "proving_test": "test asserting TRAP_OR_PASS/ABSTAIN_HIGH_VARIANCE verdicts block a row (recorded response fixture)"
+  },
+  {
+   "n": 14,
+   "gate": "GSE Engine Fail-Closed Mandate",
+   "file": "minis/live_board.py (or the DIAGNOSTIC_BOARD producer, not on branch)",
+   "function": "_fail_closed(board): refuse any row lacking an engine verdict id",
+   "proving_test": "minis/test_live_board_fail_closed.py: row without verdict -> board refuses row"
+  },
+  {
+   "n": 20,
+   "gate": "Banned Language Filter",
+   "file": "minis/live_board.py",
+   "function": "_banned_language_check(board): raise on pick/bet/edge/play in any rendered string",
+   "proving_test": "minis/test_live_board_banned_language.py: a row with \"edge\" in render text raises"
+  },
+  {
+   "n": 28,
+   "gate": "Calibration Gate Scale",
+   "file": "apps/web/lib/ops/per-market-gate.ts (already the code home for calibration floors)",
+   "function": "function implementing the scale tiers in docs/ops/CALIBRATION_GATE_SCALE_2026-09-06.md",
+   "proving_test": "apps/web/__tests__/per-market-gate.test.ts case per tier"
+  },
+  {
+   "n": 29,
+   "gate": "Release Gate Plan",
+   "file": "scripts/guardrails/release-gate.mjs (new) + .github/workflows/ci.yml job",
+   "function": "release gate per docs/gse/release-gate-plan.md",
+   "proving_test": "apps/web/__tests__/guardrails.test.ts case that a failing release criterion exits non-zero"
+  },
+  {
+   "n": 30,
+   "gate": "Independence Gates",
+   "file": "scripts/guardrails/independence-gate.mjs (new)",
+   "function": "independence checks per docs/ops/INDEPENDENCE_GATES.md",
+   "proving_test": "apps/web/__tests__/guardrails.test.ts case"
+  }
+ ],
+ "wiring_this_pass": {
+  "selective_abstention": {
+   "call_site": "docs/research/2026-10-09/rating-atlas/minis/live_board.py:live_board -> _rvc_abstain_default",
+   "existing_function": "minis/doctrine.py:FeatureRegistry (promote requires HonestyGate PROMOTED verdict)",
+   "test": "docs/research/2026-10-09/rating-atlas/minis/test_live_board_abstain.py",
+   "result": "3 passed",
+   "behavior": "every row with a residual and no valid (HonestyGate, Verdict) clearance gets abstain=True, rvc_cleared=False, render=\"ABSTAIN — diagnostic only (residual-versus-close not cleared)\"; status labels unchanged; board[\"n_abstain\"] added. JSON warehouses cannot carry a Verdict object, so every residual row from the CLI abstains.",
+   "not_touched": "minis/api/live_board.py copy (served by api.py) left unchanged — now diverges; reopen: mirror the call site there with the same test."
+  },
+  "injury_pull_gate": {
+   "call_site": "dfs/nfl_prop_resid_sigma_2026-10-11/prop_resid_sigma.py:pull_wk5_injuries (main calls it before the live nflverse injuries pull)",
+   "existing_function": "intelligence/providers/injury_gate.py:require_injury_published",
+   "test": "dfs/nfl_prop_resid_sigma_2026-10-11/test_injury_gate_callsite.py",
+   "result": "2 passed",
+   "note": "prop_resid_sigma.py was not re-run; PROP_RESID_SIGMA_STAMP.json is unchanged (its 15:2xZ pull was after Fri 18:00 ET, so the gate would have passed)."
+  },
+  "model_promotion": {
+   "shadow_lane_exists": "apps/web/lib/ops/shadow-evaluation-pass.ts (ShadowSignal via cron refresh-odds) — filter-engine shadow only; no challenger ShadowPick/CLV lane; no NFL shadow residual table",
+   "verdict": "REFUSE",
+   "reopen": {
+    "path": "dfs/shadow_residual_table/nfl_prop_shadow_resid.csv (+ SHADOW_STAMP.json) built on a frozen manifest with prop CLOSES (none exist: see LR-20261011-PRS-03-NO-CLOSE)",
+    "function": "doctrine.HonestyGate(frozen_folds).evaluate(candidate) -> promotion_check(verdict, CLVLedger, FounderGate)",
+    "test": "dfs/shadow_residual_table/test_shadow_resid.py: manifest sha pinned; tamper voids; held-out n>=500 paired events before evalPromotion eligibility"
+   }
+  }
+ },
+ "ledger_rows": [
+  "LR-20261011-GINV-01-ABSTAIN-WIRED",
+  "LR-20261011-GINV-02-INJURY-GATE-WIRED",
+  "LR-20261011-GINV-03-MODEL-PROMOTION",
+  "LR-20261011-GINV-04-TS-ABSTENTION-SCORING",
+  "LR-20261011-GINV-05-DFS-LINEUP-VALIDATION",
+  "LR-20261011-GINV-06-EVIDENCE-GUARD",
+  "LR-20261011-GINV-07-GATE-ENFORCE-MTIME",
+  "LR-20261011-GINV-08-DOCTRINE-PARTIALS",
+  "LR-20261011-GINV-09-INTELLIGENCE-GATES",
+  "LR-20261011-GINV-11-ACCEPTANCE-HARNESS",
+  "LR-20261011-GINV-10-TRUST-PARTIALS",
+  "LR-20261011-GINV-D12",
+  "LR-20261011-GINV-D13",
+  "LR-20261011-GINV-D14",
+  "LR-20261011-GINV-D20",
+  "LR-20261011-GINV-D28",
+  "LR-20261011-GINV-D29",
+  "LR-20261011-GINV-D30"
+ ],
+ "read_fresh_confirmation": [
+  {
+   "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/DIAGNOSTIC_BOARD_STAMP.json",
+   "path": "read_fresh",
+   "result": "PASS (FRESH, stamp 15:45:05Z, age 0.1h)"
+  },
+  {
+   "file": "synthetic temp lines.json / sg.json in test_live_board_abstain.py",
+   "path": "load_stamped (via live_board)",
+   "result": "PASS (test fixtures, not branch data)"
+  }
+ ],
+ "step0": {
+  "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/DIAGNOSTIC_BOARD_STAMP.json",
+  "sha256": "ccb376162d60d1c39531f11b183a389df96932747f9caba22fa9ba3dd5cda4ea",
+  "claimed_sha16": "5ca43967ee7f972c",
+  "match": false,
+  "note": "claimed sha16 does not match the file sha256 prefix (ccb376162d60d1c3), nor sha256 of the rows/stamp-minus-sha16 under 18 common JSON serializations, nor DIAGNOSTIC_BOARD.csv (12ba411b6af0e541). A file cannot contain its own hash; the value is unverifiable from the branch.",
+  "rows": 289,
+  "rows_label": "all 289 = \"DIAGNOSTIC — residual-versus-close not cleared — Reasoning Doctrine overlay applied\"",
+  "read_fresh": "PASS",
+  "ledger_refusal": "dfs/kill_ledger_freshness.jsonl line 84: NFL_PROP_LADDER_RVC REFUSED, ledger_ts 2026-10-11T15:45:05Z, cites this artifact + sha16 5ca43967ee7f972c (the stamp itself carries no ledger id)",
+  "doctrine_unchanged": "dfs/freshnessgate_wiring.py, minis/freshness_gate.py, minis/doctrine.py, minis/live_board.py byte-identical 5bcfd61 -> f508934 (before this pass's live_board edit)"
+ }
+}

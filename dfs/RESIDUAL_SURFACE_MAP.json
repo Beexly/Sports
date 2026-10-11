@@ -233,6 +233,18 @@
    "reopen": "Re-pull subcats at minutes_to_kickoff<=10 or post-Final; freeze; grade settled stats vs frozen fitted lines. Rec O/U standing source = subcat 14114.",
    "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/ENGINE_RUN_1547_STAMP.json",
    "label": "DIAGNOSTIC"
+  },
+  {
+   "id": "gate-inventory-2026-10-11",
+   "added_at": "2026-10-11T16:05:49Z",
+   "state": "INFRASTRUCTURE PASS x2 (selective-abstention default on minis/live_board.py, 3/3 tests; injury pull gate call site in prop_resid_sigma.py, 2/2 tests; commit 2623137). Recount source-30: before {'LIVE': 16, 'PARTIAL': 6, 'DOCUMENTED-ONLY': 8}, after {'LIVE': 18, 'PARTIAL': 5, 'DOCUMENTED-ONLY': 7} vs claimed 14/5/11. All 49 found: after {'LIVE': 23, 'PARTIAL': 19, 'DOCUMENTED-ONLY': 7}. DIAGNOSTIC — nothing promoted.",
+   "feeds": [
+    "minis/live_board.py rows (abstain/rvc_cleared/render)",
+    "dfs/nfl_prop_resid_sigma_2026-10-11/prop_resid_sigma.py injury pull"
+   ],
+   "reopen": "Model promotion: shadow residual table on a frozen manifest with prop closes (dfs/shadow_residual_table/ + test_shadow_resid.py). Documented-only + partial reopens: dfs/GATE_INVENTORY_2026-10-11.json documented_only_reopens + ledger rows LR-20261011-GINV-03..11, D12..D30.",
+   "ledger_id": "LR-20261011-GINV-01-ABSTAIN-WIRED; LR-20261011-GINV-02-INJURY-GATE-WIRED",
+   "artifact": "dfs/GATE_INVENTORY_2026-10-11.json"
   }
  ],
  "gate_state": {
@@ -268,5 +280,9 @@
  "appended_2026_10_11_prs": {
   "observed_at": "2026-10-11T15:22:02Z",
   "note": "entries appended; existing entries unchanged"
+ },
+ "appended_2026_10_11_gate_inventory": {
+  "observed_at": "2026-10-11T16:05:49Z",
+  "note": "entry appended; existing entries unchanged"
  }
 }
