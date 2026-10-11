@@ -1,0 +1,636 @@
+{
+ "observed_at": "2026-10-11T14:32:24Z",
+ "test": "Lineup freshness: ESPN injury snapshot as FreshnessGate input on DFS + prop residual paths",
+ "injury_input": {
+  "path": "dfs/nfl_signals_2026-10-11/espn_injuries_snapshot.json",
+  "audit": {
+   "path": "/workspace/sports/dfs/nfl_signals_2026-10-11/espn_injuries_snapshot.json",
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.01,
+   "fresh": true,
+   "failure_mode": null,
+   "label": "FRESH"
+  }
+ },
+ "paths": {
+  "DFS_main_slate_lineup": {
+   "mode": "FRESH",
+   "n_players": 8,
+   "n_flagged": 1,
+   "flagged": [
+    {
+     "player": "Kyle Monangai",
+     "team": "CHI",
+     "pos": "RB",
+     "prior_status": "FLAGGED_OUT",
+     "espn_status": "Out",
+     "espn_type": "Toe",
+     "espn_updated": "2026-10-09T17:06Z",
+     "flag": true
+    }
+   ],
+   "rows": [
+    {
+     "player": "Drew Lock",
+     "team": "SEA",
+     "pos": "QB",
+     "prior_status": "CONFIRMED",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Jordan Mason",
+     "team": "MIN",
+     "pos": "RB",
+     "prior_status": "FLAGGED_OUT",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Kyle Monangai",
+     "team": "CHI",
+     "pos": "RB",
+     "prior_status": "FLAGGED_OUT",
+     "espn_status": "Out",
+     "espn_type": "Toe",
+     "espn_updated": "2026-10-09T17:06Z",
+     "flag": true
+    },
+    {
+     "player": "Jaxon Smith-Njigba",
+     "team": "SEA",
+     "pos": "WR",
+     "prior_status": "CONFIRMED",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Nico Collins",
+     "team": "HOU",
+     "pos": "WR",
+     "prior_status": "CONFIRMED",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Chris Olave",
+     "team": "NO",
+     "pos": "WR",
+     "prior_status": "CONFIRMED",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-09T18:22Z",
+     "flag": false
+    },
+    {
+     "player": "Brock Bowers",
+     "team": "LV",
+     "pos": "TE",
+     "prior_status": "CONFIRMED",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-08T21:22Z",
+     "flag": false
+    },
+    {
+     "player": "Noah Fant",
+     "team": "NO",
+     "pos": "FLEX",
+     "prior_status": "CONFIRMED",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-10T14:05Z",
+     "flag": false
+    }
+   ]
+  },
+  "PROP_receiver_watchlist": {
+   "mode": "FRESH",
+   "n_players": 5,
+   "n_flagged": 0,
+   "flagged": [],
+   "rows": [
+    {
+     "player": "Puka Nacua",
+     "team": "LA",
+     "pos": "WR",
+     "prior_status": "yac_machines",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T20:39Z",
+     "flag": false
+    },
+    {
+     "player": "Rome Odunze",
+     "team": "CHI",
+     "pos": "WR",
+     "prior_status": "yac_machines",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Trey McBride",
+     "team": "ARI",
+     "pos": "TE",
+     "prior_status": "yac_machines",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T23:22Z",
+     "flag": false
+    },
+    {
+     "player": "Jameson Williams",
+     "team": "DET",
+     "pos": "WR",
+     "prior_status": "hands_regression",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T04:35Z",
+     "flag": false
+    },
+    {
+     "player": "Tucker Kraft",
+     "team": "GB",
+     "pos": "TE",
+     "prior_status": "hands_regression",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T22:07Z",
+     "flag": false
+    }
+   ]
+  },
+  "PROP_cpoe_pressure_qbs": {
+   "mode": "FRESH",
+   "n_players": 41,
+   "n_flagged": 4,
+   "flagged": [
+    {
+     "player": "Caleb Williams",
+     "team": "CHI",
+     "pos": "QB",
+     "prior_status": "wk2 (9, 100]",
+     "espn_status": "Questionable",
+     "espn_type": "Hamstring",
+     "espn_updated": "2026-10-11T12:26Z",
+     "flag": true
+    },
+    {
+     "player": "Marcus Mariota",
+     "team": "WAS",
+     "pos": "QB",
+     "prior_status": "wk3 (9, 100]",
+     "espn_status": "Out",
+     "espn_type": "Knee - MCL",
+     "espn_updated": "2026-10-09T21:35Z",
+     "flag": true
+    },
+    {
+     "player": "Baker Mayfield",
+     "team": "TB",
+     "pos": "QB",
+     "prior_status": "wk3 (9, 100]",
+     "espn_status": "Out",
+     "espn_type": "Thumb",
+     "espn_updated": "2026-10-09T15:18Z",
+     "flag": true
+    },
+    {
+     "player": "Lamar Jackson",
+     "team": "BAL",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Out",
+     "espn_type": "Ankle",
+     "espn_updated": "2026-10-11T12:34Z",
+     "flag": true
+    }
+   ],
+   "rows": [
+    {
+     "player": "Jaxson Dart",
+     "team": "NYG",
+     "pos": "QB",
+     "prior_status": "wk1 (3, 6]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Caleb Williams",
+     "team": "CHI",
+     "pos": "QB",
+     "prior_status": "wk2 (9, 100]",
+     "espn_status": "Questionable",
+     "espn_type": "Hamstring",
+     "espn_updated": "2026-10-11T12:26Z",
+     "flag": true
+    },
+    {
+     "player": "Cooper Rush",
+     "team": "ATL",
+     "pos": "QB",
+     "prior_status": "wk2 (0, 3]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T23:07Z",
+     "flag": false
+    },
+    {
+     "player": "Drew Lock",
+     "team": "SEA",
+     "pos": "QB",
+     "prior_status": "wk2 (3, 6]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Carson Wentz",
+     "team": "MIN",
+     "pos": "QB",
+     "prior_status": "wk2 (3, 6]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Jayden Daniels",
+     "team": "WAS",
+     "pos": "QB",
+     "prior_status": "wk2 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-09T16:54Z",
+     "flag": false
+    },
+    {
+     "player": "Jack Strand",
+     "team": "ATL",
+     "pos": "QB",
+     "prior_status": "wk2 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-06T18:21Z",
+     "flag": false
+    },
+    {
+     "player": "Marcus Mariota",
+     "team": "WAS",
+     "pos": "QB",
+     "prior_status": "wk3 (9, 100]",
+     "espn_status": "Out",
+     "espn_type": "Knee - MCL",
+     "espn_updated": "2026-10-09T21:35Z",
+     "flag": true
+    },
+    {
+     "player": "Baker Mayfield",
+     "team": "TB",
+     "pos": "QB",
+     "prior_status": "wk3 (9, 100]",
+     "espn_status": "Out",
+     "espn_type": "Thumb",
+     "espn_updated": "2026-10-09T15:18Z",
+     "flag": true
+    },
+    {
+     "player": "Case Keenum",
+     "team": "CHI",
+     "pos": "QB",
+     "prior_status": "wk3 (0, 3]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T16:38Z",
+     "flag": false
+    },
+    {
+     "player": "Jameis Winston",
+     "team": "NYG",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T00:07Z",
+     "flag": false
+    },
+    {
+     "player": "Matthew Stafford",
+     "team": "LA",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T21:08Z",
+     "flag": false
+    },
+    {
+     "player": "Malik Willis",
+     "team": "MIA",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T01:08Z",
+     "flag": false
+    },
+    {
+     "player": "C.J. Stroud",
+     "team": "HOU",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Brock Purdy",
+     "team": "SF",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T00:46Z",
+     "flag": false
+    },
+    {
+     "player": "Trevor Lawrence",
+     "team": "JAX",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Jacoby Brissett",
+     "team": "ARI",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T23:32Z",
+     "flag": false
+    },
+    {
+     "player": "Athan Kaliakmanis",
+     "team": "WAS",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Cam Ward",
+     "team": "TEN",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T22:28Z",
+     "flag": false
+    },
+    {
+     "player": "Dak Prescott",
+     "team": "DAL",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-09T03:56Z",
+     "flag": false
+    },
+    {
+     "player": "Tyler Shough",
+     "team": "NO",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-09T18:46Z",
+     "flag": false
+    },
+    {
+     "player": "Bo Nix",
+     "team": "DEN",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T01:39Z",
+     "flag": false
+    },
+    {
+     "player": "Jalen Hurts",
+     "team": "PHI",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T21:11Z",
+     "flag": false
+    },
+    {
+     "player": "Geno Smith",
+     "team": "NYJ",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T21:42Z",
+     "flag": false
+    },
+    {
+     "player": "Jared Goff",
+     "team": "DET",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T04:08Z",
+     "flag": false
+    },
+    {
+     "player": "Jordan Love",
+     "team": "GB",
+     "pos": "QB",
+     "prior_status": "wk4 (0, 3]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T23:00Z",
+     "flag": false
+    },
+    {
+     "player": "Bryce Young",
+     "team": "CAR",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T04:20Z",
+     "flag": false
+    },
+    {
+     "player": "Daniel Jones",
+     "team": "IND",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T19:11Z",
+     "flag": false
+    },
+    {
+     "player": "Drake Maye",
+     "team": "NE",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Jalon Daniels",
+     "team": "TB",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-09T15:23Z",
+     "flag": false
+    },
+    {
+     "player": "Kyler Murray",
+     "team": "MIN",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T01:54Z",
+     "flag": false
+    },
+    {
+     "player": "Lamar Jackson",
+     "team": "BAL",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Out",
+     "espn_type": "Ankle",
+     "espn_updated": "2026-10-11T12:34Z",
+     "flag": true
+    },
+    {
+     "player": "Josh Allen",
+     "team": "BUF",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T21:34Z",
+     "flag": false
+    },
+    {
+     "player": "Kirk Cousins",
+     "team": "LV",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T01:03Z",
+     "flag": false
+    },
+    {
+     "player": "Tyson Bagent",
+     "team": "CHI",
+     "pos": "QB",
+     "prior_status": "wk4 (0, 3]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T16:24Z",
+     "flag": false
+    },
+    {
+     "player": "Patrick Mahomes",
+     "team": "KC",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-05T00:49Z",
+     "flag": false
+    },
+    {
+     "player": "Justin Herbert",
+     "team": "LAC",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Joe Burrow",
+     "team": "CIN",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-04T20:58Z",
+     "flag": false
+    },
+    {
+     "player": "Aaron Rodgers",
+     "team": "PIT",
+     "pos": "QB",
+     "prior_status": "wk4 (6, 9]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Sam Darnold",
+     "team": "SEA",
+     "pos": "QB",
+     "prior_status": "wk4 (9, 100]",
+     "espn_status": "not on ESPN injury report",
+     "espn_type": null,
+     "espn_updated": null,
+     "flag": false
+    },
+    {
+     "player": "Deshaun Watson",
+     "team": "CLE",
+     "pos": "QB",
+     "prior_status": "wk4 (3, 6]",
+     "espn_status": "Active",
+     "espn_type": null,
+     "espn_updated": "2026-10-02T04:56Z",
+     "flag": false
+    }
+   ]
+  }
+ },
+ "stamp": "INFRASTRUCTURE PASS",
+ "note": "Gate wiring is a new read-only wrapper; existing producer scripts were not edited. The 6 h window means this snapshot refuses after observed_at + 6 h; re-run ingest_signals.py before lock.",
+ "label": "DIAGNOSTIC \u2014 status flags only, no residual, nothing promoted"
+}

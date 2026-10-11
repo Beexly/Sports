@@ -1,0 +1,75 @@
+{
+ "observed_at": "2026-10-11T14:33:55Z",
+ "test": "Step 1 \u2014 NFL receiving / YAC / completion prop CLOSE feed -> frozen manifest -> RVC (receiver watchlist, CPOE x pressure cells)",
+ "stamp": "REFUSE",
+ "reason": "feed missing: zero settled NFL player-prop CLOSES on research/rating-atlas-2026-10-09-packet or any Beexly/agent-bus branch; no held-out RVC or Holm table is possible without at least one settled close set",
+ "search": {
+  "sports_branch": [
+   "dfs/PROP_LADDER_PULL_REFUSED.json (DK nash: 8 attempts, Akamai 403, zero rows)",
+   "dfs/genie_acq2/nash_nfl_props_probe.json (503-byte Akamai \"Access Denied\" HTML, not data)",
+   "dfs/prop_conditional_status.json (NFL prop tables REFUSED, data gap)",
+   "dfs/kalshi_*.json/txt (game ML/spread/total only; no player props)",
+   "dfs/genie_acq2/linestar_* (DFS salaries/projections, not book closes)"
+  ],
+  "agent_bus": "main + 20 other branches listed; research/rating-atlas-session/pointer and motif/research-push-all trees scanned: only message JSONs, no prop price feed"
+ },
+ "unblock_found_this_pass": {
+  "source": "Pinnacle guest API (keyless; already authorized in docs/research/2026-10-09/rating-atlas/minis/books_api.py)",
+  "urls": [
+   "https://guest.api.arcadia.pinnacle.com/0.1/leagues/889/matchups",
+   "https://guest.api.arcadia.pinnacle.com/0.1/leagues/889/markets/straight"
+  ],
+  "credential_needed": false,
+  "browser_needed": false,
+  "proof_snapshot": {
+   "path": "dfs/prop_close_feed_2026-10-11/pinnacle_props_20261011T1433Z.json",
+   "observed_at": "2026-10-11T14:33:20Z",
+   "n_props": 342,
+   "n_rows": 684,
+   "markets": [
+    "Receiving Yards",
+    "Total Receptions",
+    "Pass Completions",
+    "Pass Attempts"
+   ],
+   "minutes_to_kickoff_range": [
+    146.7,
+    2021.7
+   ],
+   "close_status": "PRE-CLOSE (T-147 min at earliest kickoff) \u2014 NOT a close, not graded",
+   "watchlist_coverage": {
+    "Puka Nacua": [
+     "Receiving Yards",
+     "Total Receptions"
+    ],
+    "Rome Odunze": [
+     "Receiving Yards",
+     "Total Receptions"
+    ],
+    "Trey McBride": [
+     "Receiving Yards",
+     "Total Receptions"
+    ],
+    "Jameson Williams": [
+     "Receiving Yards",
+     "Total Receptions"
+    ],
+    "Tucker Kraft": [
+     "Receiving Yards",
+     "Total Receptions"
+    ]
+   }
+  },
+  "gaps": "no YAC prop market on Pinnacle; Pass Completions only 26 QBs per snapshot"
+ },
+ "exact_unblock_steps": [
+  "1. Each NFL kickoff window, run `python3 dfs/prop_close_feed_2026-10-11/snap_pinnacle_props.py` from repo root within ~5 min of kickoff (needs a scheduler: Beexly Task Scheduler or box cron). No credential, no browser.",
+  "2. Treat rows with minutes_to_kickoff <= 10 as the close; freeze them into a prop-close manifest with observed_at + sha256.",
+  "3. After games, settle against nflverse player stats (release tag `stats_player`, file stats_player_week_2026.parquet: receptions, receiving_yards, completions, attempts).",
+  "4. Residual = actual - close line (and Over/Under hit vs de-vigged price). Join watchlist players and CPOE x pressure QBs by name_key + week.",
+  "5. Held-out: pre-register the watchlist (YAC-machine Over, hands-regression Under) and the CPOE x pressure bins; fit on early weeks, test on later weeks; Holm over the registered family; stamp.",
+  "Alternative (needs browser + DK session): DK nash ladders via the 4-step recipe in dfs/PROP_LADDER_PULL_REFUSED.json, e.g. https://sportsbook-nash.draftkings.com/sites/US-NJ-SB/api/v5/leagues/88808/categories/9524/subcategories/9524?format=json from the user's real Chrome profile."
+ ],
+ "reopen_condition": ">= 1 settled week of Pinnacle prop closes (minutes_to_kickoff <= 10) frozen with observed_at; held-out test needs >= 2 such weeks",
+ "label": "DIAGNOSTIC \u2014 no residual produced, nothing promoted"
+}
