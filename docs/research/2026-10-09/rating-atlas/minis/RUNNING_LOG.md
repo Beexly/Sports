@@ -367,3 +367,9 @@
 - **THE FINDING (1,140 game×quarter rows)**: OU on live state BEATS the static closing spread at Q3 (Brier 0.194 vs 0.217) and Q4 (0.139 vs 0.217, +0.078) — the live-repricer crossover is ~halftime. At Q1/Q2 the pre-game close still wins (theta too slow from kickoff — the tunable parameter).
 - **Live-engine implication**: switch close-anchored → OU-anchored at ~halftime; blend before. The under-reactionary theta at kickoff is the calibration target.
 - All DIAGNOSTIC. Nothing promoted. Zero fabrication.
+
+### [05:00] OU per-quarter θ refinement — honest verdict: model-spec finding, not tuning
+- **θ per quarter**: Q1 0.000079 (HL 146min) / Q2 0.000005 (HL 2470min!) / Q3 0.000041 (HL 285min) / Q4 0.000072 (HL 160min)
+- **Q2 θ ≈ 0**: the linear-decay mu_path breaks in the 2-min drill — end-of-half scoring bursts violate the smooth market-path assumption. Per-quarter θ does NOT fix early-quarter Brier (Q1 0.320, Q2 0.262 — close still wins).
+- **STRUCTURAL FINDING**: OU live-WP is validated for Q3+ only. Early-game requires a non-linear mu_path (empirical attractor from data). This is a model-spec constraint, not a calibration knob.
+- DIAGNOSTIC. Nothing promoted.

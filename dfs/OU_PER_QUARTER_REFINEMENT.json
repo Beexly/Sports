@@ -1,0 +1,21 @@
+{
+ "observed_at": "2026-10-11T05:55:35Z",
+ "test": "OU per-quarter \u03b8 refinement + v2 RVC",
+ "per_quarter_theta": {
+  "1": 7.9e-05,
+  "2": 5e-06,
+  "3": 4.1e-05,
+  "4": 7.2e-05
+ },
+ "finding": "\u03b8 is NOT stationary: Q1/Q4 fast (146-160min half-life), Q2 effectively ZERO (2470min). The linear-decay mu_path is misspecified for Q2 (2-min-drill + end-of-half scoring bursts break the smooth decay). Per-quarter \u03b8 does NOT fix early-quarter Brier \u2014 the mu_path specification is the binding constraint.",
+ "v2_brier": {
+  "Q4": 0.1385,
+  "Q3": 0.1939,
+  "Q2": 0.2624,
+  "Q1": 0.3199
+ },
+ "close_brier": 0.2167,
+ "verdict": "OU validated for Q3+ only (Brier beats close +0.023 to +0.078). Early-game OU requires a non-linear mu_path (different attractor shape). This is a MODEL-SPEC finding, not a tuning issue.",
+ "label": "DIAGNOSTIC",
+ "reopen": "non-linear mu_path (empirical attractor curve from data, not linear decay) \u2192 re-fit \u2192 early-quarter Brier re-test"
+}
