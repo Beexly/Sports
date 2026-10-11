@@ -381,7 +381,7 @@
    },
    "file": "dfs/nfl_signals_2026-10-11/SIGNALS_STAMP.json"
   },
-  "label": "DIAGNOSTIC — nothing promoted"
+  "label": "DIAGNOSTIC \u2014 nothing promoted"
  },
  "NFL_PROP_LADDERS_2026_10_11": {
   "observed_at": "2026-10-11T14:59:23Z",
@@ -391,7 +391,12 @@
   "key_numbers": {
    "events": 14,
    "fits": 289,
-   "pre_kick_mean_r2": {"pass_yards": 0.992, "rush_yards": 0.959, "rec_yards": 0.971, "completions": 0.992},
+   "pre_kick_mean_r2": {
+    "pass_yards": 0.992,
+    "rush_yards": 0.959,
+    "rec_yards": 0.971,
+    "completions": 0.992
+   },
    "watchlist_on_slate": "5/5",
    "watchlist_posted_ou": "missing (subcat 16570 milestones only)",
    "cpoe_qbs_with_completion_quote": 25,
@@ -411,7 +416,12 @@
   "key_numbers": {
    "events": 14,
    "fits": 289,
-   "pre_kick_mean_r2": {"pass_yards": 0.992, "rush_yards": 0.959, "rec_yards": 0.971, "completions": 0.992},
+   "pre_kick_mean_r2": {
+    "pass_yards": 0.992,
+    "rush_yards": 0.959,
+    "rec_yards": 0.971,
+    "completions": 0.992
+   },
    "watchlist_on_slate": "5/5",
    "cpoe_qbs_with_completion_quote": 25,
    "gate": "read_fresh FRESH"
@@ -426,7 +436,11 @@
   "infrastructure": "PASS",
   "rvc": "CURRENT-QUOTE RESIDUAL ONLY",
   "held_out_n": 0,
-  "residual_sigma_pre_kick": {"pass_yards": -0.127, "rush_yards": -0.157, "completions": -0.267},
+  "residual_sigma_pre_kick": {
+   "pass_yards": -0.127,
+   "rush_yards": -0.157,
+   "completions": -0.267
+  },
   "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats against that frozen fitted line. Receiving posted O/U still missing.",
   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1512Z/NFL_PROP_LADDER_STAMP.json",
   "label": "DIAGNOSTIC"
@@ -714,5 +728,34 @@
    }
   ],
   "label": "DIAGNOSTIC \u2014 nothing promoted"
+ },
+ "NFL_ENGINE_RUN_20261011T1549Z": {
+  "observed_at": "2026-10-11T15:49:33Z",
+  "sha16": "80beee68cd08c6c7",
+  "infrastructure": "PASS",
+  "rvc": "CURRENT-QUOTE RESIDUAL WITH FULL REASONING DOCTRINE OVERLAY ONLY",
+  "held_out_n": 0,
+  "key_numbers": {
+   "rows": 291,
+   "pre_kick": 273,
+   "devig_sigma_means": {
+    "completions": 0.178,
+    "rush_yards": 0.102,
+    "pass_yards": 0.056
+   },
+   "top_cells": "Bo Nix comp +0.325s / Drake Maye comp +0.287s / Deshaun Watson comp +0.268s / Jeremiyah Love rush +0.243s",
+   "kill_ledger": "REFUSED rows appended 15:45Z + 15:49Z"
+  },
+  "reopen": "Re-pull 16569/16570/16571/16889 and O/U 9524/9522/9514 + rec O/U 14114 at minutes_to_kickoff<=10 or post-Final. Freeze. Grade settled stats vs frozen fitted line. CFB parked.",
+  "label": "DIAGNOSTIC"
+ },
+ "LOBBY_154468_20261011T1550Z": {
+  "observed_at": "2026-10-11T15:50:40Z",
+  "sha16": "9d0a90c5c63c5804",
+  "lock": "2026-10-11T17:00:00Z not passed",
+  "n_contests": 1895,
+  "lineups": "absent from getcontests payload; nothing invented",
+  "top_by_nt": "mini-MAX 403054/416171; Play-Action 230975/277447; Millionaire 144105/161764",
+  "label": "DIAGNOSTIC"
  }
 }
