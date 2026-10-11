@@ -1,0 +1,46 @@
+{
+ "observed_at": "2026-10-11T14:34:34Z",
+ "tip_confirmed": "23acf1fea5d9ced857c57fa9cbb8b2664af55a2a",
+ "doctrine_files": {
+  "freshnessgate_read_path": "PRESENT dfs/freshnessgate_wiring.py:57 read_fresh; minis/freshness_gate.py load_stamped",
+  "college_guard": "PRESENT docs/research/2026-10-09/rating-atlas/minis/doctrine.py:552 class CollegeGuard (+ live_board.py board-blocking check)",
+  "append_only_ledger": {
+   "claim": "73 entries",
+   "verdict": "MISMATCH",
+   "counts": {
+    "dfs/kill_ledger_freshness.jsonl": 56,
+    "docs/research/2026-10-09/rating-atlas/minis/kill_ledger.jsonl": 12,
+    "docs/research/2026-10-09/rating-atlas/minis/api/data/kill_ledger.jsonl": 12
+   },
+   "note": "no single ledger or obvious sum equals 73 (56+12=68; 56+12+12=80). RUNNING_LOG [11:45] cites \"33 refusals\"; the freshness ledger holds 39 F1-F4 rows (some are self-test rows) + 17 grade-attempt rows."
+  },
+  "product_label": "PRESENT minis/live_board.py:106 \"LIVE BOARD — baseline and diagnostic rows only.\""
+ },
+ "claims": {
+  "cpoe_x_pressure_refused": "MATCH — dfs/cpoe_pressure_rvc_2026-10-11/CPOE_PRESSURE_CELL_RVC.json: 0/4 bins survive Bonferroni 0.0125 (n=94); dfs/CPOE_PRESSURE_NEXT_ATS.json held-out MSE 148.11 vs naive 133.9",
+  "receiver_watchlist_refused": "MATCH — dfs/receiver_watchlist_rvc_2026-10-11/RVC_STAMP.json REFUSE (no prop closes); dfs/WATCHLIST_NEXT_WEEK_GRADE.json BT->next ATS noise (n=13)",
+  "ftn_box_blitz_ci_zero": "MATCH — dfs/FTN_ENV_NEXT_ATS.json composite delta 6.13 CI [-13.63, 26.27]; dfs/ftn_axes_rvc_2026-10-11/FTN_AXES_RVC_STAMP.json 0/13 axes, box CI contains 0, blitz_mean CI [-20.76, 20.24]",
+  "eleven_of_eleven_fresh": {
+   "verdict": "MATCH on the file, but the method differs from the claim",
+   "file": "dfs/GATE_AUDIT.json n_fresh=11",
+   "caveat": "dfs/gate_enforce.py judges FRESH by file mtime (os.path.getmtime), imports read_fresh but never calls it; 7 of 11 are parquet/CSV without an in-file observed_at that read_fresh could parse, and 3 use max_age 1e9. \"Every producer reads through freshnessgate_wiring\" is not what the code does."
+  },
+  "ftn_stamp_manifest_label": "NOTE — FTN_AXES_RVC_STAMP calls team_week_ats_2026.csv \"the frozen NFL manifest\"; the frozen manifest is dfs/nfl_rvc_manifest.json (2023-25). The 2026 csv is a derived table."
+ },
+ "residual_surface_map_summary": "dfs/RESIDUAL_SURFACE_MAP.json: OU-v2 -> live WP/in-game totals; CPOE-pressure -> QB completion props/QB DFS; FTN env -> team totals/game-env props/defense DFS; receiver watchlists -> receiving/YAC props/WR DFS; situational graph -> game picks/alt lines; EDGE5 -> cross-book picks/totals; JEV -> DFS lineups; 2pt -> live totals/coaching props; go-utility -> coaching props/live WP",
+ "left_untouched": [
+  "dfs/rvc_edge5_grade.py",
+  "dfs/jev_rvc_grade.py",
+  "dfs/dk_live_poller.py",
+  "dfs/LONDON_LIVE_SNAPSHOT.json",
+  "all CFB files",
+  "mind.jsonl",
+  "brain/cycle.py",
+  "all kill ledgers"
+ ],
+ "label": "DIAGNOSTIC",
+ "tip_moved_during_run": {
+  "to": "590d604a98d00bd966df175c13cd75807899c1a0",
+  "note": "590d604 (09:30 CT) raised GATE_AUDIT to 12/12 by adding injuries_2026.parquet (mtime-gated, max_age 84h) and appended an \"updates\" block to RESIDUAL_SURFACE_MAP.json; this run appends on top of it."
+ }
+}
