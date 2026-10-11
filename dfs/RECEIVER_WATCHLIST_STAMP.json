@@ -1,4 +1,16 @@
 {
- "observed_at": "2026-10-11T06:57:51Z",
- "test": "receiver prop watchlists \u2014 snap volume x YAC creation x hands (nflverse snaps 2026 x PFR advstats rec 2026)",
- "join": 
+ "observed_at": "2026-10-11T06:58:06Z",
+ "test": "receiver prop watchlists - snap volume x YAC creation x hands (nflverse snaps 2026 x PFR advstats rec 2026)",
+ "join": "name_key match, 351 players",
+ "yac_machines (snap%>=70, BT/g>=0.75, drops/g<=0.3)": [
+  "Puka Nacua (LA, 80% snaps, 2 BT in 2g)",
+  "Rome Odunze (CHI, 76.5%, 3 BT/4g, 1 drop)",
+  "Trey McBride (ARI, 89%, 3 BT/4g, 1 drop)"
+ ],
+ "hands_regression (snap%>=60, drops>=4)": [
+  "Jameson Williams (DET, 90.5% snaps, 5 drops/4g)",
+  "Tucker Kraft (GB, 83%, 5 drops/4g)"
+ ],
+ "prop_implication": "YAC-machine list = reception-yard overs may be underpriced on raw usage; hands-watch = contested-catch unders. DIAGNOSTIC ONLY - no prices pulled, RVC not run.",
+ "label": "DIAGNOSTIC"
+}
