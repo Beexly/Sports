@@ -1,0 +1,85 @@
+{
+ "observed_at": "2026-10-11T14:31:57Z",
+ "test": "NFL public-signal ingest + FreshnessGate stamp (not on frozen manifest)",
+ "stamp": "INFRASTRUCTURE PASS",
+ "gate_readback": {
+  "espn_injuries_snapshot.json": {
+   "fresh": true,
+   "failure_mode": null,
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.0
+  },
+  "injuries_by_teamgame.csv": {
+   "fresh": true,
+   "failure_mode": null,
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.0
+  },
+  "snaps_by_teamgame.csv": {
+   "fresh": true,
+   "failure_mode": null,
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.0
+  },
+  "officials_by_game.csv": {
+   "fresh": true,
+   "failure_mode": null,
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.0
+  }
+ },
+ "coverage": {
+  "espn_injuries": {
+   "teams": 32,
+   "rows": 800,
+   "status_counts": {
+    "Active": 571,
+    "Out": 97,
+    "Questionable": 79,
+    "Injured Reserve": 51,
+    "Doubtful": 2
+   }
+  },
+  "injuries_nflverse": {
+   "raw_rows": 17882,
+   "team_games": 1710,
+   "team_games_joined": 1694,
+   "join_rate_team_games": 0.9906,
+   "games_both_teams_joined": 846,
+   "by_season_join_rate": {
+    "2023": 0.9737,
+    "2024": 0.9982,
+    "2025": 1.0
+   }
+  },
+  "snap_counts": {
+   "raw_rows": 79768,
+   "team_games_joined": 1710,
+   "join_rate_team_games": 1.0,
+   "games_both_teams_joined": 855
+  },
+  "officials": {
+   "raw_rows_all_seasons": 22012,
+   "games_joined": 855,
+   "join_rate_games": 1.0,
+   "games_with_referee": 855
+  },
+  "manifest_games": 855,
+  "manifest_team_games": 1710
+ },
+ "raw_sha16_pins": {
+  "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries": "32969d0ba5fd3e6b",
+  "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2023.parquet": "5d8d881aabd613c3",
+  "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2024.parquet": "7ebabbba930a70bc",
+  "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2025.parquet": "c7637c2f63471944",
+  "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2023.parquet": "97873cab365dfb39",
+  "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2024.parquet": "9ec66a0c755939b3",
+  "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2025.parquet": "47220218fecda7af",
+  "https://github.com/nflverse/nflverse-data/releases/download/officials/officials.parquet": "fec0532a78c81027"
+ },
+ "not_ingested": {
+  "espn_rosters": "not in the authorized keyless pattern (books_api.py covers scoreboard + injuries only)",
+  "firecrawl": "no Firecrawl artifact or key on branch/bus; not used"
+ },
+ "label": "DIAGNOSTIC \u2014 inputs only, no residual produced"
+}
