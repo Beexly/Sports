@@ -1,0 +1,117 @@
+{
+ "observed_at": "2026-10-11T02:26:28Z",
+ "title": "DARK-LAYER ACCESS MAP \u2014 every surface, its lock, its key",
+ "surfaces": [
+  {
+   "surface": "api.draftkings.com",
+   "lock": "TLS/ALPN HTTP-version fingerprint (h1=403 438B Akamai block, h2=200)",
+   "key": "httpx http2=True, no cookies needed",
+   "verified": "3 payout ladders + draftables 1.4MB + gametype rules + draftgroups + pick6 + sports list",
+   "residual_block": "none known"
+  },
+  {
+   "surface": "www.draftkings.com legacy (/lineup/*, /lobby/getcontests, /contest/mycontests)",
+   "lock": "none for GET data endpoints (h2 open)",
+   "key": "httpx h2, UA only",
+   "verified": "getavailableplayers 30KB, getcontests 7.7MB, mycontests 388KB",
+   "residual_block": "auth-session pages 302 (need cookies)"
+  },
+  {
+   "surface": "sportsbook-nash.draftkings.com (BFF: sportscontent/navigation, team/markets, sdinfo, recommendations, widgets)",
+   "lock": "FULL browser fingerprint: Akamai _abck/bm_sz/bm_sv bind TLS+headers+JS-blessed session",
+   "key": "chrome-wf CDP session (user login), page-context same-origin fetch",
+   "verified": "navigation league pages load in-session; shell 403 AkamaiGHost 496B",
+   "residual_block": "no shell path yet; _abck seen ~0~ (unvalidated); sensor POST endpoint not located"
+  },
+  {
+   "surface": "eu-offering.kambicdn.org (DK underlying odds engine)",
+   "lock": "network/geo (connect timeout from this box, shell AND browser fetch)",
+   "key": "browser on DK sportsbook page uses it transparently",
+   "verified": "host registry only; betoffer payload not yet captured",
+   "residual_block": "retry from user normal browsing / different egress"
+  },
+  {
+   "surface": "sportsbook-ws-us-wv.draftkings.com/websocket",
+   "lock": "WS handshake w/ session",
+   "key": "session cookies + origin",
+   "verified": "host found in __productConfig",
+   "residual_block": "not yet connected"
+  },
+  {
+   "surface": "gateway.northamerica-northeast2.prod.dkapis.com/dkuswv/ (shelby push + enterpriseSafeHarbor)",
+   "lock": "unknown",
+   "key": "dkapis prod gateway",
+   "verified": "hosts only",
+   "residual_block": "untested"
+  },
+  {
+   "surface": "kalshi trade-api",
+   "lock": "none (keyless market data)",
+   "key": "direct GET; quotes in *_dollars fields (yes_bid/yes_ask fields are null \u2014 documented quirk)",
+   "verified": "28 KXNFLGAME events, PHI@JAC 46 price points, orderbook endpoint",
+   "residual_block": "trading needs account+key"
+  },
+  {
+   "surface": "linestarapp.com DNN API",
+   "lock": "none for GetSalariesV5/GetFastUpdateV2/GetPlayerHistoryRecentV2 (unauth 200)",
+   "key": "site=1&sport={id}&periodId={id} (Site ids + Sport ids enumerated)",
+   "verified": "93-period NFL harvest: 66.5k player rows + 123.6k ownership rows; NBA/MLB/NHL/CFB open",
+   "residual_block": "GenerateLineup premium-gated client-side (server untested)"
+  },
+  {
+   "surface": "thesolver.com (Next.js)",
+   "lock": "auth for engine API; buildId JbNkVdwLkNNPShsogMukd; 84 page-chunks",
+   "key": "cookie export path (DFS_PULLER_SETUP.md)",
+   "verified": "SSR + tutorial semantics captured verbatim",
+   "residual_block": "engine POST shapes mapped but not callable"
+  },
+  {
+   "surface": "fantasycruncher.com",
+   "lock": "obfuscated bundle (12,371-entry RC4 string table); ajax endpoints session-scoped",
+   "key": "decoder harness queued; user account",
+   "verified": "UI semantics from public tutorials (Randomness/Exposures, Team Salary/Value, Unique Players)",
+   "residual_block": "decoder + login"
+  },
+  {
+   "surface": "pfr.com",
+   "lock": "shell 403; browser same-origin fetch works",
+   "key": "in-page fetch on pfr page, parse #adv_rushing_and_receiving data-stat cells; player id {LastInitial}{First5}{NN}",
+   "verified": "recipe in ENGINE_BLUEPRINTS Part 4 + Bijan schema verification",
+   "residual_block": "scale-out queued (60 RB/WR pages)"
+  },
+  {
+   "surface": "nflverse-data releases",
+   "lock": "none",
+   "key": "github release URLs; pbp needs PC pyreadr (iSH documented-blocked)",
+   "verified": "FTN charting 2022-26, NGS 2016-26, injuries 2026, players.csv",
+   "residual_block": "none"
+  },
+  {
+   "surface": "nash sportscontent control-data (props ladders)",
+   "lock": "browser fingerprint (nash)",
+   "key": "templateVars={evId},{subId} + marketsQuery OData filter; subId taxonomy 189 nodes in repo (main=9524/9517/9522/9525/9514/9518/9533/14114/14115/18876/18883/18884; alt=16569-16572+18493-18495; TD=12424/12438/11818; H2H=12479/19060/18746)",
+   "verified": "16,230-row week-6 harvest (prior session)",
+   "residual_block": "scale-out via chrome-wf in-page"
+  }
+ ],
+ "protocol_tricks": [
+  "h1-vs-h2 fingerprint: the single highest-value unlock; generalizes to any Akamai-fronted API (test http2=True first)",
+  "Akamai _abck ~0~ = sensor not validated; valid sensor POST flips middle segment to ~-1~/~1~; sensor endpoint location on nash still unknown",
+  "Kambi eu-offering = the whole mid-tier industry backs onto Kambi-family offering APIs (eu-offering.kambicdn.org/offering/v2018/{brand}/...) \u2014 stable 2018 API",
+  "DK dfs session: SAML hop expires quietly; myaccount auth bounce = re-login signal; session cookie names STH/STE/PRV/VIDN/SSIDN/EXC",
+  "obfuscator.io bundles: string-table + decoder fn + rotation IIFE; decode by running decoder in node with index sweep (FC harness; pattern reusable)",
+  "DNN DesktopModules/API pattern: /DesktopModules/{Module}/API/{Controller}/{Action} \u2014 enumerate from client JS var-concat map (LineStar fully cracked this way)",
+  "Next.js: _next/data/{buildId}{page}.json for SSR payloads; buildId from __NEXT_DATA__ or build-manifest chunk",
+  "RSC (App Router): self.__next_f.push streams \u2014 reconstruct payload by joining escaped chunks (Stokastic mined this way)",
+  "host registry mining: window.__productConfig / dkConfig on SPA pages enumerate EVERY backend host incl. undocumented BFFs"
+ ],
+ "engine_equations": {
+  "dk_ladder_reconstruction": "ladder prices -> Shin de-vig -> probit -> per-player (mu, sigma) = the book distribution itself; 266 CFB fits done; NFL = scale-out with h2/nash harvest",
+  "evt_tails": "GEV/GPD on player max-play distributions vs book Gaussian quantiles = systematic longest-X mispricing (registry C; kill test: backtest 23-25)",
+  "ownership_objective": "ILP: max sum x(mu + lambda(1-own)sigma) + C_ij lift; lambda from payout-curve top-heaviness (Millionaire top-10 44.1% -> HIGH-lambda; Fair Catch 25.3% -> LOW-lambda)",
+  "kalshi_cross": "Kalshi devig (PHI 23.5 / JAC 76.5, total 42.0) vs DK salary structure = field-sentiment-vs-probability divergence; census at lock quantifies it",
+  "hawkes_football": "lambda_c(t)=mu_c+sum alpha e^(-beta dt) on scoring events; home/away alpha split = momentum asymmetry -> live repricing drift (registry A; unclaimed)",
+  "gas_strengths": "theta_t=omega+A s_(t-1)+B theta_(t-1), t-innovations; blowouts as information (registry D; CRPS bar vs Kalman)",
+  "posterior_kelly": "E[growth]=int log(1+f(b*1w-1l)) dPi(mu,sigma); MC 1000 draws; honest fractional-Kelly (registry J)"
+ }
+}

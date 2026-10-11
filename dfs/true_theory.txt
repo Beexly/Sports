@@ -1,0 +1,51 @@
+players with |gap| > 0.15 sigma: 183/262
+  Jack Foley (WAKE)                rush  gap +86.3 (+2.71σ)
+  Dylan Raiola (ORE)               pass  gap -175.2 (-2.41σ)
+  Jamal Rule (NEB)                 rec   gap +62.6 (+2.21σ)
+  Holden Geriner (PITT)            pass  gap -138.4 (-1.83σ)
+  Keyone Jenkins (UCF)             pass  gap -119.9 (-1.56σ)
+  Caden High (STAN)                rush  gap +45.7 (+1.54σ)
+  Caleb Komolafe (NW)              rec   gap -64.5 (-1.33σ)
+  Daniel Hill (ALA)                rec   gap +31.0 (+1.26σ)
+  Jaziun Patterson (MSU)           rec   gap -55.1 (-1.20σ)
+  Anthony Woods (UCLA)             rec   gap +33.1 (+1.18σ)
+
+saved dfs/dk_shade_outliers.json — the shade outliers ARE the live prop-edge candidates
+
+=== THE VAULT LESSONS (documented for teaching) ===
+
+LESSON 1 — THE ENGINE IS ONE EQUATION.
+DK's entire prop market = Φ((L−μ)/σ) per player-stat, hold applied per rung.
+262/266 players reconstructed at r² 0.96-0.99. Once you fit (μ,σ) from the ladder,
+you can compute DK's fair price at ANY rung — including rungs they haven't posted.
+
+LESSON 2 — THE POSTED LINE IS NOT THE MEDIAN, BUT IT'S CLOSE (base rate vs edge set).
+Across 262 fits: median (dk_stat − μ_fit) = −0.4, 49% above/below split.
+BUT 183/262 sit >0.15σ off — the shade DISPERSION is the signal. Jack Foley +2.71σ,
+Dylan Raiola −2.41σ. Those outliers = DK's own model disagreeing with itself across rungs,
+or stale lines — either way they're the live-edge candidate list (dk_shade_outliers.json).
+
+LESSON 3 — DK PRICES VARIANCE TIGHT (σ_ratio median 0.95, empirically 0.91-0.95).
+The book's σ is ~5-9% BELOW realized player σ. Underpricing variance = systematically
+cheap OUTCOME TAILS. Over-priced mains, under-priced alts 3+ rungs out. This compounds
+with Lesson 4.
+
+LESSON 4 — SEPARATE BASE RATE FROM EDGE SET.
+The "+34 shade" number came from a 7-player file SELECTED for big gaps. The 262-fit base
+rate says shade ≈ 0. Teaching students to spot selection bias in their own artifacts is
+worth more than any single equation.
+
+LESSON 5 — THE WAF IS A PROTOCOL CHECK, NOT A WALL.
+DK: h1→403, h2→200, same bytes. Akamai fingerprints the TLS/ALPN layer FIRST; everything
+else (cookies, JS) is downstream. Test protocol layer before touching auth.
+
+LESSON 6 — THE CLIENT SHIPS NO ENGINE.
+3.75MB app.js + 22 chunks: UI, routing, state. Zero math. Every sportsbook works this way
+(Kambi-family, nash BFF). The "secret equations" live server-side; the client leaks them
+only through OUTPUTS (ladders, trueOdds fields, ownership aggregates). Harvest outputs,
+fit the engine yourself — that's the whole game.
+
+LESSON 7 — THE FIELD IS THE LAST PARAMETER.
+μ, σ, hold — all book-side. The last unknown is ownership (what everyone else believes).
+The census (tonight's mini-MAX pull) closes that loop. Edge = |your p − book's p| ×
+|book's p − field's p| divergence, sized by posterior-Kelly.
