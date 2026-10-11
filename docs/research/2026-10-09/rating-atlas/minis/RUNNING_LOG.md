@@ -420,3 +420,11 @@
 - Both graders re-run live: EDGE#5 `--grade` REFUSED (Scheduled), JEV `--grade` REFUSED (pre-lock 302/404). Both refuse paths logged to kill ledger. Zero invention.
 - **Gateway started** (PID 24564) — the EDGE5-crossbook-grade-poller (7ac6e83e9422, every 30m × 26, no-agent watchdog) is now ARMED and will fire mechanically. Silent until London Final; then stamps EDGE5_CROSSBOOK_GRADED.json + ledger + delivers output.
 - Full readiness state: 3 graders built+verified (EDGE#5 crossbook, JEV RVC, poller), all refuse-safe, all awaiting only settlement events.
+
+### [07:25] OU v2 EMPIRICAL ATTRACTOR — the reopen condition closed; crossover moved to Q2
+- **dfs/ou_empirical_attractor.py + OU_EMPIRICAL_ATTRACTOR_STAMP.json**: empirical E[home margin | t, |close| bucket] replaces linear decay. 4 spread buckets (small/mid/big/huge), 100s cells, fitted from the same 285-game pbp paths.
+- **The attractor is NOT a decay**: 'big' bucket peaks at +4.3 by 2700s then eases; 'huge' blows OUT to +14.5 by 3300s (favorites cover late / garbage time extends); small/mid drift slightly negative (dogs hang around). The linear-to-zero μ_path was structurally wrong.
+- **RVC v2 (1,140 rows)**: OU Brier 0.1896 vs close 0.2167 — OU wins overall (+0.027). By quarter: Q1 0.2438 (close still wins, −0.027), **Q2 0.2115 (OU WINS +0.005)**, Q3 0.1704 (+0.046), Q4 0.1326 (+0.084).
+- **v1→v2**: EVERY quarter improved (Q1 −0.067, Q2 −0.047, Q3 −0.024, Q4 −0.006). The crossover moved from ~halftime to ~Q2-start. Empirical-attractor OU now beats the static close for 3 of 4 quarters.
+- **Remaining gap**: Q1 (kickoff to 2700s) — the close still carries more info than the process in the first quarter. Reopen: add close-scaled diffusion (σ scaled by |close| bucket) or a Q1-specific attractor with wider n.
+- DIAGNOSTIC. Nothing promoted. Zero fabrication. Same outcomes, same manifest, new path spec.

@@ -1,0 +1,76 @@
+{
+ "observed_at": "2026-10-11T06:40:18Z",
+ "test": "OU v2 \u2014 empirical attractor replaces linear-decay mu_path",
+ "attractor": {
+  "spec": "E[home margin | elapsed t, |close| bucket] from 285 pbp game paths, 100s cells, 4 spread buckets",
+  "buckets": {
+   "mid": {
+    "0": -0.03,
+    "900": -0.17,
+    "1800": 0.44,
+    "2700": -0.28,
+    "3500": -0.21
+   },
+   "small": {
+    "0": 0.0,
+    "900": 0.18,
+    "1800": -0.77,
+    "2700": -1.39,
+    "3500": -0.46
+   },
+   "big": {
+    "0": 0.17,
+    "900": 1.62,
+    "1800": 3.61,
+    "2700": 4.29,
+    "3500": 2.09
+   },
+   "huge": {
+    "0": 0.0,
+    "900": 4.2,
+    "1800": 5.65,
+    "2700": 10.8,
+    "3500": 12.17
+   }
+  }
+ },
+ "fit": {
+  "theta_per_s": 4.4e-05,
+  "sigma_per_sqrt_s": 0.2963,
+  "half_life_min": 264.1,
+  "n_play_pairs": 42461,
+  "n_games": 285
+ },
+ "rvc_v2": {
+  "n_rows": 1140,
+  "brier_ou": 0.1896,
+  "brier_close": 0.2167,
+  "by_quarter": {
+   "3600": {
+    "brier_ou": 0.2438,
+    "brier_close": 0.2167
+   },
+   "2700": {
+    "brier_ou": 0.2115,
+    "brier_close": 0.2167
+   },
+   "1800": {
+    "brier_ou": 0.1704,
+    "brier_close": 0.2167
+   },
+   "900": {
+    "brier_ou": 0.1326,
+    "brier_close": 0.2167
+   }
+  }
+ },
+ "v1_linear_for_comparison": {
+  "Q1": 0.3107,
+  "Q2": 0.258,
+  "Q3": 0.1939,
+  "Q4": 0.1387,
+  "overall_ou": 0.2283
+ },
+ "verdict": "DIAGNOSTIC \u2014 empirical attractor vs linear decay: the by-quarter deltas decide. Nothing promoted.",
+ "label": "DIAGNOSTIC"
+}
