@@ -14010,3 +14010,110 @@ early-down playcalling, true-pass-set pass-block grades).
   follow requested. @NerdingonNFL / @NFLResearcher timelines
   render empty (re-verified); evaluate @NFL_Researcher as
   replacement.
+
+## X ANALYTICS SWEEP 2026-10-11 (MORNING, 09:08 RUN)
+
+Window: posts after ~09:00 AM CDT through ~09:30 AM CDT Sun
+2026-10-11 (narrow window; the 08:20-09:10 sibling sweep covered
+everything before it). Read-only as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs; no compose boxes touched).
+Login confirmed whole session; no CAPTCHAs, login walls, or
+rate limits. Single browser task: home feed + 21 accounts +
+term searches (EPA, CPOE, TPRR, pass rush win rate,
+aggressiveness); absolute timestamps verified on post pages
+where marked.
+
+### NEW ITEMS
+
+None in-window. No new advanced metric/analytics posts were
+published after ~09:00 AM CDT by any sweep account or surfaced
+in term searches. Near-window exclusions (absolute timestamps
+verified; out of window, covered by the sibling sweep):
+- @GridironInfo_ "Through Week 4 Passer Rating" (Brock Purdy
+  leads at 121.3) — 8:30 AM CDT [abs].
+- @statyxio "Isaiah Likely — earns a target on 32.4% of his
+  routes" (TPRR note) — 8:37 AM CDT [abs].
+
+### DIFFERENT-ANGLE NOTES (already-inventoried metrics,
+re-researched; attributed notes, not build orders)
+
+1. AGGRESSIVENESS SOURCING RESOLUTION — this morning's section
+   flagged a SOURCE MISMATCH on @GridironInfo_'s "2026 QB
+   Aggressiveness": post text attributes the metric to Next Gen
+   Stats while the chart footer reads "Data: nflverse
+   (nflreadpy)". Attributed resolution: nflreadr's data
+   dictionary (via the public research doc at
+   github.com/rahulp7801/agentic-ev-analytics-platform,
+   "Confidence: HIGH") lists `aggressiveness` as an NGS passing
+   field available since 2016 — i.e., nflverse distributes NGS
+   data through nflreadpy/nflreadr. Footer and post text are
+   CONSISTENT, not conflicting. Standing consequence: nflreadpy
+   sightings (now 5 vs 1 nflreadr.org) are plausibly
+   NGS-sourced charts; treat as NGS-via-nflverse unless the
+   poster states otherwise.
+
+2. TE ALIGNMENT / ROLE-BASED DvP KERNEL — second sighting of
+   the kernel from a different lane. Razzball runs a weekly
+   "WR Slot vs. Wide" series (Week 4 and Week 5 editions,
+   football.razzball.com) reporting fantasy production split
+   by alignment as a matchup lens: e.g., Ravens "allowing 31.5
+   fantasy points per game" to out-wide receivers; Carnell
+   Tate "aligned out wide on nearly 70% of his snaps";
+   Cardinals "allow a 60/40 split between perimeter and slot
+   production." Same kernel as the StatRankings TE-alignment
+   chart inventoried this morning (role-based matchup instead
+   of listed-position DvP), different lane: weekly start/sit
+   vs. season-long TE chart.
+
+3. NEGATIVE PLAY % — second angle on the 2026-10-10
+   @sfdata9ers find. Steelers Depot runs a recurring
+   league-wide series studying "negative plays (zero yards or
+   less)" with weekly granularity — e.g., 2025 through Week 8:
+   Steelers 30.2% negative play rate (11th) — plus an
+   explosive-vs-negative quadrant chart framing. Attributed
+   definitional difference: Steelers Depot counts <= zero
+   yards on all pass and run plays (no plays/spikes/kneels
+   removed); @sfdata9ers' chart counts strictly negative-yard
+   plays, penalties and QB kneels excluded. Kernel candidate
+   (attributed, not a build order): the explosive-vs-negative
+   quadrant as a composite offense-stability framing.
+
+### ACCOUNT COVERAGE (nothing in-window unless noted)
+
+@cmain7 (newest 19h, Oct 10); @RyanPaganetti (pregame
+commentary/banter); @jmthrivept (injury commentary only);
+@sfdata9ers (newest 19h); @hawkblogger (Bucs/injury content);
+@MagicSportsGuy (newest 10h; TE-alignment item already
+inventoried); @SumerSports (newest Oct 8); @GridironInfo_
+(passer-rating 8:30 AM out of window; aggressiveness ~07:13 AM
+matches the inventoried 7:00 AM item); @DevyEusuf (hype posts);
+@statyxio (Likely TPRR 8:37 AM out of window);
+@ScottBarrettDFB (banter); @PattonAnalytics (newest Oct 8);
+@EstablishTheRun (article promos/injury news);
+@FantasyPtsData (newest 20-23h); @DonAtkinsonNFL (newest Oct 9);
+@DynatyzeFF (LIVE promo; pinned opportunity chart ~1h, out of
+window); @NerdingonNFL (timeline renders empty, 1 post);
+@PFF (live-game videos/promos); @FTNData (protected, not
+followed); @32BeatWriters (newest 17h).
+
+### WATCH ITEMS (resolutions + carry-forward)
+
+- @NFLResearcher — RESOLVED as parody, drop from the sweep
+  list: bio reads "Covering the NFL with next-gen research.
+  PhD Data Science from South Harmon Institute of Technology."
+  South Harmon Institute of Technology is a fictional/parody
+  institution. Timeline renders empty (4 posts, none
+  displayed). Not an analytics source.
+- @NFL_Researcher ("NFL Researcher", verified) — evaluated
+  as replacement: bio "Data-driven insights, news & analysis
+  about NFL football. All posts automatically posted from our
+  internal NFL data service." Joined Jan 2026; 2 posts total,
+  none displayed; 2 following, 1 follower. Empty feed +
+  low-effort automated-feed bio — not a functioning
+  replacement. Keep off the list until it posts visible
+  content.
+- Carried forward: ARBY computation still unstated; SUPLEX
+  differential definition still absent; Kalshi award-odds
+  series absent (last Sep 27); MHJ trade destination
+  unconfirmed; @FTNData still protected (2,556 followers), no
+  follow requested.
