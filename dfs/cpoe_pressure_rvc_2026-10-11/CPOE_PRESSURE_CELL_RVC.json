@@ -1,0 +1,108 @@
+{
+ "observed_at": "2026-10-11T12:52:00Z",
+ "test": "CPOE x pressure-BIN -> next-week ATS residual vs close (2026 wk1-5)",
+ "n_pairs_total": 94,
+ "method": "OLS next_ats ~ cpoe within pressure bin; held-out fit-odd/test-even; Bonferroni 0.0125 over 4 bins",
+ "heavy_pressure_hypothesis": {
+  "n": 33,
+  "mean_cpoe": 0.77
+ },
+ "cells": {
+  "(0, 3]": {
+   "bin": "(0, 3]",
+   "n": 5,
+   "note": "n<10, refused"
+  },
+  "(3, 6]": {
+   "bin": "(3, 6]",
+   "n": 28,
+   "slope": 0.2215,
+   "t": 0.791,
+   "p": 0.4358,
+   "r": 0.1534,
+   "mean_cpoe": 2.72,
+   "mean_next_ats": -0.554,
+   "bonf_sig": false,
+   "held_out": {
+    "n_train": 18,
+    "n_test": 10,
+    "mse_naive": 111.85,
+    "mse_sig": 117.88,
+    "beats_naive": false
+   }
+  },
+  "(6, 9]": {
+   "bin": "(6, 9]",
+   "n": 28,
+   "slope": -0.1822,
+   "t": -0.637,
+   "p": 0.5295,
+   "r": -0.124,
+   "mean_cpoe": -0.281,
+   "mean_next_ats": 1.429,
+   "bonf_sig": false,
+   "held_out": {
+    "n_train": 22,
+    "n_test": 6,
+    "mse_naive": 138.79,
+    "mse_sig": 141.4,
+    "beats_naive": false
+   }
+  },
+  "(9, 100]": {
+   "bin": "(9, 100]",
+   "n": 33,
+   "slope": -0.3685,
+   "t": -1.28,
+   "p": 0.2101,
+   "r": -0.224,
+   "mean_cpoe": 0.77,
+   "mean_next_ats": -2.606,
+   "bonf_sig": false,
+   "held_out": {
+    "n_train": 20,
+    "n_test": 13,
+    "mse_naive": 148.12,
+    "mse_sig": 131.78,
+    "beats_naive": true
+   }
+  }
+ },
+ "verdict": "REFUSE: no pressure bin survives Bonferroni correction",
+ "label": "DIAGNOSTIC",
+ "descriptive_check": {
+  "note": "Heavy-pressure hypothesis (+1.5 CPOE) checked on full 128 QB-weeks",
+  "bins_full_sample": {
+   "(0, 3]": {
+    "n": 8,
+    "mean_cpoe": 4.885
+   },
+   "(3, 6]": {
+    "n": 36,
+    "mean_cpoe": 2.215
+   },
+   "(6, 9]": {
+    "n": 39,
+    "mean_cpoe": -1.802
+   },
+   "(9, 100]": {
+    "n": 45,
+    "mean_cpoe": 1.466
+   }
+  },
+  "hypothesis_status": "CONFIRMED descriptively: (9,100] mean CPOE +1.47 ~= +1.5, n=45"
+ },
+ "predictive_status": "REFUSED: descriptive fact does not transfer to next-week ATS prediction. No pressure bin CPOE slope survives Bonferroni (0.0125). Pooled signature already refused (CPOE_PRESSURE_NEXT_ATS.json).",
+ "diagnostic_threads": [
+  "(9,100] held-out MSE 131.78 < naive 148.12 (n_test=13) \u2014 suggestive but underpowered; needs frozen 2026 late-season weeks to re-test"
+ ],
+ "reopen_condition": "Frozen 2026 weeks 6+ team-week ATS outcomes joined to QB-week CPOE x pressure bins; re-run cell OLS with n>=20 per bin; one pre-registered cell (9,100]) reaching paired t>=1.96 after Bonferroni.",
+ "stamp": "INFRASTRUCTURE PASS",
+ "result": "REFUSE",
+ "provenance": {
+  "cpoe_pressure_csv": "dfs/cpoe_x_pressure_2026.csv (sha 55db5eae, 128 QB-weeks)",
+  "ats_csv": "dfs/team_week_ats_2026.csv (sha 4dbe54be, 130 team-weeks)",
+  "prior_pooled": "dfs/CPOE_PRESSURE_NEXT_ATS.json (sha d9917b24, REFUSED pooled)",
+  "script": "dfs/cpoe_pressure_rvc_2026-10-11/cell_rvc.py"
+ }
+}
