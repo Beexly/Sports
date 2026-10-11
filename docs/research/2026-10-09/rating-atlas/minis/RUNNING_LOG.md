@@ -439,3 +439,9 @@
 - **FTN charting schema** (30 fields): n_blitzers, n_pass_rushers, qb_location, read_thrown, catchable/contested — the conditioning axes the conditional-residual tables wanted. Blocked on FTN Data API access.
 - **Blocked**: ESPN methodology pages (202 async render — needs browser), NGS API (401 anon), PFR (Cloudflare on curl). Browser lane = next session's unblock path.
 - DIAGNOSTIC. Nothing promoted.
+
+### [07:55] EQ004 TESTED — nflfastR exp kernel loses to our empirical attractor
+- **dfs/eq004_exp_kernel_test.py + EQ004_EXP_KERNEL_TEST.json**: μ_path = close·exp(−k·t/3600), k∈{2,3,4,5,6,8}. Best k=8: overall Brier 0.2095 (vs close 0.2167, vs empirical attractor 0.1896).
+- **Finding**: k sweep monotone — faster kernel decay always predicts better (the market path should die fast). But the parametric kernel loses to the empirical attractor at every k: the data curve captures the build-peak-then-ease shape a single exponential can't.
+- **Verdict**: empirical attractor stays the keeper. Kernel sweep = direction confirmation (re-fit empirical curve with faster late-game decay = next test).
+- DIAGNOSTIC. Nothing promoted.

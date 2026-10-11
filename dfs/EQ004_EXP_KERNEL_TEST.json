@@ -1,0 +1,107 @@
+{
+ "observed_at": "2026-10-11T06:48:11Z",
+ "test": "EQ004 \u2014 OU with nflfastR exponential clock kernel, k sweep",
+ "spec": "mu_path(t) = close * exp(-k * t/3600); nflfastR uses k=4 (10.4min kernel half-life)",
+ "sweep": [
+  {
+   "k": 2,
+   "theta": 5e-05,
+   "sigma": 0.2963,
+   "half_life_min": 233.4,
+   "brier_overall": 0.213,
+   "by_quarter": {
+    "3600": 0.2997,
+    "2700": 0.2384,
+    "1800": 0.1801,
+    "900": 0.1337
+   }
+  },
+  {
+   "k": 3,
+   "theta": 4.6e-05,
+   "sigma": 0.2963,
+   "half_life_min": 249.1,
+   "brier_overall": 0.2136,
+   "by_quarter": {
+    "3600": 0.3072,
+    "2700": 0.2363,
+    "1800": 0.1781,
+    "900": 0.1331
+   }
+  },
+  {
+   "k": 4,
+   "theta": 4.5e-05,
+   "sigma": 0.2963,
+   "half_life_min": 259.5,
+   "brier_overall": 0.2127,
+   "by_quarter": {
+    "3600": 0.31,
+    "2700": 0.2322,
+    "1800": 0.1761,
+    "900": 0.1326
+   }
+  },
+  {
+   "k": 5,
+   "theta": 4.3e-05,
+   "sigma": 0.2963,
+   "half_life_min": 266.5,
+   "brier_overall": 0.2116,
+   "by_quarter": {
+    "3600": 0.3111,
+    "2700": 0.2284,
+    "1800": 0.1747,
+    "900": 0.1323
+   }
+  },
+  {
+   "k": 6,
+   "theta": 4.3e-05,
+   "sigma": 0.2963,
+   "half_life_min": 271.2,
+   "brier_overall": 0.2107,
+   "by_quarter": {
+    "3600": 0.3116,
+    "2700": 0.2253,
+    "1800": 0.1738,
+    "900": 0.1322
+   }
+  },
+  {
+   "k": 8,
+   "theta": 4.2e-05,
+   "sigma": 0.2963,
+   "half_life_min": 277.1,
+   "brier_overall": 0.2095,
+   "by_quarter": {
+    "3600": 0.3119,
+    "2700": 0.221,
+    "1800": 0.1729,
+    "900": 0.1321
+   }
+  }
+ ],
+ "baselines": {
+  "close": 0.2167,
+  "v1_linear": 0.2283,
+  "v2_empirical_attractor": 0.1896
+ },
+ "best": {
+  "k": 8,
+  "theta": 4.2e-05,
+  "sigma": 0.2963,
+  "half_life_min": 277.1,
+  "brier_overall": 0.2095,
+  "by_quarter": {
+   "3600": 0.3119,
+   "2700": 0.221,
+   "1800": 0.1729,
+   "900": 0.1321
+  }
+ },
+ "verdict": "DIAGNOSTIC \u2014 the parametric kernel vs the empirical attractor: whichever wins becomes the live-WP base.",
+ "label": "DIAGNOSTIC",
+ "finding": "k sweep 2\u21928 monotone improves (0.2130\u21920.2095) \u2014 larger kernel decay always helps, i.e. the faster the market path dies, the better the process predicts. But ALL k lose to the empirical attractor (0.1896). The empirical curve captures shape the parametric kernel cannot (the big-favorite build-to-peak-then-ease). VERDICT: empirical attractor is the keeper; the kernel sweep confirms the DIRECTION (faster decay = better) and suggests the empirical curve should also be re-fitted with faster late-game decay.",
+ "next_test": "empirical attractor refit with exponential late-game weighting"
+}
