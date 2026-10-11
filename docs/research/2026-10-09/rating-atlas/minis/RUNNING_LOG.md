@@ -259,3 +259,11 @@
 - **COVERAGE.json**: examined=not-recorded / fitted 262 / >0.15σ 183 / ≤0.15σ 79 / not-fitted unknown
 - Stability + cross-book checks: NOT RUN — single snapshot + no cross-book CFB props on bus; recorded as gaps w/ reopen conditions (no fabrication)
 - All diagnostic. Residual ≠ edge until residual-vs-close on frozen manifest.
+
+### [02:50] GENIE ACQ2 — raw/near-raw edge-bearing artifacts landed
+- **dfs/genie_acq2/_bus_inventory.json**: 22/26 pre-existing residual-capable artifacts inventoried (DK fits, 4 contest ladders, Kalshi ladders, LineStar 93-week harvest, 183-table, distributions)
+- **nash game-lines payload captured live in-session (84.8KB)**: leagueId 87637 CFB subcat 4518, 15 events, 82 selections w/ displayOdds+trueOdds+participants → nash_gamelines_87637_4518.json + nash_hold_matrix_cfb_gamelines.csv
+- **HOLD MATRIX VERDICT (corrected twice, final)**: nash `trueOdds` field ≡ displayOdds.decimal on ALL 82 selections — NOT a vig-free shortcut. Overround median 5.23% (41 2-way CFB game markets, min 1.4% max ~7%+). De-vig remains ours (Shin dispatcher). No shortcut field exists in nash.
+- **Kalshi full-depth orderbooks landed**: PHI 23 yes-levels, JAC 67 yes-levels (orderbook_fp dollar-denominated) — the live liquidity surface for cross-market residuals
+- **Gaps + reopen**: Kalshi trades/candlesticks endpoints 404 (path variants tried — reopen w/ API docs); Kambi betoffer geo-gated (reopen different egress); DK rules JSON still SPA-scoped (open item)
+- All raw. Nothing promoted. Stamps on everything.

@@ -1,0 +1,13 @@
+verdict corrected + landed
+11T02:49:06Z",
+ "finding": "nash trueOdds field = displayOdds.decimal recomputed (identical on all 82 selections) \u2014 NOT a vig-free fair-prob field. Hold lives only in the paired displayOdds; de-vig is on us (Shin/multiplicative).",
+ "overround_2way_markets": {
+  "n": 41,
+  "median": 0.0523,
+  "mean": 0.0563,
+  "min": 0.0139,
+  "max": 0.0717
+ },
+ "context": "matches book_anatomy_2026.json engineered-hold range (DK 4.19%) plus sport/sample variance",
+ "implication": "every nash ladder pull must be de-vigged by our own Shin dispatcher before ladder reconstruction; no shortcut field exists"
+}
