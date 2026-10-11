@@ -178,3 +178,11 @@
 - **ALL 3 PAYOUT LADDERS LANDED**: Millionaire 23 tiers $2.75M (top-10 44.1%), $400K Spy 21 tiers (top-10 47.8%), $150K Fair Catch 23 tiers (top-10 25.3%) → λ recs: HIGH / HIGHEST / LOW-MID respectively (dfs/SESSION_CAPTURES.json)
 - Authed XHR surface mapped from draft page: contests/v1/users/{me}, lineups/v1/lateDraftEntries, dfs/tokens/v1/users/{uuid}?contestKey, events/v1/stream (SSE — Task 4 target confirmed present)
 - Pre-lock ownership confirmed aggregate-only (no per-roster pre-lock XHR on draft page — measured). entries_{contest}.jsonl at-lock path stays the plan.
+
+### [21:45] PRE-LOCK CONSENSUS PIPELINE — TESTED + LIVE
+- **detailspop endpoint cracked**: /contest/detailspop?contestId={id} renders live Entries/entrants/prize in the logged-in session (found via ContestPop JS global in the draft page)
+- **Poller tested 5 cycles** (18-45s random jitter, in-browser reload of the real page — zero non-browser traffic): entries 69,297→69,455 live growth captured, 60-entrant samples per cycle → dfs/consensus_snapshots.jsonl (append-only)
+- **Stealth properties**: runs inside the user's actual Chrome profile via CDP (full fingerprint parity — no headless, no shell requests, no cookie replay outside the browser), human-range cadence; detection surface = a normal logged-in user refreshing a page
+- **Telegram delivery live**: consensus state pushed to @GalaxySportsEdge_bot chat (entries count + trajectory + pipeline status)
+- **Roster-level lineups**: DK exposes aggregates pre-lock only (measured — no per-lineup XHR exists pre-lock); full per-entry lineups enumerate AT LOCK via leaderboardfull/v3 (pull_entries.py ready, session cookies captured). Anything promising pre-lock rosters would be fabrication — the pipeline delivers: live field counts + entrant stream now, full lineup consensus at lock, ~5 min after.
+- dk_live_poller.py landed as the reference extractor contract.
