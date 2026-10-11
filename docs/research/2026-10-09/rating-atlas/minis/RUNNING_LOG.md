@@ -170,3 +170,11 @@
 - **Telegram wired ✅**: @GalaxySportsEdge_bot token stored locally (never echoed); operator chat confirmed (getMe/getUpdates/sendMessage OK); first ILP consensus snapshot delivered. Bot = delivery channel for pre-lock consensus snapshots.
 - **Pre-lock consensus honest mechanics**: DK shows aggregates pre-lock (own% + entry counts), not rosters — lane = poll own% via session cookies → field-lean curve → at-lock leaderboardfull/v3 enumeration (pull_entries.py ready). Roster-level pre-lock does not exist on DK; anything claiming otherwise is fabrication.
 - Tasks 2/4/5 queued: PFR scale-out, WS/SSE capture, bench harness (awaiting entries_{contest}.jsonl).
+
+### [21:20] DK SESSION CAPTURED — chrome-wf CDP lane live (user login)
+- User logged in via chrome-wf profile (port 9222): session verified (users/me + finapi/userbalances 200, baxleylu)
+- **56 DK cookies captured → dfs/dk_session_cookies.json + dk_cookie_header.txt** (STH/STE/PRV/VIDN/SSIDN/EXC/_abck/bm_sz/ss-id/TAsessionID/_csrf all present); files hidden-attribute, values never in chat/git
+- **In-session API surface verified** (shell→403, session→200): draftgroups/v1/draftgroups/154468/draftables (1,079 players w/ PPG+pos-rank quality), contests/v1/contests/{id} for ALL 3 targets
+- **ALL 3 PAYOUT LADDERS LANDED**: Millionaire 23 tiers $2.75M (top-10 44.1%), $400K Spy 21 tiers (top-10 47.8%), $150K Fair Catch 23 tiers (top-10 25.3%) → λ recs: HIGH / HIGHEST / LOW-MID respectively (dfs/SESSION_CAPTURES.json)
+- Authed XHR surface mapped from draft page: contests/v1/users/{me}, lineups/v1/lateDraftEntries, dfs/tokens/v1/users/{uuid}?contestKey, events/v1/stream (SSE — Task 4 target confirmed present)
+- Pre-lock ownership confirmed aggregate-only (no per-roster pre-lock XHR on draft page — measured). entries_{contest}.jsonl at-lock path stays the plan.
