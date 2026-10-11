@@ -96,6 +96,7 @@
 - **REA intel**: open-source RE agent stack (67.9k★) cloned + assessed for Underdog/DK/Novig lanes
 - pandas+numpy installed on iSH (apk py3-pandas py3-numpy); eq agent's pandas version OOMs on multi-season — stdlib rewrite shipped
 
+<<<<<<< HEAD
 ### [21:30] ENGINE STACK RESTORED + k-sweep + quick-win metrics + DFS/deep-books lanes fired
 - **Old engine stack restored from shared mirror → engine/**: engine_math (45 fns: Shin/Kalman/teaser-MC/CRPS), ratings2 (8 systems), calibration2 (Brier/ECE/isotonic/temp/conformal), gap_engines (middles/arbs/IRLS/copulas/steam), kelly2, clv, divergence, ladder_inverse, pick6_hold — ALL IMPORT CLEAN on this machine
 - **k-sweep delivered**: K monotone improves PPD pooled CRPS (8.98→8.61) but t declines (0.52→0.37) — never clears; PPD dead standalone at ANY shrinkage; dampening demo: K=20→2.77, 50→2.50, 100→2.32, 200→2.18 (36 drives @3.2 PPD, prior 2.0)
@@ -130,3 +131,8 @@
 - FreshnessGate: DEFINED in freshness.py but NOT WIRED into any board/signal script (nfl_situational_graph_v1, nfl_pbp_baseline, cfb_prop_engine all lack asof reads) — enforcement gap logged
 - pull_entries.py VERIFIED complete/runnable; DFS_PULLER_SETUP.md written (one manual step: operator exports DK cookies + contest ID)
 - Files: compute_missing_metrics.py, DIAGNOSTIC_compute_missing_metrics_2025.json, team_efficiency_2025_corrected.csv, DFS_PULLER_SETUP.md
+
+### [19:00] GENIE ACQUISITION RUN (7-item list) — landed + blocked, stamped
+- **LANDED (stamped, docs/.../minis/re/genie-acquisition-2026-10-10/, _MANIFEST.json)**: FTN snap-level charting 2022-2026 (197k plays, 29 cols: motion/play-action/RPO/screen/no-huddle/box/blitzers/drops/contested — items 1/2 partial); NGS weekly aggregates 2016-2026 passing/receiving/rushing (cushion, separation, TTT, CPOE, RYOE — item 3 aggregates); ESPN/DK keyless lines snapshot NFL 14 + CFB 5 events (item 4 public proxy); nflverse injuries 2026 wks1-5 w/ practice_status (item 5 public layer); 13 coaching tendency tables from intelligence/coaching (item 6, pass-rate cells/PROE/sequencing/tempo/script-elasticity, 2022-2026); DK CFB prop fits 266 markets + edge sheet + true EV (item 7 partial); RE toolkit refs cloned (ghidra/x64dbg/apktool/h4cker/reverse-skill/rea)
+- **BLOCKED (reopen conditions in _MANIFEST.json)**: PFF per-snap grades+tags (vendor license), SIS charting (license), NGS frame-level coordinates (league-internal; BDB selected games only), book-internal residuals/adjustments/steam rules (book-internal; public proxy landed), non-public medical/day-by-day drills/load rationale (team-internal), DFS contest-level ownership history (needs paid export or logged-in pull)
+- No features built; no promotion; everything raw/near-raw with observed_at + source + schema + coverage + missingness. Bus commit 3158e0a8c.

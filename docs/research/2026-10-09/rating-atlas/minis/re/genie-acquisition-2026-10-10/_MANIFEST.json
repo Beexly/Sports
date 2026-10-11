@@ -1,0 +1,291 @@
+{
+ "generated_at": "2026-10-11T00:02:04Z",
+ "branch": "research/rating-atlas-2026-10-09-packet",
+ "landing_dir": "docs/research/2026-10-09/rating-atlas/minis/re/genie-acquisition-2026-10-10/",
+ "items": [
+  {
+   "file": "ftn_charting_2022.csv.gz",
+   "item": "1/2 \u2014 FTN snap-level charting (public nflverse release)",
+   "source": "nflverse-data ftn_charting release (FTN Data via nflverse), timestamp 2026-10-10 07:02 EDT",
+   "schema": "29 cols: game/play ids (ftn+nflverse), starting_hash, qb_location, n_offense_backfield, n_defense_box, is_no_huddle/motion/play_action/screen_pass/rpo/trick_play/qb_out_of_pocket/interception_worthy/throw_away/catchable_ball/contested_ball/created_reception/drop/qb_sneak, read_thrown, n_blitzers, n_pass_rushers, is_qb_fault_sack, date_pulled",
+   "coverage": "2022 season: wks 1-22",
+   "missingness": "NO formation/personnel/route-concept/coverage-shell/pressure-type/targeted-gap/alignment tags (those are PFF/SIS-proprietary); no pre/post-adjustment grades; week-6 not yet in release",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 420235
+  },
+  {
+   "file": "ftn_charting_2023.csv.gz",
+   "item": "1/2 \u2014 FTN snap-level charting (public nflverse release)",
+   "source": "nflverse-data ftn_charting release (FTN Data via nflverse), timestamp 2026-10-10 07:02 EDT",
+   "schema": "29 cols: game/play ids (ftn+nflverse), starting_hash, qb_location, n_offense_backfield, n_defense_box, is_no_huddle/motion/play_action/screen_pass/rpo/trick_play/qb_out_of_pocket/interception_worthy/throw_away/catchable_ball/contested_ball/created_reception/drop/qb_sneak, read_thrown, n_blitzers, n_pass_rushers, is_qb_fault_sack, date_pulled",
+   "coverage": "2023 season: wks 1-22",
+   "missingness": "NO formation/personnel/route-concept/coverage-shell/pressure-type/targeted-gap/alignment tags (those are PFF/SIS-proprietary); no pre/post-adjustment grades; week-6 not yet in release",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 472792
+  },
+  {
+   "file": "ftn_charting_2024.csv.gz",
+   "item": "1/2 \u2014 FTN snap-level charting (public nflverse release)",
+   "source": "nflverse-data ftn_charting release (FTN Data via nflverse), timestamp 2026-10-10 07:02 EDT",
+   "schema": "29 cols: game/play ids (ftn+nflverse), starting_hash, qb_location, n_offense_backfield, n_defense_box, is_no_huddle/motion/play_action/screen_pass/rpo/trick_play/qb_out_of_pocket/interception_worthy/throw_away/catchable_ball/contested_ball/created_reception/drop/qb_sneak, read_thrown, n_blitzers, n_pass_rushers, is_qb_fault_sack, date_pulled",
+   "coverage": "2024 season: wks 1-22",
+   "missingness": "NO formation/personnel/route-concept/coverage-shell/pressure-type/targeted-gap/alignment tags (those are PFF/SIS-proprietary); no pre/post-adjustment grades; week-6 not yet in release",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 466951
+  },
+  {
+   "file": "ftn_charting_2025.csv.gz",
+   "item": "1/2 \u2014 FTN snap-level charting (public nflverse release)",
+   "source": "nflverse-data ftn_charting release (FTN Data via nflverse), timestamp 2026-10-10 07:02 EDT",
+   "schema": "29 cols: game/play ids (ftn+nflverse), starting_hash, qb_location, n_offense_backfield, n_defense_box, is_no_huddle/motion/play_action/screen_pass/rpo/trick_play/qb_out_of_pocket/interception_worthy/throw_away/catchable_ball/contested_ball/created_reception/drop/qb_sneak, read_thrown, n_blitzers, n_pass_rushers, is_qb_fault_sack, date_pulled",
+   "coverage": "2025 season: wks 1-22",
+   "missingness": "NO formation/personnel/route-concept/coverage-shell/pressure-type/targeted-gap/alignment tags (those are PFF/SIS-proprietary); no pre/post-adjustment grades; week-6 not yet in release",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 458721
+  },
+  {
+   "file": "ftn_charting_2026.csv.gz",
+   "item": "1/2 \u2014 FTN snap-level charting (public nflverse release)",
+   "source": "nflverse-data ftn_charting release (FTN Data via nflverse), timestamp 2026-10-10 07:02 EDT",
+   "schema": "29 cols: game/play ids (ftn+nflverse), starting_hash, qb_location, n_offense_backfield, n_defense_box, is_no_huddle/motion/play_action/screen_pass/rpo/trick_play/qb_out_of_pocket/interception_worthy/throw_away/catchable_ball/contested_ball/created_reception/drop/qb_sneak, read_thrown, n_blitzers, n_pass_rushers, is_qb_fault_sack, date_pulled",
+   "coverage": "2026 wks 1-5",
+   "missingness": "NO formation/personnel/route-concept/coverage-shell/pressure-type/targeted-gap/alignment tags (those are PFF/SIS-proprietary); no pre/post-adjustment grades; week-6 not yet in release",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 105127
+  },
+  {
+   "file": "ngs_passing.csv.gz",
+   "item": "3 \u2014 NGS weekly aggregates (public nflverse release)",
+   "source": "nflverse-data nextgen_stats release, timestamp 2026-10-10 09:11 EDT",
+   "schema": "weekly player aggregates incl avg_time_to_throw, air_yards, aggressiveness, CPOE, air_distance",
+   "coverage": "seasons 2016-2026, 2026 wks 1-6",
+   "missingness": "AGGREGATES ONLY \u2014 NOT frame-level x/y/speed/accel/orientation tracking; no ball tracking; no quality flags (Big Data Bowl covers only selected games)",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 651507
+  },
+  {
+   "file": "ngs_receiving.csv.gz",
+   "item": "3 \u2014 NGS weekly aggregates (public nflverse release)",
+   "source": "nflverse-data nextgen_stats release, timestamp 2026-10-10 09:11 EDT",
+   "schema": "weekly player aggregates incl avg_cushion, avg_separation, avg_yac vs expected",
+   "coverage": "seasons 2016-2026, 2026 wks 1-6",
+   "missingness": "AGGREGATES ONLY \u2014 NOT frame-level x/y/speed/accel/orientation tracking; no ball tracking; no quality flags (Big Data Bowl covers only selected games)",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 1111596
+  },
+  {
+   "file": "ngs_rushing.csv.gz",
+   "item": "3 \u2014 NGS weekly aggregates (public nflverse release)",
+   "source": "nflverse-data nextgen_stats release, timestamp 2026-10-10 09:11 EDT",
+   "schema": "weekly player aggregates incl efficiency, time_to_los, rush_yards_over_expected",
+   "coverage": "seasons 2016-2026, 2026 wks 1-6",
+   "missingness": "AGGREGATES ONLY \u2014 NOT frame-level x/y/speed/accel/orientation tracking; no ball tracking; no quality flags (Big Data Bowl covers only selected games)",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 357502
+  },
+  {
+   "file": "espn_dk_lines_snapshot_2026-10-10.csv",
+   "item": "4 \u2014 book line surface proxy (DK via ESPN keyless)",
+   "source": "ESPN site.web.api scoreboard odds=true; provider=DraftKings",
+   "schema": "event, provider, spread, spread_value, over_under, home_ml, away_ml, observed_at",
+   "coverage": "NFL wk-6+ slate: 14 events; CFB: 2 events (live Thursday)",
+   "missingness": "PUBLIC DK LINES ONLY \u2014 not book internals (no residual surfaces, private injury/weather adjustments, ladder logic, hold/steam rules); single-book; no player props; prices move hourly",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 3074
+  },
+  {
+   "file": "espn_cfb_lines_2026-10-10.csv",
+   "item": "4 \u2014 CFB line surface proxy (DK via ESPN keyless)",
+   "source": "ESPN site.web.api college-football scoreboard odds=true, dates 20261010-12",
+   "schema": "same schema as NFL snapshot",
+   "coverage": "5 CFB events w/ DK odds",
+   "missingness": "same as NFL proxy; single book; game lines only",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 905
+  },
+  {
+   "file": "injuries_2026.parquet",
+   "item": "5 \u2014 injuries + practice participation (public nflverse)",
+   "source": "nflverse-data injuries release (team-sourced NFL wire + practice reports)",
+   "schema": "16 cols: report_primary/secondary_injury, report_status, practice_primary/secondary_injury, practice_status (Full/Limited/DNP), gsis_id, week, team",
+   "coverage": "2026 season wks 1-5 (1,409 rows)",
+   "missingness": "practice_status is participation level only \u2014 NO day-by-day drill breakdown, NO load-management rationale, NO non-public medical detail/clearance notes/timelines",
+   "observed_at": "2026-10-11T00:02:04Z",
+   "bytes": 40596
+  },
+  {
+   "file": "off_tendencies.csv",
+   "item": "6 \u2014 coaching offensive tendency slices",
+   "source": "derived in-repo from nflverse pbp 2022-2026 (intelligence/coaching/build)",
+   "schema": "160 rows x 26 cols: ['season', 'team', 'plays', 'pass_rate_all', 'pass_rate_early', 'pass_rate_1st', 'pass_rate_2nd', 'pass_rate_3rd']...",
+   "coverage": "2022-2025 full, 2026 wks 1-3",
+   "missingness": "public pbp-derived only \u2014 no PFF/SIS charting inputs, no scripted-vs-audible ground truth",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 62786
+  },
+  {
+   "file": "def_tendencies.csv",
+   "item": "6 \u2014 coaching defensive tendency slices",
+   "source": "same",
+   "schema": "160 rows x 11 cols: ['season', 'team', 'dropbacks_vs', 'rushes_vs', 'sack_rate_vs', 'qbhit_rate_vs', 'pressure_proxy', 'tfl_rate_vs_rush']...",
+   "coverage": "2022-2026 (wks 1-3)",
+   "missingness": "proxy from pbp, not charted coverage shells",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 15593
+  },
+  {
+   "file": "pass_rate_cells.csv",
+   "item": "6 \u2014 pass-rate cells (LOYO input)",
+   "source": "same",
+   "schema": "1395 rows x 7 cols: ['season', 'team', 'down_group', 'ydstogo_bin', 'n_pass', 'n_rush', 'n_plays']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 46747
+  },
+  {
+   "file": "script_elasticity.csv",
+   "item": "6 \u2014 scripted-drive elasticity",
+   "source": "same",
+   "schema": "160 rows x 4 cols: ['season', 'team', 'beta_script', 'n_plays']...",
+   "coverage": "2022-2026",
+   "missingness": "scripted = first-15 proxy, not coach-confirmed",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 3498
+  },
+  {
+   "file": "sequencing.csv",
+   "item": "6 \u2014 play sequencing",
+   "source": "same",
+   "schema": "320 rows x 8 cols: ['season', 'team', 'down', 'n_pairs', 'p_pass_after_succ_run', 'p_pass_after_fail_run', 'contrast', 'contrast_se']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 14450
+  },
+  {
+   "file": "tempo.csv",
+   "item": "6 \u2014 tempo",
+   "source": "same",
+   "schema": "160 rows x 7 cols: ['season', 'team', 'pace_p25', 'pace_med', 'pace_p75', 'hurryup_rate', 'n_diffs']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 5692
+  },
+  {
+   "file": "timeouts.csv",
+   "item": "6 \u2014 timeout usage",
+   "source": "same",
+   "schema": "130 rows x 6 cols: ['season', 'team', 'timeouts_per_game', 'share_before_2mw', 'n_games', 'challenge_note']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 9502
+  },
+  {
+   "file": "rz_mix.csv",
+   "item": "6 \u2014 red-zone mix",
+   "source": "same",
+   "schema": "160 rows x 8 cols: ['season', 'team', 'n_rz_plays', 'rz_pass_rate', 'rz_proe', 'rz_proe_se', 'gtg_pass_rate', 'n_gtg_plays']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 7163
+  },
+  {
+   "file": "second_and_short.csv",
+   "item": "6 \u2014 2nd-and-short table",
+   "source": "same",
+   "schema": "320 rows x 5 cols: ['season', 'team', 'situation', 'n_plays', 'pass_rate']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 8178
+  },
+  {
+   "file": "proe_early_neutral.csv",
+   "item": "6 \u2014 Pass Rate Over Expected (EB-shrunk)",
+   "source": "same",
+   "schema": "160 rows x 8 cols: ['season', 'team', 'n_plays', 'pass_rate_actual', 'pass_rate_expected', 'proe_raw', 'proe', 'proe_se']...",
+   "coverage": "2022-2026",
+   "missingness": "k=290 shrinkage",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 9499
+  },
+  {
+   "file": "adjustments.csv",
+   "item": "6 \u2014 in-season adjustment deltas",
+   "source": "same",
+   "schema": "2214 rows x 7 cols: ['season', 'team', 'week', 'mahal_dist', 'pct_rank', 'delta_json', 'context_note']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 509557
+  },
+  {
+   "file": "coach_offense.csv",
+   "item": "6 \u2014 coach-level offense table",
+   "source": "same",
+   "schema": "19 rows x 29 cols: ['season', 'team', 'plays', 'pass_rate_all', 'pass_rate_early', 'pass_rate_1st', 'pass_rate_2nd', 'pass_rate_3rd']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 8426
+  },
+  {
+   "file": "coach_defense.csv",
+   "item": "6 \u2014 coach-level defense table",
+   "source": "same",
+   "schema": "8 rows x 14 cols: ['season', 'team', 'dropbacks_vs', 'rushes_vs', 'sack_rate_vs', 'qbhit_rate_vs', 'pressure_proxy', 'tfl_rate_vs_rush']...",
+   "coverage": "2022-2026",
+   "missingness": "\u2014",
+   "observed_at": "2026-10-11T00:02:14Z",
+   "bytes": 1157
+  },
+  {
+   "file": "ghidra_x64dbg_apktool_h4cker_reverse-skill_rea (cloned dirs)",
+   "item": "RE/RE-toolkit references (user-directed)",
+   "source": "github: NationalSecurityAgency/ghidra, x64dbg/x64dbg, zhaoxuya520/reverse-skill, The-Art-of-Hacking/h4cker, iBotPeaches/Apktool, morluto/rea (depth-1 clones)",
+   "schema": "source trees",
+   "coverage": "latest main @ 2026-10-10",
+   "missingness": "not data artifacts; tooling/reference only",
+   "observed_at": "2026-10-11T00:02:26Z",
+   "bytes": 0
+  }
+ ],
+ "blocked": [
+  {
+   "item": "1/2 \u2014 PFF snap grades + full charting tags (formation, personnel, route concept, coverage shell, pressure type/source/timing, targeted gap, alignment/role, pre/post-adjustment grades, revision logs)",
+   "status": "BLOCKED \u2014 proprietary vendor feed",
+   "reopen": "PFF API/enterprise credential (or Teamworks PFF Enterprise license) lands on the bus; public PFF leaderboards land only aggregate weekly tables, not per-snap tags",
+   "what_exists": "FTN charting (landed) covers motion/play-action/RPO/screen/no-huddle/box/blitzers/drops/contested at snap level; repo PFF public leaderboard CSVs under docs/dfs/research/*/full-tables/ are aggregates"
+  },
+  {
+   "item": "2 \u2014 SIS complete charting (route trees, coverage shells, pressure packages, drop depths, internal success criteria)",
+   "status": "BLOCKED \u2014 proprietary; SIS data not in nflverse public releases; no credential in repo",
+   "reopen": "SIS DataHub license or licensed feed credential; FTN tags partially proxy route/pressure intent but NOT exact route trees or coverage shells"
+  },
+  {
+   "item": "3 \u2014 frame-level tracking (x,y,speed,accel,orientation, ball tracking, quality flags)",
+   "status": "BLOCKED \u2014 NGS raw coordinates are league-internal; public NGS = weekly aggregates (landed); Big Data Bowl releases cover only selected games/weeks",
+   "reopen": "NFL Big Data Bowl tracking release for a broader week set, or a tracking vendor credential (e.g. Second Spectrum/Zebra via league or team license)"
+  },
+  {
+   "item": "4 \u2014 book residual surfaces, private injury/weather adjustments, ladder construction logic, hold/shading/steam rules w/ timestamps",
+   "status": "BLOCKED \u2014 book-internal; public proxy landed (ESPN/DK keyless lines snapshot; repo already holds book_anatomy_2026.json holds/shade/CRPS + dk_vs_pinnacle_shade_2026-10-10.csv + dk_cfb_prop_fits.json)",
+   "reopen": "any book-internal feed (employee/leaked/derived-vendor) \u2014 or build residual surfaces from scored closes vs our model (already queued in repo as residual-vs-close gates)"
+  },
+  {
+   "item": "5 \u2014 non-public medical detail, day-by-day drill participation, load-management rationale, clearance notes",
+   "status": "BLOCKED \u2014 team-internal; public practice_status only (landed: injuries_2026.parquet)",
+   "reopen": "Teamworks/Kitman Labs-style feed credential or team-embedded source"
+  },
+  {
+   "item": "7 \u2014 contest-level DFS lineups/ownership history + prop ladder internals",
+   "status": "PARTIAL \u2014 repo holds DKSalaries-Week3-SunMon.csv (slate salaries, no ownership) + cfb_prop_edge_sheet/true_ev + dk ladder fits (dk_cfb_prop_fits.json, 266 player-markets)",
+   "reopen": "historical ownership/contest results need paid DFS export (Rotogrinders/DFSnation) or user-authorized DK contest-history pull via logged-in session",
+   "what_exists": "266-market DK CFB prop fits w/ per-player sigma; edge sheet + both-sides true EV for 20 props"
+  }
+ ]
+}
