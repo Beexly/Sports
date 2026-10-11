@@ -14117,3 +14117,113 @@ followed); @32BeatWriters (newest 17h).
   series absent (last Sep 27); MHJ trade destination
   unconfirmed; @FTNData still protected (2,556 followers), no
   follow requested.
+
+## X ANALYTICS SWEEP 2026-10-11 (PM, 16:20 RUN)
+
+Window: posts after ~09:00 AM CDT through ~5:05 PM CDT Sun
+2026-10-11 (~8h, Week 5 Sunday slate in progress). Read-only as
+@GalaxySportsHQ (no likes/reposts/replies/follows/DMs; no
+compose boxes touched). Login confirmed by all three tasks; no
+CAPTCHAs, login walls, or rate limits. Three parallel browser
+tasks: (A) home feed + 19 metrics/analytics accounts + term
+searches (EPA, CPOE, TPRR, pass rush win rate, aggressiveness);
+(B) news/injury (Schefter, RapSheet, Pelissero, Fowler,
+Garafolo, 32BeatWriters); (C) market + scheme/film
+(VSiNLive, Covers, ActionNetworkHQ, Bet_Labs, Nate_Tice,
+benbbaldwin). Absolute timestamps verified on post pages where
+marked [abs].
+
+### NEW ITEMS
+
+1. @Doug_Analytics — "Commanders 11-personnel EPA split by
+   defensive front" (2026-10-11 3:55 PM CDT [abs];
+   x.com/Doug_Analytics/status/2109387424677638398). NEW
+   ANGLE: personnel x defensive-front interaction split of EPA.
+   Values given in the post (two cells, no full table): vs 2
+   DL: +0.57 EPA/play (18 plays); vs 1 DL: −0.26 EPA/play (13
+   plays). No data source stated in the post. No caveats
+   stated. (No CSV: two data cells only.)
+
+### DIFFERENT-ANGLE NOTES (already-inventoried metrics,
+re-researched; attributed notes, not build orders)
+
+1. LIVE HALF-VS-GAME EPA SPLITS — @sfdata9ers posted two Week
+   5 early-window QB EPA/play leaderboards while games were in
+   progress: 1st-half split (1:42 PM CDT [abs]) — Maye 0.67,
+   Burrow 0.52, D. Jones 0.29, Cousins 0.27, Rodgers 0.26,
+   Stroud 0.16, Love 0.15, Murray 0.06, Daniels −0.03, Shough
+   −0.04, Geno −0.12, Watson −0.19; full-game early-window
+   (3:49 PM CDT [abs]) — Maye 0.71, Burrow 0.46, Love 0.45,
+   Stroud 0.3, Winston 0.29, Cousins 0.28, Murray 0.22,
+   Daniels 0.19, Rodgers 0.14, D. Jones 0.02, Willis −0.18,
+   Watson −0.22. Attributed angle: live half-vs-final EPA
+   leaderboards as an in-progress-game granularity on top of
+   the inventoried EPA leaderboard series. No data source
+   stated.
+2. SPECIAL-TEAMS EPA — @NeutralZoneLabs (in-window, ~29m old
+   at capture): Seahawks led the NFL in special-teams EPA last
+   season at ~3.8 points/game. Attributed angle: team-level ST
+   EPA per game as a distinct phase-of-game metric alongside
+   the inventoried offensive/defensive EPA series. No data
+   source stated.
+3. PASS RUSH WIN RATE — @ESPNInsights (10:45 AM CDT [abs]):
+   Seahawks lead the NFL with 69% pass rush win rate this
+   season (11 sacks through 4 games); Purdy not sacked through
+   4 games. @CoachCherry93 (2h): Panthers edge rusher Princely
+   Umanmielen is 3rd in the NFL in pass rush win rate. NGS
+   metric, no new definition.
+4. DEEP PASSING YARDS (NGS-era frame) — @NextGenStats (via
+   @NFL, ~4:05 PM CDT): Jordan Love completed 6 of 8 deep
+   passes (20+ air yards) for a career-high 258 yards and 2
+   TDs in the Packers' Week 5 win over the Bears; only Russell
+   Wilson (264, Week 2 2025) had more deep passing yards in a
+   game in the NGS era (since 2016). Attributed angle: single-
+   game deep-passing-yardage framed against the full NGS-era
+   distribution.
+5. STROUD NGS GAME LINE — @JacobBarzilla (via @NextGenStats,
+   ~4:37 PM CDT): C.J. Stroud vs Titans — 26/34, 261 yds,
+   2 TD-0 INT, +13.1% CPOE, +0.30 EPA/play, 51% success rate.
+   Source explicitly @NextGenStats. Kernel (attributed, not a
+   build order): NGS-attributed single-game CPOE/EPA/success
+   rate bundles as a QB-efficiency snapshot format.
+6. AVERAGE SEPARATION SCORE BY ROUTE (context, out of window)
+   — @FantasyPtsData Oct 10 Data Suite 2.0 route tree,
+   Average Separation Score 2024-2026 (min 100 RTE, all
+   coverage, any alignment): MHarrison — Go −0.037 (30th
+   pct), Corner −0.065 (12th), Post 0.076 (49th), Out 0.140
+   (57th), In 0.230 (91st), Hitch 0.050 (83rd), Crosser
+   0.112 (63rd), Slant 0.086 (70th); Nico Collins — Go 0.174
+   (98th), Corner 0.157 (85th), Post 0.130 (70th), Out 0.169
+   (65th), In 0.142 (74th), Hitch 0.096 (95th), Crosser
+   0.040 (31st), Slant −0.055 (30th). Stated source:
+   fantasypointsdata.com Data Suite 2.0. Attributed angle:
+   per-route separation as a role-based matchup lens (same
+   kernel family as the StatRankings TE-alignment chart).
+
+### PRODUCT/NON-METRIC NOTES (not inventoried)
+
+- @MagicSportsGuy (~10:30 AM CDT): StatRankings projection
+  pages rebuilt "this morning" — live prop market (best line
+  across books), projection leaders ticker, DK/FD/Underdog
+  scoring, DK/FD salaries + FP/$, mobile-optimized player
+  cards. Metric-product announcement.
+- @GridironInfo_ pinned Oct 9 (out of window): 2-point
+  conversion model claim — going for 2 down 14 gives 58.9%
+  win chance vs 46.1% kicking first. Noted for next sweep if
+  revisited.
+
+### WATCH ITEMS (resolutions + carry-forward)
+
+- @NerdingonNFL timeline still effectively empty (1 post,
+  none displayed). @FTNData still protected (1,276 posts), no
+  follow requested. @NFLResearcher stays off the list
+  (parody). @NFL_Researcher stays off (empty automated feed).
+  @VSiN lowercase stays avoided (squat); @VSiNLive confirmed
+  real.
+- @RapSheet profile served a stale timeline on first load
+  (unverified items excluded by the sweep task; resolved on
+  reload). Flag for future sweeps: verify RapSheet items
+  against post pages before recording.
+- Carried forward: ARBY computation still unstated; SUPLEX
+  differential definition still absent; Kalshi award-odds
+  series absent (last Sep 27).
