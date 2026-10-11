@@ -13717,3 +13717,105 @@ unrelated 0-post account).
   Week 5 → statrankings.com subscribers (standing). SUPLEX
   differential definition still absent. @GridironInfo_ Kalshi
   award-odds series still absent (last Sep 27).
+
+## X ANALYTICS SWEEP 2026-10-10 (EVENING)
+
+Window: posts after ~04:30 PM CDT through ~09:10 PM CDT Sat
+2026-10-10 (~4.7h, Saturday evening before Week 5 Sunday).
+Read-only sweep as @GalaxySportsHQ (no likes/reposts/replies/
+follows/DMs; one compose dialog accidentally triggered while
+viewing a reply — closed immediately, nothing posted). Login
+confirmed; no CAPTCHAs, login walls, or rate limits. Single
+browser task: home feed + 21 analytics accounts + term searches
+(EPA, CPOE, TPRR, pass rush win rate, aggressiveness — all
+quiet). Absolute timestamp verified on the opened post page.
+@FTNData still protected (no follow requested). @NerdingonNFL
+and @NFLResearcher timelines render empty (re-verified this
+run).
+
+### NEW ITEMS
+
+1. @PFF — "Highest receiving grade among WR this season"
+   (2026-10-10 7:05 PM CDT, absolute from post page). Metric:
+   PFF receiving grades (standard PFF metric; definition NOT
+   stated in the post). Chart values: Jaxon Smith-Njigba 92.3,
+   CeeDee Lamb 91.1, Zay Flowers 91.1, Tee Higgins 90.7, Drake
+   London 90.4, Mike Evans 90.4, DeVonta Smith 90.2, Chris
+   Olave 90.0, Justin Jefferson 84.9, Nico Collins 84.6. Data
+   source: PFF's own grades (branding only; no footer).
+   Caveats: none stated; no minimum-snap/play qualifier
+   stated. CSV:
+   docs/dfs/research/2026-10-10/full-tables/
+   pff-wr-receiving-grades-through-week4-2026.csv. Kernel
+   (attributed, not a build order): none — standard known
+   metric, new weekly snapshot; NOT an innovation candidate.
+
+### ENDPOINT OBSERVATIONS (observed only; no new chart-footer
+endpoints in-window)
+
+- @SumerSports: bio link bit.ly/getsumerpass — "SumerPass: The
+  ultimate football research platform" (their own platform).
+- @statyxio: bio link statyx.io — "Enterprise data at a
+  fraction of a cost!" (their own platform; Route IQ tool).
+- @FantasyPtsData: bio link fantasypointsdata.com — "Data
+  Suite 2.0", hand-charted, 750+ data points.
+- @ScottBarrettDFB: bio link fantasypointsdata.com ("Free
+  Premium Stats & Tools").
+- @PattonAnalytics: posts attributed to StatRankings /
+  FTNFantasy; bio link nflcoachprofiles.com.
+- @MagicSportsGuy: founder of StatRankings (statrankings.com)
+  & FTN Fantasy/Data.
+- @DynatyzeFF: bio link dynatyze.com/football.
+- @GridironInfo_: chart footer "Data: nflreadpy" (already
+  inventoried; 4th sighting this lane).
+
+### INNOVATION CANDIDATE
+
+- @statyxio (2026-10-10 5:51 PM CDT) — new Route IQ feature:
+  "Interactive chart now shows where the player has an EDGE
+  over the opponent's Defense." No definition of the EDGE
+  calculation was given in the post. Kernel (attributed, not
+  a build order): player-vs-defense edge visualization — a
+  differential framing (player rating relative to opponent
+  defense) rather than an absolute chart. NOTE: this is a
+  product feature announcement, not a defined metric; do NOT
+  treat the EDGE as an inventoried metric.
+
+### NEWS (in-window, attributed)
+
+- @32BeatWriters (~5h): Raiders elevated RB Roman Hemby with
+  Ashton Jeanty QUESTIONABLE — reinforces the likely-out read
+  (Jeanty questionable already known from the afternoon
+  sweep).
+- MHJ trade watch: Texans remain in the mix per trade-market
+  chatter (@jmthrivept quoting Jeremy Fowler, ~7h); NO final
+  destination confirmed in-window.
+- TNF final: 49ers 20–17 over Seahawks (X trending widget;
+  already known).
+
+### MARKET (in-window)
+
+- No NFL Week 5 line moves, steam, or sharp-vs-public splits
+  observed in-window (market accounts quiet on NFL; Saturday
+  evening focused on the college slate).
+
+### ACCOUNT COVERAGE (nothing in-window unless noted)
+
+@cmain7 (college football only); @RyanPaganetti (MHJ trade
+commentary 10h, Jeanty 6h — outside window); @jmthrivept
+(commentary); @sfdata9ers (college football; pinned NFL chart
+is Oct 6); @hawkblogger (49ers-Seahawks event); @MagicSportsGuy
+(Week 5 projection/injury updates); @SumerSports (latest Oct
+8); @DevyEusuf (college football); @ScottBarrettDFB (MHJ trade
+commentary); @PattonAnalytics (latest Oct 8); @EstablishTheRun
+(DFS Top Plays); @FantasyPtsData (Nico Collins vs MHJ
+stylistic-fit chart 8h — outside window); @DonAtkinsonNFL
+(21–22h); @DynatyzeFF (8h+).
+
+### WATCH ITEMS (still open)
+
+- ARBY computation still unstated. SUPLEX differential
+  definition still absent. Kalshi award-odds series still
+  absent (last Sep 27). MHJ final trade destination
+  unconfirmed. nflreadpy now at 4 sightings vs 1 for
+  nflreadr.org.
