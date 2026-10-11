@@ -1,0 +1,8 @@
+{
+ "frozen_at": "2026-10-11T02:55:14Z",
+ "artifact": "docs/research/2026-10-09/rating-atlas/minis/dk_cfb_prop_fits.json",
+ "sha256": "a146e3663410c85a7c700a2aa61cc619aded2ecdd252801f4c49c9a189f31da4",
+ "content": "262 valid CFB ladder fits (mu_fit, sigma, dk_stat posted line, r2, n) \u2014 frozen for residual-vs-close test",
+ "test_design": "FRESH closing ladder pull (nash, same 4518 subcat league 87637) \u2192 de-vig (Shin) \u2192 re-fit (mu_close,sigma_close) \u2192 residual = (mu_close-mu_fit)/sigma_fit per player \u2192 distribution vs 0 = line-move residual. Outcome grading when games settle = full residual-vs-close. All diagnostic.",
+ "gate": "FreshnessGate v2 read_fresh() on the fresh pull; refusal \u2192 close-only + kill ledger"
+}

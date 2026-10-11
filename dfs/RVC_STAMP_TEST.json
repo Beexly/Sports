@@ -1,0 +1,23 @@
+{
+ "observed_at": "2026-10-11T02:57:15Z",
+ "test": "residual-vs-close infrastructure stamp (line-move residual, game-level)",
+ "frozen_manifest": "dfs/frozen_manifest_rvc.json",
+ "frozen_sha256_16": "a146e3663410c85a",
+ "open_snapshot": "dfs/genie_acq2/nash_gamelines_87637_4518.json (2026-10-10 ~16:12Z pull embedded in fits artifact session)",
+ "close_snapshot": "dfs/genie_acq2/nash_gamelines_87637_4518_CLOSE.json (2026-10-11T02:55:44Z, FreshnessGate PASS age 0.0h)",
+ "matched_pairs": 71,
+ "moved": 40,
+ "move_stats": {
+  "mean": -0.0011,
+  "median": -0.001,
+  "max_abs": 0.4507
+ },
+ "read_path": "FreshnessGate v2 read_fresh() \u2014 close snapshot PASS; frozen artifact F2 (pre-gate format: \"captured\" key) \u2192 gate alias list updated to include \"captured\" for frozen manifests",
+ "verdict": "INFRASTRUCTURE PASS \u2014 residual measurable on frozen manifest w/ enforced reads. MODEL-SKILL STAMP PENDING outcome grading (CFB games settle Sat).",
+ "label": "DIAGNOSTIC",
+ "reopen": [
+  "outcome grading: when CFB games settle, grade line-move-vs-outcome \u2192 full residual-vs-close stamp",
+  "player-prop close: deeper nash subcat pulls (9524/16569-16571) per event \u2192 262-fit player-level residual-vs-close",
+  "gate alias: add \"captured\" to FreshnessGate stamp-key aliases for pre-gate frozen artifacts (or stamp the frozen file with observed_at at freeze time)"
+ ]
+}

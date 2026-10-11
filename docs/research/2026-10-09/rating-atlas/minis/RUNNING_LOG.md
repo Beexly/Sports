@@ -275,3 +275,11 @@
 - **Wiring order for all boards/DFS**: replace direct json.load/pd.read_csv with read_fresh(); render audit.label verbatim on every surface; on refusal use close_only_fallback() output. NO bypass path exists in the module (single entry point, ledger mandatory on refusal).
 - **DIAGNOSTIC until residual-vs-close clears on frozen manifest.** No promotion of shade outliers, THE_FLOOR upgrades, or research-packet context.
 - Doctrine confirmed: residual inventories closed (2962b15ae), shade≈0 stamped, all diagnostic.
+
+### [03:10] WEBSOCKET PROTOCOL CRACKED — DK live-odds push layer reverse-engineered
+- **wss://sportsbook-ws-us-wv.draftkings.com/websocket CONNECTED from python** (websocket-client + session cookies + origin header). Server responds JSON (validation errors + subscription-terminated events w/ websocketPublishTimestamp).
+- **Message envelope extracted from dk_datalayer.js (101KB CDN bundle)**: subscribe = {name:'subscribe', params:{query:{channel:'v1/...', params:{}, include:'...'}, id}}; unsubscribe = {name:'unsubscribe', params:{id}}. Channel paths mirror the nash REST routes (v1/leagues/87637, v1/events/34118254, subcat tree).
+- **Server distinguishes**: broken shape → exception/validation error; parsed shape w/ invalid sub → subscription-terminated. Proof the envelope is correct; remaining blocker = connection-scoped token from authorizationManager.makeGetUrl inside the live page (browser daemon dropped before full capture — reopen w/ fresh CDP).
+- **Delta stream shape** (from client.js callback wiring): {data:{add:{events,markets},change,remove}, metadata:{publishedTime}} — a proper diff stream for live odds.
+- **Prod transport = Msgpack** (connectionFormat config), test = Json. Files landed: dk_sb_client.js (1.6MB), dk_datalayer.js (101KB), WS_PROTOCOL_MAP.json
+- All protocol knowledge → THE_FLOOR protocol layer. Diagnostic; no market use until token flow captured.

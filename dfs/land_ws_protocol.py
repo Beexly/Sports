@@ -1,0 +1,44 @@
+"""Land the DK WebSocket protocol map — the cracked live-odds push protocol."""
+import json, time
+
+proto = {
+    'observed_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+    'endpoint': 'wss://sportsbook-ws-us-wv.draftkings.com/websocket',
+    'auth': 'session cookies at connect (browser); X-Client-Name: web in datalayer config',
+    'message_format': 'JSON (test env: Json; prod wrapper: Msgpack)',
+    'subscribe_shape': {
+        'name': 'subscribe',
+        'params': {
+            'query': {
+                'channel': 'v1/...',
+                'params': {'locale': 'en', 'format': 'json'},
+                'include': 'Events,Markets,Selections',
+            },
+            'id': '<id>',
+        },
+    },
+    'server_responses': {
+        'shape_ok_but_invalid_sub': '{"event":"subscription-terminated"}',
+        'shape_broken': '{"event":"exception","error":{"code":-32600,"message":"validation error"}}',
+    },
+    'unsubscribe_shape': {'name': 'unsubscribe', 'params': {'id': '<id>'}},
+    'delta_stream_shape': {
+        'data': {'add': {'events': [], 'markets': []}, 'change': {}, 'remove': {}},
+        'metadata': {'publishedTime': 0},
+    },
+    'channel_examples': {
+        'league': 'v1/leagues/87637',
+        'event': 'v1/events/34118254',
+        'subcat': 'v1/leagues/{lg}/categories/{c}/subcategories/{s}',
+    },
+    'verified': ('envelope parsed server-side (exception vs terminated distinction proves the message '
+                 'shape was parsed); full subscription requires the connection-scoped token from the '
+                 'authorizationManager.makeGetUrl flow inside the live page'),
+    'file_evidence': [
+        'dfs/dk_sb_client.js (1.6MB sportsbook app bundle — makeSubscriber/handleOpen/Msgpack config)',
+        'dfs/dk_datalayer.js (101KB WS client + channel route map + query envelope)',
+    ],
+}
+
+json.dump(proto, open('dfs/genie_acq2/WS_PROTOCOL_MAP.json', 'w'), indent=1)
+print('landed dfs/genie_acq2/WS_PROTOCOL_MAP.json')
