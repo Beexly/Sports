@@ -186,3 +186,8 @@
 - **Telegram delivery live**: consensus state pushed to @GalaxySportsEdge_bot chat (entries count + trajectory + pipeline status)
 - **Roster-level lineups**: DK exposes aggregates pre-lock only (measured — no per-lineup XHR exists pre-lock); full per-entry lineups enumerate AT LOCK via leaderboardfull/v3 (pull_entries.py ready, session cookies captured). Anything promising pre-lock rosters would be fabrication — the pipeline delivers: live field counts + entrant stream now, full lineup consensus at lock, ~5 min after.
 - dk_live_poller.py landed as the reference extractor contract.
+
+### [22:00] BOT ACCURACY FIX — entrant-vs-player labeling corrected
+- Bug: consensus snapshot labeled DK ENTRANT USERNAMES (tsirinsky, Ruby3108...) ambiguously — read as player names. They were never players; they are the contest's entrant list (people who entered).
+- Fix: correction + fully-verified lineup pushed to Telegram; every player cross-checked against DK draftables pool dg-154468 (587 players). All 9 valid incl. DST-by-team-name convention ('Vikings' = Vikings DST, DK's own naming).
+- Message contract hardened: ENTRANTS=people/usernames, LINEUP=pool-verified players, ENTRIES=live count. All future bot pushes carry explicit labels + provenance.
