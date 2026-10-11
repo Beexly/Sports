@@ -485,3 +485,10 @@
 - The situational-graph "rest edge" is already inside the closing spread. Fourth independent confirmation of the master lesson: raw situational effects shrink to zero vs close.
 - Also landed: officials 2026 (22,012 rows), games.csv full schedule (7,548 rows w/ away_rest/home_rest).
 - DIAGNOSTIC. Nothing promoted.
+
+### [09:35] 2-POINT TABLE PRICED FROM DATA — EQ010 branch, the go-for-2 equilibrium
+- **dfs/TWOPOINT_TABLE_STAMP.json + twopoint_by_score_state.csv**: 278 attempts 2024-25. Overall conversion 43.2% → 2pt EV 0.863 pts < XP 0.94 → league-average = KICK XP (the analytics-press "go for 2" is below water at the mean).
+- **By state**: trailing-10+ 46.5% / trailing-4-10 48.2% (the desperation bins convert BETTER — better defensive posture modeling needed) / trailing≤3 36.8% / leading 38-42%.
+- **By quality**: non-favorites (underdog posteam) 45.8% vs favorites 39.3% — favorites go for 2 WORSE (maybe garbage-time inflated underdog rate).
+- This prices the EQ010 branch for live: EV(2pt) = 2×P(conv|state, team-class) vs 0.94.
+- DIAGNOSTIC. Nothing promoted.
