@@ -1,0 +1,8 @@
+{
+ "frozen_at": "2026-10-11T03:35:13Z",
+ "artifact": "docs/research/2026-10-09/rating-atlas/minis/edge1b_edge2_params.json",
+ "sha256": "ced2e7fc541f396ee4dc203bb9fb4142dbfd71e90a6c7c641356a473839dba8c",
+ "content": "EDGE#1b margin-cell grid: 855 NFL games, T x S cells, Laplace params mu/sd/sd_lo/sd_hi, P|3|/P|7|, P(fav>3) \u2014 frozen for Laplace-vs-close CRPS test",
+ "test": "close-anchored CRPS: Laplace(mu_cell, sd_cell) vs Gaussian(close_line, book_sd) on frozen 2026 wk-6 folds",
+ "gate": "FreshnessGate v2.1 read_fresh; DIAGNOSTIC until C-bar clears"
+}

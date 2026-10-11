@@ -1,0 +1,15 @@
+{
+ "observed_at": "2026-10-11T03:35:40Z",
+ "test": "B8 Laplace margin-distribution RVC INFRASTRUCTURE",
+ "frozen_manifest": "dfs/frozen_manifest_edge1b.json",
+ "sha16": "ced2e7fc541f396e",
+ "gate": "PASS (freshness ok, 855-game cell grid, dict-of-lists rowcount fix working)",
+ "crps_recorded": {
+  "normal": 8.133,
+  "laplace": 5.475
+ },
+ "infrastructure": "PASS \u2014 CRPS fns + frozen manifest + gate reads verified",
+ "model_skill_stamp": "PENDING \u2014 needs NFL wk-6 2026 closing lines + final margins joined to cell predictions",
+ "reopen": "ESPN/nflverse 2026 wk-6 finals land Sat night -> join close lines (ESPN odds snapshot pre-game) to outcomes -> run CRPS per cell -> model-skill stamp vs Gaussian-close",
+ "label": "DIAGNOSTIC"
+}

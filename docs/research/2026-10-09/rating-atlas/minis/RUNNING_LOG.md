@@ -317,3 +317,9 @@
 - Reopen: scanner v2 w/ main-vs-alt grouping (marketId prefix / tags) → divergence flags become meaningful
 - **RVC settlement check**: Kansas@Utah live; 8 pending; --grade re-runs mechanically on refreshed outcomes
 - All prior artifacts confirmed on bus: RVC (graded 17, REFUSED C1), EDGE#1b/#2 params, EDGE#3 FG curve — all DIAGNOSTIC
+
+### [03:45] NFL_EQUATION_INVENTORY.md emitted + B8 infrastructure stamp
+- **dfs/NFL_EQUATION_INVENTORY.md**: 26 items inventoried (A1-A10 THE_FLOOR slots + B1-B16 spoken items), each w/ status (MEASURED/REFUSED/NOT-RUN/BLOCKED), data availability, exact RVC reopen. Highest-leverage closeable = B8 (Laplace margin dist: data fully on bus + CRPS machinery exists + doctrine bar = close-anchored CRPS).
+- **B8 INFRASTRUCTURE PASS (dfs/B8_INFRASTRUCTURE_STAMP.json)**: frozen manifest edge1b (sha ced2e7fc, artifact stamped at freeze w/ observed_at), FreshnessGate PASS (dict-of-lists fix working), CRPS fns verified (Laplace 5.475 vs Normal 8.133 recorded). MODEL-SKILL STAMP PENDING: needs NFL wk-6 2026 closing lines + final margins joined to cell predictions — reopen when Sat finals land.
+- Inventory corrections noted: B3 EPA re-derivation = validation stamp already (r≥0.97), RVC N/A; B14 tau_hat fallback flags in-file.
+- All DIAGNOSTIC. Nothing promoted.
