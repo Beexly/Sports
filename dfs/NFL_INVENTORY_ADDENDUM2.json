@@ -288,5 +288,99 @@
    "note": "was stranded (pasted in chat, zero branches); rescued by integration audit; baseline for closed-loop diff vs DK actuals",
    "label": "DIAGNOSTIC"
   }
+ },
+ "LOOPS_2026_10_11_AM": {
+  "observed_at": "2026-10-11T14:34:34Z",
+  "step0_confirmation": {
+   "file": "dfs/nfl_signals_2026-10-11/STEP0_CONFIRMATION.json",
+   "mismatches": [
+    "kill ledger \"73 entries\" not found (56 / 12 / 12)",
+    "GATE_AUDIT 11/11 FRESH is mtime-based, not read_fresh"
+   ]
+  },
+  "prop_close_feed": {
+   "stamp": "REFUSE (feed missing)",
+   "surface": "receiving/YAC props, QB completion props",
+   "unblock": "Pinnacle guest keyless snapshot at kickoff via dfs/prop_close_feed_2026-10-11/snap_pinnacle_props.py; settle via nflverse stats_player",
+   "reopen": ">= 1 settled week of Pinnacle prop closes (minutes_to_kickoff <= 10) frozen with observed_at; held-out test needs >= 2 such weeks",
+   "file": "dfs/prop_close_feed_2026-10-11/PROP_CLOSE_FEED_STAMP.json"
+  },
+  "lineup_freshness": {
+   "stamp": "INFRASTRUCTURE PASS",
+   "surface": "DFS + prop residual paths",
+   "flags": {
+    "DFS_main_slate_lineup": [
+     [
+      "Kyle Monangai",
+      "Out"
+     ]
+    ],
+    "PROP_receiver_watchlist": [],
+    "PROP_cpoe_pressure_qbs": [
+     [
+      "Caleb Williams",
+      "Questionable"
+     ],
+     [
+      "Marcus Mariota",
+      "Out"
+     ],
+     [
+      "Baker Mayfield",
+      "Out"
+     ],
+     [
+      "Lamar Jackson",
+      "Out"
+     ]
+    ]
+   },
+   "discrepancy": "Jordan Mason (MIN, IR per slate check) and Sam Darnold (ruled out per slate check) are not on the ESPN injury feed at capture; verify before lock",
+   "file": "dfs/lineup_freshness_2026-10-11/LINEUP_GATE_RUN.json"
+  },
+  "public_signals": {
+   "stamp": "INFRASTRUCTURE PASS",
+   "coverage": {
+    "espn_injuries": {
+     "teams": 32,
+     "rows": 800,
+     "status_counts": {
+      "Active": 571,
+      "Out": 97,
+      "Questionable": 79,
+      "Injured Reserve": 51,
+      "Doubtful": 2
+     }
+    },
+    "injuries_nflverse": {
+     "raw_rows": 17882,
+     "team_games": 1710,
+     "team_games_joined": 1694,
+     "join_rate_team_games": 0.9906,
+     "games_both_teams_joined": 846,
+     "by_season_join_rate": {
+      "2023": 0.9737,
+      "2024": 0.9982,
+      "2025": 1.0
+     }
+    },
+    "snap_counts": {
+     "raw_rows": 79768,
+     "team_games_joined": 1710,
+     "join_rate_team_games": 1.0,
+     "games_both_teams_joined": 855
+    },
+    "officials": {
+     "raw_rows_all_seasons": 22012,
+     "games_joined": 855,
+     "join_rate_games": 1.0,
+     "games_with_referee": 855
+    },
+    "manifest_games": 855,
+    "manifest_team_games": 1710
+   },
+   "file": "dfs/nfl_signals_2026-10-11/SIGNALS_STAMP.json"
+  },
+  "label": "DIAGNOSTIC \u2014 nothing promoted"
  }
 }

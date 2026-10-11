@@ -87,6 +87,44 @@
     "live WP"
    ],
    "file": "dfs/COACH_DECISION_STAMP.json"
+  },
+  {
+   "id": "prop-close-feed",
+   "added_at": "2026-10-11T14:34:34Z",
+   "state": "REFUSE (feed missing: 0 settled NFL prop closes on branch/bus)",
+   "feeds": [
+    "receiving/YAC props",
+    "QB completion props"
+   ],
+   "key_numbers": "Pinnacle keyless pre-close proof snapshot: 342 props (rec yds/receptions/completions/attempts), all 5 watchlist players covered; not a close",
+   "reopen": ">= 1 settled week of Pinnacle prop closes (minutes_to_kickoff <= 10) frozen with observed_at; held-out test needs >= 2 such weeks",
+   "file": "dfs/prop_close_feed_2026-10-11/PROP_CLOSE_FEED_STAMP.json"
+  },
+  {
+   "id": "lineup-freshness-gate",
+   "added_at": "2026-10-11T14:34:34Z",
+   "state": "INFRASTRUCTURE PASS (ESPN injury snapshot via read_fresh on 3 paths)",
+   "feeds": [
+    "DFS lineups",
+    "QB completion props",
+    "receiving/YAC props"
+   ],
+   "key_numbers": "DFS 8 players, 1 flagged; watchlist 5, 0 flagged; CPOE-pressure QBs 41, 4 flagged",
+   "reopen": "refuses after observed_at + 6h: re-run ingest_signals.py then lineup_gate.py before each lock",
+   "file": "dfs/lineup_freshness_2026-10-11/LINEUP_GATE_RUN.json"
+  },
+  {
+   "id": "public-signals-ingest",
+   "added_at": "2026-10-11T14:34:34Z",
+   "state": "INFRASTRUCTURE PASS (4 stamped files, all read_fresh PASS)",
+   "feeds": [
+    "injury/lineup gate",
+    "officials residuals (B4)",
+    "snap-share features"
+   ],
+   "key_numbers": "join to manifest: injuries 0.9906 of 1710 team-games, snaps 1.0, officials 1.0 of 855 games",
+   "reopen": "inputs only; no residual run on them yet",
+   "file": "dfs/nfl_signals_2026-10-11/SIGNALS_STAMP.json"
   }
  ],
  "gate_state": {
@@ -113,5 +151,10 @@
    "fresh": "snap counts wk1-5, injuries wk1-5, advstats wk1-4"
   },
   "firecrawl_espn": "No Firecrawl MCP artifact exists; ESPN injuries API equivalent is mirrored by the wired nflverse release. Reopen for direct-ESPN: browser lane (headless walled)."
+ },
+ "appended_2026_10_11_am": {
+  "observed_at": "2026-10-11T14:34:34Z",
+  "note": "entries appended to residuals[]; existing entries and the 590d604 \"updates\" block unchanged. Cross-check vs 590d604: (a) ESPN keyless injuries endpoint returned HTTP 200 from shell at 14:31Z (not browser-walled); (b) a keyless prop source exists (Pinnacle guest, see prop-close-feed), so the DK browser lane is no longer the only unblock; (c) the new GATE_AUDIT artifact #12 (injuries_2026.parquet) is still judged by file mtime, not an in-file observed_at.",
+  "step0": "dfs/nfl_signals_2026-10-11/STEP0_CONFIRMATION.json"
  }
 }
