@@ -1,0 +1,116 @@
+{
+ "observed_at": "2026-10-11T00:32:03Z",
+ "source": "LineStar client bundle fantasysportsco_new.js v417 + GetSalariesV5 payload 2026-10-10",
+ "sortMethod_enum": {
+  "0": "Value (Projection/Salary)",
+  "1": "Salary",
+  "2": "Projection (proprietary, editable)",
+  "3": "Liked count",
+  "4": "Faded count",
+  "5": "Scored",
+  "6": "Consistent (meets-or-exceeds rate)",
+  "7": "Chat",
+  "8": "Line/Order",
+  "9": "PPL",
+  "11": "Ceiling",
+  "29": "Ceiling Value (ceiling vs salary)",
+  "10": "Floor",
+  "12": "PPG",
+  "13": "Tier",
+  "14": "vs Pos",
+  "15": "Projected Ownership",
+  "16": "AlertScore (net positive alerts)",
+  "17": "Matchup Data",
+  "18": "Imp Pts (vegas-implied team pts)",
+  "19": "Leverage (low own x high proj, GPP)",
+  "20": "Consensus (industry aggregate)",
+  "28": "Consensus Diff",
+  "21": "Safety (high own x high proj, cash)",
+  "25": "Actual Ownership",
+  "26": "Name",
+  "27": "SIC Score"
+ },
+ "generate_methods_12": {
+  "0": "Highest Projected",
+  "16": "High Leverage",
+  "17": "High Safety",
+  "13": "Tournament GPP",
+  "14": "Double Ups",
+  "7": "Daily Matchup",
+  "1": "Predictable & Consistent",
+  "2": "High Ceiling",
+  "3": "High Floor",
+  "20": "Boom Bust Random",
+  "4": "Stars and Scrubs",
+  "5": "Points Per Game"
+ },
+ "optimizer_POST_schema": {
+  "endpoint": "/DesktopModules/DailyFantasyApi/API/Fantasy/GenerateLineup",
+  "fields": [
+   "Sport",
+   "Site",
+   "PeriodId",
+   "SlateId",
+   "IngoreTeams",
+   "Players",
+   "Method",
+   "Options",
+   "Reqs",
+   "Stacks",
+   "LocalSetId",
+   "SwapAllowDupes",
+   "SwapOnlyUnlocked",
+   "SwapDeleteSet"
+  ],
+  "gate": "premium client-enforced; server not probed (no account)"
+ },
+ "player_mod_flags": {
+  "MOD_FLAG_PROJ": "ProjLock replaces PP in optimizer math",
+  "bit4": "MaxExp override (0-100, 0=excluded)",
+  "loved": "IsLiked + lovedexposure option => MaxExp 100",
+  "UserPP_fallback": "proj = UserPP || PP"
+ },
+ "matchup_tables_20": {
+  "qbseason": "30 rows x 11 cols",
+  "flexSeason/last4": "334 rows",
+  "opposing_def_QB_RB_WR_TE": "season+L4",
+  "dst": "season+L4 + off-vs-DST",
+  "kicking": "season+L4",
+  "wrMatchup": "84 rows",
+  "redzoneSnaps": "334 rows (snaps & RZ, last 4)"
+ },
+ "alert_taxonomy_observed": {
+  "3": "usage/rolling (RZ targets, target streaks)",
+  "11": "expected starter/role",
+  "24": "head-to-head FP history",
+  "25": "defense allowance % splits",
+  "26": "defense rank vs position splits"
+ },
+ "solver_tutorial_semantics": {
+  "optimizer_vs_simulator": [
+   "DFS and best ball tools to optimize, simulate, draft, and track your results.",
+   "THE SOLVER has three main tools for DFS contests. The optimizer and the lineup builder help you build lineups. The simulator tests lineups in a DraftKings or FanDuel contest to give you an idea of how they perform.",
+   "Can build 1 or up to 1000 lineups with as few or as many rules as required.",
+   "Can build up to 3000 lineups much quicker than the optimizer, but accepts fewer rules and restrictions.",
+   "Simulates lineups in a DraftKings or FanDuel contest to give you an idea of how the lineup performs against a real field.",
+   "The optimizer builds lineups from the rules you set. Use simple one-click correlations or the full advanced settings.",
+   " your lineups must follow hard rules: exposure limits, player groups, stacks, and custom rules. It is the slower way to build, but every lineup follows every rule.",
+   "The lineup builder is a faster way to build lineups. It is included with every optimizer subscription and sits on its own tab inside the optimizer. It accepts far fewer rules and settings than the optimizer, which is what makes it fast.",
+   "Then filter the results, pick the lineups you want, and save them, download them, or send them to the simulator.",
+   " you want a lot of lineups fast and plan to let the simulator pick the best ones.",
+   "The simulator takes up to 3000 lineups and runs them in a DraftKings or FanDuel contest. You get projected ROI, mean and ceiling, cash rate, and where each lineup is expected to finish.",
+   " you want to know how your lineups will do and which ones to enter. It works on lineups from the optimizer, the lineup builder, or an upload.",
+   "Every lineup must follow specific stacks, groups, or exposure limits.",
+   "The optimizer and the lineup builder build lineups. The optimizer is for hard rules. The lineup builder is for speed. The simulator shows how any lineup performs in a contest."
+  ],
+  "optimizer_advanced": [
+   "DFS and best ball tools to optimize, simulate, draft, and track your results.",
+   "How to use the Advanced Settings of THE SOLVER DFS Optimizer"
+  ],
+  "aggregate_projections": [
+   "DFS and best ball tools to optimize, simulate, draft, and track your results.",
+   "If you are uploading your own projections, upload them from here",
+   "Assign weights to the sets you want to aggregate and name it what you wish, then hit Save"
+  ]
+ }
+}

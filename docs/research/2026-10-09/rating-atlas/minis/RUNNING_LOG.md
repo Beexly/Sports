@@ -147,3 +147,12 @@
 - Solver (ETR): 84 page-chunks inventoried, optimizer chunks downloaded, SSR __NEXT_DATA__ pulled; engine behind auth-gated API
 - Stokastic RSC payload reconstructed; FantasyLabs 137-route map + free player-ratings pages; SaberSim 84-route map
 - Item-4/7 reopen conditions REVISED: ownership now harvestable at scale via Linestar (historical periods); book internals + PFF/SIS remain vendor-walled
+
+### [20:40] DFS DEEP-RE ROUND 3 — LineStar internals extracted from shipped code
+- **Full sortMethod/Method enum (27 columns)** decoded from bundle: Leverage = low-own × high-proj (GPP), Safety = high-own × high-proj (cash), Ceiling Value = ceil vs salary, Consensus Diff, AlertScore, Imp Pts (vegas-implied team pts), SIC Score — the whole proprietary-column dictionary
+- **GenerateLineup POST schema** documented field-by-field (Sport/Site/PeriodId/SlateId/Players/Method/Options/Reqs/Stacks + swap flags); premium-gated client-side, server NOT probed (no account)
+- **Player-mod flag semantics**: bit4=MaxExp override, MOD_FLAG_PROJ=ProjLock replaces PP, loved+lovedexposure→100% exposure; proj resolution = UserPP||PP
+- **MatchupData engine**: 20 tables (QB/flex season+L4, opp-vs-position ×4, DST×3, kicking, WR matchup, snaps+redzone) with row counts — the full matchup DB schema
+- **Alert taxonomy**: codes 3/11/24/25/26 mapped from live payloads (usage streaks, role, H2H FP, defense-allowance splits, def-rank-vs-pos)
+- **Solver (ETR) engineering semantics captured verbatim** from shipped tutorial chunks: optimizer vs simulator vs builder tradeoffs (hard rules vs 3000-lineup sim, projected ROI/cash rate/finish distribution), aggregate-projection weighting flow — saved to solver_tutorial_copy.json
+- Landed: LINESTAR_INTERNALS.json + solver_tutorial_copy.json under dfs-deep-re-2026-10-10/
