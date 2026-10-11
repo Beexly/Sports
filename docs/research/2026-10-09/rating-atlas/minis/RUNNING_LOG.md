@@ -346,3 +346,8 @@
 - **The RVC framing (stamped)**: DK completion props likely overweight recent-form CPOE; our skill estimate (season-cumulative + regression to mean) diverges → residual-vs-close testable on completion-prop ladders
 - Reopen: DK completion-prop ladder pulls (nash subcats) → skill-vs-book residual → settled-prop grading
 - All DIAGNOSTIC.
+
+### [04:30] B1 weather residual CLOSE-ADJUSTED + B7 CPOE — two more inventory slots graded
+- **B1 weather CLOSE-ADJUSTED (dfs/b1_weather_residual.json)**: outdoor games, wind15+ vs calm on the closing-line residual — margin diff +0.734 (t=+0.43 ns), total diff −2.215 (t=−1.25 ns, n=51 windy). **The raw −5.41 wind total shrinks to a non-significant −2.2 after closing-line adjustment** — the market already prices most of the wind effect. Honest: no promotable weather edge at current n.
+- **B7 CPOE persistence (dfs/b7_cpoe_persistence.json + B7_RVC_STAMP.json)**: b2b r=+0.106 (single-week noise), half-to-half r=+0.475 (skill), reliability curve 2g 0.293 → 10g 0.803, SB 18-game 0.644, regression slope 0.11 (heavy mean-reversion). RVC framing: books overweight recent CPOE; season-cumulative skill diverges → completion-prop RVC testable.
+- **B1 pooled roof-class stamp (in-session)**: contextual model loses to close in ALL roof classes (delta +1.4 to +2.8) — graph stays diagnostic.
