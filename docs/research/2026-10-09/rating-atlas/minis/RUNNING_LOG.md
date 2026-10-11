@@ -210,3 +210,10 @@
 - Live two-way quotes via markets/{ticker} endpoint (quotes live in *_dollars fields, NOT yes_bid/yes_ask): PHI 23/24¢, JAC 76/77¢, bid-side depth $345K/$686K
 - kalshi_phijac_markets.json + phi live snapshot landed; cross-market watch vs DK ALT lines logged for the 9:30 lock window
 - Test sequence confirmed in Telegram: DK showdown portfolios + Kalshi ML live quotes + at-lock census
+
+### [23:20] KALSHI FULL GAME SURFACE — PHI@JAC 46 price points landed
+- Full ladder captured: 2 ML + 19 total rungs (23.5-65.5) + 25 spread rungs (both directions) → dfs/kalshi_kxnfl{total,spread}_phijac.json
+- **Kalshi consensus: JAC 76.5% devig ML, median total 42.0, JAC -1.5 @ 75.5¢** (interpolation verified ascending)
+- Divergence flagged: Kalshi (JAC-heavy, low total) vs DK salary structure (Hurts top-priced = PHI passing game engine) — the 9:30 census will show which side the DK field overweights; that's the leverage read
+- Quotes live in *_dollars fields (documented quirk); vol/OI null on these rungs (thin but two-way, spreads 1-2¢)
+- Telegram updated with the full game view
