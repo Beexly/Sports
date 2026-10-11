@@ -204,3 +204,9 @@
 - Showdown ILP variant built + solved: CPTN(1.5x)+5FLEX, 50K cap, field-relative objective; λ=4 backup-QB exploit identified and documented, test range λ∈{0,1,2}, 8 distinct portfolios in dfs/showdown_196458728_portfolios.json
 - Test plan pushed to Telegram; census = enter → 9:30 lock → leaderboardfull full-field pull → owned% consensus vs portfolios
 - Kalshi queued next (user directive)
+
+### [23:05] KALSHI LANE LIVE — test game cross-market
+- KXNFLGAME series cracked: 28 open events this week; test game KXNFLGAME-26OCT11PHIJAC (same London game as the showdown test)
+- Live two-way quotes via markets/{ticker} endpoint (quotes live in *_dollars fields, NOT yes_bid/yes_ask): PHI 23/24¢, JAC 76/77¢, bid-side depth $345K/$686K
+- kalshi_phijac_markets.json + phi live snapshot landed; cross-market watch vs DK ALT lines logged for the 9:30 lock window
+- Test sequence confirmed in Telegram: DK showdown portfolios + Kalshi ML live quotes + at-lock census
