@@ -47,3 +47,11 @@ CRPS machinery exists (engine stack + graph_vs_close_stamp.py precedent), and th
 metric (close-anchored CRPS) is the doctrine bar. All other slots need re-pulls or new fits.
 
 Stale-open item: B1's wk-6 single-week PROMOTED verdict needs its pooled multi-week re-run — same machinery.
+
+## ADDENDUM (2026-10-11 03:41) — structural gap CLOSED + first out-of-sample NFL RVC numbers
+- **NFL RVC manifest CLOSED**: dfs/nfl_rvc_manifest.json — 855 games 2023-25, closing lines (pbp spread_line/total_line) + final outcomes, FreshnessGate PASS, sha d4b76378. The "no frozen NFL RVC manifest" structural gap is resolved.
+- **B8 out-of-sample**: Laplace +0.41 vs Gaussian-close (MC ground truth, bug-fixed). In-sample 32.7% → ~2.7% vs efficient close. Lesson: distribution-shape edges must be CONDITIONAL (σ(T), skew cells) to survive the close.
+- **B8 σ(T) margins**: emp sd 14.28/14.62/15.10/12.90 by total bin — non-constant confirmed.
+- **B16 totals σ(T)**: resid sd 11.59-14.08 by closing-total bin (mid-total tightest 11.59); totals skew +0.359; totals CRPS Gaussian 14.27 vs Laplace 13.90.
+- **B16 over-rates by total bin**: 52.7/46.2/54.2/46.5 — no monotonic bias (no free over/under lean).
+- Remaining blockers: B4 officials crew RVC, B7 CPOE persistence, B1 pooled multi-week, OL/injury source.

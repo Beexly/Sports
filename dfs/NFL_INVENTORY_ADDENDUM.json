@@ -1,0 +1,19 @@
+{
+ "observed_at": "2026-10-11T03:41:20Z",
+ "addendum_to": "dfs/NFL_EQUATION_INVENTORY.md",
+ "new_results": {
+  "NFL_RVC_manifest": "CLOSED \u2014 dfs/nfl_rvc_manifest.json (855 games 2023-25, closings+outcomes, FreshnessGate PASS, sha d4b76378)",
+  "B8_out_of_sample": "Laplace +0.41 vs Gaussian-close (MC truth) \u2014 in-sample 32.7% shrinks to ~2.7%; closed-form CRPS bug fixed",
+  "B8_sigma_T_margins": "emp margin sd by total bin 14.28/14.62/15.10/12.90 \u2014 non-constant confirmed",
+  "B16_totals_sigmaT": "totals resid sd 11.59-14.08 by closing-total bin (mid-total tightest); skew +0.359; totals CRPS Gaussian 14.27 vs Laplace 13.90 (+0.38)",
+  "B16_over_rates": "over-rate by closing-total bin: 52.7/46.2/54.2/46.5 \u2014 no monotonic bias, noisy"
+ },
+ "structural_gap_status": "CLOSED \u2014 the \"no frozen NFL RVC manifest\" gap from the gap table is resolved; all slots can now grade on dfs/nfl_rvc_manifest.json",
+ "remaining_blockers": {
+  "B4_officials": "officials.parquet on bus, crew-level RVC not run",
+  "B7_QB": "CPOE persistence \u2192 next-week residual not run",
+  "B1_situational_pooled": "multi-week pooled close-anchored CRPS not re-run",
+  "OL_injury_source": "still missing (nflverse has no injury columns)"
+ },
+ "label": "DIAGNOSTIC"
+}
