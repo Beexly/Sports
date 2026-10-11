@@ -492,3 +492,10 @@
 - **By quality**: non-favorites (underdog posteam) 45.8% vs favorites 39.3% — favorites go for 2 WORSE (maybe garbage-time inflated underdog rate).
 - This prices the EQ010 branch for live: EV(2pt) = 2×P(conv|state, team-class) vs 0.94.
 - DIAGNOSTIC. Nothing promoted.
+
+### [09:50] GO-UTILITY SURFACE + COACHING RESIDUAL — the 4th-down behavior map
+- **dfs/COACH_DECISION_STAMP.json + coach_aggression_index_2024_25.csv**: 7,994 4th-down decisions 2024-25 (4,161 punts / 2,087 FGs / 1,746 goes).
+- **THE SURFACE**: go EPA positive in ALL (0,2]-short bins (0.22-0.74) and mid-field 2-5 (0.69-1.09); NEGATIVE in every (5,9]+ long bin except 50-60 (0.64). The empirical line: 4th-and-5+ away from opponent-40 is punt territory at league rates.
+- **Coaching aggression index** per team in clear-punt cells = the behavior residual surface (who over/under-go vs the utility map).
+- This + the 2pt table + nfl4th's WP models = the complete special-teams decision stack, priced from our own data.
+- DIAGNOSTIC. Nothing promoted.
