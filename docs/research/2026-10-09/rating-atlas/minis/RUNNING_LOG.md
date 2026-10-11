@@ -267,3 +267,11 @@
 - **Kalshi full-depth orderbooks landed**: PHI 23 yes-levels, JAC 67 yes-levels (orderbook_fp dollar-denominated) — the live liquidity surface for cross-market residuals
 - **Gaps + reopen**: Kalshi trades/candlesticks endpoints 404 (path variants tried — reopen w/ API docs); Kambi betoffer geo-gated (reopen different egress); DK rules JSON still SPA-scoped (open item)
 - All raw. Nothing promoted. Stamps on everything.
+
+### [03:55] FRESHNESSGATE v2 WIRED AS ENFORCED READ PATH — self-test 5/5 PASS
+- **dfs/freshnessgate_wiring.py**: `read_fresh()` = the only sanctioned read for any board/DFS path. 4 failure modes EXACT: F1_STALE (age>6h), F2_MISSING_FREEZE (no parsable stamp), F3_CLOCK_SKEW (stamp future >5min), F4_INCOMPLETE (fresh but zero rows). Handles DK /Date(ms)/ stamps + 6 stamp-key aliases + nested-list stamps.
+- **Failure contract**: refusal → data=None + close_only_fallback() contract (model_signals=False, shade_outliers=False, floor_upgrades=False, honest label) + APPEND-ONLY kill-ledger row (path, failure_mode, detail, ledger_ts) → dfs/kill_ledger_freshness.jsonl. Ledger never rewritten.
+- **Self-test 5/5 PASS**: fresh_ok→PASS, stale→F1, no_stamp→F2, skew→F3, empty→F4, absent→F2. Ledger rows verified written per refusal.
+- **Wiring order for all boards/DFS**: replace direct json.load/pd.read_csv with read_fresh(); render audit.label verbatim on every surface; on refusal use close_only_fallback() output. NO bypass path exists in the module (single entry point, ledger mandatory on refusal).
+- **DIAGNOSTIC until residual-vs-close clears on frozen manifest.** No promotion of shade outliers, THE_FLOOR upgrades, or research-packet context.
+- Doctrine confirmed: residual inventories closed (2962b15ae), shade≈0 stamped, all diagnostic.
