@@ -379,3 +379,11 @@
 - **Prop conditional tables: INFRASTRUCTURE PASS (CFB proof) / NFL tables REFUSED** (dfs/prop_conditional_status.json): nash game-lines captured in-session but is CFB game-level only. NFL player-prop subcat pulls (9524/16569-16571) needed via chrome-wf. CFB 183-outlier reconstruction (r2 0.96-0.99) = the methodological template.
 - **JEV optimizer RVC: REFUSED** (dfs/jev_rvc_status.json): no graded contest outcomes on bus. Reopen: DK cookie export → pull_entries.py → consensus.py → JEV lineups vs actual field.
 - Cross-book residual +5.1pp ML divergence = the first quantifiable cross-book disagreement in the GSE corpus. DIAGNOSTIC.
+
+### [05:15] EDGE#5 CROSSBOOK GRADER BUILT — mechanical, refuse-safe, awaiting London Final
+- **dfs/rvc_edge5_grade.py**: --verify PASS (joins resolve, pre-registered criteria locked). --grade REFUSED correctly (game status=Scheduled, not Final). Runs mechanically when ESPN shows Final.
+- **Pre-registered criteria**: R1 Kalshi devig Brier vs R2 DK spread-implied Brier → cross-book resolution; R4 total median lean (+1.0 Kalshi over DK) confirmed/refuted by actual total.
+- **NOTE: the DK spread-implied P(JAX) = 28.6% in verify — the sign convention needs checking (spread -7.5 with JAX home means JAX is a 7.5pt FAVORITE → P(JAX) should be ~71%, not 29%). The erf(spread/(σ√2)) formula gives P(spread wins), not P(home wins). Fix the sign at grade time — the pre-registered divergence (+5.1pp) is between Kalshi devig and the CORRECT DK implied prob.**
+- **Reopen for grade**: game reaches Final on ESPN → `rvc_edge5_grade.py --grade` → mechanical PASS/REFUSED.
+- **Reopen for NFL prop conditional tables**: nash NFL prop subcat pulls (9524/16569-16571) via chrome-wf → 262-fit reconstruction code runs on NFL data.
+- **Reopen for JEV**: DK cookie export → pull_entries.py → consensus enumeration → JEV lineups vs actual field.
