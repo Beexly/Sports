@@ -1,0 +1,39 @@
+{
+ "observed_at": "2026-10-11T12:45:00Z",
+ "test": "receiver watchlist (YAC machines + hands regression) residual-versus-close vs receiving/YAC prop closes",
+ "infrastructure": "PASS",
+ "result": "REFUSE",
+ "reason": "zero NFL player-prop closes exist on the packet branch or agent bus",
+ "watchlist_designations": {
+   "yac_machines": [
+     {"player": "Puka Nacua", "team": "LA", "pos": "WR", "games": 2, "snap_pct": 0.80, "broken_tackles": 2.0, "bt_per_game": 1.0, "drops": 0.0, "source": "dfs/receiver_watchlist_2026.csv"},
+     {"player": "Rome Odunze", "team": "CHI", "pos": "WR", "games": 4, "snap_pct": 0.765, "broken_tackles": 3.0, "drops": 1.0, "source": "dfs/receiver_watchlist_2026.csv"},
+     {"player": "Trey McBride", "team": "ARI", "pos": "TE", "games": 4, "snap_pct": 0.89, "broken_tackles": 3.0, "drops": 1.0, "source": "dfs/receiver_watchlist_2026.csv"}
+   ],
+   "hands_regression": [
+     {"player": "Jameson Williams", "team": "DET", "pos": "WR", "games": 4, "snap_pct": 0.905, "drops": 5.0, "drops_per_game": 1.25, "broken_tackles": 0.0, "source": "dfs/receiver_hands_watch_2026.csv"},
+     {"player": "Tucker Kraft", "team": "GB", "pos": "TE", "games": 4, "snap_pct": 0.83, "drops": 5.0, "broken_tackles": 0.0, "source": "dfs/receiver_hands_watch_2026.csv"}
+   ],
+   "designation_stamp": "dfs/RECEIVER_WATCHLIST_STAMP.json (observed 2026-10-11T06:58:06Z, join: name_key match, 351 players, nflverse snaps 2026 x PFR advstats rec 2026)"
+ },
+ "prop_close_search": {
+   "nash_nfl_prop_ladders": "REFUSED — dfs/PROP_LADDER_PULL_REFUSED.json (2026-10-11T06:29:03Z): 8 attempts, Akamai Bot Manager walls automated-Chrome fingerprint; zero ladder rows pulled, zero invented",
+   "prop_conditional_status": "dfs/prop_conditional_status.json: player-prop NFL conditional tables REFUSED (data gap: no NFL prop ladder on bus)",
+   "kalshi_player_props": "NONE — dfs/kalshi_phijac_all_markets.json contains 2 markets, neither is a player prop",
+   "code_search": "0 hits for receiving-yards prop files under dfs/ on packet branch",
+   "conclusion": "no receiving-yards, receptions, or YAC prop closes exist for any watchlist player (or any NFL player) in the available data"
+ },
+ "rvc_requirement": "residual = actual_receiving_performance - market_implied_expectation(prop_close). Market side is entirely missing; residuals cannot be computed.",
+ "actuals_side_available": {
+   "pfr_rec_yac_creators_2026.csv": "219 players with broken_tackles, drops (2026 season)",
+   "WATCHLIST_NEXT_WEEK_GRADE.json": "18 player-weeks with team ATS (team-level only, not player receiving performance — insufficient for player-prop RVC)"
+ },
+ "reopen_condition": {
+   "data_needed": "NFL player-prop closes (receiving yards, receptions, and/or YAC) for the 5 watchlist players, captured on a frozen manifest with observed_at timestamps",
+   "source": "DraftKings sportsbook-nash API subcats 9524/16569-16571 via the 4-step unblock in dfs/PROP_LADDER_PULL_REFUSED.json (user's real Chrome + CDP 9222 -> in-page nash fetch -> genie183 fitter), OR any equivalent book player-prop close snapshot with timestamps",
+   "then": "join prop closes to watchlist designations by player+week; compute residual = actual - implied; test whether YAC-machine designation predicts positive receiving-yard residuals and hands-watch predicts negative contested-catch residuals; stamp INFRASTRUCTURE PASS/REFUSE with paired t-statistics",
+   "manifest": "frozen NFL manifest with prop closes + outcomes (currently: frozen_manifest_rvc.json has 855 games w/ closings+outcomes but no player-prop ladder data)"
+ },
+ "label": "DIAGNOSTIC",
+ "fabrication": "zero — no prop closes invented, no residuals computed, no verdicts issued on watchlist predictive power"
+}
