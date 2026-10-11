@@ -394,3 +394,8 @@
 - **S2 EPA/rush (1,069 team-weeks)**: MONOTONE by total bin — low totals −0.119 → high totals −0.022 (run efficiency rises as total rises: run-heavy low-total games face stacked boxes). By spread bin: flat (−0.062 to −0.085). Held-out RVC: GLOBAL WINS (0.0473 vs 0.0482).
 - **S3 xYAC proxy (10,887 completions)**: the air-yards YAC curve WINS vs naive mean (RMSE 6.24 vs 6.77). Residual by pressure (qb_hit): −0.008 diff (0.073 vs 0.065 — pressure does NOT reduce YAC conditional on completion, i.e. the market's pressure adjust is already in the catch itself). Residual by air bin: deep balls (15-25 yd air) −0.34, bombs (25+) −0.50 — the curve overpredicts deep YAC = deep completions are made shorter than the curve thinks.
 - **DIAGNOSTIC CANDIDATES (0/3 survive held-out prediction)**: none promote. The honest finding: environment conditioning describes but does not beat the global mean out-of-sample at the weekly level. The xYAC air-yards curve is the ONE surface where structure helps (RMSE −0.53).
+
+### [06:25] EDGE#5 GRADER SIGN BUG FIXED + REFUSE-PATH PROVEN — grade-time ready
+- **Bug**: `_dk_implied_p_home(-7.5)` returned 28.6% (erf(spread/σ) gave P(margin < 0) for a home favorite). **Fix**: mu_home = −spread → P(JAX) = 71.36%, matching the stamped +5.1pp cross-book divergence exactly.
+- **Refuse-path PROVEN on the live ledger**: `--grade` with game Scheduled → kill_ledger_freshness.jsonl entry `{EDGE5_CROSSBOOK_GRADE, REFUSED, reason: game not Final}` at 06:23:45Z. Zero fabrication path verified end-to-end.
+- **Grade command**: `python dfs/rvc_edge5_grade.py --grade` — runs the moment ESPN shows Final. Join keys + criteria pre-registered in-file. Zero human judgment.

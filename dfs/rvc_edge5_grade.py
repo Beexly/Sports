@@ -66,8 +66,11 @@ def _espn_final():
 
 
 def _dk_implied_p_home(spread, sigma=OUR_SIGMA):
-    """P(home wins) from the closing spread, Gaussian."""
-    return 0.5 * (1 + math.erf(spread / (sigma * math.sqrt(2))))
+    """P(home wins) from the closing spread, Gaussian.
+    spread convention: -7.5 means home favored by 7.5 → home expected margin = +7.5.
+    P(home wins) = P(N(mu_home, sigma) > 0) = Phi(mu_home / sigma)."""
+    mu_home = -spread  # spread -7.5 → home margin +7.5
+    return 0.5 * (1 + math.erf(mu_home / (sigma * math.sqrt(2))))
 
 
 def _ledger(row):
