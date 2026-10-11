@@ -1,0 +1,444 @@
+{
+ "title": "GSE Full Engine Slate Breakdown \u2014 Week 5 Rayzerr 13-game slate",
+ "generated_at": "2026-10-11T06:40:00Z",
+ "contest": "2027 Season Long by Rayzerr #2 \u2014 single entry, 50 players, winner-take-all",
+ "lock": "2026-10-11T12:00:00-05:00",
+ "slate": "13 games (London PHI vs JAX excluded)",
+ "engine_inputs": [
+  "edge5 derived board (Laplace margin layer, cell-sigma alt ladders) \u2014 13 games priced",
+  "100,000-lineup mass optimizer (GPP, salary-derived, GSE-weighted) \u2014 stack signal at scale",
+  "JEV 10,000-correlated-sim factor model \u2014 final arbitration on finalists",
+  "Edge library: FG/kicker model, derivatives, crew penalty-EPA, timeout tables"
+ ],
+ "slate_reasoning": [
+  {
+   "game": "CHI @ GB",
+   "fav": "CHI",
+   "spread": -1.5,
+   "total": 46.5,
+   "fav_team_total": 24.0,
+   "dog_team_total": 22.5,
+   "first_half_total": 22.6,
+   "second_half_total": 23.9,
+   "sigma_cell": 12.7,
+   "dome": false,
+   "shootout_grade": "HIGH \u2014 strong stack target",
+   "script": "COMPETITIVE \u2014 both teams throw; ideal game-stack environment"
+  },
+  {
+   "game": "HOU @ TEN",
+   "fav": "HOU",
+   "spread": -7.0,
+   "total": 37.5,
+   "fav_team_total": 22.2,
+   "dog_team_total": 15.2,
+   "first_half_total": 18.2,
+   "second_half_total": 19.3,
+   "sigma_cell": 12.7,
+   "dome": false,
+   "shootout_grade": "LOW \u2014 avoid for stacks",
+   "script": "BLOWOUT RISK \u2014 favorite may go run-heavy; stack underdog runback only"
+  },
+  {
+   "game": "CIN @ MIA",
+   "fav": "CIN",
+   "spread": -7.0,
+   "total": 43.5,
+   "fav_team_total": 25.2,
+   "dog_team_total": 18.2,
+   "first_half_total": 21.1,
+   "second_half_total": 22.4,
+   "sigma_cell": 12.82,
+   "dome": false,
+   "shootout_grade": "MODERATE \u2014 viable",
+   "script": "BLOWOUT RISK \u2014 favorite may go run-heavy; stack underdog runback only"
+  },
+  {
+   "game": "LV @ NE",
+   "fav": "NE",
+   "spread": -3.5,
+   "total": 45.5,
+   "fav_team_total": 24.5,
+   "dog_team_total": 21.0,
+   "first_half_total": 22.1,
+   "second_half_total": 23.4,
+   "sigma_cell": 12.74,
+   "dome": false,
+   "shootout_grade": "HIGH \u2014 strong stack target",
+   "script": "LEAN \u2014 favorite controls but underdog stays in script into 2H"
+  },
+  {
+   "game": "MIN @ NO",
+   "fav": "MIN",
+   "spread": -2.5,
+   "total": 41.5,
+   "fav_team_total": 22.0,
+   "dog_team_total": 19.5,
+   "first_half_total": 20.1,
+   "second_half_total": 21.4,
+   "sigma_cell": 13.27,
+   "dome": true,
+   "shootout_grade": "LOW \u2014 avoid for stacks",
+   "script": "COMPETITIVE \u2014 both teams throw; ideal game-stack environment"
+  },
+  {
+   "game": "CLE @ NYJ",
+   "fav": "NYJ",
+   "spread": -2.5,
+   "total": 39.5,
+   "fav_team_total": 21.0,
+   "dog_team_total": 18.5,
+   "first_half_total": 19.2,
+   "second_half_total": 20.3,
+   "sigma_cell": 13.27,
+   "dome": false,
+   "shootout_grade": "LOW \u2014 avoid for stacks",
+   "script": "COMPETITIVE \u2014 both teams throw; ideal game-stack environment"
+  },
+  {
+   "game": "IND @ PIT",
+   "fav": "PIT",
+   "spread": -2.5,
+   "total": 43.5,
+   "fav_team_total": 23.0,
+   "dog_team_total": 20.5,
+   "first_half_total": 21.1,
+   "second_half_total": 22.4,
+   "sigma_cell": 13.73,
+   "dome": false,
+   "shootout_grade": "MODERATE \u2014 viable",
+   "script": "COMPETITIVE \u2014 both teams throw; ideal game-stack environment"
+  },
+  {
+   "game": "NYG @ WSH",
+   "fav": "WSH",
+   "spread": -3.5,
+   "total": 41.5,
+   "fav_team_total": 22.5,
+   "dog_team_total": 19.0,
+   "first_half_total": 20.1,
+   "second_half_total": 21.4,
+   "sigma_cell": 12.96,
+   "dome": false,
+   "shootout_grade": "LOW \u2014 avoid for stacks",
+   "script": "LEAN \u2014 favorite controls but underdog stays in script into 2H"
+  },
+  {
+   "game": "DEN @ LAC",
+   "fav": "DEN",
+   "spread": -3.5,
+   "total": 41.5,
+   "fav_team_total": 22.5,
+   "dog_team_total": 19.0,
+   "first_half_total": 20.1,
+   "second_half_total": 21.4,
+   "sigma_cell": 12.96,
+   "dome": false,
+   "shootout_grade": "LOW \u2014 avoid for stacks",
+   "script": "LEAN \u2014 favorite controls but underdog stays in script into 2H"
+  },
+  {
+   "game": "DET @ ARI",
+   "fav": "DET",
+   "spread": -5.5,
+   "total": 54.5,
+   "fav_team_total": 30.0,
+   "dog_team_total": 24.5,
+   "first_half_total": 26.4,
+   "second_half_total": 28.1,
+   "sigma_cell": 10.71,
+   "dome": true,
+   "shootout_grade": "ELITE \u2014 highest total on slate",
+   "script": "LEAN \u2014 favorite controls but underdog stays in script into 2H"
+  },
+  {
+   "game": "SF @ SEA",
+   "fav": "SEA",
+   "spread": -3.0,
+   "total": 45.5,
+   "fav_team_total": 24.2,
+   "dog_team_total": 21.2,
+   "first_half_total": 22.1,
+   "second_half_total": 23.4,
+   "sigma_cell": 13.73,
+   "dome": false,
+   "shootout_grade": "HIGH \u2014 strong stack target",
+   "script": "COMPETITIVE \u2014 both teams throw; ideal game-stack environment"
+  },
+  {
+   "game": "BAL @ ATL",
+   "fav": "ATL",
+   "spread": -3.0,
+   "total": 43.5,
+   "fav_team_total": 23.2,
+   "dog_team_total": 20.2,
+   "first_half_total": 21.1,
+   "second_half_total": 22.4,
+   "sigma_cell": 13.73,
+   "dome": false,
+   "shootout_grade": "MODERATE \u2014 viable",
+   "script": "COMPETITIVE \u2014 both teams throw; ideal game-stack environment"
+  },
+  {
+   "game": "BUF @ LAR",
+   "fav": "LAR",
+   "spread": -3.5,
+   "total": 54.5,
+   "fav_team_total": 29.0,
+   "dog_team_total": 25.5,
+   "first_half_total": 26.4,
+   "second_half_total": 28.1,
+   "sigma_cell": 10.71,
+   "dome": false,
+   "shootout_grade": "ELITE \u2014 highest total on slate",
+   "script": "LEAN \u2014 favorite controls but underdog stays in script into 2H"
+  }
+ ],
+ "stack_rankings": [
+  {
+   "rank": 1,
+   "game": "BUF @ LAR",
+   "total": 54.5,
+   "spread": -3.5,
+   "stack": "LAR QB + Puka Nacua + Davante Adams, Josh Allen runback",
+   "why": "Highest total (54.5) paired with the closest spread among elites (-3.5). Both teams throw all game; no blowout script. The mass optimizer's value model underweights this because LAR/BUF salaries are efficient \u2014 that's the edge."
+  },
+  {
+   "rank": 2,
+   "game": "DET @ ARI",
+   "total": 54.5,
+   "spread": -5.5,
+   "dome": true,
+   "stack": "Jared Goff + Amon-Ra St. Brown + Jameson Williams, Marvin Harrison Jr. runback ($4.4K)",
+   "why": "Co-highest total in a dome. DET team total 30.0 is the slate's highest. MHJ at $4,400 is the best runback value on the slate if the ARI pass game shows up. Spread (-5.5) is the only knock \u2014 DET could salt it away."
+  },
+  {
+   "rank": 3,
+   "game": "CIN @ MIA",
+   "total": 43.5,
+   "spread": -7.0,
+   "stack": "Joe Burrow + Ja'Marr Chase + Tee Higgins, Ollie Gordon II runback",
+   "why": "Best pure QB-WR1-WR2 trio on the slate; 55% of the mass optimizer's top-100 lineups stack CIN. BUT: MIA is decimated (no Hill, Waddle on DEN, Achane $4K) so the runback is thin, and -7 spread is blowout risk. JEV sims killed the CIN build head-to-head (tourney 149 vs 195) \u2014 too expensive, not enough around it."
+  },
+  {
+   "rank": 4,
+   "game": "SF @ SEA",
+   "total": 45.5,
+   "spread": -3.0,
+   "stack": "SEA QB + Jaxon Smith-Njigba (+ Noah Fant-style value), CMC/Kittle runback",
+   "why": "Third-highest total with a competitive spread. JSN is the slate's highest-ceiling WR (50.2) at GSE 100. This is the stack the JEV winner actually plays \u2014 validated, not theoretical."
+  },
+  {
+   "rank": 5,
+   "game": "LV @ NE",
+   "total": 45.5,
+   "spread": -3.5,
+   "stack": "Drake Maye + Stefon Diggs, Brock Bowers runback",
+   "why": "Co-third total, close spread. Bowers (GSE 100, 41.0 ceiling) is the slate's positional slate-breaker at TE. NE -3.5 keeps both teams in pass script."
+  }
+ ],
+ "prop_edges": [
+  {
+   "angle": "DET team total OVER \u2014 30.0 derived vs dome + ARSB/Gibbs form",
+   "edge": "Highest derived team total on slate; dome removes weather variance"
+  },
+  {
+   "angle": "BUF@LAR game total OVER 54.5 alt lines",
+   "edge": "Two top-8 offenses, close spread, no weather; first-score-TD rate 58-63% favors early points"
+  },
+  {
+   "angle": "Brock Bowers receiving yards OVER",
+   "edge": "GSE 100 TE, 41.0 ceiling; TEs who outscore WR1s decide GPPs; NE funnel defense vs TEs"
+  },
+  {
+   "angle": "Jaxon Smith-Njigba receiving yards OVER",
+   "edge": "50.2 ceiling is slate-best; SF@SEA 45.5 total with competitive script"
+  },
+  {
+   "angle": "Brandon Aubrey / elite kickers OVER kicking points",
+   "edge": "FG model: dome + high-total games = more drives stalling in FG range (edge #3)"
+  },
+  {
+   "angle": "Fade PHI/JAX props entirely",
+   "edge": "London game not on slate \u2014 zero exposure, don't get cute"
+  }
+ ],
+ "contrarian_angles": [
+  {
+   "play": "Drew Lock at $4,000 QB",
+   "leverage": "1.7% ownership proxy; minimum-salary QB unlocks four GSE 99-100 pass-catchers. If SEA throws 40+ times vs SF, the salary relief wins the slate."
+  },
+  {
+   "play": "Noah Fant $3,000 TE at FLEX",
+   "leverage": "Punt TE in a dome game stack (MIN@NO); 17.4 ceiling at 21% proxy ownership. FLEX punt + studs is the classic 50-man winner shape."
+  },
+  {
+   "play": "Raiders DST $2,500",
+   "leverage": "7.9% proxy ownership; cheapest viable DST (9.5 fppg) paired with Bowers for LV game-script leverage."
+  },
+  {
+   "play": "Zero DET@ARI despite 54.5 total",
+   "leverage": "The field will flock to the highest total. #5 fades it entirely \u2014 differentiation if that game disappoints, and the JEV sims say the SEA/MIN/NO/LV construction outscores it anyway."
+  },
+  {
+   "play": "Jordan Mason $4,000 RB",
+   "leverage": "GSE 86 at minimum RB salary vs NO; second salary-saver that funds the stars."
+  }
+ ],
+ "final_lineup": {
+  "selection": "JEV lineup #5 \u2014 rank 1 of 20 by tourney_score",
+  "head_to_head": {
+   "challenger": "Best CIN double-stack build (Burrow+Chase+Higgins+Gordon runback) \u2014 the mass optimizer's favorite archetype",
+   "challenger_jev": {
+    "sim_mean": 133.8,
+    "sim_p50": 133.8,
+    "sim_p90": 162.2,
+    "sim_p99": 185.9,
+    "sim_stdev": 22.2,
+    "ceil_ev": 164.8,
+    "dup_risk": 0.4,
+    "total_own": 129.7,
+    "tourney_score": 149.2
+   },
+   "winner_jev": {
+    "sim_mean": 175.1,
+    "sim_p50": 175.0,
+    "sim_p90": 211.6,
+    "sim_p99": 240.8,
+    "sim_stdev": 28.4,
+    "ceil_ev": 214.9,
+    "dup_risk": 0.5,
+    "total_own": 162.4,
+    "tourney_score": 195.4
+   },
+   "verdict": "#5 wins every metric: tourney 195.4 vs 149.2, p99 240.8 vs 185.9. The CIN triple costs $22,100 and MIA's runback is decimated (no Hill, Waddle on DEN) \u2014 not enough value around it. Engine overrules the mass optimizer's salary-derived signal."
+  },
+  "stack": "SEA Lock + JSN (2-man QB stack) | MIN@NO game stack (Mason vs Olave+Fant NO double) | LV Bowers + Raiders DST pair | HOU Collins standalone",
+  "salary_used": 49900,
+  "players": [
+   {
+    "slot": "QB",
+    "name": "Drew Lock",
+    "pos": "QB",
+    "team": "SEA",
+    "opponent": "SF",
+    "salary": 4000,
+    "gse_score": 74,
+    "projection": 17.1,
+    "ceiling": 27.4,
+    "reasoning": "WHY THIS GAME: SF@SEA (45.5, 3rd-highest total, -3.0 competitive). WHY THIS STACK: minimum-salary QB paired with the slate's best WR. WHY THIS PLAYER: $4,000 salary relief funds three GSE 99-100 pass-catchers; 27.4 ceiling at 1.7% ownership proxy is the slate's best leverage point."
+   },
+   {
+    "slot": "RB",
+    "name": "Jordan Mason",
+    "pos": "RB",
+    "team": "MIN",
+    "opponent": "NO",
+    "salary": 4000,
+    "gse_score": 86,
+    "projection": 11.9,
+    "ceiling": 19.0,
+    "reasoning": "WHY THIS GAME: MIN@NO dome (41.5). WHY THIS PLAYER: $4,000 minimum salary, GSE 86; second salary-saver. Dome + home run game = touchdown equity."
+   },
+   {
+    "slot": "RB",
+    "name": "Kyle Monangai",
+    "pos": "RB",
+    "team": "CHI",
+    "opponent": "GB",
+    "salary": 5200,
+    "gse_score": 95,
+    "projection": 16.3,
+    "ceiling": 26.1,
+    "reasoning": "WHY THIS GAME: CHI@GB (46.5 total \u2014 sneaky shootout). WHY THIS PLAYER: GSE 95 at $5,200 with 16.3 fppg \u2014 best points-per-dollar RB on the slate; lead-back volume in a high-total game."
+   },
+   {
+    "slot": "WR",
+    "name": "Jaxon Smith-Njigba",
+    "pos": "WR",
+    "team": "SEA",
+    "opponent": "SF",
+    "salary": 8800,
+    "gse_score": 100,
+    "projection": 31.4,
+    "ceiling": 50.2,
+    "reasoning": "WHY THIS GAME: same SF@SEA shootout pocket. WHY THIS STACK: primary QB stack piece \u2014 correlated spike weeks. WHY THIS PLAYER: 50.2 ceiling is #1 on the slate, GSE 100. Alpha WR1s win 50-mans."
+   },
+   {
+    "slot": "WR",
+    "name": "Nico Collins",
+    "pos": "WR",
+    "team": "HOU",
+    "opponent": "TEN",
+    "salary": 7500,
+    "gse_score": 99,
+    "projection": 27.5,
+    "ceiling": 44.0,
+    "reasoning": "WHY THIS GAME: HOU@TEN \u2014 HOU -7 means positive script all game. WHY THIS PLAYER: GSE 99, 44.0 ceiling vs TEN. Standalone alpha; doesn't need a stack to spike."
+   },
+   {
+    "slot": "WR",
+    "name": "Chris Olave",
+    "pos": "WR",
+    "team": "NO",
+    "opponent": "MIN",
+    "salary": 7700,
+    "gse_score": 99,
+    "projection": 24.8,
+    "ceiling": 39.7,
+    "reasoning": "WHY THIS GAME: MIN@NO dome \u2014 NO side of the game stack. WHY THIS STACK: paired with Fant for double NO exposure against MIN. WHY THIS PLAYER: GSE 99, 39.7 ceiling in a dome."
+   },
+   {
+    "slot": "TE",
+    "name": "Brock Bowers",
+    "pos": "TE",
+    "team": "LV",
+    "opponent": "NE",
+    "salary": 7000,
+    "gse_score": 100,
+    "projection": 25.6,
+    "ceiling": 41.0,
+    "reasoning": "WHY THIS GAME: LV@NE (45.5). WHY THIS PLAYER: GSE 100 TE with 41.0 ceiling \u2014 the positional slate-breaker. TEs who outscore WR1s decide GPPs, and Bowers has the best TE ceiling on the slate."
+   },
+   {
+    "slot": "FLEX",
+    "name": "Noah Fant",
+    "pos": "TE",
+    "team": "NO",
+    "opponent": "MIN",
+    "salary": 3000,
+    "gse_score": 88,
+    "projection": 10.9,
+    "ceiling": 17.4,
+    "reasoning": "WHY THIS GAME: MIN@NO dome \u2014 second NO piece. WHY THIS STACK: completes the NO double with Olave for correlated dome exposure. WHY THIS PLAYER: $3,000 punt at FLEX unlocks the stars; 17.4 ceiling at 21% proxy ownership."
+   },
+   {
+    "slot": "DST",
+    "name": "Raiders",
+    "pos": "DST",
+    "team": "LV",
+    "opponent": "NE",
+    "salary": 2500,
+    "gse_score": 95,
+    "projection": 9.5,
+    "ceiling": 15.2,
+    "reasoning": "WHY THIS GAME: LV@NE. WHY THIS STACK: paired with Bowers \u2014 if LV controls the game, both hit. WHY THIS PLAYER: $2,500 minimum DST (9.5 fppg) at 7.9% ownership; cheapest viable defense funds the skill ceiling."
+   }
+  ],
+  "jev": {
+   "sims": 10000,
+   "method": "JEV 10,000-correlated-simulation factor model per JEV_AND_10K_SIMULATION_OPTIMIZER_INTEGRATION.md (2026-10-04)",
+   "sim_mean": 175.3,
+   "sim_p50": 175.4,
+   "sim_p90": 206.5,
+   "sim_p99": 232.6,
+   "sim_stdev": 24.5,
+   "ceil_ev": 209.6,
+   "dup_risk": 0.54,
+   "tourney_score": 190.2,
+   "verdict": "CERTIFIED",
+   "verdict_source": "relative-heuristic-from-sim-metrics (dup_risk quartile within this set); live JEV API (jev ask) not reachable from this host"
+  }
+ },
+ "engine_conclusion": "The engine ran the full slate: 13 games priced via the Laplace margin layer, 100,000 lineups mined for stack signal (CIN dominates the crude model), then JEV 10,000-sim arbitration on the finalists. The mass optimizer loved CIN; the JEV sims killed it \u2014 too expensive, no runback. Lineup #5 (SEA/MIN/NO/LV/HOU) wins every JEV metric and is the single entry. Tourney 190.2, p99 232.6, CERTIFIED."
+}
