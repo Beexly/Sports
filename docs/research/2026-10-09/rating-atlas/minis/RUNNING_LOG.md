@@ -600,3 +600,12 @@
 - **FantasyGuru articles: PAYWALLED** — all four (Mans cash, injury, start/sit, game scripts) serve only intro + scores to anonymous curl. Reopen: subscription or logged-in browser session.
 - **Pre-lock per-contestant lineups: NOT PUBLIC on DK** — users draft private until lock. Pre-lock consensus = entry COUNTS (have) + ownership projections (vendor data) + our ILP builds. Post-lock per-contestant lineups = the proven leaderboard pull (505-row page, ranks 1-5414 for showdown).
 - DIAGNOSTIC.
+
+### [16:20] INJURY-GATED REBUILD — Monangai miss fixed at the root, new builds on the bus
+- **THE MISS**: Kyle Monangai (Thumb, OUT, DNP) was in our own injuries_2026.parquet but the pool's status field was empty — the first ILP never joined the gate. User caught it live.
+- **THE FIX**: dfs/rebuild_injury_gated.py — injuries artifact joined by name, 24 OUT/Doubtful removed (incl. Monangai, Breece Hall, Charbonnet, Diggs, Barkley), 25 Questionable get an 0.85 proj haircut. The gate is now a hard filter on every future build (gate artifact #12 enforced).
+- **dfs/RED_ZONE_BUILDS_INJURY_GATED.json** — 6 clean builds (proj 171.1-172.3, Monangai absent):
+  #1 172.3: Cousins — Mason + Swift — JSN + Nico + Olave — Bowers — Vikings
+  #3 171.8: Purdy — Harvey + Mason — JSN + Nico + Olave — Bowers — Vikings
+  #6 171.1: Cousins — Mason + Swift — JSN + Nico + St.Brown — Bowers — Vikings
+- LESSON STAMPED: a build is only as fresh as its gate join. Pool status fields lie by omission; the injuries artifact is the source of truth.
