@@ -1,0 +1,183 @@
+{
+ "generated_at": "2026-10-11T06:33:25Z",
+ "contest": "DraftKings NFL $2.75M Millionaire Maker",
+ "draft_group": 154468,
+ "target_lineups": 100000,
+ "actual_lineups": 100000,
+ "unique_verified": true,
+ "total_attempts": 101625,
+ "generation_seconds": 63.2,
+ "lineups_per_second": 1583.0,
+ "player_pool_size": 587,
+ "salary_cap": 50000,
+ "mode": "GPP",
+ "data_source": "LIVE DK draftables API via authenticated session (browser_draftables_154468.json)",
+ "projection_model": "Salary-derived with position-specific rates calibrated from 20-lineup sample + N(0,0.15) variance",
+ "gse_scoring": "Within-position projection percentile 0-100, GSE-weighted sampling",
+ "constraints": {
+  "slots": "QB/RB/RB/WR/WR/WR/TE/FLEX/DST",
+  "salary_cap": 50000,
+  "qb_stack": "At least 1 WR/TE from QB team (best effort)",
+  "max_exposure": "25%",
+  "deduplication": "frozenset of player indices"
+ },
+ "projection_stats": {
+  "mean": 137.5,
+  "max": 184.04,
+  "min": 93.43,
+  "top1k_min": 166.42
+ },
+ "salary_stats": {
+  "mean": 40485.0,
+  "max": 50000,
+  "min": 28600,
+  "distribution": {
+   "$28000-28999": 6,
+   "$29000-29999": 47,
+   "$30000-30999": 190,
+   "$31000-31999": 465,
+   "$32000-32999": 1087,
+   "$33000-33999": 2131,
+   "$34000-34999": 3422,
+   "$35000-35999": 5010,
+   "$36000-36999": 6556,
+   "$37000-37999": 8092,
+   "$38000-38999": 9177,
+   "$39000-39999": 9631,
+   "$40000-40999": 9797,
+   "$41000-41999": 9258,
+   "$42000-42999": 8298,
+   "$43000-43999": 7273,
+   "$44000-44999": 5992,
+   "$45000-45999": 4714,
+   "$46000-46999": 3496,
+   "$47000-47999": 2415,
+   "$48000-48999": 1741,
+   "$49000-49999": 1111,
+   "$50000-50999": 91
+  }
+ },
+ "exposure_leaders": [
+  {
+   "name": "Bengals",
+   "pos": "DST",
+   "team": "CIN",
+   "exposure_pct": 17.7
+  },
+  {
+   "name": "Vikings",
+   "pos": "DST",
+   "team": "MIN",
+   "exposure_pct": 14.6
+  },
+  {
+   "name": "Steelers",
+   "pos": "DST",
+   "team": "PIT",
+   "exposure_pct": 11.6
+  },
+  {
+   "name": "Browns",
+   "pos": "DST",
+   "team": "CLE",
+   "exposure_pct": 10.1
+  },
+  {
+   "name": "Bears",
+   "pos": "DST",
+   "team": "CHI",
+   "exposure_pct": 8.2
+  },
+  {
+   "name": "Lions",
+   "pos": "DST",
+   "team": "DET",
+   "exposure_pct": 6.9
+  },
+  {
+   "name": "Jonathan Taylor",
+   "pos": "RB",
+   "team": "IND",
+   "exposure_pct": 6.2
+  },
+  {
+   "name": "Ja'Marr Chase",
+   "pos": "WR",
+   "team": "CIN",
+   "exposure_pct": 6.2
+  },
+  {
+   "name": "Nico Collins",
+   "pos": "WR",
+   "team": "HOU",
+   "exposure_pct": 6.2
+  },
+  {
+   "name": "Christian McCaffrey",
+   "pos": "RB",
+   "team": "SF",
+   "exposure_pct": 6.2
+  },
+  {
+   "name": "Jeremiyah Love",
+   "pos": "RB",
+   "team": "ARI",
+   "exposure_pct": 6.2
+  },
+  {
+   "name": "Quentin Johnston",
+   "pos": "WR",
+   "team": "LAC",
+   "exposure_pct": 5.9
+  },
+  {
+   "name": "Jahmyr Gibbs",
+   "pos": "RB",
+   "team": "DET",
+   "exposure_pct": 5.9
+  },
+  {
+   "name": "Tony Pollard",
+   "pos": "RB",
+   "team": "TEN",
+   "exposure_pct": 5.9
+  },
+  {
+   "name": "Amon-Ra St. Brown",
+   "pos": "WR",
+   "team": "DET",
+   "exposure_pct": 5.8
+  },
+  {
+   "name": "Jaxon Smith-Njigba",
+   "pos": "WR",
+   "team": "SEA",
+   "exposure_pct": 5.7
+  },
+  {
+   "name": "Roschon Johnson",
+   "pos": "RB",
+   "team": "CHI",
+   "exposure_pct": 5.7
+  },
+  {
+   "name": "Malik Nabers",
+   "pos": "WR",
+   "team": "NYG",
+   "exposure_pct": 5.7
+  },
+  {
+   "name": "Ladd McConkey",
+   "pos": "WR",
+   "team": "LAC",
+   "exposure_pct": 5.6
+  },
+  {
+   "name": "Chase Brown",
+   "pos": "RB",
+   "team": "CIN",
+   "exposure_pct": 5.5
+  }
+ ],
+ "max_exposure_pct": 17.7
+}
