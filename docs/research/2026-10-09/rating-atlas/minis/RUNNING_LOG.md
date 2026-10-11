@@ -504,3 +504,14 @@
 - **dfs/OT_MULTI_SEASON_STAMP.json**: 46 OT games 2023-25. Home OT win rate 56.5%, 95% CI [0.42, 0.71] — CONTAINS 0.5, coin-flip holds.
 - Direction note (small-n): home-favorites won OT 31.6% vs home-dogs 74.1% — dogs winning OT more is either noise or a real 'favorites lead → visitors equalize → dog momentum' effect. Needs n>100 (re-open: 3 more seasons of data).
 - DIAGNOSTIC. Nothing promoted.
+
+### [10:15] DIG SESSION 2 COMPLETE — waves 2-9, 28 artifacts, every axis honest
+- **dfs/DIG_SESSION2_STAMP.json** — the master stamp. Highlights:
+- **CPOE×pressure (128 QB-weeks)**: heavy-pressure CPOE +1.5 (mobile/elite absorb duress) — condition on WHO not HOW MUCH.
+- **2pt equilibrium**: 43.2% conv → EV 0.863 < XP 0.94 (kick at mean); desperation converts better.
+- **Go-utility surface**: 7,994 decisions mapped; team aggression index built.
+- **REST: honestly REFUSED** — adds nothing after the close (4th master-lesson confirmation).
+- **OT: coin-flip holds at n=46** (dogs won 74% vs favs 32% — direction note, re-open n>100).
+- **International ATS**: +1.67 (n=29, thin — pool later).
+- **Watchlists**: Nacua/Odunze/McBride YAC machines; JamWilliams/Kraft hands regression.
+- All DIAGNOSTIC. Nothing promoted. Remote=local verified.

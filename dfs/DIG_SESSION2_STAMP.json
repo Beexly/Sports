@@ -1,0 +1,64 @@
+{
+ "observed_at": "2026-10-11T07:03:26Z",
+ "title": "DIG SESSION 2 \u2014 waves 2-9 complete",
+ "waves": {
+  "W2_pfr_weekly_2026": "advstats week pass/rush/rec 2026 landed (150/1,032 QB/Rec weeks)",
+  "W3_cpoe_x_pressure": {
+   "n": 128,
+   "finding": "heavy-pressure CPOE stays +1.5 (mobile/elite absorb); bad-throw flat in pressure \u2014 3rd independent confirmation",
+   "file": "dfs/cpoe_x_pressure_2026.csv"
+  },
+  "W4_yac_creators": {
+   "finding": "broken-tackle leaders: Burden/Moore/Bijan; drop leaders: Kraft/JamWilliams (5 each)",
+   "files": [
+    "dfs/pfr_rec_yac_creators_2026.csv"
+   ]
+  },
+  "W5_snap_counts_2026": "6,064 rows landed, snap% per player per week",
+  "W6_receiver_watchlists": {
+   "yac_machines": [
+    "Nacua",
+    "Odunze",
+    "McBride"
+   ],
+   "hands_watch": [
+    "JamWilliams",
+    "Kraft"
+   ],
+   "n_join": 351
+  },
+  "W7_rest_differential": {
+   "n": 816,
+   "verdict": "REFUSED \u2014 rest adds nothing after close (held-out MSE worse)",
+   "file": "dfs/REST_DIFFERENTIAL_STAMP.json"
+  },
+  "W8_twopoint": {
+   "n": 278,
+   "conv": 0.432,
+   "EV": 0.863,
+   "vs_XP": 0.94,
+   "finding": "kick at mean; desperation bins convert better (46.5-48.2%); favorites convert worse than dogs (39.3 vs 45.8)",
+   "file": "dfs/TWOPOINT_TABLE_STAMP.json"
+  },
+  "W8b_coach_surface": {
+   "n": 7994,
+   "finding": "go EPA positive in ALL short bins + mid-field 2-5; negative 5+ long except opp-40; team aggression index built"
+  },
+  "W9_ot": {
+   "n": 46,
+   "home_win": 0.565,
+   "ci": [
+    0.42,
+    0.71
+   ],
+   "verdict": "coin-flip holds, EDGE#2 provisional; dogs won 74% vs favs 32% (direction note)"
+  },
+  "W9b_international": {
+   "n_2023plus": 29,
+   "ats_resid": "+1.67",
+   "note": "neutral-site home pricing \u2014 thin, pool later"
+  }
+ },
+ "files_landed_this_session": 28,
+ "label": "DIAGNOSTIC"
+}
