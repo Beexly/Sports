@@ -21,6 +21,11 @@ ROOT = os.getcwd()
 HERE = os.path.join(ROOT, 'dfs', 'nfl_prop_resid_sigma_2026-10-11')
 sys.path.insert(0, os.path.join(ROOT, 'dfs'))
 import freshnessgate_wiring as fg  # noqa: E402
+sys.path.insert(0, ROOT)
+from intelligence.providers.injury_gate import require_injury_published  # noqa: E402  (gate wired 2026-10-11 gate-inventory pass)
+from datetime import datetime, timezone  # noqa: E402
+from zoneinfo import ZoneInfo  # noqa: E402
+FRIDAY_WK5 = datetime(2026, 10, 9, 18, 0, tzinfo=ZoneInfo('America/New_York'))  # Friday of NFL 2026 week 5 (Sun = 2026-10-11)
 
 COMMIT = '--commit' in sys.argv
 if not COMMIT:
@@ -95,6 +100,15 @@ def fetch_stamped(url, out_csv, transform):
     df['source_url'] = url
     df.to_csv(os.path.join(ROOT, out_csv), index=False)
     return hashlib.sha256(b).hexdigest()[:16]
+
+
+def pull_wk5_injuries(now=None, fetch=None):
+    """Live injury pull for week 5, behind intelligence/providers/injury_gate.require_injury_published.
+    Raises InjuryNotPublished before Friday 18:00 ET; nothing is fetched in that case."""
+    require_injury_published(5, now or datetime.now(timezone.utc), FRIDAY_WK5)
+    return (fetch or fetch_stamped)(NV.format(tag='injuries', file='injuries_2026.parquet'), f'dfs/nfl_prop_resid_sigma_2026-10-11/injuries_2026_wk5.csv',
+                                    lambda b: pd.read_parquet(io.BytesIO(b)).query('week == 5')[
+                                        ['season', 'week', 'team', 'gsis_id', 'full_name', 'position', 'report_status', 'practice_status']])
 
 
 def main():
@@ -175,9 +189,7 @@ def main():
                          lambda b: pd.read_csv(io.BytesIO(b), low_memory=False).query('season == 2026 and week == 5')[
                              ['game_id', 'season', 'week', 'gameday', 'gametime', 'away_team', 'home_team',
                               'away_rest', 'home_rest', 'roof', 'surface', 'temp', 'wind']])
-    isha = fetch_stamped(NV.format(tag='injuries', file='injuries_2026.parquet'), f'dfs/nfl_prop_resid_sigma_2026-10-11/injuries_2026_wk5.csv',
-                         lambda b: pd.read_parquet(io.BytesIO(b)).query('week == 5')[
-                             ['season', 'week', 'team', 'gsis_id', 'full_name', 'position', 'report_status', 'practice_status']])
+    isha = pull_wk5_injuries()  # injury pull gate (Friday 18:00 ET) before the live pull
     out['fresh_pull_sha16'] = {'games.csv': gsha, 'injuries_2026.parquet': isha}
     games = gate('dfs/nfl_prop_resid_sigma_2026-10-11/games_2026_wk5.csv', role='rest + roof (situational node)')
     nvinj = gate('dfs/nfl_prop_resid_sigma_2026-10-11/injuries_2026_wk5.csv', role='nflverse injury status wk5')

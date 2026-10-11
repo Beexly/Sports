@@ -28,6 +28,44 @@ except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from freshness_gate import load_stamped
 
+# Selective-abstention default (gate-inventory pass 2026-10-11): doctrine.FeatureRegistry is the
+# existing refusal primitive — a feature stays 'diagnostic' unless promote() receives a valid
+# HonestyGate PROMOTED verdict (residual-versus-close clearance). Uncleared residual rows ABSTAIN.
+import os as _os  # noqa: E402
+if _os.path.dirname(_os.path.abspath(__file__)) not in sys.path:
+    sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from doctrine import HonestyGate, KillLedger, FeatureRegistry  # noqa: E402
+
+ABSTAIN_LABEL = "ABSTAIN — diagnostic only (residual-versus-close not cleared)"
+
+
+def _rvc_abstain_default(board, clearances=None):
+    """Default every residual row to ABSTAIN unless each applied overlay is cleared.
+    clearances: optional {overlay_name: (HonestyGate, Verdict)}. Anything else = not cleared."""
+    clearances = clearances or {}
+    cleared = {}
+    names = {n for r in board.get("rows", []) for n in r.get("overlays_applied", [])}
+    for name in names:
+        gate, verdict = clearances.get(name, (None, None))
+        reg = FeatureRegistry(gate if isinstance(gate, HonestyGate) else HonestyGate([], "no_rvc_clearance"),
+                              KillLedger())
+        reg.declare(name, "diagnostic", "rvc clearance required")
+        if verdict is not None:
+            try:
+                reg.promote(name, verdict)
+            except (ValueError, AttributeError):
+                pass
+        cleared[name] = name in reg.margin_head_inputs()
+    for r in board.get("rows", []):
+        applied = r.get("overlays_applied", [])
+        ok = bool(applied) and all(cleared.get(n, False) for n in applied)
+        r["rvc_cleared"] = ok
+        r["abstain"] = r.get("residual") is not None and not ok
+        if r["abstain"]:
+            r["render"] = ABSTAIN_LABEL
+    board["n_abstain"] = sum(1 for r in board.get("rows", []) if r.get("abstain"))
+    return board
+
 
 # ---------------------------------------------------------------------------
 # CollegeGuard — rule 3, hardcoded (doctrine.py is the source of truth,
@@ -193,7 +231,7 @@ def live_board(games, warehouse):
     board["n_rows"] = len(board["rows"])
     board["n_baseline"] = sum(1 for r in board["rows"] if r["status"] == "baseline")
     board["n_diagnostic"] = sum(1 for r in board["rows"] if r["status"] == "diagnostic overlay")
-    return board
+    return _rvc_abstain_default(board, warehouse.get("rvc_clearances"))
 
 
 def _lookup_overlay(data, name, game_id, game):
