@@ -83,3 +83,57 @@ Source: dfs/dk_engine_config_vault.json and docs/research/2026-10-09/rating-atla
 | D5 | MoveTheLine 15s blink | vault LESSON_5 / micro_markets_blink_ms=15000 | DIAGNOSTIC |
 | D6 | Two protocols (odds WS vs my-bets WS) | vault LESSON_6 | DIAGNOSTIC |
 | D7 | Three third-party vendors behind one brand | RUNNING_LOG [04:45] item 6 (the source says "engines") | DIAGNOSTIC |
+
+## EXPECTED-METRIC CONDITIONAL RVC (2026-10-11): CPOE + nflfastR xYAC, by total tercile × score state
+
+**Stamp: INFRASTRUCTURE PASS. Result: REFUSED: 0/16 cells survive Holm or Bonferroni on the held-out paired CRPS t. DIAGNOSTIC only, nothing promoted.**
+
+- Same pipeline as B7: the manifest passes the FreshnessGate v2 read (sha256_16 bec543fc83a63ed7), and the residual is (home_score − away_score) − spread_line, recomputed from raw scores (the defective manifest columns are not used). The feature is the prior game only (the last-game metric diff, home − away). The HonestyGate is walk-forward: fit on earlier seasons, test on 2024 and 2025.
+- Metrics: CPOE (native `cpoe`) and YACOE = yards_after_catch − nflfastR native `xyac_mean_yardage`. **GSE-RYOE and GSE-xYAC do not exist in the repo.** Native NGS RYOE exists only as minis/re/genie-acquisition-2026-10-10/ngs_rushing.csv.gz, which is excluded: the gate can't read .gz, the rows are qualifiers only, and it isn't the manifest's source.
+- Axes: close-total tercile (cutpoints [42.5, 46.0]) × score state of the metric's plays (all vs neutral |score_differential| ≤ 8). A pressure proxy (qb_hit/sack) is derivable but wasn't used, to keep the family small.
+- **Multiple testing: 16 tests (2 metrics × 2 states × 3 terciles + pooled). Holm and Bonferroni at α=0.05 both applied.** In-sample survivors: none. Held-out survivors in the helpful direction: none. The only held-out survivor (yacoe_all pooled, paired t −3.74) is significantly **worse** than the close.
+
+| metric/state | cell | n | slope | t | 95% CI | held-out CRPS close / cand | paired t | Holm |
+|---|---|---|---|---|---|---|---|---|
+| cpoe_all | pooled | 807 | +0.0835 | 2.207 | [0.0093, 0.1576] | 7.077 / 7.0601 | 0.712 | no |
+| cpoe_all | low | 299 | -0.0084 | -0.132 | [-0.1322, 0.1154] | 7.2288 / 7.2295 | -0.146 | no |
+| cpoe_all | mid | 242 | +0.1081 | 1.642 | [-0.0209, 0.2372] | 6.8632 / 6.8151 | 0.731 | no |
+| cpoe_all | high | 266 | +0.1383 | 2.021 | [0.0042, 0.2725] | 7.1348 / 7.0974 | 0.511 | no |
+| cpoe_neutral | pooled | 806 | +0.0361 | 1.46 | [-0.0124, 0.0846] | 7.0795 / 7.0773 | 0.152 | no |
+| cpoe_neutral | low | 298 | +0.0379 | 0.963 | [-0.0393, 0.1151] | 7.2377 / 7.2517 | -0.546 | no |
+| cpoe_neutral | mid | 242 | +0.0277 | 0.615 | [-0.0606, 0.1159] | 6.8632 / 6.8746 | -0.456 | no |
+| cpoe_neutral | high | 266 | +0.0309 | 0.685 | [-0.0576, 0.1195] | 7.1348 / 7.1778 | -0.88 | no |
+| yacoe_all | pooled | 807 | -0.0924 | -0.504 | [-0.4518, 0.2671] | 7.077 / 7.1399 | -3.738 | yes (WORSE than close) |
+| yacoe_all | low | 299 | -0.3550 | -1.249 | [-0.9118, 0.2018] | 7.2288 / 7.2827 | -1.072 | no |
+| yacoe_all | mid | 242 | +0.2987 | 0.878 | [-0.3684, 0.9657] | 6.8632 / 6.9161 | -1.204 | no |
+| yacoe_all | high | 266 | -0.1130 | -0.336 | [-0.7711, 0.5452] | 7.1348 / 7.218 | -2.701 | no |
+| yacoe_neutral | pooled | 794 | -0.1594 | -1.358 | [-0.3896, 0.0707] | 7.0163 / 7.0525 | -2.508 | no |
+| yacoe_neutral | low | 290 | -0.1460 | -0.93 | [-0.4537, 0.1617] | 7.0869 / 7.1088 | -1.553 | no |
+| yacoe_neutral | mid | 241 | +0.1550 | 0.554 | [-0.3935, 0.7035] | 6.8556 / 6.8627 | -0.285 | no |
+| yacoe_neutral | high | 263 | -0.3837 | -1.717 | [-0.8215, 0.0542] | 7.1127 / 7.2346 | -1.221 | no |
+
+- Artifacts: dfs/expected_metric_conditional_rvc/em_conditional_rvc.py, residual_table.csv (855 games), cells.csv, result.json.
+- **Reopen condition:** 2026 frozen weekly folds appended to the manifest, plus a single pre-registered cell reaching paired CRPS-delta t ≥ 1.96 after Holm over the registered family. Or: prop-level closes (completions / receiving-YAC ladders) captured on a frozen manifest, for a direct metric-vs-prop residual.
+
+## OU LIVE-WP: STRUCTURAL FINDING (verified from e7c110e2) + θ REFINEMENT — DIAGNOSTIC
+
+Verified against dfs/OU_LIVE_WP_STAMP.json, dfs/ou_rvc_rows.csv and dfs/ou_live_wp.py, re-run on the box (exact reproduction):
+- Fit on **42,461 play-pairs** (285 games, 2025 pbp incl. playoffs): matches. θ = 5.03e-5/s, σ = 0.2964/√s.
+- **Half-life 230 min** (13,773 s = 229.6 min): matches.
+- **OU beats the static close from Q3 on, crossover around halftime**: matches the artifact. Brier by state (seconds remaining): 3600 OU 0.3107 vs close 0.2167; 2700 0.2580 vs 0.2167; 1800 0.1939 vs 0.2167; 900 0.1387 vs 0.2167.
+- Caveats found: (1) the RVC is in-sample (fit and graded on the same 285 games). (2) At kickoff the shipped expectation formula returns the negative of the close in 100% of games (corr(p_OU, p_close) = −0.999). That's why Q1 Brier 0.3107 is worse than a coin flip, so "θ too slow" isn't the cause. (3) The baseline is the static pre-game close, not a live line, so any state-aware model is expected to beat it late in games.
+
+θ refinement (dfs/ou_theta_refine/): **Stamp INFRASTRUCTURE PASS. Result: REFUSED as an early-game fix: per-half / per-quarter theta moves held-out Q1-start Brier by -0.0018 (half) and -0.0020 (quarter); every OU variant still loses to the close at kickoff (best B 0.2462 vs close 0.2226). The early-game gap comes from the shipped expectation formula (A), not from theta speed.**
+Locked split: fit on 2025 weeks 1–9 (135 games), test on weeks ≥ 10 (150 games). A = the formula as shipped; B = the exact conditional mean of the same SDE. Held-out Brier:
+
+| sec remaining | n | close | A single | A half | A quarter | B single | B half | B quarter |
+|---|---|---|---|---|---|---|---|---|
+| 3600 | 150 | 0.2226 | 0.3163 | 0.3145 | 0.3143 | 0.2472 | 0.2462 | 0.2462 |
+| 2700 | 150 | 0.2226 | 0.2616 | 0.2608 | 0.2607 | 0.2158 | 0.2157 | 0.2166 |
+| 1800 | 150 | 0.2226 | 0.1989 | 0.1989 | 0.1989 | 0.1773 | 0.1777 | 0.1778 |
+| 900 | 150 | 0.2226 | 0.1275 | 0.1282 | 0.131 | 0.1219 | 0.1226 | 0.1255 |
+
+Held-out paired t vs close at 1800 s: A single 1.09, B single 2.59. At 3600 s: B single -2.03. The walk-forward per-quarter θ for Q3 came out negative (-1.62e-05).
+- Artifacts: dfs/ou_theta_refine/ou_theta_refine.py, graded_states.csv, result.json.
+- **Reopen condition:** REOPEN: re-specify the attractor (mu path ending at the close-implied margin, not 0) and fix the expectation formula, then re-grade on 2023-24 fit / 2025 test; grade vs a LIVE in-game line (not the static pre-game close) before any live-engine claim.
+- Cross-check vs f8c9e873 (dfs/ou_theta_per_quarter.json, landed while this ran): its pair counts match this run's elapsed-time segments in reverse order. Its "Q2" (n=9,610, θ≈0) corresponds to elapsed 1800–2700 s, which is the **third** quarter, and its "Q4" (n=9,510) is elapsed 0–900 s, the first quarter. The quarter labels there look inverted (remaining time vs elapsed), so the "2-minute drill in Q2" explanation needs re-checking. Both runs agree that per-quarter θ doesn't fix early-game Brier.

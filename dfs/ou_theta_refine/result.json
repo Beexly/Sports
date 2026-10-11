@@ -1,0 +1,316 @@
+{
+ "observed_at": "2026-10-11T05:59:00Z",
+ "test": "OU live-WP theta refinement (single / per-half / per-quarter), early-game Brier re-grade",
+ "source_commit": "e7c110e2249db48db70c1b8ad21233e05dfc52bb (dfs/ou_live_wp.py, dfs/OU_LIVE_WP_STAMP.json)",
+ "reproduction_of_e7c110e": {
+  "n_play_pairs": 42461,
+  "n_games": 285,
+  "theta_single": 5.032e-05,
+  "sigma_single": 0.2964,
+  "half_life_min": 229.6
+ },
+ "split": {
+  "fit": "2025 weeks 1-9",
+  "test": "2025 weeks >= 10",
+  "n_fit_games": 135,
+  "n_test_games": 150,
+  "n_fit_pairs": 20204
+ },
+ "fits_in_sample": {
+  "single": [
+   {
+    "seg": [
+     0,
+     3600
+    ],
+    "theta": 5.03248019856179e-05,
+    "sigma": 0.2964448351142411,
+    "n_pairs": 42461,
+    "half_life_min": 229.6
+   }
+  ],
+  "half": [
+   {
+    "seg": [
+     0,
+     1800
+    ],
+    "theta": 5.4439751109524876e-05,
+    "sigma": 0.27630338691724066,
+    "n_pairs": 21134,
+    "half_life_min": 212.2
+   },
+   {
+    "seg": [
+     1800,
+     3600
+    ],
+    "theta": 4.8960570790460374e-05,
+    "sigma": 0.3153053229811986,
+    "n_pairs": 21327,
+    "half_life_min": 236.0
+   }
+  ],
+  "quarter": [
+   {
+    "seg": [
+     0,
+     900
+    ],
+    "theta": 7.64053734788157e-05,
+    "sigma": 0.24916500234839659,
+    "n_pairs": 9510,
+    "half_life_min": 151.2
+   },
+   {
+    "seg": [
+     900,
+     1800
+    ],
+    "theta": 3.8576202702537824e-05,
+    "sigma": 0.30100336733224997,
+    "n_pairs": 11624,
+    "half_life_min": 299.5
+   },
+   {
+    "seg": [
+     1800,
+     2700
+    ],
+    "theta": -9.072742785343219e-08,
+    "sigma": 0.25242681437105985,
+    "n_pairs": 9610,
+    "half_life_min": null
+   },
+   {
+    "seg": [
+     2700,
+     3600
+    ],
+    "theta": 8.003840304331768e-05,
+    "sigma": 0.3675738767058919,
+    "n_pairs": 11717,
+    "half_life_min": 144.3
+   }
+  ]
+ },
+ "fits_walk_forward": {
+  "single": [
+   {
+    "seg": [
+     0,
+     3600
+    ],
+    "theta": 3.074298159202442e-05,
+    "sigma": 0.2883215778020547,
+    "n_pairs": 20204,
+    "half_life_min": 375.8
+   }
+  ],
+  "half": [
+   {
+    "seg": [
+     0,
+     1800
+    ],
+    "theta": 4.8431011973498396e-05,
+    "sigma": 0.2762115192364711,
+    "n_pairs": 10123,
+    "half_life_min": 238.5
+   },
+   {
+    "seg": [
+     1800,
+     3600
+    ],
+    "theta": 2.578953758547477e-05,
+    "sigma": 0.29993891289232116,
+    "n_pairs": 10081,
+    "half_life_min": 448.0
+   }
+  ],
+  "quarter": [
+   {
+    "seg": [
+     0,
+     900
+    ],
+    "theta": 7.654211666253575e-05,
+    "sigma": 0.24530122024241124,
+    "n_pairs": 4529,
+    "half_life_min": 150.9
+   },
+   {
+    "seg": [
+     900,
+     1800
+    ],
+    "theta": 2.9559520557800007e-05,
+    "sigma": 0.30398086368231103,
+    "n_pairs": 5594,
+    "half_life_min": 390.8
+   },
+   {
+    "seg": [
+     1800,
+     2700
+    ],
+    "theta": -1.6169823156767633e-05,
+    "sigma": 0.2603137169989237,
+    "n_pairs": 4556,
+    "half_life_min": null
+   },
+   {
+    "seg": [
+     2700,
+     3600
+    ],
+    "theta": 5.289928212126983e-05,
+    "sigma": 0.33488997289206396,
+    "n_pairs": 5525,
+    "half_life_min": 218.4
+   }
+  ]
+ },
+ "brier_in_sample": {
+  "900": {
+   "n": 285,
+   "brier_close": 0.2167,
+   "brier_A_single": 0.1387,
+   "brier_B_single": 0.132,
+   "brier_A_half": 0.1391,
+   "brier_B_half": 0.1325,
+   "brier_A_quarter": 0.1411,
+   "brier_B_quarter": 0.1349,
+   "t_vs_close_A_single": 5.38,
+   "t_vs_close_B_single": 6.32,
+   "t_vs_close_A_half": 5.48,
+   "t_vs_close_B_half": 6.42,
+   "t_vs_close_A_quarter": 5.68,
+   "t_vs_close_B_quarter": 6.67
+  },
+  "1800": {
+   "n": 285,
+   "brier_close": 0.2167,
+   "brier_A_single": 0.1939,
+   "brier_B_single": 0.1718,
+   "brier_A_half": 0.194,
+   "brier_B_half": 0.1728,
+   "brier_A_quarter": 0.1939,
+   "brier_B_quarter": 0.1728,
+   "t_vs_close_A_single": 1.55,
+   "t_vs_close_B_single": 3.76,
+   "t_vs_close_A_half": 1.58,
+   "t_vs_close_B_half": 3.77,
+   "t_vs_close_A_quarter": 1.57,
+   "t_vs_close_B_quarter": 3.72
+  },
+  "2700": {
+   "n": 285,
+   "brier_close": 0.2167,
+   "brier_A_single": 0.258,
+   "brier_B_single": 0.2129,
+   "brier_A_half": 0.2572,
+   "brier_B_half": 0.2132,
+   "brier_A_quarter": 0.2573,
+   "brier_B_quarter": 0.2141,
+   "t_vs_close_A_single": -2.73,
+   "t_vs_close_B_single": 0.38,
+   "t_vs_close_A_half": -2.72,
+   "t_vs_close_B_half": 0.35,
+   "t_vs_close_A_quarter": -2.72,
+   "t_vs_close_B_quarter": 0.26
+  },
+  "3600": {
+   "n": 285,
+   "brier_close": 0.2167,
+   "brier_A_single": 0.3107,
+   "brier_B_single": 0.2456,
+   "brier_A_half": 0.31,
+   "brier_B_half": 0.2454,
+   "brier_A_quarter": 0.3101,
+   "brier_B_quarter": 0.2456,
+   "t_vs_close_A_single": -5.89,
+   "t_vs_close_B_single": -3.58,
+   "t_vs_close_A_half": -5.87,
+   "t_vs_close_B_half": -3.57,
+   "t_vs_close_A_quarter": -5.87,
+   "t_vs_close_B_quarter": -3.58
+  }
+ },
+ "brier_heldout": {
+  "900": {
+   "n": 150,
+   "brier_close": 0.2226,
+   "brier_A_single": 0.1275,
+   "brier_B_single": 0.1219,
+   "brier_A_half": 0.1282,
+   "brier_B_half": 0.1226,
+   "brier_A_quarter": 0.131,
+   "brier_B_quarter": 0.1255,
+   "t_vs_close_A_single": 5.01,
+   "t_vs_close_B_single": 5.89,
+   "t_vs_close_A_half": 5.04,
+   "t_vs_close_B_half": 5.92,
+   "t_vs_close_A_quarter": 5.09,
+   "t_vs_close_B_quarter": 5.99
+  },
+  "1800": {
+   "n": 150,
+   "brier_close": 0.2226,
+   "brier_A_single": 0.1989,
+   "brier_B_single": 0.1773,
+   "brier_A_half": 0.1989,
+   "brier_B_half": 0.1777,
+   "brier_A_quarter": 0.1989,
+   "brier_B_quarter": 0.1778,
+   "t_vs_close_A_single": 1.09,
+   "t_vs_close_B_single": 2.59,
+   "t_vs_close_A_half": 1.11,
+   "t_vs_close_B_half": 2.6,
+   "t_vs_close_A_quarter": 1.1,
+   "t_vs_close_B_quarter": 2.56
+  },
+  "2700": {
+   "n": 150,
+   "brier_close": 0.2226,
+   "brier_A_single": 0.2616,
+   "brier_B_single": 0.2158,
+   "brier_A_half": 0.2608,
+   "brier_B_half": 0.2157,
+   "brier_A_quarter": 0.2607,
+   "brier_B_quarter": 0.2166,
+   "t_vs_close_A_single": -1.74,
+   "t_vs_close_B_single": 0.45,
+   "t_vs_close_A_half": -1.72,
+   "t_vs_close_B_half": 0.46,
+   "t_vs_close_A_quarter": -1.72,
+   "t_vs_close_B_quarter": 0.39
+  },
+  "3600": {
+   "n": 150,
+   "brier_close": 0.2226,
+   "brier_A_single": 0.3163,
+   "brier_B_single": 0.2472,
+   "brier_A_half": 0.3145,
+   "brier_B_half": 0.2462,
+   "brier_A_quarter": 0.3143,
+   "brier_B_quarter": 0.2462,
+   "t_vs_close_A_single": -3.86,
+   "t_vs_close_B_single": -2.03,
+   "t_vs_close_A_half": -3.83,
+   "t_vs_close_B_half": -1.98,
+   "t_vs_close_A_quarter": -3.82,
+   "t_vs_close_B_quarter": -1.98
+  }
+ },
+ "best_early_model_heldout": {
+  "3600": "brier_close",
+  "2700": "brier_B_half"
+ },
+ "formula_note": "A = shipped e7c110e expectation (T - mu(t))*exp(-int theta) with mu_end=0: at kickoff with T=0 it returns the NEGATIVE of the close (sign-inverted vs the market). B = exact conditional mean of the same SDE. Neither is a live product. The static pre-game close is not a live market line, so any state-aware model is expected to beat it late in games.",
+ "stamp": "INFRASTRUCTURE PASS",
+ "result_stamp": "REFUSED as an early-game fix: per-half / per-quarter theta moves held-out Q1-start Brier by -0.0018 (half) and -0.0020 (quarter); every OU variant still loses to the close at kickoff (best B 0.2462 vs close 0.2226). The early-game gap comes from the shipped expectation formula (A), not from theta speed.",
+ "reopen_condition": "REOPEN: re-specify the attractor (mu path ending at the close-implied margin, not 0) and fix the expectation formula, then re-grade on 2023-24 fit / 2025 test; grade vs a LIVE in-game line (not the static pre-game close) before any live-engine claim",
+ "label": "DIAGNOSTIC \u2014 not a live edge, nothing promoted"
+}
