@@ -609,3 +609,11 @@
   #3 171.8: Purdy — Harvey + Mason — JSN + Nico + Olave — Bowers — Vikings
   #6 171.1: Cousins — Mason + Swift — JSN + Nico + St.Brown — Bowers — Vikings
 - LESSON STAMPED: a build is only as fresh as its gate join. Pool status fields lie by omission; the injuries artifact is the source of truth.
+
+### [16:35] MASON IR — double gap caught by user, V3 builds on the bus
+- **dfs/MASON_IR_CONFIRMATION.json**: Jordan Mason (MIN, RB) ON IR (high ankle sprain, Rapoport + official). Missed because BOTH sources lagged: nflverse wk5 injury report doesn't list him yet AND the DK pool injury field is empty AND DK still lists him draftable ($4K).
+- **dfs/RED_ZONE_BUILDS_V3_FULL_GATE.json**: 25 removed (24 report + Mason IR), 25 Q-haircut. Builds now:
+  #1 170.7: Cousins — Swift + Etienne — JSN + Nico + Olave — Bowers — Vikings
+  #2 170.6: Cousins — Taylor + Etienne — JSN + Nico + Watson — Bowers — Vikings
+  #3 170.2: Purdy — Harvey + Etienne — JSN + Nico + Olave — Bowers — Vikings
+- **LESSON (twice in one hour)**: no single source is fresh. The gate needs THREE layers: injury report + live news (Google News "when:3d" query) + DK pool diff. Layered gate stamped as the build-time requirement.
