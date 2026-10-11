@@ -248,7 +248,12 @@
    "key_numbers": "sha16 721f44fcdb1d6bcf. 272 rows, 258 cross-book matched. residual sigma means: completions +0.011 (sd .085, n25), rush +0.018 (sd .037, n69), pass -0.007 (sd .047, n25), rec -0.002 (sd .042, n139). DK main-line offset ~0 all stats (balanced, hold ~6%). Gate: 14 inputs FRESH, 9 refused (CPOE/FTN/inj CSV F2, CPOE agg F4, situational/OU/officials/weather/manifest F1). Banned-language hits 0.",
    "reopen": "RVC: freeze DK + Pinnacle prop lines at minutes_to_kickoff<=10 or post-Final, grade settled stats. Overlay: stamp CPOE/FTN/injury CSVs at source (observed_at); re-run situational/officials/weather stamps (F1 stale); frozen manifest needs a freeze-validity read mode (6h freshness rejects any frozen manifest).",
    "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/CANDIDATE_SURFACE_STAMP.json",
-   "label": "DIAGNOSTIC"
+   "label": "DIAGNOSTIC",
+   "current_stamp": {
+    "sha16": "ac423e39eed72c6d",
+    "observed_at": "2026-10-11T16:12:32Z"
+   },
+   "restamp_note": "restamped 2026-10-11T16:12:32Z by a concurrent session re-running gse_engine_surface.py (commit ee12a323b): rows and gate verdicts identical to the 16:05:09Z run; only input pin change = Pinnacle props file CRLF->LF git normalization (ec6efe546ffa20e4 CRLF == ccf59ecc97108020 LF, same JSON). 16:05:09Z bytes preserved at commit f18c4ad94."
   },
   {
    "id": "sunmon-dfs-candidates-154470-20261011T1605Z",
@@ -260,12 +265,17 @@
    "key_numbers": "sha16 dfeac6992d9e3829. 685 pool players, 187 with two-sided Pinnacle markets -> market-implied DK points; 123 injury BLOCK (ESPN stamped + DK pool status).",
    "reopen": "Lineup/ownership consensus needs lineup bodies (absent from getcontests). Projection RVC needs settled fantasy points vs frozen market-implied baseline.",
    "file": "dfs/genie_acq2/sunmon_154470/SUNMON_DFS_CANDIDATES_STAMP.json",
-   "label": "DIAGNOSTIC"
+   "label": "DIAGNOSTIC",
+   "current_stamp": {
+    "sha16": "bb36293aabec86ef",
+    "observed_at": "2026-10-11T16:12:32Z"
+   },
+   "restamp_note": "restamped 2026-10-11T16:12:32Z by a concurrent session re-running gse_engine_surface.py (commit ee12a323b): rows and gate verdicts identical to the 16:05:09Z run; only input pin change = Pinnacle props file CRLF->LF git normalization (ec6efe546ffa20e4 CRLF == ccf59ecc97108020 LF, same JSON). 16:05:09Z bytes preserved at commit f18c4ad94."
   },
   {
    "id": "gate-inventory-2026-10-11",
    "added_at": "2026-10-11T16:05:49Z",
-   "state": "INFRASTRUCTURE PASS x2 (selective-abstention default on minis/live_board.py, 3/3 tests; injury pull gate call site in prop_resid_sigma.py, 2/2 tests; commit 2623137). Recount source-30: before {'LIVE': 16, 'PARTIAL': 6, 'DOCUMENTED-ONLY': 8}, after {'LIVE': 18, 'PARTIAL': 5, 'DOCUMENTED-ONLY': 7} vs claimed 14/5/11. All 49 found: after {'LIVE': 23, 'PARTIAL': 19, 'DOCUMENTED-ONLY': 7}. DIAGNOSTIC — nothing promoted.",
+   "state": "INFRASTRUCTURE PASS x2 (selective-abstention default on minis/live_board.py, 3/3 tests; injury pull gate call site in prop_resid_sigma.py, 2/2 tests; commit 2623137). Recount source-30: before {'LIVE': 16, 'PARTIAL': 6, 'DOCUMENTED-ONLY': 8}, after {'LIVE': 18, 'PARTIAL': 5, 'DOCUMENTED-ONLY': 7} vs claimed 14/5/11. All 49 found: after {'LIVE': 23, 'PARTIAL': 19, 'DOCUMENTED-ONLY': 7}. DIAGNOSTIC \u2014 nothing promoted.",
    "feeds": [
     "minis/live_board.py rows (abstain/rvc_cleared/render)",
     "dfs/nfl_prop_resid_sigma_2026-10-11/prop_resid_sigma.py injury pull"

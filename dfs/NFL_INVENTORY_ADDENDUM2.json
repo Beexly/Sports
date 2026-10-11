@@ -990,7 +990,12 @@
    "15:45Z/15:49Z overlay joins": "RETRACTED \u2014 CPOE/FTN/injury CSVs were read outside FreshnessGate"
   },
   "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/CANDIDATE_SURFACE_STAMP.json",
-  "label": "DIAGNOSTIC"
+  "label": "DIAGNOSTIC",
+  "current_stamp": {
+   "sha16": "ac423e39eed72c6d",
+   "observed_at": "2026-10-11T16:12:32Z",
+   "note": "restamped 2026-10-11T16:12:32Z by a concurrent session re-running gse_engine_surface.py (commit ee12a323b): rows and gate verdicts identical to the 16:05:09Z run; only input pin change = Pinnacle props file CRLF->LF git normalization (ec6efe546ffa20e4 CRLF == ccf59ecc97108020 LF, same JSON). 16:05:09Z bytes preserved at commit f18c4ad94."
+  }
  },
  "SUNMON_DFS_154470_20261011T1605Z": {
   "observed_at": "2026-10-11T16:05:09Z",
@@ -1000,7 +1005,12 @@
   "lineups": "none emitted",
   "ownership": "none emitted",
   "file": "dfs/genie_acq2/sunmon_154470/SUNMON_DFS_CANDIDATES_STAMP.json",
-  "label": "DIAGNOSTIC"
+  "label": "DIAGNOSTIC",
+  "current_stamp": {
+   "sha16": "bb36293aabec86ef",
+   "observed_at": "2026-10-11T16:12:32Z",
+   "note": "restamped 2026-10-11T16:12:32Z by a concurrent session re-running gse_engine_surface.py (commit ee12a323b): rows and gate verdicts identical to the 16:05:09Z run; only input pin change = Pinnacle props file CRLF->LF git normalization (ec6efe546ffa20e4 CRLF == ccf59ecc97108020 LF, same JSON). 16:05:09Z bytes preserved at commit f18c4ad94."
+  }
  },
  "V3_BUILDS_ROSTER_CHECK_20261011T1605Z": {
   "verdict": "REFUSED \u2014 DK Classic gameTypeId 1 requires 9 players / $50,000; all 6 V3 builds have 8 (FLEX missing)",
