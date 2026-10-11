@@ -811,8 +811,8 @@
     "existing_function": "minis/doctrine.py:FeatureRegistry (promote requires HonestyGate PROMOTED verdict)",
     "test": "docs/research/2026-10-09/rating-atlas/minis/test_live_board_abstain.py",
     "result": "3 passed",
-    "behavior": "every row with a residual and no valid (HonestyGate, Verdict) clearance gets abstain=True, rvc_cleared=False, render=\"ABSTAIN — diagnostic only (residual-versus-close not cleared)\"; status labels unchanged; board[\"n_abstain\"] added. JSON warehouses cannot carry a Verdict object, so every residual row from the CLI abstains.",
-    "not_touched": "minis/api/live_board.py copy (served by api.py) left unchanged — now diverges; reopen: mirror the call site there with the same test."
+    "behavior": "every row with a residual and no valid (HonestyGate, Verdict) clearance gets abstain=True, rvc_cleared=False, render=\"ABSTAIN \u2014 diagnostic only (residual-versus-close not cleared)\"; status labels unchanged; board[\"n_abstain\"] added. JSON warehouses cannot carry a Verdict object, so every residual row from the CLI abstains.",
+    "not_touched": "minis/api/live_board.py copy (served by api.py) left unchanged \u2014 now diverges; reopen: mirror the call site there with the same test."
    },
    "injury_pull_gate": {
     "call_site": "dfs/nfl_prop_resid_sigma_2026-10-11/prop_resid_sigma.py:pull_wk5_injuries (main calls it before the live nflverse injuries pull)",
@@ -822,7 +822,7 @@
     "note": "prop_resid_sigma.py was not re-run; PROP_RESID_SIGMA_STAMP.json is unchanged (its 15:2xZ pull was after Fri 18:00 ET, so the gate would have passed)."
    },
    "model_promotion": {
-    "shadow_lane_exists": "apps/web/lib/ops/shadow-evaluation-pass.ts (ShadowSignal via cron refresh-odds) — filter-engine shadow only; no challenger ShadowPick/CLV lane; no NFL shadow residual table",
+    "shadow_lane_exists": "apps/web/lib/ops/shadow-evaluation-pass.ts (ShadowSignal via cron refresh-odds) \u2014 filter-engine shadow only; no challenger ShadowPick/CLV lane; no NFL shadow residual table",
     "verdict": "REFUSE",
     "reopen": {
      "path": "dfs/shadow_residual_table/nfl_prop_shadow_resid.csv (+ SHADOW_STAMP.json) built on a frozen manifest with prop CLOSES (none exist: see LR-20261011-PRS-03-NO-CLOSE)",
@@ -889,7 +889,7 @@
    "intelligence/gates/": "9 passed",
    "minis/test_live_board_abstain.py": "3 passed",
    "dfs/nfl_prop_resid_sigma_2026-10-11/test_injury_gate_callsite.py": "2 passed",
-   "TypeScript (vitest)": "NOT RUN — no node_modules on the box; listed test files exist but results are unverified here"
+   "TypeScript (vitest)": "NOT RUN \u2014 no node_modules on the box; listed test files exist but results are unverified here"
   },
   "ledger_rows": [
    "LR-20261011-GINV-01-ABSTAIN-WIRED",
@@ -918,7 +918,7 @@
    "match": false,
    "note": "claimed sha16 does not match the file sha256 prefix (ccb376162d60d1c3), nor sha256 of the rows/stamp-minus-sha16 under 18 common JSON serializations, nor DIAGNOSTIC_BOARD.csv (12ba411b6af0e541). A file cannot contain its own hash; the value is unverifiable from the branch.",
    "rows": 289,
-   "rows_label": "all 289 = \"DIAGNOSTIC — residual-versus-close not cleared — Reasoning Doctrine overlay applied\"",
+   "rows_label": "all 289 = \"DIAGNOSTIC \u2014 residual-versus-close not cleared \u2014 Reasoning Doctrine overlay applied\"",
    "read_fresh": "PASS",
    "ledger_refusal": "dfs/kill_ledger_freshness.jsonl line 84: NFL_PROP_LADDER_RVC REFUSED, ledger_ts 2026-10-11T15:45:05Z, cites this artifact + sha16 5ca43967ee7f972c (the stamp itself carries no ledger id)",
    "doctrine_unchanged": "dfs/freshnessgate_wiring.py, minis/freshness_gate.py, minis/doctrine.py, minis/live_board.py byte-identical 5bcfd61 -> f508934 (before this pass's live_board edit)"
@@ -935,6 +935,75 @@
     "result": "PASS (test fixtures, not branch data)"
    }
   ],
-  "label": "DIAGNOSTIC — nothing promoted"
+  "label": "DIAGNOSTIC \u2014 nothing promoted"
+ },
+ "NFL_CANDIDATE_SURFACE_20261011T1605Z": {
+  "observed_at": "2026-10-11T16:05:09Z",
+  "sha16": "721f44fcdb1d6bcf",
+  "rvc": "NOT CLEARED",
+  "held_out_n": 0,
+  "residual_basis": "cross-book: DK de-vigged median minus Pinnacle de-vigged median / DK ladder sigma",
+  "summary": {
+   "completions": {
+    "n": 25,
+    "mean": 0.011,
+    "sd": 0.085,
+    "min": -0.123,
+    "max": 0.278
+   },
+   "pass_yards": {
+    "n": 25,
+    "mean": -0.007,
+    "sd": 0.047,
+    "min": -0.114,
+    "max": 0.061
+   },
+   "rec_yards": {
+    "n": 139,
+    "mean": -0.002,
+    "sd": 0.042,
+    "min": -0.123,
+    "max": 0.107
+   },
+   "rush_yards": {
+    "n": 69,
+    "mean": 0.018,
+    "sd": 0.037,
+    "min": -0.054,
+    "max": 0.114
+   }
+  },
+  "gate_refused": [
+   "cpoe_x_pressure:F2_MISSING_FREEZE",
+   "ftn_box_blitz_teamweek:F2_MISSING_FREEZE",
+   "injury_wk5_report_csv:F2_MISSING_FREEZE",
+   "cpoe_aggregate:F4_INCOMPLETE",
+   "situational_graph:F1_STALE",
+   "ou_live_state:F1_STALE",
+   "officials_crew:F1_STALE",
+   "weather:F1_STALE",
+   "frozen_nfl_manifest:F1_STALE"
+  ],
+  "retractions": {
+   "15:45Z/15:49Z devig residual": "RETRACTED \u2014 additive probability shift artifact (devig minus juice = +0.056/+0.098/+0.174 sigma; 351/3491 rungs clipped)",
+   "15:45Z/15:49Z fair probabilities": "RETRACTED \u2014 american->probability formulas swapped; compressed toward 0.5",
+   "15:45Z/15:49Z overlay joins": "RETRACTED \u2014 CPOE/FTN/injury CSVs were read outside FreshnessGate"
+  },
+  "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/CANDIDATE_SURFACE_STAMP.json",
+  "label": "DIAGNOSTIC"
+ },
+ "SUNMON_DFS_154470_20261011T1605Z": {
+  "observed_at": "2026-10-11T16:05:09Z",
+  "sha16": "dfeac6992d9e3829",
+  "rows": 685,
+  "with_market_implied": 187,
+  "lineups": "none emitted",
+  "ownership": "none emitted",
+  "file": "dfs/genie_acq2/sunmon_154470/SUNMON_DFS_CANDIDATES_STAMP.json",
+  "label": "DIAGNOSTIC"
+ },
+ "V3_BUILDS_ROSTER_CHECK_20261011T1605Z": {
+  "verdict": "REFUSED \u2014 DK Classic gameTypeId 1 requires 9 players / $50,000; all 6 V3 builds have 8 (FLEX missing)",
+  "label": "DIAGNOSTIC"
  }
 }

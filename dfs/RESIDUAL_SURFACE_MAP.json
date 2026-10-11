@@ -232,6 +232,34 @@
    "key_numbers": "sha16 80beee68cd08c6c7. 291 rows (273 pre-kick). devig-anchored sigma means: completions +0.178 n26, rush +0.102 n73, pass +0.056 n26; rec no posted O/U pair this pull. Overlay joins: wk5 injury report, CPOE wk<=4 (lagged), FTN box/blitz wk<=4 (lagged), Pinnacle game env 15:38Z. Held-out n=0.",
    "reopen": "Re-pull subcats at minutes_to_kickoff<=10 or post-Final; freeze; grade settled stats vs frozen fitted lines. Rec O/U standing source = subcat 14114.",
    "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/ENGINE_RUN_1547_STAMP.json",
+   "label": "DIAGNOSTIC",
+   "superseded_by": "nfl-candidate-surface-20261011T1605Z \u2014 devig residual RETRACTED (additive-shift artifact + swapped odds conversion + overlay read outside FreshnessGate)"
+  },
+  {
+   "id": "nfl-candidate-surface-20261011T1605Z",
+   "added_at": "2026-10-11T16:05:09Z",
+   "state": "INFRASTRUCTURE PASS / RVC NOT CLEARED \u2014 cross-book residual vs Pinnacle pre-close + gated overlay only",
+   "feeds": [
+    "receiving/YAC props",
+    "QB completion props",
+    "rush yards props",
+    "pass yards props"
+   ],
+   "key_numbers": "sha16 721f44fcdb1d6bcf. 272 rows, 258 cross-book matched. residual sigma means: completions +0.011 (sd .085, n25), rush +0.018 (sd .037, n69), pass -0.007 (sd .047, n25), rec -0.002 (sd .042, n139). DK main-line offset ~0 all stats (balanced, hold ~6%). Gate: 14 inputs FRESH, 9 refused (CPOE/FTN/inj CSV F2, CPOE agg F4, situational/OU/officials/weather/manifest F1). Banned-language hits 0.",
+   "reopen": "RVC: freeze DK + Pinnacle prop lines at minutes_to_kickoff<=10 or post-Final, grade settled stats. Overlay: stamp CPOE/FTN/injury CSVs at source (observed_at); re-run situational/officials/weather stamps (F1 stale); frozen manifest needs a freeze-validity read mode (6h freshness rejects any frozen manifest).",
+   "file": "dfs/genie_acq2/nfl_context_20261011T152234Z/CANDIDATE_SURFACE_STAMP.json",
+   "label": "DIAGNOSTIC"
+  },
+  {
+   "id": "sunmon-dfs-candidates-154470-20261011T1605Z",
+   "added_at": "2026-10-11T16:05:09Z",
+   "state": "INFRASTRUCTURE PASS / RVC NOT CLEARED \u2014 market-implied baseline only, no lineups/ownership",
+   "feeds": [
+    "DFS Sun-Mon Wide dg 154470"
+   ],
+   "key_numbers": "sha16 dfeac6992d9e3829. 685 pool players, 187 with two-sided Pinnacle markets -> market-implied DK points; 123 injury BLOCK (ESPN stamped + DK pool status).",
+   "reopen": "Lineup/ownership consensus needs lineup bodies (absent from getcontests). Projection RVC needs settled fantasy points vs frozen market-implied baseline.",
+   "file": "dfs/genie_acq2/sunmon_154470/SUNMON_DFS_CANDIDATES_STAMP.json",
    "label": "DIAGNOSTIC"
   },
   {
@@ -254,7 +282,7 @@
   "enforcement": "every producer reads through freshnessgate_wiring; STALE/MISSING -> close-only + kill ledger"
  },
  "label": "DIAGNOSTIC",
- "updated_at": "2026-10-11T15:49:33Z",
+ "updated_at": "2026-10-11T16:05:09Z",
  "updates": {
   "receiver-watchlists": {
    "prop_feed_status": "CONFIRMED MISSING \u2014 bus audit found only machinery calibration (reports/edge-lab/props-hb-validation.json explicitly notes \"archived prop-price history this repo does not yet have\")",
