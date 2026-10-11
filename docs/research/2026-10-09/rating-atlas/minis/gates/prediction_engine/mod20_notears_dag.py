@@ -43,7 +43,7 @@ def team_week_panel(season):
             "pass_attempt", "rush_attempt", "sack", "interception", "fumble_lost",
             "first_down", "third_down_converted", "fourth_down_converted",
             "punt_attempt", "field_goal_attempt", "touchdown",
-            "air_yards", "yards_after_catch", "qb_hit", "tackle_for_loss",
+            "air_yards", "yards_after_catch", "qb_hit",
             "spread_line", "result"]
     df = pd.read_parquet(p, columns=[c for c in cols])
     df = df.dropna(subset=["posteam", "week"])
@@ -72,7 +72,16 @@ def team_week_panel(season):
 
 
 def notears_fit(X, lam=0.1, max_iter=60):
-    """Simplified NOTEARS: min_W 1/2n||X - XW||^2 + lam||W||_1 s.t. h(W)=0."""
+    """Simplified NOTEARS: min_W 1/2n||X - XW||^2 + lam||W||_1 s.t. h(W)=0.
+
+    HONESTY NOTE (2026-10-11): this simplified augmented-Lagrangian
+    implementation DIVERGED numerically on the team-week panel (overflow in
+    the matrix-exponential trace term -> NaN weights -> zero edges). The FAIL
+    below reflects "no stable graph learned," NOT a clean negative result.
+    Production needs the real NOTEARS implementation (notears package or
+    the TS module's own solver). Do not treat this FAIL as evidence the
+    causal structure is absent.
+    """
     n, d = X.shape
     W = np.zeros((d, d))
     rho, alpha, h_old = 1.0, 0.0, np.inf
@@ -220,6 +229,8 @@ def evaluate():
         notes.append(f"directionality fails: {directionality:.0%} < 80%")
     if brier_delta > 0.003 or jaccard < 0.5:
         notes.append("hard FAIL per spec (Brier >0.003 or stability <0.5)")
+    notes.append("NUMERICAL CAVEAT: simplified NOTEARS diverged (overflow/NaN); "
+                 "zero edges is an optimizer failure, not evidence of no causal structure")
     return stamp(verdict, "; ".join(notes) if notes else "all three legs hold", {
         "n_features": d, "mb_features": len(mb),
         "mb_fraction": round(frac, 3),
