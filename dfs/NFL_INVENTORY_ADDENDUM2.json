@@ -440,5 +440,279 @@
   "reopen": "No lineup bodies in getcontests. Do not invent lineups.",
   "file": "dfs/genie_acq2/lobby_154468_20261011T1514Z/LOBBY_PREVIEW_STAMP.json",
   "label": "DIAGNOSTIC"
+ },
+ "PROP_RESID_SIGMA_1503Z": {
+  "observed_at": "2026-10-11T15:22:02Z",
+  "stamp": "INFRASTRUCTURE PASS",
+  "verdict": "current-quote residual with situational/contextual joins only. Held-out n=0. Not a residual-versus-close. Nothing promoted.",
+  "pull": {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
+   "sha256": "5323e04803545ea0b39373f494c30e9ee2395fe64e8a3587e3aa1b6680763c57",
+   "fits_rows": 289,
+   "gate": "read_fresh PASS"
+  },
+  "raw_residual_sigma": {
+   "all_pre_kick": {
+    "n": 124,
+    "mean_sigma": -0.1741,
+    "sd_sigma": 0.1255
+   },
+   "completions": {
+    "n": 26,
+    "mean_sigma": -0.2663,
+    "sd_sigma": 0.0585
+   },
+   "pass_yards": {
+    "n": 26,
+    "mean_sigma": -0.1295,
+    "sd_sigma": 0.0241
+   },
+   "rush_yards": {
+    "n": 72,
+    "mean_sigma": -0.1568,
+    "sd_sigma": 0.1475
+   },
+   "in_play_excluded": {
+    "n": 8,
+    "mean_sigma": -0.1166,
+    "sd_sigma": 0.1535
+   },
+   "rec_yards_no_posted_line": 157
+  },
+  "conditional_by_layer_n_mean_sd": {
+   "situational_node": {
+    "0|early|rest_even": [
+     48,
+     -0.1778,
+     0.1248
+    ],
+    "1|early|rest_down": [
+     9,
+     -0.1911,
+     0.1154
+    ],
+    "1|early|rest_even": [
+     59,
+     -0.1756,
+     0.1271
+    ],
+    "1|early|rest_up": [
+     8,
+     -0.1209,
+     0.1394
+    ]
+   },
+   "cpoe_pressure_cell": {
+    "(0, 3]": [
+     4,
+     -0.2104,
+     0.0844
+    ],
+    "(3, 6]": [
+     14,
+     -0.1976,
+     0.0914
+    ],
+    "(6, 9]": [
+     12,
+     -0.1827,
+     0.0588
+    ],
+    "(9, 100]": [
+     16,
+     -0.2079,
+     0.081
+    ],
+    "MISSING (QB not in CPOE table)": [
+     6,
+     -0.1938,
+     0.1201
+    ],
+    "N/A (not a QB stat)": [
+     72,
+     -0.1568,
+     0.1475
+    ]
+   },
+   "ftn_box_blitz": {
+    "MISSING (gate refused ftn_teamweek_joined.csv)": [
+     124,
+     -0.1741,
+     0.1255
+    ]
+   },
+   "ou_live_state": {
+    "N/A (pre-game)": [
+     124,
+     -0.1741,
+     0.1255
+    ]
+   },
+   "officials_crew": {
+    "MISSING (no 2026 wk5 crew on branch)": [
+     124,
+     -0.1741,
+     0.1255
+    ]
+   },
+   "espn_status": {
+    "Active": [
+     92,
+     -0.1739,
+     0.1225
+    ],
+    "NOT_LISTED": [
+     28,
+     -0.1663,
+     0.1405
+    ],
+    "Questionable": [
+     4,
+     -0.2315,
+     0.0923
+    ]
+   },
+   "espn_teammate_skill_out": {
+    "0": [
+     31,
+     -0.1382,
+     0.1388
+    ],
+    "1": [
+     32,
+     -0.1865,
+     0.1177
+    ],
+    "2+": [
+     61,
+     -0.1858,
+     0.1209
+    ]
+   },
+   "nflverse_wk5_status": {
+    "NOT_LISTED": [
+     101,
+     -0.1646,
+     0.1295
+    ],
+    "Questionable": [
+     4,
+     -0.2315,
+     0.0923
+    ],
+    "listed, no game status": [
+     19,
+     -0.2124,
+     0.1015
+    ]
+   },
+   "rest_flag": {
+    "long(>7)": [
+     17,
+     -0.1941,
+     0.1226
+    ],
+    "normal(7)": [
+     97,
+     -0.1712,
+     0.1257
+    ],
+    "short(<7)": [
+     10,
+     -0.1672,
+     0.1385
+    ]
+   },
+   "weather": {
+    "HIGH": [
+     10,
+     -0.2025,
+     0.1025
+    ],
+    "MODERATE": [
+     17,
+     -0.1581,
+     0.1283
+    ],
+    "NONE": [
+     97,
+     -0.1739,
+     0.1278
+    ]
+   }
+  },
+  "caveat": "109/124 pre-kick residuals are negative. The cited fitter uses p = 1/trueOdds on milestone rungs without removing the hold, which inflates P(X >= m) and pushes mu_fit up, so posted - mu is expected to sit below zero. The near-uniform negative shift is most likely a fitter/vig property, not evidence of mispricing. Conditional buckets should be read relative to the all-row mean, and all are within about 1 sd of it.",
+  "joins": {
+   "team_mapped": 289,
+   "rows": 289,
+   "graded_pre_kick_rows": 124,
+   "cpoe_qbs_in_stamp_join": 25,
+   "espn_listed_graded_rows": 96,
+   "nflverse_listed_graded_rows": 23,
+   "weather_flagged_or_none": 124
+  },
+  "gate_log": [
+   [
+    "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
+    "PASS"
+   ],
+   [
+    "dfs/nfl_prop_resid_sigma_2026-10-11/games_2026_wk5.csv",
+    "PASS"
+   ],
+   [
+    "dfs/nfl_prop_resid_sigma_2026-10-11/injuries_2026_wk5.csv",
+    "PASS"
+   ],
+   [
+    "dfs/nfl_signals_2026-10-11/espn_injuries_snapshot.json",
+    "PASS"
+   ],
+   [
+    "dfs/nfl_signals_2026-10-11/officials_by_game.csv",
+    "PASS"
+   ],
+   [
+    "docs/research/2026-10-09/rating-atlas/minis/main_slate_final_check_2026-10-11.json",
+    "PASS"
+   ],
+   [
+    "dfs/ftn_axes_rvc_2026-10-11/ftn_teamweek_joined.csv",
+    "F2_MISSING_FREEZE"
+   ]
+  ],
+  "ledger_rows": {
+   "path": "dfs/kill_ledger_freshness.jsonl",
+   "explicit_rows": [
+    "LR-20261011-PRS-01-DK-REPULL",
+    "LR-20261011-PRS-02-LOBBY-CONSENSUS",
+    "LR-20261011-PRS-03-NO-CLOSE"
+   ],
+   "gate_auto_rows": [
+    "dfs/ftn_axes_rvc_2026-10-11/ftn_teamweek_joined.csv"
+   ]
+  },
+  "reopen": "Freeze a nash pull of subcats 16569/16570/16571/16889 + O/U 9524/9522/9514 for the same 14 events with minutes_to_kickoff <= 10 (or Pinnacle snap_pinnacle_props.py at kickoff), settle with nflverse stats_player_week_2026, then grade residual_sigma vs outcome per layer bucket, held out, Holm-corrected.",
+  "refusals": [
+   {
+    "ledger_id": "LR-20261011-PRS-01-DK-REPULL",
+    "verdict": "REFUSED",
+    "reason": "Beexly offline (DISCONNECTED); no browser on the box; DK not attempted from the box (Akamai Access Denied history)",
+    "reopen": "Beexly online + Garrett real Chrome with CDP 9222; in-page fetch credentials:include of nash leagueSubcategory subcats 16569/16570/16571/16889 and O/U 9524/9522/9514 for the same 14 events, minutes_to_kickoff <= 10; freeze with observed_at + sha256"
+   },
+   {
+    "ledger_id": "LR-20261011-PRS-02-LOBBY-CONSENSUS",
+    "verdict": "REFUSED",
+    "reason": "Beexly offline (DISCONNECTED); no browser on the box. Pre-lock getcontests has no lineup bodies (LOBBY_PREVIEW_STAMP 15:16Z)",
+    "reopen": "Beexly online + Garrett real Chrome CDP 9222; after lock 17:00Z, in-page fetch credentials:include of https://api.draftkings.com/scores/v1/leaderboards/{contest}?format=json&embed=leaderboard per dg 154468 contest (recipe: RUNNING_LOG [15:45]); freeze with observed_at"
+   },
+   {
+    "ledger_id": "LR-20261011-PRS-03-NO-CLOSE",
+    "verdict": "REFUSED",
+    "reason": "no frozen prop CLOSE on the manifest; 15:03Z pull = current quotes; Pinnacle 14:33Z = T-147 min. held-out n=0",
+    "reopen": "freeze a close-window pull (<=10 min to kickoff), settle with nflverse stats_player_week_2026, grade held out with Holm"
+   }
+  ],
+  "label": "DIAGNOSTIC \u2014 nothing promoted"
  }
 }

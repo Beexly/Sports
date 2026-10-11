@@ -165,6 +165,46 @@
    "reopen": "Lineup-level field consensus is not in getcontests. Reopen only if a logged-in lobby endpoint returns lineup bodies before 17:00Z. Do not invent lineups.",
    "file": "dfs/genie_acq2/lobby_154468_20261011T1514Z/LOBBY_PREVIEW_STAMP.json",
    "label": "DIAGNOSTIC"
+  },
+  {
+   "id": "prop-ladder-resid-sigma-1503Z",
+   "added_at": "2026-10-11T15:22:02Z",
+   "state": "INFRASTRUCTURE PASS / current-quote residual with situational/contextual joins only (held-out n=0)",
+   "feeds": [
+    "QB completion props",
+    "passing-yards props",
+    "rushing-yards props",
+    "receiving/YAC props (no posted O/U: residual missing)"
+   ],
+   "key_numbers": "pull sha16(file) 5323e04803545ea0, 289 fits, refit max |dmu| 0.005; residual_sigma pre-kick n=124 mean -0.1741 sd 0.1255 (109/124 negative: likely fitter/vig artifact)",
+   "layers_missing": [
+    "FTN box/blitz (gate F2 on ftn_teamweek_joined.csv)",
+    "officials crew (no 2026 wk5 crew)",
+    "OU live state (N/A pre-game)"
+   ],
+   "reopen": "Freeze a nash pull of subcats 16569/16570/16571/16889 + O/U 9524/9522/9514 for the same 14 events with minutes_to_kickoff <= 10 (or Pinnacle snap_pinnacle_props.py at kickoff), settle with nflverse stats_player_week_2026, then grade residual_sigma vs outcome per layer bucket, held out, Holm-corrected.",
+   "file": "dfs/nfl_prop_resid_sigma_2026-10-11/PROP_RESID_SIGMA_STAMP.json"
+  },
+  {
+   "id": "dk-prop-repull",
+   "added_at": "2026-10-11T15:22:02Z",
+   "state": "REFUSE (Beexly offline)",
+   "feeds": [
+    "all NFL prop residuals"
+   ],
+   "reopen": "Beexly online + Garrett real Chrome with CDP 9222; in-page fetch credentials:include of nash leagueSubcategory subcats 16569/16570/16571/16889 and O/U 9524/9522/9514 for the same 14 events, minutes_to_kickoff <= 10; freeze with observed_at + sha256",
+   "ledger_id": "LR-20261011-PRS-01-DK-REPULL"
+  },
+  {
+   "id": "dg154468-lobby-consensus",
+   "added_at": "2026-10-11T15:22:02Z",
+   "state": "REFUSE (Beexly offline; pre-lock getcontests has no lineups)",
+   "feeds": [
+    "JEV DupRisk",
+    "DFS lineups"
+   ],
+   "reopen": "Beexly online + Garrett real Chrome CDP 9222; after lock 17:00Z, in-page fetch credentials:include of https://api.draftkings.com/scores/v1/leaderboards/{contest}?format=json&embed=leaderboard per dg 154468 contest (recipe: RUNNING_LOG [15:45]); freeze with observed_at",
+   "ledger_id": "LR-20261011-PRS-02-LOBBY-CONSENSUS"
   }
  ],
  "gate_state": {
@@ -196,5 +236,9 @@
   "observed_at": "2026-10-11T14:34:34Z",
   "note": "entries appended to residuals[]; existing entries and the 590d604 \"updates\" block unchanged. Cross-check vs 590d604: (a) ESPN keyless injuries endpoint returned HTTP 200 from shell at 14:31Z (not browser-walled); (b) a keyless prop source exists (Pinnacle guest, see prop-close-feed), so the DK browser lane is no longer the only unblock; (c) the new GATE_AUDIT artifact #12 (injuries_2026.parquet) is still judged by file mtime, not an in-file observed_at.",
   "step0": "dfs/nfl_signals_2026-10-11/STEP0_CONFIRMATION.json"
+ },
+ "appended_2026_10_11_prs": {
+  "observed_at": "2026-10-11T15:22:02Z",
+  "note": "entries appended; existing entries unchanged"
  }
 }
