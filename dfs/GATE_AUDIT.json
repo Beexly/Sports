@@ -1,0 +1,109 @@
+{
+ "observed_at": "2026-10-11T14:24:32Z",
+ "gate": "freshnessgate_wiring.read_fresh + artifact hash pinning",
+ "artifacts": [
+  {
+   "artifact": "nfl_rvc_manifest.json",
+   "state": "FRESH",
+   "age_hours": 10.8,
+   "max_age_hours": 1000000000.0,
+   "sha16": "d4b763786671f3cd",
+   "type": "frozen-manifest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "cpoe_x_pressure_2026.csv",
+   "state": "FRESH",
+   "age_hours": 7.5,
+   "max_age_hours": 720,
+   "sha16": "975872a4620844fe",
+   "type": "derived-table",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "team_week_ats_2026.csv",
+   "state": "FRESH",
+   "age_hours": 1.8,
+   "max_age_hours": 168,
+   "sha16": "d5bb7a84a7264aff",
+   "type": "derived-outcomes",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse-data/ftn_charting_2026.parquet",
+   "state": "FRESH",
+   "age_hours": 7.5,
+   "max_age_hours": 336,
+   "sha16": "203e6fc5c5eff898",
+   "type": "raw-ingest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse-data/games.csv",
+   "state": "FRESH",
+   "age_hours": 7.4,
+   "max_age_hours": 336,
+   "sha16": "f154891d453c5044",
+   "type": "raw-ingest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse-data/advstats_week_pass_2026.parquet",
+   "state": "FRESH",
+   "age_hours": 7.5,
+   "max_age_hours": 336,
+   "sha16": "2ac2cc58a477e8c8",
+   "type": "raw-ingest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse-data/advstats_week_rec_2026.parquet",
+   "state": "FRESH",
+   "age_hours": 7.5,
+   "max_age_hours": 336,
+   "sha16": "ac01b36be1b4a96e",
+   "type": "raw-ingest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse-data/snap_counts_2026.csv",
+   "state": "FRESH",
+   "age_hours": 7.5,
+   "max_age_hours": 336,
+   "sha16": "fd2656dbe119dfe4",
+   "type": "raw-ingest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse_pbp_2026.parquet",
+   "state": "FRESH",
+   "age_hours": 7.5,
+   "max_age_hours": 336,
+   "sha16": "8acfb4cafc4d3ab8",
+   "type": "raw-ingest",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "OU_EMPIRICAL_ATTRACTOR_STAMP.json",
+   "state": "FRESH",
+   "age_hours": 7.7,
+   "max_age_hours": 1000000000.0,
+   "sha16": "15f13460676735e5",
+   "type": "stamp",
+   "gate_action": "read OK"
+  },
+  {
+   "artifact": "OU_LANE_FINAL_VERDICT.json",
+   "state": "FRESH",
+   "age_hours": 7.3,
+   "max_age_hours": 1000000000.0,
+   "sha16": "436c1f4edf0d76ae",
+   "type": "stamp",
+   "gate_action": "read OK"
+  }
+ ],
+ "n_fresh": 11,
+ "n_not_fresh": 0,
+ "enforcement": "Every residual producer reads through the gate; STALE/MISSING artifacts fall back to close-only with kill-ledger rows. No silent bypass \u2014 the gate wraps the artifact.",
+ "label": "DIAGNOSTIC \u2014 gate infrastructure, no residuals produced here"
+}

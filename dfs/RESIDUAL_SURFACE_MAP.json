@@ -1,0 +1,99 @@
+{
+ "observed_at": "2026-10-11T14:25:19Z",
+ "title": "OPEN RESIDUAL \u2192 SURFACE MAP (all diagnostic)",
+ "residuals": [
+  {
+   "id": "OU-v2",
+   "state": "CLOSED (live spec Q1 close / Q2+ OU, Brier 0.1896 vs 0.2167)",
+   "feeds": [
+    "live WP",
+    "in-game totals"
+   ],
+   "file": "dfs/OU_LANE_FINAL_VERDICT.json"
+  },
+  {
+   "id": "CPOE-pressure-cells",
+   "state": "BORN (128 QB-weeks, heavy-pressure +1.5)",
+   "next_test": "next-week ATS REFUSED at n=94; completion-prop closes MISSING",
+   "feeds": [
+    "QB completion props",
+    "QB DFS"
+   ],
+   "reopen": "prop quote feed OR 6+ weeks",
+   "file": "dfs/CPOE_PRESSURE_NEXT_ATS.json"
+  },
+  {
+   "id": "FTN-env-box-blitz",
+   "state": "POINT-POSITIVE (box +0.23/blitz +0.20), bootstrap CI zero at n=34",
+   "feeds": [
+    "team totals",
+    "game-env props",
+    "defense DFS"
+   ],
+   "reopen": "6+ weeks",
+   "file": "dfs/FTN_ENV_NEXT_ATS.json"
+  },
+  {
+   "id": "receiver-watchlists",
+   "state": "SCREENS ONLY (BT=game-script, drops=player-specific)",
+   "feeds": [
+    "receiving/YAC props",
+    "WR DFS"
+   ],
+   "reopen": "receiving prop quote feed",
+   "file": "dfs/WATCHLIST_NEXT_WEEK_GRADE.json"
+  },
+  {
+   "id": "situational-graph",
+   "state": "NOT SIGNIFICANT (+0.067 CRPS, CI [-0.019,+0.156])",
+   "feeds": [
+    "game picks",
+    "alt lines"
+   ],
+   "reopen": "node expansion w/ expected-metric residuals",
+   "file": "dfs/SITUATIONAL_GRAPH_RVC.json"
+  },
+  {
+   "id": "EDGE5-crossbook",
+   "state": "ARMED (grader refuse-safe, London In Progress)",
+   "feeds": [
+    "cross-book picks",
+    "totals"
+   ],
+   "file": "dfs/rvc_edge5_grade.py"
+  },
+  {
+   "id": "JEV-arbitration",
+   "state": "ARMED (showdown contest 196458728)",
+   "feeds": [
+    "DFS lineups"
+   ],
+   "file": "dfs/jev_rvc_grade.py"
+  },
+  {
+   "id": "twopoint-equilibrium",
+   "state": "PRICED (43.2% conv, EV 0.863 < XP 0.94)",
+   "feeds": [
+    "live totals",
+    "coaching props"
+   ],
+   "file": "dfs/TWOPOINT_TABLE_STAMP.json"
+  },
+  {
+   "id": "go-utility-surface",
+   "state": "MAPPED (7,994 decisions)",
+   "feeds": [
+    "coaching props",
+    "live WP"
+   ],
+   "file": "dfs/COACH_DECISION_STAMP.json"
+  }
+ ],
+ "gate_state": {
+  "audit_file": "dfs/GATE_AUDIT.json",
+  "fresh": 11,
+  "stale": 0,
+  "enforcement": "every producer reads through freshnessgate_wiring; STALE/MISSING -> close-only + kill ledger"
+ },
+ "label": "DIAGNOSTIC"
+}

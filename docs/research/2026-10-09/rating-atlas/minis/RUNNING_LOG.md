@@ -551,3 +551,9 @@
 - **All NFL-Day priorities closed**: P1 standing refusal, P2 graded at n (noise) + prop-close reopen stamped, P3 = poller armed (London Scheduled).
 - The week's full arc: 14 equations harvested, OU lane closed structurally, 5 situational axes shrunk to noise, player-residual layer born and honestly bounded. Everything waits on two things: more 2026 weeks, and prop quote feeds.
 - DIAGNOSTIC. Nothing promoted. Remote = local every landing.
+
+### [11:45] GATE CLOSURE + RESIDUAL-SURFACE MAP — P4/P5 complete
+- **dfs/gate_enforce.py + GATE_AUDIT.json**: FreshnessGate enforcement audited across all 11 input artifacts — 11 FRESH / 0 STALE, sha16-pinned. STALE/MISSING → close-only fallback + kill-ledger rows (33 refusals already on the append-only ledger). The 12 direct-reading producers are documented; the gate wraps the artifact layer, not the code — no silent bypass possible.
+- **dfs/RESIDUAL_SURFACE_MAP.json**: every open residual mapped to the surface it feeds (live WP, QB props, team totals, WR props, picks, DFS) with its state and exact reopen.
+- **LONDON LIVE**: PHI@JAC In Progress (JAX 7-0, Q2 13:03). EDGE#5 grader refuse-safe; poller fires on Final. JEV grader armed for the showdown.
+- DIAGNOSTIC. Nothing promoted.
