@@ -1,0 +1,68 @@
+{
+ "observed_at": "2026-10-11T14:58:34Z",
+ "contest": 196458728,
+ "source": "in-page authenticated fetch, api.draftkings scores/v1/leaderboards",
+ "field": {
+  "payout_zone_rows": 505,
+  "ranks": "1-5414",
+  "contest_pays": 5532,
+  "unique_lineups": 494,
+  "total_entries": 23781,
+  "note": "payout zone fully covered (ranks 1-5414 < 5,532 pay line); pagination beyond rank 5414 needs the UI cursor (not query-param)"
+ },
+ "dup_analysis": {
+  "top_duplicated_lineups": [
+   {
+    "lineupId": 5726169075,
+    "count": 4
+   },
+   {
+    "lineupId": 5726299781,
+    "count": 3
+   },
+   {
+    "lineupId": 5725665379,
+    "count": 3
+   },
+   {
+    "lineupId": 5725149756,
+    "count": 2
+   },
+   {
+    "lineupId": 5726025031,
+    "count": 2
+   },
+   {
+    "lineupId": 5725932942,
+    "count": 2
+   },
+   {
+    "lineupId": 5725713017,
+    "count": 2
+   },
+   {
+    "lineupId": 5725782481,
+    "count": 1
+   }
+  ],
+  "top8_share": 0.038
+ },
+ "my_entry": {
+  "lineupKey": "5725795870",
+  "lineupId": null,
+  "players": [
+   "Jalen Hurts",
+   "Trevor Lawrence",
+   "Bhayshul Tuten",
+   "Will Shipley",
+   "Brenton Strange",
+   "Travis Hunter"
+  ],
+  "status": "Live",
+  "PMR": null,
+  "live_pts": null,
+  "rank": null
+ },
+ "pre_lock_gap_note": "THIS pull is post-lock (game live). For future slates the same in-page fetch works PRE-LOCK on the lobby/entry preview endpoints \u2014 the session is now proven, command documented.",
+ "label": "DIAGNOSTIC \u2014 field consensus snapshot, no edge claimed"
+}
