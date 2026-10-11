@@ -416,6 +416,22 @@ export type RundownFetchResult = {
    * text for "429" would break the moment the message is reworded (C-278a).
    */
   readonly rateLimited?: boolean;
+  /**
+   * True only when EVERY day in the requested span was fetched successfully.
+   *
+   * The fan-out below skips a day that 4xx/5xx'd, timed out, or threw, and
+   * breaks out of the loop entirely on a 429. `events` is then a TRUNCATED view
+   * of the span — the games on the failed days are simply missing, and nothing
+   * in the payload says so. Callers that use this result to REPLACE a slate
+   * (rather than to add books to games they already have) must refuse an
+   * incomplete result: writing a truncated slate as if it were the whole board
+   * drops real games while the run reports SUCCESS and the freshness clock
+   * advances on the survivors. A stringly-typed `error: "partial: …"` that the
+   * caller can only log is not a usable signal, which is why this is a boolean.
+   */
+  readonly complete: boolean;
+  /** The days (YYYY-MM-DD) that could not be fetched. Empty iff `complete`. */
+  readonly failedDays: readonly string[];
 };
 
 export async function fetchRundownEventsForSport(
@@ -523,12 +539,18 @@ export async function fetchRundownEventsForSport(
         ? `rundown empty (${daySpan}d): ${errors.slice(0, 4).join("; ")}`
         : `rundown empty (${daySpan}d): no bookmaker lines`,
       rateLimited,
+      complete,
+      failedDays,
     };
   }
   return {
     events: all,
     remaining: null,
-    error: errors.length ? `partial: ${errors.slice(0, 3).join("; ")}` : undefined,
+    error: complete
+      ? undefined
+      : `partial (${failedDays.length}/${daySpan} days unread): ${errors.slice(0, 3).join("; ")}`,
     rateLimited,
+    complete,
+    failedDays,
   };
 }

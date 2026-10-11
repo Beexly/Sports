@@ -373,6 +373,8 @@ export async function fetchEspnOddsForSport(
     readonly horizonDays?: number;
     /** Per-request timeout (ms, default 8000) — blocked hosts fail fast. */
     readonly fetchTimeoutMs?: number;
+    /** Per-request ceiling (default ESPN_ODDS_TIMEOUT_MS). Test seam. */
+    readonly timeoutMs?: number;
     /**
      * Optional second real bookmaker (Kalshi via PredExon). When provided,
      * each event may gain a second book from a live two-way exchange quote —
