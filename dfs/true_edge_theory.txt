@@ -1,0 +1,18 @@
+written
+
+VERIFICATION (from tonight's fits, repo files):
+- dk_cfb_prop_fits.json: 266 players, sigma medians pass 74.8 / rush 33.0 / rec 32.5, mean r2 rush 0.974 / rec 0.964
+- dk_vs_empirical_calibration.json: DK sigma / empirical = 0.94 (DK prices TIGHTER than reality)
+- cfb_prop_edge_sheet.csv: 20 props, mu-premium +34.1±41 (DK mu vs empirical) — the systematic shade quantified
+- RB 49.5 over -9.3pts divergence = a LIVE mispricing example from our own data
+- cfb_prop_true_ev.csv: both-sides EV computed; 13/20 positive EV pre-census
+
+THE LESSON FOR STUDENTS (the garden):
+The book's engine is ONE equation — a Gaussian CDF with two parameters per player-stat.
+Every rung, every alt, every SGP leg is that same curve. Harvest the curve, you own the engine.
+The edges are not in DK's JS (there is none — verified); they live in:
+  (a) the shade (mu vs posted line),
+  (b) the sigma squeeze (DK sigma = 0.94x empirical = they underprice variance),
+  (c) the tail shape (Gaussian vs EVT — registry C),
+  (d) the hold matrix (trueOdds vs displayOdds),
+  (e) the field's departure from all of the above (census/ownership).

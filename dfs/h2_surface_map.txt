@@ -1,0 +1,16 @@
+draftables(dg154468)       OK 1439KB keys=['draftables', 'competitions', 'teamsWithoutCompetitions', 'draftAlert
+draftgroup(dg154468)       OK 7KB keys=['draftGroup', 'responseStatus', 'errorStatus']
+contest(196458728)         OK 6KB keys=['contestDetail', 'errorStatus']
+gametype_rules             OK 6KB keys=['gameTypeId', 'gameTypeName', 'gameTypeDescription', 'lineupConfigura
+sports                     OK 4KB keys=['sports']
+pick6                      OK 0KB keys=['gameStyleId', 'gameStyleName', 'gameStyleDescription', 'gameStyleSor
+  [400] /draftgroups/v1/draftgroups?date=2026-10-11 (attempt 1)
+  [400] /draftgroups/v1/draftgroups?date=2026-10-11 (attempt 2)
+  [400] /draftgroups/v1/draftgroups?date=2026-10-11 (attempt 3)
+draftgroups_list           FAIL
+  [404] /contests/v1/draftgroups/154468/contests (attempt 1)
+  [404] /contests/v1/draftgroups/154468/contests (attempt 2)
+  [404] /contests/v1/draftgroups/154468/contests (attempt 3)
+contests_by_dg             FAIL
+
+landed dfs/h2_surface_map.json
