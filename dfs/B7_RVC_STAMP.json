@@ -1,0 +1,20 @@
+{
+ "observed_at": "2026-10-11T04:28:51Z",
+ "test": "B7 CPOE persistence + reliability curve (NGS weekly 2022+, QBs \u226510 att)",
+ "r_b2b": 0.1064,
+ "slope_b2b": 0.1102,
+ "r_h1_h2": 0.4748,
+ "n_halves": 172,
+ "reliability_curve": {
+  "2game": 0.293,
+  "4game": 0.373,
+  "6game": 0.289,
+  "8game": 0.445,
+  "10game": 0.803
+ },
+ "spearman_brown_18game": 0.644,
+ "league_mean_cpoe": 0.081,
+ "reading": "Single-week CPOE \u2248 noise (r 0.29-0.45 for short windows). Season-cumulative CPOE = REAL skill (SB-projected 18-game reliability 0.644). Slope 0.11 on back-to-back = heavy regression to league mean (+0.081). The RVC play: DK completion props price recent-form CPOE (overweighting last 1-2 weeks); our skill estimate uses season-cumulative + regression \u2192 systematically different \u2192 residual-vs-close testable on completion props.",
+ "reopen": "DK completion-prop ladders (subcat family) \u2192 our CPOE-based p vs book-implied p \u2192 residual-vs-close on settled props",
+ "label": "DIAGNOSTIC"
+}

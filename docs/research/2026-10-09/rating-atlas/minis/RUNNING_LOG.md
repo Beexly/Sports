@@ -339,3 +339,10 @@
 - pen_count × totals residual r = +0.094 (weak)
 - Honest: officials effect exists in the data (crew dispersion 1.668) but NO single crew is distinguishable from noise at n≤52 games. Reopen: accumulate 2026 weeks → n grows → re-test borderline crews (Moore/Torbert) w/ more power.
 - **INFRASTRUCTURE PASS stamped** (dfs/B4_OFFICIALS_STAMP.json + b4_crew_profiles.csv + b4_game_referee_joined.csv). DIAGNOSTIC.
+
+### [04:20] B7 CPOE persistence + reliability curve — INFRASTRUCTURE PASS w/ real numbers
+- **dfs/b7_cpoe_persistence.json + B7_RVC_STAMP.json**: NGS weekly CPOE (2022+, QBs ≥10 att, n=2,612 rows)
+- **Key numbers**: back-to-back persistence r=+0.106 (WEAK — single-week CPOE ≈ noise), regression slope 0.11 (heavy mean-reversion to league +0.081), half-to-half r=+0.475 (REAL skill), reliability curve: 2-game 0.293 → 8-game 0.445 → 10-game 0.803, Spearman-Brown 18-game projection 0.644
+- **The RVC framing (stamped)**: DK completion props likely overweight recent-form CPOE; our skill estimate (season-cumulative + regression to mean) diverges → residual-vs-close testable on completion-prop ladders
+- Reopen: DK completion-prop ladder pulls (nash subcats) → skill-vs-book residual → settled-prop grading
+- All DIAGNOSTIC.
