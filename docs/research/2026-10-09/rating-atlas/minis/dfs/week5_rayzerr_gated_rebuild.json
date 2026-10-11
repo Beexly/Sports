@@ -1,0 +1,222 @@
+{
+ "generated_at": "2026-10-11T12:53:30.841889+00:00",
+ "method": "GATES-FIRST rebuild per Garrett correction 2026-10-11",
+ "gates_applied": [
+  {
+   "gate": "INJURY_GATE",
+   "filtered": 6,
+   "removed": [
+    "Caleb Williams",
+    "Ja'Marr Chase",
+    "Jayden Daniels",
+    "Jordan Mason",
+    "Kyle Monangai",
+    "Sam Darnold"
+   ],
+   "rule": "Remove OUT/IR/questionable per 2026-10-11T07:55-05:00 injury report",
+   "observed_at": "2026-10-11T07:55:00-05:00",
+   "status": "ENFORCED"
+  },
+  {
+   "gate": "SLATE_GATE",
+   "filtered": 17,
+   "removed_teams": [
+    "JAX",
+    "PHI"
+   ],
+   "rule": "13-game main slate only; London game excluded",
+   "status": "ENFORCED"
+  },
+  {
+   "gate": "FRESHNESS_GATE",
+   "filtered": 0,
+   "rule": "Injury report observed 2026-10-11T07:55-05:00, within window",
+   "status": "ENFORCED"
+  },
+  {
+   "gate": "SALARY_GATE",
+   "filtered": 0,
+   "final_salary": 50000,
+   "rule": "Total salary <= $50,000",
+   "status": "ENFORCED"
+  },
+  {
+   "gate": "CONTEST_GATE",
+   "filtered": 0,
+   "rule": "Valid positions (QB/RB/RB/WR/WR/WR/TE/FLEX/DST), no duplicates, 13-game slate",
+   "status": "ENFORCED"
+  }
+ ],
+ "pool_stats": {
+  "starting_pool": 444,
+  "after_injury_gate": 438,
+  "after_slate_gate": 421,
+  "eligible_pool_count": 422
+ },
+ "key_gate_decisions": [
+  "Jordan Mason (IR) and Kyle Monangai (OUT) removed by INJURY_GATE before any lineup construction",
+  "Ja'Marr Chase (concussion protocol) and Jayden Daniels (questionable) removed \u2014 gate excludes doubtful",
+  "Aaron Jones NOT in pool (absent from top-1000 and JEV lineups) \u2014 gates decide, not suggestions",
+  "D'Andre Swift passed INJURY_GATE (cleared, starting) and was eligible; JEV sim preferred Roschon Johnson + Emanuel Wilson by tourney_score",
+  "353 RB pairs tested via 10k correlated sims each; winner selected by tourney_score (195.3)"
+ ],
+ "final_lineup": {
+  "total_salary": 50000,
+  "jev": {
+   "sim_mean": 167.4,
+   "sim_p50": 167.5,
+   "sim_p90": 194.3,
+   "sim_p99": 217.6,
+   "sim_stdev": 21.4,
+   "ceil_ev": 197.2,
+   "dup_risk": 0.296,
+   "total_own": 1.1,
+   "tourney_score": 195.3
+  },
+  "verdict": "CERTIFIED (by tourney_score ranking; live jev ask not reachable from this host)",
+  "players": [
+   {
+    "name": "Drew Lock",
+    "pos": "QB",
+    "team": "SEA",
+    "salary": 4000,
+    "proj": 17.1,
+    "gse_score": 74,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "SEA starting QB (Darnold OUT, confirmed by Macdonald). $4K salary enables stars elsewhere. SEA stack with JSN. Passed INJURY_GATE (active starter), SLATE_GATE (SEA in 13-game slate)."
+   },
+   {
+    "name": "Jaxon Smith-Njigba",
+    "pos": "WR",
+    "team": "SEA",
+    "salary": 8800,
+    "proj": 27.01,
+    "gse_score": 95,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "SEA WR1, no injury designation. Primary stack target with Lock. Elite ceiling (proj 27.0). Passed all gates."
+   },
+   {
+    "name": "Nico Collins",
+    "pos": "WR",
+    "team": "HOU",
+    "salary": 7500,
+    "proj": 25.42,
+    "gse_score": 92,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "HOU WR1, returned from hamstring (7/118/2 last week). High-total game leverage. Passed all gates."
+   },
+   {
+    "name": "Chris Olave",
+    "pos": "WR",
+    "team": "NO",
+    "salary": 7700,
+    "proj": 22.43,
+    "gse_score": 88,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "NO WR, foot cleared, not on final injury report. Dome game. Passed all gates."
+   },
+   {
+    "name": "Brock Bowers",
+    "pos": "TE",
+    "team": "LV",
+    "salary": 7000,
+    "proj": 23.53,
+    "gse_score": 93,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "LV TE, knee cleared off injury report, full practice Friday. Elite TE ceiling. Passed all gates."
+   },
+   {
+    "name": "Noah Fant",
+    "pos": "TE",
+    "team": "NO",
+    "salary": 3000,
+    "proj": 9.52,
+    "gse_score": 55,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "NO TE/FLEX, $3K punt, no designation. Correlated with Olave (NO stack element). Passed all gates."
+   },
+   {
+    "name": "Raiders",
+    "pos": "DST",
+    "team": "LV",
+    "salary": 2500,
+    "proj": 8.0,
+    "gse_score": 60,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "LV DST, $2.5K. No concerns. Passed all gates."
+   },
+   {
+    "name": "Roschon Johnson",
+    "pos": "RB",
+    "team": "CHI",
+    "salary": 4200,
+    "proj": 18.9,
+    "gse_score": 96,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "CHI RB, $4.2K. Passed INJURY_GATE (active, not on injury report). Selected by JEV sim over 353 RB pairs for optimal tourney_score \u2014 low-ownership contrarian play."
+   },
+   {
+    "name": "Emanuel Wilson",
+    "pos": "RB",
+    "team": "SEA",
+    "salary": 5300,
+    "proj": 15.71,
+    "gse_score": 86,
+    "gate_stamps": [
+     "INJURY_GATE:PASS",
+     "SLATE_GATE:PASS",
+     "FRESHNESS_GATE:PASS",
+     "SALARY_GATE:PASS"
+    ],
+    "why": "SEA RB, $5.3K. Passed INJURY_GATE (active). Correlated with Lock/JSN stack (SEA game script). Selected by JEV sim."
+   }
+  ]
+ },
+ "stack": "SEA 3-man (Lock + JSN + Wilson) with NO 2-man correlation (Olave + Fant)",
+ "honest_caveats": [
+  "Projections are DK FPPG / salary-derived, not a fitted model",
+  "Ownership is salary-percentile proxy",
+  "GSE scores are sample-vor (pool percentile), not nflverse processGrade",
+  "JEV verdict is tourney_score ranking heuristic; live 'jev ask' API on Windows not reachable"
+ ]
+}
