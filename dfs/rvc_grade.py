@@ -79,7 +79,7 @@ def grade(outcomes_path):
         return {'verdict': verdict, 'refusal_reason': reason, 'graded_n': 0}
 
     rows = (r['data'].get('outcomes') or r['data'].get('rows')
-            or r['data'].get('settlements') or [])
+            or r['data'].get('settlements') or r['data'].get('graded') or [])
     # refuse if no real outcome rows
     real = [x for x in rows if x.get('outcome') is not None]
     if not real:

@@ -297,3 +297,10 @@
 - **12 selections graded with REAL outcomes** (4 settled events): C2 close sanity mean |p−o| = 0.2426 (PASS bar 0.50); **Brier open 0.2057 vs close 0.0896 → close beat open by +0.1162** (market moved toward truth, n=12 directional)
 - **Verdict REFUSED per pre-registered C1** (12 < 60) — stamp NOT issued, partial values landed diagnostic (dfs/RVC_PARTIAL_STAMP.json + rvc_graded_partial_4games.json)
 - Reopen: remaining 9 events settle Sat/Sun → full-71 grade; spread-label bug fixed (points field carries the number, not the label)
+
+### [03:25] RVC READINESS STAMP + incremental settlements graded
+- **Readiness PASS (dfs/RVC_READINESS_STAMP.json)**: --grade ran mechanically end-to-end — 17/17 joined (0 unmatched), C1 refusal fired correctly (17<60), kill-ledger row written. Pipeline armed for remaining settlements.
+- **Incremental settlements**: 5 of 13 events now Final on ESPN (added Minnesota@Purdue 13-41). 17 selections graded w/ REAL outcomes: C2 mean |p−o| 0.2847 (PASS), R2 +0.0283, **Brier open 0.1993 vs close 0.1178 → close beat open +0.0816** (consistent w/ 12-sel partial +0.1162). Per-type: ML 0.2275 / Spread 0.2493 / Total 0.4379 (totals noisiest, n=4)
+- **Kansas@Utah live** (24-41) — grades on final. 9 events await settlement (Sat/Sun).
+- grade() fixes: 'graded' row-key added; graded file now carries observed_at (FreshnessGate-compliant)
+- **Reopen (exact)**: remaining events settle → `rvc_grade.py --grade <refreshed outcomes>` → C1 mechanically testable at ≥60 → model-skill stamp PASS/REFUSED, no human judgment
