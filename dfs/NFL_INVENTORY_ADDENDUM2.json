@@ -381,6 +381,24 @@
    },
    "file": "dfs/nfl_signals_2026-10-11/SIGNALS_STAMP.json"
   },
-  "label": "DIAGNOSTIC \u2014 nothing promoted"
+  "label": "DIAGNOSTIC — nothing promoted"
+ },
+ "NFL_PROP_LADDERS_2026_10_11": {
+  "observed_at": "2026-10-11T14:59:23Z",
+  "infrastructure": "PASS",
+  "rvc": "REFUSE",
+  "reason": "Logged-in headed CDP 9222 nash pull landed. Quotes are current (13 pre-kick, PHI@JAX STARTED in-play). Not closes. Frozen manifest has no prop close for these events. Nothing promoted.",
+  "key_numbers": {
+   "events": 14,
+   "fits": 289,
+   "pre_kick_mean_r2": {"pass_yards": 0.992, "rush_yards": 0.959, "rec_yards": 0.971, "completions": 0.992},
+   "watchlist_on_slate": "5/5",
+   "watchlist_posted_ou": "missing (subcat 16570 milestones only)",
+   "cpoe_qbs_with_completion_quote": 25,
+   "gate": "read_fresh FRESH"
+  },
+  "reopen": "Re-pull subcats 16569/16570/16571/16889 and O/U 9524/9522/9514 at minutes_to_kickoff<=10 or after Final. Freeze. Grade settled stats against that frozen fitted line. Receiving posted O/U still needs a subcategory that returns O/U.",
+  "file": "dfs/genie_acq2/nash_nfl_props_2026-10-11/NFL_PROP_LADDER_STAMP.json",
+  "label": "DIAGNOSTIC"
  }
 }
