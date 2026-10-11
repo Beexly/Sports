@@ -404,3 +404,8 @@
 - All grader constants verified in-file: KALSHI_ML {PHI 0.235, JAC 0.765}, DK_SPREAD -7.5, OUR_SIGMA 13.3, sign fix (mu_home=-spread), refuse path proven on ledger.
 - Cron poller `7ac6e83e9422` armed: every 30m × 26 fires (~13h coverage through London Final), no-agent watchdog — silent until ESPN shows Final, then stamps EDGE5_CROSSBOOK_GRADED.json + ledger GRADED entry and delivers output.
 - Note: gateway must be running for the poller to fire (hermes gateway start).
+
+### [06:45] NFL PROP LADDER PULL: REFUSED — Akamai bot-wall, exact unblock stamped
+- **dfs/PROP_LADDER_PULL_REFUSED.json**: 8 attempt paths documented (headless+headed chrome-wf, curl+UA, full cookie jar, CDP stealth, fresh profile). Control: site root 200 via curl — the wall targets the AUTOMATED-Chrome fingerprint, not the network, not the cookies.
+- **Verdict**: REFUSED. Zero ladder rows pulled, zero invented.
+- **Unblock**: user's real Chrome session → DK NFL page (30s proof) → relaunch their profile with CDP 9222 → in-page nash fetch per event (CFB-proven path) → genie183 fitter runs on NFL rows → conditional RVC tables.

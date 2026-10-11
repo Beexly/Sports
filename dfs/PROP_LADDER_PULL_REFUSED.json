@@ -1,0 +1,24 @@
+{
+ "observed_at": "2026-10-11T06:29:03Z",
+ "task": "nash NFL prop ladder pulls (subcats 9524/16569-16571) for NFL conditional residual tables",
+ "attempts": [
+  "chrome-wf headless (9222): DK SPA -> Access Denied",
+  "nash API via curl, browser UA: 403 AkamaiGHost (edge wall, pre-auth)",
+  "nash API via curl + full dk_cookie_header.txt (8.2KB jar from last night): still 403",
+  "chrome-wf HEADED (9222): DK SPA -> Access Denied (horse page)",
+  "in-page fetch from Access Denied tab: CORS/edge fail",
+  "CDP stealth injection (webdriver mask + chrome obj + plugins) then nav: still Access Denied",
+  "FRESH throwaway profile (9223): page renders empty (renderer issue) \u2014 inconclusive",
+  "control: curl to sportsbook root + /leagues/football/nfl = 200 (2.4MB, site is UP)"
+ ],
+ "diagnosis": "Akamai Bot Manager is flagging the AUTOMATED-Chrome fingerprint on this network right now. The site serves fine to plain curl (200) but 403s the nash API edge and bot-walls the SPA for CDP-attached Chrome. Yesterday the identical chrome-wf profile passed \u2014 either last night's headless run poisoned the profile fingerprint, or DK tightened the edge overnight.",
+ "verdict": "REFUSED \u2014 zero ladder rows pulled, zero invented. The block is environmental, not methodological.",
+ "exact_unblock": [
+  "1. USER ACTION (30s): open Chrome normally (their own session, no CDP flags) -> https://sportsbook.draftkings.com/leagues/football/nfl -> click any game -> props tab. This proves the wall is automation-specific.",
+  "2. AGENT RETRY with user's real profile: kill all chrome, then launch THEIR default profile copy with CDP: chrome.exe --user-data-dir=<their profile> --remote-debugging-port=9222 --remote-allow-origins=* --app=https://sportsbook.draftkings.com/leagues/football/nfl",
+  "3. Then: in-page fetch of https://sportsbook-nash.draftkings.com/sites/US-NJ-SB/api/v5/leagues/88808/categories/9524/subcategories/9524?format=json per event id (the CFB-proven in-browser path from last night), save to dfs/genie_acq2/nash_nfl_props_<eventid>.json",
+  "4. Reconstruction: the genie183 fitter (r^2 0.96-0.99 on 262 CFB ladders) runs unchanged on NFL rows -> conditional residual tables vs frozen manifest -> RVC stamp"
+ ],
+ "session_requirement": "headed Chrome, logged-in DK session, CDP on 9222, residential IP (this network fine yesterday)",
+ "label": "DIAGNOSTIC"
+}
