@@ -4,7 +4,7 @@
  "prop_conditional": "INFRASTRUCTURE PASS (CFB reconstruction proof exists); NFL player-prop tables REFUSED (data gap)",
  "JEV": "REFUSED (no graded outcomes on bus)",
  "structural_gap_status": "NFL RVC manifest CLOSED. Cross-book residuals COMPUTED. Prop conditional tables AWAITING NFL ladder pulls.",
- "updated_at": "2026-10-11T12:37:42Z",
+ "updated_at": "2026-10-11T12:39:53Z",
  "OU_LIVE_WP": {
   "final_spec": "v2 empirical attractor (theta 0.000046/s, sigma 0.2963/sqrt(s), 4-bucket attractor curve)",
   "overall_brier": "0.1896 vs close 0.2167 \u2014 OU wins Q2/Q3/Q4 (+0.005/+0.046/+0.084)",
@@ -45,6 +45,26 @@
   },
   "receiver_watchlist_props": "no prop closes on bus \u2014 reopen: browser quote pull or nash NFL ladders",
   "reopen": "6+ more 2026 weeks (~2x pairs by midseason); box/blitz structurally sensible, persistence weak",
+  "label": "DIAGNOSTIC"
+ },
+ "NFL_DAY_2026_10_11": {
+  "tb_dal_grade": "single-game signature grade CONFIRMS P1 refusal (no discrimination)",
+  "watchlist_next_week": {
+   "n_pairs": 13,
+   "corr_bt": -0.336,
+   "corr_drops": 0.039,
+   "verdict": "noise; broken-tackle games are game-script bursts (week-1 cluster), not persistent traits; watchlists = prop screens only",
+   "file": "dfs/WATCHLIST_NEXT_WEEK_GRADE.json"
+  },
+  "data_quality": "Jalon Daniels TB verified real in NGS+PFR (no join collision)",
+  "london": {
+   "status": "Scheduled",
+   "poller": "7ac6e83e9422 armed"
+  },
+  "standing_reopens": {
+   "player_to_team_transmission": "6+ weeks of 2026",
+   "prop_closes": "browser quote pull or nash NFL ladders (stamped command)"
+  },
   "label": "DIAGNOSTIC"
  }
 }

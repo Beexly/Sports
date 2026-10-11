@@ -544,3 +544,10 @@
 - **London state**: PHI@JAC still Scheduled (poller 7ac6e83e9422 armed, silent-until-Final). Graders untouched.
 - **P1/P2 standing**: both honest-REFUSED at 2026 n (85a7c2ec7b). Reopen = 6+ weeks / prop quote feed.
 - DIAGNOSTIC. Nothing promoted.
+
+### [11:30] NFL DAY COMPLETE — watchlist graded, addendum current, London armed
+- **dfs/WATCHLIST_NEXT_WEEK_GRADE.json**: 18 player-weeks across the 5 watchlist names. BT→next team ATS −0.34 (n=13, noise); drops +0.04 (nothing). Broken-tackle games cluster in week 1 = game-script bursts, not persistent traits. **Watchlists are prop screens, not team signals.**
+- **TB@DAL live grade** confirmed the P1 refusal (553bd36ffd).
+- **All NFL-Day priorities closed**: P1 standing refusal, P2 graded at n (noise) + prop-close reopen stamped, P3 = poller armed (London Scheduled).
+- The week's full arc: 14 equations harvested, OU lane closed structurally, 5 situational axes shrunk to noise, player-residual layer born and honestly bounded. Everything waits on two things: more 2026 weeks, and prop quote feeds.
+- DIAGNOSTIC. Nothing promoted. Remote = local every landing.
