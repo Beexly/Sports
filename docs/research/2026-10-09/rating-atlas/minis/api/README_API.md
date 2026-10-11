@@ -64,3 +64,22 @@ Before each slate, re-pull Pinnacle lines and rewrite `nfl_closing_lines.json` w
 - CollegeGuard blocks the entire board if any CFB parameter matches an NFL constant within ±2%.
 - Overlays are diagnostic only. They never replace the close.
 - Kill ledger: 12 entries, chain intact (see parent directory).
+
+## Signal Firehose (added 2026-10-11)
+
+JEV arbitrates better with more context. Two new endpoints serve the unified
+signal feed — every real signal we have, honestly labeled.
+
+- `GET /signals/game/{game_id}` → 84–122 signals for one game (edge5 board,
+  8 edges, kill ledger, London intel where applicable, freshness status).
+  Example: `curl localhost:8899/signals/game/401872981`
+- `GET /signals/player/{player_key}` → 17 signals for one player (DK base,
+  GSE Score, JEV sim aggregates, positional loadings).
+  Example: `curl localhost:8899/signals/player/drew_lock`
+
+Every signal carries `value`, `source`, `observed_at`, and `status`
+(live / measured / diagnostic / proxy_* / heuristic_not_live_api / scheduled).
+No silent substitution — proxies are labeled as proxies.
+
+Builder: `signal_firehose.py` (same directory). Regenerate:
+`python3 signal_firehose.py --build-all --out ./signal_out/`

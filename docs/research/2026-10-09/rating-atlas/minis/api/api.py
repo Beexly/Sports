@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-GSE Engine API — minimal HTTP service for board predictions.
+GSE Engine API — minimal HTTP service for board predictions + signal firehose.
 
 Endpoints:
-  GET /health       → service status
-  GET /board/nfl    → NFL Week 5 board (honest baseline/diagnostic labels)
-  GET /board/cfb    → CFB model card + status (between slates)
+  GET /health                    → service status
+  GET /board/nfl                 → NFL Week 5 board (honest baseline/diagnostic labels)
+  GET /board/cfb                 → CFB model card + status (between slates)
+  GET /signals/game/<game_id>    → unified signal firehose for one game (100+ signals)
+  GET /signals/player/<player>   → unified signal firehose for one player
 
 Every response includes generated_at. No pick/bet/edge language.
 Run: python3 api.py  (serves on port 8899)
@@ -127,11 +129,70 @@ def board_cfb():
         "honest_note": "No live CFB board on Sundays. Saturday slate returns next week.",
     })
 
+@app.route("/signals/game/<game_id>", methods=["GET"])
+def signals_game(game_id):
+    """Unified signal firehose for one game — everything JEV needs, 100+ signals."""
+    try:
+        from signal_firehose import build_game_signals
+    except ImportError as e:
+        return jsonify({
+            "status": "ERROR",
+            "generated_at": _now_iso(),
+            "error": f"signal_firehose module not available: {e}",
+        }), 500
+    try:
+        result = build_game_signals(game_id)
+    except Exception as e:
+        return jsonify({
+            "status": "ERROR",
+            "generated_at": _now_iso(),
+            "error": str(e)[:500],
+        }), 500
+    if "error" in result:
+        return jsonify({
+            "status": "NOT_FOUND",
+            "generated_at": _now_iso(),
+            **result,
+        }), 404
+    result["api"] = "gse-engine-api"
+    result["endpoint"] = f"/signals/game/{game_id}"
+    return jsonify(result)
+
+@app.route("/signals/player/<player_key>", methods=["GET"])
+def signals_player(player_key):
+    """Unified signal firehose for one player — DK, GSE, JEV sim aggregates."""
+    try:
+        from signal_firehose import build_player_signals
+    except ImportError as e:
+        return jsonify({
+            "status": "ERROR",
+            "generated_at": _now_iso(),
+            "error": f"signal_firehose module not available: {e}",
+        }), 500
+    try:
+        result = build_player_signals(player_key)
+    except Exception as e:
+        return jsonify({
+            "status": "ERROR",
+            "generated_at": _now_iso(),
+            "error": str(e)[:500],
+        }), 500
+    if "error" in result:
+        return jsonify({
+            "status": "NOT_FOUND",
+            "generated_at": _now_iso(),
+            **result,
+        }), 404
+    result["api"] = "gse-engine-api"
+    result["endpoint"] = f"/signals/player/{player_key}"
+    return jsonify(result)
+
 @app.route("/", methods=["GET"])
 def index():
     return jsonify({
         "service": "gse-engine-api",
-        "endpoints": ["/health", "/board/nfl", "/board/cfb"],
+        "endpoints": ["/health", "/board/nfl", "/board/cfb",
+                      "/signals/game/<game_id>", "/signals/player/<player_key>"],
         "generated_at": _now_iso(),
     })
 
