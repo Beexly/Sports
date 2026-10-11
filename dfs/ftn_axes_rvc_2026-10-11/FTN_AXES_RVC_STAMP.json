@@ -1,0 +1,242 @@
+{
+ "observed_at": "2026-10-11T12:43:04Z",
+ "test": "FTN pressure/coverage axes -> next-week ATS residual-vs-close (2026 wk1-5)",
+ "data_source": "dfs/eq_harvest/raw/nflverse-data/ftn_charting_2026.parquet (10,996 plays, 29 cols)",
+ "manifest": "frozen NFL manifest (team_week_ats_2026.csv, 130 team-weeks)",
+ "method": "Team-week aggregation of 13 FTN pressure/coverage axes. For each axis: (1) Pearson r to next-week ATS residual, (2) week-to-week persistence, (3) held-out tercile-cell test (fit odd weeks, eval even weeks) vs naive (close-only MSE), (4) 2000x bootstrap CI on MSE delta. CANDIDATE requires CI95 entirely above 0 AND positive delta.",
+ "n_pairs": 98,
+ "axes": {
+  "blitz_mean": {
+   "corr_to_next_ats": 0.1976,
+   "persistence": 0.1786,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 150.93,
+   "delta_mse": 0.48,
+   "ci95": [
+    -20.76,
+    20.24
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "blitz_rate": {
+   "corr_to_next_ats": 0.1886,
+   "persistence": 0.1599,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 156.73,
+   "delta_mse": -5.32,
+   "ci95": [
+    -16.19,
+    4.81
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "rushers_mean": {
+   "corr_to_next_ats": 0.011,
+   "persistence": 0.0435,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 152.53,
+   "delta_mse": -1.12,
+   "ci95": [
+    -3.56,
+    1.27
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "box_mean": {
+   "corr_to_next_ats": 0.2321,
+   "persistence": -0.0549,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 143.02,
+   "delta_mse": 8.39,
+   "ci95": [
+    -2.87,
+    20.65
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "catchable_rate": {
+   "corr_to_next_ats": -0.0965,
+   "persistence": -0.0728,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 160.74,
+   "delta_mse": -9.33,
+   "ci95": [
+    -32.64,
+    13.87
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "contested_rate": {
+   "corr_to_next_ats": -0.1172,
+   "persistence": 0.0083,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 159.3,
+   "delta_mse": -7.89,
+   "ci95": [
+    -28.91,
+    14.77
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "pa_rate": {
+   "corr_to_next_ats": 0.1435,
+   "persistence": 0.0773,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 153.22,
+   "delta_mse": -1.81,
+   "ci95": [
+    -18.33,
+    13.72
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "screen_rate": {
+   "corr_to_next_ats": 0.005,
+   "persistence": 0.1163,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 156.45,
+   "delta_mse": -5.03,
+   "ci95": [
+    -14.83,
+    4.67
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "rpo_rate": {
+   "corr_to_next_ats": -0.1418,
+   "persistence": 0.2053,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 146.84,
+   "delta_mse": 4.57,
+   "ci95": [
+    -5.26,
+    14.44
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "oop_rate": {
+   "corr_to_next_ats": -0.0224,
+   "persistence": 0.1324,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 154.81,
+   "delta_mse": -3.4,
+   "ci95": [
+    -26.87,
+    22.11
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "throwaway_rate": {
+   "corr_to_next_ats": -0.0134,
+   "persistence": 0.0014,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 149.51,
+   "delta_mse": 1.9,
+   "ci95": [
+    -13.38,
+    18.27
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "int_worthy_rate": {
+   "corr_to_next_ats": 0.2817,
+   "persistence": 0.0563,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 122.75,
+   "delta_mse": 28.67,
+   "ci95": [
+    -0.01,
+    58.16
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  },
+  "drop_rate": {
+   "corr_to_next_ats": -0.0347,
+   "persistence": 0.0155,
+   "n_pairs": 98,
+   "n_heldout": 34,
+   "mse_naive": 151.41,
+   "mse_axis": 158.46,
+   "delta_mse": -7.05,
+   "ci95": [
+    -19.06,
+    4.76
+   ],
+   "significant": false,
+   "verdict": "REFUSE"
+  }
+ },
+ "summary": {
+  "n_tested": 13,
+  "n_candidates": 0,
+  "n_refused": 13,
+  "closest": {
+   "axis": "int_worthy_rate",
+   "corr": 0.2817,
+   "delta_mse": 28.67,
+   "ci95": [
+    -0.01,
+    58.16
+   ],
+   "note": "CI lower bound -0.01 contains zero. Not significant."
+  },
+  "notable_refusals": [
+   "box_mean: highest corr (+0.2321) but persistence -0.0549 (does not persist) and CI contains zero",
+   "catchable_rate: negative corr (-0.0965), hurts held-out MSE (-9.33)",
+   "contested_rate: negative corr (-0.1172), hurts held-out MSE (-7.89)",
+   "blitz_mean: weak persistence (+0.1786), CI [-20.76,+20.24] far too wide"
+  ]
+ },
+ "verdict": "INFRASTRUCTURE PASS",
+ "result": "REFUSE",
+ "reopen_conditions": [
+  "Larger sample: 98 pairs is thin for 13 axes. Re-test at 200+ pairs (full 2026 season).",
+  "Player-level join: team-week aggregation may wash out QB-specific pressure effects. Re-test with QB-week granularity when the NGS/FTN/PFR name mapping is built.",
+  "int_worthy_rate: re-test as pre-registered single axis (not 1-of-13) to avoid multiple-testing penalty.",
+  "Prop closes: test axes against completion/catchable-throw prop closes instead of ATS, if prop close snapshots become available on a frozen manifest."
+ ],
+ "label": "DIAGNOSTIC",
+ "doctrine": {
+  "freshness_gate": "FTN parquet stamped 2026-10-11 via nflverse mirror; team_week_ats_2026.csv is the frozen manifest",
+  "college_guard": "N/A - NFL only",
+  "kill_ledger": "append-only, not modified by this test",
+  "nothing_promoted": true,
+  "zero_fabrication": "every number traces to ftn_charting_2026.parquet or team_week_ats_2026.csv"
+ }
+}
