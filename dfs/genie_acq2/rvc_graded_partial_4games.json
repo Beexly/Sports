@@ -1,0 +1,132 @@
+{
+ "graded": [
+  {
+   "event": "LSU @ Kentucky",
+   "market_type": "Moneyline",
+   "label": "LSU",
+   "points": null,
+   "p_open": 0.6,
+   "p_close": 0.5708,
+   "outcome": 0.0
+  },
+  {
+   "event": "LSU @ Kentucky",
+   "market_type": "Moneyline",
+   "label": "Kentucky",
+   "points": null,
+   "p_open": 0.4695,
+   "p_close": 0.5,
+   "outcome": 1.0
+  },
+  {
+   "event": "Syracuse @ Virginia",
+   "market_type": "Moneyline",
+   "label": "Syracuse",
+   "points": null,
+   "p_open": 0.037,
+   "p_close": 0.0641,
+   "outcome": 0.0
+  },
+  {
+   "event": "Syracuse @ Virginia",
+   "market_type": "Moneyline",
+   "label": "Virginia",
+   "points": null,
+   "p_open": 0.9898,
+   "p_close": 0.9706,
+   "outcome": 1.0
+  },
+  {
+   "event": "Syracuse @ Virginia",
+   "market_type": "Spread",
+   "label": "Syracuse",
+   "points": 2.5,
+   "p_open": 0.5192,
+   "p_close": 0.0685,
+   "outcome": 0.0
+  },
+  {
+   "event": "Syracuse @ Virginia",
+   "market_type": "Spread",
+   "label": "Virginia",
+   "points": -2.5,
+   "p_open": 0.5495,
+   "p_close": 0.9677,
+   "outcome": 1.0
+  },
+  {
+   "event": "Georgia @ Alabama",
+   "market_type": "Moneyline",
+   "label": "Georgia",
+   "points": null,
+   "p_open": 0.6689,
+   "p_close": 0.8201,
+   "outcome": 1.0
+  },
+  {
+   "event": "Georgia @ Alabama",
+   "market_type": "Moneyline",
+   "label": "Alabama",
+   "points": null,
+   "p_open": 0.4,
+   "p_close": 0.2387,
+   "outcome": 0.0
+  },
+  {
+   "event": "Georgia @ Alabama",
+   "market_type": "Spread",
+   "label": "Georgia",
+   "points": -2.5,
+   "p_open": 0.635,
+   "p_close": 0.7908,
+   "outcome": 1.0
+  },
+  {
+   "event": "Georgia @ Alabama",
+   "market_type": "Spread",
+   "label": "Alabama",
+   "points": 2.5,
+   "p_open": 0.4329,
+   "p_close": 0.271,
+   "outcome": 0.0
+  },
+  {
+   "event": "Georgia @ Alabama",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 37.5,
+   "p_open": 0.6516,
+   "p_close": 0.4082,
+   "outcome": 0.0
+  },
+  {
+   "event": "Georgia @ Alabama",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 37.5,
+   "p_open": 0.4184,
+   "p_close": 0.661,
+   "outcome": 1.0
+  }
+ ],
+ "stats": {
+  "n": 12,
+  "c2_mean_abs_err": 0.2426,
+  "r2_mean": 0.0276,
+  "per_type": {
+   "Moneyline": {
+    "n": 6,
+    "mean_abs_err": 0.2638
+   },
+   "Spread": {
+    "n": 4,
+    "mean_abs_err": 0.1453
+   },
+   "Total": {
+    "n": 2,
+    "mean_abs_err": 0.3736
+   }
+  },
+  "verdict": "PARTIAL \u2014 n=8 of 71 (4 of 13 events settled); C1 coverage 8<60 \u2192 stamp REFUSED per pre-registered criteria; values diagnostic"
+ }
+}

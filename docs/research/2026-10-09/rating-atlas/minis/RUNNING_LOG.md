@@ -290,3 +290,10 @@
 - **FreshnessGate v2.1 fixes (self-test still 5/5)**: (a) dict-of-lists rowcount (fits:{pass:[...]}) — F4 false-positive on frozen artifact fixed; (b) 'captured' stamp-key alias added; (c) naive-timestamp UTC assumption (date-only stamps) — offset-naive crash fixed
 - **Manifest-of-manifests pattern**: pointer file read w/ require_manifest=False, artifact read w/ full gate + sha256 match verified (a146e366... ✓)
 - All DIAGNOSTIC. Grade step refuses without real settlement data.
+
+### [03:35] FIRST REAL RVC NUMBERS — 12 selections graded w/ ESPN outcomes (4 of 13 events settled)
+- **--verify PASS**: grading path executable + refuse-safe (empty→REFUSED F4, stale→REFUSED F1; kill-ledger rows written per refusal)
+- **S2/S3 dry-run**: Kalshi schema (status=active, settled_time=None pre-game); **S3 ESPN scoreboard VERIFIED w/ real finals** (status:Final + competitors[].score — Georgia 20 @ Alabama 17)
+- **12 selections graded with REAL outcomes** (4 settled events): C2 close sanity mean |p−o| = 0.2426 (PASS bar 0.50); **Brier open 0.2057 vs close 0.0896 → close beat open by +0.1162** (market moved toward truth, n=12 directional)
+- **Verdict REFUSED per pre-registered C1** (12 < 60) — stamp NOT issued, partial values landed diagnostic (dfs/RVC_PARTIAL_STAMP.json + rvc_graded_partial_4games.json)
+- Reopen: remaining 9 events settle Sat/Sun → full-71 grade; spread-label bug fixed (points field carries the number, not the label)

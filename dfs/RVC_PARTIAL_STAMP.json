@@ -1,0 +1,27 @@
+{
+ "observed_at": "2026-10-11T03:19:31Z",
+ "test": "first REAL residual-vs-outcome on frozen manifest (4 of 13 events settled via ESPN S3)",
+ "outcomes_source": "S3 ESPN scoreboard (status=Final, competitors[].score) \u2014 authorized keyless",
+ "graded_n": 12,
+ "events_settled": 4,
+ "events_total": 13,
+ "C1_coverage": {
+  "graded": 12,
+  "required": 60,
+  "met": false
+ },
+ "C2_close_sanity": {
+  "mean_abs_err": 0.2426,
+  "bar": 0.5,
+  "met": true
+ },
+ "line_move_quality": {
+  "brier_open": 0.2057,
+  "brier_close": 0.0896,
+  "delta": 0.1162,
+  "reading": "closing line beat opening line (market moved toward truth) \u2014 n=12, directional only"
+ },
+ "verdict": "REFUSED per pre-registered C1 (12 < 60) \u2014 stamp NOT issued; values landed as diagnostic",
+ "label": "DIAGNOSTIC",
+ "reopen": "remaining 9 events settle Sat/Sun \u2192 re-run grade with full 71; C1 will be testable"
+}
