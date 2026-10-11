@@ -20,9 +20,13 @@ export { honestConfidence, type HonestConfidence } from "./honest-confidence";
  * docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md.
  *
  * Server-only. The calibrator is fit from learning-eligible settled (WIN/LOSS)
- * picks — the same gate the cockpit calibration view and the calibration report
- * use — and memoised with a short TTL so the hot picks path does not refit per
- * request.
+ * picks — non-bootstrap, learning-eligible (signalSnapshot.eligibleForLearning),
+ * NOT filtered on isPublished. That last part is deliberate to document: this
+ * population is WIDER than loadPublicCalibrationReport (lib/calibration/report.ts),
+ * which requires isPublished: true — so the fit map and the public panel score
+ * different populations on that dimension. Recorded as C-320; narrowing it is a
+ * founder call (it changes the map applied to public picks), not a drive-by fix.
+ * Memoised with a short TTL so the hot picks path does not refit per request.
  */
 
 interface SettledRow {
