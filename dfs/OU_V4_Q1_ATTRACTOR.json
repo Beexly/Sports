@@ -1,0 +1,36 @@
+{
+ "observed_at": "2026-10-11T07:05:21Z",
+ "test": "OU v4 \u2014 Q1-specific attractor: close blended into bucket curve, ramp sweep",
+ "spec": "mu_Q1(t) = (1-s)*close + s*bucket_curve(t), s = 1 - exp(-r*t/900)",
+ "sweep": [
+  {
+   "ramp": 0.5,
+   "brier_q1": 0.2859
+  },
+  {
+   "ramp": 1.0,
+   "brier_q1": 0.2753
+  },
+  {
+   "ramp": 2.0,
+   "brier_q1": 0.2618
+  },
+  {
+   "ramp": 3.0,
+   "brier_q1": 0.2544
+  },
+  {
+   "ramp": 5.0,
+   "brier_q1": 0.2478
+  }
+ ],
+ "best": {
+  "ramp": 5.0,
+  "brier_q1": 0.24781958944834512
+ },
+ "baselines": {
+  "v2_q1": 0.2438,
+  "pure_close_q1": 0.2167
+ },
+ "verdict": "DIAGNOSTIC"
+}

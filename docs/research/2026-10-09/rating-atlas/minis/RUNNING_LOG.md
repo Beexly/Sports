@@ -515,3 +515,12 @@
 - **International ATS**: +1.67 (n=29, thin — pool later).
 - **Watchlists**: Nacua/Odunze/McBride YAC machines; JamWilliams/Kraft hands regression.
 - All DIAGNOSTIC. Nothing promoted. Remote=local verified.
+
+### [10:30] OU LANE CLOSED AT ITS STRUCTURAL LIMIT — v3 wash, v4 worse, Q1 = close, full stop
+- **dfs/OU_LANE_FINAL_VERDICT.json**:
+- **v3 (σ by |close| bucket)**: bucket sigmas spread 0.28-0.35 but Brier moves <0.001 (0.1897 vs 0.1896). Diffusion scaling is NOT the Q1 lever. WASH.
+- **v4 (Q1 blended attractor)**: WORSE at every ramp (0.2478-0.2859 vs 0.2438) — blending close into the attractor double-counts the prior.
+- **Q1 blend sweep**: monotone from pure-OU 0.2442 to pure-close 0.2167. **Q1-optimal = 100% close.**
+- **THE STRUCTURAL FINDING**: with no game state, the closing spread IS the attractor; a process built on the same prior adds noise, not signal. The crossover is real: **Q1 = close, Q2+ = OU v2. Final live spec. No blending.**
+- Lane closed. Reopen: only a fundamentally different Q1 signal (injury/lineup news pre-kick) can move it.
+- DIAGNOSTIC. Nothing promoted.

@@ -1,0 +1,49 @@
+{
+ "observed_at": "2026-10-11T07:05:46Z",
+ "test": "OU lane final verdict \u2014 v3 (sigma-by-bucket) + v4 (Q1 blended attractor) + Q1 blend sweep",
+ "v3_scaled_diffusion": {
+  "sigma_by_bucket": {
+   "small": 0.3163,
+   "mid": 0.2881,
+   "big": 0.2815,
+   "huge": 0.3485
+  },
+  "brier_overall": 0.1897,
+  "vs_v2": 0.1896,
+  "verdict": "WASH \u2014 bucket sigmas differ (0.28-0.35) but quarter Brier moves <0.001. Diffusion scaling is not the lever."
+ },
+ "v4_q1_attractor": {
+  "ramp_sweep": [
+   {
+    "ramp": 0.5,
+    "brier": 0.2859
+   },
+   {
+    "ramp": 1.0,
+    "brier": 0.2753
+   },
+   {
+    "ramp": 2.0,
+    "brier": 0.2618
+   },
+   {
+    "ramp": 3.0,
+    "brier": 0.2544
+   },
+   {
+    "ramp": 5.0,
+    "brier": 0.2478
+   }
+  ],
+  "verdict": "WORSE than v2 at every ramp \u2014 blending the close into the attractor degrades the process (double-counts the close)."
+ },
+ "q1_blend_sweep": {
+  "result": "monotone from w=0 (OU, 0.2442) to w=1.0 (close, 0.2167) \u2014 pure close optimal in Q1"
+ },
+ "FINAL_VERDICT": {
+  "spec": "OU+empirical attractor v2 is FINAL for this lane: overall 0.1896, beats close in Q2/Q3/Q4",
+  "Q1_structural_finding": "The OU process carries ZERO incremental information in Q1 \u2014 with no game state, the closing spread IS the attractor, and any process built on the same prior adds noise, not signal. The crossover is real and structural: Q1 = close, Q2+ = OU.",
+  "live_spec": "Q1: use close. Q2+: use OU v2 (empirical attractor). No blending."
+ },
+ "label": "DIAGNOSTIC \u2014 lane closed to its structural limit"
+}

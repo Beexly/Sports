@@ -1,0 +1,24 @@
+{
+ "observed_at": "2026-10-11T07:04:18Z",
+ "test": "OU v3 \u2014 close-scaled diffusion (sigma per |close| bucket) on empirical attractor",
+ "sigma_by_bucket": {
+  "big": 0.2815,
+  "huge": 0.3485,
+  "mid": 0.2881,
+  "small": 0.3163
+ },
+ "global_sigma_v2": 0.2963,
+ "theta": 4.4e-05,
+ "rvc_v3": {
+  "brier_overall": 0.1897,
+  "brier_close": 0.2167,
+  "v2_overall": 0.1896,
+  "by_quarter": {
+   "3600": 0.2442,
+   "2700": 0.2115,
+   "1800": 0.1703,
+   "900": 0.1326
+  }
+ },
+ "label": "DIAGNOSTIC"
+}
