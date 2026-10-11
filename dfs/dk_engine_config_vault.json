@@ -1,0 +1,25 @@
+{
+ "sgp_timeouts": {
+  "recalc": 500,
+  "throttle": 500,
+  "preliva_recalc": 1000
+ },
+ "micro_markets_blink_ms": 15000,
+ "mybets_ws": true,
+ "mybets_msgpack": false,
+ "sgp_combinability_matrix": true,
+ "sgp_dynamic_odds": true,
+ "sgp_inhouse": true,
+ "simplebet_enabled": true,
+ "longshot_initial_data": false,
+ "move_the_line": true,
+ "observed_at": "2026-10-11T04:34:47Z",
+ "academy_lessons": {
+  "LESSON_1_SGP_RECALC_500MS": "DK recomputes SGP combinability every 500ms (1000ms pre-live). The combinability matrix + dynamic odds run client-side on that clock. A recalc gap = stale SGP prices on your screen. Any bet submitted inside a recalc window can hit odds that are about to move. The 500ms cadence is THE exploitable rhythm.",
+  "LESSON_2_LONGSHOT_INITIAL_DATA_OFF": "isLongshotInitialDataEnabled=false: DK deliberately does NOT pre-load longshot pricing. Longshot alt-ladders load on-demand = first-request latency = the pricing you see first may be cached/stale. Longshot alt-ladders are the slowest-updated surface.",
+  "LESSON_3_SGP_INHOUSE": "isInHouseEnabled=true \u2014 DK prices SGP in-house (not Kambi). The combinability matrix + correlation model is DK proprietary, computed client-side. The correlation assumptions are IN THE JS (dk-same-game-parlay bundle on CDN).",
+  "LESSON_4_SIMPLEBET_MICRO": "Simplebet powers DK micro-markets (matchviz). Their apiKey ships in the page. Micro-market pricing = Simplebet engine + DK hold. Separate engine from Kambi/nash.",
+  "LESSON_5_MOVE_THE_LINE": "isMoveTheLineEnabled=true \u2014 DK alt-line sliders are a first-class product. Alt-ladder pricing cadence = the microMarketsBlink 15000ms delay window. Lines blink for 15s after moves = theDK signals line changes to users; a scraper watching between blinks sees pre-blink prices.",
+  "LESSON_6_MYBETS_WS_NO_MSGPACK": "My-bets WebSocket: JSON not Msgpack (isMsgPack=false), unlike the odds feed. Two protocols on the same site \u2014 odds=Msgpack over sportsbook-ws, bets=JSON over the myBets socket. Protocol split = separate RE tracks."
+ }
+}

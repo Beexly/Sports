@@ -351,3 +351,13 @@
 - **B1 weather CLOSE-ADJUSTED (dfs/b1_weather_residual.json)**: outdoor games, wind15+ vs calm on the closing-line residual — margin diff +0.734 (t=+0.43 ns), total diff −2.215 (t=−1.25 ns, n=51 windy). **The raw −5.41 wind total shrinks to a non-significant −2.2 after closing-line adjustment** — the market already prices most of the wind effect. Honest: no promotable weather edge at current n.
 - **B7 CPOE persistence (dfs/b7_cpoe_persistence.json + B7_RVC_STAMP.json)**: b2b r=+0.106 (single-week noise), half-to-half r=+0.475 (skill), reliability curve 2g 0.293 → 10g 0.803, SB 18-game 0.644, regression slope 0.11 (heavy mean-reversion). RVC framing: books overweight recent CPOE; season-cumulative skill diverges → completion-prop RVC testable.
 - **B1 pooled roof-class stamp (in-session)**: contextual model loses to close in ALL roof classes (delta +1.4 to +2.8) — graph stays diagnostic.
+
+### [04:45] DK ENGINE CONFIG VAULT — the pentest layer nobody teaches
+- **dfs/dk_engine_config_vault.json**: the full client-side engine configuration surface (__productConfig), 49 boolean switches + nested configs + 6 academy lessons:
+  1. SGP combinability recalc = 500ms client-side (isInHouse=true — correlation model IN THE CDN JS, not server-side). Recalc-window bet timing = the exploitable rhythm.
+  2. isLongshotInitialDataEnabled=false — longshot alt-ladders are on-demand-loaded = slowest-updated surface = stale-first-price window.
+  3. Simplebet micro-markets engine w/ page-shipped apiKey — separate pricing engine from Kambi/nash.
+  4. MoveTheLine product = alt-sliders first-class; microMarketsBlink delay 15000ms = DK's own line-change signal window.
+  5. My-bets WS = JSON (odds WS = Msgpack) — two protocols, two RE tracks.
+  6. isgSdk + SportRadar + Simplebet = three third-party engines behind one brand — each has its own hold/latency profile.
+- All DIAGNOSTIC. Nothing promoted.
