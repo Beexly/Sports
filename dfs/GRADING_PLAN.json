@@ -1,0 +1,692 @@
+{
+ "observed_at": "2026-10-11T03:13:26Z",
+ "prepared_before_outcomes": true,
+ "zero_fabrication_note": "No outcome data exists yet (CFB Sat games kick 2026-10-11). This plan pre-registers the join, residuals, criteria, and ledger shape. The --grade step refuses to run without real settlement data.",
+ "frozen_manifest": {
+  "path": "C:\\Users\\Garrett\\Sports-wt-rating-packet\\dfs\\frozen_manifest_rvc.json",
+  "stamp": "2026-10-11T02:55:14Z",
+  "age_hours": 0.3,
+  "fresh": true,
+  "failure_mode": null,
+  "label": "FRESH"
+ },
+ "close_snapshot": {
+  "path": "C:\\Users\\Garrett\\Sports-wt-rating-packet\\dfs\\genie_acq2\\nash_gamelines_87637_4518_CLOSE.json",
+  "stamp": "2026-10-11T02:55:44Z",
+  "age_hours": 0.3,
+  "fresh": true,
+  "failure_mode": null,
+  "label": "FRESH"
+ },
+ "n_selections": 71,
+ "join_keys": [
+  {
+   "market_key": "34746039|Moneyline|LSU|None",
+   "event_id": "34746039",
+   "event_name": "LSU @ Kentucky",
+   "market_type": "Moneyline",
+   "label": "LSU",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746039|Moneyline|Kentucky|None",
+   "event_id": "34746039",
+   "event_name": "LSU @ Kentucky",
+   "market_type": "Moneyline",
+   "label": "Kentucky",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746045|Moneyline|Syracuse|None",
+   "event_id": "34746045",
+   "event_name": "Syracuse @ Virginia",
+   "market_type": "Moneyline",
+   "label": "Syracuse",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746045|Moneyline|Virginia|None",
+   "event_id": "34746045",
+   "event_name": "Syracuse @ Virginia",
+   "market_type": "Moneyline",
+   "label": "Virginia",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746045|Spread|Syracuse|2.5",
+   "event_id": "34746045",
+   "event_name": "Syracuse @ Virginia",
+   "market_type": "Spread",
+   "label": "Syracuse",
+   "points": 2.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746045|Spread|Virginia|-2.5",
+   "event_id": "34746045",
+   "event_name": "Syracuse @ Virginia",
+   "market_type": "Spread",
+   "label": "Virginia",
+   "points": -2.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226065|Moneyline|Georgia|None",
+   "event_id": "34226065",
+   "event_name": "Georgia @ Alabama",
+   "market_type": "Moneyline",
+   "label": "Georgia",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226065|Moneyline|Alabama|None",
+   "event_id": "34226065",
+   "event_name": "Georgia @ Alabama",
+   "market_type": "Moneyline",
+   "label": "Alabama",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226065|Spread|Georgia|-2.5",
+   "event_id": "34226065",
+   "event_name": "Georgia @ Alabama",
+   "market_type": "Spread",
+   "label": "Georgia",
+   "points": -2.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226065|Spread|Alabama|2.5",
+   "event_id": "34226065",
+   "event_name": "Georgia @ Alabama",
+   "market_type": "Spread",
+   "label": "Alabama",
+   "points": 2.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226065|Total|Over|37.5",
+   "event_id": "34226065",
+   "event_name": "Georgia @ Alabama",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 37.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226065|Total|Under|37.5",
+   "event_id": "34226065",
+   "event_name": "Georgia @ Alabama",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 37.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746048|Moneyline|Minnesota|None",
+   "event_id": "34746048",
+   "event_name": "Minnesota @ Purdue",
+   "market_type": "Moneyline",
+   "label": "Minnesota",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746048|Spread|Minnesota|23.5",
+   "event_id": "34746048",
+   "event_name": "Minnesota @ Purdue",
+   "market_type": "Spread",
+   "label": "Minnesota",
+   "points": 23.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746048|Spread|Purdue|-23.5",
+   "event_id": "34746048",
+   "event_name": "Minnesota @ Purdue",
+   "market_type": "Spread",
+   "label": "Purdue",
+   "points": -23.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746048|Total|Over|57.5",
+   "event_id": "34746048",
+   "event_name": "Minnesota @ Purdue",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 57.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746048|Total|Under|57.5",
+   "event_id": "34746048",
+   "event_name": "Minnesota @ Purdue",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 57.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746049|Moneyline|Kansas|None",
+   "event_id": "34746049",
+   "event_name": "Kansas @ Utah",
+   "market_type": "Moneyline",
+   "label": "Kansas",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746049|Moneyline|Utah|None",
+   "event_id": "34746049",
+   "event_name": "Kansas @ Utah",
+   "market_type": "Moneyline",
+   "label": "Utah",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746049|Spread|Kansas|7.5",
+   "event_id": "34746049",
+   "event_name": "Kansas @ Utah",
+   "market_type": "Spread",
+   "label": "Kansas",
+   "points": 7.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746049|Spread|Utah|-7.5",
+   "event_id": "34746049",
+   "event_name": "Kansas @ Utah",
+   "market_type": "Spread",
+   "label": "Utah",
+   "points": -7.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746049|Total|Over|64.5",
+   "event_id": "34746049",
+   "event_name": "Kansas @ Utah",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 64.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746049|Total|Under|64.5",
+   "event_id": "34746049",
+   "event_name": "Kansas @ Utah",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 64.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34745984|Moneyline|James Madison|None",
+   "event_id": "34745984",
+   "event_name": "James Madison @ Georgia Southern",
+   "market_type": "Moneyline",
+   "label": "James Madison",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34745984|Moneyline|Georgia Southern|None",
+   "event_id": "34745984",
+   "event_name": "James Madison @ Georgia Southern",
+   "market_type": "Moneyline",
+   "label": "Georgia Southern",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34745984|Spread|James Madison|-9.5",
+   "event_id": "34745984",
+   "event_name": "James Madison @ Georgia Southern",
+   "market_type": "Spread",
+   "label": "James Madison",
+   "points": -9.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34745984|Spread|Georgia Southern|9.5",
+   "event_id": "34745984",
+   "event_name": "James Madison @ Georgia Southern",
+   "market_type": "Spread",
+   "label": "Georgia Southern",
+   "points": 9.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34745984|Total|Over|43.5",
+   "event_id": "34745984",
+   "event_name": "James Madison @ Georgia Southern",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 43.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34745984|Total|Under|43.5",
+   "event_id": "34745984",
+   "event_name": "James Madison @ Georgia Southern",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 43.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746050|Moneyline|Hawaii|None",
+   "event_id": "34746050",
+   "event_name": "Hawaii @ Arizona State",
+   "market_type": "Moneyline",
+   "label": "Hawaii",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746050|Moneyline|Arizona State|None",
+   "event_id": "34746050",
+   "event_name": "Hawaii @ Arizona State",
+   "market_type": "Moneyline",
+   "label": "Arizona State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746050|Spread|Hawaii|22.5",
+   "event_id": "34746050",
+   "event_name": "Hawaii @ Arizona State",
+   "market_type": "Spread",
+   "label": "Hawaii",
+   "points": 22.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746050|Spread|Arizona State|-22.5",
+   "event_id": "34746050",
+   "event_name": "Hawaii @ Arizona State",
+   "market_type": "Spread",
+   "label": "Arizona State",
+   "points": -22.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746050|Total|Over|55.5",
+   "event_id": "34746050",
+   "event_name": "Hawaii @ Arizona State",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 55.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746050|Total|Under|55.5",
+   "event_id": "34746050",
+   "event_name": "Hawaii @ Arizona State",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 55.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746051|Moneyline|Boise State|None",
+   "event_id": "34746051",
+   "event_name": "Boise State @ Fresno State",
+   "market_type": "Moneyline",
+   "label": "Boise State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746051|Moneyline|Fresno State|None",
+   "event_id": "34746051",
+   "event_name": "Boise State @ Fresno State",
+   "market_type": "Moneyline",
+   "label": "Fresno State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746051|Spread|Boise State|-3.5",
+   "event_id": "34746051",
+   "event_name": "Boise State @ Fresno State",
+   "market_type": "Spread",
+   "label": "Boise State",
+   "points": -3.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746051|Spread|Fresno State|3.5",
+   "event_id": "34746051",
+   "event_name": "Boise State @ Fresno State",
+   "market_type": "Spread",
+   "label": "Fresno State",
+   "points": 3.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746051|Total|Over|52.5",
+   "event_id": "34746051",
+   "event_name": "Boise State @ Fresno State",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 52.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34746051|Total|Under|52.5",
+   "event_id": "34746051",
+   "event_name": "Boise State @ Fresno State",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 52.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788187|Moneyline|Delaware|None",
+   "event_id": "34788187",
+   "event_name": "Delaware @ Middle Tennessee",
+   "market_type": "Moneyline",
+   "label": "Delaware",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788187|Moneyline|Middle Tennessee|None",
+   "event_id": "34788187",
+   "event_name": "Delaware @ Middle Tennessee",
+   "market_type": "Moneyline",
+   "label": "Middle Tennessee",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788187|Spread|Delaware|-1.5",
+   "event_id": "34788187",
+   "event_name": "Delaware @ Middle Tennessee",
+   "market_type": "Spread",
+   "label": "Delaware",
+   "points": -1.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788187|Spread|Middle Tennessee|1.5",
+   "event_id": "34788187",
+   "event_name": "Delaware @ Middle Tennessee",
+   "market_type": "Spread",
+   "label": "Middle Tennessee",
+   "points": 1.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788187|Total|Over|48.5",
+   "event_id": "34788187",
+   "event_name": "Delaware @ Middle Tennessee",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 48.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788187|Total|Under|48.5",
+   "event_id": "34788187",
+   "event_name": "Delaware @ Middle Tennessee",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 48.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788188|Moneyline|FIU|None",
+   "event_id": "34788188",
+   "event_name": "FIU @ Jacksonville State",
+   "market_type": "Moneyline",
+   "label": "FIU",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788188|Moneyline|Jacksonville State|None",
+   "event_id": "34788188",
+   "event_name": "FIU @ Jacksonville State",
+   "market_type": "Moneyline",
+   "label": "Jacksonville State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788188|Spread|FIU|3",
+   "event_id": "34788188",
+   "event_name": "FIU @ Jacksonville State",
+   "market_type": "Spread",
+   "label": "FIU",
+   "points": 3,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788188|Spread|Jacksonville State|-3",
+   "event_id": "34788188",
+   "event_name": "FIU @ Jacksonville State",
+   "market_type": "Spread",
+   "label": "Jacksonville State",
+   "points": -3,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788188|Total|Over|45.5",
+   "event_id": "34788188",
+   "event_name": "FIU @ Jacksonville State",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 45.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788188|Total|Under|45.5",
+   "event_id": "34788188",
+   "event_name": "FIU @ Jacksonville State",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 45.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788200|Moneyline|Colorado State|None",
+   "event_id": "34788200",
+   "event_name": "Colorado State @ Texas State",
+   "market_type": "Moneyline",
+   "label": "Colorado State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788200|Moneyline|Texas State|None",
+   "event_id": "34788200",
+   "event_name": "Colorado State @ Texas State",
+   "market_type": "Moneyline",
+   "label": "Texas State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788200|Spread|Colorado State|12.5",
+   "event_id": "34788200",
+   "event_name": "Colorado State @ Texas State",
+   "market_type": "Spread",
+   "label": "Colorado State",
+   "points": 12.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788200|Spread|Texas State|-12.5",
+   "event_id": "34788200",
+   "event_name": "Colorado State @ Texas State",
+   "market_type": "Spread",
+   "label": "Texas State",
+   "points": -12.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788200|Total|Over|67.5",
+   "event_id": "34788200",
+   "event_name": "Colorado State @ Texas State",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 67.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34788200|Total|Under|67.5",
+   "event_id": "34788200",
+   "event_name": "Colorado State @ Texas State",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 67.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226106|Moneyline|Florida State|None",
+   "event_id": "34226106",
+   "event_name": "Florida State @ Miami FL",
+   "market_type": "Moneyline",
+   "label": "Florida State",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226106|Moneyline|Miami FL|None",
+   "event_id": "34226106",
+   "event_name": "Florida State @ Miami FL",
+   "market_type": "Moneyline",
+   "label": "Miami FL",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226106|Spread|Florida State|21",
+   "event_id": "34226106",
+   "event_name": "Florida State @ Miami FL",
+   "market_type": "Spread",
+   "label": "Florida State",
+   "points": 21,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226106|Spread|Miami FL|-21",
+   "event_id": "34226106",
+   "event_name": "Florida State @ Miami FL",
+   "market_type": "Spread",
+   "label": "Miami FL",
+   "points": -21,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226106|Total|Over|56.5",
+   "event_id": "34226106",
+   "event_name": "Florida State @ Miami FL",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 56.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226106|Total|Under|56.5",
+   "event_id": "34226106",
+   "event_name": "Florida State @ Miami FL",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 56.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226092|Moneyline|Notre Dame|None",
+   "event_id": "34226092",
+   "event_name": "Notre Dame @ BYU",
+   "market_type": "Moneyline",
+   "label": "Notre Dame",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226092|Moneyline|BYU|None",
+   "event_id": "34226092",
+   "event_name": "Notre Dame @ BYU",
+   "market_type": "Moneyline",
+   "label": "BYU",
+   "points": null,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226092|Spread|Notre Dame|-12.5",
+   "event_id": "34226092",
+   "event_name": "Notre Dame @ BYU",
+   "market_type": "Spread",
+   "label": "Notre Dame",
+   "points": -12.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226092|Spread|BYU|12.5",
+   "event_id": "34226092",
+   "event_name": "Notre Dame @ BYU",
+   "market_type": "Spread",
+   "label": "BYU",
+   "points": 12.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226092|Total|Over|49.5",
+   "event_id": "34226092",
+   "event_name": "Notre Dame @ BYU",
+   "market_type": "Total",
+   "label": "Over",
+   "points": 49.5,
+   "close_p_display": null
+  },
+  {
+   "market_key": "34226092|Total|Under|49.5",
+   "event_id": "34226092",
+   "event_name": "Notre Dame @ BYU",
+   "market_type": "Total",
+   "label": "Under",
+   "points": 49.5,
+   "close_p_display": null
+  }
+ ],
+ "outcome_sources": {
+  "S1_nash_settled": "fresh nash pull post-game: markets flip to settled; authorized browser session",
+  "S2_kalshi": "KXNFLGAME-26OCT11PHIJAC settles \u2192 winner known keylessly",
+  "S3_espn_nflverse": "final scores \u2192 ML/spread/total grading (game-level)"
+ },
+ "residuals": {
+  "R1_line_move": "per selection: p_close \u2212 p_open (COMPUTED, in resid_vs_close_gamelines.json, 71 pairs / 40 moved)",
+  "R2_close_vs_outcome": "per selection: (p_close \u2212 outcome_indicator), where outcome_indicator \u2208 {0,1} from S1/S2/S3",
+  "R3_model_vs_close": "when our engine prices the same market: (p_model \u2212 p_close); needs the 262-fit player props (separate close pull, subcat 9524/16569-16571) \u2014 NOT this stamp",
+  "R4_brier_vs_close": "mean[(p_close \u2212 o)\u00b2] \u2212 mean[(p_model \u2212 o)\u00b2] > 0 for model-skill claim"
+ },
+ "criteria": {
+  "C1_coverage": ">= 60 of 71 matched selection pairs must have a settled outcome from S1/S2/S3",
+  "C2_calibration": "mean |p_close \u2212 outcome| <= 0.50 across settled selections (the close must be sane first; if the close is insane, the test is invalid, not the model)",
+  "C3_model_skill": "R4 > 0 (model beats close on Brier) with n >= 60 settled selections",
+  "C4_directional": "signed mean of R2 per selection-side != 0 at |t| >= 2.0 (public-bias direction check; diagnostic only)",
+  "fail": "any C not met \u2192 stamp = REFUSED, reopen condition logged, nothing promoted"
+ },
+ "kill_ledger_template": {
+  "event": "RVC_MODEL_SKILL_STAMP",
+  "frozen_manifest_sha16": "a146e3663410c85a",
+  "close_snapshot": "nash_gamelines_87637_4518_CLOSE.json",
+  "settled_n": "<filled at grade time>",
+  "brier_close": "<filled>",
+  "brier_model": "<filled>",
+  "verdict": "<PASS or REFUSED>",
+  "label": "DIAGNOSTIC"
+ },
+ "label": "DIAGNOSTIC"
+}

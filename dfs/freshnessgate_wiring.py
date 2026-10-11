@@ -33,7 +33,10 @@ def _parse_ts(ts):
         if s.startswith('/Date('):  # DK /Date(ms)/ format
             ms = int(s[6:s.index(')')])
             return datetime.fromtimestamp(ms / 1000, tz=timezone.utc)
-        return datetime.fromisoformat(s)
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:  # date-only / naive stamps — assume UTC
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
     except Exception:
         return None
 
@@ -76,7 +79,7 @@ def read_fresh(path, max_age_hours=FRESHNESS_DEFAULT_H, require_manifest=True):
                 d = {'rows': list(csv.DictReader(f))}
 
         ts_raw = None
-        for key in ('observed_at', 'pull_time', 'frozen_at', 'generated_at', 'captured_at', 'date_pulled'):
+        for key in ('observed_at', 'pull_time', 'frozen_at', 'generated_at', 'captured_at', 'date_pulled', 'captured'):
             if isinstance(d, dict) and d.get(key):
                 ts_raw = d[key]
                 break
@@ -111,6 +114,10 @@ def read_fresh(path, max_age_hours=FRESHNESS_DEFAULT_H, require_manifest=True):
                 for v in d.values():
                     if isinstance(v, list):
                         rowcount += len(v)
+                    elif isinstance(v, dict):  # dict-of-lists (e.g. fits: {cat: [...]})
+                        for vv in v.values():
+                            if isinstance(vv, list):
+                                rowcount += len(vv)
             if rowcount == 0:
                 fm = 'F4_INCOMPLETE'
                 detail = 'fresh stamp but zero data rows'

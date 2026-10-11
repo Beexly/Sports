@@ -283,3 +283,10 @@
 - **Delta stream shape** (from client.js callback wiring): {data:{add:{events,markets},change,remove}, metadata:{publishedTime}} — a proper diff stream for live odds.
 - **Prod transport = Msgpack** (connectionFormat config), test = Json. Files landed: dk_sb_client.js (1.6MB), dk_datalayer.js (101KB), WS_PROTOCOL_MAP.json
 - All protocol knowledge → THE_FLOOR protocol layer. Diagnostic; no market use until token flow captured.
+
+### [03:20] RVC GRADING PATH PRE-REGISTERED + FreshnessGate v2.1 fixes
+- **dfs/GRADING_PLAN.json**: the post-settlement grading contract, prepared BEFORE any outcome exists (zero fabrication): 71 join keys (event|marketType|label|points) across 13 CFB events; 3 outcome sources (S1 nash settled pull / S2 Kalshi / S3 ESPN scores); 4 residual definitions (R1 line-move computed, R2 close-vs-outcome, R3 model-vs-close, R4 Brier delta); 4 pre-registered criteria (C1 coverage ≥60/71, C2 close sanity |p−o|≤0.50, C3 model skill R4>0 n≥60, C4 directional t≥2.0)
+- **Kill-ledger template pre-written** (RVC_MODEL_SKILL_STAMP entry shape) — --grade appends real numbers when settlement lands; refuses without real data
+- **FreshnessGate v2.1 fixes (self-test still 5/5)**: (a) dict-of-lists rowcount (fits:{pass:[...]}) — F4 false-positive on frozen artifact fixed; (b) 'captured' stamp-key alias added; (c) naive-timestamp UTC assumption (date-only stamps) — offset-naive crash fixed
+- **Manifest-of-manifests pattern**: pointer file read w/ require_manifest=False, artifact read w/ full gate + sha256 match verified (a146e366... ✓)
+- All DIAGNOSTIC. Grade step refuses without real settlement data.
