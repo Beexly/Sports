@@ -473,3 +473,9 @@
 - **Third independent confirmation**: bad-throw% flat in pressure (0.149→0.172). Pressure effects live in the QB class × completion decision, not throw quality. Prop models should condition on WHO, not HOW MUCH.
 - Also landed: PFR weekly pressure curve 2026 (150 QB-weeks), rush/rec advstats 2026.
 - DIAGNOSTIC. Nothing promoted.
+
+### [09:05] RECEIVER PROP WATCHLISTS BORN — snaps × broken tackles × drops (351-player join)
+- **dfs/receiver_watchlist_2026.csv + receiver_hands_watch_2026.csv + RECEIVER_WATCHLIST_STAMP.json**
+- **YAC machines** (snap%≥70, BT/g≥0.75, drops/g≤0.3): Puka Nacua, Rome Odunze, Trey McBride.
+- **Hands regression** (snap%≥60, drops≥4): Jameson Williams (5 drops/4g at 90.5% snaps), Tucker Kraft (5/4 at 83%).
+- First player-resolved prop-shape artifact: volume × creation × hands. DIAGNOSTIC only — residual-vs-close needs the quote feed.
