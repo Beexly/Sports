@@ -1,0 +1,21 @@
+{
+ "observed_at": "2026-10-11T14:48:27Z",
+ "question": "did the telegram bot pull the pre-lock entries?",
+ "answers": {
+  "telegram": "YES \u2014 bot delivered the test plan (tg_land.txt: sent=True, Oct 10 20:02). Your two consensus steers (19:49, 20:20) arrived but the pull failed pre-lock.",
+  "prelock_entries": "NO \u2014 field lineup consensus not captured. Locked out: getupcominglineups 404, lineups API 403 (IP wall), gamecenter redirected to lobby pre-lock. The pull needed the browser session that is now bot-walled for automation.",
+  "postlock_state": "gamecenter LIVE now (200, leaderboard embedded) BUT chrome-wf DFS session expired (~12h TTL) \u2192 redirects to login. api.draftkings leaderboard 403 from this IP."
+ },
+ "unblock": "USER ACTION NEEDED (2 min): log into DK in any Chrome window on this machine, then I re-pull with your live session (your profile or refreshed cookie export). Post-lock entries + full field are public \u2014 consensus enumeration + JEV grade unlock the moment we have it. Game settles ~12:30 ET.",
+ "what_we_have": [
+  "player pools (both slates)",
+  "contest list + entry counts",
+  "payout ladders",
+  "our 8 ILP portfolios"
+ ],
+ "what_we_missed": [
+  "field lineup consensus (the JEV DupRisk input)",
+  "user entry history"
+ ],
+ "label": "DIAGNOSTIC"
+}

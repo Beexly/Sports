@@ -581,3 +581,8 @@
 - **THE UNIFIED READING**: every within-week efficiency metric correlates NEGATIVELY with next-week ATS — the mean-reversion the market prices. None survives held-out + bootstrap. The queued intel-build items are all describe-only at team level.
 - Column audit: all six had their required columns (Q11 partial — drive_yards missing, worked around with fixed_drive_result; Q23 missing run_length — big_play proxy used).
 - DIAGNOSTIC. Nothing promoted.
+
+### [15:20] ENTRIES STATUS — Telegram delivered; pre-lock consensus NOT captured; post-lock needs live session
+- **dfs/ENTRIES_STATUS.json**: Telegram bot delivered the test plan (sent=True 20:02 Oct 10). Pre-lock field-consensus pull FAILED (lineups API 403 IP-wall + gamecenter lobby-redirect + getupcominglineups 404). chrome-wf DFS session now expired (~12h TTL → login redirect).
+- **Have**: pools, contest list, payout ladders, our 8 ILP portfolios. **Missed**: field lineup consensus (JEV DupRisk input), user entry history.
+- **Unblock (user, 2 min)**: log into DK in any local Chrome → fresh session → post-lock full-field pull (public, works via gamecenter while game live). Game settles ~12:30 ET → JEV RVC + consensus enumeration both unlock.
