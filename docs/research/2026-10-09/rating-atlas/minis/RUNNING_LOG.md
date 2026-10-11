@@ -331,3 +331,11 @@
 - Sign convention documented: nflverse spread_line += home favored; home_diff aligned via posteam/home_team.
 - **THE LESSON (documented)**: in-sample distribution gains shrink vs the efficient close — the close is already Gaussian-shaped. Real edge must come from σ(T) conditioning + skew cells, not the global shape.
 - All DIAGNOSTIC. Nothing promoted.
+
+### [04:10] B4 OFFICIALS RVC — INFRASTRUCTURE PASS, full join chain cracked
+- **Bridge chain**: schedules.old_game_id == officials.game_id (3,041 games) + schedules(season,week,home_team) == pbp game_id (855/855 linked) → **855 games w/ referee + penalties + closings joined end-to-end**
+- **18 referee crews (n≥10)** profiled: penalty counts 10.8-16.1/game, totals-residual means +1.36 to +6.25. League mean +1.095.
+- **Bonferroni-corrected test: 0/18 crews survive** — no referee totals edge at the multiple-comparisons bar. Alex Moore +6.25 (n=16) is the largest deviation but doesn't clear.
+- pen_count × totals residual r = +0.094 (weak)
+- Honest: officials effect exists in the data (crew dispersion 1.668) but NO single crew is distinguishable from noise at n≤52 games. Reopen: accumulate 2026 weeks → n grows → re-test borderline crews (Moore/Torbert) w/ more power.
+- **INFRASTRUCTURE PASS stamped** (dfs/B4_OFFICIALS_STAMP.json + b4_crew_profiles.csv + b4_game_referee_joined.csv). DIAGNOSTIC.

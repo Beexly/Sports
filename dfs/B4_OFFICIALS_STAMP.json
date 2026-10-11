@@ -1,0 +1,13 @@
+{
+ "observed_at": "2026-10-11T04:10:16Z",
+ "test": "B4 officials RVC v2 \u2014 referee crews \u00d7 penalties \u00d7 closings (game_id bridge via schedules release)",
+ "sources": "nflverse officials.parquet (22k rows) + schedules.games.parquet (bridge) + pbp 2023-25 penalties",
+ "games_linked": 855,
+ "referees_n10": 18,
+ "league_total_resid_mean": 1.095,
+ "between_referee_sd": 1.668,
+ "refs_surviving_bonferroni": 0,
+ "pen_count_x_totals_r": 0.094,
+ "verdict": "INFRASTRUCTURE PASS \u2014 the full B4 join chain works end-to-end. Crew dispersion measured; Bonferroni-corrected significance is the promotion bar. No crew promoted at this stage.",
+ "label": "DIAGNOSTIC"
+}
