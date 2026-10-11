@@ -124,8 +124,8 @@ class GSEPipeline:
             "brock purdy", "geno smith", "jacoby brissett", "c.j. stroud", "will levis"
         }
 
-        # Role-Security blacklist: Phantoms, non-starters, unproven depth
-        banned_phantoms = {"tre' harris", "tre harris", "drake london"} # London if user specified
+        # Role-Security blacklist: Phantoms, non-starters, unproven depth (unlisted college draftables)
+        banned_phantoms = {"tre' harris", "tre harris"}
 
         for p in self.canonical_players:
             name_lower = p["name"].lower()
