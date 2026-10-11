@@ -617,3 +617,10 @@
   #2 170.6: Cousins — Taylor + Etienne — JSN + Nico + Watson — Bowers — Vikings
   #3 170.2: Purdy — Harvey + Etienne — JSN + Nico + Olave — Bowers — Vikings
 - **LESSON (twice in one hour)**: no single source is fresh. The gate needs THREE layers: injury report + live news (Google News "when:3d" query) + DK pool diff. Layered gate stamped as the build-time requirement.
+
+### [17:00] ACADEMY HARVEST — EVERY TOP-OF-FIELD LINEUP RESOLVED, per-contestant rosters proven
+- **dfs/ACADEMY_ROSTERS_154475.json**: 60/60 distinct top-of-field lineups resolved via the reverse-engineered endpoint `/scores/v2/entries/{dg}/{entryKey}?embed=roster` (in-page authenticated chain). Each roster = CPT/FLEX assignments, live per-player scores + stat lines, and DK's own field-wide percentDrafted.
+- **THE CONSENSUS (showdown 196458728, 23,781 entries)**: CPT Cooper 43% / Washington 30% / Shipley 27% of top entries (vs 25.8/60.3/23.6% field-wide — the top leveraged Cooper HARD). FLEX: Lawrence 98%, Hurts 85%, Washington 70%, Strange 60%, Cooper 57%.
+- **Leverage read**: Cooper CPT 43% top vs 26% field = the winning lever; Shipley CPT 27% top vs 24% field = neutral; Washington CPT 30% top vs 60% field = the SHARK play (under-owned as CPT by the field, over-used by winners).
+- **SUN-MON note**: main slate (154468) leaderboards 404 until games start (~1:00 ET). Same chain resolves every lineup at lock. Afternoon showdowns/Tiers also 404 until their games start.
+- DIAGNOSTIC — the class artifact.
