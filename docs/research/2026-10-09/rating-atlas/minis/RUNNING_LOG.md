@@ -557,3 +557,8 @@
 - **dfs/RESIDUAL_SURFACE_MAP.json**: every open residual mapped to the surface it feeds (live WP, QB props, team totals, WR props, picks, DFS) with its state and exact reopen.
 - **LONDON LIVE**: PHI@JAC In Progress (JAX 7-0, Q2 13:03). EDGE#5 grader refuse-safe; poller fires on Final. JEV grader armed for the showdown.
 - DIAGNOSTIC. Nothing promoted.
+
+### [14:30] LONDON LIVE SNAPSHOT FROZEN — pre-Q3, the OU v2 grading window
+- **dfs/LONDON_LIVE_SNAPSHOT.json**: PHI 0 @ JAX 7, 11:45 left in Q2, frozen under FreshnessGate semantics (observed_at + immutable file). When the game hits Q3, the OU v2 empirical-attractor spec takes over per the live spec — its in-play prediction is gradeable against the final the moment ESPN flips Final (poller fires).
+- The Q2-start score state (JAX +7, ~23.5 min elapsed) is the exact input the OU v2 process needs: attractor lookup by |close| bucket + state T + time remaining → P(final margin) — all pre-registered.
+- DIAGNOSTIC.
