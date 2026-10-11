@@ -1,0 +1,11 @@
+{
+ "observed_at": "2026-10-11T06:49:33Z",
+ "finding": "THE +5.1pp CROSS-BOOK RESIDUAL WAS A LINE MOVE, NOT DISAGREEMENT. JAX -7.5\u2192-8.5 overnight; Kalshi (76.5), DK-ML (76.7), ESPN (73.6) all agree within noise at the current line. Books share the same signal; residuals only exist WITHIN a stable close window.",
+ "grader_update_required": {
+  "DK_SPREAD": "was -7.5, now -8.5 (ESPN pickcenter, provider=DraftKings priority=1)",
+  "P_JAX_dk": "was 0.7136 at -7.5, now 0.7386 at -8.5",
+  "cross_book_divergence": "was +5.1pp, now: Kalshi 0.765 vs DK-ML 0.7674 = -0.2pp (AGREE)"
+ },
+ "lesson": "Cross-book residual measurement MUST snapshot both books in the same minute. A residual measured across hours is a line-move residual, not a book disagreement. This is the difference between arb and stale quotes.",
+ "label": "DIAGNOSTIC"
+}

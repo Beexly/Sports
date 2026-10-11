@@ -445,3 +445,10 @@
 - **Finding**: k sweep monotone — faster kernel decay always predicts better (the market path should die fast). But the parametric kernel loses to the empirical attractor at every k: the data curve captures the build-peak-then-ease shape a single exponential can't.
 - **Verdict**: empirical attractor stays the keeper. Kernel sweep = direction confirmation (re-fit empirical curve with faster late-game decay = next test).
 - DIAGNOSTIC. Nothing promoted.
+
+### [08:05] CROSS-BOOK TIMING LESSON — the +5.1pp was a LINE MOVE, not book disagreement
+- **ESPN summary API (open, no auth)**: predictor JAX 73.6%, pickcenter provider=DraftKings: **JAX -8.5** (moved from -7.5 overnight!), O/U 41.5, PHI ML +330.
+- **At the CURRENT line all three agree**: DK-spread 73.9% / ESPN 73.6% / DK-ML 76.7% / Kalshi (stale) 76.5% — within 0.3pp.
+- **THE LESSON (dfs/CROSSBOOK_TIMING_LESSON.json)**: cross-book residuals must be snapshotted in the same minute. A residual measured across a line move is a TIMING residual, not a disagreement. Last night's +5.1pp = Kalshi repricing a move DK had already made.
+- **Grader update required**: DK_SPREAD -7.5 → -8.5 in rvc_edge5_grade.py before London settles. The pre-registered criteria stay, the DK constant refreshes to the live close.
+- DIAGNOSTIC.
