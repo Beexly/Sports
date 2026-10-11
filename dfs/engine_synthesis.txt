@@ -1,0 +1,18 @@
+=== WHERE THE EDGES ACTUALLY LIVE (synthesis) ===
+
+A. LADDER SHAPE RECONSTRUCTION (ours, working): DK ladder prices → probit → per-player sigma
+   = the distribution the book itself uses. Our 266 CFB fits prove the pipeline. NFL scale-out
+   = same code + tonight's h2 harvest (16,230 rows already in repo + nfl ladders pullable).
+
+B. TAIL MISPRICING = EVT vs GAUSSIAN (registry C): books fit Normal curves; maxima are GEV/GPD.
+   Longest-X props priced off Gaussian quantiles = systematic tail error. The cleanest edge.
+
+C. OWNERSHIP LEVERAGE (tested tonight): ILP with lambda(1-own)*sigma objective — the field
+   census at 9:30 makes own% real. mini-MAX 150-cap contest = dup-cluster harvestable.
+
+D. CROSS-MARKET DIVERGENCE (live now): Kalshi JAC 76.5% / total 42 vs DK salary structure
+   (Hurts top-priced) — the field prices sentiment, Kalshi prices probability.
+
+E. THE 11 UNCLAIMED EQUATIONS (ANGLES_REGISTRY A-K): each has a kill test + data status.
+   Priority: EVT tails, posterior-Kelly, conformal drift gate, Hawkes football, GAS strengths.
+

@@ -225,3 +225,9 @@
 - www.draftkings.com legacy endpoints ALSO h2-accessible shell-side (getavailableplayers 200 no-cookies).
 - **User's $0.50 entry located**: 196458730 NFL Showdown $25K mini-MAX [150 Entry Max] PHI@JAX (balance $60.19→$59.69 confirmed). 35.5K entries, locks 9:30 AM ET. Census target set; plan pushed to Telegram.
 - Session hiccup mid-run (SAML hop) — re-login via vault handled, session restored.
+
+### [00:30] ENGINE-EQUATION DEEP DIVE — verdict + the dark-layer map
+- **DK JS bundles mined exhaustively** (app.js 3.75MB + 22 chunks via CloudFront h2): NO client-side scoring/pricing math exists — draftStatAttributes (ids 90=PPG, -2=pos rank w/ quality), dkGatewayApi config (full host registry extracted: nash BFF family, Kambi eu-offering, sportsDataBase wss://, shelby push gateway, scout/blitz/darwin/curator hosts). The pricing engine is SERVER-side; its outputs are the prop ladders we already reconstruct (16,230-row week-6 harvest + 266 CFB mu/sigma fits = the engine's own curves).
+- **Kambi eu-offering CDN**: geo-gated from this network (connect timeout both shell and browser) — DK's actual odds-source; nash BFF serves the same data browser-side.
+- **Engine-equation synthesis (dfs/engine_synthesis.txt)**: edges live in (A) ladder-shape reconstruction (ours, working), (B) EVT-vs-Gaussian tail mispricing (registry C — book's shape assumption provably wrong on longest-X), (C) ownership leverage via census (mini-MAX 150-cap tonight), (D) Kalshi-vs-DK cross-market divergence (live: JAC 76.5% vs Hurts top-priced), (E) the 11 verified-unclaimed equations in ANGLES_REGISTRY (Hawkes/IRL/EVT/GAS/DML/SC/TDA/N-ODE/Hedge/posterior-Kelly/conformal-gate).
+- Dark-layer discoveries tonight (protocol/fingerprint class): DK api = h2-only; www legacy = h2-open; sportsbook-nash = full-browser-fingerprint Akamai; Kambi CDN = geo-gated; Kalshi = *_dollars fields; Linestar = unauth DNN API; FC obfuscator = RC4 string-table.

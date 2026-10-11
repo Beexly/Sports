@@ -1,0 +1,155 @@
+{
+ "gameTypeId": 1,
+ "gameTypeName": "Classic",
+ "gameTypeDescription": "Create a 9-player lineup while staying under the $50,000 salary cap",
+ "lineupConfigurationId": 1,
+ "salaryCap": {
+  "isEnabled": true,
+  "minValue": 0,
+  "maxValue": 50000
+ },
+ "gameCount": {
+  "isEnabled": true,
+  "minValue": 2,
+  "maxValue": null
+ },
+ "teamCount": {
+  "isEnabled": true,
+  "minValue": 2,
+  "maxValue": null
+ },
+ "uniquePlayers": true,
+ "allowLateSwap": true,
+ "lineupTemplate": [
+  {
+   "rosterSlot": {
+    "id": 66,
+    "name": "QB",
+    "description": "Quarterback",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 1,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 67,
+    "name": "RB",
+    "description": "Running Back",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 2,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 67,
+    "name": "RB",
+    "description": "Running Back",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 3,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 68,
+    "name": "WR",
+    "description": "Wide Receiver",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 4,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 68,
+    "name": "WR",
+    "description": "Wide Receiver",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 5,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 68,
+    "name": "WR",
+    "description": "Wide Receiver",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 6,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 69,
+    "name": "TE",
+    "description": "Tight End",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 7,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 70,
+    "name": "FLEX",
+    "description": "Flex",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 8,
+   "scoringOrder": 0
+  },
+  {
+   "rosterSlot": {
+    "id": 71,
+    "name": "DST",
+    "description": "Defense/Special Teams",
+    "positionTip": null,
+    "positionTipSubtext": null,
+    "notScoring": false
+   },
+   "order": 9,
+   "scoringOrder": 0
+  }
+ ],
+ "errorStatus": null,
+ "rulesUrl": "/help/rules/1/1",
+ "draftType": "SalaryCap",
+ "allowedCompetitionAttributes": null,
+ "scoringDivider": null,
+ "useOptimalLineups": false,
+ "supportsPlayersTab": false,
+ "showByeWeekInfo": false,
+ "glossaryTerms": [
+  {
+   "id": 1,
+   "title": "Fantasy Points per Game",
+   "description": "",
+   "icon": {
+    "icon": null,
+    "iconUrl": "",
+    "iconArenaUrl": "",
+    "iconArenaUrlNight": "",
+    "textLayout": {
+     "text": "FPPG",
+     "fontColor": "#000000",
+     "fontArenaColor": "#4D4D4D",
+     "fontArenaColorNigh
