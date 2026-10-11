@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { blendIndependentHomeFair, gradeSignalPick } from "../generate-signal-slate.js";
-import { GRADE_THRESHOLDS, UNPRICED_MAX_GRADE, computePickGrade } from "@sports/types";
+import { blendIndependentHomeFair } from "../generate-signal-slate.js";
 
 describe("blendIndependentHomeFair", () => {
   it("blends two-way independents without inventing", () => {
@@ -32,57 +31,18 @@ describe("blendIndependentHomeFair", () => {
 // ============================================================================
 // ONE GRADING FUNCTION
 // ============================================================================
-
-/**
- * This file used to carry a private third grade ladder — `confidence >= 80 ->
- * STRONG_PLAY, >= 65 -> SOLID_PLAY` — writing the same words into the same
- * `pickGrade` column the market board writes, with different cut-points and no
- * market involved at all. One site, one word, two meanings.
- *
- * Signal picks have no book line (`bookmakerCount: 0`, `marketFairProb: null`),
- * so there is no Edge Index to grade against. `gradeSignalPick` now delegates to
- * the shared `computePickGrade` with `null` for the price, which applies the
- * confidence rungs and caps the result at `UNPRICED_MAX_GRADE`: the rungs above
- * it are claims about a PRICE, and there is no price to make them about.
- *
- * These assert the WIRING at runtime, not by grepping the source — a delegation
- * claim nobody executes is a delegation claim nobody keeps.
- */
-describe("gradeSignalPick delegates to the one shared grader", () => {
-  it("returns exactly what computePickGrade returns for an unpriced pick", () => {
-    for (const confidence of [50, 60, 64, 65, 70, 75, 80, 85, 95, 100]) {
-      expect(gradeSignalPick(confidence)).toBe(computePickGrade(confidence, null));
-    }
-  });
-
-  it("caps an unpriced pick at SOLID_PLAY however confident the model is", () => {
-    expect(UNPRICED_MAX_GRADE).toBe("SOLID_PLAY");
-    for (const confidence of [65, 80, 90, 100]) {
-      expect(gradeSignalPick(confidence)).toBe("SOLID_PLAY");
-    }
-  });
-
-  it("is STRICTLY stricter than the retired local ladder", () => {
-    // Retired: confidence >= 80 => STRONG_PLAY, >= 65 => SOLID_PLAY, else LEAN.
-    const retired = (c: number) =>
-      c >= 80 ? "STRONG_PLAY" : c >= 65 ? "SOLID_PLAY" : "LEAN";
-    const rank = { LEAN: 0, SOLID_PLAY: 1, STRONG_PLAY: 2, ELITE_PLAY: 3 } as const;
-
-    let demoted = 0;
-    for (let confidence = 50; confidence <= 100; confidence++) {
-      const before = retired(confidence) as keyof typeof rank;
-      const after = gradeSignalPick(confidence) as keyof typeof rank;
-      // No signal pick may GAIN a rung from this change.
-      expect(rank[after], `confidence ${confidence} was promoted`).toBeLessThanOrEqual(
-        rank[before],
-      );
-      if (rank[after] < rank[before]) demoted++;
-    }
-    // …and the change is not a no-op: the >= 80 band really does lose a rung.
-    expect(demoted).toBe(21); // confidence 80..100 inclusive
-  });
-
-  it("still awards LEAN below the lowest confidence rung", () => {
-    expect(gradeSignalPick(GRADE_THRESHOLDS.SOLID_PLAY.confidence - 1)).toBe("LEAN");
-  });
-});
+//
+// STALE PIN REMOVED 2026-10-11 (hermes): this file carried a `gradeSignalPick`
+// delegation suite asserting an unpriced signal pick may reach SOLID_PLAY at
+// confidence >= 65 via computePickGrade(c, null). That design (d3e853574,
+// 2026-08-25) was deliberately superseded on main by 97529b60a (2026-09-13,
+// "publish one model signal per matchup, and grade it LEAN"): of the 44 rows
+// graded SOLID_PLAY or better, 35 (80%) had bookmakerCount 0 - a pure signal
+// has no market to measure an edge against, so the lane is LEAN, always, and
+// "raising a model signal above LEAN again means giving it a real market to
+// be measured against, not a looser threshold". PR #1104's rebase of the
+// older design re-introduced this block after that supersession, so the
+// export it names does not exist at HEAD and the suite could never run.
+// The live invariant ("model-signal lane: grade is LEAN, always") is pinned
+// by ./signal-slate-series-and-grade.test.ts, the authoritative suite for
+// this contract.
