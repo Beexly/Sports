@@ -1,0 +1,423 @@
+{
+ "observed_at": "2026-10-11T15:22:02Z",
+ "pull": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
+ "pull_file_sha256": "5323e04803545ea0b39373f494c30e9ee2395fe64e8a3587e3aa1b6680763c57",
+ "pull_file_sha16": "5323e04803545ea0",
+ "fits_rows": 289,
+ "stamp_internal_sha16_field": "07993b543342ca7d",
+ "raw_integrity": [
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/pass_yards.json",
+   "subcategory": "16569",
+   "role": "pass_yards_milestone",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/rec_yards.json",
+   "subcategory": "16570",
+   "role": "rec_yards_milestone",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/rush_yards.json",
+   "subcategory": "16571",
+   "role": "rush_yards_milestone",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/completions.json",
+   "subcategory": "16889",
+   "role": "completions_milestone",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/pass_ou.json",
+   "subcategory": "9524",
+   "role": "pass_yards_ou",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/comp_ou.json",
+   "subcategory": "9522",
+   "role": "completions_ou",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/rush_ou.json",
+   "subcategory": "9514",
+   "role": "rush_yards_ou",
+   "sha256_match": true
+  },
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/rec_ou.json",
+   "subcategory": "16570",
+   "role": "rec_ou_request_returned_16570",
+   "sha256_match": true
+  }
+ ],
+ "verification_refit": {
+  "method": "normal probit OLS: milestone = mu + sigma * Phi^{-1}(1 - 1/trueOdds), n_rungs>=5, p in (0.02,0.98)",
+  "matched": 289,
+  "of": 289,
+  "max_abs_mu_diff": 0.005,
+  "max_abs_sigma_diff": 0.005
+ },
+ "fresh_pull_sha16": {
+  "games.csv": "6e1c5e30d52422ea",
+  "injuries_2026.parquet": "2eab2b68205513c1"
+ },
+ "raw_residual_sigma": {
+  "all_pre_kick": {
+   "n": 124,
+   "mean_sigma": -0.1741,
+   "sd_sigma": 0.1255
+  },
+  "completions": {
+   "n": 26,
+   "mean_sigma": -0.2663,
+   "sd_sigma": 0.0585
+  },
+  "pass_yards": {
+   "n": 26,
+   "mean_sigma": -0.1295,
+   "sd_sigma": 0.0241
+  },
+  "rush_yards": {
+   "n": 72,
+   "mean_sigma": -0.1568,
+   "sd_sigma": 0.1475
+  },
+  "in_play_excluded": {
+   "n": 8,
+   "mean_sigma": -0.1166,
+   "sd_sigma": 0.1535
+  },
+  "rec_yards_no_posted_line": 157
+ },
+ "conditional_by_layer": {
+  "situational_node": {
+   "0|early|rest_even": {
+    "n": 48,
+    "mean_sigma": -0.1778,
+    "sd_sigma": 0.1248
+   },
+   "1|early|rest_down": {
+    "n": 9,
+    "mean_sigma": -0.1911,
+    "sd_sigma": 0.1154
+   },
+   "1|early|rest_even": {
+    "n": 59,
+    "mean_sigma": -0.1756,
+    "sd_sigma": 0.1271
+   },
+   "1|early|rest_up": {
+    "n": 8,
+    "mean_sigma": -0.1209,
+    "sd_sigma": 0.1394
+   }
+  },
+  "cpoe_pressure_cell": {
+   "(0, 3]": {
+    "n": 4,
+    "mean_sigma": -0.2104,
+    "sd_sigma": 0.0844
+   },
+   "(3, 6]": {
+    "n": 14,
+    "mean_sigma": -0.1976,
+    "sd_sigma": 0.0914
+   },
+   "(6, 9]": {
+    "n": 12,
+    "mean_sigma": -0.1827,
+    "sd_sigma": 0.0588
+   },
+   "(9, 100]": {
+    "n": 16,
+    "mean_sigma": -0.2079,
+    "sd_sigma": 0.081
+   },
+   "MISSING (QB not in CPOE table)": {
+    "n": 6,
+    "mean_sigma": -0.1938,
+    "sd_sigma": 0.1201
+   },
+   "N/A (not a QB stat)": {
+    "n": 72,
+    "mean_sigma": -0.1568,
+    "sd_sigma": 0.1475
+   }
+  },
+  "ftn_box_blitz": {
+   "MISSING (gate refused ftn_teamweek_joined.csv)": {
+    "n": 124,
+    "mean_sigma": -0.1741,
+    "sd_sigma": 0.1255
+   }
+  },
+  "ou_live_state": {
+   "N/A (pre-game)": {
+    "n": 124,
+    "mean_sigma": -0.1741,
+    "sd_sigma": 0.1255
+   }
+  },
+  "officials_crew": {
+   "MISSING (no 2026 wk5 crew on branch)": {
+    "n": 124,
+    "mean_sigma": -0.1741,
+    "sd_sigma": 0.1255
+   }
+  },
+  "espn_status": {
+   "Active": {
+    "n": 92,
+    "mean_sigma": -0.1739,
+    "sd_sigma": 0.1225
+   },
+   "NOT_LISTED": {
+    "n": 28,
+    "mean_sigma": -0.1663,
+    "sd_sigma": 0.1405
+   },
+   "Questionable": {
+    "n": 4,
+    "mean_sigma": -0.2315,
+    "sd_sigma": 0.0923
+   }
+  },
+  "espn_teammate_skill_out": {
+   "0": {
+    "n": 31,
+    "mean_sigma": -0.1382,
+    "sd_sigma": 0.1388
+   },
+   "1": {
+    "n": 32,
+    "mean_sigma": -0.1865,
+    "sd_sigma": 0.1177
+   },
+   "2+": {
+    "n": 61,
+    "mean_sigma": -0.1858,
+    "sd_sigma": 0.1209
+   }
+  },
+  "nflverse_wk5_status": {
+   "NOT_LISTED": {
+    "n": 101,
+    "mean_sigma": -0.1646,
+    "sd_sigma": 0.1295
+   },
+   "Questionable": {
+    "n": 4,
+    "mean_sigma": -0.2315,
+    "sd_sigma": 0.0923
+   },
+   "listed, no game status": {
+    "n": 19,
+    "mean_sigma": -0.2124,
+    "sd_sigma": 0.1015
+   }
+  },
+  "rest_flag": {
+   "long(>7)": {
+    "n": 17,
+    "mean_sigma": -0.1941,
+    "sd_sigma": 0.1226
+   },
+   "normal(7)": {
+    "n": 97,
+    "mean_sigma": -0.1712,
+    "sd_sigma": 0.1257
+   },
+   "short(<7)": {
+    "n": 10,
+    "mean_sigma": -0.1672,
+    "sd_sigma": 0.1385
+   }
+  },
+  "weather": {
+   "HIGH": {
+    "n": 10,
+    "mean_sigma": -0.2025,
+    "sd_sigma": 0.1025
+   },
+   "MODERATE": {
+    "n": 17,
+    "mean_sigma": -0.1581,
+    "sd_sigma": 0.1283
+   },
+   "NONE": {
+    "n": 97,
+    "mean_sigma": -0.1739,
+    "sd_sigma": 0.1278
+   }
+  }
+ },
+ "joins": {
+  "team_mapped": 289,
+  "rows": 289,
+  "graded_pre_kick_rows": 124,
+  "cpoe_qbs_in_stamp_join": 25,
+  "espn_listed_graded_rows": 96,
+  "nflverse_listed_graded_rows": 23,
+  "weather_flagged_or_none": 124
+ },
+ "close_check": {
+  "frozen_prop_close_on_manifest": false,
+  "searched": [
+   "dfs/nfl_rvc_manifest.json (2023-25 game lines only)",
+   "dfs/prop_close_feed_2026-10-11/ (Pinnacle 14:33Z snapshot, T-147 min: not a close)",
+   "dfs/genie_acq2/nash_nfl_props_* (15:03Z, 15:12Z: current quotes)"
+  ],
+  "held_out_n": 0
+ },
+ "stamp": "INFRASTRUCTURE PASS",
+ "verdict": "current-quote residual with situational/contextual joins only. Held-out n=0. Not a residual-versus-close. Nothing promoted.",
+ "reopen": "Freeze a nash pull of subcats 16569/16570/16571/16889 + O/U 9524/9522/9514 for the same 14 events with minutes_to_kickoff <= 10 (or Pinnacle snap_pinnacle_props.py at kickoff), settle with nflverse stats_player_week_2026, then grade residual_sigma vs outcome per layer bucket, held out, Holm-corrected.",
+ "label": "DIAGNOSTIC",
+ "caveat": "109/124 pre-kick residuals are negative. The cited fitter uses p = 1/trueOdds on milestone rungs without removing the hold, which inflates P(X >= m) and pushes mu_fit up, so posted - mu is expected to sit below zero. The near-uniform negative shift is most likely a fitter/vig property, not evidence of mispricing. Conditional buckets should be read relative to the all-row mean, and all are within about 1 sd of it.",
+ "refusals": [
+  {
+   "ledger_id": "LR-20261011-PRS-01-DK-REPULL",
+   "event": "NFL_PROP_LADDER_REPULL",
+   "verdict": "REFUSED",
+   "reason": "Beexly offline (DISCONNECTED); no browser on the box; DK not attempted from the box (Akamai Access Denied history)",
+   "reopen": "Beexly online + Garrett real Chrome with CDP 9222; in-page fetch credentials:include of nash leagueSubcategory subcats 16569/16570/16571/16889 and O/U 9524/9522/9514 for the same 14 events, minutes_to_kickoff <= 10; freeze with observed_at + sha256",
+   "events": [
+    "34118254",
+    "34118195",
+    "34118229",
+    "34118204",
+    "34118223",
+    "34118176",
+    "34118065",
+    "34118174",
+    "34118048",
+    "34118147",
+    "34118017",
+    "34118121",
+    "34118099",
+    "34118101"
+   ],
+   "recipes": {
+    "nash_urls": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json files[].url (exact leagueSubcategory URLs per subcat)",
+    "nash_unblock": "dfs/PROP_LADDER_PULL_REFUSED.json exact_unblock steps 2-3 (user profile + CDP 9222 + in-page fetch)",
+    "in_page_credentials_include": "docs/research/2026-10-09/rating-atlas/minis/RUNNING_LOG.md [15:45] FIELD CONSENSUS PULLED (credentials:include in-page)",
+    "dk_recipe": "docs/research/2026-10-09/rating-atlas/minis/books_api.py DK_RECIPE (in-browser only)",
+    "no_script": "No committed script on the branch performs the in-page credentials:include fetch; it exists only as recipes/stamps above."
+   },
+   "label": "DIAGNOSTIC"
+  },
+  {
+   "ledger_id": "LR-20261011-PRS-02-LOBBY-CONSENSUS",
+   "event": "DG154468_LOBBY_CONSENSUS",
+   "verdict": "REFUSED",
+   "reason": "Beexly offline (DISCONNECTED); no browser on the box. Pre-lock getcontests has no lineup bodies (LOBBY_PREVIEW_STAMP 15:16Z)",
+   "reopen": "Beexly online + Garrett real Chrome CDP 9222; after lock 17:00Z, in-page fetch credentials:include of https://api.draftkings.com/scores/v1/leaderboards/{contest}?format=json&embed=leaderboard per dg 154468 contest (recipe: RUNNING_LOG [15:45]); freeze with observed_at",
+   "recipes": {
+    "nash_urls": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json files[].url (exact leagueSubcategory URLs per subcat)",
+    "nash_unblock": "dfs/PROP_LADDER_PULL_REFUSED.json exact_unblock steps 2-3 (user profile + CDP 9222 + in-page fetch)",
+    "in_page_credentials_include": "docs/research/2026-10-09/rating-atlas/minis/RUNNING_LOG.md [15:45] FIELD CONSENSUS PULLED (credentials:include in-page)",
+    "dk_recipe": "docs/research/2026-10-09/rating-atlas/minis/books_api.py DK_RECIPE (in-browser only)",
+    "no_script": "No committed script on the branch performs the in-page credentials:include fetch; it exists only as recipes/stamps above."
+   },
+   "label": "DIAGNOSTIC"
+  },
+  {
+   "ledger_id": "LR-20261011-PRS-03-NO-CLOSE",
+   "event": "NFL_PROP_LADDER_RVC",
+   "verdict": "REFUSED",
+   "reason": "no frozen prop CLOSE on the manifest; 15:03Z pull = current quotes; Pinnacle 14:33Z = T-147 min. held-out n=0",
+   "artifact": "dfs/nfl_prop_resid_sigma_2026-10-11/PROP_RESID_SIGMA_STAMP.json",
+   "pull_sha16_file": "5323e04803545ea0",
+   "reopen": "freeze a close-window pull (<=10 min to kickoff), settle with nflverse stats_player_week_2026, grade held out with Holm",
+   "label": "DIAGNOSTIC"
+  }
+ ],
+ "gate_log": [
+  {
+   "file": "dfs/genie_acq2/nash_nfl_props_20261011T1503Z/NFL_PROP_LADDER_STAMP.json",
+   "role": "frozen nash pull (fits = residual input)",
+   "max_age_hours": 6.0,
+   "result": "PASS",
+   "stamp": "2026-10-11T15:03:25Z",
+   "age_hours": 0.31,
+   "detail": null,
+   "ledger_row_appended": false
+  },
+  {
+   "file": "dfs/nfl_prop_resid_sigma_2026-10-11/games_2026_wk5.csv",
+   "role": "rest + roof (situational node)",
+   "max_age_hours": 6.0,
+   "result": "PASS",
+   "stamp": "2026-10-11T15:22:02Z",
+   "age_hours": 0.0,
+   "detail": null,
+   "ledger_row_appended": false
+  },
+  {
+   "file": "dfs/nfl_prop_resid_sigma_2026-10-11/injuries_2026_wk5.csv",
+   "role": "nflverse injury status wk5",
+   "max_age_hours": 6.0,
+   "result": "PASS",
+   "stamp": "2026-10-11T15:22:02Z",
+   "age_hours": 0.0,
+   "detail": null,
+   "ledger_row_appended": false
+  },
+  {
+   "file": "dfs/nfl_signals_2026-10-11/espn_injuries_snapshot.json",
+   "role": "ESPN injury status",
+   "max_age_hours": 6.0,
+   "result": "PASS",
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.84,
+   "detail": null,
+   "ledger_row_appended": false
+  },
+  {
+   "file": "dfs/nfl_signals_2026-10-11/officials_by_game.csv",
+   "role": "officials crew",
+   "max_age_hours": 6.0,
+   "result": "PASS",
+   "stamp": "2026-10-11T14:31:57Z",
+   "age_hours": 0.84,
+   "detail": null,
+   "ledger_row_appended": false
+  },
+  {
+   "file": "docs/research/2026-10-09/rating-atlas/minis/main_slate_final_check_2026-10-11.json",
+   "role": "weather flags",
+   "max_age_hours": 6.0,
+   "result": "PASS",
+   "stamp": "2026-10-11T07:55:00-05:00",
+   "age_hours": 2.45,
+   "detail": null,
+   "ledger_row_appended": false
+  },
+  {
+   "file": "dfs/ftn_axes_rvc_2026-10-11/ftn_teamweek_joined.csv",
+   "role": "FTN box/blitz team-week",
+   "max_age_hours": 6.0,
+   "result": "F2_MISSING_FREEZE",
+   "stamp": null,
+   "age_hours": null,
+   "detail": "no parsable stamp (raw=None)",
+   "ledger_row_appended": true
+  }
+ ],
+ "ledger": {
+  "path": "dfs/kill_ledger_freshness.jsonl",
+  "explicit_rows": [
+   "LR-20261011-PRS-01-DK-REPULL",
+   "LR-20261011-PRS-02-LOBBY-CONSENSUS",
+   "LR-20261011-PRS-03-NO-CLOSE"
+  ],
+  "gate_auto_rows": [
+   "dfs/ftn_axes_rvc_2026-10-11/ftn_teamweek_joined.csv"
+  ]
+ }
+}
