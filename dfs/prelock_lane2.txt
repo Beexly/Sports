@@ -1,0 +1,4 @@
+OK /lobby/getcontests?sport=NFL 7739871 b'{"SelectedSport":"NFL","SelectedSportId":null,"Contests":[{"uc":0,"ec":0,"mec":150,"fpp":0,"s":1,"n"'
+OK /lineup/getavailableplayers?draftGroupId=154468 319090 b'{"playerList":[{"pid":1214154,"pdkid":693115,"did":0,"pcode":0,"tsid":6176510,"fn":"Jahmyr","ln":"Gi'
+fail /api/lobby/v1/contests/US/1/154468 HTTP Error 404: Not Found
+fail /sites/US-DK/contests/154468 HTTP Error 404: Not Found

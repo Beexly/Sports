@@ -1,0 +1,172 @@
+{
+ "observed_at": "2026-10-11T00:55:17Z",
+ "pool": "snapshots/pool_154468.json",
+ "n_players": 587,
+ "mu_source": "DK ppg (season avg, PROXY for contest mu)",
+ "sigma_source": "position table wk1-5 realized (EMPIRICAL-FALLBACK)",
+ "own_source": "salary-rank proxy (PROXY until entries_{contest}.jsonl lands)",
+ "solver": "PuLP+CPSAT",
+ "variants": {
+  "base": {
+   "0": {
+    "n_found": 5,
+    "secs": 13.9,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "0.5": {
+    "n_found": 5,
+    "secs": 16.3,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "1": {
+    "n_found": 5,
+    "secs": 17.0,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "2": {
+    "n_found": 5,
+    "secs": 12.8,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "4": {
+    "n_found": 5,
+    "secs": 12.0,
+    "top_score": 173.1,
+    "top_salary": 50000
+   }
+  },
+  "no-stack": {
+   "0": {
+    "n_found": 5,
+    "secs": 17.4,
+    "top_score": 175.2,
+    "top_salary": 49900
+   },
+   "0.5": {
+    "n_found": 5,
+    "secs": 16.8,
+    "top_score": 175.0,
+    "top_salary": 49700
+   },
+   "1": {
+    "n_found": 5,
+    "secs": 16.3,
+    "top_score": 175.0,
+    "top_salary": 49700
+   },
+   "2": {
+    "n_found": 5,
+    "secs": 16.8,
+    "top_score": 174.6,
+    "top_salary": 49900
+   },
+   "4": {
+    "n_found": 5,
+    "secs": 23.8,
+    "top_score": 169.8,
+    "top_salary": 50000
+   }
+  },
+  "mini-mid": {
+   "0": {
+    "n_found": 5,
+    "secs": 16.0,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "0.5": {
+    "n_found": 5,
+    "secs": 18.4,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "1": {
+    "n_found": 5,
+    "secs": 16.2,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "2": {
+    "n_found": 5,
+    "secs": 17.9,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "4": {
+    "n_found": 5,
+    "secs": 15.7,
+    "top_score": 173.1,
+    "top_salary": 50000
+   }
+  },
+  "game-stack-heavy": {
+   "0": {
+    "n_found": 5,
+    "secs": 19.6,
+    "top_score": 172.7,
+    "top_salary": 50000
+   },
+   "0.5": {
+    "n_found": 5,
+    "secs": 16.9,
+    "top_score": 172.7,
+    "top_salary": 50000
+   },
+   "1": {
+    "n_found": 5,
+    "secs": 18.3,
+    "top_score": 172.7,
+    "top_salary": 50000
+   },
+   "2": {
+    "n_found": 5,
+    "secs": 16.7,
+    "top_score": 172.7,
+    "top_salary": 50000
+   },
+   "4": {
+    "n_found": 5,
+    "secs": 16.6,
+    "top_score": 167.1,
+    "top_salary": 49900
+   }
+  },
+  "salary-floor": {
+   "0": {
+    "n_found": 5,
+    "secs": 15.6,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "0.5": {
+    "n_found": 5,
+    "secs": 14.7,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "1": {
+    "n_found": 5,
+    "secs": 17.5,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "2": {
+    "n_found": 5,
+    "secs": 17.3,
+    "top_score": 175.6,
+    "top_salary": 49600
+   },
+   "4": {
+    "n_found": 5,
+    "secs": 18.4,
+    "top_score": 173.1,
+    "top_salary": 50000
+   }
+  }
+ },
+ "valid_semantics": "optimizer_suite.valid(): 9u, cap50000, QB=1,DST=1, RB<=3,WR<=4,TE<=2, skill=7"
+}
