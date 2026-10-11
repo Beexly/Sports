@@ -361,3 +361,9 @@
   5. My-bets WS = JSON (odds WS = Msgpack) — two protocols, two RE tracks.
   6. isgSdk + SportRadar + Simplebet = three third-party engines behind one brand — each has its own hold/latency profile.
 - All DIAGNOSTIC. Nothing promoted.
+
+### [04:55] OU LIVE-WP EQUATION STAMPED — first frontier-sweep equation with a real RVC result
+- **OU fit (42,461 play-pairs, 285 games)**: theta=0.00005/s, sigma=0.2964/√s, half-life 230min
+- **THE FINDING (1,140 game×quarter rows)**: OU on live state BEATS the static closing spread at Q3 (Brier 0.194 vs 0.217) and Q4 (0.139 vs 0.217, +0.078) — the live-repricer crossover is ~halftime. At Q1/Q2 the pre-game close still wins (theta too slow from kickoff — the tunable parameter).
+- **Live-engine implication**: switch close-anchored → OU-anchored at ~halftime; blend before. The under-reactionary theta at kickoff is the calibration target.
+- All DIAGNOSTIC. Nothing promoted. Zero fabrication.

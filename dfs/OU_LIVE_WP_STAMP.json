@@ -1,0 +1,50 @@
+{
+ "observed_at": "2026-10-11T05:46:20Z",
+ "test": "OU live-WP equation stamped on frozen NFL manifest",
+ "model": "dT = theta*(mu_path(t) - T)dt + sigma*dW; mu_path = close*(1-t/3600)",
+ "fit": {
+  "theta_per_s": 5e-05,
+  "sigma_per_sqrt_s": 0.2964,
+  "half_life_s": 13773.0,
+  "n_play_pairs": 42461,
+  "n_games": 285
+ },
+ "rvc": {
+  "n_rows": 1140,
+  "brier_ou": 0.2253,
+  "brier_close": 0.2167,
+  "delta_close_minus_ou": -0.0086,
+  "by_quarter": {
+   "900": {
+    "n": 285,
+    "brier_ou": 0.1387,
+    "brier_close": 0.2167
+   },
+   "1800": {
+    "n": 285,
+    "brier_ou": 0.1939,
+    "brier_close": 0.2167
+   },
+   "2700": {
+    "n": 285,
+    "brier_ou": 0.258,
+    "brier_close": 0.2167
+   },
+   "3600": {
+    "n": 285,
+    "brier_ou": 0.3107,
+    "brier_close": 0.2167
+   }
+  }
+ },
+ "verdict": "DIAGNOSTIC \u2014 OU quarter-state predictions compete with the close; the delta decides. Nothing promoted.",
+ "label": "DIAGNOSTIC",
+ "key_finding": {
+  "Q4_start (900s rem)": "OU Brier 0.1387 vs close 0.2167 \u2014 OU WINS by +0.078 (live state dominates)",
+  "Q3_start (1800s rem)": "OU 0.1939 vs close 0.2167 \u2014 OU WINS by +0.023",
+  "Q2_start (2700s rem)": "OU 0.2580 vs close 0.2167 \u2014 close WINS (pre-game info still better)",
+  "Q1_start (3600s rem)": "OU 0.3107 vs close 0.2167 \u2014 close WINS (theta too slow from kickoff)",
+  "theta_analysis": "theta=0.00005/s = half-life 230min. The market path mu(t)=close*(1-t/3600) decays to 0 at gun, but theta is SLOW \u2014 the OU process cant fully converge from kickoff. A faster theta (fitted per-quarter or per-half) would improve early-quarter predictions. The closed-form half-life of 230min > game length 60min = the process is UNDER-REACTIONARY at kickoff. This is the tunable parameter for the live engine.",
+  "live_engine_read": "For in-play repricing: at Q3/Q4, the OU model on live state BEATS the static closing spread. The live repricer should switch from close-anchored to OU-anchored at approximately halftime (the crossover point). Before halftime, blend OU + close."
+ }
+}
