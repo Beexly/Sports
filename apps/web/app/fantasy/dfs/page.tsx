@@ -50,6 +50,7 @@ export default async function DfsSuitePage() {
   const feedConnected = dfs !== null && dfs.status === "live" && dfs.rows.length > 0;
   const live = feedConnected && viewer.canUseFantasyFull;
   const topRows = live ? dfs!.rows.slice(0, 24) : [];
+  const unifiedSlate = getUnifiedDfsSlate();
 
   return (
     <FantasyShell
@@ -63,7 +64,9 @@ export default async function DfsSuitePage() {
       // about not presenting fabricated data as real; the mirror failure is
       // just as bad, and it was what this actually did.
       note={
-        live
+        unifiedSlate
+          ? "Player pool and salaries are real DraftKings values. Projections are a market-implied baseline (de-vigged sportsbook prop lines), not a model forecast; lineup math is ours."
+          : live
           ? "Live salary feed connected. Salaries and player pool are real; lineup math is ours."
           : "Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
       }
@@ -142,7 +145,10 @@ export default async function DfsSuitePage() {
         )}
       </section>
 
-      <DfsOptimizer />
+      <DfsOptimizer
+        canUseDfsOptimizer150={viewer.canUseDfsOptimizer150}
+        initialSlate={unifiedSlate}
+      />
 
       <TournamentLab />
     </FantasyShell>

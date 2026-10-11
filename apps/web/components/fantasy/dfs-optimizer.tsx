@@ -24,9 +24,17 @@ const MODES: { key: Mode; label: string; blurb: string }[] = [
 
 export interface DfsOptimizerProps {
   canUseDfsOptimizer150?: boolean;
+  /**
+   * Real slate from the unified projection feed (lib/dfs/unified-slate). When
+   * present it replaces the illustrative sample pool and the sample banner is
+   * not shown. Absent => the honest "sample slate" state, unchanged.
+   */
+  initialSlate?: readonly DfsPlayer[] | null;
 }
 
-export function DfsOptimizer({ canUseDfsOptimizer150 = false }: DfsOptimizerProps = {}) {
+export function DfsOptimizer({ canUseDfsOptimizer150 = false, initialSlate = null }: DfsOptimizerProps = {}) {
+  const hasRealSlate = Boolean(initialSlate && initialSlate.length > 0);
+  const baseSlate = (): DfsPlayer[] => (hasRealSlate ? [...initialSlate!] : [...DFS_SLATE]);
   const maxLineups = canUseDfsOptimizer150 ? 150 : 20;
   const [mode, setMode] = useState<Mode>("gpp");
   const [stack, setStack] = useState(true);
@@ -36,8 +44,8 @@ export function DfsOptimizer({ canUseDfsOptimizer150 = false }: DfsOptimizerProp
   const [excludes, setExcludes] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<GenResult | null>(null);
   const [busy, setBusy] = useState(false);
-  const [slate, setSlate] = useState<DfsPlayer[]>(() => [...DFS_SLATE]);
-  const [imported, setImported] = useState(false);
+  const [slate, setSlate] = useState<DfsPlayer[]>(() => baseSlate());
+  const [imported, setImported] = useState(hasRealSlate);
 
   const run = (s: DfsPlayer[] = slate) => {
     setBusy(true);
@@ -55,7 +63,7 @@ export function DfsOptimizer({ canUseDfsOptimizer150 = false }: DfsOptimizerProp
     setSlate(players); setImported(true); setLocks(new Set()); setExcludes(new Set()); run(players);
   };
   const onReset = () => {
-    const base = [...DFS_SLATE]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); run(base);
+    const base = baseSlate(); setSlate(base); setImported(hasRealSlate); setLocks(new Set()); setExcludes(new Set()); run(base);
   };
 
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, id: string) => {

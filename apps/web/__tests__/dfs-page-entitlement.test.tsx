@@ -52,7 +52,7 @@ const mocks = vi.hoisted(() => ({
   loadDfsSalaries: vi.fn(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => ({ auth: mocks.auth, isAdminEmail: () => false }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 vi.mock("@/lib/dfs/salaries", () => ({ loadDfsSalaries: mocks.loadDfsSalaries }));
 
