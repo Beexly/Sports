@@ -10769,6 +10769,7 @@ timestamp. Nothing inventoried without evidence.
     swung Seattle's screen-defense rank from 23rd to 30th (@hawkblogger).
     (b) Per-position cohort aging curves with player-path overlay —
     84 lead backs / 679 seasons, 1999-2026, PPR points (@DynatyzeFF).
+    *Update (2026-10-10): The RB aging curve module has been implemented in `packages/prediction-engine/src/signals/bio/rb-aging-curve.ts`. It provides the RB cohort calculation and player-path overlay. WR/TE/QB cohorts are explicitly out of scope.*
     (c) Percentile-rank QB dashboards with by-target-depth, pressure/blitz
     splits, and QB-vs-shell × opponent-allowed-rate matchup panels
     (@statyxio).
