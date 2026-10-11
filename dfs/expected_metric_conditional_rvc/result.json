@@ -1,0 +1,747 @@
+{
+ "observed_at": "2026-10-11T05:57:27Z",
+ "test": "Expected-metric layer (CPOE, nflfastR xYAC->YACOE) last-game diff -> next-week ATS residual vs close, conditional cells",
+ "stamp": "INFRASTRUCTURE PASS",
+ "stamp_basis": "manifest FreshnessGate v2 PASS; all 855 games joined both sides for CPOE and YACOE; raw-score residual; walk-forward HonestyGate per cell; 16 tests corrected",
+ "result_stamp": "REFUSED: 0/16 cells survive Holm or Bonferroni on the held-out paired CRPS t",
+ "manifest": {
+  "path": "dfs/nfl_rvc_manifest.json",
+  "sha256_16": "bec543fc83a63ed7",
+  "gate_audit": {
+   "path": "/workspace/sports/dfs/nfl_rvc_manifest.json",
+   "stamp": "2026-10-11T03:37:51Z",
+   "age_hours": 2.33,
+   "fresh": true,
+   "failure_mode": null,
+   "label": "FRESH"
+  }
+ },
+ "total_tercile_cutpoints": [
+  42.5,
+  46.0
+ ],
+ "neutral_rule": "|score_differential| <= 8 (posteam-relative, absolute)",
+ "coverage": {
+  "cpoe_all": {
+   "team_games": 1710,
+   "games_both_sides": 855
+  },
+  "cpoe_neutral": {
+   "team_games": 1709,
+   "games_both_sides": 854
+  },
+  "yacoe_all": {
+   "team_games": 1710,
+   "games_both_sides": 855
+  },
+  "yacoe_neutral": {
+   "team_games": 1697,
+   "games_both_sides": 842
+  }
+ },
+ "not_included": {
+  "GSE-RYOE": "not in repo; native NGS RYOE only in minis/re/genie-acquisition-2026-10-10/ngs_rushing.csv.gz (.gz unreadable by FreshnessGate; qualifier-only rows; not the manifest source) -> excluded",
+  "GSE-xYAC": "not in repo; nflfastR native xyac_mean_yardage used instead (labelled YACOE)",
+  "pressure_proxy": "derivable (qb_hit/sack per dropback) but not a third axis here to keep the family at 16"
+ },
+ "n_tests": 16,
+ "alpha": 0.05,
+ "in_sample_holm_survivors": [],
+ "cells": [
+  {
+   "metric_state": "cpoe_all",
+   "cell": "pooled",
+   "n": 807,
+   "slope": 0.0835,
+   "t": 2.207,
+   "ci95": [
+    0.0093,
+    0.1576
+   ],
+   "p_in_sample": 0.02731,
+   "t_by_season": {
+    "2023": 0.631,
+    "2024": 2.576,
+    "2025": 0.643
+   },
+   "gate_n": 538,
+   "close_crps": 7.077,
+   "cand_crps": 7.0601,
+   "gate_raw": "PROMOTED",
+   "paired_t": 0.712,
+   "p_gate": 0.47636,
+   "folds_won": 279,
+   "manifest_sha": "7d1d8f3238726022",
+   "fits": {
+    "2024": {
+     "k": 0.0436,
+     "shift": 0.559,
+     "close_sigma": 13.009,
+     "n_train": 269
+    },
+    "2025": {
+     "k": 0.1092,
+     "shift": -0.0369,
+     "close_sigma": 12.86,
+     "n_train": 538
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_all",
+   "cell": "low",
+   "n": 299,
+   "slope": -0.0084,
+   "t": -0.132,
+   "ci95": [
+    -0.1322,
+    0.1154
+   ],
+   "p_in_sample": 0.89498,
+   "t_by_season": {
+    "2023": -0.159,
+    "2024": -0.026,
+    "2025": -0.23
+   },
+   "gate_n": 177,
+   "close_crps": 7.2288,
+   "cand_crps": 7.2295,
+   "gate_raw": "REFUSED",
+   "paired_t": -0.146,
+   "p_gate": 0.88428,
+   "folds_won": 94,
+   "manifest_sha": "c9ca8fb2fc78b8a5",
+   "fits": {
+    "2024": {
+     "k": -0.0151,
+     "shift": 1.2514,
+     "close_sigma": 12.506,
+     "n_train": 122
+    },
+    "2025": {
+     "k": 0.0003,
+     "shift": 0.3158,
+     "close_sigma": 12.522,
+     "n_train": 218
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_all",
+   "cell": "mid",
+   "n": 242,
+   "slope": 0.1081,
+   "t": 1.642,
+   "ci95": [
+    -0.0209,
+    0.2372
+   ],
+   "p_in_sample": 0.10059,
+   "t_by_season": {
+    "2023": 0.792,
+    "2024": 1.967,
+    "2025": 0.243
+   },
+   "gate_n": 162,
+   "close_crps": 6.8632,
+   "cand_crps": 6.8151,
+   "gate_raw": "PROMOTED",
+   "paired_t": 0.731,
+   "p_gate": 0.46498,
+   "folds_won": 82,
+   "manifest_sha": "351d880dab7b632a",
+   "fits": {
+    "2024": {
+     "k": 0.1013,
+     "shift": -0.5471,
+     "close_sigma": 14.278,
+     "n_train": 80
+    },
+    "2025": {
+     "k": 0.1633,
+     "shift": 0.7077,
+     "close_sigma": 13.199,
+     "n_train": 154
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_all",
+   "cell": "high",
+   "n": 266,
+   "slope": 0.1383,
+   "t": 2.021,
+   "ci95": [
+    0.0042,
+    0.2725
+   ],
+   "p_in_sample": 0.04328,
+   "t_by_season": {
+    "2023": 0.627,
+    "2024": 1.942,
+    "2025": 0.667
+   },
+   "gate_n": 199,
+   "close_crps": 7.1348,
+   "cand_crps": 7.0974,
+   "gate_raw": "PROMOTED",
+   "paired_t": 0.511,
+   "p_gate": 0.60943,
+   "folds_won": 98,
+   "manifest_sha": "7011f6758746d316",
+   "fits": {
+    "2024": {
+     "k": 0.1102,
+     "shift": 0.6191,
+     "close_sigma": 12.474,
+     "n_train": 67
+    },
+    "2025": {
+     "k": 0.1856,
+     "shift": -1.191,
+     "close_sigma": 12.919,
+     "n_train": 166
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_neutral",
+   "cell": "pooled",
+   "n": 806,
+   "slope": 0.0361,
+   "t": 1.46,
+   "ci95": [
+    -0.0124,
+    0.0846
+   ],
+   "p_in_sample": 0.14429,
+   "t_by_season": {
+    "2023": 0.083,
+    "2024": 2.069,
+    "2025": 0.409
+   },
+   "gate_n": 537,
+   "close_crps": 7.0795,
+   "cand_crps": 7.0773,
+   "gate_raw": "PROMOTED",
+   "paired_t": 0.152,
+   "p_gate": 0.8792,
+   "folds_won": 276,
+   "manifest_sha": "6c6ede2650b68e7a",
+   "fits": {
+    "2024": {
+     "k": 0.0037,
+     "shift": 1.0831,
+     "close_sigma": 13.009,
+     "n_train": 269
+    },
+    "2025": {
+     "k": 0.0479,
+     "shift": 0.0616,
+     "close_sigma": 12.86,
+     "n_train": 538
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_neutral",
+   "cell": "low",
+   "n": 298,
+   "slope": 0.0379,
+   "t": 0.963,
+   "ci95": [
+    -0.0393,
+    0.1151
+   ],
+   "p_in_sample": 0.33555,
+   "t_by_season": {
+    "2023": -0.352,
+    "2024": 1.493,
+    "2025": 0.49
+   },
+   "gate_n": 176,
+   "close_crps": 7.2377,
+   "cand_crps": 7.2517,
+   "gate_raw": "REFUSED",
+   "paired_t": -0.546,
+   "p_gate": 0.58516,
+   "folds_won": 84,
+   "manifest_sha": "95e83d3d4887b43a",
+   "fits": {
+    "2024": {
+     "k": -0.022,
+     "shift": 0.0066,
+     "close_sigma": 12.506,
+     "n_train": 122
+    },
+    "2025": {
+     "k": 0.038,
+     "shift": -1.0726,
+     "close_sigma": 12.522,
+     "n_train": 218
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_neutral",
+   "cell": "mid",
+   "n": 242,
+   "slope": 0.0277,
+   "t": 0.615,
+   "ci95": [
+    -0.0606,
+    0.1159
+   ],
+   "p_in_sample": 0.53855,
+   "t_by_season": {
+    "2023": -0.256,
+    "2024": 1.212,
+    "2025": 0.211
+   },
+   "gate_n": 162,
+   "close_crps": 6.8632,
+   "cand_crps": 6.8746,
+   "gate_raw": "REFUSED",
+   "paired_t": -0.456,
+   "p_gate": 0.64864,
+   "folds_won": 79,
+   "manifest_sha": "356dc11b3d0fc1df",
+   "fits": {
+    "2024": {
+     "k": -0.025,
+     "shift": 0.2786,
+     "close_sigma": 14.278,
+     "n_train": 80
+    },
+    "2025": {
+     "k": 0.0404,
+     "shift": 1.2798,
+     "close_sigma": 13.199,
+     "n_train": 154
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "cpoe_neutral",
+   "cell": "high",
+   "n": 266,
+   "slope": 0.0309,
+   "t": 0.685,
+   "ci95": [
+    -0.0576,
+    0.1195
+   ],
+   "p_in_sample": 0.49334,
+   "t_by_season": {
+    "2023": 1.051,
+    "2024": 0.433,
+    "2025": -0.327
+   },
+   "gate_n": 199,
+   "close_crps": 7.1348,
+   "cand_crps": 7.1778,
+   "gate_raw": "REFUSED",
+   "paired_t": -0.88,
+   "p_gate": 0.37908,
+   "folds_won": 94,
+   "manifest_sha": "601cdd341e6376dc",
+   "fits": {
+    "2024": {
+     "k": 0.0881,
+     "shift": 4.0037,
+     "close_sigma": 12.474,
+     "n_train": 67
+    },
+    "2025": {
+     "k": 0.0624,
+     "shift": 0.4209,
+     "close_sigma": 12.919,
+     "n_train": 166
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_all",
+   "cell": "pooled",
+   "n": 807,
+   "slope": -0.0924,
+   "t": -0.504,
+   "ci95": [
+    -0.4518,
+    0.2671
+   ],
+   "p_in_sample": 0.61426,
+   "t_by_season": {
+    "2023": -1.006,
+    "2024": 2.507,
+    "2025": -2.476
+   },
+   "gate_n": 538,
+   "close_crps": 7.077,
+   "cand_crps": 7.1399,
+   "gate_raw": "REFUSED",
+   "paired_t": -3.738,
+   "p_gate": 0.00019,
+   "folds_won": 226,
+   "manifest_sha": "61b4407981426369",
+   "fits": {
+    "2024": {
+     "k": -0.3216,
+     "shift": -0.2492,
+     "close_sigma": 13.009,
+     "n_train": 269
+    },
+    "2025": {
+     "k": 0.2216,
+     "shift": -0.1418,
+     "close_sigma": 12.86,
+     "n_train": 538
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": true,
+   "holm_gate_survives": true
+  },
+  {
+   "metric_state": "yacoe_all",
+   "cell": "low",
+   "n": 299,
+   "slope": -0.355,
+   "t": -1.249,
+   "ci95": [
+    -0.9118,
+    0.2018
+   ],
+   "p_in_sample": 0.21167,
+   "t_by_season": {
+    "2023": -1.349,
+    "2024": 0.452,
+    "2025": -1.383
+   },
+   "gate_n": 177,
+   "close_crps": 7.2288,
+   "cand_crps": 7.2827,
+   "gate_raw": "REFUSED",
+   "paired_t": -1.072,
+   "p_gate": 0.28389,
+   "folds_won": 86,
+   "manifest_sha": "bb3148b76c10846e",
+   "fits": {
+    "2024": {
+     "k": -0.6092,
+     "shift": -0.1052,
+     "close_sigma": 12.506,
+     "n_train": 122
+    },
+    "2025": {
+     "k": -0.2018,
+     "shift": -0.2292,
+     "close_sigma": 12.522,
+     "n_train": 218
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_all",
+   "cell": "mid",
+   "n": 242,
+   "slope": 0.2987,
+   "t": 0.878,
+   "ci95": [
+    -0.3684,
+    0.9657
+   ],
+   "p_in_sample": 0.37994,
+   "t_by_season": {
+    "2023": 0.127,
+    "2024": 2.543,
+    "2025": -0.871
+   },
+   "gate_n": 162,
+   "close_crps": 6.8632,
+   "cand_crps": 6.9161,
+   "gate_raw": "REFUSED",
+   "paired_t": -1.204,
+   "p_gate": 0.22852,
+   "folds_won": 78,
+   "manifest_sha": "e431802443ea40e1",
+   "fits": {
+    "2024": {
+     "k": 0.0776,
+     "shift": -0.4716,
+     "close_sigma": 14.278,
+     "n_train": 80
+    },
+    "2025": {
+     "k": 0.7013,
+     "shift": -0.1293,
+     "close_sigma": 13.199,
+     "n_train": 154
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_all",
+   "cell": "high",
+   "n": 266,
+   "slope": -0.113,
+   "t": -0.336,
+   "ci95": [
+    -0.7711,
+    0.5452
+   ],
+   "p_in_sample": 0.73687,
+   "t_by_season": {
+    "2023": -0.468,
+    "2024": 1.414,
+    "2025": -2.159
+   },
+   "gate_n": 199,
+   "close_crps": 7.1348,
+   "cand_crps": 7.218,
+   "gate_raw": "REFUSED",
+   "paired_t": -2.701,
+   "p_gate": 0.00692,
+   "folds_won": 88,
+   "manifest_sha": "bd527112c37d82ee",
+   "fits": {
+    "2024": {
+     "k": -0.3195,
+     "shift": -0.246,
+     "close_sigma": 12.474,
+     "n_train": 67
+    },
+    "2025": {
+     "k": 0.3602,
+     "shift": -0.0385,
+     "close_sigma": 12.919,
+     "n_train": 166
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_neutral",
+   "cell": "pooled",
+   "n": 794,
+   "slope": -0.1594,
+   "t": -1.358,
+   "ci95": [
+    -0.3896,
+    0.0707
+   ],
+   "p_in_sample": 0.17446,
+   "t_by_season": {
+    "2023": -0.916,
+    "2024": 1.536,
+    "2025": -2.611
+   },
+   "gate_n": 529,
+   "close_crps": 7.0163,
+   "cand_crps": 7.0525,
+   "gate_raw": "REFUSED",
+   "paired_t": -2.508,
+   "p_gate": 0.01215,
+   "folds_won": 242,
+   "manifest_sha": "79be719f3a5caba9",
+   "fits": {
+    "2024": {
+     "k": -0.2048,
+     "shift": -0.1833,
+     "close_sigma": 12.534,
+     "n_train": 265
+    },
+    "2025": {
+     "k": 0.0683,
+     "shift": -0.0038,
+     "close_sigma": 12.56,
+     "n_train": 531
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_neutral",
+   "cell": "low",
+   "n": 290,
+   "slope": -0.146,
+   "t": -0.93,
+   "ci95": [
+    -0.4537,
+    0.1617
+   ],
+   "p_in_sample": 0.35237,
+   "t_by_season": {
+    "2023": -0.449,
+    "2024": 0.663,
+    "2025": -1.357
+   },
+   "gate_n": 170,
+   "close_crps": 7.0869,
+   "cand_crps": 7.1088,
+   "gate_raw": "REFUSED",
+   "paired_t": -1.553,
+   "p_gate": 0.12047,
+   "folds_won": 74,
+   "manifest_sha": "730388dde0887895",
+   "fits": {
+    "2024": {
+     "k": -0.125,
+     "shift": -0.0784,
+     "close_sigma": 12.17,
+     "n_train": 120
+    },
+    "2025": {
+     "k": 0.0149,
+     "shift": -0.0845,
+     "close_sigma": 12.181,
+     "n_train": 213
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_neutral",
+   "cell": "mid",
+   "n": 241,
+   "slope": 0.155,
+   "t": 0.554,
+   "ci95": [
+    -0.3935,
+    0.7035
+   ],
+   "p_in_sample": 0.57958,
+   "t_by_season": {
+    "2023": 0.102,
+    "2024": 1.109,
+    "2025": -0.241
+   },
+   "gate_n": 162,
+   "close_crps": 6.8556,
+   "cand_crps": 6.8627,
+   "gate_raw": "REFUSED",
+   "paired_t": -0.285,
+   "p_gate": 0.77586,
+   "folds_won": 80,
+   "manifest_sha": "e7b88df98aaa4891",
+   "fits": {
+    "2024": {
+     "k": 0.0558,
+     "shift": -0.4038,
+     "close_sigma": 14.032,
+     "n_train": 79
+    },
+    "2025": {
+     "k": 0.3242,
+     "shift": -0.1003,
+     "close_sigma": 13.069,
+     "n_train": 153
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  },
+  {
+   "metric_state": "yacoe_neutral",
+   "cell": "high",
+   "n": 263,
+   "slope": -0.3837,
+   "t": -1.717,
+   "ci95": [
+    -0.8215,
+    0.0542
+   ],
+   "p_in_sample": 0.08598,
+   "t_by_season": {
+    "2023": -1.655,
+    "2024": 0.923,
+    "2025": -3.257
+   },
+   "gate_n": 197,
+   "close_crps": 7.1127,
+   "cand_crps": 7.2346,
+   "gate_raw": "REFUSED",
+   "paired_t": -1.221,
+   "p_gate": 0.22218,
+   "folds_won": 87,
+   "manifest_sha": "50222a9eca7f2090",
+   "fits": {
+    "2024": {
+     "k": -0.7871,
+     "shift": -0.11,
+     "close_sigma": 11.347,
+     "n_train": 66
+    },
+    "2025": {
+     "k": 0.0144,
+     "shift": 0.1898,
+     "close_sigma": 12.498,
+     "n_train": 165
+    }
+   },
+   "bonf_in_sample_survives": false,
+   "holm_in_sample_survives": false,
+   "bonf_gate_survives": false,
+   "holm_gate_survives": false
+  }
+ ],
+ "proposed_kill_ledger_row": {
+  "feature": "expected_metric_conditional_ats",
+  "test": "frozen NFL manifest 2023-25, 16 cells, walk-forward 2024+2025",
+  "result": "REFUSED: 0/16 cells survive Holm or Bonferroni on the held-out paired CRPS t",
+  "reopen_condition": "REOPEN: 2026 frozen weekly folds appended to the manifest and a single pre-registered cell reaching paired CRPS-delta t >= 1.96 after Holm over the registered family; or prop-level closes (completions / receiving-YAC ladders) captured on a frozen manifest for a direct metric-vs-prop residual"
+ },
+ "label": "DIAGNOSTIC \u2014 not a live edge, no promotion"
+}
