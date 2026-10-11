@@ -4,7 +4,7 @@
  "prop_conditional": "INFRASTRUCTURE PASS (CFB reconstruction proof exists); NFL player-prop tables REFUSED (data gap)",
  "JEV": "REFUSED (no graded outcomes on bus)",
  "structural_gap_status": "NFL RVC manifest CLOSED. Cross-book residuals COMPUTED. Prop conditional tables AWAITING NFL ladder pulls.",
- "updated_at": "2026-10-11T12:39:53Z",
+ "updated_at": "2026-10-11T14:07:53Z",
  "OU_LIVE_WP": {
   "final_spec": "v2 empirical attractor (theta 0.000046/s, sigma 0.2963/sqrt(s), 4-bucket attractor curve)",
   "overall_brier": "0.1896 vs close 0.2167 \u2014 OU wins Q2/Q3/Q4 (+0.005/+0.046/+0.084)",
@@ -65,6 +65,228 @@
    "player_to_team_transmission": "6+ weeks of 2026",
    "prop_closes": "browser quote pull or nash NFL ladders (stamped command)"
   },
-  "label": "DIAGNOSTIC"
+  "label": "DIAGNOSTIC",
+  "cpoe_pressure_rvc": {
+   "commit": "ebca6d5",
+   "file": "dfs/cpoe_pressure_rvc_2026-10-11/CPOE_PRESSURE_CELL_RVC.json",
+   "file_sha": "d6e59f8c",
+   "infrastructure": "PASS",
+   "result": "REFUSE",
+   "verdict": "no pressure bin survives Bonferroni correction (alpha=0.0125, 4 bins)",
+   "n_qb_weeks": 128,
+   "n_pairs": 94,
+   "cells": {
+    "(0,3]": {
+     "n": 5,
+     "note": "refused: n<10"
+    },
+    "(3,6]": {
+     "n": 28,
+     "slope": 0.2215,
+     "t": 0.791,
+     "p": 0.4358
+    },
+    "(6,9]": {
+     "n": 28,
+     "slope": -0.1822,
+     "t": -0.637,
+     "p": 0.5295
+    },
+    "(9,100]": {
+     "n": 33,
+     "slope": -0.3685,
+     "t": -1.28,
+     "p": 0.2101
+    }
+   },
+   "heavy_pressure_descriptive": {
+    "bin": "(9,100]",
+    "n": 45,
+    "mean_cpoe": 1.47,
+    "note": "confirms +1.5 claim descriptively; does NOT transfer predictively"
+   },
+   "reopen_condition": "Frozen 2026 weeks 6+ team-week ATS outcomes joined to QB-week CPOE x pressure bins; re-run cell OLS with n>=20/bin; pre-registered (9,100] cell reaching paired t>=1.96 after Bonferroni",
+   "label": "DIAGNOSTIC"
+  },
+  "receiver_watchlist_rvc": {
+   "commit": "7590d8f",
+   "file": "dfs/receiver_watchlist_rvc_2026-10-11/RVC_STAMP.json",
+   "file_sha": "bcc76f9a",
+   "infrastructure": "PASS",
+   "result": "REFUSE",
+   "reason": "zero NFL player-prop closes exist on the packet branch or agent bus",
+   "watchlist": {
+    "yac_machines": [
+     "Puka Nacua (LA)",
+     "Rome Odunze (CHI)",
+     "Trey McBride (ARI)"
+    ],
+    "hands_regression": [
+     "Jameson Williams (DET)",
+     "Tucker Kraft (GB)"
+    ]
+   },
+   "prop_close_search": "Nash NFL ladders REFUSED (8 attempts, Akamai); Kalshi has 2 markets, neither a player prop; 0 receiving-prop files under dfs/",
+   "reopen_condition": "NFL player-prop closes (receiving yards/receptions/YAC) for the 5 watchlist players on a frozen manifest; then join, residuals, paired t, stamp",
+   "label": "DIAGNOSTIC"
+  },
+  "ftn_axes_rvc": {
+   "commit": "2cb402f",
+   "file": "dfs/ftn_axes_rvc_2026-10-11/FTN_AXES_RVC_STAMP.json",
+   "file_sha": "887ac1cd",
+   "infrastructure": "PASS",
+   "result": "REFUSE",
+   "verdict": "13 axes tested, 0 candidates, 13 refused",
+   "n_pairs": 98,
+   "n_tested": 13,
+   "closest": {
+    "axis": "int_worthy_rate",
+    "corr": 0.2817,
+    "delta_mse": 28.67,
+    "ci95": [
+     -0.01,
+     58.16
+    ],
+    "note": "CI lower bound contains zero"
+   },
+   "notable": "box_mean highest corr (+0.2321) but persistence -0.0549; catchable_rate/contested_rate negative corr, hurt held-out MSE",
+   "accumulating_lesson": "6th confirmation: raw situational edges shrink against the close",
+   "reopen_conditions": [
+    "200+ pairs (full 2026 season)",
+    "QB-week granularity when NGS/FTN/PFR name mapping is built",
+    "int_worthy_rate as pre-registered single axis",
+    "test vs prop closes if available"
+   ],
+   "label": "DIAGNOSTIC"
+  },
+  "signal_firehose": {
+   "commit": "7019f17",
+   "file": "docs/research/2026-10-09/rating-atlas/minis/api/signal_firehose.py",
+   "file_sha": "267d12ec",
+   "signals_per_game_london": 122,
+   "signals_per_game_other": 84,
+   "signals_per_player": 17,
+   "total_game_signals": 1214,
+   "n_games": 14,
+   "api_endpoints": [
+    "GET /signals/game/{game_id}",
+    "GET /signals/player/{player_key}"
+   ],
+   "api_tested": true,
+   "signal_status_labels": [
+    "live",
+    "measured",
+    "diagnostic",
+    "proxy_salary_derived",
+    "proxy_salary_percentile",
+    "sample-vor",
+    "heuristic_not_live_api",
+    "scheduled"
+   ],
+   "idle_high_priority": [
+    "FTN charting 29 cols (needs team-week agg)",
+    "PFR 38 cols (needs player-key join)",
+    "nflverse processGrade (replaces sample-vor GSE)"
+   ],
+   "label": "DIAGNOSTIC"
+  },
+  "gated_rayzerr_rebuild": {
+   "commit": "e90df44",
+   "file": "docs/research/2026-10-09/rating-atlas/minis/dfs/week5_rayzerr_gated_rebuild.json",
+   "file_sha": "9428264a",
+   "method": "gates FIRST, then decision (not lineup-then-fix)",
+   "gates_applied": {
+    "INJURY_GATE": {
+     "removed": 6,
+     "names": [
+      "Jordan Mason (IR)",
+      "Kyle Monangai (OUT)",
+      "Caleb Williams (OUT)",
+      "Sam Darnold (OUT)",
+      "Ja'Marr Chase (concussion protocol)",
+      "Jayden Daniels (questionable)"
+     ]
+    },
+    "SLATE_GATE": {
+     "removed": 17,
+     "note": "PHI/JAX London players"
+    },
+    "FRESHNESS_GATE": {
+     "note": "injury data 07:55 CT, within window"
+    },
+    "SALARY_GATE": {
+     "cap": 50000,
+     "enforced": true
+    },
+    "CONTEST_GATE": {
+     "note": "valid positions enforced"
+    }
+   },
+   "pool": {
+    "starting": 444,
+    "after_injury": 438,
+    "after_slate": 421,
+    "eligible": 422
+   },
+   "key_decisions": "Aaron Jones NOT in pool (gates decide, not suggestions); D'Andre Swift passed gates but lost on tourney_score",
+   "final_lineup": {
+    "tourney_score": 195.3,
+    "total_salary": 50000,
+    "n_players": 9,
+    "stack": "SEA 3-man (Lock + JSN + Wilson)"
+   },
+   "vs_original": "tourney 195.3 beats original 190.2",
+   "label": "DIAGNOSTIC"
+  },
+  "london_intel": {
+   "commit": "d311ee2",
+   "file": "docs/research/2026-10-09/rating-atlas/minis/london_final_intel_2026-10-11.json",
+   "file_sha": "de30de47",
+   "eagles_inactives": [
+    "Saquon Barkley (hamstring)",
+    "DeVonta Smith (hamstring)",
+    "Hollywood Brown (ankle)",
+    "Drew Kendall (knee)",
+    "Marcus Epps (groin)",
+    "Jonathan Greenard (ankle)"
+   ],
+   "jaguars_inactives": [
+    "Jaylon Jones (hamstring)"
+   ],
+   "line_move": "JAX -1.5 (open) -> -7.5 (current); total 44.5 -> 41.5",
+   "weather": "58F, 6mph W, negligible impact",
+   "referee": "Ron Torbert (-0.78 penalty-EPA/game, low-flag crew)",
+   "engine_impact": "no divergence vs edge5 board; inactives fully priced",
+   "live_angle": "JAX 1Q -2.5 (PHI 0.8 1Q ppg, JAX D zero 1Q points allowed)",
+   "label": "DIAGNOSTIC"
+  },
+  "main_slate_check": {
+   "commit": "56e5a46",
+   "file": "docs/research/2026-10-09/rating-atlas/minis/main_slate_final_check_2026-10-11.json",
+   "file_sha": "ad0ded37",
+   "go_no_go": "YELLOW",
+   "lineup_status": "7 of 9 CONFIRMED, 2 OUT",
+   "out": [
+    "Jordan Mason (IR, thumb, out to Week 7)",
+    "Kyle Monangai (OUT, turf toe, boot)"
+   ],
+   "weather_flags": "CLE@NYJ/IND@PIT/NYG@WSH rain; zero lineup players in those games",
+   "breaking": [
+    "Caleb Williams OUT (Bagent starting)",
+    "Ja'Marr Chase concussion protocol",
+    "Jayden Daniels elbow"
+   ],
+   "note": "superseded by gated rebuild e90df44",
+   "label": "DIAGNOSTIC"
+  },
+  "edge5_board_rescue": {
+   "commit": "197c547",
+   "file": "docs/research/2026-10-09/rating-atlas/minis/edge5_board_2026-10-11.json",
+   "file_sha": "3b0b5862",
+   "n_games": 14,
+   "observed_at": "2026-10-11T05:16:28Z",
+   "note": "was stranded (pasted in chat, zero branches); rescued by integration audit; baseline for closed-loop diff vs DK actuals",
+   "label": "DIAGNOSTIC"
+  }
  }
 }
