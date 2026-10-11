@@ -409,3 +409,9 @@
 - **dfs/PROP_LADDER_PULL_REFUSED.json**: 8 attempt paths documented (headless+headed chrome-wf, curl+UA, full cookie jar, CDP stealth, fresh profile). Control: site root 200 via curl — the wall targets the AUTOMATED-Chrome fingerprint, not the network, not the cookies.
 - **Verdict**: REFUSED. Zero ladder rows pulled, zero invented.
 - **Unblock**: user's real Chrome session → DK NFL page (30s proof) → relaunch their profile with CDP 9222 → in-page nash fetch per event (CFB-proven path) → genie183 fitter runs on NFL rows → conditional RVC tables.
+
+### [07:00] JEV RVC GRADER BUILT + VERIFIED — refuse-path proven live, awaiting showdown settle
+- **dfs/jev_rvc_grade.py**: --verify PASS (15 lineups across λ∈{0,1,2} parsed from showdown_196458728_portfolios.json; join keys resolve). --grade REFUSED correctly right now: gamecenter 302 pre-lock + API 404 → ledger entry {JEV_RVC_GRADE, REFUSED}.
+- **Pre-registered**: R1 portfolio points vs field pct-rank, R2 vs p50/p90/p99 (ceil check), R3 DupRisk vs top-1%. Data source: gamecenter leaderboard post-settle (10,946 entries expected).
+- **Reopen**: contest 196458728 settles (~4h) → `python dfs/jev_rvc_grade.py --grade` → field distribution + portfolio-vs-field table → INFRASTRUCTURE PASS stamp.
+- Note: www.draftkings.com (DFS side) is NOT bot-walled (users/me probe returned a served page) — only sportsbook/nash edges are. The JEV path is unblocked once outcomes exist.
