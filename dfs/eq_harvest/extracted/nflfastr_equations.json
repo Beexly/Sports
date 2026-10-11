@@ -1,0 +1,72 @@
+{
+ "observed_at": "2026-10-11T06:43:40Z",
+ "source": "nflverse/nflfastR R source (helper_add_ep_wp.R, ep_wp_calculators.R)",
+ "models": {
+  "EP_v3": {
+   "type": "xgboost multiclass (7 outcomes)",
+   "outputs": [
+    "Touchdown",
+    "Opp_Touchdown",
+    "Field_Goal",
+    "Opp_Field_Goal",
+    "Safety",
+    "Opp_Safety",
+    "No_Score"
+   ],
+   "features": [
+    "half_seconds_remaining",
+    "yardline_100",
+    "home",
+    "retractable",
+    "dome",
+    "outdoors",
+    "ydstogo",
+    "era0..era4",
+    "down1..down4",
+    "posteam_timeouts_remaining",
+    "defteam_timeouts_remaining"
+   ]
+  },
+  "WP": {
+   "type": "xgboost binary",
+   "features": [
+    "receive_2h_ko",
+    "home",
+    "half_seconds_remaining",
+    "game_seconds_remaining",
+    "Diff_Time_Ratio",
+    "score_differential",
+    "down",
+    "ydstogo",
+    "yardline_100",
+    "posteam_timeouts_remaining",
+    "defteam_timeouts_remaining"
+   ],
+   "key_derived": "Diff_Time_Ratio = the clock-score interaction (the live-WP kernel our OU competes with)"
+  },
+  "WP_spread": {
+   "features": [
+    "receive_2h_ko",
+    "spread_time",
+    "home",
+    "half_seconds_remaining",
+    "game_seconds_remaining",
+    "Diff_Time_Ratio",
+    "score_differential",
+    "down",
+    "ydstogo",
+    "yardline_100",
+    "posteam_timeouts_remaining",
+    "defteam_timeouts_remaining"
+   ],
+   "note": "spread-conditional WP = EXACTLY the GSE live-repricer shape (spread enters the model)"
+  },
+  "FG": "fastrmodels::fg_model (distance curve, our EDGE#3 counterpart)",
+  "CP": "fastrmodels (completion probability, CPOE baseline)",
+  "xYAC": "fastrmodels (expected YAC)",
+  "xPass": "fastrmodels (expected pass rate)"
+ },
+ "trained_models": "github.com/nflverse/fastrmodels (R package with the actual .rds artifacts)",
+ "lesson": "Diff_Time_Ratio and spread_time are the two derived features nobody re-derives. They are the clock-pressure kernels. Our OU empirical attractor is an alternative path; their Diff_Time_Ratio is the discriminant feature. Pull fastrmodels next = full trained model weights.",
+ "label": "DIAGNOSTIC"
+}

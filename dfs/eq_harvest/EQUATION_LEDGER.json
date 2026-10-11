@@ -1,0 +1,150 @@
+{
+ "observed_at": "2026-10-11T06:47:31Z",
+ "title": "NFL EQUATION HARVEST \u2014 night 1 (nflverse + arXiv + 4th-down bot + FTN schema)",
+ "equations": [
+  {
+   "id": "EQ001",
+   "name": "nflfastR EP v3",
+   "form": "xgboost multiclass 7-outcome [TD, oppTD, FG, oppFG, safety, oppSafety, noScore]",
+   "features": [
+    "half_seconds_remaining",
+    "yardline_100",
+    "home",
+    "retractable",
+    "dome",
+    "outdoors",
+    "ydstogo",
+    "era0-4",
+    "down1-4",
+    "posteam_timeouts_remaining",
+    "defteam_timeouts_remaining"
+   ],
+   "source": "nflfastR/helper_add_ep_wp.R:103-147",
+   "test": "compare vs our EP build on frozen manifest",
+   "status": "LANDABLE"
+  },
+  {
+   "id": "EQ002",
+   "name": "nflfastR WP",
+   "form": "xgboost binary on live state",
+   "features": [
+    "receive_2h_ko",
+    "home",
+    "half_seconds_remaining",
+    "game_seconds_remaining",
+    "Diff_Time_Ratio",
+    "score_differential",
+    "down",
+    "ydstogo",
+    "yardline_100",
+    "timeouts"
+   ],
+   "source": "helper_add_ep_wp.R:151-210",
+   "test": "Brier vs our OU v2 on same rows",
+   "status": "LANDABLE"
+  },
+  {
+   "id": "EQ003",
+   "name": "WP_spread (spread-conditional WP)",
+   "form": "adds spread_time feature \u2014 THE live-repricer shape",
+   "source": "helper_add_ep_wp.R:199-210",
+   "test": "direct competitor to OU live-WP",
+   "status": "HIGH-VALUE"
+  },
+  {
+   "id": "EQ004",
+   "name": "Diff_Time_Ratio",
+   "form": "score_differential / exp(-4 * elapsed_share)",
+   "kernel": "exp(-4 * t/3600), half-life 10.4min",
+   "source": "helper_add_ep_wp.R:253-261 VERBATIM",
+   "test": "swap OU mu_path to close*exp(-4t/3600), sweep exponent -2..-8",
+   "status": "NEXT-TEST"
+  },
+  {
+   "id": "EQ005",
+   "name": "spread_time",
+   "form": "posteam_spread * exp(-4 * elapsed_share)",
+   "source": "same",
+   "status": "NEXT-TEST"
+  },
+  {
+   "id": "EQ006",
+   "name": "CP/CPOE",
+   "form": "xgboost completion prob; CPOE = completion% - CP%",
+   "source": "helper_add_cp_cpoe.R",
+   "test": "already our GSE-CPOE baseline",
+   "status": "LANDED"
+  },
+  {
+   "id": "EQ007",
+   "name": "xYAC",
+   "form": "expected YAC given catchable target",
+   "source": "helper_add_xyac.R",
+   "test": "our S3 proxy already beat naive by 0.53 RMSE; theirs is the trained version",
+   "status": "LANDABLE"
+  },
+  {
+   "id": "EQ008",
+   "name": "xPass",
+   "form": "expected pass rate (play-selection model)",
+   "source": "helper_add_xpass.R",
+   "test": "formation/aggression residual vs close",
+   "status": "LANDABLE"
+  },
+  {
+   "id": "EQ009",
+   "name": "FG model",
+   "form": "fastrmodels::fg_model distance curve",
+   "source": "ep_wp_calculators.R:308,923",
+   "test": "our EDGE#3 curve vs theirs",
+   "status": "COMPARABLE"
+  },
+  {
+   "id": "EQ010",
+   "name": "nfl4th decision",
+   "form": "go_boost = 100*(go_wp - max(fg_wp, punt_wp)); 3-branch WP max",
+   "branches": [
+    "get_go_wp",
+    "get_fg_wp = make_prob*make_fg_wp + (1-make_prob)*miss_fg_wp",
+    "get_punt_wp (return-TD + muff flips)",
+    "get_2pt_wp"
+   ],
+   "source": "nflverse/nfl4th decision_functions.R + wrapper.R:81-82 VERBATIM",
+   "test": "apply to our 2pt/onside pricing",
+   "status": "LANDABLE"
+  },
+  {
+   "id": "EQ011",
+   "name": "nflscrapR EP gen1",
+   "form": "multinomial logistic 7-outcome (pre-XGBoost)",
+   "source": "arXiv 1802.00998",
+   "status": "HISTORICAL"
+  },
+  {
+   "id": "EQ012",
+   "name": "nflscrapR WP gen1",
+   "form": "GAM(mgcv) on EP",
+   "source": "arXiv 1802.00998",
+   "status": "HISTORICAL"
+  },
+  {
+   "id": "EQ013",
+   "name": "nflWAR",
+   "form": "multilevel models + resampling uncertainty for skill-player WAR",
+   "source": "arXiv 1802.00998",
+   "test": "player-equation layer we have NOT built",
+   "status": "GROWTH"
+  },
+  {
+   "id": "EQ014",
+   "name": "FTN charting axes",
+   "form": "n_blitzers, n_pass_rushers, qb_location, read_thrown, is_catchable_ball, is_contested_ball, is_created_reception, n_defense_box",
+   "source": "nflverse-ftn/ftn_data_dictionary.csv (30 fields)",
+   "test": "THE conditioning axes the conditional-residual tables wanted; needs FTN Data API access",
+   "status": "GROWTH-BLOCKED-ON-DATA"
+  }
+ ],
+ "raw_archive": "dfs/eq_harvest/raw/ (51 files, 3.3MB incl. 2.6MB paper PDF + sysdata.rda trained models)",
+ "index": "dfs/eq_harvest/HARVEST_INDEX.json",
+ "label": "DIAGNOSTIC \u2014 equations harvested, none promoted"
+}

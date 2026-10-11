@@ -1,0 +1,27 @@
+{
+ "observed_at": "2026-10-11T06:46:03Z",
+ "source": "nflverse/nfl4th (Baldwin's 4th-down bot, the official nflverse package)",
+ "decision_equation": {
+  "branches": [
+   "go_wp (get_go_wp)",
+   "fg_wp (get_fg_wp: make_prob * make_fg_wp + (1-make_prob) * miss_fg_wp)",
+   "punt_wp (get_punt_wp, w/ punt-return-TD + muff flips)",
+   "2pt_wp (get_2pt_wp)"
+  ],
+  "decision_rule": "go_boost = 100 * (go_wp - max(fg_wp, punt_wp)) \u2014 go if positive. max_non_go = max(fg_wp, punt_prob)",
+  "outputs": [
+   "first_down_prob",
+   "wp_fail",
+   "wp_succeed",
+   "go_wp",
+   "fg_make_prob",
+   "miss_fg_wp",
+   "make_fg_wp",
+   "fg_wp",
+   "punt_wp"
+  ],
+  "models": "sysdata.rda holds the trained WP models (200, landed)"
+ },
+ "lesson": "The 4th-down equation is a 3-branch max(\u00b7) over WP deltas with a 100x boost display. Our EDGE alt-ladder equivalent: the same structure applies to 2-point tries and onside kicks.",
+ "label": "DIAGNOSTIC"
+}

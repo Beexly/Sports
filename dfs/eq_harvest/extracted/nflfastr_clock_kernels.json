@@ -1,0 +1,13 @@
+{
+ "observed_at": "2026-10-11T06:43:54Z",
+ "kernels": {
+  "elapsed_share": "(3600 - game_seconds_remaining) / 3600",
+  "clock_kernel": "exp(-4 * elapsed_share)",
+  "spread_time": "posteam_spread * exp(-4 * elapsed_share)   # spread scaled by clock decay",
+  "Diff_Time_Ratio": "score_differential / exp(-4 * elapsed_share)   # lead divided by remaining-clock weight"
+ },
+ "implication_for_OU": "The exp(-4*elapsed_share) kernel is the functional form our linear-decay mu_path lacked. At t=0: exp(0)=1 (full weight). At t=3600: exp(-4)=0.018. HALF-LIFE of the kernel = 3600*ln(2)/4 = 623s = 10.4min \u2014 the clock weight halves every ~10.4 minutes. Our OU theta half-life was 146-264 min (too slow); nflfastR bakes the clock into the FEATURE instead of the SDE. Alternative spec: OU with mu_path(t) = close * exp(-4 * t/3600) \u2014 exponential decay with the SAME 10.4-min half-life structure.",
+ "test_to_run": "Replace OU mu_path with close * exp(-4 * t/3600) and re-run the quarter RVC. The kernel is the community-tested functional form; if it matches or beats our empirical attractor, the exponent -4 becomes a fit parameter (sweep -2..-8).",
+ "source": "nflfastR helper_add_ep_wp.R:253-261 + ep_wp_calculators.R:185-195 (verbatim)",
+ "label": "DIAGNOSTIC"
+}

@@ -1,0 +1,12 @@
+{
+ "observed_at": "2026-10-11T06:45:03Z",
+ "artifact": "arXiv 1802.00998 (nflscrapR paper, Yurko/Matano/Vinci) \u2014 43pp fulltext extracted",
+ "equations": {
+  "EP_generation1": "multinomial logistic regression, 7 outcomes (TD/opp-TD/FG/opp-FG/safety/opp-safety/no-score), features: down, distance, yardline, time, etc. \u2014 superseded by nflfastR XGBoost v3 (the 7-class matrix we already extracted)",
+  "WP_generation1": "GAM (mgcv) with EP as input + binomial smoother \u2014 the pre-XGBoost WP",
+  "nflWAR": "multilevel models isolating skill-player contributions; resampling-based uncertainty \u2014 the PLAYER-EQUATION layer we have not built",
+  "key": "the paper is the canonical citation for EP/WP; the CODE with actual feature lists is nflfastR v3 (already landed)"
+ },
+ "fulltext": "dfs/eq_harvest/extracted/arxiv_1802_00998_fulltext.txt",
+ "label": "DIAGNOSTIC"
+}

@@ -428,3 +428,14 @@
 - **v1→v2**: EVERY quarter improved (Q1 −0.067, Q2 −0.047, Q3 −0.024, Q4 −0.006). The crossover moved from ~halftime to ~Q2-start. Empirical-attractor OU now beats the static close for 3 of 4 quarters.
 - **Remaining gap**: Q1 (kickoff to 2700s) — the close still carries more info than the process in the first quarter. Reopen: add close-scaled diffusion (σ scaled by |close| bucket) or a Q1-specific attractor with wider n.
 - DIAGNOSTIC. Nothing promoted. Zero fabrication. Same outcomes, same manifest, new path spec.
+
+### [07:45] NFL EQUATION HARVEST NIGHT-1 — 14 equations from nflverse/arXiv/nfl4th/FTN
+- **dfs/eq_harvest/** — 51 raw files (3.3MB) + 5 extracted specs + EQUATION_LEDGER.json (14 equations).
+- **THE CROWN JEWELS (verbatim from nflfastR source)**: Diff_Time_Ratio = score_differential / exp(-4·elapsed_share) and spread_time = posteam_spread · exp(-4·elapsed_share). The exp(-4·t/3600) clock kernel has a 10.4-min half-life — the functional form our linear-decay μ_path lacked. NEXT-TEST: OU with μ_path = close·exp(-4t/3600), sweep exponent −2..−8.
+- **WP_spread = spread-conditional WP** — the exact live-repricer shape, features locked. Competitor to OU.
+- **Trained model artifacts landed**: nfl4th sysdata.rda (185KB trained WP models), nflfastR sysdata.rda (29KB).
+- **nfl4th decision equation**: go_boost = 100·(go_wp − max(fg_wp, punt_wp)) with 4 branch models — verbatim.
+- **arXiv 1802.00998** (nflscrapR, 43pp): EP gen1 (multinomial logistic), WP gen1 (GAM), nflWAR (multilevel + resampling — the player-equation layer not yet built). Fulltext extracted.
+- **FTN charting schema** (30 fields): n_blitzers, n_pass_rushers, qb_location, read_thrown, catchable/contested — the conditioning axes the conditional-residual tables wanted. Blocked on FTN Data API access.
+- **Blocked**: ESPN methodology pages (202 async render — needs browser), NGS API (401 anon), PFR (Cloudflare on curl). Browser lane = next session's unblock path.
+- DIAGNOSTIC. Nothing promoted.
