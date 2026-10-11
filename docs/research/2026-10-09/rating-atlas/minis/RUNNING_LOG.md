@@ -323,3 +323,11 @@
 - **B8 INFRASTRUCTURE PASS (dfs/B8_INFRASTRUCTURE_STAMP.json)**: frozen manifest edge1b (sha ced2e7fc, artifact stamped at freeze w/ observed_at), FreshnessGate PASS (dict-of-lists fix working), CRPS fns verified (Laplace 5.475 vs Normal 8.133 recorded). MODEL-SKILL STAMP PENDING: needs NFL wk-6 2026 closing lines + final margins joined to cell predictions — reopen when Sat finals land.
 - Inventory corrections noted: B3 EPA re-derivation = validation stamp already (r≥0.97), RVC N/A; B14 tau_hat fallback flags in-file.
 - All DIAGNOSTIC. Nothing promoted.
+
+### [04:00] STRUCTURAL GAP CLOSED — NFL RVC frozen manifest (855 games) + first real NFL equation RVC
+- **dfs/nfl_rvc_manifest.json (sha d4b76378, 855 games, 2023-25)**: nflverse pbp spread_line/total_line = pre-game CLOSING lines + final scores — the NFL equivalent of the CFB RVC manifest, built from local parquets, FreshnessGate PASS.
+- **B8 REAL RVC RESULT (dfs/B8_RVC_RESULT_STAMP.json)**: Laplace-close 14.5647 vs Gaussian-close 14.9747 (MC ground truth, 200-game subsample × 5000 draws) → Laplace advantage +0.41 OUT-OF-SAMPLE. **Honest correction: the in-sample 32.7% CRPS gain (EDGE#1b) shrinks to ~2.7% vs the efficient close.** Closed-form CRPS bug found (missing −1/√π term + wrong φ usage) — MC empirical used as ground truth.
+- **σ(T) verified on real outcomes**: emp margin sd by total bin = 14.28/14.62/15.10/12.90 — non-constant, consistent w/ EDGE#1b direction but magnitudes differ.
+- Sign convention documented: nflverse spread_line += home favored; home_diff aligned via posteam/home_team.
+- **THE LESSON (documented)**: in-sample distribution gains shrink vs the efficient close — the close is already Gaussian-shaped. Real edge must come from σ(T) conditioning + skew cells, not the global shape.
+- All DIAGNOSTIC. Nothing promoted.

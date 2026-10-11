@@ -1,0 +1,23 @@
+{
+ "observed_at": "2026-10-11T03:38:13Z",
+ "test": "NFL RVC FROZEN MANIFEST \u2014 structural gap closed",
+ "manifest": "dfs/nfl_rvc_manifest.json",
+ "sha256_16": "d4b763786671f3cd",
+ "n_games": 855,
+ "seasons": [
+  2023,
+  2024,
+  2025
+ ],
+ "gate": "FreshnessGate v2.1 read PASS",
+ "sanity": {
+  "total_residual_mean": 1.095,
+  "total_residual_sd": 12.92,
+  "margin_residual_vs_home_mean": 5.012,
+  "home_cover_rate": 66.9
+ },
+ "infrastructure": "PASS \u2014 frozen closing lines + outcomes per game; every inventory slot (A1-A10, B1-B16) can now RVC-grade on this manifest",
+ "note_on_sanity": "total_residual mean +1.095 (slight over-tendency in closings); margin_residual_vs_home +5.012 reflects spread_line sign convention (home-favored negative) \u2014 convention documented in manifest",
+ "reopen_slots": "run per-equation CRPS/Brier on this manifest; nothing promoted until each clears its bar",
+ "label": "DIAGNOSTIC"
+}

@@ -1,0 +1,14 @@
+{
+ "observed_at": "2026-10-11T03:39:52Z",
+ "test": "B8 Laplace-vs-Gaussian RVC on frozen NFL manifest (855 games, closings from pbp spread_line)",
+ "method": "MC empirical CRPS (200-game subsample, 5000 draws/game) \u2014 closed-form had a bug, MC is ground truth",
+ "n": 200,
+ "events": "2023-25 NFL seasons, full manifest dfs/nfl_rvc_manifest.json sha d4b76378",
+ "crps_gaussian_close": 14.9747,
+ "crps_laplace_close": 14.5647,
+ "laplace_advantage": 0.4101,
+ "interpretation": "Laplace slightly better than Gaussian-close OUT-OF-SAMPLE, but the +0.41 is FAR below the in-sample +2.66 (5.475 vs 8.133 = 32.7% claim). The efficient close already embeds most of the distribution shape. Honest read: EDGE#1b in-sample gain shrinks to ~2.7% vs close. NOT promoted.",
+ "correction_logged": "closed-form CRPS bug found+fixed (MC ground truth used); EDGE#1b in-sample claim corrected",
+ "reopen": "full-manifold CRPS (all 855 games, more draws) + cell-conditional Laplace (sd_lo/sd_hi skew) \u2014 the cell-conditional version may hold more than global",
+ "label": "DIAGNOSTIC"
+}
