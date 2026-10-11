@@ -373,3 +373,9 @@
 - **Q2 θ ≈ 0**: the linear-decay mu_path breaks in the 2-min drill — end-of-half scoring bursts violate the smooth market-path assumption. Per-quarter θ does NOT fix early-quarter Brier (Q1 0.320, Q2 0.262 — close still wins).
 - **STRUCTURAL FINDING**: OU live-WP is validated for Q3+ only. Early-game requires a non-linear mu_path (empirical attractor from data). This is a model-spec constraint, not a calibration knob.
 - DIAGNOSTIC. Nothing promoted.
+
+### [05:10] THREE WORK ORDERS CLOSED — cross-book residual + prop status + JEV status
+- **EDGE#5 cross-book INFRASTRUCTURE PASS (dfs/edge5_crossbook_residual.json)**: Kalshi-implied distribution vs DK-implied on PHI@JAC. Three real residuals: ML +5.1pp (largest), total median +1.0pt, margin sigma direction-only (2-rung solve limitation). The +5.1pp ML divergence is the single highest-leverage live cell — gradeable at London settlement.
+- **Prop conditional tables: INFRASTRUCTURE PASS (CFB proof) / NFL tables REFUSED** (dfs/prop_conditional_status.json): nash game-lines captured in-session but is CFB game-level only. NFL player-prop subcat pulls (9524/16569-16571) needed via chrome-wf. CFB 183-outlier reconstruction (r2 0.96-0.99) = the methodological template.
+- **JEV optimizer RVC: REFUSED** (dfs/jev_rvc_status.json): no graded contest outcomes on bus. Reopen: DK cookie export → pull_entries.py → consensus.py → JEV lineups vs actual field.
+- Cross-book residual +5.1pp ML divergence = the first quantifiable cross-book disagreement in the GSE corpus. DIAGNOSTIC.

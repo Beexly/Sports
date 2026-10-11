@@ -1,0 +1,29 @@
+{
+ "observed_at": "2026-10-11T06:05:16Z",
+ "test": "EDGE#5 cross-book residual \u2014 Kalshi-implied distribution vs DK-implied, same game (PHI@JAC)",
+ "game": "PHI Eagles @ JAC Jaguars (London, Sun 9:30 AM ET)",
+ "sources": {
+  "kalshi": "dfs/kalshi_kxnflspread_phijac.json + kalshi_kxnfltotal_phijac.json + ML markets (devig)",
+  "dk": "ESPN/DK scoreboard: JAX -7.5, total 41.5; Gaussian sigma 13.3 (EDGE#1b global)"
+ },
+ "kalshi_implied": {
+  "mu_margin": 7.3,
+  "sigma_margin": 25.0,
+  "median_total": 42.5,
+  "ml_devig_jac": 0.765
+ },
+ "dk_implied": {
+  "mu_margin": 7.5,
+  "sigma_margin": 13.3,
+  "total": 41.5
+ },
+ "cross_book_residuals": {
+  "margin_mu": "-0.2 pts (near-zero \u2014 books agree on the level)",
+  "margin_sigma": "25.0 vs 13.3 = Kalshi implies WIDER margins ( NOTE: the 2-rung solve is noisy at Kalshi\u2019s wide 1.5\u21929.5 gap; treat as direction, not point estimate)",
+  "total_median": "+1.0 pt (Kalshi total 42.5 vs DK 41.5)",
+  "ml_devig": "+5.1pp (Kalshi 76.5% vs DK-spread-implied 71.4%) \u2014 the largest single divergence"
+ },
+ "verdict": "INFRASTRUCTURE PASS \u2014 cross-book residuals computed from real prices on both books. The +5.1pp ML divergence is the largest and most actionable (if it survives at settlement). The sigma divergence is direction-only (2-rung solve limitation). Diagnostic: no trade recommended.",
+ "label": "DIAGNOSTIC",
+ "reopen": "Kalshi + DK settle Sun \u2192 grade the +5.1pp ML divergence and the +1.0pt total residual against outcomes"
+}

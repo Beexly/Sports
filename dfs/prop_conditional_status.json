@@ -1,0 +1,8 @@
+{
+ "observed_at": "2026-10-11T06:05:16Z",
+ "status": "INFRASTRUCTURE PASS (partial) \u2014 nash game-lines payload captured live in-session; schema verified (events/markets/selections/trueOdds/participants). BUT the payload is CFB game-level (ML/Spread/Total only, subcat 4518). PLAYER-PROP ladders (subcats 9524/16569-16571, NFL) require per-event pulls through the chrome-wf session (the nash browser-fingerprint path). The 266 CFB prop fits already exist as the reconstruction proof (r2 0.96-0.99).",
+ "conditional_tables": "NOT YET RUN \u2014 needs NFL prop ladder pulls. The frozen manifest has 855 games w/ closings+outcomes but no player-prop ladder data. The CFB 183-outlier table is the methodological template.",
+ "verdict": "INFRASTRUCTURE PASS for the CFB reconstruction; player-prop NFL conditional tables REFUSED (data gap: no NFL prop ladder on bus)",
+ "reopen": "nash NFL player-prop subcat pulls (9524/16569-16571) via chrome-wf \u2192 reconstruct (mu,sigma) per NFL player \u2192 conditional residual tables \u2192 RVC",
+ "label": "DIAGNOSTIC"
+}
