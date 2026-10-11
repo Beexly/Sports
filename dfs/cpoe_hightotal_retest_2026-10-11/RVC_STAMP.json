@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-11T12:55:00Z",
+  "test": "Pre-registered CPOE high-total cell re-test (single hypothesis, no multiple-testing correction)",
+  "pre_registration": {
+    "cell": "cpoe_all / high (closing total > 46.0)",
+    "source_commit": "4d9db9b0",
+    "original_stats": {"n": 266, "slope": 0.1383, "t": 2.021, "p_in_sample": 0.04328, "held_out_paired_t": 0.511},
+    "tercile_cutpoints": [42.5, 46.0],
+    "hypothesis": "CPOE in high-total games predicts next-week ATS residual vs close (paired t >= 1.96)"
+  },
+  "stamp": "INFRASTRUCTURE PASS",
+  "result_stamp": "REFUSED: no frozen 2026 week set with CPOE + closing totals + next-week ATS exists on the branch",
+  "data_availability_audit": {
+    "frozen_manifest_2026_rows": 0,
+    "manifest_seasons": [2023, 2024, 2025],
+    "manifest_path": "dfs/nfl_rvc_manifest.json",
+    "team_week_ats_2026": {"exists": true, "rows": 131, "has_total_line": false, "has_cpoe": false, "path": "dfs/team_week_ats_2026.csv"},
+    "cpoe_2026_files": 0,
+    "closing_totals_2026_wk1_4": "not on branch"
+  },
+  "reopen_condition": {
+    "steps": [
+      "1. Pull 2026 weeks 1-4 closing totals (source: frozen manifest extension or Pinnacle/DK close archive)",
+      "2. Compute 2026 weeks 1-4 team-game CPOE from nflfastR pbp (same definition as original: last-game CPOE diff)",
+      "3. Join with 2026 weeks 2-5 next-week ATS outcomes (team_week_ats_2026.csv extended)",
+      "4. Filter to high-total games (total_line > 46.0, the original tercile cutpoint)",
+      "5. Run pre-registered single-cell OLS: next_week_ATS_residual ~ CPOE. Paired t-test. No Bonferroni (pre-registered).",
+      "6. Stamp PASS/REFUSE on paired t >= 1.96."
+    ],
+    "earliest_possible": "After 2026 Week 5 completes (2026-10-12), when weeks 1-4 have next-week outcomes through week 5",
+    "blockers": ["2026 closing totals archive", "2026 CPOE computation from pbp"]
+  },
+  "verdict": "REFUSE",
+  "promoted": false,
+  "fabricated_rows": 0
+}
