@@ -13,6 +13,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, "/var/minis/workspace")
 from doctrine import (Warehouse, HonestyGate, CollegeGuard, crps_gaussian, sha,
                       _norm_cdf, _norm_pdf)
+from freshness_gate import load_stamped
 
 DATA = os.path.join(HERE, "data")
 SEASONS = [2023, 2024, 2025, 2026]
@@ -28,7 +29,7 @@ def load_games():
     a row before its own kickoff — point-in-time by construction."""
     w = Warehouse("cfb_games")
     for y in SEASONS:
-        rows = json.load(open(f"{DATA}/games_{y}.json"))
+        rows = load_stamped(f"{DATA}/games_{y}.json")
         for g in rows:
             if not g.get("completed") or g.get("homePoints") is None:
                 continue
@@ -52,7 +53,7 @@ def load_closes():
     Priority: consensus > the book with latest updated timestamp (closest to close)."""
     closes = {}
     for y in SEASONS:
-        rows = json.load(open(f"{DATA}/lines_{y}.json"))
+        rows = load_stamped(f"{DATA}/lines_{y}.json")
         for lr in rows:
             gid = lr["id"]
             best = {}

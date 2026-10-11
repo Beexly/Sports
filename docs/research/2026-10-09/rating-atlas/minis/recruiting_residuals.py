@@ -10,6 +10,7 @@ import json, math, statistics, sys
 from collections import defaultdict
 sys.path.insert(0, "/var/minis/workspace")
 from cfb_ppa_model import load_games, load_closes
+from freshness_gate import load_stamped
 
 HERE = "/var/minis/workspace/cfb/data"
 
@@ -18,7 +19,7 @@ def load_talent():
     for y, f in [(2023, "talent_2023.json"), (2024, "talent_2024.json"),
                  (2025, "talent_2025.json"), (2026, "cfbadv_talent.json")]:
         try:
-            for r in json.load(open(f"{HERE}/{f}")):
+            for r in load_stamped(f"{HERE}/{f}"):
                 tal[(r["team"], r["year"])] = r["talent"]
         except FileNotFoundError:
             pass
@@ -29,9 +30,9 @@ def bluechip_by_year():
     bc = defaultdict(lambda: defaultdict(int))
     for y in (2022, 2023, 2024, 2025, 2026):
         try:
-            rows = json.load(open(f"{HERE}/cfbadv_recruiting_players_{y}.json"))
+            rows = load_stamped(f"{HERE}/cfbadv_recruiting_players_{y}.json")
         except FileNotFoundError:
-            rows = json.load(open(f"{HERE}/cfbadv_recruiting_players.json")) if y == 2026 else []
+            rows = load_stamped(f"{HERE}/cfbadv_recruiting_players.json") if y == 2026 else []
         for r in rows:
             if (r.get("stars") or 0) >= 4 and r.get("committedTo"):
                 bc[r["committedTo"]][y] += 1

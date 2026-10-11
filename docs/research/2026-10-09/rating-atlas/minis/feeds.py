@@ -9,6 +9,7 @@ pattern). Latency = report->row, measurable per rule 17.
 """
 import json, os, time, urllib.request, math
 from datetime import datetime, timezone
+from freshness_gate import load_stamped
 
 WS = "/var/minis/workspace"
 UTC = timezone.utc
@@ -18,7 +19,7 @@ def stamp():
 
 def injuries_feed(out=f"{WS}/feeds/injuries_feed.jsonl"):
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    raw = json.load(open(f"{WS}/nfl/data/espn_injuries_today.json"))
+    raw = load_stamped(f"{WS}/nfl/data/espn_injuries_today.json")
     ts = stamp()
     n = 0
     with open(out, "a") as f:
@@ -43,8 +44,8 @@ def injuries_feed(out=f"{WS}/feeds/injuries_feed.jsonl"):
 def cfb_weather_feed(out=f"{WS}/feeds/weather_feed.jsonl"):
     """Forecast at STADIUM coords for upcoming 2026 games (next 10 days)."""
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    games = json.load(open(f"{WS}/cfb/data/games_2026.json"))
-    venues = {v["id"]: v for v in json.load(open(f"{WS}/cfb/data/venues.json"))}
+    games = load_stamped(f"{WS}/cfb/data/games_2026.json")
+    venues = {v["id"]: v for v in load_stamped(f"{WS}/cfb/data/venues.json")}
     today = datetime.now(UTC).date()
     upcoming = [g for g in games if not g.get("completed")
                 and g.get("startDate", "") >= f"{today}"

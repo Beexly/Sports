@@ -7,6 +7,7 @@ No closing lines available, so we measure raw effects and note the limitation.
 import csv, json, math, os, statistics, time, urllib.request
 from collections import defaultdict
 from datetime import datetime
+from freshness_gate import load_stamped
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -67,9 +68,7 @@ def haversine(lat1, lon1, lat2, lon2):
 def load_games():
     """Load games from CSV."""
     games = []
-    with open(os.path.join(DATA, "games_all.csv"), 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
+    for row in load_stamped(os.path.join(DATA, "games_all.csv")).to_dict("records"):
             # Convert numeric fields
             row['away_score'] = int(row['away_score']) if row['away_score'] else None
             row['home_score'] = int(row['home_score']) if row['home_score'] else None

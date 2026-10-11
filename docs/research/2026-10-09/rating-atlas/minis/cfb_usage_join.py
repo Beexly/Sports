@@ -7,6 +7,7 @@ The residual sheet is the player-level edge surface (diagnostic).
 """
 import csv, json, statistics, math
 from collections import defaultdict
+from freshness_gate import load_stamped
 
 DATA = "/var/minis/workspace/cfb/data"
 
@@ -17,7 +18,7 @@ def main():
     # team season passing/rushing context (2026)
     team_ctx = {}
     try:
-        for r in csv.DictReader(open(f"{DATA}/cfb_team_season_stats_2026.csv")):
+        for r in load_stamped(f"{DATA}/cfb_team_season_stats_2026.csv").to_dict("records"):
             team_ctx[r["team"]] = {
                 "pass_pg": float(r.get("netPassingYards_pg") or 0),
                 "rush_pg": float(r.get("rushingYards_pg") or 0),
@@ -27,7 +28,7 @@ def main():
     # usage 2026: player -> usage dict
     usage = {}
     try:
-        for r in csv.DictReader(open(f"{DATA}/cfb_usage_2026.csv")):
+        for r in load_stamped(f"{DATA}/cfb_usage_2026.csv").to_dict("records"):
             usage[norm(r["name"])] = {
                 "team": r.get("team"), "pos": r.get("position"),
                 "overall": float(r.get("usage_overall") or 0),
@@ -37,12 +38,12 @@ def main():
     except FileNotFoundError:
         print("[WARN] usage csv missing"); return
     # empirical sigmas (player level)
-    emp = json.load(open(f"{DATA}/../cfb_prop_sigmas.json"))["top_150_player_sigma_table"]
+    emp = load_stamped(f"{DATA}/../cfb_prop_sigmas.json")["top_150_player_sigma_table"]
     emp_by_key = {}
     for row in emp:
         emp_by_key.setdefault((norm(row["name"]), row["metric"]), row)
     # DK fits
-    dk = json.load(open(f"{DATA}/../cfb/dk_cfb_prop_fits.json"))["fits"] if False else json.load(open("/var/minis/workspace/cfb/dk_cfb_prop_fits.json"))["fits"]
+    dk = json.load(open(f"{DATA}/../cfb/dk_cfb_prop_fits.json"))["fits"] if False else load_stamped("/var/minis/workspace/cfb/dk_cfb_prop_fits.json")["fits"]
     metric = {"pass": "passing_yards", "rush": "rushing_yards", "rec": "receiving_yards"}
 
     rows = []

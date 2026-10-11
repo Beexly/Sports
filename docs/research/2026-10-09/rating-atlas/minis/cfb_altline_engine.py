@@ -18,6 +18,7 @@ import json, math, statistics, sys
 from collections import defaultdict
 sys.path.insert(0, "/var/minis/workspace")
 from cfb_ppa_model import load_games, load_closes
+from freshness_gate import load_stamped
 
 def norm_cdf(z): return 0.5 * (1 + math.erf(z / math.sqrt(2)))
 
@@ -28,7 +29,7 @@ def main():
     totals = {}
     BL = defaultdict(dict)
     for y in (2023, 2024, 2025, 2026):
-        for lr in json.load(open(f"/var/minis/workspace/cfb/data/lines_{y}.json")):
+        for lr in load_stamped(f"/var/minis/workspace/cfb/data/lines_{y}.json"):
             gid = lr["id"]
             if gid not in games: continue
             for ln in lr.get("lines", []):

@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 import numpy as np
+from freshness_gate import load_stamped
 
 UTC = timezone.utc
 RUN_TS = datetime.now(UTC).isoformat()
@@ -31,7 +32,7 @@ def load_pbp(path):
     elif path.endswith(".gz"):
         df = pd.read_csv(path, compression="gzip", low_memory=False)
     else:
-        df = pd.read_csv(path, low_memory=False)
+        df = load_stamped(path)
     return df
 
 

@@ -156,3 +156,9 @@
 - **Alert taxonomy**: codes 3/11/24/25/26 mapped from live payloads (usage streaks, role, H2H FP, defense-allowance splits, def-rank-vs-pos)
 - **Solver (ETR) engineering semantics captured verbatim** from shipped tutorial chunks: optimizer vs simulator vs builder tradeoffs (hard rules vs 3000-lineup sim, projected ROI/cash rate/finish distribution), aggregate-projection weighting flow — saved to solver_tutorial_copy.json
 - Landed: LINESTAR_INTERNALS.json + solver_tutorial_copy.json under dfs-deep-re-2026-10-10/
+
+## 2026-10-10 — FreshnessGate wired as sole read path
+- Landed `freshness_gate.py` (verbatim): `load_stamped()` refuses any data file without a fresh `observed_at` stamp (6h default).
+- Patched 18 signal scripts to route all warehouse data reads through `load_stamped`: book_anatomy, cfb_altline_engine, cfb_context, cfb_deep_context, cfb_drive_efficiency, cfb_engine, cfb_pbp_tendencies, cfb_ppa_model, cfb_prop_engine, cfb_usage_join, compute_missing_metrics, feeds, graph_vs_close_stamp, ladder_inverse, nfl_deep_context, nfl_weather_fix, ppd_v2_carryin, recruiting_residuals.
+- `FRESHNESS_GAPS.md` documents: 16 unstamped data files (gate will refuse until stamped), 5 unpatchable formats (.gz/.parquet/.jsonl), 10 exempt infrastructure reads, 4 gate limitations. Priority: wrap warehouse JSON lists with observed_at envelope.
+- All 19 files syntax-verified. Gate unit-tested (fresh/stale/garbage timestamps).

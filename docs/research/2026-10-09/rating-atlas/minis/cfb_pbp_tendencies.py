@@ -5,13 +5,14 @@ play-by-play (2026 wks 1-5 complete, wk-6 partial). All DIAGNOSTIC per doctrine.
 """
 import json, glob, statistics, math, os
 from collections import defaultdict, Counter
+from freshness_gate import load_stamped
 
 DATA = "/var/minis/workspace/cfb/data"
 
 def load_plays():
     plays = []
     for f in sorted(glob.glob(f"{DATA}/pbp_2026_w*.json")):
-        plays += json.load(open(f))
+        plays += load_stamped(f)
     return plays
 
 def main():

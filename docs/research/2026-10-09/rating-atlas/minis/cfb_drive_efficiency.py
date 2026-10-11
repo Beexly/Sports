@@ -6,19 +6,20 @@ adjusted metrics + tempo priors. FBS filter, join keys preserved.
 """
 import json, statistics, csv
 from collections import defaultdict
+from freshness_gate import load_stamped
 
 DATA = "/var/minis/workspace/cfb/data"
 YEARS = [2024, 2025, 2026]
 
 def fbs_set():
-    return {t["school"] for t in json.load(open(f"{DATA}/teams_fbs.json"))}
+    return {t["school"] for t in load_stamped(f"{DATA}/teams_fbs.json")}
 
 def main():
     fbs = fbs_set()
     # ---- team game stats -> season averages
     for y in YEARS:
         try:
-            rows = json.load(open(f"{DATA}/cfb_teamgamelog_{y}.json"))
+            rows = load_stamped(f"{DATA}/cfb_teamgamelog_{y}.json")
         except FileNotFoundError:
             continue
         agg = defaultdict(lambda: defaultdict(list))
@@ -52,7 +53,7 @@ def main():
     # ---- drives -> efficiency + field position + tempo
     for y in YEARS:
         try:
-            dr = json.load(open(f"{DATA}/cfb_drives_{y}.json"))
+            dr = load_stamped(f"{DATA}/cfb_drives_{y}.json")
         except FileNotFoundError:
             continue
         per = defaultdict(lambda: {"n": 0, "yards": 0.0, "pts": 0, "start_ytg": [],
@@ -91,7 +92,7 @@ def main():
     # ---- usage
     for y in (2025, 2026):
         try:
-            us = json.load(open(f"{DATA}/cfb_usage_{y}.json"))
+            us = load_stamped(f"{DATA}/cfb_usage_{y}.json")
         except FileNotFoundError:
             continue
         rows = sorted([u for u in us if u.get("team") in fbs

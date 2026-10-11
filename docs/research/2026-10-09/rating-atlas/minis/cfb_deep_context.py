@@ -13,6 +13,7 @@ All residuals measured against the cross-book closing median (the close is the p
 import json, math, os, statistics, urllib.request, time
 from collections import defaultdict
 from datetime import datetime
+from freshness_gate import load_stamped
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -34,7 +35,7 @@ def haversine(lat1, lon1, lat2, lon2):
 def load_games():
     games = {}
     for y in SEASONS:
-        for g in json.load(open(f"{DATA}/games_{y}.json")):
+        for g in load_stamped(f"{DATA}/games_{y}.json"):
             if g.get("completed") and g.get("homePoints") is not None \
                and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs":
                 games[g["id"]] = g
@@ -43,7 +44,7 @@ def load_games():
 def load_closes(games):
     BL = defaultdict(dict)
     for y in SEASONS:
-        for lr in json.load(open(f"{DATA}/lines_{y}.json")):
+        for lr in load_stamped(f"{DATA}/lines_{y}.json"):
             gid = lr["id"]
             if gid not in games: continue
             for ln in lr.get("lines", []):
@@ -72,7 +73,7 @@ def load_closes(games):
 # ---------------------------------------------------------------- coaches
 def coach_map():
     """(school, season) -> {coach_id, tenure_years_at_school_before, first_year}"""
-    coaches = json.load(open(f"{DATA}/coaches_all.json"))
+    coaches = load_stamped(f"{DATA}/coaches_all.json")
     out = {}
     for c in coaches:
         school_seasons = defaultdict(list)
@@ -154,7 +155,7 @@ def weather_2025(games):
     for g in games.values():
         if g["season"] != 2025 or g.get("neutralSite"): continue
         ven_games[g["venueId"]].append(g["startDate"][:10])
-    venues = {v["id"]: v for v in json.load(open(f"{DATA}/venues.json"))}
+    venues = {v["id"]: v for v in load_stamped(f"{DATA}/venues.json")}
     out = {}
     sess = urllib.request
     for i, (vid, dates) in enumerate(sorted(ven_games.items())):
@@ -256,7 +257,7 @@ def main():
 
     # ---- C. TRAVEL
     print("\nC) TRAVEL — road-team distance (haversine, team home venues)")
-    venues = json.load(open(f"{DATA}/venues.json"))
+    venues = load_stamped(f"{DATA}/venues.json")
     tv = travel_map(games, venues)
     tb = defaultdict(lambda: ([], []))
     for gid, dist in tv.items():

@@ -9,6 +9,7 @@ stdlib only. Runs on the 4-season CFBD CFB warehouse already on disk.
 import json, math, statistics, os
 from collections import defaultdict, Counter
 from datetime import datetime
+from freshness_gate import load_stamped
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -31,14 +32,14 @@ def amer_to_imp(a):
 def load():
     games = {}
     for y in SEASONS:
-        for g in json.load(open(f"{DATA}/games_{y}.json")):
+        for g in load_stamped(f"{DATA}/games_{y}.json"):
             if g.get("completed") and g.get("homePoints") is not None \
                and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs":
                 games[g["id"]] = g
     book_lines = defaultdict(dict)
     first_move = defaultdict(dict)   # book -> gid -> first update ts
     for y in SEASONS:
-        for lr in json.load(open(f"{DATA}/lines_{y}.json")):
+        for lr in load_stamped(f"{DATA}/lines_{y}.json"):
             gid = lr["id"]
             if gid not in games: continue
             for ln in lr.get("lines", []):

@@ -7,6 +7,7 @@ Open-Meteo archive cached per city, margins AND totals by wind/rain/cold.
 import csv, json, math, os, statistics, time, urllib.request
 from collections import defaultdict
 from datetime import datetime
+from freshness_gate import load_stamped
 
 HERE = "/var/minis/workspace/nfl"
 DATA = f"{HERE}/data"
@@ -25,7 +26,7 @@ CITY = {  # team abbr -> (lat, lon) — stadium-metro coords
 }
 
 def main():
-    rows = list(csv.DictReader(open(f"{DATA}/games_all.csv")))
+    rows = load_stamped(f"{DATA}/games_all.csv").to_dict("records")
     print(f"[DATA] {len(rows)} games; roof values: {sorted(set(r.get('roof','') for r in rows))}")
     outdoor = [r for r in rows if r.get("roof", "").lower() in ("outdoor", "outdoors", "open")
                and r.get("home_score") and r.get("away_score")

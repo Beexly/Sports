@@ -13,6 +13,7 @@ EMPIRICAL distributions instead of smooth Gaussians.
 """
 import json, math, statistics, csv
 from collections import defaultdict
+from freshness_gate import load_stamped
 
 HERE = "/var/minis/workspace/cfb"
 
@@ -36,9 +37,9 @@ def p_over(mu, sig, t):
     return 1 - 0.5 * (1 + math.erf((t - mu) / (sig * math.sqrt(2))))
 
 def main():
-    dk = json.load(open(f"{HERE}/dk_cfb_prop_fits.json"))["fits"]
-    emp = json.load(open(f"{HERE}/cfb_prop_sigmas.json"))["top_150_player_sigma_table"]
-    pos = json.load(open(f"{HERE}/cfb_prop_sigmas.json"))["position_sigma_table"]
+    dk = load_stamped(f"{HERE}/dk_cfb_prop_fits.json")["fits"]
+    emp = load_stamped(f"{HERE}/cfb_prop_sigmas.json")["top_150_player_sigma_table"]
+    pos = load_stamped(f"{HERE}/cfb_prop_sigmas.json")["position_sigma_table"]
 
     def norm(s): return s.lower().replace(".", "").replace("'", "").split(" (")[0].strip()
     metric = {"pass": "passing_yards", "rush": "rushing_yards", "rec": "receiving_yards"}

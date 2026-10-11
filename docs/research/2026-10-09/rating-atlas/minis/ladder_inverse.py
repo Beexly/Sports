@@ -17,6 +17,7 @@ Outputs:
 """
 import csv, json, math, os, sys, glob
 from collections import defaultdict
+from freshness_gate import load_stamped
 
 SNAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "snapshots")
 
@@ -202,7 +203,7 @@ def pinnacle_analysis():
     for fp in files:
         mid = os.path.basename(fp).replace("pinnacle_mkt_", "").replace(".json", "")
         try:
-            mkts = json.load(open(fp))
+            mkts = load_stamped(fp)
         except Exception:
             continue
         if not isinstance(mkts, list):

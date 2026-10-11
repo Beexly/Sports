@@ -11,6 +11,7 @@ sys.path.insert(0, "/var/minis/workspace")
 sys.path.insert(0, "/var/minis/workspace/cfb")
 from cfb_ppa_model import load_games, load_closes
 from doctrine import KillLedger
+from freshness_gate import load_stamped
 
 SIG = 15.15
 K = 20
@@ -25,7 +26,7 @@ def build(games):
     gw = defaultdict(lambda: [0, 0])
     for y in (2023, 2024, 2025, 2026):
         try:
-            dr = json.load(open(f"/var/minis/workspace/cfb/data/cfb_drives_{y}.json"))
+            dr = load_stamped(f"/var/minis/workspace/cfb/data/cfb_drives_{y}.json")
         except FileNotFoundError:
             continue
         for d in dr:

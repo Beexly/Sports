@@ -10,6 +10,7 @@ from collections import defaultdict
 sys.path.insert(0, "/var/minis/workspace")
 from cfb_ppa_model import load_games, load_closes
 from doctrine import HonestyGate, KillLedger
+from freshness_gate import load_stamped
 
 DATA = "/var/minis/workspace/cfb/data"
 SIG = 15.15
@@ -19,7 +20,7 @@ def ppd_rolling(games):
     gid_meta = {g["id"]: (g["season"], g["week"]) for g in games.values()}
     gw = defaultdict(lambda: [0, 0])
     for y in (2024, 2025, 2026):
-        for d in json.load(open(f"{DATA}/cfb_drives_{y}.json")):
+        for d in load_stamped(f"{DATA}/cfb_drives_{y}.json"):
             meta = gid_meta.get(d["gameId"])
             if not meta or meta[0] != y: continue
             key = (d["offense"], y, d["gameId"])

@@ -14,6 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 sys.path.insert(0, "/var/minis/workspace")
 from doctrine import HonestyGate, KillLedger, crps_gaussian, parse_ts, sha
+from freshness_gate import load_stamped
 
 SEASONS = [2023, 2024, 2025, 2026]
 BOOKS = ["DraftKings", "ESPN Bet", "Bovada", "William Hill (New Jersey)", "Caesars Sportsbook (Colorado)"]
@@ -26,7 +27,7 @@ def amer_to_imp(a):
 def load_games():
     games = {}
     for y in SEASONS:
-        for g in json.load(open(f"{DATA}/games_{y}.json")):
+        for g in load_stamped(f"{DATA}/games_{y}.json"):
             if g.get("completed") and g.get("homePoints") is not None \
                and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs":
                 games[g["id"]] = g
@@ -35,7 +36,7 @@ def load_games():
 def load_closes(games):
     BL = defaultdict(dict)
     for y in SEASONS:
-        for lr in json.load(open(f"{DATA}/lines_{y}.json")):
+        for lr in load_stamped(f"{DATA}/lines_{y}.json"):
             gid = lr["id"]
             if gid not in games: continue
             for ln in lr.get("lines", []):
@@ -63,7 +64,7 @@ def load_ppa_rolling():
     AFTER each game (so 'prior' lookups use entries before the current one)."""
     per = defaultdict(list)   # (team, season) -> [(start_ts, off, dfn)]
     for y in SEASONS:
-        for row in json.load(open(f"{DATA}/ppa_games_{y}.json")):
+        for row in load_stamped(f"{DATA}/ppa_games_{y}.json"):
             # offense/defense = {overall, passing, rushing} for THAT game
             off = (row.get("offense") or {}).get("overall")
             dfn = (row.get("defense") or {}).get("overall")
