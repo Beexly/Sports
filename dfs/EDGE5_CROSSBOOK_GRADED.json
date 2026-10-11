@@ -1,0 +1,37 @@
+{
+ "observed_at": "2026-10-11T19:20:00Z",
+ "test": "EDGE#5 cross-book residual GRADED (PHI@JAC London)",
+ "outcome": {
+  "home": {
+   "name": "Jacksonville Jaguars",
+   "score": 19
+  },
+  "away": {
+   "name": "Philadelphia Eagles",
+   "score": 17
+  },
+  "home_score": 19,
+  "away_score": 17,
+  "total": 36,
+  "winner": "JAC"
+ },
+ "ml": {
+  "kalshi_p_jac": 0.765,
+  "dk_p_jac": 0.7136,
+  "brier_kalshi": 0.0552,
+  "brier_dk": 0.082,
+  "closer_book": "KALSHI",
+  "pre_registered_divergence_pp": 5.1
+ },
+ "total": {
+  "kalshi_median": 42.5,
+  "dk_total": 41.5,
+  "actual": 36,
+  "kalshi_resid": 6.5,
+  "dk_resid": 5.5,
+  "closer_book": "DK"
+ },
+ "verdict": "GRADED",
+ "label": "DIAGNOSTIC",
+ "reading": "Cross-book ML divergence was 5.1pp. KALSHI was closer. Total: Kalshi +1.0 lean refuted. Actual total 36 vs Kalshi median 42.5 vs DK 41.5."
+}

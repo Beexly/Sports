@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>GSE DFS Process System</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0e0c;
+      --surface: #151713;
+      --surface-2: #20231c;
+      --ink: #f6f2e7;
+      --muted: #b7b09d;
+      --line: #34382f;
+      --line-strong: #626657;
+      --amber: #f0a21a;
+      --amber-bright: #ffc14c;
+      --amber-soft: #3c2b0f;
+      --good: #7abd8e;
+      --shadow: 0 18px 45px rgba(0, 0, 0, .28);
+      --display: "Avenir Next Condensed", "DIN Condensed", "Bahnschrift Condensed", "Helvetica Neue", sans-serif;
+      --body: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      --mono: "SFMono-Regular", "Cascadia Code", "Liberation Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #080907;
+        --surface: #10120e;
+        --surface-2: #191c16;
+        --ink: #fffaf0;
+        --muted: #b0aa98;
+        --line: #30332b;
+        --line-strong: #5f6255;
+        --shadow: 0 18px 55px rgba(0, 0, 0, .42);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 82px; }
+    body {
+      margin: 0;
+      min-width: 0;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px),
+        var(--bg);
+      background-size: 42px 42px;
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    ::selection { background: var(--amber); color: #111; }
+
+    .shell {
+      width: min(1480px, 100%);
+      margin: 0 auto;
+      padding: 28px clamp(18px, 3.2vw, 52px) 72px;
+    }
+
+    .masthead {
+      position: relative;
+      overflow: hidden;
+      min-height: 340px;
+      padding: clamp(30px, 6vw, 78px) clamp(22px, 5vw, 74px);
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .masthead::after {
+      content: "50K";
+      position: absolute;
+      right: -22px;
+      bottom: -70px;
+      font: 900 clamp(150px, 24vw, 340px)/1 var(--display);
+      letter-spacing: -.08em;
+      color: var(--surface-2);
+      pointer-events: none;
+    }
+
+    .mast-copy { position: relative; z-index: 1; max-width: 930px; }
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 12px;
+      color: var(--amber);
+      font: 800 12px/1 var(--mono);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { font-family: var(--display); text-transform: uppercase; }
+    h1 {
+      max-width: 800px;
+      margin: 0;
+      font-size: clamp(48px, 8vw, 108px);
+      line-height: .88;
+      letter-spacing: -.035em;
+    }
+
+    .subtitle {
+      max-width: 750px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2.1vw, 23px);
+      line-height: 1.4;
+    }
+
+    blockquote {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 30px 0 0;
+      padding: 18px 20px;
+      border-left: 4px solid var(--amber);
+      background: var(--surface-2);
+      font: 600 clamp(16px, 1.7vw, 20px)/1.45 var(--body);
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 8px;
+      color: var(--amber);
+      font: 700 12px/1.2 var(--mono);
+      font-style: normal;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .section-nav {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      display: flex;
+      gap: 6px;
+      margin: 18px 0 0;
+      padding: 9px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border: 1px solid var(--line-strong);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+    }
+    .section-nav::-webkit-scrollbar { display: none; }
+    .section-nav a {
+      flex: 0 0 auto;
+      padding: 9px 12px;
+      color: var(--muted);
+      font: 800 11px/1 var(--mono);
+      letter-spacing: .08em;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 2px solid transparent;
+    }
+    .section-nav a:hover,
+    .section-nav a:focus-visible,
+    .section-nav a.active { color: var(--ink); border-color: var(--amber); outline: none; }
+
+    section {
+      margin-top: clamp(46px, 8vw, 96px);
+      scroll-margin-top: 76px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .section-number {
+      color: var(--amber);
+      font: 800 13px/1 var(--mono);
+    }
+
+    h2 {
+      margin: 5px 0 0;
+      font-size: clamp(32px, 5vw, 62px);
+      line-height: .95;
+      letter-spacing: -.025em;
+    }
+
+    .section-intro {
+      max-width: 840px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .progress {
+      min-width: 175px;
+      text-align: right;
+    }
+    .progress strong { display: block; font: 900 28px/1 var(--mono); color: var(--amber); }
+    .progress span { color: var(--muted); font: 700 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .progress-track { width: 175px; height: 4px; margin-top: 10px; background: var(--line); }
+    .progress-fill { width: 0; height: 100%; background: var(--amber); transition: width .25s ease; }
+
+    .cadence {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 26px;
+      border-top: 1px solid var(--line-strong);
+      border-left: 1px solid var(--line-strong);
+    }
+    .day {
+      min-width: 0;
+      padding: 18px;
+      border-right: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--surface);
+    }
+    .day-name { color: var(--amber); font: 800 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .day p { margin: 11px 0 0; font-size: 14px; line-height: 1.5; }
+
+    .gates { display: grid; gap: 9px; margin-top: 24px; }
+    .gate {
+      display: grid;
+      grid-template-columns: 58px 1fr 36px;
+      gap: 18px;
+      align-items: start;
+      padding: 20px 18px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .gate:has(input:checked) { border-color: var(--good); background: color-mix(in srgb, var(--surface) 92%, var(--good)); }
+    .gate-num { padding-top: 3px; color: var(--amber); font: 900 25px/1 var(--mono); }
+    .gate:first-child .gate-num { padding-top: 6px; font-size: 11px; letter-spacing: .04em; }
+    .gate h3 { display: inline; margin: 0; font-size: 18px; letter-spacing: .02em; }
+    .gate p { display: inline; margin: 0; color: var(--muted); }
+    .gate p::before { content: " — "; color: var(--line-strong); }
+    .gate-check { display: grid; place-items: center; }
+    .gate input {
+      width: 25px;
+      height: 25px;
+      margin: 0;
+      accent-color: var(--amber);
+      cursor: pointer;
+    }
+
+    .table-wrap { margin-top: 24px; border: 1px solid var(--line-strong); background: var(--surface); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 13px 16px;
+      color: var(--amber);
+      background: var(--surface-2);
+      font: 800 11px/1.2 var(--mono);
+      letter-spacing: .09em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+    td {
+      padding: 16px;
+      border-top: 1px solid var(--line);
+      vertical-align: top;
+    }
+    tbody tr:first-child td { border-top: none; }
+    td.mono, .mono { font-family: var(--mono); font-size: .88em; font-variant-numeric: tabular-nums; }
+    .lesson-table td:nth-child(1) { width: 126px; white-space: nowrap; }
+    .lesson-table td:nth-child(3) { width: 180px; color: var(--muted); }
+    .lesson-index { display: inline-block; min-width: 28px; color: var(--amber); font: 800 13px/1 var(--mono); }
+
+    .study-grid,
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .study-card,
+    .input-panel,
+    .sim-panel {
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .study-card { padding: 24px; }
+    .study-card h3 { margin: 0; font-size: 20px; line-height: 1.15; }
+    .study-card p { margin: 14px 0 0; color: var(--muted); }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 7px 9px;
+      background: var(--amber-soft);
+      color: var(--amber);
+      font: 800 11px/1.2 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .status::before { content: ""; width: 7px; height: 7px; background: currentColor; }
+
+    .sim-panel {
+      display: grid;
+      grid-template-columns: minmax(180px, .45fr) 1fr;
+      gap: clamp(24px, 5vw, 72px);
+      align-items: center;
+      margin-top: 24px;
+      padding: clamp(24px, 5vw, 58px);
+    }
+    .sim-number { color: var(--amber); font: 900 clamp(70px, 12vw, 150px)/.8 var(--display); letter-spacing: -.05em; }
+    .sim-label { margin-top: 12px; color: var(--muted); font: 800 12px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .sim-copy { margin: 0; font-size: clamp(17px, 2vw, 22px); line-height: 1.55; }
+
+    .input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .input-panel { box-shadow: none; }
+    .input-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--surface-2);
+    }
+    .input-title h3 { margin: 0; font-size: 21px; }
+    .template-fields { margin: 0; }
+    .field {
+      display: grid;
+      grid-template-columns: 145px minmax(0, 1fr);
+      gap: 12px;
+      padding: 13px 18px;
+      border-top: 1px solid var(--line);
+    }
+    .field:first-child { border-top: 0; }
+    .field dt { color: var(--muted); font: 800 11px/1.35 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .field dd { margin: 0; }
+    .placeholder { color: var(--line-strong); font-style: italic; }
+    .box { display: inline-block; width: 15px; height: 15px; margin-right: 8px; vertical-align: -2px; border: 1px solid var(--line-strong); }
+    .input-note { margin: 16px 0 0; padding: 15px 18px; border-left: 4px solid var(--amber); background: var(--surface-2); color: var(--muted); }
+
+    .empty-cell { color: var(--line-strong); font-style: italic; }
+
+    footer {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 34px;
+      align-items: start;
+      margin-top: 88px;
+      padding: 24px 0 8px;
+      border-top: 2px solid var(--ink);
+    }
+    .updated { color: var(--amber); font: 800 12px/1.4 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .standing-rule { margin: 0; font: 700 clamp(17px, 2vw, 22px)/1.4 var(--body); }
+
+    @media (max-width: 980px) {
+      .cadence { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .day:last-child { grid-column: 1 / -1; }
+      .study-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding-inline: 12px; padding-top: 12px; }
+      .masthead { min-height: 0; padding: 34px 22px; }
+      .masthead::after { right: -8px; bottom: -38px; font-size: 150px; }
+      h1 { font-size: clamp(46px, 17vw, 78px); }
+      .section-nav { margin-top: 10px; flex-wrap: wrap; overflow-x: visible; }
+      .section-nav a { flex: 1 1 106px; text-align: center; }
+      .section-head { grid-template-columns: 1fr; align-items: start; }
+      .progress { text-align: left; }
+      .progress-track { width: 100%; }
+      .cadence, .input-grid, .sim-panel { grid-template-columns: 1fr; }
+      .day:last-child { grid-column: auto; }
+      .gate { grid-template-columns: 42px 1fr 28px; gap: 10px; padding: 17px 14px; }
+      .gate p { display: block; margin-top: 6px; }
+      .gate p::before { content: none; }
+      .gate input { width: 22px; height: 22px; }
+      .field { grid-template-columns: 112px minmax(0, 1fr); }
+      footer { grid-template-columns: 1fr; gap: 12px; }
+
+      .responsive-table thead { display: none; }
+      .responsive-table,
+      .responsive-table tbody,
+      .responsive-table tr,
+      .responsive-table td { display: block; width: 100% !important; }
+      .responsive-table tr { padding: 12px 14px; border-top: 1px solid var(--line); }
+      .responsive-table tr:first-child { border-top: 0; }
+      .responsive-table td {
+        display: grid;
+        grid-template-columns: 98px minmax(0, 1fr);
+        gap: 12px;
+        padding: 6px 0;
+        border: 0;
+        white-space: normal !important;
+      }
+      .responsive-table td::before {
+        content: attr(data-label);
+        color: var(--amber);
+        font: 800 10px/1.4 var(--mono);
+        letter-spacing: .05em;
+        text-transform: uppercase;
+      }
+      .lesson-index { display: none; }
+    }
+
+    @media (max-width: 440px) {
+      .cadence { grid-template-columns: 1fr; }
+      .field { grid-template-columns: 1fr; gap: 4px; }
+      blockquote { margin-inline: -6px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div class="mast-copy">
+        <p class="eyebrow">DraftKings NFL · Weekly Operations</p>
+        <h1>GSE DFS<br />Process System</h1>
+        <p class="subtitle">The repeatable weekly machine for DraftKings NFL DFS. Same data, same gates, every week. No rushing, no memory-trusting.</p>
+        <blockquote>
+          “We can't control the outcome. We control the data, the process, the structure — aligned for maximum points.”
+          <cite>— Garrett Baxley</cite>
+        </blockquote>
+      </div>
+    </header>
+
+    <nav class="section-nav" aria-label="Page sections">
+      <a href="#process">01 Process</a>
+      <a href="#lessons">02 Lessons</a>
+      <a href="#mans">03 Mans Study</a>
+      <a href="#core-four">04 Core Four</a>
+      <a href="#simulations">05 Simulations</a>
+      <a href="#inputs">06 Inputs</a>
+      <a href="#scorecard">07 Scorecard</a>
+    </nav>
+
+    <section id="process">
+      <div class="section-head">
+        <div>
+          <span class="section-number">SECTION 01</span>
+          <h2>The Standard Process</h2>
+        </div>
+        <div class="progress" aria-live="polite">
+          <strong id="gate-count">0 / 10</strong>
+          <span>operational gates clear this session</span>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+      </div>
+      <p class="section-intro">Weekly cadence for the Sun–Mon slate. Lock the source baseline, then clear all ten numbered gates. Every gate is a hard stop: it must pass before the process moves forward.</p>
+
+      <div class="cadence" aria-label="Weekly cadence">
+        <article class="day"><span class="day-name">Wednesday</span><p>Data pull from the locked source set + full QB pool scan (every starting QB on the slate, priced and tiered — no QB is locked before the scan is complete).</p></article>
+        <article class="day"><span class="day-name">Thursday</span><p>Position pools, stack candidates, Jeff Mans Core Four study.</p></article>
+        <article class="day"><span class="day-name">Friday</span><p>Garrett's calls logged in the input zone; Dad's research added.</p></article>
+        <article class="day"><span class="day-name">Saturday</span><p>Build lineups; run every gate and audit below.</p></article>
+        <article class="day"><span class="day-name">Sunday AM</span><p>Weather + inactives verification; final lock.</p></article>
+      </div>
+
+      <div class="gates" aria-label="Process gates">
+        <label class="gate"><span class="gate-num">BASE</span><span><h3>Data Lock</h3><p>Same sources every week. Locked v1 set: DraftKings salaries + ownership; Fantasy Alarm (Jeff Mans Core Four + show notes); weather verification (Weather.com game-day reading, not narratives); official inactive reports; GSE engine signals from Garrett's database. No swapping projection sources mid-week.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Data Lock baseline complete" data-baseline="true" /></span></label>
+        <label class="gate"><span class="gate-num">01</span><span><h3>QB Pool Scan</h3><p>Every starting QB priced and tiered before any lineup is built. Cheap QBs with rushing floors and home games get flagged as value, never skipped.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark QB Pool Scan gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">02</span><span><h3>Game-Pick Firewall</h3><p>Team fades do not eliminate opposing players. The QB of a team you pick against can still be the slate's best value.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Game-Pick Firewall gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">03</span><span><h3>Stack Rules</h3><p>QB + max 2 same-team pass-catchers. No TE at FLEX. Full <span class="mono">$50,000</span> salary spent.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Stack Rules gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">04</span><span><h3>Injury Gate</h3><p>Any injury flag = player removed from the pool. No exceptions, no “he'll play through it.”</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Injury Gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">05</span><span><h3>Weather Gate</h3><p>Every weather claim verified with a number from the locked source within hours of lock. Narratives without numbers are rejected.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Weather Gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">06</span><span><h3>Garbage-Time Discount</h3><p>Fourth-quarter trailing production is discounted hard in evaluation. Chasing volume is not a role change.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Garbage-Time Discount gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">07</span><span><h3>Thesis-to-Roster Audit</h3><p>Every written game thesis must have a rostered player. If you write “Detroit blows out the Jets,” a Lion is in the lineup.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Thesis-to-Roster Audit gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">08</span><span><h3>Garrett's Calls</h3><p>His picks are logged pre-lock in the input zone and scored post-slate. Never ignored, never changed just because he said so — verified against results.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Garrett's Calls gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">09</span><span><h3>Simulations</h3><p>Thousands of Monte Carlo slate simulations before lock (<span class="mono">10,000+</span>). Lineups must show top-decile ceiling and positive sim ROI vs the simulated field. No lineup ships on vibes; it ships on sims.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Simulations gate complete" /></span></label>
+        <label class="gate"><span class="gate-num">10</span><span><h3>Lock Checklist</h3><p>All gates above pass, salary fully spent, no flagged injuries, weather verified, sims run. If a gate fails, the lineup does not ship.</p></span><span class="gate-check"><input type="checkbox" aria-label="Mark Lock Checklist gate complete" /></span></label>
+      </div>
+    </section>
+
+    <section id="lessons">
+      <div class="section-head"><div><span class="section-number">SECTION 02</span><h2>Lessons Learned</h2></div></div>
+      <p class="section-intro">This log records failures by both Motif and Garrett. Garrett's rule: if he missed, it goes in. No egos, just signal.</p>
+      <div class="table-wrap">
+        <table class="responsive-table lesson-table">
+          <thead><tr><th>Date</th><th>Lesson</th><th>Source week</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">01</span>Scan the full QB slate before locking any QB. Marcus Mariota (~21 DK pts at minimum salary) and Deshaun Watson (~18 pts, cheap) both outscored our $8,300 Josh Allen (~19.4) and $6,400 Bryce Young (~14.6). Neither was ever in our pool. <strong>(Motif's failure)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">02</span>Game picks must not veto players. We liked Carolina, so Watson was invisible — and he beat our QB. <strong>(Motif's failure)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">03</span>Discount garbage-time production. Dalton Schultz's 14-target Week 2 was 8 fourth-quarter catches chasing Cincinnati. In a close 19-17 game he vanished: C.J. Stroud threw for 167 yards total. <strong>(Motif's failure — built the thesis on it)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">04</span>Verify weather with numbers, never narratives. We built around a “24 mph wind” story in Buffalo; actual conditions were sunny with 12 mph wind. <strong>(Motif's failure)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">05</span>Thesis-to-roster audit. We wrote “Detroit blows out the Jets” and rostered zero Lions. Jahmyr Gibbs: 164 total yards, 3 TDs. <strong>(Motif's failure)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">06</span>Injury flags are disqualifiers, not footnotes. Jalen Coker's ankle flag stayed in the lineup. <strong>(Motif's failure)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">07</span>No fragile concentration: never put ~35% of salary in one road-favorite stack (the Allen L2 build). <strong>(Motif's failure)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">08</span>Log Garrett's calls pre-lock and score them post-slate. His Mariota/Watson reads beat the model this week. <strong>(Process gap)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">09</span>Same data sources every week — no swapping mid-stream, no “different data every single time.” <strong>(Process gap)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">10</span>No rushing. Gates don't clear, lineup doesn't ship. <strong>(Process gap)</strong></td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+            <tr><td data-label="Date" class="mono">2026-09-27</td><td data-label="Lesson"><span class="lesson-index">11</span>Garrett's misses go in the log too, per his rule. The Schultz over-receptions prop was on the posted card we both approved — it missed. His “Gladstone” call busted. The log doesn't care who made the call.</td><td data-label="Source week">Week 3 Sun-Mon slate</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="mans">
+      <div class="section-head"><div><span class="section-number">SECTION 03</span><h2>Core Four Study: Jeff Mans</h2></div></div>
+      <p class="section-intro">Fantasy Alarm. “Study the best, then build our own.”</p>
+      <div class="study-grid">
+        <article class="study-card"><h3>His theory</h3><p>How he selects the four: process, factors, rules.</p><span class="status">Research in progress — being added.</span></article>
+        <article class="study-card"><h3>Week 1</h3><p>Sept 10–14, 2026: his four picks, his reasoning, results.</p><span class="status">Research in progress — being added.</span></article>
+        <article class="study-card"><h3>Week 3</h3><p>Sept 27, 2026: his four picks, his reasoning, results.</p><span class="status">Research in progress — being added.</span></article>
+      </div>
+    </section>
+
+    <section id="core-four">
+      <div class="section-head"><div><span class="section-number">SECTION 04</span><h2>Our Core Four</h2></div></div>
+      <p class="section-intro">Weekly log.</p>
+      <div class="table-wrap">
+        <table class="responsive-table">
+          <thead><tr><th>Week</th><th>Player</th><th>Pos</th><th>Salary</th><th>Why</th><th>Result</th></tr></thead>
+          <tbody><tr><td data-label="Week" class="mono">Week 3<br />2026-09-27</td><td data-label="Player" colspan="5">Set under the new process starting Week 4 — Week 3 lineups were built under the old rushed process and are scored in the autopsy, not here.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="simulations">
+      <div class="section-head"><div><span class="section-number">SECTION 05</span><h2>Simulations</h2></div><span class="status">Engine: building · 0 completed</span></div>
+      <div class="sim-panel">
+        <div><div class="sim-number">10K+</div><div class="sim-label">target simulated slates / week</div></div>
+        <p class="sim-copy"><strong>Target state:</strong> Monte Carlo engine running 10,000+ simulated slates per week before lock. Correlated player distributions (QB-WR stacks, DST matchups), simulated field for cash-line estimation, leverage/exposure analysis. v1 engine building now — results land here weekly starting Week 4.</p>
+      </div>
+    </section>
+
+    <section id="inputs">
+      <div class="section-head"><div><span class="section-number">SECTION 06</span><h2>Input Zones</h2></div></div>
+      <div class="input-grid">
+        <article class="input-panel">
+          <div class="input-title"><h3>Garrett's Calls</h3><span class="mono">PRE-LOCK</span></div>
+          <dl class="template-fields">
+            <div class="field"><dt>Date</dt><dd class="placeholder">YYYY-MM-DD</dd></div>
+            <div class="field"><dt>Player</dt><dd class="placeholder">Player name</dd></div>
+            <div class="field"><dt>Call</dt><dd class="placeholder">Start / fade / prop</dd></div>
+            <div class="field"><dt>Reason</dt><dd class="placeholder">What you see and why</dd></div>
+            <div class="field"><dt>Pre-lock logged</dt><dd><span class="box" aria-hidden="true"></span>Yes / no</dd></div>
+            <div class="field"><dt>Result</dt><dd class="placeholder">Score after slate</dd></div>
+            <div class="field"><dt>Scored</dt><dd><span class="box" aria-hidden="true"></span>Yes / no</dd></div>
+          </dl>
+        </article>
+        <article class="input-panel">
+          <div class="input-title"><h3>Dad's Research</h3><span class="mono">RESEARCH</span></div>
+          <dl class="template-fields">
+            <div class="field"><dt>Date</dt><dd class="placeholder">YYYY-MM-DD</dd></div>
+            <div class="field"><dt>Note</dt><dd class="placeholder">Observation or finding</dd></div>
+            <div class="field"><dt>Game or player</dt><dd class="placeholder">Relevant matchup or player</dd></div>
+            <div class="field"><dt>Source</dt><dd class="placeholder">Where it came from</dd></div>
+            <div class="field"><dt>Flag for Garrett</dt><dd><span class="box" aria-hidden="true"></span>Yes / no</dd></div>
+          </dl>
+        </article>
+      </div>
+      <p class="input-note">Send additions to Motif and they go on the page — one source of truth, always current.</p>
+    </section>
+
+    <section id="scorecard">
+      <div class="section-head"><div><span class="section-number">SECTION 07</span><h2>Weekly Scorecard</h2></div></div>
+      <div class="table-wrap">
+        <table class="responsive-table">
+          <thead><tr><th>Week</th><th>Gates passed (x/10)</th><th>Sims run</th><th>Lineup result</th><th>Garrett's calls hit rate</th><th>Notes</th></tr></thead>
+          <tbody><tr><td data-label="Week" class="empty-cell">Add after slate</td><td data-label="Gates passed" class="empty-cell">— / 10</td><td data-label="Sims run" class="empty-cell">—</td><td data-label="Lineup result" class="empty-cell">—</td><td data-label="Calls hit rate" class="empty-cell">—</td><td data-label="Notes" class="empty-cell">Awaiting Week 4</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div class="updated">Last updated<br /><span class="mono">2026-09-27</span></div>
+      <p class="standing-rule">This page is the process. The process doesn't change week to week — only the inputs do.</p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var checks = Array.prototype.slice.call(document.querySelectorAll('.gate input[type="checkbox"]'));
+      var countedChecks = checks.filter(function (box) { return !box.hasAttribute('data-baseline'); });
+      var count = document.getElementById('gate-count');
+      var fill = document.getElementById('progress-fill');
+
+      function updateProgress() {
+        var complete = countedChecks.filter(function (box) { return box.checked; }).length;
+        count.textContent = complete + ' / ' + countedChecks.length;
+        fill.style.width = ((complete / countedChecks.length) * 100) + '%';
+      }
+      checks.forEach(function (box) { box.addEventListener('change', updateProgress); });
+
+      var links = Array.prototype.slice.call(document.querySelectorAll('.section-nav a'));
+      var sections = links.map(function (link) { return document.querySelector(link.getAttribute('href')); });
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              links.forEach(function (link) {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+              });
+            }
+          });
+        }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+        sections.forEach(function (section) { observer.observe(section); });
+      }
+    }());
+  </script>
+</body>
+</html>

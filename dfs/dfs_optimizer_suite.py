@@ -224,19 +224,11 @@ def cash_mode(pool, mu, sigma):
     for slot in SLOTS:
         cands = by_pos["QB"] if slot == "QB" else by_pos["DST"] if slot == "DST" else \
                 (by_pos["WR"] + by_pos["RB"] + by_pos["TE"]) if slot == "FLEX" else by_pos[slot]
-        need_left = 8 - len(lineup)
-        picked = None
-        for p in cands:
+        for p in cands[:40]:
             if p["pid"] in ids: continue
-            if used + p["salary"] + FLOOR * need_left > CAP: continue
+            if used + p["salary"] + FLOOR * (8 - len(lineup)) > CAP: continue
             if slot == "FLEX" and p["pos"] not in FLEX_OK: continue
-            picked = p; break
-        if picked is None:
-            cheap = sorted((q for q in cands if q["pid"] not in ids and used + q["salary"] + FLOOR * need_left <= CAP and (slot != "FLEX" or q["pos"] in FLEX_OK)),
-                           key=lambda q: (sigma.get(q["pid"], 4) / max(mu.get(q["pid"], .1), .1)))
-            picked = cheap[0] if cheap else None
-        if picked:
-            lineup.append(picked); used += picked["salary"]; ids.add(picked["pid"])
+            lineup.append(p); used += p["salary"]; ids.add(p["pid"]); break
     return lineup if valid(lineup) else None
 
 

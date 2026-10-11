@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSE Computer Vision — How It Sees the Game</title>
+<style>
+  :root {
+    --bg: #070a14;
+    --bg2: #0b1020;
+    --card: #101728;
+    --card2: #141d33;
+    --line: #22304f;
+    --txt: #e8edf7;
+    --dim: #93a1bd;
+    --acc: #5eead4;
+    --acc2: #7c9aff;
+    --off: #5aa2ff;
+    --def: #ff6b6b;
+    --warn: #fbbf24;
+    --good: #34d399;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(1200px 600px at 50% -10%, #131c3a 0%, var(--bg) 60%);
+    color: var(--txt);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    line-height: 1.55;
+    padding: 0 0 80px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header.hero { padding: 56px 0 28px; text-align: center; }
+  header.hero h1 { font-size: 2.4rem; letter-spacing: -0.5px; margin-bottom: 10px; }
+  header.hero h1 .teal { color: var(--acc); }
+  header.hero p.sub { color: var(--dim); font-size: 1.05rem; max-width: 720px; margin: 0 auto; }
+  .chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+  .chip {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.6px;
+    padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--card); color: var(--dim); text-transform: uppercase;
+  }
+  .chip.live { color: var(--good); border-color: #1d4d3a; }
+  .chip.sim { color: var(--warn); border-color: #5c4513; }
+  .chip.zero { color: var(--acc); border-color: #134e4a; }
+  section { margin-top: 56px; }
+  section h2 { font-size: 1.5rem; margin-bottom: 6px; }
+  section h2 .n { color: var(--acc); font-weight: 800; margin-right: 8px; }
+  section p.lead { color: var(--dim); margin-bottom: 22px; max-width: 760px; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  code { background: #0a0f1e; border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; font-size: 0.86em; color: var(--acc); }
+
+  /* pipeline flow */
+  .pipe { display: flex; flex-direction: column; gap: 0; }
+  .stage {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 20px; position: relative;
+  }
+  .stage + .stage { margin-top: 26px; }
+  .stage::before {
+    content: "▼"; position: absolute; top: -24px; left: 50%; transform: translateX(-50%);
+    color: var(--acc); font-size: 0.8rem; opacity: 0.9;
+  }
+  .stage:first-child::before { content: none; }
+  .stage-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .stage-head .k {
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; color: var(--bg);
+    background: var(--acc); border-radius: 6px; padding: 3px 9px;
+  }
+  .stage-head h3 { font-size: 1.12rem; }
+  .stage-head .mod { margin-left: auto; font-size: 0.78rem; color: var(--dim); }
+  .stage p { color: var(--dim); font-size: 0.95rem; margin-top: 8px; }
+  .stage p b { color: var(--txt); }
+  .io { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .io div { flex: 1 1 240px; background: var(--bg2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; }
+  .io div span { display: block; font-size: 0.7rem; letter-spacing: 1px; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
+
+  /* demo */
+  .demo-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .panel h3 { font-size: 1rem; margin-bottom: 12px; }
+  .panel h3 .tag { font-size: 0.7rem; color: var(--warn); border: 1px solid #5c4513; border-radius: 6px; padding: 2px 8px; margin-left: 8px; letter-spacing: 1px; }
+  canvas#broadcast { width: 100%; height: auto; border-radius: 10px; background: #0a5c2e; display: block; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .controls button {
+    background: var(--bg2); color: var(--txt); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 14px; font-size: 0.85rem; cursor: pointer;
+  }
+  .controls button:hover { border-color: var(--acc); }
+  .controls button.on { background: #0f2b28; border-color: var(--acc); color: var(--acc); }
+  .stages-strip { display: flex; gap: 4px; margin-top: 14px; }
+  .stages-strip div {
+    flex: 1; text-align: center; font-size: 0.68rem; padding: 8px 2px; border-radius: 8px;
+    background: var(--bg2); border: 1px solid var(--line); color: var(--dim);
+    transition: all 0.2s; letter-spacing: 0.3px;
+  }
+  .stages-strip div.hot { background: #0f2b28; border-color: var(--acc); color: var(--acc); font-weight: 700; }
+  .metrics-live { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 4px; }
+  .metric { background: var(--bg2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .metric .k { font-size: 0.68rem; letter-spacing: 1px; color: var(--dim); text-transform: uppercase; }
+  .metric .v { font-size: 1.35rem; font-weight: 800; color: var(--txt); margin-top: 2px; }
+  .metric .v small { font-size: 0.75rem; color: var(--dim); font-weight: 400; }
+  .metric.hl .v { color: var(--acc); }
+  .phasebar { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 0.85rem; color: var(--dim); }
+  .phasebar .pill { font-weight: 800; letter-spacing: 1px; padding: 4px 14px; border-radius: 999px; background: var(--bg2); border: 1px solid var(--line); }
+  .phasebar .pill.presnap { color: var(--warn); border-color: #5c4513; }
+  .phasebar .pill.live { color: var(--good); border-color: #1d4d3a; }
+  .phasebar .pill.whistle { color: var(--acc2); border-color: #2c3a6e; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+  canvas#topdown { width: 100%; height: auto; border-radius: 10px; background: #0a3d20; display: block; }
+
+  /* catalog */
+  .cat-group { margin-bottom: 26px; }
+  .cat-group > h3 { font-size: 1.05rem; margin-bottom: 4px; color: var(--acc); }
+  .cat-group > p { color: var(--dim); font-size: 0.88rem; margin-bottom: 12px; }
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+  .cat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .cat .name { font-weight: 700; font-size: 0.92rem; }
+  .cat .unit { float: right; font-size: 0.72rem; color: var(--acc2); border: 1px solid #2c3a6e; border-radius: 6px; padding: 1px 8px; }
+  .cat p { font-size: 0.84rem; color: var(--dim); margin-top: 6px; }
+
+  /* worked example */
+  .trace { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px 0; overflow: hidden; }
+  .trace-row { display: grid; grid-template-columns: 130px 1fr; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+  .trace-row:last-child { border-bottom: none; }
+  .trace-row .t { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; color: var(--acc); text-transform: uppercase; padding-top: 3px; }
+  .trace-row .b { font-size: 0.92rem; color: var(--dim); }
+  .trace-row .b b, .trace-row .b strong { color: var(--txt); }
+  footer { margin-top: 64px; border-top: 1px solid var(--line); padding-top: 24px; color: var(--dim); font-size: 0.88rem; }
+  footer h3 { color: var(--txt); font-size: 1rem; margin-bottom: 10px; }
+  footer ul { padding-left: 20px; }
+  footer li { margin-bottom: 6px; }
+  .note { background: #141b0a; border: 1px solid #5c4513; border-radius: 10px; padding: 12px 16px; font-size: 0.88rem; color: #e8d9ae; margin-top: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>How the machine <span class="teal">sees</span> the game</h1>
+  <p class="sub">The GSE computer-vision pipeline, stage by stage: what the camera captures, how pixels become tracklets, how tracklets become speed, routes and separation — and how those become film features the engine learns from.</p>
+  <div class="chips">
+    <span class="chip sim">demo uses simulated data</span>
+    <span class="chip live">pipeline code is real — merged to main</span>
+    <span class="chip zero">film signals: uncalibrated · weight 0 · shadow only</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="n">01</span>The pipeline</h2>
+  <p class="lead">One frame's journey from broadcast pixels to a row in the film shadow ledger. Every stage below maps to a real module in <code>packages/prediction-engine</code>.</p>
+  <div class="pipe">
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 1</span><h3>Capture</h3><span class="mod mono">watcher · OpenCV</span></div>
+      <p>The <b>Windows watcher</b> grabs broadcast frames on a schedule armed around game windows. Each frame is timestamped and queued with its game context.</p>
+      <div class="io"><div><span>in</span>Live TV signal → frame grabber</div><div><span>out</span>Timestamped JPEG frames + game id</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 2</span><h3>Detect</h3><span class="mod mono">tracking/cv-detector-contract · yolo-adapter</span></div>
+      <p>A <b>YOLO detector</b> finds every player in each frame and draws a bounding box. Output is just boxes + confidence — no identities yet. The detector is a swappable boundary: any trained detector can drop in behind the same contract.</p>
+      <div class="io"><div><span>in</span>One frame</div><div><span>out</span>~22 detections: box (x, y, w, h) + confidence</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 3</span><h3>Track</h3><span class="mod mono">tracking/cv-tracklet-association</span></div>
+      <p><b>Association</b> links this frame's boxes to last frame's boxes (IoU overlap, motion-aware gating). A box followed across frames becomes a <b>tracklet</b> — e.g. <code>T-07</code> — a persistent ID with a position history. This is the moment "a player" exists to the machine.</p>
+      <div class="io"><div><span>in</span>Per-frame detections</div><div><span>out</span>Tracklets: id, team side, frame-by-frame positions</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 4</span><h3>Stabilize</h3><span class="mod mono">tracking/cv-movement-primitive · cv-camera-compensation</span></div>
+      <p>The broadcast camera <b>pans and zooms</b>. Optical flow estimates that camera motion every frame pair and <b>subtracts it</b>, so a player's movement is real movement, not camera movement. Toggle it off in the demo below and watch the speed readings go insane — that's what this stage prevents.</p>
+      <div class="io"><div><span>in</span>Raw tracklet pixel positions</div><div><span>out</span>Camera-compensated positions + camera motion field (dx, dy)</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 5</span><h3>Map to the field</h3><span class="mod mono">tracking/cv-homography · cv-field-lines · cv-field-landmarks</span></div>
+      <p>Yard lines are detected in the frame, a <b>homography</b> is fit, and every pixel position is projected into <b>real-world meters</b> on a goal-line-origin field model. From here on, everything is measured in yards and meters, not pixels.</p>
+      <div class="io"><div><span>in</span>Compensated pixel positions</div><div><span>out</span>Field positions (xM, yM) per frame per tracklet</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 6</span><h3>Measure movement</h3><span class="mod mono">tracking/cv-movement-primitive · deriveMovementMetrics</span></div>
+      <p>From the meter-positions, per tracklet: <b>distance traveled</b>, <b>top speed</b>, <b>average speed</b> — plus the full per-frame speed series, which yields sprint curves like time-to-top-speed and directional velocity.</p>
+      <div class="io"><div><span>in</span>Field positions over time</div><div><span>out</span><code>distanceM</code> · <code>topSpeedMs</code> · <code>avgSpeedMs</code> · per-frame speed</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 7</span><h3>Understand the play</h3><span class="mod mono">perception/cv-play-segmentation · cv-formation-classify · cv-route-extract · cv-separation-metrics · cv-jersey-ocr</span></div>
+      <p>The stream is cut into plays (<b>pre-snap → snap → live → whistle</b>). Pre-snap alignment is classified into a <b>formation</b>. Each receiver's path is matched against <b>14 route templates</b> (go, slant, out, dig, post, corner, curl, comeback, flat, wheel, screen, drag, seam, hitch) with a confidence score, break point and depth. At the break and catch, <b>separation</b> to the nearest defender is measured in yards. Jersey-number OCR maps tracklets to roster players.</p>
+      <div class="io"><div><span>in</span>Tracklets + field positions for one play</div><div><span>out</span>Route name + confidence · break angle° · sep@break yd · sep@catch yd · formation · player id</div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><span class="k">STAGE 8</span><h3>Learn (shadow)</h3><span class="mod mono">film-features/* · film-feature-adapter · film_shadow_ledger</span></div>
+      <p>Per-play measurements roll up into <b>film features</b>: a player's route mix, target share by formation, average separation; a team's run/pass tendency by down-and-distance, formation frequencies, play-action rate. These flow into the engine <b>shadow-only, weight 0</b> — logged to the shadow ledger for calibration, never touching a published number until validated.</p>
+      <div class="io"><div><span>in</span>Per-play perception outputs</div><div><span>out</span>Player/team film features → shadow ledger rows (weight 0)</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span>What the camera sees — live demo</h2>
+  <p class="lead">A simulated play, processed the way the real pipeline processes it. Watch receiver <b>T-07</b> run a dig route while the machine detects, tracks, stabilizes, maps and measures — the metric readouts are computed live from his simulated tracklet, using the same math as <code>deriveMovementMetrics</code>, <code>breakAngle</code> and <code>nearestDefender</code>.</p>
+  <div class="demo-grid">
+    <div class="panel">
+      <h3>Broadcast view <span class="tag">SIMULATED</span></h3>
+      <canvas id="broadcast" width="1000" height="560"></canvas>
+      <div class="stages-strip" id="stageStrip">
+        <div data-s="0">DETECT</div><div data-s="1">TRACK</div><div data-s="2">STABILIZE</div>
+        <div data-s="3">MAP</div><div data-s="4">MEASURE</div><div data-s="5">UNDERSTAND</div>
+      </div>
+      <div class="controls">
+        <button id="btnPlay" class="on">Pause</button>
+        <button id="btnRestart">Restart play</button>
+        <button id="btnBoxes" class="on">Boxes + IDs</button>
+        <button id="btnVectors" class="on">Velocity vectors</button>
+        <button id="btnComp" class="on">Camera compensation: ON</button>
+        <button id="btnTrail" class="on">Route trail</button>
+      </div>
+      <div class="phasebar">
+        <span class="pill presnap" id="phasePill">PRE-SNAP</span>
+        <span id="phaseClock" class="mono">t = 0.00s</span>
+        <span id="phaseNote">Offense set. Formation classifier reading alignment…</span>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <h3>T-07 live metrics <span class="tag">SIMULATED</span></h3>
+        <div class="metrics-live">
+          <div class="metric hl"><div class="k">Speed now</div><div class="v" id="mSpeed">0.0 <small>m/s</small></div></div>
+          <div class="metric"><div class="k">Top speed</div><div class="v" id="mTop">0.0 <small>m/s</small></div></div>
+          <div class="metric"><div class="k">Distance</div><div class="v" id="mDist">0.0 <small>m</small></div></div>
+          <div class="metric"><div class="k">Time to top speed</div><div class="v" id="mTts">— <small>s</small></div></div>
+          <div class="metric"><div class="k">Direction</div><div class="v" id="mDir">—</div></div>
+          <div class="metric"><div class="k">Field pos</div><div class="v" id="mPos" style="font-size:1rem">—</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Field-coordinates view <span class="tag">SIMULATED</span></h3>
+        <canvas id="topdown" width="520" height="300"></canvas>
+        <p style="font-size:0.82rem;color:var(--dim);margin-top:8px">Stage 5 output: the same play in real-world meters after homography — this is the coordinate space every metric is computed in. Dots are tracklets; the teal trail is T-07.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Route + separation events <span class="tag">SIMULATED</span></h3>
+      <div class="metrics-live">
+        <div class="metric"><div class="k">Route call</div><div class="v" id="eRoute" style="font-size:1.1rem">—</div></div>
+        <div class="metric"><div class="k">Route depth</div><div class="v" id="eDepth">—</div></div>
+        <div class="metric hl"><div class="k">Break angle</div><div class="v" id="eBreak">—</div></div>
+        <div class="metric hl"><div class="k">Separation @ break</div><div class="v" id="eSepB">—</div></div>
+        <div class="metric"><div class="k">Separation @ catch</div><div class="v" id="eSepC">—</div></div>
+        <div class="metric"><div class="k">Nearest defender</div><div class="v" id="eDef" style="font-size:1.1rem">—</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Try this:</b> turn <b>camera compensation OFF</b> mid-play while the camera is panning. The velocity vectors explode and the speed readout spikes — the camera's own motion is polluting every measurement. That is exactly the failure Stage 4 exists to prevent.</div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+  var YD = 0.9144;                 // meters per yard
+  var FPS = 60, DT = 1/FPS;
+  var T_END = 4.6;                 // loop length, seconds
+  var T_SNAP = 0.8, T_WHISTLE = 3.8;
+
+  // World: x = downfield yards (0..120), y = lateral yards (0..53.3). Ball on own 30 -> x=40.
+  var WR = { id:"T-07", team:"off" };
+  // Dig route waypoints (world yards): 7.5-yd stem, 90-degree break inward, across the field
+  var ROUTE = [ [40,12], [47.5,12], [47.5,30], [47.5,33.5] ];
+  // Cumulative distances along route (yards)
+  var SEGS = [], TOTAL = 0;
+  for (var i=1;i<ROUTE.length;i++){
+    var dx=ROUTE[i][0]-ROUTE[i-1][0], dy=ROUTE[i][1]-ROUTE[i-1][1];
+    var L=Math.hypot(dx,dy); SEGS.push(L); TOTAL+=L;
+  }
+  function routePos(s){ // s = yards along route -> [x,y] world
+    var acc=0;
+    for (var i=0;i<SEGS.length;i++){
+      if (s<=acc+SEGS[i] || i===SEGS.length-1){
+        var f=Math.max(0,Math.min(1,(s-acc)/SEGS[i]));
+        return [ ROUTE[i][0]+(ROUTE[i+1][0]-ROUTE[i][0])*f, ROUTE[i][1]+(ROUTE[i+1][1]-ROUTE[i][1])*f ];
+      }
+      acc+=SEGS[i];
+    }
+    return ROUTE[ROUTE.length-1].slice();
+  }
+  // Speed profile along route: accelerate, dip at break, re-accelerate, decelerate to tackle
+  function targetSpeed(s, t){
+    var top = 8.6; // m/s, realistic WR top speed
+    if (s < 2)  return top * (s/2) * 0.9 + 0.4;
+    if (s < 6.9) return top * 0.97;
+    if (s < 8.2) return top * 0.55;              // gather at the break
+    if (s < TOTAL-3) return top;
+    var rem = TOTAL - s;
+    return Math.max(0, top * (rem/3));
+  }
+
+  // Supporting cast: [id, team, pathFn]
+  var cast = [];
+  var DEF_IDS=["T-21","T-22","T-23","T-24","T-25","T-26","T-27","T-28","T-29","T-30","T-31"];
+  // QB dropback
+  cast.push({id:"T-01", team:"off", fn:function(t){ if(t<T_SNAP) return [38.5,26.7]; var k=Math.min(1,(t-T_SNAP)/1.2); return [38.5-3.5*k, 26.7]; }});
+  // O-line: small push
+  for (var o=0;o<4;o++){
+    (function(o){ cast.push({id:"T-0"+(o+2), team:"off", fn:function(t){
+      var y=20+o*2.1, x=39.2; if(t>=T_SNAP){var k=Math.min(1,(t-T_SNAP)/2.5); x=39.2+ (o%2? 1.1:-0.6)*k;}
+      return [x,y]; }}); })(o);
+  }
+  // Other receivers: simple routes
+  cast.push({id:"T-06", team:"off", fn:function(t){ if(t<T_SNAP) return [40,22]; var k=Math.min(1,(t-T_SNAP)/2.2); return [40+9*k, 22+1.5*k]; }}); // go
+  cast.push({id:"T-08", team:"off", fn:function(t){ if(t<T_SNAP) return [40,33]; var k=Math.min(1,(t-T_SNAP)/2.0); var x=40+Math.min(5,5*k), y=33-4*Math.max(0,k-0.35); return [x,y]; }}); // out-ish
+  cast.push({id:"T-09", team:"off", fn:function(t){ if(t<T_SNAP) return [40,41]; var k=Math.min(1,(t-T_SNAP)/2.4); return [40+4*k, 41-6*k]; }}); // slant
+  cast.push({id:"T-10", team:"off", fn:function(t){ if(t<T_SNAP) return [36,26.7]; var k=Math.min(1,(t-T_SNAP)/1.5); return [36-2*k, 26.7+3*k]; }}); // RB flat
+  cast.push({id:"T-11", team:"off", fn:function(t){ if(t<T_SNAP) return [40,16]; var k=Math.min(1,(t-T_SNAP)/2.0); return [40+2*k, 16]; }}); // TE seam-ish
+  // Man defender shadowing T-07, ~2.3 yd off at the break
+  cast.push({id:"T-24", team:"def", shadow:true, fn:function(t){
+    if(t<T_SNAP) return [40.6,14.2];
+    var ws = wrStateAt(t-1/FPS*2); // 2-frame reaction lag
+    var px=ws[0]-0.4, py=ws[1]+2.1;
+    return [px,py];
+  }});
+  // Other defenders
+  var dspots=[[41,20],[41,26],[41,32],[41,38],[44,24],[44,30],[38,30],[36,22],[36,33],[42,44]];
+  for (var d=0;d<10;d++){
+    (function(d){ var ids=["T-21","T-22","T-23","T-25","T-26","T-27","T-28","T-29","T-30","T-31"];
+      cast.push({id:ids[d], team:"def", fn:function(t){ var s=dspots[d];
+        if(t<T_SNAP) return [s[0],s[1]];
+        var k=Math.min(1,(t-T_SNAP)/2.5); return [s[0]+1.6*k*(d%2?1:-0.5), s[1]+(d%3-1)*1.2*k]; }}); })(d);
+  }
+
+  // WR state integration
+  var wrTrail = []; // {t,x,y} world
+  var wrS = 0, wrHist = [];
+  function wrStateAt(t){
+    if (t < T_SNAP) return [ROUTE[0][0], ROUTE[0][1]];
+    // integrate from snap
+    var s=0, steps=Math.max(1, Math.floor((t-T_SNAP)/DT));
+    for (var k=0;k<steps;k++){ var sp=targetSpeed(s,t); s=Math.min(TOTAL, s + sp*DT/YD); }
+    return routePos(s);
+  }
+
+  // Camera: pans in x to follow the play, slight handheld jitter
+  function camAt(t){
+    var focus = t<T_SNAP ? 41 : Math.max(41, wrStateAt(t)[0]-1.5);
+    return { x: focus, y: 26.7, jitter: 0.35 };
+  }
+
+  var cv = document.getElementById("broadcast"), ctx = cv.getContext("2d");
+  var td = document.getElementById("topdown"), tctx = td.getContext("2d");
+  var W=cv.width, H=cv.height;
+  var PXY = 26; // px per yard at field plane (broadcast scale)
+  function w2s(wx,wy,cam,raw){
+    var jx = raw ? (Math.sin(perf*7.3)*cam.jitter) : 0;
+    var jy = raw ? (Math.cos(perf*5.1)*cam.jitter*0.6) : 0;
+    return [ W/2 + (wx-cam.x)*PXY + jx, H*0.62 - (wy-cam.y)*PXY*0.9 + jy ];
+  }
+
+  var running=true, perf=0, showBoxes=true, showVectors=true, compOn=true, showTrail=true;
+  var speedHist=[], distAcc=0, topSoFar=0, tts=null, breakFired=false, catchFired=false;
+  var prevComp=null, prevRaw=null;
+
+  function $(id){ return document.getElementById(id); }
+  function fmt(n,d){ return n.toFixed(d===undefined?1:d); }
+
+  function breakAngleDeg(){
+    // incoming: stem start -> break; outgoing: break -> route end (mirrors cv-separation-metrics.breakAngle)
+    var a=[ROUTE[1][0]-ROUTE[0][0], ROUTE[1][1]-ROUTE[0][1]];
+    var b=[ROUTE[2][0]-ROUTE[1][0], ROUTE[2][1]-ROUTE[1][1]];
+    var n1=Math.hypot(a[0],a[1]), n2=Math.hypot(b[0],b[1]);
+    var c=Math.max(-1,Math.min(1,(a[0]*b[0]+a[1]*b[1])/(n1*n2)));
+    return Math.acos(c)*180/Math.PI;
+  }
+  function nearestDef(pos, t){
+    var best=null;
+    cast.forEach(function(p){ if(p.team!=="def") return; var q=p.fn(t); var d=Math.hypot(q[0]-pos[0],q[1]-pos[1]);
+      if(!best||d<best.d) best={id:p.id,d:d}; });
+    return best;
+  }
+
+  function drawField(){
+    ctx.fillStyle="#0d6b34"; ctx.fillRect(0,0,W,H);
+    // mow stripes
+    ctx.fillStyle="rgba(255,255,255,0.045)";
+    var cam=camAt(perf);
+    for (var gx=Math.floor(cam.x-20); gx<cam.x+20; gx+=2){
+      var sx=W/2+(gx-cam.x)*PXY;
+      ctx.fillRect(sx,0,PXY*2,H);
+    }
+    // yard lines (every 5 yds) + numbers-ish ticks
+    ctx.strokeStyle="rgba(255,255,255,0.75)"; ctx.lineWidth=2;
+    ctx.fillStyle="rgba(255,255,255,0.8)"; ctx.font="16px sans-serif"; ctx.textAlign="center";
+    for (var x=Math.ceil(cam.x-22); x<cam.x+22; x++){
+      if (x%5!==0 || x<10 || x>110) continue;
+      var lx=W/2+(x-cam.x)*PXY;
+      ctx.beginPath(); ctx.moveTo(lx,40); ctx.lineTo(lx,H-30); ctx.stroke();
+      var label = x<=60 ? (x-10) : (110-x)+10;
+      if (label%10===0){ ctx.fillText(label, lx, 90); ctx.fillText(label, lx, H-70); }
+    }
+    // end zone tint at edges
+    ctx.fillStyle="rgba(20,20,60,0.35)";
+    var ez1=W/2+(10-cam.x)*PXY, ez2=W/2+(110-cam.x)*PXY;
+    if (ez1>-50) ctx.fillRect(0,0,Math.min(ez1,W),H);
+    if (ez2<W+50) ctx.fillRect(Math.max(ez2,0),0,W,H);
+  }
+
+  function step(){
+    if (running) perf += DT;
+    if (perf >= T_END){ perf=0; speedHist=[]; distAcc=0; topSoFar=0; tts=null; breakFired=false; catchFired=false; wrTrail=[]; prevComp=null; prevRaw=null;
+      ["eRoute","eDepth","eBreak","eSepB","eSepC","eDef"].forEach(function(id){$(id).textContent="—";}); }
+
+    var t=perf, cam=camAt(t);
+    var wpos = wrStateAt(t);
+    drawField();
+
+    // trail
+    if (showTrail && t>=T_SNAP){
+      wrTrail.push({t:t,x:wpos[0],y:wpos[1]});
+      ctx.strokeStyle="rgba(94,234,212,0.9)"; ctx.lineWidth=3; ctx.beginPath();
+      var started=false;
+      wrTrail.forEach(function(p){ var s=w2s(p.x,p.y,cam,!compOn); if(!started){ctx.moveTo(s[0],s[1]);started=true;} else ctx.lineTo(s[0],s[1]); });
+      ctx.stroke();
+      // break point marker
+      var bs=w2s(ROUTE[1][0],ROUTE[1][1],cam,!compOn);
+      ctx.fillStyle="#fbbf24"; ctx.beginPath(); ctx.arc(bs[0],bs[1],7,0,7); ctx.fill();
+      ctx.fillStyle="#000"; ctx.font="bold 10px sans-serif"; ctx.textAlign="center"; ctx.fillText("BRK",bs[0],bs[1]+3.5);
+    }
+
+    // players
+    var all=[{id:WR.id,team:"off",hl:true,fn:function(tt){return wrStateAt(tt);}}].concat(cast);
+    // compensated vs raw positions for WR (for vectors + metrics)
+    var compNow=[wpos[0],wpos[1]];
+    var rawNow=[wpos[0]+Math.sin(t*7.3)*cam.jitter/PXY*8, wpos[1]+Math.cos(t*5.1)*cam.jitter/PXY*8];
+    var useNow = compOn?compNow:rawNow, usePrev = compOn?prevComp:prevRaw;
+    var spd=0, vx=0, vy=0;
+    if (usePrev && t>=T_SNAP){
+      var dxm=(useNow[0]-usePrev[0])*YD, dym=(useNow[1]-usePrev[1])*YD;
+      spd=Math.hypot(dxm,dym)/DT; vx=dxm/DT; vy=dym/DT;
+      distAcc+=Math.hypot(dxm,dym);
+      if (spd>topSoFar){ topSoFar=spd; }
+      if (tts===null && topSoFar>0 && spd>=0.95*8.6){ tts=t-T_SNAP; }
+    }
+    prevComp=compNow.slice(); prevRaw=rawNow.slice();
+
+    all.forEach(function(p){
+      var q=p.fn(t);
+      var s=w2s(q[0],q[1],cam,!compOn);
+      var col=p.team==="off"?"#5aa2ff":"#ff6b6b";
+      // vector
+      if (showVectors && t>=T_SNAP && !p.shadow){
+        var q2=p.fn(Math.min(T_END,t+0.25));
+        var s2=w2s(q2[0],q2[1],cam,!compOn);
+        var mx=(s2[0]-s[0])*4, my=(s2[1]-s[1])*4;
+        ctx.strokeStyle=p.hl?"#5eead4":col; ctx.lineWidth=p.hl?3:1.5;
+        ctx.beginPath(); ctx.moveTo(s[0],s[1]); ctx.lineTo(s[0]+mx,s[1]+my); ctx.stroke();
+        var ang=Math.atan2(my,mx);
+        ctx.beginPath(); ctx.moveTo(s[0]+mx,s[1]+my);
+        ctx.lineTo(s[0]+mx-8*Math.cos(ang-0.4),s[1]+my-8*Math.sin(ang-0.4));
+        ctx.lineTo(s[0]+mx-8*Math.cos(ang+0.4),s[1]+my-8*Math.sin(ang+0.4));
+        ctx.closePath(); ctx.fillStyle=p.hl?"#5eead4":col; ctx.fill();
+      }
+      // box + id
+      if (showBoxes){
+        var bw=26,bh=40;
+        ctx.strokeStyle=p.hl?"#5eead4":col; ctx.lineWidth=p.hl?3:2;
+        ctx.strokeRect(s[0]-bw/2,s[1]-bh/2,bw,bh);
+        ctx.fillStyle=p.hl?"#5eead4":col; ctx.font=(p.hl?"bold 13px":"11px")+" sans-serif"; ctx.textAlign="center";
+        ctx.fillText(p.id,s[0],s[1]-bh/2-6);
+      } else {
+        ctx.fillStyle=p.hl?"#5eead4":col; ctx.beginPath(); ctx.arc(s[0],s[1],p.hl?7:5,0,7); ctx.fill();
+      }
+    });
+
+    // events: break + catch
+    var sAlong = t<T_SNAP?0:Math.min(TOTAL,(function(){var s=0,steps=Math.floor((t-T_SNAP)/DT);for(var k=0;k<steps;k++){s=Math.min(TOTAL,s+targetSpeed(s,t)*DT/YD);}return s;})());
+    if (!breakFired && sAlong>=SEGS[0]){
+      breakFired=true;
+      var ba=breakAngleDeg(), nd=nearestDef([ROUTE[1][0],ROUTE[1][1]], t);
+      $("eBreak").innerHTML=fmt(ba,1)+" <small>deg</small>";
+      $("eSepB").innerHTML=fmt(nd.d,1)+" <small>yd</small>";
+      $("eDef").textContent=nd.id;
+      $("eRoute").textContent="dig";
+      $("eDepth").innerHTML=fmt(SEGS[0],1)+" <small>yd</small>";
+    }
+    if (!catchFired && sAlong>=TOTAL-0.5){
+      catchFired=true;
+      var nd2=nearestDef(wpos,t);
+      $("eSepC").innerHTML=fmt(nd2.d,1)+" <small>yd</small>";
+    }
+
+    // live metric readouts
+    var mph=spd*2.23694;
+    $("mSpeed").innerHTML = t<T_SNAP ? '0.0 <small>m/s</small>' : fmt(spd)+" <small>m/s · "+fmt(mph,0)+" mph</small>";
+    $("mTop").innerHTML=fmt(topSoFar)+" <small>m/s</small>";
+    $("mDist").innerHTML=fmt(distAcc)+" <small>m</small>";
+    $("mTts").innerHTML= tts===null ? "— <small>s</small>" : fmt(tts,2)+" <small>s</small>";
+    var dir="—";
+    if (t>=T_SNAP && Math.hypot(vx,vy)>0.5){
+      var ang=Math.atan2(vy,vx)*180/Math.PI;
+      dir = (ang>-45&&ang<=45)?"downfield →":(ang>45&&ang<=135)?"↑ sideline":(ang<-45&&ang>=-135)?"↓ sideline":"← backfield";
+    }
+    $("mDir").textContent=dir;
+    $("mPos").textContent="("+fmt(wpos[0]*YD,1)+", "+fmt(wpos[1]*YD,1)+") m";
+
+    // phase
+    var pill=$("phasePill"), note=$("phaseNote");
+    if (t<T_SNAP){ pill.className="pill presnap"; pill.textContent="PRE-SNAP";
+      note.textContent="Offense set. Formation classifier reading alignment…"; }
+    else if (t<T_WHISTLE){ pill.className="pill live"; pill.textContent="LIVE";
+      note.textContent = breakFired ? "Route classified: dig · measuring separation…" : "Ball snapped. Tracking 22 tracklets…"; }
+    else { pill.className="pill whistle"; pill.textContent="WHISTLE";
+      note.textContent="Play over. Rolling up film features → shadow ledger…"; }
+    $("phaseClock").textContent="t = "+fmt(t,2)+"s";
+
+    // pipeline stage pulse
+    var strip=$("stageStrip").children;
+    var hot=Math.floor(perf*8)%6;
+    for (var si=0;si<strip.length;si++) strip[si].className=strip[si].className.replace(" hot","");
+    strip[hot].className+=" hot";
+
+    drawTopdown(t, wpos);
+    requestAnimationFrame(step);
+  }
+
+  function drawTopdown(t, wpos){
+    var tw=td.width, th=td.height;
+    tctx.fillStyle="#0a3d20"; tctx.fillRect(0,0,tw,th);
+    // field: x 0..120 -> horizontal, y 0..53.3 -> vertical
+    function f2p(x,y){ return [ 20+(x/120)*(tw-40), 14+(y/53.3)*(th-28) ]; }
+    tctx.strokeStyle="rgba(255,255,255,0.5)"; tctx.lineWidth=1;
+    for (var x=10;x<=110;x+=10){ var a=f2p(x,0),b=f2p(x,53.3); tctx.beginPath();tctx.moveTo(a[0],a[1]);tctx.lineTo(b[0],b[1]);tctx.stroke(); }
+    tctx.strokeStyle="rgba(255,255,255,0.9)"; tctx.lineWidth=2;
+    [[10],[110]].forEach(function(g){ var a=f2p(g[0],0),b=f2p(g[0],53.3); tctx.beginPath();tctx.moveTo(a[0],a[1]);tctx.lineTo(b[0],b[1]);tctx.stroke(); });
+    // all players
+    var all=[{id:WR.id,team:"off",hl:true,fn:function(tt){return wrStateAt(tt);}}].concat(cast);
+    all.forEach(function(p){ var q=p.fn(t), s=f2p(q[0],q[1]);
+      tctx.fillStyle=p.hl?"#5eead4":(p.team==="off"?"#5aa2ff":"#ff6b6b");
+      tctx.beginPath(); tctx.arc(s[0],s[1],p.hl?5:3.5,0,7); tctx.fill(); });
+    // WR trail
+    if (wrTrail.length>1){ tctx.strokeStyle="#5eead4"; tctx.lineWidth=2; tctx.beginPath();
+      wrTrail.forEach(function(p,i){ var s=f2p(p.x,p.y); if(i===0)tctx.moveTo(s[0],s[1]); else tctx.lineTo(s[0],s[1]); });
+      tctx.stroke(); }
+    tctx.fillStyle="rgba(255,255,255,0.75)"; tctx.font="10px sans-serif"; tctx.textAlign="left";
+    tctx.fillText("goal-line-origin field · meters", 20, th-8);
+  }
+
+  // controls
+  function tog(id, fn){ $(id).addEventListener("click", function(){ var b=$(id); b.classList.toggle("on"); fn(b.classList.contains("on")); }); }
+  $("btnPlay").addEventListener("click", function(){ running=!running; $("btnPlay").textContent=running?"Pause":"Play"; $("btnPlay").classList.toggle("on",running); });
+  $("btnRestart").addEventListener("click", function(){ perf=0; });
+  tog("btnBoxes", function(on){ showBoxes=on; });
+  tog("btnVectors", function(on){ showVectors=on; });
+  tog("btnComp", function(on){ compOn=on; $("btnComp").textContent="Camera compensation: "+(on?"ON":"OFF"); });
+  tog("btnTrail", function(on){ showTrail=on; });
+
+  requestAnimationFrame(step);
+})();
+</script>
+
+<section>
+  <h2><span class="n">03</span>Every metric it pulls</h2>
+  <p class="lead">The complete inventory, straight from the code — real field names, real units, grouped by the stage that produces them. This is the full answer to "what metrics are involved."</p>
+
+  <div class="cat-group">
+    <h3>Movement — per tracklet, every play</h3>
+    <p>From <code>deriveMovementMetrics</code> + the per-frame speed series. The raw material for everything speed-related.</p>
+    <div class="cat-grid">
+      <div class="cat"><span class="unit">m</span><div class="name mono">distanceM</div><p>Total ground covered by the player during the play. Sprint distance, route distance, pursuit distance — all the same measurement.</p></div>
+      <div class="cat"><span class="unit">m/s</span><div class="name mono">topSpeedMs</div><p>The single fastest frame-to-frame speed — the player's <b>sprint speed</b> on that play.</p></div>
+      <div class="cat"><span class="unit">m/s</span><div class="name mono">avgSpeedMs</div><p>Mean speed across the play. Separates the burners from the guys who jog between bursts.</p></div>
+      <div class="cat"><span class="unit">m/s @ 60fps</span><div class="name">Per-frame speed series</div><p>Speed at every frame — the full sprint curve. From this: <b>time from snap to top speed</b>, acceleration phases, and the dip-and-reburst at a route break.</p></div>
+      <div class="cat"><span class="unit">vector</span><div class="name">Directional velocity</div><p>Speed <i>plus heading</i> per frame: how fast, and exactly which direction. This is what the arrows in the demo are.</p></div>
+      <div class="cat"><span class="unit">px</span><div class="name mono">cameraMotion dx/dy</div><p>How far the broadcast camera itself moved between frames — estimated by optical flow, then subtracted. A measurement of the measurement.</p></div>
+    </div>
+  </div>
+
+  <div class="cat-group">
+    <h3>Routes — per receiver, per play</h3>
+    <p>From <code>classifyRoute</code>: the receiver's path matched against 14 route templates.</p>
+    <div class="cat-grid">
+      <div class="cat"><span class="unit">14 classes</span><div class="name">Route name</div><p>go · slant · out · dig · post · corner · curl · comeback · flat · wheel · screen · drag · seam · hitch — or <code>unknown</code> when nothing fits.</p></div>
+      <div class="cat"><span class="unit">0–1</span><div class="name mono">confidence</div><p>Margin between the best and second-best template match. Low confidence means the route was improvised or messy.</p></div>
+      <div class="cat"><span class="unit">yards</span><div class="name mono">depthYards</div><p>How far downfield the route went — the number behind "he's their deep threat" vs "he lives underneath."</p></div>
+      <div class="cat"><span class="unit">field point</span><div class="name mono">breakPoint</div><p>The exact spot of maximum curvature — where the cut happened. Null on straight routes (go/seam have no break).</p></div>
+      <div class="cat"><span class="unit">seconds</span><div class="name mono">releaseT</div><p>When the receiver left the line relative to the snap — slow releases vs instant burners.</p></div>
+    </div>
+  </div>
+
+  <div class="cat-group">
+    <h3>Separation — per route, per play</h3>
+    <p>From <code>cv-separation-metrics</code>: the man-coverage truth serum. Nearest defender = closest opposing tracklet by field position.</p>
+    <div class="cat-grid">
+      <div class="cat"><span class="unit">degrees</span><div class="name mono">breakAngleDeg</div><p>Angle between the incoming stem and the outgoing break — e.g. ~90° on a dig. Sharpness of the cut, measured, not eyeballed.</p></div>
+      <div class="cat"><span class="unit">yards</span><div class="name mono">sepAtBreakYd</div><p>Distance to the nearest defender at the break — did the cut actually create space?</p></div>
+      <div class="cat"><span class="unit">yards</span><div class="name mono">sepAtCatchYd</div><p>Distance to the nearest defender at the catch point — the contested-catch meter.</p></div>
+      <div class="cat"><span class="unit">tracklet id</span><div class="name mono">nearestDefenderAtBreak</div><p>Which defender was closest at the break — feeds matchup analysis (who got cooked, by whom).</p></div>
+    </div>
+  </div>
+
+  <div class="cat-group">
+    <h3>Player film features — per player, rolling</h3>
+    <p>From <code>extractPlayerFilmFeatures</code>: per-play measurements aggregated into a player profile. Needs the tracklet→player identity map — without it, these are skipped, never guessed.</p>
+    <div class="cat-grid">
+      <div class="cat"><span class="unit">shares</span><div class="name mono">routeMix</div><p>Route name → share of the player's classified routes. His actual route tree, from film.</p></div>
+      <div class="cat"><span class="unit">shares</span><div class="name mono">targetShareByFormation</div><p>Where he lines up vs how often he's involved — formation tells you the plan.</p></div>
+      <div class="cat"><span class="unit">yards</span><div class="name mono">avgSepAtBreakYd / avgSepAtCatchYd</div><p>Does he separate consistently, or was one play a fluke?</p></div>
+      <div class="cat"><span class="unit">deg / yards</span><div class="name mono">avgBreakAngleDeg / avgDepthYards</div><p>How sharp his cuts are on average, how deep his average route goes.</p></div>
+      <div class="cat"><span class="unit">share</span><div class="name mono">redZoneRouteShare</div><p>Share of his routes run with the ball inside the opponent's 20 — red-zone role, measured.</p></div>
+    </div>
+  </div>
+
+  <div class="cat-group">
+    <h3>Team film features + tendencies — per team, rolling</h3>
+    <p>From <code>extractTeamFilmFeatures</code> and <code>cv-tendencies</code>: what the film says about the scheme.</p>
+    <div class="cat-grid">
+      <div class="cat"><span class="unit">matrix</span><div class="name">Down × distance run/pass</div><p>Full 4-downs × short/medium/long run-pass tendency matrix. "They pass 78% on 2nd-and-long" — from film, not vibes.</p></div>
+      <div class="cat"><span class="unit">shares</span><div class="name mono">formationFreq</div><p>Personnel + distribution → share of plays. How often they live in 11 personnel, bunch, empty…</p></div>
+      <div class="cat"><span class="unit">yards</span><div class="name mono">yardsPerPlayByFormation</div><p>Which formations actually produce — scheme efficiency, measured per formation family.</p></div>
+      <div class="cat"><span class="unit">rates</span><div class="name mono">playActionRate / screenRate / hurryUpRate</div><p>How often they use play-action, screens, and tempo — the tendency fingerprints.</p></div>
+      <div class="cat"><span class="unit">ranked list</span><div class="name mono">routeCombinationFrequency</div><p>Most common route combos from each formation family — what the defense is actually defending.</p></div>
+      <div class="cat"><span class="unit">label</span><div class="name">Formation classification</div><p>Pre-snap alignment → personnel + distribution + play-action/screen/hurry-up flags, from <code>cv-formation-classify</code>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">04</span>One play, end to end</h2>
+  <p class="lead">Trace a single snap through the whole machine — the same dig route from the demo above.</p>
+  <div class="trace">
+    <div class="trace-row"><div class="t">Capture</div><div class="b">Watcher grabs the broadcast at 60fps. Frame 1,142 lands with timestamp <b>t=0.80s</b> — the snap.</div></div>
+    <div class="trace-row"><div class="t">Detect</div><div class="b">YOLO returns 22 boxes. One of them: <b>(x 612, y 388, w 26, h 40), conf 0.93</b> — a player, no name yet.</div></div>
+    <div class="trace-row"><div class="t">Track</div><div class="b">IoU association links it to the same box 59 frames running. It becomes <b>tracklet T-07</b>, offense side.</div></div>
+    <div class="trace-row"><div class="t">Stabilize</div><div class="b">Camera panned 34px following the play. Optical flow measured it; every T-07 position is shifted back by the camera field. <b>Without this, his speed would read 11.2 m/s. With it: 8.6.</b></div></div>
+    <div class="trace-row"><div class="t">Map</div><div class="b">Yard lines detected, homography fit. T-07's pixels become <b>(36.6m, 11.0m)</b> on the goal-line-origin field.</div></div>
+    <div class="trace-row"><div class="t">Measure</div><div class="b"><b>distanceM 20.2 · topSpeedMs 8.6 · avgSpeedMs ~6.5</b> — plus the per-frame curve showing 0.75s from release to top speed and the gather-dip at the break.</div></div>
+    <div class="trace-row"><div class="t">Understand</div><div class="b">Segmented as one play, snap→whistle. Formation: <b>11 personnel, 2x2</b>. T-07's path matches the <b>dig</b> template at 0.87 confidence, depth 7.5 yd, break at (43.4m, 11.0m). <b>Break angle 90.0°. Separation at break 2.3 yd (nearest: T-24). Separation at catch 1.1 yd.</b> Jersey OCR reads <b>#11</b> → roster identity attached.</div></div>
+    <div class="trace-row"><div class="t">Learn</div><div class="b">Rolled into the player's film profile (dig share up, avg separation updated) and the team's tendency matrix. Written to <b>film_shadow_ledger</b> as a weight-0 shadow row — visible to calibration, invisible to every published number.</div></div>
+  </div>
+</section>
+
+<footer>
+  <h3>Honest status — what this page is and isn't</h3>
+  <ul>
+    <li><b>The pipeline stages, module names and metric definitions are real</b> — pulled from the merged code in <code>packages/prediction-engine/src/{tracking,perception,film-features}</code> today.</li>
+    <li><b>The animation is simulated</b> — synthetic players on a synthetic field. It demonstrates the pipeline's <i>logic</i> (the speed math, break-angle math and separation math mirror the real functions); it is not real game footage and not real measurements.</li>
+    <li><b>Detector boundary:</b> the repo holds the detector <i>contract</i>, not YOLO weights — a trained detector drops in behind it.</li>
+    <li><b>Identity gap:</b> player-level film features need the tracklet→player map (jersey OCR + roster join). Until that lands, they are skipped, not guessed.</li>
+    <li><b>Calibration:</b> every film signal is <b>UNCALIBRATED, weight 0, shadow-only</b> until the validation spec (PR #1003) is satisfied with real graded film. Nothing on this page touches a published projection.</li>
+    <li>Pipeline tests: 196/196 green on synthetic fixtures. Real-film validation is the next mountain.</li>
+  </ul>
+</footer>
+
+</div>
+</body>
+</html>
