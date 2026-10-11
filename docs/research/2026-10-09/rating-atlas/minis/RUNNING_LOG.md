@@ -249,3 +249,13 @@
 - mine_scoring.py re-run (chunks dir created): app.js scoring:48, chunk 2546 (Rules&Scoring tab UI), chunk 9265 — ALL UI refs, engine still server-side (3rd confirmation)
 - Rules JSON hunt: /rules-and-scoring/RulesAndScoring.json paths 404 (SPA shell), api rules v1 403; contest-detail carries only scoringStyleId. OPEN ITEM: capture the live rules XHR from the pop once → land DK_RulesAndScoring.json
 - Entry tracker: showdown mini-MAX 196458730 now 37,786/59.4K entries, My Entries: 1 confirmed
+
+### [01:40] GENIE — 183-outlier close + selection-bias record landed (diagnostic, no promotion)
+- **dfs/genie183/183_outlier_FULL_table.csv**: 183 players (exact re-count), cols = player/stat/L/mu/sigma/resid-σ/abs-resid/n-rungs/r2/season-week + honest gaps (both-sides flag + rung set not persisted in fits artifact — recorded as gap #3)
+- **183_tail20_top_bottom.csv**: top+bottom 20 by residual σ (Foley +2.705σ … )
+- **183_fit_quality.csv**: per-player n-rungs/r2; pass-market r2=0 rows flagged (sigma-median fallback, thin ladders)
+- **residual_distributions.json**: 6 slices — full 262 (mean −0.004σ, 49.2/50.4 split), outliers 183 (−0.006σ), inliers 79 (+0.0003σ), per-stat pass/rush/rec (−0.10/+0.06/−0.06σ) — all ≈ 0, bias cannot reappear under any cut
+- **SELECTION_BIAS_CORRECTION.md**: corrected claim stamped — full-set mean gap = +0.9 pts... wait, 262-set mean(posted−mu) ≈ 0 pts; the +34 was the 7-player selected subset (mean +33.5 pts); selection filter documented; 5 gaps with reopen conditions (stability re-fit needs later snapshot; cross-book needs FD/other CFB prop harvest; per-rung persistence; movement join; not-fitted inventory)
+- **COVERAGE.json**: examined=not-recorded / fitted 262 / >0.15σ 183 / ≤0.15σ 79 / not-fitted unknown
+- Stability + cross-book checks: NOT RUN — single snapshot + no cross-book CFB props on bus; recorded as gaps w/ reopen conditions (no fabrication)
+- All diagnostic. Residual ≠ edge until residual-vs-close on frozen manifest.
