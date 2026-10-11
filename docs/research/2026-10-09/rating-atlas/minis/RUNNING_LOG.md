@@ -593,3 +593,10 @@
 - **Coverage**: payout zone FULLY captured (505 rows, ranks 1–5414; contest pays 5,532). 494 unique lineups; max duplication 4×. Beyond rank 5414 needs the UI cursor (not query-param) — noted.
 - **Your live entry**: Hurts(C)-Lawrence-Tuten-Shipley-Strange-Hunter, status Live.
 - **Pre-lock lesson for future slates**: the same in-page authenticated fetch pattern works pre-lock on lobby/entry-preview endpoints. Session proven; command documented in the stamp.
+
+### [16:00] AFTERNOON SLATE PACKAGE — Red Zone $200K builds + consensus facts + paywall note
+- **dfs/MAIN_SLATE_POOL_154468.json + main_slate_pool_154468.csv**: 587 players (in-page authenticated getavailableplayers).
+- **dfs/RED_ZONE_BUILDS_196420201.json**: 6 ILP builds for the user's $200K Red Zone (Single Entry, locks 12:00 CT) — proj 173.0-175.4, core JSN+Nico+Olave, Bowers, Vikings DST; QB/REB pivots across Purdy/Shough/Williams/Goff and Monangai+Mason/Etienne. Basis = season PPG (honest, no fabricated matchup bumps).
+- **FantasyGuru articles: PAYWALLED** — all four (Mans cash, injury, start/sit, game scripts) serve only intro + scores to anonymous curl. Reopen: subscription or logged-in browser session.
+- **Pre-lock per-contestant lineups: NOT PUBLIC on DK** — users draft private until lock. Pre-lock consensus = entry COUNTS (have) + ownership projections (vendor data) + our ILP builds. Post-lock per-contestant lineups = the proven leaderboard pull (505-row page, ranks 1-5414 for showdown).
+- DIAGNOSTIC.
