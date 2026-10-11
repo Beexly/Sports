@@ -562,3 +562,10 @@
 - **dfs/LONDON_LIVE_SNAPSHOT.json**: PHI 0 @ JAX 7, 11:45 left in Q2, frozen under FreshnessGate semantics (observed_at + immutable file). When the game hits Q3, the OU v2 empirical-attractor spec takes over per the live spec — its in-play prediction is gradeable against the final the moment ESPN flips Final (poller fires).
 - The Q2-start score state (JAX +7, ~23.5 min elapsed) is the exact input the OU v2 process needs: attractor lookup by |close| bucket + state T + time remaining → P(final margin) — all pre-registered.
 - DIAGNOSTIC.
+
+### [14:45] P1-P3 GAPS CLOSED — injuries wired, feeds confirmed missing, ingest status honest
+- **dfs/INJURY_GATE_WIRING.json + GATE_AUDIT.json (12/12 FRESH)**: injuries_2026.parquet (1,413 rows, wk3-5, report+practice status, nflverse release) wired as gate artifact #12 (max_age 84h). London pre-kick read: PHI without Barkley/Smith/Brown — the −7.5→−8.5 move already absorbed it; OU Q1 spec stays "close".
+- **P1 prop feed CONFIRMED MISSING**: bus audit found only machinery calibration (props-hb-validation.json itself states the repo lacks archived prop-price history). Unblock command = the stamped chrome-wf sequence.
+- **dfs/INGEST_STATUS.json**: snap counts wk1-5 + injuries wk1-5 fresh; advstats wk1-4; officials 2026 lags at wk1 (release-side, re-pull verified).
+- **Firecrawl/ESPN**: no MCP artifact exists; the wired nflverse mirror is the equivalent public freshness source. Direct-ESPN reopen = browser lane.
+- DIAGNOSTIC. Nothing promoted.

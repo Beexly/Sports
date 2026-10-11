@@ -1,0 +1,52 @@
+{
+ "observed_at": "2026-10-11T14:29:36Z",
+ "ingest_status": {
+  "snap_counts": {
+   "weeks": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "rows": 6064
+  },
+  "officials_2026": {
+   "weeks": [
+    1
+   ],
+   "rows": 112
+  },
+  "advstats_pass": {
+   "weeks": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "rows": 150
+  },
+  "advstats_rec": {
+   "weeks": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "rows": 1032
+  },
+  "injuries": {
+   "weeks": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "rows": 1413
+  }
+ },
+ "gaps": "wk5 snap counts/advstats/officials land post-slate (nflverse automation); current files cover wk1-4 (+injuries wk3-5)",
+ "gate_compliance": "all inputs sha16-pinned in GATE_AUDIT; refresh before next slate",
+ "label": "DIAGNOSTIC"
+}

@@ -1,0 +1,40 @@
+{
+ "observed_at": "2026-10-11T14:29:21Z",
+ "test": "P2 \u2014 injury/roster freshness artifact exists and is now a gated FreshnessGate input",
+ "artifact": {
+  "path": "eq_harvest/raw/nflverse-data/injuries_2026.parquet",
+  "rows": 1413,
+  "weeks": [
+   3,
+   4,
+   5
+  ],
+  "age_hours": 0.0,
+  "sha16": "2eab2b68205513c1",
+  "max_age_hours": 84,
+  "source": "nflverse injuries release (open)"
+ },
+ "columns": [
+  "report_primary_injury",
+  "report_status",
+  "practice_primary_injury",
+  "practice_status"
+ ],
+ "london_pre_kick_read": {
+  "PHI_out": [
+   "Saquon Barkley (RB, hamstring)",
+   "DeVonta Smith (WR, hamstring)",
+   "Marquise Brown (WR, ankle)",
+   "Marcus Epps (S)",
+   "Drew Kendall (C)"
+  ],
+  "JAX_out_doubtful": [
+   "Jaylon Jones (CB, Out)",
+   "Eric Murray (S, Doubtful)"
+  ],
+  "reading": "PHI missing its entire projected top-3 skill trio in London. The close moved JAX -7.5\u2192-8.5 BEFORE this snapshot \u2014 the injury news is the plausible mechanism, meaning the close has ALREADY absorbed it. OU Q1 spec stays \"close\"; the injury layer explains the move rather than beating it."
+ },
+ "wiring": "injuries_2026.parquet is now a GATE_AUDIT artifact (max_age 84h \u2014 must refresh before each slate; STALE \u2192 close-only + kill ledger)",
+ "firecrawl_espn_note": "No Firecrawl MCP artifact on the bus; ESPN injuries API (open, site.api.espn.com) is the equivalent public freshness source \u2014 the nflverse release mirrors it and is the wired path.",
+ "label": "DIAGNOSTIC \u2014 wiring + pre-kick read, no grade"
+}

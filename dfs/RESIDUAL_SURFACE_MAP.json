@@ -95,5 +95,23 @@
   "stale": 0,
   "enforcement": "every producer reads through freshnessgate_wiring; STALE/MISSING -> close-only + kill ledger"
  },
- "label": "DIAGNOSTIC"
+ "label": "DIAGNOSTIC",
+ "updated_at": "2026-10-11T14:30:17Z",
+ "updates": {
+  "receiver-watchlists": {
+   "prop_feed_status": "CONFIRMED MISSING \u2014 bus audit found only machinery calibration (reports/edge-lab/props-hb-validation.json explicitly notes \"archived prop-price history this repo does not yet have\")",
+   "unblock_command": "(1) user opens real Chrome -> DK NFL game -> props tab; (2) relaunch their profile with --remote-debugging-port=9222 --remote-allow-origins=*; (3) in-page fetch nash NFL prop subcats 9524/16569-16571 per event -> dfs/genie_acq2/nash_nfl_props_<eventid>.json; (4) genie183 fitter -> RVC tables"
+  },
+  "injury_gate": {
+   "state": "WIRED \u2014 injuries_2026.parquet (1,413 rows wk3-5, report+practice status) is GATE_AUDIT artifact #12, max_age 84h, STALE->close-only+ledger",
+   "london_read": "PHI without Barkley+Smith+Brown (all Out); close moved -7.5->-8.5 pre-snapshot = news already absorbed; OU Q1 spec stays close",
+   "file": "dfs/INJURY_GATE_WIRING.json"
+  },
+  "ingest_status": {
+   "file": "dfs/INGEST_STATUS.json",
+   "gaps": "officials 2026 lags (wk1 only, release-side); wk5 advstats land post-slate",
+   "fresh": "snap counts wk1-5, injuries wk1-5, advstats wk1-4"
+  },
+  "firecrawl_espn": "No Firecrawl MCP artifact exists; ESPN injuries API equivalent is mirrored by the wired nflverse release. Reopen for direct-ESPN: browser lane (headless walled)."
+ }
 }

@@ -100,9 +100,18 @@
    "sha16": "436c1f4edf0d76ae",
    "type": "stamp",
    "gate_action": "read OK"
+  },
+  {
+   "artifact": "eq_harvest/raw/nflverse-data/injuries_2026.parquet",
+   "state": "FRESH",
+   "age_hours": 0.0,
+   "max_age_hours": 84,
+   "sha16": "2eab2b68205513c1",
+   "type": "injury-report",
+   "gate_action": "read OK \u2014 wired as DFS/prop input"
   }
  ],
- "n_fresh": 11,
+ "n_fresh": 12,
  "n_not_fresh": 0,
  "enforcement": "Every residual producer reads through the gate; STALE/MISSING artifacts fall back to close-only with kill-ledger rows. No silent bypass \u2014 the gate wraps the artifact.",
  "label": "DIAGNOSTIC \u2014 gate infrastructure, no residuals produced here"
