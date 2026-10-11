@@ -1,0 +1,57 @@
+{
+ "observed_at": "2026-10-11T03:29:12Z",
+ "source": "nflverse pbp parquets (local 2022-2026, intelligence/coaching/data/)",
+ "n_attempts": 4713,
+ "curve": [
+  {
+   "dist_lo": 15,
+   "dist_hi": 25,
+   "n": 410,
+   "fg_pct": 99.0
+  },
+  {
+   "dist_lo": 25,
+   "dist_hi": 30,
+   "n": 611,
+   "fg_pct": 96.9
+  },
+  {
+   "dist_lo": 30,
+   "dist_hi": 35,
+   "n": 648,
+   "fg_pct": 96.9
+  },
+  {
+   "dist_lo": 35,
+   "dist_hi": 40,
+   "n": 654,
+   "fg_pct": 90.7
+  },
+  {
+   "dist_lo": 40,
+   "dist_hi": 45,
+   "n": 659,
+   "fg_pct": 83.9
+  },
+  {
+   "dist_lo": 45,
+   "dist_hi": 50,
+   "n": 642,
+   "fg_pct": 76.6
+  },
+  {
+   "dist_lo": 50,
+   "dist_hi": 55,
+   "n": 691,
+   "fg_pct": 73.5
+  },
+  {
+   "dist_lo": 55,
+   "dist_hi": 65,
+   "n": 385,
+   "fg_pct": 62.6
+  }
+ ],
+ "label": "DIAGNOSTIC \u2014 edge candidate only; residual-vs-close not yet run on kicker props",
+ "reopen": "kicker FG-distance props (DK alt ladders) pulled via nash subcat 16569-16571 family -> compare book-implied FG% vs this curve -> residual-vs-close on settled kicker props"
+}

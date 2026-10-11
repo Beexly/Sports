@@ -304,3 +304,9 @@
 - **Kansas@Utah live** (24-41) — grades on final. 9 events await settlement (Sat/Sun).
 - grade() fixes: 'graded' row-key added; graded file now carries observed_at (FreshnessGate-compliant)
 - **Reopen (exact)**: remaining events settle → `rvc_grade.py --grade <refreshed outcomes>` → C1 mechanically testable at ≥60 → model-skill stamp PASS/REFUSED, no human judgment
+
+### [03:40] EDGE#3 CLOSED FROM CORPUS (zero new pulls) + pipeline refuse-safety re-verified
+- **EDGE#3 kicker/FG-distance curve (dfs/edge3_fg_curve.json + edge3_fg_curve.py)**: 4,713 FG attempts 2022-2026 from local nflverse pbp parquets — conversion by distance: 15-25: 99.0% / 25-30: 96.9% / 30-35: 96.9% / 35-40: 90.7% / 40-45: 83.9% / 45-50: 76.6% / 50-55: 73.5% / 55-65: 62.6% (n≥385 per bin except short). Zero new pulls; corpus-only.
+- DIAGNOSTIC only; reopen for RVC: pull kicker FG-distance props via nash alt subcats → compare book-implied FG% vs this curve → residual-vs-close on settled kicker props.
+- **Pipeline refuse-safety re-verified**: rvc_grade.py --verify PASS (executable + refuse-safe). Settlement status: 4 Final graded (17 sel) + Kansas@Utah live + 8 pending Sat/Sun.
+- **Reopen (exact, unchanged)**: remaining events settle → rvc_grade.py --grade <refreshed outcomes> → C1 (≥60) mechanically testable → model-skill stamp PASS/REFUSED. Nothing promoted.
