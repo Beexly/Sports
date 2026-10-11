@@ -1,0 +1,273 @@
+{
+ "observed_at": "2026-10-11T00:20:06Z",
+ "source": "linestarapp.com public Angular bundle /Portals/0/js/fantasysportsco_new.js?v=417 (client-shipped code)",
+ "endpoints": {
+  "GetSalariesV5": "GET /DesktopModules/DailyFantasyApi/API/Fantasy/GetSalariesV5?site=1&sport=1&periodId={id} \u2014 full slate config: PositionFilters, LineupRequirements (roster + multipliers), LineupBudget, GenerateMethods (12 optimizer modes w/ exact descriptions), AdvancedOptions (23 optimizer params incl Max Exposure semantics), StackingOptions (5 stack types w/ params), MatchupData, AvgAdjustments, NewsSummary, Ownership.Projected + Ownership.ContestResults (per-contest player-owned%!), SalaryContainerJson (players w/ Proj PP/Ceil/Floor/Conf/Notes \u2014 sharp-note structured alerts), SalariesMap (per-slate salary ID lists + Variants w/ per-variant salary/position/salary-mult)",
+  "GetFastUpdateV2": "GET same params \u2014 live updates",
+  "GetPlayerHistoryRecentV2": "player recent history",
+  "GenerateLineup": "POST optimizer (params encoded via AdvancedOptions/GenerateMethods ids)",
+  "GetOverrides/SaveOverride/SaveOverrideProj/UpdateCustomProjectionV3": "user projection overrides",
+  "ExportLineupSet/SaveLineupSet/DeleteLineupSet/UpdateLineupSetName": "lineup set mgmt"
+ },
+ "public_access": "GetSalariesV5 returns 200 unauthenticated (verified). Ownership data = REAL per-contest field ownership from tracked contests (ContestResults[].OwnershipData[] player-level Owned%)",
+ "generate_methods": [
+  {
+   "Method": 0,
+   "Name": "Highest Projected",
+   "ShortName": "Default",
+   "Description": "Generates lineups with the highest number of projected points."
+  },
+  {
+   "Method": 16,
+   "Name": "High Leverage",
+   "ShortName": "Leverage",
+   "Description": "Optimizes lineups with the highest leverage players to follow low owned high scoring players. *Tournaments*"
+  },
+  {
+   "Method": 17,
+   "Name": "High Safety",
+   "ShortName": "Safety",
+   "Description": "Optimizes lineups with the highest owned players to follow the field. *Double-Ups*"
+  },
+  {
+   "Method": 13,
+   "Name": "Tournament - GPP",
+   "ShortName": "Tournament",
+   "Description": "This model favors high leverage players with high ceilings. Lineups will have lower ownership for high risk and reward."
+  },
+  {
+   "Method": 14,
+   "Name": "Double Ups",
+   "ShortName": "DoubleUps",
+   "Description": "This model favors higher owned players. Lineups will have higher ownership which will follow the crowd."
+  },
+  {
+   "Method": 7,
+   "Name": "Daily Matchup",
+   "ShortName": "DailyMat",
+   "Description": "More heavily favors players with the best matchups based on our Matchups page."
+  },
+  {
+   "Method": 1,
+   "Name": "Predictable & Consistent",
+   "ShortName": "Predictable",
+   "Description": "Places more value on players who have been predictable. *Double-Ups*"
+  },
+  {
+   "Method": 2,
+   "Name": "High Ceiling",
+   "ShortName": "Ceiling",
+   "Description": "Fills lineups with players that have shown the ability to score big. This is a riskier option but can pay off. *Tournaments*"
+  },
+  {
+   "Method": 3,
+   "Name": "High Floor",
+   "ShortName": "Floor",
+   "Description": "Fills lineups with players that don't score low."
+  },
+  {
+   "Method": 20,
+   "Name": "Boom Bust Random",
+   "ShortName": "BoomBust",
+   "Description": "Optimizes lineups that will randomly give players their ceiling or floor scores."
+  },
+  {
+   "Method": 4,
+   "Name": "Stars and Scrubs",
+   "ShortName": "Stars",
+   "Description": "Fills the lineups with as many high salary studs as possible. *Tournaments*"
+  },
+  {
+   "Method": 5,
+   "Name": "Points Per Game",
+   "ShortName": "PPG",
+   "Description": "Use PPG value from daily site in place of our projections."
+  }
+ ],
+ "advanced_options": [
+  {
+   "Option": 102,
+   "OptionType": 2,
+   "Value1": 10,
+   "Value2": 0,
+   "RangeMin": 1,
+   "RangeMax": 150,
+   "Desc": "Select the number of lineups you want generated.",
+   "Name": "Lineup Count",
+   "Id": "variablelineupcount",
+   "Params": null,
+   "Save": true,
+   "Important": true
+  },
+  {
+   "Option": 8,
+   "OptionType": 2,
+   "Value1": 70,
+   "Value2": 0,
+   "RangeMin": 5,
+   "RangeMax": 100,
+   "Desc": "Max Exposure limits the number of times a player will be included in a lineup set. At 70% Max Exposure, with 10 lineups a player will be in at most 7 lineups.",
+   "Name": "Max Exposure",
+   "Id": "exposuremax",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 19,
+   "OptionType": 5,
+   "Value1": 50,
+   "Value2": 0,
+   "RangeMin": 0,
+   "RangeMax": 100,
+   "Desc": "Set the max exposure limit per position. This takes priority over the standard exposure if a position matches.",
+   "Name": "Position Exposure",
+   "Id": "positionexposurelevelmax",
+   "Params": "",
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 10,
+   "OptionType": 1,
+   "Value1": 0,
+   "Value2": 0,
+   "RangeMin": 0,
+   "RangeMax": 0,
+   "Desc": "Your liked Players can exceed the Max Exposure value.",
+   "Name": "Liked Exposure",
+   "Id": "lovedexposure",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 20,
+   "OptionType": 2,
+   "Value1": 500,
+   "Value2": 0,
+   "RangeMin": 50,
+   "RangeMax": 500,
+   "Desc": "Set the maxmium total projected ownership you want for optimized lineups.",
+   "Name": "Lineup pOwn% Max",
+   "Id": "totalineupownershipmax",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 16,
+   "OptionType": 4,
+   "Value1": 0,
+   "Value2": 100,
+   "RangeMin": 0,
+   "RangeMax": 100,
+   "Desc": "Projected Individual Ownership Range for players to be used when optimizing lineups.",
+   "Name": "pOwn% Range",
+   "Id": "playerownershiprange",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 11,
+   "OptionType": 2,
+   "Value1": 15,
+   "Value2": 0,
+   "RangeMin": 0,
+   "RangeMax": 100,
+   "Desc": "Your liked players will recieve a projection boost while optimizing lineups. Higher projections will generally include those players in more lineups.",
+   "Name": "Liked Projection Boost",
+   "Id": "likedprojectionboost",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 17,
+   "OptionType": 1,
+   "Value1": 0,
+   "Value2": 0,
+   "RangeMin": 0,
+   "RangeMax": 0,
+   "Desc": "Your liked players become your player pool. IMPORTANT: Make sure you have enough players liked to cover every position and your exposure settings otherwise lineups can't be built.",
+   "Name": "Liked Player Pool",
+   "Id": "likedplayerpool",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  }
+ ],
+ "stacking_options": [
+  {
+   "Option": 2000,
+   "OptionType": 2,
+   "Value1": 0,
+   "Value2": 0,
+   "RangeMin": 0,
+   "RangeMax": 2,
+   "Desc": "Include this many offensive players from the opposing team when this stack is used.",
+   "Name": "Game Stack",
+   "Id": "stacking_general_gamestack",
+   "Params": null,
+   "Save": true,
+   "Important": true
+  },
+  {
+   "Option": 2001,
+   "OptionType": 4,
+   "Value1": 10,
+   "Value2": 0,
+   "RangeMin": 1,
+   "RangeMax": 2,
+   "Desc": "Players between these salary values can be included in the stack",
+   "Name": "Player Salary Range",
+   "Id": "stacking_general_salaryrange",
+   "Params": null,
+   "Save": false,
+   "Important": false
+  },
+  {
+   "Option": 2002,
+   "OptionType": 4,
+   "Value1": 1,
+   "Value2": 0,
+   "RangeMin": 1,
+   "RangeMax": 100,
+   "Desc": "Players between these projections values can be used stacks.",
+   "Name": "Projection Range For Players",
+   "Id": "stacking_general_minprojection",
+   "Params": null,
+   "Save": false,
+   "Important": false
+  },
+  {
+   "Option": 2004,
+   "OptionType": 4,
+   "Value1": 0,
+   "Value2": 100,
+   "RangeMin": 0,
+   "RangeMax": 100,
+   "Desc": "Projected Ownership Range for players included in the stack.",
+   "Name": "Projected Ownership Range",
+   "Id": "stacking_general_ownershiprange",
+   "Params": null,
+   "Save": true,
+   "Important": false
+  },
+  {
+   "Option": 2003,
+   "OptionType": 1,
+   "Value1": 1,
+   "Value2": 0,
+   "RangeMin": 0,
+   "RangeMax": 0,
+   "Desc": "When a team is stacked, ensure the final optimizations don't include another player from this team.",
+   "Name": "Limit Team To Stack",
+   "Id": "stacking_general_stackedteamonly",
+   "Params": null,
+   "Save": true,
+   "Important": true
+  }
+ ]
+}

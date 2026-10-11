@@ -138,3 +138,12 @@
 
 ### [19:20] DFS OPTIMIZER LANDSCAPE RECON (8 user-supplied URLs)
 - All 8 fetched raw (HTML saved, stamped: re/genie-acquisition-2026-10-10/dfs-optimizer-recon/). Verdict: every optimizer surface (RotoWire, The Solver/ETR, FantasyPros-Yahoo, LineupHQ, FTN, DFS Army) gates projections/ownership behind accounts; RotoWire page OPEN but player data is XHR-loaded (endpoints unmapped); FantasyPros page loads w/ ZERO embedded player data (premium funnel); FTN has api.ftnfantasy.com behind subscription; DFS Army API = CMS only. Free lanes stay: DK getavailableplayers (salaries, verified earlier) + user-cookie export path in DFS_PULLER_SETUP.md. Item-7 ownership/projection internals: BLOCKED pending account — unchanged reopen conditions.
+
+### [20:10] DFS DEEP-RE ROUND 2 — LineStar fully cracked, 93-week NFL harvest landed
+- **LineStar API reverse-engineered from client bundle (fantasysportsco_new.js v417, 872KB)**: full /DesktopModules/DailyFantasyApi/API/Fantasy/ surface documented — GetSalariesV5 (UNAUTH 200: slates, LineupRequirements+multipliers, 12 GenerateMethods w/ exact optimizer semantics, 23 AdvancedOptions, 5 StackingOptions), GetFastUpdateV2, GetPlayerHistoryRecentV2 (UNAUTH: per-game salary/proj/ceil/floor/conf/stats history), GenerateLineup POST schema, GetOverrides/UpdateCustomProjectionV3
+- **93-PERIOD NFL HARVEST (2022 wk1 → 2026 wk5, unauthenticated)**: 66,513 player-week rows (proj/ceil/floor/conf/salary/opp-rank) + 123,574 field-ownership rows (per-contest player owned% w/ entry fee + entry count) — dfs-deep-re-2026-10-10/ (137MB, stamped)
+- Multi-sport confirmed open: NBA 426 periods, MLB 404, NHL 158, CFB 48 (same endpoint, sport param)
+- FantasyCruncher: obfuscated main bundle string table extracted (12,371 entries); algorithm docs captured (Randomness-and-Exposures / Team-Salary-and-Value / Unique-Players video seminars); FC ajax endpoints session-scoped (404 bare) — decoder harness queued
+- Solver (ETR): 84 page-chunks inventoried, optimizer chunks downloaded, SSR __NEXT_DATA__ pulled; engine behind auth-gated API
+- Stokastic RSC payload reconstructed; FantasyLabs 137-route map + free player-ratings pages; SaberSim 84-route map
+- Item-4/7 reopen conditions REVISED: ownership now harvestable at scale via Linestar (historical periods); book internals + PFF/SIS remain vendor-walled
