@@ -162,3 +162,4 @@
 - Patched 18 signal scripts to route all warehouse data reads through `load_stamped`: book_anatomy, cfb_altline_engine, cfb_context, cfb_deep_context, cfb_drive_efficiency, cfb_engine, cfb_pbp_tendencies, cfb_ppa_model, cfb_prop_engine, cfb_usage_join, compute_missing_metrics, feeds, graph_vs_close_stamp, ladder_inverse, nfl_deep_context, nfl_weather_fix, ppd_v2_carryin, recruiting_residuals.
 - `FRESHNESS_GAPS.md` documents: 16 unstamped data files (gate will refuse until stamped), 5 unpatchable formats (.gz/.parquet/.jsonl), 10 exempt infrastructure reads, 4 gate limitations. Priority: wrap warehouse JSON lists with observed_at envelope.
 - All 19 files syntax-verified. Gate unit-tested (fresh/stale/garbage timestamps).
+- live_board.py built — honest baseline/diagnostic labeling, FreshnessGate-enforced, CollegeGuard active. Metrics locked as diagnostic (agree-rate 1.0, CPOE r=0.966). Kill ledger #12 appended.
