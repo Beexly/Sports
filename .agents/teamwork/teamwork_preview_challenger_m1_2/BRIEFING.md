@@ -1,4 +1,4 @@
-# BRIEFING — 2026-10-11T21:25:00Z
+# BRIEFING — 2026-10-11T21:46:00Z
 
 ## Mission
 Adversarially challenge and stress-test Milestone 1 (Surface Unification & Authoritative Board Route) implementation, empirically verifying nav structures, next.config.mjs redirects, and static backward compatibility for app/picks/page.tsx.
@@ -19,7 +19,7 @@ Adversarially challenge and stress-test Milestone 1 (Surface Unification & Autho
 
 ## Current Parent
 - Conversation ID: 54bf42d6-0187-42fc-84af-ba49e183495d
-- Updated: not yet
+- Updated: 2026-10-11T21:46:00Z
 
 ## Review Scope
 - **Files to review**:
@@ -37,9 +37,15 @@ Adversarially challenge and stress-test Milestone 1 (Surface Unification & Autho
   - Correctness, empirical execution, stress resilience, backward compatibility, conformance to R1 requirements.
 
 ## Attack Surface
-- **Hypotheses tested**: [TBD]
-- **Vulnerabilities found**: [TBD]
-- **Untested angles**: [TBD]
+- **Hypotheses tested**:
+  - Redirect structure in `next.config.mjs`: verified exact 301 object `{ source: '/picks', destination: '/board', permanent: true }`.
+  - Desktop and mobile navigation: verified absence of `/picks` links and presence of "The Board" as primary signals door.
+  - Backward compatibility for `app/picks/page.tsx`: executed 23 static analysis suites; 20 suites (260 tests) passed cleanly.
+  - Runtime redirect in `app/picks/page.tsx`: stress-tested 9 query parameter permutations; 100% redirect cleanly to `/board` or `/board?qs`.
+- **Vulnerabilities found**:
+  - Landing page hero CTA in `apps/web/app/page.tsx:147` still uses `<Link href="/picks">`, causing a client-side redirect hop rather than linking directly to `/board`.
+  - Worker handoff report claimed `tabParam === "held" || tabParam === "gated" ? "held" : "signals"`, but `board/page.tsx:186` only checks `tabParam === "held"`.
+- **Untested angles**: Full production Next.js build compilation (blocked by pre-existing TS1005 in `packages/ingestion-pipeline/src/process-sport.ts`, scheduled for Milestone 5).
 
 ## Loaded Skills
 - **Source**: verification-before-completion, systematic-debugging
@@ -47,7 +53,9 @@ Adversarially challenge and stress-test Milestone 1 (Surface Unification & Autho
 - **Core methodology**: Empirical testing and evidence-before-assertion validation
 
 ## Key Decisions Made
-- Established review scope and challenge targets based on M1 requirements and worker handoff report.
+- Confirmed that Milestone 1 core deliverables (redirects, board consolidation, nav menus, route equivalence) are solid and verified.
+- Confirmed that test failures in `em-dash-public-copy`, `picks-mobile-tap-targets`, and `kickoff-local-time` are pre-existing / environmental and not regressions caused by Milestone 1.
+- Issued verdict: APPROVE.
 
 ## Artifact Index
 - `C:\Users\Garrett\Sports-wt-rating-packet\.agents\teamwork\teamwork_preview_challenger_m1_2\DISPATCH.md` — Dispatch record

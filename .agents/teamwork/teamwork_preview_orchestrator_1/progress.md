@@ -1,28 +1,34 @@
 # Progress Log
 
-Last visited: 2026-10-11T21:40:20Z
+Last visited: 2026-10-11T21:50:40Z
 
 ## Current Status
 - [x] Initialized workspace and state tracking (DISPATCH.md, BRIEFING.md)
-- [x] Heartbeat cron active (task-16, iteration 6 verified)
+- [x] Heartbeat cron active (task-16, iteration 7 verified)
 - [x] Phase 0: Dispatched 3 Survey Explorers in parallel (all 3 completed)
 - [x] Synthesized Survey findings into authoritative PROJECT.md § Feature Inventory (25 features, all assigned)
 - [x] Launched parallel E2E Testing Track (test_writer_e2e_1: c11fdf5e-147b-4f0a-bd77-141f979d0784) — COMPLETED (TEST_READY.md published, 21 tests)
-- [x] Dispatched Milestone 1 Implementation (worker_m1_1: 0fc20f40-00fc-420f-802d-aba7fe540fbc) — COMPLETED
-- [x] Milestone 1 Verification Gate in progress:
-  - Forensic Auditor (88eef986-91e0-4eb6-bdc6-c707991010f0) — CLEAN (verified)
-  - Challenger 1 (09646ff0-e0c1-4802-ad2d-f4607f9057f3) — APPROVE (verified)
-  - Reviewer 1 (d162c24b-2ef7-4697-b17e-5558dbaf2e12) — REQUEST_CHANGES (remediation identified)
-  - Reviewer 2 (2d7e0ba2-bc61-4c6a-a6fd-f5042bdc5ad2) — running
-  - Challenger 2 (7a0761ab-502e-46fd-9d8b-a02ba3100d15) — running
-- [x] Dispatched Milestone 2 Implementation (worker_m2_1: 8c4db61c-b2be-45a3-b024-7abc26911a5e) — verifying guardrails
-- [x] Dispatched Milestone 3 Implementation (worker_m3_1: a417a1de-4502-460b-88c7-dc5923c1fbbb) — verifying pricing tests
-- [ ] Milestone 4: Fantasy Data Unification & Zero Mock Policy
-- [ ] Milestone 5: Complete Verification Battery & Final E2E Validation
+- [x] Milestone 1: Surface Unification & Authoritative Board Route — CERTIFIED PASS
+  - 301 redirect /picks -> /board, 2-tab /board consolidation, nav menu update, route equivalence test (5/5)
+  - Remediation confirmed: comment stubs removed, proof-funnel-weave test updated to /board (5/5)
+  - All 5 gate agents verified (Auditor: CLEAN, Reviewer 1: APPROVE, Reviewer 2: APPROVE, Challenger 1: APPROVE, Challenger 2: APPROVE)
+- [x] Milestone 2: Plain-English Translation (Quant Jargon Purge & Brand Safety) — COMPLETED
+  - Pick cards, devig disclosures, engine views, telemetry labels updated to consumer English
+  - 4,663 brand safety tests pass, 0 trust violations, 21/21 E2E tests pass
+- [x] Milestone 3: Tier Restructuring & Elite Value Engine — COMPLETED
+  - 4-tier commercial matrix reconciled (Free $0, Fantasy $19, Pro $49, Elite $99)
+  - 4 high-leverage tools locked strictly behind Elite server-side
+  - 21/21 E2E tests pass, pricing and honesty tests pass
+- [x] Milestone 4: Fantasy Data Unification & Zero Mock Policy (worker_m4_1: 0d438332-0959-456f-b31b-65775423fa4b) — in progress
+  - Unified CSV parser (686 real NFL players), /fantasy/dfs & /optimizer parity, honest empty states, GM ledger
+- [x] Milestone 5: Complete Verification Battery & Final Milestone (worker_m5_1: 720c83ef-bc48-415f-a4a4-3a50099ffc6f) — in progress
+  - Fix syntax error in process-sport.ts, prediction-engine duplicate export, full battery execution
 - [ ] Victory Claim and Final Handoff to Sentinel
 
 ## Iteration Status
-Current iteration: 2 / 32
-Milestone 1 Gate: Evaluating (Auditor: CLEAN, Challenger 1: APPROVE, Reviewer 1: REQUEST_CHANGES)
-Milestone 2 Iteration: 1 / 32
-Milestone 3 Iteration: 1 / 32
+Current iteration: 3 / 32
+Milestone 1: PASS
+Milestone 2: DONE
+Milestone 3: DONE
+Milestone 4: IN_PROGRESS
+Milestone 5: IN_PROGRESS

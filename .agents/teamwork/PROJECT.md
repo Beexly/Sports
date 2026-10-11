@@ -47,11 +47,11 @@ Galaxy Sports Edge is a multi-package, Next.js full-stack sports analytics and b
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| 1 | M1: Surface Unification & Authoritative Board Route | Features 1-6 (redirects, board consolidation, nav, route equivalence test, links) | none | IN_PROGRESS |
-| 2 | M2: Plain-English Translation (Quant Jargon Purge) | Features 7-11 (pick-card, lab tables, telemetry labels, model versions, brand lint) | none | IN_PROGRESS |
-| 3 | M3: Tier Restructuring & Elite Value Engine | Features 12-17 (4-tier matrix, entitlements, server-side gating for 4 Elite tools) | none | IN_PROGRESS |
-| 4 | M4: Fantasy Data Unification & Zero Mock Policy | Features 18-21 (unified CSV parser, /fantasy/dfs & /optimizer parity, honest empty states, GM ledger) | none | PLANNED |
-| 5 | M5: Complete Verification Battery & Final Milestone | Features 22-24 (syntax fixes, test passes, typecheck clean, E2E validation) | M1, M2, M3, M4 | PLANNED |
+| 1 | M1: Surface Unification & Authoritative Board Route | Features 1-6 (redirects, board consolidation, nav, route equivalence test, links) | none | DONE |
+| 2 | M2: Plain-English Translation (Quant Jargon Purge) | Features 7-11 (pick-card, lab tables, telemetry labels, model versions, brand lint) | none | DONE |
+| 3 | M3: Tier Restructuring & Elite Value Engine | Features 12-17 (4-tier matrix, entitlements, server-side gating for 4 Elite tools) | none | DONE |
+| 4 | M4: Fantasy Data Unification & Zero Mock Policy | Features 18-21 (unified CSV parser, /fantasy/dfs & /optimizer parity, honest empty states, GM ledger) | none | IN_PROGRESS |
+| 5 | M5: Complete Verification Battery & Final Milestone | Features 22-24 (syntax fixes, test passes, typecheck clean, E2E validation) | M1, M2, M3, M4 | IN_PROGRESS |
 | E2E | E2E Testing Track | Feature 25 (Opaque-box E2E test suite covering Tiers 1-4 requirements) | none (parallel) | IN_PROGRESS |
 
 ## Interface Contracts
