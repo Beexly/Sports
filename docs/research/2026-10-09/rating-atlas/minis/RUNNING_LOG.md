@@ -415,3 +415,8 @@
 - **Pre-registered**: R1 portfolio points vs field pct-rank, R2 vs p50/p90/p99 (ceil check), R3 DupRisk vs top-1%. Data source: gamecenter leaderboard post-settle (10,946 entries expected).
 - **Reopen**: contest 196458728 settles (~4h) → `python dfs/jev_rvc_grade.py --grade` → field distribution + portfolio-vs-field table → INFRASTRUCTURE PASS stamp.
 - Note: www.draftkings.com (DFS side) is NOT bot-walled (users/me probe returned a served page) — only sportsbook/nash edges are. The JEV path is unblocked once outcomes exist.
+
+### [07:10] GRADE READINESS SWEEP + GATEWAY STARTED — all graders refuse-safe, poller LIVE
+- Both graders re-run live: EDGE#5 `--grade` REFUSED (Scheduled), JEV `--grade` REFUSED (pre-lock 302/404). Both refuse paths logged to kill ledger. Zero invention.
+- **Gateway started** (PID 24564) — the EDGE5-crossbook-grade-poller (7ac6e83e9422, every 30m × 26, no-agent watchdog) is now ARMED and will fire mechanically. Silent until London Final; then stamps EDGE5_CROSSBOOK_GRADED.json + ledger + delivers output.
+- Full readiness state: 3 graders built+verified (EDGE#5 crossbook, JEV RVC, poller), all refuse-safe, all awaiting only settlement events.
