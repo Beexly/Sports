@@ -310,3 +310,10 @@
 - DIAGNOSTIC only; reopen for RVC: pull kicker FG-distance props via nash alt subcats → compare book-implied FG% vs this curve → residual-vs-close on settled kicker props.
 - **Pipeline refuse-safety re-verified**: rvc_grade.py --verify PASS (executable + refuse-safe). Settlement status: 4 Final graded (17 sel) + Kansas@Utah live + 8 pending Sat/Sun.
 - **Reopen (exact, unchanged)**: remaining events settle → rvc_grade.py --grade <refreshed outcomes> → C1 (≥60) mechanically testable → model-skill stamp PASS/REFUSED. Nothing promoted.
+
+### [03:50] EDGE#5 partial close — scanner v1 built, honest artifact-superseded verdict
+- **edge5_consistency.py + edge5_consistency_scan.json**: 26 game-scans (12 close), de-vig'd ML pairs clean, ML/spread coherence checked on 11 → 7 coherent, 4 flagged
+- **Honest verdict (edge5_scanner_v1_verdict.json)**: the 4 flags are SCANNER ARTIFACTS — nash subcat 4518 carries main + alternate spreads; first-pair selection mixes main odds w/ alt labels (Syracuse +2.5 @ +1360 / Virginia -2.5 @ -3000 same payload). ZERO real divergences confirmed.
+- Reopen: scanner v2 w/ main-vs-alt grouping (marketId prefix / tags) → divergence flags become meaningful
+- **RVC settlement check**: Kansas@Utah live; 8 pending; --grade re-runs mechanically on refreshed outcomes
+- All prior artifacts confirmed on bus: RVC (graded 17, REFUSED C1), EDGE#1b/#2 params, EDGE#3 FG curve — all DIAGNOSTIC

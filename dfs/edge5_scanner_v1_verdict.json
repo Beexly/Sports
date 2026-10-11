@@ -1,0 +1,9 @@
+{
+ "observed_at": "2026-10-11T03:33:06Z",
+ "scan": "26 game-scans (12 close), ML/spread coherence checkable on 11, 7 coherent, 4 flagged",
+ "finding": "the 4 flags are scanner artifacts: nash subcat 4518 payloads contain MAIN + ALTERNATE spread markets; taking the first pair mixes main odds w/ alt-line labels (Syracuse +2.5 @ +1360 vs Virginia -2.5 @ -3000 in the same payload)",
+ "schema_need": "per-market alternates grouping \u2014 markets carry tags/mainline markers; scanner v2 must group selections by market id PAIR (home/away share marketId prefix 1_/2_) not by position",
+ "what_is_real": "ML pairs themselves are clean (82 selections, hold 1.4-7%+); the coherence check needs v2 before any divergence is real",
+ "label": "DIAGNOSTIC \u2014 scanner v1 superseded; 0 real divergences confirmed",
+ "reopen": "v2 scanner w/ alt/main grouping (selection marketId prefix or tags) \u2014 then divergence flags become meaningful"
+}
