@@ -123,8 +123,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
     still: "/immersive/performance-grid.webp",
   },
   "proof-crystal": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
-    still: "/immersive/proof-crystal.webp",
+    gradient: `radial-gradient(70% 60% at 50% 30%, rgba(0, 229, 255, 0.05), transparent 70%), linear-gradient(180deg, #050608 0%, #0A0C10 60%, #050608 100%)`,
   },
   "accountability-steady": {
     gradient: `radial-gradient(55% 80% at 50% 0%, rgba(25,28,35,0.35), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
