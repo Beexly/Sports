@@ -387,3 +387,10 @@
 - **Reopen for grade**: game reaches Final on ESPN → `rvc_edge5_grade.py --grade` → mechanical PASS/REFUSED.
 - **Reopen for NFL prop conditional tables**: nash NFL prop subcat pulls (9524/16569-16571) via chrome-wf → 262-fit reconstruction code runs on NFL data.
 - **Reopen for JEV**: DK cookie export → pull_entries.py → consensus enumeration → JEV lineups vs actual field.
+
+### [05:25] CONDITIONAL RESIDUAL TABLES — 3 surfaces × 2 axes, held-out graded
+- **dfs/CONDITIONAL_RESIDUAL_TABLES.json** + 7 CSVs in dfs/dfs_residual_tables/. All INFRASTRUCTURE PASS.
+- **S1 CPOE (1,631 QB-weeks)**: by total bin (low −0.94 / midlo +0.37 / midhi +0.71) and spread bin (fav +1.14 / dog +0.06). Held-out RVC: GLOBAL WINS (MSE 61.06 vs 61.30) — the cell means are descriptive, not predictive. Persistence stability best in midlo bin (0.024).
+- **S2 EPA/rush (1,069 team-weeks)**: MONOTONE by total bin — low totals −0.119 → high totals −0.022 (run efficiency rises as total rises: run-heavy low-total games face stacked boxes). By spread bin: flat (−0.062 to −0.085). Held-out RVC: GLOBAL WINS (0.0473 vs 0.0482).
+- **S3 xYAC proxy (10,887 completions)**: the air-yards YAC curve WINS vs naive mean (RMSE 6.24 vs 6.77). Residual by pressure (qb_hit): −0.008 diff (0.073 vs 0.065 — pressure does NOT reduce YAC conditional on completion, i.e. the market's pressure adjust is already in the catch itself). Residual by air bin: deep balls (15-25 yd air) −0.34, bombs (25+) −0.50 — the curve overpredicts deep YAC = deep completions are made shorter than the curve thinks.
+- **DIAGNOSTIC CANDIDATES (0/3 survive held-out prediction)**: none promote. The honest finding: environment conditioning describes but does not beat the global mean out-of-sample at the weekly level. The xYAC air-yards curve is the ONE surface where structure helps (RMSE −0.53).

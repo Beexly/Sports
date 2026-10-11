@@ -1,0 +1,207 @@
+{
+ "observed_at": "2026-10-11T06:22:24Z",
+ "label": "DIAGNOSTIC",
+ "surfaces": {
+  "CPOE": {
+   "status": "INFRASTRUCTURE PASS",
+   "n": 1631,
+   "by_total_bin": [
+    {
+     "total_bin": "low",
+     "count": 125,
+     "mean": -0.94,
+     "std": 7.74
+    },
+    {
+     "total_bin": "midlo",
+     "count": 1182,
+     "mean": 0.371,
+     "std": 7.896
+    },
+    {
+     "total_bin": "midhi",
+     "count": 324,
+     "mean": 0.705,
+     "std": 7.386
+    }
+   ],
+   "by_spread_bin": [
+    {
+     "spread_bin": "fav",
+     "count": 32,
+     "mean": 1.143,
+     "std": 7.685
+    },
+    {
+     "spread_bin": "pick",
+     "count": 1302,
+     "mean": 0.381,
+     "std": 7.769
+    },
+    {
+     "spread_bin": "dog",
+     "count": 297,
+     "mean": 0.056,
+     "std": 7.913
+    }
+   ],
+   "persistence_fit_eval": [
+    {
+     "tb": "low",
+     "eval": -0.058,
+     "fit": 0.195,
+     "stability": 0.253
+    },
+    {
+     "tb": "midhi",
+     "eval": 0.085,
+     "fit": 0.161,
+     "stability": 0.076
+    },
+    {
+     "tb": "midlo",
+     "eval": 0.11,
+     "fit": 0.086,
+     "stability": 0.024
+    }
+   ],
+   "held_out_mse": {
+    "global": 61.0601,
+    "cell_conditional": 61.2947,
+    "delta": -0.2346,
+    "winner": "GLOBAL"
+   }
+  },
+  "RYOE_PROXY_EPA_RUSH": {
+   "status": "INFRASTRUCTURE PASS",
+   "n_team_weeks": 1069,
+   "by_total_bin": [
+    {
+     "total_bin": "low",
+     "count": 296,
+     "mean": -0.1187,
+     "std": 0.215
+    },
+    {
+     "total_bin": "midlo",
+     "count": 299,
+     "mean": -0.0855,
+     "std": 0.2071
+    },
+    {
+     "total_bin": "midhi",
+     "count": 258,
+     "mean": -0.0567,
+     "std": 0.207
+    },
+    {
+     "total_bin": "high",
+     "count": 216,
+     "mean": -0.0223,
+     "std": 0.225
+    }
+   ],
+   "by_spread_bin": [
+    {
+     "spread_bin": "bigfav",
+     "count": 86,
+     "mean": -0.062,
+     "std": 0.2491
+    },
+    {
+     "spread_bin": "fav",
+     "count": 230,
+     "mean": -0.0767,
+     "std": 0.2221
+    },
+    {
+     "spread_bin": "pick",
+     "count": 336,
+     "mean": -0.0849,
+     "std": 0.2
+    },
+    {
+     "spread_bin": "dog",
+     "count": 262,
+     "mean": -0.0678,
+     "std": 0.21
+    },
+    {
+     "spread_bin": "bigdog",
+     "count": 155,
+     "mean": -0.0703,
+     "std": 0.2287
+    }
+   ],
+   "held_out_mse": {
+    "global": 0.04733,
+    "cell_conditional": 0.0482,
+    "delta": -0.00087,
+    "winner": "GLOBAL"
+   }
+  },
+  "XYAC_PROXY": {
+   "status": "INFRASTRUCTURE PASS",
+   "n_plays": 11594,
+   "by_qb_hit": [
+    {
+     "qb_hit": "0.0",
+     "n": 10229,
+     "mean_resid": 0.073,
+     "sd": 6.169
+    },
+    {
+     "qb_hit": "1.0",
+     "n": 658,
+     "mean_resid": 0.065,
+     "sd": 7.193
+    }
+   ],
+   "by_air_bin": [
+    {
+     "air_bin": "(-5, 2]",
+     "count": 3391,
+     "mean": 0.096,
+     "std": 6.713
+    },
+    {
+     "air_bin": "(2, 6]",
+     "count": 3721,
+     "mean": 0.153,
+     "std": 5.239
+    },
+    {
+     "air_bin": "(6, 10]",
+     "count": 1246,
+     "mean": 0.138,
+     "std": 5.313
+    },
+    {
+     "air_bin": "(10, 15]",
+     "count": 1177,
+     "mean": 0.2,
+     "std": 6.625
+    },
+    {
+     "air_bin": "(15, 25]",
+     "count": 1009,
+     "mean": -0.341,
+     "std": 7.103
+    },
+    {
+     "air_bin": "(25, 60]",
+     "count": 343,
+     "mean": -0.497,
+     "std": 9.443
+    }
+   ],
+   "rmse": {
+    "xyac_curve": 6.236,
+    "naive_mean": 6.771,
+    "winner": "CURVE"
+   }
+  }
+ },
+ "diagnostic_candidates": [],
+ "note": "Cells flagged as diagnostic candidates only when held-out cell-conditional prediction beats the global mean AND persistence is stable across fit/eval. No promotion without residual-versus-close on posted prop prices."
+}
