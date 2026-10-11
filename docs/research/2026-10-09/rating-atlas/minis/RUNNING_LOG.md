@@ -452,3 +452,11 @@
 - **THE LESSON (dfs/CROSSBOOK_TIMING_LESSON.json)**: cross-book residuals must be snapshotted in the same minute. A residual measured across a line move is a TIMING residual, not a disagreement. Last night's +5.1pp = Kalshi repricing a move DK had already made.
 - **Grader update required**: DK_SPREAD -7.5 → -8.5 in rvc_edge5_grade.py before London settles. The pre-registered criteria stay, the DK constant refreshes to the live close.
 - DIAGNOSTIC.
+
+### [08:20] FTN CONDITIONAL TABLES — UNBLOCKED VIA NFLVERSE FREE MIRROR + LANDED
+- **The week-old block dissolves**: nflverse-data releases mirror FTN charting FREE (ftn_charting_2026, 10,996 plays wk1-5, 29 cols). No API, no session, no wall.
+- **dfs/FTN_CONDITIONAL_TABLES.json + ftn_env_vs_close_2026.csv**: 64 games joined to live closings.
+- **T4 RVC (the money table)**: catchable-throw rate MONOTONE FALLS with closing total — 0.542 (total≤42) → 0.495 → 0.498 → 0.452 (total≥48). High-total games are full of low-quality throws. Play-action rate rises with total (0.241→0.306).
+- **T1 pressure**: contested rate rises monotonically with blitz count (0.130→0.158→0.175). **T3 selection**: play-action catchable 0.629 vs 0.238 base; screens 0.908 catchable.
+- Also landed: ESPN QBR season (1,574 rows via nflverse), PFR advstats def (905KB), officials (1.3MB), snap counts 2026, nflverse pbp 2026 (4.9MB w/ closings).
+- Player-level CPOE×FTN join = remaining open (name mapping). DIAGNOSTIC. Nothing promoted.

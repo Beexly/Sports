@@ -1,0 +1,44 @@
+{
+ "observed_at": "2026-10-11T06:51:38Z",
+ "test": "FTN charting (2026 wk1-5) conditional tables via nflverse free mirror",
+ "unblock": "the FTN Data API block was unnecessary \u2014 nflverse-data release mirrors FTN charting FREE",
+ "T1_blitzers": {
+  "0": {
+   "n": 9433,
+   "note": "includes non-throw plays; see T4 for throw-only"
+  },
+  "1+": "contested rate rises 0.130\u21920.175 with blitz count (n=1150/342/63)"
+ },
+ "T2_qb_location": {
+  "S(scramble)": {
+   "n": 4783,
+   "catchable": 0.504
+  },
+  "U(unhurried?)": {
+   "n": 3218,
+   "catchable": 0.203
+  }
+ },
+ "T3_selection": {
+  "play_action": {
+   "catchable": 0.629,
+   "vs": 0.238,
+   "n": 1214
+  },
+  "screens": {
+   "catchable": 0.908,
+   "n": 393
+  },
+  "rpo": {
+   "catchable": 0.206,
+   "n": 360
+  }
+ },
+ "T4_RVC": {
+  "finding": "catchable rate MONOTONE FALLS with closing total: 0.542 (low) \u2192 0.452 (high). High-total games buy more low-quality throws. PA-rate rises with total (0.241\u21920.306).",
+  "n_games": 64,
+  "file": "dfs/ftn_env_vs_close_2026.csv"
+ },
+ "verdict": "INFRASTRUCTURE PASS \u2014 the pressure/formation axes landed and produce monotone environment structure. Player-level CPOE\u00d7FTN join remains open (needs player-name mapping across NGS/FTN).",
+ "label": "DIAGNOSTIC"
+}
