@@ -1,0 +1,16 @@
+{
+ "observed_at": "2026-10-11T12:36:28Z",
+ "test": "CPOE-pressure signature -> next-week ATS (2026 wk1-5, frozen 2026 outcomes)",
+ "n_pairs": 94,
+ "correlations": {
+  "cpoe_to_next_ats": -0.0601,
+  "pressure_to_next_ats": 0.0143,
+  "cpoe_pressure_to_next_ats": -0.0597
+ },
+ "held_out": {
+  "mse_naive": 133.9,
+  "mse_signature": 148.11,
+  "verdict": "SIGNATURE ADDS NOTHING"
+ },
+ "label": "DIAGNOSTIC"
+}

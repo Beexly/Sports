@@ -531,3 +531,10 @@
 - The +3.3 late|outdoors|rest_even cell carries the point estimate (December-outdoors motivation?) — honest verdict: suggestive, not stamped-signal. Node expansion with expected-metric residuals stays REOPEN (needs the player-level join first).
 - **Master lesson extends**: 5th situational axis (after weather, rest, officials, OT) that shrinks to noise against the close.
 - DIAGNOSTIC. Nothing promoted.
+
+### [11:00] PLAYER-RESIDUAL → NEXT-WEEK ATS: both lanes honest-REFUSED at 2026 n
+- **dfs/CPOE_PRESSURE_NEXT_ATS.json** (P1): 94 next-week pairs. CPOE→next ATS −0.06, pressure +0.01, held-out MSE naive 133.9 vs signature 148.1 — SIGNATURE ADDS NOTHING. The player CPOE edge does NOT survive to team ATS.
+- **dfs/FTN_ENV_NEXT_ATS.json** (P2/P3): 98 pairs. Box +0.23 / blitz +0.20 / PA +0.14 point correlations; persistence weak (box −0.05). Held-out composite: env ADDS (+6.1 MSE) but bootstrap CI [−13.6, +26.3] — NOT significant at n=34 eval.
+- **Verdict for both**: 2026's 5 weeks cannot clear the noise floor. These are STRUCTURALLY sensible signals (box/blitz = opponent commitment) with persistence too weak and n too small. Reopen: 6+ more weeks of 2026 (pairs scale ~2× by midseason).
+- **The watchlist players (P2 prop closes)**: no completion/receiving prop closes on the bus for 2026 — reopen condition unchanged (browser-lane quote pull or nash NFL ladders). Watchlists stay as diagnostic screens only.
+- DIAGNOSTIC. Nothing promoted.

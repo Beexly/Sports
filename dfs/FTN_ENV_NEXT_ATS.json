@@ -1,0 +1,46 @@
+{
+ "observed_at": "2026-10-11T12:37:11Z",
+ "test": "FTN environment axes -> next-week ATS (2026 wk1-5) + persistence",
+ "n_pairs": 98,
+ "axes": {
+  "pa_rate": {
+   "corr_to_next_ats": 0.1435,
+   "persistence": 0.0773,
+   "n_pairs": 98
+  },
+  "blitz_faced": {
+   "corr_to_next_ats": 0.1976,
+   "persistence": 0.1786,
+   "n_pairs": 98
+  },
+  "box": {
+   "corr_to_next_ats": 0.2321,
+   "persistence": -0.0549,
+   "n_pairs": 98
+  },
+  "catchable": {
+   "corr_to_next_ats": -0.0965,
+   "persistence": -0.0728,
+   "n_pairs": 98
+  },
+  "rpo": {
+   "corr_to_next_ats": -0.1418,
+   "persistence": 0.2053,
+   "n_pairs": 98
+  }
+ },
+ "held_out_composite": {
+  "mse_naive": 151.41,
+  "mse_env": 145.28,
+  "verdict": "ENV ADDS"
+ },
+ "label": "DIAGNOSTIC",
+ "bootstrap": {
+  "delta_mse": 6.13,
+  "ci95": [
+   -13.63,
+   26.27
+  ],
+  "significant": false
+ }
+}
