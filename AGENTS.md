@@ -13819,3 +13819,301 @@ stylistic-fit chart 8h — outside window); @DonAtkinsonNFL
   absent (last Sep 27). MHJ final trade destination
   unconfirmed. nflreadpy now at 4 sightings vs 1 for
   nflreadr.org.
+
+## X ANALYTICS SWEEP 2026-10-11 (MORNING)
+
+Window: posts after ~09:00 PM CDT Sat 2026-10-10 through ~08:55
+AM CDT Sun 2026-10-11 (~11.9h, Sunday morning ahead of the Week
+5 Sunday slate; Eagles-Jaguars London game kicked 8:30 AM CDT).
+Read-only sweep as @GalaxySportsHQ (no likes/reposts/replies/
+follows/DMs; no compose boxes touched). Login confirmed whole
+session; no CAPTCHAs, login walls, or rate limits. Three
+parallel browser tasks: metrics/analytics (home feed + 21
+accounts + term searches: EPA, CPOE, TPRR, pass rush win rate,
+aggressiveness), news/injury (@AdamSchefter, @RapSheet,
+@TomPelissero, @JFowlerESPN, @MikeGarafolo, @32BeatWriters),
+market/scheme (@VSiN, @Covers, @ActionNetworkHQ, @Bet_Labs,
+@Nate_Tice, @benbbaldwin, film accounts). Absolute timestamps
+verified on post pages where marked.
+
+### NEW ITEMS
+
+1. @GridironInfo_ — "2026 QB Aggressiveness" through Week 4
+   (2026-10-11 7:00 AM CDT, absolute from post page). Metric:
+   "Shows how often each team's QB throws into tight coverage
+   (Next Gen Stats' Aggressiveness metric)" — definition quoted
+   verbatim. Chart values (QB, %): Darnold 22, Winston 22,
+   Brissett 22, Stroud 21, Willis 20, Prescott 20, Goff 18,
+   Smith 18, Rodgers 18, Purdy 15, Wilson 15, Wentz 14,
+   Cousins 14, Love 14, Jones 14, Young 14, Lawrence 13,
+   Maye 13, Burrow 13, Jackson 12, Mayfield 12, Allen 11,
+   Nix 10, Hurts 9, Mahomes 9, Murray 8, Ward 8. Data source
+   (attributed fact): post text says Next Gen Stats'
+   Aggressiveness metric, but the chart footer reads
+   "Data: nflverse (nflreadpy) | 2025-10-06" — the two
+   attributions conflict (footer date likely a typo for
+   2026-10-06). Caveats: none stated. CSV:
+   docs/dfs/research/2026-10-11/full-tables/
+   qb-aggressiveness-through-week4-2026-10-11.csv. Kernel
+   (attributed, not a build order): none — the metric itself
+   is standard NGS; the item of note is the sourcing ambiguity
+   (NGS-named metric presented under an nflverse footer).
+
+2. @MagicSportsGuy (StatRankings) — "Tight End Alignment —
+   fantasy points per game x alignment %" (2026-10-10 10:35 PM
+   CDT, absolute from post page). Poster thesis: DvP is
+   misleading where "players are listed at a position but used
+   in roles that don't match it" — quoted verbatim. Column
+   headers: RK, PLAYER, TEAM, FPTS/G, I/IN-LINE, SLOT,
+   L/W/R-WWR. Sample values: Brock Bowers 25.6 —
+   9.2 / 41.1 / 42.2; Trey McBride 17.3 — 22.9 / 67.1 / 8.1;
+   George Kittle 16.1 — 54.0 / 21.2 / 7.1; Juwan Johnson 15.3 —
+   29.0 / 48.4 / 14.4 (team values as posted were not captured;
+   marked not-stated in the CSV). Data source: StatRankings
+   (Kevin Adams is founder of @StatRankings). Caveats: none
+   stated. CSV: docs/dfs/research/2026-10-11/full-tables/
+   te-alignment-fpts-through-week4-2026-10-10.csv. Kernel
+   (attributed, not a build order): alignment-split fantasy
+   scoring as a DvP-alternative framing — role-based rather
+   than position-based defensive matchup.
+
+### ENDPOINT OBSERVATIONS (observed only; no new chart-footer
+endpoints in-window)
+
+- @GridironInfo_ chart footer "Data: nflverse (nflreadpy) |
+  2025-10-06" — 5th nflreadpy sighting this lane (vs 1
+  nflreadr.org); this instance also carries a conflicting NGS
+  attribution in the post text (see NEW ITEMS 1).
+- StatRankings (@MagicSportsGuy / Kevin Adams, founder):
+  statrankings.com — TE alignment chart source.
+- @VSiN (lowercase) is a squatted/fake account (0 posts, 129
+  followers); the real VSiN is @VSiNLive (111.4K, verified).
+  Lane list should point at @VSiNLive going forward.
+- Separate verified account @NFL_Researcher ("NFL Researcher")
+  appeared in "Who to follow" — may be the intended
+  @NFLResearcher account; evaluate a swap in future sweeps.
+
+### INNOVATION CANDIDATE
+
+- None this run. Product announcements only (not metrics):
+  @PFF Premium Stats Pro adds College scatter plots, glossary
+  on every report, sharper Guru; @statyxio Route IQ interactive
+  chart showing where a player has an EDGE over the opponent's
+  defense (~6:29 PM Oct 10, just out of window) — definition of
+  the EDGE calculation still undisclosed.
+
+### NEWS (in-window, attributed)
+
+- MHJ trade watch: "INACTIVE today and soon-to-be traded" —
+  @RapSheet (Insiders Kickoff), 7:32 AM CDT. "Texans remain the
+  team to watch" — @AdamSchefter, 4:15 AM CDT. @RapSheet,
+  5:26 AM: "In the Marvin Harrison Jr sweepstakes, the #Texans
+  are a team to watch. Nothing is done, and today's results
+  could change things."
+- Eagles inactives (London game, in progress): Hollywood Brown,
+  DeVonta Smith, Saquon Barkley, Marcus Epps, Jonathan
+  Greenard, Drew Kendall — @Eagles via @RapSheet, 7:00 AM CDT.
+- Ejections (Eagles-Jaguars London): Eagles LB Jeremiah Trotter
+  Jr. tossed after the opening kickoff; Jaguars DE Bryan Thomas
+  Jr. tossed — @MikeGarafolo, 8:36 AM CDT.
+- Jayden Daniels returns today vs Giants with full game plan
+  (@RapSheet 7:32 AM; @MikeGarafolo 7:35 AM) — but ESPN story:
+  doctors believe it's "when, not if" he re-injures his left
+  elbow; higher risk for another dislocation (@AdamSchefter,
+  6:25 AM).
+- Game-status round (CDT): Cam Jurgens OUT vs Falcons Sun
+  night; debut next week at Cleveland (@Schefter 7:30 AM). Zay
+  Flowers (foot, questionable) EXPECTED TO PLAY (@Schefter
+  6:05 AM). Ladd McConkey (foot, didn't practice) NOT expected
+  to play (@Schefter 6:04 AM). Rico Dowdle (toe, questionable)
+  UNLIKELY; pregame-warmups call (@Schefter 6:03 AM). Marlon
+  Humphrey (hamstring + calf) EXPECTED TO SUIT UP (@RapSheet
+  6:06 AM). Jake Matthews (groin, questionable; full Friday)
+  EXPECTED TO PLAY, 200th start (@RapSheet 6:02 AM). Jordan
+  Addison (hamstring) pregame workout (@RapSheet 6:06 AM).
+  Justin Jefferson (ankle) pregame workout; "do whatever he can
+  to play" (@RapSheet 6:06 AM). Alvin Kamara (back) EXPECTED
+  TO PLAY (@RapSheet 6:04 AM). Rhamondre Stevenson (knee) +
+  Christian Barmore (shoulder) EXPECTED TO PLAY (@RapSheet
+  6:03 AM). Ashton Jeanty (plantar fasciitis flare-up + ankle)
+  hopeful but NOT definite; pregame workout; Raiders elevated
+  RB Roman Hemby (@RapSheet 6:02 AM). Terry McLaurin TRUE
+  GAME-TIME DECISION; limited snaps even if active
+  (@MikeGarafolo 6:17 AM). Lamar Jackson (ankle) REAL CHANCE
+  to return next week (@RapSheet 7:01 AM). Caleb Williams
+  pushing to play next week (@RapSheet 7:01 AM; @Garafolo
+  7:09 AM). Cam Skattebo "expect a LOT of him today"
+  (@RapSheet 7:01 AM; @Garafolo 7:09 AM).
+- Broncos will have a NEW PLAY-CALLER — @RapSheet (Insiders
+  Kickoff), 7:32 AM. Eagles plan to keep retired OL Lane
+  Johnson on the 53-man roster rest of season (@RapSheet,
+  5:24 AM). Eagles "won't have a fire sale" (@RapSheet,
+  7:01 AM / 5:24 AM).
+- Weather: Northwest Stadium (Giants vs Commanders, 1pm ET) —
+  rain on/off all day (@MikeGarafolo for @SportsCenter, 7:58
+  AM). "Rain Pants Watch" — weather game brewing in Pittsburgh
+  (Colts vs Steelers 1 PM CBS) (@RyanPaganetti quoting JJ
+  Watt, 8:16 AM).
+
+### MARKET (in-window)
+
+- No overnight NFL line moves, steam, or sharp-vs-public splits
+  from @VSiNLive, @Covers, @ActionNetworkHQ, or @Bet_Labs
+  in-window.
+- @Covers (7:41 AM CDT): Jaguars -7.5 vs Eagles shown as a
+  current line (London, 9:30 ET kickoff) — no move history.
+  Hockenson anytime-TD promo: last week's price YES -33%,
+  this week's price YES -23%.
+- @ActionNetworkHQ: Week 5 Luck Rankings picks (@RotoDoc,
+  8:22 AM); 5 Week 5 player props (@The_Oddsmaker, 7:47 AM);
+  Eagles vs Jaguars London picks (@wheatonbrando, 7:25 AM).
+- @Bet_Labs (80.8K followers, loads): in-window posts all
+  college football (Georgia Southern +7.5; North Carolina +4)
+  — zero NFL Week 5 market content.
+- Just-outside-window (~8:25 PM CDT Oct 10, @VSiNLive): Circa
+  Grandissimo — Cowboys loss wiped out 9 of 24 remaining
+  entries (15 alive, $7.7M; 4 on Jaguars today). Circa
+  Survivor — 2,554 entries (42.8%) eliminated Thursday with
+  Dallas; 3,415 remain chasing $25M; most popular remaining
+  pick is the 0-4 Houston Texans (1,228 entries). Circa Million
+  consensus: Steelers -2.5 vs Colts is the No. 1 Week 5 pick
+  (1,892 cards, 32.9%); Rams and Bears round out top three.
+
+### ACCOUNT COVERAGE (nothing in-window unless noted)
+
+@cmain7 (CFB/best ball); @RyanPaganetti (weather/London-game
+takes); @jmthrivept (McLaurin GTD, Jeanty plantar fasciitis +
+ankle); @sfdata9ers (18–19h); @hawkblogger (event promos);
+@MagicSportsGuy (TE alignment chart, ARBY owed); @SumerSports
+(Oct 8); @DevyEusuf (college context); @statyxio (nothing
+in-window; Route IQ announcement just out of window);
+@ScottBarrettDFB (17–19h); @PattonAnalytics (Oct 8);
+@EstablishTheRun ([abs] 7:50 AM injury summary — McConkey,
+Caleb Williams, Dowdle, MHJ, Slayton, Palmer not expected to
+play; Jefferson, Addison, Jeanty, McLaurin, DJ Moore GTD);
+@FantasyPtsData (~20h); @DonAtkinsonNFL (Oct 9);
+@DynatyzeFF ([abs] 7:34 AM promo, no hard numbers); @PFF (PFF
+Pro product update; Garrett Wilson anytime-TD; Metcalf vs
+Sauce Gardner clip 7:33 AM); @32BeatWriters (16–20h);
+@Nate_Tice (NBA/CFB only); @benbbaldwin (nothing in-window;
+newest Oct 7 — adjusted EPA + PFF Grade leaderboard, PROE,
+early-down playcalling, true-pass-set pass-block grades).
+
+### WATCH ITEMS (still open)
+
+- ARBY computation still unstated (owed from Oct 10 overnight
+  run). SUPLEX differential definition still absent. Kalshi
+  award-odds series still absent (last Sep 27). MHJ final trade
+  destination unconfirmed — "soon-to-be traded," Texans the
+  team to watch. nflreadpy now at 5 sightings vs 1 for
+  nflreadr.org. @FTNData still protected (2,556 followers); no
+  follow requested. @NerdingonNFL / @NFLResearcher timelines
+  render empty (re-verified); evaluate @NFL_Researcher as
+  replacement.
+
+## X ANALYTICS SWEEP 2026-10-11 (MORNING, 09:08 RUN)
+
+Window: posts after ~09:00 AM CDT through ~09:30 AM CDT Sun
+2026-10-11 (narrow window; the 08:20-09:10 sibling sweep covered
+everything before it). Read-only as @GalaxySportsHQ (no
+likes/reposts/replies/follows/DMs; no compose boxes touched).
+Login confirmed whole session; no CAPTCHAs, login walls, or
+rate limits. Single browser task: home feed + 21 accounts +
+term searches (EPA, CPOE, TPRR, pass rush win rate,
+aggressiveness); absolute timestamps verified on post pages
+where marked.
+
+### NEW ITEMS
+
+None in-window. No new advanced metric/analytics posts were
+published after ~09:00 AM CDT by any sweep account or surfaced
+in term searches. Near-window exclusions (absolute timestamps
+verified; out of window, covered by the sibling sweep):
+- @GridironInfo_ "Through Week 4 Passer Rating" (Brock Purdy
+  leads at 121.3) — 8:30 AM CDT [abs].
+- @statyxio "Isaiah Likely — earns a target on 32.4% of his
+  routes" (TPRR note) — 8:37 AM CDT [abs].
+
+### DIFFERENT-ANGLE NOTES (already-inventoried metrics,
+re-researched; attributed notes, not build orders)
+
+1. AGGRESSIVENESS SOURCING RESOLUTION — this morning's section
+   flagged a SOURCE MISMATCH on @GridironInfo_'s "2026 QB
+   Aggressiveness": post text attributes the metric to Next Gen
+   Stats while the chart footer reads "Data: nflverse
+   (nflreadpy)". Attributed resolution: nflreadr's data
+   dictionary (via the public research doc at
+   github.com/rahulp7801/agentic-ev-analytics-platform,
+   "Confidence: HIGH") lists `aggressiveness` as an NGS passing
+   field available since 2016 — i.e., nflverse distributes NGS
+   data through nflreadpy/nflreadr. Footer and post text are
+   CONSISTENT, not conflicting. Standing consequence: nflreadpy
+   sightings (now 5 vs 1 nflreadr.org) are plausibly
+   NGS-sourced charts; treat as NGS-via-nflverse unless the
+   poster states otherwise.
+
+2. TE ALIGNMENT / ROLE-BASED DvP KERNEL — second sighting of
+   the kernel from a different lane. Razzball runs a weekly
+   "WR Slot vs. Wide" series (Week 4 and Week 5 editions,
+   football.razzball.com) reporting fantasy production split
+   by alignment as a matchup lens: e.g., Ravens "allowing 31.5
+   fantasy points per game" to out-wide receivers; Carnell
+   Tate "aligned out wide on nearly 70% of his snaps";
+   Cardinals "allow a 60/40 split between perimeter and slot
+   production." Same kernel as the StatRankings TE-alignment
+   chart inventoried this morning (role-based matchup instead
+   of listed-position DvP), different lane: weekly start/sit
+   vs. season-long TE chart.
+
+3. NEGATIVE PLAY % — second angle on the 2026-10-10
+   @sfdata9ers find. Steelers Depot runs a recurring
+   league-wide series studying "negative plays (zero yards or
+   less)" with weekly granularity — e.g., 2025 through Week 8:
+   Steelers 30.2% negative play rate (11th) — plus an
+   explosive-vs-negative quadrant chart framing. Attributed
+   definitional difference: Steelers Depot counts <= zero
+   yards on all pass and run plays (no plays/spikes/kneels
+   removed); @sfdata9ers' chart counts strictly negative-yard
+   plays, penalties and QB kneels excluded. Kernel candidate
+   (attributed, not a build order): the explosive-vs-negative
+   quadrant as a composite offense-stability framing.
+
+### ACCOUNT COVERAGE (nothing in-window unless noted)
+
+@cmain7 (newest 19h, Oct 10); @RyanPaganetti (pregame
+commentary/banter); @jmthrivept (injury commentary only);
+@sfdata9ers (newest 19h); @hawkblogger (Bucs/injury content);
+@MagicSportsGuy (newest 10h; TE-alignment item already
+inventoried); @SumerSports (newest Oct 8); @GridironInfo_
+(passer-rating 8:30 AM out of window; aggressiveness ~07:13 AM
+matches the inventoried 7:00 AM item); @DevyEusuf (hype posts);
+@statyxio (Likely TPRR 8:37 AM out of window);
+@ScottBarrettDFB (banter); @PattonAnalytics (newest Oct 8);
+@EstablishTheRun (article promos/injury news);
+@FantasyPtsData (newest 20-23h); @DonAtkinsonNFL (newest Oct 9);
+@DynatyzeFF (LIVE promo; pinned opportunity chart ~1h, out of
+window); @NerdingonNFL (timeline renders empty, 1 post);
+@PFF (live-game videos/promos); @FTNData (protected, not
+followed); @32BeatWriters (newest 17h).
+
+### WATCH ITEMS (resolutions + carry-forward)
+
+- @NFLResearcher — RESOLVED as parody, drop from the sweep
+  list: bio reads "Covering the NFL with next-gen research.
+  PhD Data Science from South Harmon Institute of Technology."
+  South Harmon Institute of Technology is a fictional/parody
+  institution. Timeline renders empty (4 posts, none
+  displayed). Not an analytics source.
+- @NFL_Researcher ("NFL Researcher", verified) — evaluated
+  as replacement: bio "Data-driven insights, news & analysis
+  about NFL football. All posts automatically posted from our
+  internal NFL data service." Joined Jan 2026; 2 posts total,
+  none displayed; 2 following, 1 follower. Empty feed +
+  low-effort automated-feed bio — not a functioning
+  replacement. Keep off the list until it posts visible
+  content.
+- Carried forward: ARBY computation still unstated; SUPLEX
+  differential definition still absent; Kalshi award-odds
+  series absent (last Sep 27); MHJ trade destination
+  unconfirmed; @FTNData still protected (2,556 followers), no
+  follow requested.
