@@ -1,0 +1,60 @@
+{
+ "observed_at": "2026-10-11T06:59:09Z",
+ "test": "rest-differential vs ATS residual (situational axis, 2023-25 frozen)",
+ "n_games": 816,
+ "by_bucket": [
+  {
+   "rest_bin": "-12d",
+   "n": 3,
+   "mean_ats_resid": -2.5,
+   "sd": 13.537,
+   "home_cover_rate": 0.667
+  },
+  {
+   "rest_bin": "-6d",
+   "n": 36,
+   "mean_ats_resid": -2.292,
+   "sd": 11.65,
+   "home_cover_rate": 0.472
+  },
+  {
+   "rest_bin": "-2d",
+   "n": 122,
+   "mean_ats_resid": 0.066,
+   "sd": 12.09,
+   "home_cover_rate": 0.467
+  },
+  {
+   "rest_bin": "even",
+   "n": 569,
+   "mean_ats_resid": 1.052,
+   "sd": 13.195,
+   "home_cover_rate": 0.503
+  },
+  {
+   "rest_bin": "+2d",
+   "n": 50,
+   "mean_ats_resid": -0.73,
+   "sd": 10.58,
+   "home_cover_rate": 0.42
+  },
+  {
+   "rest_bin": "+6d",
+   "n": 36,
+   "mean_ats_resid": 1.569,
+   "sd": 8.467,
+   "home_cover_rate": 0.472
+  }
+ ],
+ "corr_rest_ats": 0.04,
+ "short_week_away": {
+  "n": 0,
+  "mean_ats_resid": NaN
+ },
+ "held_out": {
+  "close_only_mse": 143.885,
+  "close_plus_rest_mse": 144.377,
+  "verdict": "REST ADDS NOTHING"
+ },
+ "label": "DIAGNOSTIC"
+}

@@ -479,3 +479,9 @@
 - **YAC machines** (snap%≥70, BT/g≥0.75, drops/g≤0.3): Puka Nacua, Rome Odunze, Trey McBride.
 - **Hands regression** (snap%≥60, drops≥4): Jameson Williams (5 drops/4g at 90.5% snaps), Tucker Kraft (5/4 at 83%).
 - First player-resolved prop-shape artifact: volume × creation × hands. DIAGNOSTIC only — residual-vs-close needs the quote feed.
+
+### [09:20] REST-DIFFERENTIAL TESTED — honest REFUSE: rest adds nothing after the close
+- **dfs/REST_DIFFERENTIAL_STAMP.json + ats_residual_by_rest.csv**: 816 games 2023-25, home-away rest differential vs ATS residual. corr +0.04; held-out MSE close-only 143.885 vs close+rest 144.377 → REST ADDS NOTHING.
+- The situational-graph "rest edge" is already inside the closing spread. Fourth independent confirmation of the master lesson: raw situational effects shrink to zero vs close.
+- Also landed: officials 2026 (22,012 rows), games.csv full schedule (7,548 rows w/ away_rest/home_rest).
+- DIAGNOSTIC. Nothing promoted.
