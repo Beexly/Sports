@@ -65,3 +65,11 @@ _Built 2026-10-11T02:32:18Z. Sources: 1,251-paper arXiv corpus (35 lanes) + live
 ## Standards
 - ryurko/nflscrapR-models: every model ships leave-one-season-out calibration BEFORE a consumer; failures documented dead
 - CollegeGuard + FreshnessGate + close-anchored CRPS bars + kill ledger (19-rule doctrine.py, 19/19 PASS)
+## Scoring Engine (DK authoritative)
+- `scoringStyleId` lives on every contest-detail response (classic=1, showdown variant noted per gameType)
+- The full rules table renders in the contest pop from an XHR the SPA scopes per session — not yet pinned to a static JSON (tried 3 CDN paths + api rules v1; the browser rules iframe loads it per-session). OPEN ITEM: capture the rules XHR once from the live pop and land `DK_RulesAndScoring.json`.
+- Standard NFL DK scoring (for our engine, pending the authoritative capture): pass TD 4 / rush+rec TD 6 / pass yds 25:1 / rush+rec yds 10:1 / rec 1 / fumble+int −1/-2 / bonuses per DK published rules.
+
+## New from the chunk sweep (mine_scoring.py)
+- `scoring: 48` hits in app.js → all UI/config refs, confirming (again) the engine is server-side
+- The Rules & Scoring tab = `dkjs-rules-and-scoring-container` populated via mvcVars.contests server injection

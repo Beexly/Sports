@@ -244,3 +244,8 @@
 - **THE_FLOOR.md/.json**: 10 equation slots × (current, upgrade, source paper, data status, kill test) — the canonical stack doc; every slot has data READY or re-pull identified
 - **agent-bus + gse-intel repos mined**: NFL metric catalog w/ formulas (EPA/CPOE/ANY/A/aDOT/TPRR/YPRR + success-rate rules), ryurko LOSO-CV honesty standard adopted as house rule, competitor teardowns
 - Bus review confirmed: ANGLES_REGISTRY A-K + ENGINE_BLUEPRINTS stay canonical; tonight's upgrades append (GAS published, nsEVDx, CMP) — no re-discovery
+
+### [01:20] Scoring-rules hunt + background job completion
+- mine_scoring.py re-run (chunks dir created): app.js scoring:48, chunk 2546 (Rules&Scoring tab UI), chunk 9265 — ALL UI refs, engine still server-side (3rd confirmation)
+- Rules JSON hunt: /rules-and-scoring/RulesAndScoring.json paths 404 (SPA shell), api rules v1 403; contest-detail carries only scoringStyleId. OPEN ITEM: capture the live rules XHR from the pop once → land DK_RulesAndScoring.json
+- Entry tracker: showdown mini-MAX 196458730 now 37,786/59.4K entries, My Entries: 1 confirmed
