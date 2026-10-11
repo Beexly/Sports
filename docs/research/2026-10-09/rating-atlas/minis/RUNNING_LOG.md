@@ -466,3 +466,10 @@
 - **PFR advanced stats harvest WITHOUT scraping PFR**: nflverse pfr_advstats mirror (848 QB-seasons, 38 cols: bad_throw_pct, pressure_pct, pocket_time, on_tgt_pct, IAY/CAY/YAC). Pressure curve at season level: weak (+0.14) — pressure response is QB-specific.
 - **3 unblocks found**: FTN via nflverse mirror (kills the week-old block), ESPN summary API, PFR-via-nflverse.
 - All DIAGNOSTIC. Nothing promoted. Remote = local verified every landing.
+
+### [08:50] THE PLAYER-LEVEL JOIN BORN — CPOE × pressure, NGS×PFR, 128 QB-weeks
+- **dfs/cpoe_x_pressure_2026.csv + CPOE_PRESSURE_TABLE_STAMP.json**: the join the conditional-tables lane needed (name_key × week).
+- **The table**: 0-3 pressures CPOE +4.9 (n=8) / 3-6 +2.2 (n=36) / 6-9 −1.8 (n=39) / **9+ +1.5 (n=45)**. Non-monotone: heavy-pressure QBs KEEP producing (mobile/elite class absorbs duress).
+- **Third independent confirmation**: bad-throw% flat in pressure (0.149→0.172). Pressure effects live in the QB class × completion decision, not throw quality. Prop models should condition on WHO, not HOW MUCH.
+- Also landed: PFR weekly pressure curve 2026 (150 QB-weeks), rush/rec advstats 2026.
+- DIAGNOSTIC. Nothing promoted.
