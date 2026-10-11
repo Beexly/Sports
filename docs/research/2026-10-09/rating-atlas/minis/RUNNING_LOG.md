@@ -197,3 +197,10 @@
 - At-lock census path verified: gamecenter/leaderboardfull renders for ENTERED contests → enter Millionaire ($20, balance $60.19) → leaderboardfull/v3 paginated enumeration at lock → consensus.py
 - Entered-contest test pending user decision (spending $20 of their balance needs their go)
 - Telegram updated with the honest mechanism + what's real now (live counts, 1,079-player pool, payout ladders, 25 ILP portfolios)
+
+### [22:55] SHOWDOWN TEST CONFIGURED — PHI@JAX London (user-directed 8am/9:30ET test)
+- Contest: $60K Play-Action 196458728 ($3, 20-max, 10,946 entries, lock Sun 9:30 AM ET) — payout ladder landed (24 tiers, $10K top, top-10 30.7% → MID-λ)
+- Showdown pool pulled in-session: 56 players (Hurts 10.8K top), snapshots/pool_154475.json
+- Showdown ILP variant built + solved: CPTN(1.5x)+5FLEX, 50K cap, field-relative objective; λ=4 backup-QB exploit identified and documented, test range λ∈{0,1,2}, 8 distinct portfolios in dfs/showdown_196458728_portfolios.json
+- Test plan pushed to Telegram; census = enter → 9:30 lock → leaderboardfull full-field pull → owned% consensus vs portfolios
+- Kalshi queued next (user directive)
