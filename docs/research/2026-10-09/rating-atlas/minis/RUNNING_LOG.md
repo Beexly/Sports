@@ -399,3 +399,8 @@
 - **Bug**: `_dk_implied_p_home(-7.5)` returned 28.6% (erf(spread/σ) gave P(margin < 0) for a home favorite). **Fix**: mu_home = −spread → P(JAX) = 71.36%, matching the stamped +5.1pp cross-book divergence exactly.
 - **Refuse-path PROVEN on the live ledger**: `--grade` with game Scheduled → kill_ledger_freshness.jsonl entry `{EDGE5_CROSSBOOK_GRADE, REFUSED, reason: game not Final}` at 06:23:45Z. Zero fabrication path verified end-to-end.
 - **Grade command**: `python dfs/rvc_edge5_grade.py --grade` — runs the moment ESPN shows Final. Join keys + criteria pre-registered in-file. Zero human judgment.
+
+### [06:30] READY-TO-FIRE CONFIRMED + MECHANICAL POLLER ARMED
+- All grader constants verified in-file: KALSHI_ML {PHI 0.235, JAC 0.765}, DK_SPREAD -7.5, OUR_SIGMA 13.3, sign fix (mu_home=-spread), refuse path proven on ledger.
+- Cron poller `7ac6e83e9422` armed: every 30m × 26 fires (~13h coverage through London Final), no-agent watchdog — silent until ESPN shows Final, then stamps EDGE5_CROSSBOOK_GRADED.json + ledger GRADED entry and delivers output.
+- Note: gateway must be running for the poller to fire (hermes gateway start).
