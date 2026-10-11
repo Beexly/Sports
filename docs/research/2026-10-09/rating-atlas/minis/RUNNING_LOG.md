@@ -460,3 +460,9 @@
 - **T1 pressure**: contested rate rises monotonically with blitz count (0.130→0.158→0.175). **T3 selection**: play-action catchable 0.629 vs 0.238 base; screens 0.908 catchable.
 - Also landed: ESPN QBR season (1,574 rows via nflverse), PFR advstats def (905KB), officials (1.3MB), snap counts 2026, nflverse pbp 2026 (4.9MB w/ closings).
 - Player-level CPOE×FTN join = remaining open (name mapping). DIAGNOSTIC. Nothing promoted.
+
+### [08:35] EQUATION HARVEST NIGHT-1 COMPLETE — 14 equations, 51 raw files, 5 findings, 3 unblocks
+- **dfs/eq_harvest/NIGHT1_MASTER_STAMP.json** — the full ledger. Every artifact stamped, every finding recorded, every remaining gap with its exact reopen path.
+- **PFR advanced stats harvest WITHOUT scraping PFR**: nflverse pfr_advstats mirror (848 QB-seasons, 38 cols: bad_throw_pct, pressure_pct, pocket_time, on_tgt_pct, IAY/CAY/YAC). Pressure curve at season level: weak (+0.14) — pressure response is QB-specific.
+- **3 unblocks found**: FTN via nflverse mirror (kills the week-old block), ESPN summary API, PFR-via-nflverse.
+- All DIAGNOSTIC. Nothing promoted. Remote = local verified every landing.

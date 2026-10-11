@@ -1,0 +1,35 @@
+{
+ "observed_at": "2026-10-11T06:52:41Z",
+ "title": "EQUATION HARVEST NIGHT-1 COMPLETE",
+ "equations_landed": 14,
+ "raw_files": 51,
+ "data_artifacts_landed": [
+  "nflverse pbp 2026 (4.9MB, w/ 2026 closings \u2014 65 games)",
+  "FTN charting 2026 (10,996 plays \u2014 the pressure axes, FREE mirror)",
+  "PFR advstats season pass (848 QB-seasons: bad_throw%, pressure_pct, pocket_time, on_tgt%, IAY/CAY/YAC)",
+  "ESPN QBR season (1,574 rows)",
+  "PFR advstats season def (905KB)",
+  "officials 2026 (1.3MB)",
+  "snap counts 2026 (544KB)",
+  "nfl4th trained models (sysdata.rda)"
+ ],
+ "findings": [
+  "F1: nflfastR clock kernel exp(-4*elapsed_share) \u2014 the verbatim feature equation; tested vs our empirical attractor (EQ004): kernel loses at every k (0.2095 best vs 0.1896), direction confirmed (faster decay=better)",
+  "F2: CROSS-BOOK TIMING LESSON: the +5.1pp was a line move (JAX -7.5\u2192-8.5); at current close all books agree within 0.3pp; residuals must be same-minute snapshots",
+  "F3: FTN T4 RVC: catchable-throw rate MONOTONE FALLS with closing total (0.542\u21920.452); high totals = low-quality throws",
+  "F4: PFR pressure curve: bad_throw% vs pressure% weak at season level (+0.14) \u2014 pressure response is QB-specific, not universal",
+  "F5: the 4th-down equation = 3-branch WP max with trained models landed"
+ ],
+ "unblocks": [
+  "FTN charting via nflverse free mirror (was REFUSED as blocked)",
+  "ESPN summary API (predictor + pickcenter, open)",
+  "PFR advanced stats via nflverse mirror (PFR itself Cloudflare-walled)"
+ ],
+ "still_open": [
+  "player-level CPOE\u00d7FTN join (name mapping)",
+  "ESPN QBR methodology page (202 async \u2014 browser lane)",
+  "NGS API (401 \u2014 browser lane)",
+  "PFR direct (Cloudflare \u2014 browser lane)"
+ ],
+ "label": "DIAGNOSTIC"
+}
