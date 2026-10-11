@@ -538,3 +538,9 @@
 - **Verdict for both**: 2026's 5 weeks cannot clear the noise floor. These are STRUCTURALLY sensible signals (box/blitz = opponent commitment) with persistence too weak and n too small. Reopen: 6+ more weeks of 2026 (pairs scale ~2× by midseason).
 - **The watchlist players (P2 prop closes)**: no completion/receiving prop closes on the bus for 2026 — reopen condition unchanged (browser-lane quote pull or nash NFL ladders). Watchlists stay as diagnostic screens only.
 - DIAGNOSTIC. Nothing promoted.
+
+### [11:15] NFL DAY — first settled-week grade + P1/P2 standing confirmations
+- **TB@DAL (Thu, Final 24-16)**: graded against wk4 CPOE-pressure signatures. Both positive (DAL +4.7, TB +3.9) → no discrimination; TB covered +17.5, DAL failed −17.5. Single-game grade CONFIRMS the P1 refusal (signature doesn't transmit to team ATS). Data-quality check: "Jalon Daniels TB" VERIFIED real in both NGS+PFR 2026 tables (no join collision).
+- **London state**: PHI@JAC still Scheduled (poller 7ac6e83e9422 armed, silent-until-Final). Graders untouched.
+- **P1/P2 standing**: both honest-REFUSED at 2026 n (85a7c2ec7b). Reopen = 6+ weeks / prop quote feed.
+- DIAGNOSTIC. Nothing promoted.
