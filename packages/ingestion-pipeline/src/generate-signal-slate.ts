@@ -186,7 +186,7 @@ const MODEL_SIGNAL_GRADE = "LEAN" as const;
  * The one sentence that keeps a signal-board grade from being read as a market-
  * board grade. Written onto the pick's `reasoning`, which is customer-visible.
  */
-export function signalGradeDisclosure(grade: SignalGrade): string {
+export function signalGradeDisclosure(grade: PickGrade): string {
   return (
     `Grade "${grade}" is confidence-only: with no book line there is no Edge Index, ` +
     `so this pick is NOT graded on the market board's confidence+Edge Index ladder.`
@@ -203,7 +203,7 @@ export function buildSignalReasoning(input: {
   readonly trueProb: number;
   readonly sourcesLabel: string;
   readonly rankingP: number;
-  readonly grade: SignalGrade;
+  readonly grade: PickGrade;
 }): string {
   const pct = Math.round(input.trueProb * 100);
   return (
