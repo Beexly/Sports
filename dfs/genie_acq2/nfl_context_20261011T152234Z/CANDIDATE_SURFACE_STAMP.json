@@ -1,9 +1,9 @@
 {
- "observed_at": "2026-10-11T16:05:09Z",
+ "observed_at": "2026-10-11T16:12:32Z",
  "input_sha16_pins": {
   "dfs/genie_acq2/nfl_context_20261011T152234Z/ENGINE_RUN_1547_STAMP.json": "0e18cfb2f8d92b52",
   "dfs/genie_acq2/nfl_context_20261011T152234Z/rec_ou.fresh.json": "83038a90698ba4fc",
-  "dfs/prop_close_feed_2026-10-11/pinnacle_props_all_20261011T1557Z.json": "ec6efe546ffa20e4",
+  "dfs/prop_close_feed_2026-10-11/pinnacle_props_all_20261011T1557Z.json": "ccf59ecc97108020",
   "dfs/genie_acq2/pinnacle_snapshot_20261011.envelope.json": "3b99a95f1f44c747",
   "dfs/genie_acq2/sunmon_154470/pool_154470.json": "bdd1051dfd2f81c1",
   "dfs/nfl_signals_2026-10-11/espn_injuries_snapshot.json": "08f1128c83e74ea0",
@@ -32,7 +32,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.26,
+   "age_hours": 0.38,
    "stamp": "2026-10-11T15:49:33Z"
   },
   {
@@ -41,7 +41,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.71,
+   "age_hours": 0.83,
    "stamp": "2026-10-11T15:22:46.126Z"
   },
   {
@@ -50,7 +50,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.12,
+   "age_hours": 0.25,
    "stamp": "2026-10-11T15:57:42Z"
   },
   {
@@ -59,7 +59,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.45,
+   "age_hours": 0.57,
    "stamp": "2026-10-11T15:38:11Z"
   },
   {
@@ -68,7 +68,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.12,
+   "age_hours": 0.25,
    "stamp": "2026-10-11T15:57:44Z"
   },
   {
@@ -77,7 +77,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 1.55,
+   "age_hours": 1.68,
    "stamp": "2026-10-11T14:31:57Z"
   },
   {
@@ -86,7 +86,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.57,
+   "age_hours": 0.69,
    "stamp": "2026-10-11T15:30:53Z"
   },
   {
@@ -95,7 +95,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 0.25,
+   "age_hours": 0.37,
    "stamp": "2026-10-11T15:50:27Z"
   },
   {
@@ -104,7 +104,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 3.47,
+   "age_hours": 3.59,
    "stamp": "2026-10-11T12:37:11Z"
   },
   {
@@ -148,7 +148,7 @@
    "file": "dfs/SITUATIONAL_GRAPH_RVC.json",
    "fresh": false,
    "failure_mode": "F1_STALE",
-   "detail": "age 8.97h > 6.0h",
+   "detail": "age 9.10h > 6.0h",
    "age_hours": null,
    "stamp": "2026-10-11T07:06:43Z"
   },
@@ -157,7 +157,7 @@
    "file": "dfs/OU_LANE_FINAL_VERDICT.json",
    "fresh": false,
    "failure_mode": "F1_STALE",
-   "detail": "age 8.99h > 6.0h",
+   "detail": "age 9.11h > 6.0h",
    "age_hours": null,
    "stamp": "2026-10-11T07:05:46Z"
   },
@@ -166,7 +166,7 @@
    "file": "dfs/B4_OFFICIALS_STAMP.json",
    "fresh": false,
    "failure_mode": "F1_STALE",
-   "detail": "age 11.91h > 6.0h",
+   "detail": "age 12.04h > 6.0h",
    "age_hours": null,
    "stamp": "2026-10-11T04:10:16Z"
   },
@@ -176,7 +176,7 @@
    "fresh": true,
    "failure_mode": null,
    "detail": null,
-   "age_hours": 1.55,
+   "age_hours": 1.68,
    "stamp": "2026-10-11T14:31:57Z"
   },
   {
@@ -184,7 +184,7 @@
    "file": "dfs/b1_weather_residual.json",
    "fresh": false,
    "failure_mode": "F1_STALE",
-   "detail": "age 11.58h > 6.0h",
+   "detail": "age 11.70h > 6.0h",
    "age_hours": null,
    "stamp": "2026-10-11T04:30:18Z"
   },
@@ -193,7 +193,7 @@
    "file": "dfs/nfl_rvc_manifest.json",
    "fresh": false,
    "failure_mode": "F1_STALE",
-   "detail": "age 12.46h > 6.0h",
+   "detail": "age 12.58h > 6.0h",
    "age_hours": null,
    "stamp": "2026-10-11T03:37:51Z"
   },
@@ -279,27 +279,27 @@
     {
      "layer": "situational_graph",
      "mode": "F1_STALE",
-     "detail": "age 8.97h > 6.0h"
+     "detail": "age 9.10h > 6.0h"
     },
     {
      "layer": "ou_live_state",
      "mode": "F1_STALE",
-     "detail": "age 8.99h > 6.0h"
+     "detail": "age 9.11h > 6.0h"
     },
     {
      "layer": "officials_crew",
      "mode": "F1_STALE",
-     "detail": "age 11.91h > 6.0h"
+     "detail": "age 12.04h > 6.0h"
     },
     {
      "layer": "weather",
      "mode": "F1_STALE",
-     "detail": "age 11.58h > 6.0h"
+     "detail": "age 11.70h > 6.0h"
     },
     {
      "layer": "frozen_nfl_manifest",
      "mode": "F1_STALE",
-     "detail": "age 12.46h > 6.0h"
+     "detail": "age 12.58h > 6.0h"
     }
    ]
   },
@@ -343,7 +343,7 @@
  },
  "title": "NFL DIAGNOSTIC CANDIDATE SURFACE — cross-book residual vs Pinnacle + gated overlay",
  "label": "DIAGNOSTIC — residual-versus-close not cleared — Reasoning Doctrine overlay applied",
- "sha16": "721f44fcdb1d6bcf",
+ "sha16": "ac423e39eed72c6d",
  "summary_residual_sigma_by_stat": {
   "completions": {
    "n": 25,
