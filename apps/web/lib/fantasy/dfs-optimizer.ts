@@ -18,6 +18,7 @@
  */
 
 import { DFS_SLOTS, SALARY_CAP, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
+import { simulateLineups, type SimStats } from "./dfs-correlation";
 import { activeDfsSlate } from "@/lib/integrations/dfs";
 
 export type Mode = "cash" | "gpp" | "leverage";
@@ -560,9 +561,14 @@ export type LineupMetrics = {
   readonly leverageScore: number; // avg leverage
   readonly stackTeam: string | null;
   readonly stacked: number;
+  readonly p90: number;
+  readonly p99: number;
+  readonly ceilEV: number;
+  readonly dupRisk: number;
+  readonly simsRun: number;
 };
 
-export function metrics(lu: Lineup): LineupMetrics {
+export function metrics(lu: Lineup, sim?: SimStats): LineupMetrics {
   const { team, stacked } = qbStackCount(lu);
   return {
     salary: salaryOf(lu),
@@ -573,6 +579,11 @@ export function metrics(lu: Lineup): LineupMetrics {
     leverageScore: Math.round((lu.reduce((s, p) => s + leverage(p), 0) / lu.length) * 100) / 100,
     stackTeam: team,
     stacked,
+    p90: sim?.p90 ?? 0,
+    p99: sim?.p99 ?? 0,
+    ceilEV: sim?.ceilEV ?? 0,
+    dupRisk: sim?.dupRisk ?? 0,
+    simsRun: sim?.simsRun ?? 0,
   };
 }
 
@@ -618,7 +629,7 @@ export function generateLineups(
 ): GenResult {
   const usage = new Map<string, number>();
   const seen = new Set<string>();
-  const lineups: { players: Lineup; metrics: LineupMetrics }[] = [];
+  const rawLineups: Lineup[] = [];
 
   const key = (lu: Lineup) => lu.map((p) => p.id).sort().join(",");
 
@@ -640,9 +651,16 @@ export function generateLineups(
     }
     if (!lu) break;
     seen.add(key(lu));
-    lineups.push({ players: lu, metrics: metrics(lu) });
+    rawLineups.push(lu);
     for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
   }
+
+  // Correlated simulation for accurate p90/p99 across the diverse generation
+  const stats = rawLineups.length > 0 ? simulateLineups(rawLineups, { sims: 10000 }) : [];
+  const lineups = rawLineups.map((lu, i) => ({
+    players: lu,
+    metrics: metrics(lu, stats[i]),
+  }));
 
   const byId = new Map(slate.map((p) => [p.id, p]));
   const exposure = [...usage.entries()]
