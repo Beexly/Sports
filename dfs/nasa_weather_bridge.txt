@@ -1,0 +1,23 @@
+THE WEATHER PIPELINE (NASA/physics equations -> football):
+
+Layer 1 — PHYSICS (deterministic, NASA-grade):
+  Drag equation: F_d = ½ρCdAv² relative to WIND VECTOR (not air speed — vector sum of ball v + wind w)
+  ρ(altitude, T, P) — Denver vs Miami density altitude changes kick carry by 4-7 yards (physics/0505118 shows
+  the human-performance analog at 100m sprint level)
+  Spin (Magnus): F_m ∝ ω × v × ρ — spiral vs end-over-end kick behavior differs in crosswind
+  → EQUATION: kick_range(ρ, Cd, v0, θ, ω, w) — solvable ODE, one NFL application: quantify
+    "wind-adjusted kicker legs" per stadium per game. Kicker props = direct market.
+
+Layer 2 — POST-PROCESSING (statistical, the actual edge):
+  Raw NWP ensembles (GEFS/GFS) → calibrated game-hour wind distribution via:
+  EMOS/ensemble model output statistics (1805.09091): P(wind15) = f(ensemble mean/spread/quantiles)
+  → our measured wind15+ = −5.41 total becomes a PROBABILISTIC overlay: E[total] = base + ∫Δ(w) dP(w)
+  → AIFS-CRPS-style training: optimize the post-processor on CRPS directly (our exact metric bar)
+
+Layer 3 — CONFORMAL GATE (registry K):
+  2606.19642 conformal UQ on AI weather → when the ensemble disagrees beyond its null quantile,
+  widen the abstain floor on weather-sensitive props (kicker yards, game totals, punts)
+
+Layer 4 — FREE DATA:
+  Pangu-Weather (Huawei, open weights) + GFS + ENS-10 dataset for backtesting the post-processor
+

@@ -1,0 +1,21 @@
+
+=== REGISTRY VALIDATION + UPGRADES (live arXiv, tonight) ===
+
+D. GAS STRENGTHS → [2604.09143] CONFIRMED + EXTENDED
+   "Score-Driven Rating System for Sports" = exactly registry D, now PUBLISHED with
+   theory: score has zero expected value, sums to zero across players, decreases in rating.
+   → our Kalman replacement is now a paint-by-numbers job with a citable method paper.
+   + [2101.04040] extends to RANKINGS via Plackett-Luce worths w/ GAS dynamics —
+   that's our receiver/RB tier lists as a time-varying worth process.
+
+C. EVT TAILS → TOOLING LANDED: [2509.07261] nsEVDx
+   Non-stationary EVD fitting, Bayesian (MCMC/MALA/HMC), Python-native, open.
+   Registry C's kill test (backtest 23-25 longest-X) just lost its last engineering excuse:
+   fit GPD(mu(t), sig(t), xi) with covariates = week, usage, weather IN THE DISTRIBUTION.
+
+NEW — CMP COUNTS: [2409.17129]
+   Bayesian BIVARIATE Conway-Maxwell-Poisson for correlated home/away scores.
+   Poisson assumes equidispersion; real football scores are under/over-dispersed by game
+   script. Bivariate CMP captures the correlation AND the dispersion — replaces the
+   independent-Poisson totals engine. Nobody in our stack uses CMP.
+
