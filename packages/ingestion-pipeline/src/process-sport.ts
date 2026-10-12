@@ -184,10 +184,8 @@ export interface ProcessSportResult {
    * request the vendor answered with an error is still counted.
    */
   paidRequestCount?: number;
-  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
-  lineSnapshotsPersisted?: number;
-  /** Games whose line-archive capture reported an error this cycle. */
-  lineArchiveErrors?: number;
+      lineSnapshotsPersisted: 0,
+      lineArchiveErrors: 0,
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -1749,10 +1747,8 @@ export async function processSport(
       note: fixtureNote ?? emptyNote,
       skippedInPlay,
       ...paidAccounting(),
-  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
-  lineSnapshotsPersisted?: number;
-  /** Games whose line-archive capture reported an error this cycle. */
-  lineArchiveErrors?: number;
+      lineSnapshotsPersisted: 0,
+      lineArchiveErrors: 0,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
