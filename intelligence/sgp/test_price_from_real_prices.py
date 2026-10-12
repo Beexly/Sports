@@ -31,7 +31,9 @@ from intelligence.props.real_price_feed import slate_records
 from intelligence.sgp.price_from_measured_correlations import build_legs, load_measured
 from intelligence.sgp.price_from_real_prices import (
     REFERENCE_TEAM_TOTAL,
+    _price_block,
     build_artifact,
+    price_game,
     scaled_legs,
 )
 
@@ -104,6 +106,27 @@ def test_real_prices_move_the_price(artifact):
         assert s["fair_probability"] > s["independent_probability"]
         assert s["correlation_lift"] > 0
         assert 0.0 < s["fair_probability"] < 1.0
+
+
+def test_control_uses_the_same_seed_as_the_scaled_run(corr_and_blob):
+    """
+    Common random numbers: the unscaled control must be exactly reproducible
+    with the SAME seed as the scaled run. A seed+1 control would mix an
+    independent Monte Carlo noise into a comparison whose whole purpose is
+    isolating the scaling coefficient's effect.
+    """
+    corr, _blob = corr_and_blob
+    record = {
+        "event_id": "x", "name": "A at B", "state": "pre", "complete_prices": True,
+        "implied_team_totals": {"home": 29.0, "away": 25.5},
+        "home_abbr": "HOM", "away_abbr": "AWY", "provider": "Draft Kings",
+    }
+    out = price_game(record, corr, draws=5_000, seed=7)
+    expected_control = _price_block(scaled_legs(REFERENCE_TEAM_TOTAL), corr, 5_000, 7)
+    for abbr in ("HOM", "AWY"):
+        got = out["sgp_stacks"][abbr]["unscaled_control"]
+        assert got["fair_probability"] == expected_control["fair_probability"]
+        assert got["leg_probabilities"] == expected_control["leg_probabilities"]
 
 
 def test_incomplete_and_post_games_are_skipped_with_reasons(corr_and_blob):
