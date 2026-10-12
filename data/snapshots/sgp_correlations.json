@@ -56,6 +56,51 @@
     "primary QB = most passing yards in the team-game; leading receiver = most receiving yards. One observation per team-game, both teams included.",
     "regular season only; preseason and postseason excluded so two usage regimes are not pooled into one correlation.",
     "anytime TD is 0/1, so its coefficients are point-biserial: numerically Pearson, but they answer 'does the continuous leg separate the scorers'.",
+    "cross-side block: entry [i][j] = corr(own leg i, opposing leg j) over 1088 ordered team-game pairs. It is a cross-correlation block, not a correlation matrix: its diagonal is a real measurement (corr(own leg i, opposing leg i)), not 1, and PSD applies to the joint matrix assembled from both sides, not to this block alone.",
     "matrix is PSD (min eigenvalue 0.260460); usable as-is."
-  ]
+  ],
+  "cross_matrix": [
+    [
+      0.1725310218297968,
+      0.1729216008892659,
+      0.19077107215306538,
+      0.14849705203784436
+    ],
+    [
+      0.17292160088926595,
+      0.06975178200408425,
+      0.14225968162490438,
+      0.05883878173252793
+    ],
+    [
+      0.19077107215306544,
+      0.1422596816249044,
+      0.20114345320741167,
+      0.09450234666273802
+    ],
+    [
+      0.1484970520378444,
+      0.05883878173252789,
+      0.09450234666273799,
+      0.006496189434577846
+    ]
+  ],
+  "cross_samples": {
+    "own_qb_pass_yards~opp_qb_pass_yards": 1088,
+    "own_qb_pass_yards~opp_qb_pass_tds": 1088,
+    "own_qb_pass_yards~opp_wr_rec_yards": 1088,
+    "own_qb_pass_yards~opp_wr_anytime_td": 1088,
+    "own_qb_pass_tds~opp_qb_pass_yards": 1088,
+    "own_qb_pass_tds~opp_qb_pass_tds": 1088,
+    "own_qb_pass_tds~opp_wr_rec_yards": 1088,
+    "own_qb_pass_tds~opp_wr_anytime_td": 1088,
+    "own_wr_rec_yards~opp_qb_pass_yards": 1088,
+    "own_wr_rec_yards~opp_qb_pass_tds": 1088,
+    "own_wr_rec_yards~opp_wr_rec_yards": 1088,
+    "own_wr_rec_yards~opp_wr_anytime_td": 1088,
+    "own_wr_anytime_td~opp_qb_pass_yards": 1088,
+    "own_wr_anytime_td~opp_qb_pass_tds": 1088,
+    "own_wr_anytime_td~opp_wr_rec_yards": 1088,
+    "own_wr_anytime_td~opp_wr_anytime_td": 1088
+  }
 }

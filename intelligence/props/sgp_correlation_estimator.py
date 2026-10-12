@@ -43,7 +43,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -68,6 +68,10 @@ class CorrelationReport:
     matrix: List[List[float]]
     pair_samples: Dict[str, int]
     notes: List[str]
+    #: Own-team legs against the opposing team's legs. Empty when no cross pairs
+    #: could be formed. Same leg order as `matrix`.
+    cross_matrix: List[List[float]] = field(default_factory=list)
+    cross_samples: Dict[str, int] = field(default_factory=dict)
 
 
 def load_season(season: int) -> Optional[pd.DataFrame]:
@@ -155,6 +159,52 @@ def pair_correlation(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.corrcoef(a, b)[0, 1])
 
 
+def cross_team_pairs(pairs: pd.DataFrame) -> pd.DataFrame:
+    """
+    Opposing-side legs: this team's QB against the OTHER team's leading receiver.
+
+    A real same-game parlay mixes both teams, and the two sides are not
+    independent. The mechanism is mostly game script and clock: a game where one
+    offence sustains long drives takes possessions away from the other, so the
+    cross-side coefficients can carry a sign the same-side ones cannot. Measuring
+    them separately is the difference between modelling a game and modelling two
+    offences that happen to share a stadium.
+
+    Self-joins the team-game table on game_id and keeps only pairs where the two
+    sides differ.
+    """
+    left = pairs[["game_id", "posteam", "qb_pass_yards", "qb_pass_tds", "wr_rec_yards", "wr_anytime_td"]]
+    right = pairs[["game_id", "posteam", "qb_pass_yards", "qb_pass_tds", "wr_rec_yards", "wr_anytime_td"]]
+    merged = left.merge(right, on="game_id", suffixes=("_own", "_opp"))
+    return merged[merged["posteam_own"] != merged["posteam_opp"]]
+
+
+def _matrix_from_columns(
+    cols: Dict[str, np.ndarray], unit_diagonal: bool = True
+) -> Tuple[List[List[float]], Dict[str, int]]:
+    """
+    Pairwise coefficients for one leg ordering.
+
+    `unit_diagonal=True` for a same-side correlation matrix (corr(x, x) = 1 by
+    definition). For a CROSS-side block the diagonal is a real measurement —
+    corr(own leg i, opposing leg i) — and forcing it to 1.0 would erase the most
+    interesting number in the table, so it is computed like any other entry.
+    """
+    k = len(LEG_NAMES)
+    matrix = [[0.0] * k for _ in range(k)]
+    pair_samples: Dict[str, int] = {}
+    for i in range(k):
+        for j in range(k):
+            if i == j and unit_diagonal:
+                matrix[i][j] = 1.0
+                continue
+            a, b = cols[LEG_NAMES[i]], cols[LEG_NAMES[j]]
+            r = pair_correlation(a, b)
+            matrix[i][j] = 0.0 if not np.isfinite(r) else r
+            pair_samples[f"{LEG_NAMES[i]}~{LEG_NAMES[j]}"] = int(len(a))
+    return matrix, pair_samples
+
+
 def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
     notes: List[str] = []
     frames = []
@@ -197,19 +247,68 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
         "wr_rec_yards": pairs["wr_rec_yards"].to_numpy(float),
         "wr_anytime_td": pairs["wr_anytime_td"].to_numpy(float),
     }
+    matrix, pair_samples = _matrix_from_columns(cols)
 
-    k = len(LEG_NAMES)
-    matrix = [[0.0] * k for _ in range(k)]
-    pair_samples: Dict[str, int] = {}
-    for i in range(k):
-        for j in range(k):
-            if i == j:
-                matrix[i][j] = 1.0
-                continue
-            a, b = cols[LEG_NAMES[i]], cols[LEG_NAMES[j]]
-            r = pair_correlation(a, b)
-            matrix[i][j] = 0.0 if not np.isfinite(r) else r
-            pair_samples[f"{LEG_NAMES[i]}~{LEG_NAMES[j]}"] = int(len(a))
+    # Cross-side (opposing team) coefficients, measured separately.
+    #
+    # Built from BOTH orderings of every distinct team pair, so each side
+    # contributes its own version of all four legs and entry [i][j] is genuinely
+    # corr(own leg i, opposing leg j). Getting this wrong is easy and silent: if
+    # only own-QB and opp-WR columns are supplied, [0][0] compares a series with
+    # itself and reads exactly 1.0000, and the whole block comes back
+    # indistinguishable from a same-side matrix.
+    cross = cross_team_pairs(pairs)
+    cross_matrix: List[List[float]] = []
+    cross_samples: Dict[str, int] = {}
+    if len(cross) > 0:
+        own_cols = {
+            "qb_pass_yards": cross["qb_pass_yards_own"].to_numpy(float),
+            "qb_pass_tds": cross["qb_pass_tds_own"].to_numpy(float),
+            "wr_rec_yards": cross["wr_rec_yards_own"].to_numpy(float),
+            "wr_anytime_td": cross["wr_anytime_td_own"].to_numpy(float),
+        }
+        opp_cols = {
+            "qb_pass_yards": cross["qb_pass_yards_opp"].to_numpy(float),
+            "qb_pass_tds": cross["qb_pass_tds_opp"].to_numpy(float),
+            "wr_rec_yards": cross["wr_rec_yards_opp"].to_numpy(float),
+            "wr_anytime_td": cross["wr_anytime_td_opp"].to_numpy(float),
+        }
+        k = len(LEG_NAMES)
+        cross_matrix = [[0.0] * k for _ in range(k)]
+        for i in range(k):
+            for j in range(k):
+                r = pair_correlation(own_cols[LEG_NAMES[i]], opp_cols[LEG_NAMES[j]])
+                cross_matrix[i][j] = 0.0 if not np.isfinite(r) else r
+                cross_samples[f"own_{LEG_NAMES[i]}~opp_{LEG_NAMES[j]}"] = int(len(cross))
+        # The block is symmetric because the row set contains both orderings of
+        # every team pair, so corr(own i, opp j) and corr(own j, opp i) range over
+        # the same set of pairs. Assert it rather than assume it: a non-zero
+        # asymmetry means the pairing is wrong, not that the NFL is asymmetric.
+        cm = np.array(cross_matrix, dtype=float)
+        asym = float(np.max(np.abs(cm - cm.T)))
+        if asym > 1e-9:
+            notes.append(
+                f"WARNING: the cross-side block is asymmetric by {asym:.6f}. The row "
+                "set contains both orderings of every team pair, so it must be "
+                "symmetric; treat this as a pairing bug, not a finding."
+            )
+        # The diagonal is corr(own leg i, opposing leg i) -- a real measurement.
+        # If any of them comes back exactly 1.0 the columns are degenerate and the
+        # block is not measuring what it claims.
+        diag = [cross_matrix[i][i] for i in range(k)]
+        if any(abs(d - 1.0) < 1e-9 for d in diag):
+            notes.append(
+                f"WARNING: cross-side diagonal contains an exact 1.0 ({diag}); the "
+                "own and opposing columns for that leg are the same series and the "
+                "block is degenerate."
+            )
+        notes.append(
+            f"cross-side block: entry [i][j] = corr(own leg i, opposing leg j) over "
+            f"{len(cross)} ordered team-game pairs. It is a cross-correlation block, "
+            "not a correlation matrix: its diagonal is a real measurement "
+            "(corr(own leg i, opposing leg i)), not 1, and PSD applies to the joint "
+            "matrix assembled from both sides, not to this block alone."
+        )
 
     # Guard: a matrix with a negative eigenvalue is not a usable correlation
     # matrix, and a copula would silently repair it. Report it instead.
@@ -237,6 +336,8 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
         matrix=matrix,
         pair_samples=pair_samples,
         notes=notes,
+        cross_matrix=cross_matrix,
+        cross_samples=cross_samples,
     )
 
 
@@ -266,6 +367,18 @@ def main(argv: Optional[List[str]] = None) -> int:
     print()
     for n in report.notes:
         print(f"  note: {n}")
+
+    if report.cross_matrix:
+        print()
+        print("  CROSS-SIDE block (entry [i][j] = corr(own leg i, opposing leg j);")
+        print("  symmetric by construction, diagonal is a measurement not 1):")
+        print(f"{'':>18}{header}")
+        for i, name in enumerate(report.leg_names):
+            row = "".join(f"{report.cross_matrix[i][j]:>16.4f}" for j in range(len(report.leg_names)))
+            print(f"{name:>18}{row}")
+        cm = np.array(report.cross_matrix, dtype=float)
+        print(f"  cross diagonal (own vs opposing, same leg): "
+              + ", ".join(f"{report.leg_names[i]}={cm[i][i]:.4f}" for i in range(len(report.leg_names))))
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

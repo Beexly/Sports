@@ -13,6 +13,7 @@ import pytest
 
 from intelligence.props.sgp_correlation_estimator import (
     LEG_NAMES,
+    cross_team_pairs,
     estimate,
     pair_correlation,
     player_game_table,
@@ -192,3 +193,49 @@ def test_missing_seasons_are_reported_rather_than_silently_dropped():
     except FileNotFoundError:
         pytest.skip("nflverse play-by-play not present on this checkout")
     assert any("1900" in n for n in report.notes), report.notes
+
+
+# ---------------------------------------------------------------------------
+# Cross-side block
+# ---------------------------------------------------------------------------
+
+def test_cross_team_pairs_yields_both_orderings_and_never_self_pairs():
+    pg = player_game_table(_toy_plays())
+    pairs = primary_pairs(pg)
+    cross = cross_team_pairs(pairs)
+    # 2 games x 2 teams x 1 opposing team = 4 ordered pairs
+    assert len(cross) == 4
+    assert (cross["posteam_own"] != cross["posteam_opp"]).all()
+    # both orderings of each matchup are present
+    g1 = cross[cross["game_id"] == "G1"]
+    assert set(zip(g1["posteam_own"], g1["posteam_opp"])) == {("T1", "T2"), ("T2", "T1")}
+
+
+def test_cross_side_diagonal_is_measured_and_not_forced_to_one():
+    """
+    The bug this pins: if only own-QB and opp-WR columns are supplied, entry
+    [0][0] compares a series with itself and reads exactly 1.0000, and the block
+    becomes indistinguishable from a same-side matrix. Every diagonal entry here
+    must be a real measurement, i.e. not exactly 1.
+    """
+    try:
+        report = estimate([2024, 2025])
+    except FileNotFoundError:
+        pytest.skip("nflverse play-by-play not present on this checkout")
+    assert report.cross_matrix, "cross-side block should be populated"
+    k = len(report.leg_names)
+    diag = [report.cross_matrix[i][i] for i in range(k)]
+    assert all(abs(d - 1.0) > 1e-9 for d in diag), f"degenerate cross diagonal: {diag}"
+    # and the report must not have flagged its own block as degenerate
+    assert not any("degenerate" in n for n in report.notes), report.notes
+
+
+def test_cross_side_block_is_symmetric_because_both_orderings_are_present():
+    """Symmetry is a property of the pairing, so a failure here is a pairing bug."""
+    try:
+        report = estimate([2024, 2025])
+    except FileNotFoundError:
+        pytest.skip("nflverse play-by-play not present on this checkout")
+    cm = np.array(report.cross_matrix, dtype=float)
+    assert np.allclose(cm, cm.T, atol=1e-9), "cross block must be symmetric"
+    assert not any("asymmetric" in n for n in report.notes), report.notes
