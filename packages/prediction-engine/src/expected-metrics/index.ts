@@ -159,3 +159,11 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Opponent kick miss luck (SHADOW, pure, defensive decomposition)
+export {
+  extractOpponentKickMissEvents,
+  computeOpponentKickMissMetrics,
+  type OpponentKickMissEvent,
+  type OpponentKickMissMetric,
+} from "./opponent-kick-miss.js";

@@ -1413,6 +1413,10 @@ export {
   DRIVES_MODEL_VERSION,
   buildEpCalibration,
   buildWpCalibration,
+  extractOpponentKickMissEvents,
+  computeOpponentKickMissMetrics,
+  type OpponentKickMissEvent,
+  type OpponentKickMissMetric,
 } from "./expected-metrics/index.js";
 export type {
   LinearModel,

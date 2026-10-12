@@ -2,6 +2,26 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    metricId: "opponent-kick-miss-luck",
+    internalName: "opponent_kick_miss_luck_shadow",
+    publicName: "Opponent Kick Miss Luck",
+    family: "luck",
+    formulaClass: "decomposition",
+    formulaSummary: "Per-team expected points gained from opponent missed FGs and XPs.",
+    historicalPrecedent: [{ name: "EPA from Opponent FG Misses", reason: "Missed kicks against a team are pure luck; a team's win record over-credits defenses that got lucky." }],
+    targetQuestion: "How many expected points did this team gain purely from opponent kicking variance?",
+    targetVariable: "luck-adjusted team strength",
+    allowedInputs: ["field_goal_result", "epa", "play_type", "posteam_score", "posteam_score_post"],
+    forbiddenInputs: ["blocked kicks", "plays from current or future weeks"],
+    protectedComponents: ["point-in-time enforcement", "minimum attempt floors", "league-mean shrinkage"],
+    validationMethods: ["walk_forward"],
+    publicExposure: "none",
+    sourceRightsRequired: ["modeling allowed"],
+    status: "SHADOW",
+    failureModes: ["leaking future data", "including blocked kicks as luck"],
+  },
+
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",

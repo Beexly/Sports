@@ -14468,3 +14468,10 @@ from the tracked accounts for Falcons-Ravens; SNF coverage was pre-game
 matchup graphics (SumerSports) plus one Q1 text note — the only in-game
 splits found were SF-SEA (@sfdata9ers, @SumerSports) and the Penix half
 split (via search, item 12).
+
+## Opponent Kick Miss Luck (SHADOW)
+Added by Jules on 2026-10-11.
+- Implemented `packages/prediction-engine/src/expected-metrics/opponent-kick-miss.ts` following fleet standards.
+- SHADOW metric quantifies expected points a team gained purely due to opponent missed FGs and XPs.
+- Registered birth certificate as `opponent_kick_miss_luck_shadow`.
+- Tests added and verified.
