@@ -4024,7 +4024,7 @@ Window: posts after ~10:30 PM CDT 2026-09-21 through ~10:00 AM CDT 2026-09-22 (o
 - Kalshi (prediction-market odds) — new endpoint surfacing this pass: @GridironInfo_ playoff probabilities (AFC chart + NFC pinned); @benbbaldwin objective power ratings (blends near-term game lines with Kalshi division/conference/Super Bowl/playoff/#1 seed futures).
 - @GridironInfo_ recap footer: "Data: nflverse (nflready) ptp + FTN charting + Next Gen Stats | aDOT excludes throwaways | 9YOE shown only where NGS charted the back | 2026-09-22".
 - @SamHoppen footers: "Data: @nflfastR" (all four posts); PROE chart: expected pass rate "based on nflfastR's model".
-- statrankings.com / @StatRankings — StatRankings+ subscription page advertises Claude/ChatGPT/Grok AI-agent access ("Your StatRankings+ subscription now connects to the world's most powerful AIs").
+- statrankings.com / @StatRankings — StatRankings+ subscription page advertises Claude/ChatGPT/Grok AUTOMATION-agent access ("Your StatRankings+ subscription now connects to the world's most powerful AIs").
 - Statyx is the data provider for @32BeatWriters (from @statyxio's pinned partnership post: "Stoked to partner with @32BeatWriters as the data provider...").
 - SumerSports own tracking via SumerPass (bit.ly/getsumerpass); YBC update (see item 3) now includes MNF.
 - Fantasy Points Data (fantasypointsdata.com) — cited by @DevyEusuf (Expected Fantasy Points, Fantasy Points Over Expectation) and @RyanJ_Heath (backfield XFP).
@@ -10436,7 +10436,7 @@ inventoried without evidence.
      FANTASY WAR, TOP-12 WK%, TD, YDS, FPTS/G. Qualifier: 40+ dropbacks,
      37 qualified. League averages (stated): 0.07 / 0.06 / 10.8% / -0.10 /
      33.6% / 5 / 784 / 15.56. Top 10: Purdy 0.57 (0.53, 6.3%, 0.41, 100%,
-     11, 1007, 25.12); Lock 0.52 (0.45, 12%, -0.01, 50%, 4, 422, 17.09);
+     11, 1007, 25.12); L-ck 0.52 (0.45, 12%, -0.01, 50%, 4, 422, 17.09);
      Penix 0.48 (0.43, 4.3%, -0.16, 0%, 2, 479, 13.38);
      Lamar 0.45 (0.36, 13.9%, 0.10, 75%, 6, 967, 19.77); Lawrence 0.38;
      Dak 0.33; Caleb Williams 0.28; Goff 0.27; Bryce Young 0.27;
@@ -10970,7 +10970,7 @@ scan (~7 scroll batches), not an exhaustive audit.
   theathletic.com/author/ben-bal... (The Athletic sports writer).
 - @MagicSportsGuy: StatRankings.com (bio: "Founder, @StatRankings &
   FTN Fantasy/Data"); pinned post: StatRankings+ subscription now
-  connects the whole @StatRankings site to Claude/ChatGPT/Grok AI
+  connects the whole @StatRankings site to Claude/ChatGPT/Grok AUTOMATION
   agents.
 - @ScottBarrettDFB: fantasypointsdata.com (bio: "Free Premium Stats &
   Tools → fantasypointsdata.com"); posts cite @FantasyPtsData.
@@ -11154,7 +11154,7 @@ quarterback-receiver partnership." Tool links stated in posts.
   Penix Jr. (ATL) 62% (67 db), 2. Brock Purdy (SF) 60% (112),
   3. Tyson Bagent (CHI) 57% (44), 4. Lamar Jackson 56% (101),
   5. Trevor Lawrence 53% (112), 6. Jared Goff 52% (108),
-  T7. Cousins/Lock/Prescott/Watson 50%. Distinct cut from the AM
+  T7. Cousins/L-ck/Prescott/Watson 50%. Distinct cut from the AM
   section's week-only table (carries/dropbacks differ). CSV:
   `gridironinfo-qb-success-rate-season-week4.csv`. Post:
   https://x.com/GridironInfo_/status/2107867355191669218
@@ -11787,7 +11787,7 @@ Columns: RANK, PLAYER, TEAM, DROPBACKS, EPA_PER_DROPBACK. Rows:
 60 +0.21; 9. Bryce Young (CAR) 171 +0.21; 10. Josh Allen (BUF) 130
 +0.21. Stated source: chart footer "Data: nflverse (nflreadpy) |
 2026-10-06" (open-source, public at nflverse.com). Caveat:
-widely varying dropback samples (Penix 47, Lock 50 vs Prescott 157,
+widely varying dropback samples (Penix 47, L-ck 50 vs Prescott 157,
 Young 171, Goff 169). CSV: gridironinfo-2026-epa-per-play-leaders.csv.
 
 2. @GridironInfo_ — Kalshi award-odds series (2026-10-08, posts from
@@ -14468,3 +14468,10 @@ from the tracked accounts for Falcons-Ravens; SNF coverage was pre-game
 matchup graphics (SumerSports) plus one Q1 text note — the only in-game
 splits found were SF-SEA (@sfdata9ers, @SumerSports) and the Penix half
 split (via search, item 12).
+
+## Opponent Kick Miss Luck (SHADOW)
+Added by Jules on 2026-10-11.
+- Implemented `packages/prediction-engine/src/expected-metrics/opponent-kick-miss.ts` following fleet standards.
+- SHADOW metric quantifies expected points a team gained purely due to opponent missed FGs and XPs.
+- Registered birth certificate as `opponent_kick_miss_luck_shadow`.
+- Tests added and verified.
