@@ -218,7 +218,7 @@ def joint_block(cross: pd.DataFrame) -> Tuple[List[List[float]], float]:
 
 def _matrix_from_columns(
     cols: Dict[str, np.ndarray], unit_diagonal: bool = True
-) -> Tuple[List[List[float]], Dict[str, int]]:
+) -> Tuple[List[List[float]], Dict[str, int], List[str]]:
     """
     Pairwise coefficients for one leg ordering.
 
@@ -226,10 +226,17 @@ def _matrix_from_columns(
     definition). For a CROSS-side block the diagonal is a real measurement —
     corr(own leg i, opposing leg i) — and forcing it to 1.0 would erase the most
     interesting number in the table, so it is computed like any other entry.
+
+    Returns (matrix, pair_samples, degenerate_pairs). A pair whose correlation
+    is undefined (a constant series, or fewer than 3 observations) is written
+    as 0.0 in the matrix — there is no other number to write — and its name is
+    returned in `degenerate_pairs` so the caller can put the assumption in the
+    report's notes. A silent 0.0 would read as measured independence.
     """
     k = len(LEG_NAMES)
     matrix = [[0.0] * k for _ in range(k)]
     pair_samples: Dict[str, int] = {}
+    degenerate_pairs: List[str] = []
     for i in range(k):
         for j in range(k):
             if i == j and unit_diagonal:
@@ -237,9 +244,11 @@ def _matrix_from_columns(
                 continue
             a, b = cols[LEG_NAMES[i]], cols[LEG_NAMES[j]]
             r = pair_correlation(a, b)
+            if not np.isfinite(r):
+                degenerate_pairs.append(f"{LEG_NAMES[i]}~{LEG_NAMES[j]}")
             matrix[i][j] = 0.0 if not np.isfinite(r) else r
             pair_samples[f"{LEG_NAMES[i]}~{LEG_NAMES[j]}"] = int(len(a))
-    return matrix, pair_samples
+    return matrix, pair_samples, degenerate_pairs
 
 
 def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
@@ -284,7 +293,13 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
         "wr_rec_yards": pairs["wr_rec_yards"].to_numpy(float),
         "wr_anytime_td": pairs["wr_anytime_td"].to_numpy(float),
     }
-    matrix, pair_samples = _matrix_from_columns(cols)
+    matrix, pair_samples, degenerate_pairs = _matrix_from_columns(cols)
+    for pair_name in degenerate_pairs:
+        notes.append(
+            f"degenerate pair {pair_name}: the correlation is undefined (a "
+            "constant series or fewer than 3 observations), so it is written "
+            "as 0.0. That 0.0 is an ASSUMED independence, not a measurement."
+        )
 
     # Cross-side (opposing team) coefficients, measured separately.
     #
@@ -317,6 +332,13 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
         for i in range(k):
             for j in range(k):
                 r = pair_correlation(own_cols[LEG_NAMES[i]], opp_cols[LEG_NAMES[j]])
+                if not np.isfinite(r):
+                    notes.append(
+                        f"degenerate pair own_{LEG_NAMES[i]}~opp_{LEG_NAMES[j]}: "
+                        "the correlation is undefined (a constant series or "
+                        "fewer than 3 observations), so it is written as 0.0. "
+                        "That 0.0 is an ASSUMED independence, not a measurement."
+                    )
                 cross_matrix[i][j] = 0.0 if not np.isfinite(r) else r
                 cross_samples[f"own_{LEG_NAMES[i]}~opp_{LEG_NAMES[j]}"] = int(len(cross))
         # The block is symmetric because the row set contains both orderings of

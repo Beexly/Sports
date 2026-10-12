@@ -11,8 +11,10 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import intelligence.props.sgp_correlation_estimator as estimator_module
 from intelligence.props.sgp_correlation_estimator import (
     LEG_NAMES,
+    _matrix_from_columns,
     cross_team_pairs,
     estimate,
     joint_block,
@@ -269,3 +271,84 @@ def test_joint_block_reports_psd_status_for_the_real_corpus():
         pytest.skip("nflverse play-by-play not present on this checkout")
     assert report.joint_min_eigenvalue is not None
     assert any("joint 8x8" in n for n in report.notes), report.notes
+
+
+# ---------------------------------------------------------------------------
+# Degenerate pairs are reported, never silently zeroed
+# ---------------------------------------------------------------------------
+
+def test_matrix_from_columns_names_its_degenerate_pairs():
+    """A constant leg has no correlation; its pairs come back NAMED, at 0.0."""
+    rng = np.random.default_rng(7)
+    n = 60
+    cols = {
+        "qb_pass_yards": rng.standard_normal(n) * 40 + 240,
+        "qb_pass_tds": rng.standard_normal(n) + 2,
+        "wr_rec_yards": rng.standard_normal(n) * 20 + 70,
+        "wr_anytime_td": np.ones(n),  # never varies in this sample
+    }
+    matrix, _samples, degenerate = _matrix_from_columns(cols)
+    k = LEG_NAMES.index("wr_anytime_td")
+    for name in degenerate:
+        assert "wr_anytime_td" in name, degenerate
+    assert set(degenerate) == {
+        f"{a}~{b}"
+        for a in LEG_NAMES
+        for b in LEG_NAMES
+        if (a == "wr_anytime_td") != (b == "wr_anytime_td")
+    }
+    for j in range(len(LEG_NAMES)):
+        if j != k:
+            assert matrix[k][j] == 0.0 and matrix[j][k] == 0.0
+    assert matrix[k][k] == 1.0  # the diagonal stays definitional, not degenerate
+
+
+def _constant_anytime_plays() -> pd.DataFrame:
+    """
+    Synthetic play-by-play in which every leading receiver scores in every
+    team-game, so wr_anytime_td is a constant 1.0 series and every pair
+    involving it is degenerate. Play counts vary per team-game so the other
+    legs keep real variance.
+    """
+    rows = []
+    for g in range(4):
+        for t, team in enumerate(("T1", "T2")):
+            plays = 2 + ((g + t) % 4)  # 2..5 plays, varies by team-game
+            for p in range(plays):
+                rows.append((
+                    f"G{g}", team, f"QB_{team}", f"WR_{team}",
+                    30.0 + 10 * g + 5 * p, 1.0, 20.0 + 7 * g + 3 * p,
+                ))
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "game_id", "posteam", "passer_player_name", "receiver_player_name",
+            "passing_yards", "pass_touchdown", "receiving_yards",
+        ],
+    ).assign(season_type="REG", week=1, defteam="X", complete_pass=1.0,
+             rush_attempt=0.0, pass_attempt=1.0)
+
+
+def test_estimate_reports_degenerate_pairs_instead_of_silent_independence(monkeypatch):
+    """
+    End to end: with anytime-TD constant, the report's notes must NAME the
+    degenerate pairs (same-side and cross-side) whose matrix entries were
+    written as 0.0. A silent 0.0 reads as measured independence; it is not.
+    """
+    df = _constant_anytime_plays()
+    monkeypatch.setattr(estimator_module, "load_season", lambda season: df)
+    report = estimate([2099])
+
+    same_side = [n for n in report.notes if n.startswith("degenerate pair ") and "~opp_" not in n]
+    cross_side = [n for n in report.notes if n.startswith("degenerate pair own_")]
+    assert any("qb_pass_yards~wr_anytime_td" in n for n in same_side), report.notes
+    assert any("wr_anytime_td" in n for n in cross_side), report.notes
+
+    m = np.array(report.matrix, dtype=float)
+    k = LEG_NAMES.index("wr_anytime_td")
+    for j in range(len(LEG_NAMES)):
+        if j != k:
+            assert m[k][j] == 0.0 and m[j][k] == 0.0
+    # a non-degenerate pair is still a real measurement, not collateral damage
+    i, j = LEG_NAMES.index("qb_pass_yards"), LEG_NAMES.index("wr_rec_yards")
+    assert np.isfinite(m[i][j]) and m[i][j] != 0.0
