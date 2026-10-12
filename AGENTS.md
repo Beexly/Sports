@@ -14468,3 +14468,33 @@ from the tracked accounts for Falcons-Ravens; SNF coverage was pre-game
 matchup graphics (SumerSports) plus one Q1 text note — the only in-game
 splits found were SF-SEA (@sfdata9ers, @SumerSports) and the Penix half
 split (via search, item 12).
+
+## X ANALYTICS SWEEP 2026-10-12 (00:20 RUN)
+
+Window: posts after ~9:35 PM CDT Sun 2026-10-11 through ~12:45 AM CDT Mon 2026-10-12 (~3h, SNF Ravens 30–23 OT Falcons window). Read-only as @GalaxySportsHQ; login confirmed, no CAPTCHAs, login walls, or rate limits. Three parallel browser lanes: metrics/analytics + home feed, news/injury, market/scheme. Absolute timestamps verified on post pages where marked [abs]; estimates [est]. No full chart tables in-window — no CSVs this run.
+
+### NEW METRIC / ANGLE ENTRIES
+
+- **2pt-conversion concept-level conversion data** — @RyanPaganetti, 2026-10-11 10:20 PM CDT [abs]: "Love gun runs on 2 point conversions. Gun runs the highest converting 2 point concept over 10-15 year samples." (with video). Stated fact: gun (shotgun) runs are the highest-converting 2-point conversion concept across 10–15 year samples. No columns/rows given (text post + video, no table). Data source: not stated (implied his own research). Caveats: concept-level conversion rate stated without sample size, team controls, or game-state splits. Novelty: concept-level (play-type) cut of 2pt conversion efficiency rather than go-for-2 decision math.
+
+- **OT 4th-down decision-theory / coach-behavior angle** — @RyanPaganetti, ~11:30 PM CDT [est]: prefers going second in OT "for the simple reason that first overtime drive fourth down attempts can be incredibly hard and coaches are not comfortable with what the data says is best. What are you doing on the first drive of OT on 4th and 1 from your own 30?" Attributed opinion framing a behavioral layer over 4th-down data: coaches' discomfort with data-optimal calls on the first OT drive as a reason to defer. No metric defined; no numbers stated.
+
+- **Middle-of-field EPA/attempt percentile split** — @SyedSchemes (Shawn Syed, verified), ~12:20 AM CDT Mon 2026-10-12 [est] (found via term search); data source quoted exactly: "per @SumerSports". Stated row: Drake Maye, middle-of-field throws, Week 5: 9/9, 103 yards, 1 TD, 99th percentile EPA/attempt. Angle: directional (middle-of-field) split of EPA/attempt expressed as a percentile rather than raw value. SumerSports percentile basis not stated.
+
+- **Single-game-vs-cumulative allowed-yardage framing** — @SumerSports, ~11:25 PM CDT [est] (graphic included): "The Falcons have allowed more rushing yards tonight (208) than they did in the first four weeks of the season combined (193)." Stated facts: Falcons 2026 rushing yards allowed — Weeks 1–4: 193; Week 5 vs Ravens: 208. Context stated by same account: Falcons entered Week 5 allowing the fewest rushing yards in the league. Data source: not stated (implied SumerSports' own). Angle: single-game total vs cumulative-season-total comparison as a defensive-performance frame.
+
+- **Success-rate-as-barometer framing** — @FB_FilmAnalysis (Ted Nguyen, verified), ~11:58 PM CDT [est] (found via term search), re Ravens' run game vs Falcons: "Success rate is a better barometer. They obviously didn't dominate on the ground but it was an effective tool for them to stay on schedule." Attributed analytical claim: success rate preferred over dominance measures for judging run-game effectiveness in the staying-on-schedule role. No metric definition or threshold stated.
+
+- **WR separation-numbers comparison angle** — @DevyEusuf, ~11:35 PM CDT [est]: hot-take thread re Marvin Harrison Jr. (traded to Texans 2026-10-11) claiming "his separation numbers were nearly identical to 2024" after bulking up in 2025, and that the Cardinals' coaching staff "sabotaged him by having him run clearouts." Source: not stated. Attributed opinion using separation metrics; no values or metric name given.
+
+- **Recency-weighted vs season-long EPA for power ratings** — @ScottBarrettDFB, ~11:30 PM CDT [est] (reply to Pat Kerrane re power-ranking models): "The models need to be dynamic and account for when things are getting better vs worse... models using season-long EPA or EPA+ will treat the Miami Dolphins the same way in Week 5 as they would in week 8. So they shouldn't be used to derive the 'best teams' without a ton of caveats." Attributed modeling critique: static season-long EPA-based team ratings lack recency dynamics. Additionally attributed: Barrett states he does not know the difference between EPA and EPA+ ("I don't know the difference between the two, honestly") — terminology confusion among practitioners, quoted verbatim. No metric definition; no build order.
+
+### INNOVATION KERNELS (attributed, no build orders)
+- Concept-level 2pt conversion data (play-type conversion rates, 10–15 yr samples) as a complement to go-for-2 decision math.
+- Coach-behavior layer over optimal-decision data (OT deferral rationale: discomfort with data-optimal 4th-down calls on the first drive).
+- Directional EPA/attempt (middle-of-field) expressed as percentiles — percentile framing for QB-location splits.
+- Single-game-vs-cumulative comparison as a defensive dominance framing device.
+- Success rate as the "staying on schedule" barometer vs raw rushing efficiency.
+
+### COVERAGE (checked, nothing in-window)
+Metrics/analytics lane: @cmain7, @sfdata9ers, @MagicSportsGuy, @GridironInfo_, @statyxio, @PattonAnalytics, @EstablishTheRun, @FantasyPtsData, @DynatyzeFF, @NerdingonNFL (empty timeline), @32BeatWriters, @hawkblogger (postgame promo only), @DonAtkinsonNFL (commentary only). Skipped per standing rule: @NFLResearcher (parody), @FTNData (protected/private, no follow requested). News lane: @AdamSchefter (latest 7:16 PM — MHJ trade, Deebo Samuel out with hamstring, Zay Flowers active), @TomPelissero (latest 9:11 PM — Seahawks-49ers pool report + Dre Greenlaw ejection clarification), @RapSheet (in-window 9:52 PM [abs] was an opinion repost of Sheil Kapadia's Lions-best-offense-per-EPA/drive claim; injury posts ~4h [est] just outside window), @JFowlerESPN, @32BeatWriters. Market lane: @VSiNLive (nothing in-window; out-of-window 209 Circa Survivor entries died on Washington tie), @VSiN (0 posts — inactive), @Covers, @ActionNetworkHQ. Scheme lane: @Nate_Tice, @benbbaldwin, @PFF (stat coverage only: AFC North all over .500, receiving-yard leaders, Goff passing-yards lead, Kyle Pitts TDs year-by-year 1/2/3/4/5/1), @robertmays. CPOE/TPRR/pass-rush-win-rate/aggressiveness term searches: no new in-window posts. @DevyEusuf first-render anomaly (TPRR/route-win-rate tables seen then vanished on reload) treated as unverifiable and excluded; flagged for re-sweep.
