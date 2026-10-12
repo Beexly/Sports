@@ -28,6 +28,13 @@ artifact as news. So by default the edge watcher requires a tier of A or B, and
 On today's data that means the edge watcher is correctly SILENT, and it will say
 so once at startup.
 
+**The edge watcher also gates on the board's doctrine stamp.** Before any row
+is even read, the artifact itself must carry the generator's DIAGNOSTIC stamp
+(`label` + `is_pick`/`is_edge_claim` false) AND report `rvc_cleared` as true.
+An unstamped or uncleared board keeps the announcer silent no matter what its
+rows contain -- residual-versus-close clearance is the fleet's publish gate,
+and a voice daemon does not get to route around it.
+
 **Test failures need a source.** There is no universal test-result file in this
 repo, so the daemon does not pretend to detect failures out of nothing. Pass
 `--test-cmd` to have it run a command (pytest/vitest) each cycle with a timeout,
@@ -202,7 +209,9 @@ class EdgeWatcher:
     """
     Newly published high-confidence picks, read from the real props board.
 
-    Requires BOTH a threshold hit AND (unless --include-unverified) an
+    Silent unless the board artifact itself passes the doctrine gate (see
+    `board_gate_open`): a DIAGNOSTIC stamp AND `rvc_cleared` true. Past the
+    gate it requires BOTH a threshold hit AND (unless --include-unverified) an
     investment-grade tier, because a threshold hit that fails the distributional
     falsifier is a modelling artifact and not news. Reads confidence from a picks
     snapshot when one exists, and EV from the props board.
@@ -216,11 +225,36 @@ class EdgeWatcher:
         self._announced: set = set()
         self.has_source = board.exists()
 
-    def _rows(self) -> List[Dict[str, Any]]:
+    def _load(self) -> Any:
         try:
-            data = json.loads(self.board.read_text(encoding="utf-8"))
+            return json.loads(self.board.read_text(encoding="utf-8"))
         except Exception:
-            return []
+            return None
+
+    @staticmethod
+    def board_gate_open(data: Any) -> bool:
+        """
+        The doctrine gate on the artifact, checked before any row is read.
+
+        Open requires BOTH:
+          * the generator's full DIAGNOSTIC stamp -- `label == "DIAGNOSTIC"`
+            with `is_pick` and `is_edge_claim` literally False, and
+          * `rvc_cleared` literally True (residual-versus-close has cleared).
+
+        Anything else -- an unstamped legacy artifact, a list payload, or a
+        stamped board whose RVC has not cleared -- keeps the announcer silent.
+        Silence is the default; speech must be earned by the stamp.
+        """
+        if not isinstance(data, dict):
+            return False
+        if data.get("label") != "DIAGNOSTIC":
+            return False
+        if data.get("is_pick") is not False or data.get("is_edge_claim") is not False:
+            return False
+        return data.get("rvc_cleared") is True
+
+    @staticmethod
+    def _rows(data: Any) -> List[Dict[str, Any]]:
         if isinstance(data, dict) and "board" in data:
             return list(data.get("board") or [])
         if isinstance(data, list):
@@ -229,7 +263,10 @@ class EdgeWatcher:
 
     def poll(self) -> List[str]:
         msgs: List[str] = []
-        for row in self._rows():
+        data = self._load()
+        if not self.board_gate_open(data):
+            return msgs
+        for row in self._rows(data):
             try:
                 ev = float(row.get("ev_pct") or 0.0)
                 conf = float(row.get("confidence") or 0.0)
@@ -534,11 +571,15 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"[watchdog] recorded test result: {'FAILED' if msgs else 'passing'}")
         return 0
 
-    # The mission's flags are opt-in, but a watchdog with every watcher off would
-    # be a daemon that never speaks, which is worse than a noisy one.
+    # The mission's flags are opt-in, and opt-in means opt-in: a bare run
+    # enables NEITHER announcer. A daemon that starts speaking because nobody
+    # told it not to is how a house gets woken by a modelling artifact.
     if not args.announce_edge and not args.announce_bus:
-        print("[watchdog] note: neither --announce-edge nor --announce-bus given; enabling both.")
-        args.announce_edge = args.announce_bus = True
+        print(
+            "[watchdog] note: neither --announce-edge nor --announce-bus given; "
+            "both announcers are OFF. Pass --announce-edge and/or --announce-bus "
+            "to enable them."
+        )
 
     daemon = WatchdogDaemon(
         interval=args.interval,
