@@ -17,7 +17,7 @@ PA). The full chain — de-vig → marginals → measured-correlation copula —
 run on Kambi prices only, using Kambi's own lines throughout (never mixed
 with the ESPN lines). Both teams' 4-leg combos are fully formed.
 
-| Team | Joint fair probability (copula) | Independence product | Monte Carlo SE |
+| Team | Joint fair probability (copula) | Independence baseline (simulated-frequency product, same simulation) | Monte Carlo SE |
 |---|---|---|---|
 | Los Angeles Rams | **0.1769** | 0.0571 | ±0.0017 |
 | Buffalo Bills | **0.1314** | 0.0384 | ±0.0015 |
@@ -92,7 +92,14 @@ copula, measured 4×4 matrix from `data/snapshots/sgp_correlations.json`
 de-vigged probabilities above, fed to `price_sgp` as Bernoulli marginals so
 the joint is P(all four legs hit) under the measured dependence.
 
-| Team | Marginals (in leg order) | Joint | Independence | Lift | SE | z vs independence |
+Independence-baseline label, corrected: the "independence" numbers below are
+**not** the analytic product of the input marginals above (that product is
+0.0562 for the Rams and 0.0379 for the Bills). They are the product of the
+simulated leg frequencies from the same simulation — which is what
+`price_sgp` reports as its independence control — so the baseline and the
+joint share the same Monte Carlo draws.
+
+| Team | Marginals (in leg order) | Joint | Independence baseline (simulated-frequency product, same simulation) | Lift | SE | z vs independence |
 |---|---|---|---|---|---|---|
 | Los Angeles Rams | 0.5000, 0.4109, 0.4978, 0.5495 | **0.1769** | 0.0571 | +209.7% | 0.0017 | +70 approx |
 | Buffalo Bills | 0.5000, 0.4946, 0.5054, 0.3030 | **0.1314** | 0.0384 | +242.0% | 0.0015 | +62 approx |
@@ -134,3 +141,39 @@ decimal (Rams 17.7, Bills 13.1).
   DraftKings' own API hosts returned Akamai 403 from this VM and no Odds API
   key is stored on this machine, which is why the Kambi/Pinnacle/FanDuel pass
   above was run. The ESPN lines were **not** used in the priced run.
+
+---
+
+## Reproduction
+
+Runner: `intelligence/props/runs/run_bills_rams_2026_10_12.py` — the exact
+priced-run script. It reads only committed artifacts (the Kambi snapshot and
+`data/snapshots/sgp_correlations.json`), derives every leg, line, and price
+from the snapshot payload by eventId 1028813042 and market name, Shin
+de-vigs the six two-sided legs (`devig_two_way`, anytime-TD Yes-only legs
+use raw implied — see the caveat above), and prices each team separately
+via `price_sgp` (Gaussian copula, measured 4×4 matrix, Bernoulli marginals
+with hit iff u <= p, 50,000 draws, seed 20261012). No price or marginal is
+hardcoded in the runner.
+
+Command (from the repo root):
+
+```
+python intelligence/props/runs/run_bills_rams_2026_10_12.py
+```
+
+Output (2026-10-12, verified against this record):
+
+```
+Los Angeles Rams
+  joint fair probability (copula): 0.1769 (+/- 0.0017)
+  independence baseline (simulated-frequency product, same simulation): 0.0571
+
+Buffalo Bills
+  joint fair probability (copula): 0.1314 (+/- 0.0015)
+  independence baseline (simulated-frequency product, same simulation): 0.0384
+```
+
+All eight de-vigged marginals printed by the runner match the leg tables
+above exactly (Rams 0.5000, 0.4109, 0.4978, 0.5495; Bills 0.5000, 0.4946,
+0.5054, 0.3030).
