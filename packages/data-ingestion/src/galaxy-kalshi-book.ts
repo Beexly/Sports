@@ -364,6 +364,10 @@ export class PredExonKalshiCatalog implements GalaxySecondBook {
           ticker: s.ticker,
           rawImpliedProb: s.quote.yes,
           fairProb: null,
+          quoteSpread: spread,
+          quoteBid: yesBid,
+          quoteAsk: yesAsk,
+          quoteSource: "kalshi",
         })),
       };
       const book = kalshiH2hBookmaker({

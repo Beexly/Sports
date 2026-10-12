@@ -1359,6 +1359,8 @@ export {
   fitLogistic,
   predictLogistic,
   computeExpectedMetricSchemaHash,
+  computeCushionSeparationMatchup,
+  type CushionSeparationMatchup,
   rollupByPlayer,
   fitExpectedCompletionModel,
   predictCompletionProbability,
@@ -2180,7 +2182,6 @@ export type { PerformanceClaimInput } from "./edge-lab/honest-ceiling.js";
 
 // Recompute verifier: re-score a ledger of claims against stored outcomes.
 export { recomputeLedger } from "./edge-lab/recompute-verifier.js";
-export type { LedgerEntry, RecomputeReport } from "./edge-lab/recompute-verifier.js";
 
 // Ladder + boost scanners: softness map across a market's price ladder.
 // Detects where model p diverges from market q. Does NOT fire live p. priced:false.

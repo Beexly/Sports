@@ -441,8 +441,8 @@ export async function fetchRundownEventsForSport(
       events: [],
       remaining: null,
       error: `rundown: no sport_id map for ${sportKey}`,
-      complete: false,
-      failedDays: [],
+
+
     };
   }
   const startDate = options?.date ?? todayIsoUtc();

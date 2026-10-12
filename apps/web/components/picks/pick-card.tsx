@@ -1,3 +1,4 @@
+import { LocalTime } from "@/components/ui/local-time";
 import type {
   PickType,
   PickGrade,
@@ -12,7 +13,6 @@ import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
-import { CENTRAL_TZ } from "@/lib/time/central";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
 import {
   bindPublicConsensusClaim,
@@ -53,20 +53,7 @@ export function PickCard({
   canSeeEdgeScore,
   canSeeFactorBreakdown,
 }: PickCardProps) {
-  // Kickoff reads Central. Without an explicit timeZone this formatted in the
-  // SERVER's zone (UTC on Vercel) during SSR and in the VIEWER's zone after
-  // hydration — two different answers for the same card, and `timeZoneName`
-  // faithfully printed whichever wrong zone it had used. Pinning the zone makes
-  // the label correct AND makes server and client agree.
-  const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
-    timeZone: CENTRAL_TZ,
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
+
   const riskInfo = RISK_LEVEL_LABELS[pick.riskLevel];
 
   const freshnessAge = pick.dataFreshnessAt

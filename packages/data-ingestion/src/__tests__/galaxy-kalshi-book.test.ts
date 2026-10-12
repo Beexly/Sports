@@ -129,8 +129,25 @@ describe("kalshiH2hBookmaker", () => {
   it("returns null when either side lacks a live two-way quote (never invents)", () => {
     const oneSided = fv({
       sides: [
-        { team: "Buffalo", ticker: "KXNFLGAME-26SEP14PITBUF-BUF", rawImpliedProb: 0.6, fairProb: null },
-        { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP14PITBUF-PIT", rawImpliedProb: null, fairProb: null },
+        { team: "Buffalo", ticker: "KXNFLGAME-26SEP14PITBUF-BUF", rawImpliedProb: 0.6, fairProb: null,
+      quoteSpread: 1,
+      quoteBid: 0,
+      quoteAsk: 0,
+      quoteSource: "kalshi" },
+        { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP14PITBUF-PIT", rawImpliedProb: null,
+      fairProb: null,
+      quoteSpread: 1,
+      quoteBid: 0,
+      quoteAsk: 0,
+      quoteSource: "kalshi",
+      quoteSpread: 1,
+      quoteBid: 0,
+      quoteAsk: 0,
+      quoteSource: "kalshi",
+      quoteSpread: 1,
+      quoteBid: 0,
+      quoteAsk: 0,
+      quoteSource: "kalshi" },
       ],
     });
     expect(kalshiH2hBookmaker({ fairValue: oneSided, homeAbbr: "BUF", awayAbbr: "PIT", homeTeam: "Buffalo Bills", awayTeam: "Pittsburgh Steelers" })).toBeNull();
