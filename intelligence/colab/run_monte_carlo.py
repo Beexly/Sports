@@ -47,6 +47,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import json
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -56,6 +57,7 @@ import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = REPO_ROOT / "data" / "snapshots" / "sgp_copula_sample.npy"
+CORRELATION_PATH = REPO_ROOT / "data" / "snapshots" / "sgp_correlations.json"
 
 DEFAULT_DRAWS = 10_000
 DEFAULT_SEED = 20261012
@@ -222,12 +224,14 @@ def build_sample_parlay() -> Tuple[List[LegSpec], np.ndarray, str]:
     """
     4-leg NFL SGP: passing yards, passing TDs, receiving yards, anytime TD.
 
-    The correlations are ILLUSTRATIVE. They are stated here in one place, with
-    their provenance, rather than buried in a call site: the repo has no
-    estimator for same-game leg dependence, so these are hand-set values chosen
-    to be plausible in SIGN and rough MAGNITUDE (a QB's yardage and his
-    touchdown passes move together; a receiver's yards and his anytime-TD are
-    positively related but far from perfectly). They are not fitted to anything.
+    The correlations are now ESTIMATED from nflverse play-by-play when the
+    estimator has been run (intelligence/props/sgp_correlation_estimator.py
+    writes data/snapshots/sgp_correlations.json), and fall back to a labelled
+    ILLUSTRATIVE matrix only when that artifact is absent.
+
+    The fallback exists so the runner works on a fresh checkout; it is never
+    silently substituted, because a price built on invented dependence is not a
+    price. Which source was used is printed on every run.
     """
     legs = [
         LegSpec("Passing yards (QB)", LogNormalLeg(mean=245.5, sd=42.0), line=250.5),
@@ -235,6 +239,25 @@ def build_sample_parlay() -> Tuple[List[LegSpec], np.ndarray, str]:
         LegSpec("Receiving yards (WR)", LogNormalLeg(mean=74.5, sd=25.0), line=75.5),
         LegSpec("Anytime TD (WR)", PoissonLeg(lam=0.40), line=0.5),
     ]
+
+    estimated = CORRELATION_PATH if CORRELATION_PATH.exists() else None
+    if estimated is not None:
+        try:
+            blob = json.loads(estimated.read_text(encoding="utf-8"))
+            corr = np.array(blob["matrix"], dtype=float)
+            if corr.shape != (4, 4):
+                raise ValueError(f"estimated matrix is {corr.shape}, expected (4, 4)")
+            provenance = (
+                f"ESTIMATED from nflverse play-by-play — {blob.get('n_team_games')} team-games, "
+                f"seasons {blob.get('seasons')} ({estimated.name})"
+            )
+            return legs, corr, provenance
+        except Exception as exc:
+            # A present-but-broken artifact must not be silently ignored, and it
+            # must not be silently trusted either.
+            print(f"  WARNING: could not use {estimated.name}: {exc}")
+            print("  falling back to the ILLUSTRATIVE matrix below")
+
     corr = np.array(
         [
             [1.00, 0.70, 0.65, 0.28],
@@ -245,8 +268,8 @@ def build_sample_parlay() -> Tuple[List[LegSpec], np.ndarray, str]:
         dtype=float,
     )
     provenance = (
-        "ILLUSTRATIVE hand-set correlations (no in-repo estimator exists for "
-        "same-game leg dependence)"
+        "ILLUSTRATIVE hand-set correlations — run "
+        "intelligence/props/sgp_correlation_estimator.py to estimate them from data"
     )
     return legs, corr, provenance
 

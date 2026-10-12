@@ -1,0 +1,61 @@
+{
+  "seasons": [
+    2024,
+    2025
+  ],
+  "n_games": 544,
+  "n_team_games": 1088,
+  "min_games": 8,
+  "leg_names": [
+    "qb_pass_yards",
+    "qb_pass_tds",
+    "wr_rec_yards",
+    "wr_anytime_td"
+  ],
+  "matrix": [
+    [
+      1.0,
+      0.4976919574246057,
+      0.6994536009539846,
+      0.2691740036819433
+    ],
+    [
+      0.49769195742460565,
+      1.0,
+      0.371569622128332,
+      0.49268011212384066
+    ],
+    [
+      0.6994536009539846,
+      0.371569622128332,
+      1.0,
+      0.3251253584467502
+    ],
+    [
+      0.2691740036819433,
+      0.49268011212384066,
+      0.3251253584467502,
+      1.0
+    ]
+  ],
+  "pair_samples": {
+    "qb_pass_yards~qb_pass_tds": 1088,
+    "qb_pass_yards~wr_rec_yards": 1088,
+    "qb_pass_yards~wr_anytime_td": 1088,
+    "qb_pass_tds~qb_pass_yards": 1088,
+    "qb_pass_tds~wr_rec_yards": 1088,
+    "qb_pass_tds~wr_anytime_td": 1088,
+    "wr_rec_yards~qb_pass_yards": 1088,
+    "wr_rec_yards~qb_pass_tds": 1088,
+    "wr_rec_yards~wr_anytime_td": 1088,
+    "wr_anytime_td~qb_pass_yards": 1088,
+    "wr_anytime_td~qb_pass_tds": 1088,
+    "wr_anytime_td~wr_rec_yards": 1088
+  },
+  "notes": [
+    "primary QB = most passing yards in the team-game; leading receiver = most receiving yards. One observation per team-game, both teams included.",
+    "regular season only; preseason and postseason excluded so two usage regimes are not pooled into one correlation.",
+    "anytime TD is 0/1, so its coefficients are point-biserial: numerically Pearson, but they answer 'does the continuous leg separate the scorers'.",
+    "matrix is PSD (min eigenvalue 0.260460); usable as-is."
+  ]
+}

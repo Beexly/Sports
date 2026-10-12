@@ -1,0 +1,279 @@
+"""
+Same-game leg correlation estimator.
+
+WHY THIS EXISTS
+---------------
+`intelligence/colab/run_monte_carlo.py` prices same-game parlays through a
+Gaussian copula, and the copula needs a correlation matrix. Until now that matrix
+was hand-set and labelled ILLUSTRATIVE, because nothing in the repo estimated
+same-game leg dependence from data. A price calculator whose dependency structure
+is invented is not a model of a market.
+
+This script estimates the matrix from real plays. It reads nflverse play-by-play
+(CC-BY 4.0, the repo's legal foundation for this class of work), aggregates to
+player-game level, and measures the pairwise co-movement of the four legs a real
+SGP is built from:
+
+    QB passing yards, QB passing TDs, WR receiving yards, WR anytime TD
+
+WHAT IT MEASURES, AND WHAT IT DOES NOT
+--------------------------------------
+It measures CO-MOVEMENT BETWEEN TEAMMATES IN THE SAME GAME — the dependence a
+book either ignores or approximates with a linear heuristic when it prices a
+same-game parlay.
+
+It does NOT:
+* claim these are the correlations a book uses (it publishes none);
+* adjust for opponent, weather, or game script (those are separate features);
+* treat a correlation as causal. Two legs moving together is a fact about the
+  joint distribution, not a mechanism.
+
+A binary leg (anytime TD) is correlated against a continuous leg with the
+point-biserial coefficient, which is the Pearson coefficient computed with the
+0/1 series left as-is — stated explicitly because the interpretation differs from
+a correlation between two continuous legs.
+
+Usage
+-----
+    python intelligence/props/sgp_correlation_estimator.py
+    python intelligence/props/sgp_correlation_estimator.py --seasons 2024 2025 --min-games 8
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+PBP_DIR = REPO_ROOT / "data" / "nflverse" / "pbp"
+OUT_JSON = REPO_ROOT / "data" / "snapshots" / "sgp_correlations.json"
+
+#: The four legs of the sample parlay, in the order the Monte Carlo runner uses.
+LEG_NAMES = ["qb_pass_yards", "qb_pass_tds", "wr_rec_yards", "wr_anytime_td"]
+
+
+@dataclass
+class CorrelationReport:
+    seasons: List[int]
+    n_games: int
+    n_team_games: int
+    min_games: int
+    leg_names: List[str]
+    matrix: List[List[float]]
+    pair_samples: Dict[str, int]
+    notes: List[str]
+
+
+def load_season(season: int) -> Optional[pd.DataFrame]:
+    path = PBP_DIR / f"play_by_play_{season}.parquet"
+    if not path.exists():
+        return None
+    cols = [
+        "game_id", "season_type", "week", "posteam", "defteam",
+        "passer_player_name", "receiver_player_name",
+        "passing_yards", "pass_touchdown", "receiving_yards",
+        "complete_pass", "rush_attempt", "pass_attempt",
+    ]
+    # NOTE: this nflverse release carries pass_touchdown / rush_touchdown as
+    # PER-PLAY BOOLEANS, not the aggregate passing_tds / receiving_tds columns
+    # some documentation implies. Summing the boolean over a player's plays is
+    # the count. Verified against the parquet schema before use rather than
+    # assumed from the column name.
+    df = pd.read_parquet(path, columns=cols)
+    return df
+
+
+def player_game_table(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    One row per (game, team, player) with the four leg quantities.
+
+    Passing legs are attributed to the passer; receiving legs to the receiver.
+    Regular season only: preseason and postseason have different usage patterns
+    and pooling them would put two regimes in one correlation.
+    """
+    reg = df[df["season_type"] == "REG"]
+
+    qb = (
+        reg.dropna(subset=["passer_player_name"])
+        .groupby(["game_id", "posteam", "passer_player_name"], as_index=False)
+        .agg(qb_pass_yards=("passing_yards", "sum"), qb_pass_tds=("pass_touchdown", "sum"))
+        .rename(columns={"passer_player_name": "player"})
+    )
+    qb["role"] = "QB"
+
+    wr = (
+        reg.dropna(subset=["receiver_player_name"])
+        .groupby(["game_id", "posteam", "receiver_player_name"], as_index=False)
+        .agg(wr_rec_yards=("receiving_yards", "sum"), wr_rec_tds=("pass_touchdown", "sum"))
+        .rename(columns={"receiver_player_name": "player"})
+    )
+    wr["role"] = "WR"
+
+    both = qb.merge(wr, on=["game_id", "posteam", "player"], how="outer")
+    both["role"] = both["role_x"].fillna(both["role_y"])
+    both = both.drop(columns=["role_x", "role_y"])
+    both["wr_anytime_td"] = (both["wr_rec_tds"].fillna(0) > 0).astype(float)
+    return both
+
+
+def primary_pairs(players: pd.DataFrame) -> pd.DataFrame:
+    """
+    For each team-game: the primary QB and that team's leading receiver.
+
+    The primary QB is the one with the most passing yards in that game (a
+    handoff or an injury game has two, and the leader is the one the game's
+    production belongs to). The leading receiver is by receiving yards, which is
+    the leg a same-game parlay is actually built on.
+    """
+    qbs = players.dropna(subset=["qb_pass_yards"]).copy()
+    qbs = qbs.sort_values("qb_pass_yards", ascending=False).drop_duplicates(["game_id", "posteam"])
+
+    wrs = players.dropna(subset=["wr_rec_yards"]).copy()
+    wrs = wrs.sort_values("wr_rec_yards", ascending=False).drop_duplicates(["game_id", "posteam"])
+
+    pairs = qbs[["game_id", "posteam", "player", "qb_pass_yards", "qb_pass_tds"]].merge(
+        wrs[["game_id", "posteam", "player", "wr_rec_yards", "wr_anytime_td"]],
+        on=["game_id", "posteam"],
+        suffixes=("_qb", "_wr"),
+    )
+    return pairs
+
+
+def pair_correlation(a: np.ndarray, b: np.ndarray) -> float:
+    """Pearson (equivalently point-biserial when one series is 0/1)."""
+    if len(a) < 3:
+        return float("nan")
+    sa, sb = np.std(a), np.std(b)
+    if sa == 0.0 or sb == 0.0:
+        return float("nan")
+    return float(np.corrcoef(a, b)[0, 1])
+
+
+def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
+    notes: List[str] = []
+    frames = []
+    for s in seasons:
+        df = load_season(s)
+        if df is None:
+            notes.append(f"season {s}: play-by-play not present at {PBP_DIR.name}/play_by_play_{s}.parquet")
+            continue
+        pg = player_game_table(df)
+        pg["season"] = s
+        frames.append(pg)
+
+    if not frames:
+        raise FileNotFoundError(
+            f"no play-by-play found in {PBP_DIR}. Download from nflverse-data "
+            "(pbp release) — CC-BY 4.0."
+        )
+
+    players = pd.concat(frames, ignore_index=True)
+    pairs = primary_pairs(players)
+
+    n_games = int(pairs["game_id"].nunique())
+    n_team_games = int(len(pairs))
+    notes.append(
+        "primary QB = most passing yards in the team-game; leading receiver = most "
+        "receiving yards. One observation per team-game, both teams included."
+    )
+    notes.append(
+        "regular season only; preseason and postseason excluded so two usage "
+        "regimes are not pooled into one correlation."
+    )
+    notes.append(
+        "anytime TD is 0/1, so its coefficients are point-biserial: numerically "
+        "Pearson, but they answer 'does the continuous leg separate the scorers'."
+    )
+
+    cols = {
+        "qb_pass_yards": pairs["qb_pass_yards"].to_numpy(float),
+        "qb_pass_tds": pairs["qb_pass_tds"].to_numpy(float),
+        "wr_rec_yards": pairs["wr_rec_yards"].to_numpy(float),
+        "wr_anytime_td": pairs["wr_anytime_td"].to_numpy(float),
+    }
+
+    k = len(LEG_NAMES)
+    matrix = [[0.0] * k for _ in range(k)]
+    pair_samples: Dict[str, int] = {}
+    for i in range(k):
+        for j in range(k):
+            if i == j:
+                matrix[i][j] = 1.0
+                continue
+            a, b = cols[LEG_NAMES[i]], cols[LEG_NAMES[j]]
+            r = pair_correlation(a, b)
+            matrix[i][j] = 0.0 if not np.isfinite(r) else r
+            pair_samples[f"{LEG_NAMES[i]}~{LEG_NAMES[j]}"] = int(len(a))
+
+    # Guard: a matrix with a negative eigenvalue is not a usable correlation
+    # matrix, and a copula would silently repair it. Report it instead.
+    ev = np.linalg.eigvalsh(np.array(matrix, dtype=float))
+    if float(ev.min()) < -1e-8:
+        notes.append(
+            f"WARNING: the estimated matrix is not PSD (min eigenvalue {float(ev.min()):.6f}). "
+            "It is reported as measured; a consumer must repair it before use and say so."
+        )
+    else:
+        notes.append(f"matrix is PSD (min eigenvalue {float(ev.min()):.6f}); usable as-is.")
+
+    if n_team_games < min_games:
+        notes.append(
+            f"WARNING: only {n_team_games} team-games, below the requested minimum of "
+            f"{min_games}. Coefficients are unstable at this sample size."
+        )
+
+    return CorrelationReport(
+        seasons=list(seasons),
+        n_games=n_games,
+        n_team_games=n_team_games,
+        min_games=min_games,
+        leg_names=list(LEG_NAMES),
+        matrix=matrix,
+        pair_samples=pair_samples,
+        notes=notes,
+    )
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    p = argparse.ArgumentParser(description="Same-game leg correlation estimator")
+    p.add_argument("--seasons", type=int, nargs="+", default=[2024, 2025])
+    p.add_argument("--min-games", type=int, default=8)
+    p.add_argument("--out", default=str(OUT_JSON))
+    args = p.parse_args(argv)
+
+    report = estimate(args.seasons, min_games=args.min_games)
+
+    print("Same-game leg correlation estimator — nflverse play-by-play")
+    print(f"  seasons      : {report.seasons}")
+    print(f"  games        : {report.n_games}")
+    print(f"  team-games   : {report.n_team_games} (one observation each)")
+    print()
+    print("  correlation matrix (legs in this order):")
+    for name in report.leg_names:
+        print(f"    {name}")
+    print()
+    header = "".join(f"{n[:14]:>16}" for n in report.leg_names)
+    print(f"{'':>18}{header}")
+    for i, name in enumerate(report.leg_names):
+        row = "".join(f"{report.matrix[i][j]:>16.4f}" for j in range(len(report.leg_names)))
+        print(f"{name:>18}{row}")
+    print()
+    for n in report.notes:
+        print(f"  note: {n}")
+
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(asdict(report), indent=2), encoding="utf-8")
+    print()
+    print(f"  wrote {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

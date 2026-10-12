@@ -1,0 +1,20 @@
+# Raw nflverse play-by-play is NOT committed.
+#
+# 40 MB of third-party data (nflverse, CC-BY 4.0) that anyone can re-download
+# from the nflverse-data GitHub release. Committing it would bloat every clone
+# and every CI checkout to carry bytes that are trivially regenerated.
+#
+# Retrieve with:
+#   python -c "import urllib.request; ..."  # see the header of
+#   intelligence/props/sgp_correlation_estimator.py, which downloads on demand
+#   and names this directory.
+#
+# The DERIVED artifact IS committed: data/snapshots/sgp_correlations.json (a few
+# KB, the measured matrix) is the thing consumers read, and it carries its own
+# provenance. The corpus is an input; the estimate is the result.
+#
+# Scoped .gitignore rather than a line in the root .gitignore, following the
+# precedent in data/backtest/.gitignore: AGENTS.md law 2 puts .gitignore under
+# "never modify", and a directory-scoped file is the narrower, safer mechanism.
+# One commit, reversible, affects nothing else in the tree.
+pbp/
