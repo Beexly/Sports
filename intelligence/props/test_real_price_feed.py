@@ -20,6 +20,7 @@ import pytest
 
 from intelligence.props.real_price_feed import (
     SOURCE_ID,
+    _american,
     game_record,
     parse_game,
     parse_scoreboard,
@@ -120,3 +121,107 @@ def test_slate_records_stamps_one_fetch_time(payload):
     records = slate_records(payload, fetched_at="2026-10-12T20:00:00+00:00")
     assert len(records) == 1
     assert records[0]["provenance"]["fetched_at"] == "2026-10-12T20:00:00+00:00"
+
+
+# ---------------------------------------------------------------------------
+# Malformed prices are rejected, never truncated into existence
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("-175", -175),
+        ("+145", 145),
+        (-110, -110),
+        (-175.0, -175),   # integral float: the VALUE is a clean integer
+        ("105.5", None),  # non-integral string: malformed, not a price
+        (105.5, None),    # non-integral number: malformed, not a price
+        ("-102.5", None),
+        ("abc", None),
+        ("", None),
+        (None, None),
+        (0, None),        # zero is not an American price
+        ("0", None),
+    ],
+)
+def test_american_prices_must_be_clean_integers(raw, expected):
+    """
+    The bug this pins: int(float('105.5')) silently produced 105 — a price
+    ESPN never quoted, one point off the real one. Non-integral input is
+    rejected as None so the market reads as unquoted, per the feed's law.
+    """
+    assert _american(raw) == expected
+
+
+def _odds_block(provider_name, ml_home, ml_away):
+    """A minimal odds block in the shape ESPN relays (see the fixture)."""
+    return {
+        "provider": {"name": provider_name},
+        "spread": -3.5,
+        "overUnder": 54.5,
+        "moneyline": {
+            "home": {"close": {"odds": ml_home}},
+            "away": {"close": {"odds": ml_away}},
+        },
+        "pointSpread": {
+            "home": {"close": {"line": "-3.5", "odds": "-110"}},
+            "away": {"close": {"line": "3.5", "odds": "-110"}},
+        },
+        "total": {
+            "over": {"close": {"line": "54.5", "odds": "-110"}},
+            "under": {"close": {"line": "54.5", "odds": "-110"}},
+        },
+    }
+
+
+def _event(odds_blocks):
+    return {
+        "id": "42",
+        "name": "A at B",
+        "date": "2026-10-12T00:00Z",
+        "status": {"type": {"state": "pre"}},
+        "competitions": [
+            {
+                "competitors": [
+                    {"homeAway": "home", "team": {"displayName": "B", "abbreviation": "B"}},
+                    {"homeAway": "away", "team": {"displayName": "A", "abbreviation": "A"}},
+                ],
+                "odds": odds_blocks,
+            }
+        ],
+    }
+
+
+def test_a_truncated_price_would_poison_the_record_so_it_stays_missing():
+    """'105.5' in a moneyline slot parses as NO price, and the game is incomplete."""
+    game = parse_game(_event([_odds_block("Draft Kings", "105.5", "+145")]))
+    assert game is not None
+    assert game.moneyline["home"] is None
+    assert game.moneyline["away"] == 145
+    assert game.complete is False
+
+
+# ---------------------------------------------------------------------------
+# Provider selection: DraftKings preferred, provider always recorded
+# ---------------------------------------------------------------------------
+
+def test_prefers_the_draftkings_block_when_several_books_are_relayed():
+    """ESPN can relay multiple books; the repo's price law is DraftKings."""
+    blocks = [
+        _odds_block("BetMGM", "-200", "+170"),
+        _odds_block("Draft Kings", "-175", "+145"),
+    ]
+    game = parse_game(_event(blocks))
+    assert game is not None
+    assert game.provider == "Draft Kings"
+    assert game.moneyline == {"home": -175, "away": 145}
+
+
+def test_falls_back_to_the_first_block_and_records_its_provider():
+    """No DraftKings block: take the first, and provenance says whose it is."""
+    game = parse_game(_event([_odds_block("BetMGM", "-200", "+170")]))
+    assert game is not None
+    assert game.provider == "BetMGM"
+    assert game.moneyline == {"home": -200, "away": 170}
+    rec = game_record(game, fetched_at="2026-10-12T20:00:00+00:00")
+    assert rec["provenance"]["provider_reported_by_espn"] == "BetMGM"

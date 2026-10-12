@@ -99,19 +99,30 @@ def utc_now_iso() -> str:
 # ---------------------------------------------------------------------------
 
 def _american(value: object) -> Optional[int]:
-    """Parse an American price ('-175', '+145', -110) — None when absent/invalid."""
-    if value is None:
+    """
+    Parse an American price ('-175', '+145', -110) — None when absent/invalid.
+
+    Strictly integral. An American price is a whole number, so a non-integral
+    value ('105.5', 105.5) is malformed data and is REJECTED (None), never
+    rounded: the previous int(float(text)) silently truncated 105.5 to 105,
+    manufacturing a price ESPN never quoted. Integral floats (-175.0) are
+    accepted — the value is a clean integer even if the encoding is not.
+    """
+    if value is None or isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
-        n = int(value)
+        f = float(value)
     else:
         text = str(value).strip().replace("+", "")
         if not text:
             return None
         try:
-            n = int(float(text))
+            f = float(text)
         except ValueError:
             return None
+    if not f.is_integer():
+        return None
+    n = int(f)
     return n if n != 0 else None
 
 
@@ -179,6 +190,24 @@ def _close(block: dict, side: str) -> dict:
     return side_block.get("close") or {}
 
 
+def _select_odds_block(odds_blocks: List[dict]) -> dict:
+    """
+    Pick the odds block to parse when ESPN relays several books.
+
+    The repo's price law is DraftKings — the TS client reads the DraftKings
+    block — so prefer the block whose provider is DraftKings (ESPN spells it
+    "Draft Kings"; match case/space-insensitively) and fall back to the first
+    block when no DraftKings block is present. Either way the chosen block's
+    provider is what lands in the record's provenance.
+    """
+    for block in odds_blocks:
+        provider = block.get("provider") or {}
+        raw = provider.get("name") or provider.get("displayName") or ""
+        if "".join(str(raw).lower().split()) == "draftkings":
+            return block
+    return odds_blocks[0] if odds_blocks else {}
+
+
 def parse_game(event: dict) -> Optional[GamePrices]:
     """Parse one ESPN scoreboard event into GamePrices (None when malformed)."""
     competitions = event.get("competitions") or []
@@ -192,7 +221,7 @@ def parse_game(event: dict) -> Optional[GamePrices]:
         return None
 
     odds_blocks = comp.get("odds") or []
-    odds = odds_blocks[0] if odds_blocks else {}
+    odds = _select_odds_block(odds_blocks)
 
     ml = odds.get("moneyline") or {}
     ps = odds.get("pointSpread") or {}
