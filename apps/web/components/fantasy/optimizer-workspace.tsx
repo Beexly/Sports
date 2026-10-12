@@ -14,6 +14,8 @@ import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
 import type { Player } from "@/lib/fantasy/players";
 
+import type { DfsPlayer } from "@/lib/fantasy/dfs-slate";
+
 type Tab = "dfs" | "startsit" | "draft";
 
 const TABS: { key: Tab; label: string; blurb: string }[] = [
@@ -29,11 +31,20 @@ const TABS: { key: Tab; label: string; blurb: string }[] = [
  * every tab runs on the illustrative default (unchanged).
  * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed):
  * a caller that forgets it gets the capped trial board, never the full paid suite.
+ * @param canUseDfsOptimizer150 Elite tier entitlement for 150-max multi-lineup generation.
+ * @param unifiedSlate Authoritative 686-player DFS slate with DraftKings salaries and Pinnacle-implied projections.
  */
 export function OptimizerWorkspace({
   pool,
   canUseFantasyFull = false,
-}: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+  canUseDfsOptimizer150 = false,
+  unifiedSlate = null,
+}: {
+  pool?: readonly Player[];
+  canUseFantasyFull?: boolean;
+  canUseDfsOptimizer150?: boolean;
+  unifiedSlate?: readonly DfsPlayer[] | null;
+} = {}) {
   const [tab, setTab] = useState<Tab>("dfs");
   const active = TABS.find((t) => t.key === tab)!;
 
@@ -76,7 +87,10 @@ export function OptimizerWorkspace({
               Open full DFS page →
             </Link>
           </div>
-          <DfsOptimizer />
+          <DfsOptimizer
+            canUseDfsOptimizer150={canUseDfsOptimizer150}
+            initialSlate={unifiedSlate}
+          />
         </div>
       )}
       {tab === "startsit" && (

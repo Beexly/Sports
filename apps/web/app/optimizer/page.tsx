@@ -19,10 +19,13 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs headroom beyond the default
 
+import { getUnifiedDfsSlate } from "@/lib/dfs/unified-slate";
+
 export default async function OptimizerPage(): Promise<JSX.Element> {
   // Live graded pool for Start/Sit + Draft tabs when projections are on; DFS uses
   // its own slate seam regardless.
   const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  const unifiedSlate = getUnifiedDfsSlate();
   // Server-side paywall enforcement (CLAUDE.md rule 3): a FREE viewer never receives the
   // paid rows of the live pool — only the trial subset is serialized to the client, so
   // the Draft tab's cap is real, not a bypassable client-side slice.
@@ -44,7 +47,12 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
           </p>
         </section>
 
-        <OptimizerWorkspace pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
+        <OptimizerWorkspace
+          pool={gatedPool}
+          canUseFantasyFull={viewer.canUseFantasyFull}
+          canUseDfsOptimizer150={viewer.canUseDfsOptimizer150}
+          unifiedSlate={unifiedSlate}
+        />
       </main>
       <Footer />
     </div>
