@@ -113,6 +113,8 @@ const CUSTOMER_SURFACES = [
   "app/page.tsx",
   "app/picks/page.tsx",
   "app/board/page.tsx",
+  "app/projections/page.tsx",
+  "components/projections/sgp-stack-card.tsx",
   "app/pricing/page.tsx",
   "app/dashboard/page.tsx",
   "app/performance/page.tsx",
