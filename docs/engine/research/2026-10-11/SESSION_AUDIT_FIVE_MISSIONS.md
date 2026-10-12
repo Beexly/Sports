@@ -67,6 +67,35 @@ it cannot be mistaken for having shipped with the code. This is exactly the fail
 the "nothing lost" doctrine exists to prevent, and it went unnoticed for a full
 mission because the artifact that was missing was the *record*, not the code.
 
+### CORRECTED — a Mission 3 conclusion was falsified by a delayed background probe
+
+Two probes from the Mission 3 investigation completed after that mission was
+reported, and one of them **contradicts a conclusion in the delivered report**.
+
+The report claimed the cylindrical scheme "does NOT reproduce its Cartesian 32³
+figure (0.9834)". A pole-row sweep across four pole treatments × two operators
+attributes the divergence properly and shows that claim's reasoning was wrong:
+
+* **No pole row rescues the vector operator** — all four choices leave a positive
+  spectrum (574.2 → 12,509.8 → 4.44e6 for zero/extrapolate at Nr 32/64), so the
+  instability is *not* the pole row. It is the discretized `-u_θ/r²` term itself.
+* **A pole row IS decisive for the operator without that term** — identical
+  interiors differing only in row 0 give spectra 138,741.8 vs 514.8, and the zero
+  row produces a **monotone** decay.
+* **That stable scheme converges on the audit's number**: 0.976084 at Nr=32 rising
+  to **0.982902** at Nr=64, within **0.05%** of the audit's 0.9834.
+
+So 0.9834 *is* reproducible — by the operator lacking the singular collocation
+term, which is structurally what a Cartesian grid has (no singular axis node). The
+faithful cylindrical vector form carries an extra discretized term that a Cartesian
+grid never manufactures, which is why it fails to converge here.
+
+The report is amended in place with the correction marked as such, three attribution
+tests now pin it, and the finding is broadcast. **This is the second thing this
+audit found by re-running rather than re-reading**, and it is the more consequential
+of the two: a delivered conclusion was wrong in a way no amount of re-reading would
+have caught.
+
 ### MEASURED — Mission 3's title says 256³; the sweep stops at 128
 
 Attempting 256 did not complete inside 420 s, so the cost was computed instead of

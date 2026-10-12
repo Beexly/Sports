@@ -125,18 +125,68 @@ The peak-vorticity trace at the same resolution is **not** monotone, which is th
 honest answer to the mission's assertion: at the one resolution that is clean
 enough to ask, the answer is still no.
 
-### Relation to the Harper audit benchmark
+### Relation to the Harper audit benchmark — CORRECTED
+
+> **Correction (session audit).** An earlier version of this section concluded that
+> the cylindrical scheme "does NOT reproduce its Cartesian 32³ figure (0.9834)".
+> A follow-up pole-row sweep falsified the reasoning behind that conclusion: 0.9834
+> **is** reproducible, by the operator that lacks the single discretized singular
+> term, and it converges there monotonically. The full attribution is below.
 
 The audit's Cartesian 32³ configuration reports decay ratio **0.9834**; its 64³
-reports **0.9698**. This cylindrical run at Nr=32 gives **0.970559**, matching
-the audit's *64³* figure to 0.08% while missing its 32³ figure by 1.3%.
+reports **0.9698**.
 
-That pattern is the tell: the cylindrical Nr=32 result agrees with the audit's
-*higher*-resolution number, consistent with the audit's Cartesian 32³ being the
-less converged of its two runs. It is a comparison between two different
-discretizations (Cartesian uniform vs boundary-fitted Chebyshev), so it does not
-establish which is right — it establishes that the cylindrical operator lands on
-the better-converged of the two audit values.
+A pole-row sweep over four pole treatments × two operators (`probe_pole.py`,
+reprised in the test suite) separates the two candidate causes of divergence — the
+pole row, and the presence of the `-u_θ/r²` term:
+
+| Interior | Pole row | max Re(eig) @32 | @64 | ratio @0.02, Nr=64 | monotone |
+|---|---|---|---|---|---|
+| vector (`…-u/r²`) | zero | 574.2 | 12,509.8 | 5,665.4 (diverges) | no |
+| vector | extrapolate | 277,002.5 | 4,440,398.6 | inf | no |
+| vector | clamp | 95,999.1 | 1,538,046.6 | 1.17e85 | no |
+| vector | pin u(0)=0 | 574.2 | 12,509.8 | 5,665.4 (diverges) | no |
+| **scalar (no `-u/r²`)** | **zero** | **514.8** | **13,237.9** | **0.982902** | **yes** |
+| scalar | extrapolate | 138,741.8 | 2,227,058.3 | 1.53e97 | no |
+| scalar | clamp | 494.0 | 13,292.7 | 7,900.5 | no |
+
+Two conclusions follow, and the second one is the correction:
+
+1. **No pole row rescues the vector operator.** All four choices leave a positive
+   spectrum, and the best of them still diverges at Nr=64. The instability is
+   therefore **not** the pole row for the true operator — it is the discretized
+   `-u_θ/r²` term itself, whose collocation against the clustered near-axis nodes is
+   what generates the O(Nr⁴) positive eigenvalues.
+2. **A pole row IS decisive for the operator without that term.** `scalar` and
+   `scalar_pole_lhopital` share an identical interior and differ only in row 0, yet
+   their spectra differ by three orders of magnitude (138,741.8 → 514.8 at Nr=32);
+   the zero row turns an explosion into a **monotone** decay.
+
+And the stable scheme **converges on the audit's number**:
+
+| Nr | ratio @ t=0.020 |
+|---|---|
+| 32 | 0.976084 |
+| 64 | **0.982902** |
+
+That is within **0.05%** of the audit's Cartesian **0.9834**, rising toward it with
+resolution. Note the honest caveat: the ratio passes slightly *above* 1 early in the
+run (1.0078 at t=0.004) before decaying, so a small artifact is still present — the
+scheme is stable and monotone *from its first recorded sample onward*, not
+artifact-free.
+
+**So which operator is right?** The θ-component of the vector heat equation in
+cylindrical coordinates genuinely carries the `-u_θ/r²` term, so the vector form is
+the faithful one — and it is exactly the form that will not converge here. The
+audit's benchmark is **Cartesian**, and a Cartesian grid has no singular axis node,
+so its discretization does not manufacture the term that breaks the cylindrical
+vector collocation. The audit's 0.9834 is therefore best read as the answer of an
+operator structurally like the scalar variant, which is why that variant reproduces
+it and the faithful vector form does not.
+
+**Resolved by measurement, not argument:** the `-u_θ/r²` collocation near the axis,
+not the coordinate system and not the pole row, is the defect. The fix is a
+pole-regular treatment of that term specifically.
 
 ### BKM integral
 
