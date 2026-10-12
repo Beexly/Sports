@@ -98,6 +98,12 @@ def test_repair_makes_cholesky_succeed_on_an_empirical_matrix():
     cop = GaussianCopula(empirical)
     assert np.all(np.isfinite(cop._L))
     assert is_psd(cop.correlation)
+    # Pin WHICH stage did the work. A rank-3 matrix of size 6 is already in the PSD
+    # cone, so the Higham projection is not the thing that made it factorable -- the
+    # PD ridge is. Without this assertion the flag could silently stop firing and
+    # nothing would notice, because the Cholesky would still succeed.
+    assert cop.regularized is True, "the PD ridge did not fire on a singular matrix"
+    assert np.allclose(np.diag(cop.correlation), 1.0, atol=1e-10)
     u = cop.uniforms(2_000, np.random.default_rng(3))
     assert u.shape == (2_000, 6)
     assert np.all(u > 0.0) and np.all(u < 1.0)

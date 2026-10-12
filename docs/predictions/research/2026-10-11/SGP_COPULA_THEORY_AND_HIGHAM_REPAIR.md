@@ -66,9 +66,35 @@ raises and the whole parlay fails to price.
 `nearest_psd_higham` implements Higham's nearest symmetric PSD matrix in the
 Frobenius norm: symmetrize, then iterate the Dykstra-style correction that pins the
 diagonal to 1 while projecting the spectrum non-negative. `is_psd` and
-`correlation_from_covariance` support it, and the repair runs automatically inside
-the copula constructor (`corr = nearest_psd_higham(corr)`), so **no caller has to
-know it happened** — which is the point.
+`correlation_from_covariance` support it.
+
+**CORRECTION (session audit).** An earlier version of this document said the repair
+"runs automatically inside the copula constructor (`corr = nearest_psd_higham(corr)`),
+so no caller has to know it happened", implying Higham alone is what keeps the
+Cholesky from raising. That is wrong, and the engine's own source says so. Higham
+maps an indefinite matrix onto the PSD **cone**, and *the boundary of that cone still
+fails Cholesky* — PSD is not PD. A short empirical sample is exactly that case: a
+correlation estimated from `n` observations has rank ≤ `n−1`, so its smallest
+eigenvalues are pinned at zero and `np.linalg.cholesky` raises
+"Matrix is not positive definite".
+
+The real guarantee is **two stages**, both inside `_Copula.__init__`:
+
+1. `nearest_psd_higham` — only when `is_psd` is False;
+2. `_make_positive_definite` — symmetrize, take the smallest eigenvalue, and if it is
+   below `_PD_FLOOR = 1e-10`, add a ridge of exactly the shortfall, then **restore the
+   unit diagonal** so the shift cannot disturb the variances. The floor is nine orders
+   of magnitude below any correlation a caller could meaningfully supply.
+
+After each stage the diagonal is renormalized back to 1, so neither repair can
+quietly change a variance. The constructor also records which stages fired, in
+`self.repaired` and `self.regularized`, so a caller can see what was done to its
+input rather than being told to assume nothing happened.
+
+The distinction is not pedantry — it is the difference between "the Cholesky never
+crashes because of Higham" and "the Cholesky never crashes because of Higham *plus* a
+ridge for the PSD-but-singular case Higham necessarily leaves behind". The test
+suite already knew this; the prose did not.
 
 Verified by test, exactly as the mission required:
 * `test_higham_repairs_intentionally_non_psd_matrix` — asserts every eigenvalue is

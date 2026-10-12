@@ -96,6 +96,33 @@ audit found by re-running rather than re-reading**, and it is the more consequen
 of the two: a delivered conclusion was wrong in a way no amount of re-reading would
 have caught.
 
+### CORRECTED — the SGP doc attributed a two-stage guarantee to one stage
+
+The SGP doc claimed the Higham repair "runs automatically inside the copula
+constructor (`corr = nearest_psd_higham(corr)`), so **no caller has to know it
+happened**". Reading the engine rather than the doc shows that is incomplete in a
+way that matters.
+
+Higham maps an indefinite matrix onto the PSD **cone**, and the *boundary of that
+cone still fails Cholesky* — PSD is not PD. A correlation estimated from `n`
+observations has rank ≤ `n−1`, so its smallest eigenvalues sit at zero and
+`np.linalg.cholesky` raises. The actual guarantee is **two stages**:
+`nearest_psd_higham` (only when `is_psd` is False) **and** `_make_positive_definite`,
+which adds a ridge of exactly the eigenvalue shortfall below `_PD_FLOOR = 1e-10` and
+then restores the unit diagonal so the shift cannot move a variance.
+
+The engine was always correct here, and — notably — **the test suite already knew**:
+`test_repair_makes_cholesky_succeed_on_an_empirical_matrix` carries the comment
+"Higham alone is not enough here". Only the prose was wrong. Doc corrected, and the
+test now also asserts `cop.regularized is True`, so the stage that actually makes the
+matrix factorable cannot silently stop firing while the Cholesky still succeeds and
+nobody notices.
+
+Pattern worth naming: in both this case and the BKM one, the *code and tests* were
+sound and the *narrative around them* was wrong. Documentation written from memory of
+the design, rather than from reading the implementation, is where the errors in this
+session concentrated.
+
 ### MEASURED — Mission 3's title says 256³; the sweep stops at 128
 
 Attempting 256 did not complete inside 420 s, so the cost was computed instead of
