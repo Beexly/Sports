@@ -127,7 +127,51 @@ Both were silent, and both are pinned by tests now:
   is a different question from a correlation between two continuous legs. Stated
   in the report's own notes, not just here.
 
-## 4. The runner now uses it
+## 4. Wired into the copula engine
+
+Two verified pieces sat unconnected in this repo: the estimator (above) and
+`intelligence/sgp/sgp_copula_engine.py`, which prices a parlay from a correlation
+matrix and had **26 passing tests and had never been handed a matrix estimated
+from data**.
+
+`intelligence/sgp/price_from_measured_correlations.py` is the adapter. The chain
+is now estimator → engine → price:
+
+```
+python intelligence/sgp/price_from_measured_correlations.py
+
+SGP price (gaussian, N=50,000)
+  legs:        0.4182, 0.5331, 0.4171, 0.3295
+  independent: 0.0306
+  true joint:  0.1178  (+/- 0.0014, z=+60.48 vs independent)
+  lift:        +284.61%
+```
+
+The independence error is **nearly a factor of four** on four positively
+correlated legs, and the z-score against the independence control is +60.5 — the
+gap is not sampling noise at any sample size this engine will ever run.
+
+### The guard that matters
+
+`load_measured` **asserts the estimator's leg order** against its own and raises on
+a mismatch. This is the one failure in the whole chain that produces a *plausible
+and meaningless* number: a silent reorder pairs each leg's marginal with the wrong
+column of the matrix, nothing crashes, and the price looks reasonable. Two tests
+pin it — one asserting the adapter and estimator agree on the order today, one
+feeding a reversed matrix and requiring the raise.
+
+### What is still not wired
+
+**The marginals are still illustrative** (a line and a spread per leg). The split
+is stated in the output on every run: *the dependence is measured, the marginals
+are not.* Replacing the marginals with projections from the props work is the next
+wiring step, and until then the lift measures the independence error rather than
+an edge against a book. There is also still **no SGP price ingested anywhere**, so
+`--book-prob` exists but nothing supplies it.
+
+---
+
+## 5. The runner also uses it
 
 `run_monte_carlo.py` reads `sgp_correlations.json` when it exists and prints which
 source it used on every run:
@@ -146,7 +190,7 @@ The fallback to the illustrative matrix still exists so a fresh checkout runs, b
 it is never silently substituted — a present-but-broken artifact prints a warning
 and names the fallback rather than being ignored or trusted.
 
-## 5. A column-name trap, recorded
+## 6. A column-name trap, recorded
 
 The estimator first crashed with
 `ArrowInvalid: No match for FieldRef.Name(passing_tds)`. This nflverse release
@@ -159,14 +203,20 @@ silent-looking: anyone who trusted the documented name would get a schema error
 and might "fix" it by inventing a column rather than checking what the file
 actually contains.
 
-## 6. Verification
+## 7. Verification
 
 ```
 python intelligence/props/sgp_correlation_estimator.py
     → exit 0, matrix written, PSD confirmed, 1,088 team-games
 
+python intelligence/sgp/price_from_measured_correlations.py
+    → exit 0, joint 0.1178 vs independent 0.0306 (z=+60.48)
+
 python -m pytest intelligence/props/ -o pythonpath=.
-    → 57 passed, exit 0   (16 new estimator tests + the 41 existing)
+    → 59 passed, exit 0   (18 new estimator tests + the 41 existing)
+
+python -m pytest intelligence/sgp/ -o pythonpath=.
+    → 32 passed, exit 0   (26 existing + 6 adapter tests)
 ```
 
 The new tests cover: Pearson agreement with numpy, exact ±1 on a linear
@@ -188,7 +238,7 @@ One test failed on first run and it was mine, not the code's: a fixture whose ro
 implied one touchdown while its own docstring claimed two. The code summed
 correctly; the expectation was wrong. Fixed the fixture to match its stated intent.
 
-## 7. What is still open
+## 8. What is still open
 
 1. **Opponent adjustment.** These are raw co-movements. A correlation conditional
    on the opponent's pass defense is a different and more useful object.
