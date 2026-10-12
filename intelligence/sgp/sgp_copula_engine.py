@@ -31,6 +31,14 @@ WHAT IS IMPLEMENTED
                       blows up together" leg, which is exactly the shape of a
                       correlated SGP collapse (QB under + WR under + team
                       under). Gaussian cannot represent this at any rho.
+                      DISCLOSURE: the Clayton sampler here is a single shared
+                      Gamma frailty (Marshall-Olkin). It is EQUI-CORRELATED
+                      and driven by Kendall's tau ALONE — it does NOT consume
+                      the correlation matrix. The matrix is used only to
+                      validate the request, and a pair-specific (heterogeneous)
+                      matrix raises ValueError rather than being silently
+                      ignored. For matrix-driven pricing use Gaussian or
+                      Student-t.
 * Higham (1988) nearest positive semi-definite repair, so an empirical
   correlation matrix estimated from a finite, noisy sample never crashes the
   Cholesky factor. Empirical matrices are routinely indefinite.
@@ -318,6 +326,15 @@ class ClaytonCopula(_Copula):
     regime), so a matrix with negative entries raises rather than silently
     returning nonsense. For a negative pair, use Gaussian or the t-copula.
 
+    EQUI-CORRELATED ONLY: the frailty sampler below draws ONE shared Gamma
+    frailty per joint draw, so every pair gets the SAME dependence, set by
+    tau alone. The correlation matrix is NOT consumed by the sampler. A
+    pair-specific (heterogeneous) matrix therefore raises ValueError: pricing
+    from it here would silently discard the pair structure the caller
+    supplied. An equi-correlated matrix (all off-diagonal entries equal —
+    including any 2x2 matrix) is accepted, and is still ignored in favour of
+    tau; pass tau to say how much dependence you mean.
+
     Sampling (Marshall-Olkin / frailty):
         V ~ Gamma(1/theta, 1),  W_i ~ Exp(1),
         U_i = (1 + W_i / V)^(-1/theta)
@@ -339,6 +356,19 @@ class ClaytonCopula(_Copula):
             raise ValueError(
                 "Clayton copula cannot represent a correlation matrix with "
                 "negative entries; use GaussianCopula or StudentTCopula"
+            )
+        # The frailty sampler is equi-correlated: it cannot consume a matrix
+        # whose pairs differ. Refuse pair-specific structure rather than
+        # silently pricing as if every pair shared one dependence.
+        if off.size and float(np.max(off) - np.min(off)) > 1e-9:
+            raise ValueError(
+                "Clayton copula here is a single-frailty sampler: it is "
+                "equi-correlated and driven by Kendall's tau alone, so it "
+                "cannot consume a correlation matrix with pair-specific "
+                "entries (the matrix would be silently ignored). Use "
+                "GaussianCopula or StudentTCopula for matrix-driven pricing, "
+                "or pass an equi-correlated matrix if the tau-only model is "
+                "intended"
             )
         if tau == 0.0:
             tau = 1e-6
@@ -721,7 +751,9 @@ def price_sgp(
         book_pair_american: the two surviving prices used to de-vig the book's
             SGP probability (see devig_two_way).
         nu: degrees of freedom for the t-copula.
-        tau: Kendall's tau for the Clayton copula.
+        tau: Kendall's tau for the Clayton copula. Clayton is equi-correlated
+            and tau-only: a pair-specific (heterogeneous) correlation matrix
+            with copula="clayton" raises ValueError (see ClaytonCopula).
 
     Returns:
         SGPResult with the true joint, the independence control, the lift, and

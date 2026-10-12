@@ -255,6 +255,40 @@ def test_clayton_rejects_negative_dependence():
         ClaytonCopula(np.eye(2), tau=-0.2)
 
 
+def test_clayton_rejects_a_heterogeneous_correlation_matrix():
+    """
+    The trap this closes: the Clayton frailty sampler ignores the supplied
+    matrix (single shared frailty, tau only), so a pair-specific matrix used
+    to price "as Clayton" was silently discarded. It must raise, and say why.
+    """
+    hetero = correlation_matrix_from_pairs(3, {(0, 1): 0.6, (0, 2): 0.4, (1, 2): 0.3})
+    with pytest.raises(ValueError, match="equi-correlated"):
+        ClaytonCopula(hetero, tau=0.3)
+
+
+def test_price_sgp_clayton_rejects_a_heterogeneous_matrix():
+    """The raise must fire through the public pricing entry point too."""
+    hetero = correlation_matrix_from_pairs(3, {(0, 1): 0.6, (0, 2): 0.4, (1, 2): 0.3})
+    legs = [
+        Leg(LogNormalMarginal(245.5, 42.0), over(250.5), "qb"),
+        Leg(LogNormalMarginal(74.5, 25.0), over(75.5), "wr1"),
+        Leg(PoissonMarginal(1.8), over(1.5), "pass_tds"),
+    ]
+    with pytest.raises(ValueError, match="tau"):
+        price_sgp(legs, hetero, copula="clayton", n_draws=5_000, seed=1)
+
+
+def test_clayton_accepts_an_equicorrelated_matrix():
+    """Equi-correlation is exactly what the frailty sampler models: allowed."""
+    equi = correlation_matrix_from_pairs(4, {(i, j): 0.4 for i in range(4) for j in range(4) if i < j})
+    cop = ClaytonCopula(equi, tau=0.4)
+    u = cop.uniforms(50_000, np.random.default_rng(5))
+    assert u.shape == (50_000, 4)
+    # marginals stay uniform: each column's mean is ~0.5
+    for col in u.T:
+        assert abs(float(col.mean()) - 0.5) < 0.01
+
+
 def test_frechet_hoeffding_bounds_hold_in_high_dimension():
     """
     For ANY copula and any set of marginals:
@@ -296,13 +330,21 @@ def test_all_three_copulas_reproduce_the_marginals():
         Leg(PoissonMarginal(1.8), over(1.5), "pass_tds"),
     ]
     base = None
-    for copula in ("gaussian", "student-t", "clayton"):
+    for copula in ("gaussian", "student-t"):
         r = price_sgp(legs, corr, copula=copula, n_draws=120_000, seed=23)
         if base is None:
             base = r.leg_probabilities
             continue
         for a, b in zip(base, r.leg_probabilities):
             assert abs(a - b) < 0.01, f"{copula} distorted a marginal: {base} vs {r.leg_probabilities}"
+    # Clayton is equi-correlated / tau-only and REFUSES the heterogeneous
+    # matrix above (see test_clayton_rejects_a_heterogeneous_matrix), so its
+    # marginal check runs on an equi-correlated matrix with the same legs:
+    # the marginals are a property of the legs, not of the dependence shape.
+    equi = correlation_matrix_from_pairs(3, {(0, 1): 0.4, (0, 2): 0.4, (1, 2): 0.4})
+    r = price_sgp(legs, equi, copula="clayton", n_draws=120_000, seed=23)
+    for a, b in zip(base, r.leg_probabilities):
+        assert abs(a - b) < 0.01, f"clayton distorted a marginal: {base} vs {r.leg_probabilities}"
 
 
 # ---------------------------------------------------------------------------
