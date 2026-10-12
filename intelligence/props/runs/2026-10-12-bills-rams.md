@@ -1,113 +1,136 @@
 # SGP real-data run — Buffalo Bills at Los Angeles Rams (MNF, 2026-10-12)
 
-INTERNAL ARTIFACT. Model machinery + real book lines; not a customer surface.
+INTERNAL ARTIFACT. Model machinery + real book lines and prices; not a customer surface.
 
 ## Game
 
 - Matchup: Buffalo Bills (away) at Los Angeles Rams (home)
 - ESPN eventId: 401872994
 - Kickoff: 2026-10-13T00:15:00Z (Mon Oct 12, 7:15 PM CDT)
-- Provider in feed: 100 (DraftKings)
 
-## Snapshot (single fetch, everything below reads only this file)
+## Outcome summary
 
-- File: `data/snapshots/espn_prop_bets_bills_rams_2026-10-12.json`
-- Source: ESPN public API, `sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401872994/competitions/401872994/odds/100/propBets`
-- Fetch window: 2026-10-12T20:30:19Z → 20:37:34Z (74 pages, one pass, no re-fetch)
-- Payload: 1,833 items (feed header count 1,830; each leg item below appears
-  twice in the payload with identical values — deduplicated on read)
+First pass (ESPN propBets, below) had real lines and **no prices**, so no leg
+could be priced. A second, bounded sourcing pass over three public sportsbook
+APIs found real two-sided prices at **Kambi** (operator `rsiuspa`, BetRivers
+PA). The full chain — de-vig → marginals → measured-correlation copula — was
+run on Kambi prices only, using Kambi's own lines throughout (never mixed
+with the ESPN lines). Both teams' 4-leg combos are fully formed.
 
-## Anchor cross-check (against the brief's stable anchors)
-
-| Anchor | Brief | This snapshot / same-event ESPN data | Verdict |
+| Team | Joint fair probability (copula) | Independence product | Monte Carlo SE |
 |---|---|---|---|
-| Game ML | Rams -175 / Bills +145 | -175 / +145 (pickcenter, DraftKings) | match |
-| Spread | LAR -3.5 | -3.5 | match |
-| Total | 54.5 | 54.5 | match |
-| Stafford pass yards line | 283.5 | 283.5 | match |
-| Stafford pass TDs line | 2.5 | 2.5 | match |
-| Allen pass TDs line | 1.5 | 1.5 | match |
-| Allen pass yards line | 241.5 | **244.5** | differs by 3.0 — see note |
-| Nacua rec yards line | 93.5 then 96.5 across earlier reads | 96.5 | snapshot value used |
+| Los Angeles Rams | **0.1769** | 0.0571 | ±0.0017 |
+| Buffalo Bills | **0.1314** | 0.0384 | ±0.0015 |
 
-Note on Allen 244.5: the snapshot item carries `lastUpdated 2026-10-12T23:19Z`,
-a stamp that postdates the fetch window — a feed-stamp inconsistency. The
-value 244.5 is what the single snapshot contains and is what is recorded here;
-the 241.5 anchor was an earlier read of an unstable feed, which is exactly why
-this run is single-snapshot.
+## Source outcomes (bounded pass, in order)
 
-## Athlete mapping (roster-verified ESPN IDs, not feed order)
+| # | Source | Result |
+|---|---|---|
+| 1 | Kambi public offering API (`eu-offering-api.kambicdn.com/offering/v2018/`) | **SUCCESS.** Operator `ubuk`/`ubus`/`ubse` NFL listView paths 404'd on the `football/nfl` segment; the correct segment is `american_football/nfl`. `rsiuspa` listView returned HTTP 200 with this game (event id 1028813042, start 2026-10-13T00:15:00Z). The event bet-offer payload (717 bet offers) carries priced player markets for every needed leg. The US operator hosts (`us-sb-api.kambicdn.com`, `us-offering-api.kambicdn.com`) did not answer (connection closed / timeout) and were not needed. |
+| 2 | Pinnacle guest API (`guest.api.arcadia.pinnacle.com/0.1/`) | **Blocked.** `/sports` returns 200, but `/leagues?sportId=15` returns 204 with an empty body and `/leagues/15/matchups` returns **401** `{"detail": "No authorization token provided"}` (an earlier probe of the leagues endpoint returned 403). No matchup or market data is reachable without a token, so no player props could be checked. Not pursued further — Kambi had already succeeded. |
+| 3 | FanDuel public API (`sbapi.tn.sportsbook.fanduel.com`) | **Not needed / one probe only.** Content-managed-page probe returned HTTP 404 `{"error":true}` and yielded no priced props. Not pursued further — Kambi had already succeeded. |
 
-| Player | ESPN ID | Team | Role |
-|---|---|---|---|
-| Matthew Stafford | 12483 | Los Angeles Rams | QB |
-| Josh Allen | 3918298 | Buffalo Bills | QB |
-| Puka Nacua | 4426515 | Los Angeles Rams | WR (top rec-yards line) |
-| Khalil Shakir | 4373678 | Buffalo Bills | WR (top rec-yards line) |
+## Priced snapshot (single fetch, everything below reads only this file)
 
-## Legs — real lines, no prices, all excluded
+- File: `data/snapshots/kambi_props_bills_rams_2026-10-12.json`
+- Source: Kambi public offering API, operator `rsiuspa` (BetRivers PA), market `US_PA`
+- URL: `https://eu-offering-api.kambicdn.com/offering/v2018/rsiuspa/betoffer/event/1028813042.json?lang=en_US&market=US_PA`
+- HTTP status: 200 · Fetched: 2026-10-12T20:59:57Z · Payload: 717 bet offers
+- Kambi quotes decimal odds (stored ×1000 in the payload) and an American
+  price string per outcome; both are recorded below and agree.
 
-The four matrix legs per team (`qb_pass_yards`, `qb_pass_tds`, `wr_rec_yards`,
-`wr_anytime_td`, in the measured matrix's order):
+## Legs — Kambi lines and prices, Shin de-vigged
 
-| Team | Leg | Player | Real line in snapshot | Price in snapshot | Status |
-|---|---|---|---|---|---|
-| LAR | qb_pass_yards | Matthew Stafford | 283.5 | none | EXCLUDED — no price |
-| LAR | qb_pass_tds | Matthew Stafford | 2.5 | none | EXCLUDED — no price |
-| LAR | wr_rec_yards | Puka Nacua | 96.5 | none | EXCLUDED — no price |
-| LAR | wr_anytime_td | Puka Nacua | market listed, no target/price | none | EXCLUDED — no price |
-| BUF | qb_pass_yards | Josh Allen | 244.5 | none | EXCLUDED — no price |
-| BUF | qb_pass_tds | Josh Allen | 1.5 | none | EXCLUDED — no price |
-| BUF | wr_rec_yards | Khalil Shakir | 45.5 | none | EXCLUDED — no price |
-| BUF | wr_anytime_td | Khalil Shakir | market listed, no target/price | none | EXCLUDED — no price |
+De-vig: `intelligence/props/prop_discrepancy_engine.py`, `devig_two_way(...,
+method="shin")` on the American prices — the engine's first exercise on real
+priced data. Leg order is the measured matrix's: `qb_pass_yards`,
+`qb_pass_tds`, `wr_rec_yards`, `wr_anytime_td`.
 
-Other real lines observed for context: Davante Adams rec yards 60.5,
-Keon Coleman rec yards 38.5.
+### Los Angeles Rams
 
-## Why no prices: the feed is lines-only (evidence)
+| Leg | Player | Kambi line | Over / Yes price | Under price | Booksum | Shin z | De-vigged marginal (over / yes) |
+|---|---|---|---|---|---|---|---|
+| qb_pass_yards | Matthew Stafford | 282.5 | -114 (1.88) | -114 (1.88) | 1.0654 | 0.0654 | **0.5000** |
+| qb_pass_tds | Matthew Stafford | 2.5 | +125 (2.25) | -165 (1.61) | 1.0671 | 0.0672 | **0.4109** |
+| wr_rec_yards | Puka Nacua | 92.5 | -113 (1.89) | -115 (1.87) | 1.0654 | 0.0654 | **0.4978** |
+| wr_anytime_td | Puka Nacua | — | -122 (1.82) | — (not offered) | — | — | **0.5495** (raw implied — see caveat) |
 
-A recursive key census of all 1,833 snapshot items finds exactly these fields:
-`competition.$ref`, `provider.$ref`, `type.{id,name}`, `lastUpdated`,
-`athlete.$ref` / `team.$ref`, and `current` / `open`, each holding only
-`target.{value,displayValue}` or nothing at all. There is no American price,
-moneyline, decimal, fraction, or odds field anywhere in the payload (the only
-"Moneyline" strings are market type names with empty `current`/`open`).
-Anytime-TD items carry empty `current`/`open` objects.
+### Buffalo Bills
 
-This is the same blocker class the props engine's own docstring records for
-the Pinnacle shade sheet: lines without prices cannot be de-vigged, and
-inventing a price to fill the gap would fabricate the marginal.
+| Leg | Player | Kambi line | Over / Yes price | Under price | Booksum | Shin z | De-vigged marginal (over / yes) |
+|---|---|---|---|---|---|---|---|
+| qb_pass_yards | Josh Allen | 246.5 | -114 (1.88) | -114 (1.88) | 1.0654 | 0.0654 | **0.5000** |
+| qb_pass_tds | Josh Allen | 1.5 | -112 (1.90) | -117 (1.86) | 1.0675 | 0.0675 | **0.4946** |
+| wr_rec_yards | Khalil Shakir | 46.5 | -117 (1.86) | -112 (1.90) | 1.0675 | 0.0675 | **0.5054** |
+| wr_anytime_td | Khalil Shakir | — | +230 (3.30) | — (not offered) | — | — | **0.3030** (raw implied — see caveat) |
 
-## De-vig engine output
+Top-WR check (Kambi receiving-yards lines, same snapshot): Nacua 92.5 is the
+highest Rams line (Adams 61.5 next). For Buffalo, Shakir 46.5 is the highest
+**WR** line (Coleman 39.5 next); Dalton Kincaid's 56.5 is higher but he is a
+tight end, and the matrix leg is the top wide receiver — the same player
+(Shakir) carries both the receiving-yards and anytime-TD legs, as the
+correlation matrix requires.
 
-Not run. `prop_discrepancy_engine.py`'s Shin / multiplicative de-vig requires
-two-sided prices; the snapshot contains none for any leg, so there is no real
-priced input to exercise it on. The de-vig path remains covered by its unit
-tests (see PR test table) but is still unexercised on real priced data.
+**Anytime-TD caveat (stated, not papered over):** Kambi's "Touchdown Scorer"
+market is Yes-only — a full-payload scan finds no No price for any player, so
+there is no second side to de-vig against for this leg. Its marginal is the
+raw implied probability of the Yes price, which is vig-inclusive and therefore
+an **upper bound** on the fair probability. The two team joints inherit that
+direction: if anything, they are slightly overstated through this one leg.
+The other six legs are Shin de-vigged from real two-sided prices.
+
+**Line differences vs the ESPN snapshot** (Kambi lines used for everything):
+Stafford pass yards 282.5 (ESPN 283.5), Nacua rec yards 92.5 (ESPN 96.5),
+Allen pass yards 246.5 (ESPN 244.5), Shakir rec yards 46.5 (ESPN 45.5).
+Pass-TD lines agree (Stafford 2.5, Allen 1.5).
 
 ## Copula chain output
 
-Not run for tonight's game: with every leg excluded, there are no real
-marginals, and the chain is not run on invented ones.
+Settings per `intelligence/sgp/price_from_measured_correlations.py`: Gaussian
+copula, measured 4×4 matrix from `data/snapshots/sgp_correlations.json`
+(1,088 team-games, 2024–2025), 50,000 draws, seed 20261012. Marginals are the
+de-vigged probabilities above, fed to `price_sgp` as Bernoulli marginals so
+the joint is P(all four legs hit) under the measured dependence.
 
-Chain verification on committed data (this branch, this run):
+| Team | Marginals (in leg order) | Joint | Independence | Lift | SE | z vs independence |
+|---|---|---|---|---|---|---|
+| Los Angeles Rams | 0.5000, 0.4109, 0.4978, 0.5495 | **0.1769** | 0.0571 | +209.7% | 0.0017 | +70 approx |
+| Buffalo Bills | 0.5000, 0.4946, 0.5054, 0.3030 | **0.1314** | 0.0384 | +242.0% | 0.0015 | +62 approx |
 
-- `python3 intelligence/sgp/price_from_measured_correlations.py`
-  → joint **0.1178 ± 0.0014** vs independence **0.0306** (illustrative
-  marginals, measured dependence — the script labels them itself)
-- Measured matrix sanity gates: symmetric ✓, unit diagonal ✓,
-  PSD ✓ (4x4 min eigenvalue 0.260460; joint 8x8 min eigenvalue 0.251083)
-- Probabilities produced tonight: none. No out-of-range or NaN values exist
-  to gate on.
+Sanity gates: all marginals and both joints in [0, 1] ✓ · measured matrix PSD
+as loaded (min eigenvalue 0.260460), no repair applied by the engine ✓ ·
+no NaN in any output ✓ · empirical leg frequencies from the simulation match
+the input marginals to Monte Carlo error ✓.
 
 ## Book SGP comparison
 
-None possible: the snapshot contains no same-game-parlay / combo market and
-no book SGP price. Model fair probabilities only would have been reported;
-none were produced (all legs excluded).
+Kambi's payload for this event contains no priced same-game-parlay / combo
+quote for either 4-leg combination, so there is no book SGP price to compare
+against. The joints above are model fair probabilities only; no edge is
+claimed.
 
 ## Customer file
 
-`apps/web/data/sgp-projections.json` carries the game with `rows: []` —
-neither team's 4-leg combo could be formed because every leg lacks a real
-price in the snapshot. No combo was fabricated.
+`apps/web/data/sgp-projections.json` now carries one row per team — each
+team's fully-formed 4-leg combo, labeled in plain English from the actual
+Kambi lines, with `projectionPct` = joint fair probability × 100 at one
+decimal (Rams 17.7, Bills 13.1).
+
+---
+
+## First pass (superseded for pricing, kept as the record): ESPN lines, no prices
+
+- Snapshot: `data/snapshots/espn_prop_bets_bills_rams_2026-10-12.json`
+  (ESPN public API, `sports.core.api.espn.com/.../events/401872994/.../odds/100/propBets`,
+  provider 100 / DraftKings; fetched 2026-10-12T20:30:19Z → 20:37:34Z, 74 pages,
+  1,833 items).
+- Real lines in that snapshot: Stafford 283.5 pass yds / 2.5 pass TDs,
+  Nacua 96.5 rec yds; Allen 244.5 pass yds / 1.5 pass TDs, Shakir 45.5 rec yds.
+  Game anchors cross-checked there: ML Rams -175 / Bills +145, spread LAR -3.5,
+  total 54.5 — all matched.
+- A recursive key census of all 1,833 items found only `target.{value,
+  displayValue}` under `current`/`open` — no American, decimal, or fractional
+  price field anywhere; anytime-TD items carried empty `current`/`open`.
+  DraftKings' own API hosts returned Akamai 403 from this VM and no Odds API
+  key is stored on this machine, which is why the Kambi/Pinnacle/FanDuel pass
+  above was run. The ESPN lines were **not** used in the priced run.
