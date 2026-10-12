@@ -1,7 +1,8 @@
 /**
- * One data-refresh cycle: every in-season sport through `processSport()` with
- * the paid The Odds API key, paced by the C-109 credit governor exactly like
- * the `refreshOdds()` loop behind the cron routes.
+ * One data-refresh cycle: every in-season sport through `processSport()`, which
+ * resolves its own odds provider (Galaxy/ESPN keyless first, paid The Odds API
+ * only when opted in), paced by the C-109 credit governor exactly like the
+ * `refreshOdds()` loop behind the cron routes.
  *
  * Lives apart from index.ts (which starts the worker loop at load) so the
  * cycle can be unit-tested without a running worker. The governor is the
@@ -11,6 +12,13 @@
  * records the quota reading and one marker per additional paid request; once
  * a response reports fewer than ODDS_API_LOW_QUOTA_THRESHOLD credits the rest
  * of the cycle is skipped, the same cutoff `refreshOdds()` applies.
+ *
+ * Keyless mode: with no THE_ODDS_API_KEY configured the worker must NOT refuse
+ * to run — the board has to keep filling from the free Galaxy/ESPN path. No
+ * paid request can be made in that mode, so the credit governor is not built at
+ * all: there is nothing to pace and nothing to ledger. `apiKey` is still passed
+ * through as the keyless sentinel so `processSport` selects the free path
+ * rather than treating the empty key as a paid credential.
  */
 
 import { getInSeasonSports } from "@sports/data-ingestion";
@@ -55,8 +63,14 @@ export interface CycleSummary {
 }
 
 export async function runRefreshCycle(): Promise<CycleSummary> {
-  const apiKey = process.env["THE_ODDS_API_KEY"];
-  if (!apiKey) throw new Error("THE_ODDS_API_KEY not set");
+  const configuredKey = process.env["THE_ODDS_API_KEY"];
+  const key = configuredKey && configuredKey.trim().length > 0 ? configuredKey : undefined;
+  // Fail-open keyless mode: without a paid key the worker still runs the
+  // Galaxy/ESPN keyless odds flow (free scoreboard + free odds path). No paid
+  // credits are spent, so the credit governor is bypassed entirely — nothing to
+  // pace and nothing to ledger.
+  const keyless = key === undefined;
+  const apiKey = key ?? "espn-free-path";
 
   // Read readiness gates fresh every cycle — env vars may change across deploys
   const gates = getReadinessGates();
@@ -75,8 +89,12 @@ export async function runRefreshCycle(): Promise<CycleSummary> {
   // C-109: this worker's processSport calls spend paid credits exactly like the
   // refresh-odds cron's, so they answer to the same default ledger-backed
   // governor. Built once per cycle; a governor that cannot be constructed
-  // fails open (logged) rather than blanking the board.
-  const governor = resolvePaidOddsGovernor(undefined, LOG_PREFIX, CREDIT_SOURCE);
+  // fails open (logged) rather than blanking the board. In keyless mode there
+  // is no paid path to pace or ledger, so the governor is not built at all —
+  // `keyless` is the only switch that skips it.
+  const governor = keyless
+    ? undefined
+    : resolvePaidOddsGovernor(undefined, LOG_PREFIX, CREDIT_SOURCE);
 
   // In-season sports only (cost control). Override: ODDS_REFRESH_ALL_SPORTS=true.
   // processSport catches provider/normalization failures (status:"failed"), but
