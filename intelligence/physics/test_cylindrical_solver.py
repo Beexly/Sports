@@ -1,3 +1,5 @@
+import math
+
 import pytest
 import numpy as np
 from intelligence.physics.cylindrical_solver import CylindricalSpectralSolver
@@ -279,3 +281,42 @@ def test_evolve_validates_its_arguments():
         solver.evolve(t_span=(0.0, 0.01), dt=0.0, nu=0.005)
     with pytest.raises(ValueError):
         solver.evolve(t_span=(0.02, 0.0), dt=0.00025, nu=0.005)
+
+
+def test_theta_component_operator_is_the_cartesian_one():
+    """
+    The -u_theta/r^2 term is PHYSICS, not a cylindrical-coordinate artifact.
+
+    An earlier write-up argued the opposite way round: that the Harper audit's
+    Cartesian benchmark must lack this term because a Cartesian grid has no
+    singular axis node, and that the audit's 0.9834 is therefore the answer of an
+    operator like the scalar variant. That reasoning is falsified here.
+
+    Method: build an axisymmetric theta-velocity field, write it in Cartesian
+    components
+        u_x = -f(r) sin(theta),  u_y = f(r) cos(theta),
+    apply the ordinary componentwise Cartesian Laplacian, and project the result
+    back onto e_theta. It must agree with the VECTOR form (with -f/r^2) and
+    disagree with the SCALAR form (without it). This pins the operator identity so
+    the question cannot be re-argued from prose.
+    """
+    f = lambda r: r**2 + 3.0 * r**3        # regular: f(0)=0, f ~ r^2 near the axis
+    f_r = lambda r: 2.0 * r + 9.0 * r**2
+    f_rr = lambda r: 2.0 + 18.0 * r
+
+    def cart_laplacian(F, x, y, h=1e-4):
+        return ((F(x + h, y) - 2.0 * F(x, y) + F(x - h, y)) / h**2
+                + (F(x, y + h) - 2.0 * F(x, y) + F(x, y - h)) / h**2)
+
+    for r0, theta in ((0.3, 0.4), (0.7, 1.1), (1.0, 0.4)):
+        x, y = r0 * math.cos(theta), r0 * math.sin(theta)
+        u_x = lambda a, b: -f(math.hypot(a, b)) * math.sin(math.atan2(b, a))
+        u_y = lambda a, b: f(math.hypot(a, b)) * math.cos(math.atan2(b, a))
+        lap_theta = (-cart_laplacian(u_x, x, y) * math.sin(theta)
+                     + cart_laplacian(u_y, x, y) * math.cos(theta))
+
+        scalar = f_rr(r0) + f_r(r0) / r0
+        vector = f_rr(r0) + f_r(r0) / r0 - f(r0) / r0**2
+
+        assert abs(lap_theta - vector) < 1e-5, (r0, theta, lap_theta, vector)
+        assert abs(lap_theta - scalar) > 1.0, (r0, theta, lap_theta, scalar)

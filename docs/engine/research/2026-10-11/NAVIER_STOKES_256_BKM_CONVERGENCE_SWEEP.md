@@ -175,18 +175,50 @@ run (1.0078 at t=0.004) before decaying, so a small artifact is still present �
 scheme is stable and monotone *from its first recorded sample onward*, not
 artifact-free.
 
-**So which operator is right?** The θ-component of the vector heat equation in
-cylindrical coordinates genuinely carries the `-u_θ/r²` term, so the vector form is
-the faithful one — and it is exactly the form that will not converge here. The
-audit's benchmark is **Cartesian**, and a Cartesian grid has no singular axis node,
-so its discretization does not manufacture the term that breaks the cylindrical
-vector collocation. The audit's 0.9834 is therefore best read as the answer of an
-operator structurally like the scalar variant, which is why that variant reproduces
-it and the faithful vector form does not.
+**So which operator is right? — SECOND CORRECTION (2026-10-12)**
 
-**Resolved by measurement, not argument:** the `-u_θ/r²` collocation near the axis,
-not the coordinate system and not the pole row, is the defect. The fix is a
-pole-regular treatment of that term specifically.
+The paragraph that used to sit here claimed the audit's Cartesian benchmark "does
+not manufacture the term that breaks the cylindrical vector collocation", and
+concluded that 0.9834 is "the answer of an operator structurally like the scalar
+variant". **That reasoning is falsified by direct measurement.**
+
+Take an axisymmetric theta-velocity field and write it in Cartesian components,
+`u_x = -f(r) sin θ`, `u_y = f(r) cos θ`, then apply the ordinary componentwise
+Cartesian Laplacian and project the result back onto `ê_θ`:
+
+| r | θ | Cartesian Laplacian (projected) | scalar form `f_rr + f_r/r` | vector form `f_rr + f_r/r − f/r²` |
+|---|---|---|---|---|
+| 0.3 | 0.4 | +10.200000 | +12.100000 | **+10.200000** |
+| 0.7 | 1.1 | +19.800000 | +22.900000 | **+19.800000** |
+| 1.0 | 0.4 | +27.000000 | +31.000000 | **+27.000000** |
+
+The Cartesian operator matches the **vector** form to ~1e-8 and disagrees with the
+scalar form by 1.9–4.0 in absolute terms. The `−u_θ/r²` term is therefore **not a
+cylindrical-coordinate artifact** — it is the correct continuum operator in either
+coordinate system, arising from the curvature of the `ê_θ` direction rather than
+from the choice of coordinates. A Cartesian solver of the same physical field
+contains it too.
+
+What actually differs is the **discretization**, not the operator: a Cartesian grid
+has no coordinate singularity at `r = 0`, so it never has to collocate a `1/r²`
+against a clustered node. The cylindrical Chebyshev block does, and that
+collocation is what carries the genuine positive eigenvalues.
+
+Consequence for the 0.9834 comparison: the scalar variant reproduces the audit's
+number, but the scalar variant solves a **different PDE** (it is the heat equation,
+not the theta-component of the vector heat equation). Its agreement with 0.9834 is
+therefore either a coincidence of two different discretizations or evidence that
+the audit's configuration has effectively different near-axis physics — **and this
+session cannot distinguish those two from here.** What is established:
+
+* the committed vector operator is the physically faithful one;
+* its near-pole collocation is the defect (measured: max Re(eig) 574/12.5k/246k at
+  Nr 32/64/128, growing as Nr⁴, with the seed's own Rayleigh quotient negative);
+* the scalar variant agrees with the audit benchmark and is monotone, which is a
+  measurement about that variant and **not** evidence that the audit is scalar.
+
+A regression test (`test_theta_component_operator_is_the_cartesian_one`) pins the
+identity so this cannot be re-argued from prose.
 
 ### BKM integral
 
