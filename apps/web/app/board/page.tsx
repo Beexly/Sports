@@ -13,6 +13,8 @@ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
+import { loadEngineBoard } from "@/lib/board/engine-board";
+import { EngineBoardCard } from "@/components/board/engine-board-card";
 export const metadata: Metadata = {
   title: "Board",
   description:
@@ -65,6 +67,11 @@ export default async function BoardPage(): Promise<JSX.Element> {
 
   const state = stateResult.data;
   const passes = passesResult.data.passes;
+  // The engine's derived board, through the same classifier and the
+  // same live flag as the lanes above. Held or empty renders nothing
+  // in its section — the banners above already say why — and stale
+  // shows the stale note rather than aging rows in public.
+  const engineBoard = loadEngineBoard(new Date());
   const calibration = calibrationResult.data;
   const dbUnreachable =
     stateResult.meta.dataError === "DB_UNREACHABLE" ||
@@ -325,6 +332,69 @@ export default async function BoardPage(): Promise<JSX.Element> {
             }
           />
         </section>
+
+        {/* ── ENGINE PROJECTIONS · the derived board's own numbers ────
+            Projected margins and totals only. No book price crosses
+            the loader, so there is nothing here to act on — these are
+            estimates published before kickoff, in the same register as
+            the rest of the board. */}
+        {engineBoard.meta.state === "live" && (
+          <section aria-label="Engine projections">
+            <div className="flex items-baseline gap-3 border-b border-mineral pb-3">
+              <span className="font-display text-2xl font-semibold text-ion-3">04</span>
+              <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-1">
+                Engine Projections
+              </h2>
+              <span className="ml-auto font-mono text-[10px] tabular-nums text-ion-3">
+                {engineBoard.data.games.length}
+              </span>
+            </div>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
+              What the model projects for each upcoming game: the margin,
+              the total, and each team&apos;s share of it. Projections
+              only, published before kickoff.
+            </p>
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
+              {engineBoard.data.games.map((game) => (
+                <EngineBoardCard
+                  key={game.eventId}
+                  game={game}
+                  kickoffLabel={`${formatCentralTime(game.kickoffIso)} ${CT_SUFFIX}`}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {engineBoard.meta.state === "stale" && (
+          <div
+            data-testid="board-engine-stale-banner"
+            className="flex flex-col gap-2 border border-caution/40 bg-caution/[0.08] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
+          >
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
+              Temporarily stale
+            </span>
+            <span className="break-words sm:ml-3">
+              Engine projections are temporarily stale, awaiting a fresh
+              set. Finished slates come down instead of aging in public.
+            </span>
+          </div>
+        )}
+
+        {engineBoard.meta.state === "invalid" && (
+          <div
+            data-testid="board-engine-invalid-state"
+            className="flex flex-col gap-2 border border-orbital-cyan/30 bg-orbital-cyan/[0.06] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
+          >
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
+              Projections held
+            </span>
+            <span className="break-words sm:ml-3">
+              The latest projection set did not pass our checks, so this
+              section shows nothing rather than something unverified.
+            </span>
+          </div>
+        )}
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
           <div className="border border-titanium bg-carbon/45 p-5">
