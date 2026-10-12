@@ -151,3 +151,149 @@ describe("parseSgpProjections", () => {
     expect(result.rows).toEqual([]);
   });
 });
+
+describe("parseSgpProjections reviewer hardening (3a/3b/3c)", () => {
+  it("drops a row with projectionPct above 100 (150)", () => {
+    const result = parseSgpProjections({
+      generatedAt: null,
+      games: [
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [
+            { market: "Too high", projectionPct: 150 },
+            { market: "Astronomical", projectionPct: 1e21 },
+            { market: "Valid", projectionPct: 42.5 },
+          ],
+        },
+      ],
+    });
+    expect(result.reason).toBeNull();
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]?.market).toBe("Valid");
+    expect(result.rows[0]?.projectionPct).toBe(42.5);
+  });
+
+  it("drops a row with projectionPct below 0 (-20)", () => {
+    const result = parseSgpProjections({
+      generatedAt: null,
+      games: [
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [
+            { market: "Too low", projectionPct: -20 },
+            { market: "Valid", projectionPct: 42.5 },
+          ],
+        },
+      ],
+    });
+    expect(result.reason).toBeNull();
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]?.market).toBe("Valid");
+  });
+
+  it("keeps the boundary projectionPct values 0 and 100", () => {
+    const result = parseSgpProjections({
+      generatedAt: null,
+      games: [
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [
+            { market: "Floor", projectionPct: 0 },
+            { market: "Ceiling", projectionPct: 100 },
+          ],
+        },
+      ],
+    });
+    expect(result.reason).toBeNull();
+    expect(result.rows).toHaveLength(2);
+    expect(result.rows[0]?.projectionPct).toBe(0);
+    expect(result.rows[1]?.projectionPct).toBe(100);
+  });
+
+  it("drops a game whose name exceeds the length cap", () => {
+    const result = parseSgpProjections({
+      generatedAt: null,
+      games: [
+        {
+          game: "G".repeat(301),
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [{ market: "Valid", projectionPct: 42.5 }],
+        },
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [{ market: "Also valid", projectionPct: 10 }],
+        },
+      ],
+    });
+    expect(result.reason).toBeNull();
+    expect(result.games).toHaveLength(1);
+    expect(result.games[0]?.game).toBe("Buffalo Bills at Los Angeles Rams");
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]?.market).toBe("Also valid");
+  });
+
+  it("drops a row whose market exceeds the length cap", () => {
+    const result = parseSgpProjections({
+      generatedAt: null,
+      games: [
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [
+            { market: "M".repeat(100_000), projectionPct: 42.5 },
+            { market: "Valid", projectionPct: 10 },
+          ],
+        },
+      ],
+    });
+    expect(result.reason).toBeNull();
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]?.market).toBe("Valid");
+    expect(result.games).toHaveLength(1);
+    expect(result.games[0]?.rows).toHaveLength(1);
+  });
+
+  it("merges duplicate games by name, keeping first occurrence order", () => {
+    const result = parseSgpProjections({
+      generatedAt: null,
+      games: [
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [{ market: "First", projectionPct: 10 }],
+        },
+        {
+          game: "Kansas City Chiefs at Denver Broncos",
+          commenceTime: "2026-10-12T20:00:00.000Z",
+          rows: [{ market: "Other game", projectionPct: 20 }],
+        },
+        {
+          game: "Buffalo Bills at Los Angeles Rams",
+          commenceTime: "2026-10-12T17:00:00.000Z",
+          rows: [{ market: "Duplicate entry row", projectionPct: 30 }],
+        },
+      ],
+    });
+    expect(result.reason).toBeNull();
+    expect(result.games).toHaveLength(2);
+    expect(result.games[0]?.game).toBe("Buffalo Bills at Los Angeles Rams");
+    expect(result.games[0]?.commenceTime).toBe("2026-10-12T17:00:00.000Z");
+    expect(result.games[0]?.rows.map((row) => row.market)).toEqual([
+      "First",
+      "Duplicate entry row",
+    ]);
+    expect(result.games[1]?.game).toBe(
+      "Kansas City Chiefs at Denver Broncos",
+    );
+    expect(result.rows).toHaveLength(3);
+    expect(result.rows.map((row) => row.market)).toEqual([
+      "First",
+      "Duplicate entry row",
+      "Other game",
+    ]);
+  });
+});

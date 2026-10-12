@@ -55,10 +55,25 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/**
+ * Maximum length for a game or market string. Anything longer is treated
+ * as malformed upstream data: the row (for a market) or the whole game
+ * (for a game name) is dropped, consistent with the drop-invalid-row
+ * pattern used throughout this loader. Strings are never truncated, so
+ * nothing silently altered is ever published.
+ */
+export const MAX_SGP_STRING_LENGTH = 300;
+
 function cleanString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
+}
+
+function cleanBoundedString(value: unknown): string | null {
+  const cleaned = cleanString(value);
+  if (cleaned === null) return null;
+  return cleaned.length <= MAX_SGP_STRING_LENGTH ? cleaned : null;
 }
 
 function cleanTime(value: unknown): string | null {
@@ -101,11 +116,14 @@ export function parseSgpProjections(parsed: unknown): SgpProjectionsResult {
   const generatedAt = cleanTime(parsed.generatedAt);
 
   const games: SgpGameProjections[] = [];
-  const rows: SgpProjectionRow[] = [];
+  // Dedupe games by name: rows from a later entry with the same game name
+  // merge into the first entry with that name, keeping first-occurrence
+  // order (and the first entry's commenceTime) for the games list.
+  const gamesByName = new Map<string, SgpGameProjections>();
 
   for (const rawGame of parsed.games) {
     if (!isRecord(rawGame)) continue;
-    const game = cleanString(rawGame.game);
+    const game = cleanBoundedString(rawGame.game);
     if (!game) continue;
     if (!Array.isArray(rawGame.rows)) continue;
     const commenceTime = cleanTime(rawGame.commenceTime);
@@ -113,10 +131,16 @@ export function parseSgpProjections(parsed: unknown): SgpProjectionsResult {
     const gameRows: SgpProjectionRow[] = [];
     for (const rawRow of rawGame.rows) {
       if (!isRecord(rawRow)) continue;
-      const market = cleanString(rawRow.market);
+      const market = cleanBoundedString(rawRow.market);
       if (!market) continue;
       const projectionPct = rawRow.projectionPct;
       if (typeof projectionPct !== "number" || !Number.isFinite(projectionPct)) {
+        continue;
+      }
+      // A projection percentage is only meaningful in [0, 100]. Values
+      // outside that range (150, -20, 1e21) are malformed upstream data
+      // and the row is dropped rather than published as-is.
+      if (projectionPct < 0 || projectionPct > 100) {
         continue;
       }
       const row: SgpProjectionRow = {
@@ -126,12 +150,20 @@ export function parseSgpProjections(parsed: unknown): SgpProjectionsResult {
         projectionPct,
       };
       gameRows.push(row);
-      rows.push(row);
     }
-    if (gameRows.length > 0) {
-      games.push({ game, commenceTime, rows: gameRows });
+    if (gameRows.length === 0) continue;
+
+    const existing = gamesByName.get(game);
+    if (existing) {
+      existing.rows.push(...gameRows);
+    } else {
+      const entry: SgpGameProjections = { game, commenceTime, rows: gameRows };
+      gamesByName.set(game, entry);
+      games.push(entry);
     }
   }
+
+  const rows: SgpProjectionRow[] = games.flatMap((entry) => entry.rows);
 
   if (rows.length === 0) {
     return { generatedAt, games: [], rows: [], reason: "EMPTY" };

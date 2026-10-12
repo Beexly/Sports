@@ -63,9 +63,9 @@ export default function SgpProjectionsPage(): JSX.Element {
         )}
 
         {hasRows &&
-          result.games.map((game) => (
+          result.games.map((game, gameIndex) => (
             <section
-              key={game.game}
+              key={`${game.game}-${game.commenceTime ?? "no-time"}-${gameIndex}`}
               aria-label={game.game}
               className="border border-mineral bg-carbon p-5"
             >
