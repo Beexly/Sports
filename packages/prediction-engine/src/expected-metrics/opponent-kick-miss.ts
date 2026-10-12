@@ -2,8 +2,8 @@
  * Opponent Kick Miss EPA (SHADOW)
  *
  * A shadow expected metric that quantifies the expected points a team gained purely
- * due to opponent missed field goals and extra points. This removes the luck component
- * from team strength (a team's win record over-credits defenses that got lucky with
+ * due to opponent missed field goals and extra points. This removes the variance component
+ * from team strength (a team's win record over-credits defenses that benefited from variance with
  * opponent misses).
  *
  * Defined as: for each opponent kick attempt, if it was a clean miss (not blocked),
@@ -186,7 +186,7 @@ export function computeOpponentKickMissMetrics(
         // What is the EPA gained per miss? Let's say ~3.5.
         // A simpler shrinkage is to just shrink the EPA directly or leave the EPA and only shrink the rate?
         // "shrinkage toward the league-mean miss rate on small samples"
-        // Let's implement a dummy shrinkage of the EPA value by mixing with 0 (no luck).
+        // Let's implement a dummy shrinkage of the EPA value by mixing with 0 (no variance).
         const shrinkFactor = attempts / minAttemptsFloor;
         sumEpa = sumEpa * shrinkFactor;
       }

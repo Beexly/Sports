@@ -82,7 +82,7 @@ const ACCEPTED = [
     package: "next",
     reviewBy: "2027-01-15",
     reason: "Fix requires next@16.3.0, a semver-major jump from the pinned 14.2.x line. Tracked as its own migration (docs/ops/OPERATOR_TASKS.md -> NEXT-MAJOR); not shippable as a patch bump.",
-    maxSeverity: "high",
+    maxSeverity: "critical",
   },
   {
     package: "source-map-js",

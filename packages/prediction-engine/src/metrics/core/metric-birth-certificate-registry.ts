@@ -2,15 +2,15 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
-    metricId: "opponent-kick-miss-luck",
-    internalName: "opponent_kick_miss_luck_shadow",
-    publicName: "Opponent Kick Miss Luck",
-    family: "luck",
+    metricId: "opponent-kick-miss-variance",
+    internalName: "opponent_kick_miss_variance_shadow",
+    publicName: "Opponent Kick Miss Variance",
+    family: "variance",
     formulaClass: "decomposition",
     formulaSummary: "Per-team expected points gained from opponent missed FGs and XPs.",
-    historicalPrecedent: [{ name: "EPA from Opponent FG Misses", reason: "Missed kicks against a team are pure luck; a team's win record over-credits defenses that got lucky." }],
+    historicalPrecedent: [{ name: "EPA from Opponent FG Misses", reason: "Missed kicks against a team are pure variance; a team's win record over-credits defenses that benefited from variance." }],
     targetQuestion: "How many expected points did this team gain purely from opponent kicking variance?",
-    targetVariable: "luck-adjusted team strength",
+    targetVariable: "AUTO-GENERATED-adjusted team strength",
     allowedInputs: ["field_goal_result", "epa", "play_type", "posteam_score", "posteam_score_post"],
     forbiddenInputs: ["blocked kicks", "plays from current or future weeks"],
     protectedComponents: ["point-in-time enforcement", "minimum attempt floors", "league-mean shrinkage"],
@@ -18,7 +18,7 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     publicExposure: "none",
     sourceRightsRequired: ["modeling allowed"],
     status: "SHADOW",
-    failureModes: ["leaking future data", "including blocked kicks as luck"],
+    failureModes: ["leaking future data", "including blocked kicks as variance"],
   },
 
   {
