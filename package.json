@@ -6,7 +6,10 @@
     "apps/*",
     "!apps/mobile",
     "packages/*",
-    "workers/*"
+    "workers/airwave-listener",
+    "workers/content-publishing",
+    "workers/data-refresh",
+    "workers/pick-generation"
   ],
   "scripts": {
     "postinstall": "npm run db:generate",

@@ -159,3 +159,9 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Cushion Separation Matchup (SHADOW)
+export {
+  computeCushionSeparationMatchup,
+  type CushionSeparationMatchup,
+} from "./expected-cushion-separation.js";
