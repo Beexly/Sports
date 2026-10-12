@@ -12,7 +12,7 @@ Mathematical Foundation:
 """
 
 import numpy as np
-from typing import Tuple, Dict, Any
+from typing import Tuple, Dict, Any, Optional
 
 class CylindricalSpectralSolver:
     def __init__(self, Nr: int = 64, Nz: int = 64, R_max: float = 1.0, L_z: float = 2.0 * np.pi, nu: float = 0.005):
@@ -219,6 +219,8 @@ class CylindricalSpectralSolver:
         alpha: float = 8.0,
         delta_r: float = 0.3,
         delta_z: float = 0.15,
+        observer: Optional[Any] = None,
+        abort_on_growth: Optional[float] = None,
     ) -> Dict[str, Any]:
         """
         RK4 temporal integration of the Harper seed vortex ring under pure
@@ -270,7 +272,11 @@ class CylindricalSpectralSolver:
             return self.compute_vorticity(u_r_, u_theta_, u_z_)["max_vorticity"]
 
         n_steps = int(round((t1 - t0) / dt))
-        trace = [(t0, peak_vorticity(u_r, u_theta, u_z))]
+        omega_at_start = peak_vorticity(u_r, u_theta, u_z)
+        trace = [(t0, omega_at_start)]
+        diverged_at: Optional[float] = None
+        if observer is not None:
+            observer(t0, u_r, u_theta, u_z)
         for step in range(n_steps):
             t = t0 + step * dt
             for _ in range(sub):
@@ -284,7 +290,27 @@ class CylindricalSpectralSolver:
                 # Regularity is preserved by the operator, not imposed: re-assert
                 # the exact pole value the analytic seed satisfies.
                 u_theta[0, :] = 0.0
-            trace.append((t + dt, peak_vorticity(u_r, u_theta, u_z)))
+            if not np.all(np.isfinite(u_theta)):
+                diverged_at = t + dt
+                break
+            omega_now = peak_vorticity(u_r, u_theta, u_z)
+            trace.append((t + dt, omega_now))
+            if observer is not None:
+                observer(t + dt, u_r, u_theta, u_z)
+            # Optional early abort: a resolution whose observable has left the
+            # physical range by orders of magnitude is diverging, and running it
+            # to the end only burns time to record the same non-answer. The
+            # divergence is REPORTED, never hidden.
+            if (
+                abort_on_growth is not None
+                and np.isfinite(omega_now)
+                and omega_now > abort_on_growth * omega_at_start
+            ):
+                diverged_at = t + dt
+                break
+            if not np.isfinite(omega_now):
+                diverged_at = t + dt
+                break
 
         omega_0 = trace[0][1]
         omega_final = trace[-1][1]
@@ -295,6 +321,9 @@ class CylindricalSpectralSolver:
             "dt": dt,
             "nu": nu,
             "n_steps": n_steps,
+            "steps_completed": len(trace) - 1,
+            "completed": diverged_at is None,
+            "diverged_at": diverged_at,
             "substeps_per_step": sub,
             "rk4_stability_limit": limit,
             "omega_0": omega_0,

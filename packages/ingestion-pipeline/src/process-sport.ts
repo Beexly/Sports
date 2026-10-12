@@ -431,11 +431,18 @@ export async function processSport(
       apiKey === "absent";
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
     const eventOddsByExternalId = new Map<string, unknown>();
+    // Galaxy-odds-first: the paid Odds API leg runs only when the deployment
+    // explicitly selects a paid provider (ODDS_PROVIDER=odds-api or
+    // the-odds-api), a real key is set, and the 402 circuit is closed.
+    const oddsProviderIsPaid =
+      (process.env["ODDS_PROVIDER"] ?? "").trim().toLowerCase() === "odds-api" ||
+      (process.env["ODDS_PROVIDER"] ?? "").trim().toLowerCase() === "the-odds-api";
 
     // Galaxy/ESPN keyless (inline scoreboard odds, registry-gated) is the
     // product path. It runs FIRST (handoff §1). Never invents — soft-fails empty.
     // The second book (Kalshi via PredExon) is attached inside the fetch when
     // PREDEXON_INGEST is on.
+    let rundownAttemptNote: string | null = null;
     let espnAttemptNote: string | null = null;
     try {
       const espn = await fetchEspnOddsForSport(sport.key, {
@@ -462,14 +469,15 @@ export async function processSport(
     // still probes upstream (one call at a time) so a recovered key is noticed
     // on its own.
     const paidCircuitOpen = !oddsKeyIsSentinel && getOddsPaymentCircuitBreaker().getState() === "open";
+    if (paidCircuitOpen) {
+      oddsProviderTag = "paid-circuit-open";
+      console.warn(
+        `${logPrefix} ${sport.key}: Odds API payment circuit open — skipping paid fetch, ` +
+          `using the keyless Galaxy/ESPN path`,
+      );
+    }
 
-    // Paid leg: runs ONLY when Galaxy/ESPN path yielded nothing, ODDS_PROVIDER
-    // explicitly requests it, the key is set, and the circuit is closed (handoff §1).
-    const isExplicitPaid =
-      process.env["ODDS_PROVIDER"] === "odds-api" ||
-      process.env["ODDS_PROVIDER"] === "the-odds-api";
-
-    if (events.length === 0 && isExplicitPaid && !oddsKeyIsSentinel && !paidCircuitOpen) {
+    if (events.length === 0 && oddsProviderIsPaid && !oddsKeyIsSentinel && !paidCircuitOpen) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
       // covers the need. For "odds" the guard passes today (no free odds source
       // is cleared), so the paid call proceeds. If a free odds source is cleared
@@ -543,7 +551,7 @@ export async function processSport(
             `free sources cover scores; skipping The Odds API.`,
         );
       }
-    } else if (events.length === 0 && isExplicitPaid && paidCircuitOpen) {
+    } else if (events.length === 0 && oddsProviderIsPaid && paidCircuitOpen) {
       oddsProviderTag = "paid-circuit-open";
       console.warn(
         `${logPrefix} ${sport.key}: Odds API payment circuit open — skipping paid fetch`,
@@ -586,9 +594,8 @@ export async function processSport(
           console.log(`${logPrefix} ${sport.key}: event-odds ${eventOddsReport.reason}`);
         }
       }
-    }
 
-    // TheRundown: full replace when primary AND the keyless path are empty;
+    // TheRundown: full replace when the keyless path AND the paid leg are empty;
     // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
     // fully covered slate.
     const rundownKey = resolveRundownApiKey();
@@ -604,7 +611,11 @@ export async function processSport(
       } else {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
-        if (rd.events.length > 0) {
+        if (rd.complete === false) {
+          oddsProviderTag = "therundown-truncated";
+          rundownAttemptNote = rd.error ?? "rundown slate truncated (incomplete day span)";
+          console.warn(`${logPrefix} ${sport.key}: rundown truncated — ${rundownAttemptNote}`);
+        } else if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
           console.log(
@@ -1745,10 +1756,8 @@ export async function processSport(
       note: fixtureNote ?? emptyNote,
       skippedInPlay,
       ...paidAccounting(),
-  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
-  lineSnapshotsPersisted?: number;
-  /** Games whose line-archive capture reported an error this cycle. */
-  lineArchiveErrors?: number;
+      lineSnapshotsPersisted,
+      lineArchiveErrors,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
