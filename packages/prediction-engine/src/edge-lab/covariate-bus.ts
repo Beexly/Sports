@@ -61,7 +61,6 @@ export interface CovariateRow {
   readonly avgSeparation: number | null; // weekly mean, yards — NOT catch-frame
   readonly avgCushion: number | null; // weekly mean, yards
   readonly airYardsShare: number | null; // % of team intended air yards (volume / T only)
-  readonly targets: number | null; // weekly NGS receiving targets
   // ── passing ───────────────────────────────────────────────
   readonly avgTimeToThrow: number | null; // seconds, weekly mean
   readonly aggressiveness: number | null; // % throws into tight coverage (<1 yd)
