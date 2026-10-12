@@ -149,6 +149,35 @@ proof, exactly as the BKM audit states.
 
 ---
 
+## 3b. The 256³ grid: measured, not attempted-and-abandoned
+
+The mission is titled "256³". The sweep as delivered stops at Nr=128, and during the
+session audit the 256 row was attempted and **did not complete inside a 420 s
+window**. Rather than leave that as a shrug, the cost was computed exactly, because
+the substep requirement is a property of the stability limit and does not need the
+evolution to run:
+
+| Nr | max Re(eig) | ν=0.005 substeps/step | total RK4 steps | ν=0.05 total RK4 steps |
+|---|---|---|---|---|
+| 32 | 574.2 | 1 | 80 | 240 |
+| 64 | 12,509.8 | 4 | 320 | 2,640 |
+| 128 | 245,768.7 | 52 | 4,160 | 41,040 |
+| **256** | **4,421,140.2** | **820** | **65,600** | **655,520** |
+
+So reaching Nr=256 at ν=0.005 takes **15.8× the substeps of Nr=128**, each on a
+257×256 field, and the high-dissipation regime takes 655,520 RK4 steps. The scheme's
+cost per unit of simulated time grows roughly as Nr⁵ (the substep count grows as Nr⁴
+and the field size as Nr², minus the FFT's log factor).
+
+The decisive point is that the run would be **expensive and pointless at the same
+time**: the positive eigenvalue at Nr=256 is 4.42e6 and grows as Nr⁴, so the same
+non-dissipative-mode artifact that makes 64 and 128 diverge is 18× larger again.
+Funding 65,600 RK4 steps would buy a more confident divergence, not new physics.
+
+Recorded as a measured limitation: **256³ was not run, and the reason is
+quantitative, not time.** The honest fix is still the pole-regular discretization in
+the next section, after which the higher grids become both stable and affordable.
+
 ## 4. What would actually fix this
 
 Recorded as an open item; **none of this is implemented**, so no result above
