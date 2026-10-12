@@ -206,3 +206,39 @@ it was replaced by three tests that assert what is actually true:
 `python -m pytest intelligence/physics/ -o pythonpath=.` → **15 passed, exit 0**.
 `python -m pytest intelligence/sgp/test_sgp_copula_engine.py -o pythonpath=.` →
 **26 passed**.
+
+---
+
+## 6. Feed recompile blocked by live credentials in the corpus
+
+Recompiling the feed surfaced a security finding that outranks the numerics.
+
+The feed row at line 92 was `Conversation with Muse AI_10-12-2026_1791774180.txt`,
+a **4.85 MB raw agent conversation transcript** — about 5% of the whole feed in a
+single row. GitHub push protection rejected the push twice with GH013, pointing
+at that row for a **GitHub personal access token** and a **GCP API key bound to a
+service account**, plus additional entries its classifier did not enumerate.
+
+A targeted local scrub removed **2 GitHub-PAT-shaped and 4 OpenAI-key-shaped**
+strings from that row, and the push was **still refused** — so the transcript
+carries credential families my patterns do not model. Worse, the repo's own
+pre-commit secret scanner passed the file both times with
+`[secret-scan] OK ... no secrets detected`, so it is not a detector to trust for
+this class of content.
+
+Resolution: the row is excluded from the committed feed, with the reasons
+recorded in `brain/feeds/2026-10-11/EXCLUDED.md` rather than dropped silently.
+The source `.txt` is left untouched on disk (it is untracked by git, at
+`docs/data-sources/research/2026-10-11/`). Feed went 94 → 93 rows, 20,645,869
+bytes.
+
+Two things follow, and neither is mine to close:
+
+1. **The credentials in that transcript are live strings pasted into a chat log
+   and should be rotated.** A transcript is not a secret store.
+2. **A feed that ingests raw transcripts verbatim will keep re-introducing
+   this.** Ingesting a 5 MB chat log as one row also means one row dominates the
+   corpus; a size cap and a content class check belong in the feed builder.
+
+The push then succeeded: `089d5ec28..0d8cb6e3f` on
+`fix/galaxy-odds-first-2026-10-08`, confirmed against the remote.
