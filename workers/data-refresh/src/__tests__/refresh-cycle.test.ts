@@ -111,11 +111,31 @@ afterEach(() => {
 });
 
 describe("runRefreshCycle (data-refresh worker, C-109 governed)", () => {
-  it("refuses to run without THE_ODDS_API_KEY (this worker is the paid path)", async () => {
+  it("keyless fallback: with THE_ODDS_API_KEY absent the cycle runs the free Galaxy/ESPN path instead of refusing", async () => {
     delete process.env["THE_ODDS_API_KEY"];
-    await expect(runRefreshCycle()).rejects.toThrow(/THE_ODDS_API_KEY not set/);
-    expect(mocks.processSport).not.toHaveBeenCalled();
+
+    const summary = await runWithTimers(runRefreshCycle());
+
+    // No paid key means no paid request can happen, so the credit governor is
+    // never built: nothing to pace, nothing to ledger.
     expect(mocks.resolvePaidOddsGovernor).not.toHaveBeenCalled();
+    // Every in-season sport still runs, through the keyless sentinel.
+    expect(mocks.processSport).toHaveBeenCalledTimes(2);
+    expect(mocks.processSport).toHaveBeenNthCalledWith(
+      1,
+      SPORTS[0],
+      "espn-free-path",
+      GATES,
+      "[data-refresh]",
+    );
+    expect(mocks.processSport).toHaveBeenNthCalledWith(
+      2,
+      SPORTS[1],
+      "espn-free-path",
+      GATES,
+      "[data-refresh]",
+    );
+    expect(summary).toEqual({ total: 2, failed: 0, held: 0, skipped: 0 });
   });
 
   it("builds the default governor once per cycle (worker log prefix and its own credit-ledger label) and runs every allowed sport through processSport", async () => {
