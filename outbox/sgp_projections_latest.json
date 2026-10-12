@@ -1,0 +1,798 @@
+{
+  "label": "DIAGNOSTIC",
+  "is_pick": false,
+  "is_edge_claim": false,
+  "rvc_cleared": false,
+  "caveat": "DIAGNOSTIC ONLY \u2014 residual-versus-close has NOT cleared. These are model fair prices for a canonical QB/WR stack, not picks, edges, or recommendations. No book SGP price exists on the keyless path, so no alpha is claimed.",
+  "generated_at": "2026-10-12T20:36:28+00:00",
+  "provenance": {
+    "prices": {
+      "source_id": "galaxy-espn-inline",
+      "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+      "provider_reported_by_espn": [
+        "DraftKings"
+      ],
+      "fetched_at": "2026-10-12T20:36:28+00:00"
+    },
+    "correlations": {
+      "path": "data/snapshots/sgp_correlations.json",
+      "leg_order": [
+        "qb_pass_yards",
+        "qb_pass_tds",
+        "wr_rec_yards",
+        "wr_anytime_td"
+      ],
+      "n_team_games": 1088,
+      "seasons": [
+        2024,
+        2025
+      ]
+    },
+    "engine": {
+      "module": "intelligence/sgp/sgp_copula_engine.py (price_sgp, gaussian copula)",
+      "draws": 50000,
+      "seed": 20261012,
+      "reference_team_total": 22.6
+    }
+  },
+  "games": [
+    {
+      "event_id": "401872994",
+      "name": "Buffalo Bills at Los Angeles Rams",
+      "commence_time": "2026-10-13T00:15Z",
+      "state": "pre",
+      "home_team": "Los Angeles Rams",
+      "away_team": "Buffalo Bills",
+      "home_abbr": "LAR",
+      "away_abbr": "BUF",
+      "provider": "DraftKings",
+      "complete_prices": true,
+      "prices": {
+        "moneyline": {
+          "home": -175,
+          "away": 145
+        },
+        "spread": {
+          "point_home": -3.5,
+          "home": -102,
+          "away": -118
+        },
+        "total": {
+          "point": 54.5,
+          "over": -118,
+          "under": -102
+        }
+      },
+      "devig": {
+        "moneyline_home_away": {
+          "prices": [
+            -175,
+            145
+          ],
+          "booksum": 1.0445269016697587,
+          "fair_shin": [
+            0.6141001855287569,
+            0.38589981447124305
+          ],
+          "fair_multiplicative": [
+            0.6092362344582594,
+            0.39076376554174075
+          ],
+          "shin_z": 0.04463117763681763
+        },
+        "spread_home_away": {
+          "prices": [
+            -102,
+            -118
+          ],
+          "booksum": 1.0462348987192298,
+          "fair_shin": [
+            0.48183304568989005,
+            0.5181669543101098
+          ],
+          "fair_multiplicative": [
+            0.4826358742837298,
+            0.5173641257162701
+          ],
+          "shin_z": 0.04623759961964631
+        },
+        "total_over_under": {
+          "prices": [
+            -118,
+            -102
+          ],
+          "booksum": 1.0462348987192298,
+          "fair_shin": [
+            0.5181669543101098,
+            0.48183304568989005
+          ],
+          "fair_multiplicative": [
+            0.5173641257162701,
+            0.4826358742837298
+          ],
+          "shin_z": 0.04623759961964631
+        }
+      },
+      "implied_team_totals": {
+        "home": 29.0,
+        "away": 25.5
+      },
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": "DraftKings",
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {
+        "LAR": {
+          "team_total_implied_by_real_prices": 29.0,
+          "volume_ratio_vs_reference": 1.2831858407079646,
+          "legs": [
+            "Passing yards (QB) over 250.5",
+            "Passing TDs (QB) over 1.5",
+            "Receiving yards (WR) over 75.5",
+            "Anytime TD (WR)"
+          ],
+          "scaled": {
+            "fair_probability": 0.28048,
+            "fair_american": 257,
+            "independent_probability": 0.17087162404480166,
+            "correlation_lift": 0.6414662268701771,
+            "joint_std_error": 0.0020090344427112243,
+            "z_vs_independent": 54.55773859570077,
+            "leg_probabilities": [
+              0.89516,
+              0.671,
+              0.7091,
+              0.40118
+            ],
+            "repaired_correlation": false
+          },
+          "unscaled_control": {
+            "fair_probability": 0.11982,
+            "fair_american": 735,
+            "independent_probability": 0.031232643973570454,
+            "correlation_lift": 2.8363706928364287,
+            "joint_std_error": 0.0014523303177996388,
+            "z_vs_independent": 60.99669953915465,
+            "leg_probabilities": [
+              0.4206,
+              0.54094,
+              0.41998,
+              0.32686
+            ],
+            "repaired_correlation": false
+          }
+        },
+        "BUF": {
+          "team_total_implied_by_real_prices": 25.5,
+          "volume_ratio_vs_reference": 1.1283185840707963,
+          "legs": [
+            "Passing yards (QB) over 250.5",
+            "Passing TDs (QB) over 1.5",
+            "Receiving yards (WR) over 75.5",
+            "Anytime TD (WR)"
+          ],
+          "scaled": {
+            "fair_probability": 0.1986,
+            "fair_american": 404,
+            "independent_probability": 0.08497099920026906,
+            "correlation_lift": 1.3372680310833762,
+            "joint_std_error": 0.001784141474211056,
+            "z_vs_independent": 63.68833550600435,
+            "leg_probabilities": [
+              0.69226,
+              0.5991,
+              0.56438,
+              0.36302
+            ],
+            "repaired_correlation": false
+          },
+          "unscaled_control": {
+            "fair_probability": 0.11982,
+            "fair_american": 735,
+            "independent_probability": 0.031232643973570454,
+            "correlation_lift": 2.8363706928364287,
+            "joint_std_error": 0.0014523303177996388,
+            "z_vs_independent": 60.99669953915465,
+            "leg_probabilities": [
+              0.4206,
+              0.54094,
+              0.41998,
+              0.32686
+            ],
+            "repaired_correlation": false
+          }
+        }
+      }
+    },
+    {
+      "event_id": "401872980",
+      "name": "Tampa Bay Buccaneers at Dallas Cowboys",
+      "commence_time": "2026-10-09T00:15Z",
+      "state": "post",
+      "home_team": "Dallas Cowboys",
+      "away_team": "Tampa Bay Buccaneers",
+      "home_abbr": "DAL",
+      "away_abbr": "TB",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872981",
+      "name": "Philadelphia Eagles at Jacksonville Jaguars",
+      "commence_time": "2026-10-11T13:30Z",
+      "state": "post",
+      "home_team": "Jacksonville Jaguars",
+      "away_team": "Philadelphia Eagles",
+      "home_abbr": "JAX",
+      "away_abbr": "PHI",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872990",
+      "name": "Chicago Bears at Green Bay Packers",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "Green Bay Packers",
+      "away_team": "Chicago Bears",
+      "home_abbr": "GB",
+      "away_abbr": "CHI",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872984",
+      "name": "Houston Texans at Tennessee Titans",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "Tennessee Titans",
+      "away_team": "Houston Texans",
+      "home_abbr": "TEN",
+      "away_abbr": "HOU",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872982",
+      "name": "Cincinnati Bengals at Miami Dolphins",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "Miami Dolphins",
+      "away_team": "Cincinnati Bengals",
+      "home_abbr": "MIA",
+      "away_abbr": "CIN",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872986",
+      "name": "Las Vegas Raiders at New England Patriots",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "New England Patriots",
+      "away_team": "Las Vegas Raiders",
+      "home_abbr": "NE",
+      "away_abbr": "LV",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872987",
+      "name": "Minnesota Vikings at New Orleans Saints",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "New Orleans Saints",
+      "away_team": "Minnesota Vikings",
+      "home_abbr": "NO",
+      "away_abbr": "MIN",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872983",
+      "name": "Cleveland Browns at New York Jets",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "New York Jets",
+      "away_team": "Cleveland Browns",
+      "home_abbr": "NYJ",
+      "away_abbr": "CLE",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872985",
+      "name": "Indianapolis Colts at Pittsburgh Steelers",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "Pittsburgh Steelers",
+      "away_team": "Indianapolis Colts",
+      "home_abbr": "PIT",
+      "away_abbr": "IND",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872988",
+      "name": "New York Giants at Washington Commanders",
+      "commence_time": "2026-10-11T17:00Z",
+      "state": "post",
+      "home_team": "Washington Commanders",
+      "away_team": "New York Giants",
+      "home_abbr": "WSH",
+      "away_abbr": "NYG",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872989",
+      "name": "Denver Broncos at Los Angeles Chargers",
+      "commence_time": "2026-10-11T20:05Z",
+      "state": "post",
+      "home_team": "Los Angeles Chargers",
+      "away_team": "Denver Broncos",
+      "home_abbr": "LAC",
+      "away_abbr": "DEN",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872991",
+      "name": "Detroit Lions at Arizona Cardinals",
+      "commence_time": "2026-10-11T20:25Z",
+      "state": "post",
+      "home_team": "Arizona Cardinals",
+      "away_team": "Detroit Lions",
+      "home_abbr": "ARI",
+      "away_abbr": "DET",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872992",
+      "name": "San Francisco 49ers at Seattle Seahawks",
+      "commence_time": "2026-10-11T20:25Z",
+      "state": "post",
+      "home_team": "Seattle Seahawks",
+      "away_team": "San Francisco 49ers",
+      "home_abbr": "SEA",
+      "away_abbr": "SF",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    },
+    {
+      "event_id": "401872993",
+      "name": "Baltimore Ravens at Atlanta Falcons",
+      "commence_time": "2026-10-12T00:20Z",
+      "state": "post",
+      "home_team": "Atlanta Falcons",
+      "away_team": "Baltimore Ravens",
+      "home_abbr": "ATL",
+      "away_abbr": "BAL",
+      "provider": null,
+      "complete_prices": false,
+      "prices": {
+        "moneyline": {
+          "home": null,
+          "away": null
+        },
+        "spread": {
+          "point_home": null,
+          "home": null,
+          "away": null
+        },
+        "total": {
+          "point": null,
+          "over": null,
+          "under": null
+        }
+      },
+      "devig": {
+        "moneyline_home_away": null,
+        "spread_home_away": null,
+        "total_over_under": null
+      },
+      "implied_team_totals": null,
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": null,
+        "fetched_at": "2026-10-12T20:36:28+00:00"
+      },
+      "sgp_stacks": {},
+      "skip_reason": "game state is post, not pre"
+    }
+  ]
+}
