@@ -1359,6 +1359,8 @@ export {
   fitLogistic,
   predictLogistic,
   computeExpectedMetricSchemaHash,
+  computeCushionSeparationMatchup,
+  type CushionSeparationMatchup,
   rollupByPlayer,
   fitExpectedCompletionModel,
   predictCompletionProbability,

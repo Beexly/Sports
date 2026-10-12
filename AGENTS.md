@@ -14468,3 +14468,6 @@ from the tracked accounts for Falcons-Ravens; SNF coverage was pre-game
 matchup graphics (SumerSports) plus one Q1 text note — the only in-game
 splits found were SF-SEA (@sfdata9ers, @SumerSports) and the Penix half
 split (via search, item 12).
+
+## STANDING CLOSE-OUT LOG
+- 2026-10-12 [Jules]: Added cushion_separation_matchup SHADOW expected metric point-in-time from NGS.
