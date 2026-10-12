@@ -1,7 +1,6 @@
-import { Suspense } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { NavMenu } from "@/components/ui/nav-menu";
-import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
+import { NavAuthFallback } from "@/components/ui/nav-auth";
 
 /**
  * Field IA — one door per job. Board is THE board.
@@ -149,17 +148,7 @@ export function Nav() {
  *
  * Files: apps/web/components/ui/nav.tsx, apps/web/components/ui/nav-auth.tsx
  */
-export function Nav() {
-  return (
-    <NavChrome
-      right={
-        <Suspense fallback={<NavAuthFallback />}>
-          <NavAuth />
-        </Suspense>
-      }
-    />
-  );
-}
+
 
 /**
  * NavSkeleton — the same bar, painted with the anonymous right rail directly.
@@ -171,9 +160,7 @@ export function Nav() {
  * milliseconds. NavAuthFallback is what <Nav /> paints during that same window
  * anyway, so the skeleton and the loaded page are pixel-identical here.
  */
-export function NavSkeleton() {
-  return <NavChrome right={<NavAuthFallback />} />;
-}
+
 
 /**
  * NavSkeleton — the same bar, painted with the anonymous right rail directly.

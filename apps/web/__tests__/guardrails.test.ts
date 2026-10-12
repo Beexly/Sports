@@ -168,14 +168,7 @@ describe("Phase 9 guardrails", () => {
    * runs every guard and reports all failures instead of short-circuiting on the
    * first). The chain that matters is therefore the GUARDS table in that file.
    */
-  function guardrailsChain(): string {
-    const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
-    const script: string = pkg.scripts.guardrails;
-    if (script.includes("run-all.mjs")) {
-      return readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
-    }
-    return script;
-  }
+
 
   it("root guardrails chain includes commercial, performance, payload-rights, OpenAPI, and raw-NGS checks", () => {
     const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
