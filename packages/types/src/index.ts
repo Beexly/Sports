@@ -541,6 +541,25 @@ export interface GameContextInput {
   // Null when no game history exists; scoring returns 0 (neutral) when null.
   scheduleDensityHome?: number | null;
   scheduleDensityAway?: number | null;
+  // LAYER-2 (situational reasoning) INPUT STATUS — audited 2026-10-12 against
+  // the live mint path (process-sport.ts → enrichGameContext → scoring.ts).
+  // The doctrine is Layer 1 = the market, Layer 2 = a situational overlay;
+  // this interface is the whole of what Layer 2 can currently say at mint:
+  //   WIRED, REAL DATA: rest days + back-to-back (computeRestDays),
+  //     schedule density (computeScheduleDensity), line movement
+  //     (openingSpread/openingTotal tracked by trackOpeningLines vs the live
+  //     price), ATS / venue / head-to-head form (real settled history,
+  //     neutral-null when the derived-history gate is off).
+  //   ABSENT — WEATHER: there is deliberately NO weather field here. A real
+  //     forecast model exists only in the edge-lab lane
+  //     (prediction-engine/src/edge-lab/features/nfl-weather.ts) and is not
+  //     consumed by scoreGame/scoreTotal/scoreMoneyline. Do not describe the
+  //     scorer as weather-aware until a field exists here AND a measured
+  //     coefficient prices it — adding either is a MODEL_VERSION decision.
+  //   ABSENT — TRAVEL: there is deliberately NO travel/distance field here.
+  //     The signal registry's circadian-travel entry is blocked upstream
+  //     ("not yet mapped in db", returns null). Any travel claim in a factor
+  //     trail today would be invented; the honest state is no field.
   // Data coverage
   bookmakerCoverageMax?: number;
   dataFreshnessMinutes?: number;

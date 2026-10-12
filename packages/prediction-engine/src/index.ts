@@ -4463,6 +4463,24 @@ export {
   type GameContext,
 } from "./reasoning/situational-engine.js";
 export {
+  EPA_CONTEXT_SOURCE_FILES,
+  EPA_CONTEXT_SWEEP,
+  TEAM_OFFENSIVE_EPA_PLAY_WK5,
+  PLAYER_RUSHING_EPA_TOP10_WK5,
+  TEAM_SCREEN_SUCCESS_WK5,
+  parseOffensiveEpaCsv,
+  parseRushingEpaCsv,
+  parseScreenSuccessCsv,
+  offensiveEpaForTeam,
+  rushingEpaForPlayer,
+  screenSuccessForTeam,
+  teamEpaContext,
+  type TeamOffensiveEpa,
+  type PlayerRushingEpa,
+  type TeamScreenSuccess,
+  type TeamEpaContext,
+} from "./reasoning/epa-context.js";
+export {
   registerDeclarations,
   SIGNAL_FAMILIES,
   type SignalDeclaration,
