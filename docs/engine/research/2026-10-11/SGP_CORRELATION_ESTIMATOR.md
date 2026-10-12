@@ -57,8 +57,8 @@ repair — reported, not assumed.
 
 A real same-game parlay mixes legs from **both teams**, so same-side dependence
 is only half the story. The estimator reports a second 4×4 **cross-side block**:
-entry `[i][j] = corr(own leg i, opposing leg j)`, over the same 1,088 team-games
-counted as 2,176 ordered pairs.
+entry `[i][j] = corr(own leg i, opposing leg j)`, over 1,088 ordered team-game
+pairs (544 games × both orientations).
 
 | own ↓ / opposing → | qb_pass_yards | qb_pass_tds | wr_rec_yards | wr_anytime_td |
 |---|---|---|---|---|

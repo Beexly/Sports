@@ -57,6 +57,7 @@
     "regular season only; preseason and postseason excluded so two usage regimes are not pooled into one correlation.",
     "anytime TD is 0/1, so its coefficients are point-biserial: numerically Pearson, but they answer 'does the continuous leg separate the scorers'.",
     "cross-side block: entry [i][j] = corr(own leg i, opposing leg j) over 1088 ordered team-game pairs. It is a cross-correlation block, not a correlation matrix: its diagonal is a real measurement (corr(own leg i, opposing leg i)), not 1, and PSD applies to the joint matrix assembled from both sides, not to this block alone.",
+    "joint 8x8 matrix across both teams is PSD (min eigenvalue 0.251083); usable as-is.",
     "matrix is PSD (min eigenvalue 0.260460); usable as-is."
   ],
   "cross_matrix": [
@@ -102,5 +103,88 @@
     "own_wr_anytime_td~opp_qb_pass_tds": 1088,
     "own_wr_anytime_td~opp_wr_rec_yards": 1088,
     "own_wr_anytime_td~opp_wr_anytime_td": 1088
-  }
+  },
+  "joint_matrix": [
+    [
+      1.0,
+      0.4976919574246057,
+      0.6994536009539846,
+      0.2691740036819433,
+      0.1725310218297968,
+      0.1729216008892659,
+      0.19077107215306538,
+      0.14849705203784436
+    ],
+    [
+      0.49769195742460565,
+      1.0,
+      0.371569622128332,
+      0.49268011212384066,
+      0.17292160088926595,
+      0.06975178200408425,
+      0.14225968162490438,
+      0.05883878173252793
+    ],
+    [
+      0.6994536009539846,
+      0.371569622128332,
+      1.0,
+      0.3251253584467502,
+      0.19077107215306544,
+      0.1422596816249044,
+      0.20114345320741167,
+      0.09450234666273802
+    ],
+    [
+      0.2691740036819433,
+      0.49268011212384066,
+      0.3251253584467502,
+      1.0,
+      0.1484970520378444,
+      0.05883878173252789,
+      0.09450234666273799,
+      0.006496189434577846
+    ],
+    [
+      0.1725310218297968,
+      0.17292160088926595,
+      0.1907710721530654,
+      0.14849705203784438,
+      1.0,
+      0.4976919574246056,
+      0.6994536009539847,
+      0.26917400368194333
+    ],
+    [
+      0.17292160088926592,
+      0.06975178200408425,
+      0.1422596816249044,
+      0.05883878173252789,
+      0.49769195742460554,
+      1.0,
+      0.3715696221283321,
+      0.49268011212384055
+    ],
+    [
+      0.1907710721530654,
+      0.14225968162490438,
+      0.20114345320741167,
+      0.094502346662738,
+      0.6994536009539847,
+      0.3715696221283321,
+      1.0,
+      0.32512535844675033
+    ],
+    [
+      0.14849705203784436,
+      0.05883878173252792,
+      0.09450234666273802,
+      0.006496189434577846,
+      0.2691740036819434,
+      0.4926801121238406,
+      0.32512535844675033,
+      1.0
+    ]
+  ],
+  "joint_min_eigenvalue": 0.25108310956064206
 }

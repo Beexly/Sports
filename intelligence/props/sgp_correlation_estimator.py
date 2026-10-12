@@ -72,6 +72,10 @@ class CorrelationReport:
     #: could be formed. Same leg order as `matrix`.
     cross_matrix: List[List[float]] = field(default_factory=list)
     cross_samples: Dict[str, int] = field(default_factory=dict)
+    #: 8x8 joint matrix across both teams ([own x4, opp x4]) and its smallest
+    #: eigenvalue. Empty when no cross pairs could be formed.
+    joint_matrix: List[List[float]] = field(default_factory=list)
+    joint_min_eigenvalue: Optional[float] = None
 
 
 def load_season(season: int) -> Optional[pd.DataFrame]:
@@ -179,6 +183,39 @@ def cross_team_pairs(pairs: pd.DataFrame) -> pd.DataFrame:
     return merged[merged["posteam_own"] != merged["posteam_opp"]]
 
 
+def joint_block(cross: pd.DataFrame) -> Tuple[List[List[float]], float]:
+    """
+    The 8x8 joint correlation matrix across BOTH teams, and its smallest
+    eigenvalue.
+
+    Columns are [own x4, opp x4], aligned row-wise on the same ordered team-game
+    pair, so this is a straight correlation matrix of eight series -- not an
+    assembly of blocks. Building it by concatenating the two 4x4 side estimates
+    would be wrong for a subtle reason: the same-side matrix is estimated over
+    team-game rows, while the cross block is estimated over ORDERED PAIRS, so the
+    two halves would be computed over different row sets and the concatenation
+    need not be PSD even when each half looks fine.
+
+    Returning the min eigenvalue rather than a boolean is deliberate: a small
+    negative value is a finite-sample artefact worth seeing, and a large one is a
+    real problem, and a caller cannot tell those apart from True/False.
+    """
+    k = len(LEG_NAMES)
+    veins = [f"{n}_own" for n in LEG_NAMES] + [f"{n}_opp" for n in LEG_NAMES]
+    cols = np.column_stack([cross[v].to_numpy(float) for v in veins])
+    # A zero-variance column (possible in a small or degenerate sample) makes
+    # corrcoef divide by zero and emit RuntimeWarning for every entry in that
+    # row. The result is NaN and is handled below, so the warning carries no
+    # information a caller can act on -- suppressed at the source rather than
+    # filtered out of the test output, where it would mask real warnings.
+    with np.errstate(invalid="ignore", divide="ignore"):
+        cm = np.corrcoef(cols, rowvar=False)
+    cm = np.nan_to_num(cm, nan=0.0, posinf=0.0, neginf=0.0)
+    np.fill_diagonal(cm, 1.0)
+    ev = float(np.linalg.eigvalsh(cm).min())
+    return cm.tolist(), ev
+
+
 def _matrix_from_columns(
     cols: Dict[str, np.ndarray], unit_diagonal: bool = True
 ) -> Tuple[List[List[float]], Dict[str, int]]:
@@ -260,6 +297,8 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
     cross = cross_team_pairs(pairs)
     cross_matrix: List[List[float]] = []
     cross_samples: Dict[str, int] = {}
+    joint_matrix: List[List[float]] = []
+    joint_min_ev: Optional[float] = None
     if len(cross) > 0:
         own_cols = {
             "qb_pass_yards": cross["qb_pass_yards_own"].to_numpy(float),
@@ -310,6 +349,19 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
             "matrix assembled from both sides, not to this block alone."
         )
 
+        joint_matrix, joint_min_ev = joint_block(cross)
+        if joint_min_ev < -1e-8:
+            notes.append(
+                f"WARNING: the JOINT 8x8 matrix is not PSD (min eigenvalue "
+                f"{joint_min_ev:.6f}). It is reported as measured; a copula spanning "
+                "both teams must repair it before use and say so."
+            )
+        else:
+            notes.append(
+                f"joint 8x8 matrix across both teams is PSD (min eigenvalue "
+                f"{joint_min_ev:.6f}); usable as-is."
+            )
+
     # Guard: a matrix with a negative eigenvalue is not a usable correlation
     # matrix, and a copula would silently repair it. Report it instead.
     ev = np.linalg.eigvalsh(np.array(matrix, dtype=float))
@@ -338,6 +390,8 @@ def estimate(seasons: List[int], min_games: int = 8) -> CorrelationReport:
         notes=notes,
         cross_matrix=cross_matrix,
         cross_samples=cross_samples,
+        joint_matrix=joint_matrix,
+        joint_min_eigenvalue=joint_min_ev,
     )
 
 

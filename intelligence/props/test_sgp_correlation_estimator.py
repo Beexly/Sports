@@ -15,6 +15,7 @@ from intelligence.props.sgp_correlation_estimator import (
     LEG_NAMES,
     cross_team_pairs,
     estimate,
+    joint_block,
     pair_correlation,
     player_game_table,
     primary_pairs,
@@ -239,3 +240,32 @@ def test_cross_side_block_is_symmetric_because_both_orderings_are_present():
     cm = np.array(report.cross_matrix, dtype=float)
     assert np.allclose(cm, cm.T, atol=1e-9), "cross block must be symmetric"
     assert not any("asymmetric" in n for n in report.notes), report.notes
+
+
+# ---------------------------------------------------------------------------
+# Joint 8x8 block
+# ---------------------------------------------------------------------------
+
+def test_joint_block_is_eight_by_eight_unit_diagonal_and_symmetric():
+    pg = player_game_table(_toy_plays())
+    pairs = primary_pairs(pg)
+    cross = cross_team_pairs(pairs)
+    jm, min_ev = joint_block(cross)
+    m = np.array(jm, dtype=float)
+    assert m.shape == (8, 8)
+    assert np.allclose(np.diag(m), 1.0)
+    assert np.allclose(m, m.T, atol=1e-9)
+    assert -1.0 - 1e-9 <= min_ev <= 1.0 + 1e-9
+
+
+def test_joint_block_reports_psd_status_for_the_real_corpus():
+    """
+    A copula spanning both teams consumes the JOINT matrix, so its PSD status is
+    the one that actually gates use. The report must state it either way.
+    """
+    try:
+        report = estimate([2024, 2025])
+    except FileNotFoundError:
+        pytest.skip("nflverse play-by-play not present on this checkout")
+    assert report.joint_min_eigenvalue is not None
+    assert any("joint 8x8" in n for n in report.notes), report.notes
