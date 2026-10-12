@@ -161,7 +161,10 @@ def price_game(record: dict, corr: np.ndarray, draws: int, seed: int) -> dict:
             continue
         abbr = record.get(abbr_key, side)
         scaled = _price_block(scaled_legs(team_total), corr, draws, seed)
-        control = _price_block(scaled_legs(REFERENCE_TEAM_TOTAL), corr, draws, seed + 1)
+        # Common random numbers: the control runs on the SAME seed, so the
+        # scaled-vs-control difference is the scaling coefficient's effect
+        # alone, not that effect plus two independent Monte Carlo noises.
+        control = _price_block(scaled_legs(REFERENCE_TEAM_TOTAL), corr, draws, seed)
         stacks[abbr] = {
             "team_total_implied_by_real_prices": team_total,
             "volume_ratio_vs_reference": team_total / REFERENCE_TEAM_TOTAL,
