@@ -195,3 +195,50 @@ both rather than starting a daemon that can never speak, and says so.
   the same name after the daemon started will be announced once, not twice.
 * The `PLAYER_GAME`-style joins and thresholds here are constants, not config; the
   thresholds (`70` / `10%`) are the mission's and are not tuned.
+
+---
+
+## 8. Update 2026-10-12 — the tests watcher now has a source
+
+Section 5's test D recorded `tests watcher has NO SOURCE` — true when written, and
+no longer true. A baseline is now recorded on this machine, established with the
+daemon's own flag run **from the repo root** (the watcher's poll uses the repo root
+as its cwd, so a command that assumes a different directory silently collects
+nothing):
+
+```
+python intelligence/voice_brain/watchdog_daemon.py --record-test-result \
+    --test-cmd "C:/Users/Garrett/AppData/Local/Programs/Python/Python313/python.exe \
+                -m pytest intelligence/physics/test_cylindrical_solver.py -o pythonpath=. -q"
+
+[watchdog] recorded test result: passing
+.hermes/last_test_result.json -> {"failed": false, "summary": "passing"}
+```
+
+The watcher was then proved able to see a failure, not merely a pass, by recording
+a deliberate one and restoring the true state:
+
+```
+--test-cmd "<python> -c \"import sys; sys.exit(1)\""  -> {"failed": true,  "summary": "Tests are failing. exit 1"}
+--test-cmd "<the physics suite>"                      -> {"failed": false, "summary": "passing"}
+```
+
+### Two things this caught
+
+**A false failure, from my own first attempt.** The first recording ran the suite
+from `intelligence/` with `pythonpath=.`, which cannot resolve
+`intelligence.physics.*` — a collection error, recorded as `FAILED`. The watcher was
+working correctly; the *command* was wrong. This is the failure mode worth naming:
+a recorded state file is only as honest as the command that produced it, and a
+false `"failed": true` sitting in it teaches the operator to ignore the daemon.
+Re-recorded from the repo root, and the deliberate-failure test above exists so the
+negative path is exercised rather than assumed.
+
+**The state file is deliberately untracked.** `.hermes/last_test_result.json` is
+runtime state, not source: it goes stale the moment any test run finishes, and a
+committed `"failed": true` would make *another* machine's daemon announce a failure
+that is not happening there. Each machine establishes its own baseline. Without a
+state file the first poll records and stays silent — no news, not invented news.
+(A scoped `.hermes/.gitignore` was attempted and blocked by the repo's protected-file
+guard; the file is simply left unstaged instead, which is why it appears in
+`git status` on a working checkout.)
