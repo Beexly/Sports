@@ -159,3 +159,5 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+export * from "./te-target-rate.js";
