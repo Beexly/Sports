@@ -1,0 +1,7 @@
+# YouTube Gvwm-B9ouN0
+
+URL: https://www.youtube.com/watch?v=Gvwm-B9ouN0
+
+Transcript (public captions):
+
+[Applause] Every game is full of what if moments. What if the receiver broke outside instead of in? What if the defender closed from a different angle? That's the challenge of the NFL Big Data Bowl powered by AWS. The annual competition where data scientists, engineers, and fans use real next-gen stats tracking data to answer football's toughest questions. This year's theme, predicting where players will move from point A to point B once the ball is in the air. You'll freeze the play at the throw and map what happens next. The big data bowl is more than a contest. It's the NFL and AWS's open lab for building the next generation of stats. Last year's challenge helped fuel the model behind the league's new coverage responsibilities stat, now part of official NextG stats. And over the years, 75 plus machine learningbased stats have started here. From expected rush yards to pressure probability, showing up on TV the very next season. If you're interested in turning complex questions into groundbreaking insights, join NFL Big Data Bowl powered by AWS. Your work could define the next generation of football analytics. [Applause]
