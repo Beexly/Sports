@@ -1,0 +1,108 @@
+{
+ "branches_consumed": {
+  "motif/gates-wiring-2026-10-12": {
+   "head": null,
+   "status": "NOT_LANDED",
+   "verification": "Ref polled 2026-10-12T21:45Z through 2026-10-12T23:57Z; 404 throughout. Runner files (intelligence/gates/gauntlet.py, gauntlet_registry.json, rvc_gate.py) exist only as unlanded work in the wiring agent's local scratch at last recon (23:21Z) and were NOT consumed."
+  },
+  "motif/props-board-live-2026-10-12": {
+   "head": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7",
+   "status": "CONSUMED",
+   "verification": "Every assembled tree file hash-verified (git blob SHA-1) against this head's remote tree listing."
+  },
+  "motif/props-model-side-2026-10-12": {
+   "head": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7",
+   "status": "LANDED_EMPTY",
+   "verification": "Ref resolves to the base head (zero new commits) at final poll 2026-10-12T23:35Z. No measured player distributions were available to fold in."
+  }
+ },
+ "frozen_at_utc": "2026-10-13T00:09:24Z",
+ "game": {
+  "away": "Buffalo Bills",
+  "event_id_espn": "401872994",
+  "home": "Los Angeles Rams",
+  "kickoff_utc": "2026-10-13T00:15:00Z",
+  "name": "Buffalo Bills at Los Angeles Rams",
+  "pinnacle_game_matchup_id": 1637432964
+ },
+ "inputs": {
+  "espn_scoreboard_capture": {
+   "bytes": 31950,
+   "path": "outbox/gauntlet/inputs/espn_scoreboard_20261012_buf_lar.json",
+   "sha256": "9a4526e9018aca5ff81287d9cea66cc1971d2ba47c984144af3b522451c9bb88",
+   "source": "Repo fixture intelligence/props/fixtures/espn_scoreboard_20261012_buf_lar.json, captured 2026-10-12 (DraftKings prices via ESPN/Galaxy keyless path)"
+  },
+  "pinnacle_prop_prices_t5": {
+   "bytes": 44816,
+   "fetched_at_utc": "2026-10-13T00:05:59Z",
+   "path": "outbox/gauntlet/inputs/pinnacle_prop_prices_t5.json",
+   "records": 69,
+   "sha256": "ca1b68d98929e201d8df973ab27416fa7a1a68c794c92bf5e75c22ce1de0e81d",
+   "source": "Pinnacle guest API (keyless), intelligence/props/pinnacle_prop_feed.py --game 1637432964"
+  },
+  "price_refresh_snapshots_retained": {
+   "initial": {
+    "fetched_at_utc": "2026-10-12T22:17:24Z",
+    "records": 69,
+    "sha256": "999be1c5027df8f42762aff4974b52c9e53a64cb81d6041899eda8a6d568ed72"
+   },
+   "note": "All refresh rounds retained locally in ~/workspace/scratch/gauntlet-run/inputs/ with fetch times; the T-5 set is the frozen set pushed with this manifest.",
+   "t30": {
+    "records": 69,
+    "sha256": "d9fcd92fde24b60037f50b6538e3bce3a6aea801fd7c2ccdf496076812d3258d"
+   },
+   "t60": {
+    "records": 69,
+    "sha256": "0d56983f7aab6fc03926d3dbbf7f28bca8496b2dc788d3c195529d33d4575355"
+   }
+  },
+  "props_live_board_frozen": {
+   "bytes": 71926,
+   "counts": {
+    "priced_only_rows": 68,
+    "priced_rows": 68,
+    "rows_with_model": 0
+   },
+   "generated_at_utc": "2026-10-13T00:08:25Z",
+   "note": "An earlier T-5 board attempt failed on a dropped connection; the frozen board is the successful 00:08:25Z regeneration. The T-30 board (23:45:32Z, 69 rows) is superseded; Greg Dortch receiving_yards was pulled by the book between T-30 and the freeze.",
+   "path": "outbox/gauntlet/inputs/props_live_board_frozen.json",
+   "sha256": "a84c40d9f4c08d6c00ada4cf3665a2d47bc610cd5b60ef38459d33bc7b35ce61",
+   "source": "intelligence/props/props_live_board.py --game 1637432964 (live Pinnacle join)"
+  },
+  "sgp_correlations_snapshot": {
+   "bytes": 5072,
+   "n_team_games": 1088,
+   "path": "data/snapshots/sgp_correlations.json (branch motif/props-board-live-2026-10-12)",
+   "seasons": [
+    2024,
+    2025
+   ],
+   "sha256": "0a543b6d09d0cbda6441a41653d76363d419e472cddb78dad27b43022b008e25"
+  },
+  "sgp_projections": {
+   "bytes": 6200,
+   "note": "ESPN live host site.web.api.espn.com was unreachable from this VM on every attempt from 21:47Z to 00:07Z (urlopen timeouts). Prices therefore rest on the 2026-10-12 captured scoreboard payload; the SGP output reproduced identically across four runs (initial/T-60/T-30/T-5).",
+   "path": "outbox/gauntlet/inputs/sgp_projections.json",
+   "sha256": "0664e84c5f79313657064b6b2d1e16c2c29a29f9697f67fd35cbfb5ee88484fc",
+   "source": "intelligence/sgp/price_from_real_prices.py --from-file (captured ESPN scoreboard)"
+  }
+ },
+ "is_edge_claim": false,
+ "is_pick": false,
+ "label": "DIAGNOSTIC",
+ "manifest_id": "mnf_20261012",
+ "provenance": {
+  "assembled_tree": "~/workspace/scratch/gauntlet-run/tree (hash-verified against remote tree of b7df9c9f4755)",
+  "odds_api_used": false,
+  "settlement_pollers_touched": false
+ },
+ "refresh_schedule_executed": [
+  "initial (T-118)",
+  "T-60 (23:13Z)",
+  "T-30 (23:44Z)",
+  "T-5 (00:05Z, board regenerated 00:08:25Z)"
+ ],
+ "run_mode": "FALLBACK_INDIVIDUAL_SUITES",
+ "run_mode_reason": "Unified gauntlet runner branch motif/gates-wiring-2026-10-12 had not landed by the T-30 checkpoint (2026-10-12T23:44:52Z) nor by freeze; gates were run as individual suites in pipeline order per fail-closed instructions.",
+ "rvc_cleared": false
+}
