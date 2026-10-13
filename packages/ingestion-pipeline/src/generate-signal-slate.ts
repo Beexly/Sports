@@ -39,6 +39,7 @@ import {
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { stalenessBlockers } from "./signal-staleness.js";
+import { envWithStoredSignals } from "./stored-signal-env-bridge.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
 
@@ -577,13 +578,23 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     let homeP = blend.homeP;
     let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
     try {
+      // Stored-signal bridge: the weather cron writes wind/temp/precip to the
+      // DB, not to env. Without this bridge the wind-elasticity tilt reads an
+      // empty env and abstains silently. DB-first, env-fallback, fail-open.
+      const storedEnv = await envWithStoredSignals(
+        game.id,
+        process.env as Record<string, string | undefined>,
+      );
+      if (storedEnv.fromDb.length && opts.logPrefix) {
+        console.info(`${logPrefix} ${storedEnv.note}`);
+      }
       const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
         sportKey,
         homeTeam,
         awayTeam,
         commenceTime,
         spreadHome: null,
-        env: process.env as Record<string, string | undefined>,
+        env: storedEnv.env,
         now: () => now,
       });
       if (tilt.applied) {
