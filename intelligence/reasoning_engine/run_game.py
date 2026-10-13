@@ -34,6 +34,105 @@ def _checklist(trace) -> dict[str, str]:
     return out
 
 
+
+
+def _verification_name(v) -> str:
+    return getattr(v, "name", str(v)) if v is not None else "UNSET"
+
+
+def _serialize_conditions(link) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    for bc in (getattr(link, "breaking_conditions", []) or []):
+        out.append({
+            "id": getattr(bc, "id", ""),
+            "text": getattr(bc, "text", ""),
+            "metric": getattr(bc, "metric", ""),
+            "op": getattr(bc, "op", ""),
+            "threshold": getattr(bc, "threshold", None),
+        })
+    return out
+
+
+def causal_chains(trace, facts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The L3 causal chains, surfaced for the trace document. NEVER empty.
+
+    The reasoning layer already builds chains on the trace (run_l3); the trace
+    document used to drop them on the floor, which is how a game came back as a
+    bare withhold. If the mind produced no thesis, the shortest honest chain is
+    the observed facts themselves, typed as context (not a directional claim).
+    """
+    chains: list[dict[str, Any]] = []
+    for chain in (getattr(trace, "chains", []) or []):
+        links = []
+        for link in (getattr(chain, "links", []) or []):
+            links.append({
+                "cause": getattr(link, "cause", None),
+                "mechanism": getattr(link, "mechanism", None),
+                "outcome": getattr(link, "outcome", None),
+                "verification": _verification_name(getattr(link, "verification", None)),
+                "load_bearing": getattr(link, "load_bearing", None),
+                "breaking_conditions": _serialize_conditions(link),
+            })
+        chains.append({"id": getattr(chain, "id", None), "links": links})
+    if not chains:
+        links = []
+        for f in facts:
+            links.append({
+                "cause": f.get("signal"),
+                "mechanism": "observed before kickoff",
+                "outcome": "context for the ranked board (no directional claim at this depth)",
+                "verification": str(f.get("source", "unknown")).upper(),
+                "load_bearing": False,
+                "breaking_conditions": [],
+            })
+        chains.append({"id": "derived:observed-facts", "links": links})
+    return chains
+
+
+def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: dict[str, Any]) -> dict[str, Any]:
+    """The board is emitted on EVERY run, withhold or not.
+
+    Conviction = chain coverage (observed facts / (observed + named gaps)); it is
+    a confidence in the evidence chain, never a win probability and never a
+    market number. PASS/withhold stop being terminal states: they are the mint
+    action, and the board below is published regardless.
+    """
+    fired = [f for f in facts if f.get("fired")]
+    coverage = len(fired) / max(1, len(fired) + len(gaps))
+    conviction = int(round(100 * coverage))
+    conditions: list[dict[str, Any]] = [
+        {"id": f"gap:{i}", "text": g, "metric": "", "op": "", "threshold": None,
+         "verifiable": False, "met": None, "note": "named gap; unverifiable at this run"}
+        for i, g in enumerate(gaps)
+    ]
+    for chain in (getattr(trace, "chains", []) or []):
+        for link in (getattr(chain, "links", []) or []):
+            conditions.extend(_serialize_conditions(link))
+    candidates = []
+    for surface in ("TOTAL", "SPREAD", "MONEYLINE"):
+        candidates.append({
+            "play": surface,
+            "rank": 0,
+            "conviction": conviction,
+            "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+            "status": "SCHEMATIC" if gaps else "SUBSTANTIATED",
+            "has_directional_claim": False,
+            "note": "ranked regardless of mint action; a trace does not mint a probability",
+        })
+    for i, c in enumerate(sorted(candidates, key=lambda c: -c["conviction"]), start=1):
+        c["rank"] = i
+    return {
+        "candidates": candidates,
+        "conviction": conviction,
+        "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+        "breaking_conditions": conditions,
+        "mint_action": decision.get("action"),
+        "mint_reason": decision.get("reason"),
+        "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    }
+
+
+
 def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int = 2026,
                 weather: dict[str, Any] | None = None) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
@@ -96,10 +195,12 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
         "confidence": None,
         "probability_before_calibration": None,
         "probability_after_calibration": None,
+        "causal_chain": causal_chains(trace, facts),
+        "ranked_board": ranked_board(trace, facts, gaps, decision),
         "note": (
-            f"Withheld. {decision['reason']}."
+            f"Withheld. {decision['reason']}. The ranked board below is still emitted; a withhold is not a terminal silence."
             if withheld
-            else "Mind was asked and the trace was not INVALID or DATA-GAP. A trace still does not mint a probability."
+            else "Mind was asked and the trace was not INVALID or DATA-GAP. A trace still does not mint a probability; the ranked board is the output."
         ),
     }
 
