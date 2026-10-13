@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { safeAgeRedirect } from "@/lib/age-verify/surface";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 
 export const metadata: Metadata = {
   title: "Age Check — 21+",
@@ -59,6 +60,9 @@ export default function AgeVerifyPage({
           </Link>
           .
         </p>
+        <div className="mt-4">
+          <RiskDisclosure variant="compact" />
+        </div>
       </div>
     </main>
   );

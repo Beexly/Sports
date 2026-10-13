@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  calculatePickResult,
-  selectGradingLine,
-  type ReadinessGates,
-} from "@sports/prediction-engine";
+import type { ReadinessGates } from "@sports/prediction-engine";
+import { calculatePickResult, selectGradingLine } from "@sports/prediction-engine";
 import type { FixtureProbe } from "../fixture-confirmation.js";
 
 /**
@@ -66,6 +63,8 @@ const mocks = vi.hoisted(() => ({
       remaining: number | null;
       error?: string;
       rateLimited?: boolean;
+      complete: boolean;
+      failedDays: readonly string[];
     }>
   >(),
   eventsBelowBookmakerThreshold: vi.fn<(events: unknown[], min?: number) => unknown[]>(),
@@ -1126,7 +1125,7 @@ describe("processSport", () => {
       const { primary, kalshiQuote } = thinNflSlate();
       mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
       mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null, complete: true, failedDays: [] });
       const twoBooks = { ...primary, bookmakers: [{ key: "fanduel" }, { key: "kalshi" }] };
       mocks.mergeBookmakersIntoPrimary.mockReturnValue({
         events: [twoBooks],
@@ -1150,7 +1149,7 @@ describe("processSport", () => {
     it("makes no Rundown call for a sport outside NFL and NCAAF, on a board thin enough that NFL would be filled", async () => {
       const { primary } = thinNflSlate();
       mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
 
       // Same one-book slate, same window, same key — only the sport differs.
       mocks.getOdds.mockResolvedValue({
@@ -1179,6 +1178,8 @@ describe("processSport", () => {
         remaining: null,
         error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
         rateLimited: true,
+        complete: false,
+        failedDays: ["2026-08-25", "2026-08-26"],
       });
 
       await processSport(SPORT, "key", gates());
@@ -1186,7 +1187,7 @@ describe("processSport", () => {
 
       // 29 minutes later — still inside the cooldown.
       nowSpy.mockReturnValue(t0 + 29 * 60 * 1000);
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null, complete: true, failedDays: [] });
       await processSport(SPORT, "key", gates());
 
       expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
@@ -1210,6 +1211,8 @@ describe("processSport", () => {
         remaining: null,
         error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
         rateLimited: true,
+        complete: false,
+        failedDays: ["2026-08-25", "2026-08-26"],
       });
 
       await processSport(SPORT, "key", gates());
@@ -1217,7 +1220,7 @@ describe("processSport", () => {
 
       // 31 minutes later — the cooldown has lapsed and the sport is eligible again.
       nowSpy.mockReturnValue(t0 + 31 * 60 * 1000);
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null, complete: true, failedDays: [] });
       await processSport(SPORT, "key", gates());
 
       expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(2);
@@ -1231,7 +1234,7 @@ describe("processSport", () => {
       const third = { ...primary, id: "odds-3", home_team: "Ravens", away_team: "Bengals" };
       mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
       mocks.getOdds.mockResolvedValue({ data: [primary, second, third], remainingRequests: 400 });
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
 
       await processSport(SPORT, "key", gates());
 
@@ -2369,7 +2372,23 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
     mocks.resolveRundownApiKey.mockReturnValue("");
-    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
+    // The mockReset above wipes EVERY factory implementation, not just call
+    // history. These five are dependencies the current processSport calls on
+    // every cycle (the C-111 fixture guard, the preseason map, the game
+    // correction write, the supersede void, the payment circuit); leaving them
+    // reset makes the run die at `fixtureBatch.status` and every pick write is
+    // skipped. Mirror the main describe's defaults. (Restored from
+    // hermes-SO-1o c65ec2d63, which repaired this same drift off-main.)
+    mocks.confirmBatch.mockImplementation(confirmAll);
+    mocks.gameFindMany.mockResolvedValue([]);
+    mocks.gameUpdate.mockResolvedValue({
+      id: "game-1",
+      homeTeamName: "Chiefs",
+      awayTeamName: "Bills",
+    });
+    mocks.supersedeUnpublished.mockResolvedValue(true);
+    mocks.circuitState.mockReturnValue("closed");
     mocks.eventsBelowBookmakerThreshold.mockReturnValue([]);
     mocks.mergeBookmakersIntoPrimary.mockImplementation((primary: unknown[]) => ({
       events: primary,
@@ -2377,8 +2396,6 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
       unmatchedSecondary: 0,
       skippedWellCovered: 0,
     }));
-    mocks.confirmBatch.mockImplementation(confirmAll);
-    mocks.circuitState.mockReturnValue("closed");
     process.env["ODDS_PROVIDER"] = "odds-api";
   });
 

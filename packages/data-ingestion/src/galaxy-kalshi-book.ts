@@ -364,6 +364,9 @@ export class PredExonKalshiCatalog implements GalaxySecondBook {
           ticker: s.ticker,
           rawImpliedProb: s.quote.yes,
           fairProb: null,
+          // The PredExon two-way carries no bid/ask on this path, so the
+          // quote-quality fields are honestly null (not measured), matching
+          // KalshiSideFairValue's "null when unquoted" contract.
           quoteSpread: null,
           quoteBid: null,
           quoteAsk: null,

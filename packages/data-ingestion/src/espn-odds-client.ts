@@ -100,7 +100,6 @@ type Loose = Record<string, unknown>;
  * caps its calls at 12–15s; these two were the hole. Kept slightly tighter
  * than the 15s siblings because of the serial fan-out.
  */
-const ESPN_ODDS_TIMEOUT_MS = 10_000;
 
 function americanNum(v: unknown): number | null {
   if (typeof v === "number" && Number.isFinite(v) && v !== 0) return Math.round(v);
@@ -303,6 +302,7 @@ function eventFromInlineOdds(
   const book: OddsApiBookmaker = {
     key: "espn_public",
     title: `ESPN/${providerName}`,
+    // no last_update: ESPN exposes no upstream timestamp (see note in fetchEspnOddsForSport)
     markets,
   };
   return {
@@ -373,6 +373,12 @@ export async function fetchEspnOddsForSport(
     /** Per-request timeout (ms, default 8000) — blocked hosts fail fast. */
     readonly fetchTimeoutMs?: number;
     /**
+     * Per-request ceiling override (ms) — same knob as the Rundown client's
+     * `timeoutMs`. Test seam: lets a test bound a hung provider in
+     * milliseconds instead of waiting out the production ceiling.
+     */
+    readonly timeoutMs?: number;
+    /**
      * Optional second real bookmaker (Kalshi via PredExon). When provided,
      * each event may gain a second book from a live two-way exchange quote —
      * the honest path past MIN_BOOKMAKERS=2 on the keyless plane. Failures
@@ -399,11 +405,15 @@ export async function fetchEspnOddsForSport(
     };
   }
   const fetchImpl = options?.fetchImpl ?? fetch;
-  const fetchTimeoutMs = Math.min(30000, Math.max(1000, options?.fetchTimeoutMs ?? 8000));
+  // One ceiling for every request below: `timeoutMs` (the test seam) wins,
+  // then the legacy `fetchTimeoutMs`, then the 8s default.
+  const fetchTimeoutMs = Math.min(
+    30000,
+    Math.max(1, options?.timeoutMs ?? options?.fetchTimeoutMs ?? 8000),
+  );
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
-  const timeoutMs = Math.max(1, options?.fetchTimeoutMs ?? ESPN_ODDS_TIMEOUT_MS);
   const errors: string[] = [];
   const now = new Date();
   const dateParams = scoreboardDateParams(now, horizonDays);

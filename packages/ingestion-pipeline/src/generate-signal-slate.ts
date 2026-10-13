@@ -182,7 +182,18 @@ export function blendIndependentHomeFair(
  */
 const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
+/** A signal-board grade is a PickGrade from the one shared ladder. */
 export type SignalGrade = PickGrade;
+
+/**
+ * Grade a signal pick: the shared computePickGrade with no priced market
+ * (`null` Edge Index), which applies the confidence rungs and caps the
+ * result at UNPRICED_MAX_GRADE. Delegation is the whole point — a private
+ * ladder here is how "STRONG_PLAY" once meant two different things.
+ */
+export function gradeSignalPick(confidence: number): SignalGrade {
+  return computePickGrade(confidence, null);
+}
 
 /**
  * The one sentence that keeps a signal-board grade from being read as a market-

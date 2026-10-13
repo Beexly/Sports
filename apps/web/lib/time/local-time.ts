@@ -24,7 +24,15 @@ export type LocalTimeFormat =
   | "kickoff"
   /** "Sunday, September 7, 2025" — headline date, no time-of-day. */
   | "date-long"
-  /** "Sep 7, 2025" — compact date, no time-of-day. */
+  /**
+   * "Sep 7, 2025" — compact calendar date, no time-of-day.
+   *
+   * No `timeZoneName`: a calendar date has no wall clock to label. It still has
+   * to be resolved on the VIEWER's clock, though — the underlying value is an
+   * instant, and an instant late enough in the UTC day is already the NEXT day
+   * for a reader east of UTC. Formatting it on the server handed every such
+   * reader the server's date instead of their own.
+   */
   | "date-short"
   /** "1:00 PM EDT" — time only, always carrying its zone. */
   | "clock"

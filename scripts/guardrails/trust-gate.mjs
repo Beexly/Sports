@@ -322,13 +322,23 @@ const LOCKFILE_SAFE_CONTEXT =
 // "D. Lock", "server-side lock", "at lock", the QB-roster clause, and
 // "Lock started W2 for the Jets" all pass.
 //
+// STAT-TABLE SURNAME FORMS, added 2026-10-12. The x-intel digests in AGENTS.md
+// quote QB leaderboards verbatim, where the same surname appears in table
+// shapes the forms above do not cover: followed by a decimal stat line
+// ("Lock 0.52 (0.45, 12%, ...)"), in a dropback-count comparison ("Lock 50 vs
+// Prescott 157"), and inside a slash-separated surname list
+// ("Cousins/Lock/Prescott/Watson"). Each added alternative is anchored to a
+// numeral or a slash list, shapes betting slang never takes; blank-then-
+// recheck still applies, so a residual standalone "lock" on the same line
+// (e.g. "Lock 0.52 — a lock") still hits.
+//
 // KNOWN GAP, NOT INTRODUCED HERE: "I locked in on that bet" is NOT caught —
 // `BANNED_PHRASES` matches `lock` with a word boundary, and `locked` is a
 // different token. Confirmed pre-existing on unpatched `af23ffc76`. Left alone
 // deliberately: widening the ban is a separate decision from this false
 // positive, and belongs in its own PR with its own evidence.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
-  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d|\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\//gi;
 
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in
@@ -510,7 +520,19 @@ function scanText(text, relPath) {
         entry.claim === "banned.lock" &&
         SCAN_FILES.includes(relNorm) &&
         isVerbatimSocialDigestLine(rawLines[i]);
-      const matched = !digestQuote && candidates.some((candidate) => {
+      // Positioning phrases quoted from a THIRD PARTY's own copy inside a
+      // memory-doc social digest are that party's positioning, not this
+      // platform's: e.g. an AGENTS.md digest line recording that a rival
+      // site's pinned post "connects the whole @StatRankings site to
+      // Claude/ChatGPT/Grok AI agents". Scoped as narrowly as the lock
+      // digest exemption: SCAN_FILES only, positioning claims only, and the
+      // line must carry the @handle it attributes the copy to. GSE's own
+      // unattributed positioning copy in the same files still hits.
+      const attributedQuote =
+        entry.claim.startsWith("banned.positioning.") &&
+        SCAN_FILES.includes(relNorm) &&
+        /@\w+/.test(rawLines[i]);
+      const matched = !digestQuote && !attributedQuote && candidates.some((candidate) => {
         let subject = candidate;
         if (entry.claim === "banned.lock") {
           subject = subject

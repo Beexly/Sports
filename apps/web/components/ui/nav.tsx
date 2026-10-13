@@ -41,6 +41,11 @@ const BOARD_MENU: readonly NavGroup[] = [
         href: "/bankroll",
         desc: "Every settled result, counted",
       },
+      {
+        label: "SGP projections",
+        href: "/sgp-projections",
+        desc: "Our number for each same-game market",
+      },
     ],
   },
 ];
@@ -89,21 +94,10 @@ const GSN_MENU: readonly NavGroup[] = [
 ];
 
 /**
- * Nav — global bar. Auth rail is Suspense-split so the shell streams before
- * the session resolves.
- *
- * CORRECTION (verified against next@14.2.35, no PPR): that Suspense boundary
- * does NOT keep the surrounding page statically prerenderable. In
- * `dist/server/app-render/dynamic-rendering.js`, `trackDynamicDataAccessed()`
- * sets `store.revalidate = 0` BEFORE it throws the DynamicServerError, and
- * `app-render.js` then copies that store value onto `metadata.revalidate`,
- * which `dist/build/index.js` reads as `hasDynamicData`. Suspending (or
- * swallowing) the throw therefore cannot restore static generation: the
- * cookie read has already marked the render dynamic. Partial Prerendering is
- * the feature that would make the claim true, and `experimental.ppr` is not
- * enabled in next.config.mjs. The Suspense boundary is still worth keeping —
- * it streams the shell before the session resolves — it just is not a
- * static-generation guarantee, so do not treat it as one.
+ * NavChrome — the shared bar markup. Nav and NavSkeleton differ ONLY in the
+ * right rail they pass in, so the chrome lives once, here. (This file briefly
+ * carried two full copies of the bar plus two references to a NavChrome that
+ * was never defined; the copies are gone and this is that component.)
  */
 function NavChrome({ right }: { right: ReactNode }) {
   return (

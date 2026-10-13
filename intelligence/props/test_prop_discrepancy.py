@@ -42,6 +42,22 @@ from intelligence.props.prop_discrepancy_engine import (
 )
 
 
+def _require_real_sheets() -> None:
+    """Skip honestly when the real input sheets are absent.
+
+    The 2026-10-11 edge/shade sheets were never committed to any branch, so on
+    a clean checkout the end-to-end tests below cannot run. Same pattern as
+    test_sgp_correlation_estimator.py uses for the nflverse parquet: skip with
+    an explicit reason rather than fail on a missing input file.
+    """
+    if not EDGE_SHEET.exists() or not SHADE_SHEET.exists():
+        pytest.skip(
+            "real prop sheets not present on this checkout "
+            f"(looked for {EDGE_SHEET} and {SHADE_SHEET}); "
+            "the 2026-10-11 sheets were never committed"
+        )
+
+
 # ---------------------------------------------------------------------------
 # Breakeven rates: derived, not assumed
 # ---------------------------------------------------------------------------
@@ -434,6 +450,7 @@ def test_an_edge_that_does_not_survive_the_normal_basis_is_never_investment_grad
 # ---------------------------------------------------------------------------
 
 def test_the_real_sheets_are_present_and_parse():
+    _require_real_sheets()
     assert EDGE_SHEET.exists(), EDGE_SHEET
     assert SHADE_SHEET.exists(), SHADE_SHEET
     props = read_edge_sheet(EDGE_SHEET)
@@ -446,6 +463,7 @@ def test_the_real_sheets_are_present_and_parse():
 
 
 def test_shade_sheet_confirms_it_carries_lines_and_no_prices():
+    _require_real_sheets()
     """
     Pins the blocker so it cannot quietly change: the shade rows are line values
     only. If a future sheet adds price columns this test SHOULD fail, which is
@@ -459,6 +477,7 @@ def test_shade_sheet_confirms_it_carries_lines_and_no_prices():
 
 
 def test_board_ranks_the_real_sheet_and_is_json_serialisable():
+    _require_real_sheets()
     props = read_edge_sheet(EDGE_SHEET)
     shades = read_shade_sheet(SHADE_SHEET)
     result = build_board(props, shades, market="5-flex")
@@ -472,6 +491,7 @@ def test_board_ranks_the_real_sheet_and_is_json_serialisable():
 
 
 def test_board_picks_the_better_side_and_agrees_with_its_own_probabilities():
+    _require_real_sheets()
     props = read_edge_sheet(EDGE_SHEET)
     result = build_board(props, read_shade_sheet(SHADE_SHEET))
     for r in result["board"]:
@@ -483,6 +503,7 @@ def test_board_picks_the_better_side_and_agrees_with_its_own_probabilities():
 
 
 def test_every_player_in_the_edge_sheet_is_joined_to_a_game():
+    _require_real_sheets()
     """An unjoined player would silently lose its shade context."""
     props = read_edge_sheet(EDGE_SHEET)
     missing = [p.player for p in props if p.player not in PLAYER_GAME]
@@ -490,6 +511,7 @@ def test_every_player_in_the_edge_sheet_is_joined_to_a_game():
 
 
 def test_board_marks_props_without_shade_context_as_none():
+    _require_real_sheets()
     props = read_edge_sheet(EDGE_SHEET)
     shades = read_shade_sheet(SHADE_SHEET)
     trimmed = {k: v for k, v in shades.items() if k != "BUF@LAR"}
@@ -499,6 +521,7 @@ def test_board_marks_props_without_shade_context_as_none():
 
 
 def test_shade_scenario_rescales_volume_by_the_pinnacle_ratio():
+    _require_real_sheets()
     props = read_edge_sheet(EDGE_SHEET)
     shades = read_shade_sheet(SHADE_SHEET)
     result = build_board(props, shades)
@@ -512,6 +535,7 @@ def test_shade_scenario_rescales_volume_by_the_pinnacle_ratio():
 
 
 def test_shade_is_reported_beside_ev_and_never_inside_it():
+    _require_real_sheets()
     """
     The shade is context, not a probability input. EV must be a pure function of
     p_win and the breakeven, so the presence of a shade cannot move it.
@@ -527,6 +551,7 @@ def test_shade_is_reported_beside_ev_and_never_inside_it():
 
 
 def test_alt_market_breakeven_is_harder_so_ev_is_lower():
+    _require_real_sheets()
     """A 57.1% breakeven is stricter than 54.2%, so every EV must be lower."""
     props = read_edge_sheet(EDGE_SHEET)
     shades = read_shade_sheet(SHADE_SHEET)

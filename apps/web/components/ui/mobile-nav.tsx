@@ -22,6 +22,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Today's picks", href: "/picks" },
       { label: "Our record", href: "/calibration" },
       { label: "Bankroll", href: "/bankroll" },
+      { label: "SGP projections", href: "/sgp-projections" },
       { label: "NFL hub", href: "/house" },
     ],
   },
