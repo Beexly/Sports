@@ -24,6 +24,8 @@ export type LocalTimeFormat =
   | "kickoff"
   /** "Sunday, September 7, 2025" — headline date, no time-of-day. */
   | "date-long"
+  /** "Sep 7, 2025" — compact date, no time-of-day. */
+  | "date-short"
   /** "1:00 PM EDT" — time only, always carrying its zone. */
   | "clock"
   /** "Sep 7, 1:00 PM EDT" — data/refresh stamps. */
@@ -41,6 +43,11 @@ const OPTIONS: Record<LocalTimeFormat, Intl.DateTimeFormatOptions> = {
   "date-long": {
     weekday: "long",
     month: "long",
+    day: "numeric",
+    year: "numeric",
+  },
+  "date-short": {
+    month: "short",
     day: "numeric",
     year: "numeric",
   },

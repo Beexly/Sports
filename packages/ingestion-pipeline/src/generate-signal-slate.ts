@@ -182,6 +182,8 @@ export function blendIndependentHomeFair(
  */
 const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
+export type SignalGrade = PickGrade;
+
 /**
  * The one sentence that keeps a signal-board grade from being read as a market-
  * board grade. Written onto the pick's `reasoning`, which is customer-visible.

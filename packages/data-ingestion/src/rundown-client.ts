@@ -420,6 +420,7 @@ export type RundownFetchResult = {
    * True when every requested day in the day-span was successfully fetched.
    */
   readonly complete?: boolean;
+  readonly failedDays?: readonly string[];
 };
 
 export async function fetchRundownEventsForSport(

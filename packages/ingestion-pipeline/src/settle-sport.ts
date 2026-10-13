@@ -111,6 +111,7 @@ export interface SettleSportConfig {
  *  UTC hour bucket is used — still stable across rapid retries. */
 export interface SettleSportOptions {
   readonly scheduledWindow?: string;
+  readonly paidScoresJustifiedSports?: readonly string[] | Set<string> | ReadonlySet<string>;
 }
 
 export interface SettleSportResult {

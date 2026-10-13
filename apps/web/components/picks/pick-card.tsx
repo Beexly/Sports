@@ -19,7 +19,9 @@ import {
   consensusEvidenceCaption,
   isBookmakerConsensusClaim,
   type PublicConsensusPick,
-} from "@/lib/claims/public-consensus-claim";import Link from "next/link";
+} from "@/lib/claims/public-consensus-claim";
+import Link from "next/link";
+import { LocalTime } from "@/components/ui/local-time";
 
 // ─────────────────────────────────────────────
 // Main PickCard

@@ -83,3 +83,27 @@ export function probOverInt(post: BetaPosterior, line: number, attempts: number)
 
 export type IntPosterior = BetaPosterior;
 export type IntPrior = BetaPrior;
+
+export const fitIntPerAttemptPrior = fitIntPrior;
+
+export function posteriorIntPerAttempt(
+  prior: BetaPrior,
+  arg2: number | { readonly attempts: number; readonly ints: number },
+  arg3?: number,
+): BetaPosterior {
+  if (typeof arg2 === "object" && arg2 !== null) {
+    return intPosterior(prior, arg2.ints, arg2.attempts);
+  }
+  return intPosterior(prior, arg2, arg3 ?? 0);
+}
+
+export function probIntGivenAttempts(
+  post: BetaPosterior,
+  attemptsOrLine: number,
+  attempts?: number,
+): number {
+  if (attempts !== undefined) {
+    return probOverInt(post, attemptsOrLine, attempts);
+  }
+  return probOverInt(post, 0, attemptsOrLine);
+}
