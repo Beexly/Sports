@@ -201,6 +201,12 @@ def _model_block(
     else:
         side_n, ev_best_n = "UNDER", ev_under_n
 
+    params_source = params.get("params_source") or (
+        "outbox/props_ev_board_latest.json — the engine's prior board "
+        "artifact, built from docs/props/research/2026-10-11/"
+        "edge_sheet_pp_vs_dk_v2.csv (DraftKings distribution "
+        "parameters); the sheet itself is not on any branch"
+    )
     model = {
         "mu": mu,
         "sigma": sigma,
@@ -208,14 +214,14 @@ def _model_block(
         "p_over": p_over,
         "p_under": p_under,
         "p_over_normal_basis": p_over_n,
-        "params_source": (
-            "outbox/props_ev_board_latest.json — the engine's prior board "
-            "artifact, built from docs/props/research/2026-10-11/"
-            "edge_sheet_pp_vs_dk_v2.csv (DraftKings distribution "
-            "parameters); the sheet itself is not on any branch"
-        ),
+        "params_source": params_source,
         "sheet_game": params.get("sheet_game"),
     }
+    if params.get("sample") is not None:
+        # Measured-parameter entries (props_model_side.py) carry the
+        # sample their (mu, sigma) was estimated from; recovered sheet
+        # parameters have no sample to carry.
+        model["sample"] = params["sample"]
     comparison = {
         "fair_over_shin": fair_over,
         "model_minus_fair_over": p_over - fair_over,
@@ -236,10 +242,16 @@ def build_board_rows(
     registry: Dict[Tuple[str, str], Dict[str, object]],
     fetched_at: str,
     game_label: Optional[str] = None,
+    missing_notes: Optional[Dict[Tuple[str, str], str]] = None,
 ) -> Tuple[List[dict], List[dict]]:
     """
     Join feed records to the model registry. Returns (rows_with_model,
     priced_only_rows). Pure: no network, no clock.
+
+    `missing_notes` optionally overrides the priced-only reason per
+    (player_lower, stat) — a caller whose registry comes from a different
+    source than the recovered sheet (e.g. measured game-log distributions)
+    states its own reasons; pairs it does not name keep NO_MODEL_NOTE.
     """
     with_model: List[dict] = []
     priced_only: List[dict] = []
@@ -275,7 +287,7 @@ def build_board_rows(
         key = (str(rec["player"]).strip().lower(), str(rec["stat"]).strip())
         params = registry.get(key)
         if params is None:
-            row["model_note"] = NO_MODEL_NOTE
+            row["model_note"] = (missing_notes or {}).get(key, NO_MODEL_NOTE)
             priced_only.append(row)
             continue
         model, comparison, note = _model_block(
@@ -306,6 +318,9 @@ def build_artifact(
     registry: Dict[Tuple[str, str], Dict[str, object]],
     fetched_at: str,
     model_board_path: Path = MODEL_BOARD_DEFAULT,
+    missing_notes: Optional[Dict[Tuple[str, str], str]] = None,
+    caveat: Optional[str] = None,
+    model_provenance: Optional[Dict[str, object]] = None,
 ) -> Dict[str, object]:
     games: List[dict] = []
     n_priced = n_model = 0
@@ -316,7 +331,8 @@ def build_artifact(
         # source did not state.
         label = " vs ".join(str(t) for t in teams) if teams else None
         with_model, priced_only = build_board_rows(
-            gb["records"], registry, fetched_at, game_label=label  # type: ignore[arg-type]
+            gb["records"], registry, fetched_at, game_label=label,  # type: ignore[arg-type]
+            missing_notes=missing_notes,
         )
         n_priced += len(with_model) + len(priced_only)
         n_model += len(with_model)
@@ -334,12 +350,24 @@ def build_artifact(
                 "priced_only_rows": priced_only,
             }
         )
+    if model_provenance is None:
+        model_provenance = {
+            "source": str(model_board_path.relative_to(REPO_ROOT))
+            if model_board_path.is_relative_to(REPO_ROOT)
+            else str(model_board_path),
+            "recovered_pairs": len(registry),
+            "note": (
+                "(player, stat) -> (dk_mu, dk_sigma) recovered from the "
+                "engine's prior board artifact; the underlying edge sheet "
+                "is not on any branch"
+            ),
+        }
     return {
         "label": "DIAGNOSTIC",
         "is_pick": False,
         "is_edge_claim": False,
         "rvc_cleared": False,
-        "caveat": CAVEAT,
+        "caveat": CAVEAT if caveat is None else caveat,
         "generated_at": fetched_at,
         "provenance": {
             "prices": {
@@ -350,17 +378,7 @@ def build_artifact(
                 "fetched_at": fetched_at,
                 "devig": "intelligence/props/prop_discrepancy_engine.devig_two_way (Shin; multiplicative beside it)",
             },
-            "model_distributions": {
-                "source": str(model_board_path.relative_to(REPO_ROOT))
-                if model_board_path.is_relative_to(REPO_ROOT)
-                else str(model_board_path),
-                "recovered_pairs": len(registry),
-                "note": (
-                    "(player, stat) -> (dk_mu, dk_sigma) recovered from the "
-                    "engine's prior board artifact; the underlying edge sheet "
-                    "is not on any branch"
-                ),
-            },
+            "model_distributions": model_provenance,
             "engine": {
                 "module": "intelligence/props/props_live_board.py",
                 "price_feed": "intelligence/props/pinnacle_prop_feed.py",
