@@ -46,6 +46,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve as pathResolve } from "node:path";
+import { registerHooks } from "node:module";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = pathResolve(HERE, "..", "..");
@@ -79,7 +80,19 @@ export function installWebAliasResolver() {
     return candidates;
   };
 
-  // Hooks dropped to resolve node-version-parity.
+  registerHooks({
+    resolve(specifier, context, nextResolve) {
+      const candidates = resolveCandidates(specifier, context.parentURL);
+      if (candidates) {
+        for (const candidate of candidates) {
+          if (existsSync(candidate)) {
+            return nextResolve(pathToFileURL(candidate).href, context);
+          }
+        }
+      }
+      return nextResolve(specifier, context);
+    },
+  });
   globalThis.__gseAliasResolverInstalled = true;
   return true;
 }
