@@ -133,10 +133,10 @@ def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: 
     }
     # Layer1 + Layer2 fusion: when real market priors and ingested signals are
     # supplied, the board carries the L4 posterior and its full update math.
-    if priors and signals:
+    if priors:
         from reasoning.bayes import update_all  # local import keeps the host lean
 
-        updates = update_all(priors, signals)
+        updates = update_all(priors, signals or [])
         board["bayes_updates"] = [u.to_dict() for u in updates]
         by_hyp: dict[str, dict[str, Any]] = {}
         for u in updates:
@@ -146,16 +146,32 @@ def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: 
                 "prior_source": u.prior_source,
                 "steps": len(u.steps),
             }
+        # per-candidate posteriors: ML updates match the MONEYLINE candidate;
+        # a total prior (when present) matches the TOTAL candidate.
+        home_u = next((u for u in updates if u.hypothesis.endswith("home win")), None)
+        away_u = next((u for u in updates if u.hypothesis.endswith("away win")), None)
+        total_u = next((u for u in updates if "total" in u.hypothesis.lower()), None)
         for cand in candidates:
             m = by_hyp.get(cand["play"])
             if m:
                 cand["market_prior"] = m["prior"]
                 cand["posterior"] = m["posterior"]
                 cand["update_steps"] = m["steps"]
+            if cand["play"] == "MONEYLINE" and (home_u or away_u):
+                if home_u:
+                    cand["posterior_home"] = home_u.posterior
+                    cand["prior_home"] = home_u.prior
+                if away_u:
+                    cand["posterior_away"] = away_u.posterior
+                    cand["prior_away"] = away_u.prior
                 cand["note"] = (
                     "market prior (Layer 1) updated by ingested signals (Layer 2); "
-                    "posterior shown with its steps in bayes_updates"
+                    "per-side posteriors with steps in bayes_updates"
                 )
+            elif cand["play"] == "TOTAL" and total_u:
+                cand["market_prior"] = total_u.prior
+                cand["posterior"] = total_u.posterior
+                cand["note"] = "total prior updated by ingested signals"
     return board
 
 
