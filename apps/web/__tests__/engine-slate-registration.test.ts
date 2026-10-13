@@ -8,8 +8,6 @@ import {
   isLiveDfs,
   registerDfsSlateProvider,
 } from "@/lib/integrations/dfs";
-import { DFS_SLATE } from "@/lib/fantasy/dfs-slate";
-
 /**
  * Proves the wire-up this fix lands in
  * `app/api/cron/engine-dfs-slate/route.ts`: the cron now calls
@@ -69,9 +67,12 @@ describe("engine DFS provider registration (cron wire-up)", () => {
     expect(isLiveDfs(LIVE_ENV)).toBe(true);
   });
 
-  it("stays illustrative while DFS_PROVIDER is unset, even after registration", () => {
+  it("stays EMPTY while DFS_PROVIDER is unset, even after registration", () => {
+    // Before 2026-10-12 this asserted the illustrative fixture's length —
+    // the silent fallback the real-slate wiring removed. Registered but
+    // unkeyed now serves an explicit empty slate, never fiction.
     registerWithCache();
-    expect(activeDfsSlate(DARK_ENV)).toHaveLength(DFS_SLATE.length);
+    expect(activeDfsSlate(DARK_ENV)).toHaveLength(0);
     expect(isLiveDfs(DARK_ENV)).toBe(false);
   });
 

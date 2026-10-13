@@ -52,7 +52,11 @@ const mocks = vi.hoisted(() => ({
   loadDfsSalaries: vi.fn(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+// `isAdminEmail` joined the auth surface when tier-access gained its admin
+// path; the mock must carry it or every render throws before the paywall
+// logic under test is reached (the 9 failures this repairs were that throw,
+// not entitlement behaviour).
+vi.mock("@/lib/auth", () => ({ auth: mocks.auth, isAdminEmail: () => false }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 vi.mock("@/lib/dfs/salaries", () => ({ loadDfsSalaries: mocks.loadDfsSalaries }));
 

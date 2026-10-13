@@ -2,33 +2,48 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { activeDfsSlate, isLiveDfs, resolveDfsSlateProvider } from "@/lib/integrations/dfs";
+import {
+  activeDfsSlate,
+  isLiveDfs,
+  resolveDfsSlateProvider,
+  EMPTY_DFS,
+  ILLUSTRATIVE_DFS,
+} from "@/lib/integrations/dfs";
 
 /**
- * The optimizer's honesty contract.
+ * The optimizer's honesty contract (rewritten 2026-10-12 for the real-slate
+ * wiring, motif/web-dfs-real-2026-10-12).
  *
- * `activeDfsSlate()` returns `ILLUSTRATIVE_DFS` — fictional players — for every
- * caller, because no licensed salary feed is registered. That is a legitimate
- * default and the repo is candid about it elsewhere (`/board/gate` badges
- * illustrative rows, `/airwave` labels its personas, `airwave/expert-board`
- * prints "Illustrative ledger · fictional personas"). The optimizer's own
- * arithmetic is real, so the surface is allowed to exist.
+ * The old contract blessed a silent illustrative default: `activeDfsSlate()`
+ * returned fictional players for every caller, and the ONLY thing standing
+ * between that fiction and a customer was a disclosure string on one page.
+ * That default is gone. The contract now is:
  *
- * What is NOT allowed is the player pool being silently presented as real. Law 8
- * forbids fabricated product data, and a customer cannot tell a fictional slate
- * from a licensed one unless the page says so. This test exists because that
- * disclosure was a bare string literal with nothing pinning it: one careless
- * edit, or a merge that reordered the conditional, would ship made-up players
- * under a heading that reads like live salaries. The disclosure must therefore
- * be a FUNCTION of the live state, not a constant.
+ *   - the seam returns the registered REAL slate, or an explicit EMPTY
+ *     slate — never fiction by default;
+ *   - the sample fixture is reachable only behind an explicit dev opt-in
+ *     (`DFS_SAMPLE_SLATE=1`), and any surface rendering it must banner it
+ *     as SAMPLE (pinned in dfs-customer-data-contract.test.tsx);
+ *   - the DFS page's provenance note is a FUNCTION of the slate state —
+ *     real pool, empty pool, and live-salary states each say so — never a
+ *     constant that happens to be true in one state.
  */
 const PAGE = readFileSync(join(process.cwd(), "app/fantasy/dfs/page.tsx"), "utf8");
 
 describe("DFS provider: no fabricated data reaches a caller unlabelled", () => {
-  it("the fallback slate is explicitly marked not live", () => {
+  it("the default fallback is an explicit empty slate, marked not live", () => {
     const provider = resolveDfsSlateProvider({});
+    expect(provider).toBe(EMPTY_DFS);
     expect(provider.live).toBe(false);
-    expect(provider.name).toMatch(/illustrative/i);
+    expect(provider.name).toMatch(/empty/i);
+    expect(activeDfsSlate({})).toEqual([]);
+  });
+
+  it("the sample fixture requires the explicit dev opt-in, and is never live", () => {
+    expect(resolveDfsSlateProvider({ DFS_SAMPLE_SLATE: "1" })).toBe(ILLUSTRATIVE_DFS);
+    expect(ILLUSTRATIVE_DFS.live).toBe(false);
+    expect(ILLUSTRATIVE_DFS.name).toMatch(/illustrative|sample/i);
+    expect(isLiveDfs({ DFS_SAMPLE_SLATE: "1" })).toBe(false);
   });
 
   it("a registered-but-unkeyed provider still refuses to go live", () => {
@@ -37,41 +52,37 @@ describe("DFS provider: no fabricated data reaches a caller unlabelled", () => {
     // founder-gated pattern.
     expect(isLiveDfs({})).toBe(false);
   });
-
-  it("the optimizer is fed the illustrative pool only while dark", () => {
-    const slate = activeDfsSlate({});
-    expect(slate.length).toBeGreaterThan(0);
-    // Structural: the pool exists and is the fixture, so the disclosure below
-    // is the ONLY thing standing between this data and a customer.
-    expect(slate.every((p) => typeof p.name === "string" && p.name.length > 0)).toBe(true);
-  });
 });
 
 describe("the DFS page discloses the pool state as a function of that state", () => {
   it("does not render the sample-slate note unconditionally", () => {
     // The bug this pins: `note="Running on a sample slate..."` was a constant
     // prop, so it displayed over LIVE salaries too. The note must be derived
-    // from `live`, which is computed from the feed's own status.
+    // from the slate/feed state.
     expect(PAGE).not.toMatch(/note="[^"]*sample slate[^"]*"/i);
   });
 
-  it("carries both disclosures, so neither the live nor the dark state is silent", () => {
+  it("carries the disclosures for every state, so no state is silent", () => {
+    // Live salaries…
     expect(PAGE).toMatch(/live\s*\?\s*[\s\S]{0,2000}?(?:live salaries|real|connected)/i);
+    // …the missing licensed feed…
     expect(PAGE).toMatch(/No licensed salary feed is connected/i);
+    // …and the measured pool / empty pool states.
+    expect(PAGE).toMatch(/measured/i);
+    expect(PAGE).toMatch(/stands empty|empty rather/i);
   });
 
-  it("keeps the page out of the index while the pool can be illustrative", () => {
-    // An illustrative optimizer page that ranks for "DFS optimizer" is a
-    // fabricated surface with an SEO tail. The existing noindex is what keeps
-    // the fallback off the search surface entirely.
+  it("keeps the page out of the index while salaries are not real", () => {
+    // An optimizer page whose cap cannot bind (no real salaries) should not
+    // rank for "DFS optimizer" as if it were the finished product. The
+    // existing noindex stays until the salary feed is real.
     expect(PAGE).toMatch(/robots:\s*\{\s*index:\s*false/);
   });
 
-  it("still tells the truth about the math when the pool is not real", () => {
-    // The distinction the customer needs: the ALGORITHM is real, the POOL is
-    // not. Losing the first half would understate the product; losing the
-    // second would overstate it.
+  it("still tells the truth about the math in every state", () => {
+    // The distinction the customer needs: the ALGORITHM is real; the POOL's
+    // provenance is stated per state. Losing the first half would understate
+    // the product; losing the second would overstate it.
     expect(PAGE).toMatch(/math is real/i);
-    expect(PAGE).toMatch(/player pool is illustrative|illustrative pool|sample pool/i);
   });
 });

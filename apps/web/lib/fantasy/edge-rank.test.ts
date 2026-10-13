@@ -1,11 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { rankLineupsByEdge } from "./edge-rank";
 import { kBest } from "./dfs-exact";
-import { activeDfsSlate } from "@/lib/integrations/dfs";
+import { DFS_SLATE } from "./dfs-slate";
 
+// The fixture is passed EXPLICITLY: `activeDfsSlate()` no longer defaults to
+// the sample pool (it returns the real slate or an explicit empty slate), and
+// a ranking test must name its fixture rather than inherit whichever pool the
+// registry happens to hold.
 describe("edge rank (Wave4 #12)", () => {
   it("ranks k-best lineups 1..k with components attached", () => {
-    const pools = kBest({ mode: "gpp" }, 5, activeDfsSlate());
+    const pools = kBest({ mode: "gpp" }, 5, DFS_SLATE);
     const ranked = rankLineupsByEdge(pools);
     expect(ranked).toHaveLength(5);
     expect(ranked.map((r) => r.rank)).toEqual([1, 2, 3, 4, 5]);
@@ -19,7 +23,7 @@ describe("edge rank (Wave4 #12)", () => {
   });
 
   it("sorts by edgeScore desc and is deterministic", () => {
-    const pools = kBest({ mode: "gpp" }, 5, activeDfsSlate());
+    const pools = kBest({ mode: "gpp" }, 5, DFS_SLATE);
     const a = rankLineupsByEdge(pools);
     const b = rankLineupsByEdge([...pools].reverse());
     expect(a.map((r) => r.edgeScore)).toEqual(b.map((r) => r.edgeScore));

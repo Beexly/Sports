@@ -5,7 +5,7 @@ import {
   resolveDfsSlateProvider,
   isLiveDfs,
   registerDfsSlateProvider,
-  ILLUSTRATIVE_DFS,
+  EMPTY_DFS,
 } from "@/lib/integrations/dfs";
 import { DFS_SLATE } from "@/lib/fantasy/dfs-slate";
 
@@ -18,8 +18,10 @@ import { DFS_SLATE } from "@/lib/fantasy/dfs-slate";
  *   sufficient on its own; that env flag is a founder-only flip under law 3 and
  *   this suite asserts the behaviour WITHOUT setting it.
  *
- * These tests pin the seam's safety property: an engine provider that finds no
- * measured data must return an empty slate, never the fictional one.
+ * These tests pin the seam's safety property: when no live provider is
+ * reachable the seam serves an explicit EMPTY slate — never the fictional
+ * one (the sample fixture is a dev opt-in, `DFS_SAMPLE_SLATE=1`, and is not
+ * what a registration failure may fall back to).
  */
 
 const LIVE_ENV = { DFS_PROVIDER: "gse-engine" } as Record<string, string | undefined>;
@@ -27,27 +29,28 @@ const LIVE_ENV = { DFS_PROVIDER: "gse-engine" } as Record<string, string | undef
 afterEach(() => registerDfsSlateProvider(null));
 
 describe("the sample-slate seam", () => {
-  it("falls back to the illustrative slate when no provider is registered", () => {
+  it("falls back to the explicit empty slate when no provider is registered", () => {
     registerDfsSlateProvider(null);
-    expect(resolveDfsSlateProvider({})).toBe(ILLUSTRATIVE_DFS);
-    expect(activeDfsSlate({})).toHaveLength(DFS_SLATE.length);
+    expect(resolveDfsSlateProvider({})).toBe(EMPTY_DFS);
+    expect(activeDfsSlate({})).toHaveLength(0);
   });
 
   it("refuses a provider that does not declare itself live", () => {
     registerDfsSlateProvider({ name: "fake", live: false, slate: () => DFS_SLATE });
-    expect(resolveDfsSlateProvider(LIVE_ENV)).toBe(ILLUSTRATIVE_DFS);
+    expect(resolveDfsSlateProvider(LIVE_ENV)).toBe(EMPTY_DFS);
+    expect(activeDfsSlate(LIVE_ENV)).toHaveLength(0);
   });
 
   it("still refuses a live provider while DFS_PROVIDER is unset (law 3 gate)", () => {
     registerDfsSlateProvider({ name: "gse", live: true, slate: () => [DFS_SLATE[0]!] });
-    // Registered + live, but the env credential is absent -> still illustrative.
-    expect(resolveDfsSlateProvider({})).toBe(ILLUSTRATIVE_DFS);
+    // Registered + live, but the env credential is absent -> empty, not fiction.
+    expect(resolveDfsSlateProvider({})).toBe(EMPTY_DFS);
     expect(isLiveDfs({})).toBe(false);
   });
 
   it("serves the live provider once the credential is present", () => {
     registerDfsSlateProvider({ name: "gse", live: true, slate: () => [DFS_SLATE[0]!] });
-    expect(resolveDfsSlateProvider(LIVE_ENV)).not.toBe(ILLUSTRATIVE_DFS);
+    expect(resolveDfsSlateProvider(LIVE_ENV)).not.toBe(EMPTY_DFS);
     expect(activeDfsSlate(LIVE_ENV)).toHaveLength(1);
     expect(isLiveDfs(LIVE_ENV)).toBe(true);
   });
