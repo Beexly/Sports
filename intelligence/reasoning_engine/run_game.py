@@ -134,9 +134,15 @@ def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: 
     # Layer1 + Layer2 fusion: when real market priors and ingested signals are
     # supplied, the board carries the L4 posterior and its full update math.
     if priors:
-        from reasoning.bayes import update_all  # local import keeps the host lean
+        from reasoning.bayes import update_all, correlated_update  # local import keeps the host lean
 
-        updates = update_all(priors, signals or [])
+        # correlated_update: same-mechanism signals compound sub-additively
+        # (the SGP insight inside the L4 update). Fall back to update_all on
+        # any signature drift so the board never dies over a math helper.
+        try:
+            updates = [correlated_update(p, signals or []) for p in priors]
+        except Exception:
+            updates = update_all(priors, signals or [])
         board["bayes_updates"] = [u.to_dict() for u in updates]
         by_hyp: dict[str, dict[str, Any]] = {}
         for u in updates:

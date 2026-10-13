@@ -107,3 +107,87 @@ def _ln(x: float) -> float:
 def _exp(x: float) -> float:
     import math
     return math.exp(x)
+
+# ---------------------------------------------------------------------------
+# L2 cross-signal correlation: signals that MOVE TOGETHER on the same game
+# (the doctrine's "biggest structural hole"). Two signals of the same direction
+# sharing a mechanism class compound sub-additively (measured rule of thumb:
+# sqrt(product) instead of product for same-mechanism stacks) - the SGP
+# insight applied to the L4 update. Same-mechanism pairs are declared, not
+# guessed, by the caller; the default pairs below are the documented ones.
+# ---------------------------------------------------------------------------
+
+SAME_MECHANISM_PAIRS: set[tuple[str, str]] = {
+    ("air_density_kg_m3", "wind_kmh"),          # both ballistics
+    ("dline_starters_out", "pressure_rate"),     # both pressure-funnel
+    ("dt1_out", "dline_starters_out"),
+}
+
+
+def correlated_update(prior: "MarketPrior", signals: list["Signal"]) -> "BayesianUpdate":
+    """update() with same-mechanism compounding.
+
+    Signals matching the prior are grouped by mechanism class (metric-based
+    pairing table). Within a group the product is dampened: LR_eff =
+    sqrt(prod(group LRs)) per pair, full LR otherwise. Every dampening is
+    recorded in the step notes so the math stays auditable.
+    """
+    import math
+
+    prior_odds = prior.prior / (1.0 - prior.prior)
+    steps: list[UpdateStep] = []
+    unapplied: list[dict[str, Any]] = []
+    groups: dict[str, list[Signal]] = {}
+    singles: list[Signal] = []
+    matched = [s for s in signals if s.hypothesis == prior.hypothesis]
+
+    for s in matched:
+        if s.direction == "neutral" or s.likelihood_ratio == 1.0:
+            unapplied.append({**s.to_dict(), "reason": "neutral / LR=1.0"})
+            continue
+        placed = False
+        for (a, b) in SAME_MECHANISM_PAIRS:
+            if s.metric == a and not any(x.metric == b for x in matched):
+                continue
+            if s.metric == b and not any(x.metric == a for x in matched):
+                continue
+            if s.metric in (a, b):
+                groups.setdefault(frozenset((a, b)).__str__(), []).append(s)
+                placed = True
+                break
+        if not placed:
+            singles.append(s)
+
+    log_shift = 0.0
+    for s in singles:
+        lr = s.effective_lr()
+        log_shift += math.log(lr) if lr > 0 else 0.0
+        steps.append(UpdateStep(metric=s.metric, subject=s.subject, direction=s.direction,
+                                lr=round(lr, 4), verification=s.verification, source=s.source, note=s.note))
+    for key, grp in groups.items():
+        if len(grp) == 1:
+            s = grp[0]
+            lr = s.effective_lr()
+            log_shift += math.log(lr) if lr > 0 else 0.0
+            steps.append(UpdateStep(metric=s.metric, subject=s.subject, direction=s.direction,
+                                    lr=round(lr, 4), verification=s.verification, source=s.source, note=s.note))
+            continue
+        prod = 1.0
+        for s in grp:
+            prod *= s.effective_lr()
+        eff = math.sqrt(prod)  # dampened same-mechanism stack (documented rule)
+        log_shift += math.log(eff) if eff > 0 else 0.0
+        names = "+".join(s.metric for s in grp)
+        steps.append(UpdateStep(
+            metric=names, subject="same-mechanism group", direction="supports",
+            lr=round(eff, 4), verification="COMPUTED", source="bayes.correlated_update",
+            note=f"same-mechanism pair damped: sqrt(prod)={eff:.4f} instead of prod={prod:.4f} (SGP compounding rule)",
+        ))
+
+    posterior_odds = prior_odds * math.exp(log_shift) if steps else prior_odds
+    posterior = posterior_odds / (1.0 + posterior_odds)
+    return BayesianUpdate(
+        hypothesis=prior.hypothesis, prior=prior.prior, prior_source=prior.source,
+        posterior=round(posterior, 4), log_odds_shift=round(log_shift, 4),
+        steps=steps, unapplied=unapplied,
+    )
