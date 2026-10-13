@@ -89,7 +89,8 @@ def causal_chains(trace, facts: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return chains
 
 
-def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: dict[str, Any]) -> dict[str, Any]:
+def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: dict[str, Any],
+                 priors: list = None, signals: list = None) -> dict[str, Any]:
     """The board is emitted on EVERY run, withhold or not.
 
     Conviction = chain coverage (observed facts / (observed + named gaps)); it is
@@ -121,7 +122,7 @@ def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: 
         })
     for i, c in enumerate(sorted(candidates, key=lambda c: -c["conviction"]), start=1):
         c["rank"] = i
-    return {
+    board = {
         "candidates": candidates,
         "conviction": conviction,
         "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
@@ -130,11 +131,39 @@ def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: 
         "mint_reason": decision.get("reason"),
         "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
     }
+    # Layer1 + Layer2 fusion: when real market priors and ingested signals are
+    # supplied, the board carries the L4 posterior and its full update math.
+    if priors and signals:
+        from reasoning.bayes import update_all  # local import keeps the host lean
+
+        updates = update_all(priors, signals)
+        board["bayes_updates"] = [u.to_dict() for u in updates]
+        by_hyp: dict[str, dict[str, Any]] = {}
+        for u in updates:
+            by_hyp[u.hypothesis] = {
+                "posterior": u.posterior,
+                "prior": u.prior,
+                "prior_source": u.prior_source,
+                "steps": len(u.steps),
+            }
+        for cand in candidates:
+            m = by_hyp.get(cand["play"])
+            if m:
+                cand["market_prior"] = m["prior"]
+                cand["posterior"] = m["posterior"]
+                cand["update_steps"] = m["steps"]
+                cand["note"] = (
+                    "market prior (Layer 1) updated by ingested signals (Layer 2); "
+                    "posterior shown with its steps in bayes_updates"
+                )
+    return board
 
 
 
 def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int = 2026,
-                weather: dict[str, Any] | None = None) -> dict[str, Any]:
+                weather: dict[str, Any] | None = None,
+                market_priors: list | None = None,
+                ingested_signals: list | None = None) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
     gaps: list[str] = []
 
@@ -196,7 +225,8 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
         "probability_before_calibration": None,
         "probability_after_calibration": None,
         "causal_chain": causal_chains(trace, facts),
-        "ranked_board": ranked_board(trace, facts, gaps, decision),
+        "ranked_board": ranked_board(trace, facts, gaps, decision,
+                                     priors=market_priors, signals=ingested_signals),
         "note": (
             f"Withheld. {decision['reason']}. The ranked board below is still emitted; a withhold is not a terminal silence."
             if withheld
