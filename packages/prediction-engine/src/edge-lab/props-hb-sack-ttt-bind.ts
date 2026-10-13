@@ -120,7 +120,11 @@ export type SackTttBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+  grain: "week_t_for_tplus1",
+  provenance: "weekly_ngs_mean",
+  layer: "L2",
+};
 
 export function bindSackTttSamples(
   rows: readonly CovariateRow[],
@@ -167,7 +171,7 @@ export function bindSackTttSamples(
         dropbacks: req.sack.dropbacks,
         sacks: req.sack.sacks,
         // Weekly NGS mean time-to-throw (seconds) — cell metadata from bus contract.
-        avgTimeToThrow: { ...BUS_CELL, value: ttt },
+        avgTimeToThrow: { ...BUS_CELL, value: ttt, knownAtWeek: row.week },
       },
     });
   }
