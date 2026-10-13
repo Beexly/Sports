@@ -241,7 +241,6 @@ function eventFromInlineOdds(
   sportKey: string,
   title: string,
   ev: Candidate,
-  lastUpdate: string,
 ): OddsApiEvent | null {
   const blk = ev.inlineOdds;
   if (!blk) return null;
@@ -253,7 +252,6 @@ function eventFromInlineOdds(
   const markets: OddsApiMarket[] = [
     {
       key: "h2h",
-      last_update: lastUpdate,
       outcomes: [
         { name: ev.away, price: awayMl },
         { name: ev.home, price: homeMl },
@@ -278,7 +276,6 @@ function eventFromInlineOdds(
       const awayPx = inlineSidePrice(blk, "pointSpread", "away", awayTeamOdds?.["spreadOdds"]);
       markets.push({
         key: "spreads",
-        last_update: lastUpdate,
         outcomes: [
           { name: ev.home, point: s, ...(homePx != null ? { price: homePx } : {}) },
           { name: ev.away, point: -s, ...(awayPx != null ? { price: awayPx } : {}) },
@@ -293,7 +290,6 @@ function eventFromInlineOdds(
       const underPx = inlineSidePrice(blk, "total", "under", blk["underOdds"]);
       markets.push({
         key: "totals",
-        last_update: lastUpdate,
         outcomes: [
           { name: "Over", point: ou, ...(overPx != null ? { price: overPx } : {}) },
           { name: "Under", point: ou, ...(underPx != null ? { price: underPx } : {}) },
@@ -307,7 +303,6 @@ function eventFromInlineOdds(
   const book: OddsApiBookmaker = {
     key: "espn_public",
     title: `ESPN/${providerName}`,
-    last_update: lastUpdate,
     markets,
   };
   return {
@@ -377,6 +372,9 @@ export async function fetchEspnOddsForSport(
     readonly horizonDays?: number;
     /** Per-request timeout (ms, default 8000) — blocked hosts fail fast. */
     readonly fetchTimeoutMs?: number;
+    /** Per-request ceiling (ms, default ESPN_ODDS_TIMEOUT_MS). Test seam:
+     * when set, it takes precedence over fetchTimeoutMs for every request. */
+    readonly timeoutMs?: number;
     /**
      * Optional second real bookmaker (Kalshi via PredExon). When provided,
      * each event may gain a second book from a live two-way exchange quote —
@@ -409,6 +407,9 @@ export async function fetchEspnOddsForSport(
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
   const timeoutMs = Math.max(1, options?.timeoutMs ?? ESPN_ODDS_TIMEOUT_MS);
+  // The ceiling every request below actually aborts on: an explicit
+  // `timeoutMs` (the test seam) wins; otherwise the fetchTimeoutMs value.
+  const requestTimeoutMs = options?.timeoutMs != null ? timeoutMs : fetchTimeoutMs;
   const errors: string[] = [];
   const now = new Date();
   const dateParams = scoreboardDateParams(now, horizonDays);
@@ -432,7 +433,7 @@ export async function fetchEspnOddsForSport(
         const res = await fetchImpl(scoreboardUrl, {
           headers: { Accept: "application/json" },
           cache: "no-store",
-          signal: AbortSignal.timeout(fetchTimeoutMs),
+          signal: AbortSignal.timeout(requestTimeoutMs),
         });
         if (!res.ok) {
           errors.push(`scoreboard${dates ? ` ${dates}` : ""}:${host}:HTTP ${res.status}`);
@@ -482,7 +483,7 @@ export async function fetchEspnOddsForSport(
       await new Promise((r) => setTimeout(r, interEventMs));
     }
 
-    const inline = eventFromInlineOdds(sportKey, meta.title, ev, lastUpdate);
+    const inline = eventFromInlineOdds(sportKey, meta.title, ev);
     if (inline) {
       out.push(inline);
       continue;
@@ -495,7 +496,7 @@ export async function fetchEspnOddsForSport(
       const res = await fetchImpl(oddsUrl, {
         headers: { Accept: "application/json" },
         cache: "no-store",
-        signal: AbortSignal.timeout(fetchTimeoutMs),
+        signal: AbortSignal.timeout(requestTimeoutMs),
       });
       if (!res.ok) {
         errors.push(`${ev.id}:HTTP ${res.status}`);

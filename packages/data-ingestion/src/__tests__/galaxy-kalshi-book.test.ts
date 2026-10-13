@@ -22,8 +22,8 @@ function fv(overrides: Partial<KalshiFairValue> = {}): KalshiFairValue {
     capturedAt: "2026-09-04T15:00:00.000Z",
     overround: 1.02,
     sides: [
-      { team: "Buffalo", ticker: "KXNFLGAME-26SEP14PITBUF-BUF", rawImpliedProb: 0.6, fairProb: 0.588 },
-      { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP14PITBUF-PIT", rawImpliedProb: 0.42, fairProb: 0.412 },
+      { team: "Buffalo", ticker: "KXNFLGAME-26SEP14PITBUF-BUF", rawImpliedProb: 0.6, fairProb: 0.588, quoteSpread: null, quoteBid: null, quoteAsk: null, quoteSource: null },
+      { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP14PITBUF-PIT", rawImpliedProb: 0.42, fairProb: 0.412, quoteSpread: null, quoteBid: null, quoteAsk: null, quoteSource: null },
     ],
     ...overrides,
   };
@@ -129,8 +129,8 @@ describe("kalshiH2hBookmaker", () => {
   it("returns null when either side lacks a live two-way quote (never invents)", () => {
     const oneSided = fv({
       sides: [
-        { team: "Buffalo", ticker: "KXNFLGAME-26SEP14PITBUF-BUF", rawImpliedProb: 0.6, fairProb: null },
-        { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP14PITBUF-PIT", rawImpliedProb: null, fairProb: null },
+        { team: "Buffalo", ticker: "KXNFLGAME-26SEP14PITBUF-BUF", rawImpliedProb: 0.6, fairProb: null, quoteSpread: null, quoteBid: null, quoteAsk: null, quoteSource: null },
+        { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP14PITBUF-PIT", rawImpliedProb: null, fairProb: null, quoteSpread: null, quoteBid: null, quoteAsk: null, quoteSource: null },
       ],
     });
     expect(kalshiH2hBookmaker({ fairValue: oneSided, homeAbbr: "BUF", awayAbbr: "PIT", homeTeam: "Buffalo Bills", awayTeam: "Pittsburgh Steelers" })).toBeNull();

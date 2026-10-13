@@ -416,6 +416,10 @@ export type RundownFetchResult = {
    * text for "429" would break the moment the message is reworded (C-278a).
    */
   readonly rateLimited?: boolean;
+  /** True when every day in the fan-out was read successfully. */
+  readonly complete: boolean;
+  /** ISO dates (yyyy-mm-dd) whose fetch failed or was refused this call. */
+  readonly failedDays: readonly string[];
 };
 
 export async function fetchRundownEventsForSport(
@@ -523,6 +527,8 @@ export async function fetchRundownEventsForSport(
         ? `rundown empty (${daySpan}d): ${errors.slice(0, 4).join("; ")}`
         : `rundown empty (${daySpan}d): no bookmaker lines`,
       rateLimited,
+      complete,
+      failedDays,
     };
   }
   return {
@@ -530,5 +536,7 @@ export async function fetchRundownEventsForSport(
     remaining: null,
     error: errors.length ? `partial: ${errors.slice(0, 3).join("; ")}` : undefined,
     rateLimited,
+    complete,
+    failedDays,
   };
 }
