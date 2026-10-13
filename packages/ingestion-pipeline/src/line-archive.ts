@@ -74,8 +74,10 @@ export interface LineArchiveDb {
          *  site below and line-archive-filter-shape.test.ts. This type is
          *  deliberately the Prisma shape and not whatever the call happens to
          *  pass; declaring it the other way round is how the outage survived
-         *  typecheck for three weeks. */
-        market?: { in: readonly string[] };
+         *  typecheck for three weeks. Prisma's generated `in` is a mutable
+         *  `string[]` — a `readonly string[]` here is NOT assignable to it
+         *  (line-archive.test.ts asserts this assignability at compile time). */
+        market?: { in: string[] };
         capturedAt?: { lte: Date };
       };
       select?: { market?: boolean };

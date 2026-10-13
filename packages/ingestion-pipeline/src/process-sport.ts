@@ -608,7 +608,23 @@ export async function processSport(
       } else {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
-        if (rd.events.length > 0) {
+        if (rd.events.length > 0 && !rd.complete) {
+          // TRUNCATED fan-out: the adapter read only part of its day span
+          // (a day 500'd, or a 429 aborted the rest), so the games on the
+          // unread days are simply absent — indistinguishable from games
+          // never scheduled. This leg REPLACES the whole board, so writing
+          // a partial slate through would report SUCCESS and advance the
+          // public freshness clock on half a board. Refuse it, exactly as
+          // an empty read is refused; the completeness signal is the
+          // adapter's own (`complete`/`failedDays` on RundownFetchResult).
+          oddsProviderTag = "therundown-empty";
+          rundownAttemptNote =
+            rd.error ??
+            `rundown truncated: ${rd.failedDays.length} day(s) unread (${rd.failedDays.join(", ")})`;
+          console.warn(
+            `${logPrefix} ${sport.key}: rundown truncated, refusing partial slate as the board — ${rundownAttemptNote}`,
+          );
+        } else if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
           console.log(
@@ -1749,10 +1765,8 @@ export async function processSport(
       note: fixtureNote ?? emptyNote,
       skippedInPlay,
       ...paidAccounting(),
-  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
-  lineSnapshotsPersisted?: number;
-  /** Games whose line-archive capture reported an error this cycle. */
-  lineArchiveErrors?: number;
+      lineSnapshotsPersisted,
+      lineArchiveErrors,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

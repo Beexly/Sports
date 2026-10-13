@@ -183,6 +183,32 @@ export function blendIndependentHomeFair(
 const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
 /**
+ * A signal-board grade. The ladder is the market board's (`PickGrade` from
+ * @sports/types): the disclosure below exists precisely to say a signal-board
+ * grade is confidence-only and is NOT that ladder's market grade.
+ */
+export type SignalGrade = PickGrade;
+
+/**
+ * How the ONE shared ladder grades a signal pick: delegate to
+ * `computePickGrade` with a null price. The confidence rungs apply and the
+ * result is capped at `UNPRICED_MAX_GRADE`, because the rungs above it are
+ * claims about a price and a signal pick has none. This is the delegation
+ * the test suite pins (generate-signal-slate.test.ts) — it replaced this
+ * lane's retired private ladder (`>=80 STRONG_PLAY, >=65 SOLID_PLAY`).
+ *
+ * It is NOT what the mint path below writes: minted model signals are
+ * graded `MODEL_SIGNAL_GRADE` (LEAN, always — see its doctrine comment),
+ * because a stored grade is a claim and this lane has no measured edge to
+ * back a higher one. This function exists so that anything which needs the
+ * shared ladder's answer for an unpriced pick gets it from the ladder
+ * itself, never from a local re-implementation.
+ */
+export function gradeSignalPick(confidence: number): SignalGrade {
+  return computePickGrade(confidence, null);
+}
+
+/**
  * The one sentence that keeps a signal-board grade from being read as a market-
  * board grade. Written onto the pick's `reasoning`, which is customer-visible.
  */

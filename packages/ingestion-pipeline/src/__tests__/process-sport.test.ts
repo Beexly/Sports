@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
+// The REAL grader and lock-selection rule (the prediction-engine mock below
+// re-exports the actual implementations): the published-terms tests grade
+// the row this pipeline actually wrote, so a stubbed grader would only
+// prove the stub agrees with itself.
+import { calculatePickResult, selectGradingLine } from "@sports/prediction-engine";
 import type { FixtureProbe } from "../fixture-confirmation.js";
 
 /**
@@ -55,13 +60,17 @@ const mocks = vi.hoisted(() => ({
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
   // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
-  // the structured 429 signal the cooldown reads (C-278a).
+  // the structured 429 signal the cooldown reads (C-278a); `complete` /
+  // `failedDays` are the day-span completeness fields the real client
+  // reports (a truncated fan-out is incomplete, never silently whole).
   fetchRundownEventsForSport: vi.fn<
     (sport: string, key: string) => Promise<{
       events: unknown[];
       remaining: number | null;
       error?: string;
       rateLimited?: boolean;
+      complete: boolean;
+      failedDays: readonly string[];
     }>
   >(),
   eventsBelowBookmakerThreshold: vi.fn<(events: unknown[], min?: number) => unknown[]>(),
@@ -1112,7 +1121,7 @@ describe("processSport", () => {
       const { primary, kalshiQuote } = thinNflSlate();
       mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
       mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null, complete: true, failedDays: [] });
       const twoBooks = { ...primary, bookmakers: [{ key: "fanduel" }, { key: "kalshi" }] };
       mocks.mergeBookmakersIntoPrimary.mockReturnValue({
         events: [twoBooks],
@@ -1136,7 +1145,7 @@ describe("processSport", () => {
     it("makes no Rundown call for a sport outside NFL and NCAAF, on a board thin enough that NFL would be filled", async () => {
       const { primary } = thinNflSlate();
       mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
 
       // Same one-book slate, same window, same key — only the sport differs.
       mocks.getOdds.mockResolvedValue({
@@ -1165,6 +1174,10 @@ describe("processSport", () => {
         remaining: null,
         error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
         rateLimited: true,
+        // Refused-read shape, as the real client returns when it cannot
+        // read the span (processSport does not consume these fields).
+        complete: false,
+        failedDays: [],
       });
 
       await processSport(SPORT, "key", gates());
@@ -1172,7 +1185,7 @@ describe("processSport", () => {
 
       // 29 minutes later — still inside the cooldown.
       nowSpy.mockReturnValue(t0 + 29 * 60 * 1000);
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null, complete: true, failedDays: [] });
       await processSport(SPORT, "key", gates());
 
       expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
@@ -1196,6 +1209,10 @@ describe("processSport", () => {
         remaining: null,
         error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
         rateLimited: true,
+        // Refused-read shape, as the real client returns when it cannot
+        // read the span (processSport does not consume these fields).
+        complete: false,
+        failedDays: [],
       });
 
       await processSport(SPORT, "key", gates());
@@ -1203,7 +1220,7 @@ describe("processSport", () => {
 
       // 31 minutes later — the cooldown has lapsed and the sport is eligible again.
       nowSpy.mockReturnValue(t0 + 31 * 60 * 1000);
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null, complete: true, failedDays: [] });
       await processSport(SPORT, "key", gates());
 
       expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(2);
@@ -1217,7 +1234,7 @@ describe("processSport", () => {
       const third = { ...primary, id: "odds-3", home_team: "Ravens", away_team: "Bengals" };
       mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
       mocks.getOdds.mockResolvedValue({ data: [primary, second, third], remainingRequests: 400 });
-      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
 
       await processSport(SPORT, "key", gates());
 
@@ -2354,7 +2371,22 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
     mocks.resolveRundownApiKey.mockReturnValue("");
-    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
+    // The reset above also wipes the C-111 confirmer stub the main describe
+    // sets; without it the batch result is undefined, the guard refuses
+    // every game, and no pick write is ever reached — the write-once terms
+    // under test here live downstream of a CONFIRMED fixture.
+    mocks.confirmBatch.mockImplementation(confirmAll);
+    mocks.circuitState.mockReturnValue("closed");
+    mocks.gameFindMany.mockResolvedValue([]);
+    // The identity resolver matches the bare gameFindUnique row and routes
+    // through the twin branch, whose record IS the gameUpdate result: it
+    // must carry the id (and names), exactly as the main describe stubs it,
+    // or confirmedGameIds fills with undefined and no pick is ever written.
+    mocks.gameUpdate.mockResolvedValue({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" });
+    mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
+    mocks.supersedeUnpublished.mockResolvedValue(true);
+    mocks.createGalaxySecondBook.mockReturnValue(undefined);
     mocks.eventsBelowBookmakerThreshold.mockReturnValue([]);
     mocks.mergeBookmakersIntoPrimary.mockImplementation((primary: unknown[]) => ({
       events: primary,

@@ -56,6 +56,27 @@ vi.mock("@sports/db", () => ({
 // so the assertions are about the CALL, never about Telegram credentials.
 vi.mock("../owner-alert.js", () => ({ notifyOwner: mocks.notifyOwner }));
 
+// The fetch surface stays inert: these tests are about DB-outage containment,
+// not about what the (real) ESPN/Odds endpoints happen to return today. When
+// this file was written the sandbox's network failed fast, so the body
+// reached the sport upsert on an empty board; with live network the real
+// ESPN fetch succeeds (~22s of real boards), the freshness/quiet-board branch
+// fires first, and the run records a different failure entirely. Stub ONLY
+// the network-touching exports; everything else in the module stays real.
+vi.mock("@sports/data-ingestion", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/data-ingestion")>();
+  return {
+    ...actual,
+    fetchEspnOddsForSport: vi.fn(async () => null),
+    createGalaxySecondBook: () => undefined,
+    OddsApiClient: class {
+      async getOdds(): Promise<{ data: unknown[]; remainingRequests: number | null }> {
+        return { data: [], remainingRequests: null };
+      }
+    },
+  };
+});
+
 import { processSport } from "../process-sport.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" };
