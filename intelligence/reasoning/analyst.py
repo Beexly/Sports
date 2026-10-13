@@ -609,6 +609,58 @@ def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
     for c in conds:
         lines.append(f"- {c}")
     lines.append("")
+    # cross-anchor: Kalshi vs DK de-vig (both Layer 1, independent books)
+    try:
+        kstore2 = [f for f in facts if f["metric"] == "kalshi_yes_ask"]
+        kalshi_home = None
+        full_home = TEAM_FULLNAMES.get(home, home)
+        home_words = [w for w in full_home.split() if len(w) > 2]
+        for k in kstore2:
+            subj = str(k["subject"]).lower()
+            if (full_home.lower() in subj or any(w.lower() in subj for w in home_words)
+                    or str(k["subject"]).rstrip(")").upper().endswith(f"-{home}")):
+                kalshi_home = k["value"]
+                break
+        book_home = None
+        book_src = None
+        traces = sorted((REPO / "intelligence" / "reasoning_engine" / "traces").glob("slate-board-*.json"))
+        for tp in reversed(traces):
+            td = _load_json(tp)
+            for g in (td or {}).get("games") or []:
+                # traces carry game_id like DAL-PHI-... and the away@home doc key
+                gid = str(g.get("game_id") or "")
+                nm = f"{gid} {g.get('espn_name') or ''} {g.get('game') or ''}"
+                if (home.lower() in nm.lower() and away.lower() in nm.lower()) or (
+                        full_home.lower() in nm.lower() and TEAM_FULLNAMES.get(away, away).lower() in nm.lower()):
+                    for u in (g.get("ranked_board") or {}).get("bayes_updates") or []:
+                        if str(u.get("hypothesis", "")).endswith("home win"):
+                            book_home = u.get("prior")
+                            book_src = u.get("prior_source")
+                            break
+                    if book_home is not None:
+                        break
+            if book_home is not None:
+                break
+        if isinstance(kalshi_home, (int, float)) and isinstance(book_home, (int, float)):
+            delta = abs(kalshi_home - book_home)
+            verdict = "AGREE - prior solid, L2 signals apply cleanly" if delta <= 0.02 else "DIVERGE - stale book or stale market; treat the prior as unreliable"
+            cross_lines = [
+                "### Cross-anchor check (Layer 1 vs Layer 1)",
+                "",
+                f"- Kalshi home price: **{kalshi_home}**",
+                f"- Book de-vig home fair: **{round(book_home, 4)}** ({book_src})",
+                f"- |delta| = **{round(delta, 4)}** -> {verdict}",
+                "",
+            ]
+            lines.extend(cross_lines)
+        else:
+            lines.append("### Cross-anchor check")
+            lines.append("")
+            lines.append(f"- unavailable: kalshi={kalshi_home}, book_fair={book_home} (one anchor missing from the corpus/traces)")
+            lines.append("")
+    except Exception as exc:
+        lines.append(f"### Cross-anchor check - failed ({type(exc).__name__}: {exc})")
+        lines.append("")
     if posterior_block:
         lines.append(posterior_block)
         lines.append("")

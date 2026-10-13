@@ -1,6 +1,6 @@
 # DAL@PHI - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-13T21:35:05.381792+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
+generated_utc: 2026-10-13T21:36:18.384661+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
 
 ## Named thesis
 
@@ -61,6 +61,12 @@ generated_utc: 2026-10-13T21:35:05.381792+00:00  |  trace: 2026-10-13T173138Z000
 - Weather shift: wind > 20 km/h or precipitation > 0.2 in at kickoff vs the cited forecast -> ballistics links must be re-run, not assumed
 - Market break: Kalshi/book prior divergence > 3 points on this game -> microstructure link is void; treat the prior as unreliable
 - Line move: closing total moves > 1.5 from the cited anchor -> the market knows something the corpus does not; downgrade conviction
+
+### Cross-anchor check (Layer 1 vs Layer 1)
+
+- Kalshi home price: **0.51**
+- Book de-vig home fair: **0.5217** (espn-inline DraftKings -120/+100 de-vig)
+- |delta| = **0.0117** -> AGREE - prior solid, L2 signals apply cleanly
 
 ### Bayesian layer (the math behind the chain)
 
