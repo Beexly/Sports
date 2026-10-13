@@ -53,13 +53,29 @@ def fetch_injuries(url: str = ESPN_INJURIES_URL) -> dict:
 
 
 def digest(payload: dict) -> dict:
-    """Compact per-team digest; keeps every row but drops bloat fields."""
-    teams = []
-    for team in payload.get("injuries", []):
-        t = team.get("team", {}) or {}
+    """Compact per-team digest; keeps every row but drops bloat fields.
+
+    ESPN's injuries feed nests teams inconsistently across versions: some
+    entries carry a top-level `team` object, others name the team only on the
+    athlete (`athlete.team`). Both are honored; a row whose team cannot be
+    resolved lands under the team key it declares, or is grouped as UNKNOWN
+    rather than dropped (dropping would hide injuries from the engine).
+    """
+    grouped: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+    for entry in payload.get("injuries", []):
+        t = entry.get("team", {}) or {}
+        abbr = t.get("abbreviation") or t.get("displayName") or ""
+        name = t.get("displayName") or ""
         rows = []
-        for item in team.get("injuries", []) or []:
+        for item in entry.get("injuries", []) or []:
             ath = item.get("athlete", {}) or {}
+            at = ath.get("team", {}) or {}
+            team_abbr = abbr or at.get("abbreviation") or "UNKNOWN"
+            team_name = name or at.get("displayName") or team_abbr
+            if team_abbr not in grouped:
+                grouped[team_abbr] = {"team": team_abbr, "name": team_name, "injuries": []}
+                order.append(team_abbr)
             rows.append(
                 {
                     "athlete": ath.get("displayName"),
@@ -71,8 +87,31 @@ def digest(payload: dict) -> dict:
                     "return_date": (item.get("details") or {}).get("returnDate"),
                 }
             )
-        teams.append({"team": t.get("abbreviation") or t.get("displayName"), "name": t.get("displayName"), "injuries": rows})
+        if abbr and abbr not in grouped:
+            grouped[abbr] = {"team": abbr, "name": name, "injuries": []}
+            order.append(abbr)
+        grouped[team_abbr_key(abbr, rows)]["injuries"].extend(rows) if False else None
+        # rows were appended per entry below
+        if abbr:
+            grouped[abbr]["injuries"].extend(rows)
+        else:
+            # team unknown at entry level: group rows by athlete team
+            by_team: dict[str, list] = {}
+            for row, item in zip(rows, entry.get("injuries", []) or []):
+                at = (item.get("athlete", {}) or {}).get("team", {}) or {}
+                key = at.get("abbreviation") or "UNKNOWN"
+                by_team.setdefault(key, []).append(row)
+            for key, rws in by_team.items():
+                if key not in grouped:
+                    grouped[key] = {"team": key, "name": key, "injuries": []}
+                    order.append(key)
+                grouped[key]["injuries"].extend(rws)
+    teams = [grouped[k] for k in order if k in grouped]
     return {"teams": teams, "team_count": len(teams), "row_count": sum(len(t["injuries"]) for t in teams)}
+
+
+def team_abbr_key(abbr: str, rows: list) -> str:
+    return abbr or "UNKNOWN"
 
 
 def main() -> int:
