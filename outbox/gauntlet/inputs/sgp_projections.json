@@ -1,0 +1,210 @@
+{
+  "label": "DIAGNOSTIC",
+  "is_pick": false,
+  "is_edge_claim": false,
+  "rvc_cleared": false,
+  "caveat": "DIAGNOSTIC ONLY \u2014 residual-versus-close has NOT cleared. These are model fair prices for a canonical QB/WR stack, not picks, edges, or recommendations. No book SGP price exists on the keyless path, so no alpha is claimed.",
+  "generated_at": "2026-10-13T00:07:41+00:00",
+  "provenance": {
+    "prices": {
+      "source_id": "galaxy-espn-inline",
+      "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+      "provider_reported_by_espn": [
+        "Draft Kings"
+      ],
+      "fetched_at": "2026-10-13T00:07:41+00:00"
+    },
+    "correlations": {
+      "path": "data/snapshots/sgp_correlations.json",
+      "leg_order": [
+        "qb_pass_yards",
+        "qb_pass_tds",
+        "wr_rec_yards",
+        "wr_anytime_td"
+      ],
+      "n_team_games": 1088,
+      "seasons": [
+        2024,
+        2025
+      ]
+    },
+    "engine": {
+      "module": "intelligence/sgp/sgp_copula_engine.py (price_sgp, gaussian copula)",
+      "draws": 50000,
+      "seed": 20261012,
+      "reference_team_total": 22.6
+    }
+  },
+  "games": [
+    {
+      "event_id": "401872994",
+      "name": "Buffalo Bills at Los Angeles Rams",
+      "commence_time": "2026-10-13T00:15Z",
+      "state": "pre",
+      "home_team": "Los Angeles Rams",
+      "away_team": "Buffalo Bills",
+      "home_abbr": "LAR",
+      "away_abbr": "BUF",
+      "provider": "Draft Kings",
+      "complete_prices": true,
+      "prices": {
+        "moneyline": {
+          "home": -175,
+          "away": 145
+        },
+        "spread": {
+          "point_home": -3.5,
+          "home": -102,
+          "away": -118
+        },
+        "total": {
+          "point": 54.5,
+          "over": -118,
+          "under": -102
+        }
+      },
+      "devig": {
+        "moneyline_home_away": {
+          "prices": [
+            -175,
+            145
+          ],
+          "booksum": 1.0445269016697587,
+          "fair_shin": [
+            0.6141001855287569,
+            0.38589981447124305
+          ],
+          "fair_multiplicative": [
+            0.6092362344582594,
+            0.39076376554174075
+          ],
+          "shin_z": 0.04463117763681763
+        },
+        "spread_home_away": {
+          "prices": [
+            -102,
+            -118
+          ],
+          "booksum": 1.0462348987192298,
+          "fair_shin": [
+            0.48183304568989005,
+            0.5181669543101098
+          ],
+          "fair_multiplicative": [
+            0.4826358742837298,
+            0.5173641257162701
+          ],
+          "shin_z": 0.04623759961964631
+        },
+        "total_over_under": {
+          "prices": [
+            -118,
+            -102
+          ],
+          "booksum": 1.0462348987192298,
+          "fair_shin": [
+            0.5181669543101098,
+            0.48183304568989005
+          ],
+          "fair_multiplicative": [
+            0.5173641257162701,
+            0.4826358742837298
+          ],
+          "shin_z": 0.04623759961964631
+        }
+      },
+      "implied_team_totals": {
+        "home": 29.0,
+        "away": 25.5
+      },
+      "provenance": {
+        "source_id": "galaxy-espn-inline",
+        "endpoint": "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        "provider_reported_by_espn": "Draft Kings",
+        "fetched_at": "2026-10-13T00:07:41+00:00"
+      },
+      "sgp_stacks": {
+        "LAR": {
+          "team_total_implied_by_real_prices": 29.0,
+          "volume_ratio_vs_reference": 1.2831858407079646,
+          "legs": [
+            "Passing yards (QB) over 250.5",
+            "Passing TDs (QB) over 1.5",
+            "Receiving yards (WR) over 75.5",
+            "Anytime TD (WR)"
+          ],
+          "scaled": {
+            "fair_probability": 0.28048,
+            "fair_american": 257,
+            "independent_probability": 0.17087162404480166,
+            "correlation_lift": 0.6414662268701771,
+            "joint_std_error": 0.0020090344427112243,
+            "z_vs_independent": 54.55773859570077,
+            "leg_probabilities": [
+              0.89516,
+              0.671,
+              0.7091,
+              0.40118
+            ],
+            "repaired_correlation": false
+          },
+          "unscaled_control": {
+            "fair_probability": 0.11982,
+            "fair_american": 735,
+            "independent_probability": 0.031232643973570454,
+            "correlation_lift": 2.8363706928364287,
+            "joint_std_error": 0.0014523303177996388,
+            "z_vs_independent": 60.99669953915465,
+            "leg_probabilities": [
+              0.4206,
+              0.54094,
+              0.41998,
+              0.32686
+            ],
+            "repaired_correlation": false
+          }
+        },
+        "BUF": {
+          "team_total_implied_by_real_prices": 25.5,
+          "volume_ratio_vs_reference": 1.1283185840707963,
+          "legs": [
+            "Passing yards (QB) over 250.5",
+            "Passing TDs (QB) over 1.5",
+            "Receiving yards (WR) over 75.5",
+            "Anytime TD (WR)"
+          ],
+          "scaled": {
+            "fair_probability": 0.1986,
+            "fair_american": 404,
+            "independent_probability": 0.08497099920026906,
+            "correlation_lift": 1.3372680310833762,
+            "joint_std_error": 0.001784141474211056,
+            "z_vs_independent": 63.68833550600435,
+            "leg_probabilities": [
+              0.69226,
+              0.5991,
+              0.56438,
+              0.36302
+            ],
+            "repaired_correlation": false
+          },
+          "unscaled_control": {
+            "fair_probability": 0.11982,
+            "fair_american": 735,
+            "independent_probability": 0.031232643973570454,
+            "correlation_lift": 2.8363706928364287,
+            "joint_std_error": 0.0014523303177996388,
+            "z_vs_independent": 60.99669953915465,
+            "leg_probabilities": [
+              0.4206,
+              0.54094,
+              0.41998,
+              0.32686
+            ],
+            "repaired_correlation": false
+          }
+        }
+      }
+    }
+  ]
+}
