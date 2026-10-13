@@ -33,6 +33,7 @@ SOURCES = REPO / "docs" / "data-sources" / "research"
 OUTROOT = REPO / "docs" / "predictions" / "research"
 
 NGS_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json"
+NGS_RUSH_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_rushing#yards.2026-07-03T13_53_05.758Z.json"
 INJ_FILE = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
 
 COVERAGE_POS = {"CB", "S", "SAF", "FS", "SS", "NB", "DB"}
@@ -80,6 +81,38 @@ def _receivers() -> dict[str, list[dict]]:
     return rows
 
 
+def _rushers() -> dict[str, list[dict]]:
+    """team -> rushers from the NGS rushing markdown table (col 3 = ATT when
+    present; this capture: PLAYER, TEAM, EFF, 8+D%, TLOS, ATT, YDS, RYOE, AVG, ...)."""
+    d = _load(NGS_RUSH_FILE)
+    if not d:
+        return {}
+    md = ((d.get("data") or {}).get("markdown") or "")
+    rows: dict[str, list[dict]] = {}
+    for line in md.splitlines():
+        if not (line.startswith("|") and line.count("|") >= 8):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 9 or not cells[0] or cells[0] == "PLAYER NAME":
+            continue
+        try:
+            row = {
+                "player": cells[0], "team": cells[1], "pos": "RB",
+                "att": int(cells[5]), "yards": float(cells[6]),
+                "ryoe": float(cells[7]),
+                "source": str(NGS_RUSH_FILE.relative_to(REPO)).replace("\\", "/"),
+            }
+        except (ValueError, IndexError):
+            continue
+        rows.setdefault(cells[1], []).append(row)
+    for team in rows:
+        seen: dict[str, dict] = {}
+        for r in sorted(rows[team], key=lambda r: r["att"], reverse=True):
+            seen.setdefault(r["player"], r)
+        rows[team] = list(seen.values())
+    return rows
+
+
 def _injuries() -> dict[str, list[dict]]:
     d = _load(INJ_FILE)
     out: dict[str, list[dict]] = {}
@@ -97,25 +130,27 @@ def _injuries() -> dict[str, list[dict]]:
     return out
 
 
-def usage_titles(team_receivers: list[dict]) -> dict[str, dict]:
-    """WR1/WR2/TE1 by targets within position; RB1 via rush table fallback (None here)."""
+def usage_titles(team_receivers: list[dict], rushers: list[dict] | None = None) -> dict[str, dict]:
+    """WR1/WR2/TE1 by targets; RB1 from the rushing table by carries."""
     titles: dict[str, dict] = {}
     wrs = [r for r in team_receivers if r["pos"] == "WR"]
     tes = [r for r in team_receivers if r["pos"] == "TE"]
-    rbs = [r for r in team_receivers if r["pos"] == "RB"]
     if wrs:
         titles["WR1"] = wrs[0]
     if len(wrs) > 1:
         titles["WR2"] = wrs[1]
     if tes:
         titles["TE1"] = tes[0]
-    if rbs:
-        titles["RB1"] = rbs[0]
+    for r in (rushers or [])[:1]:
+        r = dict(r)
+        r["usage_title_basis"] = f"rush att {r['att']}, RYOE {r['ryoe']}"
+        titles["RB1"] = r
     return titles
 
 
 def build_matchups(home: str, away: str) -> dict:
     recv = _receivers()
+    rush = _rushers()
     inj = _injuries()
     gaps: list[str] = []
     if not recv:
@@ -133,20 +168,23 @@ def build_matchups(home: str, away: str) -> dict:
         d_inj = inj.get(d, [])
         cov_out = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") in ("OUT", "INJURED RESERVE", "IR", "DOUBTFUL")]
         cov_q = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") == "QUESTIONABLE"]
-        titles = usage_titles(o_recv)
+        titles = usage_titles(o_recv, rush.get(o, []))
         for title, r in titles.items():
             pair = {
                 "side": side,
                 "usage_title": title,
                 "receiver": r["player"], "receiver_form": {
-                    "targets": r["tar"], "separation_yds": r["sep"],
-                    "yac_over_expected": r["eyac_per_r"], "catch_pct": r["catch_pct"],
+                    "targets": r.get("tar", r.get("att")),
+                    "separation_yds": r.get("sep"),
+                    "yac_over_expected": r.get("eyac_per_r"),
+                    "catch_pct": r.get("catch_pct"),
+                    "usage_basis": r.get("usage_title_basis", "targets"),
                 },
                 "opposing_coverage_status": {  # on-report statuses only (ESPN lists report players, not healthy starters)
                     "out_or_limited": [f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_out],
                     "questionable": [f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_q],
                 },
-                "source_receiver": r["source"],
+                "source_receiver": r.get("source", ""),
                 "source_defense": INJ_FILE.name,
             }
             report["pairings"].append(pair)
@@ -193,7 +231,11 @@ def emit_matchup_md(home: str, away: str, date: str) -> tuple[Path, dict]:
     for p in rep["pairings"]:
         lines.append(f"### {p['side']} - {p['usage_title']}: {p['receiver']}")
         f = p["receiver_form"]
-        lines.append(f"- targets {f['targets']} | separation {f['separation_yds']} yds | YAC/E R {f['yac_over_expected']} | catch {f['catch_pct']}% [{p['source_receiver']}]")
+        basis = f.get("usage_basis") or "targets"
+        if basis == "targets":
+            lines.append(f"- targets {f['targets']} | separation {f['separation_yds']} yds | YAC/E R {f['yac_over_expected']} | catch {f['catch_pct']}% [{p['source_receiver']}]")
+        else:
+            lines.append(f"- {basis} [{p['source_receiver']}]")
         cs = p["opposing_coverage_status"]
         lines.append(f"- opposing coverage OUT/limited: {', '.join(cs['out_or_limited']) or '(none listed)'}")
         lines.append(f"- opposing coverage QUESTIONABLE: {', '.join(cs['questionable']) or '(none)'}")

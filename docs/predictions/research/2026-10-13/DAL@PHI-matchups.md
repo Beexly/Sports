@@ -1,6 +1,6 @@
 # DAL@PHI - Matchup Report
 
-generated_utc: 2026-10-13T21:28:50.054734+00:00
+generated_utc: 2026-10-13T21:35:00.967166+00:00
 
 ## Receiver vs coverage pairings
 
@@ -19,6 +19,11 @@ generated_utc: 2026-10-13T21:28:50.054734+00:00
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: Joey Porter Jr. (CB, QUESTIONABLE), Cobie Durant (CB, QUESTIONABLE), Alijah Clark (S, QUESTIONABLE)
 
+### HOME-OFF vs AWAY-DEF - RB1: Saquon Barkley
+- rush att 280, RYOE 76.0 [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_rushing#yards.2026-07-03T13_53_05.758Z.json]
+- opposing coverage OUT/limited: (none listed)
+- opposing coverage QUESTIONABLE: Joey Porter Jr. (CB, QUESTIONABLE), Cobie Durant (CB, QUESTIONABLE), Alijah Clark (S, QUESTIONABLE)
+
 ### AWAY-OFF vs HOME-DEF - WR1: George Pickens
 - targets 137 | separation 2.3 yds | YAC/E R 3.1 | catch 67.88% [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json]
 - opposing coverage OUT/limited: (none listed)
@@ -31,6 +36,11 @@ generated_utc: 2026-10-13T21:28:50.054734+00:00
 
 ### AWAY-OFF vs HOME-DEF - TE1: Jake Ferguson
 - targets 102 | separation 3.3 yds | YAC/E R 3.7 | catch 80.39% [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json]
+- opposing coverage OUT/limited: (none listed)
+- opposing coverage QUESTIONABLE: Marcus Epps (S, QUESTIONABLE), Michael Carter II (CB, QUESTIONABLE)
+
+### AWAY-OFF vs HOME-DEF - RB1: Javonte Williams
+- rush att 252, RYOE 156.0 [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_rushing#yards.2026-07-03T13_53_05.758Z.json]
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: Marcus Epps (S, QUESTIONABLE), Michael Carter II (CB, QUESTIONABLE)
 

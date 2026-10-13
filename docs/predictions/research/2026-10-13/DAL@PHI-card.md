@@ -1,10 +1,10 @@
 # DAL@PHI - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-13T21:29:21.198386+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
+generated_utc: 2026-10-13T21:35:05.381792+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
 
 ## Named thesis
 
-**Trench Funnel** - named from the confluence cluster of 103 cited facts across 7 domains (biophysical, cognitive, dfs, environmental, market, matchup, on_field).
+**Trench Funnel** - named from the confluence cluster of 77 cited facts across 7 domains (biophysical, cognitive, dfs, environmental, market, matchup, on_field).
 
 ## Causal chain (every link cites its file)
 
@@ -14,13 +14,12 @@ generated_utc: 2026-10-13T21:29:21.198386+00:00  |  trace: 2026-10-13T173138Z000
 4. AVAILABILITY: Drew Kendall (PHI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 5. AVAILABILITY: Marcus Epps (PHI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 6. MICROSTRUCTURE: Kalshi prints 0.51 on this game [docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json] -> an independent Layer-1 anchor exists beside the de-vigged book line -> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book
-7. COGNITIVE: news flow names this game: "Bengals tight end Tanner Hudson out for season with torn pec" [docs/data-sources/research/2026-10-13/news-espn/espn-nfl-news-digest.json] -> narrative/attention pressure around the teams -> market attention (and DFS ownership) can detach from fundamentals; watch for overreaction spots
-8. TRACKING: George Pickens (DAL) carries NGS ngs_separation = 2.3 [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> measured athletic/tracking performance, not box-score residue -> usage and matchup edges the market prices late
+7. TRACKING: George Pickens (DAL) carries NGS ngs_separation = 2.3 [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> measured athletic/tracking performance, not box-score residue -> usage and matchup edges the market prices late
 
 ## Confluence
 
-- biophysical: 50 cited fact(s)
-- cognitive: 1 cited fact(s)
+- biophysical: 19 cited fact(s)
+- cognitive: 6 cited fact(s)
 - dfs: 3 cited fact(s)
 - environmental: 4 cited fact(s)
 - market: 2 cited fact(s)
@@ -42,19 +41,19 @@ generated_utc: 2026-10-13T21:29:21.198386+00:00  |  trace: 2026-10-13T173138Z000
 | injury_status_LB | Jonathan Greenard (PHI) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | injury_status_RB | Saquon Barkley (PHI) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | injury_status_WR | Hollywood Brown (PHI) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_TE | Zach Ertz (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_DT | Jalen Carter (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | injury_status_RB | Will Shipley (PHI) | Doubtful | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_PK | Jake Elliott (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_WR | Makai Lemon (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_WR | Dontayvion Wicks (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_WR | Darius Cooper (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_RB | Dameon Pierce (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_TE | Dallas Goedert (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_QB | Jalen Hurts (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_G | Tyler Steen (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | injury_status_CB | Michael Carter II (PHI) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
-| injury_status_LB | Jeremiah Trotter Jr. (PHI) | Active | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_OT | Lane Johnson (PHI) | Reserve-Ret | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_LB | Chance Campbell (PHI) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_LB | DeMarvion Overshown (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_CB | Joey Porter Jr. (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_OT | Drew Shelton (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_CB | Cobie Durant (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_OT | Tyler Guyton (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_WR | CeeDee Lamb (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_S | Alijah Clark (DAL) | Questionable | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| injury_status_DT | Jonathan Bullard (DAL) | Injured Reserve | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| kalshi_yes_ask | Philadelphia wins (KXNFLGAME-26OCT26DALPHI-PHI) | 0.51 | fires | docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json |
 
 ## Pre-registered breaking conditions
 
@@ -63,10 +62,22 @@ generated_utc: 2026-10-13T21:29:21.198386+00:00  |  trace: 2026-10-13T173138Z000
 - Market break: Kalshi/book prior divergence > 3 points on this game -> microstructure link is void; treat the prior as unreliable
 - Line move: closing total moves > 1.5 from the cited anchor -> the market knows something the corpus does not; downgrade conviction
 
+### Bayesian layer (the math behind the chain)
+
+Prior (Kalshi, Layer 1): **0.51**  
+Update steps:
+   - x1.0235 air_density_kg_m3+wind_kmh (COMPUTED) - heuristic damping (NO measured rho for this pair in the empirical matrix): sqrt(prod)=1.0235 instead of prod=1.0476; named gap, not silent
+
+Posterior: **0.5158** (log-odds shift 0.0233)
+Unapplied (neutral/off-hypothesis) signals: 0 - recorded in the board's bayes_updates, never dropped.
+
+
 ## Honest gaps
 
-- (none - every reader returned)
+- injuries: 14 PHI players appear on the report but carry ACTIVE status (listed, not firing; healthy-starters coverage is NOT in this feed)
+- injuries: 17 DAL players appear on the report but carry ACTIVE status (listed, not firing; healthy-starters coverage is NOT in this feed)
+- news: no PHI/DAL hits in espn-nfl-news-digest.json
 
-## Conviction: 100/100
+## Conviction: 70/100
 
-Conviction in the CHAIN (cited links 8 / cited + named gaps 8). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 7 / cited + named gaps 10). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

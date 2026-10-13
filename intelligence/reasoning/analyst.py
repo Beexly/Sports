@@ -154,16 +154,22 @@ def read_injuries(team: str) -> tuple[list[dict], list[str]]:
                 break
     if not entries:
         return [], [f"injuries: no entries for {full} in the gated week-6 pull"]
+    on_report = 0
     for e in entries[:40]:
         name = e.get("athlete") or e.get("name") or "?"
         pos = e.get("position") or "?"
-        status = e.get("status") or e.get("injuryStatus") or "?"
+        status = str(e.get("status") or e.get("injuryStatus") or "?")
+        if status.upper() in ("ACTIVE", "HEALTHY"):
+            on_report += 1  # healthy-but-listed: context, not a firing signal
+            continue
         facts.append({
             "domain": "biophysical", "metric": f"injury_status_{pos}",
             "subject": f"{name} ({team})", "value": status,
             "source": str(path.relative_to(REPO)).replace("\\", "/"),
             "note": "gated ESPN injury digest (published Fri 18:00 ET rule honored at pull time)",
         })
+    if on_report:
+        gaps.append(f"injuries: {on_report} {team} players appear on the report but carry ACTIVE status (listed, not firing; healthy-starters coverage is NOT in this feed)")
     return facts, gaps
 
 
@@ -210,8 +216,12 @@ def read_news(home: str, away: str, limit: int = 8) -> tuple[list[dict], list[st
         hits = []
         for it in items:
             text = " ".join(str(it.get(k, "")) for k in ("headline", "description", "summary", "title"))
-            if any(k.lower() in text.lower() for k in keys):
-                hits.append({
+            tl = text.lower()
+            home_hit = (full_home.lower() in tl) or (f" {home.lower()} " in tl)
+            away_hit = (full_away.lower() in tl) or (f" {away.lower()} " in tl)
+            if not (home_hit and away_hit):
+                continue  # single-team league news is not THIS game's news
+            hits.append({
                     "domain": "cognitive", "metric": "news_hit",
                     "subject": (it.get("headline") or it.get("title") or "?")[:120],
                     "value": text[:280],
@@ -266,6 +276,43 @@ def read_dfs(home: str, away: str, limit: int = 4) -> tuple[list[dict], list[str
         gaps.append(f"dfs: contest census unreadable ({type(exc).__name__})")
     if not facts:
         gaps.append("dfs: digest and census both missing")
+    return facts, gaps
+
+
+def read_cognitive(home: str, away: str, limit: int = 6) -> tuple[list[dict], list[str]]:
+    """Cognitive/behavioral signals from the ingested digest (team-keyed,
+    provenance-carrying): presser sentiment, coach-speak deltas, depth moves."""
+    facts, gaps = [], []
+    cpath = SOURCES / "2026-10-13" / "cognitive" / "cognitive_signals.json"
+    c = _load_json(cpath)
+    if not c:
+        return [], ["cognitive: digest missing (cognitive_signals.json)"]
+    sig = c.get("signals") or {}
+    src_rel = str(cpath.relative_to(REPO)).replace("\\", "/")
+    taken = 0
+    for stype in ("presser_sentiment", "coach_speak_delta", "depth_chart_move", "game_context_flag"):
+        for s in sig.get(stype) or []:
+            team = s.get("team") or ""
+            if team not in (home, away):
+                continue
+            # polarity-only baseline rows say nothing yet - skip honestly
+            if stype == "coach_speak_delta" and s.get("status") == "baseline_established":
+                continue
+            metric = stype
+            value = s.get("sentiment_label") or s.get("direction") or s.get("flag") or s.get("move") or ""
+            excerpt = (s.get("evidence_excerpt") or "")[:200]
+            facts.append({
+                "domain": "cognitive", "metric": metric,
+                "subject": f"{team}{(' ' + s.get('player')) if s.get('player') else ''}",
+                "value": f"{value} | {excerpt}" if excerpt else str(value),
+                "source": src_rel,
+                "note": f"agent-ingested cognitive signal (doc_count {s.get('doc_count', '?')}, published {s.get('published_utc', 'n/a')})",
+            })
+            taken += 1
+            if taken >= limit:
+                return facts, gaps
+    if taken == 0:
+        gaps.append("cognitive: no digest signals for these teams")
     return facts, gaps
 
 
@@ -326,6 +373,10 @@ def name_thesis(facts: list[dict]) -> str:
         return "Ballistics Window"
     if "dfs_artifact_hit" in metrics and "news_hit" in metrics:
         return "Chalk Divergence"
+    if any(m.startswith("coach_speak_delta") or m == "presser_sentiment" for m in metrics) and "injury_status_" in str(metrics):
+        return "Narrative Fog"
+    if any(m == "depth_chart_move" for m in metrics):
+        return "Silent Shuffle"
     if len(doms) >= 3:
         return "Confluence Play"
     if "ngs_" in str(metrics):
@@ -435,6 +486,9 @@ def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
     f, g = read_dfs(home, away)
     facts += f
     gaps += g
+    f, g = read_cognitive(home, away)
+    facts += f
+    gaps += g
     f, g = read_ngs(home, away)
     facts += f
     gaps += g
@@ -455,6 +509,62 @@ def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
         gaps.extend(mu["gaps"])
     except Exception as exc:
         gaps.append(f"matchup engine: unavailable ({type(exc).__name__})")
+
+    # Move 5 (dot-connection): the L4 posterior belongs in the card too.
+    # Build Signal records from the cited facts (only MEASURED/COMPUTED-tier
+    # facts with numeric LR-bearing metrics), take the Kalshi price as prior,
+    # and run bayes.correlated_update with the full step math shown.
+    posterior_block = ""
+    try:
+        import sys as _sys
+        _here = str(REPO / "intelligence")
+        if _here not in _sys.path:
+            _sys.path.insert(0, _here)
+        from reasoning.signals import Signal, MarketPrior
+        from reasoning.bayes import correlated_update
+
+        LR_BY_METRIC = {
+            "air_density_kg_m3": (1.10, "supports"),
+            "wind_kmh": (1.05, "contradicts"),
+        }
+        kstore = [f for f in facts if f["metric"] == "kalshi_yes_ask"]
+        if kstore:
+            side, price = None, None
+            full_home = TEAM_FULLNAMES.get(home, home)
+            home_words = [w for w in full_home.split() if len(w) > 2]  # city + nickname words
+            for k in kstore:
+                subj = str(k["subject"])
+                subj_l = subj.lower()
+                # match by full name, by any distinctive team word, or by the ticker suffix (-PHI)
+                if (full_home.lower() in subj_l
+                        or any(w.lower() in subj_l for w in home_words)
+                        or subj.rstrip(")").upper().endswith(f"-{home}")):
+                    side, price = "home", k["value"]
+                    break
+            if side == "home" and isinstance(price, (int, float)) and 0.02 < price < 0.98:
+                prior = MarketPrior(hypothesis=f"{away}@{home} {side} win", prior=price,
+                                    source=f"kalshi yes ask {price}", note="card-fused L4 (Layer 1 = prediction market)")
+                sigs = []
+                for f in facts:
+                    lr = LR_BY_METRIC.get(f["metric"])
+                    if lr and isinstance(f.get("value"), (int, float)):
+                        sigs.append(Signal(domain=f["domain"], metric=f["metric"], subject=f["subject"],
+                                           direction=lr[1], hypothesis=prior.hypothesis,
+                                           likelihood_ratio=lr[0], verification="MEASURED"))
+                if sigs:
+                    u = correlated_update(prior, sigs)
+                    steps_txt = "\n".join(
+                        f"   - x{st.lr} {st.metric} ({st.verification}) - {st.note[:150]}" for st in u.steps
+                    ) or "   - (no firing signals; posterior = prior)"
+                    posterior_block = (
+                        f"### Bayesian layer (the math behind the chain)\n\n"
+                        f"Prior (Kalshi, Layer 1): **{u.prior}**  \n"
+                        f"Update steps:\n{steps_txt}\n\n"
+                        f"Posterior: **{u.posterior}** (log-odds shift {u.log_odds_shift})\n"
+                        f"Unapplied (neutral/off-hypothesis) signals: {len(u.unapplied)} - recorded in the board's bayes_updates, never dropped.\n"
+                    )
+    except Exception as exc:
+        posterior_block = f"### Bayesian layer\n\n(unavailable this run: {type(exc).__name__}: {exc})\n"
 
     thesis = name_thesis(facts)
     chain = build_chain(home, away, facts)
@@ -499,6 +609,9 @@ def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
     for c in conds:
         lines.append(f"- {c}")
     lines.append("")
+    if posterior_block:
+        lines.append(posterior_block)
+        lines.append("")
     lines.append("## Honest gaps")
     lines.append("")
     for g in gaps or ["(none - every reader returned)"]:
