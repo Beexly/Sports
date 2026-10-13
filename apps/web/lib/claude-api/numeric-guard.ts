@@ -106,6 +106,8 @@ export interface GroundingSet {
   readonly values?: readonly GroundedValue[];
   /** Absolute tolerance for matching a claim to an allowed value. Default 0.1. */
   readonly tolerance?: number;
+  /** Allowlist of bare numbers (matches any numeric claim by value). */
+  readonly allowed?: readonly number[];
 }
 
 export interface NumericValidation {
@@ -347,6 +349,8 @@ export function validateNumericClaims(text: string, grounding: GroundingSet): Nu
 
   const claims = extractNumericClaims(text).filter((c) => !NON_STAT_KINDS.has(c.kind));
   const isGrounded = (claim: NumericClaim): boolean =>
+    (grounding.allowed !== undefined &&
+      grounding.allowed.some((a) => Math.abs(a - claim.value) <= tolerance)) ||
     grounded.some(
       (g) => kindsAreCompatible(claim.kind, g.kind) && Math.abs(g.value - claim.value) <= tolerance,
     );

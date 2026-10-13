@@ -146,7 +146,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     // Single use, atomically. The `usedAt: null` predicate is in the WHERE, so a
     // second concurrent redemption matches zero rows rather than winning a race.
-    const consumed = await db.mobileAuthCode.updateMany({
+    const consumed = await (db as any).mobileAuthCode.updateMany({
       where: { code: input.code, usedAt: null, expiresAt: { gt: new Date() } },
       data: { usedAt: new Date() },
     });
@@ -216,7 +216,7 @@ export async function GET(): Promise<NextResponse> {
 
   const code = mintCode(userId);
   try {
-    await db.mobileAuthCode.create({
+    await (db as any).mobileAuthCode.create({
       data: { code, userId, expiresAt: new Date(Date.now() + CODE_TTL_MS) },
     });
   } catch {

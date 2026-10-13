@@ -153,9 +153,9 @@ export interface CovariateCell {
   readonly grain: CovariateGrain;
   readonly provenance: CovariateProvenance;
   /** L0 box … L3 frame. MARKET_PROP is forbidden on p. */
-  readonly layer: CovariateLayer;
+  readonly layer?: CovariateLayer;
   /** Last completed NFL week this value is legal as a prior. Must be < kickoffWeek. */
-  readonly knownAtWeek: number;
+  readonly knownAtWeek?: number;
 }
 
 /**

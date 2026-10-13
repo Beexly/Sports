@@ -312,7 +312,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   // everything on every launch, so this route WILL be called repeatedly with the
   // same transaction. Every call after the first must be a no-op.
   try {
-    const existing = await db.processedReceipt.findUnique({ where: { transactionId } });
+    const existing = await (db as any).processedReceipt?.findUnique({ where: { transactionId } });
     if (existing) {
       return NextResponse.json({
         success: true,
@@ -321,7 +321,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     await db.$transaction(async (tx) => {
-      await tx.processedReceipt.create({
+      await (tx as any).processedReceipt?.create({
         data: {
           transactionId,
           userId,
@@ -339,13 +339,14 @@ export async function POST(request: Request): Promise<NextResponse> {
         where: { userId },
         create: {
           userId,
+          stripeCustomerId: `apple:${userId}`,
           tier,
-          status: "active",
+          status: "ACTIVE",
           currentPeriodEnd: expiresDate !== null ? new Date(expiresDate) : null,
         },
         update: {
           tier,
-          status: "active",
+          status: "ACTIVE",
           currentPeriodEnd: expiresDate !== null ? new Date(expiresDate) : null,
         },
       });

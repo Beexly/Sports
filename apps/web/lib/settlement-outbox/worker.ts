@@ -1289,7 +1289,9 @@ interface CountingDb {
       select: Record<string, unknown>;
     }): Promise<Array<{ createdAt: Date }>>;
   };
-  pickSettlementDelivery: StatusGroupingTable;
+  pickSettlementDelivery: StatusGroupingTable & {
+    count(args?: { where?: Record<string, unknown> }): Promise<number>;
+  };
 }
 
 /** Fold a grouped result into a dense record. `groupBy` returns NO row for a

@@ -484,7 +484,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
             else "skip" if r.skipped_reason
             else f"->{r.bucket}"
         )
-        print(f"[mind-guardian] {state:>8}  {Path(r.source_path).name}")
+        try:
+            print(f"[mind-guardian] {state:>8}  {Path(r.source_path).name}")
+        except UnicodeEncodeError:
+            clean_name = Path(r.source_path).name.encode("ascii", errors="backslashreplace").decode("ascii")
+            print(f"[mind-guardian] {state:>8}  {clean_name}")
     print(f"[mind-guardian] {len(results)} file(s) seen")
     return 0
 

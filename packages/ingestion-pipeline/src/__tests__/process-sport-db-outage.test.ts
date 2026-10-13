@@ -56,6 +56,16 @@ vi.mock("@sports/db", () => ({
 // so the assertions are about the CALL, never about Telegram credentials.
 vi.mock("../owner-alert.js", () => ({ notifyOwner: mocks.notifyOwner }));
 
+// Isolate from live ESPN network calls so the test runs entirely in-memory.
+vi.mock("@sports/data-ingestion", async () => {
+  const actual = await vi.importActual<typeof import("@sports/data-ingestion")>("@sports/data-ingestion");
+  return {
+    ...actual,
+    fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
+    createGalaxySecondBook: vi.fn().mockReturnValue(undefined),
+  };
+});
+
 import { processSport } from "../process-sport.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" };
