@@ -159,3 +159,15 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Down conversion (SHADOW metric).
+export {
+  computeDownConversionMetrics,
+  extractDownConversionSeries,
+  DOWN_CONVERSION_MODEL_VERSION,
+  DOWN_CONVERSION_FEATURE_KEYS,
+  MIN_SERIES_TO_REPORT,
+  type DownConversionSeries,
+  type DownConversionWindow,
+  type DownConversionRecord,
+} from "./down-conversion.js";
