@@ -46,7 +46,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve as pathResolve } from "node:path";
-import { registerHooks } from "node:module";
+import { register } from "node:module";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = pathResolve(HERE, "..", "..");
@@ -63,36 +63,12 @@ export const SPORTS = Object.freeze(["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl
  */
 export function installWebAliasResolver() {
   if (globalThis.__gseAliasResolverInstalled) return false;
-  const exts = ["", ".ts", ".tsx", ".mts", ".js", ".mjs", "/index.ts", "/index.js"];
-
-  const resolveCandidates = (specifier, parentURL) => {
-    let base = null;
-    if (specifier.startsWith("@/")) {
-      base = pathResolve(WEB_ROOT, specifier.slice(2));
-    } else if (specifier.startsWith("./") || specifier.startsWith("../")) {
-      if (!parentURL || !parentURL.startsWith("file:")) return null;
-      base = pathResolve(dirname(fileURLToPath(parentURL)), specifier);
-    } else {
-      return null;
-    }
-    const candidates = exts.map((e) => base + e);
-    if (base.endsWith(".js")) candidates.unshift(base.slice(0, -3) + ".ts");
-    return candidates;
-  };
-
-  registerHooks({
-    resolve(specifier, context, nextResolve) {
-      const candidates = resolveCandidates(specifier, context.parentURL);
-      if (candidates) {
-        for (const candidate of candidates) {
-          if (existsSync(candidate)) {
-            return nextResolve(pathToFileURL(candidate).href, context);
-          }
-        }
-      }
-      return nextResolve(specifier, context);
-    },
-  });
+  // module.register() (Node >= 20.6, present on the CI-pinned major) loads the
+  // resolve hook from a separate module file. The inline registerHooks API
+  // (Node >= 22) is deliberately NOT used here: the node-version-parity
+  // guardrail bans post-floor APIs anywhere under scripts/, and CI pins
+  // Node 20.
+  register("./free-auto-settle-hooks.mjs", import.meta.url);
   globalThis.__gseAliasResolverInstalled = true;
   return true;
 }
