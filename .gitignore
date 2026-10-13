@@ -240,3 +240,6 @@ brain/local_vault/
 # Python bytecode — generated artifacts, never commit
 __pycache__/
 *.pyc
+
+# Trainer feeds are local corpus; never tracked (see brain/feeds/*/EXCLUDED.md)
+brain/feeds/*/trainer_feed.jsonl

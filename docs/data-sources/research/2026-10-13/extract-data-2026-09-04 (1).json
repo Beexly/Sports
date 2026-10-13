@@ -1,0 +1,447 @@
+{
+  "data_corpora": [
+    {
+      "url": "https://api.collegefootballdata.com/",
+      "url_citation": "https://api.collegefootballdata.com/",
+      "description": "CollegeFootballData.com REST API. The opened API documentation says it retrieves college-football game, team, player, recruiting, ranking, and analytics data; the generated client/API documents expose a historical /lines endpoint plus game, season, and week parameters. This is an API source, not a static downloadable corpus; complete endpoint coverage and response size were not verified.",
+      "description_citation": "https://api.collegefootballdata.com/",
+      "license_details": {
+        "name": "CollegeFootballData.com Terms of Use (effective August 12, 2026)",
+        "name_citation": "https://collegefootballdata.com/terms",
+        "commercial_clause_verbatim": "Commercial use is permitted. Your subscription tier determines your API usage quota, not whether you may use the API commercially. You do not need separate written permission solely because an application is paid, subscription-based, advertising-supported, affiliate-supported, or used by a business. The quota pool is shared across CFBD and CBBD. Subject to these Terms, the shared quota pool, and any other expressly listed usage limits, you may: use API Data in free or paid websites, applications, dashboards, newsletters, research products, client work, and internal business tools; privately cache, store, normalize, and retain API responses; display reasonable portions of factual API Data as part of a larger product; perform historical analysis, backtesting, feature engineering, and model training; publish and commercialize independently created analyses, models, model weights, predictions, projections, rankings, visualizations, and other Derived Outputs; export ordinary reports, query results, and Derived Outputs that do not function as a bulk copy of API Data; and retain API Data retrieved while your access was active in a private historical corpus after API access or a subscription ends, while continuing to comply with these Terms. You may not: sell, sublicense, publish, or provide API Data as a standalone dataset or bulk download; operate a raw feed, public database mirror, proxy, substitute API, or substantially equivalent data service.",
+        "commercial_clause_verbatim_citation": "https://collegefootballdata.com/terms"
+      },
+      "closing_lines_info": {
+        "exists": "partial: the opened GameLine documentation exposes opening fields and unsuffixed line fields, but does not label the unsuffixed fields as closing or provide a close timestamp.",
+        "exists_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md",
+        "observed_column_names": [
+          {
+            "value": "spread",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          },
+          {
+            "value": "formatted_spread",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          },
+          {
+            "value": "spread_open",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          },
+          {
+            "value": "over_under",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          },
+          {
+            "value": "over_under_open",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          },
+          {
+            "value": "home_moneyline",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          },
+          {
+            "value": "away_moneyline",
+            "value_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+          }
+        ]
+      },
+      "sports": [
+        {
+          "value": "college football",
+          "value_citation": "https://api.collegefootballdata.com/"
+        }
+      ],
+      "season_coverage_observed": "2016-2025 is shown as the included training history on CFBD’s 2026 Model Training Pack landing page; the complete historical range of the /lines endpoint was not verified. The API getting-started page gives a 2023 example request.",
+      "season_coverage_observed_citation": "https://collegefootballdata.com/model-training-data",
+      "last_commit": "cfbd-python client latest commit 83451c0 (September 3, 2026); the API service itself has no Git commit.",
+      "last_commit_citation": "https://github.com/CFBD/cfbd-python",
+      "size": "NOT VERIFIED for API responses or a static corpus.",
+      "size_citation": "https://api.collegefootballdata.com/",
+      "field_mapping": {
+        "format": "REST API (response format/size not verified)",
+        "gameKey": "NOT VERIFIED in opened BettingGame/GameLine schemas",
+        "season": "BettingGame.season",
+        "week": "BettingGame.week",
+        "homeTeam": "BettingGame.home_team",
+        "awayTeam": "BettingGame.away_team",
+        "commenceTime": "NOT VERIFIED",
+        "spreadLine": "GameLine.spread",
+        "totalLine": "GameLine.over_under",
+        "homeMoneyline": "GameLine.home_moneyline",
+        "awayMoneyline": "GameLine.away_moneyline"
+      }
+    },
+    {
+      "url": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+      "url_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+      "description": "ESPN college-football per-game betting release. The opened release labels itself “closing betting lines and odds,” reports 23 seasons (2004–2026), 48 assets, 286 KB, and last asset written 2026-08-27. It publishes per-season betting_{season}.parquet, .csv.gz, .rds, and one .csv asset.",
+      "description_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+      "license_details": {
+        "name": "NOT VERIFIED",
+        "name_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+        "commercial_clause_verbatim": "NOT VERIFIED: no dataset license or commercial-use clause was present on the opened release page.",
+        "commercial_clause_verbatim_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting"
+      },
+      "closing_lines_info": {
+        "exists": "yes as described by the release (“closing betting lines and odds”), but the observed table is a resolved pregame line table and has no moneyline columns or explicit close timestamp.",
+        "exists_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+        "observed_column_names": [
+          {
+            "value": "game_id",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "season",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "week",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "game_spread",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "over_under",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "home_favorite",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "home_team_spread",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "game_spread_available",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "odds_source",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          }
+        ]
+      },
+      "sports": [
+        {
+          "value": "college football",
+          "value_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting"
+        }
+      ],
+      "season_coverage_observed": "2004–2026 (23 seasons), with season defined on the release page as the starting year of the season (2024 means the 2024–25 bowl cycle).",
+      "season_coverage_observed_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+      "last_commit": "Release commit cbbe83221e1458631bffd595d4934bc3d54c6d8b; last asset written 2026-08-27.",
+      "last_commit_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+      "size": "286 KB total release; 48 assets: 23 parquet, 22 csv.gz, 2 rds, 1 csv.",
+      "size_citation": "https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_cfb_betting",
+      "field_mapping": {
+        "format": "Per-season parquet, csv.gz, RDS, and CSV assets",
+        "gameKey": "game_id",
+        "season": "season",
+        "week": "week",
+        "homeTeam": "NOT PRESENT in betting table; join by game_id to schedules.home_team",
+        "awayTeam": "NOT PRESENT in betting table; join by game_id to schedules.away_team",
+        "commenceTime": "NOT PRESENT in betting table; join by game_id to schedules.game_date",
+        "spreadLine": "home_team_spread (or game_spread, favorite-oriented)",
+        "totalLine": "over_under",
+        "homeMoneyline": "NOT OBSERVED",
+        "awayMoneyline": "NOT OBSERVED"
+      }
+    },
+    {
+      "url": "https://github.com/sportsdataverse/cfbfastR-cfb-data",
+      "url_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data",
+      "description": "Analysis-ready college-football datasets reshaped from enriched per-game JSON. The opened README lists play-by-play, box scores, advanced team/player, drive-level, roster, betting, schedule, linescore, power-index, injury, recruiting, team-talent, and returning-production outputs, with per-season parquet/RDS/CSV paths and release tags. The repository is useful for efficiency, pace/drive, recruiting, returning-production, and other feature engineering, but the opened repository did not contain a verified LICENSE file.",
+      "description_citation": "https://raw.githubusercontent.com/sportsdataverse/cfbfastR-cfb-data/main/README.md",
+      "license_details": {
+        "name": "NOT VERIFIED",
+        "name_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/LICENSE",
+        "commercial_clause_verbatim": "NOT VERIFIED: the opened LICENSE path returned 404 and the repository page did not display a dataset license or commercial-use clause.",
+        "commercial_clause_verbatim_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/LICENSE"
+      },
+      "closing_lines_info": {
+        "exists": "partial: the repository contains a betting dataset and a separate release page calls that release closing betting lines; the feature datasets themselves do not add moneyline fields.",
+        "exists_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md",
+        "observed_column_names": [
+          {
+            "value": "game_id",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "season",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "week",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "game_spread",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "over_under",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "home_favorite",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "home_team_spread",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "game_spread_available",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          },
+          {
+            "value": "odds_source",
+            "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data/blob/main/DATASETS.md"
+          }
+        ]
+      },
+      "sports": [
+        {
+          "value": "college football",
+          "value_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data"
+        }
+      ],
+      "season_coverage_observed": "README documents measured build floors of 2002 for cfb_recruits and 2005 for cfb_team_talent and cfb_returning_production; it does not establish complete coverage for every output. The opened release table shows individual ESPN CFB tags with 66 seasons for many advanced datasets and 23 seasons for betting.",
+      "season_coverage_observed_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data",
+      "last_commit": "25976c86f68ad65ecded3ceb769d4d4de27fe5c1, September 2, 2026.",
+      "last_commit_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data",
+      "size": "NOT VERIFIED for the repository as a whole; opened README release table examples include espn_cfb_adv_team 29.0 MB, espn_cfb_team_summaries_weekly 231.0 MB, and espn_cfb_betting 0.3 MB.",
+      "size_citation": "https://github.com/sportsdataverse/cfbfastR-cfb-data",
+      "field_mapping": {
+        "format": "parquet, RDS, and CSV per compiled season",
+        "gameKey": "game_id",
+        "season": "season",
+        "week": "week",
+        "homeTeam": "schedules.home_team",
+        "awayTeam": "schedules.away_team",
+        "commenceTime": "schedules.game_date",
+        "spreadLine": "betting.home_team_spread / betting.game_spread",
+        "totalLine": "betting.over_under",
+        "homeMoneyline": "NOT OBSERVED",
+        "awayMoneyline": "NOT OBSERVED",
+        "feature_fields": "advanced team/passing/rushing/receiving/defensive/turnover/drive/situational, power_index, recruiting, team_talent, returning_production"
+      }
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data",
+      "url_citation": "https://github.com/nflverse/nflverse-data",
+      "description": "Automated NFL data-release store. The opened README says it holds automated data releases for nflverse projects and can be downloaded with nflreadr or manually from GitHub releases. The opened nflreadr example shows play-by-play and weekly player-stat data with game/team/time and football performance fields; release-specific files were not opened.",
+      "description_citation": "https://raw.githubusercontent.com/nflverse/nflverse-data/main/README.md",
+      "license_details": {
+        "name": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+        "name_citation": "https://raw.githubusercontent.com/nflverse/nflverse-data/main/LICENSE.md",
+        "commercial_clause_verbatim": "Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to: reproduce and Share the Licensed Material, in whole or in part; and produce, reproduce, and Share Adapted Material. If You Share the Licensed Material (including in modified form), You must retain the supplied creator identification, copyright notice, notice referring to this Public License, notice referring to the disclaimer of warranties, and a URI or hyperlink to the Licensed Material where reasonably practicable; indicate if You modified the Material; and indicate that it is licensed under this Public License, including the text or URI/hyperlink to the Public License.",
+        "commercial_clause_verbatim_citation": "https://raw.githubusercontent.com/nflverse/nflverse-data/main/LICENSE.md"
+      },
+      "closing_lines_info": {
+        "exists": "NOT VERIFIED; release-specific files were not opened and the opened store pages did not expose a closing-line table.",
+        "exists_citation": "https://github.com/nflverse/nflverse-data",
+        "observed_column_names": [
+          {
+            "value": "game_id",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "home_team",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "away_team",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "season_type",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "week",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "game_date",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "posteam",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "defteam",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "yardline_100",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          },
+          {
+            "value": "quarter_seconds_remaining",
+            "value_citation": "https://github.com/nflverse/nflreadr"
+          }
+        ]
+      },
+      "sports": [
+        {
+          "value": "American football / NFL",
+          "value_citation": "https://github.com/nflverse/nflverse-data"
+        }
+      ],
+      "season_coverage_observed": "The opened nflreadr example displays 2021 play-by-play and weekly player stats; the complete release-store season range was not verified.",
+      "season_coverage_observed_citation": "https://github.com/nflverse/nflreadr",
+      "last_commit": "6d676213eeac07d381b9e14a564515d9cfe84f46, September 1, 2026, as displayed on the opened nflverse-data page.",
+      "last_commit_citation": "https://github.com/nflverse/nflverse-data",
+      "size": "NOT VERIFIED for the release store or individual assets.",
+      "size_citation": "https://github.com/nflverse/nflverse-data",
+      "field_mapping": {
+        "format": "GitHub release assets; nflreadr README also documents rds, parquet, and csv configuration",
+        "gameKey": "game_id",
+        "season": "season (observed in nflreadr example)",
+        "week": "week",
+        "homeTeam": "home_team",
+        "awayTeam": "away_team",
+        "commenceTime": "game_date",
+        "spreadLine": "NOT OBSERVED",
+        "totalLine": "NOT OBSERVED",
+        "homeMoneyline": "NOT OBSERVED",
+        "awayMoneyline": "NOT OBSERVED"
+      }
+    }
+  ],
+  "calibration_research": [
+    {
+      "title": "Beyond temperature scaling: Obtaining well-calibrated multiclass probabilities with Dirichlet calibration",
+      "title_citation": "https://arxiv.org/abs/1910.12656",
+      "authors": [
+        {
+          "value": "Meelis Kull",
+          "value_citation": "https://arxiv.org/abs/1910.12656"
+        },
+        {
+          "value": "Miquel Perello-Nieto",
+          "value_citation": "https://arxiv.org/abs/1910.12656"
+        },
+        {
+          "value": "Markus Kängsepp",
+          "value_citation": "https://arxiv.org/abs/1910.12656"
+        },
+        {
+          "value": "Telmo Silva Filho",
+          "value_citation": "https://arxiv.org/abs/1910.12656"
+        },
+        {
+          "value": "Hao Song",
+          "value_citation": "https://arxiv.org/abs/1910.12656"
+        },
+        {
+          "value": "Peter Flach",
+          "value_citation": "https://arxiv.org/abs/1910.12656"
+        }
+      ],
+      "link": "https://arxiv.org/abs/1910.12656",
+      "link_citation": "https://arxiv.org/abs/1910.12656",
+      "implementable_method": "Fit a multiclass Dirichlet calibration map on held-out predictions: log-transform the uncalibrated class probabilities, fit one regularized linear layer plus bias with a softmax output by held-out negative log likelihood, then freeze those coefficients for deterministic inference. This directly calibrates the three-way home/draw/away output.",
+      "implementable_method_citation": "https://arxiv.org/abs/1910.12656",
+      "code_link": "https://github.com/dirichletcal/dirichlet_python",
+      "code_link_citation": "https://github.com/dirichletcal/dirichlet_python"
+    },
+    {
+      "title": "Temporal Probability Calibration",
+      "title_citation": "https://arxiv.org/html/2002.02644",
+      "authors": [
+        {
+          "value": "Tim Leathart",
+          "value_citation": "https://arxiv.org/html/2002.02644"
+        },
+        {
+          "value": "Maksymilian Polaczuk",
+          "value_citation": "https://arxiv.org/html/2002.02644"
+        }
+      ],
+      "link": "https://arxiv.org/html/2002.02644",
+      "link_citation": "https://arxiv.org/html/2002.02644",
+      "implementable_method": "For probabilities emitted at different forecast horizons or sequential information lengths, fit a separate calibration map for each discrete horizon and minimize held-out negative log likelihood; alternatively fit a fixed smooth temperature function of horizon and apply it to logits. Freeze the horizon-specific maps or temperature parameters before deployment.",
+      "implementable_method_citation": "https://arxiv.org/html/2002.02644",
+      "code_link": "NO CODE",
+      "code_link_citation": "https://arxiv.org/html/2002.02644"
+    },
+    {
+      "title": "More on verification of probability forecasts for football outcomes: score decompositions, reliability, and discrimination analyses",
+      "title_citation": "https://arxiv.org/abs/2106.14345",
+      "authors": [
+        {
+          "value": "Jean-Louis Foulley",
+          "value_citation": "https://arxiv.org/abs/2106.14345"
+        }
+      ],
+      "link": "https://arxiv.org/abs/2106.14345",
+      "link_citation": "https://arxiv.org/abs/2106.14345",
+      "implementable_method": "On a held-out chronological calibration set, fit one-vs-rest logistic calibration or isotonic (iso) regression for each home/draw/away probability, renormalize the three outputs, and freeze the maps. Evaluate with reliability diagrams, Brier/log scores, and score decomposition rather than accuracy alone.",
+      "implementable_method_citation": "https://arxiv.org/abs/2106.14345",
+      "code_link": "NO CODE",
+      "code_link_citation": "https://arxiv.org/abs/2106.14345"
+    },
+    {
+      "title": "Conformal prediction beyond exchangeability",
+      "title_citation": "https://arxiv.org/abs/2202.13415",
+      "authors": [
+        {
+          "value": "Rina Foygel Barber",
+          "value_citation": "https://arxiv.org/abs/2202.13415"
+        },
+        {
+          "value": "Emmanuel J. Candes",
+          "value_citation": "https://arxiv.org/abs/2202.13415"
+        },
+        {
+          "value": "Aaditya Ramdas",
+          "value_citation": "https://arxiv.org/abs/2202.13415"
+        },
+        {
+          "value": "Ryan J. Tibshirani",
+          "value_citation": "https://arxiv.org/abs/2202.13415"
+        }
+      ],
+      "link": "https://arxiv.org/abs/2202.13415",
+      "link_citation": "https://arxiv.org/abs/2202.13415",
+      "implementable_method": "For temporal drift, compute a nonconformity score on a chronological calibration window and use a fixed recency-weighted empirical quantile rather than an unweighted quantile; use that quantile to form prediction sets or score intervals around the frozen model output. Freeze the window, weights, and quantile rule for deterministic deployment.",
+      "implementable_method_citation": "https://arxiv.org/abs/2202.13415",
+      "code_link": "NO CODE",
+      "code_link_citation": "https://arxiv.org/abs/2202.13415"
+    },
+    {
+      "title": "Variable-Based Calibration for Machine Learning Classifiers",
+      "title_citation": "https://arxiv.org/html/2209.15154v3",
+      "authors": [
+        {
+          "value": "Markelle Kelly",
+          "value_citation": "https://arxiv.org/html/2209.15154v3"
+        },
+        {
+          "value": "Padhraic Smyth",
+          "value_citation": "https://arxiv.org/html/2209.15154v3"
+        }
+      ],
+      "link": "https://arxiv.org/html/2209.15154v3",
+      "link_citation": "https://arxiv.org/html/2209.15154v3",
+      "implementable_method": "Choose a pregame variable of interest such as forecast horizon, favorite strength, conference, or weather bin; train a decision tree using only that variable on a calibration set, then fit beta calibration within each leaf (Dirichlet calibration for multiclass outputs). Freeze the tree and leaf calibrators and report both ordinary ECE and variable-based calibration error.",
+      "implementable_method_citation": "https://arxiv.org/html/2209.15154v3",
+      "code_link": "https://github.com/markellekelly/variable-wise-calibration",
+      "code_link_citation": "https://github.com/markellekelly/variable-wise-calibration"
+    }
+  ],
+  "cfbd_terms_audit": {
+    "status": "Commercial use is expressly permitted for CFBD API Data and Derived Outputs, subject to quota/access restrictions and a prohibition on selling, publishing, or providing the raw API Data as a standalone dataset, bulk download, raw feed, database mirror, proxy, substitute API, or substantially equivalent data service.",
+    "status_citation": "https://collegefootballdata.com/terms",
+    "commercial_use_clause": "Commercial use is permitted. Your subscription tier determines your API usage quota, not whether you may use the API commercially. You do not need separate written permission solely because an application is paid, subscription-based, advertising-supported, affiliate-supported, or used by a business. The quota pool is shared across CFBD and CBBD.",
+    "commercial_use_clause_citation": "https://collegefootballdata.com/terms",
+    "api_line_type": "Opening + unspecified current/latest line fields; not verified as a pure closing-line API. The opened GameLine schema explicitly names spread_open and over_under_open alongside unsuffixed spread and over_under, but does not call the unsuffixed fields closing or provide a close timestamp.",
+    "api_line_type_citation": "https://github.com/CFBD/cfbd-python/blob/main/docs/GameLine.md"
+  }
+}

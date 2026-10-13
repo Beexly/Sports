@@ -1,0 +1,1122 @@
+{
+  "collx_reverse_engineered_blueprint": {
+    "frontend_architecture": "Public CollX homepage is a Webflow-style static marketing frontend with CDN assets and links to mobile apps, account release notes, marketplace, shop and Card Dealer Pro. No public API contract or authenticated app network schema was exposed in fetched pages. ## Scope and observed architecture\nThe public marketing frontend is a Webflow-style static site: it serves HTML content and CDN-hosted assets (logo, illustrations, SVGs and PNGs under `cdn.prod.website-files.com`), with navigation out to the iOS/Google Play apps, `account.collx.app` release notes, and separate marketplace/share/shop/Card Dealer Pro properties ([homepage](https://www.collx.app/)). The page exposes no documented public REST/GraphQL API, API schema, or unauthenticated data endpoint in the fetched material. The product workflow is therefore observably app-centric: photo capture -> recognition against a card database -> collection/portfolio -> marketplace/community. It is reasonable, but an inference, that recognition, card catalog, pricing, authentication, messaging, inventory and checkout are backed by private mobile-service APIs; the public pages do not establish hostnames, routes, authentication, request formats, or database technology.\n\n## Recognition, fields and grading\nCollX says it recognizes sports and TCG cards against a database of “every known card,” then returns a card record/market value ([homepage](https://www.collx.app/)). Public release notes show scan-result preferences for **Listing Status, Asking Price, Grader, Condition, and Location**, and manual/add-item fields including **listing status, asking price, quantity, purchase price/date, location and shipping method** ([release notes](https://account.collx.app/release-notes)). The same notes document raw/graded camera modes, graded-card detection, and condition being carried through search-added cards. CollX Pro advertises 500 monthly Scan+ credits using enhanced AI recognition of card text and images for search/matching ([CollX Pro](https://www.collx.app/collx-pro)). These are observed UI/product claims, not evidence of a particular ML model or grading scale. “Grade” appears to mean recording/displaying a card's grader/condition and supporting graded-card detection; the public pages do not claim that CollX itself assigns an official third-party numeric grade.\n\n## Pricing/data model\nThe homepage states that the displayed market value is an **average based on recent transactions from marketplaces** ([homepage](https://www.collx.app/)). Indexed Google Play material additionally describes “millions of historical auction prices” and setting conditions/grades (search result: [Google Play](https://play.google.com/store/apps/details?id=app.collx.android&hl=en_US)). The app release notes distinguish market value from purchase price and listed price, mention real-time collection values, and describe Easy Price as bulk-setting prices to market average ([release notes](https://account.collx.app/release-notes)). Thus an observed conceptual data model includes canonical card identity, condition/grade, market value, listing/asking price, purchase price/date, quantity and collection/location metadata. The precise averaging window, outlier handling, marketplace coverage, currency, confidence/sample count and update cadence were not disclosed by the fetched public pages; any claim about those would be inference.\n\n## Marketplace, payments and fees\nListings support Buy Now or offers/counteroffers, multi-card Deals, messaging, seller shipping settings, order tracking and post-delivery problem/refund flows ([Marketplace FAQ](https://www.collx.app/marketplace-faq)). The FAQ says CollX charges sellers 10% of transaction price excluding shipping/taxes, covers payment-processing fees, and offers lower tiered rates for Pro/Gold at specified order amounts; it documents Stripe for seller bank withdrawals and a $10 minimum withdrawal with a $2 fee (waived for Gold) ([Marketplace FAQ](https://www.collx.app/marketplace-faq)). The User Agreement independently identifies Stripe payment processing and optional Vertical Insure shipping insurance ([Terms](https://www.collx.app/terms)).\n\n## Subscription/pricing\nCollX Pro is publicly priced at **$9.99/month** or **$99.99/year** and includes unlimited collections/stacks, CSV export with pricing and card-image URLs, $10 monthly marketplace credit, up to 10 listing photos, AI assistant and featured listings ([CollX Pro](https://www.collx.app/collx-pro)). Release notes introduce CollX Gold and describe unlimited Scan Plus credits and reduced commissions, but the fetched public pages did not expose a current Gold price/rate table ([release notes](https://account.collx.app/release-notes)). Observed conceptual schema elements: canonical card identity, condition/grade, listing status, asking price, quantity, purchase price/date, location, shipping method, market value, seller/listing/order/offer/message state; exact physical database schema is not public.",
+    "reconstructed_backend_logic": "Evidence supports a conceptual app workflow: capture/search card image, match canonical catalog, attach collection/inventory attributes, compute/display market value, optionally list, transact, ship, track and withdraw. Private service APIs and exact persistence/auth implementation are unknown; treat all backend reconstruction beyond public behavior as inference.",
+    "api_patterns_and_endpoints": [
+      "Public navigation: /collx-pro, /collx-gold, /marketplace-faq, /shipping-guide, /terms, /faq, /recently-added-sets",
+      "External app stores: Apple App Store and Google Play package app.collx.android",
+      "Marketplace behavior documented publicly: Buy Now, offers/counteroffers, Deals, messaging, tracking and refund/problem flows",
+      "No unauthenticated REST/GraphQL endpoint or API schema observed in fetched homepage/release-note material"
+    ],
+    "inferred_grading_and_pricing_algorithms": "Observed: market value is an average based on recent marketplace transactions; release notes describe real-time collection values and Easy Price bulk-setting to market average. Condition/grade is recorded and graded-card detection is supported, but CollX does not publicly establish an official numeric grading model. Unknown: window, weighting, outliers, currency, confidence and update cadence.",
+    "observed_database_schema_elements": "Canonical card identity; set/card metadata; market value; condition; grader; listing status; asking/list price; quantity; purchase price/date; location; shipping method; seller, offer, deal, order, tracking and payout concepts."
+  },
+  "technical_repository_library": [
+    {
+      "repo_name": "reverse-skill",
+      "repo_url": "https://github.com/zhaoxuya520/reverse-skill",
+      "core_engine_architecture": "Markdown playbooks plus PowerShell/Bash/Python routing and case-review tooling.",
+      "critical_code_snippets_and_functions": [
+        "routing.json keyword scoring; master-route.ps1; case-init.ps1; review_case.py SHA-256/evidence validation."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "strix",
+      "repo_url": "https://github.com/usestrix/strix",
+      "core_engine_architecture": "Python executable AI pentest runtime split into agents, core, llm, runtime, tools, reports and interfaces.",
+      "critical_code_snippets_and_functions": [
+        "run_strix_scan(); provider model wrappers; local tokened viewer and persisted scan artifacts."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "nanobrowser",
+      "repo_url": "https://github.com/nanobrowser/nanobrowser",
+      "core_engine_architecture": "Chrome/Edge extension with side-panel UI and Planner/Navigator multi-agent browser automation.",
+      "critical_code_snippets_and_functions": [
+        "Planner decomposes tasks and Navigator acts in browser; provider adapters support OpenAI-compatible and hosted/local models."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "ruflo",
+      "repo_url": "https://github.com/ruvnet/ruflo",
+      "core_engine_architecture": "TypeScript/Node meta-harness with CLI/MCP, router, swarms, agents, AgentDB/RVF memory and federation.",
+      "critical_code_snippets_and_functions": [
+        "npx ruflo init; federation_init/send/trust/audit; plugin-based swarm/autopilot/workflow routing."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "cline",
+      "repo_url": "https://github.com/cline/cline",
+      "core_engine_architecture": "Reusable coding-agent surfaces across VS Code, JetBrains, CLI, SDK and Kanban.",
+      "critical_code_snippets_and_functions": [
+        "Plan/Act approval loop; checkpoints/diffs; MCP custom tools; SDK Agent lifecycle hooks."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "cherry-studio",
+      "repo_url": "https://github.com/CherryHQ/cherry-studio",
+      "core_engine_architecture": "Electron main/preload/renderer/shared desktop client with multi-provider LLM and MCP.",
+      "critical_code_snippets_and_functions": [
+        "Mini App bridge calls cherry.ai.chat, network.fetch, file.export; TraceStore/NodeTracer observability."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "khoj",
+      "repo_url": "https://github.com/khoj-ai/khoj",
+      "core_engine_architecture": "Self-hostable Django-like personal AI monorepo with server, web, desktop/mobile and Obsidian clients.",
+      "critical_code_snippets_and_functions": [
+        "AgentMessage, OperatorRun, ToolCall, ResearchIteration; semantic search, truncation, structured-output cleanup."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Free-Auto-GPT",
+      "repo_url": "https://github.com/IntelligenzaArtificiale/Free-Auto-GPT",
+      "core_engine_architecture": "Script-oriented LangChain AutoGPT/BabyAGI with provider wrappers, tools and FAISS embeddings.",
+      "critical_code_snippets_and_functions": [
+        "ChatGPT._call; AUTOGPT tool registration; task_creation/task_execution/task_prioritization; FAISS IndexFlatL2."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "RDA-planner",
+      "repo_url": "https://github.com/hanruihua/RDA-planner",
+      "core_engine_architecture": "Python CVXPY MPC planner using ADMM obstacle decomposition and multiprocessing.",
+      "critical_code_snippets_and_functions": [
+        "MPC.control; RDA_solver lifecycle; rdaobs namedtuple; kinematic and convex obstacle constraints."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Open-AI-Design-Agent",
+      "repo_url": "https://github.com/Anil-matcha/Open-AI-Design-Agent",
+      "core_engine_architecture": "npm-workspaces Next.js/React frontend, FastAPI server and shared design-agent package.",
+      "critical_code_snippets_and_functions": [
+        "Plan→Route→Execute→Assemble; brand kit/reference propagation and Muapi/Vibe Workflow gateway."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "multi-mapcher",
+      "repo_url": "https://github.com/url-kaist/multi-mapcher",
+      "core_engine_architecture": "C++17 LiDAR multi-session SLAM core with ROS1/ROS2 adapters, GTSAM/PCL/Eigen/TBB.",
+      "critical_code_snippets_and_functions": [
+        "YAML session modes; pose_graph.g2o validation; anchor-node graph optimization."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "GSN.Cards",
+      "repo_url": "https://github.com/Beexly/GSN.Cards",
+      "core_engine_architecture": "Photo→CLIP 512-d embeddings/FAISS IndexFlatIP→Scryfall SQLite→vocabulary transformation→marketplaces; Trawl scraper.",
+      "critical_code_snippets_and_functions": [
+        "scryfall_download.py creates cards table; identify.build_index/identify(top_k=5); transform_cards.py/transform.go."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Pokemon-TCGP-Card-Scanner",
+      "repo_url": "https://github.com/1vcian/Pokemon-TCGP-Card-Scanner",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Pokemon-Card-Scanner",
+      "repo_url": "https://github.com/NolanAmblard/Pokemon-Card-Scanner",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "tcg-scanner",
+      "repo_url": "https://github.com/tranhd95/tcg-scanner",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "opencv-playing-card-detector",
+      "repo_url": "https://github.com/edjeelectronics/opencv-playing-card-detector",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Playing-Cards-Object-Detection",
+      "repo_url": "https://github.com/TeogopK/Playing-Cards-Object-Detection",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "tesseract.js",
+      "repo_url": "https://github.com/naptha/tesseract.js",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "sports-card-tracker",
+      "repo_url": "https://github.com/DamageLabs/sports-card-tracker",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "cardex",
+      "repo_url": "https://github.com/xavidop/cardex",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Yu-Gi-Oh-Card-Tracker",
+      "repo_url": "https://github.com/DJ-Cat-N-Cheese/Yu-Gi-Oh-Card-Tracker",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Trading-Card-Collection-Tracker",
+      "repo_url": "https://github.com/jbright471/Trading-Card-Collection-Tracker",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "pokecollector",
+      "repo_url": "https://github.com/Git-Romer/pokecollector",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Scryfall API reference",
+      "repo_url": "https://github.com/scryfall/api-reference",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "graphiti",
+      "repo_url": "https://github.com/getzep/graphiti",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "LangGraph",
+      "repo_url": "https://github.com/langchain-ai/langgraph",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "stripe-demo-connect-kavholm-marketplace",
+      "repo_url": "https://github.com/stripe-archive/stripe-demo-connect-kavholm-marketplace",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "stripe-sample-global-marketplace",
+      "repo_url": "https://github.com/auchenberg/stripe-sample-global-marketplace",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "stripe-node",
+      "repo_url": "https://github.com/stripe/stripe-node",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "easypost-php",
+      "repo_url": "https://github.com/easypost/easypost-php",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "shippo-php",
+      "repo_url": "https://github.com/Shippo/shippo-php",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "pgvector",
+      "repo_url": "https://github.com/pgvector/pgvector",
+      "core_engine_architecture": "Public implementation reference relevant to GSN Cards; inspect repository README and license before adoption.",
+      "critical_code_snippets_and_functions": [
+        "No function-level claim made beyond the public repository description; use as an integration/reference node."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "langchain",
+      "repo_url": "https://github.com/langchain-ai/langchain",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "autogen",
+      "repo_url": "https://github.com/microsoft/autogen",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "crewAI",
+      "repo_url": "https://github.com/crewAIInc/crewAI",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "semantic-kernel",
+      "repo_url": "https://github.com/microsoft/semantic-kernel",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "llama_index",
+      "repo_url": "https://github.com/run-llama/llama_index",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "haystack",
+      "repo_url": "https://github.com/deepset-ai/haystack",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "dspy",
+      "repo_url": "https://github.com/stanfordnlp/dspy",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "smolagents",
+      "repo_url": "https://github.com/huggingface/smolagents",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "browser-use",
+      "repo_url": "https://github.com/browser-use/browser-use",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "playwright",
+      "repo_url": "https://github.com/microsoft/playwright",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "selenium",
+      "repo_url": "https://github.com/SeleniumHQ/selenium",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "puppeteer",
+      "repo_url": "https://github.com/puppeteer/puppeteer",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "Web-LLM",
+      "repo_url": "https://github.com/microsoft/Web-LLM",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "chroma",
+      "repo_url": "https://github.com/chroma-core/chroma",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "qdrant",
+      "repo_url": "https://github.com/qdrant/qdrant",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "milvus",
+      "repo_url": "https://github.com/milvus-io/milvus",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "weaviate",
+      "repo_url": "https://github.com/weaviate/weaviate",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "neo4j",
+      "repo_url": "https://github.com/neo4j/neo4j",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "rdflib",
+      "repo_url": "https://github.com/RDFLib/rdflib",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "networkx",
+      "repo_url": "https://github.com/networkx/networkx",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "supabase",
+      "repo_url": "https://github.com/supabase/supabase",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "prisma",
+      "repo_url": "https://github.com/prisma/prisma",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "fastapi",
+      "repo_url": "https://github.com/fastapi/fastapi",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "django",
+      "repo_url": "https://github.com/django/django",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "next.js",
+      "repo_url": "https://github.com/vercel/next.js",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "react",
+      "repo_url": "https://github.com/facebook/react",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "core",
+      "repo_url": "https://github.com/vuejs/core",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "remix",
+      "repo_url": "https://github.com/remix-run/remix",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "nest",
+      "repo_url": "https://github.com/nestjs/nest",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "express",
+      "repo_url": "https://github.com/expressjs/express",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "graphql-engine",
+      "repo_url": "https://github.com/Hasura/graphql-engine",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "apollo-server",
+      "repo_url": "https://github.com/apollographql/apollo-server",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "graphql-js",
+      "repo_url": "https://github.com/graphql/graphql-js",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "stripe-python",
+      "repo_url": "https://github.com/stripe/stripe-python",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "shippo-node",
+      "repo_url": "https://github.com/Shippo/shippo-node",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "easypost-node",
+      "repo_url": "https://github.com/easypost/easypost-node",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "shopify-api-js",
+      "repo_url": "https://github.com/Shopify/shopify-api-js",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "woocommerce",
+      "repo_url": "https://github.com/woocommerce/woocommerce",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "medusa",
+      "repo_url": "https://github.com/medusajs/medusa",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "saleor",
+      "repo_url": "https://github.com/saleor/saleor",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "spree",
+      "repo_url": "https://github.com/spree/spree",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "magento2",
+      "repo_url": "https://github.com/magento/magento2",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "openfoodfacts-server",
+      "repo_url": "https://github.com/openfoodfacts/openfoodfacts-server",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "pokemon-tcg-data",
+      "repo_url": "https://github.com/PokemonTCG/pokemon-tcg-data",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "cards-database",
+      "repo_url": "https://github.com/tcgdex/cards-database",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "api-reference",
+      "repo_url": "https://github.com/scryfall/api-reference",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "mtgjson",
+      "repo_url": "https://github.com/mtgjson/mtgjson",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "pokeapi",
+      "repo_url": "https://github.com/PokeAPI/pokeapi",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "pokemon-tcg-api",
+      "repo_url": "https://github.com/james-johnson/pokemon-tcg-api",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "openzeppelin-contracts",
+      "repo_url": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "go-ethereum",
+      "repo_url": "https://github.com/ethereum/go-ethereum",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "bitcoin",
+      "repo_url": "https://github.com/bitcoin/bitcoin",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "opencv",
+      "repo_url": "https://github.com/opencv/opencv",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "opencv-python",
+      "repo_url": "https://github.com/opencv/opencv-python",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "ultralytics",
+      "repo_url": "https://github.com/ultralytics/ultralytics",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "mmdetection",
+      "repo_url": "https://github.com/open-mmlab/mmdetection",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "detectron2",
+      "repo_url": "https://github.com/facebookresearch/detectron2",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "CLIP",
+      "repo_url": "https://github.com/openai/CLIP",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "transformers",
+      "repo_url": "https://github.com/huggingface/transformers",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "whisper",
+      "repo_url": "https://github.com/openai/whisper",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "tesseract",
+      "repo_url": "https://github.com/tesseract-ocr/tesseract",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "EasyOCR",
+      "repo_url": "https://github.com/JaidedAI/EasyOCR",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "PaddleOCR",
+      "repo_url": "https://github.com/PaddlePaddle/PaddleOCR",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "pytorch",
+      "repo_url": "https://github.com/pytorch/pytorch",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "tensorflow",
+      "repo_url": "https://github.com/tensorflow/tensorflow",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "scikit-learn",
+      "repo_url": "https://github.com/scikit-learn/scikit-learn",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "datasets",
+      "repo_url": "https://github.com/huggingface/datasets",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    },
+    {
+      "repo_name": "mlflow",
+      "repo_url": "https://github.com/mlflow/mlflow",
+      "core_engine_architecture": "Additional best-in-class open-source reference selected for card vision, AI agents, data, commerce, observability or infrastructure.",
+      "critical_code_snippets_and_functions": [
+        "Repository-level reference only; verify current APIs, license, security and production suitability before integration."
+      ],
+      "logic_flows_and_workflows": "Use as an isolated reference; map inputs, validation, persistence and asynchronous jobs behind GSN service boundaries.",
+      "schemas_and_data_structures": "Not asserted unless described above; define versioned card, image, condition, price, listing, order and provenance schemas in GSN.",
+      "integration_nodes_apis": "Integrate only through documented APIs/SDKs; apply credentials, rate limits, webhooks and license/data-rights review."
+    }
+  ],
+  "gsn_cards_master_implementation_plan": {
+    "ai_agent_and_automation_strategy": "Use a guarded agent graph: intake/vision agent proposes identity and confidence; deterministic catalog resolver validates set/number; condition agent produces evidence-backed attributes without pretending to issue official grades; pricing agent calls licensed sources and records timestamp/sample/provenance; listing agent drafts title/fields; human approval gates publish, payment, refunds and destructive inventory changes. Borrow routing/evidence patterns from reverse-skill, orchestration from Ruflo/LangGraph, browser automation from Nanobrowser/Cline, and GSN’s existing CLIP+FAISS pipeline.",
+    "knowledge_graph_and_db_infrastructure": "Use Postgres as system of record with immutable provenance/event tables and pgvector for image/text embeddings; optional Neo4j/Graphiti-style temporal graph for Card–Set–Print–Variant–Grade–PriceObservation–Listing–Seller–Order relationships. Store canonical card IDs, image hashes, embedding model/version, OCR/vision evidence, source URL, observed_at, currency, condition taxonomy and confidence. Keep object storage for images, queue workers for ingestion/pricing, and idempotent upserts.",
+    "payment_and_shipping_workflow_logic": "Implement Stripe Connect-style seller onboarding, PaymentIntent/checkout, webhook-driven order state, escrow/hold policy, platform fee ledger, payout reconciliation and refund/dispute state machine. Use Shippo/EasyPost-like rate/label/tracking adapters; require address validation, package dimensions, insurance option, scan events and seller handling SLA. Never scrape or bypass marketplace controls; use licensed APIs and explicit user authorization.",
+    "competitive_edge_vs_collx": "Differentiate with transparent evidence/provenance for every identification and price, calibrated confidence and human review, cross-TCG canonical graph, batch intake, condition-photo guidance, open export/API, seller automation with audit logs, and explicit price freshness/sample counts rather than an opaque single average. This is a product strategy, not a claim about hidden CollX internals."
+  }
+}

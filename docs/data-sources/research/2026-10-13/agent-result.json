@@ -1,0 +1,2101 @@
+{
+  "review_scope": {
+    "repository": "Beexly/Sports (Galaxy Sports Edge)",
+    "repository_url": "https://github.com/Beexly/Sports",
+    "snapshot": "main at commit 7da237b (latest commit shown during review; dated Sep 25, 2026)",
+    "snapshot_citation": "https://github.com/Beexly/Sports/commit/7da237bcec21c26f1eeebdd1de6e6e88bd461939",
+    "review_method": "Reviewed the repository landing page/tree, README, architecture and ops docs, prediction-engine/fantasy code and free-first ingestion code; then independently verified 100 candidate source pages from primary documentation or provider sites.",
+    "review_method_citation": "https://github.com/Beexly/Sports",
+    "source_count": 100,
+    "source_count_citation": "https://github.com/Beexly/Sports",
+    "distinct_domains_in_source_list": 81,
+    "distinct_domains_citation": "https://github.com/Beexly/Sports",
+    "counting_note": "The 100 recommendations are distinct verified source pages/URLs. They represent 81 distinct domains; repeated vendors are intentional when separate products/pages expose materially different signal families. No recommendation should be treated as production-approved until rights, access, point-in-time behavior and redistribution terms are checked."
+  },
+  "repository_understanding": {
+    "product_position": "A Next.js sports picks platform with PostgreSQL/Prisma, API routes, subscription/paywall surfaces, deterministic prediction/scoring code, ingestion adapters, workers and an operator cockpit; the README explicitly says it is in internal calibration only with no auto-publish, auto-send, external posting or automated betting.",
+    "product_position_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/README.md",
+    "architecture_summary": "The documented architecture has client, API, prediction, subscription, PostgreSQL data, ingestion and worker layers; the baseline flow is odds ingestion → normalization/freshness validation → database → pick generation → gated display/content.",
+    "architecture_summary_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture.md",
+    "sports_configured": [
+      "NFL",
+      "NCAAF",
+      "NBA",
+      "NCAAB",
+      "MLB",
+      "NHL",
+      "MLS"
+    ],
+    "sports_configured_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/packages/data-ingestion/src/config.ts",
+    "current_primary_ingestion": "The documented primary provider is The Odds API for bookmaker h2h, spreads and totals; the repo also contains a free-first router with adapters/registrations for ESPN public scores, Open-Meteo, NCAA, Polymarket, Kalshi, MLB Stats API, NHL API, balldontlie, ESPN box scores and nflverse.",
+    "current_primary_ingestion_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/data-sources.md",
+    "free_first_and_rights_gate": "Free-first ingestion is designed to choose a cleared free adapter, return provenance and only justify paid calls when no cleared free source covers the need; the code performs clearance checks before the ESPN score and Open-Meteo paths.",
+    "free_first_and_rights_gate_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/data-sources/free-first-ingest.ts",
+    "prediction_engine": "The prediction-engine package is described as a large TypeScript probabilistic forecasting/calibration/betting-intelligence library, but the signal-architecture review says many modules are orphaned, shadow, diagnostic or scripts-only rather than part of the certified publish path.",
+    "prediction_engine_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md",
+    "fantasy_surface": "The DFS optimizer supports cash, GPP and leverage modes, salary-cap lineups, locks/excludes, stacking and an exact search seeded by a heuristic; however the shipped DFS slate explicitly calls itself illustrative and uses fictional players/illustrative values.",
+    "fantasy_surface_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/fantasy/dfs-slate.ts",
+    "optimizer_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/fantasy/dfs-optimizer.ts",
+    "calibration_truth": "The current-state document reports an eligibility sample around 339, Brier 0.2478 (RED against a ≤0.22 floor), ECE 0.0357 (GREEN), Murphy resolution thin, and no PROVEN claim; it says calibration adjustments and auto-publish remain off.",
+    "calibration_truth_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/ops/CURRENT_STATE.md"
+  },
+  "verified_strengths": [
+    {
+      "finding": "Clear operational safety posture: internal calibration, no auto-publish/auto-bet, and feature gates/empty states are explicit.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/README.md"
+    },
+    {
+      "finding": "Rights-aware ingestion and free-first spend control are implemented as runtime concepts, not only prose.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/data-sources/free-first-ingest.ts"
+    },
+    {
+      "finding": "The engine has substantial calibration, selective-publish, edge, settlement and audit concepts, and the signal architecture explicitly separates model probability from downstream withholding/display.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    },
+    {
+      "finding": "The DFS optimizer is glass-box and testable, with seeded deterministic heuristic search plus exact branch-and-bound and an independent oracle noted in the code.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/fantasy/dfs-optimizer.ts"
+    },
+    {
+      "finding": "The source graph treats clearance, freshness, conflicts, proof and source status as first-class concerns, and the gap audit records a large seeded candidate universe.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/source-atlas.md"
+    }
+  ],
+  "highest_impact_gaps": [
+    {
+      "gap": "Fantasy projections are not model-owned: the fantasy blocker says proj/ceiling/own values in dfs-slate.ts are manually authored constants and there is no training pipeline or pick-result feedback loop.",
+      "severity": "critical",
+      "recommended_action": "Replace illustrative constants with versioned, point-in-time projections trained from historical box scores, lines, roles, injuries and contest context; persist model version and feature snapshot.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md"
+    },
+    {
+      "gap": "ADP is single-source and lazily refreshed; the blocker calls for a second ADP provider, freshness cron and discrepancy detection.",
+      "severity": "high",
+      "recommended_action": "Ingest at least two rights-cleared ADP sources on a schedule, store as-of timestamps and alert on divergence before ranking.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md"
+    },
+    {
+      "gap": "Rankings adapter exists but the blocker reports no live consumer in the pick-ranking pipeline.",
+      "severity": "high",
+      "recommended_action": "Wire rankings into a named feature/gate with an explicit model-version proposal and walk-forward evaluation.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md"
+    },
+    {
+      "gap": "The source-intelligence gap audit says active legally usable coverage is smaller than the seeded source universe and specifically calls out licensed route/pressure/coverage/tracking/PFF-like/trenches data.",
+      "severity": "high",
+      "recommended_action": "Prioritize contracts/first-party feeds for tracking, charting, pressure, coverage, route and trench signals; keep candidate sources separate from active sources.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/statking-gap-audit.md"
+    },
+    {
+      "gap": "The signal architecture reports that many research/engine modules are orphaned or scripts-only and that the edge-lab harness has not run on a schedule or in CI.",
+      "severity": "high",
+      "recommended_action": "Create a source-to-feature-to-model registry with importer, owner, rights, freshness SLA, as-of semantics, test, backtest and kill condition; schedule the walk-forward/evaluation harness.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    },
+    {
+      "gap": "The current calibration state is not publish-ready: Brier is red, the green streak is zero, and auto-publish/calibration adjustments remain off.",
+      "severity": "critical",
+      "recommended_action": "Do not expand public claims; accumulate settled, point-in-time rows, grade against close/settlement, and require pre-registered calibration and promotion gates.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/ops/CURRENT_STATE.md"
+    },
+    {
+      "gap": "The architecture says odds freshness is central, but the signal audit reports no monitor for odds_line_snapshots and describes prior archive outages going unnoticed.",
+      "severity": "high",
+      "recommended_action": "Add freshness/coverage monitors for every critical table and alert when source, book, sport or market coverage silently collapses.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    },
+    {
+      "gap": "Health/recovery and sensitive player data are not equivalent to public injury news; they require consent, minimization, access controls and explicit rights.",
+      "severity": "high",
+      "recommended_action": "Start with official public availability/status feeds; only add wearable/team-health integrations through consented contracts and a separate sensitive-data plane.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md"
+    },
+    {
+      "gap": "The real-vs-stubbed audit says backtesting proof is fixture-backed rather than historical prediction proof and vendor adapters remain gated until keys/contracts exist.",
+      "severity": "critical",
+      "recommended_action": "Build a sealed historical prediction store with opening/as-of/closing lines, feature snapshots, labels, and reproducible walk-forward reports before claiming superiority.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/statking-real-vs-stubbed-audit.md"
+    },
+    {
+      "gap": "The repo’s own signal architecture says it has a measurement shortage, not merely a signal shortage: a large corpus exists but only a narrow set is proven to calibrate.",
+      "severity": "critical",
+      "recommended_action": "Invest in measurement infrastructure first: PIT snapshots, lineage, leakage tests, baseline comparisons, uncertainty intervals, calibration, CLV and subgroup drift.",
+      "evidence_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    }
+  ],
+  "recommended_build_sequence": [
+    {
+      "phase": "0. Freeze truth and rights",
+      "deliverables": [
+        "source registry with rights/status/contract/attribution",
+        "single point-in-time event schema",
+        "source conflict and freshness rules",
+        "sensitive-data boundary",
+        "provider health/coverage monitoring"
+      ],
+      "why": "The repo already has clearance/source-graph concepts but documents gaps between candidate and active sources and between registries.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/source-atlas.md"
+    },
+    {
+      "phase": "1. Make fantasy data real",
+      "deliverables": [
+        "second ADP source",
+        "scheduled ADP/rankings ingestion",
+        "official salary/slate/contest feeds",
+        "player identity/crosswalk service",
+        "role/depth-chart/injury timeline",
+        "versioned feature snapshots"
+      ],
+      "why": "The fantasy blocker identifies single-source ADP, unwired rankings and manual projections as the largest product gaps.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md"
+    },
+    {
+      "phase": "2. Build model-owned projections",
+      "deliverables": [
+        "sport-specific projection heads",
+        "hierarchical/partial-pooling player-team model",
+        "distributional output not only point projections",
+        "ownership and leverage model",
+        "simulation-based lineup optimizer using real slates",
+        "model registry and reproducible training"
+      ],
+      "why": "The current DFS surface is deterministic and transparent but its shipped slate is illustrative; production scores require a trained, persisted model.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/fantasy/dfs-slate.ts"
+    },
+    {
+      "phase": "3. Prove calibration and edge",
+      "deliverables": [
+        "purged game-grouped walk-forward",
+        "sealed holdout",
+        "market-only baseline",
+        "Brier/log-loss/ECE/reliability/coverage",
+        "closing-line and same-book CLV",
+        "drift and subgroup reports",
+        "promotion/kill gates"
+      ],
+      "why": "The current state is explicitly not PROVEN and the architecture prioritizes a calibration-first head and honest abstention.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/ops/CURRENT_STATE.md"
+    },
+    {
+      "phase": "4. Add high-value context in shadow first",
+      "deliverables": [
+        "official injuries/transactions",
+        "weather/venue/travel/time-zone",
+        "tracking/video only under contract",
+        "news/beat signals with timestamps",
+        "health/wearable signals only with consent",
+        "social signals with bot/manipulation controls"
+      ],
+      "why": "The signal architecture says narrative/incentive/beat signals should be capture-first and withhold-only until as-of logs exist.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    },
+    {
+      "phase": "5. Productize evidence",
+      "deliverables": [
+        "per-pick evidence graph",
+        "source freshness/conflict cards",
+        "why/why-not explanation",
+        "uncertainty intervals",
+        "abstention and missing-data state",
+        "public performance only after gates pass"
+      ],
+      "why": "The gap audit states premium UX must explain trust, coverage, conflicts and missing data quickly.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/statking-gap-audit.md"
+    }
+  ],
+  "source_selection_and_validation_rules": [
+    {
+      "rule": "Treat every recommendation below as a candidate source, not an automatic integration.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/source-atlas.md"
+    },
+    {
+      "rule": "Require written rights/terms for commercial feeds, tracking, video, league pages and editorial content; do not infer scraping or redistribution permission from public visibility.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/source-atlas.md"
+    },
+    {
+      "rule": "Store fetched_at, source_as_of, license/contract, parser version, raw hash and transformed feature version for every record.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    },
+    {
+      "rule": "Do not put a signal into a published probability until it survives point-in-time leakage tests, purged walk-forward evaluation, market-baseline comparison and a pre-registered kill line.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+    },
+    {
+      "rule": "Use health, wearable, cognitive and biometric data only when athlete/team consent and legal basis exist; keep it isolated from public editorial feeds.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md"
+    },
+    {
+      "rule": "Prefer abstention/withholding when freshness, coverage, identity resolution, rights or calibration floors fail.",
+      "citation_url": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/ops/CURRENT_STATE.md"
+    }
+  ],
+  "recommended_sources": [
+    {
+      "name": "Sportradar Sports APIs",
+      "website": "https://developer.sportradar.com/",
+      "category": "Commercial multi-sport API",
+      "signal_types": [
+        "schedules",
+        "standings",
+        "rosters",
+        "player/team statistics",
+        "play-by-play"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The developer portal exposes APIs for soccer, NBA, NFL, MLB and NHL, making it a broad complement for schedules, rosters and game-level signals across the repository’s sports coverage.",
+      "access_or_rights_note": "The fetched documentation is an API developer portal; production access should be treated as requiring a Sportradar account/contract or key, and no free or open license is stated on the cited page.",
+      "citation_url": "https://developer.sportradar.com/getting-started/docs/get-started",
+      "rank": 1,
+      "domain": "developer.sportradar.com"
+    },
+    {
+      "name": "Genius Sports Official Sports Data APIs",
+      "website": "https://www.geniussports.com/",
+      "category": "Commercial official data API",
+      "signal_types": [
+        "live scores",
+        "play-by-play/events",
+        "player tracking",
+        "advanced metrics",
+        "league data"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Genius describes APIs supplying fast data for NFL, NCAA and other leagues, and specifically describes player/ball tracking with speed, acceleration, location and derived metrics.",
+      "access_or_rights_note": "The page markets official data APIs and directs prospective users to the service; it does not state that the feeds are free or openly licensed, so commercial terms should be confirmed with Genius Sports.",
+      "citation_url": "https://www.geniussports.com/engage/official-sports-data-api/",
+      "rank": 2,
+      "domain": "geniussports.com"
+    },
+    {
+      "name": "Stats Perform STATS API",
+      "website": "https://developer.stats.com/",
+      "category": "Commercial multi-sport API",
+      "signal_types": [
+        "live game statistics",
+        "player/team situational statistics",
+        "historical data",
+        "editorial metadata"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Stats Perform’s developer portal says its REST API covers live game statistics, player and team situational statistics, historical data and editorial content.",
+      "access_or_rights_note": "The portal says an access key is needed and directs users to contact Stats Perform; the page does not state a free/open license.",
+      "citation_url": "https://developer.stats.com/",
+      "rank": 3,
+      "domain": "developer.stats.com"
+    },
+    {
+      "name": "SportsDataIO",
+      "website": "https://sportsdata.io/",
+      "category": "Commercial sports API",
+      "signal_types": [
+        "scores",
+        "schedules",
+        "play-by-play",
+        "injuries",
+        "lineups",
+        "player/team statistics"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "SportsDataIO documents league APIs and links coverage, API documentation, data dictionaries and OpenAPI resources; its developer search result lists play-by-play, injuries, lineups and odds among endpoint coverage.",
+      "access_or_rights_note": "The developer materials require an API key for endpoints and present free-trial/testing and paid options; do not assume production data is free or redistributable.",
+      "citation_url": "https://sportsdata.io/developers/apis",
+      "rank": 4,
+      "domain": "sportsdata.io"
+    },
+    {
+      "name": "API-Sports",
+      "website": "https://api-sports.io/",
+      "category": "Commercial multi-sport API",
+      "signal_types": [
+        "fixtures",
+        "scores",
+        "standings",
+        "rosters",
+        "player statistics",
+        "historical data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The provider documents APIs for football, AFL, baseball, basketball, Formula 1, hockey, NBA, NFL/NCAA, rugby and other sports, including basic and advanced sport data.",
+      "access_or_rights_note": "The official site presents API products and documentation; the cited page does not establish an open license, so access limits and commercial rights must be checked in the selected plan.",
+      "citation_url": "https://api-sports.io/",
+      "rank": 5,
+      "domain": "api-sports.io"
+    },
+    {
+      "name": "Football-Data.org API",
+      "website": "https://www.football-data.org/",
+      "category": "Football API",
+      "signal_types": [
+        "fixtures",
+        "results",
+        "tables",
+        "teams",
+        "squads",
+        "lineups/substitutes",
+        "scorers/assists"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official API reference documents machine-readable team and player resources, squads and competition/season resources useful for football schedules, roster context and historical results.",
+      "access_or_rights_note": "The documentation notes paid tiers and uses an authentication token in its examples; the cited page does not grant a blanket commercial redistribution right.",
+      "citation_url": "https://www.football-data.org/documentation/api",
+      "rank": 6,
+      "domain": "football-data.org"
+    },
+    {
+      "name": "Goalserve Football Data Feeds",
+      "website": "https://www.goalserve.com/",
+      "category": "Commercial football data feed",
+      "signal_types": [
+        "live scores",
+        "fixtures/results",
+        "in-game player stats",
+        "profiles",
+        "injuries",
+        "historical data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Goalserve’s football feed page explicitly lists live scores, fixtures/results, in-game player stats, profiles, injuries, historical data and prematch/in-play feeds, filling football event and availability gaps.",
+      "access_or_rights_note": "The page advertises a free trial and XML/JSON feeds, but does not state that ongoing production use is free or open; obtain feed rights and pricing from Goalserve.",
+      "citation_url": "https://www.goalserve.com/en/sport-data-feeds/football-api/prices",
+      "rank": 7,
+      "domain": "goalserve.com"
+    },
+    {
+      "name": "Data Sports Group API",
+      "website": "https://datasportsgroup.com/",
+      "category": "Commercial multi-sport API",
+      "signal_types": [
+        "live scores",
+        "historical data",
+        "player statistics",
+        "team information",
+        "schedules"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "DSG says its API provides a unified catalogue of sports content and lists live scores, player statistics, team information and historical data.",
+      "access_or_rights_note": "The product page mentions technical documentation, API signup and support, but does not state a free/open license; usage rights require a DSG agreement.",
+      "citation_url": "https://datasportsgroup.com/products-api/",
+      "rank": 8,
+      "domain": "datasportsgroup.com"
+    },
+    {
+      "name": "Sportmonks Football API",
+      "website": "https://www.sportmonks.com/",
+      "category": "Commercial football API",
+      "signal_types": [
+        "live scores",
+        "fixtures",
+        "match events",
+        "statistics",
+        "lineups",
+        "xG",
+        "predicted lineups"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Sportmonks documents live scores, stats, lineups, xG and predictions across 2,200+ leagues, directly supporting football lineup, event and advanced-metric features.",
+      "access_or_rights_note": "The product page offers a free tier to start and links token registration, but production limits and redistribution rights should be verified under the applicable plan.",
+      "citation_url": "https://www.sportmonks.com/football-api/",
+      "rank": 9,
+      "domain": "sportmonks.com"
+    },
+    {
+      "name": "TheSportsDB API",
+      "website": "https://www.thesportsdb.com/",
+      "category": "Multi-sport sports database/API",
+      "signal_types": [
+        "teams",
+        "players",
+        "events",
+        "scores",
+        "event statistics",
+        "TV listings",
+        "artwork"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official API guide documents JSON endpoints for events, event results/statistics, sports and other database entities, useful for broad schedule, team and player metadata coverage.",
+      "access_or_rights_note": "The site labels the service a free/open crowd-sourced database and documents free versus premium API versions; review its current API terms and attribution requirements before commercial use.",
+      "citation_url": "https://www.thesportsdb.com/docs_api_guide",
+      "rank": 10,
+      "domain": "thesportsdb.com"
+    },
+    {
+      "name": "StatsBomb Open Data",
+      "website": "https://github.com/hudl/open-data",
+      "category": "Open soccer event dataset",
+      "signal_types": [
+        "match events",
+        "lineups",
+        "competitions/seasons",
+        "360 data",
+        "historical event data"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The repository documents JSON competitions, matches, events, lineups and selected StatsBomb 360 data, providing event-level soccer training and validation data beyond simple scores.",
+      "access_or_rights_note": "The repository says certain leagues are made freely available for public research and analytics and includes terms/conditions; that stated scope should not be generalized to all StatsBomb data or unrestricted commercial use.",
+      "citation_url": "https://github.com/hudl/open-data",
+      "rank": 11,
+      "domain": "github.com"
+    },
+    {
+      "name": "MLB Baseball Savant Statcast",
+      "website": "https://baseballsavant.mlb.com/",
+      "category": "Official baseball advanced metrics",
+      "signal_types": [
+        "pitch-by-pitch",
+        "batted-ball metrics",
+        "player/team metrics",
+        "game feeds",
+        "tracking metrics"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "MLB’s Baseball Savant search supports queries of the Statcast database by pitch, game, player, team and season, with definitions for Statcast metrics.",
+      "access_or_rights_note": "This is an official MLB web data product, not an explicitly offered public API or open-data license on the cited page; confirm MLB permission and access terms before automated redistribution.",
+      "citation_url": "https://baseballsavant.mlb.com/statcast_search",
+      "rank": 12,
+      "domain": "baseballsavant.mlb.com"
+    },
+    {
+      "name": "NBA.com Stats",
+      "website": "https://www.nba.com/stats/",
+      "category": "Official basketball statistics",
+      "signal_types": [
+        "player statistics",
+        "team statistics",
+        "box scores",
+        "advanced splits",
+        "historical statistics"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "NBA Stats exposes traditional player tables and links to advanced/statistical views; its FAQ documents historical coverage reaching back to early NBA seasons for multiple fields.",
+      "access_or_rights_note": "The cited pages are NBA.com’s public statistics interface and glossary, not a grant of API or redistribution rights; automated access and commercial use should be checked against NBA terms.",
+      "citation_url": "https://www.nba.com/stats/players/traditional",
+      "rank": 13,
+      "domain": "nba.com"
+    },
+    {
+      "name": "NHL EDGE",
+      "website": "https://www.nhl.com/nhl-edge/",
+      "category": "Official hockey tracking/advanced metrics",
+      "signal_types": [
+        "skater tracking",
+        "team tracking",
+        "shot speed",
+        "skating speed",
+        "zone maps",
+        "comparisons"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "NHL EDGE presents daily advanced statistics, player/team comparisons and tracking measures such as skating speed, miles skated and high-danger shots.",
+      "access_or_rights_note": "The cited page is an NHL.com public visualization/product page; it does not state an open data license or API entitlement, so rights for extraction and redistribution need NHL confirmation.",
+      "citation_url": "https://www.nhl.com/nhl-edge/comparisons",
+      "rank": 14,
+      "domain": "nhl.com"
+    },
+    {
+      "name": "PGA TOUR Stats",
+      "website": "https://www.pgatour.com/stats",
+      "category": "Official golf statistics",
+      "signal_types": [
+        "strokes gained",
+        "driving",
+        "approach",
+        "putting",
+        "scoring",
+        "money/finishes",
+        "rankings"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The PGA TOUR statistics page links category-specific tables for strokes gained, off-the-tee, approach, around-the-green, putting, scoring, streaks and rankings, supplying golf player-performance signals.",
+      "access_or_rights_note": "This is a public PGA TOUR stats interface; the page does not state that the underlying data is openly licensed or available for unrestricted scraping/redistribution.",
+      "citation_url": "https://www.pgatour.com/stats",
+      "rank": 15,
+      "domain": "pgatour.com"
+    },
+    {
+      "name": "Data Golf API",
+      "website": "https://datagolf.com/",
+      "category": "Commercial golf analytics API",
+      "signal_types": [
+        "skill estimates",
+        "rankings",
+        "tour standings",
+        "tournament data",
+        "DFS data",
+        "strokes-gained analytics"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Data Golf documents programmatic endpoints for rankings and tournament/DFS data, and positions the API as a way to integrate its golf data into models and applications.",
+      "access_or_rights_note": "The API page says API access requires becoming a Scratch Plus member; this is paid/member access rather than an asserted open or free feed.",
+      "citation_url": "https://datagolf.com/api-access",
+      "rank": 16,
+      "domain": "datagolf.com"
+    },
+    {
+      "name": "OpenF1 API",
+      "website": "https://openf1.org/",
+      "category": "Formula 1 API",
+      "signal_types": [
+        "lap times",
+        "sector times",
+        "speed traps",
+        "telemetry",
+        "pit stops",
+        "session data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "OpenF1 documents endpoints for live and historical F1 session data including lap times, sectors, speed traps, telemetry and other on-track timing signals.",
+      "access_or_rights_note": "The site describes itself as an open-source API; verify its current API documentation, rate limits and license before relying on it for production or commercial redistribution.",
+      "citation_url": "https://openf1.org/",
+      "rank": 17,
+      "domain": "openf1.org"
+    },
+    {
+      "name": "OpenLigaDB API",
+      "website": "https://api.openligadb.de/",
+      "category": "Open football results API",
+      "signal_types": [
+        "match data",
+        "league tables",
+        "goal scorers",
+        "fixtures/results",
+        "league metadata"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official OpenLigaDB specification documents match-data, league, table and goal-getter endpoints for Bundesliga and other football leagues.",
+      "access_or_rights_note": "The official page explicitly states no registration, API key or quota and says the data is under ODbL 1.0; comply with ODbL attribution/share-alike obligations where applicable.",
+      "citation_url": "https://api.openligadb.de/index.html",
+      "rank": 18,
+      "domain": "api.openligadb.de"
+    },
+    {
+      "name": "MySportsFeeds",
+      "website": "https://www.mysportsfeeds.com/",
+      "category": "Commercial North American sports API",
+      "signal_types": [
+        "schedules",
+        "scores",
+        "box scores",
+        "standings",
+        "play-by-play",
+        "lineups",
+        "injuries",
+        "DFS data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "MySportsFeeds lists consistent NFL, MLB, NBA and NHL feeds covering schedules, scores, boxscores, standings, play-by-play, lineups and injuries.",
+      "access_or_rights_note": "The product page says personal/private use can be affordable or free and offers a free trial, while commercial pricing exists; do not treat the personal-use terms as commercial redistribution permission.",
+      "citation_url": "https://www.mysportsfeeds.com/data-feeds/",
+      "rank": 19,
+      "domain": "mysportsfeeds.com"
+    },
+    {
+      "name": "Rolling Insights DataFeeds",
+      "website": "https://rolling-insights.com/",
+      "category": "Commercial sports data API",
+      "signal_types": [
+        "live scores",
+        "box scores",
+        "team pages",
+        "standings",
+        "game schedules",
+        "player/team stats"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "Rolling Insights describes a live feed for real-time scoreboards and box scores plus an API for team pages, standings and schedules, covering a useful North American data gap.",
+      "access_or_rights_note": "The page offers a trial and links an account portal; it does not state that the feed is free or openly licensed, so commercial access and rights require a plan.",
+      "citation_url": "https://rolling-insights.com/datafeeds/",
+      "rank": 20,
+      "domain": "rolling-insights.com"
+    },
+    {
+      "name": "NBA Official Injury Report",
+      "website": "https://official.nba.com/",
+      "category": "official injury and availability",
+      "signal_types": [
+        "injury",
+        "illness",
+        "rest",
+        "participation status",
+        "game availability"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The NBA says teams must report injuries, illnesses, other medical conditions or rest, with participation status and a specific reason, and it specifies reporting deadlines. This is a direct availability signal for NBA games.",
+      "access_or_rights_note": "The cited page is a public report page; it does not grant a data-republication license or provide an API, so automated reuse and redistribution should be reviewed against NBA terms.",
+      "citation_url": "https://official.nba.com/nba-injury-report-2025-26-season/",
+      "rank": 21,
+      "domain": "official.nba.com"
+    },
+    {
+      "name": "NFL Official Injury Report",
+      "website": "https://www.nfl.com/",
+      "category": "official injury and availability",
+      "signal_types": [
+        "injury",
+        "practice participation",
+        "game status",
+        "concussion",
+        "questionable/out status"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "NFL.com labels the page the official NFL injury report and presents injury, practice status and game status by player and team, which directly supports availability features.",
+      "access_or_rights_note": "The page is publicly viewable, but the cited page does not state that scraping, commercial use, or redistribution is licensed; obtain permission or use an authorized feed.",
+      "citation_url": "https://www.nfl.com/injuries/",
+      "rank": 22,
+      "domain": "nfl.com"
+    },
+    {
+      "name": "MLB Injury Report",
+      "website": "https://www.mlb.com/",
+      "category": "official injury and roster availability",
+      "signal_types": [
+        "injured list",
+        "injury diagnosis",
+        "activation",
+        "roster move",
+        "player availability"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "MLB's injury-report page organizes reports by league and team and links team injury updates; MLB's related official transaction pages expose injured-list placements and activations.",
+      "access_or_rights_note": "The cited page is public editorial/transaction content, not an API license. MLB terms and permissions should be checked before systematic extraction or redistribution.",
+      "citation_url": "https://www.mlb.com/injury-report",
+      "rank": 23,
+      "domain": "mlb.com"
+    },
+    {
+      "name": "WHOOP Developer API",
+      "website": "https://developer.whoop.com/",
+      "category": "wearable recovery API",
+      "signal_types": [
+        "sleep",
+        "recovery",
+        "heart-rate variability",
+        "resting heart rate",
+        "strain",
+        "workout"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "WHOOP's API documentation exposes sleep and recovery resources and workout/activity endpoints, making it suitable for consented recovery and workload features.",
+      "access_or_rights_note": "This is a member-data developer API. Use requires OAuth/member authorization and compliance with WHOOP developer terms; health data is sensitive and should be minimized and protected.",
+      "citation_url": "https://developer.whoop.com/api/",
+      "rank": 24,
+      "domain": "developer.whoop.com"
+    },
+    {
+      "name": "Garmin Connect Health API",
+      "website": "https://developer.garmin.com/",
+      "category": "wearable health API",
+      "signal_types": [
+        "heart rate",
+        "sleep",
+        "stress",
+        "all-day health",
+        "activity",
+        "training"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Garmin describes its Health API as providing all-day health metrics including steps, heart rate, sleep and stress, and its developer program also lists activity and training APIs.",
+      "access_or_rights_note": "Garmin presents this as a developer-program integration rather than an unrestricted public dataset. Obtain program approval/credentials and treat user health information as sensitive.",
+      "citation_url": "https://developer.garmin.com/gc-developer-program/health-api/",
+      "rank": 25,
+      "domain": "developer.garmin.com"
+    },
+    {
+      "name": "Oura API",
+      "website": "https://cloud.ouraring.com/",
+      "category": "sleep and readiness API",
+      "signal_types": [
+        "sleep duration",
+        "sleep stages",
+        "sleep timing",
+        "readiness",
+        "heart rate",
+        "breathing"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Oura's official API documentation lists daily sleep, sleep and sleep-time routes and shows authenticated requests for sleep data, supporting consented sleep/readiness ingestion.",
+      "access_or_rights_note": "The documentation shows Bearer-token authentication. Access is therefore account/token based; no blanket public-data or redistribution license is stated, and health data requires privacy controls.",
+      "citation_url": "https://cloud.ouraring.com/v2/docs",
+      "rank": 26,
+      "domain": "cloud.ouraring.com"
+    },
+    {
+      "name": "Polar AccessLink API",
+      "website": "https://www.polar.com/",
+      "category": "training-load and recovery API",
+      "signal_types": [
+        "exercise",
+        "cardio load",
+        "training load",
+        "sleep",
+        "SleepWise",
+        "webhooks"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Polar's official AccessLink documentation lists exercise resources, cardio-load data, SleepWise resources, security, rate limiting and webhooks, covering workload and recovery integration.",
+      "access_or_rights_note": "The API documentation describes security and API onboarding; it is not a public dump. Use registered/authorized access and follow Polar terms, consent and health-data safeguards.",
+      "citation_url": "https://www.polar.com/accesslink-api/",
+      "rank": 27,
+      "domain": "polar.com"
+    },
+    {
+      "name": "Catapult Athlete Monitoring",
+      "website": "https://www.catapult.com/",
+      "category": "workload and athlete-monitoring platform",
+      "signal_types": [
+        "GPS workload",
+        "athlete monitoring",
+        "injury-risk context",
+        "recovery",
+        "sensor metrics"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Catapult describes its Athlete Monitoring System as optimizing performance, reducing injury risk and improving recovery, and identifies Vector sensors and analytics for athlete monitoring.",
+      "access_or_rights_note": "This is a commercial product page with demo/contact calls to action, not an open API or open dataset. Integration and rights require a commercial agreement; collected athlete data is sensitive.",
+      "citation_url": "https://www.catapult.com/solutions/athlete-monitoring",
+      "rank": 28,
+      "domain": "catapult.com"
+    },
+    {
+      "name": "STATSports Academy",
+      "website": "https://statsports.com/",
+      "category": "GPS workload and recovery platform",
+      "signal_types": [
+        "work rate",
+        "RPE",
+        "speed",
+        "sprint distance",
+        "training load",
+        "recovery",
+        "nutrition"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "STATSports says Academy combines performance data with fitness, strength, recovery and nutrition guidance and lists Work Rate, RPE, speed, sprinting and load metrics.",
+      "access_or_rights_note": "The cited page describes a proprietary training-content/platform product; it does not promise an open data feed or reuse license. Use requires the applicable product/account terms.",
+      "citation_url": "https://statsports.com/academy",
+      "rank": 29,
+      "domain": "statsports.com"
+    },
+    {
+      "name": "KINEXON Sports Football Tracking",
+      "website": "https://kinexon-sports.com/",
+      "category": "real-time tracking and workload",
+      "signal_types": [
+        "player tracking",
+        "training intensity",
+        "weekly load",
+        "readiness",
+        "GPS/GNSS",
+        "LPS/UWB",
+        "IMU biomechanics"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "KINEXON describes real-time, data-informed performance insights, visibility into training intensity and weekly load, and GPS/LPS workflows; it also explains IMU movement and change-of-direction measurements.",
+      "access_or_rights_note": "This is a commercial solution page and does not provide an open API or public dataset license. Access, integration and use of player measurements require vendor/team authorization and privacy controls.",
+      "citation_url": "https://kinexon-sports.com/sports/football/",
+      "rank": 30,
+      "domain": "kinexon-sports.com"
+    },
+    {
+      "name": "NCAA Health, Safety and Performance",
+      "website": "https://www.ncaa.org/",
+      "category": "authoritative injury, health and training guidance",
+      "signal_types": [
+        "sport injury",
+        "illness",
+        "mental health",
+        "nutrition",
+        "hydration",
+        "sleep",
+        "periodization",
+        "performance technology"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The NCAA page covers mental and physical health, sport-related illness and injury, and training/performance resources including nutrition, hydration, sleep and periodization; it also describes injury-data collection as foundational to availability and healthcare.",
+      "access_or_rights_note": "This is public guidance and research/resource content, not a player-level API. It should not be treated as permission to collect private student-athlete medical data or redistribute NCAA materials beyond applicable terms.",
+      "citation_url": "https://www.ncaa.org/what-we-do/health-safety-and-performance/",
+      "rank": 31,
+      "domain": "ncaa.org"
+    },
+    {
+      "name": "USOPC Sports Medicine Education Resources",
+      "website": "https://www.usopc.org/",
+      "category": "authoritative sports medicine and recovery guidance",
+      "signal_types": [
+        "tendon health",
+        "injury prevention",
+        "illness prevention",
+        "sleep",
+        "women's health",
+        "return-to-performance context"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "USOPC describes its sports-medicine collection as supporting athlete health and performance and provides clinical tendon-health and illness/injury-prevention resources, plus a sleep resource link.",
+      "access_or_rights_note": "These are educational resources, not an athlete-availability feed. Download/reuse and commercial rights should be checked for each linked asset; do not infer private athlete status from them.",
+      "citation_url": "https://www.usopc.org/sports-medicine-education-resources",
+      "rank": 32,
+      "domain": "usopc.org"
+    },
+    {
+      "name": "IOC Health, Medicine and Science",
+      "website": "https://www.olympics.com/",
+      "category": "authoritative injury, illness and athlete-health evidence",
+      "signal_types": [
+        "injury surveillance",
+        "illness surveillance",
+        "mental health",
+        "concussion",
+        "relative energy deficiency",
+        "medical consensus"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The IOC page publishes consensus statements and identifies materials on injury/illness surveillance, athlete mental health, concussion and relative energy deficiency in sport, useful for feature definitions and evidence-based flags.",
+      "access_or_rights_note": "The page provides publications and PDFs, not a live player-health API. Treat documents as reference content; licensing of PDFs and derivative commercial use must be checked, and no individual medical status should be inferred.",
+      "citation_url": "https://www.olympics.com/ioc/health-medicine-and-science",
+      "rank": 33,
+      "domain": "olympics.com"
+    },
+    {
+      "name": "American College of Sports Medicine Position Stands",
+      "website": "https://acsm.org/",
+      "category": "sports science and nutrition evidence",
+      "signal_types": [
+        "nutrition",
+        "exercise prescription",
+        "training load context",
+        "recovery",
+        "health-risk guidance"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "ACSM describes position stands as official evidence-based pronouncements and lists a Nutrition and Athletic Performance position statement, providing authoritative definitions and guidance for nutrition/recovery features.",
+      "access_or_rights_note": "This is evidence/reference content rather than an API. The page links some journal-hosted material; copyright and reuse permissions must be obtained from the relevant rights holder.",
+      "citation_url": "https://acsm.org/education-resources/pronouncements-scientific-communications/position-stands/",
+      "rank": 34,
+      "domain": "acsm.org"
+    },
+    {
+      "name": "CDC HEADS UP",
+      "website": "https://www.cdc.gov/",
+      "category": "authoritative concussion and return-to-activity guidance",
+      "signal_types": [
+        "concussion",
+        "traumatic brain injury",
+        "symptoms",
+        "prevention",
+        "recovery",
+        "return to activity"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "CDC states that concussion is a type of traumatic brain injury and provides prevention, symptoms and recovery resources, including steps for athletes returning to activities after concussion.",
+      "access_or_rights_note": "This is public health guidance, not a player-status dataset or medical diagnosis API. It must not be used to diagnose or clear athletes; check CDC usage and attribution requirements for reuse.",
+      "citation_url": "https://www.cdc.gov/heads-up/",
+      "rank": 35,
+      "domain": "cdc.gov"
+    },
+    {
+      "name": "FIFA Medical Network",
+      "website": "https://www.fifamedicalnetwork.com/",
+      "category": "football medical education",
+      "signal_types": [
+        "football injury",
+        "football illness",
+        "medical education",
+        "return-to-play context"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "FIFA's Medical Network says it provides a free online FIFA Medical Diploma with 42 modules on common football-related injuries and illnesses, useful as a domain reference for football medical taxonomies.",
+      "access_or_rights_note": "The cited page requires account registration/login for access to the network and states a privacy policy; it is educational content, not an open injury/availability feed, and does not authorize extraction of personal medical data.",
+      "citation_url": "https://www.fifamedicalnetwork.com/",
+      "rank": 36,
+      "domain": "fifamedicalnetwork.com"
+    },
+    {
+      "name": "International Society of Sports Nutrition",
+      "website": "https://www.sportsnutritionsociety.org/",
+      "category": "sports nutrition evidence and education",
+      "signal_types": [
+        "sports nutrition",
+        "supplement context",
+        "hydration context",
+        "recovery nutrition",
+        "sports neuroscience"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "The society's official site identifies its sports-nutrition organization and lists conferences, including a Sports Neuroscience conference, providing authoritative editorial/education signals for nutrition and cognition research discovery.",
+      "access_or_rights_note": "This is an editorial/conference site, not an athlete data API. Conference and publication content may have separate copyright or access terms; no player-level health data rights are granted.",
+      "citation_url": "https://www.sportsnutritionsociety.org/conferences.html",
+      "rank": 37,
+      "domain": "sportsnutritionsociety.org"
+    },
+    {
+      "name": "Kitman Labs",
+      "website": "https://www.kitmanlabs.com/",
+      "category": "integrated athlete intelligence and availability",
+      "signal_types": [
+        "athlete availability",
+        "performance intelligence",
+        "medical/workforce context",
+        "training management",
+        "injury-risk context"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Kitman Labs describes an all-in-one intelligence platform, says it is built by practitioners and data scientists, and exposes an MLS NEXT platform/login path, indicating a team-performance/availability integration opportunity.",
+      "access_or_rights_note": "The site presents a proprietary platform and account/login access rather than an open API. Any integration requires vendor and team authorization; medical and performance records require strict privacy and role-based access.",
+      "citation_url": "https://www.kitmanlabs.com/",
+      "rank": 38,
+      "domain": "kitmanlabs.com"
+    },
+    {
+      "name": "SportsDataIO Developer APIs",
+      "website": "https://sportsdata.io/",
+      "category": "licensed sports data API and player status",
+      "signal_types": [
+        "player status",
+        "team/player metadata",
+        "league data",
+        "availability-related sports data",
+        "historical data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "SportsDataIO's developer page organizes per-sport resources and links API documentation, data dictionaries and coverage pages, offering a practical licensed-feed route to normalize player/team data alongside health signals.",
+      "access_or_rights_note": "The page is a commercial developer/API offering; pricing, authentication and permitted uses must be confirmed in the applicable agreement. Do not assume free access, injury coverage, or redistribution rights.",
+      "citation_url": "https://sportsdata.io/developers",
+      "rank": 39,
+      "domain": "sportsdata.io"
+    },
+    {
+      "name": "Genius Sports Official Sports Data API",
+      "website": "https://www.geniussports.com/",
+      "category": "official licensed sports data API",
+      "signal_types": [
+        "official league data",
+        "player/team data",
+        "live sports data",
+        "availability integration context"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Genius Sports describes official sports data APIs and says its service covers NFL, NCAA and other sports, providing a potential authorized backbone for roster/player data that can be joined to injury and recovery signals.",
+      "access_or_rights_note": "This is a commercial official-data product page. Access is subject to a service agreement; the page does not establish free use or grant redistribution rights, so licensing and sport-by-sport coverage must be verified.",
+      "citation_url": "https://www.geniussports.com/engage/official-sports-data-api/",
+      "rank": 40,
+      "domain": "geniussports.com"
+    },
+    {
+      "name": "Sportradar MLB API",
+      "website": "https://developer.sportradar.com/baseball/reference/mlb-overview",
+      "category": "sports data API",
+      "signal_types": [
+        "MLB schedules",
+        "standings",
+        "teams and players",
+        "real-time scores",
+        "pitch and batted-ball Statcast metrics"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official documentation says the MLB feed supplies schedules, standings, team/player data and real-time scores, and describes an additional Statcast package with pitch, hit, fielding and baserunning detail beginning in 2020.",
+      "access_or_rights_note": "Authentication is required for all API calls; the documentation labels the Statcast package as an extra package and does not state that the feed is free or openly licensed.",
+      "citation_url": "https://developer.sportradar.com/baseball/reference/mlb-overview",
+      "rank": 41,
+      "domain": "developer.sportradar.com"
+    },
+    {
+      "name": "SportsDataIO Fantasy Sports API",
+      "website": "https://sportsdata.io/fantasy-sports-api",
+      "category": "fantasy/DFS API",
+      "signal_types": [
+        "player projections",
+        "fantasy points",
+        "DFS salaries and slates",
+        "ADP",
+        "injury and lineup context"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The product page describes projections across skill positions and scoring categories, fantasy points by stat category, operator fantasy points, contest formats with salaries, and average draft position.",
+      "access_or_rights_note": "The page offers an API free trial and a contact path, but does not establish a perpetual free tier or open-data license; production use should be negotiated under SportsDataIO terms.",
+      "citation_url": "https://sportsdata.io/fantasy-sports-api",
+      "rank": 42,
+      "domain": "sportsdata.io"
+    },
+    {
+      "name": "API-Sports Baseball API",
+      "website": "https://api-sports.io/documentation/baseball/v1",
+      "category": "sports data API",
+      "signal_types": [
+        "baseball leagues",
+        "fixtures",
+        "scores",
+        "team/player metadata",
+        "historical game data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official documentation provides baseball endpoints and request examples for league retrieval, making it a potential normalized multi-league source for schedules and match-state features.",
+      "access_or_rights_note": "The documentation examples require an x-apisports-key header; the fetched documentation does not establish that the API is free or that its data may be redistributed.",
+      "citation_url": "https://api-sports.io/documentation/baseball/v1",
+      "rank": 43,
+      "domain": "api-sports.io"
+    },
+    {
+      "name": "FantasyPros Public API",
+      "website": "https://api.fantasypros.com/public/v2/docs",
+      "category": "fantasy projections and rankings API",
+      "signal_types": [
+        "expert consensus rankings",
+        "player projections",
+        "injuries",
+        "news",
+        "player metadata",
+        "fantasy points"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official API documentation lists projections for NFL, MLB and NBA plus player metadata, and exposes structured JSON endpoints suitable for projection and availability features.",
+      "access_or_rights_note": "The documentation explicitly calls this a free limited public API and says an API key must be requested; the page also links terms of use, so commercial or larger-scale use should follow those terms.",
+      "citation_url": "https://api.fantasypros.com/public/v2/docs",
+      "rank": 44,
+      "domain": "api.fantasypros.com"
+    },
+    {
+      "name": "RotoWire Partner Data",
+      "website": "https://www.rotowire.com/partner/",
+      "category": "fantasy editorial and data feed",
+      "signal_types": [
+        "fantasy sports data",
+        "injury/news context",
+        "DFS projections",
+        "lineups and player notes"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "RotoWire's official partner page positions its sports data and editorial content as a feed used by fantasy and sports-betting companies, making it relevant for news-driven player availability and DFS features.",
+      "access_or_rights_note": "The page is a commercial partnership/product page and does not grant an open-data license or promise a free API; access should be obtained through a partner agreement.",
+      "citation_url": "https://www.rotowire.com/partner/",
+      "rank": 45,
+      "domain": "rotowire.com"
+    },
+    {
+      "name": "Hudl StatsBomb",
+      "website": "https://statsbomb.com/",
+      "category": "football event and tracking data",
+      "signal_types": [
+        "event data",
+        "player locations",
+        "xG",
+        "on-ball value",
+        "tactical/performance features"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official product page describes more than 3,400 events per match across 190-plus competitions, player-location data for 40-plus leagues, and contextual models including xG and OBV.",
+      "access_or_rights_note": "The page describes a professional product and does not state that the commercial data is free or openly licensed; obtain permission or use the separately documented open-data offering where applicable.",
+      "citation_url": "https://statsbomb.com/",
+      "rank": 46,
+      "domain": "statsbomb.com"
+    },
+    {
+      "name": "FiveThirtyEight Our Data",
+      "website": "https://data.fivethirtyeight.com/",
+      "category": "sports research datasets and forecasts",
+      "signal_types": [
+        "MLB Elo",
+        "NBA forecasts",
+        "NBA RAPTOR",
+        "NHL forecasts",
+        "soccer SPI",
+        "NFL Elo"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official data index links sports datasets behind published work, including MLB Elo, NBA and NHL forecasts, RAPTOR, soccer SPI and NFL Elo, which are useful baselines for rating and probability evaluation.",
+      "access_or_rights_note": "The page says it shares data and code for checking work and creating stories/visualizations, but it does not provide a blanket commercial redistribution license; inspect each linked repository and applicable terms.",
+      "citation_url": "https://data.fivethirtyeight.com/",
+      "rank": 47,
+      "domain": "data.fivethirtyeight.com"
+    },
+    {
+      "name": "ClubElo",
+      "website": "https://clubelo.com/",
+      "category": "probabilistic sports ratings",
+      "signal_types": [
+        "football club Elo ratings",
+        "historical ratings",
+        "league strength",
+        "team form baseline"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official site exposes football club ratings, rankings and results, providing a directly usable team-strength prior for match win-probability models.",
+      "access_or_rights_note": "The fetched page presents ratings and calculations but does not state an open-data or commercial-use license; confirm permission and automated-access limits before production ingestion.",
+      "citation_url": "https://clubelo.com/",
+      "rank": 48,
+      "domain": "clubelo.com"
+    },
+    {
+      "name": "Football-Data.co.uk",
+      "website": "https://www.football-data.co.uk/downloadm.php",
+      "category": "historical football results and odds dataset",
+      "signal_types": [
+        "match results",
+        "historical betting odds",
+        "closing prices",
+        "football ratings",
+        "backtesting data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official site is dedicated to football results and betting data and links football ratings, opening/closing-odds tools and backtesting-related resources, useful for market-implied probability and historical evaluation.",
+      "access_or_rights_note": "The site contains betting disclaimers and commercial links; the fetched page does not state a blanket data license, so verify download and redistribution rights before embedding the data.",
+      "citation_url": "https://www.football-data.co.uk/downloadm.php",
+      "rank": 49,
+      "domain": "football-data.co.uk"
+    },
+    {
+      "name": "Understat",
+      "website": "https://understat.com/",
+      "category": "football analytics dataset",
+      "signal_types": [
+        "expected goals (xG)",
+        "shot locations",
+        "player shot quality",
+        "team attacking/defensive strength"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official site says it provides detailed xG statistics for top European leagues, a useful shot-quality signal complementary to final scores and box-score counts.",
+      "access_or_rights_note": "The page is an analytics website rather than an API or license grant; it does not state that automated extraction or redistribution is permitted, so obtain permission and respect site terms/robots rules.",
+      "citation_url": "https://understat.com/",
+      "rank": 50,
+      "domain": "understat.com"
+    },
+    {
+      "name": "MLB Baseball Savant Statcast CSV Documentation",
+      "website": "https://baseballsavant.mlb.com/csv-docs",
+      "category": "official sports research dataset",
+      "signal_types": [
+        "pitch type",
+        "pitch velocity",
+        "release position",
+        "batter/pitcher IDs",
+        "play outcomes"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "MLB's documentation defines fields for Statcast Search CSV downloads, including pitch type, game date, release speed/position, batter, pitcher, events and descriptions; these enable granular baseball feature engineering.",
+      "access_or_rights_note": "The citation documents CSV fields but does not grant a general redistribution or commercial-use license; review MLB/MLBAM terms and access policies before operational use.",
+      "citation_url": "https://baseballsavant.mlb.com/csv-docs",
+      "rank": 51,
+      "domain": "baseballsavant.mlb.com"
+    },
+    {
+      "name": "nflfastR",
+      "website": "https://nflfastr.com/",
+      "category": "football research dataset and modeling toolkit",
+      "signal_types": [
+        "NFL play-by-play",
+        "EPA",
+        "win probability",
+        "completion probability",
+        "CPOE",
+        "YAC expectation"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official package site documents NFL play-by-play back to 1999, expected-points/win-probability/completion-probability models, and nightly-updated complete-season datasets.",
+      "access_or_rights_note": "The site recommends downloading releases or using nflreadr and documents the package; it does not itself establish a commercial redistribution license for underlying NFL data, so check the linked repository/data terms.",
+      "citation_url": "https://nflfastr.com/",
+      "rank": 52,
+      "domain": "nflfastr.com"
+    },
+    {
+      "name": "Kaggle Sports Datasets",
+      "website": "https://www.kaggle.com/datasets?search=sports",
+      "category": "research dataset repository and benchmark source",
+      "signal_types": [
+        "sports tabular datasets",
+        "competition datasets",
+        "benchmark splits",
+        "community notebooks"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "Kaggle's official dataset index provides a searchable repository of sports datasets that can supply reproducible research inputs and benchmark candidates when provenance and quality are checked.",
+      "access_or_rights_note": "This citation is an index, not a license for every dataset: rights, attribution, and download conditions must be checked on each dataset page before use.",
+      "citation_url": "https://www.kaggle.com/datasets?search=sports",
+      "rank": 53,
+      "domain": "kaggle.com"
+    },
+    {
+      "name": "TrueSkill Python Documentation",
+      "website": "https://trueskill.org/",
+      "category": "probabilistic rating toolkit",
+      "signal_types": [
+        "team skill ratings",
+        "uncertainty",
+        "draw probability",
+        "win probability",
+        "match quality"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The documentation provides Bayesian rating objects for teams and players, match-quality/draw-probability calculations and an explicit two-team win-probability example, directly supporting sports outcome modeling.",
+      "access_or_rights_note": "The page documents installation via pip and an implementation API, but the fetched documentation does not state a separate data license; review the package's own license before redistribution.",
+      "citation_url": "https://trueskill.org/",
+      "rank": 54,
+      "domain": "trueskill.org"
+    },
+    {
+      "name": "TrueSkill: A Bayesian Skill Rating System",
+      "website": "https://www.microsoft.com/en-us/research/wp-content/uploads/2007/01/NIPS2006_0688.pdf",
+      "category": "sports-relevant research paper",
+      "signal_types": [
+        "Bayesian skill estimation",
+        "paired-comparison probabilities",
+        "team ranking",
+        "uncertainty propagation"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The paper formalizes TrueSkill as a Bayesian factor-graph rating system that infers marginal skill distributions and models team outcomes, supplying a principled research basis for probability forecasts.",
+      "access_or_rights_note": "The citation is a research-paper PDF, not a data feed or API; use of the publication and any derived implementation should follow the publisher/Microsoft copyright and licensing conditions.",
+      "citation_url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2007/01/NIPS2006_0688.pdf",
+      "rank": 55,
+      "domain": "microsoft.com"
+    },
+    {
+      "name": "scikit-learn Probability Calibration",
+      "website": "https://scikit-learn.org/stable/modules/calibration.html",
+      "category": "model calibration and evaluation tooling",
+      "signal_types": [
+        "reliability diagrams",
+        "probability calibration",
+        "calibrated classifiers",
+        "probability quality diagnostics"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official documentation explains calibration, how to detect whether predicted probabilities are reliable, and how the calibration module recalibrates probabilities or adds probability prediction support.",
+      "access_or_rights_note": "This is documentation for the open-source scikit-learn implementation; the page itself does not replace the software license or define rights for any external sports data used with it.",
+      "citation_url": "https://scikit-learn.org/stable/modules/calibration.html",
+      "rank": 56,
+      "domain": "scikit-learn.org"
+    },
+    {
+      "name": "tidymodels Model Calibration",
+      "website": "https://www.tidymodels.org/learn/models/calibration/",
+      "category": "model calibration and evaluation tooling",
+      "signal_types": [
+        "classification calibration",
+        "calibration plots",
+        "post-fit probability adjustment",
+        "resampling evaluation"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official tutorial defines a well-calibrated classifier as one whose probability estimates agree with event frequencies and demonstrates calibration as post-processing after model fitting.",
+      "access_or_rights_note": "The page is educational documentation and does not provide sports data or a separate commercial data license; software and package use remain subject to their respective licenses.",
+      "citation_url": "https://www.tidymodels.org/learn/models/calibration/",
+      "rank": 57,
+      "domain": "tidymodels.org"
+    },
+    {
+      "name": "NannyML Probability Calibration",
+      "website": "https://www.nannyml.com/blog/probability-calibration/",
+      "category": "model monitoring and calibration research",
+      "signal_types": [
+        "probability calibration",
+        "forecast reliability",
+        "post-deployment monitoring",
+        "performance-vs-calibration analysis"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The official article explains that calibrated probabilities match observed class frequencies and distinguishes calibration quality from overall predictive performance, a useful monitoring criterion for sports probabilities.",
+      "access_or_rights_note": "This citation is a technical article rather than a sports dataset or API; it does not grant rights to any third-party examples, and product/package licensing should be checked separately.",
+      "citation_url": "https://www.nannyml.com/blog/probability-calibration/",
+      "rank": 58,
+      "domain": "nannyml.com"
+    },
+    {
+      "name": "Metaculus API",
+      "website": "https://www.metaculus.com/api/",
+      "category": "probabilistic forecasting platform and evaluation data",
+      "signal_types": [
+        "community probability forecasts",
+        "question resolution",
+        "forecast scores",
+        "forecast distributions"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "The official API documentation exposes question text, resolutions and forecast-related data, making Metaculus relevant as a probabilistic-forecasting benchmark and aggregation reference.",
+      "access_or_rights_note": "The documentation explicitly says API use/data use is governed by Metaculus Terms of Use, requires authentication, and restricts using API data to train/evaluate/develop AI/ML without prior written permission; this is not an unrestricted training dataset.",
+      "citation_url": "https://www.metaculus.com/api/",
+      "rank": 59,
+      "domain": "metaculus.com"
+    },
+    {
+      "name": "OpticOdds API",
+      "website": "https://developer.opticodds.com/reference/getting-started",
+      "category": "sports odds and market-data API",
+      "signal_types": [
+        "live odds",
+        "pre-match odds",
+        "historical odds",
+        "fixtures",
+        "teams and players",
+        "market synchronization"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official getting-started documentation directs users to squads and fixtures for team/player and scheduled or historical games, making it useful for market-implied probabilities, line movement and fixture synchronization.",
+      "access_or_rights_note": "The documentation requires a license key requested through OpticOdds' contact form; it does not state a free or open license, so production access requires a commercial agreement.",
+      "citation_url": "https://developer.opticodds.com/reference/getting-started",
+      "rank": 60,
+      "domain": "developer.opticodds.com"
+    },
+    {
+      "name": "AP Media API",
+      "website": "https://developer.ap.org/ap-media-api/",
+      "category": "sports news / licensed content API",
+      "signal_types": [
+        "news stories",
+        "text",
+        "pictures",
+        "video",
+        "audio",
+        "archives"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "AP exposes programmatic access to content, including 30 days of content and current/archive picture, video, audio and print-graphics material, making it a strong structured news signal for injuries, availability and events.",
+      "access_or_rights_note": "The page describes the material as licensed content and links to API getting-started, FAQ and developer-guide resources; obtain an AP license and follow the API terms rather than scraping AP News.",
+      "citation_url": "https://developer.ap.org/ap-media-api/",
+      "rank": 61,
+      "domain": "developer.ap.org"
+    },
+    {
+      "name": "Reuters Connect",
+      "website": "https://www.reutersconnect.com/",
+      "category": "sports news / editorial licensing",
+      "signal_types": [
+        "breaking news",
+        "text",
+        "photos",
+        "video",
+        "archive media",
+        "sentiment inputs"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Reuters Connect is an editorial-content marketplace with real-time news photos, archive imagery and video, useful for event and sentiment features around teams, leagues and sponsors.",
+      "access_or_rights_note": "The product is explicitly for accessing and licensing multimedia assets; use requires a commercial license/account, and the page does not grant permission to scrape or republish material.",
+      "citation_url": "https://www.reutersconnect.com/",
+      "rank": 62,
+      "domain": "reutersconnect.com"
+    },
+    {
+      "name": "Sportmonks Football News API",
+      "website": "https://www.sportmonks.com/football-api/football-news-api/",
+      "category": "sports news API",
+      "signal_types": [
+        "pre-match previews",
+        "post-match reports",
+        "fixture-linked news",
+        "league news",
+        "team/player news"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Sportmonks says its feed supplies expert-written pre-match previews and AI-written post-match reports as structured JSON on fixture calls, which directly fills match-context and narrative signals.",
+      "access_or_rights_note": "The page invites users to obtain an API token and advertises no contracts or minimums; it does not say the feed is free or that content may be redistributed, so verify plan and content-license terms before production use.",
+      "citation_url": "https://www.sportmonks.com/football-api/football-news-api/",
+      "rank": 63,
+      "domain": "sportmonks.com"
+    },
+    {
+      "name": "SportsDataIO Developer APIs",
+      "website": "https://sportsdata.io/developers",
+      "category": "sports data API",
+      "signal_types": [
+        "league feeds",
+        "live scores",
+        "rosters",
+        "injuries",
+        "transactions",
+        "stats"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The official developer portal exposes getting-started, competition-coverage, available-data-feed and API-resource sections, providing a documented integration path for broad event and roster context around prediction signals.",
+      "access_or_rights_note": "The portal is a developer resource, not a blanket open-data license; pricing, feed availability and permitted uses must be confirmed with SportsDataIO for the selected product.",
+      "citation_url": "https://sportsdata.io/developers",
+      "rank": 64,
+      "domain": "sportsdata.io"
+    },
+    {
+      "name": "API-Sports",
+      "website": "https://api-sports.io/",
+      "category": "multi-sport data API",
+      "signal_types": [
+        "fixtures",
+        "scores",
+        "standings",
+        "teams",
+        "players",
+        "advanced statistics"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "API-Sports describes dozens of APIs covering essential sport data and more advanced statistics across multiple sports, useful as a breadth-oriented source for schedules, form and player/team features.",
+      "access_or_rights_note": "The fetched product page describes API availability but does not establish that data is open or freely redistributable; confirm the applicable account, rate and commercial-use terms.",
+      "citation_url": "https://api-sports.io/",
+      "rank": 65,
+      "domain": "api-sports.io"
+    },
+    {
+      "name": "Sportradar Sports Data API",
+      "website": "https://sportradar.com/media-tech/data-content/sports-data-api/?lang=en-us",
+      "category": "official sports data API",
+      "signal_types": [
+        "real-time scores",
+        "statistics",
+        "play-by-play",
+        "fixtures",
+        "content feeds"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Sportradar presents easy-to-consume API feeds intended to upgrade content offerings and says its APIs are used by startups and enterprise customers, making it a candidate for reliable real-time sports signals.",
+      "access_or_rights_note": "The page directs users to a free trial, API documentation and sandbox; it does not grant unrestricted access or reuse rights, so a commercial agreement and sport-specific entitlements should be assumed.",
+      "citation_url": "https://sportradar.com/media-tech/data-content/sports-data-api/?lang=en-us",
+      "rank": 66,
+      "domain": "sportradar.com"
+    },
+    {
+      "name": "Genius Sports Official Sports Data APIs",
+      "website": "https://www.geniussports.com/engage/official-sports-data-api/",
+      "category": "official sports data API",
+      "signal_types": [
+        "official live data",
+        "league data",
+        "player/team data",
+        "real-time game signals"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Genius Sports says it is an official sports-data partner to major leagues and offers data for the NFL, NCAA and more, which can add authoritative live and competition signals.",
+      "access_or_rights_note": "The page directs prospects to contact sales and describes official partners; access is therefore commercial/contractual rather than an asserted free feed, and downstream use should follow the supplied license.",
+      "citation_url": "https://www.geniussports.com/engage/official-sports-data-api/",
+      "rank": 67,
+      "domain": "geniussports.com"
+    },
+    {
+      "name": "Data Sports Group Sports Data API",
+      "website": "https://datasportsgroup.com/products-api/",
+      "category": "sports data API",
+      "signal_types": [
+        "live scores",
+        "fixtures",
+        "standings",
+        "statistics",
+        "JSON/XML feeds"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "DSG presents a Sports Data API product backed by technical documentation, starter code and example calls, offering a documented route to event and statistical data.",
+      "access_or_rights_note": "The page provides an API-signup route and says documentation/support are available; it does not state that the feed is free or open, so request commercial and redistribution terms.",
+      "citation_url": "https://datasportsgroup.com/products-api/",
+      "rank": 68,
+      "domain": "datasportsgroup.com"
+    },
+    {
+      "name": "The Odds API",
+      "website": "https://the-odds-api.com/",
+      "category": "betting markets / odds API",
+      "signal_types": [
+        "moneyline odds",
+        "spreads",
+        "totals",
+        "bookmaker consensus",
+        "line movement",
+        "historical odds"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "The product exposes bookmaker odds through an API and shows event, teams, bookmaker, market, outcome and price fields, enabling consensus, implied-probability and line-movement features.",
+      "access_or_rights_note": "The page shows API-key access and paid usage plans (including a limited free plan); plan limits, bookmaker coverage and any display/redistribution rights must be checked before use.",
+      "citation_url": "https://the-odds-api.com/",
+      "rank": 69,
+      "domain": "the-odds-api.com"
+    },
+    {
+      "name": "Betfair Exchange API",
+      "website": "https://developer.betfair.com/exchange-api/",
+      "category": "betting exchange API",
+      "signal_types": [
+        "exchange odds",
+        "market depth/volumes",
+        "market navigation",
+        "bet activity",
+        "price movement"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Betfair's official guide says the Exchange API provides navigation data, odds and volumes retrieval and bet-placement operations, supplying exchange prices and liquidity signals distinct from sportsbook lines.",
+      "access_or_rights_note": "The official developer page is the documentation for Betfair API access; access is subject to Betfair eligibility, account and developer terms, and the fetched page does not promise unrestricted or free production use.",
+      "citation_url": "https://developer.betfair.com/exchange-api/",
+      "rank": 70,
+      "domain": "developer.betfair.com"
+    },
+    {
+      "name": "MLB.com",
+      "website": "https://www.mlb.com/",
+      "category": "league primary news and official feed",
+      "signal_types": [
+        "official game results",
+        "scores",
+        "game recaps",
+        "team/player news",
+        "video"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "MLB.com is the league's official site and exposes scores, final results, game-day links and watch links, making it a primary source for baseball status and official event context.",
+      "access_or_rights_note": "This is a consumer editorial site, not an advertised public API or open-data license; use official partnership products or permission and do not assume page scraping or media reuse is allowed.",
+      "citation_url": "https://www.mlb.com/",
+      "rank": 71,
+      "domain": "mlb.com"
+    },
+    {
+      "name": "NFL League Transactions",
+      "website": "https://www.nfl.com/transactions/",
+      "category": "league transactions / primary source",
+      "signal_types": [
+        "trades",
+        "signings",
+        "waivers",
+        "reserve-list changes",
+        "terminations",
+        "other transactions"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "NFL's official transactions page organizes league activity by trades, signings, reserve list, waivers, terminations and other transactions, directly supplying roster-change signals.",
+      "access_or_rights_note": "The page is an official web presentation of NFL transactions but does not state an open API or reuse license; prefer an authorized feed or obtain permission and respect NFL site terms.",
+      "citation_url": "https://www.nfl.com/transactions/",
+      "rank": 72,
+      "domain": "nfl.com"
+    },
+    {
+      "name": "NBA Player Transactions",
+      "website": "https://www.nba.com/players/transactions",
+      "category": "league transactions / primary source",
+      "signal_types": [
+        "signings",
+        "trades",
+        "waivers",
+        "claimed-off-waivers events",
+        "player movement"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "NBA.com provides a league transactions view with filters for signing, trade, waive and claimed-off-waivers events, useful for current roster and availability features.",
+      "access_or_rights_note": "This is an official NBA web page, but the fetched page does not grant a public data license or scraping permission; use authorized NBA data access or seek permission for production redistribution.",
+      "citation_url": "https://www.nba.com/players/transactions",
+      "rank": 73,
+      "domain": "nba.com"
+    },
+    {
+      "name": "NHL EDGE",
+      "website": "https://www.nhl.com/news/topic/nhl-edge/nhl-edge-site-new-look-has-advanced-statistics-for-everybody",
+      "category": "league advanced statistics / primary source",
+      "signal_types": [
+        "advanced player statistics",
+        "zone maps",
+        "data visualizations",
+        "player comparisons",
+        "daily updates"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "The NHL describes EDGE as a redesigned platform with daily updates, zone maps, data visualizations and player comparisons, offering richer hockey performance signals beyond box scores.",
+      "access_or_rights_note": "The cited page describes a fan-facing NHL platform and does not state an open API or reuse license; treat automated extraction and redistribution as permission-dependent.",
+      "citation_url": "https://www.nhl.com/news/topic/nhl-edge/nhl-edge-site-new-look-has-advanced-statistics-for-everybody",
+      "rank": 74,
+      "domain": "nhl.com"
+    },
+    {
+      "name": "MLS Press Releases",
+      "website": "https://www.mlssoccer.com/news/topics/press-release/",
+      "category": "league press releases / primary source",
+      "signal_types": [
+        "official announcements",
+        "discipline/news context",
+        "roster/team announcements",
+        "league operations",
+        "sentiment text"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "MLSsoccer maintains a dedicated Press Release section, providing primary league announcements that can corroborate transfers, competition operations and other news signals.",
+      "access_or_rights_note": "The page is editorial web content and does not state an open feed or reuse license; use it as a provenance/reference source and obtain permission or an authorized feed for systematic republication.",
+      "citation_url": "https://www.mlssoccer.com/news/topics/press-release/",
+      "rank": 75,
+      "domain": "mlssoccer.com"
+    },
+    {
+      "name": "UEFA Media Releases",
+      "website": "https://www.uefa.com/news-media/mediaservices/mediareleases/",
+      "category": "governing-body press releases",
+      "signal_types": [
+        "competition announcements",
+        "disciplinary/administrative news",
+        "event operations",
+        "official sentiment/context"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "UEFA's official media-release archive supplies primary announcements from European football's governing body, useful for competition, scheduling and governance context that may not appear in match feeds.",
+      "access_or_rights_note": "The page identifies UEFA.com as UEFA's official site but does not provide an open-data or republication license; use links/metadata conservatively and seek authorization for bulk reuse.",
+      "citation_url": "https://www.uefa.com/news-media/mediaservices/mediareleases/",
+      "rank": 76,
+      "domain": "uefa.com"
+    },
+    {
+      "name": "FIFA Media Releases",
+      "website": "https://inside.fifa.com/organisation/media/all-media-releases",
+      "category": "governing-body press releases",
+      "signal_types": [
+        "international football announcements",
+        "tournament news",
+        "governance news",
+        "official documents/context"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "FIFA's official media-release listing aggregates releases from FIFA departments, providing primary international-football governance and tournament context for news and event features.",
+      "access_or_rights_note": "The cited page is an official publication index but does not grant an open reuse license; obtain permission or use an authorized media/data product for bulk ingestion or republishing.",
+      "citation_url": "https://inside.fifa.com/organisation/media/all-media-releases",
+      "rank": 77,
+      "domain": "inside.fifa.com"
+    },
+    {
+      "name": "Pinnacle API Documentation",
+      "website": "https://github.com/pinnacleapi/pinnacleapi-documentation",
+      "category": "sportsbook betting API",
+      "signal_types": [
+        "sportsbook odds",
+        "markets",
+        "betting lines",
+        "odds updates",
+        "rate-limit-aware polling"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Pinnacle's public documentation repository describes a REST betting service and includes an API reference and rate-limiting guidance, making it useful for sportsbook price and market signals.",
+      "access_or_rights_note": "The cited repository is documentation, not an assertion of unrestricted access or a free commercial feed; credentials, jurisdiction, account eligibility and Pinnacle's current terms must be verified before integration.",
+      "citation_url": "https://github.com/pinnacleapi/pinnacleapi-documentation",
+      "rank": 78,
+      "domain": "github.com"
+    },
+    {
+      "name": "Reddit Data API",
+      "website": "https://redditinc.com/policies/data-api-terms",
+      "category": "social/community API",
+      "signal_types": [
+        "community discussion",
+        "comment sentiment",
+        "subreddit activity",
+        "fan attention",
+        "community momentum"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Reddit's Data API can provide community discussion signals around teams and players, useful for attention and sentiment features when subreddit context and bot/noise controls are retained.",
+      "access_or_rights_note": "Reddit's terms explicitly address fees/restrictions, prohibit circumventing API limits or abusive use, and require any stated attribution; approval, applicable fees and machine-learning/redistribution restrictions must be checked before use.",
+      "citation_url": "https://redditinc.com/policies/data-api-terms",
+      "rank": 79,
+      "domain": "redditinc.com"
+    },
+    {
+      "name": "SponsorUnited Sponsorship Intelligence",
+      "website": "https://www.sponsorunited.com/",
+      "category": "financial / sponsorship context",
+      "signal_types": [
+        "sponsor relationships",
+        "commercial partnerships",
+        "brand exposure",
+        "sponsorship benchmarks",
+        "market context"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "SponsorUnited presents an AI-assisted sponsorship-intelligence platform and says its solutions help discover whitespace, evaluate properties and benchmark sponsorship activity, adding commercial context to team/league signals.",
+      "access_or_rights_note": "The page markets an integrated platform rather than an open feed and provides no blanket reuse license; treat access as a sales/product matter and confirm data provenance and permitted use contractually.",
+      "citation_url": "https://www.sponsorunited.com/",
+      "rank": 80,
+      "domain": "sponsorunited.com"
+    },
+    {
+      "name": "Hawk-Eye Innovations",
+      "website": "https://www.hawkeyeinnovations.com/",
+      "category": "optical/event tracking",
+      "signal_types": [
+        "player tracking",
+        "ball/object tracking",
+        "camera calibration",
+        "officiating events"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Hawk-Eye says its technology provides precision tracking, broadcast and officiating, and that its tracking and camera-calibration technology powers performance, ball and object tracking. These outputs can become event, trajectory and player-position features.",
+      "access_or_rights_note": "The cited page is a commercial product site and does not state a public data license or open API. Treat any feed, video, or derived data as requiring a provider/league agreement.",
+      "citation_url": "https://www.hawkeyeinnovations.com/",
+      "rank": 81,
+      "domain": "hawkeyeinnovations.com"
+    },
+    {
+      "name": "TRACAB Optical",
+      "website": "https://www.ea.com/tracab/tracab-optical",
+      "category": "optical/event tracking",
+      "signal_types": [
+        "live player tracking",
+        "ball tracking",
+        "position coordinates",
+        "team shape"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "EA's TRACAB page presents the system as a live sports tracking solution and describes accurate tracking; a licensed feed could supply synchronized player/ball coordinates and derived formations or speeds.",
+      "access_or_rights_note": "The cited page describes a commercial TRACAB product but does not publish API or redistribution terms. Obtain written access and rights before ingesting or redistributing tracking data.",
+      "citation_url": "https://www.ea.com/tracab/tracab-optical",
+      "rank": 82,
+      "domain": "ea.com"
+    },
+    {
+      "name": "Genius Sports Second Spectrum",
+      "website": "https://www.geniussports.com/newsroom/genius-sports-second-spectrum-tracking-technology-approved-by-fifa-quality-programme-for-epts/",
+      "category": "optical/event tracking",
+      "signal_types": [
+        "live player tracking",
+        "ball tracking",
+        "performance events",
+        "augmented-broadcast metadata"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Genius says Second Spectrum captures fast player and ball tracking data and supports performance analysis, sports science, automated officiating and interactive broadcasts. Those are directly useful for movement, possession and event features.",
+      "access_or_rights_note": "The page identifies Genius as an official data, technology and commercial partner and does not grant a public-use license. Access should be negotiated through Genius/rights holders; do not assume editorial or broadcast reuse is permitted.",
+      "citation_url": "https://www.geniussports.com/newsroom/genius-sports-second-spectrum-tracking-technology-approved-by-fifa-quality-programme-for-epts/",
+      "rank": 83,
+      "domain": "geniussports.com"
+    },
+    {
+      "name": "KINEXON Sports Player Tracking",
+      "website": "https://kinexon-sports.com/technology/player-tracking",
+      "category": "optical/event tracking",
+      "signal_types": [
+        "player positions",
+        "ball movements",
+        "GNSS/GPS",
+        "LPS",
+        "IMU",
+        "computer-vision tracking"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "KINEXON says it tracks player and ball movement and uses GNSS/GPS, local positioning, IMUs and optical computer-vision tracking. A team-authorized integration can turn these into workload, speed, spacing and tactical signals.",
+      "access_or_rights_note": "This is a product page, not an open-data license or API specification. Access to team, league or match data should be obtained from KINEXON and the relevant rights holder.",
+      "citation_url": "https://kinexon-sports.com/technology/player-tracking",
+      "rank": 84,
+      "domain": "kinexon-sports.com"
+    },
+    {
+      "name": "Catapult Athlete Monitoring",
+      "website": "https://www.catapult.com/solutions/athlete-monitoring",
+      "category": "wearable/event tracking",
+      "signal_types": [
+        "athlete workload",
+        "sensor telemetry",
+        "performance analytics",
+        "training status"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Catapult describes athlete monitoring with athlete data, sensors and analytics, supporting individualized access from athletes to teams. Authorized exports can add workload, fatigue-proxy and availability features.",
+      "access_or_rights_note": "The cited page is a commercial solution page and does not publish an open feed or license. Athlete and team data also require appropriate authorization and privacy controls; confirm Catapult's API/export terms.",
+      "citation_url": "https://www.catapult.com/solutions/athlete-monitoring",
+      "rank": 85,
+      "domain": "catapult.com"
+    },
+    {
+      "name": "Sportlogiq",
+      "website": "https://www.sportlogiq.com/2020/04/23/elementor-2593/",
+      "category": "video/computer vision",
+      "signal_types": [
+        "optical player coordinates",
+        "game events",
+        "participation",
+        "video-derived tracking"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Sportlogiq explains that its computer-vision process tracks all 22 football players from video, using sideline and end-zone feeds and participation lists. This can provide coordinate, event and on-field-player features without wearable sensors.",
+      "access_or_rights_note": "The page describes Sportlogiq's commercial data workflow but does not provide an open-data license or public API. License video-derived data and any underlying footage from Sportlogiq and the relevant competition.",
+      "citation_url": "https://www.sportlogiq.com/2020/04/23/elementor-2593/",
+      "rank": 86,
+      "domain": "sportlogiq.com"
+    },
+    {
+      "name": "Spiideo Perform",
+      "website": "https://www.spiideo.com/spiideo-perform/",
+      "category": "video/computer vision",
+      "signal_types": [
+        "game video",
+        "player analysis",
+        "tactical annotations",
+        "live analysis data"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Spiideo describes Perform as a cloud sports-video analysis tool for detailed game and player analysis, with uploaded recordings, illustrations, visualizations and live data. It can supply authorized video-review and tactical-context features.",
+      "access_or_rights_note": "The page is a commercial product description and does not state an open API, license or redistribution permission. Secure account/API access and rights to use the recordings and derived outputs.",
+      "citation_url": "https://www.spiideo.com/spiideo-perform/",
+      "rank": 87,
+      "domain": "spiideo.com"
+    },
+    {
+      "name": "Pixellot Automated Tracking Camera",
+      "website": "https://www.pixellot.tv/sports/soccer/",
+      "category": "video/computer vision",
+      "signal_types": [
+        "ball-following video",
+        "player tracking",
+        "automated highlights",
+        "video analytics"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Pixellot says its multi-camera AI system covers the field, follows the ball, captures action and tracks players, with video analytics for training and matches. These outputs can support event extraction and contextual video features.",
+      "access_or_rights_note": "The page describes a commercial AI-camera and analytics solution and does not grant a public feed or content license. Confirm export/API availability and obtain venue, league and broadcast rights for footage and derivatives.",
+      "citation_url": "https://www.pixellot.tv/sports/soccer/",
+      "rank": 88,
+      "domain": "pixellot.tv"
+    },
+    {
+      "name": "National Weather Service API",
+      "website": "https://www.weather.gov/documentation/services-web-API",
+      "category": "weather/venue/environment",
+      "signal_types": [
+        "forecasts",
+        "alerts",
+        "observations",
+        "weather conditions"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "NWS documentation says its API provides forecasts, alerts and observations. Join venue coordinates and match times to create precipitation, temperature, wind and severe-weather features.",
+      "access_or_rights_note": "Use the service according to the current NWS API documentation and applicable federal data policies; the cited page is documentation rather than a blanket commercial redistribution license.",
+      "citation_url": "https://www.weather.gov/documentation/services-web-API",
+      "rank": 89,
+      "domain": "weather.gov"
+    },
+    {
+      "name": "OpenWeather One Call API",
+      "website": "https://openweathermap.org/api/one-call-3",
+      "category": "weather/venue/environment",
+      "signal_types": [
+        "current weather",
+        "hourly forecast",
+        "daily forecast",
+        "historical weather"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "OpenWeather documents One Call requests for a latitude/longitude and promotes forecast and historical-weather functionality in its current documentation. Use it to align venue weather with kickoff, start time and in-game windows.",
+      "access_or_rights_note": "The page requires an OpenWeather API key and points users to current One Call documentation. Pricing, quota and permitted use should be checked against the applicable OpenWeather plan before production use.",
+      "citation_url": "https://openweathermap.org/api/one-call-3",
+      "rank": 90,
+      "domain": "openweathermap.org"
+    },
+    {
+      "name": "Tomorrow.io Weather API",
+      "website": "https://docs.tomorrow.io/reference/welcome",
+      "category": "weather/venue/environment",
+      "signal_types": [
+        "forecast",
+        "historical weather",
+        "minute-resolution weather",
+        "weather alerts/context"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Tomorrow.io documents a Timeline API with weather data from seven days in the past to 14 days ahead and up to one-minute time resolution. This supports time-aligned rain, wind, temperature and historical-weather features.",
+      "access_or_rights_note": "The documentation presents API endpoints and premium features but does not establish unrestricted free commercial use. Use requires an account/key and compliance with the selected Tomorrow.io plan and terms.",
+      "citation_url": "https://docs.tomorrow.io/reference/welcome",
+      "rank": 91,
+      "domain": "docs.tomorrow.io"
+    },
+    {
+      "name": "Meteomatics Weather API",
+      "website": "https://www.meteomatics.com/en/api/getting-started/",
+      "category": "weather/venue/environment",
+      "signal_types": [
+        "temperature",
+        "precipitation",
+        "wind",
+        "ocean/environment",
+        "climate history"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Meteomatics documents parameterized REST requests by time and coordinates, including temperature, hourly precipitation and wind. Its weather, ocean, environment and climate parameters can be joined to venue and match windows.",
+      "access_or_rights_note": "The page shows authenticated API-style requests and links to a commercial weather API. Confirm subscription, quota and redistribution rights with Meteomatics before production use.",
+      "citation_url": "https://www.meteomatics.com/en/api/getting-started/",
+      "rank": 92,
+      "domain": "meteomatics.com"
+    },
+    {
+      "name": "IQAir AirVisual API",
+      "website": "https://api-docs.iqair.com/",
+      "category": "air quality/environment",
+      "signal_types": [
+        "AQI",
+        "PM2.5",
+        "PM10",
+        "pollution forecast",
+        "temperature",
+        "humidity",
+        "wind"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "IQAir's API documentation provides current and forecast pollution fields including AQI, PM2.5 and PM10, alongside weather fields such as temperature, pressure, humidity and wind. These can become venue air-quality and heat/stress context.",
+      "access_or_rights_note": "IQAir directs users to its air-quality API plans/features and the documented API uses an API key. Do not assume the data or derived displays are unrestricted; follow the selected IQAir plan and terms.",
+      "citation_url": "https://api-docs.iqair.com/",
+      "rank": 93,
+      "domain": "api-docs.iqair.com"
+    },
+    {
+      "name": "Google Maps Routes API",
+      "website": "https://developers.google.com/maps/documentation/routes",
+      "category": "travel/time zones",
+      "signal_types": [
+        "route distance",
+        "travel duration",
+        "route matrix",
+        "arrival/departure context"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "Google's Routes documentation says the API calculates travel times and distances for route matrices of up to 625 route elements. Querying team base-to-venue routes at scheduled departure times can produce travel burden and delay features.",
+      "access_or_rights_note": "Google Maps Platform is an API product with usage, billing and Maps Platform Terms requirements; the cited page does not grant a general right to cache or redistribute results. Check current terms and quotas.",
+      "citation_url": "https://developers.google.com/maps/documentation/routes",
+      "rank": 94,
+      "domain": "developers.google.com"
+    },
+    {
+      "name": "HERE Routing API v8",
+      "website": "https://docs.here.com/routing/docs/routing-v8-intro",
+      "category": "travel/time zones",
+      "signal_types": [
+        "route calculation",
+        "travel time",
+        "transport mode",
+        "traffic/road attributes"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "HERE documents an HTTP JSON routing API supporting multiple locations, transport modes, route penalties and geographical route output. It can provide travel-time and route-complexity features for venue access.",
+      "access_or_rights_note": "The cited page is HERE developer documentation, not an open-data license. Production access, quotas, attribution and storage/redistribution rights depend on the HERE account and agreement.",
+      "citation_url": "https://docs.here.com/routing/docs/routing-v8-intro",
+      "rank": 95,
+      "domain": "docs.here.com"
+    },
+    {
+      "name": "TimeZoneDB API",
+      "website": "https://timezonedb.com/api",
+      "category": "travel/time zones",
+      "signal_types": [
+        "venue time zone",
+        "UTC offset",
+        "DST state",
+        "local match time"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "TimeZoneDB documents REST endpoints returning structured XML or JSON for listing, looking up and converting time zones. Normalize venue-local start times and daylight-saving transitions before joining travel or weather signals.",
+      "access_or_rights_note": "The page says registration for an API key is required, personal/non-commercial API use is free with a one-request-per-second limit, and commercial/heavy use should upgrade to premium. Commercial engine use therefore needs plan verification.",
+      "citation_url": "https://timezonedb.com/api",
+      "rank": 96,
+      "domain": "timezonedb.com"
+    },
+    {
+      "name": "IANA Time Zone Database",
+      "website": "https://www.iana.org/time-zones",
+      "category": "travel/time zones",
+      "signal_types": [
+        "IANA zone IDs",
+        "historical UTC offsets",
+        "DST transitions",
+        "political time-zone changes"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "IANA describes tz/zoneinfo as code and data representing changes to time-zone boundaries, UTC offsets and daylight-saving rules, intended for software implementers. It is a robust basis for converting event timestamps by venue.",
+      "access_or_rights_note": "The page documents the database and distribution model but the cited page should be consulted with the release files for exact licensing terms. Preserve the release/version and check downstream package obligations.",
+      "citation_url": "https://www.iana.org/time-zones",
+      "rank": 97,
+      "domain": "iana.org"
+    },
+    {
+      "name": "ITF Court Pace Classification",
+      "website": "https://www.itftennis.com/en/about-us/tennis-tech/classified-surfaces/",
+      "category": "surfaces",
+      "signal_types": [
+        "court surface pace",
+        "surface class",
+        "Court Pace Rating"
+      ],
+      "integration_priority": "high",
+      "why_it_matters": "ITF says its Court Pace Classification Programme helps purchasers determine suitable tennis-surface type and classifies surfaces into five categories by Court Pace Rating. Encode surface class/pace as a tennis matchup and serve/return context feature.",
+      "access_or_rights_note": "The page offers access to ITF services through Tennis ID and does not state that all classification data may be freely republished. Cite ITF and obtain permission for proprietary venue/product records.",
+      "citation_url": "https://www.itftennis.com/en/about-us/tennis-tech/classified-surfaces/",
+      "rank": 98,
+      "domain": "itftennis.com"
+    },
+    {
+      "name": "Ticketmaster Presence API",
+      "website": "https://developer.ticketmaster.com/products-and-docs/apis/presence/",
+      "category": "attendance/crowd",
+      "signal_types": [
+        "ticket validation",
+        "ticket scans",
+        "attendance proxy",
+        "venue entry activity"
+      ],
+      "integration_priority": "medium",
+      "why_it_matters": "Ticketmaster says its Presence API validates tickets and manages scanning devices for Ticketmaster events. Authorized scan counts or entry timestamps can create attendance, lateness and crowd-arrival features.",
+      "access_or_rights_note": "The official developer portal presents Presence as an API product; it does not grant anonymous or unrestricted access. Request access and use scan/attendee data only under Ticketmaster, event-organizer and privacy terms.",
+      "citation_url": "https://developer.ticketmaster.com/products-and-docs/apis/presence/",
+      "rank": 99,
+      "domain": "developer.ticketmaster.com"
+    },
+    {
+      "name": "CrowdIQ",
+      "website": "https://crowdiq.ai/about/",
+      "category": "attendance/crowd",
+      "signal_types": [
+        "attendance",
+        "crowd movement",
+        "fan engagement",
+        "demographics",
+        "buying behavior"
+      ],
+      "integration_priority": "low",
+      "why_it_matters": "CrowdIQ says its platform measures crowd intelligence and that its origins include fan images at games; it describes signals such as passion, loyalty, movement and buying behavior. A licensed venue feed could add crowd-intensity and engagement context.",
+      "access_or_rights_note": "The cited page describes a proprietary commercial platform and does not publish an open dataset or license. Any image-derived, demographic or behavioral data requires provider and venue authorization plus appropriate privacy review.",
+      "citation_url": "https://crowdiq.ai/about/",
+      "rank": 100,
+      "domain": "crowdiq.ai"
+    }
+  ],
+  "source_list_notes": [
+    "Priority is an engineering prioritization for closing the gaps documented in this repository, not a claim that any provider is approved or superior.",
+    "The list includes commercial feeds, public official pages, research datasets and software/evaluation documentation. Their access and legal status differ; each item carries a conservative rights note.",
+    "Several entries are separate products/pages from the same vendor. The list contains 100 verified source URLs and 81 distinct domains; deduplicate at procurement/integration time where one contract can cover multiple products.",
+    "The strongest immediate path is not ingesting all 100. Start with the high-priority rows that address fantasy projections, injuries/availability, schedules/rosters, odds/market depth, weather/travel and evaluation baselines; shadow the rest."
+  ],
+  "accuracy_and_claim_testing": {
+    "cross_checks": [
+      {
+        "claim": "The repo is not ready to claim an all-knowing or most-accurate engine.",
+        "test": "Compared README launch posture, current calibration metrics, fantasy blocker and signal architecture; all constrain public claims and identify unresolved calibration/model-ownership gaps.",
+        "citations": [
+          "https://raw.githubusercontent.com/Beexly/Sports/main/README.md",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/docs/ops/CURRENT_STATE.md",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/docs/architecture/2026-09-18-signal-architecture.md"
+        ]
+      },
+      {
+        "claim": "The fantasy optimizer exists, but the shipped slate is not production fantasy data.",
+        "test": "Read dfs-slate.ts and optimizer.ts together: the slate labels itself illustrative/fictional while optimizer logic is deterministic and independently tested/oracle-checked in comments.",
+        "citations": [
+          "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/fantasy/dfs-slate.ts",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/fantasy/dfs-optimizer.ts"
+        ]
+      },
+      {
+        "claim": "Free-first and rights controls are real implementation surfaces rather than only a recommendation.",
+        "test": "Read free-first-ingest.ts: it calls the clearance engine before ESPN/Open-Meteo fetch paths and exposes paidCallJustified.",
+        "citations": [
+          "https://raw.githubusercontent.com/Beexly/Sports/main/apps/web/lib/data-sources/free-first-ingest.ts"
+        ]
+      },
+      {
+        "claim": "The configured league scope is seven sports, not every sport.",
+        "test": "Compared the data-sources documentation with the canonical config.ts list.",
+        "citations": [
+          "https://raw.githubusercontent.com/Beexly/Sports/main/docs/data-sources.md",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/packages/data-ingestion/src/config.ts"
+        ]
+      },
+      {
+        "claim": "The source universe is not the same as active legally usable coverage.",
+        "test": "Compared source-atlas language with the gap audit and real-vs-stubbed audit.",
+        "citations": [
+          "https://raw.githubusercontent.com/Beexly/Sports/main/docs/source-atlas.md",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/docs/statking-gap-audit.md",
+          "https://raw.githubusercontent.com/Beexly/Sports/main/docs/statking-real-vs-stubbed-audit.md"
+        ]
+      }
+    ],
+    "limitation": "This review can verify repository text/code and public provider documentation, but cannot verify private contracts, credentials, production database freshness, provider uptime, or predictive lift without access to the deployed database/keys and a reproducible historical evaluation run.",
+    "limitation_citation": "https://raw.githubusercontent.com/Beexly/Sports/main/docs/statking-real-vs-stubbed-audit.md"
+  }
+}
