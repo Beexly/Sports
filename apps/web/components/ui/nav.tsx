@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
@@ -89,23 +89,17 @@ const GSN_MENU: readonly NavGroup[] = [
 ];
 
 /**
- * Nav — global bar. Auth rail is Suspense-split so the shell streams before
- * the session resolves.
+ * NavChrome — the shared static shell of the global bar: brand lockup and
+ * the four top-bar doors on the left, the caller's right rail in the slot.
+ * Nav and NavSkeleton below differ ONLY in what they pass as `right`.
  *
- * CORRECTION (verified against next@14.2.35, no PPR): that Suspense boundary
- * does NOT keep the surrounding page statically prerenderable. In
- * `dist/server/app-render/dynamic-rendering.js`, `trackDynamicDataAccessed()`
- * sets `store.revalidate = 0` BEFORE it throws the DynamicServerError, and
- * `app-render.js` then copies that store value onto `metadata.revalidate`,
- * which `dist/build/index.js` reads as `hasDynamicData`. Suspending (or
- * swallowing) the throw therefore cannot restore static generation: the
- * cookie read has already marked the render dynamic. Partial Prerendering is
- * the feature that would make the claim true, and `experimental.ppr` is not
- * enabled in next.config.mjs. The Suspense boundary is still worth keeping —
- * it streams the shell before the session resolves — it just is not a
- * static-generation guarantee, so do not treat it as one.
+ * (This body spent a bad merge mislabeled as a second `export function
+ * Nav()` — with its `right` slot unbound — while the real Nav and
+ * NavSkeleton referenced the NavChrome name that no longer existed. The
+ * dedupe restored the name; the PPR correction that used to sit in this
+ * comment lives on Nav below, where the Suspense boundary actually is.)
  */
-export function Nav() {
+function NavChrome({ right }: { readonly right: ReactNode }) {
   return (
     <header className="nav">
       <div className="container nav-inner">
@@ -173,35 +167,4 @@ export function Nav() {
  */
 export function NavSkeleton() {
   return <NavChrome right={<NavAuthFallback />} />;
-}
-
-/**
- * NavSkeleton — the same bar, painted with the anonymous right rail directly.
- *
- * For loading boundaries. A `loading.tsx` is rendered as a Suspense FALLBACK,
- * and the fallback subtree is part of the route's render: calling auth() (and
- * therefore cookies()) from inside it would add a dynamic data access to every
- * segment the boundary covers, for a rail the visitor sees for a few hundred
- * milliseconds. NavAuthFallback is what <Nav /> paints during that same window
- * anyway, so the skeleton and the loaded page are pixel-identical here.
- */
-export function NavSkeleton() {
-  return (
-    <header className="nav">
-      <div className="container nav-inner">
-        <div className="nav-left">
-          <BrandLockup />
-
-          <nav className="nav-links" aria-label="Primary">
-            <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
-            <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
-            <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
-          </nav>
-        </div>
-
-        <NavAuthFallback />
-      </div>
-    </header>
-  );
 }
