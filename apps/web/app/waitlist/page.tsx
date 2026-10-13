@@ -23,6 +23,7 @@ import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY, BACKTEST_TRANSPARENCY } from "@/lib/gse/waitlist-copy";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { Footer } from "@/components/ui/footer";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 export const metadata: Metadata = {
   title: "Founding Decision-Process Lane · GSE",
   description: WAITLIST_COPY.subhead,

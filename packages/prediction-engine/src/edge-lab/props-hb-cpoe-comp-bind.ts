@@ -155,8 +155,8 @@ export function bindCpoeCompSamples(
   requests: readonly CpoeCompBindRequest[],
 ): CpoeCompBindResult[] {
   const out: CpoeCompBindResult[] = [];
-  const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
-  const CPOE_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: GSE_CPOE_PROVENANCE };
+  const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = { grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean", layer: "L2" };
+  const CPOE_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = { grain: "week_t_for_tplus1", provenance: GSE_CPOE_PROVENANCE, layer: "L1" };
   for (const req of requests) {
     // GSE-CPOE as-of boundary: must be strictly prior to kickoff week AND
     // not the season-level aggregate (week=0). Season-level CPOE would leak the
@@ -232,9 +232,9 @@ export function bindCpoeCompSamples(
       sample: {
         attempts: req.comp.attempts,
         completions: req.comp.completions,
-        avgTimeToThrow: { ...BUS_CELL, value: ttt },
-        avgIntendedAirYards: { ...BUS_CELL, value: aiy },
-        gseCpoe: { ...CPOE_CELL, value: req.gseCpoe },
+        avgTimeToThrow: { ...BUS_CELL, value: ttt, knownAtWeek: row.week },
+        avgIntendedAirYards: { ...BUS_CELL, value: aiy, knownAtWeek: row.week },
+        gseCpoe: { ...CPOE_CELL, value: req.gseCpoe, knownAtWeek: req.gseCpoeAsOfWeek },
       },
     });
   }

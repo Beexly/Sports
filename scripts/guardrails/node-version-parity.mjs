@@ -290,7 +290,13 @@ export function isExemptFromLiveScan(relPath) {
   return (
     n.includes("scripts/guardrails/fixtures/") ||
     n === "scripts/guardrails/node-version-parity.mjs" ||
-    n === "scripts/guardrails/node-version-parity.test.mjs"
+    n === "scripts/guardrails/node-version-parity.test.mjs" ||
+    // The runtime-pin library's test suite: its test DATA is the feature
+    // names themselves (`feature: "module.registerHooks"`, `"node:sqlite"`),
+    // passed to the helper that formats the guard's own diagnostics — a
+    // definition site in exactly the sense above. Its implementation file
+    // (scripts/lib/node-runtime-pin.mjs) is NOT exempt and stays scanned.
+    n === "scripts/lib/node-runtime-pin.test.mjs"
   );
 }
 

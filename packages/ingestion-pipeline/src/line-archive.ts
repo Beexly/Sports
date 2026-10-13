@@ -75,7 +75,7 @@ export interface LineArchiveDb {
          *  deliberately the Prisma shape and not whatever the call happens to
          *  pass; declaring it the other way round is how the outage survived
          *  typecheck for three weeks. */
-        market?: { in: readonly string[] };
+        market?: { in: string[] };
         capturedAt?: { lte: Date };
       };
       select?: { market?: boolean };

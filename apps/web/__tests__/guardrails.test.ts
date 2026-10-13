@@ -163,20 +163,6 @@ describe("Phase 9 guardrails", () => {
     expect(r.stdout).toMatch(/\[openapi-security-scan\] OK/);
   }, GUARD_TEST_TIMEOUT_MS);
 
-  /**
-   * The root `guardrails` script delegates to scripts/guardrails/run-all.mjs (which
-   * runs every guard and reports all failures instead of short-circuiting on the
-   * first). The chain that matters is therefore the GUARDS table in that file.
-   */
-  function guardrailsChain(): string {
-    const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
-    const script: string = pkg.scripts.guardrails;
-    if (script.includes("run-all.mjs")) {
-      return readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
-    }
-    return script;
-  }
-
   it("root guardrails chain includes commercial, performance, payload-rights, OpenAPI, and raw-NGS checks", () => {
     const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
     expect(pkg.scripts["guard:commercial-copy"]).toContain("commercial-copy-scan.mjs");

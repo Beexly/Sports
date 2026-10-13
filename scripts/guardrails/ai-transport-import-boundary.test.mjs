@@ -264,6 +264,12 @@ function buildMutant(guardSource, key) {
   const anchor = "createRequire(import.meta.url)";
   assert.ok(mutated.includes(anchor), "guard no longer uses createRequire(import.meta.url); update the mutation harness");
   mutated = mutated.replace(anchor, `createRequire(${JSON.stringify(pathToFileURL(guardPath).href)})`);
+  // Same re-anchoring for the guard's relative sibling imports (e.g.
+  // min-scan-floor.mjs): the mutant lives in a temp dir, so a bare
+  // "./sibling.mjs" would resolve there and miss. Point each one at the
+  // real file beside the real guard.
+  mutated = mutated.replace(/from\s+"\.\/([A-Za-z0-9._-]+\.mjs)"/g, (_m, f) =>
+    `from ${JSON.stringify(pathToFileURL(join(dirname(guardPath), f)).href)}`);
   return mutated;
 }
 
