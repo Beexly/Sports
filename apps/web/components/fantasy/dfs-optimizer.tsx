@@ -6,11 +6,17 @@
  * Cash / GPP / Leverage objectives, QB stacking, locks & excludes, and N unique
  * lineups with real exposure control — every lineup shipped with its salary,
  * stack, total field-ownership, and a leverage score. The reasoning LineStar
- * buries, surfaced. Illustrative slate.
+ * buries, surfaced.
+ *
+ * The pool is PROP-DRIVEN (2026-10-12): the DFS page passes the measured
+ * engine slate (`slateState: "real"`) or an explicit empty state. Rendered
+ * standalone (tests, dev), it defaults to the sample fixture and banners it
+ * as SAMPLE. A real pool whose salaries are not connected says so in its
+ * banner — $0 salaries and a non-binding cap are disclosed, never dressed.
  */
 
 import { useMemo, useState } from "react";
-import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
+import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer, type DfsPos } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
 import { ProjectionsTable } from "@/components/fantasy/projections-table";
@@ -21,7 +27,27 @@ const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: low-owned upside." },
 ];
 
-export function DfsOptimizer() {
+export type DfsSlateState = "real" | "sample" | "empty";
+
+export function DfsOptimizer({
+  slate: providedSlate,
+  slateState = "sample",
+  salaryIsReal = false,
+  ownershipIsAssumed = false,
+  missingPositions = [],
+}: {
+  /** The pool to optimize. Defaults to the sample fixture (standalone use). */
+  slate?: readonly DfsPlayer[];
+  /** Provenance of the pool — drives the banner and the empty state. */
+  slateState?: DfsSlateState;
+  /** True only when salaries come from the licensed feed. */
+  salaryIsReal?: boolean;
+  /** True when ownership is the neutral placeholder, not a projection. */
+  ownershipIsAssumed?: boolean;
+  /** Roster positions the provided pool cannot fill (real state). */
+  missingPositions?: readonly DfsPos[];
+} = {}) {
+  const baseSlate = providedSlate ?? DFS_SLATE;
   const [mode, setMode] = useState<Mode>("gpp");
   const [stack, setStack] = useState(true);
   const [count, setCount] = useState(3);
@@ -30,7 +56,7 @@ export function DfsOptimizer() {
   const [excludes, setExcludes] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<GenResult | null>(null);
   const [busy, setBusy] = useState(false);
-  const [slate, setSlate] = useState<DfsPlayer[]>(() => [...DFS_SLATE]);
+  const [slate, setSlate] = useState<DfsPlayer[]>(() => [...baseSlate]);
   const [imported, setImported] = useState(false);
 
   const run = (s: DfsPlayer[] = slate) => {
@@ -49,7 +75,9 @@ export function DfsOptimizer() {
     setSlate(players); setImported(true); setLocks(new Set()); setExcludes(new Set()); run(players);
   };
   const onReset = () => {
-    const base = [...DFS_SLATE]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); run(base);
+    // Reset returns to the PROVIDED pool — the measured slate on the page,
+    // the sample fixture only in standalone/sample use. Never a silent swap.
+    const base = [...baseSlate]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); run(base);
   };
 
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, id: string) => {
@@ -58,11 +86,35 @@ export function DfsOptimizer() {
 
   const pool = useMemo(() => [...slate].sort((a, b) => b.salary - a.salary), [slate]);
 
+  // Empty state: the real pool is unavailable and NO sample data is
+  // substituted. The import path stays open — the math still runs on a pool
+  // the user supplies themselves.
+  if (slateState === "empty" && !imported) {
+    return (
+      <div className="space-y-6">
+        <div className="surface-card p-6">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Player pool</p>
+          <p className="mt-2 text-sm text-ion-1">
+            The real player pool is empty right now — the engine has no measured slate for the
+            current week, so the optimizer stands empty rather than filling with sample players.
+            When the measured slate is back, this tool runs on it automatically.
+          </p>
+          <p className="mt-2 text-sm text-ion-1">
+            To run the math today, import a DraftKings player CSV:
+          </p>
+          <div className="mt-4">
+            <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* sample-mode banner — fictional names must never read as real players.
           Caution tone (semantic): a data-honesty warning, never plasma. */}
-      {!imported && (
+      {!imported && slateState === "sample" && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-caution/30 bg-caution/5 px-4 py-3">
           <span className="rounded-full bg-caution px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
             sample slate
@@ -71,6 +123,30 @@ export function DfsOptimizer() {
             These are <strong className="text-ion-white">fictional players</strong> with illustrative
             numbers, by design, so no fake stats ever attach to a real athlete. To optimize the
             real slate today: export the player CSV from DraftKings and import it below ⤵
+          </p>
+        </div>
+      )}
+
+      {/* real-pool provenance banner — what is measured, and what is not yet
+          real (salaries, ownership, missing positions), stated on the tool
+          itself rather than only in page copy. */}
+      {!imported && slateState === "real" && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-orbital-cyan/30 bg-orbital-cyan/5 px-4 py-3">
+          <span className="rounded-full bg-orbital-cyan px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
+            real slate
+          </span>
+          <p className="text-xs text-ion-1">
+            <strong className="text-ion-white">Real players, measured projections</strong> — recent-game
+            averages from actual game logs; floor and ceiling are the observed range.
+            {!salaryIsReal && (
+              <> Salaries are not connected yet, so salaries read $0 and the cap does not bind.</>
+            )}
+            {ownershipIsAssumed && (
+              <> Ownership is a neutral 50% placeholder, not a projection.</>
+            )}
+            {missingPositions.length > 0 && (
+              <> The measured pool has no {missingPositions.join(" or ")} yet, so a complete lineup cannot be built from it.</>
+            )}
           </p>
         </div>
       )}
@@ -202,7 +278,13 @@ export function DfsOptimizer() {
             );
           })}
           {result === null && <div className="surface-card p-6 text-sm text-ion-1">Press Generate to build lineups from the current pool.</div>}
-          {result !== null && !result.lineups.length && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints. Loosen your locks or excludes.</div>}
+          {result !== null && !result.lineups.length && (
+            <div className="surface-card p-6 text-sm text-ion-1">
+              {slateState === "real" && missingPositions.length > 0
+                ? `No complete lineup can be built from the measured pool yet — it has no ${missingPositions.join(" or ")}. That is a data gap, not a constraint problem.`
+                : "No lineup fits the constraints. Loosen your locks or excludes."}
+            </div>
+          )}
         </div>
 
         {/* exposure + pool */}
@@ -230,7 +312,7 @@ export function DfsOptimizer() {
             excludes={excludes}
             onToggleLock={(id) => toggle(locks, setLocks, id)}
             onToggleExclude={(id) => toggle(excludes, setExcludes, id)}
-            isLive={imported}
+            isLive={imported || slateState === "real"}
           />
         </div>
       </div>

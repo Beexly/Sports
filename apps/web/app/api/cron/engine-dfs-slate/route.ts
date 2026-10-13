@@ -81,9 +81,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   //
   // Law 3 is respected: registration happens ONLY when the founder's
   // DFS_PROVIDER flag is set (`isConfigured("dfs")`). Without it,
-  // `resolveDfsSlateProvider` keeps returning the illustrative slate, so
-  // registration alone flips nothing live. The route stays read-only: no DB
-  // write, no flag set, no published number moves.
+  // `resolveDfsSlateProvider` keeps returning the explicit empty slate (the
+  // illustrative fixture stopped being the fallback on 2026-10-12 — it is a
+  // dev opt-in only), so registration alone flips nothing live. The route
+  // stays read-only: no DB write, no flag set, no published number moves.
   if (isConfigured("dfs", process.env)) {
     const handle = registerEngineDfsProvider({ season, week, now });
     handle.cache = report;
@@ -125,7 +126,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       dfsProviderEnvSet: Boolean(process.env["DFS_PROVIDER"]?.trim()),
       isLiveDfsNow: isLiveDfs(),
       activeProvider: provider.name,
-      note: "DFS_PROVIDER is founder-only. Until it is set, activeDfsSlate() returns the illustrative slate by design.",
+      note: "DFS_PROVIDER is founder-only. Until it is set, activeDfsSlate() returns an explicit empty slate; the page loads the measured pool directly via lib/dfs/real-slate.",
     },
     droppedSample: report.dropped.slice(0, MAX_TAKE),
   });

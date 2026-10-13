@@ -4,6 +4,7 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { TournamentLab } from "@/components/fantasy/tournament-lab";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
+import { applySalaries, loadRealDfsSlate } from "@/lib/dfs/real-slate";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const metadata: Metadata = {
@@ -23,8 +24,14 @@ export const dynamic = "force-dynamic";
  * board is the optimizer's input layer, not a separate destination).
  * The licensed board renders only when a feed is connected AND the viewer holds
  * the fantasy entitlement; otherwise the section states honestly which of the
- * two is missing. The optimizer runs on the sample pool for everyone, at every
- * tier — the paywall limits the licensed rows, never the tool.
+ * two is missing.
+ *
+ * The optimizer's pool is the MEASURED engine slate (lib/dfs/real-slate):
+ * real players with projections from actual game logs, or an explicit empty
+ * state when the engine has no measured slate — never the illustrative
+ * fixture. Licensed salaries join that pool only for entitled viewers (the
+ * same gate as the board below); for everyone else the pool carries no
+ * salaries and the cap does not bind, which the tool's banner states.
  */
 export default async function DfsSuitePage() {
   // Server-side paywall enforcement (CLAUDE.md rule 3), the same depth-limiting
@@ -42,29 +49,51 @@ export default async function DfsSuitePage() {
   // (shown to everyone, as /integrations already does with row counts), while
   // `live` — may the licensed rows actually render — additionally requires the
   // fantasy entitlement. getViewerEntitlements fails closed to FREE.
-  const [dfs, viewer] = await Promise.all([
+  const [dfs, viewer, realSlate] = await Promise.all([
     loadDfsSalaries().catch(() => null),
     getViewerEntitlements(),
+    // Fail-closed by construction (the loader returns kind "unavailable"
+    // with an empty pool rather than throwing or substituting sample data);
+    // the catch is belt-and-braces, matching the salaries call above.
+    loadRealDfsSlate().catch(() => null),
   ]);
   const feedConnected = dfs !== null && dfs.status === "live" && dfs.rows.length > 0;
   const live = feedConnected && viewer.canUseFantasyFull;
   const topRows = live ? dfs!.rows.slice(0, 24) : [];
+
+  // The optimizer's pool: the measured engine slate. Licensed salaries are
+  // applied ONLY when this viewer is entitled to them (the same `live` gate
+  // as the salary board) — the loader returns them as a separate map for
+  // exactly this reason. Unentitled viewers get the same real players with
+  // no salaries, and the tool discloses that the cap does not bind.
+  const poolState: "real" | "empty" =
+    realSlate !== null && realSlate.kind === "real" ? "real" : "empty";
+  const optimizerPlayers =
+    realSlate === null
+      ? []
+      : live
+        ? applySalaries(realSlate.players, realSlate.salaryByKey).players
+        : realSlate.players;
 
   return (
     <FantasyShell
       eyebrow="DFS Optimizer"
       accent="cyan"
       title={<>Build the lineup. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
-      intro="Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
-      // Derived from `live`, never a constant. This used to be a hardcoded
-      // string, so the "sample slate" disclosure rendered over LIVE salaries
-      // too — telling a paying customer their real board was fake. Law 8 is
-      // about not presenting fabricated data as real; the mirror failure is
-      // just as bad, and it was what this actually did.
+      intro="Pick your mode, set your locks and fades, and the optimizer builds lineups from the measured player pool. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
+      // Derived from the slate state, never a constant. This used to be a
+      // hardcoded string, so the "sample slate" disclosure rendered over LIVE
+      // salaries too — telling a paying customer their real board was fake.
+      // Law 8 is about not presenting fabricated data as real; the mirror
+      // failure is just as bad, and it was what this actually did. The note
+      // now has a branch per state: live salaries, measured pool without
+      // salaries, and the empty pool.
       note={
         live
           ? "Live salary feed connected. Salaries and player pool are real; lineup math is ours."
-          : "Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
+          : poolState === "real"
+            ? "Real player pool: projections measured from actual game logs. No licensed salary feed is connected yet, so salaries are absent and the salary cap does not bind. The math is real; the pool is measured."
+            : "The real player pool is not available right now, so the optimizer stands empty rather than filling with sample players. The math is real; the pool returns with the engine data."
       }
       wide
     >
@@ -118,8 +147,8 @@ export default async function DfsSuitePage() {
         ) : feedConnected ? (
           /* Feed IS live, viewer is not entitled: say so plainly and sell the
              unlock. No licensed row is serialized into this response. The
-             optimizer below stays fully free on the sample pool, so the free
-             tool is depth-limited, never taken away. */
+             optimizer below runs on the real measured pool for everyone, so
+             the free tool is depth-limited, never taken away. */
           <p className="mt-2 text-sm text-ion-1">
             The live salary board is part of the Fantasy suite. {dfs!.rows.length} reconciled
             DraftKings salaries are priced right now; a Fantasy, Pro, or Elite membership opens
@@ -127,7 +156,7 @@ export default async function DfsSuitePage() {
             <Link href="/pricing" className="text-orbital-cyan underline-offset-4 hover:underline">
               See plans →
             </Link>{" "}
-            The optimizer below runs fully on the sample pool for everyone.
+            The optimizer below runs fully on the real measured pool for everyone.
           </p>
         ) : (
           <p className="mt-2 text-sm text-ion-1">
@@ -136,14 +165,21 @@ export default async function DfsSuitePage() {
             <Link href="/integrations" className="text-orbital-cyan underline-offset-4 hover:underline">
               Data status →
             </Link>{" "}
-            The optimizer below runs fully on the sample pool in the meantime.
+            The optimizer below runs on the real measured pool in the meantime — projections
+            only, until salaries connect.
           </p>
         )}
       </section>
 
-      <DfsOptimizer />
+      <DfsOptimizer
+        slate={optimizerPlayers}
+        slateState={poolState}
+        salaryIsReal={live}
+        ownershipIsAssumed={realSlate?.ownershipIsAssumed ?? true}
+        missingPositions={realSlate?.missingPositions ?? []}
+      />
 
-      <TournamentLab />
+      <TournamentLab slate={optimizerPlayers} slateState={poolState} />
     </FantasyShell>
   );
 }
