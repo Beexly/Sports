@@ -340,9 +340,12 @@ def read_ngs(home: str, away: str) -> tuple[list[dict], list[str]]:
             if cat == "receiving":
                 # cells: name, team, pos, CUSH, SEP, TAY, TAY%, REC, TAR, CTCH%, YDS, TD, YAC/R, EYAC/R, +/-
                 for idx, metric, note in (
-                    (4, "ngs_separation", "avg separation (yards, tracking-measured)"),
-                    (5, "ngs_targeted_air_yards", "avg targeted air yards"),
-                    (14, "ngs_yac_above_expectation", "YAC above expectation per reception"),
+                    # 2025-SEASON SNAPSHOT: file dated 2026-07-03, season 2025 - one
+                    # full season old vs the 2026 game. Baseline form indicator,
+                    # REPORTED-tier; staleness named on the card.
+                    (4, "ngs_separation_2025baseline", "2025-season avg separation (yards, tracking); one season stale - baseline form, not current"),
+                    (5, "ngs_targeted_air_yards_2025baseline", "2025-season avg targeted air yards; one season stale"),
+                    (14, "ngs_yac_above_expectation_2025baseline", "2025-season YAC over expectation/reception; one season stale"),
                 ):
                     try:
                         val = float(cells[idx])
@@ -351,7 +354,7 @@ def read_ngs(home: str, away: str) -> tuple[list[dict], list[str]]:
                     facts.append({
                         "domain": "on_field", "metric": metric, "subject": f"{cells[0]} ({team})",
                         "value": val, "source": str(fp.relative_to(REPO)).replace("\\", "/"),
-                        "note": f"NGS receiving table (2025-season corpus capture): {note}",
+                        "note": f"NGS receiving table, 2025-SEASON SNAPSHOT (file 2026-07-03, season 2025): {note}",
                     })
                     found += 1
     if not found:
@@ -444,9 +447,10 @@ def build_chain(home: str, away: str, facts: list[dict]) -> list[str]:
     if ngs:
         f = ngs[0]
         chain.append(
-            f"TRACKING: {f['subject']} carries NGS {f['metric']} = {f['value']} {cite(f)} "
-            f"-> measured athletic/tracking performance, not box-score residue "
-            f"-> usage and matchup edges the market prices late"
+            f"TRACKING (BASELINE, 2025 season): {f['subject']} carried NGS {f['metric']} = {f['value']} last season {cite(f)} "
+            f"-> a measured 2025 form floor, NOT this season's number "
+            f"-> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; "
+            f"breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link"
         )
     if not chain:
         chain.append(

@@ -35,6 +35,7 @@ OUTROOT = REPO / "docs" / "predictions" / "research"
 NGS_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json"
 NGS_RUSH_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_rushing#yards.2026-07-03T13_53_05.758Z.json"
 INJ_FILE = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
+DC_FILE = SOURCES / "2026-10-13" / "depthcharts" / "espn-depthcharts-2026.json"
 
 COVERAGE_POS = {"CB", "S", "SAF", "FS", "SS", "NB", "DB"}
 RUSH_POS = {"DE", "DT", "ED", "DL", "NT", "OLB", "EDGE"}
@@ -64,6 +65,8 @@ def _receivers() -> dict[str, list[dict]]:
         try:
             row = {
                 "player": cells[0], "team": team, "pos": pos,
+                # 2025-SEASON SNAPSHOT (file 2026-07-03): baseline form, one season stale
+                "season_label": "2025-snapshot",
                 "cushion": float(cells[3]), "sep": float(cells[4]),
                 "tay": float(cells[5]), "rec": int(cells[7]), "tar": int(cells[8]),
                 "catch_pct": float(cells[9]), "yards": float(cells[10]), "td": int(cells[11]),
@@ -130,6 +133,27 @@ def _injuries() -> dict[str, list[dict]]:
     return out
 
 
+CB_POS_KEYS = ("LCB", "RCB", "NB")
+
+
+def _depth_chart() -> dict:
+    """team_abbr -> {unit|POS: [(slot, name), ...]} from the ESPN 2026 capture."""
+    d = _load(DC_FILE)
+    return (d or {}).get("teams") or {}
+
+
+def _corners(dc_team: dict) -> list[dict]:
+    """CB ladder (LCB/RCB/NB) with slot + name, ordered by slot then list order."""
+    out: list[dict] = []
+    for key, rows in dc_team.items():
+        pos = key.split("|")[-1]
+        if pos not in CB_POS_KEYS:
+            continue
+        for r in rows:
+            out.append({"pos": pos, "slot": r.get("slot"), "player": r.get("athlete")})
+    return out
+
+
 def usage_titles(team_receivers: list[dict], rushers: list[dict] | None = None) -> dict[str, dict]:
     """WR1/WR2/TE1 by targets; RB1 from the rushing table by carries."""
     titles: dict[str, dict] = {}
@@ -169,10 +193,26 @@ def build_matchups(home: str, away: str) -> dict:
         cov_out = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") in ("OUT", "INJURED RESERVE", "IR", "DOUBTFUL")]
         cov_q = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") == "QUESTIONABLE"]
         titles = usage_titles(o_recv, rush.get(o, []))
+        dchart = _depth_chart().get(d, {})
+        corners = _corners(dchart) if dchart else []
+        inj_by_name = {x["player"]: x for x in d_inj}
         for title, r in titles.items():
+            # Specific pairing (the doctrine's demand): top-2 WR/TE vs the
+            # opposing CB ladder slot-1s, each with his on-report status.
+            cb_pairs = []
+            if r["pos"] in ("WR", "TE") and corners:
+                starters = [c for c in corners if c.get("slot") and c["slot"] == min(c2["slot"] for c2 in corners if c2.get("slot"))]
+                seen = set()
+                for c in starters:
+                    if c["player"] in seen or c["player"] in ("?", None):
+                        continue
+                    seen.add(c["player"])
+                    st = inj_by_name.get(c["player"], {}).get("status", "not-on-report")
+                    cb_pairs.append(f"{c['player']} ({c['pos']}, slot-1, {st})")
             pair = {
                 "side": side,
                 "usage_title": title,
+                "matched_cornerbacks": cb_pairs,
                 "receiver": r["player"], "receiver_form": {
                     "targets": r.get("tar", r.get("att")),
                     "separation_yds": r.get("sep"),
@@ -189,6 +229,16 @@ def build_matchups(home: str, away: str) -> dict:
             }
             report["pairings"].append(pair)
             # chain: only when the corpus actually shows a coverage void
+            if cb_pairs:
+                q_cbs = [c for c in cb_pairs if "Questionable" in c or "Doubtful" in c or "OUT" in c.upper()]
+                if q_cbs:
+                    report["chains"].append(
+                        f"{side}: {r['player']} leads {o} pass-catchers (2025-baseline targets {r.get('tar', '?')}, separation {r.get('sep', '?')} yds) [{r['source']}] "
+                        f"-> draws the opposing slot-1 corner ladder: {', '.join(cb_pairs[:3])} [{DC_FILE.name}] "
+                        f"-> {'the starter(s) he meets are on the injury report (' + '; '.join(q_cbs) + ') - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency' if q_cbs else 'starters healthy - pairing is neutral'} "
+                        f"-> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it"
+                    )
+                break  # one specific pairing chain per side (WR1 is the usage leader)
             if cov_out:
                 names = "; ".join(f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_out[:3])
                 report["chains"].append(
@@ -233,9 +283,11 @@ def emit_matchup_md(home: str, away: str, date: str) -> tuple[Path, dict]:
         f = p["receiver_form"]
         basis = f.get("usage_basis") or "targets"
         if basis == "targets":
-            lines.append(f"- targets {f['targets']} | separation {f['separation_yds']} yds | YAC/E R {f['yac_over_expected']} | catch {f['catch_pct']}% [{p['source_receiver']}]")
+            lines.append(f"- targets {f['targets']} | separation {f['separation_yds']} yds | YAC/E R {f['yac_over_expected']} | catch {f['catch_pct']}% (2025-season snapshot, one season stale) [{p['source_receiver']}]")
         else:
             lines.append(f"- {basis} [{p['source_receiver']}]")
+        if p.get("matched_cornerbacks"):
+            lines.append(f"- matched slot-1 corners: {'; '.join(p['matched_cornerbacks'])}")
         cs = p["opposing_coverage_status"]
         lines.append(f"- opposing coverage OUT/limited: {', '.join(cs['out_or_limited']) or '(none listed)'}")
         lines.append(f"- opposing coverage QUESTIONABLE: {', '.join(cs['questionable']) or '(none)'}")
