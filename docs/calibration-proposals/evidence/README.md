@@ -33,8 +33,11 @@ It re-derives each recorded delta from the two scores it claims to difference,
 checks that every Wilson band is arithmetically possible, that every P(better)
 is a whole number of the resamples it declares, that intervals are ordered and
 MDEs are positive, that the train/validate split accounts for every holdout row,
-and that `MODEL_VERSION` is still the frozen `v5.2.7` these numbers were
-measured against.
+and that this record still names the frozen `v5.2.7` model these numbers were
+measured against. `MODEL_VERSION` has legitimately moved since (v5.3.0, with
+its own implemented evidence); this evidence has not been re-measured against
+it — there is no v5.3.0 PICKS-H1 export to re-measure with — and the record
+must never be re-labelled as if it had been.
 
 It cannot tell you whether a measurement was *right* — only that the recorded
 pieces still add up to the recorded conclusions, so nobody can quietly edit one

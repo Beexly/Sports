@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
+// The REAL grader and lock-selection rule (the prediction-engine mock below
+// re-exports the actual implementations): the published-terms tests grade
+// the row this pipeline actually wrote, so a stubbed grader would only
+// prove the stub agrees with itself.
 import { calculatePickResult, selectGradingLine } from "@sports/prediction-engine";
 import type { FixtureProbe } from "../fixture-confirmation.js";
 
@@ -56,7 +60,9 @@ const mocks = vi.hoisted(() => ({
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
   // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
-  // the structured 429 signal the cooldown reads (C-278a).
+  // the structured 429 signal the cooldown reads (C-278a); `complete` /
+  // `failedDays` are the day-span completeness fields the real client
+  // reports (a truncated fan-out is incomplete, never silently whole).
   fetchRundownEventsForSport: vi.fn<
     (sport: string, key: string) => Promise<{
       events: unknown[];
@@ -1178,8 +1184,10 @@ describe("processSport", () => {
         remaining: null,
         error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
         rateLimited: true,
+        // Refused-read shape, as the real client returns when it cannot
+        // read the span (processSport does not consume these fields).
         complete: false,
-        failedDays: ["2026-08-25", "2026-08-26"],
+        failedDays: [],
       });
 
       await processSport(SPORT, "key", gates());
@@ -1211,8 +1219,10 @@ describe("processSport", () => {
         remaining: null,
         error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
         rateLimited: true,
+        // Refused-read shape, as the real client returns when it cannot
+        // read the span (processSport does not consume these fields).
         complete: false,
-        failedDays: ["2026-08-25", "2026-08-26"],
+        failedDays: [],
       });
 
       await processSport(SPORT, "key", gates());
@@ -2373,22 +2383,21 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
     mocks.snapshotUpsert.mockResolvedValue({});
     mocks.resolveRundownApiKey.mockReturnValue("");
     mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null, complete: true, failedDays: [] });
-    // The mockReset above wipes EVERY factory implementation, not just call
-    // history. These five are dependencies the current processSport calls on
-    // every cycle (the C-111 fixture guard, the preseason map, the game
-    // correction write, the supersede void, the payment circuit); leaving them
-    // reset makes the run die at `fixtureBatch.status` and every pick write is
-    // skipped. Mirror the main describe's defaults. (Restored from
-    // hermes-SO-1o c65ec2d63, which repaired this same drift off-main.)
+    // The reset above also wipes the C-111 confirmer stub the main describe
+    // sets; without it the batch result is undefined, the guard refuses
+    // every game, and no pick write is ever reached — the write-once terms
+    // under test here live downstream of a CONFIRMED fixture.
     mocks.confirmBatch.mockImplementation(confirmAll);
-    mocks.gameFindMany.mockResolvedValue([]);
-    mocks.gameUpdate.mockResolvedValue({
-      id: "game-1",
-      homeTeamName: "Chiefs",
-      awayTeamName: "Bills",
-    });
-    mocks.supersedeUnpublished.mockResolvedValue(true);
     mocks.circuitState.mockReturnValue("closed");
+    mocks.gameFindMany.mockResolvedValue([]);
+    // The identity resolver matches the bare gameFindUnique row and routes
+    // through the twin branch, whose record IS the gameUpdate result: it
+    // must carry the id (and names), exactly as the main describe stubs it,
+    // or confirmedGameIds fills with undefined and no pick is ever written.
+    mocks.gameUpdate.mockResolvedValue({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" });
+    mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
+    mocks.supersedeUnpublished.mockResolvedValue(true);
+    mocks.createGalaxySecondBook.mockReturnValue(undefined);
     mocks.eventsBelowBookmakerThreshold.mockReturnValue([]);
     mocks.mergeBookmakersIntoPrimary.mockImplementation((primary: unknown[]) => ({
       events: primary,

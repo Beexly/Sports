@@ -121,6 +121,12 @@ function tickerTail(ticker: string): string {
 export interface PredExonTwoWay {
   readonly yes: number;
   readonly no: number;
+  /** YES-side listing-gate quote detail for this market — the provenance
+   * `KalshiSideFairValue` requires (null when the gate did not record it). */
+  readonly quoteBid: number | null;
+  readonly quoteAsk: number | null;
+  readonly quoteSpread: number | null;
+  readonly quoteSource: string | null;
 }
 
 /**
@@ -147,7 +153,14 @@ export function predexonTwoWay(m: PredExonKalshiMarket): PredExonTwoWay | null {
       ? (no.bid + no.ask) / 2
       : 1 - gate.q;
   if (!(noMid > 0 && noMid < 1)) return null;
-  return { yes: gate.q, no: noMid };
+  return {
+    yes: gate.q,
+    no: noMid,
+    quoteBid: gate.bid,
+    quoteAsk: gate.ask,
+    quoteSpread: gate.spread,
+    quoteSource: gate.source,
+  };
 }
 
 /** Numeric line the YES side needs to clear, with Kalshi's strict/inclusive rule applied. */
@@ -364,13 +377,10 @@ export class PredExonKalshiCatalog implements GalaxySecondBook {
           ticker: s.ticker,
           rawImpliedProb: s.quote.yes,
           fairProb: null,
-          // The PredExon two-way carries no bid/ask on this path, so the
-          // quote-quality fields are honestly null (not measured), matching
-          // KalshiSideFairValue's "null when unquoted" contract.
-          quoteSpread: null,
-          quoteBid: null,
-          quoteAsk: null,
-          quoteSource: null,
+          quoteSpread: s.quote.quoteSpread,
+          quoteBid: s.quote.quoteBid,
+          quoteAsk: s.quote.quoteAsk,
+          quoteSource: s.quote.quoteSource,
         })),
       };
       const book = kalshiH2hBookmaker({

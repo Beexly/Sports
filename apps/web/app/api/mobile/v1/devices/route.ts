@@ -112,6 +112,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const d = parsed.data;
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
     const existing = await (db as any).mobileDevice.findUnique({ where: { pushToken: d.pushToken } });
     if (existing && existing.userId !== userId) {
       // Do not echo which account owns it — the same information-leak rule the
@@ -123,6 +124,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const row = existing
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
       ? await (db as any).mobileDevice.update({
           where: { pushToken: d.pushToken },
           data: {
@@ -133,6 +135,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             lastSeenAt: new Date(),
           },
         })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
       : await (db as any).mobileDevice.create({
           data: {
             userId,
@@ -194,6 +197,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
   try {
     // Scoped by userId: a caller can only release their OWN token, so a guessed
     // token cannot be used to silence another account's alerts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
     const result = await (db as any).mobileDevice.deleteMany({ where: { userId, pushToken } });
     return NextResponse.json({ success: true, data: { removed: result.count } });
   } catch {

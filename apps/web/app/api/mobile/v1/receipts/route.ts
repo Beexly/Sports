@@ -312,6 +312,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   // everything on every launch, so this route WILL be called repeatedly with the
   // same transaction. Every call after the first must be a no-op.
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
     const existing = await (db as any).processedReceipt?.findUnique({ where: { transactionId } });
     if (existing) {
       return NextResponse.json({
@@ -321,6 +322,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     await db.$transaction(async (tx) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
       await (tx as any).processedReceipt?.create({
         data: {
           transactionId,

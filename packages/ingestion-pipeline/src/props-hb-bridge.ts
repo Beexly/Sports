@@ -499,9 +499,9 @@ import {
   fitCompletionPrior,
   posteriorCompletion,
   betaBinomialProbOverCompletions,
-  fitIntPerAttemptPrior,
-  posteriorIntPerAttempt,
-  probIntGivenAttempts,
+  fitIntPrior,
+  intPosterior,
+  probOverInt,
   fitPassTdPerAttemptPrior,
   posteriorPassTdPerAttempt,
   probPassTdGivenAttempts,
@@ -551,7 +551,9 @@ export function estimateCompletionsOver(input: {
 }
 
 /**
- * P(over 0.5 INTs) from a Gamma per-attempt prior + attempt exposure.
+ * P(over 0.5 INTs) from the engine's Beta-Binomial INT model
+ * (props-hb-int: INTs are bounded by attempts, so NOT the Gamma-Poisson
+ * count model). Prior on the per-attempt INT rate + attempt exposure.
  */
 export function estimateIntOver(input: {
   readonly samples: readonly { readonly attempts: number; readonly ints: number }[];
@@ -568,18 +570,15 @@ export function estimateIntOver(input: {
     return { ok: false, reason: "attemptsNextGame must be > 0" };
   }
   try {
-    const prior = fitIntPerAttemptPrior(samples as never);
-    if (!prior) return { ok: false, reason: "fitIntPerAttemptPrior returned null" };
-    const post = posteriorIntPerAttempt(prior, {
-      attempts: playerAttempts,
-      ints: playerInts,
-    } as never);
-    const pAtLeast = probIntGivenAttempts(post, attemptsNextGame);
+    const prior = fitIntPrior(samples as never);
+    if (!prior) return { ok: false, reason: "fitIntPrior returned null" };
+    const post = intPosterior(prior, playerInts, playerAttempts);
+    const pAtLeast = probOverInt(post, 0.5, attemptsNextGame);
     if (!Number.isFinite(pAtLeast) || pAtLeast < 0 || pAtLeast > 1) {
-      return { ok: false, reason: "probIntGivenAttempts out of [0,1]" };
+      return { ok: false, reason: "probOverInt out of [0,1]" };
     }
     // line=0.5 is the anytime-INT (P(>=1)) market; higher lines stay fail-closed
-    // until a dedicated NB CDF is wired.
+    // in this estimator until the bridge is deliberately widened to them.
     if (line !== 0.5) {
       return { ok: false, reason: "only line 0.5 INT markets supported — not imputed" };
     }
