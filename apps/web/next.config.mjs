@@ -35,6 +35,7 @@ const nextConfig = {
     // calls the StatKing loaders (lib/statking/product.ts).
     outputFileTracingRoot: repoRoot,
     outputFileTracingIncludes: {
+      "/sgp-projections": ["./data/sgp-projections.json"],
       "/stats/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
       "/admin/statking/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
       "/fable": ["../../docs/fable/**/*"],

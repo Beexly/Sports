@@ -2215,6 +2215,10 @@ export {
   fitIntPrior,
   intPosterior,
   probOverInt,
+  fitIntPerAttemptPrior,
+  posteriorIntPerAttempt,
+  intProbZero,
+  probIntGivenAttempts,
 } from "./edge-lab/props-hb-int.js";
 export type { IntSample } from "./edge-lab/props-hb-int.js";
 

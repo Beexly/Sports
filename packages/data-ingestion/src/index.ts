@@ -332,6 +332,7 @@ export {
   parseEspnScoreboardForSeed,
   fetchEspnSeedGamesForSport,
   fetchAllEspnSeedGames,
+  ESPN_SCOREBOARD_LIMIT,
   SHORT_TO_ODDS_SPORT,
   sportMetaForKey,
   ESPN_SCOREBOARD_LIMIT,

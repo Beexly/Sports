@@ -5,7 +5,8 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
-import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { LocalTime } from "@/components/ui/local-time";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
@@ -645,12 +646,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
 function SlateBar({ slate }: { slate: DailySlate }) {
   const record = slate.recentRecord;
-  // Central. `timeZoneName` without `timeZone` prints whichever zone the
-  // formatter happened to run in — the server's (UTC on Vercel) during SSR —
-  // so it was labelling the wrong reading rather than fixing it.
-  const lastUpdated = slate.lastUpdatedAt
-    ? `${formatCentralTime(new Date(slate.lastUpdatedAt))} ${CT_SUFFIX}`
-    : null;
+  // The instant resolves on the viewer's clock via <LocalTime> below: only
+  // the ISO string crosses the server/client boundary, never a wall clock
+  // formatted in whatever zone this server happens to run in.
+  const lastUpdatedIso = slate.lastUpdatedAt ?? null;
   return (
     <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(194,46,26,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
@@ -683,7 +682,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {lastUpdatedIso && (
           <div className="ml-auto flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(255,77,46,0.6)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>          </div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated <LocalTime iso={lastUpdatedIso} format="stamp" label="Last updated" /></span>          </div>
         )}
       </div>
 

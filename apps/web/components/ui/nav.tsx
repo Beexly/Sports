@@ -41,6 +41,11 @@ const BOARD_MENU: readonly NavGroup[] = [
         href: "/bankroll",
         desc: "Every settled result, counted",
       },
+      {
+        label: "SGP projections",
+        href: "/sgp-projections",
+        desc: "Our number for each same-game market",
+      },
     ],
   },
 ];
