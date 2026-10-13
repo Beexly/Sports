@@ -744,13 +744,13 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
       "series boundaries incorrectly spanning distinct drives",
       "incorporating game data from target week or later (point-in-time violation)"
     ],
-    family: "expected_metric",
+    family: "team",
     forbiddenInputs: [
       "any model fit",
       "non-allowlist pbp columns",
       "future game data"
     ],
-    formulaClass: "deterministic",
+    formulaClass: "composite_score",
     formulaSummary: "Per-team distribution of the down on which teams earn a new set of downs (1st / 2nd / 3rd / 4th) vs series that never convert, computed over strict rolling windows.",
     historicalPrecedent: [
       {
@@ -766,7 +766,7 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
       "point-in-time window discipline",
       "strict sample floor handling"
     ],
-    publicExposure: "none",
+    publicExposure: "hidden",
     publicName: "Down Conversion Distribution",
     sourceRightsRequired: [
       "public play-by-play data only"
@@ -774,6 +774,6 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     status: "SHADOW",
     targetQuestion: "What is the team's offense-style fingerprint regarding when they earn a new set of downs?",
     targetVariable: "down-conversion distribution and early-down share",
-    validationMethods: ["deterministic_rule_tests", "point_in_time_checks"],
+    validationMethods: ["walk_forward"],
   },
 ] as const;
