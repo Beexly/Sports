@@ -28,6 +28,18 @@ const WEATHER_KEY_TO_ENV: Record<string, string> = {
   precip_pct: "PRECIP_PCT",
 };
 
+/** One stored key may feed several env spellings (unit conversions included). */
+const KEY_TO_ENV_ALIASES: Record<string, string[]> = {
+  wind_mph: ["WIND_MPH"],
+  wind_gust_mph: ["WIND_GUST_MPH"],
+  temp_f: ["TEMP_F"],
+  precip_pct: ["PRECIP_PCT", "PRECIP_IN"], // PRECIP_IN is inches = pct/100
+};
+
+function toInches(pct: number): number {
+  return Math.round((pct / 100) * 1000) / 1000;
+}
+
 /** SignalCategory enum members usable in the where-clause (schema: WEATHER exists). */
 
 export interface StoredEnvResult {
@@ -63,8 +75,8 @@ export async function envWithStoredSignals(
       select: { signalKey: true, signalValue: true },
     });
     for (const row of rows) {
-      const envKey = WEATHER_KEY_TO_ENV[row.signalKey];
-      if (!envKey) continue;
+      const aliases = KEY_TO_ENV_ALIASES[row.signalKey] ?? [];
+      if (aliases.length === 0) continue;
       const raw = row.signalValue;
       const num =
         typeof raw === "number" ? raw
@@ -73,10 +85,12 @@ export async function envWithStoredSignals(
             ? (raw as { value: number }).value
             : null);
       if (num == null || !Number.isFinite(num)) continue;
-      // DB value wins only where ops did not set an explicit env override
-      if (baseEnv[envKey] == null) {
-        env[envKey] = String(num);
-        fromDb.push(envKey);
+      for (const envKey of aliases) {
+        // DB value wins only where ops did not set an explicit env override
+        if (baseEnv[envKey] != null) continue;
+        const value = envKey === "PRECIP_IN" ? toInches(num) : num;
+        env[envKey] = String(value);
+        if (!fromDb.includes(envKey)) fromDb.push(envKey);
       }
     }
   } catch {

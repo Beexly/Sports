@@ -806,12 +806,12 @@ export const nflLinearWindPassSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
   dataDependencies: ["nfl_stadium_weather_feed"],
-  activationStatus: "DARK",
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: DARK_NO_PIT,
+  blockedReason: "SHADOW: stored-signal env bridge can supply weather; shadow evidence accumulates until founder-gated promotion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const wind = num(ctx.env, "WIND_MPH");
@@ -838,12 +838,12 @@ export const nflTempPrecipSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
   dataDependencies: ["nfl_stadium_weather_feed"],
-  activationStatus: "DARK",
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: DARK_NO_PIT,
+  blockedReason: "SHADOW: stored-signal env bridge can supply weather; shadow evidence accumulates until founder-gated promotion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const temp = num(ctx.env, "TEMP_F");
