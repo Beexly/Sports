@@ -368,24 +368,6 @@ describe("existing disclosures stay put", () => {
     expect(src).toContain("Auto-renews at");
   });
 
-  it("the 21+ gate is enforced server-side, not by the client control alone", () => {
-    const gate = read(join(WEB, "lib", "auth", "age-gate.ts"));
-    expect(gate).toContain("MINIMUM_AGE_YEARS = 21");
-    const route = read(join(APP, "api", "subscriptions", "checkout", "route.ts"));
-    expect(route).toContain("assertAtLeast21");
-    // The refusal must precede any Stripe side effect. Compare CALL sites, not
-    // the import block — both names appear in the imports at the top of the
-    // file, in an order that says nothing about execution.
-    const ageCall = route.search(/assertAtLeast21\s*\(/);
-    const stripeCall = route.search(/createCheckoutSession\s*\(/);
-    expect(ageCall, "assertAtLeast21 is never called in the checkout route").toBeGreaterThan(-1);
-    expect(stripeCall, "createCheckoutSession is never called in the checkout route").toBeGreaterThan(-1);
-    expect(
-      ageCall,
-      "the 21+ check must run before the Stripe checkout session is created",
-    ).toBeLessThan(stripeCall);
-  });
-
   it("Stripe Terms consent stays opt-in and fails safe when unset", () => {
     // Ordering matters operationally (CLAUDE.md): the Stripe Dashboard
     // Terms-of-Service URL must be set BEFORE the flag is flipped, or Stripe

@@ -61,9 +61,11 @@ export const STRIPE_PRICE_ENV_MATRIX = Object.freeze([
  * script's runtime:
  *   1. Node's native type stripping loads the `.ts` (on by default from Node
  *      22.18).
- *   2. A tiny in-thread resolve hook maps `@/…` → `apps/web/…` so the alias
- *      resolves outside webpack/vitest. `node:module.registerHooks` landed in
- *      Node 22.15, so neither is available on Node 20.
+ *   2. A tiny resolve hook (scripts/lib/ts-alias-loader.mjs, registered via
+ *      `node:module.register()`, present since Node 20.6) maps `@/…` →
+ *      `apps/web/…` so the alias resolves outside webpack/vitest. Type
+ *      stripping is the part Node 20 lacks, so under plain Node 20 the load
+ *      still fails — loudly, with the diagnostic below.
  *
  * Both are arranged only when the runtime offers them. A host that already
  * understands TypeScript and the `@/` alias — Vitest/Vite, which is how this
@@ -89,30 +91,18 @@ export async function loadPriceIdHelpers(repoRoot) {
   // this lib runs under PLAIN Node — the ops script the operator invokes. Under
   // a host that already understands TypeScript and the `@/` alias (Vitest/Vite,
   // whose config aliases `@` to apps/web), `import()` resolves the .ts on its
-  // own, including on Node 20 where `node:module.registerHooks` does not exist
-  // at all. So arrange the hooks when the runtime offers them and otherwise
-  // fall through to the import — a runtime that can do neither still throws
-  // below, with the Node-version diagnostic, so the gate can never degrade into
-  // a silent "couldn't check, looks fine".
-  const { registerHooks } = await import("node:module");
+  // own. So register the alias loader when the runtime offers the register()
+  // API and otherwise fall through to the import — a runtime that can do
+  // neither still throws below, with the Node-version diagnostic, so the gate
+  // can never degrade into a silent "couldn't check, looks fine".
+  const { register } = await import("node:module");
 
   // Register once per process — repeated calls would stack duplicate hooks.
-  if (typeof registerHooks === "function" && !hooksRegistered) {
-    registerHooks({
-      resolve(specifier, context, nextResolve) {
-        if (specifier.startsWith("@/")) {
-          const base = join(webRoot, specifier.slice(2));
-          for (const ext of [".ts", ".tsx", ".mjs", ".js", ""]) {
-            if (existsSync(base + ext)) {
-              return { url: pathToFileURL(base + ext).href, shortCircuit: true };
-            }
-          }
-        }
-        return nextResolve(specifier, context);
-      },
-    });
+  if (typeof register === "function" && !hooksRegistered) {
+    register("./ts-alias-loader.mjs", import.meta.url);
     hooksRegistered = true;
   }
+  const runningMajor = Number(process.versions.node.split(".")[0]);
 
   // apps/web/package.json has no `"type": "module"` (it is a Next app, not an ESM
   // package), so Node prints a MODULE_TYPELESS_PACKAGE_JSON warning while stripping
@@ -135,15 +125,15 @@ export async function loadPriceIdHelpers(repoRoot) {
   try {
     mod = await import(pathToFileURL(target).href);
   } catch (err) {
-    if (typeof registerHooks !== "function") {
-      // Plain Node too old to strip types or to install the `@/` resolve hook.
-      // Surface that as the readiness failure it is — never as a skip.
+    if (runningMajor < 22) {
+      // Plain Node too old to strip types: the alias loader registers fine,
+      // but a .ts import cannot succeed before Node 22.18 (type-stripping on
+      // by default). Surface that as the readiness failure it is — never a skip.
       throw new Error(
         `could not load ${target} on Node ${process.version} ` +
           `(${err instanceof Error ? err.message : String(err)}) — ` +
-          "node:module.registerHooks is unavailable here, so re-run this check on " +
-          "Node >= 22.18 (registerHooks landed in 22.15 and TypeScript type-stripping " +
-          "is on by default from 22.18; both are needed to load the billing helpers " +
+          "re-run this check on Node >= 22.18: TypeScript type-stripping is on " +
+          "by default from 22.18, and it is needed to load the billing helpers " +
           "under plain Node)",
       );
     }

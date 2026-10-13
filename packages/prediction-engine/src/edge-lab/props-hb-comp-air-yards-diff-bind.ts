@@ -123,7 +123,7 @@ export type CompAirYardsDiffBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = { grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean", layer: "L2" };
 
 export function bindCompAirYardsDiffSamples(
   rows: readonly CovariateRow[],
@@ -170,7 +170,7 @@ export function bindCompAirYardsDiffSamples(
         attempts: req.comp.attempts,
         completions: req.comp.completions,
         // Weekly NGS mean air-yards differential — cell metadata from bus contract.
-        avgAirYardsDifferential: { ...BUS_CELL, value: diff },
+        avgAirYardsDifferential: { ...BUS_CELL, value: diff, knownAtWeek: row.week },
       },
     });
   }

@@ -325,6 +325,7 @@ export {
   parseEspnScoreboardForSeed,
   fetchEspnSeedGamesForSport,
   fetchAllEspnSeedGames,
+  ESPN_SCOREBOARD_LIMIT,
   SHORT_TO_ODDS_SPORT,
   sportMetaForKey,
 } from "./espn-schedule-seed.js";
@@ -339,3 +340,63 @@ export {
   MlbStatsApiError,
 } from "./mlb-statsapi-client.js";
 export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";
+
+// Paid-odds governor + credit ledger surface. These modules were added with
+// the paid-run accounting work but never re-exported here, while
+// @sports/ingestion-pipeline (process-sport, refresh-odds, settle-sport and
+// their tests) imports them through the package barrel.
+export {
+  PAID_CALL_MIN_INTERVAL_MS,
+  PAID_CALL_PURPOSES,
+  evaluatePaidOddsCall,
+  decidePaidOddsCall,
+} from "./odds-credit-governor.js";
+export type { PaidCallPurpose, PaidCallDecisionInput, PaidCallDecision, PaidCallEvaluation } from "./odds-credit-governor.js";
+export {
+  recordCreditObservation,
+  loadLatestCreditObservation,
+  recordPaidCall,
+  loadLatestPaidCallAt,
+  loadLatestPaidCallAnyPurposeAt,
+  reservePaidCallSlot,
+  resetPaidCallReservationWarning,
+} from "./odds-credit-ledger.js";
+export type { OddsCreditLedgerDb } from "./odds-credit-ledger.js";
+export { buildPaidOddsGovernor, espnScoreboardDateRange, STARTED_GRACE_HOURS } from "./paid-odds-governor.js";
+export type { PaidOddsGovernor, PaidOddsGovernorDeps } from "./paid-odds-governor.js";
+export { getOddsPaymentCircuitBreaker } from "./odds-api-circuit-breaker.js";
+export type { OddsPaymentCircuitBreaker } from "./odds-api-circuit-breaker.js";
+export {
+  parseKalshiSpreadLine,
+  parseKalshiTotalLine,
+  PredExonKalshiCatalog,
+  createGalaxySecondBook,
+} from "./galaxy-kalshi-book.js";
+
+// Consumer surface restored with the barrel: web routes/libs and the
+// ingestion pipeline import these through the package entry point, and the
+// production build (webpack) fails on any name the barrel does not carry.
+export {
+  EVENT_HORIZON_HOURS,
+  MONTHLY_CREDITS,
+  emptyOddsCreditTruth,
+} from "./odds-credit-governor.js";
+export type { OddsCreditTruth } from "./odds-credit-governor.js";
+export {
+  loadOddsCreditTruth,
+  loadOddsCreditTruthOutcome,
+} from "./odds-credit-ledger.js";
+export type { OddsCreditLedgerTx } from "./odds-credit-ledger.js";
+export {
+  WEIGHT_BY_GRADE,
+  WEIGHT_BY_MODEL_VERSION,
+  WEIGHT_BY_PICK_TYPE,
+  WEIGHT_BY_SPORT,
+  calibratedWinProb,
+  combinedSignalWeight,
+  shouldSuppress,
+} from "./calibration-weights.js";
+export type { SignalWeight } from "./calibration-weights.js";
+export { ingestionTargetNflSeason, resolveFootballStatsSeasonAsync } from "./nflverse-season.js";
+export type { RegRowsProbe } from "./nflverse-season.js";
+export { fetchNflversePlayerStatsWeek, mergePlayerStatsWeekCurrency } from "./nflverse-source.js";
