@@ -16,15 +16,6 @@ export const metadata: Metadata = {
   title: "Sign in",
 };
 
-/**
- * Distinct page title (WCAG 2.4.2). Without one this page inherited the root
- * layout default and announced identically to the homepage — indistinguishable
- * in a tab strip, in browser history, or to a screen reader switching windows
- * mid-signup. The layout's robots:noindex still applies; only the title is added.
- */
-export const metadata: Metadata = {
-  title: "Sign in",
-};
 
 // ─────────────────────────────────────────────
 // Page

@@ -327,6 +327,7 @@ export {
   fetchAllEspnSeedGames,
   SHORT_TO_ODDS_SPORT,
   sportMetaForKey,
+  ESPN_SCOREBOARD_LIMIT,
 } from "./espn-schedule-seed.js";
 export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";
 
@@ -339,3 +340,67 @@ export {
   MlbStatsApiError,
 } from "./mlb-statsapi-client.js";
 export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";
+
+export { getOddsPaymentCircuitBreaker } from "./odds-api-circuit-breaker.js";
+
+export {
+  parseKalshiSpreadLine,
+  parseKalshiTotalLine,
+  createGalaxySecondBook,
+} from "./galaxy-kalshi-book.js";
+
+export {
+  buildPaidOddsGovernor,
+  type PaidOddsGovernor,
+  type PaidOddsGovernorDeps,
+} from "./paid-odds-governor.js";
+
+export {
+  emptyOddsCreditTruth,
+  MONTHLY_CREDITS,
+  EVENT_HORIZON_HOURS,
+  decidePaidOddsCall,
+  type OddsCreditTruth,
+} from "./odds-credit-governor.js";
+
+export {
+  reservePaidCallSlot,
+  loadOddsCreditTruth,
+  loadOddsCreditTruthOutcome,
+  type OddsCreditTruthOutcome,
+  type OddsCreditLedgerDb,
+  type OddsCreditLedgerRows,
+} from "./odds-credit-ledger.js";
+
+export {
+  CONFIDENCE_RECALIBRATION,
+  calibratedWinProb,
+  WEIGHT_BY_PICK_TYPE,
+  WEIGHT_BY_SPORT,
+  WEIGHT_BY_GRADE,
+  WEIGHT_BY_MODEL_VERSION,
+  PUBLISH_ACTIONS,
+  combinedSignalWeight,
+  shouldSuppress,
+  SIGNAL_COVERAGE_LIVE,
+  type ConfidenceRecalibration,
+  type SignalWeight,
+  type PublishAction,
+} from "./calibration-weights.js";
+
+export {
+  STARTED_GRACE_HOURS,
+  espnScoreboardDateRange,
+} from "./paid-odds-governor.js";
+
+export {
+  ingestionTargetNflSeason,
+  resolveFootballStatsSeasonAsync,
+  type RegRowsProbe,
+} from "./nflverse-season.js";
+
+export {
+  fetchNflversePlayerStatsWeek,
+  mergePlayerStatsWeekCurrency,
+} from "./nflverse-source.js";
+
