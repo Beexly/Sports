@@ -160,6 +160,79 @@ def ranked_board(trace, facts: list[dict[str, Any]], gaps: list[str], decision: 
 
 
 
+def _auto_market_priors(home: str, away: str, season: int, week: int) -> tuple[list, list]:
+    """Layer-1 priors for this game from the ESPN inline odds, or ([], gap).
+
+    Returns (priors, gaps). Any failure is a NAMED GAP (network off, no odds
+    posted yet, shape drift) - never an exception, never a silent zero, never
+    an invented probability.
+    """
+    gaps: list[str] = []
+    try:
+        from reasoning import market_priors as mp
+        from reasoning.signals import MarketPrior
+
+        # dated scoreboard for the week's slate; fall back to the default window
+        date_param = ""
+        try:
+            from datetime import datetime, timedelta
+            # week N's slate window is unknown here; try the upcoming Saturday-Thursday
+            pass
+        except Exception:
+            pass
+        payload = None
+        for base in mp.BASES:
+            try:
+                payload = mp._fetch(base.format(sport="football/nfl") + date_param)
+                break
+            except Exception:
+                continue
+        if not payload:
+            gaps.append("market priors: ESPN scoreboard unreachable (offline run)")
+            return [], gaps
+        for ev in payload.get("events", []):
+            comps = ev.get("competitions", []) or []
+            if not comps:
+                continue
+            odds = comps[0].get("odds") or []
+            if not odds:
+                continue
+            o = odds[0]
+            ml = o.get("moneyline") or {}
+
+            def _amer(obj: dict):
+                for k in ("close", "open", "current"):
+                    raw = (obj.get(k) or {}).get("odds")
+                    if raw in (None, ""):
+                        continue
+                    try:
+                        return float(raw)
+                    except (TypeError, ValueError):
+                        continue
+                return None
+
+            h, a = _amer(ml.get("home") or {}), _amer(ml.get("away") or {})
+            if not (h and a):
+                continue
+            fa, fb, s = mp.devig_two_way(h, a)
+            name = (ev.get("name") or "").lower()
+            if home.lower() in name or away.lower() in name:
+                src = (o.get("provider") or {}).get("name") or "espn-inline"
+                return [
+                    MarketPrior(hypothesis=f"{away}@{home} home win", prior=fa,
+                                source=f"espn-inline {src} {h:+.0f}/{a:+.0f} de-vig",
+                                note=f"booksum {s:.4f}"),
+                    MarketPrior(hypothesis=f"{away}@{home} away win", prior=fb,
+                                source=f"espn-inline {src} {h:+.0f}/{a:+.0f} de-vig",
+                                note=f"booksum {s:.4f}"),
+                ], gaps
+        gaps.append("market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)")
+        return [], gaps
+    except Exception as exc:  # honesty over bravado
+        gaps.append(f"market priors: auto-attach failed ({type(exc).__name__}: {exc})")
+        return [], gaps
+
+
 def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int = 2026,
                 weather: dict[str, Any] | None = None,
                 market_priors: list | None = None,
@@ -203,6 +276,12 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
     else:
         facts.append({"signal": "weather", "value": weather, "fired": weather.get("available", False),
                       "source": weather.get("source", "unknown"), "license": weather.get("license", "unknown")})
+
+    # Layer 1 auto-attach: when the caller did not bring priors, try the ESPN
+    # inline odds. Failure is a named gap in `gaps`, not a crash.
+    if market_priors is None:
+        market_priors, prior_gaps = _auto_market_priors(home, away, season, week)
+        gaps.extend(prior_gaps)
 
     reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching, trust=None, ol=ol)
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
