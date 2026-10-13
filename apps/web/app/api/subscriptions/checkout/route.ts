@@ -36,7 +36,6 @@ import {
   classifyStripeSessionCreateError,
   transitionForOutcome,
 } from "@/lib/billing/stripe-outcome";
-import { assertAtLeast21 } from "@/lib/auth/age-gate";
 import { requireAppUrl } from "@/lib/config/app-url";
 import { MissingProductionEnvError } from "@/lib/config/require-env";
 

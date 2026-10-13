@@ -8,19 +8,12 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
 /**
- * C-330. Same gap as /auth/error: no metadata, so the page inherited the root
- * layout's default title. Indexability is inherited from app/auth/layout.tsx
- * (robots index:false, follow:false, nocache:true), so only the title is set here.
- */
-export const metadata: Metadata = {
-  title: "Sign in",
-};
-
-/**
- * Distinct page title (WCAG 2.4.2). Without one this page inherited the root
- * layout default and announced identically to the homepage — indistinguishable
- * in a tab strip, in browser history, or to a screen reader switching windows
- * mid-signup. The layout's robots:noindex still applies; only the title is added.
+ * Distinct page title (WCAG 2.4.2 / C-330). Without one this page inherited the
+ * root layout default and announced identically to the homepage —
+ * indistinguishable in a tab strip, in browser history, or to a screen reader
+ * switching windows mid-signup. Indexability is inherited from
+ * app/auth/layout.tsx (robots index:false, follow:false, nocache:true), so
+ * only the title is set here.
  */
 export const metadata: Metadata = {
   title: "Sign in",

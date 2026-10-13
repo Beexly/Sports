@@ -3,10 +3,11 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
-import { formatCentralTime, CT_SUFFIX } from "@/lib/time/central";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { LocalTime } from "@/components/ui/local-time";
+import { isRealInstant } from "@/lib/time/local-time";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { boardMarketLabel } from "@/lib/board/market-label";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
@@ -29,22 +30,23 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 /**
- * Board timestamps read Central, and say so.
+ * Board timestamps resolve on the VIEWER's clock via <LocalTime>.
  *
- * This is a server component, so a bare toLocaleTimeString() formatted in the
- * SERVER's zone — UTC on Vercel — and printed a UTC clock face with no zone
- * label at all. Measured on production 2026-09-13: /api/board/state reported
- * lastRefresh 18:06:07Z and the page rendered "Last refresh 6:06 PM". It was
- * 1:06 PM in Central. Five hours wrong, and nothing on the page said which zone
- * it meant, so a reader could not even correct for it.
+ * This is a server component, so formatting the instant during server render
+ * would bake in the SERVER's zone — UTC on Vercel — and print a UTC clock face
+ * with no zone label at all. Measured on production 2026-09-13: /api/board/state
+ * reported lastRefresh 18:06:07Z and the page rendered "Last refresh 6:06 PM".
+ * It was 1:06 PM in Central. Five hours wrong, and nothing on the page said
+ * which zone it meant, so a reader could not even correct for it.
  *
- * formatCentralTime pins the zone explicitly, and the CT suffix makes the
- * reading self-describing rather than something the viewer has to infer.
+ * Only the ISO instant crosses the boundary now; <LocalTime> resolves the
+ * wall clock after mount, in the viewer's own zone, and says which zone it
+ * used. An unparseable instant renders "Unavailable" rather than a guess.
  */
-function timeLabel(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Unavailable";
-  return `${formatCentralTime(date)} ${CT_SUFFIX}`;}
+function timeLabel(value: string): ReactNode {
+  if (!isRealInstant(value)) return "Unavailable";
+  return <LocalTime iso={value} format="stamp" label="Last refresh" />;
+}
 
 export default async function BoardPage(): Promise<JSX.Element> {
   // Entitlement resolves BEFORE the query so the refusal trail is withheld
