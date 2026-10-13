@@ -144,6 +144,7 @@ export function trueProbIsBackfill(edge: {
  */
 export function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
   if (!edge) return false;
+  if (edge.decision === "PASS") return true;
   if (!Number.isFinite(edge.expectedClv)) return false;
   return edge.expectedClv < 0;
 }
