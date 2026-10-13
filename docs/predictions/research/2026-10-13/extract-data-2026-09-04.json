@@ -1,0 +1,685 @@
+{
+  "delta_report": {
+    "wave_1_summary": [
+      {
+        "value": "Owner brief says Wave 1 comprises 604 files and already covered scores24, FantasyPros, NGS, PFR, FantasyGuru, PFF, Action Network, nfelo, RotoWire, LineStar, BettingPros, Covers, OddsShark, VegasInsider and WagerTalk. These are treated as closed items and were not repeated as Wave 2 teardowns.",
+        "value_citation": "https://github.com/Beexly/gse-competitive-intel"
+      },
+      {
+        "value": "Owner brief says four patents were already pulled; Wave 2 adds no patent duplication.",
+        "value_citation": "https://github.com/Beexly/gse-competitive-intel"
+      },
+      {
+        "value": "Owner brief says expansion-targets named the staged queue but those targets had not run: Pinnacle/Circa, Inpredictable/FiveThirtyEight, fantasy rivals, dynasty/crowd, EV/props engines and MLB Statcast.",
+        "value_citation": "https://github.com/Beexly/gse-competitive-intel"
+      },
+      {
+        "value": "Owner brief says the existing high-stakes benchmark was nfelo 66.61% SU / 53.70% ATS vs close / +5.61% CLV and that 70% ATS long-term was considered unattainable. Wave 2 independently fetched the current nfelo page, which reports different aggregate values (66.72% SU / 55.06% close ATS / 5.86% CLV), so the discrepancy must be versioned rather than silently merged.",
+        "value_citation": "https://github.com/Beexly/gse-competitive-intel"
+      },
+      {
+        "value": "The named repository files could not be retrieved in this run: raw GitHub paths returned 404 and the repository page returned a GitHub 404 view. Accordingly, the Wave 1 inventory above is reported from the owner-supplied brief and not independently re-audited.",
+        "value_citation": "https://github.com/Beexly/gse-competitive-intel"
+      }
+    ],
+    "new_findings_identified": [
+      {
+        "value": "NCAAF acquisition path: CFBD now documents 2001/2002-present coverage, FCS/other classifications, neutralSite, 2013-present lines/ATS and a tiered API; cfbfastR adds no-key season loaders and NCAA FCS/lower-division data.",
+        "value_citation": "https://api.collegefootballdata.com/data-availability"
+      },
+      {
+        "value": "The college-model gap is bounded: ESPN FPI and Sagarin expose public projections/ratings but no requested audited SU/ATS/CLV ledger was found; fetched nfelo material is NFL-only.",
+        "value_citation": "https://www.nfeloapp.com/about/"
+      },
+      {
+        "value": "New staged teardowns cover sharp benchmarks, calibration peers, fantasy/dynasty products, EV/props engines and Baseball Savant, including pricing, methodology, proof format and licensing holes.",
+        "value_citation": "https://www.pinnacle.com/betting-resources/en/betting-tools/margin-calculator"
+      },
+      {
+        "value": "Prediction-market expansion was researched without integration: Kalshi/Polymarket have dedicated sports catalogs and documented fees/APIs; Manifold has community sports markets; PredictIt showed no sports section in the fetched snapshot.",
+        "value_citation": "https://kalshi.com/category/sports/all-sports"
+      },
+      {
+        "value": "Accuracy verification added an independently fetched nfelo record, Inpredictable market benchmark, a 5,412-game peer-reviewed study, and regulator/FTC advertising-risk evidence.",
+        "value_citation": "https://www.nfeloapp.com/games/nfl-model-performance/"
+      },
+      {
+        "value": "Calibration/DFS frontier added rolling time-series CV, temperature/Platt/isotonic/beta calibration, adaptive/debiased ECE, Brier decomposition, hierarchical pooling, conformal intervals, and contest/ownership mechanics.",
+        "value_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+      }
+    ]
+  },
+  "ncaaf_intelligence": {
+    "data_sources": [
+      {
+        "source_name": "CollegeFootballData (CFBD) REST API",
+        "source_name_citation": "https://api.collegefootballdata.com/getting-started",
+        "coverage_details": "Provider availability table advertises season calendar 2002–present, raw plays 2001–present, team/player box scores 2004–present, and advanced team/game statistics 2001–present; it warns that season availability does not guarantee every team, game, subdivision, or field is complete. Games schema supports fbs, fcs, II, II/III and III classifications and a neutralSite field. Lines/ATS records are advertised for 2013–present, with provider/game variation.",
+        "coverage_details_citation": "https://api.collegefootballdata.com/data-availability",
+        "access_method": "Bearer API key over REST; official curl example GET /games?year=2023&team=Michigan. Python and TypeScript quickstarts are linked. Exact acquisition path: register at /key, keep CFBD_API_KEY server-side, pull games/lines/teams in season batches, and cache normalized responses.",
+        "access_method_citation": "https://api.collegefootballdata.com/getting-started",
+        "rate_limits": "Free 1,000 calls/month; Academic 3,000/month; Tier 1 $1/month/5,000; Tier 2 $5/month/30,000; Tier 3 $10/month/75,000 and GraphQL; higher tiers continue. Shared CFBD/CBBD quota and published limits apply.",
+        "rate_limits_citation": "https://collegefootballdata.com/api-tiers"
+      },
+      {
+        "source_name": "cfbfastR / SportsDataverse",
+        "source_name_citation": "https://cfbfastr.sportsdataverse.org/",
+        "coverage_details": "Full-season loaders use pre-built SportsDataverse-data releases: classic cfbfastR EPA/WPA PBP 2014+; ESPN-derived datasets mostly 2004+ (PBP, schedules, boxes, betting, FPI, advanced splits); NCAA stats loaders 2013+ include FCS and lower divisions ESPN misses. Loaders accept season vectors or TRUE and can write to a database.",
+        "coverage_details_citation": "https://cfbfastr.sportsdataverse.org/",
+        "access_method": "R package install from CRAN/GitHub; pre-built loaders require no API key and no scraping, while CFBD-backed calls require CFBD_API_KEY. Exact fetch: install cfbfastR, call load_cfb_pbp/load_espn_cfb_pbp/load_ncaa_mfb_pbp for selected seasons, optionally pass dbConnection.",
+        "access_method_citation": "https://cfbfastr.sportsdataverse.org/",
+        "rate_limits": "The fetched package page states no key/no scraping for pre-built releases but gives no monetary price or loader rate limit; cost NOT STATED. CFBD-backed calls inherit CFBD quotas.",
+        "rate_limits_citation": "https://cfbfastr.sportsdataverse.org/"
+      },
+      {
+        "source_name": "Massey Ratings",
+        "source_name_citation": "https://masseyratings.com/cf/fbs",
+        "coverage_details": "Public FBS and FCS rating pages, games, archives, matchup tools, and schedule/score navigation are exposed.",
+        "coverage_details_citation": "https://masseyratings.com/cf/fbs",
+        "access_method": "Public web pages; no official API or downloadable bulk method was stated on the fetched page. Acquisition would require terms review before automated collection.",
+        "access_method_citation": "https://masseyratings.com/cf/fbs",
+        "rate_limits": "No rate limit or price stated on fetched page; NOT STATED.",
+        "rate_limits_citation": "https://masseyratings.com/cf/fbs"
+      },
+      {
+        "source_name": "Sagarin college football ratings",
+        "source_name_citation": "http://sagarin.com/sports/cfsend.htm",
+        "coverage_details": "Public ratings/predictions page says its 266 rated teams are used for rating/schedule computations, location affects schedule difficulty, and neutral games are marked n; it links predictions with totals and moneylines.",
+        "coverage_details_citation": "http://sagarin.com/sports/cfsend.htm",
+        "access_method": "Public HTML page; no API/CSV interface was stated.",
+        "access_method_citation": "http://sagarin.com/sports/cfsend.htm",
+        "rate_limits": "No price, rate limit, or reuse license stated; NOT STATED.",
+        "rate_limits_citation": "http://sagarin.com/sports/cfsend.htm"
+      },
+      {
+        "source_name": "ESPN Football Power Index (FPI)",
+        "source_name_citation": "https://www.espn.com/college-football/fpi",
+        "coverage_details": "FPI is described as expected point margin versus an average opponent on a neutral field; projections use 20,000 simulations of the rest of the season from FPI, results to date and remaining schedule, with daily updates. ESPN cautions pre-2019 data may be incomplete.",
+        "coverage_details_citation": "https://www.espn.com/college-football/fpi",
+        "access_method": "Public web ranking/projection tables; no public API or bulk-download method was stated on fetched page.",
+        "access_method_citation": "https://www.espn.com/college-football/fpi",
+        "rate_limits": "No API rate limit, licensing term, or price stated; NOT STATED.",
+        "rate_limits_citation": "https://www.espn.com/college-football/fpi"
+      },
+      {
+        "source_name": "Massey Ratings Kaggle archive",
+        "source_name_citation": "https://www.kaggle.com/datasets/masseyratings/rankings",
+        "coverage_details": "Weekly ordinal rankings advertised for FBS since 1997 and FCS since 2000, with sport-year, team, system, date and ordinal rank fields.",
+        "coverage_details_citation": "https://www.kaggle.com/datasets/masseyratings/rankings",
+        "access_method": "Kaggle downloadable dataset; license shown as Unknown and update frequency not specified, so commercial ingestion requires a separate rights check.",
+        "access_method_citation": "https://www.kaggle.com/datasets/masseyratings/rankings",
+        "rate_limits": "No API quota/rate limit or paid price was established from fetched metadata; license Unknown.",
+        "rate_limits_citation": "https://www.kaggle.com/datasets/masseyratings/rankings"
+      },
+      {
+        "source_name": "Kaggle college football team-stats dataset",
+        "source_name_citation": "https://www.kaggle.com/datasets/cviaxmiwnptr/college-football-team-stats-2002-to-january-2024",
+        "coverage_details": "Advertises every game involving an FBS team, neutral boolean, game type, scores and team statistical fields; exact completeness and rights were not independently verified.",
+        "coverage_details_citation": "https://www.kaggle.com/datasets/cviaxmiwnptr/college-football-team-stats-2002-to-january-2024",
+        "access_method": "Kaggle CSV download; license/cost NOT VERIFIED on fetched page.",
+        "access_method_citation": "https://www.kaggle.com/datasets/cviaxmiwnptr/college-football-team-stats-2002-to-january-2024",
+        "rate_limits": "No rate limits stated; license/terms NOT VERIFIED.",
+        "rate_limits_citation": "https://www.kaggle.com/datasets/cviaxmiwnptr/college-football-team-stats-2002-to-january-2024"
+      },
+      {
+        "source_name": "Sports-Reference CFB",
+        "source_name_citation": "https://www.sports-reference.com/cfb/",
+        "coverage_details": "NOT FETCHED: page timed out in this run, so coverage details are not verified.",
+        "coverage_details_citation": "https://www.sports-reference.com/cfb/",
+        "access_method": "NOT FETCHED (timeout); do not assume scraping or bulk rights.",
+        "access_method_citation": "https://www.sports-reference.com/cfb/",
+        "rate_limits": "NOT FETCHED.",
+        "rate_limits_citation": "https://www.sports-reference.com/cfb/"
+      }
+    ],
+    "public_models": [
+      {
+        "model_name": "nfelo (NFL only)",
+        "model_name_citation": "https://www.nfeloapp.com/about/",
+        "track_record": "The fetched About/performance pages describe nfelo as an NFL Elo model for all 32 teams; its backtest reports 2009–2024 SU 66.72%, opening ATS 55.87%, closing ATS 55.06%, +133 units and 5.86% CLV, but it is self-reported and not audited here.",
+        "track_record_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "market_gap_identified": true,
+        "market_gap_identified_citation": "https://www.nfeloapp.com/about/"
+      },
+      {
+        "model_name": "ESPN FPI",
+        "model_name_citation": "https://www.espn.com/college-football/fpi",
+        "track_record": "Public college projection model with 20,000-simulation projections and daily updates; fetched page supplies no multi-season SU/ATS/CLV betting ledger, so track record in requested format is NOT FETCHED.",
+        "track_record_citation": "https://www.espn.com/college-football/fpi",
+        "market_gap_identified": false,
+        "market_gap_identified_citation": "https://www.espn.com/college-football/fpi"
+      },
+      {
+        "model_name": "Sagarin college ratings/predictions",
+        "model_name_citation": "http://sagarin.com/sports/cfsend.htm",
+        "track_record": "Public rating/prediction output and methodology notes were verified, but no multi-season SU/ATS/CLV ledger was found on the fetched page.",
+        "track_record_citation": "http://sagarin.com/sports/cfsend.htm",
+        "market_gap_identified": false,
+        "market_gap_identified_citation": "http://sagarin.com/sports/cfsend.htm"
+      },
+      {
+        "model_name": "College nfelo",
+        "model_name_citation": "https://www.nfeloapp.com/about/",
+        "track_record": "No college version was identified in fetched nfelo pages; the site describes itself as NFL predictions/model. This is bounded search evidence, not proof that no such private or obscure model exists.",
+        "track_record_citation": "https://www.nfeloapp.com/about/",
+        "market_gap_identified": true,
+        "market_gap_identified_citation": "https://www.nfeloapp.com/about/"
+      }
+    ],
+    "engineering_constraints": "The source surface itself implies a batch/data-engineering problem: 130+ FBS teams plus FCS/lower divisions require classification-aware IDs, historical/conference-season joins, neutralSite/location handling, and a single canonical schedule. A 60-game Saturday should be handled by season/week prefetch, server-side caching, idempotent upserts and queued line snapshots—not per-user live fan-out. cfbfastR documents season-vector loaders and direct database writes; CFBD documents classifications, neutralSite and paid quotas. These are engineering recommendations, not a claim that any competitor has solved them.",
+    "engineering_constraints_citation": "https://cfbfastr.sportsdataverse.org/"
+  },
+  "competitor_teardowns": [
+    {
+      "competitor_name": "Pinnacle",
+      "competitor_name_citation": "https://www.pinnacle.com/",
+      "category": "sharp benchmark / sportsbook",
+      "category_citation": "https://www.pinnacle.com/betting-resources/en/betting-tools/margin-calculator",
+      "pricing_model": "No subscription/API price displayed; sportsbook account access is jurisdiction-dependent.",
+      "pricing_model_citation": "https://www.pinnacle.com/betting-resources/en/betting-tools/margin-calculator",
+      "methodology_claims": "Operator margin calculator shows 1.91/1.91 (-110/-110) = 5.24% overround; Pinnacle says sharp books often run 2–4% margins versus recreational 6–10%+ and advertises limits that scale with liquidity and rise near event time.",
+      "methodology_claims_citation": "https://www.pinnacle.com/betting-resources/en/betting-tools/margin-calculator",
+      "accuracy_presentation_format": "Proof format is price/overround tooling and market reputation, not a fetched audited prediction-ROI ledger; numeric limits and long-run model record were NOT FETCHED.",
+      "accuracy_presentation_format_citation": "https://www.pinnacle.com/betting-resources/en/educational/why-pinnacle-offers-higher-betting-limits-than-other-sportsbooks",
+      "license_terms": "No reuse/API/license terms established from fetched public resources; do not infer rights.",
+      "license_terms_citation": "https://www.pinnacle.com/betting-resources/en/betting-tools/margin-calculator"
+    },
+    {
+      "competitor_name": "Circa",
+      "competitor_name_citation": "https://www.circasports.com/",
+      "category": "sharp benchmark / sportsbook",
+      "category_citation": "https://www.circasports.com/blog/circa-sports-bookmaking-philosophy",
+      "pricing_model": "Sportsbook access/app listed for select states; no subscription/API price. Circa Million contest advertises No Rake, but entry fee was not shown in fetched text.",
+      "pricing_model_citation": "https://www.circasports.com/circa-million",
+      "methodology_claims": "Circa says it seeks sharp action, uses professional/winning-player patterns to reach a true market number, raises limits and lowers hold toward start time. Numeric limits/hold NOT FETCHED.",
+      "methodology_claims_citation": "https://www.circasports.com/blog/circa-sports-bookmaking-philosophy",
+      "accuracy_presentation_format": "Circa links historical Million standings/prize PDFs; those are contest outcomes, not an audited sportsbook prediction/ROI record.",
+      "accuracy_presentation_format_citation": "https://www.circasports.com/circa-million",
+      "license_terms": "No commercial data/API license stated on fetched pages.",
+      "license_terms_citation": "https://www.circasports.com/blog/circa-sports-bookmaking-philosophy"
+    },
+    {
+      "competitor_name": "Inpredictable",
+      "competitor_name_citation": "https://www.inpredictable.com/p/methodology.html",
+      "category": "calibration peer / public model",
+      "category_citation": "https://www.inpredictable.com/p/methodology.html",
+      "pricing_model": "Public pages readable without login; no subscription, API price or usage limit stated.",
+      "pricing_model_citation": "https://stats.inpredictable.com/rankings/nfl.php",
+      "methodology_claims": "Weighted linear regression on season point spreads, with recency weights; NFL credibility coefficient is 15%, selected by minimizing future spread error.",
+      "methodology_claims_citation": "https://www.inpredictable.com/p/methodology.html",
+      "accuracy_presentation_format": "Presents favorite-win accuracy by era and season mean absolute spread error; also explains Brier score for probability evaluation. Historical market analysis reports 66.8% favorite-win accuracy for 1989–2012 and ~10.3-point average spread miss—market statistics, not a claimed ROI ledger.",
+      "accuracy_presentation_format_citation": "https://www.inpredictable.com/2013/08/is-nfl-betting-market-getting-more.html",
+      "license_terms": "No bulk/API license or commercial terms stated on fetched pages.",
+      "license_terms_citation": "https://stats.inpredictable.com/rankings/nfl.php"
+    },
+    {
+      "competitor_name": "FiveThirtyEight archived Elo/QB",
+      "competitor_name_citation": "https://github.com/fivethirtyeight/data/blob/master/nfl-elo/README.md",
+      "category": "calibration peer / archived public model",
+      "category_citation": "https://github.com/fivethirtyeight/data/blob/master/nfl-elo/README.md",
+      "pricing_model": "Archived public repository/data; no current service price or bulk-commercial license verified.",
+      "pricing_model_citation": "https://github.com/fivethirtyeight/data/blob/master/nfl-elo/README.md",
+      "methodology_claims": "README documents pregame home/away Elo, win probabilities, QB-adjusted ratings, QB names/raw Elo/QB adjustments and adjusted win probabilities.",
+      "methodology_claims_citation": "https://github.com/fivethirtyeight/data/blob/master/nfl-elo/README.md",
+      "accuracy_presentation_format": "Forecasting-game repository presents points-per-season scores (example 648.24 versus 645.9) and forecast probabilities such as 82% vs 86%; no like-for-like multi-season ATS/CLV ledger on fetched page.",
+      "accuracy_presentation_format_citation": "https://github.com/fivethirtyeight/nfl-elo-game",
+      "license_terms": "Repository license/reuse details require separate review; original methodology URL redirected and was NOT FETCHED.",
+      "license_terms_citation": "https://github.com/fivethirtyeight/nfl-elo-game"
+    },
+    {
+      "competitor_name": "4for4",
+      "competitor_name_citation": "https://www.4for4.com/plans",
+      "category": "fantasy projections/rankings",
+      "category_citation": "https://www.4for4.com/why-join-4for4",
+      "pricing_model": "Lite $39/NFL season; Pro $59/season; DFS $149; Picks $349; SharpStack $499; Picks+SharpStack $649 (monthly display also shown).",
+      "pricing_model_citation": "https://www.4for4.com/plans",
+      "methodology_claims": "Advertises Paulsen projections/ranks, dynamic/custom cheat sheets, downloadable projections, ROS ranks/stats and trade values; FAQ says ROS ranks are an opinion/guide rather than a full precision projection.",
+      "methodology_claims_citation": "https://www.4for4.com/why-join-4for4",
+      "accuracy_presentation_format": "Says it monitors weekly accuracy using a consistent method and points to FantasyPros third-party verification; no independent audit fetched.",
+      "accuracy_presentation_format_citation": "https://www.4for4.com/faq/what-do-you-mean-when-you-say-verified-accuracy",
+      "license_terms": "Subscription includes Draft Hero and league sync; no bulk/API license stated.",
+      "license_terms_citation": "https://www.4for4.com/faq-page"
+    },
+    {
+      "competitor_name": "Establish The Run",
+      "competitor_name_citation": "https://establishtherun.com/",
+      "category": "fantasy projections/analytics",
+      "category_citation": "https://establishtherun.com/faq/",
+      "pricing_model": "Draft Kit Pro page advertises $54.99; one-time and subscription products exist.",
+      "pricing_model_citation": "https://establishtherun.com/establish-the-run-fantasy-football-draft-kit-pro-whats-inside/",
+      "methodology_claims": "Analytics team says it reviews news/data granularly; Buy Low Model uses opportunity independent of fantasy scores; formula for trade values not disclosed. Rankings CSV can be downloaded for Underdog.",
+      "methodology_claims_citation": "https://establishtherun.com/faq/",
+      "accuracy_presentation_format": "NFL Full Stat Projections FAQ claims higher accuracy than closing lines over prior three seasons and publishes betting records/ROI, but no independent verification was fetched; also says no guarantees.",
+      "accuracy_presentation_format_citation": "https://establishtherun.com/nfl-full-stat-faq/",
+      "license_terms": "CSV workflow verified for Underdog; general API/commercial bulk license NOT STATED.",
+      "license_terms_citation": "https://establishtherun.com/etrs-top-300-for-underdogfantasy/"
+    },
+    {
+      "competitor_name": "FantasyLife",
+      "competitor_name_citation": "https://www.fantasylife.com/tools/projections",
+      "category": "fantasy projections",
+      "category_citation": "https://www.fantasylife.com/tools/projections",
+      "pricing_model": "Numeric subscription price NOT STATED on fetched projections page; Terms say subscriptions auto-renew at then-current fee and can be cancelled before renewal.",
+      "pricing_model_citation": "https://www.fantasylife.com/terms",
+      "methodology_claims": "Combines player/league historical efficiency with team pass/rush volume; emphasizes dropback rate over expected and plays/minute over expected; supports custom scoring and league sync.",
+      "methodology_claims_citation": "https://www.fantasylife.com/tools/projections",
+      "accuracy_presentation_format": "Calls projections highly accurate/expert-based but fetched page has no accuracy table, backtest or independent audit.",
+      "accuracy_presentation_format_citation": "https://www.fantasylife.com/tools/projections",
+      "license_terms": "Terms provide limited, non-exclusive, non-transferable, revocable access; no bulk/API license stated.",
+      "license_terms_citation": "https://www.fantasylife.com/terms"
+    },
+    {
+      "competitor_name": "Underdog Fantasy",
+      "competitor_name_citation": "https://underdogfantasy.com/terms-of-use",
+      "category": "fantasy contests / projections",
+      "category_citation": "https://underdogfantasy.com/terms-of-use",
+      "pricing_model": "Subscription/projection price NOT FETCHED; official terms describe fantasy contests and require an account.",
+      "pricing_model_citation": "https://underdogfantasy.com/terms-of-use",
+      "methodology_claims": "Official rankings URL returned no usable projection content in this run; methodology NOT FETCHED.",
+      "methodology_claims_citation": "https://underdogfantasy.com/rankings",
+      "accuracy_presentation_format": "Accuracy claims/proof format NOT FETCHED from official pages.",
+      "accuracy_presentation_format_citation": "https://underdogfantasy.com/rankings",
+      "license_terms": "Terms restrict account access to account holder and disclose no public rankings API/bulk license.",
+      "license_terms_citation": "https://underdogfantasy.com/terms-of-use"
+    },
+    {
+      "competitor_name": "KeepTradeCut",
+      "competitor_name_citation": "https://keeptradecut.com/frequently-asked-questions",
+      "category": "crowd dynasty values",
+      "category_citation": "https://keeptradecut.com/frequently-asked-questions",
+      "pricing_model": "Free resource.",
+      "pricing_model_citation": "https://keeptradecut.com/frequently-asked-questions",
+      "methodology_claims": "Users answer Keep/Trade/Cut for three players; math consolidates responses into crowdsourced values, in 12-team 0.5-PPR 1QB/superflex formats.",
+      "methodology_claims_citation": "https://keeptradecut.com/frequently-asked-questions",
+      "accuracy_presentation_format": "Claims broad participation improves accuracy but provides no formal metric, backtest or independent audit.",
+      "accuracy_presentation_format_citation": "https://keeptradecut.com/frequently-asked-questions",
+      "license_terms": "Terms prohibit scraping/player-value extraction, entire-rankings reproduction and commercial exploitation; no public bulk/API license.",
+      "license_terms_citation": "https://keeptradecut.com/terms-and-conditions"
+    },
+    {
+      "competitor_name": "FantasyCalc",
+      "competitor_name_citation": "https://fantasycalc.com/frequently-asked-questions",
+      "category": "crowd dynasty trade values",
+      "category_citation": "https://fantasycalc.com/frequently-asked-questions",
+      "pricing_model": "Numeric subscription price NOT STATED on fetched pages.",
+      "pricing_model_citation": "https://fantasycalc.com/",
+      "methodology_claims": "Values generated from millions of real trades; algorithm optimizes, removes large value-difference outliers, adjusts for format using regression and recency-weights values.",
+      "methodology_claims_citation": "https://fantasycalc.com/frequently-asked-questions",
+      "accuracy_presentation_format": "Homepage advertises draft rankings outperform 91% of experts and updates every three hours; FAQ trade-history graphs are the diagnostic proof format, but underlying study was not fetched.",
+      "accuracy_presentation_format_citation": "https://fantasycalc.com/",
+      "license_terms": "API programmatic calls must use documented endpoints and caching; commercial use requires written permission and visible FantasyCalc link.",
+      "license_terms_citation": "https://fantasycalc.com/terms-of-usage"
+    },
+    {
+      "competitor_name": "DynastyProcess",
+      "competitor_name_citation": "https://dynastyprocess.com/values/",
+      "category": "crowd/derived dynasty values",
+      "category_citation": "https://dynastyprocess.com/values/",
+      "pricing_model": "Free resources.",
+      "pricing_model_citation": "https://dynastyprocess.com/values/",
+      "methodology_claims": "Scrapes FantasyPros Dynasty Expert Consensus Ranks and applies Value = 10500 * e^(FP ECR * -0.0235); rookie picks use comparable-player weighted averages, hit-rate/perfect-knowledge variants and 80% current-year present value for future picks.",
+      "methodology_claims_citation": "https://dynastyprocess.com/values/",
+      "accuracy_presentation_format": "No accuracy percentage, validation study or audited proof format stated on fetched pages.",
+      "accuracy_presentation_format_citation": "https://dynastyprocess.com/",
+      "license_terms": "Open-source/collaborative positioning; no commercial bulk/API terms stated.",
+      "license_terms_citation": "https://dynastyprocess.com/"
+    },
+    {
+      "competitor_name": "OddsJam",
+      "competitor_name_citation": "https://oddsjam.com/betting-tools",
+      "category": "EV/arbitrage engine",
+      "category_citation": "https://oddsjam.com/betting-tools",
+      "pricing_model": "7-day trial; Sharp Money $6.60/day billed monthly (displayed against $8); Platinum $8.30/day first month (displayed against $20).",
+      "pricing_model_citation": "https://oddsjam.com/subscribe",
+      "methodology_claims": "Defines +EV as win probability × amount won minus loss probability × amount lost; scans 100+ sportsbooks in real time, offers CLV tracking to sharpest book.",
+      "methodology_claims_citation": "https://oddsjam.com/betting-tools",
+      "accuracy_presentation_format": "Displays EV/CLV and claims 10,000+ arbitrage bets/month and average 3% daily profit, but no audited sample/methodology fetched.",
+      "accuracy_presentation_format_citation": "https://oddsjam.com/betting-tools",
+      "license_terms": "Public Terms not successfully fetched; redistribution, automation and commercial reuse NOT FETCHED.",
+      "license_terms_citation": "https://oddsjam.com/"
+    },
+    {
+      "competitor_name": "Unabated",
+      "competitor_name_citation": "https://unabated.com/tools/core/odds",
+      "category": "sharp-price/EV and props engine",
+      "category_citation": "https://unabated.com/tools/core/odds",
+      "pricing_model": "Premium advertised at $199/month or $1,584/year; basic free tools remain.",
+      "pricing_model_citation": "https://unabated.com/post/benefits-of-unabated-premium-membership",
+      "methodology_claims": "Unabated Line is a proprietary vig-free consensus weighted toward sharper books; Edge Tool compares prices and Synthetic Hold combines best prices. Prop tool accepts custom/blended/market projections and runs up to 10,000 simulations per player prop.",
+      "methodology_claims_citation": "https://unabated.com/tools/core/props-tool",
+      "accuracy_presentation_format": "Proof format is fair-line/edge/simulation tooling; no independent calibration or ROI audit fetched.",
+      "accuracy_presentation_format_citation": "https://unabated.com/tools/core/odds",
+      "license_terms": "Terms grant personal, non-transferable privilege and prohibit copying, commercial distribution, scraping, robots and automated monitoring; no redistribution assumed.",
+      "license_terms_citation": "https://unabated.com/terms"
+    },
+    {
+      "competitor_name": "Outlier.bet",
+      "competitor_name_citation": "https://outlier.bet/",
+      "category": "EV/props engine",
+      "category_citation": "https://help.outlier.bet/en/articles/8454320-outlier-pro-glossary-of-terms",
+      "pricing_model": "App Store lists Premium $19.99/mo or $199.99/yr, Premium+ $29.99/mo or $299.99/yr, Pro $79.99/mo or $359.99/yr; region-dependent.",
+      "pricing_model_citation": "https://apps.apple.com/us/app/outlier-smart-sports-betting/id6443885102",
+      "methodology_claims": "Glossary says fair/no-vig odds remove vig, commonly from sharp books Pinnacle/BetOnline/Circa; variation measures disagreement. Product advertises EV+ feed, line movement, injury/matchup/sentiment data and MLB props.",
+      "methodology_claims_citation": "https://help.outlier.bet/en/articles/8454320-outlier-pro-glossary-of-terms",
+      "accuracy_presentation_format": "Proof format is EV+/fair-odds/line-movement interface; terms disclaim profit and stale/inaccurate data; no audited ROI fetched.",
+      "accuracy_presentation_format_citation": "https://www.outlier.bet/terms/",
+      "license_terms": "Personal/non-transferable access; terms prohibit scraping, robots, automated monitoring and commercial copying; subscriptions nonrefundable after cancellation/charge.",
+      "license_terms_citation": "https://www.outlier.bet/terms/"
+    },
+    {
+      "competitor_name": "Props.Cash",
+      "competitor_name_citation": "https://props.cash/",
+      "category": "player-prop research engine",
+      "category_citation": "https://props.cash/",
+      "pricing_model": "$19.99/month, $199.99/year and NBA pass $99.99/year advertised; web/iOS/Android/Discord access.",
+      "pricing_model_citation": "https://props.cash/",
+      "methodology_claims": "Advertises statistical insights, outliers, updated lines from popular books, visualizations and real-time high-EV analysis; SportsDataIO case study says it uses SportsDataIO data.",
+      "methodology_claims_citation": "https://sportsdata.io/case-study-how-propscash-partnered-with-sportsdataio-to-elevate-sports-betting-tools",
+      "accuracy_presentation_format": "Visualization/trend/high-EV format; no public formula or audited pick record fetched.",
+      "accuracy_presentation_format_citation": "https://props.cash/",
+      "license_terms": "Terms URL returned unusable content; license, scraping, redistribution and commercial-use terms NOT FETCHED.",
+      "license_terms_citation": "https://props.cash/terms"
+    },
+    {
+      "competitor_name": "Baseball Savant / Statcast",
+      "competitor_name_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "category": "public MLB tracking/CSV data",
+      "category_citation": "https://www.mlb.com/glossary/statcast",
+      "pricing_model": "Public CSV query access is visible; price/bulk commercial license NOT FETCHED.",
+      "pricing_model_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "methodology_claims": "CSV docs define pitch/event/player fields; MLB says Statcast covers pitch, hit, player and ball tracking, installed in all 30 parks in 2015 with Hawk-Eye in 2020.",
+      "methodology_claims_citation": "https://www.mlb.com/glossary/statcast",
+      "accuracy_presentation_format": "Proof format is raw, queryable event-level measurements rather than a picks accuracy claim.",
+      "accuracy_presentation_format_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "license_terms": "MLB terms are linked but a data-license grant for CSV redistribution was NOT FETCHED; review before bulk mirroring.",
+      "license_terms_citation": "https://baseballsavant.mlb.com/csv-docs"
+    },
+    {
+      "competitor_name": "DraftKings",
+      "competitor_name_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358",
+      "category": "DFS contest operator",
+      "category_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358",
+      "pricing_model": "Pick6 support page documents $1 entries; exact classic-DFS rake schedule NOT FETCHED.",
+      "pricing_model_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358",
+      "methodology_claims": "Pick6 is peer-to-peer; entries are distributed across eligible contests, with 150-entry limit and prize tables by correct-pick count. Other contest styles/fees/scoring vary.",
+      "methodology_claims_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358",
+      "accuracy_presentation_format": "Proof is contest prize-table/rules display; no projection-accuracy claim verified.",
+      "accuracy_presentation_format_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358",
+      "license_terms": "Operator rules govern; bulk projection/ownership license not established from fetched page.",
+      "license_terms_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358"
+    },
+    {
+      "competitor_name": "FanDuel",
+      "competitor_name_citation": "https://www.fanduel.com/rules",
+      "category": "DFS contest operator",
+      "category_citation": "https://www.fanduel.com/rules",
+      "pricing_model": "Exact current DFS rake schedule NOT FETCHED from official rules.",
+      "pricing_model_citation": "https://www.fanduel.com/rules",
+      "methodology_claims": "Rules say guaranteed contests pay even when unfilled; structured contests may require thresholds/refund; late swap varies; entry cap generally 3% of fields under 5,000 or 150 entries for fields ≥5,000.",
+      "methodology_claims_citation": "https://www.fanduel.com/rules",
+      "accuracy_presentation_format": "Proof is official contest rules and payout/entry-limit disclosure; no projection-accuracy claim verified.",
+      "accuracy_presentation_format_citation": "https://www.fanduel.com/rules",
+      "license_terms": "No bulk projection/ownership license established from fetched rules.",
+      "license_terms_citation": "https://www.fanduel.com/rules"
+    },
+    {
+      "competitor_name": "PrizePicks",
+      "competitor_name_citation": "https://www.prizepicks.com/help-center/payouts",
+      "category": "DFS/pick’em operator",
+      "category_citation": "https://www.prizepicks.com/help-center/payouts",
+      "pricing_model": "Payouts are pre-established and shown before submission; standard Power Play examples run 2-pick 3x through 6-pick 37.5x and Flex examples include 6/6 25x, 5/6 2x, 4/6 0.4x. Separate operator rake percentage NOT FETCHED.",
+      "pricing_model_citation": "https://www.prizepicks.com/help-center/payouts",
+      "methodology_claims": "Payout depends on lineup type/pick count, not participant count or fees; no public projection formula verified.",
+      "methodology_claims_citation": "https://www.prizepicks.com/help-center/payouts",
+      "accuracy_presentation_format": "Proof format is pre-submission payout table; no pick-accuracy audit verified.",
+      "accuracy_presentation_format_citation": "https://www.prizepicks.com/help-center/payouts",
+      "license_terms": "No bulk projection/ownership license established from fetched help page.",
+      "license_terms_citation": "https://www.prizepicks.com/help-center/payouts"
+    }
+  ],
+  "prediction_market_analysis": [
+    {
+      "platform": "Kalshi",
+      "platform_citation": "https://kalshi.com/category/sports/all-sports",
+      "fee_structure": "Fee schedule lists standard taker fees $0.07–$1.75 per 100 contracts; some series/maker cases use displayed maker fees $0.02–$0.44 per 100, with exact cost depending on series, price and order type.",
+      "fee_structure_citation": "https://kalshi.com/fee-schedule",
+      "liquidity_by_sport": "Live catalog displayed 4,213 sports markets, 1,068 football and 586 NCAA-football markets; one live NCAA page displayed $12,817,692 volume. These are time-sensitive platform figures, not normalized liquidity.",
+      "liquidity_by_sport_citation": "https://kalshi.com/category/sports/all-sports",
+      "settlement_rules": "Contract terms specify outcome rules, source and information; after expiry Kalshi determines outcome using that source. Help page says determination can take one hour to over 12 hours after closure.",
+      "settlement_rules_citation": "https://help.kalshi.com/en/articles/13823826-market-outcomes",
+      "comparison_to_sportsbooks": "ESPN describes Kalshi as charging transaction fees rather than sportsbook vig. Fetched docs expose market prices/order books but no standardized close-to-close sportsbook comparison; quantitative comparison NOT FETCHED.",
+      "comparison_to_sportsbooks_citation": "https://www.espn.com/espn/betting/story/_/id/45377686/kalshi-prediction-markets-disrupt-sports-betting"
+    },
+    {
+      "platform": "Polymarket",
+      "platform_citation": "https://docs.polymarket.com/market-data/discover-markets",
+      "fee_structure": "Only takers pay; makers are not charged. Sports fee page gives 0.05 taker rate, 0 maker rate and 15% maker rebate; example curve peaks at $1.75 per 100 shares at 50¢ (0.44% effective). Check each market.",
+      "fee_structure_citation": "https://docs.polymarket.com/trading/fees",
+      "liquidity_by_sport": "Docs expose discovery by sport/liquidity and WebSocket best bid/ask/price/resolution events, while sports metadata lists NFL, NBA, Premier League, Champions League and WBC. Consolidated sport-level liquidity total NOT FETCHED.",
+      "liquidity_by_sport_citation": "https://docs.polymarket.com/market-data/discover-markets",
+      "settlement_rules": "Contract metadata includes sport-specific resolution URLs (e.g. mlb.com or premierleague.com); universal sports settlement rule NOT ESTABLISHED from fetched docs.",
+      "settlement_rules_citation": "https://gamma-api.polymarket.com/sports",
+      "comparison_to_sportsbooks": "CLOB/WebSocket/order-book APIs expose prices but no fetched source provides standardized sportsbook-closing comparison. Polymarket compliance hold is acknowledged; research only, no integration proposed.",
+      "comparison_to_sportsbooks_citation": "https://docs.polymarket.com/api-reference/predictions/overview"
+    },
+    {
+      "platform": "PredictIt",
+      "platform_citation": "https://www.predictit.org/terms-and-conditions",
+      "fee_structure": "Terms say deposits are free, withdrawals have a 5% processing fee plus possible method fees; exact trading fee is in a separate support section that was NOT FETCHED.",
+      "fee_structure_citation": "https://www.predictit.org/terms-and-conditions",
+      "liquidity_by_sport": "Fetched homepage showed 185 markets in Elections/President/Congress/State/Local/World/Weekly; no sports section. Sports liquidity NOT FETCHED and absence is not proof no historical market existed.",
+      "liquidity_by_sport_citation": "https://www.predictit.org/",
+      "settlement_rules": "Market-specific rules govern settlement; provider judgment/factual findings are final subject to dispute process. Terms mention API access but public trading API specification NOT FETCHED.",
+      "settlement_rules_citation": "https://www.predictit.org/terms-and-conditions",
+      "comparison_to_sportsbooks": "No sportsbook-close comparison or sports product was established from fetched pages.",
+      "comparison_to_sportsbooks_citation": "https://www.predictit.org/"
+    },
+    {
+      "platform": "Manifold",
+      "platform_citation": "https://docs.manifold.markets/faq",
+      "fee_structure": "Play-money mana platform; no sportsbook-style cash rake. API docs say API is alpha and API comments incur an M1 transaction fee.",
+      "fee_structure_citation": "https://docs.manifold.markets/api",
+      "liquidity_by_sport": "Live NFL/NBA topic pages contain community-created game, spread, championship and player-prop questions; FAQ explains limit orders plus AMM and warns low liquidity moves prices; aggregate sport total NOT FETCHED.",
+      "liquidity_by_sport_citation": "https://docs.manifold.markets/faq",
+      "settlement_rules": "Correct shares pay M1 at resolution; creators generally resolve, with moderators able to overturn exceptionally.",
+      "settlement_rules_citation": "https://docs.manifold.markets/faq",
+      "comparison_to_sportsbooks": "Not a cash sportsbook; no standardized sportsbook close comparison was fetched.",
+      "comparison_to_sportsbooks_citation": "https://docs.manifold.markets/faq"
+    }
+  ],
+  "accuracy_distribution_70_percent_problem": {
+    "public_benchmarks": [
+      {
+        "source": "nfelo NFL model performance (self-reported)",
+        "source_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "su_percentage": 66.72,
+        "su_percentage_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "ats_percentage": 55.06,
+        "ats_percentage_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "clv": "5.86%",
+        "clv_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "sample_size": "2009–2024 backtest; page also reports +133.0 units; game-level audit NOT performed",
+        "sample_size_citation": "https://www.nfeloapp.com/games/nfl-model-performance/"
+      },
+      {
+        "source": "nfelo recent season detail (self-reported)",
+        "source_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "su_percentage": 69.1,
+        "su_percentage_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "ats_percentage": 45.3,
+        "ats_percentage_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "clv": "3.55% in 2024 open-line table",
+        "clv_citation": "https://www.nfeloapp.com/games/nfl-model-performance/",
+        "sample_size": "2024: 98 close bets / 104 open bets; self-reported",
+        "sample_size_citation": "https://www.nfeloapp.com/games/nfl-model-performance/"
+      },
+      {
+        "source": "Inpredictable historical NFL market analysis",
+        "source_citation": "https://www.inpredictable.com/2013/08/is-nfl-betting-market-getting-more.html",
+        "su_percentage": 66.8,
+        "su_percentage_citation": "https://www.inpredictable.com/2013/08/is-nfl-betting-market-getting-more.html",
+        "ats_percentage_citation": "https://www.inpredictable.com/2013/08/is-nfl-betting-market-getting-more.html",
+        "clv": "Not reported; analysis reports ~10.3-point average spread miss, not CLV.",
+        "clv_citation": "https://www.inpredictable.com/2013/08/is-nfl-betting-market-getting-more.html",
+        "sample_size": "1989–2012 favorite-win market analysis; not a private-model bet ledger",
+        "sample_size_citation": "https://www.inpredictable.com/2013/08/is-nfl-betting-market-getting-more.html"
+      },
+      {
+        "source": "Peer-reviewed NFL spread/total study",
+        "source_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10306238/",
+        "su_percentage_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10306238/",
+        "ats_percentage_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10306238/",
+        "clv": "Not reported",
+        "clv_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10306238/",
+        "sample_size": "5,412 regular-season games, 2002–2022; sportsbook spreads explain r²=0.86 of median margin variability and totals r²=0.79",
+        "sample_size_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10306238/"
+      }
+    ],
+    "defensible_claim_threshold": "No universal numeric “maximum” can be derived from these sources. The defensible ceiling is a narrowly scoped, pre-registered and reproducible claim: report sport/market, line timestamp (open/close), N, selection rule, units/ROI, CLV, confidence intervals and all picks—including losses—on a held-out time period. GSE should not advertise “70% ATS long-term” or imply SU equals betting profit; a safer claim is a transparent historical result such as “X% ATS on N specified bets versus the closing line,” with the audit link and limitations. This is an evidentiary/marketing recommendation, not legal advice.",
+    "defensible_claim_threshold_citation": "https://www.ftc.gov/business-guidance/advertising-marketing",
+    "regulatory_risks": "FTC guidance says advertising claims must be truthful, non-deceptive/unfair and evidence-based. The fetched New York AG alert documents misleading “risk-free” and $1,000 offer claims with play-through conditions; Connecticut DCP announced a DraftKings settlement requiring more than $3m returned to 7,000 consumers, $50,000 and marketing-law training; a legal report says NY false-advertising settlements with DraftKings/FanDuel totaled $12m and required disclosures including user success rates/top-winner concentration. FTC-specific action against a sports-picks/tipster service was NOT FETCHED in this run. Avoid guaranteed wins, risk-free wording without prominent conditions, cherry-picked streaks, and unsupported typical-user earnings/profit claims.",
+    "regulatory_risks_citation": "https://www.ftc.gov/business-guidance/advertising-marketing"
+  },
+  "methodology_and_calibration": [
+    {
+      "technique": "Temperature scaling",
+      "technique_citation": "https://proceedings.mlr.press/v70/guo17a.html",
+      "citation": "Guo et al. describe temperature scaling as a one-parameter post-processing method and report it effective on most tested neural-network datasets.",
+      "citation_citation": "https://proceedings.mlr.press/v70/guo17a.html",
+      "expected_gain": "High baseline value when logits are miscalibrated; low parameter variance and easy monitoring. It cannot fix class/region-specific distortion—engineering judgment.",
+      "expected_gain_citation": "https://proceedings.mlr.press/v70/guo17a.html",
+      "implementation_cost": "Low: fit one temperature only inside each rolling training fold; retain separate sport/market checks.",
+      "implementation_cost_citation": "https://proceedings.mlr.press/v70/guo17a.html"
+    },
+    {
+      "technique": "Platt/logistic scaling vs isotonic regression",
+      "technique_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "citation": "Platt is a smooth low-parameter map; isotonic is flexible monotone nonparametric calibration. Thin samples favor Platt/temperature; isotonic needs enough out-of-sample points and can overfit—engineering judgment.",
+      "citation_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "expected_gain": "Improves probability reliability when distortion is smooth; isotonic can capture non-sigmoid shape when data support it. Validate by rolling log loss/Brier, not in-sample fit.",
+      "expected_gain_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "implementation_cost": "Low–medium: both are standard; isotonic requires guardrails/minimum-bin rules and more monitoring.",
+      "implementation_cost_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "technique": "Beta calibration",
+      "technique_citation": "https://proceedings.mlr.press/v54/kull17a.html",
+      "citation": "Beta calibration is a richer class of maps based on the beta distribution; authors report superiority to logistic calibration for Naive Bayes and AdaBoost in their experiments.",
+      "citation_citation": "https://proceedings.mlr.press/v54/kull17a.html",
+      "expected_gain": "Candidate gain for asymmetric tails and non-logistic distortions; transfer to NCAAF/DFS is unverified and must be measured out of sample—engineering judgment.",
+      "expected_gain_citation": "https://proceedings.mlr.press/v54/kull17a.html",
+      "implementation_cost": "Medium: implement and constrain parameters, fit only within time folds and monitor tail stability.",
+      "implementation_cost_citation": "https://proceedings.mlr.press/v54/kull17a.html"
+    },
+    {
+      "technique": "Adaptive/debiased ECE + reliability diagrams",
+      "technique_citation": "https://proceedings.mlr.press/v151/roelofs22a.html",
+      "citation": "Roelofs et al. find equal-mass bins lower bias than equal-width bins and propose a debiased estimator/ECE_sweep; scikit-learn documents reliability diagrams and warns scalar Brier alone is not calibration.",
+      "citation_citation": "https://proceedings.mlr.press/v151/roelofs22a.html",
+      "expected_gain": "High measurement gain on thin slices: less binning bias and honest bootstrap uncertainty; this improves selection of calibrator rather than accuracy by itself—engineering judgment.",
+      "expected_gain_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "implementation_cost": "Low–medium: add equal-mass/debiased estimators, bootstrap intervals and reliability plots to the evaluation pipeline.",
+      "implementation_cost_citation": "https://proceedings.mlr.press/v151/roelofs22a.html"
+    },
+    {
+      "technique": "Brier decomposition",
+      "technique_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "citation": "Brier score should be decomposed into reliability, resolution and uncertainty; lower Brier alone does not guarantee better calibration.",
+      "citation_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "expected_gain": "High diagnostic value: separates probability calibration from discrimination and base-rate randomness; no guaranteed ROI uplift.",
+      "expected_gain_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "implementation_cost": "Low: compute decomposition alongside log loss, ATS and CLV by sport/season.",
+      "implementation_cost_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "technique": "Hierarchical partial pooling",
+      "technique_citation": "https://www.pymc.io/projects/examples/en/latest/case_studies/hierarchical_partial_pooling.html",
+      "citation": "Hierarchical models estimate global performance plus group effects and shrink low-information groups toward the global mean, accounting for unequal sample sizes.",
+      "citation_citation": "https://www.pymc.io/projects/examples/en/latest/case_studies/hierarchical_partial_pooling.html",
+      "expected_gain": "Meaningful variance reduction for thin NCAAF sport/league/market slices; exact gain is unverified and should be measured by rolling held-out calibration—engineering judgment.",
+      "expected_gain_citation": "https://www.pymc.io/projects/examples/en/latest/case_studies/hierarchical_partial_pooling.html",
+      "implementation_cost": "Medium–high: Bayesian fitting, prior design, drift monitoring and serving posterior uncertainty.",
+      "implementation_cost_citation": "https://www.pymc.io/projects/examples/en/latest/case_studies/hierarchical_partial_pooling.html"
+    },
+    {
+      "technique": "Leakage-proof time-series cross-validation",
+      "technique_citation": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html",
+      "citation": "TimeSeriesSplit trains on earlier folds and tests on the next; its gap excludes samples immediately before a test set. All calibration, feature transforms, ownership data and tuning must be nested historically.",
+      "citation_citation": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html",
+      "expected_gain": "Highest expected reliability/credibility gain because it prevents future information contaminating the result; effect size not verified.",
+      "expected_gain_citation": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection/TimeSeriesSplit.html",
+      "implementation_cost": "Medium: event-time data contracts, rolling feature stores, nested folds and immutable line snapshots.",
+      "implementation_cost_citation": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection/TimeSeriesSplit.html"
+    },
+    {
+      "technique": "Conformal prediction / residual intervals",
+      "technique_citation": "https://nixtlaverse.nixtla.io/statsforecast/docs/tutorials/conformalprediction.html",
+      "citation": "Conformal methods provide model-agnostic intervals with coverage guarantees under relevant assumptions; the time-series tutorial uses cross-validation-calibrated intervals.",
+      "citation_citation": "https://nixtlaverse.nixtla.io/statsforecast/docs/tutorials/conformalprediction.html",
+      "expected_gain": "Adds uncertainty bands/sets for player outcomes and NCAAF predictions; coverage is conditional on stability/exchangeability, so monitor drift—engineering judgment.",
+      "expected_gain_citation": "https://nixtlaverse.nixtla.io/statsforecast/docs/tutorials/conformalprediction.html",
+      "implementation_cost": "Medium: rolling residual stores, sport-specific coverage monitoring and interval-aware UX.",
+      "implementation_cost_citation": "https://nixtlaverse.nixtla.io/statsforecast/docs/tutorials/conformalprediction.html"
+    },
+    {
+      "technique": "Ownership-aware DFS optimization",
+      "technique_citation": "https://rotogrinders.com/lineuphq",
+      "citation": "Optimizer prior art uses salary/roster/scoring constraints, locks/exclusions, expert projections, projected ownership, floor/ceiling sorting and stacking rules.",
+      "citation_citation": "https://rotogrinders.com/lineuphq",
+      "expected_gain": "Potential leverage/diversification gain, not verified ROI; treat ownership as uncertain and backtest contest-specific utility—engineering judgment.",
+      "expected_gain_citation": "https://rotogrinders.com/lineuphq",
+      "implementation_cost": "Medium: ingest ownership forecasts, solve constrained portfolios, and calibrate against contest payout/rake.",
+      "implementation_cost_citation": "https://rotogrinders.com/lineuphq"
+    }
+  ],
+  "market_gaps_ranking": [
+    {
+      "gap_description": "Transparent, independently auditable NCAAF ATS/CLV product spanning FBS, FCS, neutral sites and realignment",
+      "gap_description_citation": "https://api.collegefootballdata.com/data-availability",
+      "ownability_score": 9,
+      "ownability_score_citation": "https://cfbfastr.sportsdataverse.org/",
+      "strategic_reasoning": "The fetched public college sources expose data/rankings and simulations but not a common, multi-season SU/ATS/CLV ledger; nfelo is explicitly NFL-only. GSE can own the measurement layer by snapshotting open/close lines, publishing all picks, N, units, CLV and calibration by subdivision/season. CFBD plus cfbfastR provides a practical acquisition base, subject to redistribution terms.",
+      "strategic_reasoning_citation": "https://www.nfeloapp.com/about/"
+    },
+    {
+      "gap_description": "College-football model uncertainty and calibration designed for thin per-sport/per-market samples",
+      "gap_description_citation": "https://www.nfeloapp.com/about/",
+      "ownability_score": 8,
+      "ownability_score_citation": "https://www.pymc.io/projects/examples/en/latest/case_studies/hierarchical_partial_pooling.html",
+      "strategic_reasoning": "Public FPI/Sagarin pages publish ratings/projections but not the requested auditable calibration stack. Hierarchical pooling, rolling CV, debiased ECE, Brier decomposition and conformal intervals create a defensible product moat rather than another opaque pick feed.",
+      "strategic_reasoning_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "gap_description": "Prediction-market-native sports analytics that maps contract prices to sportsbook closes with settlement-aware audit trails",
+      "gap_description_citation": "https://docs.polymarket.com/market-data/discover-markets",
+      "ownability_score": 7,
+      "ownability_score_citation": "https://help.kalshi.com/en/articles/13823854-kalshi-api",
+      "strategic_reasoning": "Kalshi and Polymarket own visible sports catalogs, while Manifold is community/play-money and PredictIt showed no sports section. None of the fetched platforms provides a standardized close-line comparison; GSE could own cross-market analytics without integrating Polymarket while its compliance hold remains.",
+      "strategic_reasoning_citation": "https://www.espn.com/espn/betting/story/_/id/45377686/kalshi-prediction-markets-disrupt-sports-betting"
+    },
+    {
+      "gap_description": "Proof-first EV/props layer with calibrated distributions, CLV and legal-safe claims rather than “edge” marketing",
+      "gap_description_citation": "https://oddsjam.com/betting-tools",
+      "ownability_score": 7,
+      "ownability_score_citation": "https://www.ftc.gov/business-guidance/advertising-marketing",
+      "strategic_reasoning": "OddsJam, Unabated, Outlier and Props.Cash advertise EV/fair-price/line-movement tooling, but fetched pages did not establish audited realized ROI. GSE can differentiate through timestamped fair-price inputs, uncertainty, closing-price outcomes and complete loss-inclusive logs.",
+      "strategic_reasoning_citation": "https://unabated.com/tools/core/odds"
+    },
+    {
+      "gap_description": "Licensed, bulk-friendly public-data/derived-output layer for MLB Statcast and dynasty crowd signals",
+      "gap_description_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "ownability_score": 5,
+      "ownability_score_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "strategic_reasoning": "Statcast is richly queryable but applicable commercial CSV rights were not fetched; KTC restricts scraping/commercial exploitation, FantasyCalc requires written commercial permission, and DynastyProcess discloses an open/collaborative approach without commercial terms. The opportunity is ownable only after rights clearance and would be slower than NCAAF.",
+      "strategic_reasoning_citation": "https://fantasycalc.com/terms-of-usage"
+    },
+    {
+      "gap_description": "Public, standardized DFS ownership/projection accuracy ledger tied to contest rake and payouts",
+      "gap_description_citation": "https://rotogrinders.com/lineuphq",
+      "ownability_score": 6,
+      "ownability_score_citation": "https://www.fanduel.com/rules",
+      "strategic_reasoning": "DFS operators disclose contest mechanics, while optimizer products expose ownership/floor/ceiling controls; no fetched source supplied a neutral multi-season ownership-calibration or ROI audit. GSE can publish contest-specific calibration and leverage performance, but operator terms and data access limit scope.",
+      "strategic_reasoning_citation": "https://support.draftkings.com/dk/en-us/how-it-works-contest-distribution-and-prizing?id=kb_article_view&sysparm_article=KB0010358"
+    }
+  ]
+}

@@ -1,0 +1,952 @@
+{
+  "repository_analysis": [
+    {
+      "repository_name": "Beexly/Sports — Sports Intelligence OS",
+      "repository_name_citation": "https://github.com/Beexly/Sports",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Odds/data-ingestion plane",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/packages/data-ingestion/src/odds-api-client.ts",
+            "functionality": "Fetches The Odds API data, normalizes games and bookmaker prices, validates freshness and format, and exposes failover/circuit-breaker behavior. The repository also has free ESPN odds, nflverse, MLB Stats API, ClubElo, Kalshi and other adapters in the ingestion package.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/packages/data-ingestion/src/odds-api-client.ts",
+            "mathematical_models": [
+              {
+                "value": "American odds → implied probability: positive odds p=100/(odds+100); negative odds p=|odds|/(|odds|+100)."
+              },
+              {
+                "value": "Two-way proportional de-vig: p_i^fair = p_i^implied / Σp_implied."
+              }
+            ]
+          },
+          {
+            "engine_name": "Heuristic market scorer",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/scoring.ts",
+            "functionality": "Scores SPREAD, TOTAL and MONEYLINE candidates from bookmaker consensus, market depth, de-vigged fair probability, edge, dispersion/volatility and game-context factors. It refuses thin/low-consensus markets, assigns confidence 0–100, grade, risk and FREE/PREMIUM tier, and emits a factor breakdown and reasoning.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/scoring.ts",
+            "mathematical_models": [
+              {
+                "value": "Confidence is a clamped sum of consensus, depth, edge, volatility penalty, context signals and a +10 base; MIN_PUBLISH_CONFIDENCE=50 and PREMIUM_CONFIDENCE_THRESHOLD=70."
+              },
+              {
+                "value": "Pricing edge = fair probability − offered probability; edge is mapped so 0% is half-score and +5 percentage points is full edge-component score."
+              },
+              {
+                "value": "The scorer requires at least 2 bookmakers and MONEYLINE requires fair probability ≥0.58."
+              }
+            ]
+          },
+          {
+            "engine_name": "Independent-edge and ranking engine",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/edge-engine.ts",
+            "functionality": "Separates a genuine independent estimate from the sportsbook echo. It blends non-sportsbook estimators, compares them with market fair probability, applies evidence/uncertainty/agreement shrinkage, and returns SPEAK/LEAN/PASS plus expected CLV. Ranking uses an independent true probability when available—even on PASS—while the public edge claim remains separately gated.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/edge-engine.ts",
+            "mathematical_models": [
+              {
+                "value": "Weighted true probability = Σ(weight_i·prob_i)/Σweight_i; raw edge = trueProb − marketFairProb."
+              },
+              {
+                "value": "Agreement multipliers: CONFIRMS ×1.0, SOLO ×0.6, SPLIT ×0.5, CONTRADICTS ×0; SPEAK requires shrunk edge ≥0.025 and LEAN ≥0.012."
+              },
+              {
+                "value": "Ranking blend defaults to 0.7 independent trueProb + 0.3 confidence probability; raw edge/edgeScore are explicitly forbidden as ranking p."
+              }
+            ]
+          },
+          {
+            "engine_name": "Calibration and accountable sizing pipeline",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/docs/ops/CALIBRATION_PIPELINE.md",
+            "functionality": "Exports non-seed settled picks, applies close-price Shin de-vig, measures CLV, performs a time-ordered holdout, fits centered isotonic calibration, reports ECE/Brier/reliability, and only then reaches fractional/portfolio Kelly. Live calibration remains behind CALIBRATION_ADJUSTMENTS_ENABLED and a human MODEL_VERSION gate.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/docs/ops/CALIBRATION_PIPELINE.md",
+            "mathematical_models": [
+              {
+                "value": "PAVA isotonic regression pools adjacent forecast blocks that violate monotonicity; CenteredIsotonic (CIR) collapses PAVA plateaus to mass-weighted centers and interpolates to preserve ranking resolution."
+              },
+              {
+                "value": "Brier = mean((p−y)^2); Murphy diagnostics expose reliability, resolution and uncertainty=baseRate·(1−baseRate)."
+              },
+              {
+                "value": "ECE is the sample-weighted mean absolute gap between bin mean forecast and observed outcome rate."
+              },
+              {
+                "value": "The documented sizing path uses fractional/portfolio Kelly, κ≈0.25–0.30, caps, James–Stein edge shrink, correlation haircut and a CLV deflator; CLV deflates stakes to zero until roughly 50 settled CLV samples."
+              }
+            ]
+          },
+          {
+            "engine_name": "NFL expected-metrics and opponent-adjustment layer",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/apps/web/lib/nflverse/expected-metrics.ts",
+            "functionality": "Loads public nflverse play-by-play, fits completion/rush/YAC expectation models on the season, aggregates residuals into GSE-CPOE, GSE-RYOE and GSE-xYAC, and validates/compares against Next Gen Stats. A separate EPA layer adjusts team offense and defense for opponent strength.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/apps/web/lib/nflverse/expected-metrics.ts",
+            "mathematical_models": [
+              {
+                "value": "Opponent-adjusted EPA solves epa ≈ leagueMean + offense[posteam] + defense[defteam] with iterative Gauss–Seidel/coordinate descent and zero-mean re-centering."
+              },
+              {
+                "value": "GSE expected metrics are play-level residual rollups for CPOE, RYOE and xYAC, rather than projections or picks."
+              }
+            ]
+          },
+          {
+            "engine_name": "De-vig and correlated-parlay engine",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/devig/oracle.ts",
+            "functionality": "Provides seven reference de-vig methods and a same-match parlay MRI. Fair probabilities are calibration inputs rather than an automatic scoring override; same-game leg survivability is computed on a correlated score grid.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/devig/oracle.ts",
+            "mathematical_models": [
+              {
+                "value": "Methods: multiplicative, additive, power, Shin, differential-margin-weighting, odds-ratio and logarithmic; root finding uses bisection."
+              },
+              {
+                "value": "Same-match parlay correlation uses Karlis–Ntzoufras bivariate Poisson: joint score cells use λ1, λ2, λ3 and are compared with a naive product-of-marginals grid."
+              }
+            ]
+          },
+          {
+            "engine_name": "Governance/evidence and operator cockpit",
+            "engine_name_citation": "https://github.com/Beexly/Sports/blob/main/docs/launch-observatory.md",
+            "functionality": "Jarvis synthesizes structured database counts into launch status, sectional health, warnings and next actions. Canonical-history, sample-size, publication, settlement, source and signal gates control what crosses from internal to public; missing data becomes UNKNOWN rather than a fabricated number.",
+            "functionality_citation": "https://github.com/Beexly/Sports/blob/main/docs/launch-observatory.md",
+            "mathematical_models": [
+              {
+                "value": "Public performance is blocked when the readiness gate is false, canonical settled picks are below the default 25, or the recent window is entirely bootstrap."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "The Odds API: primary licensed odds feed; The Odds API key is required for live odds ingestion.",
+            "value_citation": "https://github.com/Beexly/Sports"
+          },
+          {
+            "value": "ESPN public odds and scoreboard endpoints: free tertiary odds path when licensed sources are empty, rate-limited or unavailable.",
+            "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/data-ingestion/src/espn-odds-client.ts"
+          },
+          {
+            "value": "nflverse release assets: CC-BY-4.0 play-by-play, EPA/WPA, air yards, Next Gen Stats, snap/depth-chart and player-stat data.",
+            "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/data-ingestion/src/nflverse-source.ts"
+          },
+          {
+            "value": "MLB Stats API, ClubElo, ESPN results/power index, Kalshi, NoVig/Rundown and Open-Meteo appear as source adapters or independent evidence paths in the ingestion tree and model-version notes.",
+            "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/data-ingestion/src"
+          },
+          {
+            "value": "Google OAuth/NextAuth for sign-in; Stripe checkout/webhooks for subscriptions; PostgreSQL/Prisma for persistence; Redis/BullMQ for background workers; Anthropic Claude API for content drafts.",
+            "value_citation": "https://github.com/Beexly/Sports"
+          }
+        ],
+        "workflows_and_routing": "The intended path is: scheduled data-refresh retrieves odds and free/statistical sources → normalizers enforce schema, American-odds format and freshness → ingestion-pipeline writes games/odds and evidence → prediction-engine scores market candidates and independently derived probabilities → selective/readiness gates decide whether a pick is internally eligible → pick-generation persists versioned picks and audit factors → settlement grades WIN/LOSS/PUSH and captures close/CLV → calibration jobs build held-out reports and shadow-vs-live comparisons → the operator cockpit exposes diagnostics. Public routes read only canonical, settled, published data and return honest bootstrap/empty states when gates are closed. The content worker is draft-only by default; API v1 durable persistence is explicitly shadow/proposal-only, with a boundary guard blocking live routes, Prisma models, migrations and provider calls until owner approval.",
+        "workflows_and_routing_citation": "https://github.com/Beexly/Sports/blob/main/docs/launch-observatory.md"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Market microstructure as benchmark rather than oracle: the edge engine treats sportsbook de-vigged fair price as a reference and independent estimators as the opinion.",
+          "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/edge-engine.ts"
+        },
+        {
+          "value": "Calibration theory: PAVA/CIR isotonic regression, Platt/Beta calibration research references, Murphy Brier decomposition, reliability curves and ECE.",
+          "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/probability-calibration.ts"
+        },
+        {
+          "value": "Opponent adjustment follows an SRS-style additive model estimated by Gauss–Seidel coordinate descent.",
+          "value_citation": "https://github.com/Beexly/Sports/blob/main/apps/web/lib/metrics/opponent-adjusted-epa.ts"
+        },
+        {
+          "value": "The repository explicitly references Skellam cover modeling for spread ranking and Dixon–Coles for soccer independent estimation in its model-version history.",
+          "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/prediction-engine/src/constants.ts"
+        },
+        {
+          "value": "Related mathematical foundations: statsmodels supplies GLM, Poisson/negative-binomial/count models, ARIMA/VAR/VECM, state-space and Markov-switching methods; the distribution tutorial covers Bernoulli/binomial, Beta/Dirichlet, Gaussian and Student-t probability theory.",
+          "value_citation": "https://github.com/statsmodels/statsmodels"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "Evidence-backed sports content drafts and daily briefs",
+          "use_case_citation": "https://github.com/Beexly/Sports",
+          "implementation_details": "The original architecture uses Claude API for data-backed content generation; current README posture is safer: ContentDraft generation is internal, auto-publish/auto-send/external posting are hard-gated off, and public content is shown only when published records and readiness rules allow it.",
+          "implementation_details_citation": "https://github.com/Beexly/Sports"
+        },
+        {
+          "use_case": "Operator-facing AI orchestration and source intelligence",
+          "use_case_citation": "https://github.com/Beexly/Sports/blob/main/docs/launch-observatory.md",
+          "implementation_details": "Use structured tools/RAG over source registry, settled-pick ledger, calibration artifacts and runbooks; keep Jarvis deterministic and typed, use AI for drafting/explanation rather than authority, and require human approval for publishing, provider changes, payments and betting actions.",
+          "implementation_details_citation": "https://github.com/Beexly/Sports/blob/main/docs/launch-observatory.md"
+        },
+        {
+          "use_case": "Prompt/evidence evaluation loop",
+          "use_case_citation": "https://github.com/Beexly/Sports/blob/main/docs/ops/CALIBRATION_PIPELINE.md",
+          "implementation_details": "The repo has offline DSPy/GEPA-ready examples/metrics and deterministic eval/guardrail surfaces; combine them with UpTrain-style context relevance, factual accuracy, completeness, prompt-injection and jailbreak checks before any narrative is promoted.",
+          "implementation_details_citation": "https://github.com/uptrain-ai/uptrain"
+        }
+      ],
+      "optimization_opportunities": "1) Make the independent model layer the primary decision object and keep market-echo confidence as a separate UX score; require two independent estimators for publishable edge wherever possible. 2) Materialize immutable point-in-time feature snapshots and closing prices so no future information leaks into training or CLV. 3) Replace repeated broad scans with batched ingestion, indexes and durable feature/calibration artifacts; the current design already recognizes that large PBP work belongs in offline/precompute rather than the hot path. 4) Add sport/market-stratified walk-forward backtests, uncertainty intervals and benchmark-vs-close reporting before changing MODEL_VERSION. 5) Treat ESPN/free sources as explicit quality tiers with provenance and disagreement policy, never as silent substitutes. 6) Keep the fail-closed circuit breaker, source rights registry and API-v1 boundary; promote only after synthetic replay, disposable-DB rehearsal, rollback and owner approval. 7) For LLM narratives, add structured JSON output, claim-to-source IDs, deterministic numeric checks, prompt-injection tests and human review; never let generated prose alter picks or gates.",
+      "optimization_opportunities_citation": "https://github.com/Beexly/Sports/blob/main/docs/ops/CALIBRATION_PIPELINE.md"
+    },
+    {
+      "repository_name": "elevation-edge-sports-data/multisport-elo-lab",
+      "repository_name_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Configuration-driven Elo engine",
+            "engine_name_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab",
+            "functionality": "A shared engine executes NHL, NBA and NFL games; declarative configuration drives sport rules, metadata, pregame/postgame transformations and sport-specific playoff brackets.",
+            "functionality_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab",
+            "mathematical_models": [
+              {
+                "value": "Home advantage is a configurable Elo boost; margin-of-victory can be binary-only or scale updates by score differential."
+              },
+              {
+                "value": "Elevation Edge = elev_value × max(0, home_ft−away_ft)/1000."
+              },
+              {
+                "value": "Monte Carlo seasons feed standings and Elo into NFL reseeding, NHL best-of-seven and NBA play-in/bracket simulations."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "No external API is described in the README; inputs are schedules, scores, team/venue metadata and precomputed local simulation files.",
+            "value_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab"
+          }
+        ],
+        "workflows_and_routing": "Streamlit UI → declarative sport/model configuration → warm-up Elo from recent actual results → regular-season Monte Carlo → sport-specific playoffs → evaluation/export. Grid search can optimize enabled adjustments and produces heatmaps/top-10 configurations; diagnostics include accuracy, log loss, Brier, calibration/ECE and baselines.",
+        "workflows_and_routing_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Elo rating, Monte Carlo simulation, Log5 baseline, calibration and Brier/Murphy-style diagnostics.",
+          "value_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Use its warm-up Elo, reproducible random seed, calibration plots and explicit baselines as a benchmark harness for Sports. Port the declarative adjustment contract and bracket simulator, but add point-in-time data lineage, uncertainty intervals and closing-line comparison before interpreting simulated probabilities as actionable.",
+      "optimization_opportunities_citation": "https://github.com/elevation-edge-sports-data/multisport-elo-lab"
+    },
+    {
+      "repository_name": "sbw22/baseball_predictions — Baseball Strikeout Predictions",
+      "repository_name_citation": "https://github.com/sbw22/baseball_predictions",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "MLB strikeout feature/training pipeline",
+            "engine_name_citation": "https://github.com/sbw22/baseball_predictions",
+            "functionality": "Builds game-level rows from schedules, box scores, starting pitchers, opposing lineups and advanced CSV statistics; averages opposing batter profiles, scales features, trains a dense neural network with normalization/dropout, early stopping and checkpointing, then reuses the saved scaler/model for future inference.",
+            "functionality_citation": "https://github.com/sbw22/baseball_predictions",
+            "mathematical_models": [
+              {
+                "value": "MinMaxScaler normalization is used for X/y-compatible model artifacts."
+              },
+              {
+                "value": "Evaluation reports exact match and within-1/within-2 strikeout accuracy; exploratory correlation analysis screens candidate features."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "statsapi, pybaseball, requests and BeautifulSoup are listed dependencies; a player-spreads script explores sportsbook player-prop data.",
+            "value_citation": "https://github.com/sbw22/baseball_predictions"
+          }
+        ],
+        "workflows_and_routing": "creating_data.py → created_total_stats.csv → process_data.py → X/y joblib + scalers → model.py → saved model/evaluation heatmaps → future_game_predictor.py.",
+        "workflows_and_routing_citation": "https://github.com/sbw22/baseball_predictions"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Feed-forward supervised regression, feature scaling, early stopping/checkpointing and correlation-based exploratory feature selection.",
+          "value_citation": "https://github.com/sbw22/baseball_predictions"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Eliminate the boilerplate feature row used to satisfy model shape; replace it with a schema-validated feature builder. Add temporal splits by season/game date, pitcher workload/lineup uncertainty, probabilistic count distributions and calibration for over/under props, then compare against market closing lines.",
+      "optimization_opportunities_citation": "https://github.com/sbw22/baseball_predictions"
+    },
+    {
+      "repository_name": "BlairCurrey/nfl-analytics",
+      "repository_name_citation": "https://github.com/BlairCurrey/nfl-analytics",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "NFL spread predictor CLI",
+            "engine_name_citation": "https://github.com/BlairCurrey/nfl-analytics",
+            "functionality": "Downloads atomic nflverse PBP, builds a model, stores self-contained run artifacts (model, scaler, running averages and error manifest), and predicts single or upcoming matchups.",
+            "functionality_citation": "https://github.com/BlairCurrey/nfl-analytics",
+            "mathematical_models": [
+              {
+                "value": "Evaluation is held out by season cutoff and compares model MAE against a constant home-field baseline and Vegas closing spread from spread_line."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "nflverse play-by-play data; GitHub Actions runs the weekly pipeline and publishes predictions to a release.",
+            "value_citation": "https://github.com/BlairCurrey/nfl-analytics"
+          }
+        ],
+        "workflows_and_routing": "uv run nfl update → download missing PBP → train atomic run → predict/predict-upcoming → run-pipeline weekly via GitHub Actions; evaluate trains before cutoff and scores held-out seasons against naive and Vegas baselines.",
+        "workflows_and_routing_citation": "https://github.com/BlairCurrey/nfl-analytics"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Pareto principle as project thesis, supervised spread regression, season-based holdout validation and benchmark-vs-closing-line evaluation.",
+          "value_citation": "https://github.com/BlairCurrey/nfl-analytics"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Adopt the immutable run-directory/manifest pattern in Sports; add model/data hashes, per-sport stratification, calibration and leakage checks, and compare not only MAE but log loss/Brier/CLV against the closing market.",
+      "optimization_opportunities_citation": "https://github.com/BlairCurrey/nfl-analytics"
+    },
+    {
+      "repository_name": "Revan1900/nfl-edge-analyzer",
+      "repository_name_citation": "https://github.com/Revan1900/nfl-edge-analyzer",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Supabase edge-function sports pipeline",
+            "engine_name_citation": "https://github.com/Revan1900/nfl-edge-analyzer",
+            "functionality": "A React/Supabase product routes ingestion, feature engineering, custom prediction models, calibration, narrative generation, PDFs and TTS through Deno edge functions; PostgreSQL RLS, RBAC, rate limiting and secret storage form the operational boundary.",
+            "functionality_citation": "https://github.com/Revan1900/nfl-edge-analyzer",
+            "mathematical_models": [
+              {
+                "value": "The README specifies a staged pipeline rather than a formula: ingestion → features → predictions/confidence → calibration → narratives."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Odds API, injury data, weather data and OpenAI GPT-5; Supabase PostgreSQL/RLS and Deno edge functions.",
+            "value_citation": "https://github.com/Revan1900/nfl-edge-analyzer"
+          },
+          {
+            "value": "Health check endpoint GET /functions/v1/health-check and full orchestrator POST /functions/v1/orchestrator.",
+            "value_citation": "https://github.com/Revan1900/nfl-edge-analyzer"
+          }
+        ],
+        "workflows_and_routing": "orchestrator invokes ingest-odds/injuries/weather → build-features → generate-predictions → calibrate-model → generate-narratives; separate generate-pdf, generate-tts, alert-monitor, health-check and GDPR export functions expose product/ops capabilities.",
+        "workflows_and_routing_citation": "https://github.com/Revan1900/nfl-edge-analyzer"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Pipeline separation of raw signals, feature engineering, prediction, calibration and natural-language explanation; statistical predictions are explicitly not guarantees.",
+          "value_citation": "https://github.com/Revan1900/nfl-edge-analyzer"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "AI-generated game narratives and voice reports",
+          "use_case_citation": "https://github.com/Revan1900/nfl-edge-analyzer",
+          "implementation_details": "OpenAI is called after prediction/calibration; generate-narratives produces analysis, while generate-pdf and generate-tts package it for users.",
+          "implementation_details_citation": "https://github.com/Revan1900/nfl-edge-analyzer"
+        }
+      ],
+      "optimization_opportunities": "Use Sports’ evidence-envelope and claim scanner to constrain narratives; make calibration outputs and feature snapshots first-class artifacts, and keep LLM output downstream and non-authoritative.",
+      "optimization_opportunities_citation": "https://github.com/Revan1900/nfl-edge-analyzer"
+    },
+    {
+      "repository_name": "crimsonfox2000/polymarket-prediction-bot",
+      "repository_name_citation": "https://github.com/crimsonfox2000/polymarket-prediction-bot",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Prediction-market CLOB strategy engine",
+            "engine_name_citation": "https://github.com/crimsonfox2000/polymarket-prediction-bot",
+            "functionality": "Combines market browsing, YES/NO order books, fair-probability edge detection, book imbalance, liquidity mean reversion, positions, fills, PnL and risk limits in a Textual/Rich terminal UI.",
+            "functionality_citation": "https://github.com/crimsonfox2000/polymarket-prediction-bot",
+            "mathematical_models": [
+              {
+                "value": "Signals have confidence 0..1 and a suggested side; probability-edge fires when market price exceeds a fair-probability threshold."
+              },
+              {
+                "value": "Risk controls include maximum USDC exposure, per-market cap and daily loss limit."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Polymarket CLOB API via REST + WebSocket, Gamma market metadata and configured endpoint https://clob.polymarket.com.",
+            "value_citation": "https://github.com/crimsonfox2000/polymarket-prediction-bot"
+          }
+        ],
+        "workflows_and_routing": "CLI/config loader → market/Gamma browser and CLOB REST/WebSocket feeds → strategy scan → logged signal → paper order/fill simulator by default; live order placement requires explicit credentials and risk configuration.",
+        "workflows_and_routing_citation": "https://github.com/crimsonfox2000/polymarket-prediction-bot"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Binary-contract probability pricing, order-book imbalance, liquidity/mean-reversion and cross-market arbitrage; the README warns this is educational and not financial advice.",
+          "value_citation": "https://github.com/crimsonfox2000/polymarket-prediction-bot"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Use only as a research adapter, not a calibration target: Sports’ own calibration policy places Polymarket on compliance hold. If revisited, isolate it as an independently governed source with timestamped order-book snapshots, jurisdiction controls and a distinct market-microstructure model.",
+      "optimization_opportunities_citation": "https://github.com/Beexly/Sports/blob/main/docs/ops/CALIBRATION_PIPELINE.md"
+    },
+    {
+      "repository_name": "ikatsov/tensor-house",
+      "repository_name_citation": "https://github.com/ikatsov/tensor-house",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Enterprise ML prototyping library",
+            "engine_name_citation": "https://github.com/ikatsov/tensor-house",
+            "functionality": "Notebook-based reference architecture covering EDA/readiness assessment, deep learning, RL, causal inference, Bayesian inference, LLM/RAG, recommendations, demand forecasting and anomaly detection.",
+            "functionality_citation": "https://github.com/ikatsov/tensor-house",
+            "mathematical_models": [
+              {
+                "value": "Listed methods include DQN, PPO, DDPG, TD3, contextual bandits/LinUCB, LSTM/attention, DeepAR, ARIMA/SARIMAX, GLM, Bayesian models, Markov chains and CLIP/VAE."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Typical libraries: TensorFlow/PyTorch, RLlib, DoWhy/EconML, PyMC, LangChain, statsmodels, scikit-learn, LightGBM, NumPy/pandas.",
+            "value_citation": "https://github.com/ikatsov/tensor-house"
+          }
+        ],
+        "workflows_and_routing": "Questionnaire/readiness → dataset generator/simulator → candidate model notebook → evaluation → prototype/stakeholder review; its LLM supply-chain control-tower example dynamically writes Python that invokes multiple APIs.",
+        "workflows_and_routing_citation": "https://github.com/ikatsov/tensor-house"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Causal inference, Bayesian inference, reinforcement learning, sequence modeling, time-series forecasting, graph/recommender methods and anomaly reconstruction.",
+          "value_citation": "https://github.com/ikatsov/tensor-house"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "LLM tool-using control tower and RAG/search",
+          "use_case_citation": "https://github.com/ikatsov/tensor-house",
+          "implementation_details": "The repository describes LLM-generated Python that invokes APIs for supply-chain questions, LLM RAG, relational querying and product-attribute extraction. For Sports, constrain generated code to typed read-only tools and sandbox execution.",
+          "implementation_details_citation": "https://github.com/ikatsov/tensor-house"
+        }
+      ],
+      "optimization_opportunities": "Use its readiness-questionnaire and simulator mindset to formalize Sports data availability, rights, latency, drift and stakeholder requirements before adding another model.",
+      "optimization_opportunities_citation": "https://github.com/ikatsov/tensor-house"
+    },
+    {
+      "repository_name": "statsmodels/statsmodels",
+      "repository_name_citation": "https://github.com/statsmodels/statsmodels",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Statistical modeling toolkit",
+            "engine_name_citation": "https://github.com/statsmodels/statsmodels",
+            "functionality": "Provides estimation/inference primitives for linear/quantile/robust regression, GLMs, Poisson/negative-binomial/zero-inflated counts, Bayesian mixed GLM, state-space, ARIMA/ARIMAX, VAR/VARMAX, VECM, dynamic factor and Markov switching models.",
+            "functionality_citation": "https://github.com/statsmodels/statsmodels",
+            "mathematical_models": [
+              {
+                "value": "Supported time-series families include AR, ARIMA, VAR, structural VAR, VECM, state-space, seasonal ARIMA/ARIMAX and Markov switching."
+              },
+              {
+                "value": "Count families include Poisson, generalized Poisson, negative binomial and zero-inflated models."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Python/scipy-oriented package with NumPy-style scientific ecosystem; no sports data API is part of the repository.",
+            "value_citation": "https://github.com/statsmodels/statsmodels"
+          }
+        ],
+        "workflows_and_routing": "Feature table → model specification → fit/estimate → statistical inference/diagnostics → forecast or residual analysis.",
+        "workflows_and_routing_citation": "https://github.com/statsmodels/statsmodels"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Econometrics, GLM/count likelihoods, state-space/ARIMA, VAR/VECM, robust estimation and hypothesis testing.",
+          "value_citation": "https://github.com/statsmodels/statsmodels"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Use count models for player props, state-space/VAR for evolving team strength and robust regressions for injury/noisy inputs; validate each against the simpler baselines and market close rather than assuming a more complex family is better.",
+      "optimization_opportunities_citation": "https://github.com/statsmodels/statsmodels"
+    },
+    {
+      "repository_name": "mongodb-developer/GenAI-Showcase",
+      "repository_name_citation": "https://github.com/mongodb-developer/GenAI-Showcase",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "MongoDB-backed RAG/agent application patterns",
+            "engine_name_citation": "https://github.com/mongodb-developer/GenAI-Showcase",
+            "functionality": "The showcase organizes notebooks, JavaScript/Python apps, workshops and partner examples; MongoDB is positioned as vector database, operational database and agent-memory provider.",
+            "functionality_citation": "https://github.com/mongodb-developer/GenAI-Showcase",
+            "mathematical_models": [
+              {
+                "value": "RAG and agent patterns combine retrieval with operational data/memory; concrete implementations live in the repository notebooks/apps rather than a single framework."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "MongoDB Atlas cluster and connection string are required for the examples.",
+            "value_citation": "https://github.com/mongodb-developer/GenAI-Showcase"
+          }
+        ],
+        "workflows_and_routing": "Application/request → retrieve vector/operational context from Atlas → agent/tool or LLM response → persist useful state/memory; notebooks and apps provide the examples.",
+        "workflows_and_routing_citation": "https://github.com/mongodb-developer/GenAI-Showcase"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Retrieval-augmented generation, vector search, operational memory and tool-using agents.",
+          "value_citation": "https://github.com/mongodb-developer/GenAI-Showcase"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "Evidence-grounded sports knowledge and agent memory",
+          "use_case_citation": "https://github.com/mongodb-developer/GenAI-Showcase",
+          "implementation_details": "Store immutable source documents, embeddings, feature snapshots and conversation/task memory separately; retrieve by sport/team/date/rights filters and persist citations with generated briefs.",
+          "implementation_details_citation": "https://github.com/mongodb-developer/GenAI-Showcase"
+        }
+      ],
+      "optimization_opportunities": "A strong candidate for durable source/evidence and agent-memory storage, but keep pick truth in typed relational/event tables and treat vector retrieval as an explanatory/context layer.",
+      "optimization_opportunities_citation": "https://github.com/mongodb-developer/GenAI-Showcase"
+    },
+    {
+      "repository_name": "MiroMindAI/MiroThinker",
+      "repository_name_citation": "https://github.com/MiroMindAI/MiroThinker",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Verification-oriented deep research agent",
+            "engine_name_citation": "https://github.com/MiroMindAI/MiroThinker",
+            "functionality": "MiroThinker agents search the web, execute code when needed and answer with sources; configurations support context management, repeated benchmark runs, trace collection, SFT/DPO data collection and multiple model servers.",
+            "functionality_citation": "https://github.com/MiroMindAI/MiroThinker",
+            "mathematical_models": [
+              {
+                "value": "Recommended MiroThinker-1.7 configuration uses 256K context and keep5/max200 or max300 context management."
+              },
+              {
+                "value": "Benchmark/evaluation runs vary by task; logs are monitored with progress scripts and tool calls include web search, scraping, code execution and summarization."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Serper.dev search, Jina.ai scraping, E2B code-execution sandbox, summary LLM, OpenAI-compatible model endpoint and optional Claude/GPT-5 configurations.",
+            "value_citation": "https://github.com/MiroMindAI/MiroThinker"
+          }
+        ],
+        "workflows_and_routing": "Research task → plan/search via Serper/Jina → execute code in E2B when needed → summarize with a small/selected LLM → source-cited answer; traces can feed SFT/DPO and benchmark regression loops.",
+        "workflows_and_routing_citation": "https://github.com/MiroMindAI/MiroThinker"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Agentic web research, tool use, context management, verification and multi-run benchmark evaluation.",
+          "value_citation": "https://github.com/MiroMindAI/MiroThinker"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "Cited sports research and anomaly investigation agent",
+          "use_case_citation": "https://github.com/MiroMindAI/MiroThinker",
+          "implementation_details": "Use search/scrape only to collect source evidence; run deterministic code for stats; require source-linked claims and have a judge/evaluator score completeness, grounding and citation correctness. Never let the research agent directly mutate picks.",
+          "implementation_details_citation": "https://github.com/MiroMindAI/MiroThinker"
+        }
+      ],
+      "optimization_opportunities": "Borrow source-cited answers, tool isolation, context management and trace-based regression testing; combine with Kubernetes Agent Sandbox for untrusted code and UpTrain-style evaluation.",
+      "optimization_opportunities_citation": "https://github.com/MiroMindAI/MiroThinker"
+    },
+    {
+      "repository_name": "uptrain-ai/uptrain",
+      "repository_name_citation": "https://github.com/uptrain-ai/uptrain",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "LLM evaluation and observability engine",
+            "engine_name_citation": "https://github.com/uptrain-ai/uptrain",
+            "functionality": "Programmatic EvalLLM evaluates response/context pairs and offers response quality, context awareness, language quality, code hallucination, conversation, custom and safety evaluations; its benchmark monitors prompt/model drift on a fixed dataset.",
+            "functionality_citation": "https://github.com/uptrain-ai/uptrain",
+            "mathematical_models": [
+              {
+                "value": "Named evaluations include context relevance/utilization, factual accuracy, response completeness/conciseness/consistency, prompt injection and jailbreak detection."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "OpenAI API is shown in the quick-start; the repository advertises integrations across providers, eval frameworks, serving, observability and vector databases.",
+            "value_citation": "https://github.com/uptrain-ai/uptrain"
+          }
+        ],
+        "workflows_and_routing": "Application traces/inputs/contexts/responses → deterministic or LLM-as-judge evaluations → regression/quality report → developer selects prompt/model/configuration; fixed datasets can detect drift over time.",
+        "workflows_and_routing_citation": "https://github.com/uptrain-ai/uptrain"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "LLM-as-a-judge, regression testing, prompt drift monitoring, groundedness/context relevance and adversarial safety evaluation.",
+          "value_citation": "https://github.com/uptrain-ai/uptrain"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "Sports narrative and agent quality gate",
+          "use_case_citation": "https://github.com/uptrain-ai/uptrain",
+          "implementation_details": "Evaluate each draft against source context for factual accuracy, completeness, concision and citation/claim grounding; add prompt-injection/jailbreak checks and fixed-slate regression datasets before deployment.",
+          "implementation_details_citation": "https://github.com/uptrain-ai/uptrain"
+        }
+      ],
+      "optimization_opportunities": "Instrument every generated brief with prompt/model/version, retrieved evidence, latency, token cost and evaluator scores; block promotion on grounding/safety regressions rather than relying on manual spot checks.",
+      "optimization_opportunities_citation": "https://github.com/uptrain-ai/uptrain"
+    },
+    {
+      "repository_name": "microsoft/nn-Meter",
+      "repository_name_citation": "https://github.com/microsoft/nn-Meter",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Kernel-level edge inference latency predictor",
+            "engine_name_citation": "https://github.com/microsoft/nn-Meter",
+            "functionality": "Converts DNNs to an intermediate representation, predicts fused-kernel latency on diverse devices, supports ONNX/PyTorch/Torch/N​​NI paths and can constrain hardware-aware NAS with a latency filter.",
+            "functionality_citation": "https://github.com/microsoft/nn-Meter",
+            "mathematical_models": [
+              {
+                "value": "The README reports 99.0% mobile CPU, 99.1% Adreno 640 GPU, 99.0% Adreno 630 GPU and 83.4% Intel VPU prediction accuracy on a 26k-model dataset."
+              },
+              {
+                "value": "Kernel latency is composed/estimated from fused operator units; ONNX path is more stable, NNI path faster but less stable."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "ONNX, PyTorch, TensorFlow/NNI model conversion and hardware-specific predictor builders.",
+            "value_citation": "https://github.com/microsoft/nn-Meter"
+          }
+        ],
+        "workflows_and_routing": "Model file/object → graph/IR → built-in or device-specific predictor → latency estimate → NAS strategy/filter or deployment decision.",
+        "workflows_and_routing_citation": "https://github.com/microsoft/nn-Meter"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Kernel decomposition, hardware-aware neural architecture search, lookup-table latency estimation and latency-constrained optimization.",
+          "value_citation": "https://github.com/microsoft/nn-Meter"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "If Sports adds low-latency multimodal/video features, benchmark model latency per deployment target and make latency a first-class gate alongside accuracy and cost.",
+      "optimization_opportunities_citation": "https://github.com/microsoft/nn-Meter"
+    },
+    {
+      "repository_name": "imperial-qore/PreGAN",
+      "repository_name_citation": "https://github.com/imperial-qore/PreGAN",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Preemptive edge-fault recovery predictor",
+            "engine_name_citation": "https://github.com/imperial-qore/PreGAN",
+            "functionality": "A composite GAN-based model uses co-simulation and few-shot anomaly classification to predict proactive container migration decisions in Raspberry-Pi edge environments.",
+            "functionality_citation": "https://github.com/imperial-qore/PreGAN",
+            "mathematical_models": [
+              {
+                "value": "Reported experiment: 5.1% more accurate fault detection and 23.8% lower overhead than the best considered baseline."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Raspberry-Pi/containerized edge environment, simulators, schedulers and recovery implementations; no external sports API.",
+            "value_citation": "https://github.com/imperial-qore/PreGAN"
+          }
+        ],
+        "workflows_and_routing": "Telemetry/co-simulation → GAN few-shot anomaly classifier → fault diagnosis/classification → migration/recovery scheduler.",
+        "workflows_and_routing_citation": "https://github.com/imperial-qore/PreGAN"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Generative adversarial learning, few-shot anomaly classification, proactive fault tolerance and QoS/SLA-oriented migration.",
+          "value_citation": "https://github.com/imperial-qore/PreGAN"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Apply the pattern to Sports worker health: simulate provider outages/429/402/timeouts, classify failure modes and trigger safe failover or stale-data shutdown—not generated quotes.",
+      "optimization_opportunities_citation": "https://github.com/imperial-qore/PreGAN"
+    },
+    {
+      "repository_name": "CrickWu/GCMC",
+      "repository_name_citation": "https://github.com/CrickWu/GCMC",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Graph Convolutional Matrix Completion",
+            "engine_name_citation": "https://github.com/CrickWu/GCMC",
+            "functionality": "Learns edge/link probabilities on bipartite graphs using graph convolutional matrix factorization; the example trains on CMU data with configurable layer widths, iterations, positive upsampling and folds.",
+            "functionality_citation": "https://github.com/CrickWu/GCMC",
+            "mathematical_models": [
+              {
+                "value": "Example configuration: layers 80,70,5; 1000 iterations; positive-up ratio 10; fold 1; binary graph."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Local preprocessed datasets and optional CUDA/Theano execution; no external API.",
+            "value_citation": "https://github.com/CrickWu/GCMC"
+          }
+        ],
+        "workflows_and_routing": "Preprocess bipartite graph → graph convolution/matrix-factorization training → fold evaluation → save logs/model → edge prediction.",
+        "workflows_and_routing_citation": "https://github.com/CrickWu/GCMC"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Graph convolutional networks, matrix completion, bipartite edge prediction and collaborative-filtering style positive/negative imbalance handling.",
+          "value_citation": "https://github.com/CrickWu/GCMC"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "A useful design for recommendation/interaction edges (fan→content, user→pick, team→signal), but demand temporal graph snapshots and leakage-safe evaluation before using it for ranking.",
+      "optimization_opportunities_citation": "https://github.com/CrickWu/GCMC"
+    },
+    {
+      "repository_name": "Xiaoyu006/MATP-with-HEAT",
+      "repository_name_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Heterogeneous edge-enhanced graph attention trajectory model",
+            "engine_name_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT",
+            "functionality": "The code implements Base → HEAT → HEATIR multi-agent trajectory prediction using the INTERACTION dataset and heterogeneous edge-enhanced graph attention.",
+            "functionality_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT",
+            "mathematical_models": [
+              {
+                "value": "Model family is a heterogeneous graph-attention trajectory predictor; training command selects the one-channel HEAT model."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "INTERACTION Dataset preprocessing via datapre_run.sh; no external runtime API is described.",
+            "value_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT"
+          }
+        ],
+        "workflows_and_routing": "Raw multi-agent trajectories → sorted/scenario preprocessing → Base/HEAT/HEATIR model → training/validation.",
+        "workflows_and_routing_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Multi-agent trajectory prediction, heterogeneous graph representation and graph attention networks.",
+          "value_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "For sports tracking, use graph attention for player interactions but keep a probabilistic trajectory head, calibration and physics/venue constraints; evaluate ADE/FDE plus downstream decision value.",
+      "optimization_opportunities_citation": "https://github.com/Xiaoyu006/MATP-with-HEAT"
+    },
+    {
+      "repository_name": "marcotcr/lime",
+      "repository_name_citation": "https://github.com/marcotcr/lime",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Local Interpretable Model-agnostic Explanations",
+            "engine_name_citation": "https://github.com/marcotcr/lime",
+            "functionality": "Treats a classifier as a black box, perturbs an instance, weights samples by proximity and fits a sparse local linear surrogate; supports text, tabular, image and regression explanations.",
+            "functionality_citation": "https://github.com/marcotcr/lime",
+            "mathematical_models": [
+              {
+                "value": "Local explanation is a weighted sparse linear approximation around the instance, not a global model explanation."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Any classifier callable returning class probabilities; built-in scikit-learn support and HTML/matplotlib visualization.",
+            "value_citation": "https://github.com/marcotcr/lime"
+          }
+        ],
+        "workflows_and_routing": "Prediction function → neighborhood perturbations → proximity weights → local sparse linear fit → feature contribution visualization.",
+        "workflows_and_routing_citation": "https://github.com/marcotcr/lime"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Local surrogate modeling, sparse linear approximation and model-agnostic interpretability.",
+          "value_citation": "https://github.com/marcotcr/lime"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Expose LIME/SHAP-like local evidence for pick factors, but label explanations as approximations and verify stability across perturbation seeds; do not let explanations substitute for calibrated probability or provenance.",
+      "optimization_opportunities_citation": "https://github.com/marcotcr/lime"
+    },
+    {
+      "repository_name": "kubernetes-sigs/agent-sandbox",
+      "repository_name_citation": "https://github.com/kubernetes-sigs/agent-sandbox",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Kubernetes isolated stateful agent runtime",
+            "engine_name_citation": "https://github.com/kubernetes-sigs/agent-sandbox",
+            "functionality": "Provides a Sandbox abstraction for isolated, persistent, network-accessible singleton workloads, including untrusted LLM-generated code, RL/evaluation loops and notebooks; desired properties include hibernation, resume, persistent storage and stable identity.",
+            "functionality_citation": "https://github.com/kubernetes-sigs/agent-sandbox",
+            "mathematical_models": [
+              {
+                "value": "Strong isolation can use gVisor or Kata Containers; the project also discusses deep hibernation, automatic resume, efficient persistence and programmable Sandbox API."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "Kubernetes API/controller, CRD apiVersion agents.x-k8s.io/v1beta1, Helm/YAML installation; runtime choices include gVisor/Kata.",
+            "value_citation": "https://github.com/kubernetes-sigs/agent-sandbox"
+          }
+        ],
+        "workflows_and_routing": "Agent/task request → Sandbox CRD → controller provisions isolated singleton pod and stable hostname → tool/code execution → persistent/hibernated state → resume on connection; security boundary separates untrusted execution from host.",
+        "workflows_and_routing_citation": "https://github.com/kubernetes-sigs/agent-sandbox"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Container isolation, stateful workload lifecycle, sandboxed tool execution, RL/evaluation environments and human-governed operations.",
+          "value_citation": "https://github.com/kubernetes-sigs/agent-sandbox"
+        }
+      ],
+      "generative_ai_use_cases": [
+        {
+          "use_case": "Sandboxed sports research/code agent",
+          "use_case_citation": "https://github.com/kubernetes-sigs/agent-sandbox",
+          "implementation_details": "Run generated analysis code against read-only snapshots, enforce CPU/memory/network quotas, retain a task trace and hibernate/resume state. Keep production DBs, provider keys and betting/payment actions outside the sandbox.",
+          "implementation_details_citation": "https://github.com/kubernetes-sigs/agent-sandbox"
+        }
+      ],
+      "optimization_opportunities": "Adopt isolation before allowing LLM-generated code or dynamic notebooks; pair it with source allowlists, ephemeral credentials and deterministic output validation.",
+      "optimization_opportunities_citation": "https://github.com/kubernetes-sigs/agent-sandbox"
+    },
+    {
+      "repository_name": "apache/predictionio",
+      "repository_name_citation": "https://github.com/apache/predictionio",
+      "backend_architecture": {
+        "core_engines": [
+          {
+            "engine_name": "Lambda-architecture ML server",
+            "engine_name_citation": "https://github.com/apache/predictionio",
+            "functionality": "Provides a framework for deploying algorithms, evaluating models and querying predictive results over REST, backed by scalable Hadoop/HBase/Elasticsearch/Spark services and a Lambda Architecture.",
+            "functionality_citation": "https://github.com/apache/predictionio",
+            "mathematical_models": [
+              {
+                "value": "Lambda Architecture separates batch and serving-oriented paths; REST exposes prediction queries."
+              }
+            ]
+          }
+        ],
+        "api_integrations": [
+          {
+            "value": "REST APIs; Hadoop, HBase, Elasticsearch and Spark are named platform components.",
+            "value_citation": "https://github.com/apache/predictionio"
+          }
+        ],
+        "workflows_and_routing": "Event/data ingestion → batch feature/model computation → serving/query layer → REST prediction results → evaluation/iteration.",
+        "workflows_and_routing_citation": "https://github.com/apache/predictionio"
+      },
+      "theoretical_frameworks": [
+        {
+          "value": "Lambda Architecture, distributed batch/serving separation and model evaluation/deployment lifecycle.",
+          "value_citation": "https://github.com/apache/predictionio"
+        }
+      ],
+      "generative_ai_use_cases": [],
+      "optimization_opportunities": "Use the conceptual batch/serving split for Sports: heavy PBP/features/calibration offline, low-latency serving from immutable artifacts; avoid re-fitting or broad source scans during a request.",
+      "optimization_opportunities_citation": "https://github.com/apache/predictionio"
+    }
+  ],
+  "industry_benchmarks": {
+    "generative_ai_patterns": [
+      {
+        "value": "Agentic teams: Google Cloud describes specialized agents orchestrating end-to-end workflows and emphasizes governance/management for agentic task forces.",
+        "value_citation": "https://cloud.google.com/transform/101-real-world-generative-ai-use-cases-from-industry-leaders"
+      },
+      {
+        "value": "Multimodal physical-world intelligence: Google Cloud cites live video, sensors, blueprints and athlete-biomechanics analysis as inputs to multimodal systems.",
+        "value_citation": "https://cloud.google.com/transform/101-real-world-generative-ai-use-cases-from-industry-leaders"
+      },
+      {
+        "value": "Sports fan/content intelligence: Golden State Warriors unify data in BigQuery and use Vertex AI for personalized content including highlights, scores, stats and ticket alerts; MLB Scout Insights uses Gemini over MLB history/game context and a surprisal score for commentary.",
+        "value_citation": "https://cloud.google.com/transform/101-real-world-generative-ai-use-cases-from-industry-leaders"
+      },
+      {
+        "value": "Specialized sports agents: Google Cloud lists StatusPro’s Gemini-powered in-game coach, the Football Association training Vertex AI on scouting reports, Technogym Coach personalized programs, Vail’s Gemini slope assistant and Satisfi Labs’ specialized agents for sports/entertainment/tourism.",
+        "value_citation": "https://cloud.google.com/transform/101-real-world-generative-ai-use-cases-from-industry-leaders"
+      },
+      {
+        "value": "RAG as evidence control: AWS GenU describes RAG over organizational documents to provide current/domain knowledge and reduce plausible-but-incorrect answers; it supports Kendra, Knowledge Bases, advanced parsing, chunk strategies, query decomposition, reranking and metadata filters.",
+        "value_citation": "https://github.com/aws-samples/generative-ai-use-cases"
+      },
+      {
+        "value": "Tool-using agent pattern: GenU supports Web Search and Code Interpreter agents, imported Bedrock Agents/AgentCore/Flows and external MCP servers, with security options and SAML.",
+        "value_citation": "https://github.com/aws-samples/generative-ai-use-cases"
+      },
+      {
+        "value": "Memory/data pattern: MongoDB’s showcase positions MongoDB as vector database, operational database and memory provider for RAG and AI agents.",
+        "value_citation": "https://github.com/mongodb-developer/GenAI-Showcase"
+      },
+      {
+        "value": "Agent framework selection: the 500-AI-Agents catalog positions LangGraph for stateful graphs/RAG, CrewAI for role-based teams, AutoGen for code/research/self-healing workflows, Agno for lightweight tool agents and LlamaIndex for enterprise document pipelines.",
+        "value_citation": "https://github.com/ashishpatel26/500-AI-Agents-Projects"
+      },
+      {
+        "value": "Research-agent pattern: MiroThinker routes search through Serper, scraping through Jina, code execution through E2B, summarization through a selectable LLM and evaluation through repeated benchmark runs with traces.",
+        "value_citation": "https://github.com/MiroMindAI/MiroThinker"
+      },
+      {
+        "value": "Evaluation-first pattern: UpTrain recommends fixed datasets and evaluators for context relevance, factual accuracy, completeness, consistency, prompt injection, jailbreaks and prompt/model drift.",
+        "value_citation": "https://github.com/uptrain-ai/uptrain"
+      },
+      {
+        "value": "Workflow generation and creative multimodality: the supplied AI repositories catalog RAG, MCP, memory, multimodal, voice, OCR and fine-tuning patterns, while Google documents Gemini/Vertex AI use in media, sports and physical-world workflows.",
+        "value_citation": "https://github.com/Arindam200/awesome-ai-apps"
+      }
+    ],
+    "enterprise_workflows": [
+      {
+        "value": "Recommended Sports workflow: source registry/rights → point-in-time ingestion → deterministic feature/model computation → evidence envelope → calibrated probability/edge gate → human/operator review → draft narrative → claim/evaluation gate → controlled publication. This mirrors Google’s agentic orchestration pattern while preserving Sports’ hard gates.",
+        "value_citation": "https://github.com/Beexly/Sports/blob/main/docs/launch-observatory.md"
+      },
+      {
+        "value": "RAG workflow: document/PBP/scouting ingestion → parse/chunk → metadata filter by sport/team/date/rights → hybrid retrieval/rerank → answer with citations; AWS GenU explicitly exposes parsing, chunk selection, decomposition, reranking and metadata filters.",
+        "value_citation": "https://github.com/aws-samples/generative-ai-use-cases"
+      },
+      {
+        "value": "Sandbox workflow: untrusted/generated code is executed in an isolated, stateful Sandbox with persistent/hibernated state and no production credentials; Kubernetes Agent Sandbox identifies AI-agent runtimes and RL/evaluation as target use cases.",
+        "value_citation": "https://github.com/kubernetes-sigs/agent-sandbox"
+      },
+      {
+        "value": "Model operations workflow: keep every training run self-contained with model, scaler, running averages and error manifest; BlairCurrey’s NFL project loads only the latest complete run and evaluates against naive/Vegas baselines.",
+        "value_citation": "https://github.com/BlairCurrey/nfl-analytics"
+      },
+      {
+        "value": "Statistical decision workflow: use count/time-series/state-space/VAR models from statsmodels where assumptions fit, then calibrate and compare to simpler baselines and closing market; do not treat model complexity as evidence of edge.",
+        "value_citation": "https://github.com/statsmodels/statsmodels"
+      },
+      {
+        "value": "Reliability workflow: apply fail-closed provider circuits, multi-host/free-source failover, freshness validation, rights/provenance labels and explicit stale/unknown states. Sports’ Odds API circuit opens on decisive 402 and allows one half-open probe after a six-hour window without inventing quotes.",
+        "value_citation": "https://github.com/Beexly/Sports/blob/main/packages/data-ingestion/src/odds-api-circuit-breaker.ts"
+      },
+      {
+        "value": "Enterprise deployment pattern: AWS GenU uses CDK to provision the application and exposes deployment options, cost estimation, security settings, SAML and model-region configuration; this is a useful template for environment separation and repeatable infrastructure.",
+        "value_citation": "https://github.com/aws-samples/generative-ai-use-cases"
+      },
+      {
+        "value": "Responsible AI/observability workflow: evaluate generated outputs for factual grounding, completeness, safety and drift; UpTrain’s rationale is that evaluation prevents regressions and helps build transparency/trust, while Sports’ Jarvis blocks launch claims when safety warnings are active.",
+        "value_citation": "https://github.com/uptrain-ai/uptrain"
+      },
+      {
+        "value": "Edge-performance workflow: nn-Meter predicts fused-kernel latency and can filter NAS candidates by a device latency threshold; use this for any future real-time video/voice or mobile Sports surface.",
+        "value_citation": "https://github.com/microsoft/nn-Meter"
+      }
+    ]
+  }
+}

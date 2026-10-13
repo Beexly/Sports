@@ -1,0 +1,24 @@
+Raw features
+   │
+   ├── Source models (Elo, Poisson, market, power, standings)
+   │        │
+   │        └── logit(z_i)
+   │               │
+   │               ▼
+   ├── Aggregator A: regularized logit regression + decorrelation penalty
+   │        │
+   │        └── p_agg
+   │
+   ├── Totals model B: hierarchical negative binomial with shared random effect
+   │        │
+   │        └── full total-run distribution → p_tot
+   │
+   ├── Final meta-model C: logistic regression on logit(p_agg), logit(p_tot)
+   │        │
+   │        └── decorrelation penalty vs market
+   │
+   ├── Final distributional layer D: IDR / multicalibration
+   │        │
+   │        └── calibrated P(T = k)
+   │
+   └── Publication policy E: stratified publication + no edge claim

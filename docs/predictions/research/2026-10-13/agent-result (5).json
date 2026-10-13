@@ -1,0 +1,82 @@
+{
+  "relevance": "KEEP",
+  "relevance_citation": "https://arxiv.org/abs/1905.02928",
+  "tier": 1,
+  "tier_citation": "https://arxiv.org/abs/1905.02928",
+  "method": "Jackknife+ predictive inference",
+  "method_citation": "https://arxiv.org/abs/1905.02928",
+  "sport": "NFL",
+  "sport_citation": "https://arxiv.org/abs/1704.00197",
+  "action": "open PDF",
+  "action_citation": "https://arxiv.org/abs/1905.02928",
+  "tier_1_method_card": {
+    "score_function": "Leave-one-out residuals determine the interval width, while leave-one-out predictions at the test point are also used to account for fitted-function variability.",
+    "score_function_citation": "https://arxiv.org/abs/1905.02928",
+    "coverage_guarantee": "With exchangeable training samples and a training algorithm that treats observations symmetrically, Jackknife+ has rigorous distribution-free predictive-coverage guarantees; the abstract also reports a K-fold cross-validation extension.",
+    "coverage_guarantee_citation": "https://arxiv.org/abs/1905.02928",
+    "exchangeability_assumption": "Exchangeable training samples; the method's guarantee is stated for algorithms treating training points symmetrically.",
+    "exchangeability_assumption_citation": "https://arxiv.org/abs/1905.02928",
+    "computational_cost": "Leave-one-out fitting/prediction for all observations; the allowed Jackknife+ search record describes this as requiring leave-one-out refits and notes the resulting cost relative to split conformal.",
+    "computational_cost_citation": "https://arxiv.org/search/?query=jackknife%2B&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+  },
+  "tier_2_model_card": {
+    "input_features": [
+      {
+        "value": "Ten in-game variables for the running home-team win probability model.",
+        "value_citation": "https://arxiv.org/abs/1704.00197"
+      },
+      {
+        "value": "Detailed NFL play-by-play data.",
+        "value_citation": "https://arxiv.org/abs/1704.00197"
+      },
+      {
+        "value": "Historical data from the last seven NFL seasons obtained through the league API.",
+        "value_citation": "https://arxiv.org/abs/1704.00197"
+      }
+    ],
+    "output_distribution": "Running binary win probability for the home team in an NFL game.",
+    "output_distribution_citation": "https://arxiv.org/abs/1704.00197",
+    "calibration_method": "The paper reports that the iWinRNFL probabilities are well-calibrated; its abstract does not name a separate post-hoc calibration procedure.",
+    "calibration_method_citation": "https://arxiv.org/abs/1704.00197",
+    "known_biases": "Do not assume sportsbook probabilities are automatically efficient: the allowed football-market papers report exploitable odds/line effects, including a claimed football-market inefficiency and a home-underdog strategy exceeding the stated break-even threshold in the studied sample.",
+    "known_biases_citation": "https://arxiv.org/abs/1710.02824",
+    "data_requirements": "NFL league-API play-by-play over multiple historical seasons; the model is described as using seven seasons of detailed play-by-play data.",
+    "data_requirements_citation": "https://arxiv.org/abs/1704.00197"
+  },
+  "tier_3_data_source_card": {
+    "coverage": "Seven historical NFL seasons in the iWinRNFL study; the related NFLSimulatoR paper describes sampling from previous NFL football seasons.",
+    "coverage_citation": "https://arxiv.org/abs/1704.00197",
+    "granularity": "Detailed play-by-play data, suitable for in-game state updates; NFLSimulatoR likewise operates on plays and drives.",
+    "granularity_citation": "https://arxiv.org/abs/2102.01846",
+    "update_frequency": "Not specified in the allowed abstracts; the source description identifies a league API and historical play-by-play rather than a refresh schedule.",
+    "update_frequency_citation": "https://arxiv.org/abs/1704.00197",
+    "known_gaps": "The NFL data description does not establish NCAAF, FCS, transfer-portal, NIL, or conference-realignment coverage. The allowed college-football search returns 32 records, including Elo and point-spread work, but this does not establish a conformal NCAAF deployment.",
+    "known_gaps_citation": "https://arxiv.org/search/?query=college+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+    "alignment_gse_tables": false,
+    "alignment_gse_tables_citation": "https://arxiv.org/abs/1704.00197"
+  },
+  "ncaaf_specifics": {
+    "is_actionable_paper": false,
+    "is_actionable_paper_citation": "https://arxiv.org/abs/1905.02928",
+    "transfer_portal_relevance": false,
+    "transfer_portal_relevance_citation": "https://arxiv.org/search/?query=college+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+    "distribution_shift_type": "Temporal and covariate shift are the relevant unaddressed risks: Jackknife+ requires exchangeability for its stated guarantee, while the college-football records include season-/era-dependent Elo and point-spread modeling rather than a demonstrated transfer-portal, FCS/FBS, NIL, or realignment adjustment.",
+    "distribution_shift_type_citation": "https://arxiv.org/abs/1905.02928"
+  },
+  "calibration_analysis": {
+    "non_monotone_risk": true,
+    "non_monotone_risk_citation": "https://arxiv.org/abs/2607.14430",
+    "isotonic_regression_limits": "Do not treat a generic monotone recalibration as sufficient evidence of validity: the allowed Kalshi study finds calibration changes sharply with time-to-expiry and product type, so calibration must be conditioned on those variables rather than price alone.",
+    "isotonic_regression_limits_citation": "https://arxiv.org/abs/2607.14430",
+    "temporal_dependence_focus": true,
+    "temporal_dependence_focus_citation": "https://arxiv.org/search/?query=jackknife%2B&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+  },
+  "sgp_parlay_data": {
+    "correlation_model": "Use the contemporaneous product of leg prices as the reference, but do not assume independence is correct: the allowed Kalshi study finds cross-game parlays systematically overpriced relative to that product, with overpricing increasing with leg count.",
+    "correlation_model_citation": "https://arxiv.org/abs/2607.14430",
+    "time_to_expiry_calibration": true,
+    "time_to_expiry_calibration_citation": "https://arxiv.org/abs/2607.14430",
+    "kalshi_overpriced_reference": true,
+    "kalshi_overpriced_reference_citation": "https://arxiv.org/abs/2607.14430"
+  }
+}

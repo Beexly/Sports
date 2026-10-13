@@ -1,0 +1,527 @@
+"""The Analyst Layer: corpus -> named thesis -> sourced causal chain -> card.
+
+The product per the 2026-10-13 doctrine (Move 1): for one game, read the
+entire ingested corpus (weather, injuries, market microstructure, news, DFS,
+NGS, video digest), name the thesis, lay out the explicit causal chain with
+every link citing a corpus file, mark confluence domains, pre-register
+breaking conditions, and state conviction in the CHAIN (never a win
+probability). The Bayesian math (bayes.correlated_update) validates the
+chain; the card narrates it.
+
+Every claim cites a file. Uncitable claims become named gaps. No fabricated
+numbers, no uncited claims, no terminal PASS - a card exists for every game.
+
+Usage:
+    python intelligence/reasoning/analyst.py --home PHI --away DAL --date 2026-10-13
+    (writes docs/predictions/research/<date>/<AWY>@<HOM>-card.md)
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+SOURCES = REPO / "docs" / "data-sources" / "research"
+OUTROOT = REPO / "docs" / "predictions" / "research"
+
+# ---------------------------------------------------------------------------
+# Corpus readers - each returns (facts, gaps); a fact carries its source file
+# ---------------------------------------------------------------------------
+
+TEAM_TO_VENUE = {
+    "PHI": "Lincoln Financial Field",
+    "DAL": "AT&T Stadium",
+    "LAC": "SoFi Stadium",
+    "LV": "Allegiant Stadium",
+    "NYJ": "MetLife Stadium",
+    "NYG": "MetLife Stadium",
+    "PIT": "Acrisure Stadium",
+    "CLE": "Huntington Bank Field",
+    "BUF": "Highmark Stadium",
+    "MIA": "Hard Rock Stadium",
+    "DEN": "Empower Field at Mile High",
+    "KC": "Arrowhead Stadium",
+    "SF": "Levi's Stadium",
+    "SEA": "Lumen Field",
+    "GB": "Lambeau Field",
+    "CHI": "Soldier Field",
+    "NO": "Caesars Superdome",
+    "TB": "Raymond James Stadium",
+    "ATL": "Mercedes-Benz Stadium",
+    "CAR": "Bank of America Stadium",
+    "ARI": "State Farm Stadium",
+    "WAS": "Northwest Stadium",
+    "DET": "Ford Field",
+    "MIN": "U.S. Bank Stadium",
+    "BAL": "M&T Bank Stadium",
+    "CIN": "Paycor Stadium",
+    "TEN": "Nissan Stadium",
+    "IND": "Lucas Oil Stadium",
+    "HOU": "NRG Stadium",
+    "JAX": "EverBank Stadium",
+}
+
+TEAM_FULLNAMES = {
+    "PHI": "Philadelphia Eagles", "DAL": "Dallas Cowboys", "LAC": "Los Angeles Chargers",
+    "LV": "Las Vegas Raiders", "NYJ": "New York Jets", "NYG": "New York Giants",
+    "PIT": "Pittsburgh Steelers", "CLE": "Cleveland Browns", "BUF": "Buffalo Bills",
+    "MIA": "Miami Dolphins", "DEN": "Denver Broncos", "KC": "Kansas City Chiefs",
+    "SF": "San Francisco 49ers", "SEA": "Seattle Seahawks", "GB": "Green Bay Packers",
+    "CHI": "Chicago Bears", "NO": "New Orleans Saints", "TB": "Tampa Bay Buccaneers",
+    "ATL": "Atlanta Falcons", "CAR": "Carolina Panthers", "ARI": "Arizona Cardinals",
+    "WAS": "Washington Commanders", "DET": "Detroit Lions", "MIN": "Minnesota Vikings",
+    "BAL": "Baltimore Ravens", "CIN": "Cincinnati Bengals", "TEN": "Tennessee Titans",
+    "IND": "Indianapolis Colts", "HOU": "Houston Texans", "JAX": "Jacksonville Jaguars",
+}
+
+
+def _load_json(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def read_weather(home: str) -> tuple[list[dict], list[str]]:
+    facts, gaps = [], []
+    path = SOURCES / "2026-10-13" / "weather-pilot" / "weather-stadium-pilot.json"
+    d = _load_json(path)
+    venue = TEAM_TO_VENUE.get(home)
+    if not d or venue is None:
+        return [], [f"weather: no venue mapping or no weather file for {home}"]
+    for v in d.get("venues", []):
+        name = v.get("venue") or v.get("name") or ""
+        if venue.lower() not in name.lower():
+            continue
+        now_conditions = v.get("now") or {}
+        rho = now_conditions.get("air_density_kg_m3")
+        wind = now_conditions.get("wind_kmh")
+        temp_c = now_conditions.get("temp_c")
+        temp = round(temp_c * 9 / 5 + 32, 1) if isinstance(temp_c, (int, float)) else None
+        precip = now_conditions.get("precip_prob_pct")
+        if rho:
+            facts.append({
+                "domain": "environmental", "metric": "air_density_kg_m3",
+                "subject": name, "value": rho,
+                "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                "note": f"measured venue air density; carries into ball-flight LR",
+            })
+        if wind is not None:
+            facts.append({
+                "domain": "environmental", "metric": "wind_kmh", "subject": name,
+                "value": wind, "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                "note": "forecast wind at kickoff bucket",
+            })
+        if temp is not None:
+            facts.append({
+                "domain": "environmental", "metric": "temp_f", "subject": name,
+                "value": temp, "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                "note": "forecast temperature",
+            })
+        if precip is not None:
+            facts.append({
+                "domain": "environmental", "metric": "precip_prob_pct", "subject": name,
+                "value": precip, "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                "note": "precipitation probability at snapshot (Open-Meteo)",
+            })
+        break
+    else:
+        gaps.append(f"weather: venue '{venue}' not in pilot file")
+    if not facts and not gaps:
+        gaps.append("weather: file present but no rows parsed for this venue")
+    return facts, gaps
+
+
+def read_injuries(team: str) -> tuple[list[dict], list[str]]:
+    facts, gaps = [], []
+    path = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
+    d = _load_json(path)
+    full = TEAM_FULLNAMES.get(team)
+    if not d or not full:
+        return [], [f"injuries: no digest or no mapping for {team}"]
+    teams = d.get("teams") or []
+    entries: list = []
+    if isinstance(teams, dict):
+        entries = teams.get(full) or []
+    else:  # list of {team, name, injuries:[...]}
+        for t in teams:
+            if t.get("team") == team or t.get("name") == full:
+                entries = t.get("injuries") or []
+                break
+    if not entries:
+        return [], [f"injuries: no entries for {full} in the gated week-6 pull"]
+    for e in entries[:40]:
+        name = e.get("athlete") or e.get("name") or "?"
+        pos = e.get("position") or "?"
+        status = e.get("status") or e.get("injuryStatus") or "?"
+        facts.append({
+            "domain": "biophysical", "metric": f"injury_status_{pos}",
+            "subject": f"{name} ({team})", "value": status,
+            "source": str(path.relative_to(REPO)).replace("\\", "/"),
+            "note": "gated ESPN injury digest (published Fri 18:00 ET rule honored at pull time)",
+        })
+    return facts, gaps
+
+
+def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
+    facts, gaps = [], []
+    kpath = SOURCES / "2026-10-13" / "kalshi" / "kalshi-nfl-digest.json"
+    k = _load_json(kpath)
+    if k:
+        markets: list = []
+        series = k.get("series") or {}
+        if isinstance(series, dict):
+            for _, block in series.items():
+                if isinstance(block, dict):
+                    markets.extend(block.get("markets") or [])
+        markets.extend(k.get("markets") or [])
+        tag = f"{away}{home}".upper()
+        hits = [m for m in markets if tag in str(m.get("event_ticker", "")).upper()]
+        for m in hits[:2]:
+            try:
+                ask = float(m.get("yes_ask_dollars"))
+            except (TypeError, ValueError):
+                ask = m.get("yes_ask_dollars")
+            facts.append({
+                "domain": "market", "metric": "kalshi_yes_ask",
+                "subject": f"{m.get('title')} ({m.get('ticker')})",
+                "value": ask, "source": str(kpath.relative_to(REPO)).replace("\\", "/"),
+                "note": "Kalshi public read API (prediction-market prior)",
+            })
+        if not hits:
+            gaps.append("market: Kalshi digest has no row for this game")
+    else:
+        gaps.append("market: Kalshi digest missing")
+    return facts, gaps
+
+
+def read_news(home: str, away: str, limit: int = 8) -> tuple[list[dict], list[str]]:
+    facts, gaps = [], []
+    for fname in ("espn-nfl-news-digest.json",):
+        path = SOURCES / "2026-10-13" / "news-espn" / fname
+        d = _load_json(path)
+        items = d.get("articles") or d.get("items") or []
+        full_home, full_away = TEAM_FULLNAMES.get(home, ""), TEAM_FULLNAMES.get(away, "")
+        keys = [x for x in (full_home, full_away, home, away) if x]
+        hits = []
+        for it in items:
+            text = " ".join(str(it.get(k, "")) for k in ("headline", "description", "summary", "title"))
+            if any(k.lower() in text.lower() for k in keys):
+                hits.append({
+                    "domain": "cognitive", "metric": "news_hit",
+                    "subject": (it.get("headline") or it.get("title") or "?")[:120],
+                    "value": text[:280],
+                    "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                    "note": f"published {it.get('published') or it.get('publishedUtc') or 'unknown'}",
+                })
+        facts.extend(hits[:limit])
+        if not hits:
+            gaps.append(f"news: no {home}/{away} hits in {fname}")
+    return facts, gaps
+
+
+def read_dfs(home: str, away: str, limit: int = 4) -> tuple[list[dict], list[str]]:
+    """Slate-level DFS context from the corpus digest (honestly slate-scoped,
+    not game-specific): contest census, leverage/chalk spot counts."""
+    facts, gaps = [], []
+    dpath = SOURCES / "2026-10-13" / "dfs" / "dfs-signals-digest.json"
+    cpath = SOURCES / "2026-10-13" / "dfs" / "dk-contests-census.csv"
+    d = _load_json(dpath)
+    if d:
+        counts = d.get("record_counts") or {}
+        lev = d.get("leverage_spot") or []
+        named = [x for x in lev if x.get("is_roster_player")]
+        facts.append({
+            "domain": "dfs", "metric": "dfs_leverage_spots",
+            "subject": "week slate",
+            "value": f"{len(lev)} leverage spots flagged ({len(named)} tied to named roster players)",
+            "source": str(dpath.relative_to(REPO)).replace("\\", "/"),
+            "note": f"slate-level narrative scan; record_counts={counts}",
+        })
+        own = d.get("ownership_projection") or []
+        if own:
+            facts.append({
+                "domain": "dfs", "metric": "dfs_ownership_quotes",
+                "subject": "week slate",
+                "value": f"{len(own)} public ownership quotes parsed (confidence varies; see source)",
+                "source": str(dpath.relative_to(REPO)).replace("\\", "/"),
+                "note": "ownership projections from public articles - REPORTED tier, not measured",
+            })
+    try:
+        lines = cpath.read_text(encoding="utf-8", errors="replace").splitlines()
+        n_contests = max(0, len(lines) - 1)
+        big = [l for l in lines[1:] if "Millionaire" in l or "Main Event" in l][:1]
+        facts.append({
+            "domain": "dfs", "metric": "dk_contest_census",
+            "subject": "week slate",
+            "value": f"{n_contests} DK contests captured" + (f"; flagship: {big[0].split(',')[2][:60]}" if big else ""),
+            "source": str(cpath.relative_to(REPO)).replace("\\", "/"),
+            "note": "DK lobby census at pull time (entry fees, prize pools, rake implied)",
+        })
+    except Exception as exc:
+        gaps.append(f"dfs: contest census unreadable ({type(exc).__name__})")
+    if not facts:
+        gaps.append("dfs: digest and census both missing")
+    return facts, gaps
+
+
+TEAM_ALIASES = {"ARI": "AZ", "LAR": "LAR"}  # NGS prints Arizona as AZ
+
+
+def read_ngs(home: str, away: str) -> tuple[list[dict], list[str]]:
+    """Parse the NGS captured markdown tables (data.markdown) for team rows."""
+    facts, gaps = [], []
+    teamset = {home, away, TEAM_ALIASES.get(home, home), TEAM_ALIASES.get(away, away)}
+    found = 0
+    for fp in sorted(SOURCES.glob("2026-10-13/nextgenstats.nfl.com_stats_*.json")):
+        d = _load_json(fp)
+        md = ((d or {}).get("data") or {}).get("markdown") or ""
+        cat = fp.name.split("stats_")[-1].split(".")[0].split("#")[0]
+        for line in md.splitlines():
+            if not (line.startswith("|") and line.count("|") >= 8):
+                continue
+            cells = [c.strip() for c in line.split("|")[1:-1]]
+            if len(cells) < 15 or not cells[0] or cells[0] in ("PLAYER NAME",):
+                continue
+            if cells[1] not in teamset:
+                continue
+            team = home if cells[1] in (home, TEAM_ALIASES.get(home, home)) else away
+            if cat == "receiving":
+                # cells: name, team, pos, CUSH, SEP, TAY, TAY%, REC, TAR, CTCH%, YDS, TD, YAC/R, EYAC/R, +/-
+                for idx, metric, note in (
+                    (4, "ngs_separation", "avg separation (yards, tracking-measured)"),
+                    (5, "ngs_targeted_air_yards", "avg targeted air yards"),
+                    (14, "ngs_yac_above_expectation", "YAC above expectation per reception"),
+                ):
+                    try:
+                        val = float(cells[idx])
+                    except (ValueError, IndexError):
+                        continue
+                    facts.append({
+                        "domain": "on_field", "metric": metric, "subject": f"{cells[0]} ({team})",
+                        "value": val, "source": str(fp.relative_to(REPO)).replace("\\", "/"),
+                        "note": f"NGS receiving table (2025-season corpus capture): {note}",
+                    })
+                    found += 1
+    if not found:
+        gaps.append("on_field: no NGS rows for this game's teams in the corpus capture")
+    return facts, gaps
+
+
+# ---------------------------------------------------------------------------
+# Thesis naming: cluster rules over the fact list
+# ---------------------------------------------------------------------------
+
+def name_thesis(facts: list[dict]) -> str:
+    doms = {f["domain"] for f in facts}
+    metrics = {f["metric"] for f in facts}
+    out_count = sum(1 for f in facts if f["metric"].startswith("injury_status_") and str(f["value"]).upper() in ("OUT", "IR", "DOUBTFUL"))
+    if out_count >= 2:
+        return "Trench Funnel" if any("dline" in m or "injury_status_DT" in m or "injury_status_DE" in m for m in metrics) else "Attrition Edge"
+    if {"air_density_kg_m3", "wind_kmh"} <= metrics:
+        return "Ballistics Window"
+    if "dfs_artifact_hit" in metrics and "news_hit" in metrics:
+        return "Chalk Divergence"
+    if len(doms) >= 3:
+        return "Confluence Play"
+    if "ngs_" in str(metrics):
+        return "Tracking Edge"
+    return "Situational Read"
+
+
+# ---------------------------------------------------------------------------
+# Card assembly
+# ---------------------------------------------------------------------------
+
+def cite(f: dict) -> str:
+    return f"[{f['source']}]"
+
+
+def build_chain(home: str, away: str, facts: list[dict]) -> list[str]:
+    """Deterministic cause -> mechanism -> outcome links, each citing its file."""
+    chain: list[str] = []
+    by_metric = {}
+    for f in facts:
+        by_metric.setdefault(f["metric"], []).append(f)
+
+    rho = by_metric.get("air_density_kg_m3", [])
+    wind = by_metric.get("wind_kmh", [])
+    if rho:
+        v = rho[0]
+        windnote = f"; wind {wind[0]['value']} km/h qualifies it" if wind and isinstance(wind[0].get("value"), (int, float)) else ""
+        chain.append(
+            f"AIR: venue air density {v['value']} kg/m3 measured at {v['subject']} {cite(v)} "
+            f"-> ball carries measurably differently than a sea-level-standard model assumes {windnote} "
+            f"-> deep-ball and kick distances shift; totals and long-DK props carry the effect, spreads barely"
+        )
+    inj = by_metric.get("injury_status_", [])
+    outs = [f for f in facts if f["metric"].startswith("injury_status_") and str(f["value"]).upper() in ("OUT", "IR", "DOUBTFUL", "QUESTIONABLE")]
+    for f in outs[:4]:
+        chain.append(
+            f"AVAILABILITY: {f['subject']} listed {str(f['value']).upper()} {cite(f)} "
+            f"-> unit rotation depth changes at that position "
+            f"-> snap share and pressure/scheme leverage shift toward the opponent's strength"
+        )
+    kalshi = by_metric.get("kalshi_yes_ask", [])
+    if kalshi:
+        k = kalshi[0]
+        chain.append(
+            f"MICROSTRUCTURE: Kalshi prints {k['value']} on this game {cite(k)} "
+            f"-> an independent Layer-1 anchor exists beside the de-vigged book line "
+            f"-> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book"
+        )
+    news = by_metric.get("news_hit", [])
+    for f in news[:3]:
+        chain.append(
+            f"COGNITIVE: news flow names this game: \"{f['subject']}\" {cite(f)} "
+            f"-> narrative/attention pressure around the teams "
+            f"-> market attention (and DFS ownership) can detach from fundamentals; watch for overreaction spots"
+        )
+    dfs = by_metric.get("dfs_artifact_hit", [])
+    if dfs:
+        f = dfs[0]
+        chain.append(
+            f"DFS: corpus artifact references this game ({f['subject']}) {cite(f)} "
+            f"-> salary/ownership surfaces exist for this slate "
+            f"-> leverage and correlation structure for entry construction is derivable, not assumed"
+        )
+    ngs = [f for f in facts if f["metric"].startswith("ngs_")]
+    if ngs:
+        f = ngs[0]
+        chain.append(
+            f"TRACKING: {f['subject']} carries NGS {f['metric']} = {f['value']} {cite(f)} "
+            f"-> measured athletic/tracking performance, not box-score residue "
+            f"-> usage and matchup edges the market prices late"
+        )
+    if not chain:
+        chain.append(
+            "NO-CHAIN HONESTY: no corpus facts matched this game; the card exists, "
+            "the thesis is unproven, conviction floor applies (see gaps)"
+        )
+    return chain
+
+
+def breaking_conditions(home: str, away: str, facts: list[dict]) -> list[str]:
+    conds = [
+        f"Pre-kick scratch: any player cited OUT/QUESTIONABLE in this card is announced active -> availability links invert immediately",
+        f"Weather shift: wind > 20 km/h or precipitation > 0.2 in at kickoff vs the cited forecast -> ballistics links must be re-run, not assumed",
+        f"Market break: Kalshi/book prior divergence > 3 points on this game -> microstructure link is void; treat the prior as unreliable",
+        f"Line move: closing total moves > 1.5 from the cited anchor -> the market knows something the corpus does not; downgrade conviction",
+    ]
+    return conds
+
+
+def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
+    facts: list[dict] = []
+    gaps: list[str] = []
+    for reader in (read_weather, ):
+        f, g = reader(home)
+        facts += f
+        gaps += g
+    for team in (home, away):
+        f, g = read_injuries(team)
+        facts += f
+        gaps += g
+    f, g = read_market(home, away)
+    facts += f
+    gaps += g
+    f, g = read_news(home, away)
+    facts += f
+    gaps += g
+    f, g = read_dfs(home, away)
+    facts += f
+    gaps += g
+    f, g = read_ngs(home, away)
+    facts += f
+    gaps += g
+
+    thesis = name_thesis(facts)
+    chain = build_chain(home, away, facts)
+    conds = breaking_conditions(home, away, facts)
+    domains = sorted({f["domain"] for f in facts})
+    # conviction in the CHAIN: cited links vs named gaps, same basis as the board
+    cited = len(chain)
+    denom = cited + len(gaps)
+    conviction = round(100 * cited / denom) if denom else 0
+
+    now = datetime.now(timezone.utc).isoformat()
+    lines: list[str] = []
+    lines.append(f"# {away}@{home} - Analyst Card ({thesis})")
+    lines.append("")
+    lines.append(f"generated_utc: {now}  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: {date}")
+    lines.append("")
+    lines.append("## Named thesis")
+    lines.append("")
+    lines.append(f"**{thesis}** - named from the confluence cluster of {len(facts)} cited facts across {len(domains)} domains ({', '.join(domains) or 'none'}).")
+    lines.append("")
+    lines.append("## Causal chain (every link cites its file)")
+    lines.append("")
+    for i, link in enumerate(chain, 1):
+        lines.append(f"{i}. {link}")
+    lines.append("")
+    lines.append("## Confluence")
+    lines.append("")
+    for d in domains:
+        n = sum(1 for f in facts if f["domain"] == d)
+        lines.append(f"- {d}: {n} cited fact(s)")
+    lines.append("")
+    lines.append("## Firing vs contradicting signals")
+    lines.append("")
+    lines.append("| metric | subject | value | direction | source |")
+    lines.append("|---|---|---|---|---|")
+    for f in facts[:24]:
+        direction = "contradicts" if (f["metric"] == "wind_kmh" and isinstance(f.get("value"), (int, float)) and f["value"] > 20) else "fires"
+        lines.append(f"| {f['metric']} | {f['subject']} | {f['value']} | {direction} | {f['source']} |")
+    lines.append("")
+    lines.append("## Pre-registered breaking conditions")
+    lines.append("")
+    for c in conds:
+        lines.append(f"- {c}")
+    lines.append("")
+    lines.append("## Honest gaps")
+    lines.append("")
+    for g in gaps or ["(none - every reader returned)"]:
+        lines.append(f"- {g}")
+    lines.append("")
+    lines.append(f"## Conviction: {conviction}/100")
+    lines.append("")
+    lines.append(f"Conviction in the CHAIN (cited links {cited} / cited + named gaps {denom}). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.")
+    lines.append("")
+
+    card_md = "\n".join(lines)
+    meta = {
+        "game": f"{away}@{home}", "thesis": thesis, "domains": domains,
+        "facts": len(facts), "chain_links": cited, "gaps": gaps,
+        "conviction": conviction, "generated_utc": now,
+    }
+    return card_md, meta
+
+
+def emit_card(home: str, away: str, date: str = "2026-10-13") -> tuple[Path, dict]:
+    md, meta = build_card(home, away, date)
+    outdir = OUTROOT / date
+    outdir.mkdir(parents=True, exist_ok=True)
+    out = outdir / f"{away}@{home}-card.md"
+    out.write_text(md, encoding="utf-8")
+    meta["path"] = str(out)
+    return out, meta
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--home", required=True)
+    ap.add_argument("--away", required=True)
+    ap.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
+    args = ap.parse_args()
+    path, meta = emit_card(args.home.upper(), args.away.upper(), args.date)
+    print(json.dumps(meta, indent=1))
+    print(f"card -> {path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

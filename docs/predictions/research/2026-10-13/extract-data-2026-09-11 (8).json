@@ -1,0 +1,1388 @@
+{
+  "manifest": [
+    {
+      "full_url": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play",
+      "fetched_at": "2026-09-11T12:50:18.021Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 142317,
+      "file_hash": "c862f9a1e0e59e822d60bb9081d70922ecceb26eb713c5fff6284863666bb215",
+      "rows_written": 25,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NHL gamecenter play-by-play sample; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://api-web.nhle.com/v1/score/2024-10-08",
+      "fetched_at": "2026-09-11T12:50:18.022Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 24305,
+      "file_hash": "8971c4b8042d53ca555291541eec858dc1472f496f5e154f3436cf1dd7465e8b",
+      "rows_written": 1,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NHL score endpoint sample; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://www.actionnetwork.com/nfl/odds",
+      "fetched_at": "2026-09-11T12:50:18.023Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 39266,
+      "file_hash": "5930151aba6433a93a30883ee73406bbb8a4a1885f5b65ade7b315e7da36629c",
+      "rows_written": 6,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NFL odds rows capped to representative markets; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://smarkets.com/",
+      "fetched_at": "2026-09-11T12:50:18.024Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 10120,
+      "file_hash": "acccfcc9d3a075fd86e8f788d3fd60cd33c9b44bcc2ac148558811813714df2d",
+      "rows_written": 2,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "Smarkets displayed win-probability rows; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://kalshi.com/",
+      "fetched_at": "2026-09-11T12:50:18.025Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 20140,
+      "file_hash": "1789104666467796b508f9596a307acbbfa0b15f8351f17e5561cd83eaccb3c8",
+      "rows_written": 1,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "Kalshi NFL champion market sample; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://nflreadr.nflverse.com/reference/load_ff_playerids.html",
+      "fetched_at": "2026-09-11T12:50:18.026Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 12454,
+      "file_hash": "f7f35499c00033f2f8b31ef975b830eaf3bd843a24b14c9b4097bc82108b7dc8",
+      "rows_written": 40,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NFL player ID table sample; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv",
+      "fetched_at": "2026-09-11T12:50:18.027Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 1005731,
+      "file_hash": "d685dacc038246a0dc44694e977bec73071cf4d25fdad68ee215ca5d97095fae",
+      "rows_written": 40,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NFL roster identity rows used; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://www.pbpstats.com/",
+      "fetched_at": "2026-09-11T12:50:18.028Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 3420,
+      "file_hash": "5e8bdea522e8dd8373e57320978b6d43928fe87b78d56479e48bc61d97044288",
+      "rows_written": 5,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "PBPStats metric descriptions; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://api.pbpstats.com/docs",
+      "fetched_at": "2026-09-11T12:50:18.029Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 10951,
+      "file_hash": "e1985af8199b9f47929c90cc571998837d9180b0a93cc7eac606174f488bde5d",
+      "rows_written": 6,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "PBPStats API endpoint documentation; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://nextgenstats.nfl.com/",
+      "fetched_at": "2026-09-11T12:50:18.030Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 7797,
+      "file_hash": "bf2db39235f3b0ee53f4a322a12d6d1e6b2be2043a9c119a21127577f5981b08",
+      "rows_written": 2,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NFL Next Gen Stats metric descriptions; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://moneypuck.com/",
+      "fetched_at": "2026-09-11T12:50:18.031Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 2409,
+      "file_hash": "fd907d41ad1c589677a4eb27f3de786f0b93190aad6d6fbe6aaf9918c872dd5c",
+      "rows_written": 1,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "MoneyPuck hockey analytics source; response intentionally capped to a bounded extract."
+      }
+    },
+    {
+      "full_url": "https://www.nfl.com/transactions/",
+      "fetched_at": "2026-09-11T12:50:18.032Z",
+      "http_status": 200,
+      "data_extracted": true,
+      "raw_bytes": 2904,
+      "file_hash": "1da7581fb00ddbf6b4eae76946a883b16f711317f39fd54aafd469cac10a19a1",
+      "rows_written": 1,
+      "parser_red_check": true,
+      "cap_applied": true,
+      "truncation_metadata": {
+        "truncated": true,
+        "note": "NFL transactions source; response intentionally capped to a bounded extract."
+      }
+    }
+  ],
+  "identity_join_table": [
+    {
+      "sport": "NFL",
+      "name": "Aaron Rodgers",
+      "gsis_id": "00-0023459",
+      "pfr_id": "RodgAa00",
+      "sleeper_id": "96",
+      "espn_id": "8439",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Marcedes Lewis",
+      "gsis_id": "00-0024243",
+      "pfr_id": "LewiMa00",
+      "sleeper_id": "111",
+      "espn_id": "9614",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Matt Ryan",
+      "gsis_id": "00-0026143",
+      "pfr_id": "RyanMa00",
+      "sleeper_id": "24",
+      "espn_id": "11237",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Joe Flacco",
+      "gsis_id": "00-0026158",
+      "pfr_id": "FlacJo00",
+      "sleeper_id": "19",
+      "espn_id": "11252",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Matthew Stafford",
+      "gsis_id": "00-0026498",
+      "pfr_id": "StafMa00",
+      "sleeper_id": "421",
+      "espn_id": "12483",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Brandon Graham",
+      "gsis_id": "00-0027865",
+      "pfr_id": "GrahBr99",
+      "sleeper_id": "583",
+      "espn_id": "13239",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Von Miller",
+      "gsis_id": "00-0027940",
+      "pfr_id": "MillVo00",
+      "sleeper_id": "871",
+      "espn_id": "13976",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Cameron Jordan",
+      "gsis_id": "00-0027962",
+      "pfr_id": "JordCa00",
+      "sleeper_id": "957",
+      "espn_id": "13971",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Cameron Heyward",
+      "gsis_id": "00-0027969",
+      "pfr_id": "HeywCa01",
+      "sleeper_id": "843",
+      "espn_id": "13977",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Andy Dalton",
+      "gsis_id": "00-0027973",
+      "pfr_id": "DaltAn00",
+      "sleeper_id": "829",
+      "espn_id": "14012",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Tyrod Taylor",
+      "gsis_id": "00-0028118",
+      "pfr_id": "TaylTy00",
+      "sleeper_id": "827",
+      "espn_id": "14163",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Bobby Wagner",
+      "gsis_id": "00-0029255",
+      "pfr_id": "WagnBo00",
+      "sleeper_id": "1233",
+      "espn_id": "14979",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Russell Wilson",
+      "gsis_id": "00-0029263",
+      "pfr_id": "WilsRu00",
+      "sleeper_id": "1234",
+      "espn_id": "14881",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Stephon Gilmore",
+      "gsis_id": "00-0029542",
+      "pfr_id": "GilmSt00",
+      "sleeper_id": "1043",
+      "espn_id": "14942",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Lavonte David",
+      "gsis_id": "00-0029562",
+      "pfr_id": "DaviLa00",
+      "sleeper_id": "1192",
+      "espn_id": "14985",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Kirk Cousins",
+      "gsis_id": "00-0029604",
+      "pfr_id": "CousKi00",
+      "sleeper_id": "1166",
+      "espn_id": "14880",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Harrison Smith",
+      "gsis_id": "00-0029606",
+      "pfr_id": "SmitHa00",
+      "sleeper_id": "1213",
+      "espn_id": "14945",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Demario Davis",
+      "gsis_id": "00-0029607",
+      "pfr_id": "DaviDe00",
+      "sleeper_id": "1052",
+      "espn_id": "14958",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Greg Zuerlein",
+      "gsis_id": "00-0029621",
+      "pfr_id": "ZuerGr00",
+      "sleeper_id": "1266",
+      "espn_id": "14993",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Kyle Juszczyk",
+      "gsis_id": "00-0029892",
+      "pfr_id": "JuszKy00",
+      "sleeper_id": "1379",
+      "espn_id": "16002",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Adam Thielen",
+      "gsis_id": "00-0030035",
+      "pfr_id": "ThieAd00",
+      "sleeper_id": "1689",
+      "espn_id": "16460",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Darius Slay",
+      "gsis_id": "00-0030062",
+      "pfr_id": "SlayDa00",
+      "sleeper_id": "1518",
+      "espn_id": "15863",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Jordan Poyer",
+      "gsis_id": "00-0030114",
+      "pfr_id": "PoyeJo00",
+      "sleeper_id": "1343",
+      "espn_id": "15979",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Keenan Allen",
+      "gsis_id": "00-0030279",
+      "pfr_id": "AlleKe00",
+      "sleeper_id": "1479",
+      "espn_id": "15818",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Tyrann Mathieu",
+      "gsis_id": "00-0030459",
+      "pfr_id": "MathTy00",
+      "sleeper_id": "1576",
+      "espn_id": "15851",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Travis Kelce",
+      "gsis_id": "00-0030506",
+      "pfr_id": "KelcTr00",
+      "sleeper_id": "1466",
+      "espn_id": "15847",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "DeAndre Hopkins",
+      "gsis_id": "00-0030564",
+      "pfr_id": "HopkDe00",
+      "sleeper_id": "1426",
+      "espn_id": "15795",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Geno Smith",
+      "gsis_id": "00-0030565",
+      "pfr_id": "SmitGe00",
+      "sleeper_id": "1373",
+      "espn_id": "15864",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Christian McCaffrey",
+      "gsis_id": "00-0033280",
+      "pfr_id": "McCaCh01",
+      "sleeper_id": "4034",
+      "espn_id": "3117251",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "George Kittle",
+      "gsis_id": "00-0033288",
+      "pfr_id": "KittGe00",
+      "sleeper_id": "4217",
+      "espn_id": "3040151",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Patrick Mahomes",
+      "gsis_id": "00-0033873",
+      "pfr_id": "MahoPa00",
+      "sleeper_id": "4046",
+      "espn_id": "3139477",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Derrick Henry",
+      "gsis_id": "00-0032764",
+      "pfr_id": "HenrDe00",
+      "sleeper_id": "3198",
+      "espn_id": "3043078",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Alvin Kamara",
+      "gsis_id": "00-0033906",
+      "pfr_id": "KamaAl00",
+      "sleeper_id": "4035",
+      "espn_id": "3054850",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Cooper Kupp",
+      "gsis_id": "00-0033908",
+      "pfr_id": "KuppCo00",
+      "sleeper_id": "4039",
+      "espn_id": "2977187",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Nick Bosa",
+      "gsis_id": "00-0035717",
+      "pfr_id": "BosaNi00",
+      "sleeper_id": "5816",
+      "espn_id": "4040605",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Josh Allen",
+      "gsis_id": "00-0034857",
+      "pfr_id": "AlleJo02",
+      "sleeper_id": "4984",
+      "espn_id": "3918298",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Lamar Jackson",
+      "gsis_id": "00-0034796",
+      "pfr_id": "JackLa00",
+      "sleeper_id": "4881",
+      "espn_id": "3916387",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Justin Jefferson",
+      "gsis_id": "00-0036322",
+      "pfr_id": "JeffJu00",
+      "sleeper_id": "6794",
+      "espn_id": "4262921",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "C.J. Stroud",
+      "gsis_id": "00-0039163",
+      "pfr_id": "StroCJ00",
+      "sleeper_id": "9758",
+      "espn_id": "4432577",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    },
+    {
+      "sport": "NFL",
+      "name": "Puka Nacua",
+      "gsis_id": "00-0039075",
+      "pfr_id": "NacuPu00",
+      "sleeper_id": "9493",
+      "espn_id": "4426515",
+      "source_citation": "https://nflverse.nflverse-data/releases/download/rosters/roster_2024.csv"
+    }
+  ],
+  "independent_markets": [
+    {
+      "platform": "Action Network",
+      "event_name": "Patriots vs Seahawks",
+      "market_type": "NFL spread",
+      "price": -110,
+      "odds": "+4.5 -110",
+      "timestamp": "2026-09-11T12:50:18.041Z",
+      "source_url": "https://www.actionnetwork.com/nfl-game/patriots-seahawks-score-odds-september-9-2026/290843"
+    },
+    {
+      "platform": "Action Network",
+      "event_name": "Patriots vs Seahawks",
+      "market_type": "NFL spread",
+      "price": -107,
+      "odds": "-4.5 -107",
+      "timestamp": "2026-09-11T12:50:18.042Z",
+      "source_url": "https://www.actionnetwork.com/nfl-game/patriots-seahawks-score-odds-september-9-2026/290843"
+    },
+    {
+      "platform": "Action Network",
+      "event_name": "49ers vs Rams",
+      "market_type": "NFL spread",
+      "price": -115,
+      "odds": "+2.5 -115",
+      "timestamp": "2026-09-11T12:50:18.043Z",
+      "source_url": "https://www.actionnetwork.com/nfl-game/49ers-rams-score-odds-september-10-2026/290802"
+    },
+    {
+      "platform": "Action Network",
+      "event_name": "49ers vs Rams",
+      "market_type": "NFL spread",
+      "price": -105,
+      "odds": "-2.5 -105",
+      "timestamp": "2026-09-11T12:50:18.044Z",
+      "source_url": "https://www.actionnetwork.com/nfl-game/49ers-rams-score-odds-september-10-2026/290802"
+    },
+    {
+      "platform": "Action Network",
+      "event_name": "Jets vs Titans",
+      "market_type": "NFL spread",
+      "price": -108,
+      "odds": "+1.5 -108",
+      "timestamp": "2026-09-11T12:50:18.045Z",
+      "source_url": "https://www.actionnetwork.com/nfl-game/jets-titans-score-odds-september-13-2026/290844"
+    },
+    {
+      "platform": "Action Network",
+      "event_name": "Jets vs Titans",
+      "market_type": "NFL spread",
+      "price": -112,
+      "odds": "-1.5 -112",
+      "timestamp": "2026-09-11T12:50:18.046Z",
+      "source_url": "https://www.actionnetwork.com/nfl-game/jets-titans-score-odds-september-13-2026/290844"
+    },
+    {
+      "platform": "Smarkets",
+      "event_name": "Jaguars vs Browns",
+      "market_type": "win probability",
+      "price": 78.1,
+      "odds": "78.1%",
+      "timestamp": "2026-09-11T12:50:18.047Z",
+      "source_url": "https://smarkets.com/"
+    },
+    {
+      "platform": "Smarkets",
+      "event_name": "Jaguars vs Browns",
+      "market_type": "win probability",
+      "price": 20.8,
+      "odds": "20.8%",
+      "timestamp": "2026-09-11T12:50:18.048Z",
+      "source_url": "https://smarkets.com/"
+    },
+    {
+      "platform": "Kalshi",
+      "event_name": "2027 NFL Champion",
+      "market_type": "championship contract probability",
+      "price": 15,
+      "odds": "15%",
+      "timestamp": "2026-09-11T12:50:18.049Z",
+      "source_url": "https://kalshi.com/"
+    }
+  ],
+  "play_by_play_archive": [
+    {
+      "sport": "NHL",
+      "event_id": "152",
+      "event_type": "period-start",
+      "raw_event_data": {
+        "eventId": 152,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:00",
+        "timeRemaining": "20:00",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 520,
+        "typeDescKey": "period-start",
+        "sortOrder": 10
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "151",
+      "event_type": "faceoff",
+      "raw_event_data": {
+        "eventId": 151,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:00",
+        "timeRemaining": "20:00",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 502,
+        "typeDescKey": "faceoff",
+        "sortOrder": 11,
+        "details": {
+          "eventOwnerTeamId": 1,
+          "losingPlayerId": 8478043,
+          "winningPlayerId": 8480002,
+          "xCoord": 0,
+          "yCoord": 0,
+          "zoneCode": "N"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "147",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 147,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:05",
+        "timeRemaining": "19:55",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 12,
+        "details": {
+          "xCoord": 68,
+          "yCoord": -40,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 7,
+          "hittingPlayerId": 8479359,
+          "hitteePlayerId": 8475193
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "103",
+      "event_type": "shot-on-goal",
+      "raw_event_data": {
+        "eventId": 103,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:08",
+        "timeRemaining": "19:52",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 506,
+        "typeDescKey": "shot-on-goal",
+        "sortOrder": 13,
+        "details": {
+          "xCoord": 56,
+          "yCoord": -39,
+          "zoneCode": "O",
+          "shotType": "wrist",
+          "shootingPlayerId": 8483495,
+          "goalieInNetId": 8480045,
+          "eventOwnerTeamId": 1,
+          "awaySOG": 1,
+          "homeSOG": 0
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "123",
+      "event_type": "giveaway",
+      "raw_event_data": {
+        "eventId": 123,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:19",
+        "timeRemaining": "19:41",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 504,
+        "typeDescKey": "giveaway",
+        "sortOrder": 14,
+        "details": {
+          "xCoord": -73,
+          "yCoord": 8,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 1,
+          "playerId": 8474593
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "302",
+      "event_type": "missed-shot",
+      "raw_event_data": {
+        "eventId": 302,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:29",
+        "timeRemaining": "19:31",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 507,
+        "typeDescKey": "missed-shot",
+        "sortOrder": 21,
+        "details": {
+          "xCoord": 71,
+          "yCoord": -28,
+          "zoneCode": "O",
+          "reason": "short",
+          "shotType": "wrist",
+          "shootingPlayerId": 8479407,
+          "goalieInNetId": 8480045,
+          "eventOwnerTeamId": 1
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "208",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 208,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:36",
+        "timeRemaining": "19:24",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 23,
+        "details": {
+          "xCoord": 68,
+          "yCoord": 40,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 7,
+          "hittingPlayerId": 8481524,
+          "hitteePlayerId": 8481559
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "112",
+      "event_type": "shot-on-goal",
+      "raw_event_data": {
+        "eventId": 112,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:40",
+        "timeRemaining": "19:20",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 506,
+        "typeDescKey": "shot-on-goal",
+        "sortOrder": 24,
+        "details": {
+          "xCoord": 47,
+          "yCoord": -23,
+          "zoneCode": "O",
+          "shotType": "slap",
+          "shootingPlayerId": 8476462,
+          "goalieInNetId": 8480045,
+          "eventOwnerTeamId": 1,
+          "awaySOG": 2,
+          "homeSOG": 0
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "113",
+      "event_type": "blocked-shot",
+      "raw_event_data": {
+        "eventId": 113,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:46",
+        "timeRemaining": "19:14",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 508,
+        "typeDescKey": "blocked-shot",
+        "sortOrder": 25,
+        "details": {
+          "xCoord": 58,
+          "yCoord": 21,
+          "zoneCode": "D",
+          "blockingPlayerId": 8481524,
+          "shootingPlayerId": 8479407,
+          "eventOwnerTeamId": 1,
+          "reason": "blocked"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "57",
+      "event_type": "stoppage",
+      "raw_event_data": {
+        "eventId": 57,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:56",
+        "timeRemaining": "19:04",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 516,
+        "typeDescKey": "stoppage",
+        "sortOrder": 28,
+        "details": {
+          "reason": "icing"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "153",
+      "event_type": "faceoff",
+      "raw_event_data": {
+        "eventId": 153,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:56",
+        "timeRemaining": "19:04",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 502,
+        "typeDescKey": "faceoff",
+        "sortOrder": 29,
+        "details": {
+          "eventOwnerTeamId": 7,
+          "losingPlayerId": 8481559,
+          "winningPlayerId": 8479420,
+          "xCoord": -69,
+          "yCoord": 22,
+          "zoneCode": "O"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "119",
+      "event_type": "blocked-shot",
+      "raw_event_data": {
+        "eventId": 119,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "00:57",
+        "timeRemaining": "19:03",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 508,
+        "typeDescKey": "blocked-shot",
+        "sortOrder": 30,
+        "details": {
+          "xCoord": -68,
+          "yCoord": 11,
+          "zoneCode": "D",
+          "blockingPlayerId": 8475455,
+          "shootingPlayerId": 8482175,
+          "eventOwnerTeamId": 7,
+          "reason": "blocked"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "120",
+      "event_type": "shot-on-goal",
+      "raw_event_data": {
+        "eventId": 120,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:02",
+        "timeRemaining": "18:58",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 506,
+        "typeDescKey": "shot-on-goal",
+        "sortOrder": 31,
+        "details": {
+          "xCoord": -40,
+          "yCoord": -30,
+          "zoneCode": "O",
+          "shotType": "wrist",
+          "shootingPlayerId": 8482175,
+          "goalieInNetId": 8474593,
+          "eventOwnerTeamId": 7,
+          "awaySOG": 2,
+          "homeSOG": 1
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "230",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 230,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:03",
+        "timeRemaining": "18:57",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 32,
+        "details": {
+          "xCoord": -74,
+          "yCoord": -39,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 1,
+          "hittingPlayerId": 8479407,
+          "hitteePlayerId": 8481524
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "58",
+      "event_type": "stoppage",
+      "raw_event_data": {
+        "eventId": 58,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:04",
+        "timeRemaining": "18:56",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 516,
+        "typeDescKey": "stoppage",
+        "sortOrder": 33,
+        "details": {
+          "reason": "goalie-stopped-after-sog"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "154",
+      "event_type": "faceoff",
+      "raw_event_data": {
+        "eventId": 154,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:04",
+        "timeRemaining": "18:56",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 502,
+        "typeDescKey": "faceoff",
+        "sortOrder": 35,
+        "details": {
+          "eventOwnerTeamId": 7,
+          "losingPlayerId": 8475287,
+          "winningPlayerId": 8477949,
+          "xCoord": -69,
+          "yCoord": -22,
+          "zoneCode": "O"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "124",
+      "event_type": "missed-shot",
+      "raw_event_data": {
+        "eventId": 124,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:06",
+        "timeRemaining": "18:54",
+        "situationCode": "1551",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 507,
+        "typeDescKey": "missed-shot",
+        "sortOrder": 36,
+        "details": {
+          "xCoord": -36,
+          "yCoord": 15,
+          "zoneCode": "O",
+          "reason": "wide-right",
+          "shotType": "slap",
+          "shootingPlayerId": 8482671,
+          "goalieInNetId": 8474593,
+          "eventOwnerTeamId": 7
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "255",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 255,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:34",
+        "timeRemaining": "18:26",
+        "situationCode": "1560",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 44,
+        "details": {
+          "xCoord": -67,
+          "yCoord": 41,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 1,
+          "hittingPlayerId": 8475287,
+          "hitteePlayerId": 8481528
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "135",
+      "event_type": "penalty",
+      "raw_event_data": {
+        "eventId": 135,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:37",
+        "timeRemaining": "18:23",
+        "situationCode": "1560",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 509,
+        "typeDescKey": "penalty",
+        "sortOrder": 45,
+        "details": {
+          "xCoord": 1,
+          "yCoord": -37,
+          "zoneCode": "N",
+          "typeCode": "MIN",
+          "descKey": "slashing",
+          "duration": 2,
+          "committedByPlayerId": 8475287,
+          "drawnByPlayerId": 8479420,
+          "eventOwnerTeamId": 1
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "155",
+      "event_type": "faceoff",
+      "raw_event_data": {
+        "eventId": 155,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:37",
+        "timeRemaining": "18:23",
+        "situationCode": "1451",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 502,
+        "typeDescKey": "faceoff",
+        "sortOrder": 49,
+        "details": {
+          "eventOwnerTeamId": 1,
+          "losingPlayerId": 8477949,
+          "winningPlayerId": 8480002,
+          "xCoord": -69,
+          "yCoord": 22,
+          "zoneCode": "D"
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "260",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 260,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "01:58",
+        "timeRemaining": "18:02",
+        "situationCode": "1451",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 50,
+        "details": {
+          "xCoord": -80,
+          "yCoord": -39,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 1,
+          "hittingPlayerId": 8475455,
+          "hitteePlayerId": 8479420
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "1731721",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 1731721,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "02:14",
+        "timeRemaining": "17:46",
+        "situationCode": "1451",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 54,
+        "details": {
+          "xCoord": -41,
+          "yCoord": 38,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 1,
+          "hittingPlayerId": 8477508,
+          "hitteePlayerId": 8480839
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "278",
+      "event_type": "hit",
+      "raw_event_data": {
+        "eventId": 278,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "02:18",
+        "timeRemaining": "17:42",
+        "situationCode": "1451",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 503,
+        "typeDescKey": "hit",
+        "sortOrder": 55,
+        "details": {
+          "xCoord": -91,
+          "yCoord": -31,
+          "zoneCode": "D",
+          "eventOwnerTeamId": 1,
+          "hittingPlayerId": 8478399,
+          "hitteePlayerId": 8482097
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "243",
+      "event_type": "giveaway",
+      "raw_event_data": {
+        "eventId": 243,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "03:02",
+        "timeRemaining": "16:58",
+        "situationCode": "1451",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 504,
+        "typeDescKey": "giveaway",
+        "sortOrder": 63,
+        "details": {
+          "xCoord": -10,
+          "yCoord": 12,
+          "zoneCode": "N",
+          "eventOwnerTeamId": 7,
+          "playerId": 8481528
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    },
+    {
+      "sport": "NHL",
+      "event_id": "156",
+      "event_type": "missed-shot",
+      "raw_event_data": {
+        "eventId": 156,
+        "periodDescriptor": {
+          "number": 1,
+          "periodType": "REG",
+          "maxRegulationPeriods": 3
+        },
+        "timeInPeriod": "03:19",
+        "timeRemaining": "16:41",
+        "situationCode": "1451",
+        "homeTeamDefendingSide": "right",
+        "typeCode": 507,
+        "typeDescKey": "missed-shot",
+        "sortOrder": 67,
+        "details": {
+          "xCoord": 79,
+          "yCoord": 2,
+          "zoneCode": "O",
+          "reason": "wide-left",
+          "shotType": "wrist",
+          "shootingPlayerId": 8480002,
+          "goalieInNetId": 8480045,
+          "eventOwnerTeamId": 1
+        }
+      },
+      "source_citation": "https://api-web.nhle.com/v1/gamecenter/2024020001/play-by-play"
+    }
+  ],
+  "advanced_metrics_registry": [
+    {
+      "metric_name": "Actual possession counts",
+      "formula": "Count possessions excluding end-of-quarter possessions with heaves",
+      "value_sample": "PBPStats lists actual possession counts as a metric",
+      "source_site": "https://www.pbpstats.com/"
+    },
+    {
+      "metric_name": "Assisted and unassisted shot scoring",
+      "formula": "Points scored split by assisted/unassisted 2-point and 3-point shots",
+      "value_sample": "PBPStats metric description",
+      "source_site": "https://www.pbpstats.com/"
+    },
+    {
+      "metric_name": "Rebound percentage by shot zone",
+      "formula": "Rebounds broken down by shot zone",
+      "value_sample": "PBPStats metric description",
+      "source_site": "https://www.pbpstats.com/"
+    },
+    {
+      "metric_name": "Live-ball/dead-ball turnover breakdown",
+      "formula": "Turnovers separated by live-ball and dead-ball context",
+      "value_sample": "PBPStats metric description",
+      "source_site": "https://www.pbpstats.com/"
+    },
+    {
+      "metric_name": "Run scheme classification",
+      "formula": "NGS model classification; formula not disclosed on source page",
+      "value_sample": "run scheme classification and run-blocking matchup model",
+      "source_site": "https://nextgenstats.nfl.com/"
+    }
+  ]
+}

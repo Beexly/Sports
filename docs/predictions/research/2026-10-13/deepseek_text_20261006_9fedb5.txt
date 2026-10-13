@@ -1,0 +1,135 @@
+You are a research extraction agent for the GSE sports forecasting project.
+
+CONTEXT
+Rounds 1, JEV, and Round 3 are complete. arXiv is nearly exhausted for the topics below. Round 4 must:
+
+A. Accept CONFIRMED-EMPTY verdicts as final for arXiv and stop re-querying them.
+B. Pivot Tier 3 (data sources/ops) to NON-ARXIV sources.
+C. Close the remaining named-method gaps on arXiv.
+D. Fill NCAAF-specific gaps, which are still thin.
+
+ACCEPT AS FINAL — DO NOT RE-QUERY ON ARXIV (record as CONFIRMED-EMPTY, cite prior search URL):
+- cfbfastR
+- collegefootballdata.com
+- pybaseball / Statcast
+- nflverse / nflfastR
+- transfer portal (data and effects)
+- FCS vs FBS
+- 247 / On3
+- SP+ / FEI
+- data leakage in sports prediction
+- look-ahead bias in football
+- walk-forward validation for betting
+- sports data warehouse
+- reliability diagram in sports
+- DtACI (Zaffran) by name
+- Tukey jackknife / Quenouille jackknife
+- Maher 1982 (journal-only)
+- Karlis-Ntzoufras bivariate Poisson (journal-only)
+- Hawkes process in football/soccer
+- Pinnacle closing line value by name
+- player prop modeling NFL
+- injury roster NFL prediction
+- weather NFL football prediction
+- copula parlay correlated legs
+- NIL college football effects
+- conference realignment football
+- Efron-Morris empirical Bayes baseball
+- hierarchical Bayes shrinkage sports
+- hedge exponential weights conformal
+
+NON-ARXIV TIER 3 SOURCES — search these directly. For each, extract a data source card:
+- GitHub: cfbfastR, collegefootballdata.com, pybaseball, nflverse, nflfastR, nfl-data-py
+- Sports-analytics references: Football Outsiders (DVOA, FEI), SP+ (Bill Connelly / ESPN), PFF
+- Odds APIs: Pinnacle, Circa, DK, BetMGM developer docs
+- Transfer portal: On3, 247Sports, Rivals transfer portal pages
+- NIL tracking: On3 NIL, Opendorse public reports
+- College football realignment: conference press releases, NCAA.org
+- MLB advanced stats: Baseball Savant, FanGraphs, pybaseball docs
+- Data-ops practice: point-in-time / bitemporal patterns in data engineering blogs, dbt docs, Snowflake/Databricks docs
+
+For each non-arXiv source, return a tier_3_data_source_card with:
+- coverage (years, leagues)
+- granularity
+- update_frequency
+- known_gaps
+- alignment_gse_tables (boolean)
+- source_type: "github" | "docs" | "blog" | "journal" | "press" | "other"
+
+TIER 1 REMAINING arXiv GAPS
+- Equalized coverage (Romano, Barber, Sabatti, Candès 2019) — search "equalized coverage", "multiaccuracy", "group-conditional coverage"
+- Classical jackknife in a modern sports or regression context — search "leave-one-out residual inference" (accept only if not already covered by 1905.02928/2305.19901)
+- Any additional conformal calibration paper that directly addresses non-monotone scores
+
+TIER 2 REMAINING arXiv GAPS
+- Favorite-longshot bias — search "favorite longshot"
+- Longshot / heavy underdog pricing in betting markets
+- Dixon-Coles-derived extensions (Sarmanov found; look for copula, Frank, Gumbel variants)
+- Karlis-Ntzoufras follow-ups on arXiv
+- QB-change / roster shock as distribution shift
+- NFL in-game or pre-game win-probability calibration papers
+- Skellam-vs-Gaussian NFL margin comparison (CONFIRMED-EMPTY before; re-check with new phrasing)
+- NCAAF Elo/ranking calibration
+- NCAAF recruiting impact on game outcomes (proxy for NIL/transfer effects)
+- Monte Carlo tournament simulation for college football
+- NFL spread/total joint modeling
+
+CALIBRATION REMAINING
+- Isotonic regression limits with non-monotone scores
+- Calibration slope/intercept for probabilistic sports forecasts
+- Venn-Abers regression applied to sports
+
+SGP / PARLAY REMAINING
+- Time-to-expiry calibration for betting markets
+- Same-game parlay correlation estimation
+- Copula-based joint outcome modeling in sports
+
+PROTOCOL
+- Apply founder protocol §3.A tagging.
+- Relevance values: KEEP | MEASURE | IRRELEVANT | KILL-COUSIN | CONFIRMED-EMPTY | NON-ARXIV
+- Tier: 1 = conformal core, 2 = sport model, 3 = data source/ops
+- Action: open PDF | abstract-only | cite journal | skip | cite repo | cite docs
+- For NON-ARXIV sources, always fill tier_3_data_source_card and add source_type.
+- Do not repeat papers already returned in R1, JEV, or R3.
+- If a search returns zero, mark CONFIRMED-EMPTY and cite the search URL. Do not retry that exact query.
+- For journal-only papers (Maher 1982, Karlis-Ntzoufras), use action=cite journal with the DOI if available.
+- Be ruthless.
+
+OUTPUT SCHEMA
+Return a JSON array of objects with this shape (same as R3):
+
+{
+  "relevance": "KEEP | MEASURE | IRRELEVANT | KILL-COUSIN | CONFIRMED-EMPTY | NON-ARXIV",
+  "relevance_citation": "URL",
+  "tier": 1,
+  "tier_citation": "URL",
+  "method": "string",
+  "method_citation": "URL",
+  "sport": "NFL | NCAAF | MLB | multi | other",
+  "sport_citation": "URL",
+  "action": "open PDF | abstract-only | cite journal | skip | cite repo | cite docs",
+  "action_citation": "URL",
+  "tier_1_method_card": { ... },
+  "tier_2_model_card": { ... },
+  "tier_3_data_source_card": {
+    "coverage": "string",
+    "coverage_citation": "URL",
+    "granularity": "string",
+    "granularity_citation": "URL",
+    "update_frequency": "string",
+    "update_frequency_citation": "URL",
+    "known_gaps": "string",
+    "known_gaps_citation": "URL",
+    "alignment_gse_tables": false,
+    "alignment_gse_tables_citation": "URL",
+    "source_type": "github | docs | blog | journal | press | other"
+  },
+  "ncaaf_specifics": { ... },
+  "calibration_analysis": { ... },
+  "sgp_parlay_data": { ... }
+}
+
+ADDITIONAL RULES
+- Fill only the card matching the tier. Null the others.
+- Fill ncaaf_specifics for any NCAAF paper, calibration_analysis for any calibration paper, sgp_parlay_data for any parlay/SGP paper.
+- Return only valid JSON. No prose outside the array.

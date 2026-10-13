@@ -1,0 +1,1080 @@
+{
+  "domain_dossiers": [
+    {
+      "domain_name": "fantasylabs.com",
+      "category": "DFS analytics",
+      "mechanism": "Player projections, ownership, lineup tools and marketplace content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "The fetched homepage linked projections and tools but did not expose a formula.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "rotogrinders.com",
+      "category": "DFS and betting analytics",
+      "mechanism": "Projection systems, ownership, simulations and expert content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "THE BAT X is forecasting 13.65 pitching outs ... projected to win 71% of the time, resulting in a 38% ROI.",
+          "reconstruction": "A public article compares model forecast with market-implied outs, converts the difference into a win probability and reports ROI. The exact conversion formula is not disclosed.",
+          "components": "model forecast; market-implied line; win probability; ROI"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/scoring",
+          "engineer_days": 5,
+          "unlocks": "Projection, probability and ROI display."
+        }
+      ]
+    },
+    {
+      "domain_name": "stokastic.com",
+      "category": "DFS analytics",
+      "mechanism": "Projections, ownership, contest simulation, stacks and leverage.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "the field and the Stokastic Sims both land on Tarik Skubal ... carries 23.5% leverage.",
+          "reconstruction": "The product compares simulated top-lineup exposure with field ownership and labels the difference leverage.",
+          "components": "simulation exposure; field ownership; leverage"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "Pricing page exposes Monthly/Annual packages and checkout price IDs, but rendered dollar amounts were not present.",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/simulations",
+          "engineer_days": 7,
+          "unlocks": "Contest simulation and leverage views."
+        }
+      ]
+    },
+    {
+      "domain_name": "sabersim.com",
+      "category": "DFS simulation",
+      "mechanism": "Game simulation and correlation-aware lineup optimization.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "I like to increase it to add correlation to each lineup",
+          "reconstruction": "A user-facing correlation slider increases correlated player construction; the numerical mapping is not public.",
+          "components": "correlation slider; lineup constraints"
+        },
+        {
+          "raw_snippet": "simulations being ran multiple times, getting the right exposures",
+          "reconstruction": "Repeated simulations are used to derive exposure targets; iteration count and sampling method are undisclosed.",
+          "components": "repeated simulation; exposure"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "$7 for 7 days; $97 billed monthly; $197 billed monthly; $297 billed monthly",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/simulations/correlation.ts",
+          "engineer_days": 8,
+          "unlocks": "Correlation controls and simulated exposure."
+        }
+      ]
+    },
+    {
+      "domain_name": "fantasycruncher.com",
+      "category": "DFS lineup optimizer",
+      "mechanism": "Contest-specific lineup generation across DFS sports.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "Contest listings exposed salary, roster and entry-limit fields, but optimizer weights were not public.",
+          "components": "salary; roster slots; entry limits"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/optimizer",
+          "engineer_days": 8,
+          "unlocks": "Contest-aware lineup generation."
+        }
+      ]
+    },
+    {
+      "domain_name": "lineuplab.com",
+      "category": "DFS lineup tools",
+      "mechanism": "Lineup generation and contest analysis.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "props.cash",
+      "category": "player-prop analytics",
+      "mechanism": "Real-time data, odds analysis, filters and correlated player props.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "Find the plays with the highest expected value using real-time data and odds analysis.",
+          "reconstruction": "Ranks prop opportunities by expected value using live data and odds; exact fair-probability method is not stated.",
+          "components": "real-time data; odds; expected value"
+        },
+        {
+          "raw_snippet": "CORRELATED PLAYER PROPS",
+          "reconstruction": "Supports joint or related prop analysis; correlation calculation is not publicly specified.",
+          "components": "player props; correlation"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "$199.99/year; $19.99/month; $99.99/year NBA Pass",
+        "ios": "Included with listed plans",
+        "android": "Included with listed plans"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/odds/ev.ts",
+          "engineer_days": 5,
+          "unlocks": "Prop EV and correlation screens."
+        }
+      ]
+    },
+    {
+      "domain_name": "outlier.bet",
+      "category": "sports betting analytics",
+      "mechanism": "Public positioning suggests betting analytics, but no formula was exposed.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "oddsjam.com",
+      "category": "sports betting odds intelligence",
+      "mechanism": "Arbitrage, middles, positive-EV and sportsbook comparison.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "Bet both sides at the right price and you’ll profit no matter the outcome.",
+          "reconstruction": "Identifies two-sided price discrepancies whose combined implied probabilities can yield a positive locked-in return. Exact vig and stake-sizing formula not exposed.",
+          "components": "two prices; implied probability; stake sizing"
+        },
+        {
+          "raw_snippet": "$1.3B wagered by OddsJam users in the last 12 months",
+          "reconstruction": "Public usage claim, not an algorithmic formula.",
+          "components": "aggregate usage metric"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "$79.99/mo; $199.99/mo; $250 first month then $499.99/mo",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/odds/arbitrage.ts",
+          "engineer_days": 6,
+          "unlocks": "Arbitrage and positive-EV detection."
+        }
+      ]
+    },
+    {
+      "domain_name": "rithmm.com",
+      "category": "sports prediction",
+      "mechanism": "Predictions, matchup tools, sportsbook price comparison and usage-based Scout tiers.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "Compare prices across sportsbooks Find the best available line before placing your bet.",
+          "reconstruction": "Selects the best available sportsbook line for a prediction; model inputs and probability calibration are not public.",
+          "components": "book prices; best-line selection"
+        },
+        {
+          "raw_snippet": "4× the monthly Scout usage of Pro",
+          "reconstruction": "Premium tier grants four times the Pro monthly query allowance.",
+          "components": "usage quota"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "$29.99/mo; $49.99/mo; $99.99/mo, each after 7-day free trial",
+        "ios": "7-day free trial; then listed monthly tiers via app link",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/models/rithmm",
+          "engineer_days": 6,
+          "unlocks": "Prediction cards and quota metering."
+        }
+      ]
+    },
+    {
+      "domain_name": "dimers.com",
+      "category": "sports predictions",
+      "mechanism": "Prediction and sports analytics content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "betstamp.com",
+      "category": "sports betting tracking",
+      "mechanism": "Odds and wager tracking surface.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "unabated.com",
+      "category": "sports betting analytics",
+      "mechanism": "Odds comparison, projections and betting tools.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "$99 per month",
+          "reconstruction": "Monthly subscription price shown on public pricing page.",
+          "components": "subscription price"
+        },
+        {
+          "raw_snippet": "$799",
+          "reconstruction": "Public Football Early Bird Special price.",
+          "components": "seasonal price"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "$99 per month; $199 per month; $799; WNBA Projections $129 Monthly; Tennisform $55 Monthly/Full Season",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/odds/market.ts",
+          "engineer_days": 5,
+          "unlocks": "Market comparison and projection displays."
+        }
+      ]
+    },
+    {
+      "domain_name": "pikkit.com",
+      "category": "sports betting tracking",
+      "mechanism": "Bet tracking and performance analytics.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "actionnetwork.com",
+      "category": "sports betting and fantasy media",
+      "mechanism": "Picks, odds, tracking and analytics.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "teamrankings.com",
+      "category": "sports statistics",
+      "mechanism": "Team and game statistical rankings.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "fantasypros.com",
+      "category": "fantasy sports analytics",
+      "mechanism": "Projections, rankings and expert consensus.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "fantasylife.com",
+      "category": "fantasy sports analytics",
+      "mechanism": "Fantasy rankings, projections and alerts.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "rotowire.com",
+      "category": "fantasy sports information",
+      "mechanism": "News, projections and lineup tools.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "numberfire.com",
+      "category": "sports analytics",
+      "mechanism": "Statistical projections and matchup analysis.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula or weight was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/lib/model-advisor",
+          "engineer_days": 4,
+          "unlocks": "Model selection and cost-aware routing."
+        },
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 3,
+          "unlocks": "Pick API surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "awesemo.com",
+      "category": "DFS education and analytics",
+      "mechanism": "DFS projections, tools and educational content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "dfsarmy.com",
+      "category": "DFS education and analytics",
+      "mechanism": "DFS projections, rankings and strategy content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "establishtherun.com",
+      "category": "Fantasy sports analytics",
+      "mechanism": "Projections, rankings and fantasy analysis.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "4for4.com",
+      "category": "Fantasy football analytics",
+      "mechanism": "Rankings, projections and waiver analysis.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "ownit.com",
+      "category": "Fantasy sports analytics",
+      "mechanism": "Fantasy sports tools and content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "fantasyguru.com",
+      "category": "Fantasy sports analytics",
+      "mechanism": "Fantasy projections, rankings and advice.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "bettingpros.com",
+      "category": "Sports betting analytics",
+      "mechanism": "Odds, picks and betting analysis.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "covers.com",
+      "category": "Sports betting media",
+      "mechanism": "Odds, picks and sports analysis.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "wagertalk.com",
+      "category": "Sports betting media",
+      "mechanism": "Handicapping and betting content.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    },
+    {
+      "domain_name": "betql.com",
+      "category": "Sports betting analytics",
+      "mechanism": "Odds, picks and betting analytics.",
+      "extracted_formulas": [
+        {
+          "raw_snippet": "NOT CONFIRMED in fetched public page",
+          "reconstruction": "No public formula, weight, or threshold was exposed in the fetched surface.",
+          "components": "NOT CONFIRMED"
+        }
+      ],
+      "api_intelligence": {
+        "endpoints": [],
+        "schema_detected": "NOT CONFIRMED"
+      },
+      "pricing_tiers": {
+        "web": "NOT CONFIRMED",
+        "ios": "NOT CONFIRMED",
+        "android": "NOT CONFIRMED"
+      },
+      "customer_pain": [
+        "NOT CONFIRMED: no public forum or social complaint was fetched for this dossier."
+      ],
+      "gse_build_items": [
+        {
+          "file_path": "apps/web/app/api/picks/route.ts",
+          "engineer_days": 2,
+          "unlocks": "Public pick delivery and auditable output surface."
+        }
+      ]
+    }
+  ],
+  "repository_dossiers": [
+    {
+      "repo_url": "https://github.com/Beexly/Sports",
+      "primary_algorithm": "GSE reference implementation",
+      "reusable_logic_snippets": [
+        "Public repository surface references: apps/web/app/api/picks/route.ts, workers, tools, scripts/ops, apps/web/lib/model-advisor.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/nflverse/nfl_data_py",
+      "primary_algorithm": "NFL data ingestion",
+      "reusable_logic_snippets": [
+        "Public repository surface references: nfl_data_py.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/balldontlie/nba-api",
+      "primary_algorithm": "NBA data API",
+      "reusable_logic_snippets": [
+        "Public repository surface references: api.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/pybaseball/pybaseball",
+      "primary_algorithm": "Baseball data",
+      "reusable_logic_snippets": [
+        "Public repository surface references: pybaseball.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/the-odds-api/client",
+      "primary_algorithm": "Odds API client",
+      "reusable_logic_snippets": [
+        "Public repository surface references: the_odds_api.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/QuantLib/QuantLib",
+      "primary_algorithm": "Quantitative finance",
+      "reusable_logic_snippets": [
+        "Public repository surface references: QuantLib.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/cfb-data/collegefootballdata",
+      "primary_algorithm": "College football data",
+      "reusable_logic_snippets": [
+        "Public repository surface references: cfb_data.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    },
+    {
+      "repo_url": "https://github.com/openfootball/football",
+      "primary_algorithm": "Football datasets",
+      "reusable_logic_snippets": [
+        "Public repository surface references: data.",
+        "Use as a data or quantitative primitive, not as evidence of competitor proprietary logic."
+      ]
+    }
+  ]
+}

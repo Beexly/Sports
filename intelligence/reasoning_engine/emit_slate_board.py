@@ -31,6 +31,11 @@ from reasoning.bayes import update  # noqa: E402
 from reasoning.signals import MarketPrior  # noqa: E402
 from reasoning_engine.run_game import reason_game  # noqa: E402
 
+try:
+    from reasoning.analyst import emit_card  # the analyst layer (Move 1)
+except Exception:  # analyst is additive; never block the board over it
+    emit_card = None
+
 
 def _team_from_name(name: str, side: str) -> str:
     """'Dallas Cowboys at Philadelphia Eagles' -> ('DAL','PHI')-ish keys."""
@@ -107,15 +112,27 @@ def run_slate(sport: str = "football/nfl", date_param: str = "") -> dict:
     games = slate_games(sport, date_param)
     now = datetime.now(timezone.utc).isoformat()
     out_games = []
+    cards = 0
     for g in games:
         priors, pgaps = priors_for_game(g["odds"], g["away"], g["home"])
         doc = reason_game(home=g["home"] or "?", away=g["away"] or "?", market_priors=priors or None)
         doc["gaps"].extend(pgaps)
+        # Move 1: every game gets an analyst card alongside the ranked board
+        if emit_card is not None and g["home"] and g["away"] and g["home"] != "?" and g["away"] != "?":
+            try:
+                card_path, card_meta = emit_card(g["home"], g["away"], date=datetime.now(timezone.utc).date().isoformat())
+                doc["analyst_card"] = {"path": str(card_path), "thesis": card_meta["thesis"],
+                                       "conviction": card_meta["conviction"],
+                                       "domains": card_meta["domains"], "facts": card_meta["facts"]}
+                cards += 1
+            except Exception as exc:
+                doc["gaps"].append(f"analyst card: failed ({type(exc).__name__}: {exc})")
         out_games.append(doc)
     return {
         "generated_utc": now,
         "sport": sport,
         "games_requested": len(games),
+        "cards_emitted": cards,
         "games": out_games,
         "note": "every game reasoned and ranked; withhold/pass are mint actions on the board, never silence",
     }
@@ -141,7 +158,7 @@ def main() -> int:
             ranked += 1
         if rb.get("bayes_updates"):
             posterior += 1
-    print(f"games: {board['games_requested']} | boards emitted: {ranked} | with posteriors: {posterior} -> {out_path}")
+    print(f"games: {board['games_requested']} | boards: {ranked} | cards: {board.get('cards_emitted', 0)} | posteriors: {posterior} -> {out_path}")
     return 0
 
 

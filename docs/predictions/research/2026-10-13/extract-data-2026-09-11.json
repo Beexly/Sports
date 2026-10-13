@@ -1,0 +1,388 @@
+{
+  "source_url": "https://app.olympus-bets.com/methodology",
+  "source_url_citation": "https://app.olympus-bets.com/methodology",
+  "extraction_timestamp": "2026-09-11T02:30:32.350Z",
+  "extraction_timestamp_citation": "/workspace/LAUNCH/CRAWL-SUMMARY.md",
+  "http_status": 200,
+  "http_status_citation": "https://app.olympus-bets.com/methodology",
+  "data_schema": {
+    "crawl_artifacts": "50 exact-source dossiers at /workspace/dossiers/{slug}.json plus body captures at /workspace/raw/2026-09-11/{slug}.raw; status manifest at /workspace/raw/2026-09-11/HTTP-STATUS.json.",
+    "olympus": "Methodology and track-record HTML pages; MCP JSON-RPC error surface.",
+    "kalshi": "Documentation index/plain text; assigned trading endpoints returned migration HTML.",
+    "polymarket": "Gamma arrays of market/event/sports objects; CLOB object with data/next_cursor/limit/count; prices-history validation error.",
+    "injuries": "ESPN objects with timestamp/status/season/injuries; injury records include athlete, source, type/details; RotoWire public table headings.",
+    "odds_propLine": "PropLine rendered docs with endpoint, bookmaker and resolution fields; Odds API unauthorized JSON error.",
+    "open_data": "Football-data object with filters/resultSet/matches; papers are abstract metadata plus evidence; GitHub pages are repository/organization HTML."
+  },
+  "pricing_details": {
+    "tiers": [
+      {
+        "name": "PropLine Free",
+        "name_citation": "https://prop-line.com",
+        "price": "Free; 1,000 requests/day",
+        "price_citation": "https://prop-line.com",
+        "features": [
+          {
+            "value": "No credit card required",
+            "value_citation": "https://prop-line.com"
+          }
+        ]
+      },
+      {
+        "name": "PropLine Paid",
+        "name_citation": "https://prop-line.com",
+        "price": "$19/month; 25,000 requests/day",
+        "price_citation": "https://prop-line.com",
+        "features": []
+      },
+      {
+        "name": "Rithmm Core",
+        "name_citation": "https://rithmm.com/pricing",
+        "price": "$29.99/mo",
+        "price_citation": "https://rithmm.com/pricing",
+        "features": [
+          {
+            "value": "Predictions, recommended bets with edge, matchup research, sportsbook line shopping",
+            "value_citation": "https://rithmm.com/pricing"
+          }
+        ]
+      },
+      {
+        "name": "Rithmm Pro",
+        "name_citation": "https://rithmm.com/pricing",
+        "price": "$49.99/mo",
+        "price_citation": "https://rithmm.com/pricing",
+        "features": [
+          {
+            "value": "Everything in Core; Scout AI betting analyst",
+            "value_citation": "https://rithmm.com/pricing"
+          }
+        ]
+      },
+      {
+        "name": "Rithmm Premium",
+        "name_citation": "https://rithmm.com/pricing",
+        "price": "$99.99/mo",
+        "price_citation": "https://rithmm.com/pricing",
+        "features": [
+          {
+            "value": "Everything in Pro; advanced statistics; tracked-bet export",
+            "value_citation": "https://rithmm.com/pricing"
+          }
+        ]
+      },
+      {
+        "name": "Unabated Props+",
+        "name_citation": "https://unabated.com/pricing",
+        "price": "$99/month",
+        "price_citation": "https://unabated.com/pricing",
+        "features": [
+          {
+            "value": "Prop Odds Screen; Props Simulator; Market-Based Player Projections",
+            "value_citation": "https://unabated.com/pricing"
+          }
+        ]
+      },
+      {
+        "name": "Action Network PRO Annual",
+        "name_citation": "https://www.actionnetwork.com/subscribe",
+        "price": "$119.99/year",
+        "price_citation": "https://www.actionnetwork.com/subscribe",
+        "features": [
+          {
+            "value": "Live expert pick alerts; model projections; real-money percentages",
+            "value_citation": "https://www.actionnetwork.com/subscribe"
+          }
+        ]
+      },
+      {
+        "name": "FantasyLabs DFS",
+        "name_citation": "https://www.fantasylabs.com/pricing",
+        "price": "$49.99/month",
+        "price_citation": "https://www.fantasylabs.com/pricing",
+        "features": [
+          {
+            "value": "Projections; ownership/player models; lineup optimizer",
+            "value_citation": "https://www.fantasylabs.com/pricing"
+          }
+        ]
+      },
+      {
+        "name": "Props.cash All Sports Annual",
+        "name_citation": "https://props.cash/pricing",
+        "price": "$199.99/year",
+        "price_citation": "https://props.cash/pricing",
+        "features": [
+          {
+            "value": "Prop-market insights; updated prop lines; analysis and visualizations",
+            "value_citation": "https://props.cash/pricing"
+          }
+        ]
+      },
+      {
+        "name": "Polynode Starter",
+        "name_citation": "https://docs.polynode.dev",
+        "price": "$50/month",
+        "price_citation": "https://docs.polynode.dev",
+        "features": [
+          {
+            "value": "10 concurrent WebSocket connections; 10,000 filter items; 2-minute lookback",
+            "value_citation": "https://docs.polynode.dev"
+          }
+        ]
+      }
+    ],
+    "methodology_language": "Olympus methodology language is technical and empirical; PropLine documents a free request quota, deterministic odds conversion, no-vig cross-book +EV and graded outcomes. Detailed competitor model methodologies are generally NOT CONFIRMED on the assigned pricing pages.",
+    "methodology_language_citation": "https://prop-line.com/docs"
+  },
+  "methodology_and_algorithms": {
+    "description": "Olympus describes a nine-step pipeline: ingest schedule/odds/injury/metrics data; league-specific Monte Carlo; Platt and per-league isotonic calibration; edge; 15-dimensional profitability zones; adaptive regime threshold; Kelly sizing after probability shrinkage; append-only ledger; automatic resolution and calibration feedback. PropLine says prices pass through unchanged, decimal odds are computed deterministically, and cross-book +EV uses a no-vig fair line with Pinnacle preferred and Bovada fallback.",
+    "description_citation": "https://app.olympus-bets.com/methodology",
+    "engine_versions": "Olympus page labels NBA Possession Monte Carlo v5.0.2-calibrated-possession; NHL Pinnacle v19.1-pinnacle; CBB Savant Ultra v5.0.1; NFL Elite Pinnacle v1.1; MLB Pitch Sim v5.0; Soccer PBP v16.3; LoL Championship v2.1; Golf Conditional Sim v3.2; Tennis V2 (calibrating); Olympic Hockey v2.2.",
+    "engine_versions_citation": "https://app.olympus-bets.com/methodology",
+    "key_formulas": [
+      {
+        "value": "Edge = calibrated probability minus market-implied probability; methodology reports typical minimum-edge floors of 3–8 percentage points.",
+        "value_citation": "https://app.olympus-bets.com/methodology"
+      },
+      {
+        "value": "Kelly sizing is applied after 15% Bayesian probability shrinkage toward 50%.",
+        "value_citation": "https://app.olympus-bets.com/methodology"
+      },
+      {
+        "value": "Platt scaling uses regularization C=10.0; reported Brier-loss reduction versus raw probabilities is 3.0–19.7% across leagues.",
+        "value_citation": "https://app.olympus-bets.com/methodology"
+      },
+      {
+        "value": "Scaling-binning paper reports histogram O(B/epsilon^2), scaling O(1/epsilon^2), scaling-binning O(1/epsilon^2+B), and calibration-error estimation O(sqrt(B)).",
+        "value_citation": "https://arxiv.org/abs/1909.10155"
+      },
+      {
+        "value": "Dixon-Coles study uses tuned exponential decay against a margin-free closing market and a logarithmic opinion pool.",
+        "value_citation": "https://arxiv.org/abs/2608.11505"
+      }
+    ],
+    "de_vig_methods": "PropLine documents a no-vig fair line for cross-book +EV, with Pinnacle preferred and Bovada fallback; no separate Olympus de-vig formula is confirmed on the assigned methodology page.",
+    "de_vig_methods_citation": "https://prop-line.com/docs",
+    "calibration_ledger_link": "Olympus track-record page advertises summary JSON (/webmcp/api/performance), history JSON (/webmcp/api/history), CSV (/track_record.csv), and OpenAPI 3.1 (/openapi.json); these advertised endpoints were not separately crawled under the exact-URL constraint.",
+    "calibration_ledger_link_citation": "https://app.olympus-bets.com/track_record"
+  },
+  "published_numbers": {
+    "track_record": "Olympus reports 2,619 resolved picks overall: 52.7% win rate, -9.57u and -0.3% ROI; free segment 1,776 picks, 52.9%, +19.40u, +1.0% ROI; premium 843 picks, 52.3%, -28.97u, -2.6% ROI.",
+    "track_record_citation": "https://app.olympus-bets.com/track_record",
+    "sample_sizes": "Olympus Kelly blend validation set: 6,101 games; minimum simulation: 10,000 iterations per scheduled game. PropLine example: 712,043 total graded across 4,120 events over 30 days. Dixon-Coles paper: 7,220 matches over 19 seasons.",
+    "sample_sizes_citation": "https://app.olympus-bets.com/methodology",
+    "clv_records": "NOT CONFIRMED as a published CLV record. The Dixon-Coles paper explicitly says a separate CLV statistic is not reported; its benchmark is the closing market.",
+    "clv_records_citation": "https://arxiv.org/abs/2608.11505",
+    "update_frequency": "PropLine advertises live updating every 60 seconds; nflfastR README says complete-season files are updated nightly during the season; ESPN/RotoWire injury endpoint/page update frequencies are NOT CONFIRMED on assigned sources.",
+    "update_frequency_citation": "https://prop-line.com"
+  },
+  "domain_specific_data": {
+    "olympus_bets": {
+      "mcp_tools": [
+        {
+          "value": "NOT CONFIRMED: /mcp returned HTTP 406 JSON-RPC error requiring Accept: text/event-stream; no tools/list payload was exposed.",
+          "value_citation": "https://app.olympus-bets.com/mcp"
+        }
+      ],
+      "engine_versions": "See methodology_and_algorithms.engine_versions; MCP-specific engine versions are NOT CONFIRMED.",
+      "engine_versions_citation": "https://app.olympus-bets.com/mcp"
+    },
+    "prediction_markets": {
+      "market_schema": "Kalshi documentation describes binary yes/no markets, events containing one or more markets, ticker/prices/volume/open-interest, yes/no orderbook bids, trades and settlement rules. Polymarket Gamma market objects expose id/question/conditionId/slug/endDate/outcomes/outcomePrices/volume/liquidity/active/closed; CLOB markets expose data/next_cursor/limit/count and order-book/timestamp/condition/question metadata.",
+      "market_schema_citation": "https://docs.kalshi.com/llms.txt",
+      "historical_price_access": true,
+      "historical_price_access_citation": "https://docs.kalshi.com/llms.txt",
+      "sports_coverage": [
+        {
+          "value": "Kalshi documentation says events include sports games.",
+          "value_citation": "https://docs.kalshi.com/llms.txt"
+        },
+        {
+          "value": "Polymarket sports endpoint returned 465 observed sport/league objects; overall completeness is NOT CONFIRMED.",
+          "value_citation": "https://gamma-api.polymarket.com/sports"
+        },
+        {
+          "value": "Polymarket event/market endpoints returned sports-capable lifecycle/market fields; exact arrays were not proven exhaustive.",
+          "value_citation": "https://gamma-api.polymarket.com/events"
+        }
+      ]
+    },
+    "injury_and_depth_charts": {
+      "injury_schema": "ESPN injury objects: top-level timestamp, status, season, injuries; injury group keys id/displayName/injuries; record keys id, longComment, shortComment, status, date, athlete, source, type, details. RotoWire public headings: Player, Team, Pos, Injury, Status, Est. Return.",
+      "injury_schema_citation": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+      "depth_chart_format": "NOT CONFIRMED. ESPN NFL teams response is nested sports[].leagues[].teams[].team team metadata; ESPN injury endpoints expose injury groups, not depth-chart fields; RotoWire assigned pages do not expose a depth chart.",
+      "depth_chart_format_citation": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
+    },
+    "odds_and_bookmakers": {
+      "bookmaker_list": [
+        {
+          "value": "PropLine docs list 21 books/exchanges including Bovada, DraftKings, FanDuel, BetMGM, BetRivers, Pinnacle, Unibet, 1xBet, TAB, PrizePicks, Underdog Fantasy, Kalshi, Polymarket, Matchbook, Smarkets, Novig, ProphetX, BetUS, BetOnline.ag, Fanatics and Hard Rock Bet.",
+          "value_citation": "https://prop-line.com/docs"
+        },
+        {
+          "value": "The Odds API bookmaker list is NOT CONFIRMED because assigned endpoints returned HTTP 401 without API key.",
+          "value_citation": "https://api.the-odds-api.com/v4/sports"
+        }
+      ],
+      "historical_granularity": "PropLine exposes full snapshot history per outcome, opening/closing line per book/market/outcome, and bulk CSV full line-movement tick history. Tiers shown: Hobby 30 days, Pro 90, Streaming Lite 180, Streaming 365, Enterprise unlimited. Snapshots are written only on price/point change; archive starts April 2026.",
+      "historical_granularity_citation": "https://prop-line.com/docs",
+      "leagues_covered": [
+        {
+          "value": "PropLine docs examples include MLB, NBA, NHL, NFL, WNBA, NCAAF, tennis, UFC, golf, cricket, AFL, NRL, esports and soccer leagues.",
+          "value_citation": "https://prop-line.com/docs"
+        }
+      ]
+    },
+    "open_source_and_papers": {
+      "license": "nflverse-data CC-BY-4.0; nflfastR MIT; georgedouzas/sports-betting MIT; penaltyblog MIT; kloppy BSD-3-Clause; sportsdataverse organization license NOT CONFIRMED.",
+      "license_citation": "https://github.com/nflverse/nflverse-data",
+      "algorithm_description": "nflfastR provides NFL play-by-play and EP/WP/CP/EYAC model outputs; sports-betting combines statistics/odds dataloaders with scikit-learn bettors and backtesting; penaltyblog lists Poisson, bivariate Poisson, Dixon-Coles, Bayesian MCMC/hierarchical models and rating systems; kloppy standardizes provider-specific soccer event/tracking data; the papers cover calibration, pathwise calibration, graph forecasting and Dixon-Coles/closing-market analysis.",
+      "algorithm_description_citation": "https://github.com/martineastwood/penaltyblog",
+      "reusable_file_paths": [
+        {
+          "value": "nflverse-data: README.md, README.Rmd, LICENSE.md, nflverse-data.Rproj.",
+          "value_citation": "https://github.com/nflverse/nflverse-data"
+        },
+        {
+          "value": "nflfastR: data-raw, data, LICENSE, LICENSE.md, README.Rmd, README.md.",
+          "value_citation": "https://github.com/nflverse/nflfastR"
+        },
+        {
+          "value": "sports-betting: README.md, CHANGELOG.md, LICENSE; examples reference dataloader.pkl, model.pkl and models.py:bettor.",
+          "value_citation": "https://github.com/georgedouzas/sports-betting"
+        },
+        {
+          "value": "kloppy: LICENSE and README.md.",
+          "value_citation": "https://github.com/PySport/kloppy"
+        }
+      ],
+      "code_release_links": [
+        {
+          "value": "Dixon-Coles paper links https://github.com/pitcany/seriea-leverage on its assigned abstract page.",
+          "value_citation": "https://arxiv.org/abs/2608.11505"
+        },
+        {
+          "value": "Scaling-binning paper page links https://pypi.org/project/uncertainty-calibration.",
+          "value_citation": "https://arxiv.org/abs/1909.10155"
+        },
+        {
+          "value": "Repository URLs are the public code/data release surfaces for nflverse-data, nflfastR, sports-betting, penaltyblog and kloppy.",
+          "value_citation": "https://github.com/nflverse/nflfastR"
+        }
+      ]
+    }
+  },
+  "verification_status": "PARTIALLY VERIFIED. All 50 supplied URLs were attempted and have a dossier/raw body capture. Public accessible claims are cited to their exact source URLs. HTTP 401/404/406/400 failures, missing query parameters/credentials, paywalls, unexhausted cursors, and non-confirmed fields are explicitly recorded; no 403 or 429 was observed.",
+  "verification_status_citation": "/workspace/LAUNCH/CRAWL-SUMMARY.md",
+  "citations": [
+    {
+      "value": "All 50 supplied URLs were attempted; dossiers, raw captures and status manifest are listed in the crawl summary.",
+      "value_citation": "/workspace/LAUNCH/CRAWL-SUMMARY.md"
+    },
+    {
+      "value": "Olympus nine-step methodology, calibration, simulation, edge, shrinkage, freshness gates and engine versions.",
+      "value_citation": "https://app.olympus-bets.com/methodology"
+    },
+    {
+      "value": "Olympus overall/free/premium and league track records.",
+      "value_citation": "https://app.olympus-bets.com/track_record"
+    },
+    {
+      "value": "Olympus MCP HTTP 406 and tools NOT CONFIRMED.",
+      "value_citation": "https://app.olympus-bets.com/mcp"
+    },
+    {
+      "value": "Kalshi binary-market, event, sports, cursor-pagination and historical-candlestick documentation.",
+      "value_citation": "https://docs.kalshi.com/llms.txt"
+    },
+    {
+      "value": "Kalshi assigned markets/events endpoints returned HTTP 401 migration messages.",
+      "value_citation": "https://trading-api.kalshi.com/trade-api/v2/markets"
+    },
+    {
+      "value": "Polymarket Gamma market/event/sports response schemas and observed counts.",
+      "value_citation": "https://gamma-api.polymarket.com/markets"
+    },
+    {
+      "value": "Polymarket CLOB market cursor schema.",
+      "value_citation": "https://clob.polymarket.com/markets"
+    },
+    {
+      "value": "Polymarket prices-history requires a market asset ID and assigned request returned HTTP 400.",
+      "value_citation": "https://clob.polymarket.com/prices-history"
+    },
+    {
+      "value": "ESPN injury schema.",
+      "value_citation": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"
+    },
+    {
+      "value": "ESPN NFL team directory shape.",
+      "value_citation": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
+    },
+    {
+      "value": "RotoWire injury table headings.",
+      "value_citation": "https://www.rotowire.com/football/injury-report.php"
+    },
+    {
+      "value": "PropLine free/paid request quotas, bookmaker list, historical granularity, de-vig language and resolution example.",
+      "value_citation": "https://prop-line.com/docs"
+    },
+    {
+      "value": "PropLine 21 books + 6 exchanges, 54 sports and 60-second updates.",
+      "value_citation": "https://prop-line.com"
+    },
+    {
+      "value": "The Odds API assigned endpoints returned HTTP 401 without API key.",
+      "value_citation": "https://api.the-odds-api.com/v4/sports"
+    },
+    {
+      "value": "Sportradar/SportsData.io assigned injury endpoints returned HTTP 401.",
+      "value_citation": "https://api.sportradar.com/nfl/official/trial/v5/en/league/injuries.json"
+    },
+    {
+      "value": "Competitor prices and feature gates.",
+      "value_citation": "https://rithmm.com/pricing"
+    },
+    {
+      "value": "Unabated pricing and features.",
+      "value_citation": "https://unabated.com/pricing"
+    },
+    {
+      "value": "Action Network pricing and features.",
+      "value_citation": "https://www.actionnetwork.com/subscribe"
+    },
+    {
+      "value": "FantasyLabs pricing and features.",
+      "value_citation": "https://www.fantasyLabs.com/pricing"
+    },
+    {
+      "value": "Props.cash pricing and features.",
+      "value_citation": "https://props.cash/pricing"
+    },
+    {
+      "value": "Polynode pricing and websocket schema.",
+      "value_citation": "https://docs.polynode.dev"
+    },
+    {
+      "value": "OSS licenses and algorithms.",
+      "value_citation": "https://github.com/nflverse/nflfastR"
+    },
+    {
+      "value": "Dixon-Coles sample, metrics, calibration slope and code link.",
+      "value_citation": "https://arxiv.org/abs/2608.11505"
+    },
+    {
+      "value": "Scaling-binning formulas and calibration result.",
+      "value_citation": "https://arxiv.org/abs/1909.10155"
+    },
+    {
+      "value": "Pathwise calibration benchmark and NBA tail result.",
+      "value_citation": "https://arxiv.org/abs/2601.18774"
+    },
+    {
+      "value": "GNN accuracy/Brier result.",
+      "value_citation": "https://arxiv.org/abs/2510.20454"
+    }
+  ]
+}

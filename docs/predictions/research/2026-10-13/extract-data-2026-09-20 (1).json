@@ -1,0 +1,1870 @@
+{
+  "papers": [
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1905.02928",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/1905.02928",
+      "method": "jackknife+",
+      "method_citation": "https://arxiv.org/abs/1905.02928",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/1905.02928",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1905.02928",
+      "tier_1_method_card": {
+        "score_function": "Leave-one-out residuals combined with leave-one-out predictions at the test point.",
+        "score_function_citation": "https://arxiv.org/abs/1905.02928",
+        "coverage_guarantee": "Rigorous finite-sample predictive coverage under exchangeable training samples for symmetric fitting algorithms; K-fold extension also has coverage guarantees.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/1905.02928",
+        "exchangeability_assumption": "Exchangeable training samples; fitting treats training points symmetrically.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/1905.02928",
+        "computational_cost": "Leave-one-out refits; no runtime number in the abstract.",
+        "computational_cost_citation": "https://arxiv.org/abs/1905.02928"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2503.01495",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2503.01495",
+      "method": "cross-conformal",
+      "method_citation": "https://arxiv.org/abs/2503.01495",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2503.01495",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2503.01495",
+      "tier_1_method_card": {
+        "score_function": "Foldwise conformal p-values combined with exchangeability- and randomization-aware p-value aggregation.",
+        "score_function_citation": "https://arxiv.org/abs/2503.01495",
+        "coverage_guarantee": "Abstract reports coverage at least 1−2α−2(1−α)(K−1)/(n+K); a simple variant attains at least 1−2α.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2503.01495",
+        "exchangeability_assumption": "Exchangeability is leveraged across folds; arbitrary dependence is not claimed valid.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2503.01495",
+        "computational_cost": "K-fold model fitting plus p-value combination; no numeric runtime reported.",
+        "computational_cost_citation": "https://arxiv.org/abs/2503.01495"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1905.03222",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/1905.03222",
+      "method": "CQR",
+      "method_citation": "https://arxiv.org/abs/1905.03222",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/1905.03222",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1905.03222",
+      "tier_1_method_card": {
+        "score_function": "Quantile-regression interval score based on gaps between observations and fitted lower/upper conditional quantiles.",
+        "score_function_citation": "https://arxiv.org/abs/1905.03222",
+        "coverage_guarantee": "Finite-sample valid marginal coverage with interval length adapting to heteroscedasticity.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/1905.03222",
+        "exchangeability_assumption": "Conformal validity relies on exchangeability of calibration/test data.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/1905.03222",
+        "computational_cost": "Fit two quantile regressors then calibrate residual scores; no runtime reported.",
+        "computational_cost_citation": "https://arxiv.org/abs/1905.03222"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": "Not isotonic; CQR addresses varying conditional interval width.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/1905.03222",
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1904.06019",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/1904.06019",
+      "method": "weighted/covariate-shift conformal",
+      "method_citation": "https://arxiv.org/abs/1904.06019",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/1904.06019",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1904.06019",
+      "tier_1_method_card": {
+        "score_function": "Weighted conformal quantiles using the likelihood ratio between test and training covariate distributions.",
+        "score_function_citation": "https://arxiv.org/abs/1904.06019",
+        "coverage_guarantee": "Distribution-free intervals under covariate shift when the likelihood ratio is known or accurately estimated; also weighted exchangeability.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/1904.06019",
+        "exchangeability_assumption": "Training/test covariates differ; known/accurately estimated density ratio or weighted exchangeability.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/1904.06019",
+        "computational_cost": "Density-ratio estimation plus weighted conformal quantiles; no runtime reported.",
+        "computational_cost_citation": "https://arxiv.org/abs/1904.06019"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": "Covariate shift between training and test covariates.",
+        "distribution_shift_type_citation": "https://arxiv.org/abs/1904.06019"
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2203.15885",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2203.15885",
+      "method": "split/inductive conformal",
+      "method_citation": "https://arxiv.org/abs/2203.15885",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2203.15885",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2203.15885",
+      "tier_1_method_card": {
+        "score_function": "Split-conformal residual/nonconformity score on a held-out calibration set.",
+        "score_function_citation": "https://arxiv.org/abs/2203.15885",
+        "coverage_guarantee": "For many non-exchangeable processes, concentration/decoupling gives validity with a small coverage penalty; tested on time series and spatiotemporal data.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2203.15885",
+        "exchangeability_assumption": "Non-exchangeable dependence is handled through process-specific concentration and decoupling assumptions.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2203.15885",
+        "computational_cost": "Reported as extremely simple and orders of magnitude faster than alternatives.",
+        "computational_cost_citation": "https://arxiv.org/abs/2203.15885"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": "Not applicable: no isotonic calibration.",
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/2203.15885"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2310.01262",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2310.01262",
+      "method": "non-exchangeable conformal",
+      "method_citation": "https://arxiv.org/abs/2310.01262",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2310.01262",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2310.01262",
+      "tier_1_method_card": {
+        "score_function": "Monotone loss/nonconformity scores with relevance weights for a test example.",
+        "score_function_citation": "https://arxiv.org/abs/2310.01262",
+        "coverage_guarantee": "Controls expected value of any monotone loss under non-exchangeability; relevance weights can tighten bounds under drift/change points.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2310.01262",
+        "exchangeability_assumption": "Designed for non-exchangeable data including time series and distribution drift.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2310.01262",
+        "computational_cost": "Weighted risk-control computation; no numeric cost reported.",
+        "computational_cost_citation": "https://arxiv.org/abs/2310.01262"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": true,
+        "non_monotone_risk_citation": "https://arxiv.org/abs/2310.01262",
+        "isotonic_regression_limits": "Not addressed; isotonic regression is not the proposed guarantee mechanism.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2310.01262",
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/2310.01262"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2303.12695",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2303.12695",
+      "method": "weighted/covariate-shift conformal",
+      "method_citation": "https://arxiv.org/abs/2303.12695",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2303.12695",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2303.12695",
+      "tier_1_method_card": {
+        "score_function": "Quantile Regression Forest learns the nonconformity-score distribution and supplies test-point-specific weights; groupwise conformalization is also used.",
+        "score_function_citation": "https://arxiv.org/abs/2303.12695",
+        "coverage_guarantee": "Assumption-free finite-sample marginal and training-conditional coverage; conditional coverage under suitable assumptions.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2303.12695",
+        "exchangeability_assumption": "Marginal/training-conditional claims are assumption-free; conditional coverage needs suitable assumptions.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2303.12695",
+        "computational_cost": "QRF plus weighted/groupwise conformal computation; exact runtime not stated.",
+        "computational_cost_citation": "https://arxiv.org/abs/2303.12695"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": "Not isotonic; QRF score-distribution adaptation is the calibration device.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2303.12695",
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2409.14792",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2409.14792",
+      "method": "ACI",
+      "method_citation": "https://arxiv.org/abs/2409.14792",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2409.14792",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2409.14792",
+      "tier_1_method_card": {
+        "score_function": "Online conformal errors with a dynamically adjusted significance level at each forecast horizon.",
+        "score_function_citation": "https://arxiv.org/abs/2409.14792",
+        "coverage_guarantee": "Finite-sample coverage guarantees for each multi-step horizon and overall error rate, including non-exchangeable data.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2409.14792",
+        "exchangeability_assumption": "Online non-exchangeable time-series setting with horizon-specific target errors and learning rates.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2409.14792",
+        "computational_cost": "Sequential level updates plus forecasting model; no numeric cost reported.",
+        "computational_cost_citation": "https://arxiv.org/abs/2409.14792"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": true,
+        "non_monotone_risk_citation": "https://arxiv.org/abs/2409.14792",
+        "isotonic_regression_limits": "Not isotonic; dynamic level adaptation is the calibration mechanism.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2409.14792",
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/2409.14792"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2305.19901",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2305.19901",
+      "method": "jackknife+",
+      "method_citation": "https://arxiv.org/abs/2305.19901",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2305.19901",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2305.19901",
+      "tier_1_method_card": {
+        "score_function": "Jackknife+-inspired locally rescaled conformity scores using an estimated local score distribution.",
+        "score_function_citation": "https://arxiv.org/abs/2305.19901",
+        "coverage_guarantee": "Formal global coverage guarantees and local-coverage results including an a posteriori calibration-score bound.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2305.19901",
+        "exchangeability_assumption": "Calibration-test exchangeability is preserved despite using calibration data in rescaled scores.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2305.19901",
+        "computational_cost": "Jackknife+-style refitting plus local score-distribution estimation; exact cost not stated.",
+        "computational_cost_citation": "https://arxiv.org/abs/2305.19901"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": "Not isotonic; local score rescaling targets local coverage.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2305.19901",
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2502.05676",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2502.05676",
+      "method": "Venn-Abers",
+      "method_citation": "https://arxiv.org/abs/2502.05676",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2502.05676",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2502.05676",
+      "tier_1_method_card": {
+        "score_function": "Venn/Venn-Abers set-valued predictions from perfectly in-sample calibrated predictors and generic losses.",
+        "score_function_citation": "https://arxiv.org/abs/2502.05676",
+        "coverage_guarantee": "At least one marginally calibrated point prediction in finite samples; quantile loss yields group-conditional/multicalibrated conformal intervals.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2502.05676",
+        "exchangeability_assumption": "Finite-sample marginal calibration is central; abstract does not state a simple iid label.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2502.05676",
+        "computational_cost": "Calibration plus set-valued prediction; no runtime estimate.",
+        "computational_cost_citation": "https://arxiv.org/abs/2502.05676"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": true,
+        "non_monotone_risk_citation": "https://arxiv.org/abs/2502.05676",
+        "isotonic_regression_limits": "Histogram binning and isotonic regression are described as asymptotic-only; output remains set-valued in finite samples.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2502.05676",
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1707.03307",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/1707.03307",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/1707.03307",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/1707.03307",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1707.03307",
+      "tier_1_method_card": {
+        "score_function": "Smooth generalization of pinball-loss quantile scores within additive quantile regression.",
+        "score_function_citation": "https://arxiv.org/abs/1707.03307",
+        "coverage_guarantee": "Calibrated conditional-quantile inference and reliable quantile uncertainty estimates; not a conformal finite-sample guarantee.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/1707.03307",
+        "exchangeability_assumption": "Loss-based Bayesian updating with smoothing priors; no exchangeability guarantee claimed.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/1707.03307",
+        "computational_cost": "Fast stable additive fitting with automatic smoothing/learning-rate selection.",
+        "computational_cost_citation": "https://arxiv.org/abs/1707.03307"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": "Learning-rate calibration, not isotonic regression.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/1707.03307",
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "MEASURE",
+      "relevance_citation": "https://arxiv.org/abs/2608.29789",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2608.29789",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2608.29789",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2608.29789",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2608.29789",
+      "tier_1_method_card": {
+        "score_function": "Conformal prediction inflates the score-quantile level; Wasserstein DRO shifts the quantile value through an ambiguity radius.",
+        "score_function_citation": "https://arxiv.org/abs/2608.29789",
+        "coverage_guarantee": "Both are described as calibration-conditional coverage with high probability over calibration data; conformal retains distribution-free finite-sample validity under exchangeability.",
+        "coverage_guarantee_citation": "https://arxiv.org/abs/2608.29789",
+        "exchangeability_assumption": "Conformal requires exchangeability; DRO depends on ambiguity-radius/distribution properties.",
+        "exchangeability_assumption_citation": "https://arxiv.org/abs/2608.29789",
+        "computational_cost": "Closed-form conformal level correction versus DRO radius optimization; no runtime benchmark.",
+        "computational_cost_citation": "https://arxiv.org/abs/2608.29789"
+      },
+      "tier_2_model_card": {
+        "input_features": [],
+        "output_distribution": null,
+        "output_distribution_citation": null,
+        "calibration_method": null,
+        "calibration_method_citation": null,
+        "known_biases": null,
+        "known_biases_citation": null,
+        "data_requirements": null,
+        "data_requirements_citation": null
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1211.4000",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1211.4000",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/1211.4000",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/1211.4000",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1211.4000",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Opening and closing Vegas betting lines",
+            "value_citation": "https://arxiv.org/abs/1211.4000"
+          },
+          {
+            "value": "Margin of victory",
+            "value_citation": "https://arxiv.org/abs/1211.4000"
+          }
+        ],
+        "output_distribution": "Betting-line predictions of divisional winners and against-the-spread outcomes.",
+        "output_distribution_citation": "https://arxiv.org/abs/1211.4000",
+        "calibration_method": "Not stated; evaluates accuracy and betting returns rather than post-hoc probability calibration.",
+        "calibration_method_citation": "https://arxiv.org/abs/1211.4000",
+        "known_biases": "Home teams beat the spread 47%; home-underdog strategy reached 53.5% versus cited 52.38% break-even.",
+        "known_biases_citation": "https://arxiv.org/abs/1211.4000",
+        "data_requirements": "2,560 post-expansion regular- and post-season NFL games from 2002–2011.",
+        "data_requirements_citation": "https://arxiv.org/abs/1211.4000"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": "Not studied as isotonic calibration.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/1211.4000",
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/1211.4000"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1710.05284",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1710.05284",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/1710.05284",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/abs/1710.05284",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1710.05284",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Team-level random effects across multiple game-level responses",
+            "value_citation": "https://arxiv.org/abs/1710.05284"
+          },
+          {
+            "value": "Joint sporting outcomes",
+            "value_citation": "https://arxiv.org/abs/1710.05284"
+          }
+        ],
+        "output_distribution": "Joint normal-binary and Poisson-binary multivariate GLMM distributions.",
+        "output_distribution_citation": "https://arxiv.org/abs/1710.05284",
+        "calibration_method": "First-order and fully exponential Laplace approximations; no post-hoc calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/1710.05284",
+        "known_biases": "Potential cross-response correlation is modeled through team random effects; no specific calibration bias quantified.",
+        "known_biases_citation": "https://arxiv.org/abs/1710.05284",
+        "data_requirements": "Several seasons of American college football and basketball; mvglmmRank R package.",
+        "data_requirements_citation": "https://arxiv.org/abs/1710.05284"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": true,
+        "is_actionable_paper_citation": "https://arxiv.org/abs/1710.05284",
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": "Cross-sport/team random-effect dependence; no transfer-portal analysis.",
+        "distribution_shift_type_citation": "https://arxiv.org/abs/1710.05284"
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2207.13747",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2207.13747",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2207.13747",
+      "sport": "NCAAF",
+      "sport_citation": "https://arxiv.org/abs/2207.13747",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2207.13747",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Expected number of remaining possessions",
+            "value_citation": "https://arxiv.org/abs/2207.13747"
+          },
+          {
+            "value": "Expected score",
+            "value_citation": "https://arxiv.org/abs/2207.13747"
+          },
+          {
+            "value": "Other game-state predictors",
+            "value_citation": "https://arxiv.org/abs/2207.13747"
+          }
+        ],
+        "output_distribution": "Bayesian in-game home-team win-probability distribution.",
+        "output_distribution_citation": "https://arxiv.org/abs/2207.13747",
+        "calibration_method": "Bayesian estimation; no post-hoc calibration method stated.",
+        "calibration_method_citation": "https://arxiv.org/abs/2207.13747",
+        "known_biases": "Illustrated on one 2021 Big XII championship game; generalization/calibration requires a kill test.",
+        "known_biases_citation": "https://arxiv.org/abs/2207.13747",
+        "data_requirements": "Division-I FBS game-state data sufficient to model remaining possessions and expected score.",
+        "data_requirements_citation": "https://arxiv.org/abs/2207.13747"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": true,
+        "is_actionable_paper_citation": "https://arxiv.org/abs/2207.13747",
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": "Within-game temporal/state shift; transfer portal not analyzed.",
+        "distribution_shift_type_citation": "https://arxiv.org/abs/2207.13747"
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": true,
+        "non_monotone_risk_citation": "https://arxiv.org/abs/2207.13747",
+        "isotonic_regression_limits": "No isotonic analysis reported.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2207.13747",
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/2207.13747"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2508.05891",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2508.05891",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2508.05891",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2508.05891",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2508.05891",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Period-specific attacking and defensive team abilities",
+            "value_citation": "https://arxiv.org/abs/2508.05891"
+          },
+          {
+            "value": "Past/current performance alignment",
+            "value_citation": "https://arxiv.org/abs/2508.05891"
+          },
+          {
+            "value": "Transfer windows and coaching changes",
+            "value_citation": "https://arxiv.org/abs/2508.05891"
+          }
+        ],
+        "output_distribution": "Bayesian discrete-time dynamic goal-based models with time-varying attacking/defensive abilities.",
+        "output_distribution_citation": "https://arxiv.org/abs/2508.05891",
+        "calibration_method": "Bayesian weighted dynamic modeling with spike-and-slab hyperpriors; no post-hoc calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/2508.05891",
+        "known_biases": "Static-ability models miss rapid changes; adaptive shrinkage responds to substantial changes.",
+        "known_biases_citation": "https://arxiv.org/abs/2508.05891",
+        "data_requirements": "Last five seasons of German Bundesliga, English Premier League, and Spanish La Liga; footBayes R package.",
+        "data_requirements_citation": "https://arxiv.org/abs/2508.05891"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": true,
+        "transfer_portal_relevance_citation": "https://arxiv.org/abs/2508.05891",
+        "distribution_shift_type": "Roster/coach regime shift around transfer windows; association football, not NCAAF.",
+        "distribution_shift_type_citation": "https://arxiv.org/abs/2508.05891"
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2408.10867",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2408.10867",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2408.10867",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/2408.10867",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2408.10867",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Rest differential/bye-week and mini-bye status",
+            "value_citation": "https://arxiv.org/abs/2408.10867"
+          },
+          {
+            "value": "Game outcomes and betting-market data",
+            "value_citation": "https://arxiv.org/abs/2408.10867"
+          }
+        ],
+        "output_distribution": "Bayesian state-space model for competitive effect on outcomes/points.",
+        "output_distribution_citation": "https://arxiv.org/abs/2408.10867",
+        "calibration_method": "No post-hoc calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/2408.10867",
+        "known_biases": "Bye-week advantage declined after 2011 CBA; since 2011 no significant advantage.",
+        "known_biases_citation": "https://arxiv.org/abs/2408.10867",
+        "data_requirements": "NFL schedule, game-outcome, and betting-market data before/after 2011 CBA.",
+        "data_requirements_citation": "https://arxiv.org/abs/2408.10867"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": true,
+        "non_monotone_risk_citation": "https://arxiv.org/abs/2408.10867",
+        "isotonic_regression_limits": "No isotonic calibration reported.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2408.10867",
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/2408.10867"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2406.17220",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2406.17220",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2406.17220",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/2406.17220",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2406.17220",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Multi-dimensional player tracking features",
+            "value_citation": "https://arxiv.org/abs/2406.17220"
+          },
+          {
+            "value": "Receiver yards gained",
+            "value_citation": "https://arxiv.org/abs/2406.17220"
+          },
+          {
+            "value": "2D defender spatial/trajectory tracking",
+            "value_citation": "https://arxiv.org/abs/2406.17220"
+          }
+        ],
+        "output_distribution": "Conditional density estimates for receiver yards and 2D spatial distribution of baseline ghost defenders.",
+        "output_distribution_citation": "https://arxiv.org/abs/2406.17220",
+        "calibration_method": "Random forests for conditional density estimation; no calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/2406.17220",
+        "known_biases": "Baseline ghost distributions and tracking-data limitations; extension beyond nearest-defender-at-catch remains open.",
+        "known_biases_citation": "https://arxiv.org/abs/2406.17220",
+        "data_requirements": "NFL play-level spatial/trajectory tracking data.",
+        "data_requirements_citation": "https://arxiv.org/abs/2406.17220"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2502.16313",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2502.16313",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2502.16313",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/2502.16313",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2502.16313",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Motion type identified by Gaussian mixture model",
+            "value_citation": "https://arxiv.org/abs/2502.16313"
+          },
+          {
+            "value": "Quarterback and team random effects",
+            "value_citation": "https://arxiv.org/abs/2502.16313"
+          },
+          {
+            "value": "Receiver motion-to-snap timing",
+            "value_citation": "https://arxiv.org/abs/2502.16313"
+          }
+        ],
+        "output_distribution": "Gamma distribution for play-level snap timing with hierarchical mean and shape parameters.",
+        "output_distribution_citation": "https://arxiv.org/abs/2502.16313",
+        "calibration_method": "Bayesian multilevel estimation; no calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/2502.16313",
+        "known_biases": "Restricted to passing plays with receivers in motion; design choices may bias leaderboard comparisons.",
+        "known_biases_citation": "https://arxiv.org/abs/2502.16313",
+        "data_requirements": "NFL tracking/play-event data for motion and ball-snap timestamps.",
+        "data_requirements_citation": "https://arxiv.org/abs/2502.16313"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "MEASURE",
+      "relevance_citation": "https://arxiv.org/abs/1910.08858",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1910.08858",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/1910.08858",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/abs/1910.08858",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1910.08858",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Collected betting dataset",
+            "value_citation": "https://arxiv.org/abs/1910.08858"
+          },
+          {
+            "value": "Market observations across NFL, NBA, NCAAF, NCAAB, and WNBA",
+            "value_citation": "https://arxiv.org/abs/1910.08858"
+          }
+        ],
+        "output_distribution": "Non-parametric win-probability model for positive-expected-value situations.",
+        "output_distribution_citation": "https://arxiv.org/abs/1910.08858",
+        "calibration_method": "No calibration method reported; probability quality needs out-of-sample calibration testing.",
+        "calibration_method_citation": "https://arxiv.org/abs/1910.08858",
+        "known_biases": "Above-market returns may reflect selection, leakage, or regime dependence; stability is not established in abstract.",
+        "known_biases_citation": "https://arxiv.org/abs/1910.08858",
+        "data_requirements": "Novel betting dataset spanning multiple US sports and markets.",
+        "data_requirements_citation": "https://arxiv.org/abs/1910.08858"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": true,
+        "is_actionable_paper_citation": "https://arxiv.org/abs/1910.08858",
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": "Sport/league regime shifts across NFL, NBA, NCAAF, NCAAB and WNBA.",
+        "distribution_shift_type_citation": "https://arxiv.org/abs/1910.08858"
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1710.02824",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1710.02824",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/1710.02824",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/1710.02824",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1710.02824",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Public football betting odds/probabilities",
+            "value_citation": "https://arxiv.org/abs/1710.02824"
+          },
+          {
+            "value": "Closing odds and minute-to-minute odds",
+            "value_citation": "https://arxiv.org/abs/1710.02824"
+          }
+        ],
+        "output_distribution": "Odds-implied bookmaker probability distribution used to select mispriced bets; no parametric output distribution specified.",
+        "output_distribution_citation": "https://arxiv.org/abs/1710.02824",
+        "calibration_method": "Odds-implied probabilities and mispricing rules; no formal calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/1710.02824",
+        "known_biases": "Reported market inefficiency and discriminatory limits against successful clients; profitability needs temporal/out-of-sample validation.",
+        "known_biases_citation": "https://arxiv.org/abs/1710.02824",
+        "data_requirements": "10-year closing-odds simulation, 6-month minute-to-minute simulation, and 5-month real-money period across thousands of football games.",
+        "data_requirements_citation": "https://arxiv.org/abs/1710.02824"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2109.07581",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2109.07581",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2109.07581",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/abs/2109.07581",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2109.07581",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Moneyline odds for professional and college sports",
+            "value_citation": "https://arxiv.org/abs/2109.07581"
+          },
+          {
+            "value": "COVID/no-live-audience period",
+            "value_citation": "https://arxiv.org/abs/2109.07581"
+          }
+        ],
+        "output_distribution": "Moneyline implied-probability/return distribution by sport and odds range.",
+        "output_distribution_citation": "https://arxiv.org/abs/2109.07581",
+        "calibration_method": "No post-hoc calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/2109.07581",
+        "known_biases": "NBA market reported unusually inefficient during COVID; underdogs produced 16.7% margin, concentrated in odds 233–400; other sports did not show same inefficiency.",
+        "known_biases_citation": "https://arxiv.org/abs/2109.07581",
+        "data_requirements": "Professional and college sports betting records with COVID-era comparisons.",
+        "data_requirements_citation": "https://arxiv.org/abs/2109.07581"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": "COVID-era market regime shift; college sports included but main positive result is NBA.",
+        "distribution_shift_type_citation": "https://arxiv.org/abs/2109.07581"
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2607.14430",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2607.14430",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2607.14430",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/abs/2607.14430",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2607.14430",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "23 million moneyline trades across major sport leagues",
+            "value_citation": "https://arxiv.org/abs/2607.14430"
+          },
+          {
+            "value": "Time-to-expiry buckets",
+            "value_citation": "https://arxiv.org/abs/2607.14430"
+          },
+          {
+            "value": "Cross-game parlay leg prices",
+            "value_citation": "https://arxiv.org/abs/2607.14430"
+          }
+        ],
+        "output_distribution": "Calibrated event probabilities and cross-game parlay prices.",
+        "output_distribution_citation": "https://arxiv.org/abs/2607.14430",
+        "calibration_method": "Calibration curves fit within time-to-expiry buckets; final-ten-minute curves fit with a Prelec form.",
+        "calibration_method_citation": "https://arxiv.org/abs/2607.14430",
+        "known_biases": "Calibration is expiry-dependent; final-ten-minute curve is step-like and parlays are overpriced versus contemporaneous leg-price products, increasingly with leg count.",
+        "known_biases_citation": "https://arxiv.org/abs/2607.14430",
+        "data_requirements": "23 million moneyline trades and cross-game parlay legs from Kalshi across major sports.",
+        "data_requirements_citation": "https://arxiv.org/abs/2607.14430"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": true,
+        "non_monotone_risk_citation": "https://arxiv.org/abs/2607.14430",
+        "isotonic_regression_limits": "No isotonic regression; reports sharp time-dependent calibration and a Prelec fit.",
+        "isotonic_regression_limits_citation": "https://arxiv.org/abs/2607.14430",
+        "temporal_dependence_focus": true,
+        "temporal_dependence_focus_citation": "https://arxiv.org/abs/2607.14430"
+      },
+      "sgp_parlay_data": {
+        "correlation_model": "Leg-level contemporaneous prices are multiplied as benchmark; observed cross-game parlay prices exceed it.",
+        "correlation_model_citation": "https://arxiv.org/abs/2607.14430",
+        "time_to_expiry_calibration": true,
+        "time_to_expiry_calibration_citation": "https://arxiv.org/abs/2607.14430",
+        "kalshi_overpriced_reference": true,
+        "kalshi_overpriced_reference_citation": "https://arxiv.org/abs/2607.14430"
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2609.06739",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2609.06739",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/2609.06739",
+      "sport": "MLB",
+      "sport_citation": "https://arxiv.org/abs/2609.06739",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2609.06739",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "Book prices and shading",
+            "value_citation": "https://arxiv.org/abs/2609.06739"
+          },
+          {
+            "value": "Public bet share/handle",
+            "value_citation": "https://arxiv.org/abs/2609.06739"
+          },
+          {
+            "value": "Game outcomes",
+            "value_citation": "https://arxiv.org/abs/2609.06739"
+          }
+        ],
+        "output_distribution": "Profit decomposition: hold, price-shading × public-lean, and bet-share/outcome covariance.",
+        "output_distribution_citation": "https://arxiv.org/abs/2609.06739",
+        "calibration_method": "No calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/2609.06739",
+        "known_biases": "Pooled bet-share/outcome dependence is a Simpson paradox disappearing when stratified by book-favored side.",
+        "known_biases_citation": "https://arxiv.org/abs/2609.06739",
+        "data_requirements": "Bet-share, price, and outcome data for 1,139 MLB games.",
+        "data_requirements_citation": "https://arxiv.org/abs/2609.06739"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    },
+    {
+      "relevance": "MEASURE",
+      "relevance_citation": "https://arxiv.org/abs/1505.06918",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1505.06918",
+      "method": "other",
+      "method_citation": "https://arxiv.org/abs/1505.06918",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/1505.06918",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1505.06918",
+      "tier_1_method_card": {
+        "score_function": null,
+        "score_function_citation": null,
+        "coverage_guarantee": null,
+        "coverage_guarantee_citation": null,
+        "exchangeability_assumption": null,
+        "exchangeability_assumption_citation": null,
+        "computational_cost": null,
+        "computational_cost_citation": null
+      },
+      "tier_2_model_card": {
+        "input_features": [
+          {
+            "value": "NFL game data from last six seasons",
+            "value_citation": "https://arxiv.org/abs/1505.06918"
+          },
+          {
+            "value": "Quarterback/player statistics",
+            "value_citation": "https://arxiv.org/abs/1505.06918"
+          }
+        ],
+        "output_distribution": "Fantasy-football quarterback score predictions from SVR and neural networks.",
+        "output_distribution_citation": "https://arxiv.org/abs/1505.06918",
+        "calibration_method": "No probability calibration reported.",
+        "calibration_method_citation": "https://arxiv.org/abs/1505.06918",
+        "known_biases": "Limited six-season dataset and model assumptions; abstract calls results promising but needs kill test.",
+        "known_biases_citation": "https://arxiv.org/abs/1505.06918",
+        "data_requirements": "Only game data from last six NFL seasons; paper suggests enhancing data.",
+        "data_requirements_citation": "https://arxiv.org/abs/1505.06918"
+      },
+      "tier_3_data_source_card": {
+        "coverage": null,
+        "coverage_citation": null,
+        "granularity": null,
+        "granularity_citation": null,
+        "update_frequency": null,
+        "update_frequency_citation": null,
+        "known_gaps": null,
+        "known_gaps_citation": null,
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": null
+      },
+      "ncaaf_specifics": {
+        "is_actionable_paper": false,
+        "is_actionable_paper_citation": null,
+        "transfer_portal_relevance": false,
+        "transfer_portal_relevance_citation": null,
+        "distribution_shift_type": null,
+        "distribution_shift_type_citation": null
+      },
+      "calibration_analysis": {
+        "non_monotone_risk": false,
+        "non_monotone_risk_citation": null,
+        "isotonic_regression_limits": null,
+        "isotonic_regression_limits_citation": null,
+        "temporal_dependence_focus": false,
+        "temporal_dependence_focus_citation": null
+      },
+      "sgp_parlay_data": {
+        "correlation_model": null,
+        "correlation_model_citation": null,
+        "time_to_expiry_calibration": false,
+        "time_to_expiry_calibration_citation": null,
+        "kalshi_overpriced_reference": false,
+        "kalshi_overpriced_reference_citation": null
+      }
+    }
+  ]
+}

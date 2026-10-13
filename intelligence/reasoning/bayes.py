@@ -18,6 +18,11 @@ nothing and says so. The prior ALWAYS comes from a real market price
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
 from dataclasses import dataclass, field, asdict
 from typing import Any
 
@@ -124,6 +129,65 @@ SAME_MECHANISM_PAIRS: set[tuple[str, str]] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Move 2: the empirical copula matrix replaces the hand-declared heuristic.
+# docs/props/research/2026-10-13/sgp_correlations.json carries the pairwise
+# leg correlations measured from 1,088 nflverse team-games (2024-2025). When a
+# same-mechanism signal pair has a measured rho, the damping factor is DERIVED
+# from it (w = sqrt(rho): 1.0 at rho=0 -> independent, stronger damping as the
+# legs co-move), and every step cites the matrix cell. Pairs outside the
+# measured set fall back to the declared-pair heuristic - logged as a NAMED
+# GAP in the step note, never silently.
+# ---------------------------------------------------------------------------
+
+EMPIRICAL_COPULA_PATH = (
+    REPO_ROOT / "docs" / "props" / "research" / "2026-10-13" / "sgp_correlations.json"
+)
+
+
+def _load_empirical_copula() -> dict:
+    try:
+        data = json.loads(EMPIRICAL_COPULA_PATH.read_text(encoding="utf-8"))
+        legs = data["leg_names"]
+        matrix = data["matrix"]
+        rhos: dict[tuple[str, str], float] = {}
+        for i, a in enumerate(legs):
+            for j, b in enumerate(legs):
+                if i != j:
+                    rhos[frozenset((a, b)).__str__()] = float(matrix[i][j])
+        return {"leg_names": legs, "rhos": rhos, "n_team_games": data.get("n_team_games"),
+                "source": str(EMPIRICAL_COPULA_PATH).replace("\\", "/")}
+    except Exception:
+        return {}
+
+
+_EMPIRICAL_COPULA_CACHE: dict | None = None
+
+
+def _empirical_copula() -> dict:
+    global _EMPIRICAL_COPULA_CACHE
+    if _EMPIRICAL_COPULA_CACHE is None:
+        _EMPIRICAL_COPULA_CACHE = _load_empirical_copula()
+    return _EMPIRICAL_COPULA_CACHE
+
+
+# declared signal-pair -> (copula leg a, copula leg b) when a measured rho exists
+SIGNAL_PAIR_TO_COPULA_LEGS: dict[tuple[str, str], tuple[str, str]] = {
+    # passing volume and scoring are the measured qb_pass_yards~qb_pass_tds cell
+    ("qb_pass_volume", "qb_pass_tds"): ("qb_pass_yards", "qb_pass_tds"),
+    # receiver production co-moves with qb volume (qb_pass_yards~wr_rec_yards cell)
+    ("qb_pass_volume", "wr_production"): ("qb_pass_yards", "wr_rec_yards"),
+    # receiver scoring with receiver volume (wr_rec_yards~wr_anytime_td cell)
+    ("wr_production", "wr_touchdown"): ("wr_rec_yards", "wr_anytime_td"),
+}
+
+HEURISTIC_PAIRS: set[tuple[str, str]] = {
+    ("air_density_kg_m3", "wind_kmh"),
+    ("dline_starters_out", "pressure_rate"),
+    ("dt1_out", "dline_starters_out"),
+}
+
+
 def correlated_update(prior: "MarketPrior", signals: list["Signal"]) -> "BayesianUpdate":
     """update() with same-mechanism compounding.
 
@@ -146,7 +210,7 @@ def correlated_update(prior: "MarketPrior", signals: list["Signal"]) -> "Bayesia
             unapplied.append({**s.to_dict(), "reason": "neutral / LR=1.0"})
             continue
         placed = False
-        for (a, b) in SAME_MECHANISM_PAIRS:
+        for (a, b) in list(SIGNAL_PAIR_TO_COPULA_LEGS) + list(HEURISTIC_PAIRS):
             if s.metric == a and not any(x.metric == b for x in matched):
                 continue
             if s.metric == b and not any(x.metric == a for x in matched):
@@ -164,6 +228,7 @@ def correlated_update(prior: "MarketPrior", signals: list["Signal"]) -> "Bayesia
         log_shift += math.log(lr) if lr > 0 else 0.0
         steps.append(UpdateStep(metric=s.metric, subject=s.subject, direction=s.direction,
                                 lr=round(lr, 4), verification=s.verification, source=s.source, note=s.note))
+    emp = _empirical_copula()
     for key, grp in groups.items():
         if len(grp) == 1:
             s = grp[0]
@@ -175,13 +240,42 @@ def correlated_update(prior: "MarketPrior", signals: list["Signal"]) -> "Bayesia
         prod = 1.0
         for s in grp:
             prod *= s.effective_lr()
-        eff = math.sqrt(prod)  # dampened same-mechanism stack (documented rule)
+        metrics = frozenset(s.metric for s in grp)
+        emp_note = None
+        eff = None
+        # 1) empirical matrix first: measured rho -> derived damping weight
+        for pair, legs in SIGNAL_PAIR_TO_COPULA_LEGS.items():
+            if metrics == frozenset(pair) and emp:
+                key2 = frozenset(legs).__str__()
+                rho = emp["rhos"].get(key2)
+                if rho is not None:
+                    w = math.sqrt(max(0.0, rho))
+                    eff = prod ** w
+                    emp_note = (
+                        f"empirical copula damping: rho({legs[0]},{legs[1]})={rho:.4f} from "
+                        f"{emp['n_team_games']} team-games [{emp['source']}] -> weight sqrt(rho)={w:.4f}, "
+                        f"LR {prod:.4f}^(w) = {eff:.4f} (independent product would overstate)"
+                    )
+                break
+        # 2) heuristic fallback for declared pairs without a measured cell - NAMED, never silent
+        if eff is None:
+            eff = math.sqrt(prod)
+            if emp:
+                emp_note = (
+                    f"heuristic damping (NO measured rho for this pair in the empirical matrix): "
+                    f"sqrt(prod)={eff:.4f} instead of prod={prod:.4f}; named gap, not silent"
+                )
+            else:
+                emp_note = (
+                    f"heuristic damping (empirical copula artifact unavailable): "
+                    f"sqrt(prod)={eff:.4f} instead of prod={prod:.4f}; named gap, not silent"
+                )
         log_shift += math.log(eff) if eff > 0 else 0.0
         names = "+".join(s.metric for s in grp)
         steps.append(UpdateStep(
             metric=names, subject="same-mechanism group", direction="supports",
             lr=round(eff, 4), verification="COMPUTED", source="bayes.correlated_update",
-            note=f"same-mechanism pair damped: sqrt(prod)={eff:.4f} instead of prod={prod:.4f} (SGP compounding rule)",
+            note=emp_note,
         ))
 
     posterior_odds = prior_odds * math.exp(log_shift) if steps else prior_odds
