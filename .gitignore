@@ -236,3 +236,7 @@ brain/local_vault/
 # Detached worktrees
 .worktrees/
 
+
+# Python bytecode — generated artifacts, never commit
+__pycache__/
+*.pyc

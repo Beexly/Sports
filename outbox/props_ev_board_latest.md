@@ -1,5 +1,7 @@
 # Props EV board
 
+> **DIAGNOSTIC ONLY** — residual-versus-close has NOT cleared. Not picks, edges, or recommendations.
+
 Market: **5-flex** (breakeven 0.542) · alt: 2-pick (breakeven 0.571)
 
 21 props scored · 19 at positive EV.
