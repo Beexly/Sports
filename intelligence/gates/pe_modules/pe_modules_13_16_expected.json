@@ -1,0 +1,182 @@
+[
+  {
+    "module_id": 13,
+    "module_name": "fg_kicker_epa",
+    "evaluated_at": "2026-10-11T15:48:24.037411+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "distance_yards": 45,
+      "kicker_id": null,
+      "kicker_epa_per_season": 0.0,
+      "is_outdoor": true,
+      "wind_mph": 0.0
+    },
+    "outputs": {
+      "make_probability": 0.75,
+      "miss_epa": -4.2,
+      "expected_points": 1.2
+    },
+    "notes": "Measured tables; skill adj from Folk +2.49 / Ryland -2.07",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 13,
+    "module_name": "fg_kicker_epa",
+    "evaluated_at": "2026-10-11T15:48:24.037467+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "distance_yards": 58,
+      "kicker_id": "folk",
+      "kicker_epa_per_season": 2.49,
+      "is_outdoor": true,
+      "wind_mph": 0.0
+    },
+    "outputs": {
+      "make_probability": 0.4541,
+      "miss_epa": -4.8,
+      "expected_points": -1.258
+    },
+    "notes": "Measured tables; skill adj from Folk +2.49 / Ryland -2.07",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 13,
+    "module_name": "fg_kicker_epa",
+    "evaluated_at": "2026-10-11T15:48:24.037474+00:00",
+    "verdict": "REFUSE",
+    "inputs": {
+      "distance_yards": 75,
+      "kicker_id": null,
+      "kicker_epa_per_season": 0.0,
+      "is_outdoor": true,
+      "wind_mph": 0.0
+    },
+    "outputs": {},
+    "notes": "Distance 75 outside valid range [15, 70]",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 14,
+    "module_name": "timeout_wp_adjust",
+    "evaluated_at": "2026-10-11T15:48:24.037535+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "seconds_remaining": 90,
+      "deficit": 7,
+      "timeouts_remaining": 3,
+      "has_ball": true
+    },
+    "outputs": {
+      "base_wp": 0.078,
+      "adjusted_wp": 0.105,
+      "timeout_lift": 0.027
+    },
+    "notes": "Measured: 10.4% -> 14.0% with 3 timeouts in final 2 min",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 14,
+    "module_name": "timeout_wp_adjust",
+    "evaluated_at": "2026-10-11T15:48:24.037539+00:00",
+    "verdict": "REFUSE",
+    "inputs": {
+      "seconds_remaining": 600,
+      "deficit": 7,
+      "timeouts_remaining": 3,
+      "has_ball": true
+    },
+    "outputs": {},
+    "notes": "Not a late-game trailing-with-ball situation; module not applicable",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 15,
+    "module_name": "derivative_probs",
+    "evaluated_at": "2026-10-11T15:48:24.037551+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "derivative": "first_score_td",
+      "fav_team_total": 24.5,
+      "dog_team_total": 20.5,
+      "side": "fav"
+    },
+    "outputs": {
+      "probability": 0.5925,
+      "fair_odds": 1.688
+    },
+    "notes": "Measured: 1st-score TD 58-63%, race-21 fav 34.6% / dog 2.8%",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 15,
+    "module_name": "derivative_probs",
+    "evaluated_at": "2026-10-11T15:48:24.037559+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "derivative": "race_to_21",
+      "fav_team_total": 24.5,
+      "dog_team_total": 20.5,
+      "side": "fav"
+    },
+    "outputs": {
+      "probability": 0.3853,
+      "fair_odds": 2.595
+    },
+    "notes": "Measured: 1st-score TD 58-63%, race-21 fav 34.6% / dog 2.8%",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 15,
+    "module_name": "derivative_probs",
+    "evaluated_at": "2026-10-11T15:48:24.037565+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "derivative": "race_to_21",
+      "fav_team_total": 24.5,
+      "dog_team_total": 20.5,
+      "side": "dog"
+    },
+    "outputs": {
+      "probability": 0.0261,
+      "fair_odds": 38.328
+    },
+    "notes": "Measured: 1st-score TD 58-63%, race-21 fav 34.6% / dog 2.8%",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 16,
+    "module_name": "crew_penalty_epa",
+    "evaluated_at": "2026-10-11T15:48:24.037581+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "crew_id": "torbert",
+      "crew_penalty_epa": -0.78,
+      "base_total": 41.5
+    },
+    "outputs": {
+      "total_adjustment": -0.39,
+      "adjusted_total": 41.1,
+      "crew_percentile": 0.0
+    },
+    "notes": "Measured range: Torbert -0.78 to Smith 1.58 EPA/game",
+    "label": "DIAGNOSTIC"
+  },
+  {
+    "module_id": 16,
+    "module_name": "crew_penalty_epa",
+    "evaluated_at": "2026-10-11T15:48:24.037591+00:00",
+    "verdict": "PASS",
+    "inputs": {
+      "crew_id": "smith",
+      "crew_penalty_epa": 1.58,
+      "base_total": 41.5
+    },
+    "outputs": {
+      "total_adjustment": 0.79,
+      "adjusted_total": 42.3,
+      "crew_percentile": 1.0
+    },
+    "notes": "Measured range: Torbert -0.78 to Smith 1.58 EPA/game",
+    "label": "DIAGNOSTIC"
+  }
+]

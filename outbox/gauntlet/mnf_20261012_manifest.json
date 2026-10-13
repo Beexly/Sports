@@ -1,0 +1,132 @@
+{
+  "run_id": "mnf_20261012",
+  "frozen_at": "2026-10-12T23:45:16.154927+00:00",
+  "game": {
+    "away": "Buffalo Bills",
+    "home": "Los Angeles Rams",
+    "away_abbr": "BUF",
+    "home_abbr": "LAR",
+    "kickoff_utc": "2026-10-13T00:15:00Z",
+    "pinnacle_game_matchup_id": 1637432964
+  },
+  "base_commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7",
+  "inputs": {
+    "calibration_rows": {
+      "path": "intelligence/gates/calibration_rows.json",
+      "source": "signal calibration registry",
+      "producer": "intelligence/gates",
+      "sha256": "191362bd1c0bddd228fe1c197aeef10a4c4d2b594458998116ccf93d774494c5",
+      "bytes": 665,
+      "rows": 4,
+      "date_range": "standing",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "claims": {
+      "path": "intelligence/gates/claims.json",
+      "source": "fleet claim registry",
+      "producer": "intelligence/gates/claim_matrix.py",
+      "sha256": "c0440243102a8e939214995883ffe7f1c34903e0cc69e8e2b2b45317e0e2e851",
+      "bytes": 2717,
+      "rows": 8,
+      "date_range": "standing",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "correlations": {
+      "path": "data/snapshots/sgp_correlations.json",
+      "source": "nflverse play-by-play, measured same-game correlations",
+      "producer": "intelligence/props/sgp_correlation_estimator.py",
+      "sha256": "0a543b6d09d0cbda6441a41653d76363d419e472cddb78dad27b43022b008e25",
+      "bytes": 5072,
+      "rows": 12,
+      "date_range": "per snapshot seasons field",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "espn_scoreboard": {
+      "path": "intelligence/props/fixtures/espn_scoreboard_20261012_buf_lar.json",
+      "source": "ESPN scoreboard API (keyless public path), captured 2026-10-12",
+      "producer": "intelligence/props/real_price_feed.py",
+      "sha256": "9a4526e9018aca5ff81287d9cea66cc1971d2ba47c984144af3b522451c9bb88",
+      "bytes": 31950,
+      "rows": 4,
+      "date_range": "2026-10-12 slate",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "pinnacle_matchups": {
+      "path": "intelligence/props/fixtures/pinnacle_matchups_buf_lar.json",
+      "source": "Pinnacle guest API (public client key), captured 2026-10-12",
+      "producer": "intelligence/props/pinnacle_prop_feed.py",
+      "sha256": "73e9c4fec5f12950502d2a2d3a0c2d664cec4d691fa89ba5bbb7ac79389e9b34",
+      "bytes": 32771,
+      "rows": 2,
+      "date_range": "2026-10-12",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "pinnacle_related": {
+      "path": "intelligence/props/fixtures/pinnacle_related_buf_lar.json",
+      "source": "Pinnacle guest API related/straight bundle, captured 2026-10-12",
+      "producer": "intelligence/props/pinnacle_prop_feed.py",
+      "sha256": "5be5191129aa55c6114fa628ddc6a37716f6bbec2816a7bc303bc3b399c9b4cd",
+      "bytes": 63981,
+      "rows": 2,
+      "date_range": "2026-10-12",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "props_ev_board": {
+      "path": "outbox/props_ev_board_latest.json",
+      "source": "Hermes props EV board (evidence-scan only in this run)",
+      "producer": "intelligence/props/prop_discrepancy_engine.py",
+      "sha256": "bf372c8fdc26db6457db8b468b7336e1cacc686a3c12bfaf7da55f698d67c6c7",
+      "bytes": 20588,
+      "rows": 7,
+      "date_range": "2026-10-11",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "props_live_board": {
+      "path": "outbox/props_live_board_latest.json",
+      "source": "Live props board on Pinnacle prices",
+      "producer": "intelligence/props/props_live_board.py",
+      "sha256": "3b86497a762584dc7f587096309619920641b343e6442b20b5ec8527f79c2b48",
+      "bytes": 69845,
+      "rows": 1,
+      "date_range": "2026-10-12",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    },
+    "sgp_projections": {
+      "path": "outbox/sgp_projections_latest.json",
+      "source": "SGP projections artifact from real ESPN/Galaxy prices",
+      "producer": "intelligence/sgp/price_from_real_prices.py",
+      "sha256": "6cde637f4a4fee71e7153c4276f5d8addb2e06863978c542dcb4efc80c40f04d",
+      "bytes": 22655,
+      "rows": 15,
+      "date_range": "2026-10-12",
+      "license": "internal",
+      "point_in_time": "2026-10-12T23:45:16.154927+00:00",
+      "host": "htch-runtime",
+      "commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7"
+    }
+  }
+}

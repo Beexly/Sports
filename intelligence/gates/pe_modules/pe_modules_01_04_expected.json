@@ -1,0 +1,196 @@
+{
+  "generated_at": "2026-10-11T15:48:51.298356+00:00",
+  "engine": "prediction-engine",
+  "model_version": "v5.1.0",
+  "modules": {
+    "1": {
+      "module": 1,
+      "name": "confidence_score_computation",
+      "pass": true,
+      "cases": [
+        {
+          "inputs": {
+            "implied_probability": 0.6,
+            "line_movement": 2.0,
+            "consensus_pct": 0.65,
+            "bookmaker_count": 8
+          },
+          "expected": 91.0,
+          "computed": 91.0,
+          "in_range": true,
+          "matches_expected": true,
+          "pass": true
+        },
+        {
+          "inputs": {
+            "implied_probability": 0.95,
+            "line_movement": 10.0,
+            "consensus_pct": 0.9,
+            "bookmaker_count": 15
+          },
+          "expected": 100,
+          "computed": 100,
+          "in_range": true,
+          "matches_expected": true,
+          "pass": true
+        },
+        {
+          "inputs": {
+            "implied_probability": 0.05,
+            "line_movement": 0.0,
+            "consensus_pct": 0.5,
+            "bookmaker_count": 1
+          },
+          "expected": 7.0,
+          "computed": 7.0,
+          "in_range": true,
+          "matches_expected": true,
+          "pass": true
+        }
+      ]
+    },
+    "2": {
+      "module": 2,
+      "name": "tier_assignment",
+      "pass": true,
+      "cases": [
+        {
+          "confidence": 85.0,
+          "expected_tier": "PREMIUM",
+          "assigned_tier": "PREMIUM",
+          "pass": true
+        },
+        {
+          "confidence": 70.0,
+          "expected_tier": "PREMIUM",
+          "assigned_tier": "PREMIUM",
+          "pass": true
+        },
+        {
+          "confidence": 69.99,
+          "expected_tier": "FREE",
+          "assigned_tier": "FREE",
+          "pass": true
+        },
+        {
+          "confidence": 50.0,
+          "expected_tier": "FREE",
+          "assigned_tier": "FREE",
+          "pass": true
+        },
+        {
+          "confidence": 49.99,
+          "expected_tier": "HIDDEN",
+          "assigned_tier": "HIDDEN",
+          "pass": true
+        },
+        {
+          "confidence": 0.0,
+          "expected_tier": "HIDDEN",
+          "assigned_tier": "HIDDEN",
+          "pass": true
+        }
+      ]
+    },
+    "3": {
+      "module": 3,
+      "name": "input_completeness",
+      "pass": true,
+      "cases": [
+        {
+          "inputs": {
+            "implied_probability": 0.6,
+            "line_movement": 1.5,
+            "consensus_pct": 0.62,
+            "bookmaker_count": 10,
+            "game_id": "401872981",
+            "pick_type": "SPREAD"
+          },
+          "should_pass": true,
+          "validation_errors": [],
+          "valid": true,
+          "pass": true
+        },
+        {
+          "inputs": {
+            "implied_probability": 0.6,
+            "line_movement": 1.5,
+            "bookmaker_count": 10,
+            "game_id": "401872981",
+            "pick_type": "SPREAD"
+          },
+          "should_pass": false,
+          "validation_errors": [
+            "missing:consensus_pct"
+          ],
+          "valid": false,
+          "pass": true
+        },
+        {
+          "inputs": {
+            "implied_probability": 1.5,
+            "line_movement": 1.5,
+            "consensus_pct": 0.62,
+            "bookmaker_count": 10,
+            "game_id": "401872981",
+            "pick_type": "TOTAL"
+          },
+          "should_pass": false,
+          "validation_errors": [
+            "range:implied_probability=1.5"
+          ],
+          "valid": false,
+          "pass": true
+        },
+        {
+          "inputs": {
+            "implied_probability": 0.6,
+            "line_movement": 1.5,
+            "consensus_pct": 0.62,
+            "bookmaker_count": 10,
+            "game_id": "401872981",
+            "pick_type": "PARLAY"
+          },
+          "should_pass": false,
+          "validation_errors": [
+            "value:pick_type=PARLAY"
+          ],
+          "valid": false,
+          "pass": true
+        }
+      ]
+    },
+    "4": {
+      "module": 4,
+      "name": "model_version_tracking",
+      "pass": true,
+      "cases": [
+        {
+          "pick_id": "p1",
+          "modelVersion": "v5.1.0",
+          "expected_version": "v5.1.0",
+          "should_pass": true,
+          "pass": true
+        },
+        {
+          "pick_id": "p2",
+          "modelVersion": "v1.0.0",
+          "expected_version": "v5.1.0",
+          "should_pass": false,
+          "pass": true
+        },
+        {
+          "pick_id": "p3",
+          "modelVersion": null,
+          "expected_version": "v5.1.0",
+          "should_pass": false,
+          "pass": true
+        }
+      ]
+    }
+  },
+  "overall_pass": true,
+  "verdict": "INFRASTRUCTURE PASS / modules PASS",
+  "label": "DIAGNOSTIC",
+  "note": "Modules 1-4 wired against documented v5.1.0 spec (docs/prediction-engine.md). Module 1 uses the documented weight maxima; full constants.ts weight table not replicated \u2014 flagged for module 5+."
+}

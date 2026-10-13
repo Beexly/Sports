@@ -1,0 +1,1468 @@
+{
+  "run_id": "mnf_20261012",
+  "generated_at": "2026-10-12T23:45:16.154927+00:00",
+  "game": {
+    "away": "Buffalo Bills",
+    "home": "Los Angeles Rams",
+    "away_abbr": "BUF",
+    "home_abbr": "LAR",
+    "kickoff_utc": "2026-10-13T00:15:00Z",
+    "pinnacle_game_matchup_id": 1637432964
+  },
+  "base_commit": "b7df9c9f4755f81bbdaf2a71f408e6ab5315a3c7",
+  "manifest_path": "/home/hatch/workspace/scratch/gates-wiring/outbox/gauntlet/mnf_20261012_manifest.json",
+  "stamps": {
+    "label": "DIAGNOSTIC",
+    "rvc_cleared": false,
+    "is_pick": false,
+    "is_edge_claim": false
+  },
+  "rvc": {
+    "verdict": "NOT_CLEARED",
+    "label": "DIAGNOSTIC",
+    "manifest_id": "mnf_20261012",
+    "metrics": {
+      "n": 0
+    },
+    "checks": [
+      {
+        "name": "dataset_present",
+        "pass": false,
+        "detail": "no paired holdout dataset supplied"
+      }
+    ],
+    "reasons": [
+      "dataset_present: no paired holdout dataset supplied"
+    ]
+  },
+  "gates": [
+    {
+      "gate_id": "ingest.price_feed_integrity",
+      "stage": "INGEST",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/props/real_price_feed.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "games_parsed": 1,
+        "provider": "Draft Kings",
+        "moneyline": {
+          "home": -175,
+          "away": 145
+        },
+        "spread": {
+          "point_home": -3.5,
+          "home": -102,
+          "away": -118
+        },
+        "total": {
+          "point": 54.5,
+          "over": -118,
+          "under": -102
+        },
+        "implied_team_totals": {
+          "home": 29.0,
+          "away": 25.5
+        },
+        "moneyline_booksum": 1.0445269016697587,
+        "complete_prices": true
+      }
+    },
+    {
+      "gate_id": "ingest.pinnacle_prop_feed",
+      "stage": "INGEST",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/props/pinnacle_prop_feed.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "priced_props": 66,
+        "specials_seen": 66,
+        "skipped_one_sided_or_unpriced": 0,
+        "all_records_two_way": true
+      }
+    },
+    {
+      "gate_id": "ingest.manifest_completeness",
+      "stage": "INGEST",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/gates/manifest_check.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "inputs_frozen": 9,
+        "required_fields": [
+          "source",
+          "producer",
+          "sha256",
+          "bytes",
+          "rows",
+          "date_range",
+          "license",
+          "point_in_time",
+          "host",
+          "commit"
+        ],
+        "problems": []
+      }
+    },
+    {
+      "gate_id": "ingest.heldout_discipline",
+      "stage": "INGEST",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/gates/heldout_check.py",
+      "verdict": "SKIP",
+      "reason": "no run input declares train/eval years; the RVC gate performs its own held-out check on its dataset",
+      "error": null,
+      "evidence": {
+        "split_declaring_inputs": [],
+        "problems": []
+      }
+    },
+    {
+      "gate_id": "ingest.injury_publication_gate",
+      "stage": "INGEST",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/providers/injury_gate.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "week": 5,
+        "friday_of_game_week": "2026-10-09",
+        "cutoff": "Friday 18:00 America/New_York",
+        "now": "2026-10-12T23:45:16.154927+00:00",
+        "live_injury_pull_in_this_run": false,
+        "injury_report_published": true
+      }
+    },
+    {
+      "gate_id": "ingest.leakwall_market_snapshot",
+      "stage": "INGEST",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/trust/leakwall.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "grain": "market_snapshot",
+        "provenance": "select_market_snapshot",
+        "wrapped_not_bare": true
+      }
+    },
+    {
+      "gate_id": "signal.claim_matrix",
+      "stage": "SIGNAL",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/gates/claim_matrix.py",
+      "verdict": "PASS",
+      "reason": "all wired claims resolve in the frozen tree",
+      "error": null,
+      "evidence": {
+        "claims_total": 8,
+        "claims_by_status": {
+          "wired": 1,
+          "measured": 3,
+          "partial": 2,
+          "gap": 2
+        },
+        "check_errors": [
+          "ol_provider: wired but code missing (intelligence/coaching/ol_provider.py)",
+          "ol_provider: wired but test missing (intelligence/coaching/tests/test_ol_provider.py)",
+          "ol_provider: wired but data missing (intelligence/coaching/data/injuries_2026.parquet)"
+        ],
+        "assembly_gaps_annotated": [
+          "ol_provider: wired but code missing (intelligence/coaching/ol_provider.py)",
+          "ol_provider: wired but test missing (intelligence/coaching/tests/test_ol_provider.py)",
+          "ol_provider: wired but data missing (intelligence/coaching/data/injuries_2026.parquet)"
+        ]
+      }
+    },
+    {
+      "gate_id": "pe.module_03",
+      "stage": "SIGNAL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_01_04.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 3,
+        "name": "input_completeness",
+        "cases": 4,
+        "module_pass": true,
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "model.measured_correlations",
+      "stage": "MODEL",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "data/snapshots/sgp_correlations.json",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "leg_order": [
+          "qb_pass_yards",
+          "qb_pass_tds",
+          "wr_rec_yards",
+          "wr_anytime_td"
+        ],
+        "n_team_games": 1088,
+        "seasons": [
+          2024,
+          2025
+        ],
+        "min_eigenvalue": 0.26045952779104437,
+        "strongest_pair": {
+          "legs": [
+            "qb_pass_yards",
+            "wr_rec_yards"
+          ],
+          "rho": 0.6994536009539846
+        }
+      }
+    },
+    {
+      "gate_id": "model.sgp_reproduction",
+      "stage": "MODEL",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/sgp/price_from_real_prices.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "draws": 50000,
+        "seed": 20261012,
+        "record_index": 0,
+        "tolerance": 0.006,
+        "comparisons": [
+          {
+            "team": "BUF",
+            "part": "scaled",
+            "artifact": 0.1986,
+            "repriced": 0.1986,
+            "abs_delta": 0.0
+          },
+          {
+            "team": "BUF",
+            "part": "unscaled_control",
+            "artifact": 0.11982,
+            "repriced": 0.11982,
+            "abs_delta": 0.0
+          },
+          {
+            "team": "LAR",
+            "part": "scaled",
+            "artifact": 0.28048,
+            "repriced": 0.28048,
+            "abs_delta": 0.0
+          },
+          {
+            "team": "LAR",
+            "part": "unscaled_control",
+            "artifact": 0.11982,
+            "repriced": 0.11982,
+            "abs_delta": 0.0
+          }
+        ],
+        "worst_abs_delta": 0.0
+      }
+    },
+    {
+      "gate_id": "model.props_board_consistency",
+      "stage": "MODEL",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/props/props_live_board.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "rows": 0,
+        "devig_rows_checked": 0,
+        "devig_bad_sums": 0,
+        "problems": []
+      }
+    },
+    {
+      "gate_id": "pe.module_01",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_01_04.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 1,
+        "name": "confidence_score_computation",
+        "cases": 3,
+        "module_pass": true,
+        "note": "the harness's default vectors for module 1 compute the expected values with the same formula they test \u2014 self-referential; one of the reasons this module's spec is INFERRED and the gate is shadow-only",
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_02",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_01_04.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 2,
+        "name": "tier_assignment",
+        "cases": 6,
+        "module_pass": true,
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_04",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_01_04.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 4,
+        "name": "model_version_tracking",
+        "cases": 3,
+        "module_pass": true,
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_05",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_05_08.py",
+      "verdict": "SKIP",
+      "reason": "frozen games manifest not in run inputs (insufficient n=0, need 50); the module refuses rather than fabricating a sample",
+      "error": null,
+      "evidence": {
+        "module": 5,
+        "name": "derivatives_edge",
+        "evaluation": {
+          "n": 0,
+          "error": "insufficient n=0, need 50"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_06",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_05_08.py",
+      "verdict": "SKIP",
+      "reason": "frozen games manifest not in run inputs (insufficient crews=0, need 3); the module refuses rather than fabricating a sample",
+      "error": null,
+      "evidence": {
+        "module": 6,
+        "name": "crew_penalty_epa_edge",
+        "evaluation": {
+          "n_crews": 0,
+          "error": "insufficient crews=0, need 3"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_07",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_05_08.py",
+      "verdict": "SKIP",
+      "reason": "frozen games manifest not in run inputs (insufficient n=0, need 30); the module refuses rather than fabricating a sample",
+      "error": null,
+      "evidence": {
+        "module": 7,
+        "name": "timeout_edge",
+        "evaluation": {
+          "n": 0,
+          "error": "insufficient n=0, need 30"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_08",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_05_08.py",
+      "verdict": "SKIP",
+      "reason": "frozen games manifest not in run inputs (insufficient n=0, need 100); the module refuses rather than fabricating a sample",
+      "error": null,
+      "evidence": {
+        "module": 8,
+        "name": "fg_kicker_edge",
+        "evaluation": {
+          "n": 0,
+          "error": "insufficient n=0, need 100"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_13",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_13_16.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 13,
+        "cases": [
+          {
+            "inputs": {
+              "distance_yards": 45,
+              "kicker_id": null,
+              "kicker_epa_per_season": 0.0,
+              "is_outdoor": true,
+              "wind_mph": 0.0
+            },
+            "verdict": "PASS"
+          },
+          {
+            "inputs": {
+              "distance_yards": 58,
+              "kicker_id": "folk",
+              "kicker_epa_per_season": 2.49,
+              "is_outdoor": true,
+              "wind_mph": 0.0
+            },
+            "verdict": "PASS"
+          },
+          {
+            "inputs": {
+              "distance_yards": 75,
+              "kicker_id": null,
+              "kicker_epa_per_season": 0.0,
+              "is_outdoor": true,
+              "wind_mph": 0.0
+            },
+            "verdict": "REFUSE"
+          }
+        ],
+        "recorded_stamp_cases": 3,
+        "mismatches_vs_recorded_stamps": [],
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_14",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_13_16.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 14,
+        "cases": [
+          {
+            "inputs": {
+              "seconds_remaining": 90,
+              "deficit": 7,
+              "timeouts_remaining": 3,
+              "has_ball": true
+            },
+            "verdict": "PASS"
+          },
+          {
+            "inputs": {
+              "seconds_remaining": 600,
+              "deficit": 7,
+              "timeouts_remaining": 3,
+              "has_ball": true
+            },
+            "verdict": "REFUSE"
+          }
+        ],
+        "recorded_stamp_cases": 2,
+        "mismatches_vs_recorded_stamps": [],
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_15",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_13_16.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 15,
+        "cases": [
+          {
+            "inputs": {
+              "derivative": "first_score_td",
+              "fav_team_total": 24.5,
+              "dog_team_total": 20.5,
+              "side": "fav"
+            },
+            "verdict": "PASS"
+          },
+          {
+            "inputs": {
+              "derivative": "race_to_21",
+              "fav_team_total": 24.5,
+              "dog_team_total": 20.5,
+              "side": "fav"
+            },
+            "verdict": "PASS"
+          },
+          {
+            "inputs": {
+              "derivative": "race_to_21",
+              "fav_team_total": 24.5,
+              "dog_team_total": 20.5,
+              "side": "dog"
+            },
+            "verdict": "PASS"
+          }
+        ],
+        "recorded_stamp_cases": 3,
+        "mismatches_vs_recorded_stamps": [],
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_16",
+      "stage": "MODEL",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_13_16.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "module": 16,
+        "cases": [
+          {
+            "inputs": {
+              "crew_id": "torbert",
+              "crew_penalty_epa": -0.78,
+              "base_total": 41.5
+            },
+            "verdict": "PASS"
+          },
+          {
+            "inputs": {
+              "crew_id": "smith",
+              "crew_penalty_epa": 1.58,
+              "base_total": 41.5
+            },
+            "verdict": "PASS"
+          }
+        ],
+        "recorded_stamp_cases": 2,
+        "mismatches_vs_recorded_stamps": [],
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "trust.enbpi_coverage",
+      "stage": "SIMULATION",
+      "mode": "SHADOW",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/trust/enbpi.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "synthetic_self_check": true,
+        "data_basis": "seeded_synthetic_nonstationary_dgp",
+        "result": {
+          "early_season_gain_pp": 6.25,
+          "full_season_deviation_pp": -0.20408163265306367,
+          "enbpi_early_coverage": 0.84375,
+          "icp_early_coverage": 0.78125,
+          "enbpi_full_coverage": 0.8979591836734694,
+          "icp_full_coverage": 0.8857142857142857,
+          "nominal_coverage": 0.9,
+          "n_early": 64,
+          "n_full": 245,
+          "alpha": 0.1,
+          "seed": 1641,
+          "data_basis": "seeded_synthetic_nonstationary_dgp"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "arbitration.rvc",
+      "stage": "ARBITRATION",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/gates/rvc_gate.py",
+      "verdict": "FAIL",
+      "reason": "residual-versus-close NOT_CLEARED: dataset_present: no paired holdout dataset supplied",
+      "error": null,
+      "evidence": {
+        "rvc": {
+          "verdict": "NOT_CLEARED",
+          "label": "DIAGNOSTIC",
+          "manifest_id": "mnf_20261012",
+          "metrics": {
+            "n": 0
+          },
+          "checks": [
+            {
+              "name": "dataset_present",
+              "pass": false,
+              "detail": "no paired holdout dataset supplied"
+            }
+          ],
+          "reasons": [
+            "dataset_present: no paired holdout dataset supplied"
+          ]
+        },
+        "manifest_id": "mnf_20261012",
+        "frozen_manifest": "/home/hatch/workspace/scratch/gates-wiring/outbox/gauntlet/mnf_20261012_manifest.json"
+      }
+    },
+    {
+      "gate_id": "arbitration.mint_gate",
+      "stage": "ARBITRATION",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/reasoning_engine/mint_gate.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "label": "ANALYSIS-DRAFT \u2014 not for publication",
+        "facets": {
+          "residual_vs_close": "DATA-GAP",
+          "price_feed": "CLEAR",
+          "measured_correlations": "CLEAR"
+        },
+        "decision": {
+          "action": "withhold",
+          "reason": "analyze() DATA-GAP on residual_vs_close; no probability was substituted"
+        },
+        "expected_action": "withhold"
+      }
+    },
+    {
+      "gate_id": "arbitration.proof_ledger",
+      "stage": "ARBITRATION",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/trust/proofledger.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "floor": 0.524,
+        "artifacts_checked": [
+          "sgp_projections",
+          "props_live_board"
+        ],
+        "edge_claims_found": [],
+        "problems": []
+      }
+    },
+    {
+      "gate_id": "trust.calibration_chain_baseline",
+      "stage": "ARBITRATION",
+      "mode": "SHADOW",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/trust/calibration.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "synthetic_self_check": true,
+        "data_basis": "seeded_synthetic_cohort",
+        "result": {
+          "brier": 0.21172620891784444,
+          "adaptive_ece": 0.012580537896002605,
+          "n": 2750,
+          "n_groups": 5,
+          "temperature": 1.58,
+          "tau": 0.19711838178441912,
+          "data_basis": "seeded_synthetic_cohort"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "trust.abstention_backtest",
+      "stage": "ARBITRATION",
+      "mode": "SHADOW",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/trust/abstention.py",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "synthetic_self_check": true,
+        "data_basis": "seeded_synthetic_pick_set",
+        "result": {
+          "brier_all": 0.2160428737061156,
+          "brier_published": 0.20817685975492609,
+          "brier_cut": 0.007866013951189521,
+          "coverage_loss": 0.1185,
+          "n_abstained": 237,
+          "n_picks": 2000,
+          "tau_disagree": 0.0243674727192241,
+          "tau_market": 0.08,
+          "target_error": 0.25,
+          "abstained_brier": 0.2745567243219264,
+          "seed": 1778,
+          "data_basis": "seeded_synthetic_pick_set"
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_21",
+      "stage": "ARBITRATION",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_21_24.py",
+      "verdict": "SKIP",
+      "reason": "no frozen paired dataset in run inputs \u2014 the module REFUSES rather than scoring an empty sample; the same absence is what the RVC gate records",
+      "error": null,
+      "evidence": {
+        "module": 21,
+        "stamp": {
+          "module_id": 21,
+          "module_name": "spread_margin_calibration",
+          "verdict": "REFUSE",
+          "metrics": {
+            "n_available": 0,
+            "n_required": 50
+          },
+          "n_observations": 0,
+          "manifest_id": "mnf_20261012",
+          "evaluated_at": "2026-10-12T23:45:21.690326+00:00",
+          "evaluator": "prediction_engine_gates.py",
+          "label": "DIAGNOSTIC",
+          "notes": "REFUSE: only 0 paired observations, need 50. Reopen when frozen manifest reaches threshold."
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_22",
+      "stage": "ARBITRATION",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_21_24.py",
+      "verdict": "SKIP",
+      "reason": "no frozen paired dataset in run inputs \u2014 the module REFUSES rather than scoring an empty sample; the same absence is what the RVC gate records",
+      "error": null,
+      "evidence": {
+        "module": 22,
+        "stamp": {
+          "module_id": 22,
+          "module_name": "total_ou_calibration",
+          "verdict": "REFUSE",
+          "metrics": {
+            "n_available": 0,
+            "n_required": 50
+          },
+          "n_observations": 0,
+          "manifest_id": "mnf_20261012",
+          "evaluated_at": "2026-10-12T23:45:21.690370+00:00",
+          "evaluator": "prediction_engine_gates.py",
+          "label": "DIAGNOSTIC",
+          "notes": "REFUSE: only 0 paired observations, need 50."
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_23",
+      "stage": "ARBITRATION",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_21_24.py",
+      "verdict": "SKIP",
+      "reason": "no frozen paired dataset in run inputs \u2014 the module REFUSES rather than scoring an empty sample; the same absence is what the RVC gate records",
+      "error": null,
+      "evidence": {
+        "module": 23,
+        "stamp": {
+          "module_id": 23,
+          "module_name": "team_total_calibration",
+          "verdict": "REFUSE",
+          "metrics": {
+            "n_available": 0,
+            "n_required": 100
+          },
+          "n_observations": 0,
+          "manifest_id": "mnf_20261012",
+          "evaluated_at": "2026-10-12T23:45:21.690383+00:00",
+          "evaluator": "prediction_engine_gates.py",
+          "label": "DIAGNOSTIC",
+          "notes": "REFUSE: only 0 team-game pairs, need 100."
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "pe.module_24",
+      "stage": "ARBITRATION",
+      "mode": "SHADOW",
+      "spec_status": "INFERRED",
+      "source": "intelligence/gates/pe_modules/pe_modules_21_24.py",
+      "verdict": "SKIP",
+      "reason": "no frozen paired dataset in run inputs \u2014 the module REFUSES rather than scoring an empty sample; the same absence is what the RVC gate records",
+      "error": null,
+      "evidence": {
+        "module": 24,
+        "stamp": {
+          "module_id": 24,
+          "module_name": "win_probability_calibration",
+          "verdict": "REFUSE",
+          "metrics": {
+            "n_available": 0,
+            "n_required": 50
+          },
+          "n_observations": 0,
+          "manifest_id": "mnf_20261012",
+          "evaluated_at": "2026-10-12T23:45:21.690392+00:00",
+          "evaluator": "prediction_engine_gates.py",
+          "label": "DIAGNOSTIC",
+          "notes": "REFUSE: only 0 paired observations, need 50."
+        },
+        "shadow": true,
+        "effect": "recorded only \u2014 a shadow verdict never blocks, never clears, and never changes a stamp"
+      }
+    },
+    {
+      "gate_id": "output.stamp_derivation",
+      "stage": "OUTPUT",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/gates/gauntlet.py::derive_stamps",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "recorded_stamps": {
+          "label": "DIAGNOSTIC",
+          "rvc_cleared": false,
+          "is_pick": false,
+          "is_edge_claim": false
+        },
+        "derived_stamps": {
+          "label": "DIAGNOSTIC",
+          "rvc_cleared": false,
+          "is_pick": false,
+          "is_edge_claim": false
+        },
+        "rvc_verdict": "NOT_CLEARED",
+        "enforcing_failures_pre_output": [
+          "arbitration.rvc"
+        ]
+      }
+    },
+    {
+      "gate_id": "output.public_surface_guard",
+      "stage": "OUTPUT",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/gates/gauntlet.py::_deep_scan",
+      "verdict": "PASS",
+      "reason": null,
+      "error": null,
+      "evidence": {
+        "verdict_hits": [],
+        "upstream_evidence_only_hits": [
+          "stake field at props_ev_board/board[0]/kelly_quarter",
+          "stake field at props_ev_board/board[1]/kelly_quarter",
+          "stake field at props_ev_board/board[2]/kelly_quarter",
+          "stake field at props_ev_board/board[3]/kelly_quarter",
+          "stake field at props_ev_board/board[4]/kelly_quarter",
+          "stake field at props_ev_board/board[5]/kelly_quarter",
+          "stake field at props_ev_board/board[6]/kelly_quarter",
+          "stake field at props_ev_board/board[7]/kelly_quarter",
+          "stake field at props_ev_board/board[8]/kelly_quarter",
+          "stake field at props_ev_board/board[9]/kelly_quarter",
+          "stake field at props_ev_board/board[10]/kelly_quarter",
+          "stake field at props_ev_board/board[11]/kelly_quarter",
+          "stake field at props_ev_board/board[12]/kelly_quarter",
+          "stake field at props_ev_board/board[13]/kelly_quarter",
+          "stake field at props_ev_board/board[14]/kelly_quarter",
+          "stake field at props_ev_board/board[15]/kelly_quarter",
+          "stake field at props_ev_board/board[16]/kelly_quarter",
+          "stake field at props_ev_board/board[17]/kelly_quarter",
+          "stake field at props_ev_board/board[18]/kelly_quarter",
+          "stake field at props_ev_board/board[19]/kelly_quarter",
+          "stake field at props_ev_board/board[20]/kelly_quarter"
+        ],
+        "upstream_note": "props_ev_board is Hermes' unstamped board; its restamp is owned by the PR #1156 hygiene lane \u2014 recorded here as evidence, not re-stamped by this run"
+      }
+    },
+    {
+      "gate_id": "output.evidence_guard",
+      "stage": "OUTPUT",
+      "mode": "ENFORCING",
+      "spec_status": "CANONICAL",
+      "source": "intelligence/trust/evidence_guard.py",
+      "verdict": "PASS",
+      "reason": "guard HOLDs the artifact from publishing \u2014 correct for a run without clearance evidence",
+      "error": null,
+      "evidence": {
+        "guard_decision": "HOLD",
+        "guard_passed": 4,
+        "guard_failed_checks": [
+          "evidence_hash_present",
+          "evidence_rebound",
+          "sample_floor",
+          "calibration_vs_baseline",
+          "ece_bound",
+          "version_pinned",
+          "window_defined",
+          "provenance_complete",
+          "leakage_attested",
+          "metric_direction_sane",
+          "independent_derivation"
+        ],
+        "guard_hard_failed": [
+          "evidence_hash_present",
+          "evidence_rebound"
+        ],
+        "note": "evidence_hash_present/evidence_rebound are satisfied by publish()'s rebinding at publish time; evaluate() detail above is shown pre-binding",
+        "rvc_verdict": "NOT_CLEARED"
+      }
+    }
+  ],
+  "registry_consistency_errors": [],
+  "census": {
+    "wired_enforcing": [
+      "arbitration.mint_gate",
+      "arbitration.proof_ledger",
+      "arbitration.rvc",
+      "ingest.heldout_discipline",
+      "ingest.injury_publication_gate",
+      "ingest.leakwall_market_snapshot",
+      "ingest.manifest_completeness",
+      "ingest.pinnacle_prop_feed",
+      "ingest.price_feed_integrity",
+      "model.measured_correlations",
+      "model.props_board_consistency",
+      "model.sgp_reproduction",
+      "output.evidence_guard",
+      "output.public_surface_guard",
+      "output.stamp_derivation",
+      "signal.claim_matrix"
+    ],
+    "shadow_only": [
+      "pe.module_01",
+      "pe.module_02",
+      "pe.module_03",
+      "pe.module_04",
+      "pe.module_05",
+      "pe.module_06",
+      "pe.module_07",
+      "pe.module_08",
+      "pe.module_13",
+      "pe.module_14",
+      "pe.module_15",
+      "pe.module_16",
+      "pe.module_21",
+      "pe.module_22",
+      "pe.module_23",
+      "pe.module_24",
+      "trust.abstention_backtest",
+      "trust.calibration_chain_baseline",
+      "trust.enbpi_coverage"
+    ],
+    "not_wired": [
+      {
+        "id": "pe.module_09",
+        "kind": "prediction_engine_module",
+        "reason": "landed 2026-10-11 in commit dc918d8 marked SPEC_PENDING; no executable harness exists in the local packet or on this branch \u2014 a gate that cannot be executed cannot be wired, only registered."
+      },
+      {
+        "id": "pe.module_10",
+        "kind": "prediction_engine_module",
+        "reason": "landed 2026-10-11 in commit dc918d8 marked SPEC_PENDING; no executable harness exists in the local packet or on this branch \u2014 a gate that cannot be executed cannot be wired, only registered."
+      },
+      {
+        "id": "pe.module_11",
+        "kind": "prediction_engine_module",
+        "reason": "landed 2026-10-11 in commit dc918d8 marked SPEC_PENDING; no executable harness exists in the local packet or on this branch \u2014 a gate that cannot be executed cannot be wired, only registered."
+      },
+      {
+        "id": "pe.module_12",
+        "kind": "prediction_engine_module",
+        "reason": "landed 2026-10-11 in commit dc918d8 marked SPEC_PENDING; no executable harness exists in the local packet or on this branch \u2014 a gate that cannot be executed cannot be wired, only registered."
+      },
+      {
+        "id": "pe.module_17",
+        "kind": "prediction_engine_module",
+        "reason": "no harness located: every PE harness found covers 1-8, 13-16, 21-24. Nothing to reconcile or execute."
+      },
+      {
+        "id": "pe.module_18",
+        "kind": "prediction_engine_module",
+        "reason": "no harness located: every PE harness found covers 1-8, 13-16, 21-24. Nothing to reconcile or execute."
+      },
+      {
+        "id": "pe.module_19",
+        "kind": "prediction_engine_module",
+        "reason": "no harness located: every PE harness found covers 1-8, 13-16, 21-24. Nothing to reconcile or execute."
+      },
+      {
+        "id": "pe.module_20",
+        "kind": "prediction_engine_module",
+        "reason": "no harness located: every PE harness found covers 1-8, 13-16, 21-24. Nothing to reconcile or execute."
+      },
+      {
+        "id": "pe.modules_25_36",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36
+        ],
+        "reason": "staged locally amid GitHub failures on 2026-10-11 (fleet record); never landed on any branch in this stack."
+      },
+      {
+        "id": "pe.modules_37_40",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          37,
+          38,
+          39,
+          40
+        ],
+        "reason": "landed in commit 7996d0d outside this branch's stack; some builders guessed mappings without canonical specs \u2014 quarantined until reconciled against GATE-SPECS and the module headers. Not imported across branches unreviewed."
+      },
+      {
+        "id": "pe.modules_49_52",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          49,
+          50,
+          51,
+          52
+        ],
+        "reason": "landed in commit 155ac67 outside this branch's stack; some builders guessed mappings without canonical specs \u2014 quarantined until reconciled against GATE-SPECS and the module headers. Not imported across branches unreviewed."
+      },
+      {
+        "id": "pe.modules_53_56",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          53,
+          54,
+          55,
+          56
+        ],
+        "reason": "landed in commit 6bb66d84 outside this branch's stack; some builders guessed mappings without canonical specs \u2014 quarantined until reconciled against GATE-SPECS and the module headers. Not imported across branches unreviewed."
+      },
+      {
+        "id": "pe.modules_57_60",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          57,
+          58,
+          59,
+          60
+        ],
+        "reason": "landed in commit cb2d32e outside this branch's stack; some builders guessed mappings without canonical specs \u2014 quarantined until reconciled against GATE-SPECS and the module headers. Not imported across branches unreviewed."
+      },
+      {
+        "id": "pe.modules_61_64",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          61,
+          62,
+          63,
+          64
+        ],
+        "reason": "landed in commit 1f96f8b outside this branch's stack; some builders guessed mappings without canonical specs \u2014 quarantined until reconciled against GATE-SPECS and the module headers. Not imported across branches unreviewed."
+      },
+      {
+        "id": "pe.modules_41_48",
+        "kind": "prediction_engine_module_range",
+        "modules": [
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "reason": "no landing record located in fleet records or this branch's history; nothing to reconcile or execute."
+      },
+      {
+        "id": "ts_corpus.automl",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 2,
+        "gate_status_not_evaluated": 2,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/automl/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 2 of 2 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.bayesian",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 16,
+        "gate_status_not_evaluated": 15,
+        "gate_stated_no_status_line": 1,
+        "source": "packages/prediction-engine/src/bayesian/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 15 of 16 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.calibration",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 1,
+        "gate_status_not_evaluated": 1,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/calibration/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 1 of 1 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.causal",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 5,
+        "gate_status_not_evaluated": 4,
+        "gate_stated_no_status_line": 1,
+        "source": "packages/prediction-engine/src/causal/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 4 of 5 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.continual",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 3,
+        "gate_status_not_evaluated": 3,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/continual/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 3 of 3 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.decision",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 44,
+        "gate_status_not_evaluated": 0,
+        "gate_stated_no_status_line": 44,
+        "source": "packages/prediction-engine/src/decision/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 0 of 44 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.ensemble",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 14,
+        "gate_status_not_evaluated": 13,
+        "gate_stated_no_status_line": 1,
+        "source": "packages/prediction-engine/src/ensemble/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 13 of 14 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.experimental",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 19,
+        "gate_status_not_evaluated": 16,
+        "gate_stated_no_status_line": 3,
+        "source": "packages/prediction-engine/src/experimental/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 16 of 19 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.injuries",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 9,
+        "gate_status_not_evaluated": 8,
+        "gate_stated_no_status_line": 1,
+        "source": "packages/prediction-engine/src/injuries/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 8 of 9 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.inplay",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 1,
+        "gate_status_not_evaluated": 1,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/inplay/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 1 of 1 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.invention",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 7,
+        "gate_status_not_evaluated": 0,
+        "gate_stated_no_status_line": 7,
+        "source": "packages/prediction-engine/src/invention/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 0 of 7 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.markets",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 10,
+        "gate_status_not_evaluated": 9,
+        "gate_stated_no_status_line": 1,
+        "source": "packages/prediction-engine/src/markets/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 9 of 10 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.metalearning",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 6,
+        "gate_status_not_evaluated": 4,
+        "gate_stated_no_status_line": 2,
+        "source": "packages/prediction-engine/src/metalearning/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 4 of 6 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.nlp",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 3,
+        "gate_status_not_evaluated": 3,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/nlp/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 3 of 3 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.props-dfs",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 14,
+        "gate_status_not_evaluated": 14,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/props-dfs/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 14 of 14 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.rl",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 7,
+        "gate_status_not_evaluated": 5,
+        "gate_stated_no_status_line": 2,
+        "source": "packages/prediction-engine/src/rl/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 5 of 7 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.simulators",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 1,
+        "gate_status_not_evaluated": 1,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/simulators/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 1 of 1 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.sizing",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 1,
+        "gate_status_not_evaluated": 1,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/sizing/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 1 of 1 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.symreg",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 3,
+        "gate_status_not_evaluated": 3,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/symreg/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 3 of 3 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.team-ratings",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 5,
+        "gate_status_not_evaluated": 5,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/team-ratings/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 5 of 5 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.tracking",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 3,
+        "gate_status_not_evaluated": 3,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/tracking/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 3 of 3 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.weather",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 2,
+        "gate_status_not_evaluated": 2,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/weather/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 2 of 2 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "ts_corpus.win-spread-total",
+        "kind": "ts_arxiv_corpus_family",
+        "modules": 3,
+        "gate_status_not_evaluated": 3,
+        "gate_stated_no_status_line": 0,
+        "source": "packages/prediction-engine/src/win-spread-total/",
+        "reason": "TypeScript corpus in packages/** \u2014 owned by the packages lane, not this run path. Its acceptance gates are documented in docs/gates/GATE-SPECS.md; per that spec, 3 of 3 carry 'Gate status: NOT EVALUATED' (they require historical walk-forward data) and the rest state a gate with no recorded evaluation. A Python gauntlet cannot execute them; they are registered so the census is complete, not wired."
+      },
+      {
+        "id": "intelligence.staking",
+        "kind": "python_lane",
+        "source": "intelligence/staking/",
+        "reason": "staking/sizing sits DOWNSTREAM of RVC clearance by doctrine; while RVC is uncleared there is nothing legitimate for it to size. Excluded from the run path deliberately, not by omission."
+      },
+      {
+        "id": "intelligence.ratings",
+        "kind": "python_lane",
+        "source": "intelligence/ratings/",
+        "reason": "rating producers (GElo, Dixon-Coles family) \u2014 model inputs with their own tests, not acceptance gates over a game run."
+      },
+      {
+        "id": "intelligence.qb",
+        "kind": "python_lane",
+        "source": "intelligence/qb/",
+        "reason": "QB model components \u2014 producers, not acceptance gates."
+      },
+      {
+        "id": "intelligence.coaching",
+        "kind": "python_lane",
+        "source": "intelligence/coaching/",
+        "reason": "coaching signal producers with their own gate tests (intelligence/tests/test_coaching_gates.py, a separate suite); their claims are policed by signal.claim_matrix in this run."
+      },
+      {
+        "id": "intelligence.combining",
+        "kind": "python_lane",
+        "source": "intelligence/combining/",
+        "reason": "forecast-combination library (AFCRPS etc.) \u2014 machinery, not an acceptance gate over the run."
+      },
+      {
+        "id": "intelligence.newregime",
+        "kind": "python_lane",
+        "source": "intelligence/newregime/",
+        "reason": "regime/drift research modules with their own tests; not wired as run-path gates in this branch."
+      },
+      {
+        "id": "intelligence.trust_signals",
+        "kind": "python_lane",
+        "source": "intelligence/trust-signals/",
+        "reason": "tipster/social trust scoring \u2014 a different domain (source trust), not a gate over engine output for a game."
+      },
+      {
+        "id": "intelligence.reasoning",
+        "kind": "python_lane",
+        "source": "intelligence/reasoning/",
+        "reason": "reasoning trace machinery (adversary/checklist/escalation); the arbitration surface that IS a gate \u2014 mint_gate \u2014 is wired."
+      },
+      {
+        "id": "intelligence.engines",
+        "kind": "python_lane",
+        "source": "intelligence/engines/",
+        "reason": "engines/llm is an LLM specialist harness; engines/drift_monitor.py is a HuggingFace ZeroGPU free-tier cost tripwire (cron infra that makes live network calls) \u2014 neither is an acceptance gate over a priced game run."
+      },
+      {
+        "id": "intelligence.trust.leakwall_feature_store",
+        "kind": "python_lane",
+        "source": "intelligence/trust/leakwall.py",
+        "reason": "the FeatureStore / latest_prior_row point-in-time machinery is wired where a feature store exists; this run path consumes frozen captures, not a feature store. leakwall's market-feed rule (select_market_snapshot) IS wired at INGEST."
+      },
+      {
+        "id": "intelligence.physics.bkm",
+        "kind": "python_lane",
+        "source": "intelligence/physics/bkm_convergence_sweep.py",
+        "reason": "research convergence sweep; its honest result (15 of 27 cases diverge) is a finding, not a run-path gate. The cylindrical solver itself is a model component, not a gate."
+      },
+      {
+        "id": "intelligence.keel",
+        "kind": "python_lane",
+        "source": "intelligence/keel/",
+        "reason": "TypeScript app (Keel UI) inside intelligence/ \u2014 not a Python gate."
+      },
+      {
+        "id": "intelligence.voice_brain",
+        "kind": "python_lane",
+        "source": "intelligence/voice_brain/",
+        "reason": "Windows voice daemon lane (Hermes). Its watchdog's announcement gating is fixed in the PR #1156 hygiene lane, not here."
+      },
+      {
+        "id": "intelligence.integration",
+        "kind": "python_lane",
+        "source": "intelligence/integration/",
+        "reason": "specialist integration plumbing (api/providers/synthesis) \u2014 machinery, not acceptance gates."
+      },
+      {
+        "id": "intelligence.audit_and_context",
+        "kind": "python_lane",
+        "source": "intelligence/audit/ + intelligence/context/",
+        "reason": "paired-audit and tau wiring utilities \u2014 tools used by other lanes, not run-path gates."
+      }
+    ]
+  },
+  "counts": {
+    "enforcing": {
+      "PASS": 14,
+      "FAIL": 1,
+      "SKIP": 1
+    },
+    "shadow": {
+      "PASS": 11,
+      "FAIL": 0,
+      "SKIP": 8
+    }
+  },
+  "enforcing_failures": [
+    "arbitration.rvc"
+  ]
+}
