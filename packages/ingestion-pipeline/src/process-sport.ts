@@ -431,12 +431,43 @@ export async function processSport(
       apiKey === "absent";
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
     const eventOddsByExternalId = new Map<string, unknown>();
+    // Galaxy-odds-first: the paid Odds API leg runs only when the deployment
+    // explicitly selects a paid provider (ODDS_PROVIDER=odds-api or
+    // the-odds-api), a real key is set, and the 402 circuit is closed.
+    const oddsProviderIsPaid =
+      (process.env["ODDS_PROVIDER"] ?? "").trim().toLowerCase() === "odds-api" ||
+      (process.env["ODDS_PROVIDER"] ?? "").trim().toLowerCase() === "the-odds-api";
+
+    // Galaxy/ESPN keyless (inline scoreboard odds, registry-gated) is the
+    // product path. It runs FIRST (handoff §1). Never invents — soft-fails empty.
+    // The second book (Kalshi via PredExon) is attached inside the fetch when
+    // PREDEXON_INGEST is on.
+    let rundownAttemptNote: string | null = null;
+    let espnAttemptNote: string | null = null;
+    try {
+      const espn = await fetchEspnOddsForSport(sport.key, {
+        secondBook: createGalaxySecondBook(),
+      });
+      if (espn.events.length > 0) {
+        events = espn.events;
+        oddsProviderTag = "espn_public";
+        console.log(
+          `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
+            (espn.error ? ` (note: ${espn.error})` : ""),
+        );
+      } else {
+        espnAttemptNote = espn.error ?? "espn odds empty";
+        console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+      }
+    } catch (espnErr) {
+      espnAttemptNote = espnErr instanceof Error ? espnErr.message : String(espnErr);
+      console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
+    }
 
     // WP-27 step 2: while the HTTP 402 payment circuit is OPEN the paid client
-    // refuses every call anyway (fail-closed, no upstream request). Skip the
-    // paid leg outright so the cycle goes straight to the keyless Galaxy path
-    // and no phantom paid request is counted. half_open still probes upstream
-    // (one call at a time) so a recovered key is noticed on its own.
+    // refuses every call anyway (fail-closed, no upstream request). half_open
+    // still probes upstream (one call at a time) so a recovered key is noticed
+    // on its own.
     const paidCircuitOpen = !oddsKeyIsSentinel && getOddsPaymentCircuitBreaker().getState() === "open";
     if (paidCircuitOpen) {
       oddsProviderTag = "paid-circuit-open";
@@ -446,18 +477,18 @@ export async function processSport(
       );
     }
 
-    if (!oddsKeyIsSentinel && !paidCircuitOpen) {
+    if (events.length === 0 && oddsProviderIsPaid && !oddsKeyIsSentinel && !paidCircuitOpen) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
       // covers the need. For "odds" the guard passes today (no free odds source
       // is cleared), so the paid call proceeds. If a free odds source is cleared
-      // in the future, paidCallJustified flips to false and we skip to the free
-      // dual-path below (rundown / espn).
+      // in the future, paidCallJustified flips to false and we skip.
       if (paidCallJustified("odds", sport.key)) {
         try {
           paidRequestCount += 1;
           const primary = await client.getOdds(sport.key, [...MARKETS]);
           events = primary.data as import("@sports/types").OddsApiEvent[];
           recordPaidResponse(primary);
+          oddsProviderTag = "the-odds-api";
           if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow(fetchedAt)) {
             try {
               paidRequestCount += 1;
@@ -520,8 +551,14 @@ export async function processSport(
             `free sources cover scores; skipping The Odds API.`,
         );
       }
+    } else if (events.length === 0 && oddsProviderIsPaid && paidCircuitOpen) {
+      oddsProviderTag = "paid-circuit-open";
+      console.warn(
+        `${logPrefix} ${sport.key}: Odds API payment circuit open — skipping paid fetch`,
+      );
+    }
 
-      // Licensed event-odds (player props). Default OFF. Hard credit cap.
+    // Licensed event-odds (player props). Default OFF. Hard credit cap.
       // Never historical. Never throws. Persistence uses OddsLineSnapshot
       // string market/side (no new table) when LINE_ARCHIVE is on.
       if (events.length > 0) {
@@ -557,42 +594,8 @@ export async function processSport(
           console.log(`${logPrefix} ${sport.key}: event-odds ${eventOddsReport.reason}`);
         }
       }
-    }
 
-    // Galaxy/ESPN keyless (inline scoreboard odds, registry-gated) is the
-    // product path when the paid feed yields nothing (key absent, circuit open,
-    // or an empty/failed paid response). It runs BEFORE Rundown: we are the
-    // provider, Rundown is at most a bridge (ledger C-103/C-104). Never invents
-    // — soft-fails empty. The second book (Kalshi via PredExon) is attached
-    // inside the fetch when PREDEXON_INGEST is on.
-    let rundownAttemptNote: string | null = null;
-    let espnAttemptNote: string | null = null;
-    if (events.length === 0) {
-      try {
-        // One PredExon catalog per sport per cycle (cached inside; undefined
-        // while PREDEXON_INGEST is off, which is the default).
-        const espn = await fetchEspnOddsForSport(sport.key, {
-          secondBook: createGalaxySecondBook(),
-        });
-        if (espn.events.length > 0) {
-          events = espn.events;
-          oddsProviderTag = "espn_public";
-          console.log(
-            `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
-              (espn.error ? ` (note: ${espn.error})` : ""),
-          );
-        } else {
-          espnAttemptNote = espn.error ?? "espn odds empty";
-          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
-        }
-      } catch (espnErr) {
-        espnAttemptNote =
-          espnErr instanceof Error ? espnErr.message : String(espnErr);
-        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
-      }
-    }
-
-    // TheRundown: full replace when primary AND the keyless path are empty;
+    // TheRundown: full replace when the keyless path AND the paid leg are empty;
     // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
     // fully covered slate.
     const rundownKey = resolveRundownApiKey();
@@ -609,22 +612,30 @@ export async function processSport(
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0 && !rd.complete) {
-          // FAIL CLOSED. This branch REPLACES the entire slate for the sport,
-          // so a truncated day-span here is not "some data is better than
-          // none" — it is a board that silently omits every game on the days
-          // Rundown failed to serve, written as though it were the whole
-          // slate. The run would then report SUCCESS, oddsInserted > 0 would
-          // advance the public freshness clock, and the missing games would be
-          // indistinguishable from games that simply are not scheduled.
-          // Refusing lets the ESPN tertiary path (and the next cycle) try
-          // again. The thin-fill branch below is deliberately NOT gated this
-          // way: it only ADDS bookmakers to games we already hold, so a short
-          // day-span there means fewer fills, never a missing game.
+          // FAIL CLOSED (main/#1160). This branch REPLACES the entire slate
+          // for the sport, so a truncated day-span here is not "some data is
+          // better than none" — it is a board that silently omits every game
+          // on the days Rundown failed to serve, written as though it were
+          // the whole slate. The run would then report SUCCESS,
+          // oddsInserted > 0 would advance the public freshness clock, and
+          // the missing games would be indistinguishable from games that
+          // simply are not scheduled. Refusing lets the ESPN tertiary path
+          // (and the next cycle) try again. The thin-fill branch below is
+          // deliberately NOT gated this way: it only ADDS bookmakers to games
+          // we already hold, so a short day-span there means fewer fills,
+          // never a missing game.
           oddsProviderTag = "therundown-incomplete";
           rundownAttemptNote =
             `rundown incomplete — refusing partial board replacement ` +
             `(unread days: ${rd.failedDays.join(", ") || "unknown"}): ${rd.error ?? ""}`;
           console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
+        } else if (rd.complete === false) {
+          // Branch/#1158: incomplete span that returned no events at all.
+          // Nothing to replace either way, but the tag/note must say the
+          // slate was truncated, not merely empty.
+          oddsProviderTag = "therundown-truncated";
+          rundownAttemptNote = rd.error ?? "rundown slate truncated (incomplete day span)";
+          console.warn(`${logPrefix} ${sport.key}: rundown truncated — ${rundownAttemptNote}`);
         } else if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
