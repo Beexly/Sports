@@ -733,4 +733,47 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    allowedInputs: [
+      "game_id", "play_id", "posteam", "down", "ydstogo", "yards_gained",
+      "play_type", "touchdown", "interception", "fumble_lost", "fixed_drive"
+    ],
+    failureModes: [
+      "unratable plays (kickoffs, penalties, NaN yardage) mistakenly scored as failures",
+      "turnover gaining yardage mistakenly scored as conversion",
+      "series boundaries incorrectly spanning distinct drives",
+      "incorporating game data from target week or later (point-in-time violation)"
+    ],
+    family: "expected_metric",
+    forbiddenInputs: [
+      "any model fit",
+      "non-allowlist pbp columns",
+      "future game data"
+    ],
+    formulaClass: "deterministic",
+    formulaSummary: "Per-team distribution of the down on which teams earn a new set of downs (1st / 2nd / 3rd / 4th) vs series that never convert, computed over strict rolling windows.",
+    historicalPrecedent: [
+      {
+        name: "Down-of-conversion fingerprint",
+        reason: "WHEN an offense converts is an offense-style fingerprint. Feeds Layer-2 game-script reasoning (e.g. early-down converters vs late-down-dependent offenses).",
+      },
+    ],
+    internalName: "down_conversion_shadow",
+    metricId: "down-conversion",
+    protectedComponents: [
+      "conversion definition (turnover dominates, TD forces success)",
+      "drive-grouping segmentation logic",
+      "point-in-time window discipline",
+      "strict sample floor handling"
+    ],
+    publicExposure: "none",
+    publicName: "Down Conversion Distribution",
+    sourceRightsRequired: [
+      "public play-by-play data only"
+    ],
+    status: "SHADOW",
+    targetQuestion: "What is the team's offense-style fingerprint regarding when they earn a new set of downs?",
+    targetVariable: "down-conversion distribution and early-down share",
+    validationMethods: ["deterministic_rule_tests", "point_in_time_checks"],
+  },
 ] as const;
