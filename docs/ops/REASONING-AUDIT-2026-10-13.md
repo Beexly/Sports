@@ -60,3 +60,34 @@ is additive).
 - Directional candidates: when the mind's L3 chains carry thesis legs
   (trace.legs + adversary verdicts), the board should rank those legs by
   verdict + chain strength instead of the surface skeleton.
+
+
+## L4 UPDATE (later the same day): the two-layer doctrine is now code
+
+Architecture as pushed (6a7929dd3..836411507 + auto-attach):
+
+- `intelligence/reasoning/signals.py` - typed `Signal` records, 10 domains,
+  mandatory provenance, likelihood ratios with verification labels,
+  `effective_lr()` (contradict -> inverse, neutral -> 1).
+- `intelligence/reasoning/bayes.py` - `MarketPrior` + `update()`:
+  posterior_odds = prior_odds x prod(LR); every step recorded; LR=1 / neutral
+  logged as unapplied, never dropped.
+- `intelligence/reasoning/market_priors.py` - Layer 1 for EVERY game: ESPN
+  inline odds (DraftKings American strings at moneyline.home.close.odds)
+  de-vigged multiplicatively -> MarketPrior (booksum recorded).
+- `reasoning_engine/run_game.py` - auto-attaches priors by matchup (named gap
+  on failure), always emits `ranked_board` (+ `bayes_updates` when priors
+  exist) + `causal_chain`; withhold/pass are mint actions, never silence.
+- `reasoning_engine/facets.py` - L1 facts now carry the metric-universe set:
+  success_rate, air_yards_per_att, wpa, cpoe_mean, xyac_mean, air/yac EPA
+  (point-in-time, same parquet).
+
+END-TO-END PROOF (real data only): DAL@PHI - DK close -120/+100 ->
+de-vig 0.5217/0.4783 (booksum 1.0455) x air-density LR 1.10 (Lincoln Financial,
+rho 1.1891, MEASURED) -> PHI posterior 0.5455 with the step shown; DAL flat
+0.4783 (no firing signals - honest). Kalshi cross-check: 0.51 -> 0.5338.
+
+DEFAULT BEHAVIOR NOW: every run emits ranked board + chain + (when odds exist)
+Bayesian posterior with full update math. PASS/withhold survive only as the
+mint action text - the only veto that remains is the sealed pricesWorseThanMarket
+safety rule.
