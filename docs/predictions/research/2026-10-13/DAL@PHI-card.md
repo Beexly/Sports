@@ -1,10 +1,10 @@
 # DAL@PHI - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-13T21:19:29.401402+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
+generated_utc: 2026-10-13T21:29:21.198386+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
 
 ## Named thesis
 
-**Trench Funnel** - named from the confluence cluster of 102 cited facts across 6 domains (biophysical, cognitive, dfs, environmental, market, on_field).
+**Trench Funnel** - named from the confluence cluster of 103 cited facts across 7 domains (biophysical, cognitive, dfs, environmental, market, matchup, on_field).
 
 ## Causal chain (every link cites its file)
 
@@ -24,6 +24,7 @@ generated_utc: 2026-10-13T21:19:29.401402+00:00  |  trace: 2026-10-13T173138Z000
 - dfs: 3 cited fact(s)
 - environmental: 4 cited fact(s)
 - market: 2 cited fact(s)
+- matchup: 1 cited fact(s)
 - on_field: 42 cited fact(s)
 
 ## Firing vs contradicting signals

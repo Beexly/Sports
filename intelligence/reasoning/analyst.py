@@ -438,6 +438,23 @@ def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
     f, g = read_ngs(home, away)
     facts += f
     gaps += g
+    # Move 3: the matchup report joins the card (same corpus, deeper pairing)
+    try:
+        import sys as _sys
+        _mp = str(REPO / "intelligence" / "matchups")
+        if _mp not in _sys.path:
+            _sys.path.insert(0, _mp)
+        from matchup_engine import build_matchups
+        mu = build_matchups(home, away)
+        for c in mu["chains"]:
+            facts.append({
+                "domain": "matchup", "metric": "matchup_chain", "subject": c.split(":")[0],
+                "value": c, "source": "intelligence/matchups/matchup_engine.py",
+                "note": "specific-receiver/specific-coverage pairing chain (Move 3)",
+            })
+        gaps.extend(mu["gaps"])
+    except Exception as exc:
+        gaps.append(f"matchup engine: unavailable ({type(exc).__name__})")
 
     thesis = name_thesis(facts)
     chain = build_chain(home, away, facts)
