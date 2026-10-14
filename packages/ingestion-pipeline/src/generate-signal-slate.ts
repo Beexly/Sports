@@ -42,6 +42,7 @@ import { stalenessBlockers } from "./signal-staleness.js";
 import { envWithStoredSignals } from "./stored-signal-env-bridge.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
+import { emissionBlocked, zeroEmissionNote } from "./walk-forward-emission-gate.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -259,6 +260,21 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       mindWithheld: 0,
       errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
       note: "slate refused: no association trace",
+    };
+  }
+  if (emissionBlocked(opts.emissionGate)) {
+    return {
+      ok: true,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      mindWithheld: 0,
+      errors: [],
+      note: zeroEmissionNote(),
     };
   }
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";

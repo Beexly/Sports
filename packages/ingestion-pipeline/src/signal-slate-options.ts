@@ -28,4 +28,9 @@ export type SignalSlateOptions = {
    * exactly as they are without this field.
    */
   readonly mindByGameId?: ReadonlyMap<string, MindVerdict>;
+  /**
+   * Walk-forward emission override. Production omits this and reads
+   * walk-forward-gate.json. passed !== true blocks every Pick write.
+   */
+  readonly emissionGate?: { readonly passed: boolean };
 };
