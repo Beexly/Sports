@@ -1,0 +1,103 @@
+{
+ "label": "DIAGNOSTIC -- walk-forward margin CRPS; infrastructure only; nothing promoted",
+ "gate_status": "NOT CLEARED",
+ "passed": false,
+ "provisional": true,
+ "generated_at": "2026-10-14T21:26:25Z",
+ "manifest": {
+  "path": "dfs/nfl_rvc_manifest.json",
+  "sha256": "bec543fc83a63ed70042251147504e3df995bab590ea7a709bc0d9cbb7f3cbd5",
+  "freshness_audit": {
+   "path": "/tmp/wfwt/dfs/nfl_rvc_manifest.json",
+   "stamp": "2026-10-11T03:37:51Z",
+   "age_hours": 89.81,
+   "fresh": true,
+   "failure_mode": null,
+   "label": "FRESH"
+  },
+  "n_rows": 855,
+  "final_diff_mismatch_rows": 340,
+  "margin_source": "home_score - away_score (final_diff column not used)"
+ },
+ "model": {
+  "family": "Laplace(mu=close spread, b(T,S))",
+  "mu": "spread_line (closing spread as predicted home margin; not fitted)",
+  "b": "mean |Y-mu| of strictly earlier (season,week) games in the (T,|S|) cell; fallback to all earlier if cell < 30",
+  "cdf": "F(y)=0.5*exp((y-mu)/b) if y<mu else 1-0.5*exp(-(y-mu)/b); P(cover)=F(spread)=0.5; P(home win)=1-F(0)",
+  "bins": {
+   "T_edges": [
+    41.0,
+    45.0,
+    48.0
+   ],
+   "T_bins": [
+    "T<41",
+    "41<=T<45",
+    "45<=T<48",
+    "T>=48"
+   ],
+   "absS_edges": [
+    3.5,
+    7.5
+   ],
+   "absS_bins": [
+    "|S|<3.5",
+    "3.5<=|S|<7.5",
+    "|S|>=7.5"
+   ],
+   "choice": "T edges near the 2023-25 closing-total quartiles; |S| split at the 3 and 7 key numbers"
+  },
+  "cell_min": 30
+ },
+ "baseline": {
+  "family": "Gaussian(mu=close, sigma=13.45 fixed)",
+  "same_games": true
+ },
+ "warmup_season": 2023,
+ "scored_seasons": [
+  2024,
+  2025
+ ],
+ "n": 570,
+ "pooled": {
+  "n": 570,
+  "laplace_conditional_crps": 7.0611,
+  "laplace_one_scale_crps": 7.0203,
+  "gaussian_close_crps": 7.0271,
+  "delta_conditional_vs_gaussian": -0.034,
+  "delta_one_scale_vs_gaussian": 0.0068,
+  "cell_fallbacks": 105
+ },
+ "per_season": {
+  "2024": {
+   "n": 285,
+   "laplace_conditional_crps": 7.139,
+   "laplace_one_scale_crps": 7.1114,
+   "gaussian_close_crps": 7.1355,
+   "delta_conditional_vs_gaussian": -0.0035,
+   "delta_one_scale_vs_gaussian": 0.0241,
+   "cell_fallbacks": 77
+  },
+  "2025": {
+   "n": 285,
+   "laplace_conditional_crps": 6.9833,
+   "laplace_one_scale_crps": 6.9292,
+   "gaussian_close_crps": 6.9187,
+   "delta_conditional_vs_gaussian": -0.0646,
+   "delta_one_scale_vs_gaussian": -0.0105,
+   "cell_fallbacks": 28
+  }
+ },
+ "rule": {
+  "passed_if": "delta_conditional_vs_gaussian >= 0.01 AND n >= 150"
+ },
+ "honesty_notes": [
+  "Gate is NOT cleared unless passed is true; even then nothing is promoted and mu stays the close.",
+  "The absolute 7.109 / 7.099 bar was not reproduced on this manifest and is not used; comparison is same-games Gaussian(close, 13.45).",
+  "Closes are nflverse point lines (spread_line/total_line), not de-vigged prices.",
+  "Reader path unresolved: autonomous_cycle.py is not in any GitHub branch; the path it reads must be confirmed on Beexly.",
+  "Garrett reference (n=2462, Laplace 7.1597, Gaussian 7.1540) is on a larger game set; this manifest covers 2023-2025 only.",
+  "Manifest final_diff disagrees with home_score - away_score on final_diff_mismatch_rows rows (sign flipped); Y uses the score fields. The frozen manifest file itself is untouched.",
+  "Vision weight 0. No imputation. Joins fail closed."
+ ]
+}
