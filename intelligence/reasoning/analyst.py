@@ -470,9 +470,114 @@ def breaking_conditions(home: str, away: str, facts: list[dict]) -> list[str]:
     return conds
 
 
-def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
+def _slate_week(date: str, explicit: int | None = None) -> int:
+    """Which harvested week are we reasoning? Explicit --week wins; else the
+    week whose start is the latest one on/before `date`; else the newest week."""
+    if explicit:
+        return explicit
+    try:
+        from reasoning.slate_registry import weeks  # type: ignore
+    except Exception:
+        try:
+            from slate_registry import weeks  # type: ignore
+        except Exception:
+            return 412
+    ws = weeks()
+    if not ws:
+        return 412
+    try:
+        import datetime as _dt
+        d = _dt.date.fromisoformat(date)
+        for w in ws:
+            s = str(w.get("start") or "")[:10]
+            if s and _dt.date.fromisoformat(s) <= d:
+                return w["periodId"]
+    except Exception:
+        pass
+    return ws[0]["periodId"]
+
+
+def _fixture_guard(home: str, away: str, week: int) -> tuple[dict | None, list[str]]:
+    """THE guard against phantom fixtures. Returns (game, gaps).
+
+    A card for a matchup that is not on the real slate is the worst failure in
+    this repo: it reads as analysis and is fiction. If the requested game is not
+    in the harvested slate, this returns the game=None and a named gap that
+    states who each team ACTUALLY plays that week.
+    """
+    gaps: list[str] = []
+    try:
+        try:
+            from reasoning.slate_registry import resolve_fixture, opponent_of, week as _wk
+        except Exception:
+            from slate_registry import resolve_fixture, opponent_of, week as _wk
+    except Exception as exc:
+        return None, [f"FIXTURE GUARD UNAVAILABLE ({type(exc).__name__}): slate registry not importable; "
+                      f"the matchup was NOT confirmed against a real slate"]
+    w = _wk(week) or {}
+    gm = resolve_fixture(week, away, home)
+    if gm is None:
+        ha, aa = opponent_of(week, home), opponent_of(week, away)
+        gaps.append(
+            f"FIXTURE NOT ON SLATE: {away}@{home} is not a game in {w.get('name')} (period {week}). "
+            f"Real games that week: {home} plays {ha or 'unknown'}; {away} plays {aa or 'unknown'}. "
+            f"A card for this matchup would be fiction — the engine REFUSES to reason it as real."
+        )
+        return None, gaps
+    return gm, gaps
+
+
+def build_card(home: str, away: str, date: str, week: int | None = None) -> tuple[str, dict]:
     facts: list[dict] = []
     gaps: list[str] = []
+    # --- FIXTURE CONFIRMATION: nothing below runs for a phantom matchup ---
+    _week = _slate_week(date, week)
+    _game, _fgaps = _fixture_guard(home, away, _week)
+    gaps += _fgaps
+    if _game is None:
+        # REFUSE. No facts, no chain, no posterior for a matchup that is not real.
+        now = datetime.now(timezone.utc).isoformat()
+        refused = "\n".join([
+            f"# {away}@{home} - FIXTURE NOT CONFIRMED (card REFUSED)",
+            "",
+            f"**This matchup is not a game on the real {_week} slate.** The engine does not",
+            "emit an analyst card for a fixture it cannot confirm. A card here would be",
+            "fiction that reads as analysis.",
+            "",
+            "## Why this card was refused",
+            "",
+        ] + [f"- {g}" for g in _fgaps] + [
+            "",
+            "## What to do instead",
+            "",
+            "- Re-run against the actual game (the real opponents are named above).",
+            "- Or pass `--week <periodId>` for the week this matchup really belongs to.",
+            "",
+        ])
+        return refused, {
+            "game": f"{away}@{home}", "thesis": "FIXTURE NOT CONFIRMED",
+            "domains": 0, "facts": 0, "chain_links": 0, "gaps": _fgaps,
+            "conviction": 0, "generated_utc": now, "fixture_confirmed": False,
+            "slate_week": _week, "refused": True,
+        }
+    if _game is not None:
+        try:
+            try:
+                from reasoning.slate_registry import fair_probabilities
+            except Exception:
+                from slate_registry import fair_probabilities
+            _fair = fair_probabilities(_game)
+        except Exception:
+            _fair = {"ok": False, "gap": "de-vig unavailable"}
+        facts.append({
+            "domain": "market", "metric": "vegas_line_slate", "subject": f"{_game.get('matchup')}",
+            "value": _game.get("total"),
+            "source": "docs/data-sources/research/2026-10-13/linestar/linestar_slates_by_period.json",
+            "note": (f"LineStar/DraftKings slate line: spread {_game.get('spread_away')}/{_game.get('spread_home')}, "
+                     f"total {_game.get('total')}, ML {_game.get('ml_away')}/{_game.get('ml_home')}; "
+                     f"de-vigged fair {_fair.get('fair_away')}/{_fair.get('fair_home')} "
+                     f"(overround {_fair.get('overround')})" if _fair.get("ok") else _fair.get("gap")),
+        })
     for reader in (read_weather, ):
         f, g = reader(home)
         facts += f
@@ -683,15 +788,18 @@ def build_card(home: str, away: str, date: str) -> tuple[str, dict]:
         "game": f"{away}@{home}", "thesis": thesis, "domains": domains,
         "facts": len(facts), "chain_links": cited, "gaps": gaps,
         "conviction": conviction, "generated_utc": now,
+        "fixture_confirmed": _game is not None, "slate_week": _week,
+        "game_id": (_game or {}).get("gameId"),
     }
     return card_md, meta
 
 
-def emit_card(home: str, away: str, date: str = "2026-10-13") -> tuple[Path, dict]:
-    md, meta = build_card(home, away, date)
+def emit_card(home: str, away: str, date: str = "2026-10-13", week: int | None = None) -> tuple[Path, dict]:
+    md, meta = build_card(home, away, date, week)
     outdir = OUTROOT / date
     outdir.mkdir(parents=True, exist_ok=True)
-    out = outdir / f"{away}@{home}-card.md"
+    suffix = "" if meta.get("fixture_confirmed") else "-REFUSED"
+    out = outdir / f"{away}@{home}-card{suffix}.md"
     out.write_text(md, encoding="utf-8")
     meta["path"] = str(out)
     return out, meta
@@ -702,8 +810,10 @@ def main() -> int:
     ap.add_argument("--home", required=True)
     ap.add_argument("--away", required=True)
     ap.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
+    ap.add_argument("--week", type=int, default=None,
+                    help="LineStar periodId (NFL week). Default: latest week on/before --date.")
     args = ap.parse_args()
-    path, meta = emit_card(args.home.upper(), args.away.upper(), args.date)
+    path, meta = emit_card(args.home.upper(), args.away.upper(), args.date, args.week)
     print(json.dumps(meta, indent=1))
     print(f"card -> {path}")
     return 0
