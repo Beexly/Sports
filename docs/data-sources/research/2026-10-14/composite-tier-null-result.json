@@ -1,0 +1,25 @@
+{
+ "generated_utc": "2026-10-14",
+ "test": "Composite interaction: cover-tier (CB1/CB2/CB3+/S-DB from nflverse depth charts, matched via PFF primary coverage matchup + nflId->gsis crosswalk) x Route-Depth Signature (measured tracking kinematics)",
+ "sample": {
+  "pooled_targeted_plays_with_resolved_tier": 925,
+  "split": "train-w1 346, heldout-w7 280, repl-w8 (tiered subset)",
+  "tier_counts": {"CB1": 304, "CB2": 214, "CB3+": 100, "S/DB": 307}
+ },
+ "result": {
+  "deep_route_rate_by_tier": {"CB1": 0.217, "CB2": 0.210, "CB3+": 0.240, "S/DB": 0.235},
+  "chi2": 0.658, "dof": 3, "p_value": 0.8822,
+  "kinematic_means_by_tier": "speed_max 6.79-6.85 m/s across all tiers; sep_min 1.68-1.77 m — NO meaningful separation"
+ },
+ "verdict": "NO COMPOSITE EFFECT MEASURED",
+ "honesty": {
+  "what_was_expected": "better corners suppress deep routes or shift the kinematic signature (composition of Interior Vacuum-family primitives with Route-Depth Signature)",
+  "what_was_measured": "deep-route choice and the kinematic signature are statistically indistinguishable across cover tiers (p=0.88); the signature's power (AUC 0.85-0.88) does NOT come from who covers the receiver",
+  "interpretation": "this is a REAL FINDING, not a failure: the Route-Depth Signature is coverage-agnostic — the receiver's own kinematics encode the route independent of the defender's quality tier. It means the primitive composes with NOTHING on the cover-tier axis; composition claims for Interior Vacuum x Route-Depth are RETRACTED pending a different mechanism path",
+  "power_note": "n=925 pooled; chi2 has ~85% power to detect a 12pp effect; effects smaller than that are not excluded by this test"
+ },
+ "failure_taxonomy": [
+  "avoided #3 (correlation): refused to multiply tier x signature without an interaction test",
+  "avoided #12 (adversarial): the null result is published as the finding"
+ ]
+}

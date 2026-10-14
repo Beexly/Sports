@@ -42,10 +42,7 @@
   "coefficients flip sign on the replication split (mechanism unstable)",
   "the feature set fails to beat the context prior's log-loss when blended at w=0.5"
  ],
- "composes_with": [
-  "Interior Vacuum (CB2 out -> clean releases inflate speed_max)",
-  "Press Magnet (WR1 draws bracket -> sep_min shifts)"
- ],
+ "composes_with": [],
  "use_in_decision": "SHADOW \u2014 weight 0 until the falsifier's full validation spec crosses",
  "precedent_hook": "structural match on (speed_max>8.5, sep_min>1.0, 3rd&long)",
  "replication": {
@@ -57,5 +54,11 @@
   "artifact": "docs/data-sources/research/2026-10-14/route-depth-replication.json",
   "verdict": "REPLICATED"
  },
- "honesty_note": "Two independent week splits (7, 8) both exceed the pre-registered AUC bar; the mechanism is stable across samples. Still SHADOW weight-0: measured signal quality is necessary but not sufficient \u2014 the full validation spec (calibration half + market half on the same margin) governs the flip."
+ "honesty_note": "Two independent week splits (7, 8) both exceed the pre-registered AUC bar; the mechanism is stable across samples. Still SHADOW weight-0: measured signal quality is necessary but not sufficient \u2014 the full validation spec (calibration half + market half on the same margin) governs the flip.",
+ "composition_note": {
+  "tested": "cover-tier (CB1/CB2/CB3+/S-DB, 925 pooled plays, chi2 p=0.88)",
+  "result": "NO interaction \u2014 the kinematic signature is coverage-agnostic",
+  "artifact": "docs/data-sources/research/2026-10-14/composite-tier-null-result.json",
+  "doctrine": "primitives compose only when effects touch the same mechanism; the cover-tier path was tested and does not touch this mechanism"
+ }
 }
