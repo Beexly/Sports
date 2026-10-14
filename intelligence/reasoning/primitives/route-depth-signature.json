@@ -60,5 +60,19 @@
   "result": "NO interaction \u2014 the kinematic signature is coverage-agnostic",
   "artifact": "docs/data-sources/research/2026-10-14/composite-tier-null-result.json",
   "doctrine": "primitives compose only when effects touch the same mechanism; the cover-tier path was tested and does not touch this mechanism"
+ },
+ "third_criterion": {
+  "test": "family blend (w=0.5 pre-registered) vs context prior, held-out tracked plays n=1429 (wk7+8)",
+  "prior_only_logscore": 2.3583,
+  "prior_x_family_logscore": 2.3206,
+  "delta": 0.0377,
+  "met": true,
+  "artifact": "docs/data-sources/research/2026-10-14/falsifier-third-criterion.json"
+ },
+ "gate_progress": {
+  "calibration_half": "dry-run PASSED on real data (this artifact + falsifier-dryrun-real.json)",
+  "family_model": "AUC 0.846 wk7 / 0.879 wk8, blend delta +0.0377 held-out",
+  "market_half": "PENDING \u2014 per-play market margin comparison needs the game-margin rollout",
+  "final_flip": "STILL weight-0: both halves on the SAME margin required by VISION-CONTRACT"
  }
 }
