@@ -1,0 +1,48 @@
+{
+ "name": "Depth-Chart Replacement (measured NULL on the breakout template)",
+ "family": "cognitive",
+ "version": "1.0",
+ "built_at": "2026-10-14",
+ "tier": "MEASURED (10 seasons, 32,038 player-weeks)",
+ "mechanism_text": "A depth-chart promotion signals a VACANCY (injury/trade/benching ahead of the promoted player), not a breakout. The promoted player's next-week production regresses below comparable non-promoted players in every prior-production band; the vacated targets disperse rather than transfer.",
+ "measured": {
+  "controlled_deltas": {
+   "low": {
+    "promoted": 4.9,
+    "stayed": 8.51
+   },
+   "mid": {
+    "promoted": -5.13,
+    "stayed": -1.58
+   },
+   "high": {
+    "promoted": -27.79,
+    "stayed": -22.86
+   },
+   "star": {
+    "promoted": -74.97,
+    "stayed": -72.71
+   }
+  },
+  "artifact": "docs/data-sources/research/2026-10-14/depth-move-primitive-test.json"
+ },
+ "magnitude_ladder": [
+  {
+   "condition": "promotion into a star's vacancy",
+   "mag": "expect STAR-scale mean reversion (-75 yds), not the star's production"
+  },
+  {
+   "condition": "promotion from low band",
+   "mag": "small positive drift (+4.9) but BELOW the no-move baseline (+8.5)"
+  }
+ ],
+ "falsifiers": [
+  "a season split where promoted players OUT-produce matched non-promoted in any band (would revive the breakout template)",
+  "role-weighted snap-share data contradicting the depth-slot finding"
+ ],
+ "composes_with": [
+  "Interior Vacuum (vacancy signal both directions)"
+ ],
+ "use_in_decision": "SHADOW weight 0; usable as a DOWN-weight (fade promoted players' props) only after calibration on 2026",
+ "anti_template": "this entry REPLACES the popular 'depth bump = breakout' template, which the data kills"
+}
