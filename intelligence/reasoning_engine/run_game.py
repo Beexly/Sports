@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import json
 import os
+import sys
+from pathlib import Path
 from typing import Any
 
 from coaching.ol_provider import NflverseOLProvider
@@ -20,6 +22,37 @@ from qb_behavior.situational.provider import SituationalQBProvider
 from reasoning_engine.facets import epa_facets
 from reasoning_engine.mint_gate import mint_after_mind
 from tests.helpers import card_request
+
+
+def _build_trust_provider():
+    """The honest trust provider, or None if the package can't load.
+
+    Why not None: trust=None makes api.py report trust_signals=UNCHECKED,
+    which the L5 checklist gate rejects — every card ships INVALID/withheld
+    (the 14/14 board bug). Why not FileStore directly: its empty-store branch
+    reports CLEAR ('intake swept'), which would flip withheld cards to FINAL
+    on no data — the silent-CLEAR trap, measured this session. The honest
+    wrapper distinguishes never-ran (DATA-GAP, recorded) from swept (CLEAR).
+    """
+    try:
+        import importlib.util as ilu
+        pkg_dir = Path(__file__).resolve().parents[1] / "trust-signals"
+        if "trust_signals" not in sys.modules:
+            spec = ilu.spec_from_file_location(
+                "trust_signals", str(pkg_dir / "__init__.py"),
+                submodule_search_locations=[str(pkg_dir)])
+            mod = ilu.module_from_spec(spec)
+            sys.modules["trust_signals"] = mod
+            spec.loader.exec_module(mod)
+        from trust_signals.store import IntakeStore
+        from trust_signals.honest_provider import HonestTrustSignalProvider
+        root = os.environ.get("GSE_TRUST_INTAKE_ROOT") or str(
+            Path(__file__).resolve().parents[1] / "trust-signals" / "intake")
+        return HonestTrustSignalProvider(store=IntakeStore(root))
+    except Exception as exc:
+        print(f"[run_game] trust provider unavailable ({type(exc).__name__}: {exc}); "
+              "falling back to trust=None -> UNCHECKED (cards will withhold)")
+        return None
 
 
 def _label(trace) -> str:
@@ -305,7 +338,8 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
         market_priors, prior_gaps = _auto_market_priors(home, away, season, week)
         gaps.extend(prior_gaps)
 
-    reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching, trust=None, ol=ol)
+    reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching,
+                           trust=_build_trust_provider(), ol=ol)
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
     label = _label(trace)
     checklist = _checklist(trace)
