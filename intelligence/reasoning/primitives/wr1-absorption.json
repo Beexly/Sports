@@ -1,0 +1,27 @@
+{
+  "name": "WR1-Absorption (measured)",
+  "family": "injury",
+  "version": "1.0",
+  "built_at": "2026-10-14",
+  "tier": "MEASURED (10 seasons, 308k player-games, 5,353 team-games resolved)",
+  "mechanism_text": "When WR1 misses a game, his vacated target share does NOT transfer wholesale. WR2 absorbs ~+0.7pp (+13.5% lift on his baseline 5.19% share), WR3 ~+0.7pp (+15.6%); the majority of WR1's ~9.7% share disperses to TEs, RBs, and checkdown targets. The market's naive 1.2-1.3x scaling of WR2 lines overstates the effect.",
+  "measured": {
+    "WR2": {"share_active": 0.0519, "share_wr1_out": 0.0589, "lift_pct": 13.5},
+    "WR3": {"share_active": 0.0430, "share_wr1_out": 0.0497, "lift_pct": 15.6},
+    "WR1_own_share_when_active": 0.0971,
+    "WR2_yds_active": 26.40, "WR2_yds_wr1_out": 29.07,
+    "artifact": "docs/data-sources/research/2026-10-14/wr1-absorption-measured.json"
+  },
+  "magnitude_ladder": [
+    {"condition": "WR1 confirmed OUT (not just doubtful)", "mag": "WR2 line x1.135, WR3 x1.156 — the measured multiplier, not the folk 1.25x"},
+    {"condition": "WR1 doubtful/game-time", "mag": "partial weight by P(active); recompute at the freshness-stamped report"},
+    {"condition": "WR1 out AND WR2 also out", "mag": "NOT measured in this run — named gap; WR3 becomes the floor but the dispersion target is unmeasured"}
+  ],
+  "falsifiers": [
+    "a season split where WR2 lift exceeds +25% (the dispersion pattern changed)",
+    "team-level heterogeneity: if per-team lifts vary >2x, the pooled multiplier is wrong and per-team rates are required"
+  ],
+  "composes_with": ["Depth-Chart Replacement (the promotion-side mirror of the same vacancy mechanism)", "Route-Depth Signature (the promoted WR2's kinematic profile determines which routes he inherits)"],
+  "use_in_decision": "SHADOW weight 0; the x1.135/x1.156 multipliers are the measured location adjustment for the prop margin's injury-conditioned variant",
+  "anti_template": "replaces the folk 'WR1 out = WR2 feast' scaling the market and models often embed"
+}
