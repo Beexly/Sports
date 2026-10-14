@@ -422,6 +422,13 @@ export {
 } from "./odds-api-circuit-breaker.js";
 
 export {
+  ActionNetworkSecondBook,
+  createActionNetworkSecondBook,
+  ACTION_NETWORK_BOOK_TITLES,
+  type ActionNetworkBookOptions,
+} from "./action-network-book.js";
+
+export {
   KALSHI_BOOK_KEY,
   KALSHI_BOOK_TITLE,
   KALSHI_LINE_SERIES,

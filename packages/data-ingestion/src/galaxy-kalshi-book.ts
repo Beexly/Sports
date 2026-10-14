@@ -451,19 +451,29 @@ export class PredExonKalshiCatalog implements GalaxySecondBook {
   }
 }
 
+import {
+  ActionNetworkSecondBook,
+  createActionNetworkSecondBook,
+} from "./action-network-book.js";
+
 /**
  * The second book for this cycle, or undefined when it is switched off:
- * PREDEXON_INGEST must be on, PREDEXON_API_KEY present, and the "predexon"
- * registry verdict ingestible. Default OFF — the founder flips it (ledger F-34).
+ * 1. PREDEXON_INGEST on + PREDEXON_API_KEY present -> Kalshi exchange book (ledger F-34)
+ * 2. ACTION_NETWORK_SECOND_BOOK_ENABLED on (or default on production keyless flow) -> Action Network multi-book
  */
 export function createGalaxySecondBook(
   env: NodeJS.ProcessEnv = process.env,
   opts: PredExonKalshiCatalogOptions & { readonly fetchImpl?: typeof fetch } = {},
 ): GalaxySecondBook | undefined {
-  if (!isPredExonIngestEnabled(env)) return undefined;
-  if (!(env.PREDEXON_API_KEY ?? "").trim()) return undefined;
-  if (!isIngestible("predexon")) return undefined;
-  const { fetchImpl, ...catalogOpts } = opts;
-  const client = fetchImpl ? new PredExonClient(env, fetchImpl) : new PredExonClient(env);
-  return new PredExonKalshiCatalog(client, catalogOpts);
+  if (isPredExonIngestEnabled(env)) {
+    if (!(env.PREDEXON_API_KEY ?? "").trim()) return undefined;
+    if (!isIngestible("predexon")) return undefined;
+    const { fetchImpl, ...catalogOpts } = opts;
+    const client = fetchImpl ? new PredExonClient(env, fetchImpl) : new PredExonClient(env);
+    return new PredExonKalshiCatalog(client, catalogOpts);
+  }
+  if (env.ACTION_NETWORK_SECOND_BOOK_ENABLED === "true") {
+    return createActionNetworkSecondBook({ fetchImpl: opts.fetchImpl });
+  }
+  return undefined;
 }

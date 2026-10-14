@@ -1,8 +1,9 @@
 {
  "source": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
- "pulled_at": "2026-10-13T16:40:47.700201-04:00",
+ "pulled_at": "2026-10-13T17:53:17.578354-04:00",
  "week": 6,
  "gate": "require_injury_published (Friday 18:00 ET)",
+ "roster_crosscheck": "every row verified on the ESPN 2026 roster of its block team (800 rows, 0 mismatches)",
  "team_count": 32,
  "row_count": 800,
  "teams": [
@@ -617,15 +618,6 @@
      "return_date": null
     },
     {
-     "athlete": "Chris Moore",
-     "position": "WR",
-     "status": "Active",
-     "date": "2026-10-08T23:30Z",
-     "detail": "active",
-     "side": null,
-     "return_date": null
-    },
-    {
      "athlete": "Rashod Bateman",
      "position": "WR",
      "status": "Active",
@@ -693,6 +685,15 @@
      "position": "WR",
      "status": "Active",
      "date": "2026-10-06T04:00Z",
+     "detail": "active",
+     "side": null,
+     "return_date": null
+    },
+    {
+     "athlete": "Justice Hill",
+     "position": "RB",
+     "status": "Active",
+     "date": "2026-10-06T02:27Z",
      "detail": "active",
      "side": null,
      "return_date": null
@@ -935,6 +936,24 @@
    "name": "Carolina Panthers",
    "injuries": [
     {
+     "athlete": "Tershawn Wharton",
+     "position": "DT",
+     "status": "Out",
+     "date": "2026-10-13T21:01Z",
+     "detail": "Neck",
+     "side": "Not Specified",
+     "return_date": "2026-10-18"
+    },
+    {
+     "athlete": "Trevor Etienne",
+     "position": "RB",
+     "status": "Injured Reserve",
+     "date": "2026-10-13T20:53Z",
+     "detail": "Ankle",
+     "side": "Not Specified",
+     "return_date": "2026-10-18"
+    },
+    {
      "athlete": "Jalen Coker",
      "position": "WR",
      "status": "Questionable",
@@ -958,15 +977,6 @@
      "status": "Out",
      "date": "2026-10-12T18:43Z",
      "detail": "Illness",
-     "side": "Not Specified",
-     "return_date": "2026-10-18"
-    },
-    {
-     "athlete": "Tershawn Wharton",
-     "position": "DT",
-     "status": "Out",
-     "date": "2026-10-12T18:21Z",
-     "detail": "Neck",
      "side": "Not Specified",
      "return_date": "2026-10-18"
     },
@@ -1048,15 +1058,6 @@
      "status": "Questionable",
      "date": "2026-10-05T23:35Z",
      "detail": "Hamstring",
-     "side": "Not Specified",
-     "return_date": "2026-10-18"
-    },
-    {
-     "athlete": "Trevor Etienne",
-     "position": "RB",
-     "status": "Injured Reserve",
-     "date": "2026-10-05T23:29Z",
-     "detail": "Ankle",
      "side": "Not Specified",
      "return_date": "2026-10-18"
     },
@@ -1169,10 +1170,19 @@
      "athlete": "Anthony Johnson Jr.",
      "position": "S",
      "status": "Out",
-     "date": "2026-10-13T20:29Z",
+     "date": "2026-10-13T21:46Z",
      "detail": "Undisclosed",
      "side": "Not Specified",
      "return_date": "2026-10-18"
+    },
+    {
+     "athlete": "Shemar Turner",
+     "position": "DT",
+     "status": "Active",
+     "date": "2026-10-13T20:47Z",
+     "detail": "active",
+     "side": null,
+     "return_date": null
     },
     {
      "athlete": "Montez Sweat",
@@ -1335,15 +1345,6 @@
      "detail": "active",
      "side": null,
      "return_date": null
-    },
-    {
-     "athlete": "Shemar Turner",
-     "position": "DT",
-     "status": "Out",
-     "date": "2026-10-10T19:58Z",
-     "detail": "Knee - ACL",
-     "side": "Not Specified",
-     "return_date": "2026-10-18"
     },
     {
      "athlete": "Kyler Gordon",
@@ -1628,6 +1629,15 @@
    "name": "Cleveland Browns",
    "injuries": [
     {
+     "athlete": "Raheim Sanders",
+     "position": "RB",
+     "status": "Injured Reserve",
+     "date": "2026-10-13T21:00Z",
+     "detail": "Hip",
+     "side": "Not Specified",
+     "return_date": "2026-11-15"
+    },
+    {
      "athlete": "Tylan Wallace",
      "position": "WR",
      "status": "Questionable",
@@ -1770,15 +1780,6 @@
      "detail": "Concussion",
      "side": "Not Specified",
      "return_date": "2026-10-18"
-    },
-    {
-     "athlete": "Raheim Sanders",
-     "position": "RB",
-     "status": "Questionable",
-     "date": "2026-10-11T20:01Z",
-     "detail": "Hip",
-     "side": "Not Specified",
-     "return_date": "2026-11-15"
     },
     {
      "athlete": "Tytus Howard",
@@ -3014,6 +3015,15 @@
    "name": "Indianapolis Colts",
    "injuries": [
     {
+     "athlete": "Pharaoh Brown",
+     "position": "TE",
+     "status": "Active",
+     "date": "2026-10-13T21:17Z",
+     "detail": "active",
+     "side": null,
+     "return_date": null
+    },
+    {
      "athlete": "Darius Slayton",
      "position": "WR",
      "status": "Questionable",
@@ -3228,15 +3238,6 @@
      "detail": "active",
      "side": null,
      "return_date": null
-    },
-    {
-     "athlete": "Alec Pierce",
-     "position": "WR",
-     "status": "Injured Reserve",
-     "date": "2026-09-28T18:38Z",
-     "detail": "Heel",
-     "side": "Left",
-     "return_date": "2026-10-25"
     }
    ]
   },
@@ -4169,6 +4170,15 @@
    "name": "Los Angeles Rams",
    "injuries": [
     {
+     "athlete": "Alaric Jackson",
+     "position": "OT",
+     "status": "Active",
+     "date": "2026-10-13T21:06Z",
+     "detail": "active",
+     "side": null,
+     "return_date": null
+    },
+    {
      "athlete": "Harrison Mevis",
      "position": "PK",
      "status": "Active",
@@ -4380,15 +4390,6 @@
      "position": "CB",
      "status": "Active",
      "date": "2026-10-05T18:50Z",
-     "detail": "active",
-     "side": null,
-     "return_date": null
-    },
-    {
-     "athlete": "Alex Bachman",
-     "position": "WR",
-     "status": "Active",
-     "date": "2026-10-03T23:35Z",
      "detail": "active",
      "side": null,
      "return_date": null
@@ -5093,6 +5094,15 @@
    "name": "New Orleans Saints",
    "injuries": [
     {
+     "athlete": "Brock Rechsteiner",
+     "position": "WR",
+     "status": "Active",
+     "date": "2026-10-13T21:46Z",
+     "detail": "active",
+     "side": null,
+     "return_date": null
+    },
+    {
      "athlete": "Jeremiah Wright",
      "position": "G",
      "status": "Questionable",
@@ -5307,15 +5317,6 @@
      "detail": "active",
      "side": null,
      "return_date": null
-    },
-    {
-     "athlete": "Kendre Miller",
-     "position": "RB",
-     "status": "Active",
-     "date": "2026-10-07T00:08Z",
-     "detail": "active",
-     "side": null,
-     "return_date": null
     }
    ]
   },
@@ -5327,7 +5328,7 @@
      "athlete": "Jermaine Eluemunor",
      "position": "OT",
      "status": "Questionable",
-     "date": "2026-10-13T20:16Z",
+     "date": "2026-10-13T21:06Z",
      "detail": "Calf",
      "side": "Not Specified",
      "return_date": "2026-10-18"
@@ -6479,6 +6480,15 @@
    "name": "Seattle Seahawks",
    "injuries": [
     {
+     "athlete": "Irv Charles",
+     "position": "WR",
+     "status": "Active",
+     "date": "2026-10-13T21:39Z",
+     "detail": "active",
+     "side": null,
+     "return_date": null
+    },
+    {
      "athlete": "Chazz Surratt",
      "position": "LB",
      "status": "Questionable",
@@ -6540,15 +6550,6 @@
      "detail": "Ankle",
      "side": "Not Specified",
      "return_date": "2026-10-15"
-    },
-    {
-     "athlete": "Irv Charles",
-     "position": "WR",
-     "status": "Active",
-     "date": "2026-10-12T23:18Z",
-     "detail": "active",
-     "side": null,
-     "return_date": null
     },
     {
      "athlete": "Leonard Williams",

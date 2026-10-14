@@ -1,0 +1,69 @@
+{
+  "generated_utc": "2026-10-14T01-47-09Z",
+  "honesty_notes": {
+    "action_network": "Keyless multi-book. Exits single-book plane and satisfies MIN_BOOKMAKERS=2.",
+    "ngs": "Cookie-warmed session required. Pure anonymous requests are flaky (intermittent 401).",
+    "kalshi": "Public reads. Correct *_dollars fields used. Cursor pagination enabled.",
+    "linestar": "GetSalariesV5 truncated. Snaps/red-zone real. Full slate via POST GetReportGridBoxes.",
+    "pinnacle": "Guest API live straight markets (sharp reference). Confirm terms before heavy use.",
+    "espn_injuries": "Keyless full roster injury feed. Large payload.",
+    "refresh_wire": "Scheduled at */10 * * * * in vercel.json to unlock ~100 curated feeds.",
+    "firecrawl_alexandria": "Structured enrichment layer (~5 credits/call) for official NFL injuries and ESPN scoreboards."
+  },
+  "sources": {
+    "action_network": {
+      "status": "ok",
+      "note": "14 games | books=[15, 30, 68, 69, 71, 75]",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\action-network\\live_2026-10-14T01-47-09Z.json"
+    },
+    "ngs_rushing": {
+      "status": "ok",
+      "note": "NGS rushing: 53 rows | top=Saquon Barkley RYOE=40.15138885589599 8plus=13.88888888888889",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\ngs\\live_rushing_2026-10-14T01-47-09Z.json"
+    },
+    "ngs_passing": {
+      "status": "ok",
+      "note": "NGS passing: 40 rows | top=Jared Goff passerRating=111.2674520069808 compPctOverExpected=None",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\ngs\\live_passing_2026-10-14T01-47-09Z.json"
+    },
+    "ngs_receiving": {
+      "status": "ok",
+      "note": "NGS receiving: 128 rows | top=Adonai Mitchell recYds=None avgSeparation=2.6859090721190895",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\ngs\\live_receiving_2026-10-14T01-47-09Z.json"
+    },
+    "espn_injuries": {
+      "status": "ok",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\injuries\\espn_2026-10-14T01-47-09Z.json"
+    },
+    "kalshi": {
+      "status": "ok",
+      "note": "150 open markets collected across 2 pages",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\kalshi\\live_2026-10-14T01-47-09Z.json"
+    },
+    "open_meteo": {
+      "status": "ok",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\weather\\sofi_2026-10-14T01-47-09Z.json"
+    },
+    "linestar": {
+      "status": "ok",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\linestar\\live_2026-10-14T01-47-09Z.json",
+      "honesty": "GetSalariesV5 is truncated (IsTruncated=true, TruncatedSalaryCount high). Use POST GetReportGridBoxes for the full slate. Snap and red-zone counts are real but not slate-wide."
+    },
+    "pinnacle": {
+      "status": "ok",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\pinnacle\\guest_2026-10-14T01-47-09Z.json"
+    },
+    "firecrawl_nfl_injuries": {
+      "status": "ok",
+      "note": "NFL.com official injury/practice report | creditsUsed=5",
+      "creditsCost": 5,
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\firecrawl\\alexandria_nfl_injuries_2026-10-14T01-47-09Z.json"
+    },
+    "firecrawl_espn_scoreboard": {
+      "status": "ok",
+      "note": "ESPN structured scoreboard/event summary | creditsUsed=5",
+      "creditsCost": 5,
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\firecrawl\\alexandria_espn_scoreboard_2026-10-14T01-47-09Z.json"
+    }
+  }
+}

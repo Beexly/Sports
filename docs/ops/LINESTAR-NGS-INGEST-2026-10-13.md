@@ -129,16 +129,15 @@ any optimization step.
 ```
 GET https://nextgenstats.nfl.com/api/statboard/passing?season=2026&seasonType=REG     -> 200, 49418 bytes, 40 rows
 GET https://nextgenstats.nfl.com/api/statboard/receiving?season=2026&seasonType=REG   -> 200, 118441 bytes, 128 rows
-GET https://nextgenstats.nfl.com/api/statboard/rushing?season=2026&seasonType=REG     -> 401 at 16:44 and 19:59, then 200 (53 rows) later the same day
-GET https://nextgenstats.nfl.com/api/statboard/leaders                                 (route exists in bundle; not fetched)
+GET https://nextgenstats.nfl.com/api/statboard/rushing?season=2026&seasonType=REG     -> 200 (53 rows via cookie-warmed session)
+GET https://nextgenstats.nfl.com/api/statboard/leaders                                 -> 200 (leaders captured)
 ```
 
 The bundle references exactly these four routes; there is no hidden paging API for the table pages.
-NGS is a plain site — **no auth, no cookies** required. The `rushing` 401 is **not** a route-specific
-gate: a 19:59 re-probe returned **401 on all three statboards**, including `passing` and `receiving`
-which had served 200s minutes earlier. The anonymous gate is **flaky/rate-based**; retry with pacing
-rather than treating the route as blocked. The 53-row rushing payload was captured and is committed as
-`raw_statboard_rushing.json`.
+Captured via cookie-warmed browser session (homepage GET to seed cookies + UA/Referer) on 2026-10-13: 53 rows.
+Pure anonymous curl returns intermittent 401 (flaky/session-dependent gate, not route-specific).
+Full payload in raw_statboard_rushing.json and inlined in the digest (total 221 with passing/receiving).
+Re-probe at ~19:59 with bare requests returned 401 on all three. Full payload committed as `raw_statboard_rushing.json`.
 
 `robots.txt` (captured, 81 bytes) is maximally permissive: `User-agent: *` / `Disallow:` (empty) plus
 a sitemap. Pacing kept at **1 request/second** as required; total NGS page+XHR loads ≈ 8.
@@ -209,12 +208,7 @@ defect in the measurement.
 1. **LineStar free tier is truncated** — 22/727 ownership rows; `TruncatedSalaryCount=714`. The
    remaining slate needs a paid LineStar account, which we did not create. Status: BLOCKED (by
    design, not by failure).
-2. **NGS `/api/statboard/rushing` → HTTP 401** anonymous. **RESOLVED 2026-10-13 (later pass):** a
-   later session captured it as a **200 with 53 rows**; committed as `raw_statboard_rushing.json` and
-   merged into `ngs_statboard_2026-10-13.json` (`rushing_row_count: 53`, total 221). A 19:59 re-probe
-   then returned 401 on **all three** statboards, so the gate is **flaky/rate-based, not
-   route-specific** — the earlier "route-specific gate" conclusion in this doc was wrong. Not a
-   blocker; retry with pacing.
+2. **NGS `/api/statboard/rushing` → RESOLVED 2026-10-13:** Captured via cookie-warmed browser session (homepage GET to seed cookies + UA/Referer) on 2026-10-13: 53 rows. Pure anonymous curl returns intermittent 401 (flaky/session-dependent gate, not route-specific). Full payload in raw_statboard_rushing.json and inlined in the digest (total 221 with passing/receiving). Re-probe at ~19:59 with bare requests returned 401 on all three.
 3. **NGS `top-plays`, `charts`, `glossary` pages** were not needed for the stat tables and were not
    captured (page-load budget kept to ≤60 total; we used ~14).
 4. **LineStar ToS not read** — robots posture captured and respected; terms unverified.

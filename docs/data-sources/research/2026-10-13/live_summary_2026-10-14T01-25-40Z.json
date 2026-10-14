@@ -1,0 +1,56 @@
+{
+  "generated_utc": "2026-10-14T01-25-40Z",
+  "gates": {
+    "action_network": "Keyless public multi-book endpoint. Exits single-book plane.",
+    "ngs": "Cookie-warmed session required (homepage GET seeds cookies to bypass soft 401).",
+    "espn_injuries": "Keyless full roster injury feed.",
+    "crons": "7 dark crons scheduled in vercel.json (refresh-wire at */10 * * * *)."
+  },
+  "sources": {
+    "action_network": {
+      "status": "ok",
+      "games_count": 14,
+      "books": [
+        15,
+        30,
+        68,
+        69,
+        71,
+        74,
+        79
+      ],
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\action-network\\live_scoreboard_2026-10-14T01-25-40Z.json"
+    },
+    "ngs_rushing": {
+      "status": "ok",
+      "rows_count": 53,
+      "note": "NGS rushing: 53 rows | top=Saquon Barkley RYOE=40.15138885589599 8plus=13.88888888888889",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\ngs\\live_rushing_2026-10-14T01-25-40Z.json"
+    },
+    "ngs_passing": {
+      "status": "ok",
+      "rows_count": 40,
+      "note": "NGS passing: 40 rows | top=Jared Goff passerRating=111.2674520069808 compPctOverExpected=None",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\ngs\\live_passing_2026-10-14T01-25-40Z.json"
+    },
+    "ngs_receiving": {
+      "status": "ok",
+      "rows_count": 128,
+      "note": "NGS receiving: 128 rows | top=Adonai Mitchell recYds=None avgSeparation=2.6859090721190895",
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\ngs\\live_receiving_2026-10-14T01-25-40Z.json"
+    },
+    "espn_injuries": {
+      "status": "ok",
+      "teams_reported": 4,
+      "path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-13\\injuries\\espn_injuries_2026-10-14T01-25-40Z.json"
+    },
+    "kalshi": {
+      "status": "ok",
+      "exchange_active": true
+    },
+    "open_meteo": {
+      "status": "ok",
+      "elevation": 49.0
+    }
+  }
+}

@@ -196,28 +196,49 @@ def categorize(filename: str, text: str) -> str:
 # ─── Sensitivity routing ──────────────────────────────────────────────────────
 
 _SENSITIVE_FILENAME = re.compile(
-    r"(?i)(cred|secret|password|passwd|\.env|token|apikey|api[_-]?key|"
-    r"id_rsa|private[_-]?key)"
+    r"(?i)(\bcredentials?\b|\bsecrets?\b|\bpasswords?\b|\bpasswd\b|client_secret|^\.?env(\s*\(\d+\))?\.txt$|^\.env|"
+    r"\baccesskey(\s*\(\d+\))?\.csv$|^\d{13}\.txt$|"
+    r"\b(auth|access|bearer|refresh)[_-]?tokens?\b|\bapi[_-]?keys?\b|"
+    r"hf_env\.txt|\bid_rsa\b|\bprivate[_-]?key\b)"
 )
 
+_ARXIV_FILENAME = re.compile(r"^\d{4}\.\d{4,5}(v\d+)?(\s*\(\d+\))?\.pdf$", re.IGNORECASE)
+
 _SENSITIVE_PATTERNS = [
-    re.compile(r"sk-[A-Za-z0-9_\-]{8,}"),  # OpenAI-style key
+    re.compile(r"\bsk-(?:proj|svcacct|admin)-[A-Za-z0-9_\-]{15,}\b"),
+    re.compile(r"\bsk-[a-zA-Z0-9]{32,}\b"),
+    re.compile(r"\bhf_[a-zA-Z0-9]{30,}\b"),
+    re.compile(r"\bnpg_[A-Za-z0-9_\-]{12,}\b"),
+    re.compile(r"\bLTAI[A-Za-z0-9]{16,24}\b"),
     re.compile(
-        r"(?i)(api[_-]?key|access[_-]?key|secret|token|password|passwd|pwd)"
-        r"\s*[:=]"
+        r"(?i)\b(pgpassword|api[_-]?key|access[_-]?key|secret|password|passwd|pwd|auth[_-]?token)\s*[:=]\s*['\"]?[A-Za-z0-9_\-\.]{8,}"
     ),
-    re.compile(r"(?i)(postgres(ql)?|mysql|mongodb(\+srv)?|redis|amqp)://"),
+    re.compile(r"(?i)(postgres(ql)?|mysql|mongodb(\+srv)?|redis|amqp)://[^\s]+:[^\s]+@"),
     re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
-    re.compile(r"(?i)\b(aws_secret_access_key|aws_access_key_id)\b"),
+    re.compile(r"(?i)\b(aws_secret_access_key|aws_access_key_id)\s*[:=]\s*[A-Za-z0-9/+=]{16,}"),
 ]
+
+_MOCK_SECRET_PATTERNS = re.compile(
+    r"(?i)(YOUR_API_KEY|ODDS_API_KEY|<API_KEY>|API_KEY|YOUR_KEY|REPLACE_ME|CHANGEME)"
+)
 
 
 def is_sensitive(filename: str, text: str) -> bool:
     """True when the file looks like credentials/secrets and must go to the vault."""
-    if _SENSITIVE_FILENAME.search(Path(filename).name):
+    name = Path(filename).name
+    if _ARXIV_FILENAME.match(name) or name.lower().endswith(".pdf"):
+        # Academic / research PDFs are never credentials files
+        return False
+
+    if _SENSITIVE_FILENAME.search(name):
         return True
     blob = text or ""
-    return any(rx.search(blob) for rx in _SENSITIVE_PATTERNS)
+    for rx in _SENSITIVE_PATTERNS:
+        for match in rx.finditer(blob):
+            matched_text = match.group(0)
+            if not _MOCK_SECRET_PATTERNS.search(matched_text):
+                return True
+    return False
 
 
 # ─── Result record ────────────────────────────────────────────────────────────
@@ -292,12 +313,32 @@ class MindGuardian:
     def _ensure_memory_schema(self) -> None:
         conn = self._connect()
         try:
-            conn.execute(
-                "CREATE TABLE IF NOT EXISTS facts ("
-                "key TEXT PRIMARY KEY, value TEXT, domain TEXT, source TEXT)"
-            )
-            conn.execute(
-                "CREATE VIRTUAL TABLE IF NOT EXISTS facts_fts USING fts5(key, value)"
+            conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS facts (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    domain TEXT NOT NULL,
+                    source TEXT NOT NULL,
+                    confidence REAL DEFAULT 1.0,
+                    updated_at TEXT NOT NULL
+                );
+
+                CREATE VIRTUAL TABLE IF NOT EXISTS facts_fts USING fts5(
+                    key, value, content=facts, content_rowid=rowid
+                );
+
+                CREATE TRIGGER IF NOT EXISTS facts_ai AFTER INSERT ON facts BEGIN
+                    INSERT INTO facts_fts(rowid, key, value) VALUES (new.rowid, new.key, new.value);
+                END;
+                CREATE TRIGGER IF NOT EXISTS facts_ad AFTER DELETE ON facts BEGIN
+                    INSERT INTO facts_fts(facts_fts, rowid, key, value) VALUES('delete', old.rowid, old.key, old.value);
+                END;
+                CREATE TRIGGER IF NOT EXISTS facts_au AFTER UPDATE ON facts BEGIN
+                    INSERT INTO facts_fts(facts_fts, rowid, key, value) VALUES('delete', old.rowid, old.key, old.value);
+                    INSERT INTO facts_fts(rowid, key, value) VALUES (new.rowid, new.key, new.value);
+                END;
+                """
             )
             conn.commit()
         finally:
@@ -306,20 +347,14 @@ class MindGuardian:
     def _index(self, sha: str, filename: str, text: str) -> None:
         conn = self._connect()
         try:
+            now_iso = _dt.datetime.now(_dt.timezone.utc).isoformat()
             key = f"ingested:{sha[:16]}"
             value = f"{filename}: {(text or '')[:2000]}"
             conn.execute(
-                "INSERT OR REPLACE INTO facts (key, value, domain, source) "
-                "VALUES (?,?,?,?)",
-                (key, value, "ingest", sha),
-            )
-            rid = conn.execute(
-                "SELECT rowid FROM facts WHERE key=?", (key,)
-            ).fetchone()[0]
-            conn.execute("DELETE FROM facts_fts WHERE rowid=?", (rid,))
-            conn.execute(
-                "INSERT INTO facts_fts (rowid, key, value) VALUES (?,?,?)",
-                (rid, key, value),
+                "INSERT INTO facts (key, value, domain, source, confidence, updated_at) "
+                "VALUES (?,?,?,?,1.0,?) "
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=excluded.updated_at",
+                (key, value, "ingest", sha, now_iso),
             )
             conn.commit()
         finally:
@@ -392,15 +427,32 @@ class MindGuardian:
 
         feed = self.repo_root / "brain" / "feeds" / self.today / "trainer_feed.jsonl"
         feed.parent.mkdir(parents=True, exist_ok=True)
-        row = {
-            "sha256": sha,
-            "text": text,
-            "path": str(target),
-            "bucket": bucket,
-            "source": str(f),
-        }
-        with open(feed, "a", encoding="utf-8") as fh:
-            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+        if not hasattr(self, "_feed_shas") or getattr(self, "_feed_today", None) != self.today:
+            self._feed_shas = set()
+            self._feed_today = self.today
+            if feed.exists():
+                with open(feed, "r", encoding="utf-8", errors="ignore") as rfh:
+                    for line in rfh:
+                        line = line.strip()
+                        if line:
+                            try:
+                                d = json.loads(line)
+                                if "sha256" in d:
+                                    self._feed_shas.add(d["sha256"])
+                            except Exception:
+                                pass
+
+        if sha not in self._feed_shas:
+            row = {
+                "sha256": sha,
+                "text": text,
+                "path": str(target),
+                "bucket": bucket,
+                "source": str(f),
+            }
+            with open(feed, "a", encoding="utf-8") as fh:
+                fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+            self._feed_shas.add(sha)
 
         if self.memory_db is not None:
             self._index(sha, f.name, text)

@@ -9,7 +9,7 @@
 - receiving rows: 128
 - rushing rows: 53
 - total rows: 221
-- `/api/statboard/rushing?season=2026&seasonType=REG` returned HTTP 401 anonymously at 16:44 and again at 19:59 on 2026-10-13; a later session the same day captured a **200 with 53 rows**. The anonymous gate is **flaky/rate-based, not route-specific** — a 19:59 re-probe got 401 on all three statboards (passing and receiving included) minutes after they had served 200s. Raw payload: `raw_statboard_rushing.json`.
+- Captured via cookie-warmed browser session (homepage GET to seed cookies + UA/Referer) on 2026-10-13: 53 rows. Pure anonymous curl returns intermittent 401 (flaky/session-dependent gate, not route-specific). Full payload in raw_statboard_rushing.json and inlined in the digest (total 221 with passing/receiving). Re-probe at ~19:59 with bare requests returned 401 on all three.
 
 ## Passing leaders (by passYards)
 
