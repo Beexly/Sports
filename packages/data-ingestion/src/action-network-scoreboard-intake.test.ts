@@ -90,9 +90,14 @@ describe("ingestActionNetworkScoreboard", () => {
     expect(res.data.accepted).toHaveLength(0);
   });
 
-  it("knows the DraftKings and FanDuel book ids", () => {
-    expect(ACTION_NETWORK_BOOK_IDS["DRAFTKINGS"]).toBe(15);
-    expect(ACTION_NETWORK_BOOK_IDS["FANDUEL"]).toBe(30);
+  it("knows the verified DraftKings/FanDuel/BetRivers/BetMGM book ids", () => {
+    // VERIFIED 2026-10-13 against GET /web/v1/books source_name values.
+    // The previous values (DK=15, FD=30, Caesars=68, BetMGM=69) were wrong:
+    // 15 is "Consensus" and 30 is "Open" — synthetic aggregates.
+    expect(ACTION_NETWORK_BOOK_IDS["DRAFTKINGS"]).toBe(68);
+    expect(ACTION_NETWORK_BOOK_IDS["FANDUEL"]).toBe(69);
+    expect(ACTION_NETWORK_BOOK_IDS["BETRIVERS"]).toBe(71);
+    expect(ACTION_NETWORK_BOOK_IDS["BETMGM"]).toBe(75);
     expect(ACTION_NETWORK_SCOREBOARD_BASE).toBe("https://api.actionnetwork.com");
   });
 

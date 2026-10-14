@@ -3,8 +3,7 @@
  *
  * The existing action-network-client.ts covers /nfl/public-betting.
  * This module covers the no-auth scoreboard API, which returns per-book
- * odds (DraftKings book_id=15, FanDuel book_id=30, Caesars=68, BetMGM=69,
- * ...) for every game on a date — the clean alternative to FanDuel's
+ * odds for every game on a date — the clean alternative to FanDuel's
  * fragile sbapi _ak token.
  *
  * VERIFIED LIVE 2026-09-25 (curl, this VM):
@@ -12,10 +11,23 @@
  *       ?date=20260927&bookIds=15,30
  *   -> HTTP 200 ONLY with a browser-like User-Agent (CloudFront 403s
  *      bare curl/default UAs as of 2026-09-25), 1,593,336 bytes, 16 games.
- *   Schema drift notes (audit 2026-09-25): `season` is numeric, not a
- *   string; `line_status` is a per-market object ({over:0,...}), not a
- *   string; and `teams` order is UNSTABLE — away/home must be resolved
- *   via away_team_id/home_team_id matched to the team entries' ids.
+ *
+ * RE-VERIFIED 2026-10-13 (no params): HTTP 200, 649,846 bytes, 14 games
+ *   (week 6), 6 books per game. NOTE: the same request works with a plain
+ *   curl UA from this host — the "403 without a UA" note above is
+ *   host/edge-specific and should not be treated as a hard requirement.
+ *
+ * BOOK-ID CORRECTION 2026-10-13: the map below previously said DK=15,
+ * FD=30, Caesars=68, BetMGM=69. Verified against /web/v1/books (458 books,
+ * each carrying an authoritative `source_name`), those were all wrong:
+ * 15 is "Consensus" and 30 is "Open" (both synthetic aggregates), while
+ * 68 is "DK NJ" [draftkings] and 69 is "FanDuel NJ" [fanduel]. Corrected.
+ * See action-network-book.ts for the full evidence table.
+ *
+ * Schema drift notes (audit 2026-09-25): `season` is numeric, not a
+ * string; `line_status` is a per-market object ({over:0,...}), not a
+ * string; and `teams` order is UNSTABLE — away/home must be resolved
+ * via away_team_id/home_team_id matched to the team entries' ids.
  *
  * COMPOSES WITH: action-network-client (transport-adjacent), odds inputs.
  *
@@ -29,12 +41,21 @@ export const ACTION_NETWORK_SCOREBOARD_INTAKE_ENABLED_ENV =
 
 export const ACTION_NETWORK_SCOREBOARD_BASE = "https://api.actionnetwork.com";
 
-/** Book ids observed in the scoreboard API (DK=15, FD=30 per worker recon). */
+/** Book ids present in the DEFAULT scoreboard response. VERIFIED 2026-10-13. */
 export const ACTION_NETWORK_BOOK_IDS: Record<string, number> = {
-  DRAFTKINGS: 15,
-  FANDUEL: 30,
-  CAESARS: 68,
-  BETMGM: 69,
+  DRAFTKINGS: 68,
+  FANDUEL: 69,
+  BETRIVERS: 71,
+  BETMGM: 75,
+};
+
+/**
+ * Synthetic rows Action Network computes — NOT bookmakers. Exposed so
+ * callers can exclude them from any "how many books" count.
+ */
+export const ACTION_NETWORK_SYNTHETIC_BOOK_IDS: Record<string, number> = {
+  CONSENSUS: 15,
+  OPEN: 30,
 };
 
 export function actionNetworkScoreboardIntakeEnabled(

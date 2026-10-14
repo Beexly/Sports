@@ -2,34 +2,74 @@
  * Action Network Second Book — keyless multi-book odds plane exit.
  *
  * Implements GalaxySecondBook for the keyless Galaxy path, querying
- * Action Network's public scoreboard API (Caesars, DraftKings, BetMGM, FanDuel)
- * to attach a second independent real bookmaker quote to ESPN events.
+ * Action Network's public scoreboard API to attach a second independent
+ * real bookmaker quote to ESPN events.
  *
  * This turns the single-book (ESPN-relayed DraftKings) path into a
  * multi-book plane and unblocks MIN_BOOKMAKERS=2, book dispersion,
  * and Shin's z de-vigging without requiring paid keys.
+ *
+ * BOOK IDS VERIFIED 2026-10-13 against GET https://api.actionnetwork.com/web/v1/books
+ * (HTTP 200, 336,006 bytes, 458 books) — id -> {display_name, source_name}:
+ *     68 -> "DK NJ"          [draftkings]     <- DraftKings
+ *     69 -> "FanDuel NJ"     [fanduel]        <- FanDuel
+ *     71 -> "BetRivers NJ"   [njsugarhouse]   <- BetRivers
+ *     75 -> "BetMGM NJ"      [njplaymgm]      <- BetMGM
+ *     15 -> "Consensus"      [consensus]      <- SYNTHETIC (not a bookmaker)
+ *     30 -> "Open"           [open]           <- SYNTHETIC (not a bookmaker)
+ *
+ * PRIOR VALUES WERE WRONG. The previous map claimed 15=DraftKings,
+ * 30=FanDuel, 68=Caesars, 69=BetMGM, 71=PointsBet, 74=Circa, 79=Bovada.
+ * Every one of those is a different book than labelled — 15 is the
+ * Consensus aggregate and 30 is the Open line. Corrected here; the
+ * per-book ids are REGION-SPECIFIC (DraftKings appears as DK NJ / DK NH /
+ * DK VA / ... with different ids), so this table describes the DEFAULT
+ * (no-params) scoreboard response only. Re-derive if you start passing
+ * bookIds or a state/region selector.
  */
 
 import type { OddsApiBookmaker, OddsApiMarket, OddsApiOutcome } from "@sports/types";
 import type { GalaxySecondBook, GalaxySecondBookGameRef } from "./espn-odds-client.js";
 
+/**
+ * Book ids present in the DEFAULT Action Network scoreboard response.
+ * Region-specific: these are the NJ variants the default request returns.
+ */
 export const ACTION_NETWORK_BOOK_TITLES: Record<number, string> = {
-  15: "DraftKings",
-  30: "FanDuel",
-  68: "Caesars",
-  69: "BetMGM",
-  71: "PointsBet",
-  74: "Circa Sports",
-  79: "Bovada",
+  68: "DraftKings",
+  69: "FanDuel",
+  71: "BetRivers",
+  75: "BetMGM",
 };
 
+/**
+ * Synthetic rows — aggregates Action Network computes, NOT independent
+ * bookmakers. A "second book" drawn from here is NOT independent of the
+ * market, and counting one toward MIN_BOOKMAKERS would clear the gate
+ * without adding a real second quote. Kept out of the preferred list.
+ */
+export const ACTION_NETWORK_SYNTHETIC_BOOKS: readonly number[] = [
+  15, // Consensus
+  30, // Open
+];
+
+export function isSyntheticActionNetworkBook(bookId: number): boolean {
+  return ACTION_NETWORK_SYNTHETIC_BOOKS.includes(bookId);
+}
+
+/**
+ * Preference order for the second book. Real, independent bookmakers only.
+ *
+ * DraftKings is deliberately LAST: the primary Galaxy path already relays
+ * DraftKings lines via ESPN (`espn_public`, see espn-odds-client.ts), so
+ * taking DraftKings here would pair a source with itself and satisfy
+ * MIN_BOOKMAKERS=2 with a duplicate rather than a second opinion.
+ */
 export const ACTION_NETWORK_PREFERRED_BOOKS: readonly number[] = [
-  68, // Caesars (first choice - distinct from ESPN's DK relay)
-  69, // BetMGM
-  30, // FanDuel
-  74, // Circa
-  71, // PointsBet
-  15, // DraftKings (fallback if no others present)
+  71, // BetRivers  (independent of the ESPN/DK relay)
+  75, // BetMGM     (independent)
+  69, // FanDuel    (independent)
+  68, // DraftKings (LAST — same book as the ESPN relay; fallback only)
 ];
 
 const SPORT_KEY_TO_LEAGUE: Record<string, string> = {
@@ -141,10 +181,17 @@ export class ActionNetworkSecondBook implements GalaxySecondBook {
       }
     }
 
-    // If none of preferred matched, pick any book with odds
+    // If none of preferred matched, fall back to any REAL book with odds.
+    // Synthetic rows (Consensus/Open) are skipped: they are aggregates, not
+    // independent bookmaker quotes, so returning one would violate this
+    // module's contract and falsely clear a 2-book gate. Fail closed.
     if (!chosenOdd) {
       for (const o of matched.odds) {
-        if (o?.book_id != null && (o.ml_home != null || o.spread_home != null || o.total != null)) {
+        if (
+          o?.book_id != null &&
+          !isSyntheticActionNetworkBook(o.book_id) &&
+          (o.ml_home != null || o.spread_home != null || o.total != null)
+        ) {
           chosenOdd = o;
           chosenBookId = o.book_id;
           break;

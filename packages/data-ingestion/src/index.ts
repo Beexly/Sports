@@ -425,6 +425,9 @@ export {
   ActionNetworkSecondBook,
   createActionNetworkSecondBook,
   ACTION_NETWORK_BOOK_TITLES,
+  ACTION_NETWORK_PREFERRED_BOOKS,
+  ACTION_NETWORK_SYNTHETIC_BOOKS,
+  isSyntheticActionNetworkBook,
   type ActionNetworkBookOptions,
 } from "./action-network-book.js";
 

@@ -16,7 +16,7 @@ const mockScoreboard = {
       ],
       odds: [
         {
-          book_id: 68, // Caesars
+          book_id: 68, // DraftKings NJ [draftkings] — verified 2026-10-13
           ml_home: -180,
           ml_away: 155,
           spread_home: -3.5,
@@ -29,14 +29,14 @@ const mockScoreboard = {
           inserted: "2026-10-13T12:00:00Z",
         },
         {
-          book_id: 15, // DraftKings
-          ml_home: -185,
-          ml_away: 154,
-          spread_home: -3.5,
-          spread_home_line: -112,
-          spread_away: 3.5,
-          spread_away_line: -108,
-          total: 55.0,
+          book_id: 15, // Consensus — SYNTHETIC, not a bookmaker
+          ml_home: -175,
+          ml_away: 150,
+          spread_home: -3.0,
+          spread_home_line: -110,
+          spread_away: 3.0,
+          spread_away_line: -110,
+          total: 54.0,
           over: -110,
           under: -110,
         },
@@ -46,7 +46,7 @@ const mockScoreboard = {
 };
 
 describe("ActionNetworkSecondBook", () => {
-  it("attaches Caesars as preferred second book for a matching NFL game", async () => {
+  it("attaches DraftKings as second book for a matching NFL game", async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => mockScoreboard,
@@ -67,7 +67,7 @@ describe("ActionNetworkSecondBook", () => {
 
     expect(book).not.toBeNull();
     expect(book?.key).toBe("action_network_68");
-    expect(book?.title).toBe("Caesars (Action Network)");
+    expect(book?.title).toBe("DraftKings (Action Network)");
 
     const h2h = book?.markets.find((m) => m.key === "h2h");
     expect(h2h).toBeDefined();
@@ -142,5 +142,103 @@ describe("ActionNetworkSecondBook", () => {
     });
 
     expect(book).toBeNull();
+  });
+
+  // --- Regression coverage for the 2026-10-13 book-id correction ---
+  // These would have failed against the old (wrong) map, which labelled
+  // 15 as DraftKings and 30 as FanDuel when both are synthetic aggregates.
+
+  const gameWithBooks = (odds: unknown[]) => ({
+    games: [
+      {
+        id: 999,
+        away_team_id: 10,
+        home_team_id: 20,
+        teams: [
+          { id: 10, abbr: "LAR", full_name: "Los Angeles Rams" },
+          { id: 20, abbr: "BUF", full_name: "Buffalo Bills" },
+        ],
+        odds,
+      },
+    ],
+  });
+
+  const row = (book_id: number, ml_home: number, ml_away: number) => ({
+    book_id,
+    ml_home,
+    ml_away,
+    spread_home: -3.5,
+    spread_home_line: -110,
+    spread_away: 3.5,
+    spread_away_line: -110,
+    total: 54.5,
+    over: -112,
+    under: -108,
+  });
+
+  const bufGame = {
+    sportKey: "americanfootball_nfl",
+    commenceTime: "2026-10-13T00:15:00Z",
+    homeAbbr: "BUF",
+    awayAbbr: "LAR",
+    homeTeam: "Buffalo Bills",
+    awayTeam: "Los Angeles Rams",
+  };
+
+  it("labels 68 as DraftKings and 69 as FanDuel (verified map)", async () => {
+    const sb = createActionNetworkSecondBook({
+      fetchImpl: vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => gameWithBooks([row(69, -190, 160)]),
+      }) as any,
+    });
+    const book = await sb.bookmakerFor(bufGame);
+    expect(book?.key).toBe("action_network_69");
+    expect(book?.title).toBe("FanDuel (Action Network)");
+  });
+
+  it("prefers a genuinely independent book over the DraftKings relay", async () => {
+    // BetRivers (71) and DraftKings (68) both present. DraftKings is what
+    // ESPN already relays on the primary path, so BetRivers must win.
+    const sb = createActionNetworkSecondBook({
+      fetchImpl: vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => gameWithBooks([row(68, -180, 155), row(71, -170, 145)]),
+      }) as any,
+    });
+    const book = await sb.bookmakerFor(bufGame);
+    expect(book?.key).toBe("action_network_71");
+    expect(book?.title).toBe("BetRivers (Action Network)");
+    // and it must carry BetRivers' prices, not DraftKings'
+    const h2h = book?.markets.find((m) => m.key === "h2h");
+    expect(h2h?.outcomes).toEqual([
+      { name: "Buffalo Bills", price: -170 },
+      { name: "Los Angeles Rams", price: 145 },
+    ]);
+  });
+
+  it("refuses a synthetic Consensus/Open row as the second book", async () => {
+    // Only synthetic rows present -> fail closed rather than hand back an
+    // aggregate dressed up as a second independent bookmaker.
+    const sb = createActionNetworkSecondBook({
+      fetchImpl: vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => gameWithBooks([row(15, -175, 150), row(30, -172, 148)]),
+      }) as any,
+    });
+    const book = await sb.bookmakerFor(bufGame);
+    expect(book).toBeNull();
+  });
+
+  it("keeps DraftKings as a last-resort fallback when no independent book exists", async () => {
+    const sb = createActionNetworkSecondBook({
+      fetchImpl: vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => gameWithBooks([row(15, -175, 150), row(68, -180, 155)]),
+      }) as any,
+    });
+    const book = await sb.bookmakerFor(bufGame);
+    expect(book?.key).toBe("action_network_68");
+    expect(book?.title).toBe("DraftKings (Action Network)");
   });
 });
