@@ -20,6 +20,7 @@ import {
   type SignalObservation,
   type MarketBelief,
 } from "./reasoning";
+import { runSituationalTrace, type SituationTraceResult } from "./situational-trace";
 import type { SignalShadowPolicy } from "./shadow";
 import {
   allObservations,
@@ -127,6 +128,13 @@ export interface IntelligenceResult {
    * a caller how many of those were actually allowed to move the number.
    */
   readonly shadowReport: IntelligenceReasoning["shadowReport"];
+  /**
+   * L2 aggregation-trace (situational-engine): per-signal divergence vs the
+   * market's de-vigged probability, consistency gate, dormant-signal list.
+   * Divergence is a DIFFERENCE OF NUMBERS — never a bet. Null + reason when
+   * the trace could not run (fail-open, never blocks the pick path).
+   */
+  readonly situationTrace: SituationTraceResult | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -192,6 +200,10 @@ export function runIntelligence(bundle: GameBundle): IntelligenceResult {
   // modelProb is calibratedProb (shift is already inside reason()); exposed
   // separately so proof receipts can store it and Brier can be computed.
   const modelProb = computeModelProb(reasoning.calibratedProb, 0);
+  // L2 trace: the situational engine consumes the spine's calibrated market
+  // fair-probability and the SAME observations reason() saw. Fail-open by
+  // contract: a trace failure records the reason and never blocks the pick.
+  const situationTrace = runSituationalTrace(ctx, reasoning);
 
   return {
     reasoning,
@@ -211,6 +223,7 @@ export function runIntelligence(bundle: GameBundle): IntelligenceResult {
     knowability: reasoning.knowability,
     evidenceHealth: reasoning.evidenceHealth,
     shadowReport: reasoning.shadowReport,
+    situationTrace,
   };
 }
 
