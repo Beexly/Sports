@@ -1,0 +1,54 @@
+{
+ "ts": "2026-10-14T13:21:54.097094+00:00",
+ "record_type": "kalman_proof_play_baseline",
+ "source": "vision_tracklet_adapter",
+ "contract": "intelligence/vision/VISION-CONTRACT.md",
+ "proof_play": {
+  "game_id": 2022091113,
+  "play_id": 1766,
+  "frames_processed": 64,
+  "hz": 10
+ },
+ "player_tracks": 22,
+ "true_players": 22,
+ "bytetrack_stage2_rescues": 18,
+ "ball_separated": true,
+ "deepsort_enabled": false,
+ "player_mean_trace_P": 0.6835,
+ "player_mean_innovation_norm_m": 0.4683,
+ "ball_mean_trace_P": 1.1062,
+ "ball_mean_innovation_norm_m": 0.8266,
+ "sample_final_player_track": {
+  "track_id": "P-001",
+  "bank": "player",
+  "x_m": 85.922,
+  "y_m": 23.8862,
+  "vx_ms": -1.0083,
+  "vy_ms": -0.2307,
+  "pos_std_m": 0.1493,
+  "trace_P": 0.1818,
+  "innovation_norm": 0.3552,
+  "coast_frames": 0
+ },
+ "sample_final_ball_track": {
+  "track_id": "BALL-01",
+  "bank": "ball",
+  "x_m": 33.1413,
+  "y_m": 46.0667,
+  "vx_ms": -7.0432,
+  "vy_ms": 3.1781,
+  "pos_std_m": 0.1578,
+  "trace_P": 0.6922,
+  "innovation_norm": 1.1373,
+  "coast_frames": 0
+ },
+ "joins_on": [
+  "game_id",
+  "play_id",
+  "gsis_id"
+ ],
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty_note": "Measured 4-state CV Kalman + ByteTrack baseline distribution on BDB 2025 proof play (2022091113 / 1766) in field meters (post-homography). Player mean trace(P)=0.6835, innovation norm=0.4683 m; ball mean trace(P)=1.1062, innovation norm=0.8266 m; 22/22 tracks, 18 stage-2 rescues, ball separated, DeepSORT off. This is the baseline distribution the VISION-CONTRACT falsifier will later compare against the market. Not a validation.",
+ "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and Identity Loop validation spec are met."
+}

@@ -1,11 +1,15 @@
 {
- "generated_utc": "2026-10-14T13:01:28.418040+00:00",
+ "generated_utc": "2026-10-14T13:26:57.279207+00:00",
  "ngs_public_surfaces": {
-  "artifact_path": "artifacts/gse_brain/ngs_public_surfaces_2026-10-14T13-01-28Z.json",
+  "artifact_path": "artifacts/gse_brain/ngs_public_surfaces_2026-10-14T13-26-57Z.json",
   "endpoints": {
    "schedule_2026_reg": {
     "status": 200,
     "count": 272
+   },
+   "schedule_current": {
+    "status": 200,
+    "count": 14
    },
    "league_teams": {
     "status": 200,
@@ -23,33 +27,80 @@
     "status": 200,
     "count": 118
    },
+   "statboard_leaders_2026": {
+    "status": 200,
+    "count": 35
+   },
+   "leaders_speed_ball_carrier_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_time_sack_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_distance_ball_carrier_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_expectation_completion_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_expectation_ery_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_expectation_yac_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "plays_highlights_2026": {
+    "status": 200,
+    "count": 20
+   },
    "teams_bare_deprecated": {
     "status": 403,
     "count": 0
    },
-   "fastest_ball_carriers_restricted": {
+   "fastest_ball_carriers_statboard_restricted": {
     "status": 403,
     "count": 0
    },
    "pass_rush_statboard_restricted": {
     "status": 403,
     "count": 0
+   },
+   "plays_tracking_restricted": {
+    "status": 403,
+    "count": 0
    }
   }
  },
+ "ngs_gamecenter_overviews": {
+  "artifact_path": "artifacts/gse_brain/ngs_gamecenter_overviews_2026-10-14T13-26-57Z.json",
+  "games_count": 7,
+  "total_rows": 180,
+  "gsis_joined": 180,
+  "restricted_subroutes": {
+   "/gamecenter/drives": 403,
+   "/gamecenter/plays": 403,
+   "/gamecenter/scores": 403
+  }
+ },
  "espn_4th_down_decisions": {
-  "artifact_path": "artifacts/gse_brain/espnanalytics_4th_down_2026-10-14T13-01-28Z.json",
+  "artifact_path": "artifacts/gse_brain/espnanalytics_4th_down_2026-10-14T13-26-57Z.json",
   "status": 200,
   "rows": 236
  },
  "sleeper_wk6_projections": {
-  "artifact_path": "artifacts/gse_brain/sleeper_projections_wk6_2026-10-14T13-01-28Z.json",
+  "artifact_path": "artifacts/gse_brain/sleeper_projections_wk6_2026-10-14T13-26-57Z.json",
   "status": 200,
   "active_rows": 345,
   "gsis_joined": 341
  },
  "nflverse_data_plane": {
-  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T13-01-28Z.json",
+  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T13-26-57Z.json",
   "stores_count": 17
  },
  "weight": 0.0,

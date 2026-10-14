@@ -1,6 +1,45 @@
 {
- "generated_utc": "2026-10-14T13:01:28.418040+00:00",
+ "generated_utc": "2026-10-14T13:26:57.279207+00:00",
  "source": "nflverse_data_plane_catalog",
+ "core_play_level_source": "intelligence/coaching/data/play_by_play_2026.parquet",
+ "play_level_source_matrix": [
+  {
+   "source": "nflverse PBP (play_by_play_2026.parquet)",
+   "play_level": "Yes (full)",
+   "notes": "372-col nflfastR schema, EPA/WPA, air_yards, cpoe, gsis player IDs, CC-BY 4.0",
+   "status": "Live, updated 2026-10-14T09:03:22Z (CORE PLAY-LEVEL SOURCE)"
+  },
+  {
+   "source": "NGS Game Center overview (/api/gamecenter/overview)",
+   "play_level": "No (player summaries only)",
+   "notes": "Per-game passers (with field-zone splits), rushers, receivers, passRushers",
+   "status": "Works with cookie-warmed browser session (HTTP 200); sub-routes /drives, /plays, /scores are HTTP 403"
+  },
+  {
+   "source": "NGS /plays/highlights or tracking",
+   "play_level": "Limited",
+   "notes": "/plays/highlights returns play + player metadata (787 total); /plays/tracking and /plays/play are HTTP 403",
+   "status": "Restricted (tracking coordinates 403)"
+  },
+  {
+   "source": "ESPN summary endpoint",
+   "play_level": "Partial",
+   "notes": "Drive chart + plays exist in some responses; not full nflfastR schema",
+   "status": "Keyless, HTTP 200"
+  },
+  {
+   "source": "EndzoneAPI / nfldata.org",
+   "play_level": "Yes",
+   "notes": "Wrap nflverse; require API keys or credits",
+   "status": "Not pure keyless (excluded)"
+  },
+  {
+   "source": "NFL Shield / api.nfl.com",
+   "play_level": "Yes (raw)",
+   "notes": "sportsdataverse has parsers; fragile, not fully public",
+   "status": "Header/session sensitive"
+  }
+ ],
  "weight": 0.0,
  "validation_spec_met": false,
  "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and Identity Loop validation spec are met.",
@@ -27,7 +66,7 @@
    ],
    "weight": 0.0,
    "validation_spec_met": false,
-   "honesty_note": "Keyless nflverse release parquet (13842 rows, 372 cols); weight=0.0 until validation spec met."
+   "honesty_note": "Keyless nflverse release parquet (13842 rows, 372 cols) (Core play-level source, CC-BY 4.0, refreshed 2026-10-14T09:03:22Z); weight=0.0 until validation spec met."
   },
   "play_by_play_2025": {
    "path": "intelligence/coaching/data/play_by_play_2025.parquet",
@@ -257,7 +296,7 @@
   },
   "pbp_participation_2026": {
    "path": "intelligence/coaching/data/pbp_participation_2026.parquet",
-   "status": "MISSING_UPSTREAM_404",
+   "status": "MISSING_UPSTREAM_404_STRUCTURAL",
    "rows": 0,
    "cols": 0,
    "joins_on": [
@@ -267,7 +306,7 @@
    ],
    "weight": 0.0,
    "validation_spec_met": false,
-   "honesty_note": "Verified HTTP 404 on nflverse-data releases; not yet published upstream for 2026. Fail-closed: not fabricated."
+   "honesty_note": "Verified HTTP 404 on nflverse-data releases; per official nflverse loader documentation, FTN participation data is provided only after all post-season games complete. Coverage-shell features use pbp_participation_2025.parquet as explicit prior. Not fabricated."
   },
   "ftn_charting_2026": {
    "path": "intelligence/coaching/data/ftn_charting_2026.parquet",
