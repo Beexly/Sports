@@ -1,0 +1,191 @@
+{
+ "label": "DIAGNOSTIC -- residual-scale modulator; mu = close; not wired; emission unchanged; nothing promoted",
+ "gate_rule": "feature model n >= 150 AND CRPS <= 7.099 (unreproduced bar) AND beats same-games Gaussian 13.45 by >= 0.01 on the frozen manifest; AND the nflverse cross-check passes the same test; AND the feature improves its own baseline on both sets",
+ "definitions": "BQP and SWCC residual-scale modulators.  DIAGNOSTIC ONLY.  mu = close; features only rescale the\npredictive distribution: scale *= exp(gamma * z), z = (feature - mean_prior) / sd_prior over earlier\ngames with the feature present; gamma by MLE (golden section on [-1, 1]) on strictly earlier games,\nrefit weekly.  A game whose feature is omitted (failed-closed join) uses z = 0 = baseline scale and\nstill counts.  Not wired; emission unchanged.  CVI is not touched or re-scored.\n\nBQP (backup quality penalty), per team side, positions QB / RB / WR / TE:\n  player EPA attribution  QB: plays where he is passer_player_id or rusher_player_id (dropbacks + runs);\n                          RB: rusher_player_id plays; WR/TE: receiver_player_id plays (targets).\n                          Position = nflverse snap_counts position for the team's prior games.\n  snap adjustment         EPA/play shrunk toward the position's league prior mean:\n                          (sum_epa + K * mu_pos) / (plays + K), K = 50 plays; all from prior games only.\n  starter / backup        by mean offense_pct over the team's last 4 games strictly before kickoff; QB, RB:\n                          rank 1 = starter, rank 2 = backup; WR: ranks 1-2 starters, rank 3 backup; TE: 1 / 2.\n  BQP_p                   EPA_starter_prior - EPA_backup_prior (snap-adjusted).\n  trigger                 counted only when the starter has an nflverse injury row for (season, week, team)\n                          with date_modified <= kickoff and report_status Out/Doubtful or practice DNP/Limited.\n  game BQP                sum over both sides and positions of max(0, BQP_p) for triggered starters.\n  fail closed (omit)      injury file for the season lacks date_modified (2025); team has < 4 prior games\n                          of snap counts; a needed pfr->gsis crosswalk is missing for a triggered starter\n                          or backup; no prior PBP plays for starter or backup.\n  depth charts            not used: legacy files have no timestamp; 2025 has dt but 2025 injuries are\n                          omitted anyway, so the trigger cannot fire there.\nSWCC (short-week cumulative cost), per team:\n  rest_deficit = max(0, 7 - rest_days) from games.csv home_rest/away_rest\n  travel_miles = schedule_meta away_travel_miles for the away team, 0 for the home team at its own venue\n  prior_game_snaps = team offense snaps + defense snaps in its previous game (max offense_snaps +\n                     max defense_snaps over that game's snap_counts rows), strictly before kickoff\n  SWCC_team = rest_deficit * ln(1 + travel_miles) * prior_game_snaps / 1000\n  game SWCC = SWCC_home + SWCC_away\n  fail closed (omit)  neutral-site game (home travel unknown); away travel null; rest missing; no prior game snaps.\n",
+ "manifest_sha256": "bec543fc83a63ed70042251147504e3df995bab590ea7a709bc0d9cbb7f3cbd5",
+ "manifest_freshness": {
+  "path": "dfs/nfl_rvc_manifest.json",
+  "stamp": "2026-10-11T03:37:51Z",
+  "age_hours": 90.55,
+  "fresh": true,
+  "failure_mode": null,
+  "label": "FRESH"
+ },
+ "nflverse_games_csv_sha256": "5db5edcd5a26fe4d74f0c52014fe187288122d1a6aa16fdf5b514d899d49f82f",
+ "nflverse_note": "UNFROZEN public nflverse games.csv 2016-2025 (warm-up 2016, n=2494 scored); Garrett's 2,462 filter is not reproduced; does NOT count alone for the gate",
+ "generated_at": "2026-10-14T22:10:56Z",
+ "best_feature_model": "normal_mixture_2+feat",
+ "technical_pass_manifest": true,
+ "passed": false,
+ "gate_status": "NOT CLEARED: technical pass on manifest only; nflverse cross-check fails (CRPS above 7.099 or delta < 0.01); feature does not improve its own normal_mixture_2 baseline on both sets",
+ "feature": "bqp",
+ "frozen_manifest": {
+  "target": "margin",
+  "n": 570,
+  "n_feature_present": 279,
+  "coverage": 0.4895,
+  "warmup_season": 2023,
+  "scored_seasons": [
+   2024,
+   2025
+  ],
+  "baseline_gaussian": "sigma 13.45 fixed",
+  "crps": {
+   "gaussian": 7.0271,
+   "gaussian+feat": 7.0224,
+   "normal_mixture_2": 7.0079,
+   "normal_mixture_2+feat": 7.0032
+  },
+  "per_season": {
+   "gaussian": {
+    "2024": 7.1355,
+    "2025": 6.9187
+   },
+   "gaussian+feat": {
+    "2024": 7.1261,
+    "2025": 6.9187
+   },
+   "normal_mixture_2": {
+    "2024": 7.1069,
+    "2025": 6.9088
+   },
+   "normal_mixture_2+feat": {
+    "2024": 7.0977,
+    "2025": 6.9088
+   }
+  },
+  "fit_final_window": {
+   "gamma_gaussian": [
+    0.043
+   ],
+   "gamma_mixture": [
+    0.0403
+   ],
+   "feature_mean": [
+    0.1032
+   ],
+   "feature_sd": [
+    0.1571
+   ],
+   "n_train": 854
+  },
+  "delta_feature_vs_own_baseline": {
+   "gaussian": 0.0047,
+   "normal_mixture_2": 0.0047
+  },
+  "delta_vs_same_games_gaussian": {
+   "gaussian": 0.0,
+   "gaussian+feat": 0.0047,
+   "normal_mixture_2": 0.0192,
+   "normal_mixture_2+feat": 0.0239
+  }
+ },
+ "nflverse_crosscheck_unfrozen": {
+  "target": "margin",
+  "n": 2494,
+  "n_feature_present": 2151,
+  "coverage": 0.8625,
+  "warmup_season": 2016,
+  "scored_seasons": [
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "baseline_gaussian": "sigma 13.45 fixed",
+  "crps": {
+   "gaussian": 7.1485,
+   "gaussian+feat": 7.1494,
+   "normal_mixture_2": 7.1316,
+   "normal_mixture_2+feat": 7.1323
+  },
+  "per_season": {
+   "gaussian": {
+    "2017": 7.3127,
+    "2018": 7.1947,
+    "2019": 7.3335,
+    "2020": 7.0588,
+    "2021": 7.6108,
+    "2022": 6.4446,
+    "2023": 7.3445,
+    "2024": 7.1355,
+    "2025": 6.9187
+   },
+   "gaussian+feat": {
+    "2017": 7.3173,
+    "2018": 7.1955,
+    "2019": 7.3348,
+    "2020": 7.0614,
+    "2021": 7.6112,
+    "2022": 6.4463,
+    "2023": 7.3448,
+    "2024": 7.1325,
+    "2025": 6.9187
+   },
+   "normal_mixture_2": {
+    "2017": 7.313,
+    "2018": 7.1722,
+    "2019": 7.3348,
+    "2020": 7.0376,
+    "2021": 7.6206,
+    "2022": 6.3858,
+    "2023": 7.3283,
+    "2024": 7.1078,
+    "2025": 6.9034
+   },
+   "normal_mixture_2+feat": {
+    "2017": 7.3181,
+    "2018": 7.1735,
+    "2019": 7.3356,
+    "2020": 7.0398,
+    "2021": 7.6211,
+    "2022": 6.3866,
+    "2023": 7.3285,
+    "2024": 7.1037,
+    "2025": 6.9034
+   }
+  },
+  "fit_final_window": {
+   "gamma_gaussian": [
+    0.013
+   ],
+   "gamma_mixture": [
+    0.0157
+   ],
+   "feature_mean": [
+    0.1041
+   ],
+   "feature_sd": [
+    0.1475
+   ],
+   "n_train": 2760
+  },
+  "delta_feature_vs_own_baseline": {
+   "gaussian": -0.0009,
+   "normal_mixture_2": -0.0007
+  },
+  "delta_vs_same_games_gaussian": {
+   "gaussian": 0.0,
+   "gaussian+feat": -0.0009,
+   "normal_mixture_2": 0.0169,
+   "normal_mixture_2+feat": 0.0162
+  }
+ },
+ "failed_closed_joins": {
+  "injury_row_no_date_modified": 6068,
+  "omit_lt4_prior_snap_games": 12,
+  "omit_triggered_no_backup_or_crosswalk": 52,
+  "omit_triggered_no_prior_pbp": 4,
+  "omit_injury_season_no_date_modified": 570
+ },
+ "feature_definition_key": "bqp",
+ "combined_bqp_swcc": {
+  "run": false,
+  "reason": "combined is run only if each improves its mixture baseline alone on the manifest; improves = {'bqp': True, 'swcc': False}"
+ }
+}
