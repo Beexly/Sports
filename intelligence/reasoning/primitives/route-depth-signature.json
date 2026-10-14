@@ -47,5 +47,15 @@
   "Press Magnet (WR1 draws bracket -> sep_min shifts)"
  ],
  "use_in_decision": "SHADOW \u2014 weight 0 until the falsifier's full validation spec crosses",
- "precedent_hook": "structural match on (speed_max>8.5, sep_min>1.0, 3rd&long)"
+ "precedent_hook": "structural match on (speed_max>8.5, sep_min>1.0, 3rd&long)",
+ "replication": {
+  "week8_n": 720,
+  "week8_auc": 0.8786,
+  "week8_logloss": 0.2983,
+  "threshold": "AUC >= 0.65 (pre-registered falsifier)",
+  "coefficient_sign_stability": true,
+  "artifact": "docs/data-sources/research/2026-10-14/route-depth-replication.json",
+  "verdict": "REPLICATED"
+ },
+ "honesty_note": "Two independent week splits (7, 8) both exceed the pre-registered AUC bar; the mechanism is stable across samples. Still SHADOW weight-0: measured signal quality is necessary but not sufficient \u2014 the full validation spec (calibration half + market half on the same margin) governs the flip."
 }
