@@ -116,8 +116,10 @@ def extract_ball_tracklet(detector_result: dict[str, Any],
 
     Positions are bbox centers (the ball is compact; center == foot point for
     a 12px box), directly feedable to cv-pipeline.ts homography +
-    deriveMovementMetrics. Returns (None, reason) when no ball was detected —
-    never an empty-but-present tracklet.
+    deriveMovementMetrics. Highest-confidence ball wins (adopted from the
+    external agent's polished pass — max-by-confidence, not [0]).
+    Returns (None, reason) when no ball was detected — never an
+    empty-but-present tracklet.
     """
     primary = (detector_result or {}).get("primary") or {}
     dets = primary.get("detections") or []
@@ -126,7 +128,7 @@ def extract_ball_tracklet(detector_result: dict[str, Any],
         return None, "no_ball_detected"
     if n_frames <= 0:
         return None, "non_positive_frames"
-    b = balls[0]
+    b = max(balls, key=lambda d: d.confidence)
     positions = tuple(
         TrackletPosition(t=round(i / fps, 4),
                          x_px=b.bbox.x + b.bbox.width / 2 + i,  # deterministic drift, mock-stable
@@ -134,29 +136,35 @@ def extract_ball_tracklet(detector_result: dict[str, Any],
         for i in range(n_frames)
     )
     tk = Tracklet(id="BALL-01", team="BALL", role="ball", positions=positions)
-    print(f"[shadow] ball tracklet {tk.id}: {len(positions)} position(s)")
+    print(f"[shadow] ball tracklet {tk.id}: {len(positions)} position(s) "
+          f"(confidence {b.confidence})")
     return tk, "ok"
 
 
-def join_nflverse_when_identity(jersey: int | None,
-                                team_hint: str | None = None) -> dict[str, Any]:
+def join_nflverse_when_identity(tracklet_id: str | None,
+                                jersey: int | None,
+                                team_hint: str | None = None,
+                                game_id: str | None = None,
+                                play_id: int | None = None) -> dict[str, Any]:
     """Step 3: nflverse join stub — activates ONLY on a jersey number.
 
-    We do not have jersey OCR yet (VISION-CONTRACT non-goal v0), so the live
-    path is the skip. When OCR lands, this becomes the join point to nflverse
-    participation (gsis_id via rosters; see the data-dictionary integration
-    table in the external agent's report: rosters carry gsis_id <-> jersey).
+    Signature widened (adopted from the external agent's polished pass): the
+    join needs tracklet + game + play context to key nflverse participation
+    (gsis_id via rosters; their data-dictionary table: rosters carry
+    gsis_id <-> jersey). We do not have jersey OCR yet (VISION-CONTRACT
+    non-goal v0), so the live path is the skip.
     """
     if jersey is None:
         print("[shadow] nflverse join: skipped_no_jersey_ocr")
         return {"joined": False, "reason": "skipped_no_jersey_ocr", "row": None}
     # Join-ready row (still weight 0 downstream): identity keys only, no
-    # invented attributes. The actual gsis_id resolution needs the rosters
-    # table keyed (team, jersey, season) — recorded as the named next step.
+    # invented attributes. gsis_id resolution needs the rosters table keyed
+    # (team, jersey, season) — recorded as the named next step.
     return {
         "joined": True,
         "reason": "join_ready_identity_keys_only",
-        "row": {"jersey": jersey, "team_hint": team_hint,
+        "row": {"tracklet_id": tracklet_id, "jersey": jersey,
+                "team_hint": team_hint, "game_id": game_id, "play_id": play_id,
                 "gsis_id": None,
                 "note": "gsis_id resolution requires rosters join - named next step"},
     }
@@ -218,18 +226,23 @@ def append_film_shadow_ledger(rows: list[dict[str, Any]]) -> Path:
     return p
 
 
-def run_pipeline(n_frames: int = 3, jersey: int | None = None) -> dict[str, Any]:
-    """Steps 1-5 in sequence. Returns the summary the agent's spec showed."""
+def run_pipeline(n_frames: int = 3, jersey: int | None = None,
+                 game_id: str = "2026_06_PENDING",
+                 base_play_id: int = 1000) -> dict[str, Any]:
+    """Steps 1-5 in sequence. Returns the summary the agent's spec showed.
+
+    Per-frame detector rows are logged to the ledger too (adopted from the
+    external agent's polished pass: log every step, not just film features) —
+    the validation pass will need detector-level history, not only gate rows.
+    """
     # Deterministic mock frames; production frames arrive decoded upstream.
     from intelligence.vision.cv_detector_adapter import VideoFrame
 
-    now_iso = datetime.now(timezone.utc).isoformat()
     all_rows: list[dict[str, Any]] = []
     summary: dict[str, Any] = {}
 
     primary_total = roboflow_total = 0
     ball_tk: Tracklet | None = None
-    join: dict[str, Any] = {"joined": False, "reason": "not_attempted", "row": None}
 
     for i in range(n_frames):
         frame = VideoFrame(index=i, t=i / 30.0, width=1920, height=1080)
@@ -239,8 +252,17 @@ def run_pipeline(n_frames: int = 3, jersey: int | None = None) -> dict[str, Any]
         tk, reason = extract_ball_tracklet(res, n_frames=n_frames)
         if tk:
             ball_tk = tk
+        # per-frame shadow rows (gate-safe: detector counts are observational,
+        # not decision features, so they carry weight 0 like everything else)
+        all_rows.append(film_feature_to_decision(
+            "detector_primary_count", res["counts"]["primary_detections"]))
+        all_rows.append(film_feature_to_decision(
+            "detector_roboflow_ball", res["counts"]["roboflow_ball"]))
 
-    join = join_nflverse_when_identity(jersey)
+    ball_id = ball_tk.id if ball_tk else None
+    join = join_nflverse_when_identity(ball_id, jersey,
+                                       game_id=game_id,
+                                       play_id=base_play_id + n_frames)
 
     # Film feature from the ball tracklet (mock value; the REAL value comes
     # from TS-side deriveMovementMetrics once real footage exists).
@@ -249,17 +271,15 @@ def run_pipeline(n_frames: int = 3, jersey: int | None = None) -> dict[str, Any]
         "sep_at_break_yd", feature_value, join if join.get("joined") else None)
     all_rows.append(gate)
 
-    ledger = None
-    if not all([isinstance(x, dict) for x in all_rows]):
-        raise RuntimeError("unreachable")
     ledger = append_film_shadow_ledger(all_rows)
 
     summary = {
         "primary_detections": primary_total,
         "roboflow_detections": roboflow_total,
-        "ball_tracklet": ball_tk.id if ball_tk else None,
+        "ball_tracklet": ball_id,
         "nflverse_joined": join.get("joined", False),
-        "film_feature": all_rows[0],
+        "nflverse_reason": join.get("reason"),
+        "film_feature": all_rows[-1],
         "ledger": str(ledger),
     }
     print(json.dumps(summary, indent=1, default=str))
