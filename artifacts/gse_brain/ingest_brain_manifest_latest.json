@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-14T15:20:44.774063+00:00",
+ "generated_utc": "2026-10-14T17:10:21.297454+00:00",
  "ngs_public_surfaces": {
   "artifact_path": "artifacts/gse_brain/ngs_public_surfaces_2026-10-14T13-26-57Z.json",
   "endpoints": {
@@ -100,8 +100,8 @@
   "gsis_joined": 341
  },
  "nflverse_data_plane": {
-  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T15-20-44Z.json",
-  "stores_count": 42
+  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T17-10-21Z.json",
+  "stores_count": 43
  },
  "weight": 0.0,
  "validation_spec_met": false,
@@ -154,5 +154,14 @@
   "artifact_path": "artifacts/gse_brain/endzoneapi_tools_catalog_latest.json",
   "status": 200,
   "tools_count": 20
+ },
+ "validation_2026_highlights_787": {
+  "artifact_path": "artifacts/gse_brain/validation_2026_highlights_summary_latest.json",
+  "outcome_enrichment_parquet": "intelligence/vision/data/tracklet_outcome_enrichment_2026.parquet",
+  "plays_evaluated": 787,
+  "tracklets_enriched": 17312,
+  "single_view_mean_rmse_m": 0.0955,
+  "multi_view_mean_rmse_m": 0.0669,
+  "shadow_color_unmatched_rate": 0.0
  }
 }

@@ -505,6 +505,7 @@ def catalog_nflverse_local_stores(stamp: str, now_iso: str) -> dict[str, Any]:
         ("ngs_highlight_participation_2025", "ngs_highlight_participation_2025.parquet", ["game_id", "play_id", "gsis_id"]),
         ("ngs_highlight_events_2026", "ngs_highlight_events_2026.parquet", ["game_id", "play_id", "frame_id"]),
         ("ngs_highlight_events_2025", "ngs_highlight_events_2025.parquet", ["game_id", "play_id", "frame_id"]),
+        ("teams_colors_logos", "teams_colors_logos.parquet", ["team_abbr", "team_id"]),
         ("ftn_charting_2026", "ftn_charting_2026.parquet", ["nflverse_game_id", "nflverse_play_id"]),
         ("ftn_charting_2025", "ftn_charting_2025.parquet", ["nflverse_game_id", "nflverse_play_id"]),
         ("ngs_receiving", "ngs_receiving.parquet", ["player_gsis_id", "season", "week"]),

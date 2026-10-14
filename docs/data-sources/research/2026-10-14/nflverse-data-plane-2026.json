@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-14T15:20:44.774063+00:00",
+ "generated_utc": "2026-10-14T17:10:21.297454+00:00",
  "source": "nflverse_data_plane_catalog",
  "core_play_level_source": "intelligence/coaching/data/play_by_play_2026.parquet",
  "play_level_source_matrix": [
@@ -672,6 +672,21 @@
    "weight": 0.0,
    "validation_spec_met": false,
    "honesty_note": "Keyless nflverse release parquet (25828 rows, 9 cols); weight=0.0 until validation spec met."
+  },
+  "teams_colors_logos": {
+   "path": "intelligence/coaching/data/teams_colors_logos.parquet",
+   "status": "INGESTED_PARQUET",
+   "rows": 36,
+   "cols": 16,
+   "seasons": [],
+   "weeks": [],
+   "joins_on": [
+    "team_abbr",
+    "team_id"
+   ],
+   "weight": 0.0,
+   "validation_spec_met": false,
+   "honesty_note": "Keyless nflverse release parquet (36 rows, 16 cols); weight=0.0 until validation spec met."
   },
   "ftn_charting_2026": {
    "path": "intelligence/coaching/data/ftn_charting_2026.parquet",

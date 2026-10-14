@@ -1042,6 +1042,7 @@ class Detection:
     conf: float
     jersey_ocr: Optional[str] = None
     team: Optional[str] = None
+    color_embedding: Optional[np.ndarray] = None  # 6D L2-normalized [R1,G1,B1,R2,G2,B2] torso color descriptor (shadow)
 
 
 @dataclass
@@ -1052,6 +1053,8 @@ class Tracklet:
     jersey: Optional[str] = None
     team: Optional[str] = None
     gsis_id: Optional[str] = None
+    color_embedding: Optional[np.ndarray] = None  # Shadow second-signal visual/color embedding (weight 0)
+    shadow_gsis_id: Optional[str] = None          # Candidate gsis_id resolved with shadow jersey-color tie-breaker
     bbox: np.ndarray = field(default_factory=lambda: np.zeros(4, dtype=np.float64))
     missed_frames: int = 0
     low_pass_recoveries: int = 0
@@ -1295,6 +1298,108 @@ def join_tracklet_to_gsis(
     return None
 
 
+class JerseyColorEmbeddingResolver:
+    """
+    Shadow second-signal identity tie-breaker using L2-normalized 6D RGB primary/secondary
+    team jersey color embeddings from nflverse teams_colors_logos.parquet.
+    Used ONLY at weight 0 in shadow mode to disambiguate duplicate jersey numbers across
+    opposing teams on the same play when tracklet.team is not pre-populated.
+    """
+
+    def __init__(self) -> None:
+        self.team_vecs: Dict[str, np.ndarray] = {}
+        self.team_id_to_vec: Dict[str, np.ndarray] = {}
+        self.team_id_to_abbr: Dict[str, str] = dict(NGS_TEAM_ID_TO_ABBR)
+        self._load_colors()
+
+    @staticmethod
+    def _hex_pair_to_vec(h1: str, h2: str) -> np.ndarray:
+        def _h2rgb(h: str) -> Tuple[int, int, int]:
+            s = (h or "#000000").lstrip("#")
+            if len(s) < 6:
+                s = s.ljust(6, "0")
+            return int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16)
+
+        r1, g1, b1 = _h2rgb(h1)
+        r2, g2, b2 = _h2rgb(h2)
+        v = np.array([r1, g1, b1, r2, g2, b2], dtype=np.float64)
+        nrm = float(np.linalg.norm(v))
+        return v / nrm if nrm > 1e-9 else v
+
+    def _load_colors(self) -> None:
+        import pandas as pd
+        p = COACH_DATA / "teams_colors_logos.parquet"
+        if not p.exists():
+            return
+        df = pd.read_parquet(p)
+        for r in df.itertuples(index=False):
+            abbr = str(r.team_abbr).upper()
+            tid = str(r.team_id)
+            vec = self._hex_pair_to_vec(str(r.team_color), str(r.team_color2))
+            self.team_vecs[abbr] = vec
+            self.team_id_to_vec[tid] = vec
+            self.team_id_to_abbr[tid] = abbr
+        if "LA" in self.team_vecs:
+            self.team_vecs["LAR"] = self.team_vecs["LA"]
+        if "ARI" in self.team_vecs:
+            self.team_vecs["AZ"] = self.team_vecs["ARI"]
+
+    def resolve_shadow_with_color(
+        self,
+        tracklet: Tracklet,
+        participation: Any,
+        game_id: str | int,
+        play_id: int,
+        min_cosine_margin: float = 0.01,
+    ) -> Optional[str]:
+        """
+        Attempt jersey-only join first; if 2 candidates share the same jersey number
+        across opposing teams on the play, use tracklet.color_embedding cosine similarity
+        against each candidate's team color vector as a shadow tie-breaker.
+        """
+        if not tracklet.jersey:
+            return None
+        jersey = _norm_jersey_str(tracklet.jersey)
+        if not jersey or participation is None or len(participation) == 0:
+            return None
+
+        gid_col = "game_id" if "game_id" in participation.columns else "nflverse_game_id"
+        on_field = participation[
+            (participation[gid_col].astype(str) == str(game_id)) &
+            (participation["play_id"].astype(int) == int(play_id))
+        ]
+        if on_field.empty or "jersey_number" not in on_field.columns:
+            return None
+
+        j_norm = on_field["jersey_number"].map(_norm_jersey_str)
+        candidates = on_field[j_norm == jersey]
+        if len(candidates) == 1:
+            gsis = str(candidates["gsis_id"].iloc[0])
+            tracklet.shadow_gsis_id = gsis
+            return gsis
+
+        if len(candidates) > 1 and tracklet.color_embedding is not None:
+            emb = np.asarray(tracklet.color_embedding, dtype=np.float64)
+            nrm = float(np.linalg.norm(emb))
+            if nrm > 1e-9:
+                emb = emb / nrm
+            scored: List[Tuple[float, str]] = []
+            for r in candidates.itertuples(index=False):
+                tid = str(getattr(r, "current_team_id", "") or getattr(r, "team_id", ""))
+                tabbr = str(getattr(r, "team_abbr", "") or getattr(r, "team", "")).upper()
+                tvec = self.team_id_to_vec.get(tid)
+                if tvec is None and tabbr:
+                    tvec = self.team_vecs.get(tabbr)
+                if tvec is not None:
+                    scored.append((float(np.dot(emb, tvec)), str(r.gsis_id)))
+            if len(scored) >= 2:
+                scored.sort(key=lambda x: x[0], reverse=True)
+                if (scored[0][0] - scored[1][0]) >= min_cosine_margin:
+                    tracklet.shadow_gsis_id = scored[0][1]
+                    return scored[0][1]
+        return None
+
+
 class SkeleTrack:
     """
     Broadcast-to-field tracklet pipeline combining:
@@ -1379,6 +1484,8 @@ class SkeleTrack:
                 track.jersey = det.jersey_ocr
             if det.team:
                 track.team = det.team
+            if det.color_embedding is not None:
+                track.color_embedding = det.color_embedding
             track.frames.append(frame_id)
             track.positions.append(track.state[:2].copy())
 
@@ -1404,6 +1511,7 @@ class SkeleTrack:
                 covariance=init_cov,
                 jersey=det.jersey_ocr,
                 team=det.team,
+                color_embedding=det.color_embedding,
                 bbox=np.asarray(det.bbox, dtype=np.float64),
                 missed_frames=0,
                 frames=[frame_id],
