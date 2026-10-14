@@ -149,6 +149,14 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// QB Pressure-Behavior Change Detection (SHADOW)
+export {
+  computeQbPressureChange,
+  QB_PRESSURE_CHANGE_MODEL_VERSION,
+  type PressuredProxyDropback,
+  type QbPressureWindowResult,
+} from "./qb-pressure-change.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

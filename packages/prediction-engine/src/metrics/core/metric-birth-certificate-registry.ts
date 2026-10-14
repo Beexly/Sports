@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["EPA per pressured-proxy dropback", "pressured-proxy rate", "prior 16 game baseline", "rolling 8 game window", "pooled standard error"],
+    failureModes: ["single-game flags", "using true pressure rate instead of proxy", "sample size too small"],
+    family: "performance",
+    forbiddenInputs: ["true pressure rate", "private NGS data", "game indices beyond target week"],
+    formulaClass: "deterministic-rule",
+    formulaSummary: "Compares rolling 8-game EPA per pressured-proxy dropback against prior 16-game baseline using 1.5x pooled standard error.",
+    historicalPrecedent: [{ name: "SumerSports QB pressure chart", reason: "Identified structural breaks in QB performance under pressure." }],
+    internalName: "qb_pressure_change_shadow",
+    metricId: "qb-pressure-change",
+    protectedComponents: ["1.5x standard error threshold", "75 pressured-proxy dropback floor", "Bayesian shrinkage"],
+    publicExposure: "none",
+    publicName: "QB Pressure-Behavior Change",
+    sourceRightsRequired: ["modeling allowed"],
+    status: "SHADOW",
+    targetQuestion: "Has a QB's performance under pressure structurally changed, or is it noise?",
+    targetVariable: "structural break flag",
+    validationMethods: ["drift_test", "walk_forward"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",

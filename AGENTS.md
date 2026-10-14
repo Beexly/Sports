@@ -15117,3 +15117,13 @@ Lane B (scanned / in-window): @ScottBarrettDFB 4 + 1 pinned / 2 definite + 1 at-
 @NFLResearcher: Posts tab rendered 0 post articles despite a "4 posts" header; Replies tab shows replies with newest visible activity Jan 25 — 0 in-window. Bio claims a PhD in Data Science from a fictional institution name as displayed (recorded as displayed in the 16:20 run).
 Home feed (Following), checked by Lane B twice: 5 articles on pass 1, 7 on pass 2 — highlights/video and non-NFL items only; 0 in-window advanced NFL analytics items with numbers beyond the account items above.
 Pre-window explicitly excluded from new items: @ScottBarrettDFB 4:32 PM CDT Bowers post as a standalone (inventoried above only via @RyanPaganetti's in-window quote, with both timestamps recorded), @KevinCole___ 7:56 AM CDT QB grading chart as a standalone (inventoried only via @DevyEusuf's in-window quote), @sfdata9ers 4:32 PM CDT and all older hourly boards, @SumerSports 4:58 PM CDT late-down target share board (inventoried in the 16:20 run), @statyxio 4:00 PM CDT Chicago/GB receiving board (inventoried in the 16:20 run).
+
+## 2026-10-13: QB Pressure-Behavior Change Detection (SHADOW)
+
+* **What was built:** Added a SHADOW metric for QB pressure-behavior change detection (`packages/prediction-engine/src/expected-metrics/qb-pressure-change.ts`). It flags structural breaks in a QB's EPA per pressured-proxy dropback by comparing a rolling 8-game window against their prior 16-game baseline using a 1.5x pooled standard error rule.
+* **Where:**
+  * `packages/prediction-engine/src/expected-metrics/qb-pressure-change.ts`
+  * `packages/prediction-engine/src/expected-metrics/__tests__/qb-pressure-change.test.ts`
+  * Registered in `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts` as `qb-pressure-change`.
+  * Added `sack` and `qb_hit` to allowlist in `packages/prediction-engine/src/expected-metrics/nflverse-pbp-mapper.ts`.
+* **Tests:** Added tests covering proxy classification, expected points integration, break flag rules, minimum dropback floors, avoidance of single-game outliers, point-in-time constraints, CUSUM diagnostic generation, and Bayesian shrinkage. All tests pass locally via vitest.
