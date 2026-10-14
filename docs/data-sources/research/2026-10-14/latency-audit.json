@@ -1,0 +1,71 @@
+{
+ "generated_utc": "2026-10-14T06:09:54.143248+00:00",
+ "measured": "ACQUISITION lag (source event time -> landed on disk). This is the part of the chain we control.",
+ "not_yet_measured": [
+  "event->model-update lag (requires the reasoning run to stamp its input-artifact mtimes per card - the emitter already writes generated_utc; adding read-stamps is a small change)",
+  "model-update->market-move lag (requires timestamped line snapshots at higher frequency than one capture per cycle)"
+ ],
+ "acquisition_histogram": {
+  "n": 7,
+  "min_minutes": 0.0,
+  "p25": 0.0,
+  "median": 0.0,
+  "p75": 0.0,
+  "max_minutes": 0.3,
+  "buckets": {
+   "0-5min": 7
+  }
+ },
+ "detail": [
+  {
+   "source": "espn_public",
+   "file": "public_injuries_2026-10-14T05-29-35Z.json",
+   "event_utc": "2026-10-14T05:29:35.874567+00:00",
+   "captured_utc": "2026-10-14T05:29:36.235195+00:00",
+   "acquisition_lag_minutes": 0.0
+  },
+  {
+   "source": "espn_public",
+   "file": "public_scoreboard_2026-10-14T05-29-35Z.json",
+   "event_utc": "2026-10-14T05:29:35.874567+00:00",
+   "captured_utc": "2026-10-14T05:29:36.172075+00:00",
+   "acquisition_lag_minutes": 0.0
+  },
+  {
+   "source": "kalshi_full_slate",
+   "file": "kalshi_full_slate_2026-10-14T05-55-21Z.json",
+   "event_utc": "2026-10-14T05:55:21.885423+00:00",
+   "captured_utc": "2026-10-14T05:55:40.574234+00:00",
+   "acquisition_lag_minutes": 0.3
+  },
+  {
+   "source": "kalshi_paged",
+   "file": "kalshi_open_markets_2026-10-14T05-32-14Z.json",
+   "event_utc": "2026-10-14T05:32:14.183930+00:00",
+   "captured_utc": "2026-10-14T05:32:14.403331+00:00",
+   "acquisition_lag_minutes": 0.0
+  },
+  {
+   "source": "kalshi_paged",
+   "file": "kalshi_open_markets_2026-10-14T05-53-53Z.json",
+   "event_utc": "2026-10-14T05:53:53.589832+00:00",
+   "captured_utc": "2026-10-14T05:53:53.694842+00:00",
+   "acquisition_lag_minutes": 0.0
+  },
+  {
+   "source": "espn_injuries",
+   "file": "espn_nfl_injuries_week6.json",
+   "event_utc": "2026-10-13T17:53:17.578354-04:00",
+   "captured_utc": "2026-10-13T21:53:17.584614+00:00",
+   "acquisition_lag_minutes": 0.0
+  },
+  {
+   "source": "cognitive_signals",
+   "file": "cognitive_signals.json",
+   "event_utc": "2026-10-13T22:14:26.910326+00:00",
+   "captured_utc": "2026-10-13T22:14:29.600392+00:00",
+   "acquisition_lag_minutes": 0.0
+  }
+ ],
+ "founder_answer": "The assumption was correct: event->update->price latency was unmeasured. Acquisition lag is now measured and instrumented; the two remaining legs need self-stamping in the emitter and higher-frequency line captures. Neither requires new data sources - both are code."
+}
