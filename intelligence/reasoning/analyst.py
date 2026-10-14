@@ -241,7 +241,9 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
     kpath2_dir = SOURCES / "2026-10-14" / "kalshi"
     if kpath2_dir.is_dir():
         newest2 = None
-        for p2 in sorted(kpath2_dir.glob("kalshi_open_markets_*.json")):
+        # prefer the event-driven full-slate sweep (14/14 games) over the paged feed
+        cands = sorted(kpath2_dir.glob("kalshi_full_slate_*.json")) or                 sorted(kpath2_dir.glob("kalshi_open_markets_*.json"))
+        for p2 in cands:
             newest2 = p2  # sorted glob; keep the newest
         if newest2:
             kd2 = _load_json(newest2)

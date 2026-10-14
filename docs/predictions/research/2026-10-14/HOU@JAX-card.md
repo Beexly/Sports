@@ -1,10 +1,10 @@
 # HOU@JAX - Analyst Card (Attrition Edge)
 
-generated_utc: 2026-10-14T05:49:24.938649+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:57:42.162757+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
-**Attrition Edge** - named from the confluence cluster of 78 cited facts across 5 domains (biophysical, cognitive, dfs, market, on_field).
+**Attrition Edge** - named from the confluence cluster of 80 cited facts across 5 domains (biophysical, cognitive, dfs, market, on_field).
 
 ## Causal chain (every link cites its file)
 
@@ -12,18 +12,20 @@ generated_utc: 2026-10-14T05:49:24.938649+00:00  |  trace: 2026-10-13T173138Z000
 2. AVAILABILITY: Montaric Brown (JAX) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 3. AVAILABILITY: Ross Matiscik (JAX) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 4. AVAILABILITY: Jalen Pitre (HOU) listed DOUBTFUL [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
-5. TRACKING (2026 IN-SEASON): Travis Etienne (JAX) records RYOE = -15.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-6. TRACKING (2026 IN-SEASON): Travis Etienne (JAX) records STACKED BOX PCT = 6.7 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-7. TRACKING (2026 IN-SEASON): Kendre Miller (JAX) records RYOE = -37.5 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-8. MULTI-BOOK PLANE: Action Network multi-book coverage across 29 books: DraftKings (ML -148, Spd -2.5, O/U 42.5); DraftKings (ML -142, Spd -1.5, O/U 20.5); DraftKings (ML -135, Spd -0.5, O/U 7.5); DraftKings (ML -140, Spd -1.5, O/U 12.5) [docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json] -> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane -> enables true Shin de-vigging and bookmaker shading identification
-9. TRACKING (BASELINE, 2025 season): Nico Collins (HOU) carried NGS ngs_separation_2025baseline = 2.3 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
+5. MICROSTRUCTURE (two-sided): Kalshi live book on the home side: bid 0.56 / ask 0.57 (mid 0.565, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+6. MICROSTRUCTURE (two-sided): Kalshi live book on the away side: bid 0.43 / ask 0.44 (mid 0.435, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+7. TRACKING (2026 IN-SEASON): Travis Etienne (JAX) records RYOE = -15.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+8. TRACKING (2026 IN-SEASON): Travis Etienne (JAX) records STACKED BOX PCT = 6.7 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+9. TRACKING (2026 IN-SEASON): Kendre Miller (JAX) records RYOE = -37.5 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+10. MULTI-BOOK PLANE: Action Network multi-book coverage across 29 books: DraftKings (ML -148, Spd -2.5, O/U 42.5); DraftKings (ML -142, Spd -1.5, O/U 20.5); DraftKings (ML -135, Spd -0.5, O/U 7.5); DraftKings (ML -140, Spd -1.5, O/U 12.5) [docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json] -> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane -> enables true Shin de-vigging and bookmaker shading identification
+11. TRACKING (BASELINE, 2025 season): Nico Collins (HOU) carried NGS ngs_separation_2025baseline = 2.3 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
 
 ## Confluence
 
 - biophysical: 7 cited fact(s)
 - cognitive: 6 cited fact(s)
 - dfs: 3 cited fact(s)
-- market: 4 cited fact(s)
+- market: 6 cited fact(s)
 - on_field: 58 cited fact(s)
 
 ## Firing vs contradicting signals
@@ -38,6 +40,8 @@ generated_utc: 2026-10-14T05:49:24.938649+00:00  |  trace: 2026-10-13T173138Z000
 | injury_status_S | Jalen Pitre (HOU) | Doubtful | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | injury_status_RB | David Montgomery (HOU) | Doubtful | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | injury_status_OT | Braden Smith (HOU) | Injured Reserve | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
+| kalshi_two_sided_home | Jacksonville wins (KXNFLGAME-26OCT18HOUJAC-JAC) | {'yes_bid': 0.56, 'yes_ask': 0.57, 'mid': 0.565, 'spread': 0.01} | fires | docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json |
+| kalshi_two_sided_away | Houston wins (KXNFLGAME-26OCT18HOUJAC-HOU) | {'yes_bid': 0.43, 'yes_ask': 0.44, 'mid': 0.435, 'spread': 0.01} | fires | docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json |
 | action_network_multi_book | HOU@JAX multi-book plane | 29 books: DraftKings (ML -148, Spd -2.5, O/U 42.5); DraftKings (ML -142, Spd -1.5, O/U 20.5); DraftKings (ML -135, Spd -0.5, O/U 7.5); DraftKings (ML -140, Spd -1.5, O/U 12.5) | fires | docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json |
 | market_spread_dispersion | HOU@JAX | 2.5 | fires | docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json |
 | pinnacle_sharp_reference_available | HOU@JAX | 2 Pinnacle guest line snapshot(s) archived | fires | docs/data-sources/research/2026-10-13/pinnacle/guest_2026-10-14T01-47-09Z.json |
@@ -52,8 +56,6 @@ generated_utc: 2026-10-14T05:49:24.938649+00:00  |  trace: 2026-10-13T173138Z000
 | game_context_flag | HOU |  | fires | docs/data-sources/research/2026-10-13/cognitive/cognitive_signals.json |
 | ngs_2026_ryoe | Travis Etienne (JAX) | -15.8 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
 | ngs_2026_stacked_box_pct | Travis Etienne (JAX) | 6.7 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
-| ngs_2026_ryoe | Kendre Miller (JAX) | -37.5 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
-| ngs_2026_stacked_box_pct | Kendre Miller (JAX) | 27.6 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
 
 ## Pre-registered breaking conditions
 
@@ -112,11 +114,11 @@ Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis st
 
 ## Sizing
 
-- Chain conviction 64/100 (cited links 9 / cited + gaps 14)
-- **Kelly-fraction ceiling: 0.0064 of bankroll (quarter-unit max)**
+- Chain conviction 69/100 (cited links 11 / cited + gaps 16)
+- **Kelly-fraction ceiling: 0.0069 of bankroll (quarter-unit max)**
 - Basis: this is a *coverage* ratio, not a win probability; the engine refuses to mint a win probability (named gap: no calibrated tau on this host). The fraction above is a hard ceiling on stake sized from evidence coverage, discounted 50% for uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.
 - Concentration: slate-level correlation is NOT computed here (named gap: the portfolio layer does not yet consume these cards). Do not stack multiple cards sharing the same weather or injury signal without cutting each stake; shared signals compound concentration risk, not edge.
 
-## Conviction: 64/100
+## Conviction: 69/100
 
-Conviction in the CHAIN (cited links 9 / cited + named gaps 14). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 11 / cited + named gaps 16). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

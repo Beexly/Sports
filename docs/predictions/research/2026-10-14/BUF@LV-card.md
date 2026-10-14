@@ -1,6 +1,6 @@
 # BUF@LV - Analyst Card (Narrative Fog)
 
-generated_utc: 2026-10-14T05:49:33.098003+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:57:49.843884+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
@@ -110,15 +110,16 @@ Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis st
 - weather: venue 'Allegiant Stadium' not in pilot file
 - injuries: 20 LV players appear on the report but carry ACTIVE status
 - injuries: 18 BUF players appear on the report but carry ACTIVE status
+- market: fresh Kalshi two-sided books have no row for this game
 - news: no LV/BUF hits in espn-nfl-news-digest.json
 
 ## Sizing
 
-- Chain conviction 71/100 (cited links 10 / cited + gaps 14)
-- **Kelly-fraction ceiling: 0.0071 of bankroll (quarter-unit max)**
+- Chain conviction 67/100 (cited links 10 / cited + gaps 15)
+- **Kelly-fraction ceiling: 0.0067 of bankroll (quarter-unit max)**
 - Basis: this is a *coverage* ratio, not a win probability; the engine refuses to mint a win probability (named gap: no calibrated tau on this host). The fraction above is a hard ceiling on stake sized from evidence coverage, discounted 50% for uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.
 - Concentration: slate-level correlation is NOT computed here (named gap: the portfolio layer does not yet consume these cards). Do not stack multiple cards sharing the same weather or injury signal without cutting each stake; shared signals compound concentration risk, not edge.
 
-## Conviction: 71/100
+## Conviction: 67/100
 
-Conviction in the CHAIN (cited links 10 / cited + named gaps 14). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 10 / cited + named gaps 15). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

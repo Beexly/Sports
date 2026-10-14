@@ -1,27 +1,29 @@
 # ARI@LAR - Analyst Card (Narrative Fog)
 
-generated_utc: 2026-10-14T05:49:31.400228+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:57:48.271442+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
-**Narrative Fog** - named from the confluence cluster of 51 cited facts across 5 domains (biophysical, cognitive, dfs, market, on_field).
+**Narrative Fog** - named from the confluence cluster of 53 cited facts across 5 domains (biophysical, cognitive, dfs, market, on_field).
 
 ## Causal chain (every link cites its file)
 
 1. AVAILABILITY: Andrew Wingard (ARI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 2. AVAILABILITY: Wydett Williams Jr. (ARI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 3. MICROSTRUCTURE: Kalshi prints 0.88 on this game [docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json] -> an independent Layer-1 anchor exists beside the de-vigged book line -> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book
-4. TRACKING (2026 IN-SEASON): Kyren Williams (LAR) records RYOE = 40.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-5. TRACKING (2026 IN-SEASON): Kyren Williams (LAR) records STACKED BOX PCT = 27.1 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-6. TRACKING (2026 IN-SEASON): Blake Corum (LAR) records RYOE = 3.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-7. TRACKING (BASELINE, 2025 season): Puka Nacua (LAR) carried NGS ngs_separation_2025baseline = 2.9 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
+4. MICROSTRUCTURE (two-sided): Kalshi live book on the home side: bid 0.87 / ask 0.88 (mid 0.875, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+5. MICROSTRUCTURE (two-sided): Kalshi live book on the away side: bid 0.12 / ask 0.13 (mid 0.125, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+6. TRACKING (2026 IN-SEASON): Kyren Williams (LAR) records RYOE = 40.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+7. TRACKING (2026 IN-SEASON): Kyren Williams (LAR) records STACKED BOX PCT = 27.1 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+8. TRACKING (2026 IN-SEASON): Blake Corum (LAR) records RYOE = 3.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+9. TRACKING (BASELINE, 2025 season): Puka Nacua (LAR) carried NGS ngs_separation_2025baseline = 2.9 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
 
 ## Confluence
 
 - biophysical: 6 cited fact(s)
 - cognitive: 6 cited fact(s)
 - dfs: 3 cited fact(s)
-- market: 4 cited fact(s)
+- market: 6 cited fact(s)
 - on_field: 32 cited fact(s)
 
 ## Firing vs contradicting signals
@@ -37,6 +39,8 @@ generated_utc: 2026-10-14T05:49:31.400228+00:00  |  trace: 2026-10-13T173138Z000
 | injury_status_TE | Hunter Long (ARI) | Injured Reserve | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | kalshi_yes_ask | Los Angeles R wins (KXNFLGAME-26OCT18ARILAR-LAR) | 0.88 | fires | docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json |
 | kalshi_yes_ask | Arizona wins (KXNFLGAME-26OCT18ARILAR-ARI) | 0.13 | fires | docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json |
+| kalshi_two_sided_home | Los Angeles R wins (KXNFLGAME-26OCT18ARILAR-LAR) | {'yes_bid': 0.87, 'yes_ask': 0.88, 'mid': 0.875, 'spread': 0.01} | fires | docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json |
+| kalshi_two_sided_away | Arizona wins (KXNFLGAME-26OCT18ARILAR-ARI) | {'yes_bid': 0.12, 'yes_ask': 0.13, 'mid': 0.125, 'spread': 0.01} | fires | docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json |
 | pinnacle_sharp_reference_available | ARI@LAR | 2 Pinnacle guest line snapshot(s) archived | fires | docs/data-sources/research/2026-10-13/pinnacle/guest_2026-10-14T01-47-09Z.json |
 | dfs_leverage_spots | week slate | 31 leverage spots flagged (1 tied to named roster players) | fires | docs/data-sources/research/2026-10-13/dfs/dfs-signals-digest.json |
 | dfs_ownership_quotes | week slate | 7 public ownership quotes parsed (confidence varies; see source) | fires | docs/data-sources/research/2026-10-13/dfs/dfs-signals-digest.json |
@@ -50,8 +54,6 @@ generated_utc: 2026-10-14T05:49:31.400228+00:00  |  trace: 2026-10-13T173138Z000
 | ngs_2026_ryoe | Kyren Williams (LAR) | 40.8 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
 | ngs_2026_stacked_box_pct | Kyren Williams (LAR) | 27.1 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
 | ngs_2026_ryoe | Blake Corum (LAR) | 3.8 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
-| ngs_2026_stacked_box_pct | Blake Corum (LAR) | 23.7 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json |
-| ngs_2026_time_to_throw | Matthew Stafford (LAR) | 2.76 | fires | docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json |
 
 ## Pre-registered breaking conditions
 
@@ -109,11 +111,11 @@ Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis st
 
 ## Sizing
 
-- Chain conviction 64/100 (cited links 7 / cited + gaps 11)
-- **Kelly-fraction ceiling: 0.0064 of bankroll (quarter-unit max)**
+- Chain conviction 69/100 (cited links 9 / cited + gaps 13)
+- **Kelly-fraction ceiling: 0.0069 of bankroll (quarter-unit max)**
 - Basis: this is a *coverage* ratio, not a win probability; the engine refuses to mint a win probability (named gap: no calibrated tau on this host). The fraction above is a hard ceiling on stake sized from evidence coverage, discounted 50% for uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.
 - Concentration: slate-level correlation is NOT computed here (named gap: the portfolio layer does not yet consume these cards). Do not stack multiple cards sharing the same weather or injury signal without cutting each stake; shared signals compound concentration risk, not edge.
 
-## Conviction: 64/100
+## Conviction: 69/100
 
-Conviction in the CHAIN (cited links 7 / cited + named gaps 11). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 9 / cited + named gaps 13). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

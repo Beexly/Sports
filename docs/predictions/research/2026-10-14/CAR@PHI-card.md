@@ -1,10 +1,10 @@
 # CAR@PHI - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-14T05:49:29.582689+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:57:46.716647+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
-**Trench Funnel** - named from the confluence cluster of 70 cited facts across 7 domains (biophysical, cognitive, dfs, environmental, market, matchup, on_field).
+**Trench Funnel** - named from the confluence cluster of 72 cited facts across 7 domains (biophysical, cognitive, dfs, environmental, market, matchup, on_field).
 
 ## Causal chain (every link cites its file)
 
@@ -14,11 +14,13 @@ generated_utc: 2026-10-14T05:49:29.582689+00:00  |  trace: 2026-10-13T173138Z000
 4. AVAILABILITY: Drew Kendall (PHI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 5. AVAILABILITY: Marcus Epps (PHI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 6. MICROSTRUCTURE: Kalshi prints 0.52 on this game [docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json] -> an independent Layer-1 anchor exists beside the de-vigged book line -> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book
-7. TRACKING (2026 IN-SEASON): Saquon Barkley (PHI) records RYOE = 40.2 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-8. TRACKING (2026 IN-SEASON): Saquon Barkley (PHI) records STACKED BOX PCT = 13.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-9. TRACKING (2026 IN-SEASON): Tank Bigsby (PHI) records RYOE = -18.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-10. MULTI-BOOK PLANE: Action Network multi-book coverage across 29 books: DraftKings (ML -115, Spd -1.5, O/U 40.5); DraftKings (ML -113, Spd -1, O/U 20.5); DraftKings (ML -110, Spd -0.5, O/U 7.5); DraftKings (ML -120, Spd -1.5, O/U 12.5) [docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json] -> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane -> enables true Shin de-vigging and bookmaker shading identification
-11. TRACKING (BASELINE, 2025 season): Tetairoa McMillan (CAR) carried NGS ngs_separation_2025baseline = 2.7 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
+7. MICROSTRUCTURE (two-sided): Kalshi live book on the home side: bid 0.51 / ask 0.52 (mid 0.515, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+8. MICROSTRUCTURE (two-sided): Kalshi live book on the away side: bid 0.49 / ask 0.5 (mid 0.495, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+9. TRACKING (2026 IN-SEASON): Saquon Barkley (PHI) records RYOE = 40.2 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+10. TRACKING (2026 IN-SEASON): Saquon Barkley (PHI) records STACKED BOX PCT = 13.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+11. TRACKING (2026 IN-SEASON): Tank Bigsby (PHI) records RYOE = -18.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+12. MULTI-BOOK PLANE: Action Network multi-book coverage across 29 books: DraftKings (ML -115, Spd -1.5, O/U 40.5); DraftKings (ML -113, Spd -1, O/U 20.5); DraftKings (ML -110, Spd -0.5, O/U 7.5); DraftKings (ML -120, Spd -1.5, O/U 12.5) [docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json] -> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane -> enables true Shin de-vigging and bookmaker shading identification
+13. TRACKING (BASELINE, 2025 season): Tetairoa McMillan (CAR) carried NGS ngs_separation_2025baseline = 2.7 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
 
 ## Confluence
 
@@ -26,7 +28,7 @@ generated_utc: 2026-10-14T05:49:29.582689+00:00  |  trace: 2026-10-13T173138Z000
 - cognitive: 6 cited fact(s)
 - dfs: 3 cited fact(s)
 - environmental: 4 cited fact(s)
-- market: 6 cited fact(s)
+- market: 8 cited fact(s)
 - matchup: 1 cited fact(s)
 - on_field: 29 cited fact(s)
 
@@ -127,11 +129,11 @@ Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis st
 
 ## Sizing
 
-- Chain conviction 79/100 (cited links 11 / cited + gaps 14)
-- **Kelly-fraction ceiling: 0.0079 of bankroll (half-unit ceiling)**
+- Chain conviction 81/100 (cited links 13 / cited + gaps 16)
+- **Kelly-fraction ceiling: 0.0081 of bankroll (half-unit ceiling)**
 - Basis: this is a *coverage* ratio, not a win probability; the engine refuses to mint a win probability (named gap: no calibrated tau on this host). The fraction above is a hard ceiling on stake sized from evidence coverage, discounted 50% for uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.
 - Concentration: slate-level correlation is NOT computed here (named gap: the portfolio layer does not yet consume these cards). Do not stack multiple cards sharing the same weather or injury signal without cutting each stake; shared signals compound concentration risk, not edge.
 
-## Conviction: 79/100
+## Conviction: 81/100
 
-Conviction in the CHAIN (cited links 11 / cited + named gaps 14). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 13 / cited + named gaps 16). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

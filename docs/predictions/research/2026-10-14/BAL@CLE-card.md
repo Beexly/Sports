@@ -1,10 +1,10 @@
 # BAL@CLE - Analyst Card (Narrative Fog)
 
-generated_utc: 2026-10-14T05:49:26.401000+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:57:43.607796+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
-**Narrative Fog** - named from the confluence cluster of 68 cited facts across 5 domains (biophysical, cognitive, dfs, market, on_field).
+**Narrative Fog** - named from the confluence cluster of 70 cited facts across 5 domains (biophysical, cognitive, dfs, market, on_field).
 
 ## Causal chain (every link cites its file)
 
@@ -13,18 +13,20 @@ generated_utc: 2026-10-14T05:49:26.401000+00:00  |  trace: 2026-10-13T173138Z000
 3. AVAILABILITY: Mason Graham (CLE) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 4. AVAILABILITY: Mike Hall Jr. (CLE) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 5. MICROSTRUCTURE: Kalshi prints 0.34 on this game [docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json] -> an independent Layer-1 anchor exists beside the de-vigged book line -> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book
-6. TRACKING (2026 IN-SEASON): Quinshon Judkins (CLE) records RYOE = -34.7 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-7. TRACKING (2026 IN-SEASON): Quinshon Judkins (CLE) records STACKED BOX PCT = 23.3 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-8. TRACKING (2026 IN-SEASON): Derrick Henry (BAL) records RYOE = 22.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
-9. MULTI-BOOK PLANE: Action Network multi-book coverage across 29 books: DraftKings (ML 189, Spd 4.5, O/U 41.5); DraftKings (ML 147, Spd 2.5, O/U 20.5); DraftKings (ML 125, Spd 0.5, O/U 7.5); DraftKings (ML 138, Spd 1.5, O/U 12.5) [docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json] -> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane -> enables true Shin de-vigging and bookmaker shading identification
-10. TRACKING (BASELINE, 2025 season): Zay Flowers (BAL) carried NGS ngs_separation_2025baseline = 3.6 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
+6. MICROSTRUCTURE (two-sided): Kalshi live book on the home side: bid 0.32 / ask 0.33 (mid 0.325, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+7. MICROSTRUCTURE (two-sided): Kalshi live book on the away side: bid 0.67 / ask 0.68 (mid 0.675, spread 0.01) [docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json] -> the prediction market quotes BOTH sides with visible depth -> a tight spread means the prior is liquid; a wide spread means the market itself is uncertain and any 'edge' vs a single stale book quote is suspect
+8. TRACKING (2026 IN-SEASON): Quinshon Judkins (CLE) records RYOE = -34.7 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+9. TRACKING (2026 IN-SEASON): Quinshon Judkins (CLE) records STACKED BOX PCT = 23.3 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+10. TRACKING (2026 IN-SEASON): Derrick Henry (BAL) records RYOE = 22.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts
+11. MULTI-BOOK PLANE: Action Network multi-book coverage across 29 books: DraftKings (ML 189, Spd 4.5, O/U 41.5); DraftKings (ML 147, Spd 2.5, O/U 20.5); DraftKings (ML 125, Spd 0.5, O/U 7.5); DraftKings (ML 138, Spd 1.5, O/U 12.5) [docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json] -> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane -> enables true Shin de-vigging and bookmaker shading identification
+12. TRACKING (BASELINE, 2025 season): Zay Flowers (BAL) carried NGS ngs_separation_2025baseline = 3.6 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
 
 ## Confluence
 
 - biophysical: 20 cited fact(s)
 - cognitive: 6 cited fact(s)
 - dfs: 3 cited fact(s)
-- market: 6 cited fact(s)
+- market: 8 cited fact(s)
 - on_field: 33 cited fact(s)
 
 ## Firing vs contradicting signals
@@ -54,7 +56,7 @@ generated_utc: 2026-10-14T05:49:26.401000+00:00  |  trace: 2026-10-13T173138Z000
 | injury_status_TE | Durham Smythe (BAL) | Injured Reserve | fires | docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json |
 | kalshi_yes_ask | Cleveland wins (KXNFLGAME-26OCT18BALCLE-CLE) | 0.34 | fires | docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json |
 | kalshi_yes_ask | Baltimore wins (KXNFLGAME-26OCT18BALCLE-BAL) | 0.68 | fires | docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json |
-| action_network_multi_book | BAL@CLE multi-book plane | 29 books: DraftKings (ML 189, Spd 4.5, O/U 41.5); DraftKings (ML 147, Spd 2.5, O/U 20.5); DraftKings (ML 125, Spd 0.5, O/U 7.5); DraftKings (ML 138, Spd 1.5, O/U 12.5) | fires | docs/data-sources/research/2026-10-13/action-network/scoreboard_probe.json |
+| kalshi_two_sided_home | Cleveland wins (KXNFLGAME-26OCT18BALCLE-CLE) | {'yes_bid': 0.32, 'yes_ask': 0.33, 'mid': 0.325, 'spread': 0.01} | fires | docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json |
 
 ## Pre-registered breaking conditions
 
@@ -114,11 +116,11 @@ Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis st
 
 ## Sizing
 
-- Chain conviction 71/100 (cited links 10 / cited + gaps 14)
-- **Kelly-fraction ceiling: 0.0071 of bankroll (quarter-unit max)**
+- Chain conviction 75/100 (cited links 12 / cited + gaps 16)
+- **Kelly-fraction ceiling: 0.0075 of bankroll (half-unit ceiling)**
 - Basis: this is a *coverage* ratio, not a win probability; the engine refuses to mint a win probability (named gap: no calibrated tau on this host). The fraction above is a hard ceiling on stake sized from evidence coverage, discounted 50% for uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.
 - Concentration: slate-level correlation is NOT computed here (named gap: the portfolio layer does not yet consume these cards). Do not stack multiple cards sharing the same weather or injury signal without cutting each stake; shared signals compound concentration risk, not edge.
 
-## Conviction: 71/100
+## Conviction: 75/100
 
-Conviction in the CHAIN (cited links 10 / cited + named gaps 14). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 12 / cited + named gaps 16). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

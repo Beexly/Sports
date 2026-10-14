@@ -1,6 +1,6 @@
 # DAL@GB - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-14T05:49:33.962947+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:57:50.695059+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
@@ -123,15 +123,16 @@ Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis st
 
 - injuries: 15 GB players appear on the report but carry ACTIVE status
 - injuries: 17 DAL players appear on the report but carry ACTIVE status
+- market: fresh Kalshi two-sided books have no row for this game
 - news: no GB/DAL hits in espn-nfl-news-digest.json
 
 ## Sizing
 
-- Chain conviction 79/100 (cited links 11 / cited + gaps 14)
-- **Kelly-fraction ceiling: 0.0079 of bankroll (half-unit ceiling)**
+- Chain conviction 73/100 (cited links 11 / cited + gaps 15)
+- **Kelly-fraction ceiling: 0.0073 of bankroll (quarter-unit max)**
 - Basis: this is a *coverage* ratio, not a win probability; the engine refuses to mint a win probability (named gap: no calibrated tau on this host). The fraction above is a hard ceiling on stake sized from evidence coverage, discounted 50% for uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.
 - Concentration: slate-level correlation is NOT computed here (named gap: the portfolio layer does not yet consume these cards). Do not stack multiple cards sharing the same weather or injury signal without cutting each stake; shared signals compound concentration risk, not edge.
 
-## Conviction: 79/100
+## Conviction: 73/100
 
-Conviction in the CHAIN (cited links 11 / cited + named gaps 14). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.
+Conviction in the CHAIN (cited links 11 / cited + named gaps 15). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.

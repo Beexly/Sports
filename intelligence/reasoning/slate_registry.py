@@ -83,23 +83,37 @@ def games_in_week(period_id: int) -> list[dict[str, Any]]:
     return (w or {}).get("games") or []
 
 
+_ABBR_ALIAS = {"WSH": "WAS", "JAX": "JAC", "LA": "LAR"}
+
+
+def _norm_abbr(abbr: str) -> str:
+    a = (abbr or "").upper().strip()
+    return _ABBR_ALIAS.get(a, a)
+
+
 def resolve_fixture(period_id: int, away: str, home: str) -> dict[str, Any] | None:
-    """The game dict if `away @ home` is really on that week's slate, else None."""
-    a, h = away.upper().strip(), home.upper().strip()
+    """The game dict if `away @ home` is really on that week's slate, else None.
+
+    Abbreviation aliases are normalized on both sides: ESPN emits WSH where
+    the harvested slate stores WAS (and the reverse on other surfaces), so an
+    un-normalized compare refuses a real fixture as fiction — the exact
+    failure the guard exists to prevent, pointed the wrong way.
+    """
+    a, h = _norm_abbr(away), _norm_abbr(home)
     for gm in games_in_week(period_id):
-        if {gm.get("away", "").upper(), gm.get("home", "").upper()} == {a, h}:
+        if {_norm_abbr(gm.get("away", "")), _norm_abbr(gm.get("home", ""))} == {a, h}:
             return gm
     return None
 
 
 def opponent_of(period_id: int, team: str) -> str | None:
     """Who `team` actually plays in this week (the honest answer to a wrong ask)."""
-    t = team.upper().strip()
+    t = _norm_abbr(team)
     for gm in games_in_week(period_id):
-        if gm.get("away", "").upper() == t:
-            return gm.get("home", "").upper()
-        if gm.get("home", "").upper() == t:
-            return gm.get("away", "").upper()
+        if _norm_abbr(gm.get("away", "")) == t:
+            return _norm_abbr(gm.get("home", ""))
+        if _norm_abbr(gm.get("home", "")) == t:
+            return _norm_abbr(gm.get("away", ""))
     return None
 
 
