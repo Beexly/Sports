@@ -54,9 +54,9 @@ except Exception:
     YOLO = None  # type: ignore
 
 try:
-    from supervision import ByteTrack, Detections
+    from supervision import ByteTrack as SupervisionByteTrack, Detections
 except Exception:
-    ByteTrack = None  # type: ignore
+    SupervisionByteTrack = None  # type: ignore
     Detections = None  # type: ignore
 
 REPO = Path(__file__).resolve().parents[2]
@@ -741,7 +741,7 @@ class SkeleTrackV2:
     ):
         self.custom_detector = custom_detector
         self.model = YOLO(model_path) if (custom_detector is None and YOLO is not None) else None
-        self.tracker = ByteTrack(frame_rate=int(round(fps))) if ByteTrack is not None else None
+        self.tracker = SupervisionByteTrack(frame_rate=int(round(fps))) if SupervisionByteTrack is not None else None
         self.conf = conf
         self.q_base = q_base
         self.r_base = r_base
@@ -1038,11 +1038,42 @@ from scipy.optimize import linear_sum_assignment
 @dataclass
 class Detection:
     bbox: np.ndarray          # [x1, y1, x2, y2]
-    keypoints: np.ndarray     # (17, 3) COCO: x, y, conf
-    conf: float
+    conf: float = 1.0
+    keypoints: Optional[np.ndarray] = None  # (17, 3) COCO: x, y, conf
+    jersey: Optional[str] = None
     jersey_ocr: Optional[str] = None
     team: Optional[str] = None
     color_embedding: Optional[np.ndarray] = None  # 6D L2-normalized [R1,G1,B1,R2,G2,B2] torso color descriptor (shadow)
+
+    def __post_init__(self) -> None:
+        # Support positional Detection(bbox, keypoints, conf) as well as Detection(bbox, conf, keypoints, jersey)
+        if isinstance(self.conf, np.ndarray) and (self.keypoints is None or isinstance(self.keypoints, (int, float))):
+            kpts = self.conf
+            cf = float(self.keypoints) if self.keypoints is not None else 1.0
+            self.keypoints = kpts
+            self.conf = cf
+        if self.jersey is None and self.jersey_ocr is not None:
+            self.jersey = self.jersey_ocr
+        elif self.jersey_ocr is None and self.jersey is not None:
+            self.jersey_ocr = self.jersey
+
+
+@dataclass
+class Track:
+    track_id: int
+    bbox: np.ndarray
+    state: np.ndarray         # Kalman [x, y, vx, vy]
+    covariance: np.ndarray
+    age: int = 0
+    hits: int = 0
+    time_since_update: int = 0
+    jersey: Optional[str] = None
+    team: Optional[str] = None
+    gsis_id: Optional[str] = None
+    color_embedding: Optional[np.ndarray] = None
+    shadow_gsis_id: Optional[str] = None
+    is_coast: bool = False
+    low_pass_recoveries: int = 0
 
 
 @dataclass
@@ -1519,6 +1550,262 @@ class SkeleTrack:
             )
 
         return list(self.tracks.values())
+
+
+class ByteTrack:
+    """
+    Standalone two-pass ByteTrack associator (Zhang et al., 2022) with:
+      - Pass 1: high-confidence detections (conf >= high_thresh) matched to active tracks via IoU + Hungarian.
+      - Pass 2: low-confidence detections (low_thresh <= conf < high_thresh) matched ONLY to remaining
+        unmatched tracks to recover partially occluded or motion-blurred players without birthing false tracks.
+      - Track birth ONLY from unmatched high-confidence detections.
+      - Coasting buffer (max_coast frames, default 30 frames = 3.0s at 10 Hz) during which AdaptiveKalman
+        continues to predict state and covariance before deletion.
+    """
+
+    def __init__(
+        self,
+        high_thresh: float = 0.5,
+        low_thresh: float = 0.1,
+        iou_thresh: float = 0.3,
+        max_coast: int = 30,
+        q_scale: float = 0.01,
+        r_base: float = 0.25,
+    ):
+        self.high_thresh = high_thresh
+        self.low_thresh = low_thresh
+        self.iou_thresh = iou_thresh
+        self.max_coast = max_coast
+        self.tracks: Dict[int, Track] = {}
+        self.next_id = 1
+        self.kalman = AdaptiveKalman(q_scale=q_scale, r_base=r_base)
+        self.pass1_high_matches = 0
+        self.pass2_low_recoveries = 0
+
+    def update(self, detections: List[Detection]) -> List[Track]:
+        # Split detections into high-confidence and low-confidence tiers
+        high_dets = [d for d in detections if d.conf >= self.high_thresh]
+        low_dets = [d for d in detections if self.low_thresh <= d.conf < self.high_thresh]
+
+        # Predict all tracks and advance age / coasting counters
+        for t in self.tracks.values():
+            t.state, t.covariance = self.kalman.predict(t.state, t.covariance)
+            t.time_since_update += 1
+            t.age += 1
+            # Shift predicted bbox by velocity (vx*dt, vy*dt) so IoU gating tracks motion during coasting
+            dx = float(t.state[2] * self.kalman.dt)
+            dy = float(t.state[3] * self.kalman.dt)
+            t.bbox = np.array([t.bbox[0] + dx, t.bbox[1] + dy, t.bbox[2] + dx, t.bbox[3] + dy], dtype=np.float64)
+
+        active_tracks = [t for t in self.tracks.values() if t.time_since_update <= self.max_coast]
+        track_list = list(active_tracks)
+
+        # Pass 1: high-confidence association
+        matches_high, unmatched_tracks, unmatched_high = self._associate(
+            high_dets, track_list, self.iou_thresh
+        )
+
+        # Pass 2: low-confidence recovery on remaining unmatched tracks only
+        remaining_tracks = [track_list[i] for i in unmatched_tracks]
+        matches_low, unmatched_tracks2, _ = self._associate(
+            low_dets, remaining_tracks, self.iou_thresh
+        )
+
+        # Apply high-confidence matches
+        for det_idx, track_idx, _ in matches_high:
+            self.pass1_high_matches += 1
+            self._update_track(track_list[track_idx], high_dets[det_idx], is_low_recovery=False)
+
+        # Apply low-confidence recovery matches
+        for det_idx, track_idx, _ in matches_low:
+            self.pass2_low_recoveries += 1
+            self._update_track(remaining_tracks[track_idx], low_dets[det_idx], is_low_recovery=True)
+
+        # Birth new tracks from unmatched high-confidence detections ONLY
+        for det_idx in unmatched_high:
+            self._birth(high_dets[det_idx])
+
+        # Mark coasting flag
+        for t in self.tracks.values():
+            t.is_coast = t.time_since_update > 0
+
+        # Delete expired tracks exceeding coasting buffer
+        to_delete = [tid for tid, t in self.tracks.items() if t.time_since_update > self.max_coast]
+        for tid in to_delete:
+            del self.tracks[tid]
+
+        return list(self.tracks.values())
+
+    def _associate(
+        self,
+        dets: List[Detection],
+        tracks: List[Track],
+        iou_thresh: float,
+    ) -> Tuple[List[Tuple[int, int, str]], List[int], List[int]]:
+        if not dets or not tracks:
+            return [], list(range(len(tracks))), list(range(len(dets)))
+
+        det_boxes = np.array([d.bbox for d in dets], dtype=np.float64)
+        track_boxes = np.array([t.bbox for t in tracks], dtype=np.float64)
+        iou = iou_matrix(det_boxes, track_boxes)
+        cost = 1.0 - iou
+        row, col = linear_sum_assignment(cost)
+
+        matches: List[Tuple[int, int, str]] = []
+        used_d: set[int] = set()
+        used_t: set[int] = set()
+        for r, c in zip(row, col):
+            if iou[r, c] >= iou_thresh:
+                matches.append((int(r), int(c), "assoc"))
+                used_d.add(int(r))
+                used_t.add(int(c))
+
+        unmatched_t = [i for i in range(len(tracks)) if i not in used_t]
+        unmatched_d = [i for i in range(len(dets)) if i not in used_d]
+        return matches, unmatched_t, unmatched_d
+
+    def _update_track(self, track: Track, det: Detection, is_low_recovery: bool = False) -> None:
+        z = np.array([
+            0.5 * (float(det.bbox[0]) + float(det.bbox[2])),
+            0.5 * (float(det.bbox[1]) + float(det.bbox[3])),
+        ], dtype=np.float64)
+        track.state, track.covariance, _ = self.kalman.update(
+            track.state, track.covariance, z, det.conf
+        )
+        track.bbox = np.asarray(det.bbox, dtype=np.float64).copy()
+        track.hits += 1
+        track.time_since_update = 0
+        track.is_coast = False
+        if is_low_recovery:
+            track.low_pass_recoveries += 1
+        if det.jersey:
+            track.jersey = det.jersey
+        if det.team:
+            track.team = det.team
+        if det.color_embedding is not None:
+            track.color_embedding = det.color_embedding
+
+    def _birth(self, det: Detection) -> Track:
+        cx = 0.5 * (float(det.bbox[0]) + float(det.bbox[2]))
+        cy = 0.5 * (float(det.bbox[1]) + float(det.bbox[3]))
+        init_state = np.array([cx, cy, 0.0, 0.0], dtype=np.float64)
+        r_init = self.kalman.R_base / max(float(det.conf), 0.05)
+        init_cov = np.diag([r_init, r_init, 4.0, 4.0]).astype(np.float64)
+        tid = self.next_id
+        self.next_id += 1
+        trk = Track(
+            track_id=tid,
+            bbox=np.asarray(det.bbox, dtype=np.float64).copy(),
+            state=init_state,
+            covariance=init_cov,
+            age=1,
+            hits=1,
+            time_since_update=0,
+            jersey=det.jersey,
+            team=det.team,
+            color_embedding=det.color_embedding,
+            is_coast=False,
+        )
+        self.tracks[tid] = trk
+        return trk
+
+
+@dataclass
+class Homography:
+    """3x3 Hartley DLT image-to-field homography."""
+    H: np.ndarray  # shape (3, 3)
+
+    def project(self, u: np.ndarray) -> np.ndarray:
+        """u: (2,) or (N, 2) pixel coords -> (2,) or (N, 2) field meters."""
+        is_1d = u.ndim == 1
+        u_2d = np.atleast_2d(np.asarray(u, dtype=np.float64))
+        ones = np.ones((len(u_2d), 1), dtype=np.float64)
+        uv1 = np.hstack([u_2d, ones])
+        xyz = (self.H @ uv1.T).T
+        xy = xyz[:, :2] / xyz[:, 2:3]
+        return xy[0] if is_1d else xy
+
+    def jacobian(self, u: np.ndarray) -> np.ndarray:
+        """
+        Exact 2x2 Jacobian J = d(x,y)/d(u,v) of the perspective map.
+        u: (2,) or (N, 2) pixel coordinates.
+        Returns (2, 2) or (N, 2, 2).
+        """
+        u_2d = np.atleast_2d(np.asarray(u, dtype=np.float64))
+        ones = np.ones((len(u_2d), 1), dtype=np.float64)
+        uv1 = np.hstack([u_2d, ones])
+        xyz = (self.H @ uv1.T).T          # (N, 3)
+        w = xyz[:, 2]
+        x, y = xyz[:, 0] / w, xyz[:, 1] / w
+
+        # Quotient-rule form of the Jacobian
+        # J = (1/w) * [[h11 - x*h31, h12 - x*h32],
+        #              [h21 - y*h31, h22 - y*h32]]
+        h = self.H
+        J = np.empty((len(u_2d), 2, 2), dtype=np.float64)
+        J[:, 0, 0] = (h[0, 0] - x * h[2, 0]) / w
+        J[:, 0, 1] = (h[0, 1] - x * h[2, 1]) / w
+        J[:, 1, 0] = (h[1, 0] - y * h[2, 0]) / w
+        J[:, 1, 1] = (h[1, 1] - y * h[2, 1]) / w
+        return J.squeeze(0) if J.shape[0] == 1 else J
+
+
+class AdaptiveKalmanJacobian:
+    """
+    4-state constant-velocity Kalman with projective Jacobian R.
+    State: [x, y, vx, vy] in field meters.
+    """
+
+    def __init__(self, r_pixel_base: float = 4.0, epsilon: float = 1e-6):
+        self.dt = 0.1
+        self.F = np.array([
+            [1.0, 0.0, self.dt, 0.0],
+            [0.0, 1.0, 0.0, self.dt],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ], dtype=np.float64)
+        self.H_obs = np.array([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+        ], dtype=np.float64)
+        self.Q = np.diag([0.01, 0.01, 0.25, 0.25]).astype(np.float64)
+        self.r_pixel_base = r_pixel_base   # pixel^2
+        self.epsilon = epsilon
+
+    def predict(self, state: np.ndarray, cov: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        state = self.F @ state
+        cov = self.F @ cov @ self.F.T + self.Q
+        return state, cov
+
+    def update(
+        self,
+        state: np.ndarray,
+        cov: np.ndarray,
+        z_field: np.ndarray,
+        pixel_uv: np.ndarray,
+        conf: float,
+        H: Homography,
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        """
+        z_field: (2,) measured field position (already projected)
+        pixel_uv: (2,) original pixel coordinate used for the projection
+        """
+        # Pixel-space covariance (anisotropic allowed; here isotropic for control)
+        r_pix = self.r_pixel_base / max(float(conf), 0.05)
+        R_pixel = np.eye(2, dtype=np.float64) * r_pix
+
+        # Propagate through the exact Jacobian
+        J = H.jacobian(pixel_uv)          # (2, 2)
+        R_field = J @ R_pixel @ J.T + self.epsilon * np.eye(2, dtype=np.float64)
+
+        # Standard Joseph-form update
+        S = self.H_obs @ cov @ self.H_obs.T + R_field
+        K = cov @ self.H_obs.T @ np.linalg.inv(S)
+        y = np.asarray(z_field, dtype=np.float64)[:2] - self.H_obs @ state
+        state = state + K @ y
+        I_KH = np.eye(4, dtype=np.float64) - K @ self.H_obs
+        cov = I_KH @ cov @ I_KH.T + K @ R_field @ K.T
+        return state, cov, y, R_field
 
 
 def main() -> None:

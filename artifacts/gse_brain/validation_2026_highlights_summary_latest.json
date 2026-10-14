@@ -1,39 +1,175 @@
 {
  "record_type": "summary",
- "generated_utc": "2026-10-14T17:09:48.914805+00:00",
- "source": "ngs_highlight_tracking_2026_full_787_validation",
+ "generated_utc": "2026-10-14T19:06:57.342438+00:00",
+ "source": "ngs_highlight_tracking_2026_full_787_jacobian_control_and_multiview_audit",
  "total_2026_reg_highlight_plays": 787,
  "overlapping_plays_evaluated": 787,
  "total_player_play_tracklets": 17312,
  "total_player_frame_observations": 1181625,
- "real_broadcast_video_tracklet_plays_in_repo": 0,
- "broadcast_projected_tracklet_plays_evaluated": 787,
- "single_view_kalman_metrics": {
+ "multi_view_availability_audit": {
+  "2026_reg_highlight_plays_total": 787,
+  "2026_reg_highlight_plays_with_10hz_ngs_tracking": 787,
+  "2026_reg_highlight_plays_with_real_broadcast_mp4_in_repo": 0,
+  "2026_reg_highlight_plays_with_real_second_camera_or_all22_video_on_free_surfaces": 0,
+  "historical_bdb_archive_10hz_plays_with_multi_camera_video_on_free_surfaces": 0,
+  "amf_2016_statsbomb_30hz_optical_games": 16,
+  "amf_2016_camera_angles_per_play": 1,
+  "finding": "Public NGS highlight tracking (2018-2026, 17,770 plays) and historical BDB releases (2019-2026) publish 10 Hz Zebra UWB ground-truth field coordinates (single canonical coordinate stream per play), NOT multi-angle broadcast or All-22 video feeds (NFL+ Pro All-22 film is paywalled/DRM-gated). Therefore 0/787 plays have a free second camera angle in the wild; single-view calibration upgrades (Jacobian + per-play PnLCalib/TVCalib) are mandatory for real single-camera broadcast clips."
+ },
+ "jacobian_control_experiment_single_view": {
+  "model": "AdaptiveKalmanJacobian (R_field = J(u,v) R_pixel J(u,v)^T + 1e-6 I_2, r_pixel_base=4.0 px^2, Q=diag(0.01,0.01,0.25,0.25))",
+  "mean_rmse_m": 0.0974,
+  "median_rmse_m": 0.0988,
+  "mean_ci90_coverage": 0.9818,
+  "plays_within_ci90_band_85_95": 75,
+  "plays_within_ci90_band_fraction": 0.0953,
+  "plays_flagged_coverage_outside_85_95": 712,
+  "stratified_zones": {
+   "Near": {
+    "plays": 753,
+    "player_frame_observations": 178840,
+    "mean_coverage": 0.9101,
+    "pct_inside_85_95": 27.22,
+    "plays_inside_85_95": 205,
+    "plays_below_85": 192,
+    "plays_above_95": 356,
+    "mean_rmse_m": 0.1165
+   },
+   "Mid": {
+    "plays": 787,
+    "player_frame_observations": 764681,
+    "mean_coverage": 0.9999,
+    "pct_inside_85_95": 0.0,
+    "plays_inside_85_95": 0,
+    "plays_below_85": 0,
+    "plays_above_95": 787,
+    "mean_rmse_m": 0.0861
+   },
+   "Far": {
+    "plays": 763,
+    "player_frame_observations": 194762,
+    "mean_coverage": 0.9985,
+    "pct_inside_85_95": 0.13,
+    "plays_inside_85_95": 1,
+    "plays_below_85": 0,
+    "plays_above_95": 762,
+    "mean_rmse_m": 0.118
+   },
+   "End": {
+    "plays": 393,
+    "player_frame_observations": 43342,
+    "mean_coverage": 0.9288,
+    "pct_inside_85_95": 11.96,
+    "plays_inside_85_95": 47,
+    "plays_below_85": 45,
+    "plays_above_95": 301,
+    "mean_rmse_m": 0.0987
+   }
+  }
+ },
+ "isotropic_baseline_single_view": {
+  "model": "AdaptiveKalmanKeypoint (isotropic R_base=0.015 m^2 + scalar 0.60*reproj_err floor)",
   "mean_rmse_m": 0.0955,
   "median_rmse_m": 0.0971,
-  "p10_rmse_m": 0.0819,
-  "p90_rmse_m": 0.1062,
-  "min_rmse_m": 0.0717,
-  "max_rmse_m": 0.124,
   "mean_ci90_coverage": 0.8369,
   "plays_within_ci90_band_85_95": 278,
   "plays_within_ci90_band_fraction": 0.3532,
-  "plays_flagged_coverage_outside_85_95": 509
+  "plays_flagged_coverage_outside_85_95": 509,
+  "stratified_zones": {
+   "Near": {
+    "plays": 753,
+    "player_frame_observations": 178840,
+    "mean_coverage": 0.7308,
+    "pct_inside_85_95": 15.54,
+    "plays_inside_85_95": 117,
+    "plays_below_85": 617,
+    "plays_above_95": 19,
+    "mean_rmse_m": 0.1114
+   },
+   "Mid": {
+    "plays": 787,
+    "player_frame_observations": 764681,
+    "mean_coverage": 0.8954,
+    "pct_inside_85_95": 79.42,
+    "plays_inside_85_95": 625,
+    "plays_below_85": 72,
+    "plays_above_95": 90,
+    "mean_rmse_m": 0.0867
+   },
+   "Far": {
+    "plays": 763,
+    "player_frame_observations": 194762,
+    "mean_coverage": 0.7232,
+    "pct_inside_85_95": 13.37,
+    "plays_inside_85_95": 102,
+    "plays_below_85": 631,
+    "plays_above_95": 30,
+    "mean_rmse_m": 0.1102
+   },
+   "End": {
+    "plays": 393,
+    "player_frame_observations": 43342,
+    "mean_coverage": 0.8105,
+    "pct_inside_85_95": 37.15,
+    "plays_inside_85_95": 146,
+    "plays_below_85": 157,
+    "plays_above_95": 90,
+    "mean_rmse_m": 0.0952
+   }
+  }
  },
- "multi_view_triangulation_comparison": {
+ "multi_view_synthetic_triangulation_comparison": {
   "views_fused": [
    "Broadcast_Sideline_Camera",
    "All22_Endzone_Orthogonal_Camera"
   ],
   "mean_rmse_m": 0.0669,
   "median_rmse_m": 0.0691,
-  "p10_rmse_m": 0.0557,
-  "p90_rmse_m": 0.074,
-  "rmse_reduction_vs_single_view_m": 0.0286,
-  "rmse_reduction_vs_single_view_pct": 29.99,
   "mean_ci90_coverage": 0.9121,
   "plays_within_ci90_band_85_95": 652,
-  "plays_within_ci90_band_fraction": 0.8285
+  "plays_within_ci90_band_fraction": 0.8285,
+  "stratified_zones": {
+   "Near": {
+    "plays": 753,
+    "player_frame_observations": 178840,
+    "mean_coverage": 0.9341,
+    "pct_inside_85_95": 65.34,
+    "plays_inside_85_95": 492,
+    "plays_below_85": 10,
+    "plays_above_95": 251,
+    "mean_rmse_m": 0.0656
+   },
+   "Mid": {
+    "plays": 787,
+    "player_frame_observations": 764681,
+    "mean_coverage": 0.9166,
+    "pct_inside_85_95": 82.08,
+    "plays_inside_85_95": 646,
+    "plays_below_85": 0,
+    "plays_above_95": 141,
+    "mean_rmse_m": 0.0654
+   },
+   "Far": {
+    "plays": 763,
+    "player_frame_observations": 194762,
+    "mean_coverage": 0.8709,
+    "pct_inside_85_95": 48.49,
+    "plays_inside_85_95": 370,
+    "plays_below_85": 318,
+    "plays_above_95": 75,
+    "mean_rmse_m": 0.074
+   },
+   "End": {
+    "plays": 393,
+    "player_frame_observations": 43342,
+    "mean_coverage": 0.9594,
+    "pct_inside_85_95": 27.23,
+    "plays_inside_85_95": 107,
+    "plays_below_85": 14,
+    "plays_above_95": 272,
+    "mean_rmse_m": 0.0578
+   }
+  }
  },
  "identity_robustness_shadow_comparison": {
   "total_player_plays": 17312,
@@ -59,16 +195,9 @@
   "targeted_receiver_tracklets": 530,
   "targeted_receiver_peak_speed_vs_epa_corr": 0.2838
  },
- "mean_player_kalman_rmse_m": 0.0955,
- "mean_ci90_coverage": 0.8369,
- "plays_within_ci90_band_fraction": 0.3532,
- "mean_ocr_join_completeness": 1.0,
- "mean_ocr_join_accuracy": 1.0,
- "total_flagged_plays": 509,
  "homography_correspondences": 22,
  "homography_reproj_err_m": 0.0394,
- "elapsed_seconds": 45.7,
+ "elapsed_seconds": 86.28,
  "weight": 0.0,
- "validation_spec_met": false,
- "honesty_note": "Scaled validation across all 787 regular-season 2026 NGS highlight plays (17,312 player-play tracklets, 1,181,625 post-snap player-frame observations). (1) Single-view Kalman mean RMSE = 0.0956m, 90% CI coverage = 0.8366 (282/787 plays in [0.85, 0.95]; 505 flagged due to single-camera far-sideline/endzone perspective foreshortening). (2) Adding an orthogonal second camera view (All-22 Endzone + Sideline triangulation) reduces mean Kalman RMSE to 0.0706m (-26.15%) and raises plays inside the [0.85, 0.95] coverage band from 282/787 (35.8%) to 656/787 (83.4%). (3) Jersey-only participation join leaves 1,346/17,312 (7.77%) player-plays unmatched due to duplicate jerseys across opposing teams on 505/787 plays; adding the shadow 6D team jersey-color embedding tie-breaker reduces unmatched rate from 7.77% to 0.00% with 0 false matches. (4) All 17,312 validated tracklets are linked to PBP EPA/WPA/CPOE (100.0%), game snap_counts_2026 (99.64%), and weekly injuries_2026 (15.73% on report). All signals remain at weight=0.0 with validation_spec_met=False."
+ "validation_spec_met": false
 }
