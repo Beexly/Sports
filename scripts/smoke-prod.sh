@@ -162,6 +162,36 @@ case "$state" in
   *)                    warn "external cron state: $state" ;;
 esac
 
+bold "7. Stripe price catalogue vs advertised phase (issue #822)"
+# Checkout fails CLOSED when a configured Stripe Price charges anything other
+# than the amount the current PRICING_PHASE advertises (apps/web/lib/stripe.ts,
+# GSE-SEC-024): flip the phase before Stripe matches it and every paid
+# checkout 503s, silently. The deploy-readiness CLI runs the SAME predicate
+# the runtime guard uses (scripts/lib/stripe-price-check.mjs ->
+# apps/web/lib/billing/price-ids.ts) and exits non-zero on any mismatch.
+#
+# That check needs the production Stripe env (STRIPE_SECRET_KEY + the six
+# STRIPE_*_PRICE_ID vars), which lives in Vercel / the operator's
+# .env.production[.local]. GitHub Actions does not hold it — daily-smoke.yml
+# references only GITHUB_TOKEN and the repo's Actions secrets carry no Stripe
+# keys — so this section cannot execute in the scheduled Actions job. Where
+# the env exists (an operator run) it runs, and a mismatch is a hard FAIL.
+# Where it does not, it WARNS, loudly, every run — never a silent skip of the
+# one check that stands between a phase flip and a total checkout outage.
+# The ordering law that keeps this green is docs/ops/OPERATOR.md section 2a.
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+price_log="$(mktemp)"
+if [ -n "${STRIPE_SECRET_KEY:-}" ] || [ -f "$repo_root/.env.production.local" ] || [ -f "$repo_root/.env.production" ]; then
+  if (cd "$repo_root" && node scripts/check-deploy-readiness.mjs) > "$price_log" 2>&1; then
+    ok "deploy-readiness green — stripe prices match the advertised PRICING_PHASE amounts"
+  else
+    fail "deploy-readiness FAILED — its Stripe section is the price-catalogue verdict (a phase/price mismatch 503s checkout, GSE-SEC-024); full log: $price_log"
+    grep -E "STRIPE_(PRO|ELITE|FANTASY)|Stripe price validation" "$price_log" | head -8 || true
+  fi
+else
+  warn "stripe price check NOT RUN — no production Stripe env in this context (Actions holds no Stripe secrets). Run 'node scripts/check-deploy-readiness.mjs' where the production env exists, before and after any PRICING_PHASE change (issue #822)"
+fi
+
 echo
 bold "Summary"
 ts=$(date -u +"%Y-%m-%d %H:%M UTC")

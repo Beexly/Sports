@@ -40,6 +40,32 @@ Ensure events include (code already handles):
 
 **Secret match:** `STRIPE_WEBHOOK_SECRET` must match **this** endpoint’s signing secret (`we_…` / `whsec_…`). Sustained 400s = wrong secret.
 
+## 2a. PRICING_PHASE flips — the ordering law (issue #822)
+
+`PRICING_PHASE` (`apps/web/lib/pricing/pricing-phases.ts`) sets the amounts
+the site advertises. Checkout fails CLOSED when a configured Stripe Price
+charges anything else (`apps/web/lib/stripe.ts`, GSE-SEC-024), so flipping
+the phase before Stripe matches it turns every paid checkout into a 503.
+The order is law:
+
+1. **Create the Stripe Prices at the NEW phase amounts first** — one per
+   tier x interval, with the lookup keys attached (Stripe Dashboard, or
+   `scripts/seed-stripe-prices.mjs` — set its CATALOG to the new phase
+   amounts first; it is written per-phase).
+2. **Update the six `STRIPE_*_PRICE_ID` env vars** (section 5): each var
+   lists the NEW Price ID first and retains the OLD ID after it
+   (`splitPriceIds` in `apps/web/lib/billing/price-ids.ts` resolves the
+   first ID; the retained ones keep existing subscribers grandfathered on
+   the price they joined at).
+3. **Verify before flipping:** `node scripts/check-deploy-readiness.mjs` —
+   its Stripe section compares every configured Price against the
+   advertised phase amounts (amount, interval, currency) and exits
+   non-zero on any mismatch. Green, or stop.
+4. **Only then flip `PRICING_PHASE`** in the deploy env and redeploy.
+
+The daily smoke test carries this same check (`scripts/smoke-prod.sh`
+section 7) in every context that holds the production Stripe env.
+
 ## 3. CRON_SECRET
 
 Primary `CRON_SECRET` on Production. Dual-secret rotation: `CRON_SECRET_PREVIOUS`. Smoke: 401 without Bearer, 200 with correct secret.

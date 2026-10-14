@@ -54,7 +54,7 @@ const HERO_HEADLINE =
 const HERO_SUB = HERO_SUB_BY_ORDER[phase.order] ?? HERO_SUB_BY_ORDER[0]!;
 
 export const metadata: Metadata = {
-  title: "Pricing: Founding-Member Rates, Locked For Life",
+  title: "Plans & Pricing",
   description:
     "A free daily sample and a public record as settled history accumulates, with the full board, confidence, depth, and alerts on the paid tiers. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
