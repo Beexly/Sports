@@ -59,12 +59,32 @@ class NflverseOLProvider(OLProvider):
         self._load()
         assert self._inj is not None and self._starters is not None
         season_weeks = self._inj.loc[self._inj["season"] == int(season), "week"]
-        if int(week) not in set(int(w) for w in season_weeks.unique()):
-            raise DataGapError(
-                "offensive_line",
-                f"injury report for season {season} week {week} is not in the file. "
-                f"Published weeks: {sorted(int(w) for w in season_weeks.unique())}. "
-                "Unpublished weeks are a gap, not an empty injury list.",
+        published = set(int(w) for w in season_weeks.unique())
+        requested = int(week)
+        used_week = requested
+        fallback_note = ""
+        if requested not in published:
+            # Week not yet published (nflverse releases after Fri 18:00 ET).
+            # Refusing outright left every card carrying a named OL gap for the
+            # ENTIRE week even though last week's report is the best available
+            # evidence about the current trench. Doctrine: labeled stale data
+            # beats silence. Fall back to the most recent published week and
+            # LABEL the fallback in data_gap so nothing downstream mistakes it
+            # for this week's report. If no prior week exists either, refuse.
+            prior = sorted(w for w in published if w < requested)
+            if not prior:
+                raise DataGapError(
+                    "offensive_line",
+                    f"injury report for season {season} week {week} is not in the file "
+                    f"and no earlier week exists to fall back on. "
+                    f"Published weeks: {sorted(published)}.",
+                )
+            used_week = prior[-1]
+            fallback_note = (
+                f"requested week {requested} not yet published; using week "
+                f"{used_week} (most recent available). Starters listed Out in "
+                f"week {used_week} may have returned or new injuries may have "
+                f"landed since - treat as a floor on continuity, not a report. "
             )
         five = self._starters[self._starters["team"] == team]
         if len(five) < 5:
@@ -77,7 +97,7 @@ class NflverseOLProvider(OLProvider):
         week_rows = self._inj[
             (self._inj["team"] == team)
             & (self._inj["season"] == int(season))
-            & (self._inj["week"] == int(week))
+            & (self._inj["week"] == int(used_week))
             & (self._inj["gsis_id"].isin(ids))
         ]
         out = []
@@ -93,7 +113,7 @@ class NflverseOLProvider(OLProvider):
         out_t = tuple(sorted(out))
         return OLState(
             team=team,
-            week=int(week),
+            week=int(used_week),
             season=int(season),
             starters_out=out_t,
             practice_status=tuple(practice),
@@ -101,7 +121,8 @@ class NflverseOLProvider(OLProvider):
             pressure_rate_allowed=None,
             verification=Verification.CORPUS,
             data_gap=(
-                f"starter set is the depth chart scraped {self._chart_dt}, "
+                fallback_note
+                + f"starter set is the depth chart scraped {self._chart_dt}, "
                 "not the chart as of this week. continuity_index is "
                 "1 minus the share of those five listed Out. It is not a "
                 "trench grade."

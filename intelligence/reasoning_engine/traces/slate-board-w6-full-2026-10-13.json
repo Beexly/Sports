@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-14T05:57:40.595124+00:00",
+ "generated_utc": "2026-10-14T05:59:50.349324+00:00",
  "sport": "football/nfl",
  "week": 6,
  "season": 2026,
@@ -69,11 +69,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DEN.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "SEA.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol DEN: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol SEA: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -117,6 +137,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "DEN.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "SEA.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -126,7 +162,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -135,7 +171,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -144,7 +180,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -155,31 +191,11 @@
       "prior_away": 0.5634920634920635
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol DEN: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol SEA: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -189,7 +205,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -298,11 +314,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "JAX.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "HOU.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol JAX: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol HOU: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -346,6 +382,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "JAX.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "HOU.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -355,7 +407,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -364,7 +416,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -373,7 +425,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -384,31 +436,11 @@
       "prior_away": 0.42794036443953615
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol JAX: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol HOU: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -418,7 +450,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -527,11 +559,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "ATL.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CHI.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol ATL: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol CHI: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -575,6 +627,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "ATL.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CHI.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -584,7 +652,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -593,7 +661,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -602,7 +670,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -613,31 +681,11 @@
       "prior_away": 0.593369754159424
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol ATL: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol CHI: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -647,7 +695,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -757,11 +805,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CLE.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "BAL.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol CLE: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol BAL: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -805,6 +873,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "CLE.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "BAL.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -814,7 +898,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -823,7 +907,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -832,7 +916,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -843,31 +927,11 @@
       "prior_away": 0.6750312469954812
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol CLE: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol BAL: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -877,7 +941,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -986,11 +1050,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "IND.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "TEN.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol IND: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol TEN: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -1034,6 +1118,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "IND.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "TEN.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -1043,7 +1143,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1052,7 +1152,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1061,7 +1161,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1072,31 +1172,11 @@
       "prior_away": 0.2591283863368669
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol IND: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol TEN: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -1106,7 +1186,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -1215,11 +1295,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NE.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NYJ.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol NE: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol NYJ: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -1263,6 +1363,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "NE.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NYJ.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -1272,7 +1388,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1281,7 +1397,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1290,7 +1406,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1301,31 +1417,11 @@
       "prior_away": 0.2559309849029475
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol NE: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol NYJ: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -1335,7 +1431,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -1445,11 +1541,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NYG.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NO.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol NYG: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol NO: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -1493,6 +1609,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "NYG.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NO.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -1502,7 +1634,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1511,7 +1643,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1520,7 +1652,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1531,31 +1663,11 @@
       "prior_away": 0.5108342361863488
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol NYG: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol NO: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -1565,7 +1677,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -1674,11 +1786,33 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "PHI.ol",
+     "value": {
+      "starters_out": [
+       "Drew Kendall (C)"
+      ],
+      "continuity_index": 0.8,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CAR.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol PHI: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol CAR: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -1722,6 +1856,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "PHI.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CAR.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -1731,7 +1881,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1740,7 +1890,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1749,7 +1899,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1760,31 +1910,11 @@
       "prior_away": 0.4891657638136511
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol PHI: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol CAR: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -1794,7 +1924,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -1905,11 +2035,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "TB.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "PIT.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol TB: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol PIT: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -1953,6 +2103,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "TB.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "PIT.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -1962,7 +2128,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1971,7 +2137,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1980,7 +2146,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -1991,31 +2157,11 @@
       "prior_away": 0.5634920634920635
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol TB: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol PIT: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -2025,7 +2171,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -2134,11 +2280,23 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "ARI.ol",
+     "value": {
+      "starters_out": [
+       "Isaiah Adams (G)"
+      ],
+      "continuity_index": 0.8,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol LAR: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol ARI: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol LAR: depth chart 2026-10-02T13:49:21Z has 0 OL starters for LAR, not five. Refusing to fill the missing slots.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -2182,6 +2340,14 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "ARI.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -2191,7 +2357,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 20,
+      "conviction": 40,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2200,7 +2366,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 20,
+      "conviction": 40,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2209,7 +2375,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 20,
+      "conviction": 40,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2220,12 +2386,12 @@
       "prior_away": 0.136986301369863
      }
     ],
-    "conviction": 20,
+    "conviction": 40,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol LAR: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "text": "ol LAR: depth chart 2026-10-02T13:49:21Z has 0 OL starters for LAR, not five. Refusing to fill the missing slots.",
       "metric": "",
       "op": "",
       "threshold": null,
@@ -2235,16 +2401,6 @@
      },
      {
       "id": "gap:1",
-      "text": "ol ARI: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -2254,7 +2410,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:2",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -2363,11 +2519,34 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "KC.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "LAC.ol",
+     "value": {
+      "starters_out": [
+       "Joe Alt (T)",
+       "Trevor Penning (G)"
+      ],
+      "continuity_index": 0.6,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol KC: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol LAC: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -2411,6 +2590,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "KC.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "LAC.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -2420,7 +2615,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2429,7 +2624,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2438,7 +2633,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2449,31 +2644,11 @@
       "prior_away": 0.19999999999999998
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol KC: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol LAC: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -2483,7 +2658,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -2593,11 +2768,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "LV.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "BUF.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol LV: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol BUF: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -2641,6 +2836,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "LV.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "BUF.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -2650,7 +2861,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2659,7 +2870,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2668,7 +2879,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2679,31 +2890,11 @@
       "prior_away": 0.690792883054068
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol LV: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol BUF: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -2713,7 +2904,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -2822,11 +3013,31 @@
      "fired": true,
      "source": "real",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "GB.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DAL.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol GB: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol DAL: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -2870,6 +3081,22 @@
        "verification": "REAL",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "GB.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DAL.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -2879,7 +3106,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2888,7 +3115,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2897,7 +3124,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 33,
+      "conviction": 67,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -2908,31 +3135,11 @@
       "prior_away": 0.4739134147382802
      }
     ],
-    "conviction": 33,
+    "conviction": 67,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol GB: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:1",
-      "text": "ol DAL: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -2942,7 +3149,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:1",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",
@@ -3052,11 +3259,21 @@
      "fired": false,
      "source": "missing-rows",
      "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "SF.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 6 not yet published; using week 5 (most recent available). Starters listed Out in week 5 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-02T13:49:21Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
     }
    ],
    "gaps": [
-    "ol SF: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-    "ol WSH: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol WSH: depth chart 2026-10-02T13:49:21Z has 0 OL starters for WSH, not five. Refusing to fill the missing slots.",
     "tau: no live win probability; refused a 0.5 stand-in",
     "weather: not fetched for this run"
    ],
@@ -3100,6 +3317,14 @@
        "verification": "MISSING-ROWS",
        "load_bearing": false,
        "breaking_conditions": []
+      },
+      {
+       "cause": "SF.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
       }
      ]
     }
@@ -3109,7 +3334,7 @@
      {
       "play": "TOTAL",
       "rank": 1,
-      "conviction": 20,
+      "conviction": 40,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -3118,7 +3343,7 @@
      {
       "play": "SPREAD",
       "rank": 2,
-      "conviction": 20,
+      "conviction": 40,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -3127,7 +3352,7 @@
      {
       "play": "MONEYLINE",
       "rank": 3,
-      "conviction": 20,
+      "conviction": 40,
       "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
       "status": "SCHEMATIC",
       "has_directional_claim": false,
@@ -3138,12 +3363,12 @@
       "prior_away": 0.21809369951534735
      }
     ],
-    "conviction": 20,
+    "conviction": 40,
     "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
     "breaking_conditions": [
      {
       "id": "gap:0",
-      "text": "ol SF: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "text": "ol WSH: depth chart 2026-10-02T13:49:21Z has 0 OL starters for WSH, not five. Refusing to fill the missing slots.",
       "metric": "",
       "op": "",
       "threshold": null,
@@ -3153,16 +3378,6 @@
      },
      {
       "id": "gap:1",
-      "text": "ol WSH: injury report for season 2026 week 6 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
-      "metric": "",
-      "op": "",
-      "threshold": null,
-      "verifiable": false,
-      "met": null,
-      "note": "named gap; unverifiable at this run"
-     },
-     {
-      "id": "gap:2",
       "text": "tau: no live win probability; refused a 0.5 stand-in",
       "metric": "",
       "op": "",
@@ -3172,7 +3387,7 @@
       "note": "named gap; unverifiable at this run"
      },
      {
-      "id": "gap:3",
+      "id": "gap:2",
       "text": "weather: not fetched for this run",
       "metric": "",
       "op": "",

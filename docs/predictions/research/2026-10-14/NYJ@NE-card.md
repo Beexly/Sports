@@ -1,6 +1,6 @@
 # NYJ@NE - Analyst Card (Narrative Fog)
 
-generated_utc: 2026-10-14T05:57:45.122820+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:59:54.782530+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 

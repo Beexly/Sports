@@ -1,6 +1,6 @@
 # SEA@DEN - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-14T05:57:41.450434+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:59:51.183516+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 

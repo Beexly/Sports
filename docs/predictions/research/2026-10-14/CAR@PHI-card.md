@@ -1,6 +1,6 @@
 # CAR@PHI - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-14T05:57:46.716647+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:59:56.616765+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
