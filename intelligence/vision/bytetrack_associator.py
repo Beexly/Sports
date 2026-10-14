@@ -43,6 +43,7 @@ class TrackedDetection:
     y_m: float
     confidence: float
     track_id: str | None = None  # assigned by the associator
+    last_track_id: str | None = None  # owner from the previous frame (stickiness)
 
 
 @dataclass
@@ -65,6 +66,22 @@ class ByteTrackConfig:
                                           # the position wildly and the next
                                           # detection falls outside a tight gate)
     tentative_gate_boost: float = 3.0     # gate multiplier for tentative tracks
+    coast_penalty_m: float = 0.0          # sort-cost penalty per coasted frame;
+                                          # fresh tracks win ties against stale
+    gate_speed_gain: float = 2.0          # gate floor grows 2*|v|*0.1 m for a
+                                          # track at speed |v| — sprinters need
+                                          # room their P does not encode
+    owner_radius_m: float = 0.6           # a det within this of the track's
+                                          # last matched position = same owner
+    incumbent_bonus_m: float = 1.0        # cost bonus (meters) for a det the
+                                          # track owned last frame — identity
+                                          # stickiness at symmetric crossings.
+                                          # (Tried momentum-cosine cost first:
+                                          # at 10Hz the per-frame displacement
+                                          # is smaller than detector noise, so
+                                          # direction penalties fired on noise
+                                          # and mixing got WORSE. Ownership is
+                                          # the mechanism that survives.)
     recovery_max_coast: int = 15          # stage-2 eligibility = still alive in
                                           # the bank (not yet retired). The paper's
                                           # "recently tracked" line is stricter,
@@ -108,6 +125,7 @@ class KalmanByteTracker:
         self.track_hits: dict[str, int] = {}        # track_id -> total matches (confirmation)
         self._next_id: int = 1                      # monotonic: len()-based ids
                                                     # collide after retirement
+        self.last_det_pos: dict[str, tuple[float, float]] = {}  # track -> last det xy
 
     # -- gating -------------------------------------------------------------
     def _gate_ok(self, bank: KalmanBank, track_id: str, x: float, y: float,
@@ -122,7 +140,14 @@ class KalmanByteTracker:
         hits = self.track_hits.get(track_id, 0)
         if hits < self.cfg.confirm_hits:
             sigma *= self.cfg.tentative_gate_boost
-        std = max(trk.position_std, self.cfg.gate_floor_m / sigma)
+        # speed-scaled floor: a track moving at v has position uncertainty
+        # ~ v*dt per frame beyond the Kalman P (acceleration the CV model
+        # missed). Without this, an 8 m/s sprinter breaks his own gate at
+        # every direction change and his det gets handed to the nearest
+        # stationary track — the last identity-mixing mechanism.
+        speed = math.hypot(trk.vx, trk.vy)
+        speed_floor = speed * self.cfg.gate_speed_gain * 0.1  # *dt at 10Hz ref
+        std = max(trk.position_std, self.cfg.gate_floor_m / sigma, speed_floor / sigma)
         dist = math.hypot(x - trk.x, y - trk.y)
         # coasting allowance: a coasted prediction carries unmodeled velocity
         # bias (the filter is overconfident after occlusion — its P does not
@@ -161,6 +186,23 @@ class KalmanByteTracker:
                     continue
                 dist = math.hypot(d.x_m - trk.x, d.y_m - trk.y)
                 pairs.append((dist, tid, di))
+        # incumbent stickiness: ownership lives on the TRACK (last matched det
+        # position), because detection objects are new every frame. A det
+        # within owner_radius of the track's last matched position is "the
+        # same physical player" — bonus its pair cost before the global sort.
+        for k, (dist, tid, di) in enumerate(pairs):
+            cost = dist
+            last = self.last_det_pos.get(tid)
+            if last is not None:
+                dd = math.hypot(hi[di].x_m - last[0], hi[di].y_m - last[1])
+                if dd <= cfg.owner_radius_m:
+                    cost -= cfg.incumbent_bonus_m
+            # fresh tracks outrank coasting ones at similar cost: a stale
+            # prediction must not steal a live track's det (coast >= 1 means
+            # the track did NOT see this player last frame — ownership is
+            # weakened, and its velocity is staler).
+            cost += self.players.tracks[tid].coast_frames * cfg.coast_penalty_m
+            pairs[k] = (max(0.0, cost), tid, di)
         pairs.sort(key=lambda p: p[0])
         for dist, tid, di in pairs:
             if tid in matched_tracks or di in used_dets:
@@ -170,6 +212,7 @@ class KalmanByteTracker:
             used_dets.add(di)
             self.players.step(tid, d.x_m, d.y_m, t)
             d.track_id = tid
+            self.last_det_pos[tid] = (d.x_m, d.y_m)
             out.stage1_matches.append((tid, di))
             self.recently_tracked[tid] = 0
             self.track_hits[tid] = self.track_hits.get(tid, 0) + 1
@@ -199,6 +242,7 @@ class KalmanByteTracker:
             matched_tracks.add(tid)
             self.players.step(tid, d.x_m, d.y_m, t)
             d.track_id = tid
+            self.last_det_pos[tid] = (d.x_m, d.y_m)
             out.stage2_matches.append((tid, di))
             self.recently_tracked[tid] = 0
             self.track_hits[tid] = self.track_hits.get(tid, 0) + 1
@@ -225,6 +269,7 @@ class KalmanByteTracker:
                 del self.players.tracks[tid]
                 self.recently_tracked.pop(tid, None)
                 self.track_hits.pop(tid, None)
+                self.last_det_pos.pop(tid, None)
                 out.retired.append(tid)
 
         # ---- ball: separate bank, simple nearest-gate (single object)

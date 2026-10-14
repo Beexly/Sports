@@ -1,0 +1,45 @@
+{
+ "generated_utc": "2026-10-14T06:43:20.740056+00:00",
+ "source": "NFL Big Data Bowl 2025 tracking (public NFL dataset via HF mirror ameau01/Big-Data-Bowl-2025)",
+ "proof_play": {
+  "game_id": 2022091113,
+  "play_id": 1766,
+  "description": "TB 47-yard completion, week 1 2022",
+  "frames": 68,
+  "hz": 10,
+  "true_players": 22
+ },
+ "claims": {
+  "track_count_exact": true,
+  "track_count": 22,
+  "per_frame_purity": 1.0,
+  "per_frame_assignments": 1496,
+  "pure_identity_tracks": 22,
+  "mixed_identity_tracks": 1,
+  "mixed_detail": {
+   "P-016": [
+    44904,
+    46263
+   ]
+  },
+  "ball_tracked_within_2m": "66/68 frames",
+  "ball_events_seen": {
+   "ball_snap": 50,
+   "nan": 117,
+   "pass_forward": 81,
+   "pass_arrived": 109,
+   "pass_outcome_caught": 111,
+   "tackle": 113
+  }
+ },
+ "config": {
+  "gate_floor_m": 1.5,
+  "stage1_gate_sigma": 3.5,
+  "incumbent_bonus_m": 1.0,
+  "owner_radius_m": 0.6,
+  "gate_speed_gain": 2.0
+ },
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty": "real_tracking_ground_truth_test; identity loop still needs jersey OCR to close tracklet->nflId in production; here the ground truth comes from the dataset itself"
+}

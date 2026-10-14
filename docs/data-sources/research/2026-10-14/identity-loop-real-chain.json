@@ -1,0 +1,22 @@
+{
+ "loop": "tracklet -> jersey/roster id -> nflverse participation -> outcome",
+ "tracking_source": "NFL BDB 2025 tracking_week_1 (real NFL 10Hz tracking)",
+ "tracklet": {
+  "game": "2022_01_TB_DAL",
+  "play_id": 1766,
+  "player": "Julio Jones",
+  "nflId": 37079,
+  "role_in_play": "receiver of 48-yard completion (desc: pass deep right to 6-J.Jones)"
+ },
+ "roster_join": {
+  "crosswalk": "nflverse players.parquet (nfl_id -> gsis_id)",
+  "gsis_id": "00-0027944",
+  "coverage": "1697/1697 BDB players, 22/22 proof-play players"
+ },
+ "outcome_join": {
+  "source": "nflverse pbp 2022 (same game_id+play_id)",
+  "epa": 2.6194,
+  "passer": "T.Brady"
+ },
+ "verdict": "ALL FOUR KEYS JOIN ON REAL DATA, one queryable chain"
+}
