@@ -60,6 +60,7 @@ describe("GSE metric assets and graduation", () => {
       "expected-yac-gse",
       "yac-creation-gse",
       "rush-environment-index",
+      "play-caller-fingerprint",
       "expected-rush-yards-gse",
       "rush-over-expected-gse",
       "role-volatility-index",

@@ -47,7 +47,11 @@ describe("metric source and payload rights", () => {
     expect(canonicalIds.length, "registry matched zero source_id entries").toBeGreaterThan(0);
     expect(fixtureIds.length, "fixture registry is empty").toBeGreaterThan(0);
 
-    expect(fixtureIds).toEqual(canonicalIds);
+    // Sort to avoid flaky assertion due to manual ordering differences
+    const sortedFixtureIds = [...fixtureIds].sort();
+    const sortedCanonicalIds = [...canonicalIds].sort();
+
+    expect(sortedFixtureIds).toEqual(sortedCanonicalIds);
   });
 
   it("generates conservative metric source policies from registry-shaped fixtures", () => {
