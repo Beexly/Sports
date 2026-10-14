@@ -229,6 +229,89 @@ team pairs, which is the current best-known enumeration path.
 Provenance for every row: the endpoint URL + `PlayerId` + `generated_utc`. `PlayerId` is LineStar's own id —
 join to repo feeds via name+team until a crosswalk exists (named gap, not silently bridged).
 
+### 3.6 LineStar slate grid — `GetReportGridBoxes` + `GetDefenseVsPosMatchupV2` + `GetFootballOpponentMatchup` [V VERIFIED-LIVE]
+
+**The correction that matters most:** the earlier note in this directory said the anonymous LineStar tier
+truncates salaries. That is true of **one endpoint**, not of the account. `GetSalariesV5` returns 12 of 727
+salaries and sets `IsTruncated=true, TruncatedSalaryCount=714`. The **POST** route
+`GetReportGridBoxes` returns **746 players with real salaries** on the same anonymous session, same host,
+no cookies. The truncation is a teaser behaviour of `GetSalariesV5`; there is no account wall here. Any
+plan built on "we cannot get salaries without auth" is built on a false premise. [V]
+
+| measure | value |
+|---|---|
+| players in the grid | **746** |
+| players with salary | 746 |
+| games | **14** |
+| games carrying a Vegas total | 14 |
+| games carrying wind speed | 14 |
+| games with hourly weather slices | 10 |
+| team defense-vs-position rows | **32** |
+| opponent-matchup rows | **240** |
+| salary range | 2,000 – 8,700 |
+| injury designations | **298** (O 261 · Q 32 · D 5) |
+
+**Routes and their real contracts [V]** — recovered from the Angular bundles
+(`betfully.ownership.js`, `fantasysportsco.reportGrid.js`, `fantasysportsco.footballOpponentMatchup.js`):
+
+| route | verb | path |
+|---|---|---|
+| slate grid | **POST** | `/DesktopModules/DailyFantasyApi/API/Fantasy/GetReportGridBoxes` body `{"Sport":1,"Site":1,"PeriodId":412}` |
+| defense vs position | GET | `/DesktopModules/DailyFantasyApi/API/Fantasy/GetDefenseVsPosMatchupV2?sport=1&periodId=412` |
+| opponent matchup | GET | `/DesktopModules/DailyFantasyApi/API/Fantasy/GetFootballOpponentMatchupWithNumOpponents?siteId=1&sport=1&periodId=412&numOpponents=17` |
+
+**Five page names are NOT routes [V] — stop hunting them.** The bundle shows `TeamDefenseReport`,
+`SalaryChanges`, `Perfect`, `SalaryComparison` and `DailyDashboard` resolving to *sub-views of the grid*
+(`ReportGridBoxes[]` = "Injury Replacement", "Salary Changes", "Perfect Lineup - Past 30 Days",
+"Hot/Cold Players"). They are render targets, not API endpoints. `GetPeriodInformation` returned 404 on
+this base path; its true route name is **UNVERIFIED**.
+
+**Vegas + weather composite per game [V]** — every game row carries `VegasLineAway`, `VegasLineHome`,
+`VegasMoneyLineAway`, `VegasMoneyLineHome`, `VegasTotals`, `WindSpeed`, `WindDirection`, `Temp`,
+`Humidity`, `RainAmount`, `IsDome`, `PostponeChance`, `WeatherIsLocked`, plus hourly `WeatherSlices[]`
+(`Temperature`, `WindSpeed`, `WindDirection`, `Precipitation`, `WeatherIcon`, `DateUtc`). This is a
+**third odds anchor** beside ESPN's inline DraftKings numbers already in-repo, and it arrives with the
+stadium's hourly weather on the same row — the air-density / wind-elasticity layer needs no separate
+weather join for this slate. Where this total disagrees with the ESPN anchor beyond the de-vig margin,
+**name the disagreement; do not average silently.**
+
+**Defense vs position AND depth-slot [V]** — `GetDefenseVsPosMatchupV2` returns 32 team rows with the
+full stat definition table (`Stats`) and position buckets (`Positions`), i.e. what each defense allows to
+QB / RB1 / RB2 / WR1 / WR2 / WR3 / TE1 / etc. This is the empirical prior the matchup engine's heuristic
+pairings were approximating. Caveat: the sampled team row carried `OppAbbrev: null`, `OppTeamId: 0` —
+opponent resolution must read the `Opponents[]` sub-array, not the top-level field. [V]
+
+**Injury designations with salary attached [V]** — 298 players carry `InjuryStatusAbbreviation` (O/Q/D) on
+rows that also carry `Salary`, `OpposingRank` and `StartingOrder`. That is a second keyless injury feed,
+independent of the ESPN adapter, keyed to LineStar's `PlayerId`.
+
+**What is still zeroed [V]:** `SiteProjection` is **0.0 for all 746 players** on this endpoint too. The
+projection column is withheld anonymously. Treat projections as *absent* — a named gap — never as
+"0 projected points". Salary, injury, depth order, opposing rank, Vegas and weather are all real.
+
+**Raw evidence:** `docs/data-sources/research/2026-10-13/linestar/raw_GetReportGridBoxes.json`,
+`raw_GetDefenseVsPosMatchupV2.json`, `raw_GetFootballOpponentMatchup.json`; digest
+`linestar_slate_grid_2026-10-13.json` (1.02 MB) and human-readable
+`linestar_slate_grid_2026-10-13.md`.
+
+**Signal mapping [V]** — published third-party data, so `REPORTED`, domain per row:
+
+| payload field | Signal metric | domain |
+|---|---|---|
+| `Salary` | `dfs_salary` | `dfs` |
+| `InjuryStatusAbbreviation` | `lineup_status` | `injuries` |
+| `StartingOrder` / `StartingPosition` | `depth_slot` | `depth_chart` |
+| `OpposingRank` / `TotalOpposingRank` | `opposing_def_rank_vs_pos` | `matchup` |
+| `VegasTotals`, `VegasLine*`, `VegasMoneyLine*` | `implied_total`, `implied_spread` | `markets` |
+| `WeatherSlices[].WindSpeed/Temperature/Precipitation` | `wind_mph`, `temp_f`, `precip` | `weather` |
+| `GetDefenseVsPosMatchupV2` per-position stat block | `def_vs_pos_<stat>` | `matchup` |
+| `FootballOpponentMatchup` `fp` / `fpavg` | `opponent_fp_avg` | `dfs` |
+
+**Gaps named, not bridged [V]:** no LineStar↔repo `PlayerId` crosswalk yet (join by name+team only); ToS
+not read; free tier only — no auth bypass and no parameter guessing beyond the contracts printed in the
+bundles. TheSportsDB remains in the same category: `Allow: /` but `Content-Signal: ai-train=no`, no rights
+registry entry, tier terms unread.
+
 ## 4. Candidate roster — "everything under the sun" (59 sources)
 
 Legend for **Rights/robots**: `OK` = robots permits and registry/licence is clear · `GATE` = robots permits
