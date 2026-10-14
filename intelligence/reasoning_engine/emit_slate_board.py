@@ -43,17 +43,35 @@ def _team_from_name(name: str, side: str) -> str:
     return part.strip()
 
 
-def slate_games(sport: str = "football/nfl", date_param: str = "") -> list[dict]:
-    """(away, home, espn_name, odds_row) per event with odds, else None odds."""
+def slate_games(sport: str = "football/nfl", query: str = "") -> tuple[list[dict], int, int, list[str]]:
+    """(games, week, season, byes) — games is (away, home, espn_name, odds_row) per event.
+
+    `query` is a raw ESPN scoreboard query string. Two forms matter:
+      * "?week=N&seasontype=2"  -> the FULL week slate (all Thu-Mon games) and the
+        payload carries `season` + `week.teamsOnBye`.
+      * "?dates=YYYYMMDD"       -> only the games on that date, and the payload has
+        NO `season` key at all, so the season must be supplied or it comes back 0.
+
+    The slate's week/season travel with the games. reason_game() defaults to
+    week=4, so leaving this unstamped made the board reason a week-4 team state
+    (epa_facets before_week=4, ol_state week 4) against whatever slate ESPN
+    actually served, and stamped every game_id "w4" regardless of the real week.
+    """
     payload = None
     for base in mp.BASES:
         try:
-            payload = mp._fetch(base.format(sport=sport) + date_param)
+            payload = mp._fetch(base.format(sport=sport) + query)
             break
         except Exception:
             continue
     if payload is None:
         raise RuntimeError("ESPN scoreboard unreachable")
+    week = int(((payload.get("week") or {}).get("number")) or 0)
+    season = int(((payload.get("season") or {}).get("year")) or 0)
+    byes = [
+        t.get("abbreviation") or ""
+        for t in ((payload.get("week") or {}).get("teamsOnBye") or [])
+    ]
     games: list[dict] = []
     for ev in payload.get("events", []):
         comps = ev.get("competitions", []) or []
@@ -69,7 +87,7 @@ def slate_games(sport: str = "football/nfl", date_param: str = "") -> list[dict]
             else:
                 away = (c.get("team") or {}).get("abbreviation") or ""
         games.append({"espn_name": ev.get("name") or "", "away": away, "home": home, "odds": o})
-    return games
+    return games, week, season, byes
 
 
 def priors_for_game(odds: dict | None, away: str, home: str) -> tuple[list[MarketPrior], list[str]]:
@@ -108,14 +126,36 @@ def priors_for_game(odds: dict | None, away: str, home: str) -> tuple[list[Marke
     )
 
 
-def run_slate(sport: str = "football/nfl", date_param: str = "") -> dict:
-    games = slate_games(sport, date_param)
+def run_slate(sport: str = "football/nfl", query: str = "", week: int | None = None,
+              season: int | None = None) -> dict:
+    games, slate_week, slate_season, byes = slate_games(sport, query)
+    # reason_game() defaults to week=4; stamp the slate's real week so the Layer 2
+    # facets (epa_facets before_week, ol_state) line up with the Layer 1 odds.
+    wk = int(week) if week else slate_week
+    # "?dates=" payloads carry no `season` key, so fall back explicitly and say so
+    # on the board rather than silently reasoning a season 0.
+    gaps: list[str] = []
+    if season:
+        sn = int(season)
+    elif slate_season:
+        sn = slate_season
+    else:
+        sn = 2026
+        gaps.append("season: not carried by the ESPN payload; defaulted to 2026")
     now = datetime.now(timezone.utc).isoformat()
     out_games = []
     cards = 0
     for g in games:
         priors, pgaps = priors_for_game(g["odds"], g["away"], g["home"])
-        doc = reason_game(home=g["home"] or "?", away=g["away"] or "?", market_priors=priors or None)
+        doc = reason_game(home=g["home"] or "?", away=g["away"] or "?", week=wk, season=sn,
+                          market_priors=priors or None)
+        # The per-game doc comes from reason_game() and carries only game_id, so a
+        # consumer reading the board could not name the teams without parsing the id.
+        # Stamp the slate's own away/home back onto the record - the board is the
+        # product surface and it should be self-describing.
+        doc["away"] = g["away"] or "?"
+        doc["home"] = g["home"] or "?"
+        doc["matchup"] = f"{g['away'] or '?'}@{g['home'] or '?'}"
         doc["gaps"].extend(pgaps)
         # Move 1: every game gets an analyst card alongside the ranked board
         if emit_card is not None and g["home"] and g["away"] and g["home"] != "?" and g["away"] != "?":
@@ -131,9 +171,13 @@ def run_slate(sport: str = "football/nfl", date_param: str = "") -> dict:
     return {
         "generated_utc": now,
         "sport": sport,
+        "week": wk,
+        "season": sn,
+        "byes": [b for b in byes if b],
         "games_requested": len(games),
         "cards_emitted": cards,
         "games": out_games,
+        "gaps": gaps,
         "note": "every game reasoned and ranked; withhold/pass are mint actions on the board, never silence",
     }
 
@@ -141,11 +185,22 @@ def run_slate(sport: str = "football/nfl", date_param: str = "") -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sport", default="football/nfl")
-    ap.add_argument("--date", default="", help="YYYYMMDD slate date param for ESPN")
+    ap.add_argument("--date", default="", help="YYYYMMDD slate date param for ESPN (one day only)")
+    ap.add_argument("--week", type=int, default=None,
+                    help="week number. Without --date this ALSO drives the fetch "
+                         "(?week=N&seasontype=2 -> the full week slate + byes); "
+                         "with --date it only stamps the week")
+    ap.add_argument("--season", type=int, default=None,
+                    help="force the season (default: read from the ESPN payload)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
-    date_param = f"?dates={args.date}" if args.date else ""
-    board = run_slate(args.sport, date_param)
+    if args.date:
+        query = f"?dates={args.date}"
+    elif args.week:
+        query = f"?week={args.week}&seasontype=2"
+    else:
+        query = ""
+    board = run_slate(args.sport, query, week=args.week, season=args.season)
     out_path = args.out or str(HERE / "traces" / f"slate-board-{datetime.now(timezone.utc).date().isoformat()}.json")
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
