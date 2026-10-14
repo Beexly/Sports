@@ -95,6 +95,27 @@
    "docs/data-sources/research/2026-10-14/totals-efficiency-model.json",
    "docs/data-sources/research/2026-10-14/totals-model-oof-sd.json",
    "docs/data-sources/research/2026-10-14/totals-model-honest-verdict.json"
-  ]
+  ],
+  "injury_extension": {
+   "tested": "Out/Doubtful counts by position group (OL/QB/WR/RB/TE/DEF), 2015-24 injuries releases, joined pre-game",
+   "results": {
+    "A_epa_only_oof_sd": 13.369,
+    "B_epa_plus_inj_oof_sd": 13.429,
+    "C_inj_only_oof_sd": 13.384,
+    "market_sd": 13.319,
+    "heldout_logscore": {
+     "market": 3.9589,
+     "A": 3.9575,
+     "B": 3.9647
+    }
+   },
+   "findings": [
+    "injury counts WIDEN the model (B worst) \u2014 raw counts are noise at this granularity",
+    "A (EPA-only) edges the market on location (3.9575 < 3.9589) but fails the width half (13.369 > 13.319)",
+    "suspicious coefficients (RB -12.5) flag count-feature instability \u2014 role-weighted availability is the next granularity"
+   ],
+   "verdict": "MARKET HALF STILL NOT MET \u2014 both halves recorded; availability data does not break the collinearity at count granularity",
+   "artifact": "docs/data-sources/research/2026-10-14/totals-injury-model.json"
+  }
  }
 }
