@@ -166,6 +166,10 @@ export interface FactorBreakdown {
   // Schedule density (v5)
   scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
+  // Biophysical & tracking features (v5.3)
+  injuryScore?: number;        // ±5: structured practice/injury availability signal
+  ngsTrackingScore?: number;   // ±5: in-season NGS tracking features (RYOE, separation, box rate)
+  dispersionScore?: number;    // -8–0: multi-book market dispersion uncertainty penalty
   // Independent-edge layer — may be priced into ranking when trueProb finite (see priced)
   independentEdge?: IndependentEdgeSummary | null;
   /**
@@ -542,6 +546,23 @@ export interface GameContextInput {
   // Null when no game history exists; scoring returns 0 (neutral) when null.
   scheduleDensityHome?: number | null;
   scheduleDensityAway?: number | null;
+  // Biophysical / Practice Availability (v5.3 - Factor 2)
+  injuryDesignationHome?: string | null;     // e.g. "OUT", "QUESTIONABLE", "DOUBTFUL"
+  injuryDesignationAway?: string | null;
+  practiceStatusHome?: string | null;        // e.g. "DNP", "LIMITED", "FULL", "DIDNOT"
+  practiceStatusAway?: string | null;
+  dnpDaysHome?: number | null;               // number of DNP days this week
+  dnpDaysAway?: number | null;
+  injuryFreshnessHours?: number | null;      // freshness of practice/injury report
+  // In-season NGS Tracking (v5.3 - Factor 2)
+  ngsRyoeHome?: number | null;               // Rush Yards Over Expected
+  ngsRyoeAway?: number | null;
+  ngsBoxStackedRateHome?: number | null;     // 8+ defenders in the box %
+  ngsBoxStackedRateAway?: number | null;
+  trackingFreshnessMinutes?: number | null;  // tracking data freshness
+  // Multi-book Market Uncertainty (Factor 3)
+  marketSpreadDispersion?: number | null;    // max - min spread across books
+  marketMlDispersion?: number | null;        // max - min moneyline prob across books
   // Data coverage
   bookmakerCoverageMax?: number;
   dataFreshnessMinutes?: number;

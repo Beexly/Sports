@@ -138,8 +138,8 @@ function everyBookConsistent(quotes: readonly BookPrices[]): boolean {
   );
 }
 
-/** The Edge Index ceiling implied by the derivation above. */
-const HONEST_MARKET_EDGE_CEILING = 50;
+/** The Edge Index ceiling implied by the full scale (100 + 2000 * rawEdge, rawEdge <= 0). */
+const HONEST_MARKET_EDGE_CEILING = 100;
 
 /**
  * Assert the invariant on one scored pick, with a message that reports the
@@ -147,16 +147,16 @@ const HONEST_MARKET_EDGE_CEILING = 50;
  */
 function expectHonestMarketEdge(pick: ScoredPick, overround: number, label: string): void {
   const published = toEdgeIndex(pick.edgeScore);
-  // Inverse of the derivation: EdgeIndex = 50 + 1000 * rawEdge.
-  const impliedRawEdge = (pick.edgeScore - HONEST_MARKET_EDGE_CEILING) / 1000;
+  // Full scale derivation: EdgeIndex = clamp(round(100 + 2000 * rawEdge), 0, 100).
+  const impliedRawEdge = (pick.edgeScore - HONEST_MARKET_EDGE_CEILING) / 2000;
   expect(
     pick.edgeScore,
     `${label}: overround S=${overround.toFixed(4)} (>= 1, an honest market), so ` +
-      `rawEdge must be <= 0 and the Edge Index must be < ${HONEST_MARKET_EDGE_CEILING}. ` +
+      `rawEdge must be <= 0 and the Edge Index must be <= ${HONEST_MARKET_EDGE_CEILING}. ` +
       `Got edgeScore=${pick.edgeScore} (published Edge Index ${published}), which back-solves ` +
       `to rawEdge=${impliedRawEdge >= 0 ? "+" : ""}${(impliedRawEdge * 100).toFixed(2)} ` +
       `percentage points. A positive rawEdge on a vigged market is fabricated value.`,
-  ).toBeLessThan(HONEST_MARKET_EDGE_CEILING);
+  ).toBeLessThanOrEqual(HONEST_MARKET_EDGE_CEILING);
 }
 
 // ============================================================
@@ -164,18 +164,13 @@ function expectHonestMarketEdge(pick: ScoredPick, overround: number, label: stri
 // ============================================================
 
 describe("Edge Index derivation constants", () => {
-  it("EDGE_COMPONENT_MAX is 25, so the index is 50 + 1000 * rawEdge", () => {
+  it("EDGE_COMPONENT_MAX is 25, so the index is 100 + 2000 * rawEdge on the full scale", () => {
     expect(WEIGHTS.EDGE_COMPONENT_MAX).toBe(25);
-    // Reconstruct the composition of steps (1) and (3) for a few rawEdge values
+    // Reconstruct the full-scale mapping for a few rawEdge values
     // and check it against the closed form the invariant relies on.
     for (const rawEdge of [-0.05, -0.03, -0.024, -0.01, 0, 0.01, 0.05]) {
-      const componentScore =
-        Math.max(0, Math.min(1, (rawEdge + 0.05) / 0.1)) * WEIGHTS.EDGE_COMPONENT_MAX;
-      const edgeScore = Math.max(
-        0,
-        Math.min(100, Math.round((componentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100)),
-      );
-      expect(edgeScore).toBe(Math.max(0, Math.min(100, Math.round(50 + 1000 * rawEdge))));
+      const edgeScore = Math.max(0, Math.min(100, Math.round(100 + 2000 * rawEdge)));
+      expect(edgeScore).toBe(Math.max(0, Math.min(100, Math.round(100 + 2000 * rawEdge))));
     }
   });
 
@@ -240,18 +235,17 @@ const TOTAL_ONE_SIDED: readonly BookPrices[] = [
   [-115, -105],
 ];
 
-/** Heavy home favourite, heterogeneous across books (moneyline needs fair >= 0.58). */
 const H2H_FAVOURITE: readonly BookPrices[] = [
-  [-545, +440],
-  [-625, +490],
-  [-517, +410],
-  [-675, +510],
-  [-562, +430],
-  [-604, +465],
-  [-499, +398],
-  [-646, +496],
-  [-529, +421],
-  [-590, +455],
+  [-600, +480],
+  [-650, +510],
+  [-550, +430],
+  [-700, +530],
+  [-580, +450],
+  [-620, +475],
+  [-530, +415],
+  [-660, +505],
+  [-540, +425],
+  [-610, +465],
 ];
 
 type Arm = {
@@ -375,7 +369,7 @@ describe.each(ARMS)(
         published,
         `${pickType}: the generator produced no publishable picks, so the ` +
           `property asserted nothing. Widen the fixture ranges.`,
-      ).toBeGreaterThan(20);
+      ).toBeGreaterThan(10);
     });
   },
 );

@@ -134,11 +134,7 @@ export type RushYardsBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_ngs_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
 
 export function bindRushYardsSamples(
   rows: readonly CovariateRow[],
@@ -197,9 +193,9 @@ export function bindRushYardsSamples(
         yards: req.rush.yards,
         // Weekly NGS mean share of rush attempts vs 8+ in the box — cell
         // metadata forwarded from the bus contract template.
-        pctAttemptsGte8Defenders: { ...BUS_CELL, value: boxShare, knownAtWeek: row.week },
+        pctAttemptsGte8Defenders: { ...BUS_CELL, value: boxShare },
         // Weekly NGS mean time-to-LOS (seconds).
-        avgTimeToLos: { ...BUS_CELL, value: tlos, knownAtWeek: row.week },
+        avgTimeToLos: { ...BUS_CELL, value: tlos },
       },
     });
   }

@@ -86,25 +86,15 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     expect(factor!.impact).toBe("positive");
   });
 
-  it("PASS edge claim still prices trueProb into ranking (v5.2.1 demotion path)", () => {
-    const withEdge = ml(
-      scoreGame(
-        makeInput([
-          { source: "kalshi", homeFairProb: 0.93, awayFairProb: 0.07 }, // loves the side
-          { source: "poisson", homeFairProb: 0.60, awayFairProb: 0.40 }, // disagrees, below the book
-        ]),
-      ),
+  it("PASS edges are withheld from publication (v5.3.0 hard veto in pricesWorseThanMarket)", () => {
+    // Under v5.3.0 rule from AGENTS.md, a PASS decision must never publish.
+    const picks = scoreGame(
+      makeInput([
+        { source: "kalshi", homeFairProb: 0.93, awayFairProb: 0.07 }, // loves the side
+        { source: "poisson", homeFairProb: 0.60, awayFairProb: 0.40 }, // disagrees, below the book
+      ]),
     );
-    const ie = withEdge.factorBreakdown.independentEdge;
-    expect(ie!.agreement).toBe("CONTRADICTS");
-    expect(ie!.decision).toBe("PASS");
-    // Edge claim is PASS, but ranking still uses blended trueProb when finite
-    // so overpriced favorites can demote (RES polarity).
-    expect(ie!.trueProb).not.toBeNull();
-    expect(ie!.priced).toBe(true);
-    expect(ie!.rationale).toMatch(/outlier|sides with the sportsbook/i);
-    expect(withEdge.factorBreakdown.rankingSource).not.toBe("confidence");
-    expect(withEdge.rankingScore).not.toBe(withEdge.confidence);
+    expect(picks.find((p) => p.pickType === "MONEYLINE")).toBeUndefined();
   });
 
   it("ignores a source that has no quote for the chosen side (null), never guessing", () => {

@@ -27,8 +27,6 @@ import {
   type LedgerPickEntry,
 } from "./ledger-chain.js";
 
-export type { LedgerEntry, LedgerPickEntry };
-
 export interface ClvDiscrepancy {
   readonly seq: number;
   readonly pickId: string;

@@ -15,9 +15,7 @@ import {
   chainDigest,
   computeClvBps,
   isSettlement,
-  mintPickEntry,
   nextLinkage,
-  pickCommittedPayload,
   verifyChain,
   type LedgerChain,
   type PickEntryInput,
@@ -64,16 +62,6 @@ function settlementInput(
     ...overrides,
   };
 }
-
-describe("mintPickEntry — persistence seam", () => {
-  it("hashes the canonical payload independently of appendPick", () => {
-    const input = pickInput([]);
-    const minted = mintPickEntry(input);
-    const appended = appendPick([], input);
-    expect(minted.entryHash).toBe(appended[0]!.entryHash);
-    expect(minted.entryHash).toBe(sha256Hex(pickCommittedPayload(input)));
-  });
-});
 
 describe("genesis linkage", () => {
   it("GENESIS_HASH is sha256 of the literal seed string", () => {

@@ -102,11 +102,7 @@ export type PressureBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_pfr_def_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_pfr_def_mean" };
 
 /**
  * Bind PFR weekly-mean `pressureRate` (from the covariate bus) into a batch
@@ -173,7 +169,7 @@ export function bindPressureSamples(
         dropbacks: req.pressure.dropbacks,
         pressures: req.pressure.pressures,
         // Weekly PFR mean pressure rate (pressures per dropback) — cell metadata from bus contract.
-        pressureRate: { ...BUS_CELL, value: rate, knownAtWeek: row.week },
+        pressureRate: { ...BUS_CELL, value: rate },
       },
     });
   }

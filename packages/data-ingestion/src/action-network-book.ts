@@ -40,6 +40,17 @@ const SPORT_KEY_TO_LEAGUE: Record<string, string> = {
   icehockey_nhl: "nhl",
 };
 
+const ABBR_ALIASES: Record<string, string> = {
+  JAX: "JAC",
+  WSH: "WAS",
+  ARI: "AZ",
+};
+
+function normAbbr(abbr: string): string {
+  const up = (abbr || "").toUpperCase().trim();
+  return ABBR_ALIASES[up] ?? up;
+}
+
 export interface ActionNetworkBookOptions {
   readonly fetchImpl?: typeof fetch;
   readonly preferredBookIds?: readonly number[];
@@ -88,8 +99,8 @@ export class ActionNetworkSecondBook implements GalaxySecondBook {
     const scoreboard = await this.fetchScoreboard(league);
     if (!scoreboard || !Array.isArray(scoreboard.games)) return null;
 
-    const targetHome = game.homeAbbr.toUpperCase();
-    const targetAway = game.awayAbbr.toUpperCase();
+    const targetHome = normAbbr(game.homeAbbr);
+    const targetAway = normAbbr(game.awayAbbr);
 
     // Find matching game by team abbreviation
     const matched = scoreboard.games.find((g: any) => {
@@ -108,8 +119,8 @@ export class ActionNetworkSecondBook implements GalaxySecondBook {
       if (!gAwayAbbr && teams[0]) gAwayAbbr = teams[0].abbr;
 
       return (
-        gHomeAbbr?.toUpperCase() === targetHome &&
-        gAwayAbbr?.toUpperCase() === targetAway
+        normAbbr(gHomeAbbr ?? "") === targetHome &&
+        normAbbr(gAwayAbbr ?? "") === targetAway
       );
     });
 

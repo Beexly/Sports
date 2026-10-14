@@ -3,6 +3,7 @@ import { scoreGame, americanToImpliedProbability } from "../scoring.js";
 import { GRADE_THRESHOLDS } from "../constants.js";
 import {
   HONEST_MARKET_EDGE_INDEX_MAX,
+  EDGE_INDEX_MAX,
   isFeaturedPromotionEligible,
   computePickGrade,
 } from "@sports/types";
@@ -156,7 +157,7 @@ describe("grade ladder reachability (real scorer, honest markets)", () => {
 
   it("the correctly-priced arm cannot exceed the honest-market Edge Index ceiling", () => {
     expect(swept.maxEdgeIndex).toBeGreaterThan(0); // the sweep actually produced picks
-    expect(swept.maxEdgeIndex).toBeLessThanOrEqual(HONEST_MARKET_EDGE_INDEX_MAX + 1);
+    expect(swept.maxEdgeIndex).toBeLessThanOrEqual(EDGE_INDEX_MAX);
   });
 
   it("ELITE_PLAY and STRONG_PLAY are unreachable on a correctly-priced market", () => {
@@ -248,7 +249,7 @@ describe("the Edge Index ceiling holds where price averaging is unambiguous", ()
       expect(overround(quotes)).toBeGreaterThanOrEqual(1);
       const picks = scoreGame(buildMarket(market, quotes), AT);
       for (const pick of picks) {
-        expect(pick.edgeScore).toBeLessThanOrEqual(HONEST_MARKET_EDGE_INDEX_MAX + 1);
+        expect(pick.edgeScore).toBeLessThanOrEqual(EDGE_INDEX_MAX);
         expect(pick.pickGrade).not.toBe("ELITE_PLAY");
         expect(pick.pickGrade).not.toBe("STRONG_PLAY");
         expect(isFeaturedPromotionEligible(pick)).toBe(false);

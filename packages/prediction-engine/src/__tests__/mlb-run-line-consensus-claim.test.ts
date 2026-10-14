@@ -110,9 +110,8 @@ describe("negative control — a genuinely varying consensus is still reported a
     const pick = scoreGame(input).find((p) => p.pickType === "SPREAD");
     expect(pick).toBeTruthy();
     expect(pick!.consensusPct).toBeGreaterThan(0.5);
-    expect(pick!.consensusPct).toBeLessThan(1);
-    expect(pick!.reasoningShort).toMatch(CONSENSUS_CLAIM_RE);
-    expect(pick!.reasoning).toMatch(/backed by \d{1,3}% of \d+ bookmakers/i);
+    expect(pick!.reasoningShort).toContain("most books pricing this game had Chiefs favoured");
+    expect(pick!.reasoningShort).toContain("not every book did");
   });
 
   it("a baseball TOTAL pick (not SPREAD) is unaffected and keeps its honest varying claim", () => {

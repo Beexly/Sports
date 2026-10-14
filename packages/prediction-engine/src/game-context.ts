@@ -40,6 +40,10 @@ export interface GameContextScores {
   crossMarketScore: number;         // –3 to +4 (spread/ML agreement)
   // v5 additions
   scheduleStressScore: number;      // –5 to +5 (schedule density fatigue)
+  // v5.3 additions (Factors 2 & 3)
+  injuryScore: number;              // -5 to +5 (structured practice/injury availability signal)
+  ngsTrackingScore: number;         // -5 to +5 (in-season NGS tracking features: RYOE, separation, box rate)
+  dispersionScore: number;          // -8 to 0 (multi-book market dispersion uncertainty penalty)
   factors: FactorDetail[];
 }
 
@@ -616,6 +620,212 @@ export function computeUncertaintyPenalty(
 }
 
 // ============================================================
+// Biophysical / Practice Availability (v5.3 - Factor 2)
+// ============================================================
+
+/**
+ * Biophysical / Practice Availability feature (v5.3 - Factor 2).
+ *
+ * Evaluates practice participation delta (DNP vs LIMITED vs FULL) and DNP days.
+ * Gated by injuryFreshnessHours <= 72. Stale or absent reports return 0.
+ * Positive = picked side has availability advantage (opponent banged up / missing practice).
+ * Negative = picked side disadvantaged by practice DNPs / key injuries.
+ */
+export function computeBiophysicalInjuryScore(
+  practiceStatusHome: string | null | undefined,
+  practiceStatusAway: string | null | undefined,
+  dnpDaysHome: number | null | undefined,
+  dnpDaysAway: number | null | undefined,
+  injuryFreshnessHours: number | null | undefined,
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER"
+): { score: number; factor: FactorDetail | null } {
+  // Side-agnostic or totals markets do not evaluate directional team injuries
+  if (pickedSide === "OVER" || pickedSide === "UNDER") {
+    return { score: 0, factor: null };
+  }
+  // Freshness gate: 72 hours max
+  if (injuryFreshnessHours == null || injuryFreshnessHours > 72) {
+    return { score: 0, factor: null };
+  }
+  if (!practiceStatusHome && !practiceStatusAway && dnpDaysHome == null && dnpDaysAway == null) {
+    return { score: 0, factor: null };
+  }
+
+  const isDnp = (status?: string | null) => {
+    if (!status) return false;
+    const s = status.toUpperCase();
+    return s.includes("DNP") || s.includes("DIDNOT") || s.includes("OUT");
+  };
+  const isFull = (status?: string | null) => {
+    if (!status) return false;
+    const s = status.toUpperCase();
+    return s.includes("FULL");
+  };
+
+  const homeDnp = isDnp(practiceStatusHome) || (dnpDaysHome != null && dnpDaysHome >= 2);
+  const awayDnp = isDnp(practiceStatusAway) || (dnpDaysAway != null && dnpDaysAway >= 2);
+  const homeFull = isFull(practiceStatusHome) || (dnpDaysHome != null && dnpDaysHome === 0);
+  const awayFull = isFull(practiceStatusAway) || (dnpDaysAway != null && dnpDaysAway === 0);
+
+  // Net home advantage (positive = home is healthier, away is more injured)
+  let homeAdvantage = 0;
+  if (awayDnp && homeFull) {
+    homeAdvantage = 3;
+  } else if (awayDnp && !homeDnp) {
+    homeAdvantage = 2;
+  } else if (homeDnp && awayFull) {
+    homeAdvantage = -3;
+  } else if (homeDnp && !awayDnp) {
+    homeAdvantage = -2;
+  } else if (dnpDaysHome != null && dnpDaysAway != null) {
+    const diff = dnpDaysAway - dnpDaysHome; // more away DNP days = home advantage
+    homeAdvantage = clamp(diff * 1.5, -4, 4);
+  }
+
+  const rawScore = pickedSide === "HOME" ? homeAdvantage : -homeAdvantage;
+  const score = clamp(Math.round(rawScore), -5, 5);
+
+  if (score === 0) return { score: 0, factor: null };
+
+  const sideLabel = pickedSide === "HOME" ? "Home" : "Away";
+  const oppLabel = pickedSide === "HOME" ? "Away" : "Home";
+  const desc = score > 0
+    ? `Biophysical advantage: ${oppLabel} practice DNPs / limited availability (${injuryFreshnessHours}h fresh report)`
+    : `Biophysical disadvantage: ${sideLabel} practice DNPs / injury impact (${injuryFreshnessHours}h fresh report)`;
+
+  return {
+    score,
+    factor: {
+      name: "Biophysical Injury Signal",
+      impact: score > 0 ? "positive" : "negative",
+      description: desc,
+      weight: score,
+    },
+  };
+}
+
+// ============================================================
+// In-Season NGS Tracking (v5.3 - Factor 2)
+// ============================================================
+
+/**
+ * In-season NGS Tracking feature (v5.3 - Factor 2).
+ *
+ * Compares RYOE (Rush Yards Over Expected) and stacked box rate.
+ * Gated by trackingFreshnessMinutes <= 10080 (7 days). Stale or absent data returns 0.
+ * Positive = picked side has superior ground efficiency / explosive separation.
+ */
+export function computeNgsTrackingScore(
+  ngsRyoeHome: number | null | undefined,
+  ngsRyoeAway: number | null | undefined,
+  ngsBoxStackedRateHome: number | null | undefined,
+  ngsBoxStackedRateAway: number | null | undefined,
+  trackingFreshnessMinutes: number | null | undefined,
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER"
+): { score: number; factor: FactorDetail | null } {
+  if (pickedSide === "OVER" || pickedSide === "UNDER") {
+    return { score: 0, factor: null };
+  }
+  // Freshness gate: 7 days (10,080 minutes)
+  if (trackingFreshnessMinutes == null || trackingFreshnessMinutes > 10080) {
+    return { score: 0, factor: null };
+  }
+  if (ngsRyoeHome == null && ngsRyoeAway == null) {
+    return { score: 0, factor: null };
+  }
+
+  const ryoeHome = ngsRyoeHome ?? 0;
+  const ryoeAway = ngsRyoeAway ?? 0;
+  const ryoeDiff = pickedSide === "HOME" ? ryoeHome - ryoeAway : ryoeAway - ryoeHome;
+
+  let raw = 0;
+  if (ryoeDiff >= 100) raw += 3;
+  else if (ryoeDiff >= 50) raw += 2;
+  else if (ryoeDiff >= 20) raw += 1;
+  else if (ryoeDiff <= -100) raw -= 3;
+  else if (ryoeDiff <= -50) raw -= 2;
+  else if (ryoeDiff <= -20) raw -= 1;
+
+  // Box stacked bonus: if facing 8+ in box at high rate (> 0.25) while maintaining positive RYOE
+  const pickedStacked = pickedSide === "HOME" ? ngsBoxStackedRateHome : ngsBoxStackedRateAway;
+  if (pickedStacked != null && pickedStacked >= 0.25 && ryoeDiff > 0) {
+    raw += 1;
+  }
+
+  const score = clamp(Math.round(raw), -5, 5);
+  if (score === 0) return { score: 0, factor: null };
+
+  const desc = `NGS tracking: RYOE differential ${ryoeDiff > 0 ? "+" : ""}${ryoeDiff.toFixed(1)} yds (${Math.round(trackingFreshnessMinutes / 60)}h freshness)`;
+
+  return {
+    score,
+    factor: {
+      name: "NGS Tracking Edge",
+      impact: score > 0 ? "positive" : "negative",
+      description: desc,
+      weight: score,
+    },
+  };
+}
+
+// ============================================================
+// Multi-Book Market Dispersion (v5.3 - Factor 3)
+// ============================================================
+
+/**
+ * Multi-Book Market Dispersion Uncertainty Penalty (v5.3 - Factor 3).
+ *
+ * Imposes down-sizing or penalty when multi-book market spread dispersion >= 1.5
+ * or ML dispersion >= 0.08, signaling wide market disagreement.
+ * Scale: –8 to 0.
+ */
+export function computeDispersionUncertaintyScore(
+  marketSpreadDispersion: number | null | undefined,
+  marketMlDispersion: number | null | undefined,
+  marketType: "SPREAD" | "TOTAL" | "MONEYLINE"
+): { penalty: number; factor: FactorDetail | null } {
+  let penalty = 0;
+  const reasons: string[] = [];
+
+  if (marketType === "SPREAD" && marketSpreadDispersion != null) {
+    if (marketSpreadDispersion >= 2.0) {
+      penalty = -5;
+      reasons.push(`spread dispersion ${marketSpreadDispersion.toFixed(1)} pts (>= 2.0)`);
+    } else if (marketSpreadDispersion >= 1.5) {
+      penalty = -3;
+      reasons.push(`spread dispersion ${marketSpreadDispersion.toFixed(1)} pts (>= 1.5)`);
+    } else if (marketSpreadDispersion >= 1.0) {
+      penalty = -1;
+      reasons.push(`spread dispersion ${marketSpreadDispersion.toFixed(1)} pts (>= 1.0)`);
+    }
+  } else if (marketType === "MONEYLINE" && marketMlDispersion != null) {
+    if (marketMlDispersion >= 0.12) {
+      penalty = -5;
+      reasons.push(`moneyline dispersion ${(marketMlDispersion * 100).toFixed(1)}% (>= 12%)`);
+    } else if (marketMlDispersion >= 0.08) {
+      penalty = -3;
+      reasons.push(`moneyline dispersion ${(marketMlDispersion * 100).toFixed(1)}% (>= 8%)`);
+    } else if (marketMlDispersion >= 0.05) {
+      penalty = -1;
+      reasons.push(`moneyline dispersion ${(marketMlDispersion * 100).toFixed(1)}% (>= 5%)`);
+    }
+  }
+
+  penalty = clamp(penalty, -8, 0);
+  if (penalty === 0) return { penalty: 0, factor: null };
+
+  return {
+    penalty,
+    factor: {
+      name: "Multi-Book Dispersion Penalty",
+      impact: "negative",
+      description: `Market uncertainty elevated: ${reasons.join(", ")} — multi-book disagreement`,
+      weight: penalty,
+    },
+  };
+}
+
+// ============================================================
 // Compute all game context scores at once
 // ============================================================
 
@@ -734,6 +944,39 @@ export function computeGameContext(
   const dataQualityPenalty = dq.penalty;
   if (dq.factor) factors.push(dq.factor);
 
+  // 10. Biophysical Injury Score (v5.3 - Factor 2)
+  const injury = computeBiophysicalInjuryScore(
+    context.practiceStatusHome,
+    context.practiceStatusAway,
+    context.dnpDaysHome,
+    context.dnpDaysAway,
+    context.injuryFreshnessHours,
+    pickedSide
+  );
+  const injuryScore = injury.score;
+  if (injury.factor) factors.push(injury.factor);
+
+  // 11. In-Season NGS Tracking Score (v5.3 - Factor 2)
+  const ngs = computeNgsTrackingScore(
+    context.ngsRyoeHome,
+    context.ngsRyoeAway,
+    context.ngsBoxStackedRateHome,
+    context.ngsBoxStackedRateAway,
+    context.trackingFreshnessMinutes,
+    pickedSide
+  );
+  const ngsTrackingScore = ngs.score;
+  if (ngs.factor) factors.push(ngs.factor);
+
+  // 12. Multi-Book Market Dispersion Penalty (v5.3 - Factor 3)
+  const disp = computeDispersionUncertaintyScore(
+    context.marketSpreadDispersion,
+    context.marketMlDispersion,
+    marketType
+  );
+  const dispersionScore = disp.penalty;
+  if (disp.factor) factors.push(disp.factor);
+
   return {
     lineMovementScore,
     restAdvantageScore,
@@ -747,6 +990,10 @@ export function computeGameContext(
     crossMarketScore,
     // v5
     scheduleStressScore,
+    // v5.3 (Factors 2 & 3)
+    injuryScore,
+    ngsTrackingScore,
+    dispersionScore,
     factors,
   };
 }

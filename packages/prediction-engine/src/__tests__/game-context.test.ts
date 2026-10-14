@@ -68,6 +68,9 @@ describe("computeGameContext — orchestrator", () => {
     expect(scores.crossMarketScore).toBe(0);
     expect(scores.uncertaintyPenalty).toBe(0);
     expect(scores.scheduleStressScore).toBe(0);
+    expect(scores.injuryScore).toBe(0);
+    expect(scores.ngsTrackingScore).toBe(0);
+    expect(scores.dispersionScore).toBe(0);
     // All directional/form signals are zero; the only non-zero field is the
     // data-quality score, which on empty input reflects default freshness credit
     // (dataFreshnessMinutes defaults to 0 → full 30 freshness pts, no coverage).
@@ -142,5 +145,60 @@ describe("computeGameContext — orchestrator", () => {
     expect(s.dataQualityPenalty).toBeLessThanOrEqual(0);
     expect(s.dataQualityScore).toBeGreaterThanOrEqual(0);
     expect(s.dataQualityScore).toBeLessThanOrEqual(100);
+    expect(s.injuryScore).toBeGreaterThanOrEqual(-5);
+    expect(s.injuryScore).toBeLessThanOrEqual(5);
+    expect(s.ngsTrackingScore).toBeGreaterThanOrEqual(-5);
+    expect(s.ngsTrackingScore).toBeLessThanOrEqual(5);
+    expect(s.dispersionScore).toBeGreaterThanOrEqual(-8);
+    expect(s.dispersionScore).toBeLessThanOrEqual(0);
+  });
+
+  it("applies positive biophysical score when opponent has DNP practice status (Factor 2)", () => {
+    const input: GameContextInput = {
+      practiceStatusHome: "FULL",
+      practiceStatusAway: "DNP",
+      injuryFreshnessHours: 24,
+    };
+    const home = computeGameContext(input, "SPREAD", "HOME");
+    expect(home.injuryScore).toBeGreaterThan(0);
+    expect(home.factors.some((f) => f.name === "Biophysical Injury Signal")).toBe(true);
+
+    const away = computeGameContext(input, "SPREAD", "AWAY");
+    expect(away.injuryScore).toBeLessThan(0);
+  });
+
+  it("gates biophysical score to zero when injury report is stale (>72 hours)", () => {
+    const input: GameContextInput = {
+      practiceStatusHome: "FULL",
+      practiceStatusAway: "DNP",
+      injuryFreshnessHours: 96,
+    };
+    const scores = computeGameContext(input, "SPREAD", "HOME");
+    expect(scores.injuryScore).toBe(0);
+    expect(scores.factors.some((f) => f.name === "Biophysical Injury Signal")).toBe(false);
+  });
+
+  it("rewards explosive RYOE differential when NGS tracking is fresh (Factor 2)", () => {
+    const input: GameContextInput = {
+      ngsRyoeHome: 120,
+      ngsRyoeAway: -10,
+      trackingFreshnessMinutes: 1440, // 24 hours
+    };
+    const home = computeGameContext(input, "SPREAD", "HOME");
+    expect(home.ngsTrackingScore).toBeGreaterThanOrEqual(2);
+    expect(home.factors.some((f) => f.name === "NGS Tracking Edge")).toBe(true);
+
+    const away = computeGameContext(input, "SPREAD", "AWAY");
+    expect(away.ngsTrackingScore).toBeLessThan(0);
+  });
+
+  it("penalizes multi-book spread dispersion >= 1.5 pts (Factor 3)", () => {
+    const input: GameContextInput = {
+      marketSpreadDispersion: 2.0,
+    };
+    const scores = computeGameContext(input, "SPREAD", "HOME");
+    expect(scores.dispersionScore).toBe(-5);
+    expect(scores.factors.some((f) => f.name === "Multi-Book Dispersion Penalty")).toBe(true);
   });
 });
+

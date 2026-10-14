@@ -130,11 +130,7 @@ export type PassCayBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_ngs_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
 
 export function bindPassCaySamples(
   rows: readonly CovariateRow[],
@@ -181,7 +177,7 @@ export function bindPassCaySamples(
         attempts: req.pass.attempts,
         yards: req.pass.yards,
         // Weekly NGS mean completed air yards — cell metadata from bus contract.
-        avgCompletedAirYards: { ...BUS_CELL, value: cay, knownAtWeek: row.week },
+        avgCompletedAirYards: { ...BUS_CELL, value: cay },
       },
     });
   }

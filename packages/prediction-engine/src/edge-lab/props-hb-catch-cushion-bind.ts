@@ -121,11 +121,7 @@ export type CatchCushionBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_ngs_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
 
 export function bindCatchCushionSamples(
   rows: readonly CovariateRow[],
@@ -172,7 +168,7 @@ export function bindCatchCushionSamples(
         targets: req.catch.targets,
         receptions: req.catch.receptions,
         // Weekly NGS mean cushion at catch point (yards) — cell metadata from bus contract.
-        avgCushion: { ...BUS_CELL, value: cushion, knownAtWeek: row.week },
+        avgCushion: { ...BUS_CELL, value: cushion },
       },
     });
   }

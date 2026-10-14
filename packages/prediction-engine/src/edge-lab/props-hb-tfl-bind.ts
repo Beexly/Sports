@@ -72,11 +72,7 @@ export type TflBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_pfr_def_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_pfr_def_mean" };
 
 /**
  * Bind PFR weekly-mean `tflRate` (from the covariate bus) into a batch
@@ -143,7 +139,7 @@ export function bindTflSamples(
         snaps: req.tfl.snaps,
         tfl: req.tfl.tfl,
         // Weekly PFR mean TFL rate (tfl per snap) — cell metadata from bus contract.
-        tflRate: { ...BUS_CELL, value: rate, knownAtWeek: row.week },
+        tflRate: { ...BUS_CELL, value: rate },
       },
     });
   }

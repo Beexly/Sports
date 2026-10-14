@@ -111,11 +111,7 @@ export type CatchSeparationBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_ngs_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
 
 /**
  * Bind NGS weekly-mean `avgSeparation` (from the covariate bus) into a batch
@@ -183,7 +179,7 @@ export function bindCatchSeparationSamples(
         targets: req.catch.targets,
         receptions: req.catch.receptions,
         // Weekly NGS mean separation at catch point (yards) — cell metadata from bus contract.
-        avgSeparation: { ...BUS_CELL, value: separation, knownAtWeek: row.week },
+        avgSeparation: { ...BUS_CELL, value: separation },
       },
     });
   }

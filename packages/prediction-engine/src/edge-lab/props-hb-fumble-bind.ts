@@ -57,10 +57,10 @@ export type FumbleBindResult =
       readonly refuse: "no_prior_row";
     };
 
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+const BUS_CELL: CovariateCell = {
+  value: 0,
   grain: "week_t_for_tplus1",
   provenance: "weekly_pfr_def_mean",
-  layer: "L2",
 };
 
 export function bindFumbleSamples(
@@ -94,7 +94,7 @@ export function bindFumbleSamples(
       sample: {
         touches: req.fumble.touches,
         fumbles: req.fumble.fumbles,
-        fumbleRate: { ...BUS_CELL, value: rate, knownAtWeek: row.week },
+        fumbleRate: { ...BUS_CELL, value: rate },
       },
     });
   }
