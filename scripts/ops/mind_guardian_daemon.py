@@ -198,7 +198,7 @@ def categorize(filename: str, text: str) -> str:
 _SENSITIVE_FILENAME = re.compile(
     r"(?i)(\bcredentials?\b|\bsecrets?\b|\bpasswords?\b|\bpasswd\b|client_secret|^\.?env(\s*\(\d+\))?\.txt$|^\.env|"
     r"\baccesskey(\s*\(\d+\))?\.csv$|^\d{13}\.txt$|"
-    r"\b(auth|access|bearer|refresh)[_-]?tokens?\b|\bapi[_-]?keys?\b|"
+    r"\b(auth|access|bearer|refresh|api)[_-]?tokens?\b|\bapi[_-]?keys?\b|"
     r"hf_env\.txt|\bid_rsa\b|\bprivate[_-]?key\b)"
 )
 
