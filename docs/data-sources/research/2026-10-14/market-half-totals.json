@@ -1,0 +1,35 @@
+{
+ "generated_utc": "2026-10-14T07:47:08.379846+00:00",
+ "margin": "game total (closing line vs actual combined score)",
+ "corpus": {
+  "n": 2622,
+  "train": 1835,
+  "held": 787,
+  "seasons": [
+   2015,
+   2024
+  ]
+ },
+ "market_implied_uncertainty": {
+  "sd_train_error": 13.32
+ },
+ "model_uncertainty": {
+  "sd_train_residual": 13.822,
+  "lean_line_corr": 0.9593
+ },
+ "held_out": {
+  "n": 787,
+  "market_logscore": 3.9769,
+  "naive_model_logscore": 4.0235,
+  "market_coverage_90": 0.9022,
+  "naive_model_coverage_90": 0.9034
+ },
+ "verdict_pending": "the naive team-lean model is the FLOOR model; the market half verdict requires a model whose held-out log-score BEATS the market at narrower width \u2014 the blend model (lean shrunk to line) is the next measurement",
+ "blend_model": {
+  "gamma_train_fit": 0.0,
+  "held_out_logscore": 3.9769,
+  "held_out_coverage_90": 0.9022,
+  "held_out_realized_sd": 12.886,
+  "note": "width uses the market sd (same uncertainty claim) so the log-score comparison isolates the LOCATION improvement; the width comparison (uncertainty strictly smaller) needs the model's own sd from train residuals"
+ }
+}

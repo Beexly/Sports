@@ -74,5 +74,12 @@
   "family_model": "AUC 0.846 wk7 / 0.879 wk8, blend delta +0.0377 held-out",
   "market_half": "PENDING \u2014 per-play market margin comparison needs the game-margin rollout",
   "final_flip": "STILL weight-0: both halves on the SAME margin required by VISION-CONTRACT"
+ },
+ "market_half": {
+  "status": "MEASURED ON THE TOTALS MARGIN \u2014 FLOOR MODEL DOES NOT BEAT THE MARKET",
+  "result": "naive team-lean totals model: held-out log-score 4.0235 vs market 3.9769; the closing line's implied uncertainty (sd 13.32) remains the bar",
+  "artifact": "docs/data-sources/research/2026-10-14/market-half-totals.json",
+  "contract_language": "if calibration holds but no margin beats the market, the module is a working state estimator and still not an edge \u2014 both facts get recorded",
+  "implication": "the vision module is a working estimator (calibration half passed, family replicated) and NOT yet an edge on a priced margin; per-play route-class information remains an unpriced-margin advantage"
  }
 }
