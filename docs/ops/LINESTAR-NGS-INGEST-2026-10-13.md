@@ -10,7 +10,7 @@ account). Raw payloads are committed next to each digest as evidence:
 | digest | rows | raw evidence |
 |---|---|---|
 | `docs/data-sources/research/2026-10-13/linestar/linestar_ownership_2026-10-13.json` (+ `.md`) | 22 | `raw_GetSalariesV5_period412.json`, `raw_robots_linestar.txt` |
-| `docs/data-sources/research/2026-10-13/ngs/ngs_statboard_2026-10-13.json` (+ `.md`) | 40 passing + 128 receiving = 168 | `raw_statboard_passing.json`, `raw_statboard_receiving.json`, `raw_robots_ngs.txt` |
+| `docs/data-sources/research/2026-10-13/ngs/ngs_statboard_2026-10-13.json` (+ `.md`) | 40 passing + 128 receiving + 53 rushing = 221 | `raw_statboard_passing.json`, `raw_statboard_receiving.json`, `raw_statboard_rushing.json`, `raw_robots_ngs.txt` |
 
 Both digest dirs were appended to the trainer feed:
 `python brain/feeds/append_day_feed.py --date 2026-10-13 --dirs docs/data-sources/research/2026-10-13/linestar docs/data-sources/research/2026-10-13/ngs`
@@ -159,19 +159,23 @@ avgCushion, avgIntendedAirYards, avgYAC, avgExpectedYAC, avgYACAboveExpectation,
 percentShareOfIntendedAirYards`.
 
 Row counts captured: **40 passing** (whole qualified leaderboard, sorted by `passYards` in the
-digest) and **128 receiving**.
+digest), **128 receiving**, and **53 rushing** (`threshold=25` rush attempts on 2026-10-13; after Week 5 MNF finalized on 2026-10-14, the cumulative league qualifier stepped to `threshold=30` attempts -> **42 rushing**, **37 passing**, **118 receiving**, all with 100% `player.gsisId` join).
 
-### 2.3 Repeatable recipe
+Rushing table adds: `rushAttempts, rushYards, rushTouchdowns, avgRushYards, avgTimeToLos, expectedRushYards, rushYardsOverExpected, rushYardsOverExpectedPerAtt, rushPctOverExpected, efficiency, percentAttemptsGteEightDefenders`.
+
+### 2.3 Repeatable recipe (cookie-warmed session)
 
 ```bash
-for t in passing receiving; do
-  curl -sS "https://nextgenstats.nfl.com/api/statboard/$t?season=2026&seasonType=REG" \
+curl -sS -c /tmp/ngs_cookies.txt 'https://nextgenstats.nfl.com/' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36' > /dev/null
+for t in passing receiving rushing leaders; do
+  curl -sS -b /tmp/ngs_cookies.txt "https://nextgenstats.nfl.com/api/statboard/$t?season=2026&seasonType=REG" \
     -H 'Accept: application/json' \
+    -H 'Referer: https://nextgenstats.nfl.com/' \
     -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36' \
     -o "statboard_$t.json"
   sleep 1   # 1 req/sec pacing, per ingest policy
 done
-python -c "import json;s=json.load(open('statboard_passing.json'));print(len(s['stats']),s['stats'][0]['playerName'],s['stats'][0]['passYards'])"
 ```
 
 ### 2.4 Parity note (do not double-count)
@@ -193,6 +197,7 @@ These are measured NFL tracking values, so they land as `MEASURED` `on_field` Si
 | `completionPercentageAboveExpectation` / `expectedCompletionPercentage` | `domain` | `"on_field"`, `metric` `"ngs_air_accuracy"`, `verification` `"MEASURED"` |
 | `avgTimeToThrow` | `domain` | `"on_field"`, `metric` `"ngs_ttt"`, `verification` `"MEASURED"` |
 | `avgIntendedAirYards`, `avgAirDistance`, `aggressiveness`, `avgCushion`, `avgYACAboveExpectation` | `domain` | `"on_field"`, same table, `verification` `"MEASURED"` |
+| `rushYardsOverExpected` (`RYOE`), `rushYardsOverExpectedPerAtt`, `percentAttemptsGteEightDefenders`, `avgTimeToLos`, `efficiency` | `domain` | `"on_field"`, `metric` `"ngs_ryoe_positive"` / `"ngs_ryoe_negative"` / `"ngs_stacked_box_pct"`, `verification` `"MEASURED"` (wired in `intelligence/reasoning/signals.py:signals_from_ngs_2026` at weight 0) |
 
 Provenance for each: `https://nextgenstats.nfl.com/api/statboard/<table>?season=2026&seasonType=REG`
 + `player.gsisId` + `generated_utc`. Direction: separation/air-accuracy above positional baseline →

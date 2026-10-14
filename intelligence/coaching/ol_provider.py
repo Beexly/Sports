@@ -60,6 +60,11 @@ class NflverseOLProvider(OLProvider):
         assert self._inj is not None and self._starters is not None
         season_weeks = self._inj.loc[self._inj["season"] == int(season), "week"]
         published = set(int(w) for w in season_weeks.unique())
+        team_weeks = self._inj.loc[
+            (self._inj["season"] == int(season)) & (self._inj["team"] == team),
+            "week",
+        ]
+        team_published = set(int(w) for w in team_weeks.unique())
         requested = int(week)
         used_week = requested
         fallback_note = ""
@@ -86,6 +91,20 @@ class NflverseOLProvider(OLProvider):
                 f"week {used_week} may have returned or new injuries may have "
                 f"landed since - treat as a floor on continuity, not a report. "
             )
+        elif requested not in team_published:
+            # Partial week release (e.g. TNF teams SEA/DEN published for Week 6
+            # on Wednesday while Sunday/Monday teams are not yet in the file).
+            # Fall back to the most recent week published for THIS team rather
+            # than silently treating an unpublished team report as 0 OL injuries.
+            prior_team = sorted(w for w in (team_published or published) if w < requested)
+            if prior_team:
+                used_week = prior_team[-1]
+                fallback_note = (
+                    f"requested week {requested} partially published upstream (not yet "
+                    f"released for {team}); using week {used_week} (most recent "
+                    f"available for {team}). Treat as a floor on continuity, not a "
+                    f"final week-{requested} report. "
+                )
         five = self._starters[self._starters["team"] == team]
         if len(five) < 5:
             raise DataGapError(

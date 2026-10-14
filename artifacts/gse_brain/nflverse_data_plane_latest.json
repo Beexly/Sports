@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-14T14:00:17.230361+00:00",
+ "generated_utc": "2026-10-14T14:52:45.516079+00:00",
  "source": "nflverse_data_plane_catalog",
  "core_play_level_source": "intelligence/coaching/data/play_by_play_2026.parquet",
  "play_level_source_matrix": [
@@ -241,7 +241,7 @@
   "injuries_2026": {
    "path": "intelligence/coaching/data/injuries_2026.parquet",
    "status": "INGESTED_PARQUET",
-   "rows": 1413,
+   "rows": 1428,
    "cols": 16,
    "seasons": [
     2026
@@ -251,7 +251,8 @@
     2,
     3,
     4,
-    5
+    5,
+    6
    ],
    "joins_on": [
     "gsis_id",
@@ -260,12 +261,12 @@
    ],
    "weight": 0.0,
    "validation_spec_met": false,
-   "honesty_note": "Keyless nflverse release parquet (1413 rows, 16 cols); weight=0.0 until validation spec met."
+   "honesty_note": "Keyless nflverse release parquet (1428 rows, 16 cols); weight=0.0 until validation spec met."
   },
   "depth_charts_2026": {
    "path": "intelligence/coaching/data/depth_charts_2026.parquet",
    "status": "INGESTED_PARQUET",
-   "rows": 594789,
+   "rows": 650071,
    "cols": 12,
    "seasons": [],
    "weeks": [],
@@ -276,7 +277,7 @@
    ],
    "weight": 0.0,
    "validation_spec_met": false,
-   "honesty_note": "Keyless nflverse release parquet (594789 rows, 12 cols); weight=0.0 until validation spec met."
+   "honesty_note": "Keyless nflverse release parquet (650071 rows, 12 cols); weight=0.0 until validation spec met."
   },
   "pbp_participation_2025": {
    "path": "intelligence/coaching/data/pbp_participation_2025.parquet",

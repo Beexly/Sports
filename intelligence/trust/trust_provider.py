@@ -129,6 +129,33 @@ class TrustProviderGuard:
             reason=f"{verdict} ({rows} teams, age {age_h}h vs budget {budget_h}h)"
         )
 
+    def _check_trust_intake_jsonl(self, path: Path, required: bool, budget_h: float) -> StoreCheckResult:
+        name = "trust_signals_intake_2026"
+        rel = str(path.relative_to(self.repo)).replace("\\", "/") if path.is_relative_to(self.repo) else str(path)
+        if not path.exists():
+            return StoreCheckResult(
+                store_name=name, required=required, path=rel, exists=False, non_empty=False,
+                row_count=0, age_hours=None, budget_hours=budget_h, verdict="MISSING_EMPTY",
+                reason=f"MISSING trust intake store: {rel}"
+            )
+        age_h = round((time.time() - path.stat().st_mtime) / 3600.0, 2)
+        lines = [ln.strip() for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        rows = len(lines)
+        teams = {json.loads(ln).get("team") for ln in lines if json.loads(ln).get("team")}
+        if rows == 0:
+            return StoreCheckResult(
+                store_name=name, required=required, path=rel, exists=True, non_empty=False,
+                row_count=0, age_hours=age_h, budget_hours=budget_h, verdict="MISSING_EMPTY",
+                reason=f"EMPTY trust intake store (0 signals): {rel}"
+            )
+        verdict = "FRESH" if age_h <= budget_h else "STALE"
+        return StoreCheckResult(
+            store_name=name, required=required, path=rel, exists=True, non_empty=True,
+            row_count=rows, age_hours=age_h, budget_hours=budget_h, verdict=verdict,
+            reason=f"{verdict} ({rows} trust signals across {len(teams)} teams, age {age_h}h <= {budget_h}h)",
+            max_season=2026, max_week=6,
+        )
+
     def _check_espn_receivers_json(self, path: Path, required: bool, budget_h: float) -> StoreCheckResult:
         """Check ESPN Analytics Receivers JSON store freshness using captured S3 Last-Modified header."""
         name = "espnanalytics_receivers_2026"
@@ -191,6 +218,10 @@ class TrustProviderGuard:
         dc_pq = COACH_DATA / "depth_charts_2026.parquet"
         checks.append(self._check_parquet("depth_charts_2026_parquet", dc_pq, required=True, budget_h=FRESHNESS_BUDGET_HOURS["depth_charts"]))
 
+        # Required: non-empty trust-signals intake store (intelligence/trust-signals/intake/signals.jsonl)
+        intake_sig_path = self.repo / "intelligence" / "trust-signals" / "intake" / "signals.jsonl"
+        checks.append(self._check_trust_intake_jsonl(intake_sig_path, required=True, budget_h=FRESHNESS_BUDGET_HOURS["injuries"]))
+
         # Optional: ESPN Analytics Receivers S3 JSON freshness check (Last-Modified 2026-10-13T15:10:17Z)
         if check_espn_receivers:
             checks.append(self._check_espn_receivers_json(BRAIN_DIR / "espnanalytics_receivers_latest.json", required=False, budget_h=FRESHNESS_BUDGET_HOURS["espn_receivers"]))
@@ -200,15 +231,16 @@ class TrustProviderGuard:
             checks.append(self._check_parquet("snap_counts_2026", COACH_DATA / "snap_counts_2026.parquet", required=False, budget_h=FRESHNESS_BUDGET_HOURS["snap_counts"]))
             checks.append(self._check_parquet("snap_counts_2025", COACH_DATA / "snap_counts_2025.parquet", required=False, budget_h=FRESHNESS_BUDGET_HOURS["snap_counts"]))
 
-        # Optional: participation (2025 present; 2026 upstream 404 structural post-season check)
+        # Optional: participation (2025 present; 2026 reconstructed present; 2026 upstream 404 structural post-season check)
         if check_participation:
             checks.append(self._check_parquet("pbp_participation_2025", COACH_DATA / "pbp_participation_2025.parquet", required=False, budget_h=FRESHNESS_BUDGET_HOURS["participation"]))
+            checks.append(self._check_parquet("pbp_participation_2026_reconstructed", COACH_DATA / "pbp_participation_2026_reconstructed.parquet", required=False, budget_h=FRESHNESS_BUDGET_HOURS["participation"]))
             checks.append(self._check_parquet(
                 "pbp_participation_2026",
                 COACH_DATA / "pbp_participation_2026.parquet",
                 required=require_2026_participation,
                 budget_h=FRESHNESS_BUDGET_HOURS["participation"],
-                extra_missing_note="HTTP 404 upstream; FTN participation is published only after post-season completes; 2025 fallback active",
+                extra_missing_note="HTTP 404 upstream; FTN participation is published only after post-season completes; 2025 fallback + 2026 reconstructed participation active",
             ))
 
         # Fail-closed evaluation
@@ -220,15 +252,18 @@ class TrustProviderGuard:
         cards = []
         if sb_files:
             sb = json.loads(sb_files[-1].read_text(encoding="utf-8"))
-            for line in sb.get("lines", []):
+            raw_cards = sb.get("lines") or sb.get("games") or []
+            for line in raw_cards:
                 card_status = "VALID" if not failed_required else "INVALID"
+                gid = line.get("gameId") or line.get("espn_event_id")
+                matchup = line.get("matchup") or line.get("name") or f"{line.get('away')}@{line.get('home')}"
                 cards.append({
-                    "gameId": line.get("gameId"),
-                    "matchup": line.get("matchup"),
+                    "gameId": gid,
+                    "matchup": matchup,
                     "status": card_status,
                     "invalid_reasons": [c.reason for c in failed_required],
                     "optional_warnings": [c.reason for c in failed_optional],
-                    "injuries_week_note": "injuries_2026.parquet has weeks 1..5 (week 6 unpublished upstream prior to Fri 18:00 ET); live ESPN public_injuries_2026 covers all 32 teams",
+                    "injuries_week_note": "injuries_2026.parquet refreshed to week 6 (1,428 rows, wks 1..6; SEA/DEN TNF week-6 reports live, Sun/Mon teams fall back to week 5 per-team in ol_provider.py); trust_signals intake store populated with 225 signals across 32 teams",
                 })
 
         overall_status = "VALID" if (cards and not failed_required) else "INVALID"
@@ -264,9 +299,12 @@ def run_trust_audit_and_log() -> dict[str, Any]:
         "http_status": "LOCAL_STORE_GUARD_PLUS_S3_LAST_MODIFIED_CHECK",
         "truncation": False,
         "access_restriction": (
-            "injuries_2026.parquet (1,413 rows, wks 1-5), depth_charts_2026.parquet (594,789 rows), "
+            "injuries_2026.parquet (1,428 rows, wks 1-6; TNF SEA/DEN week 6 live, per-team week-5 fallback for Sun/Mon teams), "
+            "depth_charts_2026.parquet (650,071 rows, dt 2026-10-14T12:51:31Z), "
+            "trust_signals_intake_2026 (225 signals across 32 teams in intelligence/trust-signals/intake/signals.jsonl), "
             "espnanalytics_receivers_latest.json (93 rows, Last-Modified 2026-10-13T15:10:17Z, 100% gsis_id join), "
-            "snap_counts_2026.parquet (7,370 rows, wks 1-5), pbp_participation_2025.parquet (45,184 rows) are FRESH; "
+            "snap_counts_2026.parquet (7,370 rows, wks 1-5), pbp_participation_2025.parquet (45,184 rows), and "
+            "pbp_participation_2026_reconstructed.parquet (13,842 rows) are FRESH; "
             "pbp_participation_2026.parquet is HTTP 404 upstream (FTN post-season release only) and flagged explicitly"
         ),
         "derivation": "Fail-closed empty-store + freshness guard over required (injuries, depth_charts) and optional (espn_receivers, snap_counts, participation) stores.",

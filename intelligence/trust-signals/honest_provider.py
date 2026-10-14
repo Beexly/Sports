@@ -55,7 +55,8 @@ class HonestTrustSignalProvider:
                 f"{self.root} empty) - never-ran is DATA-GAP, not CLEAR")
         if self._inner is not None:
             return self._inner.get_trust_signals(team, week, season)
-        return self._store_signals(team)
+        from .provider import FileStoreTrustSignalProvider
+        return FileStoreTrustSignalProvider(store=self._store).get_trust_signals(team, week, season)
 
     def _store_signals(self, team: str) -> list:
         return self._store.signals_for_team(team)
