@@ -18,7 +18,15 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("../refresh-odds.js", () => ({ refreshOdds: mocks.refreshOdds }));
 vi.mock("../seed-games-from-espn.js", () => ({ seedGamesFromEspn: mocks.seedGamesFromEspn }));
-vi.mock("../generate-signal-slate.js", () => ({ generateSignalSlate: mocks.generateSignalSlate }));
+vi.mock("../generate-signal-slate.js", () => ({
+  generateSignalSlate: mocks.generateSignalSlate,
+  zeroSignalSlate: (note: string) => ({ picksUpserted: 0, gamesConsidered: 0, note }),
+}));
+// Emission lock is covered in walk-forward-emission-lock.test.ts; here the gate is open
+// so these C-109 governor tests still exercise the slate call.
+vi.mock("../walk-forward-gate.js", () => ({
+  readWalkForwardGate: () => ({ open: true, reason: "open", path: null, detail: "test" }),
+}));
 vi.mock("@sports/data-ingestion", () => ({
   oddsApiKeyPresence: () => ({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
   rundownApiKeyPresence: () => ({ present: false, matchedEnv: null }),

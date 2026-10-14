@@ -7,9 +7,10 @@ import {
   rundownApiKeyPresence,
 } from "@sports/data-ingestion";
 import { refreshOdds, type RefreshOddsResult } from "./refresh-odds.js";
-import { generateSignalSlate, type SignalSlateResult } from "./generate-signal-slate.js";
+import { generateSignalSlate, zeroSignalSlate, type SignalSlateResult } from "./generate-signal-slate.js";
 import { seedGamesFromEspn, type SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
 import { slateAssociationTrace } from "./slate-association.js";
+import { readWalkForwardGate } from "./walk-forward-gate.js";
 
 export type BoardFillResult = {
   readonly ok: boolean;
@@ -28,6 +29,9 @@ export type BoardFillResult = {
 export async function runBoardFillPipeline(opts?: {
   readonly sport?: string;
   readonly logPrefix?: string;
+  /** Override for the walk-forward gate file path (tests). */
+  readonly walkForwardGatePath?: string;
+  readonly now?: Date;
 }): Promise<BoardFillResult> {
   const logPrefix = opts?.logPrefix ?? "[board-fill]";
   const oddsPresence = oddsApiKeyPresence();
@@ -42,12 +46,21 @@ export async function runBoardFillPipeline(opts?: {
 
   // 3) Independent signal slate (no book labels). The slate mints only on a
   // stored association trace (see slate-association.ts) — fail-closed.
-  const signals = await generateSignalSlate({
-    logPrefix: `${logPrefix}:signal`,
-    // games already seeded; avoid nested re-seed loop
-    skipSeed: true,
-    trace: await slateAssociationTrace(),
-  });
+  // Walk-forward emission lock: missing / stale / unparseable / passed!==true
+  // -> the slate is never invoked and the 0-object is emitted.
+  const wfGate = readWalkForwardGate({ path: opts?.walkForwardGatePath, now: opts?.now });
+  const signals: SignalSlateResult = wfGate.open
+    ? await generateSignalSlate({
+        logPrefix: `${logPrefix}:signal`,
+        // games already seeded; avoid nested re-seed loop
+        skipSeed: true,
+        trace: await slateAssociationTrace(),
+        ...(opts?.walkForwardGatePath ? { walkForwardGatePath: opts.walkForwardGatePath } : {}),
+        ...(opts?.now ? { now: opts.now } : {}),
+      })
+    : zeroSignalSlate(`signals refused: walk-forward gate closed (${wfGate.reason})`, [
+        `walk-forward gate ${wfGate.reason}: ${wfGate.detail}`,
+      ]);
 
   const ok = odds.ok || signals.picksUpserted > 0 || seed.upserted > 0;
   const note =

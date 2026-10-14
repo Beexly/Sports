@@ -1,0 +1,819 @@
+{
+ "label": "DIAGNOSTIC -- Step 0 baseline reproduction attempt; NOT REPRODUCED; feature scoring (RIL/OLCD/PSR/PFE/CTF) halted per handoff",
+ "target": {
+  "n": 2462,
+  "crps_gaussian": 7.154021,
+  "source": "Garrett handoff t811u 2026-10-14"
+ },
+ "harness_prior": {
+  "n": 2494,
+  "filter": "games.csv seasons 2017-2025 all game types (2016 warm-up), score+spread present",
+  "sigma": 13.45,
+  "crps": 7.1485
+ },
+ "method": "closed-form Gaussian CRPS of (home_score-away_score-spread_line), mu=close, grid over season windows 2014-2018..2024/2025, REG vs ALL, sigma in {13.0,13.45,13.5,14.0,RMS-fitted}; plus single-filter drops on 2017-2025",
+ "games_csv_sha256": "5db5edcd5a26fe4d74f0c52014fe187288122d1a6aa16fdf5b514d899d49f82f",
+ "result": "no tested filter yields n=2462; closest CRPS matches occur at other n (2383 REG 2017-25 s13.45 -> 7.156879; 2127 REG 2018-25 s14 -> 7.154646)",
+ "grid": [
+  {
+   "n": 3010,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.219746
+  },
+  {
+   "n": 3010,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.211969
+  },
+  {
+   "n": 3010,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.22085
+  },
+  {
+   "n": 3010,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.234428
+  },
+  {
+   "n": 3010,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 12.924,
+   "crps_gaussian": 7.211051
+  },
+  {
+   "n": 2879,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.225948
+  },
+  {
+   "n": 2879,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.2183
+  },
+  {
+   "n": 2879,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.227038
+  },
+  {
+   "n": 2879,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.240481
+  },
+  {
+   "n": 2879,
+   "seasons_lo": 2014,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 12.937,
+   "crps_gaussian": 7.217542
+  },
+  {
+   "n": 3295,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.193706
+  },
+  {
+   "n": 3295,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.185719
+  },
+  {
+   "n": 3295,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.194834
+  },
+  {
+   "n": 3295,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.208659
+  },
+  {
+   "n": 3295,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 12.867,
+   "crps_gaussian": 7.184123
+  },
+  {
+   "n": 3151,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.20113
+  },
+  {
+   "n": 3151,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.19332
+  },
+  {
+   "n": 3151,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.202239
+  },
+  {
+   "n": 3151,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.215882
+  },
+  {
+   "n": 3151,
+   "seasons_lo": 2014,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 12.881,
+   "crps_gaussian": 7.191918
+  },
+  {
+   "n": 2743,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.132557
+  },
+  {
+   "n": 2743,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.123193
+  },
+  {
+   "n": 2743,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.133835
+  },
+  {
+   "n": 2743,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.149137
+  },
+  {
+   "n": 2743,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 12.769,
+   "crps_gaussian": 7.119927
+  },
+  {
+   "n": 2623,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.134959
+  },
+  {
+   "n": 2623,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.125623
+  },
+  {
+   "n": 2623,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.136235
+  },
+  {
+   "n": 2623,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.151509
+  },
+  {
+   "n": 2623,
+   "seasons_lo": 2015,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 12.776,
+   "crps_gaussian": 7.122452
+  },
+  {
+   "n": 3028,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.112427
+  },
+  {
+   "n": 3028,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.102984
+  },
+  {
+   "n": 3028,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.113715
+  },
+  {
+   "n": 3028,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.129124
+  },
+  {
+   "n": 3028,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 12.721,
+   "crps_gaussian": 7.099129
+  },
+  {
+   "n": 2895,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.116496
+  },
+  {
+   "n": 2895,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.107141
+  },
+  {
+   "n": 2895,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.117775
+  },
+  {
+   "n": 2895,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.133094
+  },
+  {
+   "n": 2895,
+   "seasons_lo": 2015,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 12.729,
+   "crps_gaussian": 7.103438
+  },
+  {
+   "n": 2476,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.117373
+  },
+  {
+   "n": 2476,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.107588
+  },
+  {
+   "n": 2476,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.118697
+  },
+  {
+   "n": 2476,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.134443
+  },
+  {
+   "n": 2476,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 12.748,
+   "crps_gaussian": 7.103836
+  },
+  {
+   "n": 2367,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.124422
+  },
+  {
+   "n": 2367,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.114691
+  },
+  {
+   "n": 2367,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.12574
+  },
+  {
+   "n": 2367,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.141424
+  },
+  {
+   "n": 2367,
+   "seasons_lo": 2016,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 12.765,
+   "crps_gaussian": 7.111177
+  },
+  {
+   "n": 2761,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.096864
+  },
+  {
+   "n": 2761,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.087036
+  },
+  {
+   "n": 2761,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.098194
+  },
+  {
+   "n": 2761,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.114012
+  },
+  {
+   "n": 2761,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 12.697,
+   "crps_gaussian": 7.082661
+  },
+  {
+   "n": 2639,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.105254
+  },
+  {
+   "n": 2639,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.095544
+  },
+  {
+   "n": 2639,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.106571
+  },
+  {
+   "n": 2639,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.122261
+  },
+  {
+   "n": 2639,
+   "seasons_lo": 2016,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 12.715,
+   "crps_gaussian": 7.09145
+  },
+  {
+   "n": 2209,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.178123
+  },
+  {
+   "n": 2209,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.169357
+  },
+  {
+   "n": 2209,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.179335
+  },
+  {
+   "n": 2209,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.193975
+  },
+  {
+   "n": 2209,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 12.863,
+   "crps_gaussian": 7.167474
+  },
+  {
+   "n": 2111,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.185023
+  },
+  {
+   "n": 2111,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.176346
+  },
+  {
+   "n": 2111,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.186225
+  },
+  {
+   "n": 2111,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.200769
+  },
+  {
+   "n": 2111,
+   "seasons_lo": 2017,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 12.879,
+   "crps_gaussian": 7.17468
+  },
+  {
+   "n": 2494,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.148476
+  },
+  {
+   "n": 2494,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.139546
+  },
+  {
+   "n": 2494,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.149707
+  },
+  {
+   "n": 2494,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.164553
+  },
+  {
+   "n": 2494,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 12.794,
+   "crps_gaussian": 7.136786
+  },
+  {
+   "n": 2383,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.156879
+  },
+  {
+   "n": 2383,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.148104
+  },
+  {
+   "n": 2383,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.158093
+  },
+  {
+   "n": 2383,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.172774
+  },
+  {
+   "n": 2383,
+   "seasons_lo": 2017,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 12.811,
+   "crps_gaussian": 7.145603
+  },
+  {
+   "n": 1942,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.159624
+  },
+  {
+   "n": 1942,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.150568
+  },
+  {
+   "n": 1942,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.160868
+  },
+  {
+   "n": 1942,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.175816
+  },
+  {
+   "n": 1942,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "ALL",
+   "sigma": 12.824,
+   "crps_gaussian": 7.148105
+  },
+  {
+   "n": 1855,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.167727
+  },
+  {
+   "n": 1855,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.158731
+  },
+  {
+   "n": 1855,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.168964
+  },
+  {
+   "n": 1855,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.183846
+  },
+  {
+   "n": 1855,
+   "seasons_lo": 2018,
+   "seasons_hi": 2024,
+   "game_type": "REG",
+   "sigma": 12.844,
+   "crps_gaussian": 7.156535
+  },
+  {
+   "n": 2227,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.45,
+   "crps_gaussian": 7.12879
+  },
+  {
+   "n": 2227,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.0,
+   "crps_gaussian": 7.119588
+  },
+  {
+   "n": 2227,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 13.5,
+   "crps_gaussian": 7.130051
+  },
+  {
+   "n": 2227,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 14.0,
+   "crps_gaussian": 7.145191
+  },
+  {
+   "n": 2227,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "ALL",
+   "sigma": 12.752,
+   "crps_gaussian": 7.116215
+  },
+  {
+   "n": 2127,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.45,
+   "crps_gaussian": 7.138407
+  },
+  {
+   "n": 2127,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.0,
+   "crps_gaussian": 7.129342
+  },
+  {
+   "n": 2127,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 13.5,
+   "crps_gaussian": 7.139653
+  },
+  {
+   "n": 2127,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 14.0,
+   "crps_gaussian": 7.154646
+  },
+  {
+   "n": 2127,
+   "seasons_lo": 2018,
+   "seasons_hi": 2025,
+   "game_type": "REG",
+   "sigma": 12.772,
+   "crps_gaussian": 7.126274
+  }
+ ]
+}

@@ -42,6 +42,7 @@ import { stalenessBlockers } from "./signal-staleness.js";
 import { envWithStoredSignals } from "./stored-signal-env-bridge.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
+import { readWalkForwardGate } from "./walk-forward-gate.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -245,7 +246,32 @@ export function buildSignalReasoning(input: {
 /**
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
  */
+/** The 0-object: what the slate emits whenever the walk-forward gate is closed. */
+export function zeroSignalSlate(note: string, errors: readonly string[] = []): SignalSlateResult {
+  return {
+    ok: false,
+    gamesConsidered: 0,
+    candidatesWithIndependents: 0,
+    picksUpserted: 0,
+    picksSkipped: 0,
+    fixtureUnconfirmed: 0,
+    skippedInPlay: 0,
+    seriesRepeatsSkipped: 0,
+    mindWithheld: 0,
+    errors,
+    note,
+  };
+}
+
 export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<SignalSlateResult> {
+  // Walk-forward emission lock: checked before ANY db access, so a closed gate
+  // can never reach db.pick.create / db.pick.updateMany.
+  const wfGate = readWalkForwardGate({ path: opts?.walkForwardGatePath, now: opts?.now });
+  if (!wfGate.open) {
+    return zeroSignalSlate(`slate refused: walk-forward gate closed (${wfGate.reason})`, [
+      `walk-forward gate ${wfGate.reason}: ${wfGate.detail}`,
+    ]);
+  }
   if (!opts?.trace || opts.trace.conclusion !== "ASSOCIATION_ONLY") {
     return {
       ok: false,

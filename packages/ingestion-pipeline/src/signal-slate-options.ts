@@ -27,5 +27,7 @@ export type SignalSlateOptions = {
    * missing from the map, means the mind was not asked. Those games are minted
    * exactly as they are without this field.
    */
+  /** Override for the walk-forward gate file path (tests); default resolves dfs/walk_forward/walk_forward.json. */
+  readonly walkForwardGatePath?: string;
   readonly mindByGameId?: ReadonlyMap<string, MindVerdict>;
 };
