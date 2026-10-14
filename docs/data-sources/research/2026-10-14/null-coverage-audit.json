@@ -1,0 +1,186 @@
+{
+ "generated_utc": "2026-10-14T06:07:13.078004+00:00",
+ "host": "BEEXLY (this machine)",
+ "fields": [
+  {
+   "source": "pbp_participation_2025",
+   "field": "offense_formation",
+   "non_null": 36076,
+   "total": 45184,
+   "null_pct": 20.2,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "defense_coverage_type",
+   "non_null": 22055,
+   "total": 45184,
+   "null_pct": 51.2,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "defense_man_zone_type",
+   "non_null": 45175,
+   "total": 45184,
+   "null_pct": 0.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "route",
+   "non_null": 45175,
+   "total": 45184,
+   "null_pct": 0.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "was_pressure",
+   "non_null": 45175,
+   "total": 45184,
+   "null_pct": 0.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "number_of_pass_rushers",
+   "non_null": 45175,
+   "total": 45184,
+   "null_pct": 0.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "ngs_air_yards",
+   "non_null": 0,
+   "total": 45184,
+   "null_pct": 100.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "time_to_throw",
+   "non_null": 19378,
+   "total": 45184,
+   "null_pct": 57.1,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "offense_numbers",
+   "non_null": 45184,
+   "total": 45184,
+   "null_pct": 0.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "pbp_participation_2025",
+   "field": "defense_numbers",
+   "non_null": 45184,
+   "total": 45184,
+   "null_pct": 0.0,
+   "freshness_hours": 0.1,
+   "note": "identity/coverage backbone, 2025 season"
+  },
+  {
+   "source": "injuries_2026",
+   "field": "report_status",
+   "non_null": 601,
+   "total": 1413,
+   "null_pct": 57.5,
+   "freshness_hours": 0.1,
+   "note": "weeks 1-5; week 6 unpublished (Fri 18:00 ET rule) - OL provider falls back labeled"
+  },
+  {
+   "source": "depth_charts_2026",
+   "field": "gsis_id",
+   "non_null": 567993,
+   "total": 594789,
+   "null_pct": 4.5,
+   "freshness_hours": 124.2,
+   "note": "starter identity for OL continuity"
+  },
+  {
+   "source": "weather-stadium-pilot",
+   "field": "air_density_kg_m3",
+   "non_null": 8,
+   "total": 8,
+   "null_pct": 0.0,
+   "freshness_hours": 10.0,
+   "note": "venue-level; kickoff-bucket forecast, not in-game"
+  },
+  {
+   "source": "weather-stadium-pilot",
+   "field": "wind_kmh",
+   "non_null": 8,
+   "total": 8,
+   "null_pct": 0.0,
+   "freshness_hours": 10.0,
+   "note": ""
+  },
+  {
+   "source": "kalshi_full_slate",
+   "field": "two_sided_prices",
+   "non_null": 56,
+   "total": 56,
+   "null_pct": 0.0,
+   "freshness_hours": 0.2,
+   "note": "h2h only; NO order-book depth/limits (displayed prices)"
+  },
+  {
+   "source": "kalshi_full_slate",
+   "field": "order_book_depth_limits",
+   "non_null": 0,
+   "total": 56,
+   "null_pct": 100.0,
+   "freshness_hours": 0.2,
+   "note": "NULL >50%: queue position and resting-order size are not exposed keylessly - CONFIRMED gap"
+  },
+  {
+   "source": "action-network",
+   "field": "displayed_prices",
+   "non_null": 408,
+   "total": 408,
+   "null_pct": 0.0,
+   "freshness_hours": 3.3,
+   "note": "6 books incl DK/FD/BR/MGM; synthetic Consensus/Open excluded upstream"
+  },
+  {
+   "source": "action-network",
+   "field": "limits_or_order_state",
+   "non_null": 0,
+   "total": 408,
+   "null_pct": 100.0,
+   "freshness_hours": 3.3,
+   "note": "NULL >50%: displayed prices only - CONFIRMED gap"
+  },
+  {
+   "source": "film_shadow_ledger",
+   "field": "validation_spec_met",
+   "non_null": 1,
+   "total": 12,
+   "null_pct": 91.7,
+   "freshness_hours": 0.0,
+   "note": "crossed rows; dry-run calibration only - real footage pending"
+  },
+  {
+   "source": "trust-signals-intake",
+   "field": "signals",
+   "non_null": 0,
+   "total": 1,
+   "null_pct": 100.0,
+   "freshness_hours": null,
+   "note": "never populated - provider correctly reports DATA-GAP; this is the known empty store"
+  }
+ ]
+}
