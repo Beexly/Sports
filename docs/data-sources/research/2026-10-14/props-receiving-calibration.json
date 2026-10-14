@@ -1,0 +1,20 @@
+{
+ "test": "shrunk-lognormal prior calibration on 2026 receiving yards (expanding, leak-free)",
+ "n": 570,
+ "containment_50": 0.3982,
+ "containment_90": 0.7526,
+ "pooled_error_sd": 31.82,
+ "note": "first cut (sd floor 8) contained only 30.7% at the 50% band \u2014 the falsifier caught its own model being overconfident; recalibrated with pooled shrinkage",
+ "two_part_gamma": {
+  "n": 570,
+  "containment_50": 0.6421,
+  "containment_90": 0.8421,
+  "quiet_game_rate_global": 0.34296875,
+  "note": "lognormal shape was wrong (34.3% quiet games); two-part quiet x gamma improves 50% band 0.398->X, still short of nominal \u2014 heavy heterogeneity across players remains"
+ },
+ "assessment": {
+  "50pct_band": "0.642 \u2014 over-covers (model slightly wide in the middle)",
+  "90pct_band": "0.842 \u2014 within reach of the contract's 0.85-0.95 bar, needs one more refinement pass (player-level quiet-rate weighting)",
+  "structural_finding": "receiving yards are a TWO-PART distribution: 34.3% quiet games break any single lognormal; the falsifier caught the one-part model being overconfident (30.7% containment) \u2014 this is the measured shape the prop falsifier must use"
+ }
+}
