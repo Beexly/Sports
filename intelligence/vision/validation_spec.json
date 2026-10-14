@@ -1,0 +1,73 @@
+{
+ "signal_family": "identity_loop",
+ "spec_version": "1.0",
+ "defined_at": "2026-10-14",
+ "defined_by": "founder directive + GSE implementation",
+ "status": "SPECIFIED — evaluation harness executable; real-tracklet run pending footage",
+
+ "criteria": {
+  "join_completeness": {
+   "threshold": 0.95,
+   "definition": "For plays where a tracklet is visible AND a jersey is readable, the fraction that join to a roster player_id AND then to an nflverse participation row, on the same game_id + play_id.",
+   "denominator_rule": "Plays with no readable jersey are EXCLUDED (honestly skipped), not failed.",
+   "measured_on": "player-plays, not frames"
+  },
+  "join_accuracy": {
+   "threshold": 0.98,
+   "definition": "On a manually labeled sample of >=200 player-plays, joined player_id matches true roster identity.",
+   "ground_truth": "manual label sample; cross-checkable against depth_charts gsis_id",
+   "measured_on": "player-plays"
+  },
+  "temporal_alignment": {
+   "threshold": "exact game_id + play_id; play-index tolerance +/-1",
+   "definition": "The join keys must match the nflverse play within +/-1 play index. Systematic off-by-one FAILS.",
+   "test": "for each joined row, re-resolve the play in PBP; a join whose (game_id, play_id) has no PBP twin is misaligned"
+  },
+  "no_silent_imputation": {
+   "threshold": "0 guessed identities",
+   "definition": "OCR below declared confidence threshold, or multiple roster players sharing a jersey in that game, returns NULL + logs the reason. Any guessing path fails.",
+   "implementation": "identity_join.py refuses on column-length mismatch; join_nflverse_when_identity returns null+reason on missing jersey; both paths log"
+  },
+  "downstream_calibration_check": {
+   "threshold": "post-join film features must IMPROVE or be NEUTRAL to held-out log-score; degradation FAILS even if the join is accurate",
+   "measurement": "reliability/log-score comparison on a held-out week, with vs without recomputed player-level features (route mix, avg separation)",
+   "baseline": "docs/data-sources/research/2026-10-14/reliability-baseline.json (log-score -0.6162 regular / -0.5867 enriched)"
+  },
+  "freshness_bound": {
+   "threshold": "joined row available to the decision layer before the relevant market moves more than the declared threshold",
+   "measurement": "join timestamp vs market-move timestamp (kalshi_full_slate captures at N-minute cadence)",
+   "late_rule": "late joins are marked STALE and do not count toward join_completeness"
+  }
+ },
+
+ "not_required": [
+  "every tracklet identified - anonymous tracklets keep team-level features or are dropped",
+  "film features at nonzero weight in the final model - the spec only PERMITS consideration",
+  "real-time performance on first pass - batch validation on historical film flips the flag; latency is a separate freshness gate"
+ ],
+
+ "flip_artifact_schema": {
+  "signal_family": "identity_loop",
+  "held_out_games": ["<game_id>", "..."],
+  "join_completeness": 0.97,
+  "join_accuracy": 0.99,
+  "temporal_alignment_ok": true,
+  "silent_imputation_count": 0,
+  "calibration_delta_log_score": "+0.012 or 'neutral'",
+  "validation_spec_met": true,
+  "validated_at": "<timestamp>",
+  "validated_by": "<process or human id>"
+ },
+
+ "primary_source": {
+  "name": "nflverse",
+  "license": "CC-BY-4.0",
+  "access": "nfl_data_py / nflreadpy / direct parquet from nflverse-data releases",
+  "verified_on_this_host": {
+   "pbp_2026_parquet": "present, 8,497 rows, weeks 1-4 at fetch time; all identity+execution fields present",
+   "participation_2025_parquet": "present, 45,184 rows; the order-matched identity list is offense_players (NOT players_on_play - ordering trap documented in identity_join.py)",
+   "ftn_charting_fields": "absent from the plain pbp parquet; separate FTN release (2022+), not yet downloaded",
+   "nfl_data_py": "ABSENT on this host (C-toolchain build fails); direct-parquet path is the working one"
+  }
+ }
+}
