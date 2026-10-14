@@ -1,0 +1,33 @@
+{
+  "label": "DIAGNOSTIC. Filter frozen. Nothing promoted. passed is false.",
+  "generated_at": "2026-10-14T23:26:00Z",
+  "source": "nflverse schedules games.csv downloaded 2026-10-14. The copy that ended at 2025 cannot hit n=2462.",
+  "filter": {
+    "game_type": "REG",
+    "from": "2017 week 1",
+    "through": "2026 week 5",
+    "require": ["home_score", "away_score", "spread_line"],
+    "mu": "spread_line",
+    "sigma_gaussian": 13.45,
+    "history_for_scale_models": "all earlier REG games, prior weeks only",
+    "n": 2462,
+    "n_2026_reg_through_week_5": 79,
+    "weeks_2026": {"1": 16, "2": 16, "3": 16, "4": 16, "5": 15}
+  },
+  "reproduction": {
+    "gaussian_13.45_crps": 7.154021,
+    "matches_contract": true
+  },
+  "scored_on_same_2462": [
+    {"model": "gaussian_fixed_13.45", "crps": 7.154021, "vs_gaussian": 0.0, "gap_to_7.099": 0.055021, "status": "BASELINE"},
+    {"model": "laplace_one_scale_prior_mean_abs", "crps": 7.149214, "vs_gaussian": -0.004807, "gap_to_7.099": 0.050214, "status": "IMPROVES_NOT_CLEAR"},
+    {"model": "laplace_cell_TS_bins_41_45_48_x_3.5_7.5", "crps": 7.150489, "vs_gaussian": -0.003532, "gap_to_7.099": 0.051489, "status": "IMPROVES_NOT_CLEAR"},
+    {"model": "gaussian_sigma_refit_weekly_grid", "crps": 7.144872, "vs_gaussian": -0.009148, "gap_to_7.099": 0.045872, "last_sigma": 12.7, "status": "IMPROVES_NOT_CLEAR"},
+    {"model": "normal_mixture_2_means_locked", "crps": 7.138654, "vs_gaussian": -0.015367, "gap_to_7.099": 0.039654, "weights": "0.20 N(mu, 6.5) + 0.80 N(mu, 14)", "status": "BEST_THIS_PASS_NOT_CLEAR"},
+    {"model": "key_number_absolute_mean_preserving", "crps": 7.158658, "vs_gaussian": 0.004637, "status": "REFUSED"},
+    {"model": "key_number_residual_around_close", "crps": 7.206039, "vs_gaussian": 0.052018, "status": "REFUSED"}
+  ],
+  "passed": false,
+  "gate": "CRPS <= 7.099 on n >= 150",
+  "do_not_adopt": "2018-2025 REG at sigma 14.0 prints 7.154646. Wrong n, wrong sigma."
+}
