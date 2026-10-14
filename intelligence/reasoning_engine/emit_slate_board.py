@@ -43,6 +43,37 @@ def _team_from_name(name: str, side: str) -> str:
     return part.strip()
 
 
+def _nfl_week_to_period(week: int) -> int:
+    """NFL week number -> LineStar periodId (the analyst's --week contract).
+
+    The slate registry is keyed by periodId (412 = week 6, 2026). emit_card's
+    fixture guard resolves through that registry, so an unmapped week number
+    (6) finds no period 6, refuses every real fixture, and stamps REFUSED on
+    all cards. Resolution: exact periodId hit wins; else the registry week
+    whose `name` carries 'Week <n>'; else the week passes through unchanged
+    and the caller's fixture guard degrades to a named gap, not a crash.
+    """
+    try:
+        from reasoning.slate_registry import weeks as _weeks
+    except Exception:
+        try:
+            from slate_registry import weeks as _weeks  # type: ignore
+        except Exception:
+            return week
+    ws = _weeks() or []
+    for w in ws:
+        if w.get("periodId") == week:
+            return week  # already a periodId
+    for w in ws:
+        name = str(w.get("name") or "").lower()
+        if name.startswith(f"week {week}") or name.startswith(f"Week {week}".lower()):
+            try:
+                return int(w["periodId"])
+            except (KeyError, TypeError, ValueError):
+                continue
+    return week
+
+
 def slate_games(sport: str = "football/nfl", query: str = "") -> tuple[list[dict], int, int, list[str]]:
     """(games, week, season, byes) — games is (away, home, espn_name, odds_row) per event.
 
@@ -157,10 +188,17 @@ def run_slate(sport: str = "football/nfl", query: str = "", week: int | None = N
         doc["home"] = g["home"] or "?"
         doc["matchup"] = f"{g['away'] or '?'}@{g['home'] or '?'}"
         doc["gaps"].extend(pgaps)
-        # Move 1: every game gets an analyst card alongside the ranked board
+        # Move 1: every game gets an analyst card alongside the ranked board.
+        # emit_card's --week contract is a LineStar periodId (412 = week 6),
+        # NOT the NFL week number. Passing the raw week (wk) makes the
+        # fixture guard look up "period 6" in a registry keyed 407..412,
+        # refuse every real game, and stamp all 14 cards REFUSED. Map first.
         if emit_card is not None and g["home"] and g["away"] and g["home"] != "?" and g["away"] != "?":
             try:
-                card_path, card_meta = emit_card(g["home"], g["away"], date=datetime.now(timezone.utc).date().isoformat())
+                period_id = _nfl_week_to_period(wk)
+                card_path, card_meta = emit_card(g["home"], g["away"],
+                                                 date=datetime.now(timezone.utc).date().isoformat(),
+                                                 week=period_id)
                 doc["analyst_card"] = {"path": str(card_path), "thesis": card_meta["thesis"],
                                        "conviction": card_meta["conviction"],
                                        "domains": card_meta["domains"], "facts": card_meta["facts"]}
