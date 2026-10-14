@@ -1,6 +1,6 @@
 # HOU@JAX - Analyst Card (Attrition Edge)
 
-generated_utc: 2026-10-14T04:42:25.048035+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:49:24.938649+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 

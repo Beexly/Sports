@@ -234,6 +234,46 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
     else:
         gaps.append("market: Kalshi digest missing")
 
+    # 1b. Fresh Kalshi two-sided books (kalshi_patterns.py output). The digest
+    # above is a snapshot; this is the live two-sided read. Ticker grammar:
+    # KXNFLGAME-<DDMMMDD><AWAY3><HOME3>-<SIDE>. Kalshi uses JAC where ESPN
+    # uses JAX; away/home order is matched as an unordered pair per game.
+    kpath2_dir = SOURCES / "2026-10-14" / "kalshi"
+    if kpath2_dir.is_dir():
+        newest2 = None
+        for p2 in sorted(kpath2_dir.glob("kalshi_open_markets_*.json")):
+            newest2 = p2  # sorted glob; keep the newest
+        if newest2:
+            kd2 = _load_json(newest2)
+            rows2 = (kd2 or {}).get("rows") or []
+            abbr_alias = {"JAX": "JAC", "WSH": "WAS"}
+            h_alias = abbr_alias.get(home.upper(), home.upper())
+            a_alias = abbr_alias.get(away.upper(), away.upper())
+            want_pair = {h_alias, a_alias}
+            matched2 = 0
+            for r2 in rows2:
+                m2 = re.match(
+                    r"KXNFLGAME-\d{2}[A-Z]{3}\d{2}([A-Z]{3})([A-Z]{3})-([A-Z]{2,3})$",
+                    str(r2.get("ticker") or ""))
+                if not m2:
+                    continue
+                t_away, t_home, side = m2.groups()
+                if {t_away, t_home} != want_pair:
+                    continue
+                matched2 += 1
+                facts.append({
+                    "domain": "market",
+                    "metric": ("kalshi_two_sided_home" if side == h_alias
+                               else "kalshi_two_sided_away"),
+                    "subject": "{} ({})".format(r2.get("title"), r2.get("ticker")),
+                    "value": {"yes_bid": r2.get("yes_bid"), "yes_ask": r2.get("yes_ask"),
+                              "mid": r2.get("mid"), "spread": r2.get("spread")},
+                    "source": str(newest2.relative_to(REPO)).replace("\\", "/"),
+                    "note": "Kalshi live two-sided book (kalshi_patterns.py)",
+                })
+            if matched2 == 0:
+                gaps.append("market: fresh Kalshi two-sided books have no row for this game")
+
     # 2. Action Network Multi-Book Odds Plane (Caesars, DraftKings, BetMGM, FanDuel)
     an_files = sorted(SOURCES.glob("2026-10-13/action-network/scoreboard_*.json"))
     for an_path in an_files:
@@ -870,6 +910,20 @@ def build_chain(home: str, away: str, facts: list[dict]) -> list[str]:
             f"-> an independent Layer-1 anchor exists beside the de-vigged book line "
             f"-> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book"
         )
+    two_sided = [f for f in facts if str(f.get("metric", "")).startswith("kalshi_two_sided_")]
+    if two_sided:
+        for tf in two_sided[:2]:
+            v = tf.get("value") or {}
+            side = "home" if "home" in str(tf.get("metric")) else "away"
+            chain.append(
+                f"MICROSTRUCTURE (two-sided): Kalshi live book on the {side} side: "
+                f"bid {v.get('yes_bid')} / ask {v.get('yes_ask')} (mid {v.get('mid')}, "
+                f"spread {v.get('spread')}) {cite(tf)} "
+                f"-> the prediction market quotes BOTH sides with visible depth "
+                f"-> a tight spread means the prior is liquid; a wide spread means "
+                f"the market itself is uncertain and any 'edge' vs a single stale "
+                f"book quote is suspect"
+            )
     news = by_metric.get("news_hit", [])
     for f in news[:3]:
         chain.append(

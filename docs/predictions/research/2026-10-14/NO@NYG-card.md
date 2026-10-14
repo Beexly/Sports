@@ -1,6 +1,6 @@
 # NO@NYG - Analyst Card (Narrative Fog)
 
-generated_utc: 2026-10-14T04:42:31.493819+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
+generated_utc: 2026-10-14T05:49:28.680096+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-14
 
 ## Named thesis
 
