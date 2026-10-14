@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-14T13:26:57.279207+00:00",
+ "generated_utc": "2026-10-14T14:00:17.230361+00:00",
  "ngs_public_surfaces": {
   "artifact_path": "artifacts/gse_brain/ngs_public_surfaces_2026-10-14T13-26-57Z.json",
   "endpoints": {
@@ -100,10 +100,46 @@
   "gsis_joined": 341
  },
  "nflverse_data_plane": {
-  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T13-26-57Z.json",
-  "stores_count": 17
+  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T14-00-17Z.json",
+  "stores_count": 27
  },
  "weight": 0.0,
  "validation_spec_met": false,
- "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and Identity Loop validation spec are met."
+ "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and Identity Loop validation spec are met.",
+ "open_meteo_week6_weather": {
+  "artifact_path": "artifacts/gse_brain/open_meteo_week6_weather_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "games": 14,
+  "outdoor": 11,
+  "indoor": 3
+ },
+ "nflverse_qbr_and_players_crosswalk": {
+  "artifact_path": "artifacts/gse_brain/nflverse_qbr_and_players_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "players_total": 24854,
+  "qbr_season_2026": "51/51 gsis_id joined",
+  "qbr_week_2026": "158/158 gsis_id joined"
+ },
+ "espn_summary_drive_charts": {
+  "artifact_path": "artifacts/gse_brain/espn_summary_drive_charts_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "week5_games_synced_with_pbp": "15/15"
+ },
+ "ngs_leaders_expanded": {
+  "artifact_path": "artifacts/gse_brain/ngs_leaders_expanded_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "leaders_gsis_joined": "95/95"
+ },
+ "kalshi_full_slate": {
+  "artifact_path": "artifacts/gse_brain/kalshi_full_slate_2026-10-14T14-00-17Z.json",
+  "status": 200,
+  "events": 28,
+  "markets_count": 56
+ },
+ "espn_scoreboard_odds": {
+  "artifact_path": "artifacts/gse_brain/espn_scoreboard_odds_2026-10-14T14-00-17Z.json",
+  "status": 200,
+  "games_count": 14,
+  "games_with_odds": 14
+ }
 }

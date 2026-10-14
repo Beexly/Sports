@@ -489,6 +489,7 @@ def catalog_nflverse_local_stores(stamp: str, now_iso: str) -> dict[str, Any]:
         ("depth_charts_2026", "depth_charts_2026.parquet", ["gsis_id", "team", "dt"]),
         ("pbp_participation_2025", "pbp_participation_2025.parquet", ["nflverse_game_id", "play_id", "gsis_id"]),
         ("pbp_participation_2026", "pbp_participation_2026.parquet", ["nflverse_game_id", "play_id", "gsis_id"]),
+        ("pbp_participation_2026_reconstructed", "pbp_participation_2026_reconstructed.parquet", ["nflverse_game_id", "play_id", "gsis_id"]),
         ("ftn_charting_2026", "ftn_charting_2026.parquet", ["nflverse_game_id", "nflverse_play_id"]),
         ("ftn_charting_2025", "ftn_charting_2025.parquet", ["nflverse_game_id", "nflverse_play_id"]),
         ("ngs_receiving", "ngs_receiving.parquet", ["player_gsis_id", "season", "week"]),
@@ -496,6 +497,15 @@ def catalog_nflverse_local_stores(stamp: str, now_iso: str) -> dict[str, Any]:
         ("ngs_rushing", "ngs_rushing.parquet", ["player_gsis_id", "season", "week"]),
         ("advstats_week_def_2026", "advstats_week_def_2026.parquet", ["game_id", "pfr_player_id"]),
         ("advstats_week_pass_2026", "advstats_week_pass_2026.parquet", ["game_id", "pfr_player_id"]),
+        ("advstats_week_rec_2026", "advstats_week_rec_2026.parquet", ["game_id", "pfr_player_id"]),
+        ("advstats_week_rush_2026", "advstats_week_rush_2026.parquet", ["game_id", "pfr_player_id"]),
+        ("players_master_crosswalk", "players.parquet", ["gsis_id", "espn_id", "nfl_id", "pfr_id", "esb_id"]),
+        ("qbr_season_level", "qbr_season_level.parquet", ["player_id (espn_id -> gsis_id)", "team_abb"]),
+        ("qbr_week_level", "qbr_week_level.parquet", ["player_id (espn_id -> gsis_id)", "game_id", "team_abb"]),
+        ("stats_player_week_2026", "stats_player_week_2026.parquet", ["player_id (gsis_id)", "game_id", "team"]),
+        ("stats_team_week_2026", "stats_team_week_2026.parquet", ["game_id", "team", "week"]),
+        ("draft_picks", "draft_picks.parquet", ["gsis_id", "pfr_player_id", "team"]),
+        ("combine", "combine.parquet", ["pfr_id", "cfb_id", "player_name"]),
     ]
     catalog = {}
     for name, fname, joins in stores_spec:

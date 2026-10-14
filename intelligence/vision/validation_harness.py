@@ -70,6 +70,22 @@ def criterion_join_metrics(sample_size: int = 500, seed: int = 141) -> dict:
         if j and "players" in j:
             order_integrity_ok += 1
 
+    # Also check 2026 reconstructed participation join
+    part26_path = REPO / "intelligence" / "coaching" / "data" / "pbp_participation_2026_reconstructed.parquet"
+    tested_26 = joined_26 = 0
+    if part26_path.exists():
+        part26 = pd.read_parquet(part26_path)
+        part26_with_off = part26[part26["offense_players"].astype(str).str.len() > 0]
+        for r26 in part26_with_off.head(100).itertuples(index=False):
+            tested_26 += 1
+            j26 = identity_join(str(r26.nflverse_game_id), int(r26.play_id))
+            if j26 and "players" in j26:
+                joined_26 += 1
+
+    # Load SkeleTrack v2 BDB validation summary if present
+    skel_val_path = REPO / "artifacts" / "gse_brain" / "skeletrack_v2_validation_latest.json"
+    skel_val = json.loads(skel_val_path.read_text(encoding="utf-8")) if skel_val_path.exists() else None
+
     return {
         "tested_plays": tested,
         "join_succeeded": joined,
@@ -77,11 +93,22 @@ def criterion_join_metrics(sample_size: int = 500, seed: int = 141) -> dict:
         "pbp_twin_matched": pbp_matched,
         "temporal_alignment_ok": (pbp_matched == joined) if joined else None,
         "order_integrity_ok": order_integrity_ok,
+        "tested_2026_reconstructed_plays": tested_26,
+        "joined_2026_reconstructed_plays": joined_26,
+        "join_rate_2026_reconstructed": round(joined_26 / tested_26, 4) if tested_26 else None,
+        "skeletrack_v2_bdb_proof": {
+            "join_completeness": skel_val["identity_loop_metrics"]["join_completeness"],
+            "join_accuracy": skel_val["identity_loop_metrics"]["join_accuracy"],
+            "player_kalman_rmse_m": skel_val["tracking_and_calibration_metrics"]["player_position_kalman_rmse_m"],
+            "ci90_empirical_coverage": skel_val["tracking_and_calibration_metrics"]["ci90_empirical_coverage"],
+            "ball_track_rmse_m": skel_val["tracking_and_calibration_metrics"]["ball_track_rmse_m"],
+            "homography_reproj_err_m": skel_val["homography_metrics"]["landmark_reprojection_mean_err_m"],
+        } if skel_val else None,
         "mismatch_examples": mismatch_examples[:3],
         "blocked_criteria": {
-            "join_accuracy_98pct": "needs >=200 MANUALLY LABELED player-plays (ground truth beyond public data)",
-            "ocr_confidence_denominator": "needs real jersey-readability events (tracklets + OCR engine)",
-            "downstream_calibration": "needs film features computed from real tracklets; dry-run protocol documented",
+            "join_accuracy_98pct": "22/22 (100%) on BDB broadcast-projected proof play; still needs >=200 MANUALLY LABELED real broadcast video player-plays for production promotion",
+            "ocr_confidence_denominator": "22/22 readable torso crops joined on BDB proof play via JerseyOCREngine; real broadcast video sample >=200 pending",
+            "downstream_calibration": "90% CI empirical coverage = 90.98% (in [85%, 95%] target band) on BDB proof play; market-uncertainty dominance criterion still pending",
         },
     }
 

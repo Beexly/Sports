@@ -24,6 +24,8 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[2]
 PART = REPO / "intelligence" / "coaching" / "data" / "pbp_participation_2025.parquet"
 PBP = REPO / "intelligence" / "coaching" / "data" / "play_by_play_2025.parquet"
+PART_2026 = REPO / "intelligence" / "coaching" / "data" / "pbp_participation_2026_reconstructed.parquet"
+PBP_2026 = REPO / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
 
 
 def _split(v: Any) -> list[str]:
@@ -33,18 +35,26 @@ def _split(v: Any) -> list[str]:
 def identity_join(game_id: str, play_id: int) -> dict | None:
     """All four identity keys + EPA for one play, one query.
 
+    Supports both 2025 (FTN full participation) and 2026 (reconstructed participation
+    from PBP 43 player_id cols + FTN charting 2026 + snap_counts 2026 + roster 2026).
+
     Returns:
       {
         game_id, play_id, possession,
         epa, wpa, desc,                      # PBP join
         players: [ {name, jersey, position, gsis_id}, ... ],  # offense, order-matched
+        defense_players: [ {name, jersey, position, gsis_id}, ... ],  # defense involved (2026+)
         routes: {player_name: route},        # per-receiver route label
         coverage: defense_coverage_type,
         source_files: [...],
       }
       or None if the play is absent from either side (honest miss).
     """
-    part = pd.read_parquet(PART)
+    is_2026 = str(game_id).startswith("2026_")
+    part_path = PART_2026 if (is_2026 and PART_2026.exists()) else PART
+    pbp_path = PBP_2026 if (is_2026 and PBP_2026.exists()) else PBP
+
+    part = pd.read_parquet(part_path)
     row = part[(part["nflverse_game_id"] == game_id)
                & (part["play_id"] == float(play_id))]
     if not len(row):
@@ -55,7 +65,6 @@ def identity_join(game_id: str, play_id: int) -> dict | None:
     numbers = _split(r.get("offense_numbers"))
     positions = _split(r.get("offense_positions"))
     gsis = _split(r.get("offense_players"))  # ORDER-MATCHED list (see module docstring)
-    routes = _split(r.get("route")).pop(0, None) if False else None  # route is single-label
     n = min(len(names), len(numbers), len(positions), len(gsis))
     if n == 0 or len(names) != len(gsis):
         # order integrity check: refuse rather than mis-pair
@@ -67,27 +76,40 @@ def identity_join(game_id: str, play_id: int) -> dict | None:
                 "position": positions[i], "gsis_id": gsis[i]}
                for i in range(n)]
 
+    def_names = _split(r.get("defense_names"))
+    def_numbers = _split(r.get("defense_numbers"))
+    def_positions = _split(r.get("defense_positions"))
+    def_gsis = _split(r.get("defense_players"))
+    dn = min(len(def_names), len(def_numbers), len(def_positions), len(def_gsis))
+    def_players = [{"name": def_names[i], "jersey": def_numbers[i],
+                    "position": def_positions[i], "gsis_id": def_gsis[i]}
+                   for i in range(dn)] if dn > 0 and len(def_names) == len(def_gsis) else []
+
     out = {
         "game_id": game_id,
         "play_id": int(play_id),
         "possession": r.get("possession_team"),
         "coverage": (r.get("defense_coverage_type") or None),
         "man_zone": (r.get("defense_man_zone_type") or None),
+        "defenders_in_box": None if pd.isna(r.get("defenders_in_box")) else float(r.get("defenders_in_box")),
+        "number_of_pass_rushers": None if pd.isna(r.get("number_of_pass_rushers")) else float(r.get("number_of_pass_rushers")),
         "players": players,
-        "source_files": [str(PART.relative_to(REPO)).replace("\\\\", "/")],
+        "defense_players": def_players,
+        "provenance": r.get("provenance") or "FTN_FULL_2025",
+        "source_files": [str(part_path.relative_to(REPO)).replace("\\\\", "/")],
     }
     if r.get("route"):
         out["route_of_play"] = str(r["route"])
 
     # PBP join for EPA/WPA
-    pbp = pd.read_parquet(PBP, columns=["game_id", "play_id", "epa", "wpa", "success", "desc"])
+    pbp = pd.read_parquet(pbp_path, columns=["game_id", "play_id", "epa", "wpa", "success", "desc"])
     pr = pbp[(pbp["game_id"] == game_id) & (pbp["play_id"] == float(play_id))]
     if len(pr):
         p0 = pr.iloc[0]
         out["epa"] = None if pd.isna(p0["epa"]) else round(float(p0["epa"]), 4)
         out["wpa"] = None if pd.isna(p0["wpa"]) else round(float(p0["wpa"]), 4)
         out["desc"] = str(p0["desc"]).strip()
-        out["source_files"].append(str(PBP.relative_to(REPO)).replace("\\\\", "/"))
+        out["source_files"].append(str(pbp_path.relative_to(REPO)).replace("\\\\", "/"))
     return out
 
 
