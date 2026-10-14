@@ -82,6 +82,8 @@ class KalmanTrack2D:
     last_t: float | None = None
     last_innovation: tuple[float, float] | None = None
     _init: bool = False
+    _prev_pos: tuple[float, float] | None = None  # for finite-difference velocity seeding
+    _hit_count: int = 0
 
     # -- linear algebra (2-state-per-axis, no numpy dependency) --
     def _predict(self, dt: float, cfg: KalmanConfig) -> None:
@@ -118,8 +120,25 @@ class KalmanTrack2D:
             self.x, self.y = x, y
             self.last_t = t
             self._init = True
+            self._prev_pos = (x, y)
+            self._hit_count = 1
             self.last_innovation = (0.0, 0.0)
             return self.last_innovation
+        self._hit_count += 1
+        if self._hit_count == 2 and self._prev_pos is not None and self.last_t:
+            dt0 = t - self.last_t
+            if dt0 > 1e-6:
+                # SORT-style seeding: velocity from the first finite difference.
+                # A zero-velocity prior under an 8 m/s truth leaves the gate
+                # chasing the target for dozens of frames (observed ID churn).
+                self.vx = (x - self._prev_pos[0]) / dt0
+                self.vy = (y - self._prev_pos[1]) / dt0
+                fd_var = 2 * (cfg.pos_meas_std ** 2) / (dt0 ** 2)
+                # velocity uncertainty = FD uncertainty (but not below the
+                # process model's own floor)
+                self.P[10] = max(fd_var, 0.25)
+                self.P[15] = max(fd_var, 0.25)
+            self._prev_pos = (x, y)
         if self.last_t is not None and t > self.last_t:
             self._predict(t - self.last_t, cfg)
         self.last_t = t
