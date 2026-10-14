@@ -5,7 +5,7 @@
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
-import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
+import { runBoardFillPipeline, readWalkForwardGate } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -16,8 +16,21 @@ export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
+  const gate = readWalkForwardGate();
   try {
     const result = await runBoardFillPipeline({ logPrefix: "[cron:board-fill]" });
+    if (!gate.open) {
+      return NextResponse.json({
+        ok: true,
+        picks: 0,
+        parlays: 0,
+        dfs: 0,
+        picksUpserted: 0,
+        note: `emission gate closed (${gate.reason}): 0 picks, 0 parlays, 0 DFS. pickCreate and pickUpdateMany were not called.`,
+        seed: { ok: result.seed.ok, upserted: result.seed.upserted },
+        signals: result.signals,
+      });
+    }
     return NextResponse.json({
       ok: result.ok,
       note: result.note,

@@ -5,7 +5,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { generateSignalSlate, slateAssociationTrace } from "@sports/ingestion-pipeline";
+import { generateSignalSlate, slateAssociationTrace, readWalkForwardGate } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -17,6 +17,20 @@ export const maxDuration = 300;
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
+
+  const gate = readWalkForwardGate();
+  if (!gate.open) {
+    return NextResponse.json({
+      ok: true,
+      picks: 0,
+      parlays: 0,
+      dfs: 0,
+      picksUpserted: 0,
+      note: `emission gate closed (${gate.reason}): 0 picks, 0 parlays, 0 DFS. pickCreate and pickUpdateMany were not called.`,
+      oddsApiRequired: false as const,
+      claimPosture: "experimental_model_signal_not_book_line",
+    });
+  }
 
   try {
     const result = await generateSignalSlate({

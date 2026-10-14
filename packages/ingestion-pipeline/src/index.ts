@@ -160,6 +160,7 @@ export {
 } from "./nfl-team-abbr.js";
 
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
+export { readWalkForwardGate } from "./walk-forward-gate.js";
 export { slateAssociationTrace } from "./slate-association.js";
 export type { SignalSlateResult } from "./generate-signal-slate.js";
 

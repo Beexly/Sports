@@ -1,0 +1,233 @@
+{
+ "label": "DIAGNOSTIC. Not an emission weight. passed stays false.",
+ "filter": "REG 2017 W1 through 2026 W5, non-null scores and spread_line",
+ "gaussian_baseline": {
+  "n": 2462,
+  "crps": 7.154021,
+  "matches_7.154021": true
+ },
+ "delta_definition": "crps_with - crps_without. Refuse when delta >= 0.",
+ "weights": {
+  "status": {
+   "Out": 1.0,
+   "Doubtful": 0.75,
+   "Questionable": 0.25,
+   "Probable": 0.0
+  },
+  "position": {
+   "C": 1.2,
+   "C/G": 1.2,
+   "CB": 0.8,
+   "DB": 0.8,
+   "DE": 1.0,
+   "DL": 1.0,
+   "DT": 1.0,
+   "EDGE": 1.0,
+   "FB": 0.5,
+   "FS": 0.8,
+   "G": 1.2,
+   "G/C": 1.2,
+   "G/T": 1.2,
+   "HB": 0.5,
+   "ILB": 0.6,
+   "LB": 0.6,
+   "LG": 1.2,
+   "LT": 1.2,
+   "MLB": 0.6,
+   "NT": 1.0,
+   "OG": 1.2,
+   "OL": 1.2,
+   "OLB": 0.6,
+   "OT": 1.2,
+   "QB": 2.5,
+   "RB": 0.5,
+   "RG": 1.2,
+   "RT": 1.2,
+   "S": 0.8,
+   "SS": 0.8,
+   "T": 1.2,
+   "T/G": 1.2,
+   "TE": 0.7,
+   "WR": 0.7
+  }
+ },
+ "diagnostics": {
+  "RIL": {
+   "n_filter": 2462,
+   "n_feature_defined_and_scored": 2061,
+   "crps_without": 7.159999,
+   "crps_with": 7.164178,
+   "delta": 0.004179,
+   "full_filter_crps_without": 7.154021,
+   "full_filter_crps_with": 7.157519,
+   "full_filter_delta": 0.003498,
+   "beta_last": -0.0198,
+   "status": "REFUSED",
+   "passed": false,
+   "mu": "spread_line",
+   "sigma": 13.45,
+   "n_defined": 2105,
+   "failed_closed": {
+    "ril_player_no_prior_snaps": 2890,
+    "ril_status_or_position_unmapped": 22523,
+    "ril_omit_lt3_prior_snaps": 6,
+    "ril_injury_after_kickoff": 24,
+    "ril_no_crosswalk": 4,
+    "ril_omit_season_or_kickoff": 351
+   }
+  },
+  "OLCD": {
+   "n_filter": 2462,
+   "n_feature_defined_and_scored": 2410,
+   "crps_without": 7.13496,
+   "crps_with": 7.13757,
+   "delta": 0.00261,
+   "full_filter_crps_without": 7.154021,
+   "full_filter_crps_with": 7.156575,
+   "full_filter_delta": 0.002554,
+   "beta_last": 0.0106,
+   "status": "REFUSED",
+   "passed": false,
+   "mu": "spread_line",
+   "sigma": 13.45,
+   "n_defined": 2454,
+   "failed_closed": {
+    "olcd_omit_lt4_prior": 8
+   }
+  },
+  "PSR": {
+   "n_filter": 2462,
+   "n_feature_defined_and_scored": 2370,
+   "crps_without": 7.130748,
+   "crps_with": 7.132229,
+   "delta": 0.001481,
+   "full_filter_crps_without": 7.154021,
+   "full_filter_crps_with": 7.155447,
+   "full_filter_delta": 0.001426,
+   "beta_last": 0.0028,
+   "status": "REFUSED",
+   "passed": false,
+   "mu": "spread_line",
+   "sigma": 13.45,
+   "n_defined": 2414,
+   "failed_closed": {
+    "psr_omit_no_prior_pbp": 48,
+    "psr_files": [
+     "pbp_2016.parquet",
+     "pbp_2017.parquet",
+     "pbp_2018.parquet",
+     "pbp_2019.parquet",
+     "pbp_2020.parquet",
+     "pbp_2021.parquet",
+     "pbp_2022.parquet",
+     "pbp_2023.parquet",
+     "pbp_2024.parquet",
+     "play_by_play_2025.parquet",
+     "play_by_play_2026.parquet"
+    ]
+   }
+  },
+  "PFE": {
+   "n_filter": 2462,
+   "n_feature_defined_and_scored": 2410,
+   "crps_without": 7.13496,
+   "crps_with": 7.139441,
+   "delta": 0.004481,
+   "full_filter_crps_without": 7.154021,
+   "full_filter_crps_with": 7.158407,
+   "full_filter_delta": 0.004386,
+   "beta_last": 0.0041,
+   "status": "REFUSED",
+   "passed": false,
+   "mu": "spread_line",
+   "sigma": 13.45,
+   "n_defined": 2454,
+   "failed_closed": {
+    "pfe_omit_lt4_prior": 8
+   }
+  },
+  "CTF": {
+   "n_filter": 2462,
+   "n_feature_defined_and_scored": 1690,
+   "crps_without": 7.058731,
+   "crps_with": 7.059643,
+   "delta": 0.000912,
+   "full_filter_crps_without": 7.154021,
+   "full_filter_crps_with": 7.154647,
+   "full_filter_delta": 0.000626,
+   "beta_last": 0.0233,
+   "status": "REFUSED",
+   "passed": false,
+   "mu": "spread_line",
+   "sigma": 13.45,
+   "n_defined": 1723,
+   "failed_closed": {
+    "ctf_omit_null_travel_tz_or_rest": 739
+   }
+  }
+ },
+ "combination": {
+  "run": false,
+  "reason": "fewer than two features improved alone",
+  "improving": []
+ },
+ "failed_closed_counts": {
+  "ril_player_no_prior_snaps": 2890,
+  "ril_status_or_position_unmapped": 22523,
+  "ril_omit_lt3_prior_snaps": 6,
+  "ril_injury_after_kickoff": 24,
+  "ril_no_crosswalk": 4,
+  "ril_omit_season_or_kickoff": 351,
+  "olcd_omit_lt4_prior": 8,
+  "psr_omit_no_prior_pbp": 48,
+  "psr_files": [
+   "pbp_2016.parquet",
+   "pbp_2017.parquet",
+   "pbp_2018.parquet",
+   "pbp_2019.parquet",
+   "pbp_2020.parquet",
+   "pbp_2021.parquet",
+   "pbp_2022.parquet",
+   "pbp_2023.parquet",
+   "pbp_2024.parquet",
+   "play_by_play_2025.parquet",
+   "play_by_play_2026.parquet"
+  ],
+  "pfe_omit_lt4_prior": 8,
+  "ctf_omit_null_travel_tz_or_rest": 739
+ },
+ "pfe_columns_seen": [
+  "defenders_in_box",
+  "defense_coverage_type",
+  "defense_man_zone_type",
+  "defense_names",
+  "defense_numbers",
+  "defense_personnel",
+  "defense_players",
+  "defense_positions",
+  "n_defense",
+  "n_offense",
+  "nflverse_game_id",
+  "ngs_air_yards",
+  "number_of_pass_rushers",
+  "offense_formation",
+  "offense_names",
+  "offense_numbers",
+  "offense_personnel",
+  "offense_players",
+  "offense_positions",
+  "old_game_id",
+  "play_id",
+  "players_on_play",
+  "possession_team",
+  "route",
+  "time_to_throw",
+  "was_pressure"
+ ],
+ "untouched": [
+  "CVI",
+  "BQP",
+  "SWCC"
+ ],
+ "passed": false
+}

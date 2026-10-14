@@ -54,6 +54,10 @@ vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,
 }));
 
+vi.mock("../walk-forward-gate.js", () => ({
+  readWalkForwardGate: () => ({ open: true, reason: "open", path: null, detail: "test" }),
+}));
+
 import { generateSignalSlate } from "../generate-signal-slate.js";
 
 const NOW = new Date("2026-09-05T15:00:00.000Z");

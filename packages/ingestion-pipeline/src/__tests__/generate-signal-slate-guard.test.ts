@@ -46,6 +46,10 @@ vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,
 }));
 
+vi.mock("../walk-forward-gate.js", () => ({
+  readWalkForwardGate: () => ({ open: true, reason: "open", path: null, detail: "test" }),
+}));
+
 import {
   buildSignalReasoningShort,
   generateSignalSlate,
