@@ -116,6 +116,17 @@
    ],
    "verdict": "MARKET HALF STILL NOT MET \u2014 both halves recorded; availability data does not break the collinearity at count granularity",
    "artifact": "docs/data-sources/research/2026-10-14/totals-injury-model.json"
+  },
+  "totals_margin_close": {
+   "status": "CLOSED HONESTLY \u2014 four feature families tested, none beats the closing width OOF",
+   "ladder": {
+    "C_injury_counts_oof": 13.384,
+    "D_role_weighted_oof": 13.355,
+    "A_epa_only_oof": 13.369,
+    "market": 13.319
+   },
+   "finding": "role-weighting improves on counts (+0.029) but the residual gap (0.036 pts) requires information the line does not already encode \u2014 the line is built from these same public signals",
+   "verdict": "TOTALS MARGIN CLOSED as a keyless-public-data edge path; remaining priced path = per-play props (propline-intake) and freshness-critical windows (pre-injury-move)"
   }
  }
 }

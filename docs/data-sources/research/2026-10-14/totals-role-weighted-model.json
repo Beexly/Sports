@@ -1,0 +1,18 @@
+{
+ "generated_utc": "2026-10-14T07:56:27.769932+00:00",
+ "feature": "role-weighted Out/Doubtful (weight=1/depth-chart rank, offense rows, 2015-24)",
+ "n_train": 1261,
+ "n_held": 582,
+ "market_sd_train": 13.319,
+ "oof_sd": {
+  "D_rolew_only": 13.355,
+  "E_epa_plus_rolew": 13.396,
+  "A_epa_only_prev": 13.369,
+  "market": 13.319
+ },
+ "held_out": {
+  "market_logscore": 3.9589,
+  "E_logscore": 3.9602
+ },
+ "verdict": "STILL NOT BEATING THE MARKET \u2014 OOF widths vs market: D 13.355 / E 13.396 vs 13.319"
+}
