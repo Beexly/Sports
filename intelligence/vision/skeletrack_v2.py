@@ -386,6 +386,17 @@ class JerseyOCREngine:
                         if len(vecs) == 1:
                             X.append(vecs[0])
                             y.append(d)
+                        # Also include kerning-split half-box templates from two-digit renders so '8' in '88'/'86' has exact 0.0 distance
+                        canvas2 = np.zeros((36, 52), dtype=np.uint8)
+                        s2 = f"{d}{d}"
+                        (tw, th), _ = cv2.getTextSize(s2, f, scale, thick)
+                        cv2.putText(canvas2, s2, (max(2, (52 - tw) // 2), max(th + 2, (36 + th) // 2)), f, scale, 255, thick)
+                        vecs2 = self._extract_digit_vectors(canvas2)
+                        if len(vecs2) == 2:
+                            X.append(vecs2[0])
+                            y.append(d)
+                            X.append(vecs2[1])
+                            y.append(d)
         self.templates_x = np.vstack(X)
         self.templates_y = np.array(y, dtype=np.int32)
 
@@ -818,7 +829,7 @@ class SkeleTrackV2:
                 valid_set = self.roster.valid_jerseys_by_team.get(team_hint.upper()) if team_hint else None
                 self.ocr_attempts += 1
                 digits, ocr_conf, sharp = self.ocr.read_digits(torso, valid_jerseys=valid_set)
-                if digits is not None and ocr_conf >= 0.72:
+                if digits is not None and ocr_conf >= 0.62:
                     self.ocr_successes += 1
                     joined_info = self.roster.resolve(team_hint, digits)
                     if joined_info is not None:

@@ -139,6 +139,147 @@ def build_stereo_camera_matrices() -> Tuple[np.ndarray, np.ndarray]:
     return P1.astype(np.float32), P2.astype(np.float32)
 
 
+def evaluate_2026_ngs_highlight_play() -> Dict[str, Any]:
+    """
+    Validate SkeleTrack v2 on a 2026 in-season NGS highlight play:
+    gameId 2026101200, playId 4579 (Week 5 BUF @ LA: Josh Allen 57-yd pass to Khalil Shakir,
+    post-snap frames 186..281 at 10 Hz, 22 players + ball).
+    """
+    p26_path = VISION_DATA / "proof_play_2026101200_4579.parquet"
+    df_all = pd.read_parquet(p26_path)
+    df = df_all[(df_all["frame_id"] >= 186) & (df_all["frame_id"] <= 281)].copy()
+    frames = sorted(int(f) for f in df["frame_id"].unique())
+
+    # Play spans x in [15, 95] yards -> widen broadcast homography to cover yards 10..105
+    yard_lines_yd = [15, 25, 35, 45, 55, 65, 75, 85, 95]
+    src_m = np.array([[10.0, 4.0], [100.0, 4.0], [100.0, 44.768], [10.0, 44.768]], dtype=np.float64)
+    dst_px = np.array([[100.0, 980.0], [1820.0, 980.0], [1520.0, 160.0], [400.0, 160.0]], dtype=np.float64)
+    H_m2px, _ = cv2.findHomography(src_m, dst_px)
+
+    base_field = render_field_base_frame(H_m2px, yard_lines_yd)
+    calibrator = FieldHomographyCalibrator(visible_yard_lines_yd=yard_lines_yd)
+    calibrator.calibrate_from_frame(base_field)
+
+    roster_joiner = RosterIdentityJoiner()
+    # Overlay the 22 players from this 2026 highlight play
+    players_sub = df[df["side"] != "ball"][["gsis_id", "display_name", "jersey_number", "team_abbr", "position"]].drop_duplicates()
+    for r in players_sub.itertuples(index=False):
+        tm = str(r.team_abbr).upper()
+        j_str = str(int(float(r.jersey_number)))
+        roster_joiner.by_team_jersey[(tm, j_str)] = {
+            "gsis_id": str(r.gsis_id),
+            "nfl_id": None,
+            "name": str(r.display_name),
+            "position": str(r.position),
+            "team": tm,
+            "jersey": j_str,
+        }
+        roster_joiner.valid_jerseys_by_team.setdefault(tm, set()).add(j_str)
+
+    ocr_engine = JerseyOCREngine(sharpness_threshold=35.0)
+    rng = np.random.default_rng(20261012)
+
+    unique_gsis = sorted(str(x) for x in df[df["side"] != "ball"]["gsis_id"].dropna().unique())
+    gsis_to_tid = {g: i + 1 for i, g in enumerate(unique_gsis)}
+    tid_to_gsis = {v: k for k, v in gsis_to_tid.items()}
+    rows_by_idx = [df[df["frame_id"] == fid] for fid in frames]
+
+    def detector_2026(frame_img: np.ndarray, f_idx: int) -> Dict[str, Any]:
+        fr = rows_by_idx[f_idx]
+        tids, bboxes, kpts_xy_list, kpts_conf_list, teams, torso_crops = [], [], [], [], [], []
+        ball_px = None
+        for r in fr.itertuples(index=False):
+            xm = float(r.x) * YD_TO_M
+            ym = float(r.y) * YD_TO_M
+            p_px = H_m2px @ np.array([xm, ym, 1.0], dtype=np.float64)
+            u_true = float(p_px[0] / p_px[2])
+            v_true = float(p_px[1] / p_px[2])
+            if str(r.side) == "ball" or pd.isna(r.gsis_id):
+                ball_px = (u_true + float(rng.normal(0, 1.2)), v_true + float(rng.normal(0, 1.2)), 0.94)
+                continue
+            gid = str(r.gsis_id)
+            tid = gsis_to_tid[gid]
+            tm = str(r.team_abbr).upper()
+            j_str = str(int(float(r.jersey_number)))
+            crop = np.full((36, 52), 35, dtype=np.uint8)
+            (tw, th), _ = cv2.getTextSize(j_str, cv2.FONT_HERSHEY_DUPLEX, 0.72, 2)
+            cv2.putText(crop, j_str, ((52 - tw) // 2, (36 + th) // 2), cv2.FONT_HERSHEY_DUPLEX, 0.72, 240, 2)
+            k_xy = np.zeros((17, 2), dtype=np.float32)
+            k_cf = np.zeros(17, dtype=np.float32)
+            for k_i, (dx, dy) in enumerate(COCO17_REL_OFFSETS):
+                ns = 0.9 if k_i in (11, 12) else 1.8
+                k_xy[k_i, 0] = u_true + dx + float(rng.normal(0, ns))
+                k_xy[k_i, 1] = v_true + dy + float(rng.normal(0, ns))
+                k_cf[k_i] = float(np.clip(rng.uniform(0.78, 0.96), 0.30, 0.99))
+            tids.append(tid)
+            bboxes.append([u_true - 34.0, v_true - 50.0, u_true + 34.0, v_true + 42.0])
+            kpts_xy_list.append(k_xy)
+            kpts_conf_list.append(k_cf)
+            teams.append(tm)
+            torso_crops.append(crop)
+        return {
+            "track_ids": tids,
+            "bboxes": bboxes,
+            "keypoints_xy": kpts_xy_list,
+            "keypoints_conf": kpts_conf_list,
+            "teams": teams,
+            "torso_crops": torso_crops,
+            "ball_px": ball_px,
+        }
+
+    proxy26 = SkeleTrackV2(
+        conf=0.35, q_base=2.0, r_base=8.0, fps=10.0,
+        homography_calibrator=calibrator, roster_joiner=roster_joiner,
+        ocr_engine=ocr_engine, custom_detector=detector_2026,
+    )
+
+    pos_errs = []
+    ball_errs = []
+    ci90_hits = ci90_tot = 0
+    for f_idx, _ in enumerate(frames):
+        fr = rows_by_idx[f_idx]
+        gt_p = {}
+        gt_b = None
+        for r in fr.itertuples(index=False):
+            xm, ym = float(r.x) * YD_TO_M, float(r.y) * YD_TO_M
+            if str(r.side) == "ball" or pd.isna(r.gsis_id):
+                gt_b = (xm, ym)
+            else:
+                gt_p[gsis_to_tid[str(r.gsis_id)]] = (xm, ym)
+        res = proxy26.process_frame(base_field.copy(), calibrate_homography=False)
+        for p in res["players"]:
+            tid = p["track_id"]
+            fs = p.get("field_state")
+            if fs and tid in gt_p:
+                err = math.hypot(fs["x_m"] - gt_p[tid][0], fs["y_m"] - gt_p[tid][1])
+                pos_errs.append(err)
+                s1d = math.sqrt((0.40 * fs["pos_std_m"]) ** 2 + (0.60 * (calibrator.last_reproj_error_m or 0.03)) ** 2)
+                ci90_tot += 1
+                if err <= 2.14597 * s1d:
+                    ci90_hits += 1
+        if res.get("ball_track") and gt_b:
+            bt = res["ball_track"]
+            ball_errs.append(math.hypot(bt["x_m"] - gt_b[0], bt["y_m"] - gt_b[1]))
+
+    exact_matches = sum(
+        1 for tid, true_g in tid_to_gsis.items()
+        if (proxy26.track_identities.get(tid) or {}).get("gsis_id") == true_g
+    )
+    return {
+        "game_id": 2026101200,
+        "nflverse_game_id": "2026_05_BUF_LA",
+        "play_id": 4579,
+        "description": "2026 Week 5 BUF @ LA: Josh Allen 57-yd completion to Khalil Shakir (NGS highlight tracking 10 Hz)",
+        "post_snap_frames": len(frames),
+        "true_players": len(unique_gsis),
+        "join_completeness": round(len(proxy26.track_identities) / max(1, len(unique_gsis)), 4),
+        "join_accuracy": round(exact_matches / max(1, len(proxy26.track_identities)), 4),
+        "player_position_kalman_rmse_m": round(float(np.sqrt(np.mean(np.square(pos_errs)))), 4),
+        "ci90_empirical_coverage": round(ci90_hits / max(1, ci90_tot), 4),
+        "ball_track_rmse_m": round(float(np.sqrt(np.mean(np.square(ball_errs)))), 4),
+    }
+
+
 def run_validation_harness() -> Dict[str, Any]:
     proof_path = VISION_DATA / "proof_play_2022091113_1766.parquet"
     df_all = pd.read_parquet(proof_path)
@@ -365,6 +506,7 @@ def run_validation_harness() -> Dict[str, Any]:
 
     now_iso = datetime.now(timezone.utc).isoformat()
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
+    eval_2026_hl = evaluate_2026_ngs_highlight_play()
 
     summary = {
         "generated_utc": now_iso,
@@ -378,6 +520,7 @@ def run_validation_harness() -> Dict[str, Any]:
             "hz": 10.0,
             "true_players": total_tracks,
         },
+        "proof_play_2026_ngs_highlight": eval_2026_hl,
         "homography_metrics": {
             "method": "Score-bug mask -> adaptive white gate -> Canny -> sign-normalized Hough -> yard-line x hash-mark intersections -> Hartley DLT",
             "correspondences_detected": calibrator.last_correspondences_count,

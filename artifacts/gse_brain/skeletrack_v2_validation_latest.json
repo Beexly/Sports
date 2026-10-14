@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-14T14:29:53.388992+00:00",
+ "generated_utc": "2026-10-14T15:18:33.528170+00:00",
  "source": "skeletrack_v2_bdb_validation_harness",
  "contract": "intelligence/vision/VISION-CONTRACT.md",
  "proof_play": {
@@ -9,6 +9,19 @@
   "post_snap_frames": 68,
   "hz": 10.0,
   "true_players": 22
+ },
+ "proof_play_2026_ngs_highlight": {
+  "game_id": 2026101200,
+  "nflverse_game_id": "2026_05_BUF_LA",
+  "play_id": 4579,
+  "description": "2026 Week 5 BUF @ LA: Josh Allen 57-yd completion to Khalil Shakir (NGS highlight tracking 10 Hz)",
+  "post_snap_frames": 96,
+  "true_players": 22,
+  "join_completeness": 1.0,
+  "join_accuracy": 1.0,
+  "player_position_kalman_rmse_m": 0.0893,
+  "ci90_empirical_coverage": 0.8821,
+  "ball_track_rmse_m": 0.1434
  },
  "homography_metrics": {
   "method": "Score-bug mask -> adaptive white gate -> Canny -> sign-normalized Hough -> yard-line x hash-mark intersections -> Hartley DLT",
@@ -45,7 +58,7 @@
     "joined_nfl_id": 37079,
     "joined_gsis_id": "00-0027944",
     "joined_name": "Julio Jones",
-    "ocr_conf": 0.7703,
+    "ocr_conf": 0.797,
     "crop_sharpness": 1865.57,
     "exact_match": true
    },
@@ -56,7 +69,7 @@
     "joined_nfl_id": 41263,
     "joined_gsis_id": "00-0031411",
     "joined_name": "Demarcus Lawrence",
-    "ocr_conf": 0.9162,
+    "ocr_conf": 0.895,
     "crop_sharpness": 4332.7,
     "exact_match": true
    },
@@ -78,7 +91,7 @@
     "joined_nfl_id": 42033,
     "joined_gsis_id": "00-0031273",
     "joined_name": "Cameron Brate",
-    "ocr_conf": 0.773,
+    "ocr_conf": 0.7912,
     "crop_sharpness": 3857.29,
     "exact_match": true
    },
@@ -89,7 +102,7 @@
     "joined_nfl_id": 42346,
     "joined_gsis_id": "00-0032052",
     "joined_name": "Dante Fowler",
-    "ocr_conf": 0.7469,
+    "ocr_conf": 0.7755,
     "crop_sharpness": 4166.8,
     "exact_match": true
    }
