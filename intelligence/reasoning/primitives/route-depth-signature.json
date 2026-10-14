@@ -76,10 +76,25 @@
   "final_flip": "STILL weight-0: both halves on the SAME margin required by VISION-CONTRACT"
  },
  "market_half": {
-  "status": "MEASURED ON THE TOTALS MARGIN \u2014 FLOOR MODEL DOES NOT BEAT THE MARKET",
-  "result": "naive team-lean totals model: held-out log-score 4.0235 vs market 3.9769; the closing line's implied uncertainty (sd 13.32) remains the bar",
-  "artifact": "docs/data-sources/research/2026-10-14/market-half-totals.json",
-  "contract_language": "if calibration holds but no margin beats the market, the module is a working state estimator and still not an edge \u2014 both facts get recorded",
-  "implication": "the vision module is a working estimator (calibration half passed, family replicated) and NOT yet an edge on a priced margin; per-play route-class information remains an unpriced-margin advantage"
+  "status": "MEASURED \u2014 location improves marginally, width claim FAILS out-of-fold",
+  "totals_model": "EPA/success deltas (expanding window, pbp 2015-2024)",
+  "location": {
+   "rmse_market": 12.896,
+   "rmse_model": 12.88,
+   "logscore_same_width": "market 3.9771 vs model 3.9759",
+   "beats_market_location": true
+  },
+  "width": {
+   "model_sd_oof": 13.376,
+   "market_sd": 13.361,
+   "in_sample_claim": "13.33 < 13.361 \u2014 RETRACTED (fit flattery, failure #6)",
+   "model_narrower": false
+  },
+  "verdict": "MARKET HALF NOT MET: the contract requires strictly smaller uncertainty; out-of-fold the width edge vanishes. The EPA deltas add real but tiny location skill.",
+  "artifacts": [
+   "docs/data-sources/research/2026-10-14/totals-efficiency-model.json",
+   "docs/data-sources/research/2026-10-14/totals-model-oof-sd.json",
+   "docs/data-sources/research/2026-10-14/totals-model-honest-verdict.json"
+  ]
  }
 }

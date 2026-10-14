@@ -1,0 +1,15 @@
+{
+ "location_only_test_same_width": {
+  "market_logscore": 3.9771,
+  "model_logscore": 3.9759,
+  "model_beats_market_location": true,
+  "rmse_market": 12.896,
+  "rmse_model": 12.88
+ },
+ "width_test_oof": {
+  "model_sd_oof": 13.376,
+  "market_sd": 13.361,
+  "model_narrower": false
+ },
+ "honest_verdict": "EPA-delta features add a small LOCATION improvement (check rmse/log-score) but the WIDTH claim fails out-of-fold; the in-sample 'model_narrower' was fit flattery (failure #6), retracted"
+}
