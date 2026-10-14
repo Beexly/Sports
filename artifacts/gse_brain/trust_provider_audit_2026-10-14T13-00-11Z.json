@@ -1,0 +1,135 @@
+{
+ "generated_utc": "2026-10-14T13:00:11.201381+00:00",
+ "source": "trust_provider_guard",
+ "live_evaluation": {
+  "overall_status": "VALID",
+  "cards_valid": "14/14",
+  "failed_required_count": 0,
+  "optional_missing_stores_flagged": [
+   "pbp_participation_2026: MISSING store file: intelligence/coaching/data/pbp_participation_2026.parquet"
+  ],
+  "store_checks": [
+   {
+    "store_name": "injuries_2026_parquet",
+    "required": true,
+    "path": "intelligence/coaching/data/injuries_2026.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 1413,
+    "age_hours": 7.02,
+    "budget_hours": 168.0,
+    "verdict": "FRESH",
+    "reason": "OK (1413 rows, age 7.02h <= 168.0h, max_season=2026, max_week=5)",
+    "max_season": 2026,
+    "max_week": 5
+   },
+   {
+    "store_name": "espn_live_injuries_2026",
+    "required": true,
+    "path": "docs/data-sources/research/2026-10-14/espn/public_injuries_2026-10-14T05-29-35Z.json",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 32,
+    "age_hours": 7.51,
+    "budget_hours": 168.0,
+    "verdict": "FRESH",
+    "reason": "FRESH (32 teams, age 7.51h vs budget 168.0h)",
+    "max_season": null,
+    "max_week": null
+   },
+   {
+    "store_name": "depth_charts_2026_parquet",
+    "required": true,
+    "path": "intelligence/coaching/data/depth_charts_2026.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 594789,
+    "age_hours": 131.04,
+    "budget_hours": 336.0,
+    "verdict": "FRESH",
+    "reason": "OK (594789 rows, age 131.04h <= 336.0h, max_season=None, max_week=None)",
+    "max_season": null,
+    "max_week": null
+   },
+   {
+    "store_name": "snap_counts_2026",
+    "required": false,
+    "path": "intelligence/coaching/data/snap_counts_2026.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 7370,
+    "age_hours": 0.23,
+    "budget_hours": 336.0,
+    "verdict": "FRESH",
+    "reason": "OK (7370 rows, age 0.23h <= 336.0h, max_season=2026, max_week=5)",
+    "max_season": 2026,
+    "max_week": 5
+   },
+   {
+    "store_name": "snap_counts_2025",
+    "required": false,
+    "path": "intelligence/coaching/data/snap_counts_2025.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 26613,
+    "age_hours": 0.23,
+    "budget_hours": 336.0,
+    "verdict": "FRESH",
+    "reason": "OK (26613 rows, age 0.23h <= 336.0h, max_season=2025, max_week=22)",
+    "max_season": 2025,
+    "max_week": 22
+   },
+   {
+    "store_name": "pbp_participation_2025",
+    "required": false,
+    "path": "intelligence/coaching/data/pbp_participation_2025.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 45184,
+    "age_hours": 6.96,
+    "budget_hours": 2160.0,
+    "verdict": "FRESH",
+    "reason": "OK (45184 rows, age 6.96h <= 2160.0h, max_season=None, max_week=None)",
+    "max_season": null,
+    "max_week": null
+   },
+   {
+    "store_name": "pbp_participation_2026",
+    "required": false,
+    "path": "intelligence/coaching/data/pbp_participation_2026.parquet",
+    "exists": false,
+    "non_empty": false,
+    "row_count": 0,
+    "age_hours": null,
+    "budget_hours": 2160.0,
+    "verdict": "MISSING_EMPTY",
+    "reason": "MISSING store file: intelligence/coaching/data/pbp_participation_2026.parquet",
+    "max_season": null,
+    "max_week": null
+   }
+  ]
+ },
+ "fail_closed_verification_when_required_store_missing": {
+  "overall_status": "INVALID",
+  "cards_invalid": "14/14",
+  "explicit_invalid_reasons": [
+   "MISSING store file: intelligence/coaching/data/pbp_participation_2026.parquet"
+  ]
+ },
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty": {
+  "http_status": "LOCAL_STORE_GUARD_PLUS_UPSTREAM_CHECK",
+  "truncation": false,
+  "access_restriction": "injuries_2026.parquet (1,413 rows, wks 1-5), depth_charts_2026.parquet (594,789 rows), snap_counts_2026.parquet (7,370 rows, wks 1-5), pbp_participation_2025.parquet (45,184 rows) are FRESH; pbp_participation_2026.parquet is unpublished upstream (HTTP 404) and flagged explicitly",
+  "derivation": "Fail-closed empty-store + freshness guard over required (injuries, depth_charts) and optional (snap_counts, participation) stores. Missing/stale required store forces 14/14 cards to INVALID with explicit reasons.",
+  "joins_on": [
+   "game_id",
+   "team",
+   "gsis_id"
+  ],
+  "weight": 0.0,
+  "validation_spec_met": false,
+  "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and downstream calibration validation spec are met."
+ }
+}

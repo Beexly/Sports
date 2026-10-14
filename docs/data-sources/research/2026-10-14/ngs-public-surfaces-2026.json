@@ -1,0 +1,338 @@
+{
+ "generated_utc": "2026-10-14T13:01:28.418040+00:00",
+ "source": "ngs_public_api",
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and downstream calibration validation spec are met.",
+ "endpoints": {
+  "schedule_2026_reg": {
+   "url": "https://nextgenstats.nfl.com/api/league/schedule?season=2026&seasonType=REG",
+   "http_status": 200,
+   "record_count": 272,
+   "truncation": false,
+   "access_restriction": "keyless public NGS JSON API (requires Referer: https://nextgenstats.nfl.com/; no week=all on statboards)",
+   "joins_on": [
+    "gsis_id (player.gsisId / esbId)",
+    "game_id (gameId)",
+    "team_abbr"
+   ],
+   "weight": 0.0,
+   "validation_spec_met": false,
+   "sample": [
+    {
+     "season": 2026,
+     "seasonType": "REG",
+     "week": 1,
+     "gameId": 2026090900,
+     "gameKey": 60178,
+     "smartId": "a8fb0d78-4feb-11f1-abca-2c54536568a9",
+     "gameDate": "09/09/2026",
+     "gameTime": "2026-09-10T00:20:00Z",
+     "gameTimeEastern": "20:20:00",
+     "isoTime": 1788999600000,
+     "homeTeamId": "4600",
+     "visitorTeamId": "3200",
+     "homeTeamAbbr": "SEA",
+     "homeDisplayName": "Seattle Seahawks",
+     "homeNickname": "Seahawks",
+     "visitorTeamAbbr": "NE",
+     "visitorDisplayName": "New England Patriots",
+     "visitorNickname": "Patriots",
+     "gameType": "REG",
+     "weekNameAbbr": "Week 1",
+     "visitorTeam": {
+      "teamId": "3200",
+      "smartId": "10403200-69ab-9ea6-5af5-e240fbc08bea",
+      "abbr": "NE",
+      "cityState": "New England",
+      "fullName": "New England Patriots",
+      "nick": "Patriots",
+      "teamType": "TEAM",
+      "conferenceAbbr": "AFC",
+      "divisionAbbr": "ACE",
+      "logo": "https://static.www.nfl.com/{formatInstructions}/league/api/clubs/logos/NE"
+     },
+     "homeTeam": {
+      "teamId": "4600",
+      "smartId": "10404600-adcd-28ac-5826-b4d95ec2a228",
+      "abbr": "SEA",
+      "cityState": "Seattle",
+      "fullName": "Seattle Seahawks",
+      "nick": "Seahawks",
+      "teamType": "TEAM",
+      "conferenceAbbr": "NFC",
+      "divisionAbbr": "NCW",
+      "logo": "https://static.www.nfl.com/{formatInstructions}/league/api/clubs/logos/SEA"
+     },
+     "validated": true,
+     "releasedToClubs": true,
+     "site": {
+      "siteId": 5315,
+      "smartId": "00085315-d5b8-18a5-6c08-f91cd9144cb5",
+      "siteCity": "Seattle",
+      "siteFullName": "Lumen Field",
+      "siteState": "WA",
+      "postalCode": "98134",
+      "roofType": "OUTDOOR"
+     },
+     "score": {
+      "time": "00:00",
+      "phase": "FINAL",
+      "visitorTeamScore": {
+       "pointTotal": 10,
+       "pointQ1": 0,
+       "pointQ2": 7,
+       "pointQ3": 3,
+       "pointQ4": 0,
+       "pointOT": 0,
+       "timeoutsRemaining": 1
+      },
+      "homeTeamScore": {
+       "pointTotal": 13,
+       "pointQ1": 0,
+       "pointQ2": 0,
+       "pointQ3": 3,
+       "pointQ4": 10,
+       "pointOT": 0,
+       "timeoutsRemaining": 0
+      }
+     },
+     "networkChannel": "NBC",
+     "ngsGame": true
+    },
+    {
+     "season": 2026,
+     "seasonType": "REG",
+     "week": 1,
+     "gameId": 2026091100,
+     "gameKey": 60179,
+     "smartId": "a8fc08da-4feb-11f1-abca-2c54536568a9",
+     "gameDate": "09/10/2026",
+     "gameTime": "2026-09-11T00:35:00Z",
+     "gameTimeEastern": "20:35:00",
+     "isoTime": 1789086900000,
+     "homeTeamId": "2510",
+     "visitorTeamId": "4500",
+     "homeTeamAbbr": "LAR",
+     "homeDisplayName": "Los Angeles Rams",
+     "homeNickname": "Rams",
+     "visitorTeamAbbr": "SF",
+     "visitorDisplayName": "San Francisco 49ers",
+     "visitorNickname": "49ers",
+     "gameType": "REG",
+     "weekNameAbbr": "Week 1",
+     "visitorTeam": {
+      "teamId": "4500",
+      "smartId": "10404500-e7cb-7fce-3f10-4eeb269bd179",
+      "abbr": "SF",
+      "cityState": "San Francisco",
+      "fullName": "San Francisco 49ers",
+      "nick": "49ers",
+      "teamType": "TEAM",
+      "conferenceAbbr": "NFC",
+      "divisionAbbr": "NCW",
+      "logo": "https://static.www.nfl.com/{formatInstructions}/league/api/clubs/logos/SF"
+     },
+     "homeTeam": {
+      "teamId": "2510",
+      "smartId": "10402510-8931-0d5f-9815-79bb79649a65",
+      "abbr": "LAR",
+      "cityState": "Los Angeles",
+      "fullName": "Los Angeles Rams",
+      "nick": "Rams",
+      "teamType": "TEAM",
+      "conferenceAbbr": "NFC",
+      "divisionAbbr": "NCW",
+      "logo": "https://static.www.nfl.com/{formatInstructions}/league/api/clubs/logos/LA"
+     },
+     "validated": true,
+     "releasedToClubs": true,
+     "site": {
+      "siteId": 6001,
+      "smartId": "00086001-ac21-5b8e-1a38-6bade051be83",
+      "siteCity": "East Melbourne",
+      "siteFullName": "Melbourne Cricket Ground",
+      "siteState": "Victoria",
+      "roofType": "OUTDOOR"
+     },
+     "score": {
+      "time": "00:00",
+      "phase": "FINAL",
+      "visitorTeamScore": {
+       "pointTotal": 27,
+       "pointQ1": 3,
+       "pointQ2": 7,
+       "pointQ3": 7,
+       "pointQ4": 10,
+       "pointOT": 0,
+       "timeoutsRemaining": 1
+      },
+      "homeTeamScore": {
+       "pointTotal": 7,
+       "pointQ1": 0,
+       "pointQ2": 7,
+       "pointQ3": 0,
+       "pointQ4": 0,
+       "pointOT": 0,
+       "timeoutsRemaining": 2
+      }
+     },
+     "networkChannel": "NETFLIX",
+     "ngsGame": true
+    }
+   ]
+  },
+  "league_teams": {
+   "url": "https://nextgenstats.nfl.com/api/league/teams",
+   "http_status": 200,
+   "record_count": 34,
+   "truncation": false,
+   "access_restriction": "keyless public NGS JSON API (requires Referer: https://nextgenstats.nfl.com/; no week=all on statboards)",
+   "joins_on": [
+    "gsis_id (player.gsisId / esbId)",
+    "game_id (gameId)",
+    "team_abbr"
+   ],
+   "weight": 0.0,
+   "validation_spec_met": false,
+   "sample": [
+    {
+     "season": 2026,
+     "teamId": "8600",
+     "smartId": "10408600-77a1-8b0f-8f54-99b7e0a7d1b2",
+     "abbr": "AFC",
+     "cityState": "AFC",
+     "fullName": "AFC Pro Bowl Team",
+     "nick": "AFC",
+     "teamType": "PRO",
+     "conferenceAbbr": "AFC",
+     "stadiumName": "Allegiant Stadium",
+     "conference": {
+      "id": "0011",
+      "abbr": "AFC",
+      "fullName": "American Football Conference"
+     },
+     "yearFound": 2020,
+     "logo": "https://static.www.nfl.com/{formatInstructions}/league/api/clubs/logos/APR"
+    },
+    {
+     "season": 2026,
+     "teamId": "3800",
+     "smartId": "10403800-517c-7b8c-65a3-c61b95d86123",
+     "abbr": "AZ",
+     "cityState": "Arizona",
+     "fullName": "Arizona Cardinals",
+     "nick": "Cardinals",
+     "teamType": "TEAM",
+     "conferenceAbbr": "NFC",
+     "stadiumName": "State Farm Stadium",
+     "conference": {
+      "id": "0015",
+      "abbr": "NFC",
+      "fullName": "National Football Conference"
+     },
+     "division": {
+      "id": "0018",
+      "abbr": "NCW",
+      "fullName": "NFC West Division"
+     },
+     "yearFound": 1920,
+     "ticketPhoneNumber": "602-379-0102",
+     "teamSiteUrl": "http://www.azcardinals.com/",
+     "teamSiteTicketUrl": "http://www.azcardinals.com/tickets/",
+     "logo": "https://static.www.nfl.com/{formatInstructions}/league/api/clubs/logos/ARI"
+    }
+   ]
+  },
+  "statboard_passing_2026": {
+   "url": "https://nextgenstats.nfl.com/api/statboard/passing?season=2026&seasonType=REG",
+   "http_status": 200,
+   "record_count": 37,
+   "truncation": false,
+   "access_restriction": "keyless public NGS JSON API (requires Referer: https://nextgenstats.nfl.com/; no week=all on statboards)",
+   "joins_on": [
+    "gsis_id (player.gsisId / esbId)",
+    "game_id (gameId)",
+    "team_abbr"
+   ],
+   "weight": 0.0,
+   "validation_spec_met": false,
+   "sample": {
+    "season": 2026,
+    "seasonType": "REG",
+    "filter": "ALL",
+    "threshold": 45
+   }
+  },
+  "statboard_rushing_2026": {
+   "url": "https://nextgenstats.nfl.com/api/statboard/rushing?season=2026&seasonType=REG",
+   "http_status": 200,
+   "record_count": 42,
+   "truncation": false,
+   "access_restriction": "keyless public NGS JSON API (requires Referer: https://nextgenstats.nfl.com/; no week=all on statboards)",
+   "joins_on": [
+    "gsis_id (player.gsisId / esbId)",
+    "game_id (gameId)",
+    "team_abbr"
+   ],
+   "weight": 0.0,
+   "validation_spec_met": false,
+   "sample": {
+    "season": 2026,
+    "seasonType": "REG",
+    "filter": "ALL",
+    "threshold": 30
+   }
+  },
+  "statboard_receiving_2026": {
+   "url": "https://nextgenstats.nfl.com/api/statboard/receiving?season=2026&seasonType=REG",
+   "http_status": 200,
+   "record_count": 118,
+   "truncation": false,
+   "access_restriction": "keyless public NGS JSON API (requires Referer: https://nextgenstats.nfl.com/; no week=all on statboards)",
+   "joins_on": [
+    "gsis_id (player.gsisId / esbId)",
+    "game_id (gameId)",
+    "team_abbr"
+   ],
+   "weight": 0.0,
+   "validation_spec_met": false,
+   "sample": {
+    "season": 2026,
+    "seasonType": "REG",
+    "filter": "ALL",
+    "threshold": 15
+   }
+  },
+  "teams_bare_deprecated": {
+   "url": "https://nextgenstats.nfl.com/api/teams",
+   "http_status": 403,
+   "record_count": 0,
+   "truncation": false,
+   "access_restriction": "RESTRICTED_OR_DEPRECATED (HTTPError 403: Forbidden); fail-closed \u2014 zero rows fabricated",
+   "joins_on": [],
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  "fastest_ball_carriers_restricted": {
+   "url": "https://nextgenstats.nfl.com/api/statboard/fastest-ball-carriers?season=2026&seasonType=REG",
+   "http_status": 403,
+   "record_count": 0,
+   "truncation": false,
+   "access_restriction": "RESTRICTED_OR_DEPRECATED (HTTPError 403: Forbidden); fail-closed \u2014 zero rows fabricated",
+   "joins_on": [],
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  "pass_rush_statboard_restricted": {
+   "url": "https://nextgenstats.nfl.com/api/statboard/pass-rush?season=2026&seasonType=REG",
+   "http_status": 403,
+   "record_count": 0,
+   "truncation": false,
+   "access_restriction": "RESTRICTED_OR_DEPRECATED (HTTPError 403: Forbidden); fail-closed \u2014 zero rows fabricated",
+   "joins_on": [],
+   "weight": 0.0,
+   "validation_spec_met": false
+  }
+ }
+}
