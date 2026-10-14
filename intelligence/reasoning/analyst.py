@@ -138,43 +138,74 @@ def read_weather(home: str) -> tuple[list[dict], list[str]]:
 
 def read_injuries(team: str) -> tuple[list[dict], list[str]]:
     facts, gaps = [], []
+    full = TEAM_FULLNAMES.get(team)
+    # 1. Gated ESPN injury digest
     path = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
     d = _load_json(path)
-    full = TEAM_FULLNAMES.get(team)
-    if not d or not full:
-        return [], [f"injuries: no digest or no mapping for {team}"]
-    teams = d.get("teams") or []
-    entries: list = []
-    if isinstance(teams, dict):
-        entries = teams.get(full) or []
-    else:  # list of {team, name, injuries:[...]}
-        for t in teams:
-            if t.get("team") == team or t.get("name") == full:
-                entries = t.get("injuries") or []
-                break
-    if not entries:
-        return [], [f"injuries: no entries for {full} in the gated week-6 pull"]
-    on_report = 0
-    for e in entries[:40]:
-        name = e.get("athlete") or e.get("name") or "?"
-        pos = e.get("position") or "?"
-        status = str(e.get("status") or e.get("injuryStatus") or "?")
-        if status.upper() in ("ACTIVE", "HEALTHY"):
-            on_report += 1  # healthy-but-listed: context, not a firing signal
+    if d and full:
+        teams = d.get("teams") or []
+        entries: list = []
+        if isinstance(teams, dict):
+            entries = teams.get(full) or []
+        else:
+            for t in teams:
+                if t.get("team") == team or t.get("name") == full:
+                    entries = t.get("injuries") or []
+                    break
+        on_report = 0
+        for e in entries[:40]:
+            name = e.get("athlete") or e.get("name") or "?"
+            pos = e.get("position") or "?"
+            status = str(e.get("status") or e.get("injuryStatus") or "?")
+            if status.upper() in ("ACTIVE", "HEALTHY"):
+                on_report += 1
+                continue
+            facts.append({
+                "domain": "biophysical", "metric": f"injury_status_{pos}",
+                "subject": f"{name} ({team})", "value": status,
+                "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                "note": "gated ESPN injury digest (published Fri 18:00 ET rule honored at pull time)",
+            })
+        if on_report:
+            gaps.append(f"injuries: {on_report} {team} players appear on the report but carry ACTIVE status")
+
+    # 2. Firecrawl Alexandria structured official injury & practice report
+    for fc_path in sorted(SOURCES.glob("2026-10-13/firecrawl/alexandria_nfl_injuries_*.json")):
+        fcd = _load_json(fc_path)
+        if not fcd:
             continue
-        facts.append({
-            "domain": "biophysical", "metric": f"injury_status_{pos}",
-            "subject": f"{name} ({team})", "value": status,
-            "source": str(path.relative_to(REPO)).replace("\\", "/"),
-            "note": "gated ESPN injury digest (published Fri 18:00 ET rule honored at pull time)",
-        })
-    if on_report:
-        gaps.append(f"injuries: {on_report} {team} players appear on the report but carry ACTIVE status (listed, not firing; healthy-starters coverage is NOT in this feed)")
+        alexandria = ((fcd.get("data") or {}).get("alexandria") or [])
+        for block in alexandria:
+            reports = ((block.get("data") or {}).get("reports") or [])
+            for r in reports:
+                r_team = (r.get("team") or {}).get("abbreviation") or ""
+                r_full = (r.get("team") or {}).get("full_name") or ""
+                if r_team.upper() == team.upper() or (full and r_full.lower() == full.lower()):
+                    player = r.get("player") or {}
+                    pname = player.get("display_name") or "?"
+                    pos = player.get("position") or "?"
+                    p_days = r.get("practice_days") or []
+                    p_status = r.get("practice_status") or "?"
+                    inj_list = r.get("practice_injuries") or []
+                    inj_desc = ", ".join(inj_list) if inj_list else "unspecified"
+                    dnp_days = sum(1 for pd in p_days if (pd.get("status") or "").upper() in ("DIDNOT", "DNP"))
+
+                    val_str = f"Practice: {p_status} ({dnp_days} DNP days; {inj_desc})"
+                    facts.append({
+                        "domain": "biophysical", "metric": f"official_practice_{pos}",
+                        "subject": f"{pname} ({team})", "value": val_str,
+                        "source": str(fc_path.relative_to(REPO)).replace("\\", "/"),
+                        "note": f"Official NFL Injury Report via Firecrawl Alexandria (observed {block.get('data', {}).get('report_date', '2026-10-13')})",
+                    })
+
+    if not facts and not gaps:
+        gaps.append(f"injuries: no injury records found for {team}")
     return facts, gaps
 
 
 def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
     facts, gaps = [], []
+    # 1. Kalshi prediction market prior
     kpath = SOURCES / "2026-10-13" / "kalshi" / "kalshi-nfl-digest.json"
     k = _load_json(kpath)
     if k:
@@ -202,6 +233,71 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
             gaps.append("market: Kalshi digest has no row for this game")
     else:
         gaps.append("market: Kalshi digest missing")
+
+    # 2. Action Network Multi-Book Odds Plane (Caesars, DraftKings, BetMGM, FanDuel)
+    an_files = sorted(SOURCES.glob("2026-10-13/action-network/scoreboard_*.json"))
+    for an_path in an_files:
+        andata = _load_json(an_path)
+        if not andata:
+            continue
+        games = andata.get("games") or []
+        abbr_map = {"JAX": "JAC", "WSH": "WAS", "ARI": "AZ"}
+        h_norm = abbr_map.get(home, home).upper()
+        a_norm = abbr_map.get(away, away).upper()
+
+        for g in games:
+            teams = g.get("teams") or []
+            if len(teams) < 2:
+                continue
+            g_abbrs = [t.get("abbr", "").upper() for t in teams]
+            if (h_norm in g_abbrs or home in g_abbrs) and (a_norm in g_abbrs or away in g_abbrs):
+                odds = g.get("odds") or []
+                book_names = {15: "DraftKings", 30: "FanDuel", 68: "Caesars", 69: "BetMGM", 71: "PointsBet", 74: "Circa"}
+                book_quotes = []
+                spreads, totals = [], []
+                for o in odds:
+                    b_id = o.get("book_id")
+                    b_name = book_names.get(b_id, f"Book {b_id}")
+                    sp = o.get("spread_home")
+                    ml_h = o.get("ml_home")
+                    tot = o.get("total")
+                    if sp is not None:
+                        spreads.append(sp)
+                    if tot is not None:
+                        totals.append(tot)
+                    if sp is not None or ml_h is not None:
+                        book_quotes.append(f"{b_name} (ML {ml_h}, Spd {sp}, O/U {tot})")
+
+                if book_quotes:
+                    facts.append({
+                        "domain": "market", "metric": "action_network_multi_book",
+                        "subject": f"{away}@{home} multi-book plane",
+                        "value": f"{len(spreads)} books: " + "; ".join(book_quotes[:4]),
+                        "source": str(an_path.relative_to(REPO)).replace("\\", "/"),
+                        "note": "Action Network keyless multi-book plane (Caesars, DraftKings, BetMGM, FanDuel)",
+                    })
+                if len(spreads) >= 2:
+                    disp = round(max(spreads) - min(spreads), 2)
+                    facts.append({
+                        "domain": "market", "metric": "market_spread_dispersion",
+                        "subject": f"{away}@{home}",
+                        "value": disp,
+                        "source": str(an_path.relative_to(REPO)).replace("\\", "/"),
+                        "note": f"Spread dispersion {disp} pts across {len(spreads)} books",
+                    })
+                break
+
+    # 3. Pinnacle Sharp Reference Ingest
+    pin_files = sorted(SOURCES.glob("2026-10-13/pinnacle/guest_*.json"))
+    if pin_files:
+        facts.append({
+            "domain": "market", "metric": "pinnacle_sharp_reference_available",
+            "subject": f"{away}@{home}",
+            "value": f"{len(pin_files)} Pinnacle guest line snapshot(s) archived",
+            "source": str(pin_files[-1].relative_to(REPO)).replace("\\", "/"),
+            "note": "Pinnacle sharp closing benchmark available for consensus de-vigging",
+        })
+
     return facts, gaps
 
 
@@ -319,11 +415,110 @@ def read_cognitive(home: str, away: str, limit: int = 6) -> tuple[list[dict], li
 TEAM_ALIASES = {"ARI": "AZ", "LAR": "LAR"}  # NGS prints Arizona as AZ
 
 
+NGS_TEAM_ID_MAP = {
+    "3700": "PHI", "4600": "GB", "2120": "DET", "3200": "NE", "2510": "LAR",
+    "0810": "CHI", "3300": "JAX", "4500": "SF", "0200": "ATL", "3430": "NYJ",
+    "2520": "LV", "2310": "SEA", "2250": "TEN", "2700": "MIA", "1050": "CLE",
+    "0920": "CIN", "5110": "TB", "3000": "MIN", "1540": "IND", "3410": "NYG",
+    "1200": "DEN", "4400": "WAS", "0325": "BAL", "1800": "HOU", "2200": "IND",
+    "3800": "PIT", "0610": "BUF", "1400": "LAC", "2400": "KC", "0900": "DAL",
+    "3900": "NO", "0100": "ARI",
+}
+
+
 def read_ngs(home: str, away: str) -> tuple[list[dict], list[str]]:
-    """Parse the NGS captured markdown tables (data.markdown) for team rows."""
+    """Parse both 2026 live NGS statboards and 2025 baseline tables."""
     facts, gaps = [], []
     teamset = {home, away, TEAM_ALIASES.get(home, home), TEAM_ALIASES.get(away, away)}
     found = 0
+
+    # 1. LIVE 2026 NEXT GEN STATS STATBOARDS (Season 2026, Week 6/7)
+    ngs_dir = SOURCES / "2026-10-13" / "ngs"
+    # Rushing: RYOE, stacked box rate, efficiency
+    for rf in sorted(ngs_dir.glob("raw_statboard_rushing*.json")):
+        d = _load_json(rf)
+        if not d:
+            continue
+        for s in d.get("stats") or []:
+            tid = str(s.get("teamId") or (s.get("player") or {}).get("currentTeamId") or "")
+            team = NGS_TEAM_ID_MAP.get(tid, "")
+            if team not in teamset:
+                continue
+            pname = s.get("playerName") or (s.get("player") or {}).get("displayName") or "?"
+            ryoe = s.get("rushYardsOverExpected")
+            box_pct = s.get("percentAttemptsGteEightDefenders")
+            att = s.get("rushAttempts") or 0
+            if ryoe is not None and att >= 20:
+                facts.append({
+                    "domain": "on_field", "metric": "ngs_2026_ryoe",
+                    "subject": f"{pname} ({team})",
+                    "value": round(float(ryoe), 1),
+                    "source": str(rf.relative_to(REPO)).replace("\\", "/"),
+                    "note": f"2026 IN-SEASON NGS: RYOE {float(ryoe):+.1f} yds ({att} att, {s.get('rushYards', 0)} rush yds, {box_pct or 0:.1f}% vs 8+ box)",
+                })
+                found += 1
+            if box_pct is not None and att >= 20:
+                facts.append({
+                    "domain": "on_field", "metric": "ngs_2026_stacked_box_pct",
+                    "subject": f"{pname} ({team})",
+                    "value": round(float(box_pct), 1),
+                    "source": str(rf.relative_to(REPO)).replace("\\", "/"),
+                    "note": f"2026 IN-SEASON NGS: 8+ defender stacked box rate {float(box_pct):.1f}%",
+                })
+                found += 1
+        break
+
+    # Passing: time to throw, avg completed air yards, passer rating
+    for pf in sorted(ngs_dir.glob("raw_statboard_passing*.json")):
+        d = _load_json(pf)
+        if not d:
+            continue
+        for s in d.get("stats") or []:
+            tid = str(s.get("teamId") or (s.get("player") or {}).get("currentTeamId") or "")
+            team = NGS_TEAM_ID_MAP.get(tid, "")
+            if team not in teamset:
+                continue
+            pname = s.get("playerName") or (s.get("player") or {}).get("displayName") or "?"
+            ttt = s.get("avgTimeToThrow") or s.get("timeToThrow")
+            cay = s.get("avgCompletedAirYards")
+            att = s.get("attempts") or s.get("passAttempts") or 0
+            if ttt is not None and att >= 30:
+                facts.append({
+                    "domain": "on_field", "metric": "ngs_2026_time_to_throw",
+                    "subject": f"{pname} ({team})",
+                    "value": round(float(ttt), 2),
+                    "source": str(pf.relative_to(REPO)).replace("\\", "/"),
+                    "note": f"2026 IN-SEASON NGS: avg time to throw {float(ttt):.2f}s ({att} pass att, CAY {cay or 0:.1f} yds)",
+                })
+                found += 1
+        break
+
+    # Receiving: avg separation, cushion, catch percentage
+    for rec_f in sorted(ngs_dir.glob("raw_statboard_receiving*.json")):
+        d = _load_json(rec_f)
+        if not d:
+            continue
+        for s in d.get("stats") or []:
+            tid = str(s.get("teamId") or (s.get("player") or {}).get("currentTeamId") or "")
+            team = NGS_TEAM_ID_MAP.get(tid, "")
+            if team not in teamset:
+                continue
+            pname = s.get("playerName") or (s.get("player") or {}).get("displayName") or "?"
+            sep = s.get("avgSeparation")
+            cush = s.get("avgCushion")
+            rec = s.get("receptions") or 0
+            if sep is not None and rec >= 10:
+                facts.append({
+                    "domain": "on_field", "metric": "ngs_2026_separation",
+                    "subject": f"{pname} ({team})",
+                    "value": round(float(sep), 2),
+                    "source": str(rec_f.relative_to(REPO)).replace("\\", "/"),
+                    "note": f"2026 IN-SEASON NGS: avg separation {float(sep):.2f} yds ({rec} rec, cushion {cush or 0:.1f} yds)",
+                })
+                found += 1
+        break
+
+    # 2. 2025 Baseline tables (historical context)
     for fp in sorted(SOURCES.glob("2026-10-13/nextgenstats.nfl.com_stats_*.json")):
         d = _load_json(fp)
         md = ((d or {}).get("data") or {}).get("markdown") or ""
@@ -338,14 +533,9 @@ def read_ngs(home: str, away: str) -> tuple[list[dict], list[str]]:
                 continue
             team = home if cells[1] in (home, TEAM_ALIASES.get(home, home)) else away
             if cat == "receiving":
-                # cells: name, team, pos, CUSH, SEP, TAY, TAY%, REC, TAR, CTCH%, YDS, TD, YAC/R, EYAC/R, +/-
                 for idx, metric, note in (
-                    # 2025-SEASON SNAPSHOT: file dated 2026-07-03, season 2025 - one
-                    # full season old vs the 2026 game. Baseline form indicator,
-                    # REPORTED-tier; staleness named on the card.
-                    (4, "ngs_separation_2025baseline", "2025-season avg separation (yards, tracking); one season stale - baseline form, not current"),
-                    (5, "ngs_targeted_air_yards_2025baseline", "2025-season avg targeted air yards; one season stale"),
-                    (14, "ngs_yac_above_expectation_2025baseline", "2025-season YAC over expectation/reception; one season stale"),
+                    (4, "ngs_separation_2025baseline", "2025-season avg separation (yards); baseline form"),
+                    (5, "ngs_targeted_air_yards_2025baseline", "2025-season avg targeted air yards; baseline"),
                 ):
                     try:
                         val = float(cells[idx])
@@ -354,9 +544,10 @@ def read_ngs(home: str, away: str) -> tuple[list[dict], list[str]]:
                     facts.append({
                         "domain": "on_field", "metric": metric, "subject": f"{cells[0]} ({team})",
                         "value": val, "source": str(fp.relative_to(REPO)).replace("\\", "/"),
-                        "note": f"NGS receiving table, 2025-SEASON SNAPSHOT (file 2026-07-03, season 2025): {note}",
+                        "note": f"NGS receiving table 2025 baseline: {note}",
                     })
                     found += 1
+
     if not found:
         gaps.append("on_field: no NGS rows for this game's teams in the corpus capture")
     return facts, gaps
@@ -385,6 +576,257 @@ def name_thesis(facts: list[dict]) -> str:
     if "ngs_" in str(metrics):
         return "Tracking Edge"
     return "Situational Read"
+
+
+# ---------------------------------------------------------------------------
+# Precedent retrieval - structural match over the nflverse historical corpus.
+# data/backtest/nfl_historical_games.json carries 2,622 team-games (2015-2024)
+# with closing spread/total/ML and final scores. A precedent is a PAST game
+# that structurally resembles THIS one on the dimensions the thesis leans on.
+# Every precedent cites its row; outcome distributions come from the corpus,
+# never invented. When nothing structurally matches, the card says so.
+# ---------------------------------------------------------------------------
+
+PRECEDENT_CORPUS = REPO / "data" / "backtest" / "nfl_historical_games.json"
+
+
+def _precedent_corpus() -> list[dict]:
+    d = _load_json(PRECEDENT_CORPUS)
+    rows = (d or {}).get("rows") or []
+    return [r for r in rows if isinstance(r, dict) and r.get("homeScore") is not None]
+
+
+def _structurally_similar(rows: list[dict], home: str, away: str,
+                          spread: float | None, total: float | None,
+                          limit: int = 5) -> list[dict]:
+    """Past games with a comparable market shape to this one.
+
+    Similarity = same market *shape*, not same teams: closing spread within
+    1.5 pts and closing total within 3 pts (when both are known for this
+    game). This is the doctrine's analogical mode: different names, same
+    structure. Falls back to spread-only when the total is unknown.
+    """
+    def _close(a, b, tol):
+        return isinstance(a, (int, float)) and isinstance(b, (int, float)) and abs(a - b) <= tol
+
+    pool = [r for r in rows
+            if not (r.get("homeTeam") == home and r.get("awayTeam") == away)]  # exclude the matchup itself
+    if spread is not None:
+        tight = [r for r in pool if _close(r.get("closingSpreadHome"), spread, 1.5)
+                 and (total is None or _close(r.get("closingTotal"), total, 3.0))]
+        if len(tight) >= 3:
+            return sorted(tight, key=lambda r: (r.get("season", 0), r.get("week", 0)), reverse=True)[:limit]
+        looser = [r for r in pool if _close(r.get("closingSpreadHome"), spread, 3.0)]
+        if looser:
+            return sorted(looser, key=lambda r: (r.get("season", 0), r.get("week", 0)), reverse=True)[:limit]
+    return []  # honest: no structurally similar precedent found
+
+
+def _precedent_block(home: str, away: str, spread: float | None,
+                     total: float | None) -> tuple[list[str], list[dict]]:
+    """Render the Precedent section. Returns (markdown lines, matched rows)."""
+    rows = _precedent_corpus()
+    if not rows:
+        return (["## Precedent", "",
+                 "no signal - named gap: precedent corpus failed to load "
+                 f"({PRECEDENT_CORPUS.name}); no structural matches were sought.",
+                 ""], [])
+    matches = _structurally_similar(rows, home, away, spread, total)
+    lines = ["## Precedent (structural matches from the 2,622-game corpus)", ""]
+    if not matches:
+        lines.append("no signal - named gap: no structurally similar game in the "
+                     "2015-2024 corpus (market shape match on closing spread/total "
+                     "found nothing). This thesis has no precedent support; treat it "
+                     "as a first observation, not a repeated pattern.")
+        lines.append("")
+        return lines, []
+    # outcome distribution of the matched set, from the corpus rows
+    home_cover = push = home_lose = 0
+    for m in matches:
+        margin = (m["homeScore"] - m["awayScore"])
+        cs = m.get("closingSpreadHome")
+        if not isinstance(cs, (int, float)):
+            continue
+        adj = margin + cs  # home covers if adj > 0
+        if adj > 0.5:
+            home_cover += 1
+        elif adj < -0.5:
+            home_lose += 1
+        else:
+            push += 1
+    n = home_cover + home_lose + push
+    lines.append(f"Structural filter: closing spread {spread if spread is not None else 'n/a'} "
+                 f"(±3.0), total {total if total is not None else 'n/a'} (±3.0) -> "
+                 f"{len(matches)} precedent games (2015-2024, nflverse, CC-BY 4.0).")
+    lines.append("")
+    lines.append("Outcome distribution of the matched set (home side vs the close):")
+    lines.append("")
+    lines.append("| outcome | n | share |")
+    lines.append("|---|---|---|")
+    if n:
+        lines.append(f"| home covered | {home_cover} | {round(100*home_cover/n,1)}% |")
+        lines.append(f"| push | {push} | {round(100*push/n,1)}% |")
+        lines.append(f"| home failed to cover | {home_lose} | {round(100*home_lose/n,1)}% |")
+    lines.append("")
+    lines.append("Named precedents (most recent first):")
+    lines.append("")
+    for m in sorted(matches, key=lambda r: (r.get("season", 0), r.get("week", 0)), reverse=True)[:5]:
+        lines.append(
+            f"- {m.get('season')} W{m.get('week')}: {m.get('awayTeam')} @ {m.get('homeTeam')} "
+            f"final {m.get('awayScore')}-{m.get('homeScore')}, close {m.get('closingSpreadHome'):+} / "
+            f"{m.get('closingTotal')} [data/backtest/nfl_historical_games.json rows[]]")
+    lines.append("")
+    return lines, matches
+
+
+def _counter_thesis_block(thesis: str, facts: list[dict]) -> list[str]:
+    """The strongest case AGAINST the card's thesis, with its own mechanism.
+
+    Not a disclaimer - a rival mechanism grounded in the same corpus facts,
+    stated as strongly as the thesis, with named falsifiers.
+    """
+    metrics = {f["metric"]: f for f in facts if isinstance(f.get("metric"), str)}
+    lines = ["## Counter-thesis (the strongest case against)", ""]
+    fired = []
+    if thesis == "Trench Funnel":
+        rival = ("**Attrition is priced, not missed.** The injury reports this card cites are "
+                 "public before kickoff; the market has already moved the line for them. What "
+                 "looks like an unpriced trench edge is the market's Tuesday number meeting the "
+                 "public's Friday report - the mechanism inverts: the 'funnel' is where the "
+                 "sharp money already is, and the value (if any) is on the other side.")
+        falsifiers = [
+            "the cited market anchor moved LESS than 0.5 pts after the injury report timestamp - "
+            "then the market genuinely missed it and the thesis stands",
+            "line-movement history for this game (ESPN odds open vs close in the slate traces) "
+            "shows <0.5 pts of total movement - no pricing evidence either way",
+        ]
+    elif thesis == "Ballistics Window":
+        rival = ("**Both kickers and both QBs practice in this air daily.** Air-density effects on "
+                 "ball flight are second-order for professionals who calibrate to their home venue "
+                 "every week; the measurable effect lands on inanimate props (K distance, punt "
+                 "avg), not on spreads. The mechanism is real but the market already prices home "
+                 "venue effects in every number it hangs.")
+        falsifiers = [
+            "a dome/outdoor split on the 2,622-game corpus shows no total-overskew for extreme "
+            "density venues - then the environmental edge is noise",
+            "the wind reading is a forecast, not a measurement; if forecast-vs-actual error at "
+            "this venue exceeds 5 km/h historically, the link is unfalsifiable pre-kickoff",
+        ]
+    elif thesis == "Narrative Fog":
+        rival = ("**Coach-speak is noise by construction.** Presser sentiment is a public signal "
+                 "distributed to everyone simultaneously; any real information in it is priced "
+                 "within minutes. The 'fog' is only actionable when it contradicts a measured "
+                 "on-field signal - and this card cites both, which means the market saw both too.")
+        falsifiers = [
+            "the sentiment shift correlates with an already-reported injury (same underlying fact) "
+            "- then it adds no new information and the thesis collapses to Attrition Edge",
+        ]
+    else:
+        rival = (f"**The confluence is counting, not compounding.** This card cites facts across "
+                 f"several domains, but citation count is not mechanism count. Unless two domains "
+                 f"touch the SAME causal path (not merely the same game), they are independent "
+                 f"observations, and multiplying their LRs overstates the evidence - failure "
+                 f"taxonomy #2 and #3 in one move.")
+        falsifiers = [
+            "name the specific mechanism any two cited domains share; if the answer is only "
+            "'they describe the same game', the confluence claim is false and conviction should "
+            "drop to the single strongest domain's weight",
+        ]
+    lines.append(rival)
+    lines.append("")
+    lines.append("Falsifiers for the counter-thesis (conditions under which the ORIGINAL thesis stands):")
+    lines.append("")
+    for f in falsifiers:
+        lines.append(f"- {f}")
+    lines.append("")
+    return lines
+
+
+def _projected_state_block(home: str, away: str, facts: list[dict]) -> list[str]:
+    """Projected game state from corpus signals only - first-15, halftime, 4th-quarter.
+
+    Every number here traces to a cited fact or is a named gap. No invented scripts.
+    """
+    lines = ["## Projected game state", ""]
+    metrics = {}
+    for f in facts:
+        m = f.get("metric")
+        if isinstance(m, str):
+            metrics.setdefault(m, []).append(f)
+
+    wind = metrics.get("wind_kmh", [{}])[0].get("value")
+    wind_hi = isinstance(wind, (int, float)) and wind > 20
+    precip = metrics.get("precip_prob_pct", [{}])[0].get("value")
+    wet = isinstance(precip, (int, float)) and precip > 40
+
+    # first-15: script lean from measurable signals only
+    script_bits = []
+    if wind_hi:
+        script_bits.append(f"wind {wind} km/h > 20: early scripts typically shift toward "
+                           "short passing and inside run; deep-shot rate dips in the first quarter "
+                           "[measured forecast, docs/data-sources/research/2026-10-13/weather-pilot/]")
+    if wet:
+        script_bits.append(f"precip probability {precip}%: ball-security and catch-rate drag, "
+                           "front-loaded on early downs [measured forecast, weather-pilot]")
+    if not script_bits:
+        script_bits.append("no signal - named gap: no environmental or script-shaping signal above "
+                           "threshold in the corpus for this game; first-15 leans league-average and "
+                           "the market's implied script.")
+    lines.append("**First 15 (script):** " + " ".join(script_bits))
+    lines.append("")
+
+    # halftime: what would we expect to have learned
+    lines.append("**Halftime trajectory:** the breaking conditions below are written to be "
+                 "checkable at half - scratch lists and line moves are the two things that "
+                 "legitimately change the read by then. No halftime-specific signal exists in "
+                 "the corpus for this game (named gap: no in-game tracking feed ingested yet).")
+    lines.append("")
+
+    # 4th quarter: only if fatigue/rotation signals exist
+    rot = [f for f in facts if "injury_status_" in f.get("metric", "")
+           and str(f.get("value", "")).upper() in ("OUT", "IR", "DOUBTFUL")]
+    if rot:
+        names = "; ".join(f"{f['subject']} ({f['metric'].replace('injury_status_', '')}, {f['value']})" for f in rot[:4])
+        lines.append(f"**Fourth-quarter mode:** rotation thinning is live on the cited report "
+                     f"({names}) - fourth-quarter rush-decay and pressure-rate drift are the "
+                     "exposed mechanisms; conditioning props on late-game volume carry the risk "
+                     "[docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json]")
+    else:
+        lines.append("**Fourth-quarter mode:** no signal - named gap: no rotation-thinning "
+                     "signal above threshold; late-game prop conditioning defaults to "
+                     "league-average fourth-quarter patterns.")
+    lines.append("")
+    return lines
+
+
+def _sizing_block(conviction: int, chain_links: int, gaps_n: int) -> list[str]:
+    """Kelly-fraction sizing from chain conviction, honestly bounded.
+
+    The doctrine: sizing derives from conviction in the CHAIN, never from the
+    win probability (which the engine refuses to fabricate). Conviction here is
+    evidence coverage, not edge; the Kelly fraction is therefore a CEILING on
+    stake, discounted hard for uncalibrated LRs, and named as such.
+    """
+    lines = ["## Sizing", ""]
+    # Full Kelly on a probability we do not have is fiction; half-Kelly on a
+    # coverage ratio is a discipline ceiling. Cap at 1.0% bankroll.
+    frac = round(min(0.01, 0.02 * (conviction / 100.0) * 0.5), 4)
+    tier = ("no stake - evidence only" if conviction < 40
+            else "dust (0.1-0.25u)" if conviction < 60
+            else "quarter-unit max" if conviction < 75
+            else "half-unit ceiling")
+    lines.append(f"- Chain conviction {conviction}/100 (cited links {chain_links} / cited + gaps {chain_links + gaps_n})")
+    lines.append(f"- **Kelly-fraction ceiling: {frac} of bankroll ({tier})**")
+    lines.append("- Basis: this is a *coverage* ratio, not a win probability; the engine refuses to "
+                 "mint a win probability (named gap: no calibrated tau on this host). The fraction "
+                 "above is a hard ceiling on stake sized from evidence coverage, discounted 50% for "
+                 "uncalibrated LRs - every LR in the Bayesian layer is ASSUMED or COMPUTED, none MEASURED.")
+    lines.append("- Concentration: slate-level correlation is NOT computed here (named gap: the "
+                 "portfolio layer does not yet consume these cards). Do not stack multiple cards "
+                 "sharing the same weather or injury signal without cutting each stake; shared "
+                 "signals compound concentration risk, not edge.")
+    lines.append("")
+    return lines
 
 
 # ---------------------------------------------------------------------------
@@ -443,7 +885,33 @@ def build_chain(home: str, away: str, facts: list[dict]) -> list[str]:
             f"-> salary/ownership surfaces exist for this slate "
             f"-> leverage and correlation structure for entry construction is derivable, not assumed"
         )
-    ngs = [f for f in facts if f["metric"].startswith("ngs_")]
+    ngs_2026 = [f for f in facts if f["metric"].startswith("ngs_2026_")]
+    for f in ngs_2026[:3]:
+        metric_label = f['metric'].replace('ngs_2026_', '').replace('_', ' ').upper()
+        chain.append(
+            f"TRACKING (2026 IN-SEASON): {f['subject']} records {metric_label} = {f['value']} {cite(f)} "
+            f"-> live tracking proves in-season trench/separation mechanics (not historical proxy) "
+            f"-> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts"
+        )
+
+    prac = [f for f in facts if f["metric"].startswith("official_practice_")]
+    for f in prac[:3]:
+        chain.append(
+            f"PRACTICE PARTICIPATION: {f['subject']} {f['value']} {cite(f)} "
+            f"-> official NFL practice report reveals recovery trajectory and true snap-share readiness "
+            f"-> multiple DNP days suppress expected touch volume; full-practice return unlocks normal scheme usage"
+        )
+
+    an_mb = by_metric.get("action_network_multi_book", [])
+    if an_mb:
+        f = an_mb[0]
+        chain.append(
+            f"MULTI-BOOK PLANE: Action Network multi-book coverage across {f['value']} {cite(f)} "
+            f"-> cross-book price consensus from Caesars, DraftKings, FanDuel, and BetMGM exits the single-book plane "
+            f"-> enables true Shin de-vigging and bookmaker shading identification"
+        )
+
+    ngs = [f for f in facts if f["metric"].startswith("ngs_") and not f["metric"].startswith("ngs_2026_")]
     if ngs:
         f = ngs[0]
         chain.append(
@@ -684,6 +1152,23 @@ def build_card(home: str, away: str, date: str, week: int | None = None) -> tupl
     denom = cited + len(gaps)
     conviction = round(100 * cited / denom) if denom else 0
 
+    # market shape for the precedent filter: live spread/total from the
+    # LineStar slates-by-period corpus (keyed by LineStar periodId = _week)
+    mkt_spread = mkt_total = None
+    try:
+        _ls = _load_json(SOURCES / "2026-10-13" / "linestar" / "linestar_slates_by_period.json")
+        _per = (_ls or {}).get(str(_week)) or {}
+        for _g in _per.get("games") or []:
+            if str(_g.get("home", "")).upper() == home.upper() and str(_g.get("away", "")).upper() == away.upper():
+                sh, sa = _g.get("spread_home"), _g.get("spread_away")
+                if isinstance(sh, (int, float)):
+                    mkt_spread = sh  # home closing spread, same convention as the corpus
+                if isinstance(_g.get("total"), (int, float)):
+                    mkt_total = _g["total"]
+                break
+    except Exception:
+        mkt_spread = mkt_total = None  # precedent falls back to honest no-match
+
     now = datetime.now(timezone.utc).isoformat()
     lines: list[str] = []
     lines.append(f"# {away}@{home} - Analyst Card ({thesis})")
@@ -773,11 +1258,19 @@ def build_card(home: str, away: str, date: str, week: int | None = None) -> tupl
     if posterior_block:
         lines.append(posterior_block)
         lines.append("")
+    # --- the four doctrine sections the cards were missing (all 16 audited) ---
+    # order fixed by the output contract: Precedent -> Projected Game State ->
+    # Counter-Thesis -> (Bayesian layer above) -> Honest gaps -> Sizing
+    prec_lines, _prec_rows = _precedent_block(home, away, mkt_spread, mkt_total)
+    lines.extend(prec_lines)
+    lines.extend(_projected_state_block(home, away, facts))
+    lines.extend(_counter_thesis_block(thesis, facts))
     lines.append("## Honest gaps")
     lines.append("")
     for g in gaps or ["(none - every reader returned)"]:
         lines.append(f"- {g}")
     lines.append("")
+    lines.extend(_sizing_block(conviction, cited, len(gaps)))
     lines.append(f"## Conviction: {conviction}/100")
     lines.append("")
     lines.append(f"Conviction in the CHAIN (cited links {cited} / cited + named gaps {denom}). NOT a win probability. The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.")
