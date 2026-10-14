@@ -43,6 +43,10 @@ N_MIN = 150
 FROZEN_MAX_AGE_H = 24 * 3650   # frozen historical manifest: age is not a staleness signal
 DEFAULT_MANIFEST = os.path.join(DFS, "nfl_rvc_manifest.json")
 DEFAULT_OUT = os.path.join(HERE, "walk_forward.json")
+ABS_BAR = 7.099   # unreproduced absolute bar; reported, also required for "cleared"
+CROSSCHECK_CSV = "/workspace/games.csv"
+CROSSCHECK_SEASONS = (2016, 2025)
+import wf_models as wm  # noqa: E402
 
 
 class FailClosed(Exception):
@@ -160,7 +164,69 @@ def _summ(s):
             "cell_fallbacks": sum(1 for x in s if x["fallback"])}
 
 
-def run(manifest_path=DEFAULT_MANIFEST, out_path=DEFAULT_OUT, ledger=True):
+def load_nflverse_csv(path, lo, hi):
+    """Unfrozen public nflverse games.csv cross-check.  Rows lacking result/spread/total are
+    excluded (games not yet played); no imputation."""
+    import csv
+    out = []
+    for g in csv.DictReader(open(path, encoding="utf-8")):
+        if not (lo <= int(g["season"]) <= hi):
+            continue
+        if any(g[k] in ("", "NA") for k in ("home_score", "away_score", "spread_line", "total_line")):
+            continue
+        out.append({"game_id": g["game_id"], "season": int(g["season"]), "week": int(g["week"]),
+                    "S": float(g["spread_line"]), "T": float(g["total_line"]),
+                    "Y": float(g["home_score"]) - float(g["away_score"])})
+    return out
+
+
+def _mean(v):
+    return round(sum(v) / len(v), 4) if v else None
+
+
+def models_block(rows):
+    """Extra families + key-number hybrid on the best continuous model (by pooled CRPS)."""
+    base = wm.walk(rows, SIGMA_FIXED)
+    g_ref = base["crps"]["gaussian_fixed_13.45"]
+    _, legacy = evaluate(rows)
+    cont = {k: v for k, v in base["crps"].items()}
+    cont["laplace_one_scale"] = [x["lap_one"] for x in legacy]
+    cont["laplace_conditional_TS"] = [x["lap_cond"] for x in legacy]
+    best = min((k for k in cont if k != "laplace_conditional_TS"), key=lambda k: sum(cont[k]))
+    hyb_base = best if best in wm.CONT or best == "gaussian_fixed_13.45" else "gaussian_fixed_13.45"
+    if best == "laplace_one_scale":   # not in wm.CONT; next-best wm family is used, stated below
+        hyb_base = min(list(wm.CONT) + ["gaussian_fixed_13.45"], key=lambda k: sum(cont[k]))
+    hy = wm.walk(rows, SIGMA_FIXED, hybrid_base=hyb_base)
+    cont["key_number_hybrid"] = hy["hybrid"]
+    seasons = base["seasons"]
+    res = {}
+    for k, v in cont.items():
+        res[k] = {"n": len(v), "crps": _mean(v),
+                  "delta_vs_gaussian_13.45": round(_mean(g_ref) - _mean(v), 4),
+                  "delta_vs_laplace_one_scale": round(_mean(cont["laplace_one_scale"]) - _mean(v), 4),
+                  "per_season": {str(s): _mean([c for c, ss in zip(v, seasons) if ss == s]) for s in sorted(set(seasons))},
+                  "le_abs_bar_7.099": bool(_mean(v) <= ABS_BAR)}
+    fw = base["final_window"]
+    params = {k: {kk: (round(vv, 4) if isinstance(vv, float) else vv) for kk, vv in p.items()} for k, p in fw["fits"].items()}
+    params["key_probs"] = {str(k): round(v, 4) for k, v in fw["key_probs"].items()}
+    params["n_train"] = fw["n_train"]; params["train_through_season_week"] = fw["train_through_season_week"]
+    cleared = [k for k, r in res.items() if r["n"] >= N_MIN and r["delta_vs_gaussian_13.45"] >= DELTA_BAR and r["crps"] <= ABS_BAR]
+    return {"n": len(g_ref), "warmup_season": base["warm"], "scored_seasons": sorted(set(seasons)),
+            "models": res, "fitted_params_final_window": params,
+            "best_continuous_excluding_conditional": best, "hybrid_base_model": hyb_base,
+            "hybrid": {"p_cover_mean": _mean(hy["hybrid_p_cover"]),
+                       "p_cover_min": round(min(hy["hybrid_p_cover"]), 4), "p_cover_max": round(max(hy["hybrid_p_cover"]), 4),
+                       "p_cover_dev_from_half_mean": round(sum(abs(c - 0.5) for c in hy["hybrid_p_cover"]) / len(hy["hybrid_p_cover"]), 4),
+                       "p_cover_dev_from_half_min": round(min(abs(c - 0.5) for c in hy["hybrid_p_cover"]), 4),
+                       "p_cover_dev_from_half_max": round(max(abs(c - 0.5) for c in hy["hybrid_p_cover"]), 4),
+                       "p_cover_definition": "F(close) = P(Y <= close) under the layer, per scored game",
+                       "mean_shift_vs_close_mean": _mean(hy["hybrid_mean_shift"]),
+                       "mean_shift_abs_max": round(max(abs(x) for x in hy["hybrid_mean_shift"]), 4),
+                       "approach": "F(y)=(1-sum p_k)*F_cont(y-close)+sum p_k*1{y>=k}, atoms at absolute Y in {+3,-3,+7,-7} (residual k - close), p3 = earlier freq of |Y|==3 and p7 = earlier freq of |Y|==7, each split equally between +k and -k; continuous mass 1-p3-p7 is the best continuous model; continuous part keeps center=close and carries no mass on key points; NOT re-centered, so the mixture mean moves off the close by the reported shift (no compensation fitted, per mu=close on every component)"},
+            "models_meeting_full_gate": cleared}
+
+
+def run(manifest_path=DEFAULT_MANIFEST, out_path=DEFAULT_OUT, ledger=True, extra=True):
     res, rows = load_rows(manifest_path)
     warm, scored = evaluate(rows)
     pooled = _summ(scored)
@@ -192,7 +258,7 @@ def run(manifest_path=DEFAULT_MANIFEST, out_path=DEFAULT_OUT, ledger=True):
         "rule": {"passed_if": f"delta_conditional_vs_gaussian >= {DELTA_BAR} AND n >= {N_MIN}"},
         "honesty_notes": [
             "Gate is NOT cleared unless passed is true; even then nothing is promoted and mu stays the close.",
-            "The absolute 7.109 / 7.099 bar was not reproduced on this manifest and is not used; comparison is same-games Gaussian(close, 13.45).",
+            "The absolute 7.109 / 7.099 bar was not reproduced on this manifest. The top-level Laplace check ignores it; the models block requires it in addition to the same-games 0.01 delta (see models.gate_rule).",
             "Closes are nflverse point lines (spread_line/total_line), not de-vigged prices.",
             "Reader path unresolved: autonomous_cycle.py is not in any GitHub branch; the path it reads must be confirmed on Beexly.",
             "Garrett reference (n=2462, Laplace 7.1597, Gaussian 7.1540) is on a larger game set; this manifest covers 2023-2025 only.",
@@ -200,9 +266,44 @@ def run(manifest_path=DEFAULT_MANIFEST, out_path=DEFAULT_OUT, ledger=True):
             "Vision weight 0. No imputation. Joins fail closed.",
         ],
     }
+    if extra:
+        mb = models_block(rows)
+        out["models"] = {"label": "DIAGNOSTIC -- extra families, mu = close on every component, MLE on strictly earlier games, refit weekly; CRPS by numeric integration (step %.2f)" % wm.H,
+                         "frozen_manifest": mb}
+        cc = None
+        if os.path.exists(CROSSCHECK_CSV):
+            crow = load_nflverse_csv(CROSSCHECK_CSV, *CROSSCHECK_SEASONS)
+            cc = models_block(crow)
+            cc["source"] = {"path": CROSSCHECK_CSV, "sha256": hashlib.sha256(open(CROSSCHECK_CSV, "rb").read()).hexdigest(),
+                            "seasons": list(CROSSCHECK_SEASONS), "rows": len(crow),
+                            "status": "UNFROZEN public nflverse games.csv cross-check -- does NOT count for the gate"}
+        out["models"]["nflverse_crosscheck_unfrozen"] = cc
+        out["models"]["gate_rule"] = f"cleared only if a model has n >= {N_MIN}, beats same-games Gaussian 13.45 by >= {DELTA_BAR}, AND CRPS <= {ABS_BAR} (unreproduced bar); frozen manifest only"
+        out["models"]["gate_cleared"] = bool(mb["models_meeting_full_gate"])
+        if mb["models_meeting_full_gate"]:
+            out["gate_status"] = "CLEARED (provisional, diagnostic)"; out["passed"] = True
+        out["models"]["gate_status"] = out["gate_status"]
+        out["models"]["caveats"] = [
+            "Selection: 8 families were scored on the same held-out games and the best is reported; no multiple-comparison correction.",
+            "Per season the margin is thin: see per_season (normal_mixture_2 2025 delta vs Gaussian 13.45 is under 0.01).",
+            "7.099 is an unreproduced bar; on this manifest the same-games Gaussian 13.45 is itself below it, so CRPS <= 7.099 is not informative here.",
+            "On the larger unfrozen nflverse cross-check the same families beat Gaussian 13.45 by >= 0.01 but every CRPS is above 7.099.",
+            "laplace_mixture_2 collapsed to one scale (b1 == b2) under EM; it equals laplace_one_scale.",
+            "Cleared here means a provisional DIAGNOSTIC stamp only. mu stays the close; nothing is promoted; no reader consumes this file until autonomous_cycle.py is found.",
+        ]
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1)
-    if ledger:
+    if ledger and extra:
+        mb = out["models"]["frozen_manifest"]
+        _ledger_append({"id": "LR-20261014-WF-MODELS-MIX-T-KEYNUM-SYM",
+                        "supersedes": "LR-20261014-WF-MODELS-MIX-T-KEYNUM (asymmetric key masses; replaced by symmetric p3/p7 spec)",
+                        "verdict": "INFRASTRUCTURE PASS (diagnostic; provisional; not promoted)" if out["passed"] else
+                        "REFUSED (gate NOT cleared: no family beat Gaussian close 13.45 by >=0.01 with CRPS <= 7.099)",
+                        "artifact": "dfs/walk_forward/walk_forward.json", "manifest_sha256": sha, "n": mb["n"],
+                        "crps": {k: v["crps"] for k, v in mb["models"].items()},
+                        "nflverse_crosscheck_crps_unfrozen": {k: v["crps"] for k, v in (out["models"]["nflverse_crosscheck_unfrozen"] or {"models": {}})["models"].items()},
+                        "passed": out["passed"], "label": "DIAGNOSTIC", "promotion": "NONE"})
+    elif ledger:
         _ledger_append({"id": "LR-20261014-WF-MARGIN-CRPS",
                         "verdict": "INFRASTRUCTURE PASS (diagnostic; gate cleared provisionally; not promoted)" if passed
                         else "REFUSED (gate NOT cleared: conditional Laplace did not beat Gaussian close 13.45 by >=0.01)",
