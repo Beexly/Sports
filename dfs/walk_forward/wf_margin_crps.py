@@ -240,7 +240,7 @@ def run(manifest_path=DEFAULT_MANIFEST, out_path=DEFAULT_OUT, ledger=True, extra
         "passed": passed, "provisional": True,
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "manifest": {"path": os.path.relpath(manifest_path, ROOT) if manifest_path.startswith(ROOT) else manifest_path,
-                     "sha256": sha, "freshness_audit": res["audit"], "n_rows": len(rows),
+                     "sha256": sha, "freshness_audit": {**res["audit"], "path": os.path.relpath(res["audit"]["path"], ROOT) if os.path.abspath(res["audit"]["path"]).startswith(ROOT) else res["audit"]["path"]}, "n_rows": len(rows),
                      "final_diff_mismatch_rows": res["final_diff_sign_mismatches"],
                      "margin_source": "home_score - away_score (final_diff column not used)"},
         "model": {"family": "Laplace(mu=close spread, b(T,S))",
@@ -279,8 +279,18 @@ def run(manifest_path=DEFAULT_MANIFEST, out_path=DEFAULT_OUT, ledger=True, extra
                             "status": "UNFROZEN public nflverse games.csv cross-check -- does NOT count for the gate"}
         out["models"]["nflverse_crosscheck_unfrozen"] = cc
         out["models"]["gate_rule"] = f"cleared only if a model has n >= {N_MIN}, beats same-games Gaussian 13.45 by >= {DELTA_BAR}, AND CRPS <= {ABS_BAR} (unreproduced bar); frozen manifest only"
-        out["models"]["gate_cleared"] = bool(mb["models_meeting_full_gate"])
-        if mb["models_meeting_full_gate"]:
+        tech = bool(mb["models_meeting_full_gate"])
+        cc_ok = bool(cc and cc["models_meeting_full_gate"])
+        out["models"]["technical_pass_manifest"] = tech
+        out["models"]["gate_cleared"] = bool(tech and cc_ok)
+        if tech and not cc_ok:
+            nm = mb["models"].get("normal_mixture_2", {})
+            g25 = mb["models"]["gaussian_fixed_13.45"]["per_season"].get("2025")
+            m25 = round(g25 - nm["per_season"]["2025"], 4) if nm and g25 is not None else None
+            out["gate_status"] = ("NOT CLEARED: technical pass on manifest only; nflverse cross-check above 7.099; "
+                                  f"best-of-8 selection; 2025 two-normal margin {m25}")
+            out["passed"] = False
+        elif tech and cc_ok:
             out["gate_status"] = "CLEARED (provisional, diagnostic)"; out["passed"] = True
         out["models"]["gate_status"] = out["gate_status"]
         out["models"]["caveats"] = [

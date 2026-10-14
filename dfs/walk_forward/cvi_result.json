@@ -1,0 +1,208 @@
+{
+ "label": "DIAGNOSTIC -- CVI scale modulation; mu = close; not wired; nothing promoted",
+ "generated_at": "2026-10-14T21:54:02Z",
+ "gate_status": "NOT CLEARED: technical pass on manifest only, inherited from normal_mixture_2 (CVI itself changes CRPS by -0.0016); nflverse cross-check above 7.099",
+ "technical_pass_manifest": true,
+ "passed": false,
+ "gate_rule": "a +CVI model with n >= 150 on the CVI-filtered set AND CRPS <= 7.099 (unreproduced bar) AND beats same-games Gaussian 13.45 by >= 0.01; status also requires the nflverse cross-check to pass and CVI to improve on its own no-CVI model (same doctrine as the walk_forward.json relabel)",
+ "definitions": "window          D's last W_DEF=4 games strictly before g (snap_counts, any season).\n  residual        a DB's snap-adjusted residual = trailing mean defense_pct over the window (absent\n                  game = 0) minus STARTER_THR = 0.60.\n  starter slots   top-2 CB (position CB) and top-2 S (S/FS/SS) by trailing share = 4 slots.\n  cascaded slot   residual < 0 (slot already held by a below-threshold player), OR the slot's\n                  starter has an nflverse injury row for (season, week, D) with date_modified <= t and\n                  report_status in {Out, Doubtful} or practice_status in {DNP, Limited}.\n  backup_quality  mean over cascaded slots of: injury slot -> starter_share / backup_share (backup =\n                  next-highest non-starter in the group); below-threshold slot -> STARTER_THR / share;\n                  clipped to [1, 3]; a slot whose replacement has no snaps contributes 1.0.  This is a\n                  SNAP-SHARE proxy for quality, not a coverage-performance residual: no per-defender\n                  coverage outcome is available from real data in this repo for 2016-2025.\n  opp_deep_rate   opponent offense's deep targets (pass_attempt==1 and air_yards>=20) per dropback\n                  (qb_dropback==1) over its last W_OFF=8 games strictly before g (nflverse PBP).\n  league_avg      the same rate over every team's plays in games strictly before g, last 365 days.\nFail-closed: a game with fewer than 4 prior defensive games or no prior offensive PBP for either side\ngets CVI = None and is excluded from the CVI-filtered set (the without-CVI baseline is scored on the\nsame filtered set).  Injury rows lacking date_modified (nflverse 2025) are rejected at ingest, so the\ninjury branch is empty for 2025: CVI there reflects only below-threshold slots.",
+ "params": {
+  "W_DEF": 4,
+  "W_OFF": 8,
+  "STARTER_THR": 0.6,
+  "gamma_grid": [
+   -0.5,
+   1.5,
+   0.01
+  ],
+  "bad_report": [
+   "Doubtful",
+   "Out"
+  ],
+  "bad_practice": [
+   "Did Not Participate In Practice",
+   "Limited Participation in Practice"
+  ]
+ },
+ "model": "scale *= (1 + gamma * CVI_game); gamma MLE on strictly earlier CVI-available games, refit weekly; base normal-mixture params MLE on all earlier residuals",
+ "frozen_manifest": {
+  "n_scored_all": 570,
+  "n_cvi_filtered": 570,
+  "cvi_coverage": 1.0,
+  "share_cvi_positive": 0.714,
+  "warmup_season": 2023,
+  "scored_seasons": [
+   2024,
+   2025
+  ],
+  "crps": {
+   "gaussian_13.45": 7.0271,
+   "gaussian_13.45+cvi": 7.0267,
+   "normal_mixture_2": 7.0079,
+   "normal_mixture_2+cvi": 7.0095
+  },
+  "per_season": {
+   "gaussian_13.45": {
+    "2024": 7.1355,
+    "2025": 6.9187
+   },
+   "gaussian_13.45+cvi": {
+    "2024": 7.1393,
+    "2025": 6.9142
+   },
+   "normal_mixture_2": {
+    "2024": 7.1069,
+    "2025": 6.9088
+   },
+   "normal_mixture_2+cvi": {
+    "2024": 7.1092,
+    "2025": 6.9099
+   }
+  },
+  "interval_coverage": {
+   "50%": {
+    "gaussian_13.45": 0.5754,
+    "gaussian_13.45+cvi": 0.5719
+   },
+   "80%": {
+    "gaussian_13.45": 0.814,
+    "gaussian_13.45+cvi": 0.814
+   },
+   "90%": {
+    "gaussian_13.45": 0.9175,
+    "gaussian_13.45+cvi": 0.9158
+   }
+  },
+  "gamma_final_window": {
+   "gaussian_13.45": -0.04,
+   "normal_mixture_2": 0.01,
+   "n_train_cvi": 854
+  },
+  "delta_cvi_vs_without": {
+   "gaussian_13.45": 0.0004,
+   "normal_mixture_2": -0.0016
+  },
+  "delta_vs_same_games_gaussian_13.45": {
+   "gaussian_13.45": 0.0,
+   "gaussian_13.45+cvi": 0.0004,
+   "normal_mixture_2": 0.0192,
+   "normal_mixture_2+cvi": 0.0176
+  },
+  "best": "normal_mixture_2+cvi",
+  "manifest_sha256": "bec543fc83a63ed70042251147504e3df995bab590ea7a709bc0d9cbb7f3cbd5"
+ },
+ "nflverse_crosscheck_unfrozen": {
+  "n_scored_all": 2494,
+  "n_cvi_filtered": 2438,
+  "cvi_coverage": 0.9775,
+  "share_cvi_positive": 0.76,
+  "warmup_season": 2016,
+  "scored_seasons": [
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "crps": {
+   "gaussian_13.45": 7.1547,
+   "gaussian_13.45+cvi": 7.1455,
+   "normal_mixture_2": 7.1376,
+   "normal_mixture_2+cvi": 7.1378
+  },
+  "per_season": {
+   "gaussian_13.45": {
+    "2017": 7.4326,
+    "2018": 7.1661,
+    "2019": 7.3006,
+    "2020": 7.0871,
+    "2021": 7.6108,
+    "2022": 6.4446,
+    "2023": 7.3445,
+    "2024": 7.1355,
+    "2025": 6.9187
+   },
+   "gaussian_13.45+cvi": {
+    "2017": 7.4322,
+    "2018": 7.1632,
+    "2019": 7.2958,
+    "2020": 7.0672,
+    "2021": 7.6079,
+    "2022": 6.4143,
+    "2023": 7.3436,
+    "2024": 7.1268,
+    "2025": 6.9088
+   },
+   "normal_mixture_2": {
+    "2017": 7.4411,
+    "2018": 7.1386,
+    "2019": 7.2974,
+    "2020": 7.0674,
+    "2021": 7.6206,
+    "2022": 6.3858,
+    "2023": 7.3283,
+    "2024": 7.1078,
+    "2025": 6.9034
+   },
+   "normal_mixture_2+cvi": {
+    "2017": 7.4376,
+    "2018": 7.1399,
+    "2019": 7.3001,
+    "2020": 7.0684,
+    "2021": 7.6225,
+    "2022": 6.3802,
+    "2023": 7.3329,
+    "2024": 7.1076,
+    "2025": 6.9034
+   }
+  },
+  "interval_coverage": {
+   "50%": {
+    "gaussian_13.45": 0.5574,
+    "gaussian_13.45+cvi": 0.5345
+   },
+   "80%": {
+    "gaussian_13.45": 0.8249,
+    "gaussian_13.45+cvi": 0.8134
+   },
+   "90%": {
+    "gaussian_13.45": 0.9106,
+    "gaussian_13.45+cvi": 0.9003
+   }
+  },
+  "gamma_final_window": {
+   "gaussian_13.45": -0.06,
+   "normal_mixture_2": -0.01,
+   "n_train_cvi": 2669
+  },
+  "delta_cvi_vs_without": {
+   "gaussian_13.45": 0.0092,
+   "normal_mixture_2": -0.0002
+  },
+  "delta_vs_same_games_gaussian_13.45": {
+   "gaussian_13.45": 0.0,
+   "gaussian_13.45+cvi": 0.0092,
+   "normal_mixture_2": 0.0171,
+   "normal_mixture_2+cvi": 0.0169
+  },
+  "best": "normal_mixture_2+cvi",
+  "would_pass_rule": false,
+  "status": "UNFROZEN public nflverse games.csv 2016-2025 -- does NOT count for the gate",
+  "games_csv_sha256": "5db5edcd5a26fe4d74f0c52014fe187288122d1a6aa16fdf5b514d899d49f82f"
+ },
+ "inputs": {
+  "cache": "/workspace/nflverse_cache",
+  "sources": "nflverse snap_counts, injuries (date_modified), players crosswalk, PBP (CC-BY-4.0) via dfs/ingest/nflverse_release.py; kickoff from games.csv"
+ },
+ "honesty_notes": [
+  "7.099 is an unreproduced bar.",
+  "backup_quality_multiplier is a snap-share proxy; a coverage-performance residual could not be built from real data here.",
+  "nflverse injuries 2025 lack date_modified and are rejected at ingest: the injury branch of cascade_count is empty for 2025.",
+  "Depth charts are not used: legacy (<=2024) depth charts carry no timestamp, so observed_at <= t cannot be proven.",
+  "mu never moves; vision weight 0; injury_adj not wired; emission unchanged."
+ ]
+}

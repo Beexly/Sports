@@ -1,16 +1,16 @@
 {
  "label": "DIAGNOSTIC -- walk-forward margin CRPS; infrastructure only; nothing promoted",
- "gate_status": "CLEARED (provisional, diagnostic)",
- "passed": true,
+ "gate_status": "NOT CLEARED: technical pass on manifest only; nflverse cross-check above 7.099; best-of-8 selection; 2025 two-normal margin 0.0099",
+ "passed": false,
  "provisional": true,
- "generated_at": "2026-10-14T21:33:54Z",
+ "generated_at": "2026-10-14T21:54:09Z",
  "manifest": {
   "path": "dfs/nfl_rvc_manifest.json",
   "sha256": "bec543fc83a63ed70042251147504e3df995bab590ea7a709bc0d9cbb7f3cbd5",
   "freshness_audit": {
-   "path": "/tmp/wfwt/dfs/nfl_rvc_manifest.json",
+   "path": "dfs/nfl_rvc_manifest.json",
    "stamp": "2026-10-11T03:37:51Z",
-   "age_hours": 89.93,
+   "age_hours": 90.27,
    "fresh": true,
    "failure_mode": null,
    "label": "FRESH"
@@ -471,8 +471,9 @@
    }
   },
   "gate_rule": "cleared only if a model has n >= 150, beats same-games Gaussian 13.45 by >= 0.01, AND CRPS <= 7.099 (unreproduced bar); frozen manifest only",
-  "gate_cleared": true,
-  "gate_status": "CLEARED (provisional, diagnostic)",
+  "technical_pass_manifest": true,
+  "gate_cleared": false,
+  "gate_status": "NOT CLEARED: technical pass on manifest only; nflverse cross-check above 7.099; best-of-8 selection; 2025 two-normal margin 0.0099",
   "caveats": [
    "Selection: 8 families were scored on the same held-out games and the best is reported; no multiple-comparison correction.",
    "Per season the margin is thin: see per_season (normal_mixture_2 2025 delta vs Gaussian 13.45 is under 0.01).",
