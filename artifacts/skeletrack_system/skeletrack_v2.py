@@ -1026,6 +1026,393 @@ class SkeleTrackV2:
                 f.write(json.dumps(row) + "\n")
 
 
+# ============================================================================
+# 5. Broadcast-to-Field Tracklet Pipeline (Detection / Tracklet / ByteTrack IoU
+#    + Hungarian / AdaptiveKalman / join_tracklet_to_gsis)
+# ============================================================================
+
+from dataclasses import dataclass, field
+from scipy.optimize import linear_sum_assignment
+
+
+@dataclass
+class Detection:
+    bbox: np.ndarray          # [x1, y1, x2, y2]
+    keypoints: np.ndarray     # (17, 3) COCO: x, y, conf
+    conf: float
+    jersey_ocr: Optional[str] = None
+    team: Optional[str] = None
+
+
+@dataclass
+class Tracklet:
+    track_id: int
+    state: np.ndarray         # [x, y, vx, vy] in field meters
+    covariance: np.ndarray    # 4x4
+    jersey: Optional[str] = None
+    team: Optional[str] = None
+    gsis_id: Optional[str] = None
+    bbox: np.ndarray = field(default_factory=lambda: np.zeros(4, dtype=np.float64))
+    missed_frames: int = 0
+    low_pass_recoveries: int = 0
+    frames: List[int] = field(default_factory=list)
+    positions: List[np.ndarray] = field(default_factory=list)
+
+
+class AdaptiveKalman:
+    """
+    4-state field-meter constant-velocity Kalman filter [x, y, vx, vy] with
+    confidence-adaptive R (R = r_base / max(conf, 0.05)) and Joseph-form
+    covariance update.
+    """
+
+    def __init__(self, dt: float = 0.1, q_scale: float = 0.01, r_base: float = 0.25):
+        self.dt = dt
+        self.F = np.array([
+            [1.0, 0.0, self.dt, 0.0],
+            [0.0, 1.0, 0.0, self.dt],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ], dtype=np.float64)
+        self.H = np.eye(2, 4, dtype=np.float64)
+        self.Q = np.eye(4, dtype=np.float64) * q_scale
+        self.R_base = r_base
+
+    def predict(self, state: np.ndarray, cov: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        state = self.F @ state
+        cov = self.F @ cov @ self.F.T + self.Q
+        return state, cov
+
+    def update(
+        self,
+        state: np.ndarray,
+        cov: np.ndarray,
+        z: np.ndarray,
+        conf: float,
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        r_val = self.R_base / max(float(conf), 0.05)
+        R = np.eye(2, dtype=np.float64) * r_val
+        S = self.H @ cov @ self.H.T + R
+        K = cov @ self.H.T @ np.linalg.inv(S)
+        y = np.asarray(z, dtype=np.float64)[:2] - self.H @ state
+        state = state + K @ y
+        I_KH = np.eye(4, dtype=np.float64) - K @ self.H
+        # Joseph-form covariance update for numerical stability
+        cov = I_KH @ cov @ I_KH.T + K @ R @ K.T
+        return state, cov, y
+
+
+def iou_matrix(boxes_a: np.ndarray, boxes_b: np.ndarray) -> np.ndarray:
+    """boxes: N x 4 (x1, y1, x2, y2)"""
+    if len(boxes_a) == 0 or len(boxes_b) == 0:
+        return np.zeros((len(boxes_a), len(boxes_b)), dtype=np.float64)
+    a = np.asarray(boxes_a, dtype=np.float64)[:, None]
+    b = np.asarray(boxes_b, dtype=np.float64)[None, :]
+    inter_x1 = np.maximum(a[..., 0], b[..., 0])
+    inter_y1 = np.maximum(a[..., 1], b[..., 1])
+    inter_x2 = np.minimum(a[..., 2], b[..., 2])
+    inter_y2 = np.minimum(a[..., 3], b[..., 3])
+    inter = np.maximum(0.0, inter_x2 - inter_x1) * np.maximum(0.0, inter_y2 - inter_y1)
+    area_a = (boxes_a[:, 2] - boxes_a[:, 0]) * (boxes_a[:, 3] - boxes_a[:, 1])
+    area_b = (boxes_b[:, 2] - boxes_b[:, 0]) * (boxes_b[:, 3] - boxes_b[:, 1])
+    union = area_a[:, None] + area_b[None, :] - inter
+    return inter / np.maximum(union, 1e-6)
+
+
+def byte_track_associate(
+    high_dets: List[Detection],
+    low_dets: List[Detection],
+    tracks: List[Tracklet],
+    iou_thresh: float = 0.3,
+) -> Tuple[List[Tuple[int, int, str]], List[int], List[int], List[int]]:
+    """
+    ByteTrack two-pass association (Zhang et al., 2022).
+    Pass 1: high-confidence detections (conf > high_thresh) to existing tracks via IoU + Hungarian.
+    Pass 2: low-confidence detections (low_thresh < conf <= high_thresh) to remaining unmatched tracks.
+    Returns (matches, unmatched_tracks, unmatched_high, unmatched_low)
+    where matches is list of (det_idx_in_combined_high_plus_low, track_idx, pass_label).
+    """
+    if not tracks:
+        return [], [], list(range(len(high_dets))), list(range(len(low_dets)))
+    track_boxes = np.array([t.bbox for t in tracks], dtype=np.float64)
+    matches: List[Tuple[int, int, str]] = []
+    used_tracks: set[int] = set()
+    used_high: set[int] = set()
+    used_low: set[int] = set()
+
+    # Pass 1 — high confidence
+    if high_dets:
+        high_boxes = np.array([d.bbox for d in high_dets], dtype=np.float64)
+        iou = iou_matrix(high_boxes, track_boxes)
+        cost = 1.0 - iou
+        row, col = linear_sum_assignment(cost)
+        for r, c in zip(row, col):
+            if iou[r, c] >= iou_thresh:
+                matches.append((int(r), int(c), "high"))
+                used_tracks.add(int(c))
+                used_high.add(int(r))
+
+    # Pass 2 — low confidence recovery on remaining tracks
+    remaining_tracks = [i for i in range(len(tracks)) if i not in used_tracks]
+    if low_dets and remaining_tracks:
+        low_boxes = np.array([d.bbox for d in low_dets], dtype=np.float64)
+        rem_boxes = track_boxes[remaining_tracks]
+        iou = iou_matrix(low_boxes, rem_boxes)
+        cost = 1.0 - iou
+        row, col = linear_sum_assignment(cost)
+        for r, c in zip(row, col):
+            if iou[r, c] >= iou_thresh:
+                track_idx = remaining_tracks[int(c)]
+                matches.append((int(r) + len(high_dets), track_idx, "low"))
+                used_tracks.add(track_idx)
+                used_low.add(int(r))
+
+    unmatched_tracks = [i for i in range(len(tracks)) if i not in used_tracks]
+    unmatched_high = [i for i in range(len(high_dets)) if i not in used_high]
+    unmatched_low = [i for i in range(len(low_dets)) if i not in used_low]
+
+    return matches, unmatched_tracks, unmatched_high, unmatched_low
+
+
+NGS_TEAM_ID_TO_ABBR: Dict[str, str] = {
+    "0200": "ATL", "0325": "BAL", "0610": "BUF", "0750": "CAR", "0810": "CHI",
+    "0920": "CIN", "1050": "CLE", "1200": "DAL", "1400": "DEN", "1540": "DET",
+    "1800": "GB",  "2100": "TEN", "2120": "HOU", "2200": "IND", "2250": "JAX",
+    "2310": "KC",  "2510": "LAR", "2520": "LV",  "2700": "MIA", "3000": "MIN",
+    "3200": "NE",  "3300": "NO",  "3410": "NYG", "3430": "NYJ", "3700": "PHI",
+    "3800": "ARI", "3900": "PIT", "4400": "LAC", "4500": "SF",  "4600": "SEA",
+    "4900": "TB",  "5110": "WAS",
+}
+NGS_ABBR_TO_TEAM_IDS: Dict[str, set[str]] = {
+    "ARI": {"3800", "ARI", "AZ"}, "AZ": {"3800", "ARI", "AZ"},
+    "LAR": {"2510", "LAR", "LA"}, "LA": {"2510", "LAR", "LA"},
+}
+for _tid, _abbr in NGS_TEAM_ID_TO_ABBR.items():
+    NGS_ABBR_TO_TEAM_IDS.setdefault(_abbr, set()).update({_tid, _abbr})
+
+
+def _norm_jersey_str(val: Any) -> str:
+    if val is None:
+        return ""
+    s = str(val).strip()
+    if not s or s.lower() == "nan":
+        return ""
+    try:
+        return str(int(float(s)))
+    except Exception:
+        return s
+
+
+def join_tracklet_to_gsis(
+    tracklet: Tracklet,
+    participation: Any,   # polars or pandas DataFrame from ngs_highlight_participation or pbp_participation
+    roster: Any,          # polars or pandas DataFrame from roster_2026 / players.parquet
+    game_id: str | int,
+    play_id: int,
+) -> Optional[str]:
+    """
+    Join a vision tracklet to a stable gsis_id.
+    Priority: jersey + team + play participation -> roster fallback.
+    Fail-closed: returns None if ambiguous or missing. Weight 0 until measured at scale.
+    """
+    if not tracklet.jersey:
+        return None
+    jersey = _norm_jersey_str(tracklet.jersey)
+    if not jersey:
+        return None
+
+    team_match_tokens = NGS_ABBR_TO_TEAM_IDS.get((tracklet.team or "").upper(), {(tracklet.team or "").upper()})
+
+    # Support both Polars and Pandas DataFrames seamlessly
+    is_polars_part = hasattr(participation, "height") and hasattr(participation, "filter") and not hasattr(participation, "iloc")
+    if is_polars_part:
+        import polars as pl
+        on_field = participation.filter(
+            (pl.col("game_id").cast(pl.Utf8) == str(game_id)) &
+            (pl.col("play_id").cast(pl.Int64) == int(play_id))
+        )
+        candidates = on_field.filter(
+            pl.col("jersey_number").cast(pl.Float64).cast(pl.Int64).cast(pl.Utf8) == jersey
+        )
+        if candidates.height > 1 and tracklet.team:
+            for tcol in ("team_abbr", "team", "club", "team_id", "current_team_id"):
+                if tcol in candidates.columns:
+                    filtered = candidates.filter(pl.col(tcol).cast(pl.Utf8).is_in(list(team_match_tokens)))
+                    if filtered.height > 0:
+                        candidates = filtered
+                        break
+        if candidates.height == 1:
+            gsis = str(candidates["gsis_id"][0])
+            tracklet.gsis_id = gsis
+            return gsis
+    elif participation is not None and len(participation) > 0:
+        import pandas as pd
+        gid_col = "game_id" if "game_id" in participation.columns else "nflverse_game_id"
+        on_field = participation[
+            (participation[gid_col].astype(str) == str(game_id)) &
+            (participation["play_id"].astype(int) == int(play_id))
+        ]
+        if not on_field.empty and "jersey_number" in on_field.columns:
+            j_norm = on_field["jersey_number"].map(_norm_jersey_str)
+            candidates = on_field[j_norm == jersey]
+            if len(candidates) > 1 and tracklet.team:
+                for tcol in ("team_abbr", "team", "club", "team_id", "current_team_id"):
+                    if tcol in candidates.columns:
+                        filtered = candidates[candidates[tcol].astype(str).str.upper().isin(team_match_tokens)]
+                        if len(filtered) > 0:
+                            candidates = filtered
+                            break
+            if len(candidates) == 1:
+                gsis = str(candidates["gsis_id"].iloc[0])
+                tracklet.gsis_id = gsis
+                return gsis
+
+    # Fallback: jersey + team from roster if participation missing or ambiguous across teams
+    if roster is not None and tracklet.team:
+        is_polars_rost = hasattr(roster, "height") and hasattr(roster, "filter") and not hasattr(roster, "iloc")
+        if is_polars_rost:
+            import polars as pl
+            team_candidates = roster.filter(
+                (pl.col("jersey_number").cast(pl.Float64).cast(pl.Int64).cast(pl.Utf8) == jersey) &
+                (pl.col("team") == tracklet.team)
+            )
+            if team_candidates.height == 1:
+                gsis = str(team_candidates["gsis_id"][0])
+                tracklet.gsis_id = gsis
+                return gsis
+        elif len(roster) > 0:
+            tcol = "team" if "team" in roster.columns else "latest_team"
+            j_norm = roster["jersey_number"].map(_norm_jersey_str)
+            team_candidates = roster[
+                (j_norm == jersey) &
+                (roster[tcol].astype(str).str.upper() == tracklet.team.upper())
+            ]
+            if len(team_candidates) == 1:
+                gsis = str(team_candidates["gsis_id"].iloc[0])
+                tracklet.gsis_id = gsis
+                return gsis
+
+    return None
+
+
+class SkeleTrack:
+    """
+    Broadcast-to-field tracklet pipeline combining:
+      - Two-pass ByteTrack IoU + Hungarian association (high-conf > 0.5, low-conf 0.1..0.5 recovery)
+      - 30-frame coasting buffer before track deletion
+      - Homography ground-plane projection (mid-hip keypoint proxy if available, else keypoint[0])
+      - Per-tracklet 4-state field-meter AdaptiveKalman [x, y, vx, vy]
+    """
+
+    def __init__(
+        self,
+        q_scale: float = 0.01,
+        r_base: float = 0.25,
+        high_thresh: float = 0.5,
+        low_thresh: float = 0.1,
+        iou_thresh: float = 0.3,
+        max_coast_frames: int = 30,
+    ):
+        self.kalman = AdaptiveKalman(q_scale=q_scale, r_base=r_base)
+        self.tracks: Dict[int, Tracklet] = {}
+        self.next_id = 1
+        self.high_thresh = high_thresh
+        self.low_thresh = low_thresh
+        self.iou_thresh = iou_thresh
+        self.max_coast_frames = max_coast_frames
+
+    @staticmethod
+    def _extract_ground_point_px(det: Detection) -> np.ndarray:
+        """Use mid-hip (COCO indices 11, 12) when present, else keypoint[0]."""
+        if det.keypoints is not None and len(det.keypoints) >= 13:
+            c11 = det.keypoints[11, 2] if det.keypoints.shape[1] >= 3 else 1.0
+            c12 = det.keypoints[12, 2] if det.keypoints.shape[1] >= 3 else 1.0
+            if c11 > 0.1 and c12 > 0.1:
+                return 0.5 * (det.keypoints[11, :2] + det.keypoints[12, :2])
+        return det.keypoints[0, :2]
+
+    def associate(
+        self,
+        detections: List[Detection],
+        tracks: List[Tracklet],
+    ) -> Tuple[List[Tuple[Detection, int, str]], List[int], List[Detection]]:
+        high_dets = [d for d in detections if d.conf > self.high_thresh]
+        low_dets = [d for d in detections if self.low_thresh < d.conf <= self.high_thresh]
+        combined = high_dets + low_dets
+        raw_matches, unmatched_track_idxs, unmatched_high_idxs, _ = byte_track_associate(
+            high_dets, low_dets, tracks, iou_thresh=self.iou_thresh
+        )
+        matched_pairs = [
+            (combined[det_i], tracks[trk_i].track_id, pass_tag)
+            for det_i, trk_i, pass_tag in raw_matches
+        ]
+        unmatched_high_dets = [high_dets[i] for i in unmatched_high_idxs]
+        return matched_pairs, unmatched_track_idxs, unmatched_high_dets
+
+    def process_frame(
+        self,
+        detections: List[Detection],
+        frame_id: int,
+        homography: np.ndarray,
+    ) -> List[Tracklet]:
+        # 1. Predict all existing tracks
+        track_list = list(self.tracks.values())
+        for t in track_list:
+            t.state, t.covariance = self.kalman.predict(t.state, t.covariance)
+
+        # 2. Two-pass ByteTrack association
+        matched_pairs, unmatched_track_idxs, unmatched_high_dets = self.associate(detections, track_list)
+
+        # 3. Update matched tracks
+        for det, track_id, pass_tag in matched_pairs:
+            track = self.tracks[track_id]
+            center = self._extract_ground_point_px(det).astype(np.float32)
+            field_xy = cv2.perspectiveTransform(center.reshape(1, 1, 2), homography.astype(np.float64))[0, 0]
+            track.state, track.covariance, _ = self.kalman.update(
+                track.state, track.covariance, field_xy, det.conf
+            )
+            track.bbox = np.asarray(det.bbox, dtype=np.float64)
+            track.missed_frames = 0
+            if pass_tag == "low":
+                track.low_pass_recoveries += 1
+            if det.jersey_ocr:
+                track.jersey = det.jersey_ocr
+            if det.team:
+                track.team = det.team
+            track.frames.append(frame_id)
+            track.positions.append(track.state[:2].copy())
+
+        # 4. Coast unmatched tracks and prune expired (> max_coast_frames)
+        for trk_idx in unmatched_track_idxs:
+            trk = track_list[trk_idx]
+            trk.missed_frames += 1
+            if trk.missed_frames > self.max_coast_frames:
+                self.tracks.pop(trk.track_id, None)
+
+        # 5. Birth new tracks for unmatched high-confidence detections
+        for det in unmatched_high_dets:
+            center = self._extract_ground_point_px(det).astype(np.float32)
+            field_xy = cv2.perspectiveTransform(center.reshape(1, 1, 2), homography.astype(np.float64))[0, 0]
+            init_state = np.array([float(field_xy[0]), float(field_xy[1]), 0.0, 0.0], dtype=np.float64)
+            r_init = self.kalman.R_base / max(float(det.conf), 0.05)
+            init_cov = np.diag([r_init, r_init, 4.0, 4.0]).astype(np.float64)
+            tid = self.next_id
+            self.next_id += 1
+            self.tracks[tid] = Tracklet(
+                track_id=tid,
+                state=init_state,
+                covariance=init_cov,
+                jersey=det.jersey_ocr,
+                team=det.team,
+                bbox=np.asarray(det.bbox, dtype=np.float64),
+                missed_frames=0,
+                frames=[frame_id],
+                positions=[init_state[:2].copy()],
+            )
+
+        return list(self.tracks.values())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="SkeleTrack-style open-source proxy v2 (GSE Vision Plane)")
     parser.add_argument("--source", required=True, help="Video file or camera index")
