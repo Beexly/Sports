@@ -2,7 +2,8 @@
  * Derive ESPN / free-score date keys from pending pick commence times.
  *
  * ESPN's undated scoreboard is "now" only (offseason → next slate). Overdue
- * settlement requires date-targeted fetches (`dates=YYYYMMDD` or ranges).
+ * settlement requires date-targeted fetches (`dates=YYYYMMDD`, ONE day per
+ * request — ESPN 400s every multi-day value; see compactEspnDateRanges).
  *
  * Critical: do NOT fill the maxDays budget with *future* commence days
  * (e.g. NFL week-1 in September while draining July/August overdue). Future
@@ -131,43 +132,22 @@ export function uniqueScoreboardDates(
 }
 
 /**
- * Collapse adjacent ESPN day keys into range strings when helpful
- * (e.g. 20260701-20260703). Singleton days stay as YYYYMMDD.
+ * One ESPN day key per element, sorted and deduped.
+ *
+ * ESPN's scoreboard endpoint REJECTS every multi-day `dates` value with HTTP
+ * 400 — verified live 2026-10-15 on MLB, NHL and NFL: `dates=20261003-20261005`,
+ * `dates=20261003,20261004` and the reversed range all return 400 while
+ * `dates=20261003` returns 200 with the full board. The previous behavior
+ * compacted adjacent days into ranges like `20260701-20260703`, so EVERY dated
+ * settlement fetch spanning two or more days was a guaranteed-rejected request:
+ * the graders loaded no finals, every pick held NO_FINAL, and the Oct 3-6
+ * cohort sat ungraded for 12 days while the zero-sit lane correctly refused to
+ * void on a missing board (fetch error = skip, by design).
+ *
+ * The name stays for grep continuity; every caller treats the output as opaque
+ * request params. If ESPN ever reinstates multi-day keys, re-verify against the
+ * live endpoint before reintroducing ranges here.
  */
 export function compactEspnDateRanges(espnKeys: readonly string[]): string[] {
-  if (espnKeys.length === 0) return [];
-  const sorted = [...espnKeys].sort();
-  const ranges: string[] = [];
-  let start = sorted[0]!;
-  let prev = start;
-
-  // Pure calendar successor of a YYYYMMDD key. Deliberately does NOT round-trip
-  // through toEspnDateKey: that maps an INSTANT to an Eastern day, while this
-  // maps a calendar DAY to the next calendar day. Feeding a UTC-midnight Date
-  // to an Eastern formatter lands on the previous evening, so the old
-  // round-trip returned the same key back and adjacent days stopped compacting.
-  const nextDay = (yyyymmdd: string): string => {
-    const y = Number(yyyymmdd.slice(0, 4));
-    const m = Number(yyyymmdd.slice(4, 6));
-    const d = Number(yyyymmdd.slice(6, 8));
-    const dt = new Date(Date.UTC(y, m - 1, d));
-    dt.setUTCDate(dt.getUTCDate() + 1);
-    const ny = dt.getUTCFullYear();
-    const nm = String(dt.getUTCMonth() + 1).padStart(2, "0");
-    const nd = String(dt.getUTCDate()).padStart(2, "0");
-    return `${ny}${nm}${nd}`;
-  };
-
-  for (let i = 1; i < sorted.length; i++) {
-    const cur = sorted[i]!;
-    if (cur === nextDay(prev)) {
-      prev = cur;
-      continue;
-    }
-    ranges.push(start === prev ? start : `${start}-${prev}`);
-    start = cur;
-    prev = cur;
-  }
-  ranges.push(start === prev ? start : `${start}-${prev}`);
-  return ranges;
+  return [...new Set(espnKeys)].sort();
 }
