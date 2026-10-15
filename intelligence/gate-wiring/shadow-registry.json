@@ -1,0 +1,104 @@
+{
+  "batch": 1,
+  "created": "2026-10-15",
+  "doctrine": {
+    "emission": "ZERO_OBJECT",
+    "rule": "Shadow registration only. No production-path changes, no migrations, no caller added, no behavior changed. Characterization tests pin current behavior; a red pin after a future edit means behavior moved and must be reviewed, not silently re-pinned.",
+    "weight": 0
+  },
+  "entries": [
+    {
+      "characterization": [
+        "apps/web/lib/auth/age-gate.characterization.test.ts (new; extends the existing age-gate.test.ts)",
+        "pins: MINIMUM_AGE_YEARS=21; null/empty-string -> missing_date_of_birth; non-string parse -> null; whitespace trim; Feb-30 rejection; midnight-UTC 21st-birthday boundary; Feb-29 -> Mar-1 aging in non-leap years"
+      ],
+      "file": "apps/web/lib/auth/age-gate.ts",
+      "flags": [
+        "STALE FRAMING: the hard 21+ checkout gate was REMOVED 2026-09-14 by founder decision (module header). This registration is documentation-grade; wiring this module into checkout would contradict that decision. Do not wire without a new founder call."
+      ],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "Age Gate",
+      "sign_audit": "pass \u2014 grep for spread_line/spreadLine over the module: no matches; no market math of any kind",
+      "status": "shadow-registered",
+      "sweep_id": "G-21",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "apps/web/lib/auth/csrf-origin-guard.characterization.test.ts (new; module shipped with NO test file)",
+        "pins: fail-closed when NEXT_PUBLIC_APP_URL unset; fail-closed on missing/unparseable Origin+Referer; exact-origin accept; Referer fallback; cross-origin/scheme-downgrade/port-mismatch rejects with naming reason strings"
+      ],
+      "file": "apps/web/lib/auth/csrf-origin-guard.ts",
+      "flags": [],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "CSRF Origin Guard",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches; pure env/header logic, no imports",
+      "status": "shadow-registered",
+      "sweep_id": "G-22",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "apps/web/lib/claude-api/numeric-guard.characterization.test.ts (new; module shipped with NO test file)",
+        "pins: kind-compatibility matrix (same-kind + record<->count only); version/date spans ground nothing; unlabelled percent grounds nothing; the header's own fabrication case (true probability spent as hit rate) is refused; record grounded by count values; money kind-strictness; default 0.1 tolerance"
+      ],
+      "file": "apps/web/lib/claude-api/numeric-guard.ts",
+      "flags": [
+        "DEFECT (pinned, not fixed): a percent with >=2 decimals (e.g. 54.34%) also spawns a phantom magnitude claim for its truncated prefix (54.3) via DECIMAL_RE, so validation demands magnitude grounding for a number that appears only inside the percent. Fail-closed direction (stricter, never looser) but makes two-decimal percents effectively unvalidatable. Pinned in numeric-guard.characterization.test.ts."
+      ],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "Numeric Guard",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches; pure text/number logic, no imports",
+      "status": "shadow-registered",
+      "sweep_id": "G-25",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "packages/prediction-engine/src/markets/1910-08858v2-spread-win-probability-table.characterization.test.ts (new; extends the co-located synthetic test)",
+        "pins: ENABLED===false; brier/logLoss length-mismatch throws; exact Brier values; logLoss clipping finiteness; ECE p===1 last-bin routing; normalCdfLocal(0)=0.5; spearman reversed=-1 / constant=0; classWeightedBCE posWeight scaling"
+      ],
+      "file": "packages/prediction-engine/src/markets/1910-08858v2-spread-win-probability-table.ts",
+      "flags": [
+        "NAME/CONTENT MISMATCH (pinned, not fixed): the file named 'spread-win-probability-table' contains no spread->win-probability table \u2014 only generic scoring utilities. Its header records the P(Win|PS) acceptance gate as NOT EVALUATED. Any future wiring must not cite this module as a spread->WP source.",
+        "DEFECT (pinned, not fixed): spearman() breaks ties by position (no rank averaging) \u2014 a constant series returns +/-1 instead of 0/undefined. Pinned in the characterization test."
+      ],
+      "kind": "prediction-engine-module",
+      "mu_contact": "none",
+      "name": "markets/1910-08858v2-spread-win-probability-table",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches; probability scoring utilities only, derives no mean from any line",
+      "status": "shadow-registered",
+      "sweep_evidence": "packages/prediction-engine/src/index.ts (import) \u2014 exported from the package barrel",
+      "sweep_id": "PE-125",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "packages/prediction-engine/src/decision/2104-08236v1-totals-abstention-sigma.characterization.test.ts (new; extends the co-located test)",
+        "pins: ENABLED===false; totalsPublishRule inclusive at sigma===tau; kappaFromSigma([])=1; recalibrateTau([])=Infinity; sigmaCalibration([])={mean:0,std:1}; gaussianNll sigma floor 1e-6 (finite at sigma=0); PID alpha floor 0.01; gate band edges inclusive (MAE gap 0.5, zMean \u00b10.2, zStd 0.8/1.2)"
+      ],
+      "file": "packages/prediction-engine/src/decision/2104-08236v1-totals-abstention-sigma.ts",
+      "flags": [
+        "PUBLISH-SHAPED SURFACE BEHIND A CONST FLAG: the module exports a totals publish rule and gate helper while ENABLED=false and unwired. The ENABLED===false characterization pin is the tripwire \u2014 any flip turns this suite red and forces review. No caller may be added under shadow registration."
+      ],
+      "kind": "prediction-engine-module",
+      "mu_contact": "none",
+      "name": "decision/2104-08236v1-totals-abstention-sigma",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches; its `mu` parameters are a generic regression mean supplied by a caller (no caller exists); it derives nothing from market lines and cannot shift engine \u03bc",
+      "status": "shadow-registered",
+      "sweep_id": "PE-048",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    }
+  ],
+  "registry": "gate-wiring shadow registry",
+  "source_note": "Sweep file was not present at its cited path on Beexly/Sports main (9a989b3) at build time (contents API 404; docs/ops tree listing). Working copy: the G-02 lane's preserved download, whose status/kind counts reproduce the census annex exactly (182/24/11/6/3/3; kinds 179 prediction-engine-module / 30 engine-gate / 20 local-inferred-harness).",
+  "source_sweep": "docs/ops/SWEEP-2026-10-13-GATES.jsonl (229 rows; status counts 182 landed-not-wired / 24 quarantined / 11 wired-live / 6 unclear / 3 not-found / 3 spec-only)"
+}
