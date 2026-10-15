@@ -15368,3 +15368,7 @@ TIMESTAMP METHOD: both lanes opened every candidate post; detail pages show abso
 - @cmain7 survivor scatter: per-team WP/FV values chart-only except the DEN Week 13 sample in post text.
 - Home feed partially failed to load ("Something went wrong") and rendered a limited repost set — a skim, not full coverage.
 - Lane A: author self-replies/conversation replies under opened posts were checked only for source info and not counted as separate Posts-tab posts unless they appeared as timeline entries. No bio-link/external data pages were visited by either lane (see endpoint notes).
+
+## 2026-10-14: QB-Conditioned Receiver Efficiency (SHADOW)
+Added a new pure expected metric `qb-conditioned-receiver-efficiency` to measure a receiver's target efficiency depending on the QB throwing the ball.
+**Crucial limitation**: The metric measures yards per target, NOT yards per route run (YPRR). Routes are not available in public nflverse play-by-play, so YPRR is completely out of scope. The module returns yards per target and the conditioned differential (vs all other QBs combined over the same point-in-time window), alongside target floors (20 targets for the pairing, 10 for the baseline) and shrinkage to the league mean. It is registered purely as a SHADOW metric and should not be surfaced publically.
