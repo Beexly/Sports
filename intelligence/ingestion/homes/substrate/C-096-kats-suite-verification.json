@@ -5,7 +5,7 @@
  "census_status": "EVALUATED 2026-10-05/06 with ADOPT order issued (per packet); evaluation landed on a branch + deep-dive doc, but sibling-session landings are recorded UNVERIFIED",
  "stamp_required": "per-item landed-artifact paths + test files (evaluation stack)",
  "stamp_available": "PARTIAL",
- "stamp_gap": "5 of 9 ADOPT sub-items have no artifact in the repo; the 4 landed items are modules with unit tests but no service wiring (app/main.py exposes only tda/etkf/free-energy/mps/irl)",
+ "stamp_gap": "5 of 9 ADOPT sub-items have no Kats artifact in the repo (TSFeatures has only the adjacent FRANS implementation, a different method); the 4 landed items are modules with unit tests but no service wiring (app/main.py exposes only tda/etkf/free-energy/mps/irl)",
  "reasoning_available": "NO",
  "emission_status": "ZERO_OBJECT",
  "homed_by": "wiring-surge-a-2026-10-15",
@@ -18,7 +18,7 @@
    {
     "item": "TSFeatures",
     "verdict": "NOT LANDED",
-    "evidence": "no tsfeatures module in the vendored kats tree; repo code search 'tsfeatures' = 0"
+    "evidence": "no Kats TSFeatures module in the vendored kats tree or gse-ml-service. Adjacent capability under a different method: packages/data-ingestion/src/frans-ts-features.ts implements FRANS (arXiv:2209.07018) automatic time-series feature extraction (offline; catch22-lite + stats) - not the Kats ADOPT item as specified. (Correction 2026-10-15: an earlier draft cited a code-search count of 0; the term actually returns 12 hits, incl. the FRANS module and Oct-06 wiring docs.)"
    },
    {
     "item": "BOCPD",
