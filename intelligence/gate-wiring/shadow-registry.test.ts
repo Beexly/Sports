@@ -1,5 +1,5 @@
 /**
- * Registry integrity test — gate-wiring shadow registry (batch 1).
+ * Registry integrity test — gate-wiring shadow registry (batches 1-2).
  * Asserts the registry's doctrine invariants mechanically: every entry
  * is weight 0, shadow-registered, sign-audited, and points at a file
  * that exists in the repo tree.
@@ -26,15 +26,26 @@ const registry = JSON.parse(
   }>;
 };
 
-describe("shadow registry — batch 1 invariants", () => {
+describe("shadow registry — batches 1-2 invariants", () => {
   it("declares weight 0 and ZERO_OBJECT emission doctrine", () => {
     expect(registry.doctrine.weight).toBe(0);
     expect(registry.doctrine.emission).toBe("ZERO_OBJECT");
   });
 
-  it("registers exactly the five batch-1 sweep ids", () => {
+  it("registers exactly the ten batch-1 + batch-2 sweep ids", () => {
     expect(registry.entries.map((e) => e.sweep_id).sort()).toEqual(
-      ["G-21", "G-22", "G-25", "PE-048", "PE-125"].sort(),
+      [
+        "G-04",
+        "G-05",
+        "G-06",
+        "G-08",
+        "G-10",
+        "G-21",
+        "G-22",
+        "G-25",
+        "PE-048",
+        "PE-125",
+      ].sort(),
     );
   });
 

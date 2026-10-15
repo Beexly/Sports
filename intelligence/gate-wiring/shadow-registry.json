@@ -1,5 +1,9 @@
 {
-  "batch": 1,
+  "batch": 2,
+  "batch_history": [
+    1,
+    2
+  ],
   "created": "2026-10-15",
   "doctrine": {
     "emission": "ZERO_OBJECT",
@@ -94,6 +98,105 @@
       "sign_audit": "pass \u2014 no spread_line/spreadLine matches; its `mu` parameters are a generic regression mean supplied by a caller (no caller exists); it derives nothing from market lines and cannot shift engine \u03bc",
       "status": "shadow-registered",
       "sweep_id": "PE-048",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "apps/web/lib/signals/spine.characterization.test.ts (new; extends the existing spine.test.ts)",
+        "pins: environmentScalar breakpoints and clamps (implied 15 -> 0.35, 22 -> 1.0, 30 -> 1.3, absent environment -> 1); multiplierOf clamps [0.55, 1.45]; ramp step when floor === full; NEUTRAL_READ reference identity; thin-sample-only read (delta 0, multiplier 1, confidence 0.5); vacated-usage beneficiary decay (cuts 1, 1/2, 1/4) and QB exclusion; coverage severity === environmentScalar; wind severity = max(sustained, gust) ramps; backup_qb fixed severity 1 (DST excluded); airwave breadth x tier-weight arithmetic"
+      ],
+      "file": "apps/web/lib/signals/spine.ts",
+      "flags": [
+        "DEFECT (pinned, not fixed): SignalEffect.severity is documented '0..1' but the usage paths multiply by environmentScalar AFTER the Math.min(1, ...) clamp, so severity reaches 1.3 and a WR vacated-usage weight reaches 7.15 in a top offense (implied total 30). Pinned in spine.characterization.test.ts.",
+        "SIGN CONVENTION UNDOCUMENTED IN-MODULE: GameEnvironment.spread is consumed as an unsigned magnitude with direction from a separate `favourite` field; a negative spread silently yields no blowout effect (pinned). Producers must keep supplying magnitude + favourite."
+      ],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "Signal Spine",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches in the module; env.spread is read only as an unsigned magnitude with direction from env.favourite; the module emits signed fantasy-point effects and its header forbids feeding published probabilities",
+      "status": "shadow-registered",
+      "sweep_evidence": "Code search at batch-2 build time: imported by apps/web/lib/fantasy/{dfs-signals, dfs-solve, props, trade, waivers}.ts \u2014 production-lib callers exist; the sweep's 'landed-not-wired' denotes no gate-registry wiring, not zero callers",
+      "sweep_id": "G-04",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "packages/ingestion-pipeline/src/publish-guards-bridge.characterization.test.ts (new; extends the existing publish-guards-bridge.test.ts)",
+        "pins: evalReliability refuses p at exactly 0 and 1 (open interval), non-finite p, y outside {0,1}, and non-array rows, naming the first bad row index; exact Brier (0.16 for the two-row specimen) with 6-dp rounding; default 10-bin diagram with p=0.65 in bin 6 and NaN stats on empty bins; bins=1 aggregation; sibling fail-closed surfaces (evalAbstention NaN stratumN, evalStratumGate identity fields, evalFloorStrata empty list)"
+      ],
+      "file": "packages/ingestion-pipeline/src/publish-guards-bridge.ts",
+      "flags": [
+        "DEFECT (pinned, not fixed): evalReliability never validates `bins` \u2014 bins=0 returns ok:true with an empty reliability diagram while the Brier is still computed and reported. A caller asking for 0 bins silently loses the diagram. Pinned in publish-guards-bridge.characterization.test.ts.",
+        "NO PRODUCTION CALLER: code search at batch-2 build time finds evalReliability only in the bridge, its test, and the ingestion package barrel re-export (packages/ingestion-pipeline/src/index.ts). The publish path never invokes it; shadow registration does not change that."
+      ],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "Proper Scoring Gate (publish-guards bridge)",
+      "sign_audit": "pass \u2014 the gate consumes caller-supplied probabilities (strictly inside (0,1), enforced) and binary outcomes; it derives no probability from any line and touches no mean",
+      "status": "shadow-registered",
+      "sweep_evidence": "packages/ingestion-pipeline/src/index.ts (re-export) \u2014 exported from the package barrel; no call sites anywhere in the repo",
+      "sweep_id": "G-10",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "apps/web/lib/ops/per-market-gate.characterization.test.ts (new; module shipped with NO test file of its own)",
+        "pins: the full floor table (all markets minN 100, reliabilityFloor 0.05; MONEYLINE eceNullQ95 0.0793 / debiased 0.0535 / resFloor 0.0091; SPREAD 0.0518 / 0.0369 / 0.0029; TOTAL 0.0552 / 0.0434 / 0.0036; PROPS identical to MONEYLINE); ML_RES_FLOOR_STRICT=0.0126; INSUFFICIENT below minN with the exact reason and boundary n==minN proceeding; ECE strict >, reliability strict >, Brier equality fails, resolution-at-floor fails (inclusive); null debiased ECE skipped; reason accumulation order; strictMl copies the floors and applies to MONEYLINE only"
+      ],
+      "file": "apps/web/lib/ops/per-market-gate.ts",
+      "flags": [
+        "DEFECT (pinned, not fixed): no finiteness validation \u2014 all-NaN metric inputs return PASS ('all per-market floors met'), because every check is a comparison that NaN makes false. The gate fails OPEN on garbage inputs. Pinned in per-market-gate.characterization.test.ts.",
+        "PROPS FLOORS ARE UNMEASURED: the module header states the PROPS entry is the pooled moneyline default and MUST be re-derived from the props null simulation before use. The floor-table pin freezes the values; it does not validate them for props."
+      ],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "Per-Market Calibration Gate",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches; the gate consumes per-market calibration statistics and compares them to pre-computed null-simulation floors; it derives no probability and no mean",
+      "status": "shadow-registered",
+      "sweep_evidence": "apps/web/lib/ops/compute-live-calibration-metrics.ts (import; verdict call) \u2014 a production ops caller exists; the verdict is recorded in metrics report-only and enforced on no publish path",
+      "sweep_id": "G-06",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "packages/prediction-engine/src/promotion/__tests__/evaluate.characterization.test.ts (new; completes the decision table of the existing evaluate.test.ts and its six sibling suites)",
+        "pins: concurrentChallengers 0 / 1.5 / -2 throw RangeError (integrity itself does not check m); Leg-1 reason precedence (n < N_min reported first; coverage reported before the LCB); Leg 2 failing alone \u2014 decisive CLV inferiority, and the zero-rows variant (z NaN, oneSidedP 1); zero-variance CLV decided deterministically at the gate level (z = +/-Infinity); decision metadata echo (ids, codeRevision, injected decidedAt verbatim, alphaAdj = alpha/m, windowHash sha256 format)"
+      ],
+      "file": "packages/prediction-engine/src/promotion/evaluate.ts",
+      "flags": [
+        "DARK BY CONTRACT, NOT BY OMISSION: docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md section 6 freezes this module as evaluator-only ('No wiring into live scoring, no cron, no UI'); the module header records that applying a promotion is a separate founder-applied step outside the module. Shadow registration preserves that posture exactly.",
+        "MISSING INFRASTRUCTURE (contract-named): no trials registry persists the PromotionDecision records contract section 5 invariant 5 requires, and the Leg-2 CLV evidence lane ('Workstream E router', contract section 3) has no implementation on trunk. Both are prerequisites for any live-weight use, separate from this registration."
+      ],
+      "kind": "prediction-engine-module",
+      "mu_contact": "none",
+      "name": "Model Promotion Gate (promotion/evaluate)",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches; the CLV sign convention is explicit in types.ts (positive = the locked price beat the close) and probabilities are integrity-checked into [0,1] before any statistic; the gate emits eligibility verdicts only, never a probability or a mean",
+      "status": "shadow-registered",
+      "sweep_evidence": "packages/ingestion-pipeline/src/publish-guards-bridge.ts (import; evalPromotion wrapper) + packages/prediction-engine/src/index.ts (leaf re-exports) \u2014 the promotion module itself has no live app caller",
+      "sweep_id": "G-08",
+      "sweep_status": "landed-not-wired",
+      "weight": 0
+    },
+    {
+      "characterization": [
+        "apps/web/lib/fantasy/dfs-signals.characterization.test.ts (new; extends the existing dfs-signals.test.ts)",
+        "pins: payoutRate exactly 0.05 is NOT the cash branch (strict >); fieldSize 1000/999 leverage-gpp cutoff; all three branches' exact reason strings; mismatch === (chosen !== recommended); degenerate fields (0-size guarded by Math.max(1, fieldSize); placesPaid > fieldSize reports >100% and takes the cash branch); signalPenalty is 0 in every mode under an empty context"
+      ],
+      "file": "apps/web/lib/fantasy/dfs-signals.ts",
+      "flags": [
+        "DEAD INPUT (pinned, not fixed): ContestShape.singleEntry is a required field that adviseMode never reads \u2014 two contests differing only in singleEntry receive identical advice. Either the field should drive advice or callers are collecting a value nobody uses. Pinned in dfs-signals.characterization.test.ts."
+      ],
+      "kind": "engine-gate",
+      "mu_contact": "none",
+      "name": "Contest-Shape Guard (adviseMode)",
+      "sign_audit": "pass \u2014 no spread_line/spreadLine matches in dfs-signals.ts; adviseMode emits a mode label (cash/gpp/leverage) and no numeric market output; the module's numeric path (signalPenalty) delegates to the G-04 spine and inherits its audit",
+      "status": "shadow-registered",
+      "sweep_evidence": "apps/web/lib/fantasy/dfs-solve.ts (import + call) \u2014 production-lib caller exists inside the DFS library; no customer surface changes under shadow registration",
+      "sweep_id": "G-05",
       "sweep_status": "landed-not-wired",
       "weight": 0
     }
