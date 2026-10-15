@@ -130,10 +130,13 @@ async function loadHenry(free: Sport): Promise<readonly NcaaGame[]> {
   });
   if (!clearance.allowed) {
     // Fail-CLOSED is correct — but log the reason so a rights-status change is
-    // visible instead of looking like an empty off-season slate.
+    // visible instead of looking like an empty off-season slate. The CODES go
+    // in the message: an operator searching the log for "SOURCE_NOT_REGISTERED"
+    // must be able to find the refusal, and bare "blocks=[]" brackets read as
+    // "no reason given".
     console.warn(
       `[free-score-persist] clearance DENIED for henrygd-ncaa (${free}) — ` +
-      `blocks=[${clearance.blocks.join(", ") || "none"}] ` +
+      `blocks=[${clearance.blocks.map((b) => b.code).join(", ") || "none"}] ` +
       `warnings=[${clearance.warnings.join(", ") || "none"}]; skipping fetch`,
     );
     return [];

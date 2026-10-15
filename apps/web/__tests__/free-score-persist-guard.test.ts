@@ -34,8 +34,25 @@ vi.mock("@/lib/data-sources/free-ingestion-run", () => ({
   recordFreeIngestionRun: vi.fn(async () => ({ id: "run-1" })),
 }));
 vi.mock("@/lib/scraping/clearance-engine", () => ({
+  // Shape mirrors the real ClearanceResult (lib/scraping/clearance-engine.ts):
+  // loadHenry's deny path reads blocks/warnings to log WHY clearance was
+  // refused (GSE-SEC-050 hardening, 68ba1c410). A bare { allowed } mock made
+  // that read throw "Cannot read properties of undefined (reading 'join')",
+  // which the sport-level catch swallowed into ok:false — every guard test
+  // then saw gamesMatched 0 with no visible cause.
   // ESPN storage is cleared for the test; henrygd stays denied (GSE-SEC-050).
-  checkClearance: (req: { source_id: string }) => ({ allowed: req.source_id === "espn-public-api" }),
+  checkClearance: (req: { source_id: string }) => ({
+    allowed: req.source_id === "espn-public-api",
+    requiresReview: false,
+    source_id: req.source_id,
+    mode: "public_logged_off_fact_extract",
+    tool_id: "fetch-native",
+    intents: ["storage", "derived_analytics"],
+    blocks: req.source_id === "espn-public-api" ? [] : [{ code: "SOURCE_NOT_REGISTERED", message: "mock: not registered" }],
+    warnings: [],
+    rightsSnapshot: null,
+    checkedAt: "2025-12-13T20:00:00.000Z",
+  }),
 }));
 
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
