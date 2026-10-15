@@ -1,0 +1,558 @@
+{
+ "graph": "gse-situational-graph",
+ "version": "1.0",
+ "season": 2026,
+ "week": 6,
+ "generated_at": "2026-10-15T20:16:23.230335+00:00",
+ "builder": "intelligence/situational-graph/builder.py",
+ "nodes": [
+  {
+   "id": "game:2026_06_SEA_DEN",
+   "kind": "game",
+   "gameday": "2026-10-15",
+   "away_team": "SEA",
+   "home_team": "DEN",
+   "roof": "outdoors",
+   "surface": "grass"
+  },
+  {
+   "id": "player:Chazz-Surratt",
+   "kind": "player",
+   "name": "Chazz Surratt",
+   "position": "LB",
+   "team": "SEA"
+  },
+  {
+   "id": "player:Drake-Thomas",
+   "kind": "player",
+   "name": "Drake Thomas",
+   "position": "LB",
+   "team": "SEA"
+  },
+  {
+   "id": "player:Jadarian-Price",
+   "kind": "player",
+   "name": "Jadarian Price",
+   "position": "RB",
+   "team": "SEA"
+  },
+  {
+   "id": "player:Jonah-Coleman",
+   "kind": "player",
+   "name": "Jonah Coleman",
+   "position": "RB",
+   "team": "DEN"
+  },
+  {
+   "id": "player:Julian-Neal",
+   "kind": "player",
+   "name": "Julian Neal",
+   "position": "CB",
+   "team": "SEA"
+  },
+  {
+   "id": "player:Pat-Bryant",
+   "kind": "player",
+   "name": "Pat Bryant",
+   "position": "WR",
+   "team": "DEN"
+  },
+  {
+   "id": "player:Pat-Surtain-II",
+   "kind": "player",
+   "name": "Pat Surtain II",
+   "position": "CB",
+   "team": "DEN"
+  },
+  {
+   "id": "player:Riley-Moss",
+   "kind": "player",
+   "name": "Riley Moss",
+   "position": "CB",
+   "team": "DEN"
+  },
+  {
+   "id": "player:Talanoa-Hufanga",
+   "kind": "player",
+   "name": "Talanoa Hufanga",
+   "position": "S",
+   "team": "DEN"
+  },
+  {
+   "id": "player:Zach-Charbonnet",
+   "kind": "player",
+   "name": "Zach Charbonnet",
+   "position": "RB",
+   "team": "SEA"
+  },
+  {
+   "id": "state:ALTITUDE_VISIT",
+   "kind": "state",
+   "state": "ALTITUDE_VISIT"
+  },
+  {
+   "id": "state:SHORT_WEEK",
+   "kind": "state",
+   "state": "SHORT_WEEK"
+  },
+  {
+   "id": "state:THURSDAY_GAME",
+   "kind": "state",
+   "state": "THURSDAY_GAME"
+  },
+  {
+   "id": "team:DEN",
+   "kind": "team",
+   "code": "DEN"
+  },
+  {
+   "id": "team:SEA",
+   "kind": "team",
+   "code": "SEA"
+  },
+  {
+   "id": "venue:DEN",
+   "kind": "venue",
+   "team": "DEN"
+  },
+  {
+   "id": "week:2026-06",
+   "kind": "week",
+   "season": 2026,
+   "week": 6
+  }
+ ],
+ "edges": [
+  {
+   "id": "altitude:2026_06_SEA_DEN:team:SEA->venue:DEN",
+   "type": "altitude",
+   "from": "team:SEA",
+   "to": "venue:DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "venue_elevation_ft": 5280,
+    "at_altitude": true,
+    "threshold_ft": 4000,
+    "city": "Denver, CO"
+   },
+   "source": {
+    "kind": "venue_static",
+    "ref": "static venue reference: Denver, CO elevation 5,280 ft (fixed geographic fact); data/gse-dataset/games.jsonl corroborates DEN home roof=outdoors, surface=grass"
+   },
+   "as_of": null
+  },
+  {
+   "id": "altitude_short_week:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+   "type": "altitude_short_week",
+   "from": "team:SEA",
+   "to": "game:2026_06_SEA_DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "venue_elevation_ft": 5280,
+    "visitor_rest_days": 4,
+    "home_rest_days": 4,
+    "basis": "visitor at altitude on a short week"
+   },
+   "source": {
+    "kind": "derived",
+    "ref": "altitude + rest_differential inputs, this build"
+   },
+   "as_of": "2026-10-11"
+  },
+  {
+   "id": "coaching_change:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+   "type": "coaching_change",
+   "from": "team:DEN",
+   "to": "game:2026_06_SEA_DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "role": "DC",
+    "name": "Vance Joseph",
+    "seasons_with_team": [
+     2023,
+     2024,
+     2025,
+     2026
+    ],
+    "changed_this_season": false
+   },
+   "source": {
+    "kind": "repo_doc",
+    "ref": "intelligence/coaching/coach_tenures.py (verified coach tenures 2022-2026, web-verified 2026-10-01)"
+   },
+   "as_of": "2026-10-01"
+  },
+  {
+   "id": "has_state:2026_06_SEA_DEN:team:DEN->state:SHORT_WEEK",
+   "type": "has_state",
+   "from": "team:DEN",
+   "to": "state:SHORT_WEEK",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "rest_days": 4,
+    "basis": "days between games <= 5"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+   },
+   "as_of": "2026-10-11"
+  },
+  {
+   "id": "has_state:2026_06_SEA_DEN:team:DEN->state:THURSDAY_GAME",
+   "type": "has_state",
+   "from": "team:DEN",
+   "to": "state:THURSDAY_GAME",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "basis": "gameday is a Thursday"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl"
+   },
+   "as_of": null
+  },
+  {
+   "id": "has_state:2026_06_SEA_DEN:team:SEA->state:ALTITUDE_VISIT",
+   "type": "has_state",
+   "from": "team:SEA",
+   "to": "state:ALTITUDE_VISIT",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "venue_elevation_ft": 5280
+   },
+   "source": {
+    "kind": "venue_static",
+    "ref": "static venue reference: Denver, CO elevation 5,280 ft (fixed geographic fact); data/gse-dataset/games.jsonl corroborates DEN home roof=outdoors, surface=grass"
+   },
+   "as_of": null
+  },
+  {
+   "id": "has_state:2026_06_SEA_DEN:team:SEA->state:SHORT_WEEK",
+   "type": "has_state",
+   "from": "team:SEA",
+   "to": "state:SHORT_WEEK",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "rest_days": 4,
+    "basis": "days between games <= 5"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+   },
+   "as_of": "2026-10-11"
+  },
+  {
+   "id": "has_state:2026_06_SEA_DEN:team:SEA->state:THURSDAY_GAME",
+   "type": "has_state",
+   "from": "team:SEA",
+   "to": "state:THURSDAY_GAME",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "basis": "gameday is a Thursday"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl"
+   },
+   "as_of": null
+  },
+  {
+   "id": "hosted_at:2026_06_SEA_DEN:game:2026_06_SEA_DEN->venue:DEN",
+   "type": "hosted_at",
+   "from": "game:2026_06_SEA_DEN",
+   "to": "venue:DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {},
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl"
+   },
+   "as_of": null
+  },
+  {
+   "id": "in_week:2026_06_SEA_DEN:game:2026_06_SEA_DEN->week:2026-06",
+   "type": "in_week",
+   "from": "game:2026_06_SEA_DEN",
+   "to": "week:2026-06",
+   "game": "2026_06_SEA_DEN",
+   "value": {},
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl"
+   },
+   "as_of": null
+  },
+  {
+   "id": "injury_burden:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+   "type": "injury_burden",
+   "from": "team:DEN",
+   "to": "game:2026_06_SEA_DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "burden": 3.0,
+    "contributors": [
+     {
+      "player": "player:Pat-Surtain-II",
+      "position": "CB",
+      "status": "Out",
+      "weight": 0.8
+     },
+     {
+      "player": "player:Talanoa-Hufanga",
+      "position": "S",
+      "status": "Out",
+      "weight": 0.8
+     },
+     {
+      "player": "player:Riley-Moss",
+      "position": "CB",
+      "status": "Questionable",
+      "weight": 0.2
+     },
+     {
+      "player": "player:Pat-Bryant",
+      "position": "WR",
+      "status": "Out",
+      "weight": 0.7
+     },
+     {
+      "player": "player:Jonah-Coleman",
+      "position": "RB",
+      "status": "Out",
+      "weight": 0.5
+     }
+    ],
+    "weight_table": "edge_types.json injury_burden.weights (RIL, Hermes walk-forward diagnostics)"
+   },
+   "source": {
+    "kind": "injury_report",
+    "ref": "fixtures/injuries-sea-den-week06-stamped.csv"
+   },
+   "as_of": "2026-10-15T11:36:00-04:00"
+  },
+  {
+   "id": "injury_burden:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+   "type": "injury_burden",
+   "from": "team:SEA",
+   "to": "game:2026_06_SEA_DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "burden": 3.0,
+    "contributors": [
+     {
+      "player": "player:Zach-Charbonnet",
+      "position": "RB",
+      "status": "Out",
+      "weight": 0.5
+     },
+     {
+      "player": "player:Chazz-Surratt",
+      "position": "LB",
+      "status": "Out",
+      "weight": 0.6
+     },
+     {
+      "player": "player:Drake-Thomas",
+      "position": "LB",
+      "status": "Out",
+      "weight": 0.6
+     },
+     {
+      "player": "player:Julian-Neal",
+      "position": "CB",
+      "status": "Out",
+      "weight": 0.8
+     },
+     {
+      "player": "player:Jadarian-Price",
+      "position": "RB",
+      "status": "Out",
+      "weight": 0.5
+     }
+    ],
+    "weight_table": "edge_types.json injury_burden.weights (RIL, Hermes walk-forward diagnostics)"
+   },
+   "source": {
+    "kind": "injury_report",
+    "ref": "fixtures/injuries-sea-den-week06-stamped.csv"
+   },
+   "as_of": "2026-10-15T11:36:00-04:00"
+  },
+  {
+   "id": "participates_in:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+   "type": "participates_in",
+   "from": "team:DEN",
+   "to": "game:2026_06_SEA_DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "role": "home"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl"
+   },
+   "as_of": null
+  },
+  {
+   "id": "participates_in:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+   "type": "participates_in",
+   "from": "team:SEA",
+   "to": "game:2026_06_SEA_DEN",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "role": "away"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl"
+   },
+   "as_of": null
+  },
+  {
+   "id": "rest_differential:2026_06_SEA_DEN:team:DEN->team:SEA",
+   "type": "rest_differential",
+   "from": "team:DEN",
+   "to": "team:SEA",
+   "game": "2026_06_SEA_DEN",
+   "value": {
+    "rest_away_days": 4,
+    "rest_home_days": 4,
+    "rest_diff_home_minus_away": 0,
+    "away_prev_gameday": "2026-10-11",
+    "home_prev_gameday": "2026-10-11"
+   },
+   "source": {
+    "kind": "schedule",
+    "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+   },
+   "as_of": "2026-10-11"
+  }
+ ],
+ "honest_empty": [
+  {
+   "edge_type": "coaching_change",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "verified coach tenure rows for SEA"
+   ],
+   "reason": "coaches input carries no tenure row for this team",
+   "team": "SEA"
+  },
+  {
+   "edge_type": "weather_extreme",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "stamped forecast for 2026-10-15"
+   ],
+   "reason": "no forecast input supplied for this game"
+  },
+  {
+   "edge_type": "atmosphere",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored atmosphere read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "SEA"
+  },
+  {
+   "edge_type": "coaching_honesty",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored coaching_honesty read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "SEA"
+  },
+  {
+   "edge_type": "injury_context_identity",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored injury_context_identity read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "SEA"
+  },
+  {
+   "edge_type": "layered_revenge",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored layered_revenge read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "SEA"
+  },
+  {
+   "edge_type": "logistical_disruption",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored logistical_disruption read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "SEA"
+  },
+  {
+   "edge_type": "atmosphere",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored atmosphere read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "DEN"
+  },
+  {
+   "edge_type": "coaching_honesty",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored coaching_honesty read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "DEN"
+  },
+  {
+   "edge_type": "injury_context_identity",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored injury_context_identity read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "DEN"
+  },
+  {
+   "edge_type": "layered_revenge",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored layered_revenge read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "DEN"
+  },
+  {
+   "edge_type": "logistical_disruption",
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "authored logistical_disruption read with source + as-of stamp"
+   ],
+   "reason": "no read input supplied; the graph records reads, it does not invent them",
+   "team": "DEN"
+  }
+ ],
+ "diagnostics": {
+  "edges_by_type": {
+   "participates_in": 2,
+   "hosted_at": 1,
+   "in_week": 1,
+   "has_state": 5,
+   "rest_differential": 1,
+   "altitude": 1,
+   "altitude_short_week": 1,
+   "coaching_change": 1,
+   "injury_burden": 2
+  },
+  "failed_closed": {},
+  "honest_empty_count": 12
+ }
+}

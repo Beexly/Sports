@@ -71,7 +71,9 @@ import sys
 from pathlib import Path
 
 BRIDGE_NAME = "gse-bridge-model"
-BRIDGE_VERSION = "1.0"
+BRIDGE_VERSION = "1.1"  # 1.1 (branch motif/bridge-injury-rule-2026-10-15): injury_burden_differential rule,
+# unlocked by the feed stamp fix (intelligence/providers/injury_stamps.py,
+# branch motif/injury-feed-stamps-2026-10-15). v1 rules unchanged.
 
 # --- situational graph constants: import the real module when present ----
 try:  # pragma: no cover - exercised once the graph package shares the tree
@@ -362,6 +364,58 @@ def _rule_coaching(graph, game, rule, read_at, out):
                 evidence_edges=[edge], rule=rule, read_at=read_at))
 
 
+def _rule_injury_burden(graph, game, rule, read_at, out):
+    """Injury burden differential (v1.1). The scalar is the graph's RIL
+    burden per team; the premise is the DIFFERENTIAL, banded on the
+    differential's own extremity on the RIL scale (one starting CB Out is
+    0.8; a QB Out is 2.5). Fires only when BOTH teams carry a stamped
+    burden edge — a differential against an honest-empty is not a
+    differential, and the missing side stays in not_consumed with its
+    reason. The premise reports what the scalar says: it counts
+    designated availability and does not see positional concentration,
+    which the statement says out loud."""
+    edges = _edges(graph, "injury_burden")
+    if len(edges) < 2:
+        return
+    home = _home_team(graph)
+    by_team = {e["from"]: e for e in edges}
+    if home is None or home not in by_team:
+        return
+    others = [t for t in by_team if t != home]
+    if len(others) != 1:
+        return
+    away = others[0]
+    b_home = by_team[home]["value"]["burden"]
+    b_away = by_team[away]["value"]["burden"]
+    diff = round(b_home - b_away, 3)
+    adiff = abs(diff)
+    band = "NEUTRAL"
+    for row in rule["bands"]:  # ordered strongest-first; first match wins
+        cond = row["condition"]
+        if "> 2.0" in cond and adiff > 2.0:
+            band = row["band"]
+            break
+        if "0.75 <" in cond and 0.75 < adiff <= 2.0:
+            band = row["band"]
+            break
+        if "0 <" in cond and 0 < adiff <= 0.75:
+            band = row["band"]
+            break
+        if "== 0" in cond and adiff == 0:
+            band = row["band"]
+            break
+    direction = "NEUTRAL" if diff == 0 else ("AGAINST_HOME" if diff > 0 else "AGAINST_AWAY")
+    out.append(make_premise(
+        premise_id="premise:%s:injury_burden_differential" % game,
+        game=game, subject="game:%s" % game, kind=rule["kind"],
+        direction=direction, magnitude_band=band,
+        statement=("Injury burden differential %+.2f (home perspective): %s burden %.2f, "
+                   "%s burden %.2f over designated players (RIL weights). The scalar "
+                   "counts designated availability; it does not see positional concentration."
+                   % (diff, _team_of(home), b_home, _team_of(away), b_away)),
+        evidence_edges=[by_team[home], by_team[away]], rule=rule, read_at=read_at))
+
+
 def _home_team(graph):
     for edge in graph.get("edges", []):
         if edge["type"] == "participates_in" and (edge.get("value") or {}).get("role") == "home":
@@ -375,6 +429,7 @@ RULE_FUNCS = {
     "altitude_short_week_composite": _rule_composite,
     "short_week_game_context": _rule_short_week_game,
     "coaching_continuity": _rule_coaching,
+    "injury_burden_differential": _rule_injury_burden,
 }
 
 

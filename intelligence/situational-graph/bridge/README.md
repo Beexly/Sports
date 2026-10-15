@@ -94,6 +94,25 @@ the graph marks `honest_empty` (injury burden, weather, authored reads)
 propagates to the premise document's `not_consumed` list with its reason —
 the bridge never invents a premise over missing facts.
 
+## Rules v1.1 (this branch: `motif/bridge-injury-rule-2026-10-15`)
+
+| rule | scalar | registered signals (crosswalk) |
+|---|---|---|
+| injury_burden_differential | burden_home − burden_away (RIL) | nfl_injury_trajectory (partial) |
+
+Unlocked by the injury feed stamp fix (`intelligence/providers/
+injury_stamps.py`, branch `motif/injury-feed-stamps-2026-10-15`): injury
+rows now carry `pulled_at`, the graph stamps `injury_burden` edges with it,
+and this rule converts the two burdens into one differential premise. It
+fires only when BOTH teams carry a stamped burden edge — a differential
+against an honest-empty is not a differential. Worked example on the
+stamped instance (`inputs/2026-week06-sea-at-den-stamped.graph.json`,
+read 2026-10-15T23:59Z): 6 premises — the five v1 premises unchanged,
+plus the injury premise. On the fixture facts the RIL burdens tie
+(DEN 3.00, SEA 3.00), so the premise is NEUTRAL and says what the scalar
+cannot see: positional concentration. The bridge reports the scalar; it
+does not import the narrative.
+
 ## Worked example
 
 Input: `inputs/2026-week06-sea-at-den.graph.json` — byte-identical copy of
