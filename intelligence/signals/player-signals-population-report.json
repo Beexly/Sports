@@ -1,0 +1,37 @@
+{
+  "artifact": "player-signals-population-report",
+  "census_row": "C-074",
+  "command": "npx tsx scripts/dfs/populate-player-signals.ts (dry-run; --write is the runbook-gated prod step)",
+  "loader": "apps/web/lib/ops/player-signals-pbp-loader.ts",
+  "extractor": "intelligence/signals/extract_player_week_pbp.py",
+  "aggregates": "intelligence/signals/player_week_pbp.jsonl",
+  "table_before": "signals (entityType='player'): 0 rows \u2014 measured read-only on prod 2026-09-27 (signal-ledger-loader header); census C-074 BUILT-EMPTY",
+  "dry_run_result": {
+    "mode": "dry-run",
+    "inputRows": 22466,
+    "candidates": 136029,
+    "byKey": {
+      "pbp.rush_attempts": 9468,
+      "pbp.rushing_yards": 9468,
+      "pbp.pass_attempts": 2807,
+      "pbp.completions": 2807,
+      "pbp.passing_yards": 2807,
+      "pbp.targets": 18112,
+      "pbp.receptions": 18112,
+      "pbp.receiving_yards": 18112,
+      "pbp.air_yards": 18112,
+      "pbp.yards_after_catch": 18112,
+      "pbp.target_share": 18112
+    },
+    "bySeason": {
+      "2022": 32690,
+      "2023": 32960,
+      "2024": 32108,
+      "2025": 32414,
+      "2026": 5857
+    },
+    "dropped": [],
+    "players": 1116
+  },
+  "write_contract": "upsert on (entityType, entityId, key, season, week) via signal-ledger-writer.writeSignalCandidates; weight 0 (no fitted scale for pbp.* keys); emission ZERO_OBJECT"
+}
