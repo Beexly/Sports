@@ -1,0 +1,551 @@
+{
+ "label": "DIAGNOSTIC SCREEN. Kill-only asymmetric screen (Opus review 2026-10-15). Improvement earns a future-filter pre-registration slot only -- never a weight, never a promotion. Emission ZERO_OBJECT. passed stays false.",
+ "spec_source": "Oct 14 Architectural Deepening doc (Drive), formulas recovered from OMML equations; doc kernels in wf_situational_engine.py",
+ "filter": "REG 2017 W1 - 2026 W5, non-null scores and spread_line",
+ "n_filter": 2462,
+ "baseline_reproduction": {
+  "crps": 7.154021,
+  "target": 7.154021,
+  "ok": true
+ },
+ "family2_reproduction": {
+  "crps": 7.133199,
+  "target": 7.133199,
+  "ok": true
+ },
+ "mu": "spread_line (locked, never shifted)",
+ "screen_protocol": {
+  "rule": "delta_full < 0 on the operative reference -> SCREENED-SURVIVED (pre-registration slot on the FUTURE filter); delta_full >= 0 -> SCREENED-KILLED (refused, recorded)",
+  "operative_reference": "family-2 construction (7.133199) where composable; else baseline with explicit flag",
+  "beta_fit": "expanding window by (season, week) blocks; doc grid [-0.25, 0.50] x151 for baseline screens; 31-point grid (step 0.025) for family-2-composed fits (documented); >=25 prior defined games else beta=0",
+  "multiplicity_looks": 7,
+  "multiplicity_note": "7 pathway looks (CAOFI; RIL_sum; RIL_|dRIL|; OLCAI; SPESE scale; SPESE atom; QPTSR) on the operative reference, each also read vs baseline and under the branch harness (non-operative readings); SAI combination adds 1 look when screened. BQP and SWCC contribute 0 frozen looks (PARKED / REFUSED-prior)."
+ },
+ "metrics": {
+  "CAOFI": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * CAOFI)",
+   "disposition": "SCREENED-KILLED",
+   "ingestion": {
+    "n_defined": 1701,
+    "coverage": 0.6909,
+    "min": 0.0,
+    "median": 0.046491,
+    "mean": 0.201526,
+    "max": 1.540399,
+    "n_zero": 351
+   },
+   "failed_closed": {
+    "caofi_tz_or_kickoff_missing": 739,
+    "caofi_no_prior_game_away": 2,
+    "caofi_ref_no_prior_games": 10,
+    "caofi_ref_history_missing": 10
+   },
+   "screens": {
+    "CAOFI": {
+     "doc_vs_baseline": {
+      "reference": "gaussian_baseline_7.154021",
+      "n_filter": 2462,
+      "n_joined": 1701,
+      "crps_without": 7.154021,
+      "crps_with": 7.154092,
+      "delta_full": 7.1e-05,
+      "subset_n": 1701,
+      "subset_crps_without": 7.10131,
+      "subset_crps_with": 7.101413,
+      "delta_subset": 0.000103,
+      "beta_last": -0.095
+     },
+     "family2_conditional": {
+      "reference": "family2_7.133199",
+      "n_filter": 2462,
+      "n_joined": 1701,
+      "crps_without": 7.133199,
+      "crps_with": 7.134927,
+      "delta_full": 0.001728,
+      "subset_n": 1701,
+      "subset_crps_without": 7.078795,
+      "subset_crps_with": 7.081296,
+      "delta_subset": 0.002501,
+      "beta_last": 0.0
+     },
+     "family2_conditional_note": null,
+     "branch_harness": {
+      "reference": "branch_harness_exp_z (situational_metrics.score_feature equivalent)",
+      "n_filter": 2462,
+      "n_feature_defined_and_scored": 1669,
+      "crps_without": 7.077596,
+      "crps_with": 7.079842,
+      "delta_subset": 0.002246,
+      "full_filter_crps_without": 7.154021,
+      "full_filter_crps_with": 7.155544,
+      "delta_full": 0.001523,
+      "beta_last": 0.0087
+     }
+    }
+   }
+  },
+  "RIL-P1": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta_sum * RIL_sum + beta_diff * |dRIL|)",
+   "disposition": "SCREENED-KILLED",
+   "ingestion": {
+    "n_defined": 600,
+    "coverage": 0.2437,
+    "min": 0.0,
+    "median": 1.674197,
+    "mean": 1.865272,
+    "max": 9.555688,
+    "n_zero": 5
+   },
+   "failed_closed": {
+    "ril_kernel_none": 1511,
+    "ril_row_after_kickoff_excluded": 22,
+    "ril_season_unstamped": 351
+   },
+   "screens": {
+    "RIL_sum": {
+     "doc_vs_baseline": {
+      "reference": "gaussian_baseline_7.154021",
+      "n_filter": 2462,
+      "n_joined": 600,
+      "crps_without": 7.154021,
+      "crps_with": 7.154703,
+      "delta_full": 0.000682,
+      "subset_n": 600,
+      "subset_crps_without": 7.109352,
+      "subset_crps_with": 7.112152,
+      "delta_subset": 0.0028,
+      "beta_last": -0.04
+     },
+     "family2_conditional": {
+      "reference": "family2_7.133199",
+      "n_filter": 2462,
+      "n_joined": 600,
+      "crps_without": 7.133199,
+      "crps_with": 7.136574,
+      "delta_full": 0.003375,
+      "subset_n": 600,
+      "subset_crps_without": 7.08796,
+      "subset_crps_with": 7.10181,
+      "delta_subset": 0.01385,
+      "beta_last": -0.025
+     },
+     "family2_conditional_note": null,
+     "branch_harness": {
+      "reference": "branch_harness_exp_z (situational_metrics.score_feature equivalent)",
+      "n_filter": 2462,
+      "n_feature_defined_and_scored": 570,
+      "crps_without": 7.098484,
+      "crps_with": 7.108725,
+      "delta_subset": 0.010241,
+      "full_filter_crps_without": 7.154021,
+      "full_filter_crps_with": 7.156392,
+      "delta_full": 0.002371,
+      "beta_last": 0.0068
+     }
+    },
+    "RIL_absdiff": {
+     "doc_vs_baseline": {
+      "reference": "gaussian_baseline_7.154021",
+      "n_filter": 2462,
+      "n_joined": 600,
+      "crps_without": 7.154021,
+      "crps_with": 7.154067,
+      "delta_full": 4.6e-05,
+      "subset_n": 600,
+      "subset_crps_without": 7.109352,
+      "subset_crps_with": 7.109542,
+      "delta_subset": 0.00019,
+      "beta_last": -0.075
+     },
+     "family2_conditional": {
+      "reference": "family2_7.133199",
+      "n_filter": 2462,
+      "n_joined": 600,
+      "crps_without": 7.133199,
+      "crps_with": 7.136027,
+      "delta_full": 0.002828,
+      "subset_n": 600,
+      "subset_crps_without": 7.08796,
+      "subset_crps_with": 7.099563,
+      "delta_subset": 0.011603,
+      "beta_last": -0.025
+     },
+     "family2_conditional_note": null,
+     "branch_harness": {
+      "reference": "branch_harness_exp_z (situational_metrics.score_feature equivalent)",
+      "n_filter": 2462,
+      "n_feature_defined_and_scored": 570,
+      "crps_without": 7.098484,
+      "crps_with": 7.103756,
+      "delta_subset": 0.005272,
+      "full_filter_crps_without": 7.154021,
+      "full_filter_crps_with": 7.155241,
+      "delta_full": 0.00122,
+      "beta_last": -0.0149
+     }
+    }
+   }
+  },
+  "OLCAI": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * exp(beta * OLCAI)",
+   "disposition": "SCREENED-KILLED",
+   "ingestion": {
+    "n_defined": 2454,
+    "coverage": 0.9968,
+    "min": 1.6e-05,
+    "median": 0.518304,
+    "mean": 0.666082,
+    "max": 3.454051,
+    "n_zero": 0
+   },
+   "failed_closed": {
+    "olcai_lt4_prior_games": 8,
+    "olcai_injury_term_unstamped_season_zeroed": 702
+   },
+   "screens": {
+    "OLCAI": {
+     "doc_vs_baseline": {
+      "reference": "gaussian_baseline_7.154021",
+      "n_filter": 2462,
+      "n_joined": 2454,
+      "crps_without": 7.154021,
+      "crps_with": 7.149059,
+      "delta_full": -0.004962,
+      "subset_n": 2454,
+      "subset_crps_without": 7.161878,
+      "subset_crps_with": 7.156899,
+      "delta_subset": -0.004979,
+      "beta_last": -0.075
+     },
+     "family2_conditional": {
+      "reference": "family2_7.133199",
+      "n_filter": 2462,
+      "n_joined": 2454,
+      "crps_without": 7.133199,
+      "crps_with": 7.135617,
+      "delta_full": 0.002418,
+      "subset_n": 2454,
+      "subset_crps_without": 7.141048,
+      "subset_crps_with": 7.143473,
+      "delta_subset": 0.002425,
+      "beta_last": 0.0
+     },
+     "family2_conditional_note": null,
+     "branch_harness": {
+      "reference": "branch_harness_exp_z (situational_metrics.score_feature equivalent)",
+      "n_filter": 2462,
+      "n_feature_defined_and_scored": 2410,
+      "crps_without": 7.13496,
+      "crps_with": 7.13666,
+      "delta_subset": 0.0017,
+      "full_filter_crps_without": 7.154021,
+      "full_filter_crps_with": 7.155684,
+      "delta_full": 0.001663,
+      "beta_last": 0.0103
+     }
+    }
+   }
+  },
+  "SPESE": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * (SPESE - SPESE_bar)); AND atom weight on P(|M|=7) vs P(|M|=3) with p_37 preserved",
+   "disposition": "SCREENED-SURVIVED",
+   "ingestion": {
+    "n_defined": 2412,
+    "coverage": 0.9797,
+    "min": 0.117853,
+    "median": 0.161523,
+    "mean": 0.161824,
+    "max": 0.212579,
+    "n_zero": 0
+   },
+   "failed_closed": {
+    "spese_no_prior_games": 2,
+    "spese_window_empty": 48
+   },
+   "screens": {
+    "SPESE_scale": {
+     "doc_vs_baseline": {
+      "reference": "gaussian_baseline_7.154021",
+      "n_filter": 2462,
+      "n_joined": 2412,
+      "crps_without": 7.154021,
+      "crps_with": 7.152884,
+      "delta_full": -0.001137,
+      "subset_n": 2412,
+      "subset_crps_without": 7.155718,
+      "subset_crps_with": 7.154558,
+      "delta_subset": -0.00116,
+      "beta_last": 0.5
+     },
+     "family2_conditional": {
+      "reference": "family2_7.133199",
+      "n_filter": 2462,
+      "n_joined": 2412,
+      "crps_without": 7.133199,
+      "crps_with": 7.132936,
+      "delta_full": -0.000263,
+      "subset_n": 2412,
+      "subset_crps_without": 7.134354,
+      "subset_crps_with": 7.134086,
+      "delta_subset": -0.000268,
+      "beta_last": 0.5
+     },
+     "family2_conditional_note": null,
+     "branch_harness": {
+      "reference": "branch_harness_exp_z (situational_metrics.score_feature equivalent)",
+      "n_filter": 2462,
+      "n_feature_defined_and_scored": 2369,
+      "crps_without": 7.132418,
+      "crps_with": 7.130575,
+      "delta_subset": -0.001843,
+      "full_filter_crps_without": 7.154021,
+      "full_filter_crps_with": 7.152247,
+      "delta_full": -0.001774,
+      "beta_last": 0.0144
+     }
+    },
+    "SPESE_atom": {
+     "family2_conditional": {
+      "reference": "family2_7.133199_atoms",
+      "n_filter": 2462,
+      "n_joined": 2412,
+      "crps_without": 7.133199,
+      "crps_with": 7.133001,
+      "delta_full": -0.000198,
+      "subset_n": 2412,
+      "subset_crps_without": 7.134354,
+      "subset_crps_with": 7.134152,
+      "delta_subset": -0.000202,
+      "gamma_last": 0.5
+     },
+     "note": "atom pathway exists only composed on a key-number base (family-2); no baseline form"
+    }
+   }
+  },
+  "QPTSR": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * QPTSR)",
+   "disposition": "SCREENED-KILLED",
+   "ingestion": {
+    "n_defined": 982,
+    "coverage": 0.3989,
+    "min": -0.319262,
+    "median": -0.005938,
+    "mean": 0.017501,
+    "max": 0.517182,
+    "n_zero": 0
+   },
+   "failed_closed": {
+    "qptsr_no_primary_qb": 3798,
+    "qptsr_neither_qb_qualifies": 1480,
+    "qptsr_no_prior_game": 2,
+    "qptsr_no_prior_pressure": 11,
+    "qptsr_starter_replaced_out": 2,
+    "qptsr_qb_lt50_prior_dropbacks": 12
+   },
+   "screens": {
+    "QPTSR": {
+     "doc_vs_baseline": {
+      "reference": "gaussian_baseline_7.154021",
+      "n_filter": 2462,
+      "n_joined": 982,
+      "crps_without": 7.154021,
+      "crps_with": 7.154206,
+      "delta_full": 0.000185,
+      "subset_n": 982,
+      "subset_crps_without": 7.127379,
+      "subset_crps_with": 7.127843,
+      "delta_subset": 0.000464,
+      "beta_last": -0.18
+     },
+     "family2_conditional": {
+      "reference": "family2_7.133199",
+      "n_filter": 2462,
+      "n_joined": 982,
+      "crps_without": 7.133199,
+      "crps_with": 7.133605,
+      "delta_full": 0.000406,
+      "subset_n": 982,
+      "subset_crps_without": 7.106213,
+      "subset_crps_with": 7.107231,
+      "delta_subset": 0.001018,
+      "beta_last": -0.2
+     },
+     "family2_conditional_note": null,
+     "branch_harness": {
+      "reference": "branch_harness_exp_z (situational_metrics.score_feature equivalent)",
+      "n_filter": 2462,
+      "n_feature_defined_and_scored": 949,
+      "crps_without": 7.115152,
+      "crps_with": 7.122041,
+      "delta_subset": 0.006889,
+      "full_filter_crps_without": 7.154021,
+      "full_filter_crps_with": 7.156676,
+      "delta_full": 0.002655,
+      "beta_last": -0.0141
+     }
+    }
+   }
+  },
+  "BQP": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * max(0, BQP))",
+   "disposition": "PARKED (leak audit of the nflverse run + corpus game-ID overlap counts pending in another lane; frozen screen not run)",
+   "ingestion": {
+    "n_defined": 2101,
+    "coverage": 0.8534,
+    "min": 0.0,
+    "median": 0.0,
+    "mean": 0.017165,
+    "max": 0.841332,
+    "n_zero": 1840
+   },
+   "failed_closed": {
+    "bqp_no_prior_snaps": 2,
+    "bqp_no_backup_or_epa": 8,
+    "bqp_season_injuries_unstamped": 351
+   },
+   "screens": {},
+   "prior_corpora": {
+    "manifest_570": {
+     "n": 570,
+     "crps_gaussian": 7.0271,
+     "crps_with": 7.0224,
+     "delta_baseline_minus_with": 0.0047,
+     "verdict": "improves on manifest"
+    },
+    "nflverse_2494": {
+     "n": 2494,
+     "crps_gaussian": 7.1485,
+     "crps_with": 7.1494,
+     "delta_baseline_minus_with": -0.0009,
+     "verdict": "degrades on cross-check"
+    },
+    "source": "bqp_result.json on grok/walk-forward-2026-10-14, generated 2026-10-14T22:10:56Z (verified from the artifact)"
+   }
+  },
+  "SWCC": {
+   "target_parameter": "sigma scale: sigma_adj = sigma_base * exp(beta * SWCC)",
+   "disposition": "REFUSED (prior corpora: degraded on manifest 570 and nflverse 2494; frozen screen not run per protocol)",
+   "ingestion": {
+    "n_defined": 1639,
+    "coverage": 0.6657,
+    "min": 0.0,
+    "median": 0.0,
+    "mean": 3.483971,
+    "max": 38.883041,
+    "n_zero": 833
+   },
+   "failed_closed": {
+    "swcc_no_prior_game_in_season": 161,
+    "swcc_travel_missing": 662
+   },
+   "screens": {},
+   "prior_corpora": {
+    "manifest_570": {
+     "n": 570,
+     "crps_gaussian": 7.0271,
+     "crps_with": 7.0289,
+     "delta_baseline_minus_with": -0.0018,
+     "verdict": "degrades on manifest"
+    },
+    "nflverse_2494": {
+     "n": 2494,
+     "crps_gaussian": 7.1485,
+     "crps_with": 7.149,
+     "delta_baseline_minus_with": -0.0005,
+     "verdict": "degrades on cross-check"
+    },
+    "source": "swcc_result.json on grok/walk-forward-2026-10-14, generated 2026-10-14T22:10:56Z (verified from the artifact)"
+   }
+  }
+ },
+ "SAI": {
+  "disposition": "NOT SCORED (fewer than 2 constituents survived: 1)",
+  "survivors_used": [
+   "SPESE"
+  ],
+  "ingestion": null,
+  "screens": null
+ },
+ "graph_registration": {
+  "note": "Every metric is ingested as a situational-graph edge family at weight 0 with its disposition as its status. Refusal is a status inside the engine, never exile. Survivors hold future-filter pre-registration slots only.",
+  "edge_families": {
+   "BQP": {
+    "edge_family": "situational.p1.bqp",
+    "weight": 0,
+    "status": "PARKED (leak audit of the nflverse run + corpus game-ID overlap counts pending in another lane; frozen screen not run)",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * max(0, BQP))"
+   },
+   "SWCC": {
+    "edge_family": "situational.p1.swcc",
+    "weight": 0,
+    "status": "REFUSED (prior corpora: degraded on manifest 570 and nflverse 2494; frozen screen not run per protocol)",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * exp(beta * SWCC)"
+   },
+   "RIL-P1": {
+    "edge_family": "situational.p1.ril_p1",
+    "weight": 0,
+    "status": "SCREENED-KILLED",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta_sum * RIL_sum + beta_diff * |dRIL|)"
+   },
+   "QPTSR": {
+    "edge_family": "situational.p1.qptsr",
+    "weight": 0,
+    "status": "SCREENED-KILLED",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * QPTSR)"
+   },
+   "OLCAI": {
+    "edge_family": "situational.p1.olcai",
+    "weight": 0,
+    "status": "SCREENED-KILLED",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * exp(beta * OLCAI)"
+   },
+   "SPESE": {
+    "edge_family": "situational.p1.spese",
+    "weight": 0,
+    "status": "SCREENED-SURVIVED",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * (SPESE - SPESE_bar)); AND atom weight on P(|M|=7) vs P(|M|=3) with p_37 preserved"
+   },
+   "CAOFI": {
+    "edge_family": "situational.p1.caofi",
+    "weight": 0,
+    "status": "SCREENED-KILLED",
+    "target_parameter": "sigma scale: sigma_adj = sigma_base * (1 + beta * CAOFI)"
+   },
+   "SAI": {
+    "edge_family": "situational.p1.sai",
+    "weight": 0,
+    "status": "NOT SCORED (fewer than 2 constituents survived: 1)",
+    "target_parameter": "sigma scale (composite regime variable over cleared constituents)"
+   }
+  }
+ },
+ "passed": false,
+ "emission": "ZERO_OBJECT (0 picks / 0 parlays / 0 DFS)",
+ "walk_forward_json_touched": false,
+ "audit_notes": {
+  "spese_survival_robustness": {
+   "check": "fixed-beta=0.5 family-2-conditional scale screen (no weekly refit), per-season paired deltas on the 2,412 defined games",
+   "per_season_mean_delta": {
+    "2017": -0.001918,
+    "2018": 0.001266,
+    "2019": -0.001546,
+    "2020": 0.000548,
+    "2021": 0.000142,
+    "2022": -0.001539,
+    "2023": -0.000882,
+    "2024": 0.00079,
+    "2025": 1.8e-05,
+    "2026": 0.000292
+   },
+   "overall_mean_delta": -0.000316,
+   "finding": "Effect is small and season-unstable (5 of 10 seasons positive). SPESE survives the screen AS DEFINED and earns a future-filter pre-registration slot ONLY. beta_last sits at the doc grid edge (0.50) on both the baseline and family-2 scale fits and gamma at the edge on the atom fit -- the fitted modulation wants more than the grid allows; treat the magnitude as unreliable."
+  },
+  "olcai_redundancy": "OLCAI improves vs the Gaussian baseline (-0.004962 full-filter, the largest baseline delta of any screened metric) but degrades conditional on family-2 (+0.002418) and under the branch harness (+0.001663). Killed as redundant: its sigma information is already carried by family-2's total-line hetero sigma. This is the Opus review's redundancy case.",
+  "coverage_mechanisms": {
+   "CAOFI_1701_of_2462": "stadiums.json (landed with schedule_meta) carries null lat/lon/timezone/altitude for ambiguous-Wikidata venues (e.g. CHI98 Soldier Field): 410 filter games at null-geo venues, 739 games missing at least one tz component -> fail-closed per spec.",
+   "SWCC_1639_of_2462": "travel miles unavailable for 662 games (same null-geo stadiums gap, venue or away-origin side) + 161 Week-1 games with no prior in-season game.",
+   "RIL-P1_600_of_2462": "351 games in unstamped injury seasons (2025 + 2026 W1-5: no date_modified column in the current nflverse injuries release) + 1,511 team-game kernel failures: the doc kernel/prose fail a team closed when ANY player on its stamped report lacks a computable prior-3-week snap share (long-term-out and zero-snap reported players poison the whole team-week).",
+   "QPTSR_982_of_2462": "the doc's starter rule (prior game's >60% dropback passer) fails on 3,798 of 4,924 team-games -- any QB-rotated prior game (injury/benching/blowout) makes the NEXT game fail-closed for that side."
+  }
+ }
+}
