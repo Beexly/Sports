@@ -291,7 +291,8 @@ def _auto_market_priors(home: str, away: str, season: int, week: int) -> tuple[l
 def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int = 2026,
                 weather: dict[str, Any] | None = None,
                 market_priors: list | None = None,
-                ingested_signals: list | None = None) -> dict[str, Any]:
+                ingested_signals: list | None = None,
+                conformal_advisory: dict[str, Any] | None = None) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
     gaps: list[str] = []
 
@@ -343,9 +344,9 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
     label = _label(trace)
     checklist = _checklist(trace)
-    decision = mint_after_mind(label, checklist, asked=True)
+    decision = mint_after_mind(label, checklist, asked=True, conformal=conformal_advisory)
     withheld = decision["action"] == "withhold"
-    return {
+    read = {
         "game_id": f"{away}-{home}-{season}-w{week}",
         "bet_type": "CARD",
         "facts": facts,
@@ -368,6 +369,13 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
             else "Mind was asked and the trace was not INVALID or DATA-GAP. A trace still does not mint a probability; the ranked board is the output."
         ),
     }
+    if conformal_advisory is not None:
+        # Pass discipline only: the advisory can withhold via the mint gate
+        # above; it is recorded verbatim so the veto is auditable. It is
+        # never a pick, price, or probability input. When no advisory is
+        # supplied the read is unchanged (see gates wiring note 2026-10-15).
+        read["conformal_pass_discipline"] = conformal_advisory
+    return read
 
 
 def write_trace(path: str, doc: dict[str, Any]) -> None:
