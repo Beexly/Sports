@@ -55,8 +55,25 @@
     "links": ["nfl_id", "gsis_id", "pfr_id", "espn_id", "sportradar_id", "sleeper_id", "smart_id"],
     "note": "This bridges BDB nfl_id to the gsis_id chain the rest of the repo uses."
   },
+  "tracking_coverage_by_season": {
+    "2023": {"tracking_rows": 3665443, "distinct_games_with_tracking": 333, "games_in_games_csv": 334, "missing": 1},
+    "2024": {"tracking_rows": 7827944, "distinct_games_with_tracking": 334, "games_in_games_csv": 334, "missing": 0},
+    "2025": {"tracking_rows": 11160903, "distinct_games_with_tracking": 334, "games_in_games_csv": 334, "missing": 0},
+    "total_games_with_tracking": 1001,
+    "total_games_in_games_csv": 1002,
+    "coverage_pct": 99.9
+  },
+  "coordinate_validation": {
+    "2023_x_range": [-4.0, 123.3],
+    "2023_y_range": [-6.1, 58.1],
+    "2025_x_range": [-4.5, 121.8],
+    "2025_y_range": [-7.5, 57.2],
+    "field_geometry": "x spans 0-120 yards (with end zones), y spans 0-53.3 yards",
+    "top_events_2023": ["ball_snap 2802", "pass_forward 1734", "tackle 1551", "first_contact 1541"],
+    "verdict": "Real field coordinates with proper NFL event labels. This is a genuine 10Hz-class input plane."
+  },
   "actionable": [
-    "2023-2025 REG in-game tracking with x/y coordinates IS available locally and covers all 816 REG games of those seasons. That is a real input plane for the vision/coordinate workstream, at weight 0.",
+    "2023-2025 REG in-game tracking with x/y coordinates IS available locally and covers 1001 of 1002 games (99.9%). That is a real input plane for the vision/coordinate workstream, at weight 0.",
     "Week 5 and Week 6 of the 2026 season have NO public coordinate source. The handoff's statement stands.",
     "CC BY-NC 4.0 must be resolved before any commercial use."
   ],
