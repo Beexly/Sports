@@ -66,7 +66,9 @@ def score(rows, moves):
             raise RuntimeError("location lock violated")
         max_dev = max(max_dev, abs(mu - r["spread_line"]))
         rec = moves.get(r["game_id"])
-        gameday = str(r.get("gameday") or "")
+        # frozen rows carry no gameday column; the movement file supplies it from
+        # nflverse games.csv at build time. Stamp is checked strictly against it.
+        gameday = str(r.get("gameday") or (rec or {}).get("gameday") or "")
         stamp_ok = False
         move = None
         if rec is not None:
@@ -107,6 +109,7 @@ def score(rows, moves):
             "max_abs_mean_shift": max_dev,
             "gate_cleared": False,
             "passed": False,
+            "deltas": deltas,
             "reason": "n_scored < 150 or movement stamps missing. Not a clear.",
         }
     mean_d = sum(deltas) / len(deltas)

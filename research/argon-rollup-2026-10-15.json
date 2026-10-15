@@ -114,7 +114,8 @@
       "id": "gate_decision",
       "status": "extract_only",
       "path": "research/gate-decision-2026-10-15.md",
-      "decision": "7.099 operative"
+      "decision": "7.099 operative",
+      "quote_reverified": "2026-10-15: 7.099 string re-found directly in the text layer of Measurement-First (2 hits), Strategic Research Plan (2 hits), Architectural Deepening (1) (17 hits). The gate-decision-packet that reported no 7.099 match had not read those docx files."
     },
     {
       "id": "doc_gate_extracts",
@@ -132,10 +133,26 @@
     },
     {
       "id": "line_movement_clv",
-      "status": "refused_prior",
-      "path": "research/line-movement-score-2026-10-15.json",
-      "reason": "Frozen games.csv has spread_line (close) only. Live ESPN capture is 14 scheduled games, 4 timestamps, 0 nonzero moves, 0 scores. No imputation. Command when a PIT file exists: MOVE_CSV=<path> python dfs/walk_forward/line_movement_score.py",
-      "gate_cleared": false
+      "status": "ran_live",
+      "path": "research/line_movement_clv_2026-10-15.json",
+      "source": "neon gse-postgres odds_line_snapshots OPEN/CLOSE, 64 stamped frozen games (all 2026 W1-W5)",
+      "paired_delta_vs_joint_hetero": -0.006989,
+      "se": 0.079018,
+      "t": -0.088,
+      "n_scored": 64,
+      "refusal": "n_scored < 150; |t| ~ 0.09. Terminal refusal, no imputation.",
+      "gate_cleared": false,
+      "tests": "research/line_movement_scorer_test_2026-10-15.txt (10/10)",
+      "dataset": "research/line_movement_pit_safe.jsonl",
+      "inventory": "research/line_movement_sources_2026-10-15.json",
+      "gap": "research/line_movement_data_gap_2026-10-15.json"
+    },
+    {
+      "id": "bdb2027_repos_extract",
+      "status": "extract_only",
+      "path": "research/bdb2027_extract_2026-10-15.md",
+      "repos": ["conormalone/BDB27", "will-rice/bdb-2027", "Hermes-25/nfl-bdb-2027-mirror-recovery"],
+      "verdict": "0 of 3 produce a scoreable margin feature for the frozen filter. Draft-time-stampable features exist (weight/height, combine envelope, mirror shortfall) but join only to player cohorts, not 2,462 team margins. Transferable: split-half reliability floor as a bind falsifier; negative prior vs athletic descriptors (mirror worsened equal-player Brier by -0.000902)."
     }
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-15",
+  "finding": "partial",
+  "summary": "A PIT-stamped second timestamp EXISTS for 64 of the 2,462 frozen games (Neon odds_line_snapshots, all 2026 W1-W5). No stamped source exists for 2017-2025. The subset was scored; n=64 < 150, so the result is a measured refusal, not a clear.",
+  "scored_result": {
+    "file": "research/line_movement_clv_2026-10-15.json",
+    "n_scored": 64,
+    "paired_delta_vs_joint_hetero_7_142622": -0.006989,
+    "se": 0.079018,
+    "t": -0.088,
+    "delta_vs_fixed_13_45": 0.009727,
+    "t_vs_fixed_13_45": 0.183,
+    "gate_cleared": false,
+    "reason": "n_scored=64 < 150 required by the gate. Also |t| far below 2 on both comparisons."
+  },
+  "historical_gap": {
+    "missing": "pre-kickoff open/mid/close timestamps for REG 2017-2025 (2,398 games).",
+    "verified_absent_in": [
+      "nflverse games.csv (close spread only, no timestamps)",
+      "nflverse nfldata initial_lines.csv (season 2021 only, NO observed_at column -> unstamped -> fails closed)",
+      "nflverse nfldata closing_lines.csv (close side only, 2006-2018)",
+      "pinnacle_mkt_*.json snapshots (one capture per matchupId, no before/after pair, 2026 W6+ only)",
+      "live ESPN capture (14 scheduled 2026 W6+ games, outside filter)",
+      "Drive export zip (0 odds/line files)",
+      "wehoop/cfbfastR open columns: documented in corpus blueprints, CFB-only (spread_open in cfbfastR schedules), not fetched for NFL; wehoop has no NFL open line"
+    ],
+    "earliest_new_in_filter_coverage": "the Neon pipeline stamps OPEN+CLOSE pairs from 2026-08-19 forward; the frozen filter ends 2026 W5, so in-filter n cannot grow from it. Growth path: capture pre-kickoff lines NOW for 2026 W6+ games (already running) - those games enter a future filter, not the frozen one."
+  },
+  "command_when_n_150": "MOVE_CSV=<path: game_id,move,observed_at,gameday> python dfs/walk_forward/line_movement_score.py",
+  "unit_tests": "dfs/walk_forward/test_line_movement_score.py, 10/10 OK, log at research/line_movement_scorer_test_2026-10-15.txt",
+  "status": "ran_live",
+  "emission": "ZERO_OBJECT"
+}

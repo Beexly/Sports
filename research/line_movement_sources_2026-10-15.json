@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-15",
+  "purpose": "Inventory of every two-timestamp (open/mid/close) line source checked for the PIT line-movement surface. Fail-closed rule: a row counts only with a real pre-kickoff stamp on a frozen-filter game (REG 2017 W1-2026 W5, n=2462).",
+  "sources": [
+    {
+      "path": "neon gse-postgres public.odds_line_snapshots",
+      "rows": 3885897,
+      "columns": ["gameId", "capturedAt", "phase (OPEN/INTERIM/CLOSE)", "book", "market", "side", "price", "line", "source"],
+      "date_range": "capturedAt 2026-08-19 19:30Z .. 2026-10-15",
+      "nfl_games": "sportId cmpg6t7v900031heri45v3d8s",
+      "stamped_pairs": "75 NFL FINAL games with both OPEN and CLOSE home-side spread lines; 64 join the frozen filter (all 2026 W1-W5, joined by gameday + team-name -> gsis abbr)",
+      "pit_stamp_status": "STAMPED. observed_at = OPEN capturedAt, verified < gameday for all 64.",
+      "caveat": "33 of 64 CLOSE-phase captures are ON gameday; 31 captured 'CLOSE' days early (pipeline phase label, not the pre-kickoff market close). Recorded in line_movement_clv_2026-10-15.json.",
+      "verdict": "scoreable, and scored. n_scored=64 < 150 -> terminal refusal."
+    },
+    {
+      "path": "neon gse-postgres public.games openingSpread/lineMovementSpread",
+      "rows": 4455,
+      "date_range": "commenceTime 2026-05-21 .. 2027-01-10",
+      "pit_stamp_status": "UNSTAMPED. lineMovementSpread is a precomputed difference with no first/second timestamp; openingSpread is a float64 multi-book mean. No observed_at column. Cannot stamp.",
+      "verdict": "rejected as a scorer input. Reconstructing it from odds_line_snapshots instead."
+    },
+    {
+      "path": "neon gse-postgres public.opening_lines",
+      "rows": 5519,
+      "date_range": "firstSeenAt 2026-05-22 .. 2026-10-15",
+      "pit_stamp_status": "PARTIAL. Has firstSeenAt but only the open side; the matching close side (closing_lines table) holds 2 rows only. No pair.",
+      "verdict": "no usable pair."
+    },
+    {
+      "path": "neon gse-postgres public.closing_lines",
+      "rows": 2,
+      "pit_stamp_status": "effectively empty",
+      "verdict": "no."
+    },
+    {
+      "path": "neon gse-postgres public.odds",
+      "rows": 8907824,
+      "date_range": "fetchedAt 2026-05-22 .. 2026-10-15",
+      "pit_stamp_status": "STAMPED timestamps exist, but gameId is Prisma-cid (no gsis). Join path is public.games (externalId = ESPN hash, commenceTime) -> (date, teams) -> gsis. Same 2026-only horizon; no 2017-2025 rows at all.",
+      "verdict": "same coverage as odds_line_snapshots; used via the join above."
+    },
+    {
+      "path": "C:/Users/Garrett/Sports/data/snapshots/snapshots/pinnacle_mkt_*.json",
+      "rows": 1717,
+      "files": 17,
+      "date_range": "file ts 2021-11-20 (epoch labels) BUT cutoffAt 2026-10-11..2026-10-13; all snapshots taken inside one window",
+      "pit_stamp_status": "FAIL CLOSED. cutoffAt is kickoff, not an observation time; all 'versions' per matchup are identical within a file (one capture per matchupId); no before/after pair. Matches the prior audit (dfs/walk_forward/clv_snapshot_diagnostic.json: 911 matchupIds, 0 at two timestamps).",
+      "verdict": "not scoreable. Pinnacle phase filter: 0 games with both OPEN+CLOSE at book=pinnacle."
+    },
+    {
+      "path": "$LOCALAPPDATA/hermes/cache/scratch/market/espn_*.json (live capture)",
+      "rows": "14 events x 4 timestamps",
+      "date_range": "captured 2026-10-14",
+      "pit_stamp_status": "future rows. 14 STATUS_SCHEDULED games (2026 W6+), 0 nonzero moves, 0 final scores. All OUTSIDE the frozen filter (cutoff 2026 W5).",
+      "verdict": "not scoreable (future/unsettled). Kept capturing; each week inside the filter horizon adds stamped pairs."
+    },
+    {
+      "path": "nflverse nfldata initial_lines.csv",
+      "rows": 1088,
+      "date_range": "season 2021 only (WSGT, WSGT book)",
+      "pit_stamp_status": "UNSTAMPED. No observed_at column anywhere. 272 games x 2 markets. Fails the lock.",
+      "verdict": "rejected. Would be the only path to 2021 open lines and it has no timestamp."
+    },
+    {
+      "path": "nflverse nfldata closing_lines.csv",
+      "rows": 20490,
+      "date_range": "2006-09-07 .. 2018-12-24 game_ids",
+      "pit_stamp_status": "close-only, no open pair, no timestamps.",
+      "verdict": "rejected. Overlaps 2017-2018 of the frozen filter but supplies only the close that games.csv already has."
+    },
+    {
+      "path": "watch.games (neon, tracking plane)",
+      "rows": 17,
+      "date_range": "season 2026 only (BDB capture games)",
+      "pit_stamp_status": "not an odds source",
+      "verdict": "n/a"
+    },
+    {
+      "path": "GSE. 10.2.26 working set + 086d4976...zip (Drive export)",
+      "pit_stamp_status": "zip member scan: 0 files matching odds|spread|line|csv|parquet. Drive copies are document exports, not market data.",
+      "verdict": "no line data."
+    }
+  ],
+  "frozen_filter_reach": {
+    "total_stamped_scoreable": 64,
+    "seasons_covered": [2026],
+    "missing": "2017 W1 - 2026 W5 minus the 64 stamped = 2398 games have NO pre-kickoff second timestamp in any source on this machine or the Neon DB.",
+    "earliest_new_coverage": "the live ESPN capture adds stamped open->close pairs for 2026 W6+ games as they settle, but those are OUTSIDE the frozen filter. In-filter n can only rise by capturing pre-kickoff lines for future games as they enter the filter horizon (2027 seasons), or by finding a stamped historical source."
+  },
+  "scorer_command_when_n_150": "MOVE_CSV=<movement_pit.csv with game_id,move,observed_at,gameday> python dfs/walk_forward/line_movement_score.py",
+  "result_files": [
+    "research/line_movement_pit_safe.jsonl",
+    "research/line_movement_clv_2026-10-15.json",
+    "research/line_movement_scorer_test_2026-10-15.txt",
+    "research/line-movement-score-2026-10-15.json"
+  ],
+  "passed": false,
+  "emission": "ZERO_OBJECT"
+}
