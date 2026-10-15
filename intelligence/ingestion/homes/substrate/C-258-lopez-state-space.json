@@ -1,0 +1,24 @@
+{
+ "census_id": "C-258",
+ "name": "Lopez state-space market-margin model (1701.05976)",
+ "home_kind": "calibration substrate record",
+ "census_status": "DOCUMENTED-ONLY",
+ "stamp_required": "settled results + closing spread_line, game-stamped",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "no per-sport closing-margin series has been fit on GSE closes yet; MLS sigma has no source and must be estimated in-house",
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "wiring-surge-a-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "model": "Lopez de Prado-style state-space model of market margins (arXiv:1701.05976)",
+  "role": "per-sport error floors sigma2_B / sigma2_W / sigma2_G replace ad-hoc caps with measured ones",
+  "rank": "ranked the #1 build by BOTH GSE58 syntheses; named 'primary structural anchor' by the Drive Research Audit",
+  "implementation_path": "public code exists (JAGS); PyMC v5 rewrite prescribed in the source docs",
+  "needs": [
+   "per-sport closing-margin series fit on GSE closes + settled results",
+   "MLS sigma estimated in-house"
+  ],
+  "build_state": "not built; this record is its substrate home until the fit lands"
+ }
+}
