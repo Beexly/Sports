@@ -15540,3 +15540,5 @@ TIMESTAMP METHOD: both lanes opened every candidate post; absolute times are as 
 - @PattonAnalytics Time to Pressure scatter: individual points illegible — chart-only entry. Dynatyze scatter Lamb catch-rate discrepancy (76.5 in 08:20 section vs 76.6% read this run) flagged above, not resolved.
 - Citadel TPRR delta values (Jeudy/Moore/RB TPRR) are search-timeline reads, not detail-opened verifications — flagged in the section entry and CSV.
 - No bio-link or external site data/API pages were visited (Kalshi, StatRankings/statrankings, dynatyze.com, ESPN win-rate article recorded as seen-mentions only).
+
+- **Built drive-outcome-distribution expected metric (SHADOW)** — Jules, 2026-10-14. A pure deterministic mapping of drive results into mutually exclusive distribution buckets (TD, FG, MISSED_FG, PUNT, TURNOVER, etc.) to quantify how offenses terminate their drives, complete with point-in-time rolling windows.
