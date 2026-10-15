@@ -739,13 +739,13 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
       "misclassifying TD drives with trailing failed PATs",
       "including point-in-time violations in rolling windows",
     ],
-    family: "expected_metric",
+    family: "team",
     forbiddenInputs: [
       "fitted models",
       "probabilistic inferences",
       "third-party subjective charting",
     ],
-    formulaClass: "definitional_aggregation",
+    formulaClass: "linear",
     formulaSummary:
       "Per-team, per-window count, share, and points per drive broken down by mutually exclusive end-of-drive outcomes.",
     historicalPrecedent: [
@@ -758,12 +758,12 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     internalName: "drive_outcome_distribution",
     metricId: "drive-outcome-distribution",
     protectedComponents: [],
-    publicExposure: "none",
+    publicExposure: "hidden",
     publicName: "Drive Outcome Distribution",
     sourceRightsRequired: ["nflverse pbp allowed"],
     status: "SHADOW",
     targetQuestion: "How exactly does an offense terminate its drives on average?",
     targetVariable: "drive outcome buckets",
-    validationMethods: ["definitional_invariant_check"],
+    validationMethods: ["walk_forward"],
   },
 ] as const;
