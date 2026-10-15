@@ -28,6 +28,8 @@ export default function robots(): MetadataRoute.Robots {
           "/admin/",
           "/cockpit",
           "/cockpit/",
+          "/ops",
+          "/ops/",
           "/api/",
           "/auth/",
           "/dashboard",
