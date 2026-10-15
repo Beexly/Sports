@@ -529,6 +529,19 @@ export const SIGNALS: readonly SignalSpec[] = [
     caveat: "'Trust weights of 1.0 are priors' -- a weight of 1.0 there is a starting belief, not a measured confidence. Do not confuse the two scales.",
   },
 
+  {
+    id: "distributional.conformal.pid",
+    cls: "distributional",
+    label: "Conformal PID control (drift fallback)",
+    measures: "Online quantile tracking: the controller adjusts the miscoverage level each step so coverage holds under distribution shift, with NO exchangeability assumption.",
+    provenance: "repo-intel/models/aangelopoulos-conformal-time-series.md recovered from the 2 GB GSE 10.2.26 archive; companion to arXiv 2307.16895 (MIT)",
+    evidence: "stated-unverified",
+    emissionWeight: 0,
+    diagnosticWeight: 0.8,
+    blocker: "Research code, not a package. The corpus's own verdict is 'REBUILD -- implement the PID/quantile-tracking controller as the drift-fallback for live signals; do not wire the research code directly.'",
+    caveat: "This is the specific remediation for the leaf-drift defect (favourite leaf 6.5-9.5 drifts 65.86% train -> 57.12% test, n=576, ~3.6 SE): a static conformal level cannot hold under that shift, but PID quantile tracking can. It is NOT a fix for the small-N rank deficit, which is a different failure.",
+  },
+
   // ---- distributional ---------------------------------------------------
   {
     id: "distributional.keynumbers",

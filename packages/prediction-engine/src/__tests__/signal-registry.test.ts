@@ -204,6 +204,8 @@ describe("nothing is killed or deferred", () => {
       "situational.postbye",
       "integrity.leafdrift",
       "integrity.signal.registry.census",
+      // Recovered from repo-intel inside the 2 GB GSE archive.
+      "distributional.conformal.pid",
     ]) {
       expect(ids).toContain(required);
     }
