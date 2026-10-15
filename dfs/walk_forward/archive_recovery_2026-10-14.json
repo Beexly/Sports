@@ -1,0 +1,71 @@
+{
+  "label": "RECOVERED FROM ARCHIVES. Two Combine datasets that were inside a 2.07 GB zip and never opened by any prior sweep.",
+  "generated_at": "2026-10-14",
+
+  "source": "GSE. 10.2.26-20261014T184234Z-1-001.zip -> GSE. 10.2.26/combine_tracking.xlsx (38.9 MB) and combine_results.xlsx",
+
+  "combine_tracking_xlsx": {
+    "size_MB": 38.9,
+    "raw_cells": 1852770,
+    "sheet": "combine_tracking.csv",
+    "columns": ["draft_year", "event_id", "nfl_id", "entity_type", "time", "drill_type", "drill_name", "attempt", "x", "y", "s", "a", "dis", "dir"],
+    "sampling": "time is a serial datetime; consecutive rows differ by ~0.00116 day = ~1.0 ms. This is HIGH-RATE tracking, not the 10 Hz of in-game data.",
+    "coordinate_frame": "x 44-45, y 28-29 in the sample rows -- a LOCAL drill coordinate frame, NOT the 120x53.3 yard field. Do not join to field-frame tracking without a transform.",
+    "drills_observed": ["OL_PULL_DRILL_FOLD_BLOCK_RIGHT"],
+    "entity_type_observed": "PLAYER (others may exist: BALL, CONE)",
+    "what_it_is_good_for": "Combine drill mechanics -- acceleration profiles, change-of-direction, drill completion time. A pre-draft athleticism signal.",
+    "what_it_is_NOT": "Not in-game tracking. Cannot feed a game-state model directly. Different coordinate frame, different population (draft prospects, not game rosters)."
+  },
+
+  "combine_results_xlsx": {
+    "sheet": "combine_results.csv",
+    "columns": ["draft_year", "nfl_id", "combine_position", "combine_height", "combine_weight", "hand_size", "arm_length", "wing_span", "ten_yd_split", "forty", "vertical", "broad_jump", "three_cone", "short_shuttle", "bench_reps", "ngs_athleticism_score", "ngs_college_production_score", "ngs_final_score"],
+    "draft_years_present": [2023],
+    "measured_rows_quoted": [
+      {"nfl_id": 56085, "pos": "TE", "forty": 4.55, "vertical": 40.0, "broad": 128.0, "three_cone": 6.87, "shuttle": 4.12, "bench": 23, "athleticism": 97.0, "production": 65.0, "final": 79.0},
+      {"nfl_id": 55885, "pos": "WR", "forty": null, "vertical": 40.5, "broad": 134.0, "athleticism": 73.0, "production": 79.0, "final": 81.0},
+      {"nfl_id": 56010, "pos": "DB", "forty": 4.59, "vertical": 33.5, "broad": 116.0, "bench": 23, "athleticism": 60.0, "production": 77.0, "final": 74.0}
+    ],
+    "missingness": "Heavy NA on three_cone / short_shuttle / bench for many rows (position-specific drills not run). Do not impute; treat as position-conditional availability.",
+    "key_derived_columns": [
+      "ngs_athleticism_score -- NGS composite athleticism (60-97 observed range)",
+      "ngs_college_production_score -- separate production measure, NOT athleticism",
+      "ngs_final_score -- combined; observed 64-81"
+    ],
+    "why_this_matters": "These are THREE distinct signals (measurables, athleticism, college production) plus a composite, keyed on nfl_id -- which is the join key the rest of the stack already uses via the crosswalk in archive.zip (12,608 rows bridging nfl_id <-> gsis_id)."
+  },
+
+  "join_path": "combine_*.xlsx nfl_id -> nfl_id_crosswalk.csv (archive.zip, 12,608 rows) -> gsis_id -> the gsis chain the repo already uses.",
+
+  "relation_to_prior_findings": {
+    "bdb_2027": "combine_results.csv also appears in nfl-big-data-bowl-2027.zip (2306 MB). The xlsx here is the same data already on disk -- NOT new information, only a second copy. combine_tracking.xlsx is the part that is genuinely new.",
+    "license": "BDB 2027 is CC BY-NC 4.0 (non-commercial), unresolved. Same constraint applies here."
+  },
+
+  "other_never_seen_archive_material": {
+    "total_new_files": 372,
+    "total_text_MB": 48.9,
+    "duplicate_members_skipped": 275,
+    "notable": [
+      "What I Was Still Missing.docx (18,201 chars) -- recovered; describes a ~7-9 GB / ~128,000-file shadow corpus on a DIFFERENT machine. All nine named dirs (gse-research, qb-behavioral-profiles, creator-intel, arxiv-sweep, sports-merge, coaching-tendencies, gse-lab, edge-sheet, trust) are ABSENT on this machine -- verified. Its ~128k figure is not verifiable here.",
+      "GROK 4.docx (63,987 chars)",
+      "GSE Agent Skill -- sketch (draft, not published).docx (101,482 chars)",
+      "branch-atlas.md (107,756 chars)",
+      "grok-bot-read-manifest-2026-10-02.txt (453,204 chars)",
+      "45-day-research-compendium-2026-10-09.md (91,677 chars)",
+      "SOURCE-2026-09-12-deepseek-ground-truth-batch-{1,2,3}.md (127,662 / 66,772 chars) -- named 'ground truth', never read",
+      "Week5_Master_2026-10-11.md (126,952 chars)",
+      "EYI manifest.json (9.1 MB) + Conversation with Muse AI (4.9 MB)"
+    ]
+  },
+
+  "extraction_bug_fixed_this_pass": {
+    "symptom": "7 workbooks reported 'too little text' and were skipped: combine_tracking.xlsx, combine_results.xlsx, players.xlsx, games.xlsx, player_career_successes(2).xlsx, and 2 others.",
+    "cause": "My extractor used `re.finditer(...)[:0] or list(re.finditer(...))[:400]`. Slicing an iterator with [:0] yields an EMPTY list, which is falsy, so the `or` branch ran -- but the intent was to materialise once. The expression discarded the iterator and the loop body never executed, so zero rows were read and the text came back under the 120-char threshold.",
+    "fix": "row_iter = list(re.finditer(...)); for rm in row_iter[:400]",
+    "lesson": "A parser that returns empty looks identical to a file that IS empty. The workbooks were fine (1.85M shared-string cells). Always confirm a zero result against the raw XML before concluding the source has no content."
+  },
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
