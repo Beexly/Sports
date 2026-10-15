@@ -46,7 +46,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve as pathResolve } from "node:path";
-import { registerHooks } from "node:module";
+import { register } from "node:module";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = pathResolve(HERE, "..", "..");
@@ -80,8 +80,17 @@ export function installWebAliasResolver() {
     return candidates;
   };
 
-  registerHooks({
-    resolve(specifier, context, nextResolve) {
+  const code = `
+    import { existsSync } from "node:fs";
+    import { fileURLToPath, pathToFileURL } from "node:url";
+    import { dirname, resolve as pathResolve } from "node:path";
+
+    const exts = ${JSON.stringify(exts)};
+    const WEB_ROOT = ${JSON.stringify(WEB_ROOT)};
+
+    const resolveCandidates = ${resolveCandidates.toString()};
+
+    export function resolve(specifier, context, nextResolve) {
       const candidates = resolveCandidates(specifier, context.parentURL);
       if (candidates) {
         for (const candidate of candidates) {
@@ -91,8 +100,12 @@ export function installWebAliasResolver() {
         }
       }
       return nextResolve(specifier, context);
-    },
-  });
+    }
+  `;
+
+  const dataUrl = `data:text/javascript,${encodeURIComponent(code)}`;
+  register(dataUrl, import.meta.url);
+
   globalThis.__gseAliasResolverInstalled = true;
   return true;
 }

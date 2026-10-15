@@ -68,6 +68,14 @@ export {
   type ExpectedRushModel,
 } from "./expected-rush-yards.js";
 
+// QB-conditioned receiver efficiency → GSE-QB-Target-Efficiency
+export {
+  computeQbConditionedReceiverEfficiency,
+  mapTargetedPassPlays,
+  type TargetedPassPlay,
+  type QbConditionedReceiverEfficiencyRow,
+} from "./qb-conditioned-receiver-efficiency.js";
+
 // Expected YAC → GSE-xYAC.
 export {
   fitExpectedYacModel,
