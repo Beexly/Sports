@@ -1,0 +1,28 @@
+{
+ "census_id": "C-100",
+ "name": "Laya / Jev gate evaluation",
+ "home_kind": "calibration substrate record",
+ "census_status": "DESIGNED + ARMED, NOT RUN - eval set built (3,081 rows: Tier A 570 from the sealed 2025 holdout, Tier B 2,511 production settled picks)",
+ "stamp_required": "settled-prediction timestamps (evaluation stack)",
+ "stamp_available": "YES",
+ "stamp_gap": "none for the deterministic arms; the completing production pull needs DATABASE_URL (Garrett-side tap)",
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "wiring-surge-a-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "frozen_rule": "PASS >= 0.50 / REJECT <= 0.35",
+  "eval_set": {
+   "rows": 3081,
+   "tier_a": 570,
+   "tier_b": 2511
+  },
+  "deterministic_arms_measured_2026-10-15": {
+   "source": "Motif-side run; report: laya-eval-2026-10-15.md",
+   "pass_all_pooled": "-0.0859 u/pick, CI [-0.1814, +0.0079]",
+   "edge_threshold_rule": "-0.1249 u/pick, CI [-0.2794, +0.0321]; coverage 44.9%; false-pass 0.5212; false-reject 0.6084 - WORSE than pass-all"
+  },
+  "model_arms": "NOT RUN - blocked on compute only: Openjev/Laya needs NVIDIA >= 24GB VRAM (none on Motif VM); hosted Codiv needs an API key. Hermes HO-2 (GPU host) is the completing lane",
+  "build_state": "evaluation record homed in the substrate; the gate question stays open until the model arms run"
+ }
+}
