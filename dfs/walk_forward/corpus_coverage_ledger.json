@@ -1,0 +1,68 @@
+{
+  "label": "Corpus coverage ledger. What has and has NOT been swept. Do not re-sweep a covered class.",
+  "generated_at": "2026-10-14",
+
+  "downloads_total_files": 2145,
+
+  "COVERED": {
+    "markdown": {"files": 229, "gse_relevant": 66, "extracted_by": "6 text shards", "status": "SWEPT"},
+    "python": {"files": 56, "gse_relevant": 50, "extracted_by": "PY_MATH_1 + PY_MATH_2", "status": "SWEPT"},
+    "json": {"files": 104, "gse_relevant": 39, "extracted_by": "JSON_DATA", "status": "SWEPT"},
+    "csv": {"files": 30, "gse_relevant": 11, "extracted_by": "CSV_ODDS", "status": "SWEPT"},
+    "html": {"files": 47, "gse_relevant": 24, "extracted_by": "OTHER_TEXT", "status": "SWEPT"},
+    "text_txt": {"files": 77, "gse_relevant": 5, "extracted_by": "OTHER_TEXT", "status": "SWEPT"},
+    "archive_zip_bdb2027": {"status": "MEASURED", "note": "see bdb2026_coverage.json"},
+    "archive_zip_archive": {"status": "MEASURED", "note": "nfl_id_crosswalk.csv 12608 rows bridges nfl_id<->gsis_id"}
+  },
+
+  "NOT_COVERED_BEFORE_2026-10-14_LATE": {
+    "docx": {"files": 192, "total_MB": 59.4, "status": "NOW BEING SWEPT", "note": "the architectural + equation documents. This was the single largest gap."},
+    "xlsx": {"files": 29, "total_MB": 9.1, "status": "NOW BEING SWEPT", "note": "includes gse_research_analysis.xlsx which the user named explicitly"}
+  },
+
+  "STILL_NOT_COVERED": {
+    "pdf": {"files": 265, "total_MB": 307.6, "status": "UNSWEPT", "note": "265 PDFs. Not yet triaged. Includes jensen-shannon.pdf and likely academic papers."},
+    "image": {"files": 226, "total_MB": 197.2, "status": "UNSWEPT", "note": "mostly gse_week4_* renders; low information density for equations"},
+    "other_uncategorized": {"files": 962, "total_MB": 674.3, "status": "UNSWEPT", "note": "unclassified extensions; likely app bundles and non-research"},
+    "partial_crdownload": {"files": 1, "total_MB": 183.4, "status": "INCOMPLETE DOWNLOAD", "note": "Unconfirmed 930390.crdownload -- unfinished, unreadable"},
+    "archives_unextracted": {"files": 109, "total_MB": 8434.2, "status": "MOSTLY IRRELEVANT", "note": "most are third-party OSS (freqtrade, OpenBB, StockSharp, trading bots). The GSE ones are: GSE 10.2.26 x2 (2.07GB + 1.53GB), eb89c0e3 (700MB), e2b7702e (695MB), EYI Package (536MB), GSE.zip (174MB), sports_data_api (21MB). Not yet opened."}
+  },
+
+  "office_sweep_2026-10-14": {
+    "extractor": "extract_office.py",
+    "docx_method": "word/document.xml with paragraph breaks preserved, entities decoded",
+    "xlsx_method": "sharedStrings + per-sheet cell values, 400 rows/sheet cap",
+    "documents_extracted": 78,
+    "skipped": 144,
+    "text_total_MB": 4.3,
+    "largest": [
+      "Completeness audit passed, four gaps closed, delivery v7 shipped.docx (400k chars)",
+      "CQR Research.docx (400k chars)",
+      "10_13 update (2).docx (333k chars)",
+      "Galaxy Sports Edge Research Audit (3).docx (290k chars)",
+      "Deep Research Equation Extraction (3).docx (177k chars)"
+    ],
+    "shards": ["OFFICE_EQ", "OFFICE_VISION", "OFFICE_ARCH", "OFFICE_XLSX", "OFFICE_RESEARCH"]
+  },
+
+  "text_sweep_totals_2026-10-14": {
+    "unique_findings": 4437,
+    "by_category": {"equations": 881, "parameters": 1015, "algorithms": 575,
+                    "data_sources": 521, "measured_results": 367,
+                    "blockers": 922, "contradictions": 156},
+    "provenance_orphans_real": 3,
+    "provenance_orphans_false_positive": 179
+  },
+
+  "highest_value_open_threads": [
+    {"thread": "7.129681 locked contract number has NEVER been reproduced", "blocker": "original construction undocumented"},
+    {"thread": "key numbers 6 and 10 (corpus spec) scored and REJECTED", "detail": "3,6,7,10 = 7.118668 is worse than current 3,7 = 7.109809; best 3,6,7 = 7.109543"},
+    {"thread": "mu sign convention", "detail": "mu=-spread_line costs 3.28 CRPS on nflverse columns; corpus formula is for book home-number feeds"},
+    {"thread": "Glicko-2 idle period crashes on empty game list", "detail": "ZeroDivisionError, not 'unadjusted' as the handoff claims"},
+    {"thread": "BDB 2027 CC BY-NC 4.0 license unresolved", "detail": "blocks commercial use of 22.6M tracking rows"},
+    {"thread": "Tier-1 metrics wired 0 of 11; wiring backlog 38 items", "source": "MASTER-REGISTER.md"}
+  ],
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
