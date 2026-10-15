@@ -108,7 +108,6 @@ describe("QB-conditioned receiver efficiency", () => {
     for (let i = 0; i < 19; i++) { // 19 targets < 20 floor
       plays.push({
         gameId: "2025_01_AAA_BBB", season: 2025, week: 1, passerId: "QB1", receiverId: "WR1",
-        gameId: "2025_01_AAA_BBB", season: 2025, week: 1, passerId: "QB1", receiverId: "WR1",
         complete: 1, receivingYards: 10, airYards: 10, posteam: "AAA", defteam: "BBB",
       });
     }
