@@ -1,0 +1,91 @@
+{
+  "label": "DIAGNOSTIC",
+  "emission": "ZERO_OBJECT",
+  "filter": "REG 2017 W1 - 2026 W5 (frozen), n=2462, mu=+spread_line (never flipped)",
+  "frozen_filter_n": 2462,
+  "baseline_full_filter": {
+    "crps": 7.154021,
+    "reference": 7.154021,
+    "reproduced": true
+  },
+  "holdout_control_flat_sigma13.45": {
+    "window": "2024 - 2026 W5 (Hermes holdout scoring window)",
+    "n": 623,
+    "season_counts": {
+      "2024": 272,
+      "2025": 272,
+      "2026": 79
+    },
+    "crps": 7.009786,
+    "hermes_claimed": 7.01,
+    "abs_diff": 0.000214,
+    "verdict": "control reproduced; holdout rows/window identical to frozen-filter tail"
+  },
+  "fit_window_flat_for_context": {
+    "window": "2017-2023",
+    "n": 1839,
+    "crps": 7.202883
+  },
+  "vig_plane_inputs": {
+    "rows_with_both_spread_odds": 2461,
+    "rows_missing": 1,
+    "avg_juice_distinct_levels": 15,
+    "avg_juice_top_levels": [
+      [
+        -110.0,
+        802
+      ],
+      [
+        -105.0,
+        665
+      ],
+      [
+        -5.5,
+        375
+      ],
+      [
+        -105.5,
+        179
+      ],
+      [
+        -5.0,
+        167
+      ],
+      [
+        -6.0,
+        120
+      ]
+    ],
+    "rows_avg_juice_not_minus110": 1659
+  },
+  "claim_ladder_arithmetic": {
+    "v2_claim": 7.136486,
+    "atom_key_step_claim": 7.135471,
+    "v3_claim": 7.134568,
+    "step_atom_key_delta": -0.001015,
+    "step_vig_delta": -0.000903,
+    "v3_edge_vs_baseline": 0.019453,
+    "v3_gap_to_gate_7.099": 0.035568,
+    "gate_cleared_by_claim": false,
+    "holdout_champion_claim": 6.985,
+    "holdout_champion_edge_vs_reproduced_flat": 0.024786
+  },
+  "champion_reproduction": {
+    "status": "NOT REPRODUCED - config not reachable",
+    "missing": [
+      "research/gate_hunt_champion_v2_2026-10-15.json (frozen v3 config + evidence chain + negative-results ledger)",
+      "references/gate-hunt-crps-constructions.md (skill reference)",
+      "champion scoring code for the v2/v3 constructions"
+    ]
+  },
+  "committed_neighbour_rerun": {
+    "what": "Re-run of the branch's own committed pit_round2.py (gse_location_locked_harness, GAMES_CSV=nflverse games.csv), executed by Motif 2026-10-15 in /tmp, output written outside the repo.",
+    "family2_label": "hetero-Gaussian sigma0*exp(beta_T*T/44) + key-number atoms (beta_T,p3,p7 PIT)",
+    "family2_crps": 7.133199,
+    "family2_mean_delta": -0.020822,
+    "family2_se": 0.00592,
+    "family2_t": -3.517,
+    "matches_committed_artifact": true,
+    "note": "Family 2 (hetero-Gaussian beta_T + key-number atoms, PIT) measures 7.133199 on the same frozen filter -- below champion v3's claimed 7.134568. Its own committed label is DIAGNOSTIC, promotion NONE."
+  }
+}
