@@ -134,6 +134,66 @@ response / `[line-archiver]` log line) should show `rowsPersisted > 0`;
 `apps/web/lib/ops/line-archive-freshness.ts` will then start reporting the
 archive as fresh.
 
+## Product prices (SPEC-B extension, 2026-10-15)
+
+SPEC-B (the pick spec) can only score products the archive captures:
+alternate lines, buy-point prices, teasers. The featured leg above
+captures the main line only, so a second leg — `espn-product-prices.ts`,
+wired by `run-product-prices.ts` — probes the keyless ESPN surfaces per
+in-window event for alternate-line ladders and persists whatever
+genuinely exists as `OddsLineSnapshot` rows under the **additive** market
+values `ALT_SPREAD` / `ALT_TOTAL`: same row shape, same stores, same
+serializer, same OPEN/INTERIM classification per (gameId, market), same
+`espn-public-dk` source stamp. Existing rows and consumers are untouched
+— `ALT_*` rows are new market values in the same table (dry-run: a
+separate JSONL, default `line-archive-products-dry-run.jsonl`).
+
+```sh
+# Dry-run — probe the live surfaces, append any product rows to JSONL
+npx tsx packages/ingestion-pipeline/src/line-archiver/run-product-prices.ts --dry-run --out ./products.jsonl
+
+# DB mode — appends rows; no-op unless LINE_ARCHIVE_ENABLED=true
+npx tsx packages/ingestion-pipeline/src/line-archiver/run-product-prices.ts
+```
+
+Extraction never invents a price: a ladder is an array under a key whose
+path names it an alternate AND names its market; entries are accepted in
+outcome form (`{ name, price, point }`) or side form
+(`{ home: { line, price }, away: { … } }`), strictly validated, and a rung
+identical to the featured row (same side, line AND price — the main line
+inside the ladder) is dropped so the featured price is never
+double-archived as a product. Every run reports per-class exposure and
+names unexposed classes in its result's `gaps`. There is deliberately
+**no cron route for this leg yet**: the keyless surfaces expose no
+ladders today (table below), and hourly production fan-out for an
+availability probe is spend without capture. Wire the route the day a
+run reports a class exposed.
+
+### Product-price gaps (explicit — sources checked 2026-10-15, event 401872995 SEA@DEN)
+
+| product class | keyless status | source(s) checked |
+| ------------- | -------------- | ----------------- |
+| `ALT_SPREAD` (alternate spread lines + prices) | **NOT EXPOSED** — main line only (open + current) | ESPN scoreboard inline odds block; ESPN summary `pickcenter` (its bet-type links enumerate only Moneyline / Point Spread / Total); ESPN core-API odds index + provider detail (`…/events/401872995/competitions/401872995/odds/100`) |
+| `ALT_TOTAL` (alternate totals + prices) | **NOT EXPOSED** — main line only (open + current) | same three surfaces as above |
+| Buy-point prices | **NOT EXPOSED** — a buy-point price is an alternate-ladder rung adjacent to the main line; no ladder exists on the checked surfaces | same three surfaces as above |
+| Teaser prices / teaser-relevant shifted lines | **NOT EXPOSED** — no teaser card and no ladder to shift from on the checked surfaces | same three surfaces as above |
+| DraftKings guest API (the book behind the ESPN block, direct) | **UNVERIFIABLE from the capture environment** — `sportsbook-nash.draftkings.com` answers HTTP 403 (Akamai edge) for the event endpoint; contents not read, block not routed around (no spoofing, per doctrine) | `GET /sites/US-SB/api/v5/events/34118277` (the DK event id carried in ESPN's own deep links), 2026-10-15 |
+| MONEYLINE | already captured by the featured leg (home/away rows, `line: null`) — confirmed against tonight's game: SEA −142 / DEN +120 | ESPN scoreboard inline odds block |
+
+The known keyed path to ladders exists but is **outside this leg's
+keyless fence**: The Odds API's catalog carries `alternate_spreads` /
+`alternate_totals` markets (per its public market docs) on keyed plans.
+If SPEC-B prioritizes product scoring before a keyless surface ships
+ladders, that is the priced route — it would ride the existing Odds API
+legs, not this one. Nothing here fabricates the missing prices in the
+meantime.
+
+One adjacent non-capture, stated plainly: the checked payloads also
+carry each book's **opening** line beside the current one. An opening
+price is not a product price, and stamping it with a later `capturedAt`
+would falsify the series (phase `OPEN` already means first-captured, not
+opened-at), so this leg leaves open lines unarchived.
+
 ## Failure behavior
 
 - Upstream ESPN failure: the run returns `errors: ["fetch failed: …"]`,
@@ -143,6 +203,11 @@ archive as fresh.
   recorded in `errors`, and the run continues.
 - A game in-window with no usable odds (ESPN carries no inline book for it)
   is counted in `gamesWithoutRows`.
+- Product leg: a surface that fails to fetch is simply not consulted (and
+  never claimed in the run's `sourcesChecked`); an event whose surfaces
+  all fail is recorded in `errors` and the slate continues. Zero product
+  rows with `gaps` populated is a finding, not a failure — the product
+  CLI exits 0 unless the probe itself failed (errors and nothing scanned).
 
 ## Files
 
@@ -152,3 +217,12 @@ archive as fresh.
 - `run-line-archiver.ts` — production wiring (real ESPN client, normalizer,
   game resolver, Prisma store) + the operator CLI + `runLineArchiverJob`
   used by the cron route.
+- `espn-product-prices.ts` — the product-price extension core: per-event
+  probing of the keyless ESPN surfaces (core odds detail + summary
+  pickcenter), strict alternate-ladder extraction, exposure/gap
+  accounting, the gated/ungated runners. Unit-tested in
+  `../../__tests__/espn-product-prices.test.ts` against tonight's real
+  captured payloads plus synthetic ladders.
+- `run-product-prices.ts` — the extension's wiring (real keyless payload
+  fetches, game resolver, stores) + operator CLI + `runProductPricesJob`.
+  CLI-only for now — see "Product prices" above for why no cron route.
