@@ -1,0 +1,63 @@
+{
+  "label": "gse_research_analysis.xlsx — recovered. Prior extraction attempts returned an EMPTY dump and the artifact was believed unusable. It is not. 1,343 papers + 58 dossiers + a reconciled build plan.",
+  "generated_at": "2026-10-14",
+
+  "why_it_was_missed": {
+    "root_cause": "The workbook has NO xl/sharedStrings.xml. Every text cell is stored inline as <c t=\"inlineStr\"><is><t>value</t></is></c>. The first extractor read only <v> plus the shared-string table, so it read 0 of 10,726 text cells and emitted a structurally valid but EMPTY sheet dump.",
+    "second_bug": "That extractor also built its sheet map from workbook.xml.rels without normalising the Target attribute ('worksheets/sheet1.xml' vs '/xl/worksheets/sheet1.xml'), so every sheet resolved to a name absent from the archive and was skipped entirely.",
+    "symptom": "Silent. 0 cells, 0 chars, no error. The kind of failure that reads as 'this file has nothing in it' rather than 'my parser is broken'.",
+    "fix": "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/xlsx_inline.py — handles BOTH storage forms, normalises rels targets with positional fallback, and REFUSES to write a dump when it finds zero text cells.",
+    "recovered": {"text_cells": 10726, "numeric_cells": 599, "sheets": 4, "rows_total": 2772}
+  },
+
+  "sheets": {
+    "GSE Research Triage": "1343 papers: arxiv_id, url, title, summary, function, relevance_to_GSE, creative_use, status. status: 1342 ok / 1 unresolved.",
+    "Ranked by Relevance": "same corpus with relevance_tier + relevance_score. Tiers: High=58, Medium=402, Low=882, Unresolved=1.",
+    "Grok 58 Dossiers (Reconciled)": "58 shortlisted papers, two independent passes: verified_note, core_method, reported_results, code_data, direct_application, implementation_cost, independent_relevance_call_pass2, pass2_deeper_read_flag.",
+    "Build Plan & Synthesis": "25 rows. A reconciled build plan from 3 independent research passes. THE most decision-bearing content in the corpus."
+  },
+
+  "BUILD_PLAN_VERBATIM_HIGHLIGHTS": {
+    "highest_confidence_recommendation": "2501.02505 + 2406.19563 (rank-clustering / partial rankings, as the Bootstrap-mode replacement) and 2408.08331 (run the Poisson baseline as a diagnostic before building anything new) appear in the top tier of ALL THREE passes.",
+    "build_order": [
+      "1. 1704.00197 (iWinRNFL) — cheap NFL diagnostic first. Low cost.",
+      "2. 2408.08331 (ML vs Poisson) — run the Poisson baseline as a diagnostic before building anything new. Very low cost.",
+      "3. 1701.05976 (hierarchical state-space) — structural backbone: per-sport noise model, public JAGS code, feeds the CEPT ensemble. Medium cost.",
+      "4. 2208.08598 (conformal win probability) — calibration wrapper with public repo. Pass 2's correction: conformal fixes COVERAGE, not point-estimate bias, so base-model quality matters first.",
+      "5. 2501.02505 / 2406.19563 (partial rankings / rank-clustered BTL) — the Bootstrap-mode replacement all three passes converge on.",
+      "6. 1710.02824 (Beating the Bookies) — cheap one-time diagnostic: does CLV actually correlate with better Brier in GSE's own settled picks?"
+    ],
+    "pass_disagreement": "Pass 1 leads with 1701.05976 as the architectural foundation (only paper supplying a per-sport noise model + generative CEPT backbone + public JAGS code). Pass 2 leads with 1704.00197 as a fast low-cost diagnostic. These are complementary, not contradictory.",
+    "CEPT_ensemble_correction": "Pass 1's original 4-expert proposal (iWinRNFL + LinNet + rank-clustered BTL + conformal) DOES NOT COMPOSE as stated. Pass 2 caught it: the base models output probabilities over different units of analysis (in-game state, lineup matchup, ranking, interval), so they cannot be multiplicatively combined without an intermediate layer. Corrected design requires a common target across base models.",
+    "bootstrap_mode_replacement": "Replace the ad-hoc confidence cap with rank-clustering. When data is sparse, statistically indistinguishable picks are shown as a TIED CLUSTER rather than an arbitrarily capped point estimate. As picks settle, clusters split and rankings sharpen."
+  },
+
+  "STRUCTURAL_CRITIQUES_these_argue_the_current_approach_may_be_wrong": [
+    {"n": 1, "claim": "Model complexity does not appear to buy calibration or accuracy in this literature — 2408.08331 in soccer and 1704.00197 in NFL, INDEPENDENTLY. If a 10-feature logistic regression or a plain Poisson baseline matches or beats current MAE, the problem is features/data/training procedure, NOT model architecture.", "citations": ["2408.08331", "1704.00197"], "implication": "The entire CRPS-on-2462 effort may be optimising the wrong axis."},
+    {"n": 2, "claim": "The 'maximize win probability' decision paradigm may itself be fragile under model uncertainty — published picks may be overconfident because uncertainty is not propagated into the published number. Concrete fix: bootstrap-resample the calibration gate itself (1,000 resamples of settled picks per window; require the 95th PERCENTILE of Brier/ECE, not just the point estimate).", "citations": ["2311.03490"]},
+    {"n": 3, "claim": "The market-efficiency assumption behind the CLV benchmark is CONTESTED in the literature itself. Run the cheap internal diagnostic (does high CLV correlate with better Brier in GSE's own data?) before continuing to treat CLV as the public accuracy standard.", "citations": ["1710.02824", "2008.01485"]},
+    {"n": 4, "claim": "The withdrawn FightTracker paper (2312.11067) is a direct warning about the '3 consecutive green windows' gate: short evaluation windows can make a LOSING model look profitable. Pair the windows requirement with the bootstrap-resampling check.", "citations": ["2312.11067"]},
+    {"n": 5, "claim": "(Pass 3, UNVERIFIED, offered as hypothesis) Calibration failure may partly be a selection-bias / estimator-variance artifact of training on the platform's own historical settled picks, rather than pure miscalibration. Worth a simulation diagnostic: generate games with known true probabilities, measure how much bias that induces.", "verified": false}
+  ],
+
+  "data_integrity_finding": "Pass 2 flagged 6 of the 58 IDs as 'unresolved / no relevant paper found / misidentified': 2503.21713, 2503.23911, 2505.21543, 2602.08083, 2606.09327, 1906.05029. Direct arXiv metadata lookup confirms ALL 6 are real, on-topic papers. 1906.05029 is a genuinely relevant Bayesian in-game soccer win-probability model — a real gap in Pass 2's coverage, not a dead end. LESSON: a prior agent declared real papers dead; verify before discarding.",
+
+  "pass3_caveat": "Pass 3 introduced ~50 new arXiv IDs NOT part of the original 58-paper / 1,343-paper corpus, none verified the way the 6 disputed IDs were. Treat Pass 3's specific citations as UNVERIFIED leads pending spot-check, not confirmed facts.",
+
+  "top_scored_high_tier_papers": [
+    {"score": 22, "id": "1701.05976", "title": "How often does the best team win? A unified approach to underdog uncertainty"},
+    {"score": 20, "id": "1911.01815", "title": "A Bayesian Quest for Finding a Unified Model for Predicting Sports Matches"},
+    {"score": 20, "id": "1607.00379", "title": "Probabilistic Programming and PyMC3"},
+    {"score": 19, "id": "2501.17711", "title": "STGCN-LSTM for Olympic Medal Prediction: Dynamic Power Models"},
+    {"score": 19, "id": "1707.01855", "title": "LinNet: Probabilistic Lineup Evaluation Through Network Embeddings"},
+    {"score": 18, "id": "2001.00878", "title": "Predicting competitions by combining conditional logistic regression and expert judgement"},
+    {"score": 17, "id": "2501.02505", "title": "Estimation of partial rankings from sparse, noisy comparisons", "note": "has public repo github.com/seb310/partial-rankings"},
+    {"score": 17, "id": "2406.19563", "title": "Bayesian Rank-Clustering"},
+    {"score": 16, "id": "2105.09881", "title": "Poisson Modeling and Predicting English Premier League Matches"}
+  ],
+
+  "cross_reference": "~80 of these arxiv PDFs are already on disk in C:/Users/Garrett/Downloads (filenames are bare arxiv IDs, which is why a keyword name-filter classed them 'not-gse'). gse_research_analysis.xlsx is effectively the INDEX to that local PDF pile. extract_arxiv.py re-triages them on CONTENT rather than filename.",
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
