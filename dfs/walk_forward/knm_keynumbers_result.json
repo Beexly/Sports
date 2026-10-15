@@ -1,0 +1,100 @@
+{
+ "filter": "REG 2017 W1..2026 W5",
+ "n_filter": 2462,
+ "gaussian_baseline": 7.154021,
+ "method": "prior-only global key frequency, expanding window, mean-preserving residual-relative atoms, energy-form CRPS",
+ "results": [
+  {
+   "candidate": "none (pure Gaussian)",
+   "keys": [],
+   "n": 2399,
+   "crps": 7.12087,
+   "delta_vs_gaussian": -0.033151,
+   "gate": 7.099,
+   "cleared": false
+  },
+  {
+   "candidate": "3,7 (current)",
+   "keys": [
+    3,
+    7
+   ],
+   "n": 2399,
+   "crps": 7.109809,
+   "delta_vs_gaussian": -0.044212,
+   "gate": 7.099,
+   "cleared": false
+  },
+  {
+   "candidate": "3,6,7,10 (corpus spec)",
+   "keys": [
+    3,
+    6,
+    7,
+    10
+   ],
+   "n": 2399,
+   "crps": 7.118668,
+   "delta_vs_gaussian": -0.035352,
+   "gate": 7.099,
+   "cleared": false
+  },
+  {
+   "candidate": "3,7,10",
+   "keys": [
+    3,
+    7,
+    10
+   ],
+   "n": 2399,
+   "crps": 7.117839,
+   "delta_vs_gaussian": -0.036181,
+   "gate": 7.099,
+   "cleared": false
+  },
+  {
+   "candidate": "3,6,7",
+   "keys": [
+    3,
+    6,
+    7
+   ],
+   "n": 2399,
+   "crps": 7.109543,
+   "delta_vs_gaussian": -0.044477,
+   "gate": 7.099,
+   "cleared": false
+  },
+  {
+   "candidate": "6,7,10",
+   "keys": [
+    6,
+    7,
+    10
+   ],
+   "n": 2399,
+   "crps": 7.124319,
+   "delta_vs_gaussian": -0.029702,
+   "gate": 7.099,
+   "cleared": false
+  },
+  {
+   "candidate": "3,6,7,10,14,17",
+   "keys": [
+    3,
+    6,
+    7,
+    10,
+    14,
+    17
+   ],
+   "n": 2399,
+   "crps": 7.127203,
+   "delta_vs_gaussian": -0.026818,
+   "gate": 7.099,
+   "cleared": false
+  }
+ ],
+ "passed": false,
+ "emission": "0 picks / 0 parlays / 0 DFS"
+}
