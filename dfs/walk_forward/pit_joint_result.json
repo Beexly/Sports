@@ -1,0 +1,58 @@
+{
+ "family": "sigma_g = 13.45 * exp(beta_S*|S|/10 + beta_T*T/44)",
+ "mu": "spread_line (unchanged; Gaussian symmetric about mu)",
+ "baseline_crps": 7.154020678264436,
+ "n": 2462,
+ "mean_delta": -0.01139843707727143,
+ "se": 0.004756602234842324,
+ "implied_crps": 7.142622241187165,
+ "gate": 7.099,
+ "gate_cleared": false,
+ "flagged_beta0": 25,
+ "grid_points": 1681,
+ "chosen_top": [
+  {
+   "beta_S": 0.0,
+   "beta_T": -0.08399999999999999,
+   "rows": 644
+  },
+  {
+   "beta_S": 0.0,
+   "beta_T": -0.091,
+   "rows": 503
+  },
+  {
+   "beta_S": 0.0,
+   "beta_T": -0.07,
+   "rows": 107
+  },
+  {
+   "beta_S": 0.0,
+   "beta_T": 0.0,
+   "rows": 101
+  },
+  {
+   "beta_S": 0.0,
+   "beta_T": -0.07699999999999999,
+   "rows": 101
+  },
+  {
+   "beta_S": -0.02799999999999997,
+   "beta_T": -0.063,
+   "rows": 72
+  },
+  {
+   "beta_S": 0.0,
+   "beta_T": -0.063,
+   "rows": 72
+  },
+  {
+   "beta_S": -0.04199999999999998,
+   "beta_T": -0.055999999999999994,
+   "rows": 43
+  }
+ ],
+ "scoring_discipline": "scored ONCE on the full frozen filter; no confirmation block, no retuning",
+ "pit": "expanding window, folded after scoring, min_prior=25",
+ "emission": "0 picks / 0 parlays / 0 DFS"
+}

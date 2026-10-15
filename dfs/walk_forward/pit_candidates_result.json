@@ -1,0 +1,88 @@
+{
+ "baseline": {
+  "n": 2462,
+  "crps": 7.154020678264436
+ },
+ "skipped_rows": 193,
+ "constraints": {
+  "mu": "spread_line, mean preserved to <1e-12 (symmetric pair / recentring)",
+  "pit": "expanding window, beta fitted on strictly prior rows",
+  "min_prior": 25,
+  "refusal_rule": "full-filter mean DeltaCRPS >= 0 is terminal"
+ },
+ "candidates": [
+  {
+   "label": "hetero-Gaussian sigma_g=13.45*exp(beta*|S|/10)",
+   "n": 2462,
+   "mean_delta": -0.005978017412230221,
+   "se": 0.0037619712922475567,
+   "flagged_beta0": 25,
+   "beta_histogram_top": [
+    [
+     -0.10266666666666668,
+     375
+    ],
+    [
+     -0.10500000000000001,
+     313
+    ],
+    [
+     -0.10033333333333336,
+     225
+    ],
+    [
+     -0.10733333333333334,
+     157
+    ],
+    [
+     0.0,
+     144
+    ]
+   ],
+   "decision": "improves solo"
+  },
+  {
+   "label": "hetero-Gaussian sigma_g=13.45*exp(beta*T/44)",
+   "n": 2462,
+   "mean_delta": -0.012281559294895699,
+   "se": 0.004718332263260774,
+   "flagged_beta0": 25,
+   "beta_histogram_top": [
+    [
+     -0.08866666666666667,
+     308
+    ],
+    [
+     -0.08400000000000002,
+     300
+    ],
+    [
+     -0.08633333333333335,
+     277
+    ],
+    [
+     -0.08166666666666667,
+     209
+    ],
+    [
+     -0.091,
+     188
+    ]
+   ],
+   "decision": "improves solo"
+  },
+  {
+   "label": "symmetric-pair asymmetric Laplace, mean locked at mu",
+   "n": 2462,
+   "mean_delta": -0.0015403472987699635,
+   "se": 0.007004180994176996,
+   "flagged_beta0": 25,
+   "decision": "improves solo"
+  }
+ ],
+ "improvers": 3,
+ "joint_authorised": true,
+ "gate": 7.099,
+ "gate_cleared": false,
+ "emission": "0 picks / 0 parlays / 0 DFS"
+}

@@ -1,0 +1,147 @@
+{
+  "session": "2026-10-15",
+  "brief": "Find a measured CRPS improvement on the frozen location-locked filter, or document why none exists.",
+
+  "step1_baseline_reproduction": {
+    "command": "gse_location_locked_harness.load_frozen + score_baseline",
+    "n": 2462,
+    "crps": 7.154021,
+    "skipped_rows": 193,
+    "assert": "n == 2462 and abs(crps - 7.154021) <= 5e-5",
+    "result": "PASS -- baseline reproduced exactly before any candidate was scored"
+  },
+
+  "constraints_honoured": {
+    "mu": "spread_line for every game; Gaussian is symmetric about mu so E[X] == mu to machine precision. No de-vig, no synthetic mu.",
+    "pit": "expanding window only; beta folded into the running objective AFTER the current row is scored, so row i sees only rows j < i",
+    "min_prior": 25,
+    "refusal_rule": "full-filter mean DeltaCRPS >= 0 is a terminal refusal; solos scored separately",
+    "gate_file": "walk_forward.json NOT touched; emission stays the zero object",
+    "scoring_discipline": "joint fitted and scored ONCE on the full filter; no confirmation block, no retuning, no best-of selection"
+  },
+
+  "solos": [
+    {
+      "candidate": "hetero-Gaussian sigma_g = 13.45*exp(beta*|S|/10)",
+      "n": 2462,
+      "mean_delta": -0.005978,
+      "se": 0.003762,
+      "decision": "improves solo"
+    },
+    {
+      "candidate": "hetero-Gaussian sigma_g = 13.45*exp(beta*T/44)",
+      "n": 2462,
+      "mean_delta": -0.012282,
+      "se": 0.004718,
+      "decision": "improves solo"
+    },
+    {
+      "candidate": "symmetric-pair asymmetric Laplace, mean locked at mu",
+      "n": 2462,
+      "mean_delta": -0.001540,
+      "se": 0.007004,
+      "decision": "improves solo"
+    }
+  ],
+
+  "joint": {
+    "authorised_because": "3 of 3 solos improved (rule requires >= 2)",
+    "family": "sigma_g = 13.45 * exp(beta_S*|S|/10 + beta_T*T/44)",
+    "n": 2462,
+    "mean_delta": -0.011398,
+    "se": 0.004757,
+    "t_stat": -2.396,
+    "implied_crps": 7.142622,
+    "gate": 7.099,
+    "gate_cleared": false,
+    "gap_to_gate": 0.043622,
+    "flagged_beta0": 25,
+    "grid_points": 1681,
+    "fitted_betas_most_used": [
+      {"beta_S": 0.0, "beta_T": -0.084, "rows": 644},
+      {"beta_S": 0.0, "beta_T": -0.091, "rows": 503},
+      {"beta_S": 0.0, "beta_T": -0.070, "rows": 107},
+      {"beta_S": 0.0, "beta_T": 0.0, "rows": 101},
+      {"beta_S": 0.0, "beta_T": -0.077, "rows": 101},
+      {"beta_S": -0.028, "beta_T": -0.063, "rows": 72}
+    ],
+    "interpretation": "beta_S sits at 0.000 on 1,456 of 2,462 rows -- the spread magnitude contributes essentially nothing once the total is in the model. All the signal is in beta_T (negative: higher totals narrow the residual).",
+    "decision": "improves, does NOT clear the gate"
+  },
+
+  "pit_leak_tests": {
+    "file": "dfs/walk_forward/pit_leak_test.py",
+    "tests": [
+      {"name": "perturbation inertness", "result": "PASS -- appending 50 absurd-margin games changes only the appended rows (n 2462 -> 2512)"},
+      {"name": "order sensitivity", "result": "PASS -- reversing row order changes delta (-0.012282 -> -0.011423), proving the suite can detect a difference"},
+      {"name": "thin-prior forces beta=0", "result": "PASS -- 2462/2462 flagged, mean_delta exactly 0.000000000000"},
+      {"name": "beta=0 reduces to baseline", "result": "PASS -- delta exactly 0.000000000000 with a beta grid of {0}"}
+    ],
+    "verdict": "ALL PASS -- the expanding window is genuinely prior-only"
+  },
+
+  "bug_found_and_fixed_during_this_run": {
+    "symptom": "The first heteroscedastic run returned mean_delta = +0.000000 with SE = 0.000000 on both candidates, and a beta histogram of {0.0: 2462}.",
+    "diagnosis": "The fitter minimised a LAPLACE-scale objective (b = base_b * mean(exp(beta*x))) while the scorer was GAUSSIAN. The two objectives do not share an optimum, so the grid search had no gradient to follow and returned beta=0 on every row. The candidate silently degenerated into the baseline.",
+    "why_it_mattered": "Reported as-is it would have looked like a legitimate refusal ('delta >= 0') when it was actually a non-measurement. A refusal and a bug look identical in the output.",
+    "fix": "Made the objective identical to the scorer (mean Gaussian CRPS over prior rows) and vectorised it with a running sum, which also cut runtime from O(n^2 * grid) hours to O(n * grid) seconds.",
+    "after_fix": "beta moved off zero and all 3 solos improved; the joint reached -0.011398."
+  },
+
+  "second_bug_found": {
+    "symptom": "A docstring claimed Laplace CRPS at its own centre is b/2.",
+    "truth": "It is b/4: at y == mu, z = 0, so b*(0 + 1 - 0.75) = b/4. Verified by Monte Carlo over 200k draws (0.9935 vs 1.0000 closed form for b=4).",
+    "fix": "Corrected the comment; the closed-form code was already right."
+  },
+
+  "third_bug_found": {
+    "symptom": "The first draft of the asymmetric-Laplace CRPS contained terms multiplied by 0.0 -- a derivation with no mathematical content that merely looked like one.",
+    "fix": "Replaced with the plain closed form. Fabricated-looking algebra is worse than no algebra."
+  },
+
+  "prior_session_results_not_re_litigated": {
+    "location_locked_harness": "reproduces baseline, refused 5 of 6 candidates",
+    "entropy_floor": "model-free empirical residual distribution 7.164250 -- worse than Gaussian 7.154021",
+    "observable_scan_paired": "0 of 8 columns improved; all deltas positive; earlier subset claims retracted",
+    "line_movement": "live capture running; 14 games captured, UNMEASURABLE until pairs form"
+  },
+
+  "cumulative_evidence_on_the_gate": [
+    "sigma-shaping on spread/total: refused (harness candidates, entropy-floor oracle)",
+    "sigma-shaping on any single column: 0 of 8 improved, all paired deltas positive",
+    "heteroscedastic sigma_g = sigma0*exp(beta*x) on |spread| and total: improves by -0.0114 (t=-2.40) but reaches only 7.1426, still 0.0436 above the gate",
+    "adaptive expert weighting: WIRED ablation shows equal weights beat CRPS-weighted experts by -0.00039 +/- 0.00015",
+    "no document in 1,557 arxiv digests claims sub-7.099; the only '7.099' grep hit is arXiv ID 2507.09999v1",
+    "7.129681: 20 repo references, all of them either a reproduction TARGET or a record of the reproduction FAILING (off by 0.008249). No construction is documented anywhere."
+  ],
+
+  "ledger_finding_worth_recording": {
+    "detail": "The kill ledger contains 154 rows: 72 REFUSED, 6 GRADED, and exactly 2 with passed=true.",
+    "the_two_passed_true": [
+      "LR-20261014-WF-MODELS-MIX-T-KEYNUM",
+      "LR-20261014-WF-MODELS-MIX-T-KEYNUM-SYM"
+    ],
+    "trap": "Both are labelled 'INFRASTRUCTURE PASS (diagnostic; provisional; not promoted)' with label=DIAGNOSTIC and promotion=NONE, and both were scored on the 570-game MANIFEST, not the 2,462-game frozen filter. Their nflverse cross-check values are 7.1376-7.2215 -- all above 7.099. Row LR-20261014-WF-RELABEL-NOT-CLEARED explicitly supersedes the second one with 'REFUSED (NOT CLEARED: technical pass on manifest only; nflverse cross-check above 7.099; best-of-8 selection)'.",
+    "lesson": "A grep for '\"passed\": true' in the ledger finds two hits that look like gate clears and are neither. Any future claim of a clear must name the filter, the n, and the cross-check."
+  },
+
+  "gate_cleared": false,
+  "passed_file_modified": false,
+  "emission": "0 picks / 0 parlays / 0 DFS",
+
+  "artifacts_pushed": [
+    "dfs/walk_forward/pit_candidates.py",
+    "dfs/walk_forward/pit_candidates_result.json",
+    "dfs/walk_forward/pit_joint.py",
+    "dfs/walk_forward/pit_joint_result.json",
+    "dfs/walk_forward/pit_leak_test.py",
+    "dfs/walk_forward/observable_scan.py",
+    "dfs/walk_forward/observable_scan_fair.py",
+    "dfs/walk_forward/entropy_floor.py",
+    "dfs/walk_forward/line_movement.py",
+    "scripts/capture_market.py",
+    "scripts/capture_loop.py",
+    "scripts/mine_arxiv_digests.py",
+    "dfs/walk_forward/arxiv_corpus_evidence.json"
+  ]
+}
