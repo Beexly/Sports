@@ -149,6 +149,19 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+export {
+  computeDriveOutcomeDistributions,
+  mapDriveResultToBucket,
+  DRIVE_OUTCOME_DISTRIBUTION_MODEL_VERSION,
+  DRIVE_OUTCOME_BUCKETS,
+  MIN_DRIVES_TO_REPORT,
+  type DriveOutcomeBucket,
+  type DriveOutcomeBucketDistribution,
+  type DriveOutcomeWindow,
+  type DriveOutcomeDistributionMetric,
+  type DriveOutcomeDistributionResult,
+} from "./drive-outcome-distribution.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

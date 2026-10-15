@@ -733,4 +733,37 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    allowedInputs: ["raw play-by-play row", "terminal outcome classification"],
+    failureModes: [
+      "misclassifying TD drives with trailing failed PATs",
+      "including point-in-time violations in rolling windows",
+    ],
+    family: "expected_metric",
+    forbiddenInputs: [
+      "fitted models",
+      "probabilistic inferences",
+      "third-party subjective charting",
+    ],
+    formulaClass: "definitional_aggregation",
+    formulaSummary:
+      "Per-team, per-window count, share, and points per drive broken down by mutually exclusive end-of-drive outcomes.",
+    historicalPrecedent: [
+      {
+        name: "GridironInfo Drive Outcomes",
+        reason:
+          "Layer-2 game-script reasoning requires tracking full outcome distributions (TD vs FG vs punt vs turnover mix) rather than just scalar failure rates, as it separates offenses that finish from offenses that stall.",
+      },
+    ],
+    internalName: "drive_outcome_distribution",
+    metricId: "drive-outcome-distribution",
+    protectedComponents: [],
+    publicExposure: "none",
+    publicName: "Drive Outcome Distribution",
+    sourceRightsRequired: ["nflverse pbp allowed"],
+    status: "SHADOW",
+    targetQuestion: "How exactly does an offense terminate its drives on average?",
+    targetVariable: "drive outcome buckets",
+    validationMethods: ["definitional_invariant_check"],
+  },
 ] as const;

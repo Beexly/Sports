@@ -1411,6 +1411,11 @@ export {
   SUCCESS_YARDAGE_FRACTION,
   buildDrives,
   DRIVES_MODEL_VERSION,
+  computeDriveOutcomeDistributions,
+  mapDriveResultToBucket,
+  DRIVE_OUTCOME_DISTRIBUTION_MODEL_VERSION,
+  DRIVE_OUTCOME_BUCKETS,
+  MIN_DRIVES_TO_REPORT,
   buildEpCalibration,
   buildWpCalibration,
 } from "./expected-metrics/index.js";
@@ -1445,6 +1450,11 @@ export type {
   DrivePlay,
   Drive,
   DriveResult,
+  DriveOutcomeBucket,
+  DriveOutcomeBucketDistribution,
+  DriveOutcomeWindow,
+  DriveOutcomeDistributionMetric,
+  DriveOutcomeDistributionResult,
 } from "./expected-metrics/index.js";
 
 // Model Promotion Gate ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pure eligibility evaluator (paired-Brier EB-LCB +
