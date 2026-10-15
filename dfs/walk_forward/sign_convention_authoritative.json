@@ -1,0 +1,49 @@
+{
+  "label": "AUTHORITATIVE spread-sign verification. Measured twice, once after a user correction. This supersedes any corpus statement.",
+  "generated_at": "2026-10-14",
+  "filter": "REG 2017 W1 - 2026 W5, margin = home_score - away_score, n = 2462",
+
+  "RULE": "mu = +spread_line on nflverse. DO NOT FLIP.",
+
+  "evidence": {
+    "correlation_spread_line_vs_home_margin": 0.4469,
+    "correlation_sign": "positive -> spread_line tracks the home margin",
+    "crps_mu_equals_plus_spread_line": 7.154021,
+    "crps_mu_equals_minus_spread_line": 10.435732,
+    "cost_of_flipping": 3.281711,
+    "model_P_home_win": 0.5451,
+    "empirical_P_home_win": 0.5406,
+    "model_empirical_agreement": "within 0.005, confirms the orientation"
+  },
+
+  "CORRECTION_TO_A_COMMON_MISSTATEMENT": {
+    "the_claim": "'A fair -3.5 covers at 50%.'",
+    "verdict": "TRUE ONLY UNDER THE WRONG CONVENTION. It is the tell-tale of the flipped sign.",
+    "measured": {
+      "with_mu_equals_plus_spread_line_correct": {"P_cover_of_minus_3.5": 0.6986, "P_home_win": 0.6027},
+      "with_mu_equals_minus_spread_line_WRONG": {"P_cover_of_minus_3.5": 0.5000, "P_home_win": 0.3973}
+    },
+    "why": "nflverse spread_line = +3.5 means the HOME team is getting 3.5. The line the home team must beat is -3.5, so with mu = +3.5 they clear it 69.86% of the time. The 50% cover figure only appears when mu is flipped.",
+    "the_useful_part": "P(home win) = 0.6027 under the correct convention matches the quoted 'win 60.3%' exactly. It is the cover figure paired with it that was inverted."
+  },
+
+  "proof_row": {
+    "game_id": "2017_01_KC_NE",
+    "home": "NE", "away": "KC",
+    "spread_line": 8.0,
+    "home_score": 27, "away_score": 42, "home_margin": -15,
+    "reading": "KC (away) favoured by 8, won by 15. mu = +8 vs realized -15 is the correct error. mu = -8 would predict NE by 8 against a 15-point KC win."
+  },
+
+  "where_the_wrong_convention_lives": [
+    "The corpus, ~8 places: PREDICTION_ENGINE_MASTER (1)/(2).md, GSE_MASTER_PACK_2026-10-10 (1).md, GSE_HANDOFF_PACK_2026-10-10 (1).md, gse-deep-nfl-methods-corpus-2026.md",
+    "IN-REPO: docs/predictions/research/2026-10-13/SKILL.md:22 and :48, and CODING_AGENT_PROMPT_EXACT.md:18 -- these teach mu_margin = -listed_spread and must be annotated",
+    "Sports Engine and Glicko2 Audit.docx: 'residual = home_margin + listed_spread where listed spread is the bookmaker's home line (favorite < 0)'"
+  ],
+  "why_those_are_not_simply_wrong": "They are correct for a BOOK's home-number feed. nflverse's spread_line is the away team's number. The formula is right; the data column it was pointed at is different. Any code adopting mu = -listed_spread MUST first assert which team the incoming spread refers to.",
+
+  "related_convention_that_inherits_the_dependency": "team_total_split: home = (game_total + mu_margin)/2, away = (game_total - mu_margin)/2. The corpus already notes the original (T+spread)/2 made the favourite score LESS -- a real sign error caught earlier.",
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
