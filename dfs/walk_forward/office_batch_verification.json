@@ -1,0 +1,93 @@
+{
+  "label": "Verification pass over the 5-subagent office batch. Two claims checked at source: one CONFIRMED and serious, one FABRICATED.",
+  "generated_at": "2026-10-14",
+
+  "batch_status": {
+    "subagents": 5,
+    "all_completed": true,
+    "total_duration_seconds": 1409,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "files_read": "48 (10 unreadable recorded honestly with reasons)",
+    "findings": {"equations": 312, "parameters": 327, "algorithms": 150,
+                 "data_sources": 112, "measured_results": 242,
+                 "blockers": 198, "contradictions": 85},
+    "verdict_on_honesty": "Agents cited sources on every finding (0 unsourced in OFFICE_RESEARCH) and recorded unreadable files with reasons instead of hiding them. One citation is still wrong -- see below."
+  },
+
+  "CLAIM_1_FABRICATED_pass_veto_leak": {
+    "claim_as_reported": "PASS-veto leak at packages/prediction-engine/src/index.ts:145 named pricesWorseThanMarket.",
+    "verdict": "FALSE. Not a real defect.",
+    "checks_run": [
+      "grep 'pricesWorseThanMarket' in packages/prediction-engine/src/index.ts -> 0 matches",
+      "grep 'pricesWorseThanMarket|worseThanMarket|marketVeto|veto' across packages/prediction-engine/src/ -> the symbol does not exist anywhere in the package",
+      "grep 'PASS' in packages/prediction-engine/src/index.ts -> 0 matches",
+      "read lines 135-160 -> it is a type-import block (ProjectionRow, CvSource, ModelPosition, BandKind...) ending in a re-export of convictionTier"
+    ],
+    "conclusion": "The cited identifier and line are both invented. Do NOT open a ticket for this. This is exactly why subagent output is a self-report and must be spot-checked before it enters the ledger.",
+    "real_veto_machinery_that_does_exist": [
+      "packages/prediction-engine/src/calibration/pathwise-defect.ts:193 -- mint-time veto for a calibration history",
+      "packages/prediction-engine/src/edge-lab/selective-gate.ts:237 -- width veto, and it correctly notes a prior version only counted vetoed rows instead of identifying them",
+      "packages/prediction-engine/src/edge-lab/edge-lab-council.ts:284 -- guardian veto enforced structurally in the orchestrator rather than trusted to the agent"
+    ]
+  },
+
+  "CLAIM_2_CONFIRMED_sign_convention_is_now_self_contradictory_in_repo": {
+    "severity": "HIGH -- and this one is real, verified in the repo itself",
+    "claim_a": "The corpus and the repo's own docs state: 'listed_spread is the book home number, favorite negative. mu_margin = -listed_spread.' Found verbatim at docs/predictions/research/2026-10-13/SKILL.md:22 and :48, and in CODING_AGENT_PROMPT_EXACT.md:18.",
+    "claim_b": "nflverse spread_line is the AWAY team's number. Measured on the frozen filter: mu = +spread_line -> CRPS 7.154021; mu = -spread_line -> CRPS 10.435732. Cost of the flip: 3.281711.",
+    "additional_conflict": "OFFICE_RESEARCH quotes Sports Engine and Glicko2 Audit.docx: 'residual = home_margin + listed_spread where listed spread is the bookmaker's home line (favorite < 0)'. That is the SAME convention as claim_a -- correct for a book feed, wrong for nflverse columns.",
+    "why_it_is_dangerous": "The repo's own SKILL.md now teaches the convention that costs 3.28 CRPS on nflverse data. Any future agent following that skill will invert the prediction.",
+    "proof_row": "2017_01_KC_NE: spread_line +8.0, home 27, away 42, margin -15. KC (away) favoured by 8 and won by 15. mu=+8 vs realized -15 is the correct error; mu=-8 predicts the home team by 8 against a 15-point away win.",
+    "action": "Any code adopting mu = -listed_spread MUST first assert which team the incoming spread refers to. See dfs/walk_forward/corpus_sign_convention.json."
+  },
+
+  "high_value_findings_worth_carrying_forward": {
+    "conformal_small_sample_law": {
+      "detail": "n=5, alpha=0.10 -> inflation 1.08, k=ceil(6*0.90)=6 > n=5, so the interval is infinite or No-Bet. Clamping gives n/(n+1)=5/6 = 83.33% coverage, a 6.67% under-coverage defect. Minimum viable n=9. At n=500, k=451.",
+      "source": "Auditing Conformal Prediction, Small-Sample Calibration... docx",
+      "why_it_matters": "It means small-N calibration gates are structurally incapable of hitting nominal coverage. Directly relevant to the build plan's proposed bootstrap-resampled calibration gate."
+    },
+    "vision_calibration_headline_failure": {
+      "detail": "787 plays / 1,181,625 frames, mean RMSE 0.0956 m (median 0.0972, range 0.0681-0.1246) BUT 90% CI coverage 83.65% -- 476/787 plays below 0.85, 31/787 above 0.95, outside the [0.85,0.95] band.",
+      "source": "Measurement-First Engineering Roadmap docx",
+      "why_it_matters": "The accuracy looks fine while the stated uncertainty is wrong. That is the same class of defect as the non-binding Brier floor: a good point estimate hiding a broken interval."
+    },
+    "jacobian_covariance_fix": {
+      "detail": "R_field(u,v) = J(u,v) * R_pixel * J(u,v)^T + eps*I2 with eps=1e-6 m^2, det(J)=det(H)/w~^3, R_field scaling O(w~^-4). The remedy for far-sideline/end-zone under-coverage.",
+      "source": "Projective Geometry ... 8-DoF Hartley DLT docx"
+    },
+    "frozen_model_replay_clean": {
+      "detail": "27-season replay, n=15,939: win rate 52.700% vs break-even 52.381% at -110, z=0.799, ROI -5.48%/unit, AUC 0.4965 (p=0.4113), lookahead errors 0.",
+      "source": "ASTRA-PACK-COMBINED docx",
+      "why_it_matters": "A leakage-free harness that reports a NEGATIVE result honestly. AUC 0.4965 is below chance. That is the baseline any new model must beat."
+    },
+    "sgp_copula_fitted": {
+      "detail": "Student-t nu=4.0, 50,000 draws, empirical 8x8 matrix over 1,088 team-games; true joint 39.25% vs 30.98% independent (+26.68%, z=37.85); damped_LR = LR^(sqrt(rho)) with rho=0.6995, sqrt(rho)=0.8363 (1.2320 -> 1.1906).",
+      "source": "10_13 update (2) docx",
+      "note": "MITIGATES the skill's teaser finding rather than contradicting it: the corpus says a 28-point swing from correlation alone; here correlation moves a specific LR by 3.4%."
+    },
+    "glicko2_tau_is_not_identified": {
+      "detail": "tau=0.5 is 'an assumed operational prior rather than an identified empirical parameter' -- likelihood flat over tau in [0.2, 1.2]. sigma=0.06 unidentifiable/inert. Idle-period rule phi'=sqrt(phi^2+sigma^2) is NOT wired (ratings2.py only iterates teams present in the active period's game records).",
+      "source": "Sports Engine and Glicko2 Audit docx",
+      "cross_check": "Independently confirmed this session: glicko2_parallel(r, rd, sigma, []) raises ZeroDivisionError, so a bye week CRASHES rather than passing through unadjusted. The idle rule itself reproduces exactly (RD 200 -> 200.27 / 201.08 / 204.57)."
+    },
+    "market_close_is_the_baseline_to_beat": {
+      "detail": "De-vigged closing moneyline pooled Brier 0.2106 (95% CI [0.2050, 0.2172]), adaptive ECE 0.0126, n=5,281 NFL games 2006-2025. Isotonic/Platt/beta beat identity by <= 0.0005.",
+      "source": "Next Project Steps (1) docx / ASTRA-PACK-COMBINED docx"
+    },
+    "production_constants_disputed": {
+      "detail": "SCALE_CONSTANT=45.42, HFA_POINTS=2.10, NFL_EPA_MIN_GAMES=4; repo defaults 0.12/0.025 called wrong; pooled OLS 36.61 over 14,251 fixtures; averaging to 41.01 forbidden.",
+      "status": "UNVERIFIED -- two agents give different HFA values (2.10 here vs 2.178 fitted on 1,187 games in the GSE Corpus Extractions doc, and 1.56 [1.54,1.59] in the v7 audit). Three different numbers for the same quantity. Needs a single source of truth before it is wired."
+    }
+  },
+
+  "subagent_citation_quality": {
+    "fabricated_citations_found": 1,
+    "fabricated_detail": "packages/prediction-engine/src/index.ts:145 pricesWorseThanMarket -- neither the symbol nor the described code exists",
+    "unsourced_findings": 0,
+    "lesson": "1 bad citation in ~5 files of claims. The failure mode is a plausible-looking file:line for something that was never checked. Always grep the symbol before it becomes a ticket."
+  },
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
