@@ -30,7 +30,12 @@ import {
 export type CvapAggregationMode = "geometric" | "arithmetic";
 
 export interface CvapOptions {
-  /** Number of folds (default 5). Must be >= 2 and <= calibration size. */
+  /**
+   * Number of folds (default 5). Must be an integer; non-integer values
+   * (incl. NaN/Infinity) are rejected with an error. Integer requests are
+   * clamped to [2, calibration size], and foldsUsed always reports the
+   * number of folds actually run.
+   */
   readonly folds?: number;
   /** Aggregation rule across folds (default geometric / minimax). */
   readonly aggregation?: CvapAggregationMode;
@@ -81,6 +86,16 @@ export function cvapPredict(
   testScore: number,
   options: CvapOptions = {},
 ): CvapPrediction {
+  // Validate the folds option (defect D2, fixed 2026-10-15): a non-integer
+  // count previously flowed through the clamp below, so folds=2.5 ran 3
+  // folds while foldsUsed reported 2.5. Reject non-integers fail-closed;
+  // integer requests keep the existing clamp semantics pinned by the test
+  // battery, so foldsUsed now always equals foldPredictions.length.
+  if (options.folds !== undefined && !Number.isInteger(options.folds)) {
+    throw new Error(
+      `cvapPredict: options.folds must be an integer, got ${String(options.folds)}`,
+    );
+  }
   const n = calibration.length;
   if (n === 0) {
     return {
