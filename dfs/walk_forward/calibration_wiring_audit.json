@@ -1,0 +1,85 @@
+{
+  "label": "MEASURED import-graph analysis. 81 calibration branches produced 25 modules; 15 of them are reachable only by their own tests.",
+  "generated_at": "2026-10-14",
+  "method": "Built the import graph over 3,486 TS/TSX files under packages/ (node_modules excluded). A calibration module is WIRED if some non-test file imports it, TEST-ONLY if only its own test does, ORPHANED if nothing imports it.",
+
+  "headline": {
+    "calibration_themed_branches_in_atlas": 81,
+    "modules_that_landed": 25,
+    "wired_into_shipping_code": 10,
+    "test_only_built_but_never_shipped": 15,
+    "orphaned": 0,
+    "wired_but_untested": 5,
+    "pct_of_modules_actually_wired": 40.0
+  },
+
+  "wired": {
+    "ivap": {"importers": 3, "has_test": false},
+    "calibration-gates": {"importers": 2, "has_test": true},
+    "cvap": {"importers": 2, "has_test": false},
+    "pav": {"importers": 2, "has_test": false},
+    "aggregation": {"importers": 1, "has_test": false},
+    "build-calibration-history": {"importers": 1, "has_test": true},
+    "family-weight-evidence": {"importers": 1, "has_test": true},
+    "isotonic-calibration": {"importers": 1, "has_test": true},
+    "local-isotonic-patch": {"importers": 1, "has_test": false},
+    "pathwise-defect": {"importers": 1, "has_test": true}
+  },
+
+  "TEST_ONLY_built_but_never_shipped": [
+    "1905-07886-conformal-ncp-intervals",
+    "base-rate-honesty",
+    "calibration-horserace",
+    "calibrator-adapter",
+    "hfa-diagnostic",
+    "mmce-selective",
+    "multicalib-audit-patch",
+    "skeptic-overlay",
+    "slate-label-shift",
+    "spline-calibration",
+    "teacher-calibration",
+    "temperature-scaling",
+    "temporal-conformal",
+    "venn-width-harness",
+    "weighted-conformal-shift"
+  ],
+
+  "WIRED_BUT_UNTESTED_these_are_the_real_risk": [
+    "aggregation",
+    "cvap",
+    "ivap",
+    "local-isotonic-patch",
+    "pav"
+  ],
+
+  "why_this_matters": {
+    "test_only": "15 modules are fully implemented and unit-tested but nothing in shipping code imports them. That is 60% of the calibration surface doing nothing at runtime. It is the same class of finding as MASTER-REGISTER's 'Tier-1 metrics wired 0 of 11' and the office sweep's '185-186 landed-not-wired gates vs the census's 34' -- the codebase consistently builds faster than it wires.",
+    "wired_but_untested": "The opposite failure: 5 modules ARE in the shipping path with no test file. cvap/ivap are the Venn-Abers style conformal wrappers the build plan recommends; pav and local-isotonic-patch are on the calibration path; aggregation is the ensemble layer. These are exactly the modules where an untested regression would silently corrupt every published probability."
+  },
+
+  "cross_reference_to_measured_defects": {
+    "deployed_ece_failure": "Deployed v5.2.7 ECE 0.1089 vs floor 0.05 while the pooled sample clears.",
+    "brier_floor_non_binding": "A zero-skill constant forecast at base rate 0.69 scores 0.2139 < the 0.22 floor.",
+    "conformal_small_n_law": "At n=5, alpha=0.10, k=ceil(6*0.90)=6 > n -> infinite/No-Bet; clamped gives 83.33% coverage. Minimum viable n=9.",
+    "interpretation": "The calibration layer has plenty of machinery and almost none of it is exercised in production, while the two gates that ARE deployed are both unsound in measured ways. Adding more modules is not the constraint."
+  },
+
+  "branch_atlas_summary": {
+    "branches_parsed": 224,
+    "date_range": "2026-04-22 .. 2026-10-02",
+    "no_commit_since_2026_09_01": 77,
+    "branches_whose_own_notes_flag_hold_or_blocked_or_superseded": 112,
+    "by_theme": {"calibration": 81, "other": 38, "research/paper": 23, "odds/market": 20,
+                 "vision/tracking": 19, "infra/ci": 11, "walk-forward/gate": 9,
+                 "ledger/proof": 8, "data-ingest": 5, "rating": 5,
+                 "crps/metric": 3, "injuries/roster": 2},
+    "note": "112 of 224 branches carry their own HOLD/blocked/killed/superseded markers. The atlas is as much a record of abandoned work as of live work."
+  },
+
+  "not_gse_material_checked_and_dismissed": {
+    "SOURCE-2026-09-12-deepseek-ground-truth-batch-{1,2,3}.md": "Despite the 'ground truth' name these are WEB-BUILDER competitive intelligence (Wix, Luma, Polycam, Stripe, Resend pricing/features), not engine material. Batch 1-2 self-declares 'NORMALIZED WORKING COPY -- NOT verbatim'; batch 3 declares itself repaired and notes SITE 30 was never delivered."
+  },
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
