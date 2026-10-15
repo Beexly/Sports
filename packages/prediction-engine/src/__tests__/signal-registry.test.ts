@@ -196,6 +196,14 @@ describe("nothing is killed or deferred", () => {
       "integrity.ece.deployed",
       "integrity.vision.coverage",
       "integrity.snapshot.auth",
+      // Equations recovered from the 2026-10-14 corpus sweep.
+      "roster.ril.definition",
+      "roster.ctf.definition",
+      "situational.context.effects",
+      "situational.fatigue",
+      "situational.postbye",
+      "integrity.leafdrift",
+      "integrity.signal.registry.census",
     ]) {
       expect(ids).toContain(required);
     }
@@ -248,6 +256,47 @@ describe("class coverage", () => {
     const market = signalsByClass("market");
     expect(market.length).toBeGreaterThan(0);
     for (const s of market) expect(s.cls).toBe("market");
+  });
+
+  it("flags a corpus claim that the shipped code contradicts", () => {
+    // The corpus says "idle step wired: DONE in commit 744d89fb1" but the
+    // shipped TS has no idle-by-game-list and zero importers. The registry
+    // must record the contradiction, not the claim.
+    const glicko = SIGNALS.find((s) => s.id === "rating.glicko2");
+    expect(glicko).toBeDefined();
+    expect(glicko!.blocker).toMatch(/ZERO importers/);
+    expect(glicko!.blocker).toMatch(/SEASON-START DEVIATES FROM PAPER/);
+    expect(glicko!.caveat).toMatch(/744d89fb1/);
+    expect(glicko!.caveat).toMatch(/Idle not wired/);
+  });
+
+  it("does not carry a soccer-only measurement into an NFL claim", () => {
+    // The 2H/1H = 1.224 fatigue ratio is EPL, not NFL.
+    const fatigue = SIGNALS.find((s) => s.id === "situational.fatigue");
+    expect(fatigue!.blocker).toMatch(/EPL \(soccer\), NOT NFL/);
+    expect(fatigue!.emissionWeight).toBe(0);
+  });
+
+  it("pins the recovered feature equations", () => {
+    const ril = SIGNALS.find((s) => s.id === "roster.ril.definition");
+    expect(ril!.measures).toContain("rest_deficit");
+    expect(ril!.measures).toContain("prior_3w_snap_share");
+    const ctf = SIGNALS.find((s) => s.id === "roster.ctf.definition");
+    expect(ctf!.measures).toContain("ln(1 + travel_miles)");
+  });
+
+  it("separates the post-bye effect from the rest feature", () => {
+    // "Rust, not rest" -- folding the -2.33pt road effect into the rest
+    // modulator would double-count it.
+    const ctx = SIGNALS.find((s) => s.id === "situational.context.effects");
+    expect(ctx!.caveat).toMatch(/must not be folded into the rest feature/);
+    const rest = SIGNALS.find((s) => s.id === "schedule.rest");
+    expect(rest!.id).not.toBe(ctx!.id);
+  });
+
+  it("does not silently merge the two signal censuses", () => {
+    const census = SIGNALS.find((s) => s.id === "integrity.signal.registry.census");
+    expect(census!.blocker).toMatch(/not yet reconciled/);
   });
 
   it("flags the sign-sensitive signals", () => {
