@@ -758,7 +758,7 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     internalName: "drive_outcome_distribution",
     metricId: "drive-outcome-distribution",
     protectedComponents: [],
-    publicExposure: "hidden",
+    publicExposure: "none",
     publicName: "Drive Outcome Distribution",
     sourceRightsRequired: ["nflverse pbp allowed"],
     status: "SHADOW",
