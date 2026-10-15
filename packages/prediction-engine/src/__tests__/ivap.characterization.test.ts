@@ -10,8 +10,10 @@ import {
  *
  * The main suite (ivap.test.ts) asserts only inequalities. These tests pin
  * EXACT golden intervals on hand-verifiable calibration sets, plus
- * monotonicity of pMid, input immutability, and the current (unsafe) handling
- * of non-finite scores — flagged as defect candidate D1 in the freeze report.
+ * monotonicity of pMid and input immutability. The non-finite-score block at
+ * the bottom originally pinned the unsafe D1 behavior as-is; it was updated
+ * 2026-10-15 when D1 was fixed (fail-closed rejection), on purpose, with a
+ * fix report.
  */
 const tiny: IvapCalibrationPoint[] = [
   { score: 0, label: 0 },
@@ -126,27 +128,35 @@ describe("InductiveVennAbers — structural pins", () => {
   });
 });
 
-describe("InductiveVennAbers — non-finite inputs (defect candidate D1, pinned as-is)", () => {
-  it("FLAG: a NaN test score silently returns the top-of-range interval [2/3, 1] on the four-point set", () => {
-    // Current behavior pinned deliberately. NaN fails every `s > testScore`
-    // comparison, so the test point is inserted at the end and the sort treats
-    // NaN as equal-to-everything; the result is a confident interval rather
-    // than the uninformative [0.5, 0.5] or a throw. If D1 is fixed, this test
-    // is the one that should change — on purpose, with a report note.
-    const p = ivapPredict(four, NaN);
-    expect(p.p0).toBeCloseTo(2 / 3, 12);
-    expect(p.p1).toBe(1);
+describe("InductiveVennAbers — non-finite inputs (defect D1, FIXED 2026-10-15)", () => {
+  it("a NaN test score is rejected with a clear error instead of returning [2/3, 1]", () => {
+    // D1 fix: predict validates finiteness and throws (fail-closed). Before
+    // the fix, NaN failed every `s > testScore` comparison, so the test point
+    // was inserted at the end of the range and predict(NaN) returned the
+    // confident top-of-range interval [2/3, 1] on this set. ±Infinity test
+    // scores are rejected the same way.
+    expect(() => ivapPredict(four, NaN)).toThrow(/must be finite/);
+    expect(() => ivapPredict(four, Infinity)).toThrow(/must be finite/);
+    expect(() => ivapPredict(four, -Infinity)).toThrow(/must be finite/);
   });
 
-  it("FLAG: a NaN calibration score does not throw and shifts the interval", () => {
-    const p = ivapPredict(
-      [
-        { score: NaN, label: 1 },
-        { score: 0.5, label: 0 },
-      ],
-      0.5,
+  it("a non-finite calibration score is rejected at fit time and never shifts an interval", () => {
+    // D1 fix: the constructor validates every calibration score and throws,
+    // naming the offending index. Before the fix, a NaN calibration score
+    // was accepted silently and shifted the interval on this fixture to
+    // [0.5, 1].
+    expect(
+      () =>
+        new InductiveVennAbers([
+          { score: NaN, label: 1 },
+          { score: 0.5, label: 0 },
+        ]),
+    ).toThrow(/must be finite/);
+    expect(() => ivapPredict([{ score: Infinity, label: 1 }], 0.5)).toThrow(
+      /must be finite/,
     );
-    expect(p.p0).toBeCloseTo(0.5, 12);
-    expect(p.p1).toBe(1);
+    expect(() => ivapPredict([{ score: -Infinity, label: 0 }], 0.5)).toThrow(
+      /must be finite/,
+    );
   });
 });

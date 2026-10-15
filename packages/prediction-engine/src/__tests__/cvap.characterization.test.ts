@@ -7,8 +7,10 @@ import type { IvapCalibrationPoint } from "../calibration/ivap.js";
  *
  * Pins behavior the main suite (cvap.test.ts) does not: the n=1 honest
  * degradation (the fuzz-found leave-nothing-out fix described in the source),
- * negative/zero fold requests, exact seeded goldens on a noisy set, and the
- * non-integer folds quirk flagged as defect candidate D2 in the freeze report.
+ * negative/zero fold requests, and exact seeded goldens on a noisy set. The
+ * non-integer folds block originally pinned the D2 quirk as-is; it was
+ * updated 2026-10-15 when D2 was fixed (fail-closed rejection of non-integer
+ * fold counts), on purpose, with a fix report.
  */
 const tiny: IvapCalibrationPoint[] = [
   { score: 0, label: 0 },
@@ -68,15 +70,23 @@ describe("cvapPredict — folds option edges", () => {
     expect(cvapPredict(noisy12, 0.45, { folds: -3 }).foldsUsed).toBe(2);
   });
 
-  it("FLAG (defect candidate D2): folds=2.5 is not validated — 3 folds run but foldsUsed reports 2.5", () => {
-    // Current behavior pinned deliberately. K flows into the fold loop and
-    // the foldsUsed field without an integer check, so the reported count is
-    // a non-integer that disagrees with foldPredictions.length. If D2 is
-    // fixed (validate/coerce to an integer), this test should change on
-    // purpose, with a report note.
-    const p = cvapPredict(four, 0.5, { folds: 2.5 });
-    expect(p.foldPredictions).toHaveLength(3);
-    expect(p.foldsUsed).toBe(2.5);
+  it("FIXED (defect D2): folds=2.5 is rejected — non-integer fold counts throw instead of misreporting foldsUsed", () => {
+    // D2 fix: cvapPredict validates that options.folds is an integer and
+    // throws fail-closed. Before the fix, folds=2.5 ran 3 folds while
+    // foldsUsed reported 2.5 (a non-integer disagreeing with
+    // foldPredictions.length). NaN/Infinity fold counts are rejected the
+    // same way. Integer requests keep the pinned clamp behavior (folds=0
+    // and folds=-3 above; folds=1 and folds=100 in the main suite), so
+    // foldsUsed now always equals the number of folds actually run.
+    expect(() => cvapPredict(four, 0.5, { folds: 2.5 })).toThrow(
+      /must be an integer/,
+    );
+    expect(() => cvapPredict(four, 0.5, { folds: NaN })).toThrow(
+      /must be an integer/,
+    );
+    expect(() => cvapPredict(four, 0.5, { folds: Infinity })).toThrow(
+      /must be an integer/,
+    );
   });
 });
 
