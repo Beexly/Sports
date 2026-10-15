@@ -1,0 +1,57 @@
+{
+  "label": "MEASURED. The CLV diagnostic CANNOT be run from this archive. Stating that rather than reporting a fabricated number.",
+  "generated_at": "2026-10-14",
+  "source": "gse_full_transfer_2026-10-10.tar.gz -> snapshots/pinnacle_mkt_*.json (17 files)",
+
+  "what_the_snapshots_actually_are": {
+    "structure": "Each file is a LIST of market records. Keys: cutoffAt, isAlternate, key, limits, matchupId, period, prices, status, type, version.",
+    "market_types": {"total": 1023, "spread": 344, "moneyline": 266, "team_total": 84, "about:blank": 3},
+    "periods": {"0 (full game)": 1174, "1": 377, "3": 166},
+    "isAlternate": {"True": 610, "False": 210},
+    "distinct_matchups_across_all_files": 911,
+    "matchups_appearing_in_more_than_one_file": 0,
+    "cutoffAt_range": "2026-10-11T13:25:00Z .. 2026-10-13T00:15:00Z",
+    "distinct_cutoffs": 12,
+    "interpretation": "These are 17 CROSS-MATCHUP board snapshots (~70 different matchups each), not 17 time-series captures of one market. There is no repeated market, so line MOVEMENT is not measurable from this archive at all."
+  },
+
+  "DATA_QUALITY_DEFECT_3_of_17_files_are_auth_errors_stored_as_data": {
+    "files": ["pinnacle_mkt_1637432960.json", "pinnacle_mkt_1637435175.json", "pinnacle_mkt_1637435176.json"],
+    "content": "{\"detail\": \"No authorization token provided\", \"status\": 401, \"title\": \"Unauthorized\", \"type\": \"about:blank\"}",
+    "size_bytes": 119,
+    "why_it_matters": "An HTTP 401 response body was saved into the snapshot directory as though it were market data. Any loader that does not check status will silently treat these as empty boards. If they were ever included in an average, they would drag it toward zero without raising.",
+    "action": "Any snapshot loader MUST reject records where status != 200 or type == 'about:blank', and MUST count rejected files in the run report."
+  },
+
+  "CANNOT_BE_COMPUTED_HERE": {
+    "clv": false,
+    "clv_vs_brier_correlation": false,
+    "matched_close_denominator_adjudication": false,
+    "line_movement": false,
+    "steam_threshold_test": false,
+    "rlm_sign_rule_test": false,
+    "reasons": {
+      "clv": "CLV needs (locked price, closing price, outcome). There are no settled picks and no outcomes in this archive.",
+      "line_movement": "Zero matchups appear in more than one file (0 of 911), so there is no before/after pair to difference.",
+      "rlm": "No public-bet-percentage field exists in the snapshots."
+    }
+  },
+
+  "what_WOULD_answer_the_open_clv_question": {
+    "need": "The platform's own graded picks joined to (a) the price locked at pick time and (b) the closing price for the same market.",
+    "not_this_archive": "Confirmed: this tar.gz has market snapshots and an ESPN injury snapshot, but no picks and no outcomes.",
+    "next_step": "Pull graded picks from the platform DB (read-only) and join to a closing-line source. That is the only path to settling whether CLV correlates with Brier in GSE's own data."
+  },
+
+  "other_contents_of_the_tar_gz": {
+    "espn_injuries_2026-10-09.json": "8.76 MB, timestamp 2026-10-10T05:18:03Z, status success, 32 team entries -- a live injury snapshot",
+    "dk_week6_props_2026-10-09.tsv": "1.87 MB",
+    "prizepicks_nfl_board_2026-10-09.tsv": "0.84 MB",
+    "prizepicks_maps_2026-10-09.tsv": "25 KB",
+    "dk_submap.json": "25 KB",
+    "GSE_HANDOFF_PACK_2026-10-10.md": "240 KB"
+  },
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
