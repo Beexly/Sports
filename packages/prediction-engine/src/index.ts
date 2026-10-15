@@ -39,6 +39,34 @@ export type { SettlementResult } from "./settlement.js";
 // CalibrationHistoryRow[] for calibrationHistoryWithholds. Fail-open on absence.
 export { buildCalibrationHistory } from "./calibration/build-calibration-history.js";
 export type { SettledPickHistorySource } from "./calibration/build-calibration-history.js";
+// The engine's signal registry: every recovered signal, weighted by measured
+// evidence, with mandatory provenance and a live reasoning trace. No signal is
+// killed or deferred -- an unproven one carries diagnosticWeight and a named
+// blocker instead. Emission weight is 0 until a measured CRPS improvement on
+// the frozen 2,462-game filter (see FROZEN_FILTER). See signal-registry.ts.
+export {
+  SIGNALS,
+  FROZEN_FILTER,
+  CONFORMAL_SMALL_N,
+  MARKET_BAR,
+  GATE_DEFECTS,
+  signalsByClass,
+  signalsWithEmissionWeight,
+  signSensitiveSignals,
+  totalEmissionWeight,
+  buildReasoningTrace,
+  decideEmission,
+  validateRegistry,
+  assertProvenance,
+  assertSignConvention,
+} from "./signal-registry.js";
+export type {
+  SignalSpec,
+  SignalClass,
+  EvidenceStrength,
+  ReasoningStep,
+  EmissionDecision,
+} from "./signal-registry.js";
 // The published-line rule: the customer-visible / locked / graded handicap is the
 // nearest line a book actually posted, never the raw consensus mean (which makes
 // PUSH structurally unreachable for spreads and totals). See published-line.ts.
