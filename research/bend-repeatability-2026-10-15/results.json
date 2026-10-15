@@ -1,0 +1,88 @@
+{
+  "design": "WO-3 Deliverable 1 (Grok, EXPERT, 2026-10-15)",
+  "estimator": "ICC(2,1) Shrout-Fleiss absolute agreement; 95% CI parametric bootstrap (B=2000) from fitted ANOVA variance components; validated on synthetic ground truth (tests/test_icc_synthetic.py)",
+  "route_a_combine_drills": {
+    "combine_tracking_csv_found": [],
+    "search_scope": "~/workspace (node_modules/.venv/.git pruned), plus ~/.kaggle (absent) checked separately",
+    "athletes_with_reps": 0,
+    "total_reps": 0
+  },
+  "route_b_game_tracking": {
+    "sources": [
+      {
+        "path": "/home/hatch/workspace/vendor/bdb27-reliability/chasko-winners/samples/2024/tracking_sample.csv",
+        "games": 1,
+        "plays": 25,
+        "athletes": 58,
+        "athletes_ge2_games": 0,
+        "bend_events_extracted": 133
+      },
+      {
+        "path": "/home/hatch/workspace/vendor/bdb27-reliability/chasko-winners/samples/2025/tracking_sample.csv",
+        "games": 1,
+        "plays": 25,
+        "athletes": 56,
+        "athletes_ge2_games": 0,
+        "bend_events_extracted": 849
+      }
+    ],
+    "athletes_total": 60,
+    "games_total": 2,
+    "athletes_ge2_games": 0,
+    "athletes_ge4_games": 0,
+    "total_bend_events": 982,
+    "events_dl_positions": 144,
+    "athletes_with_events": 56
+  },
+  "aggregates_only": {
+    "itsmesujan_qualified_edge_cohort": {
+      "athletes": 78,
+      "hoop_peak_ac_values": 78,
+      "reps_per_athlete": 1,
+      "usable_for_icc": false
+    },
+    "ktd_wr_metrics": {
+      "rows": 14,
+      "usable_for_icc": false
+    }
+  },
+  "icc_2_1": null,
+  "verdict": {
+    "gate": "UNDERPOWERED",
+    "reason": "No ICC computed: 0 athletes have >=2 independent games in the located rep-level data (Route B samples are 1 game each), and Route A's combine_tracking.csv is absent (Kaggle-only). Per the design's failure-mode rule, no reliability number is entered.",
+    "decision_grade": {
+      "athletes_ge4_games_needed": 30,
+      "athletes_ge4_games_found": 0,
+      "events_needed": 200,
+      "events_found": 982,
+      "athlete_shortfall": 30,
+      "event_shortfall": 0
+    }
+  },
+  "spearman_brown_reps_needed_context": {
+    "0.2": {
+      "0.7": 9.33,
+      "0.8": 16.0
+    },
+    "0.3": {
+      "0.7": 5.44,
+      "0.8": 9.33
+    },
+    "0.4": {
+      "0.7": 3.5,
+      "0.8": 6.0
+    },
+    "0.5": {
+      "0.7": 2.33,
+      "0.8": 4.0
+    },
+    "0.6": {
+      "0.7": 1.56,
+      "0.8": 2.67
+    },
+    "0.7": {
+      "0.7": 1.0,
+      "0.8": 1.71
+    }
+  }
+}
