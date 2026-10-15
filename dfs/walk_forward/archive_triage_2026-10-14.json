@@ -1,0 +1,106 @@
+{
+  "label": "MEASURED archive triage. Every remaining named artifact was opened and classified. Three claims are corrected by measurement.",
+  "generated_at": "2026-10-14",
+
+  "corpus_indexed": {
+    "action": "Pulled 4.2 MB of previously unindexed corpus text into gse_archive_text (95 named paths from the user's list).",
+    "files_added": 44,
+    "note": "Prior sweeps counted these as 'unread' only because the reconciliation script looked for temp-dir extraction; most had in fact been read. The count is now honest.",
+    "biggest_recovered": [
+      "gse_master_pack_2026_10_10.md (311,277 chars)",
+      "antigravity_jev_process_2026_10_10.md (370,392 chars)",
+      "full_stack_delivery.md (277,220 chars)",
+      "gse_handoff_pack_2026_10_10.md (238,899 chars)",
+      "measurement_first_engineering_roadmap.docx (353,132 chars)",
+      "astra_pack_combined.docx (620,823 chars)",
+      "strategic_research_plan.docx (411,783 chars)",
+      "gse_research_analysis.xlsx (492,984 chars)",
+      "architectural_deepening.docx (205,251 chars)"
+    ]
+  },
+
+  "CLAIM_1_CORRECTED_crdownload_is_not_engine_data": {
+    "file": "C:/Users/Garrett/Downloads/Unconfirmed 930390.crdownload (183,369,473 bytes)",
+    "zipfile_says": "File is not a zip file",
+    "unzip_says": "End-of-central-directory signature not found",
+    "root_cause": "The download was INTERRUPTED. The file starts with a valid PK\\x03\\x04 local header but has no central directory, so both tools refuse it.",
+    "salvage_method": "Streamed the single member with zlib.decompressobj(-15) using the data-descriptor form (flags 0x808). Recovered 183,341,318 bytes (183.34 MB) of an INNER zip named Turner-20260603T184234Z-3-001.zip.",
+    "inner_content": {
+      "name_like_strings": 405,
+      "extensions": "3708 xml, 204 jpeg, 196+79 docx, 85+61 png, 14 xlsx, 14 pptx, 2 json, 11 bin",
+      "sample_names": ["Turner/IMG_6116.PNG", "Turner/original_msg.eml", "Turner/CTS Intern Review Form.xlsx", "Turner/Pasted text (2)(1) (1).txt"],
+      "engine_terms_found": {"CRPS": 0, "Glicko": 0, "conformal": 0, "nflverse": 0, "Galaxy": 0, "de-vig": 0, "homograph": 0, "Kalman": 0, "combine_tracking": 0, "spread_line": 0},
+      "code_files": "md 0, py 0, ts 0, csv 0, ipynb 0"
+    },
+    "verdict": "NOT ENGINE MATERIAL. A personal photo/document archive. Zero engine terms, zero code files. The nested member decompressed cleanly, so nothing further is recoverable from it."
+  },
+
+  "CLAIM_2_VERIFIED_clv_is_not_measurable": {
+    "source": "gse_full_transfer_2026-10-10.tar.gz -> snapshots/pinnacle_mkt_*.json",
+    "files_extracted": 23,
+    "schema": "Each snapshot is a LIST of market rows: {matchupId, type, key, period, prices:[{designation, price}], status, cutoffAt, version, limits}",
+    "measured": {
+      "auth_401_bodies": 3,
+      "valid_snapshots": 14,
+      "unique_matchupId": 911,
+      "matchups_in_more_than_one_snapshot": 0
+    },
+    "verdict": "CONFIRMED. No matchup is observed at two timestamps, so line movement and CLV-vs-close are NOT computable from this archive. The three 119-byte HTTP 401 bodies are saved alongside real data and must be rejected by any loader.",
+    "methodology_note": "My first pass reported '14 matchups in more than one file' -- that was WRONG. I keyed on the snapshot's own id field rather than the per-row matchupId. Re-measured against the real schema gives 0. Recording the error so the wrong number does not propagate."
+  },
+
+  "CLAIM_3_CORRECTED_glicko_idle_wiring": {
+    "corpus_says": "Task 1 (idle step wired): DONE in commit 744d89fb1 -- idled players get rating unchanged / sigma unchanged / rd' = scale*sqrt((rd/scale)^2 + sigma^2), no volatility solve, no division by v",
+    "git_says": "The very next commit e1ef31280 is titled 'Idle not wired'",
+    "code_says": {
+      "intelligence/ratings/glicko2.py": "DOES NOT EXIST in this worktree",
+      "frontier/sports/glicko2_trueskill_engine.py": "exists; has mu/phi properties, update_rating, update_duel, margin_of_victory_multiplier -- NO glicko2_idle, NO period_with_byes",
+      "packages/feature-store/src/metrics/glicko2-modified-2310.ts": "shipped TS port; 8 tests; ZERO importers outside its own test",
+      "grep_glicko2_idle": "0 hits repo-wide",
+      "grep_period_with_byes": "0 hits repo-wide"
+    },
+    "verdict": "The idle rule is NOT wired anywhere in this worktree. The corpus claim describes a different machine or branch. Recorded in the registry as a contradiction, not adopted.",
+    "second_defect_found": "The shipped TS season-start returns phi' = sqrt(phi^2 + priorPhi^2) -- raw quadrature against a PRIOR PHI, uncapped. The Glicko-2 idle rule is phi' = sqrt(phi^2 + SIGMA^2), i.e. it must add the VOLATILITY sigma. Adding priorPhi silently changes the meaning of the term. The python reference uses the sigma form and caps at SCALE=173.7178."
+  },
+
+  "checked_and_dismissed_not_engine_material": {
+    "TzL96JxMOqA0GchR-grok-workspace.zip": "310 entries. A web-app workspace: auth / building-games / design-ui / game-animation-frames / game-asset-core / imagine-grok-build skills, vite and vercel config. 0 entries match sport|nfl|bet|odds|galaxy|gse|engine|calibrat|crps|glicko|predic.",
+    "takeout-20261012T030827Z-1-001.zip": "14 Gemini conversation exports, 186 engine-term hits. They are JSON with escaped newlines, so line scanning finds nothing until parsed. Content is research-audit PROMPTS, not new math. Doctrine only: 'Do not trust any document... Those are rumor'; 'Brier, ECE, Kelly, calibration maps are INPUTS the engine consumes. They are fuel. They are not objectives.'",
+    "gse_full_transfer_2026-10-10.tar.gz": "24 entries: GSE_HANDOFF_PACK md (already read) plus 23 snapshot files. Useful only for the CLV negative result above.",
+    "SOURCE-2026-09-12-deepseek-ground-truth-batch-*.md": "Web-builder competitive intelligence (Wix, Luma, Polycam, Stripe pricing). Batch 1-2 self-declares 'NORMALIZED WORKING COPY -- NOT verbatim'.",
+    "What I Was Still Missing.docx": "Claims a ~7-9 GB / ~128,000-file shadow corpus in 9 named dirs. ALL NINE ABSENT on this machine. Describes a different machine."
+  },
+
+  "new_signals_registered_this_sweep": {
+    "count": 7,
+    "ids": [
+      "roster.ril.definition -- RIL = rest_deficit x SUM(status_weight x position_weight x prior_3w_snap_share). Equation pinned verbatim; scoring still REFUSED (+0.004179).",
+      "roster.ctf.definition -- CTF = tz_diff_hours x ln(1 + travel_miles) x (1 if short rest else 0.5). Equation pinned; scoring still REFUSED (+0.000912).",
+      "situational.context.effects -- travel +0.0004/mi (t=2.14); post-bye road -2.33 pts (t=-2.54); altitude beta -0.25/kft (n.s.). Rust not rest -- must NOT be folded into the rest feature.",
+      "situational.fatigue -- EPL 2H/1H = 1.224 (p=6.9e-14). SOCCER measurement, explicitly blocked from NFL transfer.",
+      "situational.postbye -- threshold flag rest >= 12; distinct from the continuous rest modulator.",
+      "integrity.leafdrift -- favourite leaf 6.5-9.5 drifts 65.86% train to 57.12% test (n=576, ~3.6 SE). Flagged, not gated.",
+      "integrity.signal.registry.census -- corpus counted 47 signals (yes=0, no=46, partial=1). Different criteria from this registry's 45; NOT reconciled, deliberately not merged."
+    ],
+    "registry_total": 45,
+    "tests": "29 pass, tsc clean, gate passed=false, emission ZERO_OBJECT"
+  },
+
+  "equations_extracted": {
+    "unique_equation_like_lines": 5952,
+    "by_topic": {"other": 5246, "sigma": 130, "weather": 115, "shin": 105, "travel": 64, "rest": 57, "glicko": 54, "kelly": 43, "brier": 42, "epa": 41, "crps": 36, "conformal": 27, "combine": 23, "mixture": 19, "kalman": 15, "referee": 14, "winprob": 14, "ece": 13, "hfa": 11, "keynumber": 10, "elo": 9, "homography": 7, "cvp": 3},
+    "caveat": "The 5,246 'other' bucket is dominated by XML residue (w:rsid attributes) and unrelated TS test scaffolding. Topic-tagged lines were triaged individually; the ones with real engine content were registered above.",
+    "shin_note": "Corpus repeatedly warns: Shin uses the closed root in scripts/engine_math.py. Do not restore the pasted quadratic. It returns z = 0 on every overround book. Closed-root form at -110/-110 gives z = 0.0476 -> 0.50/0.50."
+  },
+
+  "deepseek_subagents_requested_but_unavailable": {
+    "requested": "USE DEEPSEEK FLASH 4.1 SUBAGENTS TO HELP YOU TRIAGE / SWARM THESE",
+    "credential_state": "deepseek (1 credentials): DEEPSEEK_API_KEY present in hermes auth list",
+    "tested": "curl https://api.deepseek.com/chat/completions with model deepseek-chat",
+    "result": "HTTP 401 -- Authentication Fails, Your api key is invalid (invalid_request_error)",
+    "consequence": "The key is expired or revoked. No DeepSeek swarm was possible; triage was done directly instead. A valid key would be needed to parallelise the remaining work."
+  },
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
