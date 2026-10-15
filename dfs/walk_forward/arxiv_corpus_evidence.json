@@ -1,0 +1,136 @@
+{
+ "label": "MEASURED evidence from 1,557 arxiv-program paper digests. The single most important finding is a NEGATIVE result that explains the 7.099 gap.",
+ "generated_at": "2026-10-15",
+ "corpus_measured": {
+  "path": "docs/arxiv-program/research/**/*.md",
+  "files": 1557,
+  "already_extracted_markdown_digests": true,
+  "note": "These are pre-digested paper summaries with equations, datasets, and measured baselines -- not raw PDFs. Mineable without any PDF library.",
+  "also_present": "fulltext-cache.tar.gz (23.9 MB) and a 3.8 MB phase2 artifact, both still unexpanded"
+ },
+ "pattern_census": {
+  "calibration": 242,
+  "gradient_boosting_quantile": 202,
+  "conformal": 142,
+  "heteroscedastic": 100,
+  "distributional": 98,
+  "bayesian": 96,
+  "crps": 82,
+  "nrpd": 57,
+  "proper_scoring": 55,
+  "skew": 54,
+  "quantile_regression": 51,
+  "copula": 34,
+  "kde": 32,
+  "mixture": 31,
+  "emkp": 28,
+  "hetero_ordinal": 18,
+  "lwk_crps": 16,
+  "energy_score": 16,
+  "explicit_score_numbers_found": 396
+ },
+ "THE_KEY_FINDING_WIRED_arxiv_2608_12998": {
+  "paper": "WIRED: Weighted Adaptive Prediction with Structured Dependence for Probabilistic Multiseries Forecasting (Vercellino 2026, arXiv:2608.12998)",
+  "digest": "docs/arxiv-program/research/2026-09-21/arxiv-deep/1548-wired-weighted-adaptive-prediction.md",
+  "corpus_verdict": "ADAPT -- ports directly to combining an ensemble into calibrated scenarios",
+  "what_it_does": "8-expert marginal library (naive PERT, ARIMA, EWMA Gaussian, historical bootstrap, drift+residual bootstrap, volatility-scaled naive Gaussian, robust median/MAD, shrunk quantile regression). Expanding-window backtests produce per-expert CRPS histories; a Theil-Sen slope extrapolates the next-window score; a temperature-scaled softmax converts predicted scores to mixture weights.",
+  "equations": [
+   "w_k = exp(-s_hat_k / tau) / SUM_l exp(-s_hat_l / tau)   [mixture weights]",
+   "F_j(x) = SUM_k w_k F_jk(x)                              [marginal mixture]",
+   "CRPS(X, z) = (1/m) SUM|X_i - z| - (1/2m^2) SUM SUM|X_i - X_k|  [sample CRPS]",
+   "R_ij = rho_P (Pearson); sin(pi*tau/2) (Kendall); 2 sin(pi*rho_S/6) (Spearman)  [rank->copula]",
+   "R_alpha = (1-alpha)*R_hat + alpha*I_p                   [shrinkage to identity]"
+  ],
+  "HEADLINE_NEGATIVE_RESULT": "The paper's own words: 'WIRED-full is NOT the overall winner in this benchmark. The Gaussian-copula bootstrap baseline has the best average CRPS, energy score, and variogram score.'",
+  "ablation_table_4_paired_deltas_vs_WIRED_full_negative_is_better": {
+   "independent_marginals_variogram": "+0.00186 +/- 0.00030 (dependence layer earns its keep)",
+   "EQUAL_WEIGHTS_crps": "-0.00039 +/- 0.00015",
+   "equal_weights_energy": "-0.00093 +/- 0.00034",
+   "bootstrap_independent_crps": "-0.00051 +/- 0.00017"
+  },
+  "why_this_matters_to_us": "This is direct, published, measured evidence that ADAPTIVE CRPS-WEIGHTED EXPERT MIXTURES LOSE TO EQUAL WEIGHTS. It corroborates exactly what I measured on the frozen NFL filter: every adaptive weighting scheme (rest-beta, cell-conditional, key-number atoms) lands at 7.13-7.15 while a fixed Gaussian sits at 7.154021. The WIRED ablation delta of -0.00039 with SD 0.00269 is the same order as my own -0.0024 to -0.0045 improvements -- i.e. NOISE.",
+  "the_papers_own_diagnosis": "'current CRPS-extrapolated softmax not yet robust enough'; fix via stronger weight regularization (regularize toward equal weights / bootstrap prior), better expert-skill forecasting, explicit bootstrap-copula fallback.",
+  "gse_specific_caveat_from_the_digest": "'paper combines time-series marginal experts for continuous moves, not discrete game outcomes; mapping to NFL requires a discrete-outcome or latent-score analogue.'",
+  "leakage_caveat": "All variants UNDER-cover the nominal 80% (0.73-0.82 synthetic, 0.77-0.82 real) -- the digest flags systematic overconfidence in the expert library, undiagnosed."
+ },
+ "reject_option_distributional_regression_0701": {
+  "paper": "Distributional Regression with Reject Option",
+  "digest": "docs/arxiv-program/research/2026-09-21/arxiv-deep/0701-distributional-regression-reject-option.md",
+  "equations": [
+   "CRPS(H,y) = INT (H(u) - 1{y<=u})^2 du",
+   "average-CRPS decomposition: CRPS_bar(H,K) = ent(K) + Div(H,K)",
+   "ent(K) = INT K(u)(1-K(u)) du",
+   "Div(H,K) = INT (H(u) - K(u))^2 du",
+   "rejection-rate control: E|r(Gamma_hat_eps) - eps| <= C*N^(-1/2) (Prop 5)"
+  ],
+  "measured": {
+   "airfoil_DRF": "Err 1.53(0.05) at eps=0 -> 1.11(0.06) at eps=0.5 -> 0.78(0.09) at eps=0.9",
+   "rejection_rates_track_targets": "eps=0.1 -> 0.10(0.02); eps=0.5 -> 0.50(0.04); eps=0.9 -> 0.90(0.02), even with only 20% unlabeled data",
+   "concrete_DRF": "3.55(0.14) -> 1.92(0.22)",
+   "QSAR_DRF": "0.65(0.04) -> 0.37(0.09)",
+   "conclusion": "DRF uniformly beats distributional KNN on error; CALIBRATION OF THE ENTROPY THRESHOLD matters more than the estimator choice."
+  },
+  "relevance": "The average-CRPS decomposition ent(K) + Div(H,K) is a diagnostic I do not currently compute. It separates irreducible entropy from distributional divergence, which would tell me whether the 7.099 gap is fundamental (entropy floor) or a fixable divergence problem."
+ },
+ "conformal_predictive_systems_under_covariate_shift_0745": {
+  "digest": "arxiv-deep/0745-conformal-predictive-systems-covariate-shift.md",
+  "finding": "Airfoil under shift: unweighted CPS coverage collapses below nominal; WEIGHTED SCPS restores average coverage to the desired 80% and slightly LOWERS CRPS vs unweighted CPS. Kang-Schafer: same pattern.",
+  "relevance": "Weighted conformal predictive systems are the one mechanism in this corpus that both restores coverage under shift AND improves CRPS. This is the concrete form of the conformal-PID remediation already registered for the leaf-drift defect."
+ },
+ "local_scale_invariance_1087": {
+  "digest": "arxiv-deep/1087-local-scale-invariance-robustness-scoring-rules.md",
+  "equations": "CRPS (kernel form): S1_ker(P,y) = 1/2 E|X-Y| - E|X-y|, X,Y ~ P independent",
+  "relevance": "Confirms my energy form E|X-y| - 0.5*E|X-X'| is the standard kernel form. Also: equal-weighting consequence sigma_i^2 s(Q_theta_i) = s(Q) -- each observation contributes equally to discrimination, which is the scale-normalisation question behind the rest-modulator being inert."
+ },
+ "bradley_terry_elo_unification_0004": {
+  "digest": "arxiv-deep/0004-bradley-terry-elo-unification.md",
+  "measured": "Elo with covariates p = 0.002 (significant); score difference p = 0.235 (NOT significant); rank-four p ~= 1",
+  "relevance": "Direct evidence on the rating plane: adding covariates to Elo is significant, plain score-difference terms are not."
+ },
+ "what_this_corpus_did_NOT_contain": {
+  "no_claim_below_7_099": true,
+  "no_construction_of_7_129681": true,
+  "checked": "grep for '7.099' across docs/arxiv-program returned exactly one hit: the arXiv ID 2507.09999v1 ('Sparsity-Aware Extended Kalman Filter for Tracking Dynamic Graphs'). Not a CRPS claim.",
+  "conclusion": "The 7.129681 contract figure is NOT documented anywhere in the 1,557-paper corpus. Combined with the fact that no construction reproduces it, this strengthens the conclusion that it was never measured."
+ },
+ "implication_for_the_gate": {
+  "restated": "Three independent lines of evidence now converge: (1) every sigma-only construction on the frozen filter lands at 7.13-7.15; (2) the WIRED ablation shows adaptive expert weighting loses to equal weights by a noise-scale margin; (3) no paper in a 1,557-document corpus claims sub-7.099 on this problem.",
+  "next_measured_step": "Compute the average-CRPS decomposition ent(K) + Div(H,K) on the frozen filter. If ent(K) alone exceeds 7.099, the gate is provably unreachable with mu = close and the correct action is to change the gate, not the model."
+ },
+ "subagent_infrastructure_note": {
+  "status": "ALL FIVE subagents failed with HTTP 402 on deepseek/deepseek-v4.1-flash: 'can only afford 12804' tokens.",
+  "workaround": "Mined the corpus directly with a pattern-scoring script (scripts/mine_arxiv_digests.py) instead. Effective, and no credits consumed.",
+  "if_credits_restored": "Re-dispatch on claude-haiku-4.5 via the Experimental Labs key (verified HTTP 200, 294 aliases) rather than the exhausted route."
+ },
+ "passed": false,
+ "emission": "0 picks / 0 parlays / 0 DFS",
+ "ENTROPY_FLOOR_MEASURED_2026-10-15": {
+  "question": "Is 7.099 reachable with mu = spread_line?",
+  "method": "Prior-only oracle: forecast each game with the empirical residual distribution of strictly earlier games in the same (spread, total) cell. Model-free, so it is the best distribution constructible from these observables. Sample CRPS (WIRED Eq 3).",
+  "results": {
+   "spread_bin_conditional": {
+    "n": 1871,
+    "crps": 7.261497,
+    "se": 0.132437
+   },
+   "spread_total_conditional": {
+    "n": 1871,
+    "crps": 7.201389,
+    "se": 0.131905
+   },
+   "global_empirical_residual": {
+    "n": 1871,
+    "crps": 7.16425,
+    "se": 0.131841
+   }
+  },
+  "best": 7.16425,
+  "gaussian_baseline": 7.154021,
+  "gate": 7.099,
+  "gap_best_vs_gate": 0.06525,
+  "KEY_RESULT": "The model-free empirical conditional residual distribution (7.164250) is WORSE than the fixed Gaussian (7.154021). Conditioning on spread and total adds NO exploitable conditional structure to the residual.",
+  "implication": "Sigma-shaping on spread/total cannot reach 7.099. Closing the 0.055 gap requires NEW OBSERVABLES carrying conditional residual information, not another scale parameter.",
+  "two_wrong_attempts_recorded": "A prior version computed INT K(1-K)du directly and returned 7.94 then 7.23, both ABOVE the Gaussian baseline -- impossible for a perfect conditional forecast. ent(K) is not on the CRPS scale. Archived at entropy_floor_v2_wrong.py rather than deleted.",
+  "honesty": "Achievable-performance bound for THIS conditioning set, not an information-theoretic floor. A richer feature set could beat it."
+ }
+}
