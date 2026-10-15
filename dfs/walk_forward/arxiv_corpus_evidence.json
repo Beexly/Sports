@@ -132,5 +132,95 @@
   "implication": "Sigma-shaping on spread/total cannot reach 7.099. Closing the 0.055 gap requires NEW OBSERVABLES carrying conditional residual information, not another scale parameter.",
   "two_wrong_attempts_recorded": "A prior version computed INT K(1-K)du directly and returned 7.94 then 7.23, both ABOVE the Gaussian baseline -- impossible for a perfect conditional forecast. ent(K) is not on the CRPS scale. Archived at entropy_floor_v2_wrong.py rather than deleted.",
   "honesty": "Achievable-performance bound for THIS conditioning set, not an information-theoretic floor. A richer feature set could beat it."
+ },
+ "OBSERVABLE_SCAN_2026-10-15": {
+  "question": "Which of the 46 filter columns carry conditional residual information?",
+  "attempt_1_observable_scan_py": {
+   "reported": {
+    "weekday": 6.493182,
+    "away_rest_bin": 6.764911,
+    "home_rest_bin": 6.906707,
+    "surface": 7.000742,
+    "wind_bin": 7.05571,
+    "div_game": 7.067231,
+    "roof": 7.100182
+   },
+   "claimed": "7 observables beat the Gaussian; 5 clear the 7.099 gate",
+   "status": "RETRACTED -- invalid comparison"
+  },
+  "attempt_2_observable_scan_fair_py": {
+   "method": "Paired: oracle and Gaussian scored on the IDENTICAL subset of games the oracle managed to score. Per-game difference with paired SE.",
+   "results": [
+    {
+     "observable": "weekday",
+     "n": 122,
+     "oracle": 6.493182,
+     "gauss_same_subset": 6.464217,
+     "delta": 0.028965,
+     "se": 0.063436
+    },
+    {
+     "observable": "away_rest_bin",
+     "n": 242,
+     "oracle": 6.764911,
+     "gauss_same_subset": 6.751313,
+     "delta": 0.013598,
+     "se": 0.045524
+    },
+    {
+     "observable": "home_rest_bin",
+     "n": 273,
+     "oracle": 6.906707,
+     "gauss_same_subset": 6.893199,
+     "delta": 0.013508,
+     "se": 0.040725
+    },
+    {
+     "observable": "surface",
+     "n": 854,
+     "oracle": 7.000742,
+     "gauss_same_subset": 6.980003,
+     "delta": 0.020738,
+     "se": 0.022397
+    },
+    {
+     "observable": "wind_bin",
+     "n": 232,
+     "oracle": 7.05571,
+     "gauss_same_subset": 7.002396,
+     "delta": 0.053314,
+     "se": 0.051145
+    },
+    {
+     "observable": "div_game",
+     "n": 1253,
+     "oracle": 7.067231,
+     "gauss_same_subset": 7.022364,
+     "delta": 0.044868,
+     "se": 0.021323
+    },
+    {
+     "observable": "roof",
+     "n": 1092,
+     "oracle": 7.100182,
+     "gauss_same_subset": 7.075094,
+     "delta": 0.025087,
+     "se": 0.018282
+    },
+    {
+     "observable": "location",
+     "n": 1871,
+     "oracle": 7.16425,
+     "gauss_same_subset": 7.114379,
+     "delta": 0.049871,
+     "se": 0.016996
+    }
+   ],
+   "significant_improvements": "0 of 8",
+   "status": "ALL 8 deltas POSITIVE -- the cell-conditional empirical oracle is WORSE than the fixed Gaussian on every observable tested, paired."
+  },
+  "why_attempt_1_was_wrong": "Two compounding errors. (1) The oracle scored only 122-1871 of 2462 games depending on the column, because cells with <40 prior games were skipped; comparing that against a Gaussian scored on all 2462 is not a like-for-like comparison. (2) Even after fixing the subset, the oracle LOSES. The empirical cell distribution is a noisy, finite-sample estimate with ~40-400 members; the fixed Gaussian sigma=13.45 is a smooth parametric fit to all 2462 games. Estimating a distribution from 40 residuals is worse than borrowing the global shape.",
+  "deeper_meaning": "This is the same finding as the WIRED ablation (arXiv:2608.12998), where equal weights beat adaptive CRPS-weighted experts by -0.00039+/-0.00015. Cell-conditional empirical distributions underperform a well-estimated global parametric fit on data this size. Sample-CRPS with m=40-400 draws also carries estimator variance that the analytic Gaussian CRPS does not.",
+  "final_conclusion": "No available observable in the 46-column frozen filter carries enough conditional residual information for a model-free oracle to beat Gaussian(mu=spread_line, sigma=13.45). The 7.099 gate is not reachable by sigma-shaping on any single column or tested pair."
  }
 }
