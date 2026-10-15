@@ -1,0 +1,38 @@
+{
+  "label": "location-locked compound-Poisson ceiling, scored against the best-fit Gaussian on the frozen filter",
+  "date": "2026-10-15",
+  "filter": "REG 2017 W1-2026 W5, n=2462, expanding window, min_prior=25, mu=spread_line",
+  "construction": "Symmetric zero-mean compound Poisson on the residual: eps = 3*(N3+ - N3-) + 7*(N7+ - N7-), rates set so Var(eps) matches the prior sigma_hat, TD weight w7=0.70. Support is recentered by (mu - raw_mean) so E[X]=spread_line. Earlier non-symmetric PMF check: max |mean - spread_line| = 3.55e-15.",
+  "best_fit_gaussian": {
+    "expanding_homo_rmse_crps": 7.149032,
+    "joint_hetero_crps": 7.142622,
+    "best": "joint_hetero",
+    "best_crps": 7.142622
+  },
+  "matched_to_expanding_homo_sigma": {
+    "crps": 7.145975,
+    "delta_vs_expanding_homo": -0.003057,
+    "delta_vs_best_gaussian": 0.003353
+  },
+  "matched_to_joint_hetero_sigma": {
+    "crps": 7.142250,
+    "delta_vs_expanding_homo": -0.006782,
+    "delta_vs_best_gaussian": -0.000372
+  },
+  "delta_vs_best_gaussian": -0.000372,
+  "gate": 7.099,
+  "gate_cleared": false,
+  "passed": false,
+  "emission": "ZERO_OBJECT",
+  "note": "delta_vs_best_gaussian is the hetero-matched process versus joint hetero-Gaussian 7.142622. The improvement is 0.000372, about 1/100 of the remaining gap to 7.099. Not a clear. No SE was computed on this run; do not promote it.",
+  "margin_key_hybrid": {
+    "source": "dfs/walk_forward/hybrid_result.json",
+    "n": 2462,
+    "hybrid_crps": 7.13793,
+    "versus_fixed_gaussian_13_45": -0.016091,
+    "delta_vs_best_gaussian_published_means": -0.004692,
+    "paired_rescore_against_best_gaussian": "not run; the paired command timed out. The -0.004692 figure is 7.13793 - 7.142622, a difference of two published means on the same filter, not a paired SE.",
+    "different_universe_855": true,
+    "note_855": "The 855-game EDGE#1b hybrid (8.133 to 5.475) is a different filter. It is not this 2462-game score."
+  }
+}

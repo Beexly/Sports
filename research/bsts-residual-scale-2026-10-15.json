@@ -1,0 +1,246 @@
+{
+  "model": "BSTS local-level-plus-trend on residual eps_g = y_g - spread_line (zero-mean scale modulator)",
+  "date": "2026-10-15",
+  "filter": {
+    "definition": "REG 2017 W1 - 2026 W5, expanding window, strictly prior rows only",
+    "n": 2462,
+    "min_prior": 25,
+    "thin_prior_rows_beta_zero": 25,
+    "pit_fail_closed": true
+  },
+  "location_lock": {
+    "mu_definition": "spread_line",
+    "max_abs_mean_shift": 0.0,
+    "lock_tolerance": 1e-12,
+    "lock_verified": true,
+    "rows_where_bsts_level_trend_shift_refused": 2461
+  },
+  "baselines": {
+    "homoscedastic_gaussian_13_45_crps": 7.154021,
+    "joint_hetero_gaussian_crps": 7.142622,
+    "operative_gate_crps": 7.099
+  },
+  "primary_zero_mean_bsts_scale_centered": {
+    "crps": 7.156409,
+    "delta_vs_baseline_7_154021": 0.002388,
+    "se_vs_baseline": 0.001332,
+    "t_vs_baseline": 1.792,
+    "delta_vs_joint_hetero_7_142622": 0.013786,
+    "se_vs_joint_hetero": 0.004913,
+    "t_vs_joint_hetero": 2.806
+  },
+  "diagnostic_uncentered_bsts_scale": {
+    "crps": 7.15485,
+    "delta_vs_baseline_7_154021": 0.00083,
+    "se_vs_baseline": 0.001321,
+    "t_vs_baseline": 0.628,
+    "delta_vs_joint_hetero_7_142622": 0.012228,
+    "se_vs_joint_hetero": 0.004853,
+    "t_vs_joint_hetero": 2.52
+  },
+  "coefficient_paths": {
+    "beta_histogram_centered": {
+      "-0.5": 31,
+      "-0.48": 1,
+      "-0.46": 1,
+      "-0.44": 1,
+      "-0.4": 1,
+      "-0.36": 1,
+      "-0.34": 1,
+      "-0.32": 1,
+      "-0.3": 1,
+      "-0.26": 2,
+      "-0.24": 18,
+      "-0.22": 54,
+      "-0.2": 62,
+      "-0.18": 73,
+      "-0.16": 47,
+      "-0.14": 40,
+      "-0.12": 55,
+      "-0.1": 256,
+      "-0.08": 249,
+      "-0.06": 194,
+      "-0.04": 52,
+      "-0.02": 224,
+      "0.0": 302,
+      "0.02": 717,
+      "0.04": 76,
+      "0.12": 1,
+      "0.16": 1
+    },
+    "beta_histogram_uncentered": {
+      "-0.3": 1,
+      "-0.28": 3,
+      "-0.26": 9,
+      "-0.24": 16,
+      "-0.22": 61,
+      "-0.2": 62,
+      "-0.18": 121,
+      "-0.16": 84,
+      "-0.14": 34,
+      "-0.12": 5,
+      "-0.1": 31,
+      "-0.08": 120,
+      "-0.06": 203,
+      "-0.04": 289,
+      "-0.02": 106,
+      "0.0": 181,
+      "0.02": 115,
+      "0.04": 97,
+      "0.06": 332,
+      "0.08": 589,
+      "0.1": 3
+    },
+    "checkpoints": [
+      {
+        "row_index": 0,
+        "game_id": "2017_01_KC_NE",
+        "season": 2017,
+        "week": 1,
+        "eps_level_prior": 0.0,
+        "eps_trend_prior": 0.0,
+        "scale_level_prior": 0.0,
+        "scale_trend_prior": 0.0,
+        "beta_centered": 0.0,
+        "beta_uncentered": 0.0,
+        "sigma_pred_centered": 13.45
+      },
+      {
+        "row_index": 24,
+        "game_id": "2017_02_MIA_LAC",
+        "season": 2017,
+        "week": 2,
+        "eps_level_prior": 0.963556,
+        "eps_trend_prior": 0.076012,
+        "scale_level_prior": 10.995885,
+        "scale_trend_prior": -0.183955,
+        "beta_centered": 0.0,
+        "beta_uncentered": 0.0,
+        "sigma_pred_centered": 13.45
+      },
+      {
+        "row_index": 25,
+        "game_id": "2017_02_NYJ_OAK",
+        "season": 2017,
+        "week": 2,
+        "eps_level_prior": 0.188466,
+        "eps_trend_prior": 0.030304,
+        "scale_level_prior": 10.091702,
+        "scale_trend_prior": -0.226559,
+        "beta_centered": -0.5,
+        "beta_uncentered": -0.18,
+        "sigma_pred_centered": 16.280017
+      },
+      {
+        "row_index": 100,
+        "game_id": "2017_07_DAL_SF",
+        "season": 2017,
+        "week": 7,
+        "eps_level_prior": 0.920044,
+        "eps_trend_prior": 0.166757,
+        "scale_level_prior": 12.58583,
+        "scale_trend_prior": 0.024479,
+        "beta_centered": -0.16,
+        "beta_uncentered": -0.2,
+        "sigma_pred_centered": 13.611791
+      },
+      {
+        "row_index": 500,
+        "game_id": "2018_17_CAR_NO",
+        "season": 2018,
+        "week": 17,
+        "eps_level_prior": 0.648014,
+        "eps_trend_prior": 0.125923,
+        "scale_level_prior": 17.193936,
+        "scale_trend_prior": 0.311743,
+        "beta_centered": -0.06,
+        "beta_uncentered": -0.06,
+        "sigma_pred_centered": 13.149135
+      },
+      {
+        "row_index": 1000,
+        "game_id": "2020_16_CLE_NYJ",
+        "season": 2020,
+        "week": 16,
+        "eps_level_prior": -4.802192,
+        "eps_trend_prior": -0.205691,
+        "scale_level_prior": 13.618731,
+        "scale_trend_prior": 0.046459,
+        "beta_centered": -0.08,
+        "beta_uncentered": -0.04,
+        "sigma_pred_centered": 13.360653
+      },
+      {
+        "row_index": 1500,
+        "game_id": "2022_14_CAR_SEA",
+        "season": 2022,
+        "week": 14,
+        "eps_level_prior": -0.47723,
+        "eps_trend_prior": -0.131808,
+        "scale_level_prior": 11.800039,
+        "scale_trend_prior": 0.091105,
+        "beta_centered": 0.02,
+        "beta_uncentered": 0.06,
+        "sigma_pred_centered": 13.437975
+      },
+      {
+        "row_index": 2000,
+        "game_id": "2024_11_ATL_DEN",
+        "season": 2024,
+        "week": 11,
+        "eps_level_prior": 4.367016,
+        "eps_trend_prior": 0.147019,
+        "scale_level_prior": 11.673323,
+        "scale_trend_prior": 0.063911,
+        "beta_centered": 0.0,
+        "beta_uncentered": 0.06,
+        "sigma_pred_centered": 13.45
+      },
+      {
+        "row_index": 2461,
+        "game_id": "2026_05_BUF_LA",
+        "season": 2026,
+        "week": 5,
+        "eps_level_prior": -4.389554,
+        "eps_trend_prior": -0.241206,
+        "scale_level_prior": 12.47498,
+        "scale_trend_prior": 0.061616,
+        "beta_centered": 0.02,
+        "beta_uncentered": 0.08,
+        "sigma_pred_centered": 13.453388
+      }
+    ],
+    "eps_level_summary": {
+      "min": -16.403307,
+      "max": 10.682901,
+      "final": -4.389554
+    },
+    "eps_trend_summary": {
+      "min": -0.644726,
+      "max": 0.549483,
+      "final": -0.241206
+    },
+    "scale_level_summary": {
+      "min": 0.0,
+      "max": 29.812699,
+      "final": 12.47498
+    },
+    "scale_trend_summary": {
+      "min": -1.57987,
+      "max": 2.210643,
+      "final": 0.061616
+    }
+  },
+  "decision": {
+    "status": "refused_prior",
+    "terminal_refusal": true,
+    "gate_cleared": false,
+    "passed": false,
+    "emission": "ZERO_OBJECT",
+    "refusal_reasons": [
+      "Location lock enforced: nonzero BSTS residual level+trend on 2,461 of 2,462 rows was blocked from shifting mu_g (predictive mean remained spread_line to 0.0 < 1e-12).",
+      "Pure time-varying BSTS scale modulation (prior-centered local-level-plus-trend) scored CRPS 7.156409, Delta CRPS = +0.002388 >= 0 vs 7.154021 baseline (terminal refusal per full-filter Delta >= 0 rule) and +0.013786 vs 7.142622 joint hetero-Gaussian.",
+      "Uncentered BSTS scale diagnostic scored CRPS 7.154850 (Delta = +0.000830 vs 7.154021, Delta = +0.012228 vs 7.142622): all apparent gain vs fixed 13.45 is static global scale shrinkage toward the empirical RMSE (12.80), which still degrades CRPS by +0.012065 relative to the joint hetero-Gaussian (7.142622) and misses the 7.099 gate by 0.055687."
+    ]
+  }
+}

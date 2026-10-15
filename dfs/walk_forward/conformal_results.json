@@ -1,0 +1,1596 @@
+{
+ "n": 2462,
+ "alpha": 0.1,
+ "nominal_coverage": 0.9,
+ "baseline_gaussian_crps": 7.154020678264403,
+ "max_abs_mean_shift": 0.0,
+ "location_lock_verified": true,
+ "wrappers": {
+  "fixed_center": {
+   "n_bet": 2437,
+   "n_no_bet": 25,
+   "empirical_coverage": 0.9072630283135003,
+   "average_width": 43.24333196553139,
+   "uniform_interval_crps": 7.245028913345032,
+   "crps_degradation_vs_gaussian_13_45": 0.09100823508062916,
+   "clears_crps_gate": false
+  },
+  "locally_weighted": {
+   "n_bet": 2437,
+   "n_no_bet": 25,
+   "empirical_coverage": 0.8978251949117768,
+   "average_width": 42.6629207016532,
+   "uniform_interval_crps": 7.242079408599958,
+   "crps_degradation_vs_gaussian_13_45": 0.08805873033555489,
+   "clears_crps_gate": false
+  },
+  "cqr": {
+   "n_bet": 2437,
+   "n_no_bet": 25,
+   "empirical_coverage": 0.9105457529749692,
+   "average_width": 43.944809191629055,
+   "uniform_interval_crps": 7.272926776835605,
+   "crps_degradation_vs_gaussian_13_45": 0.11890609857120182,
+   "clears_crps_gate": false
+  },
+  "cqr_tail": {
+   "n_bet": 2437,
+   "n_no_bet": 25,
+   "empirical_coverage": 0.9101354123922856,
+   "average_width": 43.94152646696758,
+   "uniform_interval_crps": 7.270177326261321,
+   "crps_degradation_vs_gaussian_13_45": 0.1161566479969185,
+   "clears_crps_gate": false
+  },
+  "mondrian": {
+   "n_bet": 2431,
+   "n_no_bet": 31,
+   "empirical_coverage": 0.9095022624434389,
+   "average_width": 44.123406005758945,
+   "uniform_interval_crps": 7.27109758882764,
+   "crps_degradation_vs_gaussian_13_45": 0.11707691056323721,
+   "clears_crps_gate": false
+  },
+  "aci": {
+   "n_bet": 2437,
+   "n_no_bet": 25,
+   "empirical_coverage": 0.8998768978251949,
+   "average_width": 43.90069757899056,
+   "uniform_interval_crps": 7.320664209418825,
+   "crps_degradation_vs_gaussian_13_45": 0.16664353115442232,
+   "clears_crps_gate": false
+  },
+  "dtaci": {
+   "n_bet": 2437,
+   "n_no_bet": 25,
+   "empirical_coverage": 0.8978251949117768,
+   "average_width": 43.32416906032007,
+   "uniform_interval_crps": 7.3004905958749005,
+   "crps_degradation_vs_gaussian_13_45": 0.14646991761049755,
+   "clears_crps_gate": false
+  }
+ },
+ "gate": 7.099,
+ "gate_cleared": false,
+ "passed": false,
+ "emission": "ZERO_OBJECT",
+ "note": "Wrappers inform NO_BET only. Uniform-interval CRPS is a diagnostic degradation, not a pricing distribution.",
+ "skipped_rows": [
+  {
+   "game_id": "2026_06_SEA_DEN",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_HOU_JAX",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_CHI_ATL",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_BAL_CLE",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_TEN_IND",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_NYJ_NE",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_NO_NYG",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_CAR_PHI",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_PIT_TB",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_ARI_LA",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_LAC_KC",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_BUF_LV",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_DAL_GB",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_06_WAS_SF",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_NE_CHI",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_PIT_NO",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_SF_ATL",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_CIN_BAL",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_TB_CAR",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_NYG_HOU",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_IND_MIN",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_MIA_NYJ",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_CLE_TEN",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_DEN_ARI",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_GB_DET",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_LA_LV",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_KC_SEA",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_07_DAL_PHI",
+   "missing": [
+    "home_score",
+    "away_score"
+   ]
+  },
+  {
+   "game_id": "2026_08_CAR_GB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_BAL_BUF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_TEN_CIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_ARI_DAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_MIN_DET",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_IND_JAX",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_LV_NYJ",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_CLE_PIT",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_ATL_TB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_LAC_LA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_KC_DEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_NE_MIA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_PHI_WAS",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_08_CHI_SEA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_JAX_BAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_CIN_ATL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_DEN_CAR",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_DAL_IND",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_NYJ_KC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_DET_MIA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_CLE_NO",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_NYG_PHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_LA_WAS",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_HOU_LAC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_LV_SF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_GB_NE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_ARI_SEA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_TB_CHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_09_BUF_MIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_WAS_NYG",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_NE_DET",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_KC_ATL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_HOU_CLE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_MIN_GB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_MIA_IND",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_CAR_NO",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_BUF_NYJ",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_JAX_TEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_LA_ARI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_SEA_LV",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_SF_DAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_PIT_CIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_10_LAC_BAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_IND_HOU",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_MIA_BUF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_BAL_CAR",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_NO_CHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_TEN_DAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_TB_DET",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_ARI_KC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_JAX_NYG",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_NYJ_LAC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_LV_DEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_PIT_PHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_MIN_SF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_11_CIN_WAS",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_GB_LA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_CHI_DET",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_PHI_DAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_KC_BUF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_DEN_PIT",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_NO_CIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_LV_CLE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_BAL_HOU",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_NYG_IND",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_NYJ_MIA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_ATL_MIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_TEN_JAX",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_WAS_ARI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_SEA_SF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_NE_LAC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_12_CAR_TB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_KC_LA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_DET_ATL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_JAX_CHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_CIN_CLE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_GB_NO",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_SF_NYG",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_LAC_TB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_WAS_TEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_PHI_ARI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_MIA_DEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_CAR_MIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_BUF_NE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_HOU_PIT",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_13_DAL_SEA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_MIN_NE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_TB_BAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_NO_CAR",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_ATL_CLE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_TEN_DET",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_CHI_MIA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_DEN_NYJ",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_IND_PHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_HOU_WAS",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_LAC_LV",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_KC_CIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_NYG_SEA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_LA_SF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_BUF_GB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_14_PIT_JAX",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_SF_LAC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_SEA_PHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_CHI_BUF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_CIN_CAR",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_MIA_GB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_JAX_HOU",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_CLE_NYG",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_BAL_PIT",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_NO_TB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_IND_TEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_ATL_WAS",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_NYJ_ARI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_DAL_LA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_DEN_LV",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_DET_MIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_15_NE_KC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_HOU_PHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_GB_CHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_BUF_DEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_LA_SEA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_TB_ATL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_CLE_BAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_CIN_IND",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_LAC_MIA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_WAS_MIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_ARI_NO",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_NE_NYJ",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_CAR_PIT",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_TEN_LV",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_SF_KC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_JAX_DAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_16_NYG_DET",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_BAL_CIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_NO_ATL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_SEA_CAR",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_IND_CLE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_NYG_DAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_WAS_JAX",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_KC_LAC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_BUF_MIA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_DEN_NE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_MIN_NYJ",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_LA_TB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_PIT_TEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_LV_ARI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_DET_CHI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_PHI_SF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_17_HOU_GB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_SF_ARI",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_PIT_BAL",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_NYJ_BUF",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_ATL_CAR",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_CLE_CIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_LAC_DEN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_DET_GB",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_TEN_HOU",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_JAX_IND",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_LV_KC",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_SEA_LA",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_CHI_MIN",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_MIA_NE",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_TB_NO",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_PHI_NYG",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  },
+  {
+   "game_id": "2026_18_DAL_WAS",
+   "missing": [
+    "home_score",
+    "away_score",
+    "spread_line"
+   ]
+  }
+ ]
+}

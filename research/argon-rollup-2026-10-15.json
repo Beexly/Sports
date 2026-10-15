@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-15",
+  "branch": "grok/walk-forward-2026-10-14",
+  "filter": "REG 2017 W1-2026 W5, n=2462, expanding window, min_prior=25, PIT fail-closed",
+  "location_lock": "mu = +spread_line, max abs shift measured 0.0 < 1e-12",
+  "operative_gate": {
+    "figure": 7.099,
+    "rule": "CRPS <= 7.099 on n >= 150 on the frozen filter",
+    "not_the_gate": 7.109,
+    "why": "7.109 is the closing-market benchmark. 7.099 is that benchmark minus the required 0.01.",
+    "source_quote": "until a candidate model beats the Gaussian-close CRPS of 7.109 by at least 0.01 (CRPS<=7.099) over n>=150 walk-forward, out-of-sample games",
+    "source": "Measurement-First Engineering Roadmap for the Galaxy Sports Edge NFL Prediction and Computer Vision Architecture.docx",
+    "decision_file": "research/gate-decision-2026-10-15.md"
+  },
+  "baseline": {
+    "gaussian_sigma_13_45_crps": 7.154021,
+    "best_fit_expanding_homo_crps": 7.149032,
+    "best_measured_joint_hetero_crps": 7.142622,
+    "gap_to_gate_from_best": 0.043622
+  },
+  "emission": "ZERO_OBJECT",
+  "passed": false,
+  "walk_forward_json": "untouched",
+  "items": [
+    {
+      "id": "joint_hetero_gaussian",
+      "status": "ran_live",
+      "crps": 7.142622,
+      "delta_vs_7_154021": -0.011398,
+      "gate_cleared": false,
+      "path": "dfs/walk_forward/pit_joint_result.json"
+    },
+    {
+      "id": "bsts_residual_scale_zero_mean",
+      "status": "refused_prior",
+      "crps": 7.156409,
+      "delta_vs_7_154021": 0.002388,
+      "delta_vs_joint_hetero_7_142622": 0.013786,
+      "terminal_refusal": true,
+      "reason": "full-filter Delta CRPS >= 0 vs 7.154021. Level+trend estimated on 2461 rows and refused before scoring; predictive mean stayed spread_line.",
+      "path": "research/bsts-residual-scale-2026-10-15.json"
+    },
+    {
+      "id": "conformal_wrappers",
+      "status": "ran_live",
+      "role": "NO_BET only. Does not clear the CRPS gate.",
+      "unit_tests": "dfs/walk_forward/test_enforcement.py 9/9 OK",
+      "live": {
+        "n": 2462,
+        "max_abs_mean_shift": 0.0,
+        "fixed_center_coverage": 0.907263,
+        "fixed_center_width": 43.243,
+        "locally_weighted_coverage": 0.897825,
+        "cqr_coverage": 0.910546,
+        "mondrian_coverage": 0.909502,
+        "mondrian_no_bet": 31,
+        "aci_coverage": 0.899877,
+        "dtaci_coverage": 0.897825,
+        "uniform_interval_crps_degradation_vs_13_45": "positive on every wrapper (0.088 to 0.167). Degradation, not a clear."
+      },
+      "note": "Synthetic exchangeable mean coverage met nominal 0.90 (unit test). On the one live path, locally weighted / ACI / DtACI printed 0.898-0.900. That is a single-path fluctuation, not a gate. n<=5 Mondrian emits NO_BET; quantile rank k>n is not clamped.",
+      "path": "dfs/walk_forward/conformal_results.json"
+    },
+    {
+      "id": "compound_poisson_ceiling",
+      "status": "ran_live",
+      "delta_vs_best_gaussian": -0.000372,
+      "crps": 7.142250,
+      "best_gaussian_crps": 7.142622,
+      "gate_cleared": false,
+      "different_universe_855": true,
+      "path": "research/compound-poisson-ceiling-2026-10-15.json"
+    },
+    {
+      "id": "margin_key_hybrid_2462",
+      "status": "ran_live",
+      "hybrid_crps": 7.13793,
+      "delta_vs_fixed_13_45": -0.016091,
+      "delta_vs_best_gaussian_published_means": -0.004692,
+      "paired_rescore": "not run (timed out). -0.004692 is a difference of published means, not a paired SE.",
+      "gate_cleared": false,
+      "different_universe_855": true,
+      "path": "dfs/walk_forward/hybrid_result.json"
+    },
+    {
+      "id": "sports_status_from_git",
+      "status": "ran",
+      "path": "sports_status_from_git.csv",
+      "note": "6848 catalog rows. STATUS from git commit dates. Bulk-sync dates flagged: 2026-08-19, 2026-09-27, 2026-10-02, 2026-10-03, 2026-10-06. RECENT_CUTOFF 2026-10-08."
+    },
+    {
+      "id": "sports_md_status_from_git",
+      "status": "ran",
+      "path": "sports_md_status_from_git.csv",
+      "counts": {"bulk_sync": 3716, "untracked_sync": 331, "future": 240, "now": 107, "archive": 4}
+    },
+    {
+      "id": "sports_md_summaries_deepened",
+      "status": "extract_only",
+      "path": "sports_md_summaries_deepened.csv",
+      "deepened_rows": 75,
+      "blank_rows_resolved": 6,
+      "length_range_chars": [421, 578],
+      "note": "Long tail left as opening-line indexes. No residual engine code was changed to produce this file."
+    },
+    {
+      "id": "gate_number_reconciliation",
+      "status": "extract_only",
+      "path": "research/gate-number-reconciliation-2026-10-15.md"
+    },
+    {
+      "id": "gate_decision",
+      "status": "extract_only",
+      "path": "research/gate-decision-2026-10-15.md",
+      "decision": "7.099 operative"
+    },
+    {
+      "id": "doc_gate_extracts",
+      "status": "extract_only",
+      "path": "research/doc-gate-extracts-2026-10-15.md",
+      "docs_read": 17,
+      "directives_executed": 0
+    },
+    {
+      "id": "ocr_blank_pdfs",
+      "status": "ran",
+      "path": "research/ocr-blanks-2026-10-15.md",
+      "astra": "6 pages, text layer empty, Windows OCR, no CRPS hits",
+      "codila": "page 1 image-only; pages 2-14 had a text layer. No CRPS hits."
+    }
+  ]
+}

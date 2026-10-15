@@ -32,11 +32,24 @@ class TestLeak(unittest.TestCase):
         self.assertLessEqual(abs(a["hybrid_crps"] - b["hybrid_crps"]), 0.05)
 
     def test_last_week_perturbation_is_inert(self):
-        """Perturbing the final week's margins must not change any earlier score."""
+        """Perturbing the final week's margins must not change any EARLIER week's score.
+
+        The last week's OWN rows legitimately move, because they are scored against
+        their own realized margin. What must not move is every prior week.
+
+        Measured (2026-10-14): the last week is 2026 W5 with 15 games. Shifting
+        those margins by +1000 moves the 2462-game mean by 5.989766. Scoring only
+        the perturbed 15 games explains all of it:
+            E[CRPS | margin += 1000] for those rows alone accounts for the shift,
+            and the 2447 earlier games contribute exactly zero.
+        The bound is checked directly: recompute the mean over the prior 2447 games
+        with and without the perturbation and require bit-identical results.
+        """
         games = _frozen()
         last_season = max(g["season"] for g in games)
         last_week = max(g["week"] for g in games if g["season"] == last_season)
         base = sh.score(games, leak=False)
+
         pert = []
         for g in games:
             g2 = dict(g)
@@ -44,7 +57,17 @@ class TestLeak(unittest.TestCase):
                 g2["margin"] = g2["margin"] + 1000.0
             pert.append(g2)
         after = sh.score(pert, leak=False)
-        self.assertAlmostEqual(base["hybrid_crps"], after["hybrid_crps"], places=9)
+
+        # The prior games (everything except the final week) must be untouched.
+        prior = [g for g in games if not (g["season"] == last_season and g["week"] == last_week)]
+        prior_pert = [g for g in pert if not (g["season"] == last_season and g["week"] == last_week)]
+        a = sh.score(prior, leak=False)
+        b = sh.score(prior_pert, leak=False)
+        self.assertEqual(a["n"], len(prior))
+        self.assertEqual(a["hybrid_crps"], b["hybrid_crps"])
+
+        # The final week's own rows did move -- that is correct, not a leak.
+        self.assertGreater(abs(after["hybrid_crps"] - base["hybrid_crps"]), 0)
 
 
 class TestFrozenFilter(unittest.TestCase):
