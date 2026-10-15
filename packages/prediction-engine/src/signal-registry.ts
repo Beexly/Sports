@@ -542,6 +542,19 @@ export const SIGNALS: readonly SignalSpec[] = [
     caveat: "This is the specific remediation for the leaf-drift defect (favourite leaf 6.5-9.5 drifts 65.86% train -> 57.12% test, n=576, ~3.6 SE): a static conformal level cannot hold under that shift, but PID quantile tracking can. It is NOT a fix for the small-N rank deficit, which is a different failure.",
   },
 
+  {
+    id: "distributional.drive.outcome",
+    cls: "distributional",
+    label: "Drive outcome distribution (SHADOW, unmerged)",
+    measures: "Outcome shares over 10 buckets (TD, FG, MISSED_FG, PUNT, TURNOVER, TURNOVER_ON_DOWNS, SAFETY, END_OF_HALF, END_OF_GAME, OTHER), reconciled to points per drive. MIN_DRIVES_TO_REPORT = 10.",
+    provenance: "packages/prediction-engine/src/expected-metrics/drive-outcome-distribution.ts on branch origin/jules/q11-drive-outcome-recovery-2026-10-14 (251 lines + 188-line test, vitest 8/8 green, tsc exit 0). Never merged to main.",
+    evidence: "measured-reported",
+    emissionWeight: 0,
+    diagnosticWeight: 0.6,
+    blocker: "SHADOW and unmerged -- nothing on main imports it. It is a CATEGORICAL distribution over drive outcomes, not a margin distribution, so it cannot be scored against home margin / CRPS directly.",
+    caveat: "A game-script / scoring-efficiency signal, not a replacement for the margin distribution. Its branch note explicitly states 'SHADOW status unchanged; no scoring, no gate, no MODEL_VERSION change'. TD buckets include trailing PAT/2PT because Drive.points is the whole drive.",
+  },
+
   // ---- distributional ---------------------------------------------------
   {
     id: "distributional.keynumbers",

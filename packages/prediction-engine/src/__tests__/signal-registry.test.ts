@@ -206,6 +206,8 @@ describe("nothing is killed or deferred", () => {
       "integrity.signal.registry.census",
       // Recovered from repo-intel inside the 2 GB GSE archive.
       "distributional.conformal.pid",
+      // Recovered from an unmerged branch during the 1,654-branch census.
+      "distributional.drive.outcome",
     ]) {
       expect(ids).toContain(required);
     }
