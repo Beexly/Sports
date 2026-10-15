@@ -35,6 +35,16 @@ BASELINE = 7.154021
 SQRT2 = math.sqrt(2.0)
 SQRTPI = math.sqrt(math.pi)
 
+# --- SIGMA-D PLANNING PERSISTENCE (added 2026-10-15) ----------------------
+# PLANNING measurement only (SPEC-A S8.3 PLANNING entry): persist the
+# per-game difference vectors that summarise() already computes, so sigma_d
+# and the within-week design effect (DEFF) can be derived later WITHOUT
+# re-scoring anything. This block changes NO computed value: it only records
+# the `d` vector and its row keys verbatim alongside the aggregates.
+PERGAME_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "pit_round2_pergame_diffs.jsonl")
+_PERGAME_RECORDS = []
+
 
 # ------------------------------------------------------------------ families
 
@@ -293,6 +303,11 @@ def pit_select(rows, table, min_prior=MIN_PRIOR):
 def summarise(label, rows, crps_with, flagged, extra=None):
     base = [H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"]) for r in rows]
     d = [a - b for a, b in zip(crps_with, base)]
+    # SIGMA-D PLANNING (2026-10-15): record the per-game differences verbatim.
+    for r, dv in zip(rows, d):
+        _PERGAME_RECORDS.append({"candidate": label, "game_id": r["game_id"],
+                                 "season": r["season"], "week": r["week"],
+                                 "d": dv})
     n = len(d)
     md = sum(d) / n
     var = sum((x - md) ** 2 for x in d) / max(1, n - 1)
@@ -432,6 +447,11 @@ def main():
         "walk_forward_json_touched": False,
     }, open(OUT, "w", encoding="utf-8"), indent=1)
     print("written", OUT)
+    # SIGMA-D PLANNING (2026-10-15): write the persisted per-game vectors.
+    with open(PERGAME_OUT, "w", encoding="utf-8") as fh:
+        for rec in _PERGAME_RECORDS:
+            fh.write(json.dumps(rec) + "\n")
+    print("written", PERGAME_OUT, len(_PERGAME_RECORDS), "per-game rows")
     return cands
 
 
