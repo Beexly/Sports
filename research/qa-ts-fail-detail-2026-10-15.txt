@@ -1,0 +1,14 @@
+   [33m[2m✓[22m[39m shuffled-time placebo — THE Phase-0 gate[2m > [22mFAILS when a backdated outcome-encoding feature is planted (the named leak class) [33m6243[2mms[22m[39m
+[31m   [31m×[31m metric source and payload rights[2m > [22mkeeps metric source fixtures aligned with the canonical web registry source ids[90m 16[2mms[22m[31m[39m
+[31m   [31m×[31m NFL route-run / H0.6 rush-yards bind — CAND-001 RED test[2m > [22mfails: RED first — feature real but claim not yet verified (CAND-001/H0.6)[90m 12[2mms[22m[31m[39m
+[31m   [31m×[31m NFL route-run / H0.6 rush-yards bind — CAND-001 RED test[2m > [22mpriced: false invariant verified (RED until backtest completes)[90m 2[2mms[22m[31m[39m
+[31m   [31m×[31m YACoe real backtest — fast slice[2m > [22mruns on small slice without error[90m 10[2mms[22m[31m[39m
+[31m[1m[7m FAIL [27m[22m[39m src/edge-lab/__tests__/falsify.test.ts[2m [ src/edge-lab/__tests__/falsify.test.ts ][22m
+[31m[1m[7m FAIL [27m[22m[39m src/edge-lab/__tests__/yacoe-edge-candidate.test.ts[2m [ src/edge-lab/__tests__/yacoe-edge-candidate.test.ts ][22m
+[31m[1m[7m FAIL [27m[22m[39m src/edge-lab/__tests__/route-run-red-cand-001.test.ts[2m > [22mNFL route-run / H0.6 rush-yards bind — CAND-001 RED test[2m > [22mfails: RED first — feature real but claim not yet verified (CAND-001/H0.6)
+[31m[1mAssertionError[22m: expected 'rush_yards_bind_v1' to be 'unexpected_red_tag_for_cand_001' // Object.is equality[39m
+[31m[1m[7m FAIL [27m[22m[39m src/edge-lab/__tests__/route-run-red-cand-001.test.ts[2m > [22mNFL route-run / H0.6 rush-yards bind — CAND-001 RED test[2m > [22mpriced: false invariant verified (RED until backtest completes)
+[31m[1mAssertionError[22m: expected false to be true // Object.is equality[39m
+[31m[1m[7m FAIL [27m[22m[39m src/edge-lab/__tests__/yacoe-backtest-fast-slice.test.ts[2m > [22mYACoe real backtest — fast slice[2m > [22mruns on small slice without error
+[31m[1m[7m FAIL [27m[22m[39m src/metrics/__tests__/metric-source-payload-rights.test.ts[2m > [22mmetric source and payload rights[2m > [22mkeeps metric source fixtures aligned with the canonical web registry source ids
+[31m[1mAssertionError[22m: expected [ 'nflverse', …(18) ] to deeply equal [ 'nflverse', …(17) ][39m

@@ -1,0 +1,41 @@
+{
+  "qa_task": "games.csv snapshot diff (the gap claude-review-artifact-pack listed as unclosable off-VM)",
+  "date": "2026-10-15",
+  "run_snapshot": {
+    "path": "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/nflverse_games.csv",
+    "sha256": "0988e79b7c7b63adcc943b1ee09e27c3a44a9dc7d35b1dd5cf3055cef93fb53e",
+    "rows": 7548,
+    "note": "This is the filter's pinned data path (GAMES_CSV). Differs from the 2026-10-14 snapshot sha 5db5edcd cited in filter_contract and from the 2026-10-15 public sha 0ce5461e - three different files across three snapshots."
+  },
+  "public_snapshot_20261015": {
+    "path": "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/nflverse_games_20261015_public.csv",
+    "sha256": "0ce5461e4caa81553f9aa9f6bc6dbc9c2fdea9a6d572085f22227ae49ff52999",
+    "rows": 7548
+  },
+  "diff": {
+    "row_membership": "identical - 0 added, 0 removed",
+    "frozen_filter_game_ids_differing_in_any_scored_field": 3,
+    "detail": [
+      ["2017_03_TB_MIN", "spread_line", "0", "-0"],
+      ["2017_05_TEN_MIA", "spread_line", "0", "-0"],
+      ["2017_14_DET_TB", "spread_line", "0", "-0"]
+    ],
+    "severity": "cosmetic-negative-zero; float('0') == float('-0') == 0.0 so no scored value changed",
+    "baseline_crps_run_file": 7.154020678264436,
+    "baseline_crps_public_file": 7.154020678264436,
+    "baseline_delta": 0.0,
+    "verdict": "The frozen-filter measurement is snapshot-stable across the 2026-10-15 public update. The review pack's residual risk for Section 3 is now closed with evidence, not convention."
+  },
+  "second_gap_closed_this_pass": {
+    "artifact_probe": "claude-review-artifact-pack Gaps item 5: 'knm_vectorized_diag.json covers 2,254 of the filter's 2,462 games; the artifact does not state why 208 games have no row'",
+    "hypothesis": "insufficient-prior rows",
+    "verdict": "NOT THE CAUSE on this evidence - see harness_skip_census_2026-10-15.json. The harness skips 193 and they are all 2026 W6+ unplayed future rows, impossible in the filter; 208 != 193 - 15 too many. The 208-game gap is NOT the skip list. Plausible cause remains insufficient-prior (knm needs prior cell games), unverified."
+  },
+  "harness_skip_census": {
+    "file": "harness_skip_census_2026-10-15.json",
+    "skipped_rows": 193,
+    "by_reason": {"all three (home_score, away_score, spread_line)": 165, "scores only (home+away, spread_line present)": 28},
+    "by_season": {"2026": 193},
+    "interpretation": "every skipped row is a 2026 W6-W18 pre-loaded future game. The frozen filter ends 2026 W5 and 2026 W1-W5 has zero missing-score games. The 193 are not data loss - they are rows a public schedule file carries before results exist. The frozen n=2462 is complete by construction."
+  }
+}

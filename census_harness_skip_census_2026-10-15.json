@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-15",
+  "question": "What are the 193 rows the location-locked harness reports as skipped, and is any of them data loss inside the frozen filter?",
+  "answer": "All 193 are unplayed 2026 Weeks 6-18 games pre-loaded in the public games.csv. None can belong to the frozen filter (REG 2017 W1 - 2026 W5).",
+  "skipped_rows": 193,
+  "by_reason": {
+    "home_score + away_score + spread_line all missing": 165,
+    "home_score + away_score missing but spread_line present": 28
+  },
+  "by_season": {"2026": 193, "2017-2025": 0},
+  "cross_checks": [
+    "2026 rows by week in games.csv: {1:16, 2:16, 3:16, 4:16, 5:15, 6:14, 7:14, 8:14, 9:15, 10:14, 11:13, 12:16, 13:14, 14:15, 15:16, 16:16, 17:16, 18:16}",
+    "2026 W1-W5 games missing any required field: 0",
+    "2026 W6+ games with real final scores: 0 (kickoff-night files carry nulls by design)",
+    "Frozen filter rows loaded: 2462, matching the contract exactly"
+  ],
+  "implications": [
+    "The 2462 is not a truncated sample; the skip list is upstream's future-schedule rows. Fail-closed behavior is correct and costs nothing.",
+    "The knm_vectorized_diag.json 208-game hole is NOT this 193 list (208 > 193). Its cause stays unverified-probable-insufficient-prior.",
+    "Settlement tonight: 2026_06_SEA_DEN is currently in the 165 group (null scores, null line). After the game and the pipeline's line capture, it will leave the skip list on the next snapshot; the settlement probe should grade from the ESPN final, which is verified reachable for event 401872995."
+  ]
+}
