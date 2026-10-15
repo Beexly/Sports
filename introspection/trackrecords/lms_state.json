@@ -1,0 +1,29 @@
+{
+  "as_of_utc": "2026-10-15T20:47:11Z",
+  "bootstrap": {
+    "b": 1000,
+    "interval": null,
+    "status": "INSUFFICIENT_WEEKS",
+    "weeks": 0
+  },
+  "generating_script": "run_s1.py",
+  "generating_script_sha256": "6603e1d2f7aec31f65d955548904b750ae4c2df58bc84fffca012c720ea8302f",
+  "lms": {
+    "lms": null,
+    "missing": 0,
+    "pending": 1,
+    "resolved": 0,
+    "status": "NO_RESOLVED_GAMES",
+    "sum_q": 0.0,
+    "sum_r": 0.0
+  },
+  "note": "LMS accrual starts at the next T0 for which a stamped forecast can exist: 2026_06_DAL_GB, T0 2026-10-15 19:20 CT (see the accrual calendar). The reference vector used above is a placeholder uniform vector for state reporting only — no game is resolved, so no LMS value is computed or claimed.",
+  "per_game": [
+    {
+      "forecast": "MISSING (MISSED-T0; scores as the reference)",
+      "game_id": "2026_06_SEA_DEN",
+      "outcome": "UNRESOLVABLE_FROM_ARCHIVE — the archive's first capture postdates this game's T0, so line(T0) was never archived; delta and category cannot be computed from archived data"
+    }
+  ],
+  "state": "ACCRUING"
+}

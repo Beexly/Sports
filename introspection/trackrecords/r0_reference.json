@@ -1,0 +1,59 @@
+{
+  "built_utc": "2026-10-15T20:47:11Z",
+  "generating_script": "run_s1.py",
+  "generating_script_sha256": "6603e1d2f7aec31f65d955548904b750ae4c2df58bc84fffca012c720ea8302f",
+  "reference": {
+    "active_reference": "R0",
+    "completed_trajectories": 0,
+    "r0": {
+      "counts": {
+        "AWAY": 0,
+        "FLAT": 0,
+        "HOME": 0
+      },
+      "frequencies": null,
+      "n": 0,
+      "status": "INSUFFICIENT_DATA"
+    },
+    "r1_switch_threshold": 200
+  },
+  "sources": [
+    {
+      "kind": "line_archive_flat",
+      "ref": "line-archive-2026-10-15.jsonl",
+      "rows": 252,
+      "snapshot_rows_skipped": 14
+    }
+  ],
+  "trajectories": [
+    {
+      "captures": 3,
+      "category": null,
+      "delta": null,
+      "espn_game_id": "espn:americanfootball_nfl:401872995",
+      "final_utc": "2026-10-16T00:15:00Z",
+      "game_id": "2026_06_SEA_DEN",
+      "kickoff_utc": "2026-10-16T00:15:00Z",
+      "line_t0": null,
+      "line_t1": null,
+      "status": "NO_T0_ANCHOR",
+      "t0_utc": "2026-10-13T00:15:00Z"
+    }
+  ],
+  "unmapped_espn_game_ids": [
+    "espn:americanfootball_nfl:401872996",
+    "espn:americanfootball_nfl:401872997",
+    "espn:americanfootball_nfl:401872998",
+    "espn:americanfootball_nfl:401872999",
+    "espn:americanfootball_nfl:401873000",
+    "espn:americanfootball_nfl:401873001",
+    "espn:americanfootball_nfl:401873002",
+    "espn:americanfootball_nfl:401873003",
+    "espn:americanfootball_nfl:401873004",
+    "espn:americanfootball_nfl:401873005",
+    "espn:americanfootball_nfl:401873006",
+    "espn:americanfootball_nfl:401873007",
+    "espn:americanfootball_nfl:401873008"
+  ],
+  "unmapped_note": "Trajectories are keyed by ESPN event id; only SEA@DEN's mapping to an engine game_id is verified today (pickcenter snapshot rows + the workorder packet). Unmapped games' captures still accrue in the archive; they enter the trajectory pool once their event mapping is registered. No completed trajectories exist yet: every archived game is unplayed, and the archive's first capture (2026-10-15T17:15Z) postdates every Week 6 T0."
+}

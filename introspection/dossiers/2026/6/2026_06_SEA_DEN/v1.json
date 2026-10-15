@@ -1,0 +1,397 @@
+{
+  "author_lane": "introspection-importer (S0/S1 build)",
+  "author_model_id": "deterministic-import; premises authored by bridge-model v1.0 and the Grok WO-0 Layer-2 read",
+  "authored_utc": "2026-10-15T20:47:11.431Z",
+  "commitments": [],
+  "game_id": "2026_06_SEA_DEN",
+  "generator_version": "gse-introspection-s0s1/1.0.0",
+  "inputs_hash": "483a8da06b910ff411f1a0fd11679c3621e10c614e5b0a12da5ad58f6818f2e2",
+  "inputs_manifest": [
+    {
+      "kind": "bridge_premise_instance",
+      "ref": "intelligence/situational-graph/bridge/instances/2026-week06-sea-at-den.premises.json (branch motif/bridge-model-2026-10-15)"
+    },
+    {
+      "kind": "premise_grading_ledger",
+      "ref": "intelligence/situational-graph/premise-grading/ledger/premise-grades.jsonl (branch motif/premise-grading-2026-10-15)"
+    }
+  ],
+  "line_move_forecast": {
+    "kickoff_utc": "2026-10-16T00:15:00Z",
+    "reason": "T0 for this game was 2026-10-12 20:15 ET (2026-10-13T00:15:00Z), before this store existed. No T0 read can be authored now without violating the server-stamp rule (SPEC-C §1.9 / §2.2). The game scores MISSING = the reference on the primary metric.",
+    "status": "MISSED_T0",
+    "t0_utc": "2026-10-13T00:15:00Z"
+  },
+  "premises": [
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "Visitor SEA plays at 5280 ft, 1280 ft above the graph's 4000 ft altitude threshold: an altitude-exposure burden on the visitor.",
+      "MAGNITUDE": "STRONG",
+      "TRIGGER": "altitude_exposure",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "CORROBORATED",
+        "direction": "AGAINST_AWAY",
+        "evidence_as_of": null,
+        "magnitude_band": "STRONG",
+        "notes": "Produced by bridge rule altitude_exposure v1.0; registered signals: nfl_high_altitude_fatigue. Source as_of is null: every evidence edge is timeless (venue static); the premise was visible at the bridge's read_at 2026-10-15.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "altitude_exposure",
+        "sources": [
+          {
+            "kind": "bridge_model",
+            "ref": "intelligence/situational-graph/bridge/instances/2026-week06-sea-at-den.premises.json (branch motif/bridge-model-2026-10-15 @ 330b758; vendored copy at inputs/2026-week06-sea-at-den.bridge-premises.json)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:altitude_exposure:SEA"
+          }
+        ],
+        "stated_uncertainty": "Bridge confidence class CORROBORATED (mechanical: evidence spans >= 2 edge types); magnitude band STRONG bands the scalar's own extremity, not a fitted effect size.",
+        "subject": "team:SEA"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:altitude_exposure:SEA",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "Composite friction on visitor SEA: at altitude (5280 ft) on a short week (4 days rest). Recorded as variance/friction on the visitor, not as a mean shift.",
+      "MAGNITUDE": "STRONG",
+      "TRIGGER": "altitude_short_week_composite",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "CORROBORATED",
+        "direction": "FRICTION",
+        "evidence_as_of": "2026-10-11",
+        "magnitude_band": "STRONG",
+        "notes": "Produced by bridge rule altitude_short_week_composite v1.0; registered signals: nfl_high_altitude_fatigue, nfl_short_week_road_deficit. DEDUPED: the Layer 2 read's altitude_short_week_composite premise (premise:2026_06_SEA_DEN:wo0:altitude_short_week_composite) states the same premise for this game; it is linked here as a second source, not double-counted. Same premise as the bridge model's altitude_short_week_composite for this game: the ledger links the two sources on one record instead of double-counting. The read's statement bundles the altitude edge and the altitude state edge the bridge keeps as a separate altitude_exposure premise; that premise stays bridge-only.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "altitude_short_week_composite",
+        "sources": [
+          {
+            "kind": "bridge_model",
+            "ref": "intelligence/situational-graph/bridge/instances/2026-week06-sea-at-den.premises.json (branch motif/bridge-model-2026-10-15 @ 330b758; vendored copy at inputs/2026-week06-sea-at-den.bridge-premises.json)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:altitude_short_week:SEA"
+          },
+          {
+            "kind": "layer2_read",
+            "ref": "sea-den-layer2-read-grok-2026-10-15.md (Grok Work Order 0 Layer 2 read, produced 2026-10-15 ~11:21 AM CT from the stamped ESPN/DraftKings input packet; fleet copy held with the day's deliverables)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:wo0:altitude_short_week_composite"
+          }
+        ],
+        "stated_uncertainty": "Bridge confidence class CORROBORATED (mechanical: evidence spans >= 2 edge types); magnitude band STRONG bands the scalar's own extremity, not a fitted effect size. || Corroborating Layer 2 read, in its own words: The read states this premise as settled: \"This is a deterministic environmental edge.\" No uncertainty qualifier is attached to the premise itself.",
+        "subject": "team:SEA"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:altitude_short_week:SEA",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "DEN continuity: DC Vance Joseph has held the role since 2023 (4 seasons with the team), no change this season — a stability context premise, unweighted.",
+      "MAGNITUDE": "WEAK",
+      "TRIGGER": "coaching_continuity",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "STAMPED",
+        "direction": "FAVORS_HOME",
+        "evidence_as_of": "2026-10-01",
+        "magnitude_band": "WEAK",
+        "notes": "Produced by bridge rule coaching_continuity v1.0; registered signals: nfl_coaching_tendencies.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "coaching_continuity",
+        "sources": [
+          {
+            "kind": "bridge_model",
+            "ref": "intelligence/situational-graph/bridge/instances/2026-week06-sea-at-den.premises.json (branch motif/bridge-model-2026-10-15 @ 330b758; vendored copy at inputs/2026-week06-sea-at-den.bridge-premises.json)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:coaching_continuity:DEN"
+          }
+        ],
+        "stated_uncertainty": "Bridge confidence class STAMPED (mechanical: >= 1 stamped edge); magnitude band WEAK bands the scalar's own extremity, not a fitted effect size.",
+        "subject": "team:DEN"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:coaching_continuity:DEN",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "Rest is level: both teams on 4 days (diff +0, home perspective).",
+      "MAGNITUDE": "NEUTRAL",
+      "TRIGGER": "rest_differential",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "CORROBORATED",
+        "direction": "NEUTRAL",
+        "evidence_as_of": "2026-10-11",
+        "magnitude_band": "NEUTRAL",
+        "notes": "Produced by bridge rule rest_differential v1.0; registered signals: nfl_short_week_road_deficit, nfl_age_conditioned_rest. DEDUPED: the Layer 2 read's rest_differential premise (premise:2026_06_SEA_DEN:wo0:rest_differential) states the same premise for this game; it is linked here as a second source, not double-counted. Same premise as the bridge model's rest_differential for this game (both teams on 4 days, diff +0): linked on one record, not double-counted.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "rest_differential",
+        "sources": [
+          {
+            "kind": "bridge_model",
+            "ref": "intelligence/situational-graph/bridge/instances/2026-week06-sea-at-den.premises.json (branch motif/bridge-model-2026-10-15 @ 330b758; vendored copy at inputs/2026-week06-sea-at-den.bridge-premises.json)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:rest_differential"
+          },
+          {
+            "kind": "layer2_read",
+            "ref": "sea-den-layer2-read-grok-2026-10-15.md (Grok Work Order 0 Layer 2 read, produced 2026-10-15 ~11:21 AM CT from the stamped ESPN/DraftKings input packet; fleet copy held with the day's deliverables)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:wo0:rest_differential"
+          }
+        ],
+        "stated_uncertainty": "Bridge confidence class CORROBORATED (mechanical: evidence spans >= 2 edge types); magnitude band NEUTRAL bands the scalar's own extremity, not a fitted effect size. || Corroborating Layer 2 read, in its own words: Stated as a plain fact with no qualifier: \"Zero.\"",
+        "subject": "game:2026_06_SEA_DEN"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:rest_differential",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "Both teams play on a short week (DEN 4 days, SEA 4 days): preparation is compressed on both sides; the context takes no side.",
+      "MAGNITUDE": "MODERATE",
+      "TRIGGER": "short_week_game_context",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "STAMPED",
+        "direction": "NEUTRAL",
+        "evidence_as_of": "2026-10-11",
+        "magnitude_band": "MODERATE",
+        "notes": "Produced by bridge rule short_week_game_context v1.0; registered signals: nfl_short_week_road_deficit.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "short_week_game_context",
+        "sources": [
+          {
+            "kind": "bridge_model",
+            "ref": "intelligence/situational-graph/bridge/instances/2026-week06-sea-at-den.premises.json (branch motif/bridge-model-2026-10-15 @ 330b758; vendored copy at inputs/2026-week06-sea-at-den.bridge-premises.json)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:short_week_game_context"
+          }
+        ],
+        "stated_uncertainty": "Bridge confidence class STAMPED (mechanical: >= 1 stamped edge); magnitude band MODERATE bands the scalar's own extremity, not a fitted effect size.",
+        "subject": "game:2026_06_SEA_DEN"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:short_week_game_context",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "The injury edge is asymmetric: Denver is missing its two highest-leverage defensive backs (Surtain II and Hufanga, both OUT) while the market prices a defensive game (total 40.5); Denver's secondary attrition is the larger scheme-identity shift, and the defensive total is being priced against a secondary that is not the one the market has historically seen.",
+      "MAGNITUDE": null,
+      "TRIGGER": "injury_asymmetry",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "QUALITATIVE",
+        "direction": "FAVORS_AWAY",
+        "evidence_as_of": "2026-10-15",
+        "magnitude_band": null,
+        "notes": "Open item carried by the read (its Timing / news note): Riley Moss's final status resolves with official inactives ~5:45 PM CT; that process note is recorded here, on the premise it qualifies, and is not a premise of its own. Contrast with the bridge model, which deliberately has NO injury premise for this game: the graph's injury input carries no stamp column, so no injury fact can be proven knowable before kickoff in that lane. The two lanes' disagreement about stamp provenance is preserved, not resolved.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "injury_asymmetry",
+        "sources": [
+          {
+            "kind": "layer2_read",
+            "ref": "sea-den-layer2-read-grok-2026-10-15.md (Grok Work Order 0 Layer 2 read, produced 2026-10-15 ~11:21 AM CT from the stamped ESPN/DraftKings input packet; fleet copy held with the day's deliverables)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:injury_asymmetry:DEN"
+          }
+        ],
+        "stated_uncertainty": "The read's own words: \"No stamped snap-share or EB-shrunk EPA gap has been computed (BQP/RIL remain unrun). The read is qualitative.\"",
+        "subject": "team:DEN"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:injury_asymmetry:DEN",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "No residual feature has cleared the gate, so the read produces no pick, no price, and no probability: the correct action for this game is NO_BET and emission stays ZERO_OBJECT.",
+      "MAGNITUDE": null,
+      "TRIGGER": "pass_discipline",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "QUALITATIVE",
+        "direction": "NO_BET",
+        "evidence_as_of": "2026-10-15",
+        "magnitude_band": null,
+        "notes": "WO-8 section 4 mechanics: every Layer 2 read records its directional premise or NO_BET. This record is the read's NO_BET. It can only be graded against a gate-evaluation artifact for this game (see premise-grading README grading rules); without one it stays UNRESOLVED, which is a statement about the evidence, not about the pass.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "pass_discipline",
+        "sources": [
+          {
+            "kind": "layer2_read",
+            "ref": "sea-den-layer2-read-grok-2026-10-15.md (Grok Work Order 0 Layer 2 read, produced 2026-10-15 ~11:21 AM CT from the stamped ESPN/DraftKings input packet; fleet copy held with the day's deliverables)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:pass_discipline"
+          }
+        ],
+        "stated_uncertainty": "The read's own words: \"The archiver is live and capturing, but the two-timestamp series for this game is not yet scored. The reliability gate has not admitted any Combine-derived feature to Layer 2. The seven PIT situational metrics remain unrun.\"",
+        "subject": "game:2026_06_SEA_DEN"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:pass_discipline",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    },
+    {
+      "AFFECTED": null,
+      "DIRECTION": null,
+      "LOG": "Weather is a non-factor for this game: no total or spread adjustment is warranted by the conditions (54F, gusts 8 mph, 20% precip).",
+      "MAGNITUDE": null,
+      "TRIGGER": "weather_non_factor",
+      "family": null,
+      "game_id": "2026_06_SEA_DEN",
+      "gradeable": false,
+      "legacy": {
+        "confidence_class": "QUALITATIVE",
+        "direction": "NEUTRAL",
+        "evidence_as_of": "2026-10-15",
+        "magnitude_band": null,
+        "notes": "Grades against realized game-time weather in the outcome artifact, not against the forecast.",
+        "registered_signals": null,
+        "rule": null,
+        "rule_version": "1.0",
+        "source": "premise_grading_ledger",
+        "source_kind": "weather_non_factor",
+        "sources": [
+          {
+            "kind": "layer2_read",
+            "ref": "sea-den-layer2-read-grok-2026-10-15.md (Grok Work Order 0 Layer 2 read, produced 2026-10-15 ~11:21 AM CT from the stamped ESPN/DraftKings input packet; fleet copy held with the day's deliverables)",
+            "source_premise_id": "premise:2026_06_SEA_DEN:weather_non_factor"
+          }
+        ],
+        "stated_uncertainty": "Stated flatly, with no qualifier: \"Non-factor.\"",
+        "subject": "game:2026_06_SEA_DEN"
+      },
+      "p": null,
+      "premise_id": "premise:2026_06_SEA_DEN:weather_non_factor",
+      "resolution": null,
+      "status": "UNRESOLVABLE",
+      "type_id": null,
+      "unresolvable_reasons": [
+        "family None is not one of the 7 registered adjustment families",
+        "type_id None is not a registered premise type",
+        "AFFECTED None is not in the resolvable-quantity registry (§1.4)",
+        "no stated probability p (§1.1.2: p is mandatory)",
+        "no machine-readable resolution criterion (§1.1)"
+      ]
+    }
+  ],
+  "prev_sha": "0000000000000000000000000000000000000000000000000000000000000000",
+  "read_status": {
+    "final_read": "THIS_VERSION",
+    "t0_read": "MISSING"
+  },
+  "record_sha": "249cab242f054e52e4bbd72671be9191d7623287fdf4814ec19b56d02be7b1e2",
+  "retro": false,
+  "retro_note": "Not RETRO under §4.7: authored before kickoff from stamped pre-game inputs; the imported premises were authored pre-kickoff (bridge read_at 2026-10-15; WO-0 read 2026-10-15 ~11:21 CT).",
+  "scoring": {
+    "lms_forecast": "MISSING_SCORES_AS_REFERENCE",
+    "outcome": "PENDING"
+  },
+  "season": 2026,
+  "template_hash": "5d527e026479facb9d9437a97713bed8a645af8ed33a33b6e4e9b1c7710e059f",
+  "version": 1,
+  "week": 6
+}
