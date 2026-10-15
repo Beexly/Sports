@@ -180,12 +180,11 @@ run reports a class exposed.
 | DraftKings guest API (the book behind the ESPN block, direct) | **UNVERIFIABLE from the capture environment** — `sportsbook-nash.draftkings.com` answers HTTP 403 (Akamai edge) for the event endpoint; contents not read, block not routed around (no spoofing, per doctrine) | `GET /sites/US-SB/api/v5/events/34118277` (the DK event id carried in ESPN's own deep links), 2026-10-15 |
 | MONEYLINE | already captured by the featured leg (home/away rows, `line: null`) — confirmed against tonight's game: SEA −142 / DEN +120 | ESPN scoreboard inline odds block |
 
-The known keyed path to ladders exists but is **outside this leg's
-keyless fence**: The Odds API's catalog carries `alternate_spreads` /
-`alternate_totals` markets (per its public market docs) on keyed plans.
-If SPEC-B prioritizes product scoring before a keyless surface ships
-ladders, that is the priced route — it would ride the existing Odds API
-legs, not this one. Nothing here fabricates the missing prices in the
+The known keyed path to ladders was **outside this leg's keyless
+fence** when the table above was written: The Odds API's catalog
+carries `alternate_spreads` / `alternate_totals` markets on keyed
+plans. That route is now built — see "Keyed product prices (The Odds
+API leg)" below. Nothing here fabricates the missing prices in the
 meantime.
 
 One adjacent non-capture, stated plainly: the checked payloads also
@@ -193,6 +192,81 @@ carry each book's **opening** line beside the current one. An opening
 price is not a product price, and stamping it with a later `capturedAt`
 would falsify the series (phase `OPEN` already means first-captured, not
 opened-at), so this leg leaves open lines unarchived.
+
+## Keyed product prices (The Odds API leg, 2026-10-15)
+
+`oddsapi-product-prices.ts`, wired by `run-oddsapi-product-prices.ts`,
+is the keyed counterpart of the extension above: it captures The Odds
+API's event-level `alternate_spreads` / `alternate_totals` markets into
+the **same** `OddsLineSnapshot` rows under the additive `ALT_SPREAD` /
+`ALT_TOTAL` market values — same row shape, same stores, same
+serializer, same OPEN/INTERIM classification per (gameId, market).
+Rows are distinguishable by `source: "oddsapi"` (vs this folder's
+`espn-public-dk`, the US refresh's `the-odds-api`, and the Pinnacle
+leg's `the-odds-api-eu`), and `book` is the bookmaker's own key — one
+book per capture (DraftKings first when it carries a ladder, so keyed
+ladders join the featured series book-for-book). Buy-point prices are
+rungs of these ladders and are captured as `ALT_*` rows like any other
+rung; a rung identical to the book's own featured row is dropped by the
+duplicate guard, exactly as in the keyless leg. The Odds API exposes
+**no teaser market** — a teaser is a book-side parlay construct, not a
+priced market — so teasers remain uncaptured, by the vendor's catalog,
+not by this leg's choice.
+
+```sh
+# Dry-run — LIVE keyed capture to JSONL; SPENDS credits (see budget below)
+npx tsx packages/ingestion-pipeline/src/line-archiver/run-oddsapi-product-prices.ts --dry-run --out ./oddsapi-products.jsonl
+
+# DB mode — appends rows; no-op unless LINE_ARCHIVE_ENABLED=true
+npx tsx packages/ingestion-pipeline/src/line-archiver/run-oddsapi-product-prices.ts
+```
+
+Each capture is ONE event-odds call per game requesting `h2h`,
+`spreads`, `totals` (featured context for the duplicate guard, plus the
+moneyline cross-check: when the wiring knows the featured archive's
+moneyline for the game — dry-run reads it off the keyless ESPN board it
+already fetched for game resolution — the run reports match / mismatch
+/ not_checked per game, and every game's featured lines ride along in
+the run result for the operator) plus the two alternate markets.
+
+**Key handling** follows the repo's existing keyed legs exactly: the
+wiring reads `process.env["THE_ODDS_API_KEY"]` transiently and
+constructs the shared `OddsApiClient` with it (the same pattern as
+`process-sport.ts` and the cron routes). The value is never printed,
+logged, committed, or returned — the job result reports only
+`keyConfigured: boolean`. A missing key is a reported state (zero API
+calls, the reason named), not a crash. Error strings leaving the wiring
+are scrubbed of any `apiKey=…` fragment as defense in depth.
+
+**Credit budget (hard, enforced in the core module, not a
+convention):**
+
+- **Window:** alternate captures only for games kicking off within
+  **48 hours**. The featured leg's 7-day window does not apply; a game
+  further out is skipped and never fetched.
+- **Cadence:** at most **3 captures per game** across this leg's whole
+  history, counted from the archive itself (distinct `capturedAt`
+  values among the game's `source: "oddsapi"` rows) and enforced
+  *before* any call is spent on the game. The third capture is the
+  final pre-kickoff one that settle-time `markClosingSnapshots`
+  re-tags `CLOSE` — this leg stamps only OPEN/INTERIM, per codebase
+  law.
+- **Burn cap:** every response's `x-requests-used` /
+  `x-requests-remaining` headers are recorded; realized per-capture
+  cost is the header delta across each event-odds call (never a doc
+  number — the market-count estimate is used only until the first
+  delta is measured, and is labeled an estimate). Before each call the
+  run projects monthly burn at the capped cadence (per-capture × 3
+  captures × 16 games × 5 slates — at the 5-market request shape that
+  is 5 × 240 = **1,200 credits/month**) and **aborts the alternate
+  capture for the rest of the run if the projection exceeds 2,000
+  credits**. The abort touches only this leg; the featured and keyless
+  legs are separate modules and proceed independently.
+
+There is deliberately **no cron route for this leg yet**: it spends
+credits, and its cadence is a scheduling decision the budget machinery
+enforces but does not choose. Wire the route when SPEC-B product
+scoring goes live.
 
 ## Failure behavior
 
@@ -208,6 +282,13 @@ opened-at), so this leg leaves open lines unarchived.
   all fail is recorded in `errors` and the slate continues. Zero product
   rows with `gaps` populated is a finding, not a failure — the product
   CLI exits 0 unless the probe itself failed (errors and nothing scanned).
+- Keyed product leg: a failed event-odds call is recorded in `errors`
+  and the slate continues — and its quota headers still count (a failed
+  call may have spent). A game at the 3-capture cap or beyond the 48h
+  window is skipped before any call. A budget abort stops the alt
+  capture for the rest of the run and says so in `errors` and
+  `credits.abortedForBudget`. A missing `THE_ODDS_API_KEY` makes zero
+  calls and the job result names the reason; the CLI exits 1.
 
 ## Files
 
@@ -226,3 +307,15 @@ opened-at), so this leg leaves open lines unarchived.
 - `run-product-prices.ts` — the extension's wiring (real keyless payload
   fetches, game resolver, stores) + operator CLI + `runProductPricesJob`.
   CLI-only for now — see "Product prices" above for why no cron route.
+- `oddsapi-product-prices.ts` — the keyed product-price leg's core:
+  strict alternate-ladder extraction from The Odds API event-odds
+  payloads (single-book provenance, featured-rung duplicate guard,
+  moneyline cross-check), the hard credit budget (48h window,
+  3-capture cap, header-measured per-capture cost, monthly-burn abort),
+  the gated/ungated runners. Unit-tested in
+  `../../__tests__/oddsapi-product-prices.test.ts` against synthetic
+  mocked API fixtures — no live calls in tests.
+- `run-oddsapi-product-prices.ts` — the keyed leg's wiring (shared
+  `OddsApiClient` built from `THE_ODDS_API_KEY`, game resolver, capture
+  counting, stores) + operator CLI + `runOddsApiProductPricesJob`.
+  CLI-only — see "Keyed product prices" above for why no cron route.
