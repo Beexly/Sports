@@ -1,0 +1,69 @@
+{
+  "label": "MEASURED against the frozen filter. Do not wire the corpus sign convention to nflverse columns.",
+  "generated_at": "2026-10-14",
+  "filter": "REG 2017 W1 - 2026 W5, n=2462, margin = home_score - away_score",
+
+  "claim_under_test": "The research corpus states, in at least 8 places across PREDICTION_ENGINE_MASTER (1).md, PREDICTION_ENGINE_MASTER (2).md, GSE_HANDOFF_PACK_2026-10-10 (1).md, GSE_MASTER_PACK_2026-10-10 (1).md and gse-deep-nfl-methods-corpus-2026.md: 'listed_spread = the book's HOME number (favorite negative); mu_margin = -listed_spread'.",
+  "verdict": "The formula is CORRECT for a book's home-number feed and WRONG for nflverse spread_line. Wiring it to this repo's data column silently inverts the prediction.",
+
+  "measurement": {
+    "n": 2462,
+    "mu_equals_PLUS_spread_line": {"crps": 7.154021, "note": "the repo's locked baseline; correct"},
+    "mu_equals_MINUS_spread_line": {"crps": 10.435732, "note": "the corpus convention applied to nflverse columns"},
+    "cost_of_the_sign_flip": 3.281711,
+    "correlation_spread_line_vs_home_margin": 0.4536,
+    "correlation_minus_spread_line_vs_home_margin": -0.4536
+  },
+
+  "why": "nflverse spread_line is the AWAY team's number. Positive spread_line means the away team is favoured, so expected home margin is +spread_line, not -spread_line.",
+  "evidence_row": {
+    "game_id": "2017_01_KC_NE",
+    "home_team": "NE", "away_team": "KC",
+    "spread_line": 8.0,
+    "home_score": 27, "away_score": 42,
+    "home_margin": -15,
+    "reading": "KC (away) favoured by 8, won by 15. Expected home margin +8 vs realized -15 is the correct error. mu = -8 would have predicted NE by 8 against a 15-point KC win."
+  },
+  "cover_check": {
+    "spread_line_plus_home_margin_gt_0": 1387,
+    "pct": 56.3,
+    "note": "With mu = +spread_line the favourite covers at 56.3% before de-vig, consistent with a correctly-oriented line."
+  },
+
+  "actionable": [
+    "Any engine code adopting mu_margin = -listed_spread MUST first assert which team the incoming spread refers to. Do not copy the formula without that check.",
+    "The team-total split (game_total +/- mu_margin)/2 inherits the same dependency; the corpus already notes the original (T+spread)/2 was a real sign error.",
+    "injury_adj and situational_adj in the corpus add drops/adj to listed_spread. Those are fine as BOOK-spread adjustments, but must not be applied to spread_line and then fed as mu without the sign flip."
+  ],
+
+  "corpus_audit_summary": {
+    "files_in_corpus": 2145,
+    "gse_relevant_text_artifacts": 195,
+    "duplicate_copies_skipped": 34,
+    "shards_extracted": 6,
+    "unique_findings": 4437,
+    "by_category": {
+      "equations": 881, "parameters": 1015, "algorithms": 575,
+      "data_sources": 521, "measured_results": 367,
+      "blockers": 922, "contradictions": 156
+    },
+    "unreadable_files": 12,
+    "provenance_orphans_flagged_by_checker": 182,
+    "provenance_orphans_real": 3,
+    "note": "179 of 182 were checker false-positives: citations carrying line refs like 'file.md:L22' do not string-match a bare filename. Only 3 real cases: GSE_MIND_LEAP_2026-10-03 (1).md cited without being read, and a wildcard citation 'GSE/GSE/firecrawl_activity_logs*.csv'. The swarm did not fabricate citations at scale."
+  },
+
+  "other_high_value_extractions": [
+    {"item": "CVI = (cascade_count/4) * (opp_deep_rate/league_avg) * backup_quality_multiplier", "source": "cvi_and_ingest_plan.md / cvi_implementation_handoff.md", "status": "diagnostic only, not wired"},
+    {"item": "trueProb = (1-evidenceFactor)*marketFairProb + evidenceFactor*rawModelProb", "source": "Antigravity_Corpus_2026-10-11 (1).md line 146", "note": "matches the repo's measured finding that signal-path trueProb is ANTI-calibrated"},
+    {"item": "Brier decomposition BS = REL - RES + UNC", "source": "gse-deep-nfl-methods-corpus-2026.md"},
+    {"item": "parlay-consistency ratio R = parlay price / product of leg prices", "source": "gse-deep-nfl-methods-corpus-2026.md L44-45 (arXiv:2607.14430v1)"},
+    {"item": "referee empirical-Bayes shrinkage (grand, var_between, se2, w_r, post_r)", "source": "GSE_HANDOFF_PACK_2026-10-10 (1).md L4137-4182"},
+    {"item": "margin mixture: Stern-normal continuous + discrete point masses at 3, 7, 6, 10 (both signs)", "source": "gse-deep-nfl-metrics-catalog-2026.md L333", "note": "a FOURTH key number (6 and 10) that the walk-forward has never tested"},
+    {"item": "Tier-1 metrics wired: 0 of 11", "source": "MASTER-REGISTER.md", "n": 11},
+    {"item": "Wiring backlog: 38 items", "source": "MASTER-REGISTER.md", "n": 38}
+  ],
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
