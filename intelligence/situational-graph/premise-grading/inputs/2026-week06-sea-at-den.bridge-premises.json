@@ -1,0 +1,309 @@
+{
+  "bridge": "gse-bridge-model",
+  "emission_state": "ZERO_OBJECT",
+  "game": "2026_06_SEA_DEN",
+  "input": {
+    "kind": "situational_graph_instance",
+    "ref": "inputs/2026-week06-sea-at-den.graph.json"
+  },
+  "not_consumed": [
+    {
+      "edge_type": "atmosphere",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored atmosphere read with source + as-of stamp)",
+      "team": "DEN"
+    },
+    {
+      "edge_type": "atmosphere",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored atmosphere read with source + as-of stamp)",
+      "team": "SEA"
+    },
+    {
+      "edge_type": "coaching_change",
+      "reason": "graph honest_empty: coaches input carries no tenure row for this team (missing: verified coach tenure rows for SEA)",
+      "team": "SEA"
+    },
+    {
+      "edge_type": "coaching_honesty",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored coaching_honesty read with source + as-of stamp)",
+      "team": "DEN"
+    },
+    {
+      "edge_type": "coaching_honesty",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored coaching_honesty read with source + as-of stamp)",
+      "team": "SEA"
+    },
+    {
+      "edge_type": "injury_burden",
+      "reason": "graph honest_empty: injury input injuries_2026.csv has no stamp column (as_of, report_date, date_modified, report_as_of); unstamped rows cannot be proven knowable before kickoff (missing: injury report rows with an as-of stamp column)",
+      "team": null
+    },
+    {
+      "edge_type": "injury_context_identity",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored injury_context_identity read with source + as-of stamp)",
+      "team": "DEN"
+    },
+    {
+      "edge_type": "injury_context_identity",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored injury_context_identity read with source + as-of stamp)",
+      "team": "SEA"
+    },
+    {
+      "edge_type": "layered_revenge",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored layered_revenge read with source + as-of stamp)",
+      "team": "DEN"
+    },
+    {
+      "edge_type": "layered_revenge",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored layered_revenge read with source + as-of stamp)",
+      "team": "SEA"
+    },
+    {
+      "edge_type": "logistical_disruption",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored logistical_disruption read with source + as-of stamp)",
+      "team": "DEN"
+    },
+    {
+      "edge_type": "logistical_disruption",
+      "reason": "graph honest_empty: no read input supplied; the graph records reads, it does not invent them (missing: authored logistical_disruption read with source + as-of stamp)",
+      "team": "SEA"
+    },
+    {
+      "edge_type": "weather_extreme",
+      "reason": "graph honest_empty: no forecast input supplied for this game (missing: stamped forecast for 2026-10-15)",
+      "team": null
+    }
+  ],
+  "pit_excluded": [],
+  "premises": [
+    {
+      "as_of": null,
+      "confidence_class": "CORROBORATED",
+      "direction": "AGAINST_AWAY",
+      "evidence": [
+        {
+          "as_of": null,
+          "edge_id": "altitude:2026_06_SEA_DEN:team:SEA->venue:DEN",
+          "edge_type": "altitude",
+          "source": {
+            "kind": "venue_static",
+            "ref": "static venue reference: Denver, CO elevation 5,280 ft (fixed geographic fact); data/gse-dataset/games.jsonl corroborates DEN home roof=outdoors, surface=grass"
+          }
+        },
+        {
+          "as_of": null,
+          "edge_id": "has_state:2026_06_SEA_DEN:team:SEA->state:ALTITUDE_VISIT",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "venue_static",
+            "ref": "static venue reference: Denver, CO elevation 5,280 ft (fixed geographic fact); data/gse-dataset/games.jsonl corroborates DEN home roof=outdoors, surface=grass"
+          }
+        }
+      ],
+      "game": "2026_06_SEA_DEN",
+      "kind": "situational_friction",
+      "magnitude_band": "STRONG",
+      "premise_id": "premise:2026_06_SEA_DEN:altitude_exposure:SEA",
+      "statement": "Visitor SEA plays at 5280 ft, 1280 ft above the graph's 4000 ft altitude threshold: an altitude-exposure burden on the visitor.",
+      "subject": "team:SEA",
+      "trace": {
+        "registered_signals": [
+          "nfl_high_altitude_fatigue"
+        ],
+        "rule_id": "altitude_exposure",
+        "rule_version": "1.0"
+      }
+    },
+    {
+      "as_of": "2026-10-11",
+      "confidence_class": "CORROBORATED",
+      "direction": "FRICTION",
+      "evidence": [
+        {
+          "as_of": null,
+          "edge_id": "altitude:2026_06_SEA_DEN:team:SEA->venue:DEN",
+          "edge_type": "altitude",
+          "source": {
+            "kind": "venue_static",
+            "ref": "static venue reference: Denver, CO elevation 5,280 ft (fixed geographic fact); data/gse-dataset/games.jsonl corroborates DEN home roof=outdoors, surface=grass"
+          }
+        },
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "altitude_short_week:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+          "edge_type": "altitude_short_week",
+          "source": {
+            "kind": "derived",
+            "ref": "altitude + rest_differential inputs, this build"
+          }
+        },
+        {
+          "as_of": null,
+          "edge_id": "has_state:2026_06_SEA_DEN:team:SEA->state:ALTITUDE_VISIT",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "venue_static",
+            "ref": "static venue reference: Denver, CO elevation 5,280 ft (fixed geographic fact); data/gse-dataset/games.jsonl corroborates DEN home roof=outdoors, surface=grass"
+          }
+        },
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "has_state:2026_06_SEA_DEN:team:SEA->state:SHORT_WEEK",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+          }
+        }
+      ],
+      "game": "2026_06_SEA_DEN",
+      "kind": "situational_friction",
+      "magnitude_band": "STRONG",
+      "premise_id": "premise:2026_06_SEA_DEN:altitude_short_week:SEA",
+      "statement": "Composite friction on visitor SEA: at altitude (5280 ft) on a short week (4 days rest). Recorded as variance/friction on the visitor, not as a mean shift.",
+      "subject": "team:SEA",
+      "trace": {
+        "registered_signals": [
+          "nfl_high_altitude_fatigue",
+          "nfl_short_week_road_deficit"
+        ],
+        "rule_id": "altitude_short_week_composite",
+        "rule_version": "1.0"
+      }
+    },
+    {
+      "as_of": "2026-10-01",
+      "confidence_class": "STAMPED",
+      "direction": "FAVORS_HOME",
+      "evidence": [
+        {
+          "as_of": "2026-10-01",
+          "edge_id": "coaching_change:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+          "edge_type": "coaching_change",
+          "source": {
+            "kind": "repo_doc",
+            "ref": "intelligence/coaching/coach_tenures.py (verified coach tenures 2022-2026, web-verified 2026-10-01)"
+          }
+        }
+      ],
+      "game": "2026_06_SEA_DEN",
+      "kind": "continuity_context",
+      "magnitude_band": "WEAK",
+      "premise_id": "premise:2026_06_SEA_DEN:coaching_continuity:DEN",
+      "statement": "DEN continuity: DC Vance Joseph has held the role since 2023 (4 seasons with the team), no change this season \u2014 a stability context premise, unweighted.",
+      "subject": "team:DEN",
+      "trace": {
+        "registered_signals": [
+          "nfl_coaching_tendencies"
+        ],
+        "rule_id": "coaching_continuity",
+        "rule_version": "1.0"
+      }
+    },
+    {
+      "as_of": "2026-10-11",
+      "confidence_class": "CORROBORATED",
+      "direction": "NEUTRAL",
+      "evidence": [
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "has_state:2026_06_SEA_DEN:team:DEN->state:SHORT_WEEK",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+          }
+        },
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "has_state:2026_06_SEA_DEN:team:SEA->state:SHORT_WEEK",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+          }
+        },
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "rest_differential:2026_06_SEA_DEN:team:DEN->team:SEA",
+          "edge_type": "rest_differential",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+          }
+        }
+      ],
+      "game": "2026_06_SEA_DEN",
+      "kind": "rest_context",
+      "magnitude_band": "NEUTRAL",
+      "premise_id": "premise:2026_06_SEA_DEN:rest_differential",
+      "statement": "Rest is level: both teams on 4 days (diff +0, home perspective).",
+      "subject": "game:2026_06_SEA_DEN",
+      "trace": {
+        "registered_signals": [
+          "nfl_short_week_road_deficit",
+          "nfl_age_conditioned_rest"
+        ],
+        "rule_id": "rest_differential",
+        "rule_version": "1.0"
+      }
+    },
+    {
+      "as_of": "2026-10-11",
+      "confidence_class": "STAMPED",
+      "direction": "NEUTRAL",
+      "evidence": [
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "has_state:2026_06_SEA_DEN:team:DEN->state:SHORT_WEEK",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+          }
+        },
+        {
+          "as_of": null,
+          "edge_id": "has_state:2026_06_SEA_DEN:team:DEN->state:THURSDAY_GAME",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl"
+          }
+        },
+        {
+          "as_of": "2026-10-11",
+          "edge_id": "has_state:2026_06_SEA_DEN:team:SEA->state:SHORT_WEEK",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl (rest_away/rest_home/rest_diff)"
+          }
+        },
+        {
+          "as_of": null,
+          "edge_id": "has_state:2026_06_SEA_DEN:team:SEA->state:THURSDAY_GAME",
+          "edge_type": "has_state",
+          "source": {
+            "kind": "schedule",
+            "ref": "data/gse-dataset/games.jsonl"
+          }
+        }
+      ],
+      "game": "2026_06_SEA_DEN",
+      "kind": "game_friction",
+      "magnitude_band": "MODERATE",
+      "premise_id": "premise:2026_06_SEA_DEN:short_week_game_context",
+      "statement": "Both teams play on a short week (DEN 4 days, SEA 4 days): preparation is compressed on both sides; the context takes no side.",
+      "subject": "game:2026_06_SEA_DEN",
+      "trace": {
+        "registered_signals": [
+          "nfl_short_week_road_deficit"
+        ],
+        "rule_id": "short_week_game_context",
+        "rule_version": "1.0"
+      }
+    }
+  ],
+  "read_at": "2026-10-15",
+  "version": "1.0"
+}
