@@ -1,0 +1,1778 @@
+{
+  "graph": "gse-situational-graph",
+  "version": "1.0",
+  "season": 2026,
+  "week": 6,
+  "game_id": "2026_06_SEA_DEN",
+  "kickoff_utc": "2026-10-16T00:15:00Z",
+  "pit_cutoff_utc": "2026-10-15T22:45:00Z",
+  "generated_at": "2026-10-15T22:43:17Z",
+  "builder": "intelligence/situational-graph/produce_sea_den_edges.py",
+  "nodes": [
+    {
+      "id": "game:2026_06_SEA_DEN",
+      "kind": "game",
+      "gameday": "2026-10-15",
+      "kickoff_utc": "2026-10-16T00:15:00Z",
+      "cutoff_utc": "2026-10-15T22:45:00Z",
+      "away_team": "SEA",
+      "home_team": "DEN",
+      "roof": "outdoors",
+      "surface": "grass"
+    },
+    {
+      "id": "player:00-0033908",
+      "kind": "player",
+      "name": "Cooper Kupp",
+      "team": "SEA",
+      "position": "WR",
+      "gsis_id": "00-0033908"
+    },
+    {
+      "id": "player:00-0034348",
+      "kind": "player",
+      "name": "Courtland Sutton",
+      "team": "DEN",
+      "position": "WR",
+      "gsis_id": "00-0034348"
+    },
+    {
+      "id": "player:00-0034978",
+      "kind": "player",
+      "name": "Ben Powers",
+      "team": "DEN",
+      "position": "G",
+      "gsis_id": "00-0034978"
+    },
+    {
+      "id": "player:00-0036564",
+      "kind": "player",
+      "name": "Talanoa Hufanga",
+      "team": "DEN",
+      "position": "S",
+      "gsis_id": "00-0036564"
+    },
+    {
+      "id": "player:00-0036874",
+      "kind": "player",
+      "name": "Pat Surtain II",
+      "team": "DEN",
+      "position": "CB",
+      "gsis_id": "00-0036874"
+    },
+    {
+      "id": "player:00-0037545",
+      "kind": "player",
+      "name": "Rashid Shaheed",
+      "team": "SEA",
+      "position": "WR",
+      "gsis_id": "00-0037545"
+    },
+    {
+      "id": "player:00-0038543",
+      "kind": "player",
+      "name": "Jaxon Smith-Njigba",
+      "team": "SEA",
+      "position": "WR",
+      "player_id": "00-0038543"
+    },
+    {
+      "id": "player:00-0038552",
+      "kind": "player",
+      "name": "Riley Moss",
+      "team": "DEN",
+      "position": "CB",
+      "gsis_id": "00-0038552"
+    },
+    {
+      "id": "player:00-0038605",
+      "kind": "player",
+      "name": "JL Skinner",
+      "team": "DEN",
+      "position": "S",
+      "gsis_id": "00-0038605"
+    },
+    {
+      "id": "player:00-0038797",
+      "kind": "player",
+      "name": "Emanuel Wilson",
+      "team": "SEA",
+      "position": "RB",
+      "gsis_id": "00-0038797"
+    },
+    {
+      "id": "player:00-0038922",
+      "kind": "player",
+      "name": "Drake Thomas",
+      "team": "SEA",
+      "position": "LB",
+      "gsis_id": "00-0038922"
+    },
+    {
+      "id": "player:00-0039165",
+      "kind": "player",
+      "name": "Zach Charbonnet",
+      "team": "SEA",
+      "position": "RB",
+      "gsis_id": "00-0039165"
+    },
+    {
+      "id": "player:00-0039371",
+      "kind": "player",
+      "name": "Kris Abrams-Draine",
+      "team": "DEN",
+      "position": "CB",
+      "gsis_id": "00-0039371"
+    },
+    {
+      "id": "player:00-0039815",
+      "kind": "player",
+      "name": "Tyrice Knight",
+      "team": "SEA",
+      "position": "LB",
+      "gsis_id": "00-0039815"
+    },
+    {
+      "id": "player:00-0040720",
+      "kind": "player",
+      "name": "Jahdae Barron",
+      "team": "DEN",
+      "position": "CB",
+      "gsis_id": "00-0040720"
+    },
+    {
+      "id": "player:00-0041498",
+      "kind": "player",
+      "name": "Kage Casey",
+      "team": "DEN",
+      "position": "G",
+      "gsis_id": "00-0041498"
+    },
+    {
+      "id": "player:4037521",
+      "kind": "player",
+      "name": "Chazz Surratt",
+      "team": "SEA",
+      "position": "LB",
+      "player_id": "4037521"
+    },
+    {
+      "id": "player:4360853",
+      "kind": "player",
+      "name": "Talanoa Hufanga",
+      "team": "DEN",
+      "position": "S",
+      "player_id": "4360853"
+    },
+    {
+      "id": "player:4372012",
+      "kind": "player",
+      "name": "Pat Surtain II",
+      "team": "DEN",
+      "position": "CB",
+      "player_id": "4372012"
+    },
+    {
+      "id": "player:4382401",
+      "kind": "player",
+      "name": "Riley Moss",
+      "team": "DEN",
+      "position": "CB",
+      "player_id": "4382401"
+    },
+    {
+      "id": "player:4426385",
+      "kind": "player",
+      "name": "Zach Charbonnet",
+      "team": "SEA",
+      "position": "RB",
+      "player_id": "4426385"
+    },
+    {
+      "id": "player:4428659",
+      "kind": "player",
+      "name": "Drake Thomas",
+      "team": "SEA",
+      "position": "LB",
+      "player_id": "4428659"
+    },
+    {
+      "id": "player:4600981",
+      "kind": "player",
+      "name": "Pat Bryant",
+      "team": "DEN",
+      "position": "WR",
+      "player_id": "4600981"
+    },
+    {
+      "id": "player:4684543",
+      "kind": "player",
+      "name": "Julian Neal",
+      "team": "SEA",
+      "position": "CB",
+      "player_id": "4684543"
+    },
+    {
+      "id": "player:4685512",
+      "kind": "player",
+      "name": "Jadarian Price",
+      "team": "SEA",
+      "position": "RB",
+      "player_id": "4685512"
+    },
+    {
+      "id": "player:4702555",
+      "kind": "player",
+      "name": "Jonah Coleman",
+      "team": "DEN",
+      "position": "RB",
+      "player_id": "4702555"
+    },
+    {
+      "id": "state:ALTITUDE_VISIT",
+      "kind": "state",
+      "state": "ALTITUDE_VISIT"
+    },
+    {
+      "id": "state:DISRUPTION",
+      "kind": "state",
+      "state": "DISRUPTION"
+    },
+    {
+      "id": "state:SHORT_WEEK",
+      "kind": "state",
+      "state": "SHORT_WEEK"
+    },
+    {
+      "id": "state:THURSDAY_GAME",
+      "kind": "state",
+      "state": "THURSDAY_GAME"
+    },
+    {
+      "id": "team:DEN",
+      "kind": "team",
+      "code": "DEN",
+      "name": "Denver Broncos"
+    },
+    {
+      "id": "team:SEA",
+      "kind": "team",
+      "code": "SEA",
+      "name": "Seattle Seahawks"
+    },
+    {
+      "id": "venue:DEN",
+      "kind": "venue",
+      "team": "DEN",
+      "name": "Empower Field at Mile High",
+      "elevation_ft": 5280
+    },
+    {
+      "id": "week:2026-06",
+      "kind": "week",
+      "season": 2026,
+      "week": 6
+    }
+  ],
+  "edges": [
+    {
+      "id": "altitude:2026_06_SEA_DEN:team:SEA->venue:DEN",
+      "type": "altitude",
+      "from": "team:SEA",
+      "to": "venue:DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "venue_elevation_ft": 5280,
+        "at_altitude": true,
+        "threshold_ft": 4000,
+        "city": "Denver, CO"
+      },
+      "source": {
+        "kind": "venue_static",
+        "ref": "intelligence/situational-graph/inputs/venues.json"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "altitude_short_week:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+      "type": "altitude_short_week",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "venue_elevation_ft": 5280,
+        "visitor_rest_days": 4,
+        "home_rest_days": 4,
+        "basis": "visitor at altitude on a short week (zero acclimatization window)"
+      },
+      "source": {
+        "kind": "derived",
+        "ref": "altitude + rest_differential inputs (C-022)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "atmosphere:2026_06_SEA_DEN:venue:DEN->game:2026_06_SEA_DEN",
+      "type": "atmosphere",
+      "from": "venue:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "read": "Thursday Night Football primetime stage at Empower Field at Mile High (5,280 ft); Seattle offense operates on silent count on 4 days rest with rookie LG Grey Zabel and C Jalen Sundell communicating against Vance Joseph's 36.4% 3rd-and-short pressure package.",
+        "factors": [
+          "TNF_primetime_silent_count",
+          "altitude_5280ft_crowd_noise",
+          "short_week_ol_communication"
+        ]
+      },
+      "source": {
+        "kind": "manual_read",
+        "ref": "data/gse-dataset/games.jsonl + intelligence/coaching/data/dc_pressure.csv (C-016)"
+      },
+      "as_of": "2026-10-15T15:36:00Z",
+      "visible_at": "2026-10-15T15:36:00Z"
+    },
+    {
+      "id": "circadian_travel_friction:2026_06_SEA_DEN:team:DEN->venue:DEN",
+      "type": "circadian_travel_friction",
+      "from": "team:DEN",
+      "to": "venue:DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "tz_delta_hours": 1,
+        "travel_miles": 831.0,
+        "surface_transition": "MatrixTurf dome (LAC W5) -> natural grass outdoors (DEN W6)",
+        "days_rest": 4,
+        "body_clock_kickoff_local": "18:15 MT (returned from Inglewood CA Sunday)"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl + venues.json (C-019, C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "circadian_travel_friction:2026_06_SEA_DEN:team:SEA->venue:DEN",
+      "type": "circadian_travel_friction",
+      "from": "team:SEA",
+      "to": "venue:DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "tz_delta_hours": 1,
+        "travel_miles": 1021.4,
+        "surface_transition": "FieldTurf (SEA W5) -> natural grass (DEN W6)",
+        "days_rest": 4,
+        "body_clock_kickoff_local": "17:15 PT / 18:15 MT"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl + venues.json (C-019, C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "coaching_change:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+      "type": "coaching_change",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "role": "DC",
+        "name": "Vance Joseph",
+        "seasons_with_team": [
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "changed_this_season": false
+      },
+      "source": {
+        "kind": "repo_doc",
+        "ref": "intelligence/coaching/coach_tenures.py (C-050)"
+      },
+      "as_of": "2026-10-01T00:00:00Z",
+      "visible_at": "2026-10-01T00:00:00Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:DEN:def_3rd_short_pressure_proxy",
+      "type": "coaching_tendency",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "def_3rd_short_pressure_proxy",
+        "team": "DEN",
+        "scalar_value": 0.3636,
+        "description": "DEN 3rd-and-short defensive pressure proxy 36.36% (Vance Joseph simulated/blitz pressure)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:DEN:proe_early_neutral",
+      "type": "coaching_tendency",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "proe_early_neutral",
+        "team": "DEN",
+        "scalar_value": 0.008412,
+        "description": "DEN early-down neutral PROE +0.84% (payton screen/quick-game extension of run game)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:DEN:script_elasticity_beta",
+      "type": "coaching_tendency",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "script_elasticity_beta",
+        "team": "DEN",
+        "scalar_value": -0.612,
+        "description": "DEN pass-rate script elasticity beta = -0.6120",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:DEN:tempo_pace_median_sec",
+      "type": "coaching_tendency",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "tempo_pace_median_sec",
+        "team": "DEN",
+        "scalar_value": 38.5,
+        "description": "DEN neutral pace median 38.5s at home altitude",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:SEA:def_pressure_proxy_overall",
+      "type": "coaching_tendency",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "def_pressure_proxy_overall",
+        "team": "SEA",
+        "scalar_value": 0.2593,
+        "description": "SEA defensive pressure proxy 25.93% (qbhit 19.44%, sack 6.48% on 108 dropbacks)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:SEA:proe_early_neutral",
+      "type": "coaching_tendency",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "proe_early_neutral",
+        "team": "SEA",
+        "scalar_value": -0.013704,
+        "description": "SEA early-down neutral PROE -1.37% (actual pass rate 40.82% vs expected 50.30%, n=49)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:SEA:redzone_pass_rate",
+      "type": "coaching_tendency",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "redzone_pass_rate",
+        "team": "SEA",
+        "scalar_value": 0.4615,
+        "description": "SEA red-zone pass rate 46.15% (rz_proe -1.99%, goal-to-go pass rate 38.1%, n=39)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:SEA:script_elasticity_beta",
+      "type": "coaching_tendency",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "script_elasticity_beta",
+        "team": "SEA",
+        "scalar_value": -0.7249,
+        "description": "SEA pass-rate script elasticity beta = -0.7249 (sharp pass shift when trailing, n=140)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "coaching_tendency:2026_06_SEA_DEN:team:SEA:tempo_pace_median_sec",
+      "type": "coaching_tendency",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "facet": "tempo_pace_median_sec",
+        "team": "SEA",
+        "scalar_value": 40.0,
+        "description": "SEA neutral pace median 40.0s, hurry-up rate 28.57% (n=138 diffs)",
+        "vintage": "2026-10-02 (sha256:ad20b929)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/vintage-2026-10-02.json (C-050, C-052, C-060)"
+      },
+      "as_of": "2026-10-02T17:52:51Z",
+      "visible_at": "2026-10-02T17:52:51Z"
+    },
+    {
+      "id": "depth_chart_replacement:2026_06_SEA_DEN:player:00-0034978->player:00-0041498",
+      "type": "depth_chart_replacement",
+      "from": "player:00-0034978",
+      "to": "player:00-0041498",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "slot": "3WR 1TE LG (slot 4)",
+        "starter_name": "Ben Powers",
+        "replacement_name": "Kage Casey",
+        "starter_status": "Injured Reserve",
+        "consequence": "Kage Casey replaces LG1 Ben Powers inside against Seattle's interior rotation (Leonard Williams / Byron Murphy II / Jarran Reed)."
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/depth_charts_2026.parquet (dt=2026-10-14T12:51:31Z) (C-024, C-075, C-189)"
+      },
+      "as_of": "2026-10-14T22:19:00Z",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "id": "depth_chart_replacement:2026_06_SEA_DEN:player:00-0036564->player:00-0038605",
+      "type": "depth_chart_replacement",
+      "from": "player:00-0036564",
+      "to": "player:00-0038605",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "slot": "Base 3-4 D SS (slot 9)",
+        "starter_name": "Talanoa Hufanga",
+        "replacement_name": "JL Skinner",
+        "starter_status": "Out",
+        "consequence": "JL Skinner replaces Hufanga at strong safety alongside FS Brandon Jones, degrading late-rotation disguise and box run-fit tackle reliability."
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/depth_charts_2026.parquet (dt=2026-10-14T12:51:31Z) (C-024, C-075, C-189)"
+      },
+      "as_of": "2026-10-14T22:19:00Z",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "id": "depth_chart_replacement:2026_06_SEA_DEN:player:00-0036874->player:00-0040720",
+      "type": "depth_chart_replacement",
+      "from": "player:00-0036874",
+      "to": "player:00-0040720",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "slot": "Base 3-4 D LCB (slot 8)",
+        "starter_name": "Pat Surtain II",
+        "replacement_name": "Jahdae Barron",
+        "starter_status": "Out",
+        "consequence": "Rookie Jahdae Barron elevates to LCB1; eliminates Vance Joseph's single-side lock on JSN/Kupp and forces safety help over top."
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/depth_charts_2026.parquet (dt=2026-10-14T12:51:31Z) (C-024, C-075, C-189)"
+      },
+      "as_of": "2026-10-14T22:19:00Z",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "id": "depth_chart_replacement:2026_06_SEA_DEN:player:00-0038552->player:00-0039371",
+      "type": "depth_chart_replacement",
+      "from": "player:00-0038552",
+      "to": "player:00-0039371",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "slot": "Base 3-4 D RCB (slot 11)",
+        "starter_name": "Riley Moss",
+        "replacement_name": "Kris Abrams-Draine",
+        "starter_status": "Questionable",
+        "consequence": "Riley Moss (ribs) playing impaired or ceding boundary snaps to Kris Abrams-Draine leaves both outside corner spots vulnerable to double-moves and play-action."
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/depth_charts_2026.parquet (dt=2026-10-14T12:51:31Z) (C-024, C-075, C-189)"
+      },
+      "as_of": "2026-10-14T22:19:00Z",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "id": "depth_chart_replacement:2026_06_SEA_DEN:player:00-0038922->player:00-0039815",
+      "type": "depth_chart_replacement",
+      "from": "player:00-0038922",
+      "to": "player:00-0039815",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "slot": "Base 3-4 D LILB (slot 5)",
+        "starter_name": "Drake Thomas",
+        "replacement_name": "Tyrice Knight",
+        "starter_status": "Out",
+        "consequence": "With LILB1 Drake Thomas OUT (knee) and Chazz Surratt on IR, Tyrice Knight steps in next to Ernest Jones IV, testing green-dot communication and RB checkdown coverage vs RJ Harvey/Engram."
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/depth_charts_2026.parquet (dt=2026-10-14T12:51:31Z) (C-024, C-075, C-189)"
+      },
+      "as_of": "2026-10-14T22:19:00Z",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "id": "depth_chart_replacement:2026_06_SEA_DEN:player:00-0039165->player:00-0038797",
+      "type": "depth_chart_replacement",
+      "from": "player:00-0039165",
+      "to": "player:00-0038797",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "slot": "3WR 1TE RB (slot 11)",
+        "starter_name": "Zach Charbonnet",
+        "replacement_name": "Emanuel Wilson",
+        "starter_status": "Out",
+        "consequence": "With Charbonnet OUT (ACL), Emanuel Wilson (17.12 proj carries) and George Holani (5.80 proj carries, 2.17 targets) absorb early-down and 3rd-down pass-pro work."
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "intelligence/coaching/data/depth_charts_2026.parquet (dt=2026-10-14T12:51:31Z) (C-024, C-075, C-189)"
+      },
+      "as_of": "2026-10-14T22:19:00Z",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "id": "has_state:2026_06_SEA_DEN:team:DEN->state:SHORT_WEEK",
+      "type": "has_state",
+      "from": "team:DEN",
+      "to": "state:SHORT_WEEK",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "rest_days": 4,
+        "basis": "days between games <= 5"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "has_state:2026_06_SEA_DEN:team:DEN->state:THURSDAY_GAME",
+      "type": "has_state",
+      "from": "team:DEN",
+      "to": "state:THURSDAY_GAME",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "basis": "gameday is a Thursday"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "has_state:2026_06_SEA_DEN:team:SEA->state:ALTITUDE_VISIT",
+      "type": "has_state",
+      "from": "team:SEA",
+      "to": "state:ALTITUDE_VISIT",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "venue_elevation_ft": 5280
+      },
+      "source": {
+        "kind": "venue_static",
+        "ref": "intelligence/situational-graph/inputs/venues.json"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "has_state:2026_06_SEA_DEN:team:SEA->state:SHORT_WEEK",
+      "type": "has_state",
+      "from": "team:SEA",
+      "to": "state:SHORT_WEEK",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "rest_days": 4,
+        "basis": "days between games <= 5"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "has_state:2026_06_SEA_DEN:team:SEA->state:THURSDAY_GAME",
+      "type": "has_state",
+      "from": "team:SEA",
+      "to": "state:THURSDAY_GAME",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "basis": "gameday is a Thursday"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "hosted_at:2026_06_SEA_DEN:game:2026_06_SEA_DEN->venue:DEN",
+      "type": "hosted_at",
+      "from": "game:2026_06_SEA_DEN",
+      "to": "venue:DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {},
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "in_week:2026_06_SEA_DEN:game:2026_06_SEA_DEN->week:2026-06",
+      "type": "in_week",
+      "from": "game:2026_06_SEA_DEN",
+      "to": "week:2026-06",
+      "game": "2026_06_SEA_DEN",
+      "value": {},
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "injury_burden:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+      "type": "injury_burden",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "burden": 3.0,
+        "contributors": [
+          {
+            "player": "player:4702555",
+            "name": "Jonah Coleman",
+            "position": "RB",
+            "status": "Injured Reserve",
+            "weight": 0.5,
+            "as_of": "2026-09-26T20:36:00Z"
+          },
+          {
+            "player": "player:4600981",
+            "name": "Pat Bryant",
+            "position": "WR",
+            "status": "Injured Reserve",
+            "weight": 0.7,
+            "as_of": "2026-10-09T21:47:00Z"
+          },
+          {
+            "player": "player:4372012",
+            "name": "Pat Surtain II",
+            "position": "CB",
+            "status": "Out",
+            "weight": 0.8,
+            "as_of": "2026-10-14T23:52:00Z"
+          },
+          {
+            "player": "player:4382401",
+            "name": "Riley Moss",
+            "position": "CB",
+            "status": "Questionable",
+            "weight": 0.2,
+            "as_of": "2026-10-14T23:56:00Z"
+          },
+          {
+            "player": "player:4360853",
+            "name": "Talanoa Hufanga",
+            "position": "S",
+            "status": "Out",
+            "weight": 0.8,
+            "as_of": "2026-10-14T18:06:00Z"
+          }
+        ],
+        "weight_table": "ril-v1 (pos x status)"
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (C-015, C-043)"
+      },
+      "as_of": "2026-10-14T23:56:00Z",
+      "visible_at": "2026-10-14T23:56:00Z"
+    },
+    {
+      "id": "injury_burden:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+      "type": "injury_burden",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "burden": 3.175,
+        "contributors": [
+          {
+            "player": "player:4037521",
+            "name": "Chazz Surratt",
+            "position": "LB",
+            "status": "Out",
+            "weight": 0.6,
+            "as_of": "2026-10-15T01:42:00Z"
+          },
+          {
+            "player": "player:4428659",
+            "name": "Drake Thomas",
+            "position": "LB",
+            "status": "Out",
+            "weight": 0.6,
+            "as_of": "2026-10-15T00:24:00Z"
+          },
+          {
+            "player": "player:4685512",
+            "name": "Jadarian Price",
+            "position": "RB",
+            "status": "Injured Reserve",
+            "weight": 0.5,
+            "as_of": "2026-10-03T20:02:00Z"
+          },
+          {
+            "player": "player:00-0038543",
+            "name": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "status": "Questionable",
+            "weight": 0.175,
+            "as_of": "2026-10-14T13:26:57Z"
+          },
+          {
+            "player": "player:4684543",
+            "name": "Julian Neal",
+            "position": "CB",
+            "status": "Injured Reserve",
+            "weight": 0.8,
+            "as_of": "2026-10-11T02:04:00Z"
+          },
+          {
+            "player": "player:4426385",
+            "name": "Zach Charbonnet",
+            "position": "RB",
+            "status": "Out",
+            "weight": 0.5,
+            "as_of": "2026-10-14T22:14:00Z"
+          }
+        ],
+        "weight_table": "ril-v1 (pos x status)"
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (C-015, C-043)"
+      },
+      "as_of": "2026-10-15T01:42:00Z",
+      "visible_at": "2026-10-15T01:42:00Z"
+    },
+    {
+      "id": "injury_context_identity:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+      "type": "injury_context_identity",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "read": "Simultaneous absence of All-Pro LCB1 Pat Surtain II (ankle) and SS1 Talanoa Hufanga (ankle), with RCB1 Riley Moss questionable (ribs), strips Vance Joseph of man-blitz coverage integrity. Rookie Jahdae Barron (LCB2) and JL Skinner (SS2) force Denver out of single-high Cover-1 blitzes into two-high shell or un-protected blitz exposure.",
+        "players": [
+          "Pat Surtain II",
+          "Talanoa Hufanga",
+          "Riley Moss",
+          "Jahdae Barron",
+          "JL Skinner"
+        ]
+      },
+      "source": {
+        "kind": "manual_read",
+        "ref": "intelligence/situational-graph/inputs/injuries_2026_wk6_stamped.csv + depth_charts_2026.parquet (C-024)"
+      },
+      "as_of": "2026-10-15T15:36:00Z",
+      "visible_at": "2026-10-15T15:36:00Z"
+    },
+    {
+      "id": "injury_context_identity:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+      "type": "injury_context_identity",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "read": "Zach Charbonnet OUT (ACL) consolidates early-down carries onto Emanuel Wilson (17.12 proj att) and passing-down snaps onto George Holani + TE AJ Barner, while JSN (Questionable, 9.93 proj targets) faces a depleted Denver boundary without Surtain.",
+        "players": [
+          "Zach Charbonnet",
+          "Emanuel Wilson",
+          "George Holani",
+          "Jaxon Smith-Njigba",
+          "Drake Thomas",
+          "Tyrice Knight"
+        ]
+      },
+      "source": {
+        "kind": "manual_read",
+        "ref": "intelligence/situational-graph/inputs/injuries_2026_wk6_stamped.csv + sleeper_projections_wk6_latest.json (C-024)"
+      },
+      "as_of": "2026-10-15T15:36:00Z",
+      "visible_at": "2026-10-15T15:36:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:00-0038543->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:00-0038543",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Jaxon Smith-Njigba",
+        "position": "WR",
+        "report_status": "Questionable",
+        "injury_type": null,
+        "burden_weight": 0.175
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (sleeper_wk6) (C-015)"
+      },
+      "as_of": "2026-10-14T13:26:57Z",
+      "visible_at": "2026-10-14T13:26:57Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4037521->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4037521",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Chazz Surratt",
+        "position": "LB",
+        "report_status": "Out",
+        "injury_type": "Calf",
+        "burden_weight": 0.6
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-15T01:42:00Z",
+      "visible_at": "2026-10-15T01:42:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4360853->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4360853",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "player_name": "Talanoa Hufanga",
+        "position": "S",
+        "report_status": "Out",
+        "injury_type": "Ankle",
+        "burden_weight": 0.8
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-14T18:06:00Z",
+      "visible_at": "2026-10-14T18:06:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4372012->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4372012",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "player_name": "Pat Surtain II",
+        "position": "CB",
+        "report_status": "Out",
+        "injury_type": "Ankle",
+        "burden_weight": 0.8
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-14T23:52:00Z",
+      "visible_at": "2026-10-14T23:52:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4382401->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4382401",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "player_name": "Riley Moss",
+        "position": "CB",
+        "report_status": "Questionable",
+        "injury_type": "Ribs",
+        "burden_weight": 0.2
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-14T23:56:00Z",
+      "visible_at": "2026-10-14T23:56:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4426385->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4426385",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Zach Charbonnet",
+        "position": "RB",
+        "report_status": "Out",
+        "injury_type": "Knee - ACL",
+        "burden_weight": 0.5
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-14T22:14:00Z",
+      "visible_at": "2026-10-14T22:14:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4428659->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4428659",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Drake Thomas",
+        "position": "LB",
+        "report_status": "Out",
+        "injury_type": "Ankle",
+        "burden_weight": 0.6
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-15T00:24:00Z",
+      "visible_at": "2026-10-15T00:24:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4600981->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4600981",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "player_name": "Pat Bryant",
+        "position": "WR",
+        "report_status": "Injured Reserve",
+        "injury_type": "Ankle",
+        "burden_weight": 0.7
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-09T21:47:00Z",
+      "visible_at": "2026-10-09T21:47:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4684543->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4684543",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Julian Neal",
+        "position": "CB",
+        "report_status": "Injured Reserve",
+        "injury_type": "Hamstring",
+        "burden_weight": 0.8
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-11T02:04:00Z",
+      "visible_at": "2026-10-11T02:04:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4685512->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4685512",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Jadarian Price",
+        "position": "RB",
+        "report_status": "Injured Reserve",
+        "injury_type": "Chest",
+        "burden_weight": 0.5
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-10-03T20:02:00Z",
+      "visible_at": "2026-10-03T20:02:00Z"
+    },
+    {
+      "id": "injury_designation:2026_06_SEA_DEN:player:4702555->game:2026_06_SEA_DEN",
+      "type": "injury_designation",
+      "from": "player:4702555",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "player_name": "Jonah Coleman",
+        "position": "RB",
+        "report_status": "Injured Reserve",
+        "injury_type": "Ankle",
+        "burden_weight": 0.5
+      },
+      "source": {
+        "kind": "injury_report",
+        "ref": "artifacts/forcing/injury_timestamped.jsonl (espn_summary) (C-015)"
+      },
+      "as_of": "2026-09-26T20:36:00Z",
+      "visible_at": "2026-09-26T20:36:00Z"
+    },
+    {
+      "id": "line_movement:2026_06_SEA_DEN:moneyline",
+      "type": "line_movement",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "market_type": "MONEYLINE",
+        "open_line": 120.0,
+        "latest_line": 120.0,
+        "net_drift": 0.0,
+        "kalshi_den_yes_bid_ask": [
+          0.45,
+          0.46
+        ],
+        "kalshi_sea_yes_bid_ask": [
+          0.55,
+          0.56
+        ],
+        "earliest_observed_at": "2026-10-15T18:13:47Z"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "artifacts/forcing/odds.jsonl (KXNFLGAME-26OCT15SEADEN) (C-113)"
+      },
+      "as_of": "2026-10-15T21:19:03Z",
+      "visible_at": "2026-10-15T21:19:03Z"
+    },
+    {
+      "id": "line_movement:2026_06_SEA_DEN:spread",
+      "type": "line_movement",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "market_type": "SPREAD",
+        "open_line": 2.5,
+        "latest_line": 2.5,
+        "net_drift": 0.0,
+        "kalshi_strike_2_5_bid_ask": [
+          0.47,
+          0.5
+        ],
+        "earliest_observed_at": "2026-10-15T18:13:47Z",
+        "t0_72h_forecast_status": "MISSING (earliest_observed_at=2026-10-15T18:13:47Z, 6.0h before kickoff; 72h T0 window not captured)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "research/archiver-pathshape/features_2026-10-15.jsonl + artifacts/forcing/odds.jsonl (C-009, C-010)"
+      },
+      "as_of": "2026-10-15T20:20:32Z",
+      "visible_at": "2026-10-15T20:20:32Z"
+    },
+    {
+      "id": "line_movement:2026_06_SEA_DEN:total",
+      "type": "line_movement",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "market_type": "TOTAL",
+        "open_line": 40.5,
+        "latest_line": 40.5,
+        "net_drift": 0.0,
+        "kalshi_strike_40_5_bid_ask": [
+          0.51,
+          0.53
+        ],
+        "earliest_observed_at": "2026-10-15T18:13:47Z",
+        "t0_72h_forecast_status": "MISSING (earliest_observed_at=2026-10-15T18:13:47Z)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "research/archiver-pathshape/features_2026-10-15.jsonl + artifacts/forcing/odds.jsonl (C-009, C-010)"
+      },
+      "as_of": "2026-10-15T20:20:32Z",
+      "visible_at": "2026-10-15T20:20:32Z"
+    },
+    {
+      "id": "logistical_disruption:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+      "type": "logistical_disruption",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "read": "Compressed 96-hour Sunday-to-Thursday turnaround with Wednesday travel to 5,280 ft precludes physiological hematocrit acclimatization and eliminates full-speed padded install practices.",
+        "events": [
+          "Sunday_W5_physical_divisional_vs_SF",
+          "Wednesday_flight_to_5280ft",
+          "Thursday_kickoff_zero_acclimatization"
+        ]
+      },
+      "source": {
+        "kind": "manual_read",
+        "ref": "data/gse-dataset/games.jsonl (C-018)"
+      },
+      "as_of": "2026-10-15T15:36:00Z",
+      "visible_at": "2026-10-15T15:36:00Z"
+    },
+    {
+      "id": "market_hold_dispersion:2026_06_SEA_DEN:dk_alt_ladder",
+      "type": "market_hold_dispersion",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "bookmaker": "DraftKings",
+        "market_type": "ALT_SPREAD_KEY_RUNGS",
+        "overround_or_spread": 0.07069,
+        "line_value": 3.5,
+        "n_ladder_rows": 178,
+        "keyset_joint_crps_equiv": 0.003841
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "research/product_breakeven_results_2026-10-15.json (C-036)"
+      },
+      "as_of": "2026-10-15T18:29:17Z",
+      "visible_at": "2026-10-15T18:29:17Z"
+    },
+    {
+      "id": "market_hold_dispersion:2026_06_SEA_DEN:dk_main",
+      "type": "market_hold_dispersion",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "bookmaker": "DraftKings",
+        "market_type": "MAIN_SPREAD_TOTAL_ML",
+        "overround_or_spread": 0.04753,
+        "total_hold": 0.04708,
+        "ml_hold": 0.04132,
+        "line_value": 2.5,
+        "spread_juice_home_away": [
+          -108,
+          -112
+        ],
+        "total_juice_over_under": [
+          -115,
+          -105
+        ]
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "research/product_breakeven_results_2026-10-15.json (C-036, C-113)"
+      },
+      "as_of": "2026-10-15T18:29:17Z",
+      "visible_at": "2026-10-15T18:29:17Z"
+    },
+    {
+      "id": "market_hold_dispersion:2026_06_SEA_DEN:kalshi_vs_dk_dispersion",
+      "type": "market_hold_dispersion",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "bookmaker": "Kalshi_vs_DraftKings",
+        "market_type": "CROSS_VENUE_DISPERSION",
+        "overround_or_spread": 0.0135,
+        "line_value": -2.5,
+        "dk_sea_devig_win_share": 0.5635,
+        "kalshi_sea_mid_share": 0.555,
+        "dk_spread_2_5_juice_asymmetry": "SEA -2.5 (-112) vs DEN +2.5 (-108); total 40.5 Over -115 / Under -105"
+      },
+      "source": {
+        "kind": "derived",
+        "ref": "artifacts/forcing/odds.jsonl + espn_scoreboard_odds_latest.json (C-091, C-113)"
+      },
+      "as_of": "2026-10-15T21:19:03Z",
+      "visible_at": "2026-10-15T21:19:03Z"
+    },
+    {
+      "id": "matchup_tracking_context:2026_06_SEA_DEN:player:00-0033908",
+      "type": "matchup_tracking_context",
+      "from": "player:00-0033908",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Cooper Kupp",
+        "metric_type": "sleeper_proj_targets_and_espn_tracking",
+        "scalar_value": 3.75,
+        "proj_rec_tgt": 3.75,
+        "proj_rec": 2.29,
+        "proj_rec_yd": 30.01,
+        "espn_overall": 60.0,
+        "espn_catch": 72.0
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "artifacts/gse_brain/espnanalytics_receivers_latest.json + sleeper_projections_wk6_latest.json (C-040, C-058)"
+      },
+      "as_of": "2026-10-14T13:26:57Z",
+      "visible_at": "2026-10-14T13:26:57Z"
+    },
+    {
+      "id": "matchup_tracking_context:2026_06_SEA_DEN:player:00-0034348",
+      "type": "matchup_tracking_context",
+      "from": "player:00-0034348",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "DEN",
+        "player_name": "Courtland Sutton",
+        "metric_type": "sleeper_proj_targets_and_espn_tracking",
+        "scalar_value": 6.03,
+        "proj_rec_tgt": 6.03,
+        "proj_rec": 2.81,
+        "proj_rec_yd": 34.26,
+        "espn_overall": 73.0,
+        "espn_open": 74.0,
+        "espn_catch": 78.0
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "artifacts/gse_brain/espnanalytics_receivers_latest.json + sleeper_projections_wk6_latest.json (C-040, C-058)"
+      },
+      "as_of": "2026-10-14T13:26:57Z",
+      "visible_at": "2026-10-14T13:26:57Z"
+    },
+    {
+      "id": "matchup_tracking_context:2026_06_SEA_DEN:player:00-0037545",
+      "type": "matchup_tracking_context",
+      "from": "player:00-0037545",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Rashid Shaheed",
+        "metric_type": "sleeper_proj_targets_and_espn_tracking",
+        "scalar_value": 3.73,
+        "proj_rec_tgt": 3.73,
+        "proj_rec": 1.84,
+        "proj_rec_yd": 25.22,
+        "espn_overall": 55.0,
+        "espn_open": 62.0
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "artifacts/gse_brain/espnanalytics_receivers_latest.json + sleeper_projections_wk6_latest.json (C-040, C-058)"
+      },
+      "as_of": "2026-10-14T13:26:57Z",
+      "visible_at": "2026-10-14T13:26:57Z"
+    },
+    {
+      "id": "matchup_tracking_context:2026_06_SEA_DEN:player:00-0038543",
+      "type": "matchup_tracking_context",
+      "from": "player:00-0038543",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "team": "SEA",
+        "player_name": "Jaxon Smith-Njigba",
+        "metric_type": "sleeper_proj_targets_and_espn_tracking",
+        "scalar_value": 9.93,
+        "proj_rec_tgt": 9.93,
+        "proj_rec": 6.54,
+        "proj_rec_yd": 98.75,
+        "injury_status": "Questionable"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "artifacts/gse_brain/espnanalytics_receivers_latest.json + sleeper_projections_wk6_latest.json (C-040, C-058)"
+      },
+      "as_of": "2026-10-14T13:26:57Z",
+      "visible_at": "2026-10-14T13:26:57Z"
+    },
+    {
+      "id": "participates_in:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN",
+      "type": "participates_in",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "role": "home"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "participates_in:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+      "type": "participates_in",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "role": "away"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl"
+      },
+      "as_of": null,
+      "visible_at": null
+    },
+    {
+      "id": "rest_differential:2026_06_SEA_DEN:team:DEN->team:SEA",
+      "type": "rest_differential",
+      "from": "team:DEN",
+      "to": "team:SEA",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "rest_away_days": 4,
+        "rest_home_days": 4,
+        "rest_diff_home_minus_away": 0,
+        "away_prev_gameday": "2026-10-11",
+        "home_prev_gameday": "2026-10-11"
+      },
+      "source": {
+        "kind": "schedule",
+        "ref": "data/gse-dataset/games.jsonl (C-020)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:DEN:OLCAI",
+      "type": "sai_situational_scalar",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "OLCAI",
+        "team": "DEN",
+        "scalar_value": 0.480456,
+        "prior_week_game": "2026_05_DEN_LAC",
+        "disposition": "SCREENED-KILLED-REDUNDANT (shadow context; elevated OL attrition)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:DEN:QPTSR",
+      "type": "sai_situational_scalar",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "QPTSR",
+        "team": "DEN",
+        "scalar_value": 0.131357,
+        "prior_week_game": "2026_04_DEN_SF",
+        "disposition": "SCREENED-KILLED (shadow context: Nix quick-pressure-to-sack residual)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:DEN:SPESE",
+      "type": "sai_situational_scalar",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "SPESE",
+        "team": "DEN",
+        "scalar_value": 0.155436,
+        "prior_week_game": "2026_05_DEN_LAC",
+        "disposition": "SCREENED-SURVIVED (pre-registration slot PRJ-1)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:DEN:SWCC",
+      "type": "sai_situational_scalar",
+      "from": "team:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "SWCC",
+        "team": "DEN",
+        "scalar_value": 0.154725,
+        "prior_week_game": "2026_05_DEN_LAC",
+        "disposition": "REFUSED-PRIOR (shadow context)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:SEA:CAOFI",
+      "type": "sai_situational_scalar",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "CAOFI",
+        "team": "SEA",
+        "scalar_value": 1.25887,
+        "prior_week_game": "2026_03_SEA_WAS",
+        "disposition": "SCREENED-KILLED (shadow context: circadian/altitude friction baseline)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:SEA:OLCAI",
+      "type": "sai_situational_scalar",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "OLCAI",
+        "team": "SEA",
+        "scalar_value": 0.146833,
+        "prior_week_game": "2026_05_SF_SEA",
+        "disposition": "SCREENED-KILLED-REDUNDANT (shadow context)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:SEA:SPESE",
+      "type": "sai_situational_scalar",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "SPESE",
+        "team": "SEA",
+        "scalar_value": 0.132873,
+        "prior_week_game": "2026_05_SF_SEA",
+        "disposition": "SCREENED-SURVIVED (pre-registration slot PRJ-1)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "sai_situational_scalar:2026_06_SEA_DEN:team:SEA:SWCC",
+      "type": "sai_situational_scalar",
+      "from": "team:SEA",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "metric": "SWCC",
+        "team": "SEA",
+        "scalar_value": 0.0,
+        "prior_week_game": "2026_05_SF_SEA",
+        "disposition": "REFUSED-PRIOR (shadow context)"
+      },
+      "source": {
+        "kind": "dataset",
+        "ref": "dfs/walk_forward/sai_features_2026-10-15.jsonl (C-190..C-195)"
+      },
+      "as_of": "2026-10-11T23:59:00Z",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "id": "weather_extreme:2026_06_SEA_DEN:venue:DEN->game:2026_06_SEA_DEN",
+      "type": "weather_extreme",
+      "from": "venue:DEN",
+      "to": "game:2026_06_SEA_DEN",
+      "game": "2026_06_SEA_DEN",
+      "value": {
+        "temp_f": 52.5,
+        "temp_c": 11.4,
+        "wind_mph": 6.5,
+        "precip": 0.0,
+        "surface_pressure_hpa": 853.9,
+        "relative_humidity_pct": 43,
+        "air_density_kg_m3": 1.0454,
+        "sea_level_standard_rho": 1.225,
+        "air_density_reduction_pct": 14.66,
+        "extreme_flags": [
+          "LOW_AIR_DENSITY_ALTITUDE"
+        ]
+      },
+      "source": {
+        "kind": "forecast",
+        "ref": "Open-Meteo forecast for Denver CO (39.739N, -104.985W, 853.9 hPa) (C-014, C-182)"
+      },
+      "as_of": "2026-10-15T21:00:00Z",
+      "visible_at": "2026-10-15T21:00:00Z"
+    }
+  ],
+  "honest_empty": [
+    {
+      "edge_type": "layered_revenge",
+      "game_id": "2026_06_SEA_DEN",
+      "team": "SEA",
+      "missing": [
+        "multi-layer revenge trigger with pre-kickoff stamp"
+      ],
+      "reason": "no multi-layer emotional/schematic revenge edge qualifies under template contract"
+    },
+    {
+      "edge_type": "coaching_honesty",
+      "game_id": "2026_06_SEA_DEN",
+      "team": "SEA",
+      "missing": [
+        "stamped coach press-conference statement log"
+      ],
+      "reason": "statement-vs-observed log not populated for Week 6"
+    }
+  ],
+  "diagnostics": {
+    "total_edges": 66,
+    "total_nodes": 35,
+    "edges_by_type": {
+      "participates_in": 2,
+      "hosted_at": 1,
+      "in_week": 1,
+      "has_state": 5,
+      "rest_differential": 1,
+      "altitude": 1,
+      "altitude_short_week": 1,
+      "circadian_travel_friction": 2,
+      "weather_extreme": 1,
+      "injury_designation": 11,
+      "injury_burden": 2,
+      "depth_chart_replacement": 6,
+      "coaching_change": 1,
+      "coaching_tendency": 9,
+      "sai_situational_scalar": 8,
+      "line_movement": 3,
+      "market_hold_dispersion": 3,
+      "matchup_tracking_context": 4,
+      "injury_context_identity": 2,
+      "atmosphere": 1,
+      "logistical_disruption": 1
+    },
+    "failed_closed": {},
+    "honest_empty_count": 2,
+    "pit_rule": "visible_at <= 2026-10-15T22:45:00Z (kickoff - 90m) or timeless (None)"
+  }
+}

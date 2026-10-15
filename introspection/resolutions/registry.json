@@ -1,0 +1,40 @@
+{
+  "schema": "SPEC-C-resolution-registry-v1",
+  "generated_at": "2026-10-15T22:43:35Z",
+  "quantities": [
+    {
+      "id": "official_inactives",
+      "source": "ESPN summary / NFL gamebook inactives",
+      "resolvable": "machine"
+    },
+    {
+      "id": "pbp_epa_and_success_splits",
+      "source": "nflverse play_by_play_2026.parquet",
+      "resolvable": "machine"
+    },
+    {
+      "id": "player_target_and_carry_shares",
+      "source": "nflverse player_stats / PBP",
+      "resolvable": "machine"
+    },
+    {
+      "id": "closing_spread_and_total",
+      "source": "artifacts/forcing/odds.jsonl at kickoff_utc",
+      "resolvable": "machine"
+    },
+    {
+      "id": "kickoff_touchback_and_fg_distance",
+      "source": "nflverse PBP special teams plays",
+      "resolvable": "machine"
+    }
+  ],
+  "postmortem_taxonomy_rule": {
+    "categories": [
+      "SUPPORTED_MECHANISM",
+      "REFUTED_PREMISE",
+      "UNOBSERVED_SHOCK",
+      "VARIANCE"
+    ],
+    "variance_forcing_rule": "When all pre-kickoff premises in a domain resolve SUPPORTED on their intermediate mechanism (e.g., Surtain/Hufanga out, SEA target share >= threshold, pressure rate >= threshold) but the final game score margin contradicts the directional lean due to turnover luck (fumble recovery rate != 50%, tipped-pass INT) or single-play special teams/defensive TD with |EPA| > 3.5, the postmortem MUST be classified as VARIANCE; post-hoc narrative invention is prohibited."
+  }
+}

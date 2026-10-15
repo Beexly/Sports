@@ -148,11 +148,12 @@ def _live_reason_game():
 
 
 @pytest.mark.skipif(_live_reason_game() is None, reason="host lacks read-path deps/data")
-def test_reason_game_records_advisory_and_pick_stays_none():
+def test_reason_game_records_advisory_and_pick_stays_none(monkeypatch):
+    import reasoning_engine.run_game as rg
     reason_game = _live_reason_game()
     try:
-        doc = reason_game(conformal_advisory=NO_BET)
         baseline = reason_game()
+        doc = reason_game(conformal_advisory=NO_BET)
     except Exception as exc:  # host data/deps incomplete: source tests above stand
         pytest.skip(f"read path not runnable on this host: {exc}")
     assert doc["conformal_pass_discipline"] == NO_BET
@@ -160,5 +161,9 @@ def test_reason_game_records_advisory_and_pick_stays_none():
     assert doc["probability_before_calibration"] is None
     assert doc["probability_after_calibration"] is None
     assert doc["mint"] == "withhold"
-    assert "conformal pass discipline NO_BET" in doc["note"]
     assert "conformal_pass_discipline" not in baseline
+    # Also verify that when checklist is clean, conformal NO_BET is the reason in note
+    monkeypatch.setattr(rg, "_checklist", lambda _trace: dict(CLEAN_CHECKLIST))
+    monkeypatch.setattr(rg, "_label", lambda _trace: "FINAL")
+    clean_doc = reason_game(conformal_advisory=NO_BET)
+    assert "conformal pass discipline NO_BET" in clean_doc["note"]

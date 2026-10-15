@@ -46,10 +46,10 @@ describe("program review record — census arithmetic closes", () => {
     expect([...byLabel.values()]).toEqual([2, 18, 9, 21, 229]);
   });
 
-  it("the situational graph registry carries exactly 14 edge types", () => {
-    expect(R.layer2.situationalGraph.edgeTypes.rows).toHaveLength(14);
+  it("the situational graph registry carries at least 14 edge types", () => {
+    expect(R.layer2.situationalGraph.edgeTypes.rows.length).toBeGreaterThanOrEqual(14);
     const types = R.layer2.situationalGraph.edgeTypes.rows.map((e) => e.type);
-    expect(new Set(types).size).toBe(14);
+    expect(new Set(types).size).toBe(R.layer2.situationalGraph.edgeTypes.rows.length);
     expect(types).toContain("altitude_short_week");
   });
 

@@ -1,0 +1,209 @@
+{
+  "emission_status": "ZERO_OBJECT",
+  "game_id": "2026_06_SEA_DEN",
+  "kickoff_utc": "2026-10-16T00:15:00Z",
+  "matchup": "Seattle Seahawks @ Denver Broncos",
+  "pit_cutoff_utc": "2026-10-15T22:45:00Z",
+  "premise_count": 8,
+  "premises": [
+    {
+      "AFFECTED": "team:SEA (defensive front rotational stamina and 4th-quarter pass-rush snap sustainment)",
+      "DIRECTION": "AGAINST_AWAY",
+      "MAGNITUDE": "STRONG",
+      "TRIGGER": "Visiting sea-level team (Seattle, 0 ft) playing at Empower Field at Mile High (5,280 ft) on a 4-day Sunday-to-Thursday turnaround with Wednesday travel (zero physiological hematocrit acclimatization window).",
+      "census_ids": [
+        "C-022",
+        "C-195"
+      ],
+      "confidence_class": "CORROBORATED",
+      "edge_ids": [
+        "altitude:2026_06_SEA_DEN:team:SEA->venue:DEN",
+        "altitude_short_week:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN",
+        "has_state:2026_06_SEA_DEN:team:SEA->state:ALTITUDE_VISIT"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Rest / Travel / Altitude",
+      "non_stat_context": true,
+      "p": 0.64,
+      "premise_id": "P-01",
+      "resolution_criterion": "Machine-checkable post-game via nflverse participation/PBP: SEA defensive 2H EPA/play allowed minus 1H EPA/play allowed > +0.05, or SEA defensive DL snap rotation dispersion increases in Q3-Q4.",
+      "stamp_source": "intelligence/situational-graph/inputs/venues.json + data/gse-dataset/games.jsonl (as_of=2026-10-11T23:59:00Z)",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "AFFECTED": "game:2026_06_SEA_DEN (net rest-day differential baseline)",
+      "DIRECTION": "NEUTRAL",
+      "MAGNITUDE": "NEUTRAL",
+      "TRIGGER": "Rest differential is 0 days (both SEA and DEN played Sunday 2026-10-11 in Week 5 and enter on 4 days rest).",
+      "census_ids": [
+        "C-020"
+      ],
+      "confidence_class": "STAMPED",
+      "edge_ids": [
+        "rest_differential:2026_06_SEA_DEN:team:DEN->team:SEA",
+        "has_state:2026_06_SEA_DEN:team:DEN->state:SHORT_WEEK",
+        "has_state:2026_06_SEA_DEN:team:SEA->state:SHORT_WEEK"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Rest / Travel / Altitude",
+      "non_stat_context": false,
+      "p": 0.5,
+      "premise_id": "P-02",
+      "resolution_criterion": "Deterministic pre-kickoff schedule invariant: rest_home_days - rest_away_days == 0.",
+      "stamp_source": "data/gse-dataset/games.jsonl (rest_away=4, rest_home=4, rest_diff=0, as_of=2026-10-11T23:59:00Z)",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "AFFECTED": "team:SEA (early-quarter offensive timing and false-start / procedural penalty rate)",
+      "DIRECTION": "FRICTION",
+      "MAGNITUDE": "MODERATE",
+      "TRIGGER": "Seattle travels 1,021.4 statute miles eastward (+1h PT->MT timezone shift) on Wednesday after a physical Week 5 divisional game vs SF on FieldTurf, transitioning to outdoor natural grass at 5,280 ft on 96 hours recovery.",
+      "census_ids": [
+        "C-019",
+        "C-018"
+      ],
+      "confidence_class": "STAMPED",
+      "edge_ids": [
+        "circadian_travel_friction:2026_06_SEA_DEN:team:SEA->venue:DEN",
+        "logistical_disruption:2026_06_SEA_DEN:team:SEA->game:2026_06_SEA_DEN"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Rest / Travel / Altitude",
+      "non_stat_context": true,
+      "p": 0.58,
+      "premise_id": "P-03",
+      "resolution_criterion": "Machine-checkable via PBP: SEA pre-snap procedural penalties (false start, delay of game, illegal shift) >= 2 in 1H or 1Q offensive success rate below season mean.",
+      "stamp_source": "data/gse-dataset/games.jsonl (2026_05_SF_SEA -> 2026_06_SEA_DEN, as_of=2026-10-11T23:59:00Z)",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "AFFECTED": "team:DEN (mitigates pure home-rest advantage; both teams endured Sunday physical divisional games)",
+      "DIRECTION": "FRICTION",
+      "MAGNITUDE": "WEAK",
+      "TRIGGER": "Denver also traveled in Week 5 (831 miles from Inglewood dome MatrixTurf at LAC on 2026-10-11 back to Denver outdoor grass), carrying prior-week SWCC=0.1547.",
+      "census_ids": [
+        "C-019",
+        "C-190"
+      ],
+      "confidence_class": "STAMPED",
+      "edge_ids": [
+        "circadian_travel_friction:2026_06_SEA_DEN:team:DEN->venue:DEN",
+        "sai_situational_scalar:2026_06_SEA_DEN:team:DEN:SWCC"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Rest / Travel / Altitude",
+      "non_stat_context": false,
+      "p": 0.53,
+      "premise_id": "P-04",
+      "resolution_criterion": "Machine-checkable via PBP: combined 1H offensive yards per play below season average for both teams (< 5.2 YPP).",
+      "stamp_source": "data/gse-dataset/games.jsonl (2026_05_DEN_LAC) + dfs/walk_forward/sai_features_2026-10-15.jsonl",
+      "visible_at": "2026-10-11T23:59:00Z"
+    },
+    {
+      "AFFECTED": "game:2026_06_SEA_DEN (aerodynamic drag reduction on 50+ yard field goals for Wil Lutz / Jason Myers and touchback hang-time/distance for Michael Dickson / Jeremy Crawshaw)",
+      "DIRECTION": "FAVORS_HOME",
+      "MAGNITUDE": "MODERATE",
+      "TRIGGER": "Stamped Open-Meteo kickoff forecast for Denver (52.5 F / 11.4 C, wind 6.5 mph, 0% precip, surface pressure 853.9 hPa, RH 43%) yields dry-air density rho = 1.0454 kg/m3 \u2014 a 14.66% reduction vs sea-level standard (1.2250 kg/m3) with benign wind.",
+      "census_ids": [
+        "C-014",
+        "C-182"
+      ],
+      "confidence_class": "STAMPED",
+      "edge_ids": [
+        "weather_extreme:2026_06_SEA_DEN:venue:DEN->game:2026_06_SEA_DEN"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Additional Layer \u2014 Atmospheric Physics & Kicking/Deep-Ball Carry",
+      "non_stat_context": true,
+      "p": 0.63,
+      "premise_id": "P-05",
+      "resolution_criterion": "Machine-checkable via PBP: kickoff touchback rate >= 75% and/or at least one successful field goal attempt >= 50 yards (or zero short kicks on 50-56 yd attempts).",
+      "stamp_source": "Open-Meteo forecast Denver CO (39.739N, -104.985W, P=853.9hPa, T=11.4C, observed_at=2026-10-15T21:00:00Z)",
+      "visible_at": "2026-10-15T21:00:00Z"
+    },
+    {
+      "AFFECTED": "team:DEN (boundary man-coverage lockdown removed; Vance Joseph cannot isolate LCB1 in single-coverage on JSN or Rashid Shaheed)",
+      "DIRECTION": "FAVORS_AWAY",
+      "MAGNITUDE": "STRONG",
+      "TRIGGER": "Denver All-Pro LCB1 Pat Surtain II (00-0036874) is stamped OUT (ankle, 2026-10-14T22:18:00Z); rookie LCB2 Jahdae Barron (00-0040720) elevates to boundary starter per depth_charts_2026.parquet (2026-10-14T12:51:31Z).",
+      "census_ids": [
+        "C-015",
+        "C-024",
+        "C-075"
+      ],
+      "confidence_class": "CORROBORATED",
+      "edge_ids": [
+        "injury_designation:2026_06_SEA_DEN:player:00-0036874->game:2026_06_SEA_DEN",
+        "depth_chart_replacement:2026_06_SEA_DEN:player:00-0036874->player:00-0040720"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Injury Context & Coverage Replacement",
+      "non_stat_context": true,
+      "p": 0.68,
+      "premise_id": "P-06",
+      "resolution_criterion": "Machine-checkable via official gamebook inactives + PBP: Pat Surtain II inactive AND SEA WR corps (JSN + Kupp + Shaheed) achieves >= 140 combined receiving yards or positive receiving EPA.",
+      "stamp_source": "artifacts/forcing/injury_timestamped.jsonl (espn_summary 2026-10-14T22:18:00Z) + depth_charts_2026.parquet (2026-10-14T12:51:31Z)",
+      "visible_at": "2026-10-14T22:18:00Z"
+    },
+    {
+      "AFFECTED": "team:DEN (strong-side box run fits, TE seam matching vs AJ Barner, and pre-snap safety rotation disguise)",
+      "DIRECTION": "FAVORS_AWAY",
+      "MAGNITUDE": "MODERATE",
+      "TRIGGER": "Denver starting SS1 Talanoa Hufanga (00-0036564) is stamped OUT (ankle, 2026-10-14T22:19:00Z); SS2 JL Skinner (00-0038605) elevates alongside FS Brandon Jones.",
+      "census_ids": [
+        "C-015",
+        "C-024",
+        "C-075"
+      ],
+      "confidence_class": "CORROBORATED",
+      "edge_ids": [
+        "injury_designation:2026_06_SEA_DEN:player:00-0036564->game:2026_06_SEA_DEN",
+        "depth_chart_replacement:2026_06_SEA_DEN:player:00-0036564->player:00-0038605"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Injury Context & Coverage Replacement",
+      "non_stat_context": true,
+      "p": 0.63,
+      "premise_id": "P-07",
+      "resolution_criterion": "Machine-checkable via PBP: Talanoa Hufanga inactive AND SEA tight ends (AJ Barner / Eric Saubert) + middle-of-field pass targets produce >= 35 receiving yards or >= 4 receptions.",
+      "stamp_source": "artifacts/forcing/injury_timestamped.jsonl (espn_summary 2026-10-14T22:19:00Z) + depth_charts_2026.parquet (2026-10-14T12:51:31Z)",
+      "visible_at": "2026-10-14T22:19:00Z"
+    },
+    {
+      "AFFECTED": "team:DEN (secondary cluster depletion: 2.5 of 4 starting DBs out/impaired; forces Vance Joseph to choose between unprotected blitzes or passive Cover-2/Cover-4 shells)",
+      "DIRECTION": "FAVORS_AWAY",
+      "MAGNITUDE": "STRONG",
+      "TRIGGER": "Denver RCB1 Riley Moss (00-0038552) is stamped QUESTIONABLE (ribs, 2026-10-14T22:19:00Z) with RCB2 Kris Abrams-Draine (00-0039371) behind him, compounding the simultaneous loss of LCB1 Surtain and SS1 Hufanga.",
+      "census_ids": [
+        "C-015",
+        "C-024"
+      ],
+      "confidence_class": "CORROBORATED",
+      "edge_ids": [
+        "injury_designation:2026_06_SEA_DEN:player:00-0038552->game:2026_06_SEA_DEN",
+        "depth_chart_replacement:2026_06_SEA_DEN:player:00-0038552->player:00-0039371",
+        "injury_context_identity:2026_06_SEA_DEN:team:DEN->game:2026_06_SEA_DEN"
+      ],
+      "game_id": "2026_06_SEA_DEN",
+      "layer": "Injury Context & Coverage Replacement",
+      "non_stat_context": true,
+      "p": 0.66,
+      "premise_id": "P-08",
+      "resolution_criterion": "Machine-checkable via PBP: Sam Darnold achieves >= 6.8 yards per pass attempt or >= 2 explosive pass completions (>= 20 yards) against Denver's depleted secondary.",
+      "stamp_source": "artifacts/forcing/injury_timestamped.jsonl + depth_charts_2026.parquet (as_of=2026-10-15T15:36:00Z)",
+      "visible_at": "2026-10-15T15:36:00Z"
+    }
+  ],
+  "retro": false,
+  "schema": "SPEC-C-dossier-v1",
+  "season": 2026,
+  "server_stamped_at": "2026-10-15T20:33:59Z",
+  "t0_line_move_forecast": {
+    "direction": null,
+    "earliest_observed_at": "2026-10-15T18:13:47Z",
+    "reason": "T0 (kickoff - 72h = 2026-10-13T00:15:00Z) snapshot absent; earliest archiver observation is 2026-10-15T18:13:47Z. Scored against frozen reference per SPEC-C.",
+    "status": "MISSING"
+  },
+  "version": 1,
+  "week": 6
+}
