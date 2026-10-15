@@ -1,0 +1,107 @@
+{
+  "label": "Office-document sweep + archive listing. Two findings here are serious enough to act on before any further model work.",
+  "generated_at": "2026-10-14",
+
+  "office_sweep_final": {
+    "documents_mined": 78,
+    "shards": 5,
+    "unique_findings": 1428,
+    "by_category": {"equations": 310, "parameters": 326, "algorithms": 150,
+                    "data_sources": 117, "measured_results": 242,
+                    "blockers": 198, "contradictions": 85},
+    "real_provenance_orphans": 25,
+    "orphan_note": "Most OFFICE_XLSX 'orphans' are the agent correctly citing cell addresses in the ORIGINAL .xlsx after it bypassed my broken .txt dump and read xl/worksheets/*.xml directly. That is better provenance than the dump, not worse.",
+    "artifact": "dfs/walk_forward/corpus_extraction_office.json"
+  },
+
+  "CRITICAL_FINDING_1_BRIER_FLOOR_IS_NON_BINDING": {
+    "severity": "HIGH — a published quality gate does not test what it claims to test",
+    "claim_a": "The gate uses a Brier <= 0.22 publishability floor.",
+    "claim_b": "At base rate 0.69 a ZERO-SKILL constant forecast yields Brier 0.2139 < 0.22. The floor is passed by a model with no predictive power whatsoever.",
+    "source": "ASTRA-PACK-COMBINED.docx",
+    "action": "Replace the absolute Brier floor with a skill-score floor (Brier Skill Score vs base rate), which is zero for a constant forecast and cannot be gamed by the base rate."
+  },
+
+  "CRITICAL_FINDING_2_ECE_FAILS_ON_DEPLOYED_VERSION": {
+    "severity": "HIGH",
+    "detail": "Deployed v5.2.7 ECE 0.1089 vs floor 0.05 — it FAILS its own floor — while the pooled sample clears. The aggregate number hides the deployed regression.",
+    "source": "ASTRA-PACK-COMBINED.docx",
+    "related": "Best single version (v5.2.7) Brier 0.2489 on n=353; Brier after perfect recalibration ~0.244 on n=1663, i.e. recalibration buys almost nothing.",
+    "action": "Gate on the DEPLOYED version, not the pooled sample."
+  },
+
+  "CRITICAL_FINDING_3_MURPHY_DECOMPOSITION_DOES_NOT_RECONCILE": {
+    "severity": "MEDIUM-HIGH",
+    "detail": "At 10 equal-width bins rel - res + unc = 0.2438 but Brier = 0.2106; within-bin residual ~0.033. The terms are not additive at that bin count, so using the decomposition as a reconciliation check is unsound.",
+    "source": "office contradiction extract",
+    "action": "Either use many more bins / adaptive binning, or stop treating rel-res+unc == Brier as a validation check."
+  },
+
+  "CLV_INTEGRITY": {
+    "denominator_contamination": "System CLV 23.2% [0.212,0.253] counts MATCHED_CLOSE failures as non-beats; decided-only CLV 40.8% [0.377,0.441]. Both must be published. Floor is 52.4% at -110. Neither clears it.",
+    "surface_contamination": "ELITE's canUseClvLedger gates a client-only localStorage manual bet log with NO code path to the platform's own graded picks (docs/data/CARDS_PROOF_LADDER.md:69-73). Any CLV from that surface is not platform CLV.",
+    "contested_benchmark": "The market-efficiency assumption behind CLV is itself contested (1710.02824, 2008.01485). The build plan's cheapest high-value action is: does CLV actually correlate with better Brier in GSE's own settled picks? If not, the benchmark needs revisiting."
+  },
+
+  "MARKET_LINES_AS_FEATURES_unresolved_and_load_bearing": {
+    "claim_a": "nflfastR/Baldwin: adding the pre-game point spread to the WP model cuts log loss 0.52 -> 0.44 and error 27% -> 23%. Spread as a feature is beneficial.",
+    "claim_b": "World-Class audit: incorporating closing lines or near-game odds as features destroys CLV measurement (target leakage); the pure performance engine must stay decoupled.",
+    "status": "UNRESOLVED. This is not academic — it decides whether the engine may use the single most informative available feature.",
+    "note": "The de-vigged close over 5,281 NFL games 2006-2025 is already calibrated: pooled Brier 0.2106, adaptive ECE 0.0126, and isotonic/Platt/beta beat identity by <= 0.0005. Market moneyline recalibration is therefore KILLED for the engine, and bridge-model.ts rebuild is prohibited (stated Brier 0.2237 vs spread-bucket 0.2120 on 285 sealed 2025 games)."
+  },
+
+  "GOVERNANCE_KILLS_confirmed_in_unread_docs": {
+    "maher_independent_poisson_totals": "dead",
+    "dixon_coles_four_cell": "dead",
+    "karlis_ntzoufras_bivariate_poisson_nfl_spreads": "dead",
+    "verbatim_ban": "'Soccer-derived process assumptions (Dixon-Coles tau, Poisson goals) do not port to NFL - port explicitly banned.' Reinforced by 1807.07536: 'NOT a license to port soccer tau; NFL re-derivation only'.",
+    "market_moneyline_recalibration": "killed ('the de-vigged close is calibrated', 5,281-game identity result)",
+    "soft_elo_mae_45.9_to_17.9": "killed as a build until ledger 0540 is read and the sport/sample is stated NFL",
+    "coverage_transformer_0.894": "demoted to dataset-gated (needs NGS tracking absent from the plane)"
+  },
+
+  "OTHER_REAL_BUGS_FOUND": {
+    "ci_sample_division_bug": "Gap 1 OPEN — analyze_nfl.py in v7 delivery divides by sqrt(n), understating interval width. Fix = overwrite with interval_fix.py draws logic (2.5%/97.5% percentiles). Source: Sports Engine and Glicko2 Audit.docx",
+    "poisson_already_killed_for_td_props": "1002.0797 is described as 'direct evidence on the Poisson assumption GSE killed for TD props' — so the build plan's 'run the Poisson baseline as a cheap diagnostic' is only new for MARGIN, not for TD props.",
+    "brier_error_bars_missing": "'GSE reports Brier floors; error bars are missing' — 1303.6182 variance estimation is the candidate fix; kill if delta-method variance misfits correlated picks (games per slate)."
+  },
+
+  "ARCHIVES_listed_not_extracted": {
+    "GSE. 10.2.26-20261014T184234Z-1-001.zip": {"size_MB": 2069, "members": 367, "texty_MB": 64.8,
+      "notable": ["combine_tracking.xlsx (38.9 MB — NFL Combine tracking, never opened)",
+                  "repo-intel/Deep Research Equation Extraction.docx",
+                  "repo-intel/gse_research_analysis_2.xlsx", "GROK 4.docx (818 KB)"],
+      "status": "UNEXTRACTED"},
+    "GSE. 10.2.26-20261003T021143Z-1-001.zip": {"size_MB": 1526, "members": 327, "texty_MB": 9.4,
+      "notable": ["What I Was Still Missing.docx (791 KB — never read)",
+                  "sports-api-provider-policy.md x4", "GSE-REPO-INTELLIGENCE.md"],
+      "status": "UNEXTRACTED"},
+    "eb89c0e3.zip": {"size_MB": 700, "members": 1421, "texty_MB": 588.9,
+      "notable": ["prod-grok-backend.json (588 MB single file — a production grok backend export)"],
+      "status": "UNEXTRACTED — size makes it a separate job; contents unverified"},
+    "e2b7702e.zip": {"size_MB": 695, "members": 1353, "texty_MB": 581.2,
+      "notable": ["prod-grok-backend.json (581 MB) — near-duplicate of the eb89c0e3 export"],
+      "status": "UNEXTRACTED — likely duplicate of eb89c0e3"},
+    "EYI Package_10-12-2026.zip": {"size_MB": 536, "members": 618, "texty_MB": 31.7,
+      "notable": ["snapshots/espn_injuries_2026-10-09.json (8.8 MB — live injury snapshot)",
+                  "manifest.json (9.2 MB)", "Conversation with Muse AI (4.9 MB)",
+                  "workspace/goals/** research files"],
+      "status": "UNEXTRACTED"},
+    "GSE.zip": {"size_MB": 174, "members": 57, "texty_MB": 31.6,
+      "notable": ["extract-data-2026-09-11 (5).json (17.3 MB)", "World-Class Sports Probability Engine Corpus Audit.docx",
+                  "CQR Research.docx", "Auditing Conformal Prediction...docx", "firecrawl_activity_logs"],
+      "status": "UNEXTRACTED"},
+    "gse_full_transfer_2026-10-10.tar.gz": {"size_MB": 0.7, "members": 23, "texty_MB": 9.9,
+      "notable": ["snapshots/espn_injuries_2026-10-09.json (8.8 MB)",
+                  "snapshots/pinnacle_mkt_*.json x12 (closing-line snapshots — CLV measurement input)"],
+      "status": "UNEXTRACTED — small and high-value, cheapest remaining win"}
+  },
+
+  "arxiv_pdf_status": {
+    "pdfs_with_gse_relevant_content": "extraction running; ~80 arxiv-ID PDFs on disk were mis-classified 'not-gse' by a filename keyword filter and are being re-triaged on CONTENT",
+    "index": "gse_research_analysis.xlsx IS the index to that local PDF pile (1343 papers with relevance_to_GSE and creative_use columns)"
+  },
+
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
