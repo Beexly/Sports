@@ -1,0 +1,94 @@
+=== date ===
+14 Oct 2026 20:13:36
+=== git local HEAD ===
+9a6e159d6261ba932bf2aaf6127d9bb33a3bd42b
+=== git origin ref ===
+9a6e159d6261ba932bf2aaf6127d9bb33a3bd42b	refs/heads/grok/walk-forward-2026-10-14
+=== walk_forward.json must be unmodified ===
+(empty above = clean)
+=== baseline repro ===
+n 2462 skipped 0 crps 7.154020678264403
+missing rest rows 0
+=== test_hybrid_crps ===
+test_matches_on_frozen_filter_subsample (test_hybrid_crps.TestPureGaussianLimit.test_matches_on_frozen_filter_subsample) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.049s
+
+OK
+=== test_rest_beta ===
+test_none_when_history_thin (test_rest_beta.TestRestBeta.test_none_when_history_thin) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.008s
+
+OK
+=== pre-existing harness test_wf_margin_crps ===
+test_p_home_win (__main__.TestLaplace.test_p_home_win) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.228s
+
+OK
+=== score_hybrid result ===
+{
+ "n": 2462,
+ "gaussian_crps": 7.154021,
+ "hybrid_crps": 7.13793,
+ "delta": -0.016091,
+ "fallback_levels": {
+  "0": 1540,
+  "1": 647,
+  "2": 178,
+  "3": 66,
+  "4": 31
+ },
+ "beta_last": -0.15,
+ "leak": false,
+ "reproduction_target": 7.129681,
+ "reproduced_within_1e-4": false,
+ "gate": 7.099,
+ "gate_cleared": false,
+ "passed": false,
+ "mu": "spread_line",
+ "sigma_base": 13.45,
+ "beta_bound": 0.15,
+ "atoms": "residual-relative +-3, +-7",
+ "skipped_rows": 0
+}=== week6 freeze ===
+{
+ "mode": "ZERO_OBJECT",
+ "frozen_at": "2026-10-14",
+ "note": "Gate not cleared. Emission stays the 0-object. passed remains false.",
+ "hybrid_crps_on_frozen_filter": 7.13793,
+ "gaussian_crps_on_frozen_filter": 7.154021,
+ "reproduction_target": 7.129681,
+ "reproduced_within_1e-4": false,
+ "n": 2462,
+ "gate": 7.099,
+ "passed": false,
+ "emission": "0 picks / 0 parlays / 0 DFS"
+}
+=== EMISSION LOCK RE-VERIFICATION (read-only, CI cannot see this dir) ===
+--- gate probe: every branch must be open=false ---
+real committed file      open=false not_passed
+missing                  open=false missing
+garbage                  open=false unparseable
+passed=false fresh       open=false not_passed
+passed='true' string     open=false not_passed
+stale                    open=false stale
+no generated_at          open=false no_generated_at
+--- vitest walk-forward-emission-lock (expect 16 passed) ---
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+--- vitest board-fill (expect 4 passed) ---
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+--- independent-fair upsert ban: gate guard precedes any db access ---
+45:import { readWalkForwardGate } from "./walk-forward-gate.js";
+269:  const wfGate = readWalkForwardGate({ path: opts?.walkForwardGatePath, now: opts?.now });
+  -> line 269 gate check returns zeroSignalSlate BEFORE buildIndependentFairValues (565) and pick writes (946, 960)
+--- gate file must be unmodified ---
+(empty above = clean)
+--- passed value in committed gate file ---
+passed = False
