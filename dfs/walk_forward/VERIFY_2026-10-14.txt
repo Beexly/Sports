@@ -92,3 +92,17 @@ no generated_at          open=false no_generated_at
 (empty above = clean)
 --- passed value in committed gate file ---
 passed = False
+
+=== LEAK SUITE (corrected assertion) — 14 Oct 2026 21:40:27 ===
+Ran 6 tests in 2786.627s -- OK, exit 0
+  test_prior_only_not_better_than_leaky ....... ok
+  test_one_week_shift_placebo .................. ok
+  test_last_week_perturbation_is_inert ......... ok
+  test_n_and_baseline_are_locked ............... ok
+  test_passed_is_always_false .................. ok
+  test_mu_is_never_fitted ...................... ok
+Note: the third case asserts the PRIOR 2447 games are bit-identical when the
+final week (2026 W5, 15 games) is perturbed. The final week's own rows
+legitimately move. Measured full-filter shift 5.989766 vs 6.0926 predicted
+from those 15 games alone -- the shortfall is because those rows' CRPS is
+bounded, not a full +1000. No lookahead.
