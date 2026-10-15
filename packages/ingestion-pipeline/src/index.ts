@@ -200,6 +200,43 @@ export type { FixtureCollapseRow } from "./fixture-collapse.js";
 export { markClosingSnapshotsIfEnabled } from "./line-archive.js";
 export type { MarkClosingSnapshotsIfEnabledResult } from "./line-archive.js";
 
+// Forward line archiver — ESPN/DraftKings leg. Standalone hourly producer
+// of OPEN/INTERIM OddsLineSnapshot rows for NFL games T-7d → kickoff (the
+// original archive only persisted what the paid refresh already fetched, and
+// with LINE_ARCHIVE_ENABLED never flipped the table stayed empty — L-14).
+// The job is hard-gated on LINE_ARCHIVE_ENABLED; see
+// src/line-archiver/README.md for the operator runbook.
+export {
+  runEspnLineArchiver,
+  runEspnLineArchiverIfEnabled,
+  createDbLineArchiveStore,
+  createJsonlLineArchiveStore,
+  selectEventsInWindow,
+  classifyLineArchivePhase,
+  serializeLineArchiveRow,
+  zeroEspnLineArchiverResult,
+  ESPN_LINE_ARCHIVE_SOURCE,
+  LINE_ARCHIVER_SPORT_KEY,
+  LINE_ARCHIVER_WINDOW_DAYS,
+  LINE_ARCHIVER_MAX_EVENTS,
+} from "./line-archiver/espn-line-archive.js";
+export type {
+  EspnLineArchiverDeps,
+  EspnLineArchiverResult,
+  EspnLineArchiverIfEnabledResult,
+  LineArchiveInsertRow,
+  LineArchivePhase,
+  LineArchiveStore,
+  LineArchiveStoreDb,
+  JsonlFileSystem,
+  WindowSelection,
+} from "./line-archiver/espn-line-archive.js";
+export { runLineArchiverJob } from "./line-archiver/run-line-archiver.js";
+export type {
+  RunLineArchiverJobOptions,
+  RunLineArchiverJobResult,
+} from "./line-archiver/run-line-archiver.js";
+
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
 export {
