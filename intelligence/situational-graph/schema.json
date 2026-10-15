@@ -1,0 +1,191 @@
+{
+ "$defs": {
+  "edge": {
+   "properties": {
+    "as_of": {
+     "description": "ISO date or datetime from which the fact was knowable. null = timeless reference data (always visible). An edge is visible to a read at time T iff as_of is null or as_of <= T.",
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from": {
+     "type": "string"
+    },
+    "game": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "id": {
+     "type": "string"
+    },
+    "source": {
+     "$ref": "#/$defs/source"
+    },
+    "to": {
+     "type": "string"
+    },
+    "type": {
+     "type": "string"
+    },
+    "value": {
+     "type": "object"
+    }
+   },
+   "required": [
+    "id",
+    "type",
+    "from",
+    "to",
+    "game",
+    "value",
+    "source",
+    "as_of"
+   ],
+   "type": "object"
+  },
+  "honestEmpty": {
+   "properties": {
+    "edge_type": {
+     "type": "string"
+    },
+    "game_id": {
+     "type": "string"
+    },
+    "missing": {
+     "items": {
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "reason": {
+     "type": "string"
+    },
+    "team": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "edge_type",
+    "game_id",
+    "missing",
+    "reason"
+   ],
+   "type": "object"
+  },
+  "node": {
+   "properties": {
+    "id": {
+     "pattern": "^(team|player|venue|week|game|state):",
+     "type": "string"
+    },
+    "kind": {
+     "enum": [
+      "team",
+      "player",
+      "venue",
+      "week",
+      "game",
+      "state"
+     ]
+    },
+    "state": {
+     "enum": [
+      "SHORT_WEEK",
+      "ALTITUDE_VISIT",
+      "THURSDAY_GAME",
+      "POST_BYE",
+      "REVENGE_GAME",
+      "DISRUPTION"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "kind"
+   ],
+   "type": "object"
+  },
+  "source": {
+   "properties": {
+    "kind": {
+     "enum": [
+      "schedule",
+      "venue_static",
+      "injury_report",
+      "repo_doc",
+      "dataset",
+      "forecast",
+      "manual_read",
+      "derived"
+     ]
+    },
+    "ref": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "kind",
+    "ref"
+   ],
+   "type": "object"
+  }
+ },
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "properties": {
+  "builder": {
+   "type": "string"
+  },
+  "diagnostics": {
+   "type": "object"
+  },
+  "edges": {
+   "items": {
+    "$ref": "#/$defs/edge"
+   },
+   "type": "array"
+  },
+  "generated_at": {
+   "type": "string"
+  },
+  "graph": {
+   "const": "gse-situational-graph"
+  },
+  "honest_empty": {
+   "items": {
+    "$ref": "#/$defs/honestEmpty"
+   },
+   "type": "array"
+  },
+  "nodes": {
+   "items": {
+    "$ref": "#/$defs/node"
+   },
+   "type": "array"
+  },
+  "season": {
+   "type": "integer"
+  },
+  "version": {
+   "const": "1.0"
+  },
+  "week": {
+   "type": "integer"
+  }
+ },
+ "required": [
+  "graph",
+  "version",
+  "season",
+  "week",
+  "nodes",
+  "edges",
+  "honest_empty"
+ ],
+ "title": "GSE Situational Graph v1 document",
+ "type": "object"
+}

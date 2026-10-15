@@ -1,0 +1,151 @@
+{
+ "source": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+ "pulled_at": "2026-10-15T11:36:00-04:00",
+ "week": 6,
+ "gate": "fixture: no pull performed; see fixture_provenance",
+ "team_count": 2,
+ "row_count": 10,
+ "teams": [
+  {
+   "team": "DEN",
+   "name": "Denver Broncos",
+   "injuries": [
+    {
+     "athlete": "Pat Surtain II",
+     "position": "CB",
+     "status": "Out",
+     "date": "2026-10-15",
+     "detail": "Ankle",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Talanoa Hufanga",
+     "position": "S",
+     "status": "Out",
+     "date": "2026-10-15",
+     "detail": "Ankle",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Riley Moss",
+     "position": "CB",
+     "status": "Questionable",
+     "date": "2026-10-15",
+     "detail": "Ribs",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Pat Bryant",
+     "position": "WR",
+     "status": "Injured Reserve",
+     "date": "2026-10-15",
+     "detail": "Ankle",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Jonah Coleman",
+     "position": "RB",
+     "status": "Injured Reserve",
+     "date": "2026-10-15",
+     "detail": "Ankle",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    }
+   ]
+  },
+  {
+   "team": "SEA",
+   "name": "Seattle Seahawks",
+   "injuries": [
+    {
+     "athlete": "Zach Charbonnet",
+     "position": "RB",
+     "status": "Out",
+     "date": "2026-10-15",
+     "detail": "Knee",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Chazz Surratt",
+     "position": "LB",
+     "status": "Out",
+     "date": "2026-10-15",
+     "detail": "Calf",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Drake Thomas",
+     "position": "LB",
+     "status": "Out",
+     "date": "2026-10-15",
+     "detail": "Ankle",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Julian Neal",
+     "position": "CB",
+     "status": "Injured Reserve",
+     "date": "2026-10-15",
+     "detail": "Hamstring",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    },
+    {
+     "athlete": "Jadarian Price",
+     "position": "RB",
+     "status": "Injured Reserve",
+     "date": "2026-10-15",
+     "detail": "Chest",
+     "side": null,
+     "return_date": null,
+     "reported_at": "2026-10-15",
+     "pulled_at": "2026-10-15T11:36:00-04:00",
+     "source": "espn-nfl-injuries"
+    }
+   ]
+  }
+ ],
+ "fixture_provenance": {
+  "kind": "FIXTURE \u2014 declared, not live data",
+  "facts_source": "~/workspace/your_files/sea-den-workorder0-inputs-2026-10-15.md (WORK ORDER 0 INPUT PACKET, Motif pull of ESPN designations 2026-10-15 10:31-10:36 AM CT)",
+  "statuses_and_injuries": "verbatim from the packet (OUT / QUESTIONABLE / Injured Reserve designations and body parts)",
+  "positions": "packet-stated for Surtain II (CB1), Moss (starting corner), Hufanga (starting safety), Charbonnet (RB2), Surratt and Thomas (linebacker depth); positions for the four IR-listed players (Bryant WR, Coleman RB, Neal CB, Price RB) supplemented from team rosters as of 2026-10-15 by the fixture author",
+  "reported_at": "the packet date 2026-10-15 for every row: the packet is the source document and carries no per-player publication times",
+  "pulled_at": "the packet pull moment, expressed on the G-02 caller's clock (America/New_York)",
+  "week_numbering": "week 6 per the repo schedule record (games.jsonl: 2026_06_SEA_DEN); some fleet briefs label this Week 7 \u2014 discrepancy on the record, not resolved here"
+ }
+}
