@@ -31,6 +31,9 @@ SIGMA0 = 13.45
 GATE = 7.099
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                    "pit_round2_result.json")
+BASELINE = 7.154021
+SQRT2 = math.sqrt(2.0)
+SQRTPI = math.sqrt(math.pi)
 
 
 # ------------------------------------------------------------------ families
@@ -61,18 +64,20 @@ def crps_student_t(mu, sd, nu, y):
     """
     if nu <= 2.0:
         raise ValueError("Student-t CRPS requires nu > 2 for a finite mean")
+    # Midpoint rule split at z. The earlier left-endpoint grid (du=0.05, no
+    # split at the indicator jump) carried an O(sd*du) error of ~0.1-0.2 and
+    # disagreed with the closed form; it is reference-only (tests).
     z = (y - mu) / sd
     lo, hi = -60.0, 60.0
-    steps = 2400
-    du = (hi - lo) / steps
+    z = min(max(z, lo), hi)
     tot = 0.0
-    for i in range(steps + 1):
-        u = lo + i * du
-        F = _student_t_cdf(u, nu)
-        ind = 1.0 if z <= u else 0.0
-        d = F - ind
-        tot += d * d
-    return sd * tot * du
+    for a, b, ind in ((lo, z, 0.0), (z, hi, 1.0)):
+        steps = 6000
+        du = (b - a) / steps
+        for i in range(steps):
+            F = _student_t_cdf(a + (i + 0.5) * du, nu)
+            tot += (F - ind) ** 2 * du
+    return sd * tot
 
 
 def _betainc_reg(a, b, x):
@@ -81,6 +86,12 @@ def _betainc_reg(a, b, x):
         return 0.0
     if x >= 1.0:
         return 1.0
+    # Lentz continued fraction only converges for x < (a+1)/(a+b+2); use the
+    # symmetry I_x(a,b) = 1 - I_{1-x}(b,a) otherwise. Without this switch the
+    # Student-t CDF was wrong near u=0 for large nu (0.5701 vs 0.5398 at u=0.1,
+    # nu=1e6), which biased both the numerical and closed-form t CRPS.
+    if x > (a + 1.0) / (a + b + 2.0):
+        return 1.0 - _betainc_reg(b, a, 1.0 - x)
     lbeta = math.lgamma(a) + math.lgamma(b) - math.lgamma(a + b)
     front = math.exp(math.log(x) * a + math.log(1.0 - x) * b - lbeta) / a
     f, c, d = 1.0, 1.0, 0.0
@@ -106,177 +117,322 @@ def _betainc_reg(a, b, x):
     return front * (f - 1.0)
 
 
-def crps_integer_support(mu, sd, y, p3, p7):
-    """Discretized Gaussian on integer margins, mean locked by SYMMETRY.
 
-    The Gaussian is discretised onto unit bins, then symmetric mass p3/2 and
-    p7/2 is moved onto |margin - mu| == 3 and == 7. Because the atoms are
-    symmetric pairs about mu, E[X] == mu exactly -- no recentring, no mean shift.
+def _Phi(z):
+    return 0.5 * (1.0 + math.erf(z / SQRT2))
 
-    Returns the exact discrete CRPS: sum_k P(k) * |k - y| - 0.5 * sum_j sum_k
-    P(j) P(k) |j - k|, computed on the truncated support.
-    """
-    probs = {}
-    span = int(math.ceil(6.0 * sd))
-    for k in range(int(math.floor(mu)) - span, int(math.ceil(mu)) + span + 1):
-        # probability mass of the unit bin [k-0.5, k+0.5]
-        z_hi = (k + 0.5 - mu) / sd
-        z_lo = (k - 0.5 - mu) / sd
-        Phi_hi = 0.5 * (1.0 + math.erf(z_hi / math.sqrt(2.0)))
-        Phi_lo = 0.5 * (1.0 + math.erf(z_lo / math.sqrt(2.0)))
-        probs[k] = probs.get(k, 0.0) + max(0.0, Phi_hi - Phi_lo)
 
-    # move symmetric mass onto the key numbers, preserving the mean
-    for p, kk in ((p3, 3), (p7, 7)):
-        if p <= 0:
-            continue
-        k_up = int(round(mu)) + kk
-        k_dn = int(round(mu)) - kk
-        for target in (k_up, k_dn):
-            have = probs.get(target, 0.0)
-            need = min(p / 2.0, 1.0 - sum(probs.values()) + have)
-            probs[target] = have + max(0.0, need)
-    total = sum(probs.values())
-    if total <= 0:
-        return None
-    probs = {k: v / total for k, v in probs.items()}
+def _phi(z):
+    return math.exp(-0.5 * z * z) / math.sqrt(2.0 * math.pi)
 
-    ks = sorted(probs)
-    e1 = sum(probs[k] * abs(k - y) for k in ks)
-    e2 = 0.0
-    for j in ks:
-        pj = probs[j]
-        for k in ks:
-            e2 += pj * probs[k] * abs(j - k)
+
+# ---- 1. integer-support discretized Gaussian ---------------------------
+
+def int_support_probs(mu, sd, span_sd=12.0):
+    """Unit-bin masses P(k) = Phi((k+.5-mu)/sd) - Phi((k-.5-mu)/sd) on a span
+    symmetric about mu. No atoms, no renormalisation fudge. For sd >= 1 the
+    lattice mean error is exp(-2 pi^2 sd^2)-small; truncation at 12 sd is
+    below double precision."""
+    span = int(math.ceil(span_sd * sd))
+    lo, hi = int(math.floor(mu)) - span, int(math.ceil(mu)) + span
+    ks = list(range(lo, hi + 1))
+    ps = [_Phi((k + 0.5 - mu) / sd) - _Phi((k - 0.5 - mu) / sd) for k in ks]
+    return ks, ps
+
+
+def crps_discrete(ks, ps, y):
+    """Exact CRPS of a distribution on consecutive integers ks at any real y:
+    INT (F(u) - 1{u >= y})^2 du with F a step function constant on [k, k+1)."""
+    tot = 0.0
+    F = 0.0
+    for i, k in enumerate(ks):
+        F += ps[i]
+        nxt = ks[i + 1] if i + 1 < len(ks) else k + 1
+        # segment [k, nxt): F constant; split at y if inside
+        a, b = float(k), float(nxt)
+        if y <= a:
+            tot += (F - 1.0) ** 2 * (b - a)
+        elif y >= b:
+            tot += F * F * (b - a)
+        else:
+            tot += F * F * (y - a) + (F - 1.0) ** 2 * (b - y)
+    # left tail below ks[0] has F=0: contributes (y - ks[0]) if y < ks[0]
+    if y < ks[0]:
+        tot += ks[0] - y
+    return tot
+
+
+def crps_integer_support(mu, sd, y):
+    ks, ps = int_support_probs(mu, sd)
+    return crps_discrete(ks, ps, y)
+
+
+# ---- 2. hetero-Gaussian + key-number overlay ---------------------------
+
+KEYS = (3.0, 7.0)
+
+
+def keynum_components(mu, sd, p3, p7):
+    """Atoms on ABSOLUTE margins +-3 (p3/2 each) and +-7 (p7/2 each), i.e.
+    residual atoms at k - close. The continuous part has mass w = 1-p3-p7.
+    Atom mean is 0 (symmetric pairs about 0, not about mu), so the continuous
+    centre is c = mu / w so that E[X] == mu exactly (mean lock). With
+    p3=p7=0 this is N(mu, sd)."""
+    w = 1.0 - p3 - p7
+    atoms = [(3.0, p3 / 2), (-3.0, p3 / 2), (7.0, p7 / 2), (-7.0, p7 / 2)]
+    atoms = [(a, q) for a, q in atoms if q > 0]
+    return w, mu / w, atoms
+
+
+def mixture_mean(mu, sd, p3, p7):
+    w, c, atoms = keynum_components(mu, sd, p3, p7)
+    return w * c + sum(a * q for a, q in atoms)
+
+
+def _e_abs_g(c, sd, x):
+    """E|G - x| for G ~ N(c, sd)."""
+    z = (x - c) / sd
+    return sd * (z * (2.0 * _Phi(z) - 1.0) + 2.0 * _phi(z))
+
+
+def crps_keynum(mu, sd, p3, p7, y):
+    """Energy-form CRPS E|X-y| - 0.5 E|X-X'| with all three cross terms."""
+    w, c, atoms = keynum_components(mu, sd, p3, p7)
+    e1 = w * _e_abs_g(c, sd, y) + sum(q * abs(a - y) for a, q in atoms)
+    e2 = w * w * 2.0 * sd / SQRTPI
+    e2 += 2.0 * w * sum(q * _e_abs_g(c, sd, a) for a, q in atoms)
+    e2 += sum(qi * qj * abs(ai - aj) for ai, qi in atoms for aj, qj in atoms)
     return e1 - 0.5 * e2
+
+
+def hetero_sd(beta_T, total_line):
+    xT = (total_line if total_line is not None else 44.0) / 44.0
+    return SIGMA0 * math.exp(max(-0.45, min(0.45, beta_T * xT)))
+
+
+# ---- 3. Student-t (closed form) ----------------------------------------
+
+def _t_pdf(z, nu):
+    lc = math.lgamma((nu + 1) / 2) - math.lgamma(nu / 2) - 0.5 * math.log(nu * math.pi)
+    return math.exp(lc - (nu + 1) / 2 * math.log1p(z * z / nu))
+
+
+def _lbeta(a, b):
+    return math.lgamma(a) + math.lgamma(b) - math.lgamma(a + b)
+
+
+def crps_student_t_closed(mu, scale, nu, y):
+    """Closed-form CRPS of mu + scale*T_nu (Jordan, Krueger & Lerch 2019):
+    z(2F-1) + 2f (nu+z^2)/(nu-1) - 2 sqrt(nu) B(1/2,nu-1/2) / ((nu-1) B(1/2,nu/2)^2).
+    Verified in tests against the numerical-integral crps_student_t."""
+    z = (y - mu) / scale
+    F = _student_t_cdf(z, nu) if z != 0 else 0.5
+    f = _t_pdf(z, nu)
+    k = 2.0 * math.sqrt(nu) * math.exp(_lbeta(0.5, nu - 0.5) - 2.0 * _lbeta(0.5, nu / 2.0)) / (nu - 1.0)
+    return scale * (z * (2.0 * F - 1.0) + 2.0 * f * (nu + z * z) / (nu - 1.0) - k)
+
+
+def t_scale_var_matched(nu):
+    """scale such that SD(mu + scale*T_nu) == SIGMA0 (single shape parameter)."""
+    return SIGMA0 * math.sqrt((nu - 2.0) / nu)
+
+
+NU_GRID = (3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 15.0, 30.0)
+
+
+# ---- 4. empirical-quantile scale on total -------------------------------
+
+def _quantile(xs, q):
+    s = sorted(xs)
+    if not s:
+        return None
+    pos = q * (len(s) - 1)
+    lo = int(math.floor(pos))
+    hi = min(lo + 1, len(s) - 1)
+    return s[lo] + (s[hi] - s[lo]) * (pos - lo)
 
 
 # ------------------------------------------------------------------ drivers
 
-def run_expanding(rows, score_fn, label, min_prior=MIN_PRIOR):
-    """Generic expanding-window scorer. score_fn(prior_rows, row) -> crps or None."""
-    deltas = []
-    flagged = 0
+def week_key(r):
+    return (r["season"], r["week"])
+
+
+def prior_index(rows):
+    """For each row, the number of rows with a STRICTLY earlier (season, week).
+    Rows must be sorted by (season, week). Same-week games are NOT prior."""
+    out, first = [], {}
     for i, r in enumerate(rows):
-        prior = rows[:i]
-        if len(prior) < min_prior:
+        first.setdefault(week_key(r), i)
+        out.append(first[week_key(r)])
+    return out
+
+
+def pit_select(rows, table, min_prior=MIN_PRIOR):
+    """table[j][i] = CRPS of parameter j on row i. For each row choose the j
+    minimising mean CRPS over strictly-prior rows (running sums: O(n*J)).
+    Rows with < min_prior prior rows return (None, None) -> baseline (beta=0)."""
+    J = len(table)
+    pidx = prior_index(rows)
+    cums = [[0.0] for _ in range(J)]
+    for j in range(J):
+        acc = 0.0
+        for v in table[j]:
+            acc += v
+            cums[j].append(acc)
+    picks = []
+    for i in range(len(rows)):
+        n = pidx[i]
+        if n < min_prior:
+            picks.append(None)
+            continue
+        picks.append(min(range(J), key=lambda j: cums[j][n]))
+    return picks
+
+
+def summarise(label, rows, crps_with, flagged, extra=None):
+    base = [H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"]) for r in rows]
+    d = [a - b for a, b in zip(crps_with, base)]
+    n = len(d)
+    md = sum(d) / n
+    var = sum((x - md) ** 2 for x in d) / max(1, n - 1)
+    se = math.sqrt(var / n)
+    crps = sum(crps_with) / n
+    out = {"label": label, "n": n, "crps": round(crps, 6),
+           "mean_delta": round(md, 6), "se": round(se, 6),
+           "t": round(md / se, 3) if se > 0 else None,
+           "rows_at_baseline_flagged": flagged,
+           "gate": GATE, "gate_met": False,
+           "verdict": ("REFUSED (full-filter DeltaCRPS >= 0, terminal)" if md >= 0
+                       else ("improves solo; misses gate by %.6f" % (crps - GATE)
+                             if crps > GATE else
+                             "improves solo; at/under gate number -- NOT a clear, DIAGNOSTIC only"))}
+    if extra:
+        out.update(extra)
+    return out
+
+
+def family_integer(rows):
+    w = [crps_integer_support(r["spread_line"], SIGMA0, r["margin"]) for r in rows]
+    mean_err = 0.0
+    for r in rows:
+        ks, ps = int_support_probs(r["spread_line"], SIGMA0)
+        m = sum(k * p for k, p in zip(ks, ps)) / sum(ps)
+        mean_err = max(mean_err, abs(m - r["spread_line"]))
+    return summarise("integer-support discretized Gaussian sigma=13.45 (no fitted params)",
+                     rows, w, 0, {"max_mean_error_vs_line": mean_err,
+                                  "mean_lock_ok": mean_err < 1e-12})
+
+
+BETA_GRID = tuple(round(-0.20 + 0.02 * i, 2) for i in range(21))
+P_GRID = (0.0, 0.01, 0.02, 0.03, 0.05, 0.08)
+
+
+def family_hetero_keys(rows):
+    params = [(b, p3, p7) for b in BETA_GRID for p3 in P_GRID for p7 in P_GRID]
+    table = [[crps_keynum(r["spread_line"], hetero_sd(b, r["total_line"]), p3, p7, r["margin"])
+              for r in rows] for (b, p3, p7) in params]
+    picks = pit_select(rows, table)
+    w, flagged, chosen, merr = [], 0, {}, 0.0
+    for i, r in enumerate(rows):
+        if picks[i] is None:
             flagged += 1
-            c_with = H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"])
+            w.append(H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"]))
+            continue
+        b, p3, p7 = params[picks[i]]
+        chosen[str((b, p3, p7))] = chosen.get(str((b, p3, p7)), 0) + 1
+        merr = max(merr, abs(mixture_mean(r["spread_line"], hetero_sd(b, r["total_line"]), p3, p7)
+                             - r["spread_line"]))
+        w.append(table[picks[i]][i])
+    return summarise("hetero-Gaussian sigma0*exp(beta_T*T/44) + key-number atoms (beta_T,p3,p7 PIT)",
+                     rows, w, flagged, {"param_grid": {"beta_T": BETA_GRID, "p3": P_GRID, "p7": P_GRID},
+                                        "chosen_param_counts": chosen,
+                                        "max_mean_error_vs_line": merr,
+                                        "mean_lock_ok": merr < 1e-12,
+                                        "mean_lock_method": "continuous centre c=mu/(1-p3-p7); atoms on absolute margins +-3,+-7"})
+
+
+def family_student_t(rows):
+    table = [[crps_student_t_closed(r["spread_line"], t_scale_var_matched(nu), nu, r["margin"])
+              for r in rows] for nu in NU_GRID]
+    picks = pit_select(rows, table)
+    w, flagged, chosen = [], 0, {}
+    for i, r in enumerate(rows):
+        if picks[i] is None:
+            flagged += 1
+            w.append(H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"]))
         else:
-            c_with = score_fn(prior, r)
-            if c_with is None:
-                flagged += 1
-                c_with = H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"])
-        c_without = H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"])
-        deltas.append(c_with - c_without)
-    md = sum(deltas) / len(deltas)
-    var = sum((d - md) ** 2 for d in deltas) / max(1, len(deltas) - 1)
-    se = math.sqrt(var / len(deltas))
-    return {"label": label, "n": len(deltas), "mean_delta": md, "se": se,
-            "flagged": flagged,
-            "decision": "REFUSED (DeltaCRPS >= 0)" if md >= 0 else "improves solo"}
+            chosen[str(NU_GRID[picks[i]])] = chosen.get(str(NU_GRID[picks[i]]), 0) + 1
+            w.append(table[picks[i]][i])
+    return summarise("Student-t, nu PIT-fit, variance-matched to sigma0=13.45, mean=line by symmetry",
+                     rows, w, flagged, {"nu_grid": NU_GRID, "chosen_nu_counts": chosen,
+                                        "mean_lock_ok": True})
+
+
+def family_empirical_total(rows, nbins=4):
+    """Bin edges = prior-only quantiles of total_line; sigma = median|resid| / 0.67449
+    over prior games in the row's bin. <25 in bin or missing total -> baseline."""
+    pidx = prior_index(rows)
+    w, flagged, sds = [], 0, []
+    for i, r in enumerate(rows):
+        prior = rows[:pidx[i]]
+        T = r["total_line"]
+        ok = len(prior) >= MIN_PRIOR and T is not None
+        sd = None
+        if ok:
+            tots = [p["total_line"] for p in prior if p["total_line"] is not None]
+            edges = [_quantile(tots, q / nbins) for q in range(1, nbins)]
+            b = sum(1 for e in edges if T >= e)
+            pool = [abs(p["margin"] - p["spread_line"]) for p in prior
+                    if p["total_line"] is not None and sum(1 for e in edges if p["total_line"] >= e) == b]
+            if len(pool) >= MIN_PRIOR:
+                sd = _quantile(pool, 0.5) / 0.6744897501960817
+        if sd is None or sd <= 0:
+            flagged += 1
+            w.append(H.crps_gaussian(r["spread_line"], SIGMA0, r["margin"]))
+        else:
+            sds.append(sd)
+            w.append(H.crps_gaussian(r["spread_line"], sd, r["margin"]))
+    return summarise("empirical-quantile scale on total (prior quartile bins, median|resid|/0.6745)",
+                     rows, w, flagged, {"sd_min": min(sds) if sds else None,
+                                        "sd_max": max(sds) if sds else None,
+                                        "mean_lock_ok": True})
 
 
 def main():
     rows, skipped = H.load_frozen()
     base = H.score_baseline(rows)
-    assert base["n"] == 2462 and abs(base["crps"] - 7.154021) <= 5e-5, \
-        "baseline not reproduced -- refusing to score"
-
-    # ---- 1. integer-support discretized Gaussian, mean locked by symmetry
-    print("1. integer-support discretized Gaussian ...", flush=True)
-    r_int = run_expanding(
-        rows,
-        lambda prior, r: crps_integer_support(r["spread_line"], SIGMA0,
-                                              r["margin"], 0.05, 0.03),
-        "integer-support Gaussian + symmetric atoms p3=.05 p7=.03")
-
-    # ---- 2. mean-preserving atoms ON TOP of the heteroscedastic Gaussian
-    # sigma from the joint's fitted beta_T (beta_S collapsed to 0)
-    print("2. hetero-Gaussian + key-number overlay ...", flush=True)
-    beta_T = -0.084
-
-    def score_hetero_atoms(prior, r):
-        xT = (r["total_line"] or 44.0) / 44.0
-        sd = SIGMA0 * math.exp(max(-0.45, min(0.45, beta_T * xT)))
-        return crps_integer_support(r["spread_line"], sd, r["margin"], 0.05, 0.03)
-
-    r_ha = run_expanding(rows, score_hetero_atoms,
-                         "hetero-Gaussian(beta_T=-0.084) + symmetric atoms")
-
-    # ---- 3. Student-t, nu fit on prior rows only, mean locked at mu
-    print("3. Student-t with nu fit on prior rows ...", flush=True)
-    nu_grid = [3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 15.0, 30.0]
-
-    def score_student_t(prior, r):
-        # fit nu by minimising Student-t CRPS on prior residuals (fixed sd)
-        best, best_v = None, None
-        for nu in nu_grid:
-            tot = 0.0
-            for pr in prior[-400:]:      # bounded window, still strictly prior
-                tot += crps_student_t(0.0, SIGMA0, nu, pr["margin"] - pr["spread_line"])
-            v = tot / min(len(prior), 400)
-            if best_v is None or v < best_v:
-                best, best_v = nu, v
-        # recenter so E[X] == mu exactly (Student-t is symmetric, so mu is the mean)
-        return crps_student_t(r["spread_line"], SIGMA0, best, r["margin"])
-
-    r_t = run_expanding(rows, score_student_t,
-                        "Student-t, nu fit on prior rows, mean locked by symmetry")
-
-    # ---- 4. empirical-quantile scale on total only (beta_S collapsed to 0)
-    print("4. empirical-quantile scale on total ...", flush=True)
-
-    def score_emp_scale(prior, r):
-        # scale = mean |resid| over prior games in the same total bin
-        tb = 0 if (r["total_line"] or 44) < 41 else (1 if (r["total_line"] or 44) < 45
-                                                    else (2 if (r["total_line"] or 44) < 48 else 3))
-        pool = [abs(p["margin"] - p["spread_line"]) for p in prior
-                if (0 if (p["total_line"] or 44) < 41 else
-                    (1 if (p["total_line"] or 44) < 45 else
-                     (2 if (p["total_line"] or 44) < 48 else 3))) == tb]
-        if len(pool) < MIN_PRIOR:
-            return None
-        b = sum(pool) / len(pool)
-        sd = b * math.sqrt(math.pi / 2.0)   # Laplace scale -> Gaussian sigma
-        return H.crps_gaussian(r["spread_line"], sd, r["margin"])
-
-    r_emp = run_expanding(rows, score_emp_scale,
-                          "empirical-quantile scale on total bin")
-
-    cands = [r_int, r_ha, r_t, r_emp]
-    print()
-    print("=== ROUND 2 SOLOS (expanding window, mu = spread_line) ===")
-    print("  %-56s %6s %11s %9s %s" % ("candidate", "n", "mean_delta", "SE", "decision"))
-    for c in cands:
-        print("  %-56s %6d %+11.6f %9.6f %s"
-              % (c["label"][:56], c["n"], c["mean_delta"], c["se"], c["decision"]))
-        print("      rows falling back to baseline: %d" % c["flagged"])
-
+    if not (base["n"] == 2462 and abs(base["crps"] - BASELINE) <= 5e-7):
+        print("STOP: baseline not reproduced", base, "target n=2462 crps", BASELINE)
+        sys.exit(2)
+    print("baseline reproduced n=%d crps=%.6f" % (base["n"], base["crps"]), flush=True)
+    cands = []
+    for name, fn in (("1", family_integer), ("2", family_hetero_keys),
+                     ("3", family_student_t), ("4", family_empirical_total)):
+        print(name, "...", flush=True)
+        c = fn(rows)
+        cands.append(c)
+        print("  %-80s n=%d crps=%.6f d=%+.6f se=%.6f %s" % (c["label"][:80], c["n"], c["crps"],
+              c["mean_delta"], c["se"], c["verdict"]), flush=True)
     improvers = [c for c in cands if c["mean_delta"] < 0]
-    print()
-    print("improvers: %d of %d" % (len(improvers), len(cands)))
-    print("joint authorised? %s" % ("YES" if len(improvers) >= 2 else "NO -- needs >= 2"))
-    if cands:
-        best = min(cands, key=lambda c: c["mean_delta"])
-        print("best solo implied CRPS: %.6f  (gate %.3f, gap %+.6f)"
-              % (base["crps"] + best["mean_delta"], GATE,
-                 base["crps"] + best["mean_delta"] - GATE))
-
     json.dump({
-        "baseline": {"n": base["n"], "crps": base["crps"]},
-        "locks": {"mu": "spread_line", "pit": "expanding window",
-                  "mean_lock": "symmetry (atoms/unit bins) or recentering (Student-t)",
-                  "refusal": "full-filter mean DeltaCRPS >= 0"},
+        "label": "DIAGNOSTIC", "promotion": "NONE",
+        "filter": "REG 2017 W1 - 2026 W5 (frozen), n=2462",
+        "data_path": "GAMES_CSV (nflverse games.csv)",
+        "baseline": {"n": base["n"], "crps": round(base["crps"], 6), "sigma": SIGMA0},
+        "locks": {"mu": "spread_line (nflverse sign, never flipped)",
+                  "pit": "expanding window, strictly earlier (season,week); <25 prior -> baseline (beta=0), flagged",
+                  "refusal": "full-filter mean DeltaCRPS >= 0 is terminal"},
         "candidates": cands,
         "improvers": len(improvers),
-        "joint_authorised": len(improvers) >= 2,
-        "gate": GATE,
-        "gate_cleared": False,
-        "emission": "0 picks / 0 parlays / 0 DFS",
+        "joint_scored": False,
+        "joint_note": "not scored in this run; task scoped to the four solos",
+        "gate": GATE, "gate_cleared": False, "passed": False,
+        "emission": "ZERO_OBJECT (0 picks / 0 parlays / 0 DFS)",
+        "walk_forward_json_touched": False,
     }, open(OUT, "w", encoding="utf-8"), indent=1)
-    print()
     print("written", OUT)
+    return cands
 
 
 if __name__ == "__main__":
