@@ -21,6 +21,8 @@
   "emission": "ZERO_OBJECT",
   "passed": false,
   "walk_forward_json": "untouched",
+  "residual_surface": "closed",
+  "residual_surface_note": "Steps 1-4 produced no clear. Best measured number remains joint hetero-Gaussian 7.142622. Gap to 7.099 is 0.043622. walk_forward.json not updated.",
   "items": [
     {
       "id": "joint_hetero_gaussian",
@@ -127,6 +129,13 @@
       "path": "research/ocr-blanks-2026-10-15.md",
       "astra": "6 pages, text layer empty, Windows OCR, no CRPS hits",
       "codila": "page 1 image-only; pages 2-14 had a text layer. No CRPS hits."
+    },
+    {
+      "id": "line_movement_clv",
+      "status": "refused_prior",
+      "path": "research/line-movement-score-2026-10-15.json",
+      "reason": "Frozen games.csv has spread_line (close) only. Live ESPN capture is 14 scheduled games, 4 timestamps, 0 nonzero moves, 0 scores. No imputation. Command when a PIT file exists: MOVE_CSV=<path> python dfs/walk_forward/line_movement_score.py",
+      "gate_cleared": false
     }
   ]
 }

@@ -1,0 +1,26 @@
+{
+ "status": "refused_prior",
+ "reason": "No PIT movement file. nflverse games.csv has spread_line only (the close). Live ESPN snapshots are 14 STATUS_SCHEDULED games, 4 timestamps, 0 nonzero moves, 0 final scores. Movement cannot be scored on the frozen n=2462 filter without imputing.",
+ "frozen_n": 2462,
+ "skipped_rows": 193,
+ "movement_file": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\movement_pit.csv",
+ "movement_file_present": false,
+ "live_snapshots": {
+  "dir": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\market",
+  "events": 14,
+  "two_timestamps": 14,
+  "nonzero_move": 0,
+  "status": "STATUS_SCHEDULED"
+ },
+ "mu": "spread_line",
+ "gate": 7.099,
+ "gate_cleared": false,
+ "passed": false,
+ "emission": "ZERO_OBJECT",
+ "command_when_file_appears": "MOVE_CSV=<path> python dfs/walk_forward/line_movement_score.py",
+ "required_columns": [
+  "game_id",
+  "move",
+  "observed_at"
+ ]
+}
