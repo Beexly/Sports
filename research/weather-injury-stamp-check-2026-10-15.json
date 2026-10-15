@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-15",
+  "purpose": "Stamp-reality check for the two modulator classes proposed next after line movement. Both fail closed BEFORE scoring: the timestamps required by PIT do not exist.",
+  "weather": {
+    "claim_tested": "Open-Meteo archived forecast, t_init <= kickoff, as an expanding-window scale modulator.",
+    "games_csv_columns_present": ["temp", "wind", "roof", "surface", "stadium_id"],
+    "stamp_columns": "none -- games.csv weather fields have no observed_at/fetched_at. They are game-time finals, i.e. post-kickoff by construction. Already a permanent PIT exclusion (filter_reconciliation 2026-10-14: 'Historical pre-kickoff weather (Open-Meteo not pulled under model-run timestamps)').",
+    "local_archives_found": 0,
+    "verdict": "refused_prior. No score taken. Scoring would require starting a capture loop now so that FUTURE games have pre-kickoff fetch stamps -- those games cannot enter the frozen filter (closes 2026 W5)."
+  },
+  "injuries": {
+    "claim_tested": "ESPN daily injury stamps, dt <= kickoff, as a scale modulator on 2025-2026 games.",
+    "file": "data/gse-dataset/current/injuries_2026.csv",
+    "rows": 733,
+    "rows_with_date_modified": 0,
+    "columns_present": ["season", "season_type", "game_type", "team", "week", "gsis_id", "position", "full_name", "report_primary_injury", "report_status", "practice_status"],
+    "verdict": "refused_prior. Not one row carries a modified timestamp; week-grain rows cannot be stamped to a day, let alone pre-kickoff. Matches the permanent PIT exclusion ('2025 injuries with no date_modified'). No score taken."
+  },
+  "line_movement_contrast": "unlike these two, the line-movement class DID find 64 stamped rows (Neon odds_line_snapshots) and was scored: refused at n_scored=64 < 150. See research/line_movement_clv_2026-10-15.json.",
+  "passed": false,
+  "emission": "ZERO_OBJECT"
+}

@@ -153,6 +153,31 @@
       "path": "research/bdb2027_extract_2026-10-15.md",
       "repos": ["conormalone/BDB27", "will-rice/bdb-2027", "Hermes-25/nfl-bdb-2027-mirror-recovery"],
       "verdict": "0 of 3 produce a scoreable margin feature for the frozen filter. Draft-time-stampable features exist (weight/height, combine envelope, mirror shortfall) but join only to player cohorts, not 2,462 team margins. Transferable: split-half reliability floor as a bind falsifier; negative prior vs athletic descriptors (mirror worsened equal-player Brier by -0.000902)."
+    },
+    {
+      "id": "novig_continuous_mu",
+      "status": "ran_live",
+      "path": "research/novig-mu-2026-10-15.json",
+      "construction": "mu = (1-beta)*spread_line + beta*13.45*Phi^-1(devigged closing-ML home prob); sigma fixed; beta expanding-window prior-only min_prior=25; 2461/2462 rows usable",
+      "implied_crps": 7.158048,
+      "delta_vs_baseline": 0.004027,
+      "t_vs_baseline": 0.66,
+      "paired_delta_vs_joint_hetero": 0.015425,
+      "t_paired": 1.999,
+      "verdict": "REFUSED (full-filter delta >= 0, terminal). The de-vigged ML carries no expectation beyond what spread_line already prices; the Gaussian-quantile inversion adds mu noise (t~2 AGAINST joint hetero). The hypothesis that a no-vig mu is the observable class that can move the mean is falsified at n=2462.",
+      "gate_cleared": false
+    },
+    {
+      "id": "weather_scale_modulator",
+      "status": "refused_prior",
+      "path": "research/weather-injury-stamp-check-2026-10-15.json",
+      "reason": "No PIT-stamped weather exists for the frozen filter: games.csv temp/wind/roof are un-stamped game-time finals; zero archived Open-Meteo forecast captures with fetched_at on this machine. Fail closed; no score taken."
+    },
+    {
+      "id": "injury_stamp_modulator",
+      "status": "refused_prior",
+      "path": "research/weather-injury-stamp-check-2026-10-15.json",
+      "reason": "injuries_2026.csv: 0 of 733 rows carry date_modified. Pre-2025 charts have no observed_at either (permanent PIT exclusion). Not one frozen-filter game can be stamped dt <= kickoff. Fail closed; no score taken."
     }
   ]
 }
