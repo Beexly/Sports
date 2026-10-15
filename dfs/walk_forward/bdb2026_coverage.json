@@ -1,0 +1,65 @@
+{
+  "label": "MEASURED. Read-only inspection of local archives. Nothing promoted. passed stays false.",
+  "generated_at": "2026-10-14",
+  "sources": [
+    "C:/Users/Garrett/Downloads/nfl-big-data-bowl-2027.zip",
+    "C:/Users/Garrett/Downloads/archive.zip",
+    "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/nflverse_games.csv"
+  ],
+  "claim_under_test": "The 2026-10-09 handoff states the BDB 2027 set is Combine tracking for 2023-2025 plus in-game tracking for those same players, and that it will not cover the Week 5 / Week 6 slate. The archive also contains player_play rows whose game_id begins 2026, which superficially contradicts that.",
+  "verdict": "HANDOFF CLAIM CONFIRMED. The game_id prefix is a DATE, not a season.",
+  "bdb_games_csv": {
+    "total_games": 1002,
+    "seasons": {"2023": 334, "2024": 334, "2025": 334},
+    "season_type": {"REG": 816, "PRE": 147, "POST": 39},
+    "rows_with_season_2026": 0
+  },
+  "bdb_player_play_2026_rows": {
+    "row_count": 14821,
+    "distinct_game_ids": 29,
+    "dates": ["2026-01-03", "2026-01-04", "2026-01-10", "2026-01-11", "2026-01-12",
+              "2026-01-17", "2026-01-18", "2026-01-25", "2026-02-08"],
+    "games_on_2026_01_04": 14,
+    "distinct_possession_teams": 32,
+    "interpretation": "Jan-Feb 2026 is the NFL postseason concluding the 2025 season. 14 games on 2026-01-04 across all 32 teams is wild-card weekend. These are POST games of the 2025 season, not REG games of the 2026 season."
+  },
+  "join_to_frozen_filter": {
+    "frozen_filter": "REG 2017 W1 - 2026 W5, n=2462",
+    "raw_game_id_join_rate": 0.0,
+    "raw_join_note": "Expected 0 on raw id: BDB uses 10-digit YYYYMMDDNN, nflverse uses YYYY_WW_HOME_AWAY. A raw-id mismatch is not evidence of non-coverage.",
+    "date_level_join": {
+      "bdb_2026_dates": 9,
+      "nflverse_2026_reg_dates": 57,
+      "shared_dates": 0,
+      "nflverse_2026_games_covered": 0,
+      "coverage_of_2026_season_pct": 0.0,
+      "coverage_of_frozen_filter_pct": 0.0
+    },
+    "coverage_of_2023_2025": {
+      "bdb_reg_games": 816,
+      "note": "BDB covers full REG seasons 2023-2025. The frozen filter contains 272+272+272 = 816 REG games for those seasons, so tracking coverage there is complete in principle. It is NOT verified play-by-play here."
+    }
+  },
+  "tracking_columns": {
+    "game_tracking_YYYY.csv": ["game_id", "play_id", "nfl_id", "time", "x", "y", "s", "a", "dis", "o", "dir", "event"],
+    "player_play.csv_rich_columns": ["pre_snap_home_team_win_probability", "expected_points_added",
+                                     "separation_at_pass_forward", "cushion", "time_to_pressure",
+                                     "pressure_allowed", "sack_allowed", "route_ran",
+                                     "coverage_assignment", "coverage_assignment_at_snap"],
+    "note": "game_tracking carries true 10Hz-style x/y/s/a/dis/o/dir/event coordinates for 2023-2025 REG games. This is the only sanctioned in-game coordinate source available locally."
+  },
+  "license": "BDB 2027 competition data is CC BY-NC 4.0 (non-commercial). Flagged in the handoff; unresolved. Do not feed it into anything commercial until cleared.",
+  "crosswalk": {
+    "file": "archive.zip -> nfl_id_crosswalk.csv",
+    "rows": 12608,
+    "links": ["nfl_id", "gsis_id", "pfr_id", "espn_id", "sportradar_id", "sleeper_id", "smart_id"],
+    "note": "This bridges BDB nfl_id to the gsis_id chain the rest of the repo uses."
+  },
+  "actionable": [
+    "2023-2025 REG in-game tracking with x/y coordinates IS available locally and covers all 816 REG games of those seasons. That is a real input plane for the vision/coordinate workstream, at weight 0.",
+    "Week 5 and Week 6 of the 2026 season have NO public coordinate source. The handoff's statement stands.",
+    "CC BY-NC 4.0 must be resolved before any commercial use."
+  ],
+  "passed": false,
+  "emission": "0 picks / 0 parlays / 0 DFS"
+}
