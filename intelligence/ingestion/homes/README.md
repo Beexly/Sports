@@ -52,8 +52,10 @@ artifact; every row's emission stays ZERO_OBJECT.
   vendored Simulator), all unwired (no endpoint in `app/main.py`); 5 not
   landed (TSFeatures, StatSig, backtesters, VAR, HarmonicRegression).
 - Incidental probe results: PR #1018 (C-101's blocker) is **closed, never
-  merged**; the C-009 n=2,397 series exists nowhere in this repo (code search
-  "2397" = 0); no `PlayerSignal` model exists in the repo (C-074).
+  merged**; the C-009 n=2,397 series exists nowhere in this repo as a data
+  artifact (code search "2397" returns only incidental numeric matches);
+  no player-signals table or model exists in the repo (C-074; the term
+  `PlayerSignal` appears only in docs and a shadow-evidence flag).
 
 ## Ledger twin
 
