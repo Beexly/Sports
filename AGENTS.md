@@ -14918,6 +14918,10 @@ TIMESTAMP METHOD: profile timelines show relative labels; post pages show absolu
 - @PFF, 2026-10-13 9:00 AM CDT [verified]: all-time receiving TD leaders list — Rice 197, Moss 156, Owens 153, Carter 130, Harrison 128, Adams and Fitzgerald tied 6th at 121. Counting stat, not an advanced metric; source not stated beyond PFF branding. Also 8:46 AM CDT [verified]: a 2027 Mock Draft 1.0 announcement linking pff.com/news, no analytics values.
 - Home feed (Following): the only in-window advanced-analytics item in the feed top was the @PFF Adams list above; other in-window feed items (league poll, TNF promo, team posts) carried no advanced metrics.
 
+### AGENT ACTIVITY (documented per conventions)
+
+- **2026-10-13** — @jules: Implemented the `play-caller-fingerprint` expected metric (SHADOW) module following gse-intel-build-loop Q12, strictly computing personnel entropy and conditional Markov predictability without adopting StatRankings proprietary inputs. Registered in `metric-birth-certificate-registry.ts` and notified fleet via `agent-bus`.
+
 ### INNOVATION KERNELS (attributed notes, no build orders)
 
 - Drive-outcome share profile (six outcomes summing across a team's Week 5 drives) as a team board (@GridironInfo_, source nflverse).

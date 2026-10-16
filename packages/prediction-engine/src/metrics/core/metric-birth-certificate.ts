@@ -9,6 +9,7 @@ export type GseMetricFamily =
   | "receiving"
   | "rushing"
   | "role"
+  | "efficiency"
   | "environment"
   | "narrative"
   | "calibration"
@@ -26,7 +27,8 @@ export type GseFormulaClass =
   | "gam_spline"
   | "ensemble"
   | "conformal"
-  | "composite_score";
+  | "composite_score"
+  | "deterministic_rule";
 
 export type MetricValidationMethod =
   | "mae"
@@ -43,7 +45,7 @@ export type MetricValidationMethod =
   | "drift_test"
   | "conformal_coverage";
 
-export type MetricPublicExposure = "hidden" | "driver_only" | "grade_only" | "score_band" | "full_score" | "api_limited" | "api_full";
+export type MetricPublicExposure = "none" | "hidden" | "driver_only" | "grade_only" | "score_band" | "full_score" | "api_limited" | "api_full";
 
 export interface GseMetricBirthCertificate {
   readonly metricId: string;

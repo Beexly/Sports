@@ -149,6 +149,15 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Play-caller fingerprint (SHADOW; deterministic rule).
+export {
+  computePlayCallerFingerprint,
+  PLAY_CALLER_FINGERPRINT_MODEL_VERSION,
+  type FingerprintPlay,
+  type CoachMapping,
+  type PlayCallerFingerprintResult,
+} from "./play-caller-fingerprint.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

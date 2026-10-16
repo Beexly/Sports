@@ -264,6 +264,56 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     validationMethods: ["mae", "rmse", "spearman", "bucket_lift", "walk_forward", "drift_test"],
   },
   {
+    allowedInputs: [
+      "public play-by-play",
+      "offense_personnel",
+      "play type",
+      "season",
+      "week",
+      "team",
+      "coach attribution map",
+    ],
+    failureModes: [
+      "small sample size causing extreme entropy/predictability reads",
+      "point-in-time violations feeding future play counts into current windows",
+      "treating kneel downs, spikes, or field goals as sequential tendency",
+      "missing coach mapping defaulting to incorrect attributions",
+    ],
+    family: "efficiency",
+    forbiddenInputs: [
+      "StatRankings proprietary tendency algorithms",
+      "StatRankings formula coefficients",
+      "StatRankings proprietary personnel mappings",
+      "private team practice data",
+    ],
+    formulaClass: "deterministic_rule",
+    formulaSummary:
+      "A deterministic entropy and Markov sequence predictability metric based on public personnel and play-type frequencies. Incorporates point-in-time rolling and seasonal windows with league mean shrinkage.",
+    historicalPrecedent: [
+      {
+        name: "Play-caller tendency and personnel diversification",
+        reason:
+          "Offensive scheme effectiveness is often measured by how uniformly a team uses its personnel packages (entropy) and how predictable its run/pass sequencing is (Markov state dependence).",
+      },
+    ],
+    internalName: "play_caller_fingerprint_shadow",
+    metricId: "play-caller-fingerprint",
+    protectedComponents: [
+      "shrinkage constants",
+      "sample-size floor",
+    ],
+    publicExposure: "none",
+    publicName: "Play-Caller Tendency Fingerprint",
+    sourceRightsRequired: [
+      "public play-by-play allowed",
+      "public mapping allowed",
+    ],
+    status: "SHADOW",
+    targetQuestion: "How diverse is this play-caller's personnel grouping usage and how predictable is their run/pass sequencing?",
+    targetVariable: "coach offensive tendency and predictability",
+    validationMethods: ["walk_forward", "drift_test"],
+  },
+  {
     allowedInputs: ["rush-environment-index", "yards to go", "yardline", "shrunk rusher yards-per-carry prior", "shrunk defense rushing prior", "designed-rush flag"],
     failureModes: ["goal-line contexts can compress yardage but raise touchdown value", "quarterback scrambles have a different yardage distribution than designed runs", "weak priors can overweight noisy recent rushing efficiency"],
     family: "rushing",

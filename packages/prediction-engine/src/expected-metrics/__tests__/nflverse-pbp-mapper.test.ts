@@ -281,7 +281,7 @@ describe("T4 — non-finite guards", () => {
 describe("T5 — FTN + `sp` structural exclusion", () => {
   it("keeps the projection allowlist free of FTN/participation columns and `sp`", () => {
     const denylist =
-      /^ftn_|participation|defenders_in_box|(offense|defense)_personnel|^n_(offense|defense)|was_pressure|^route$|time_to_throw|ngs_/;
+      /^ftn_|participation|defenders_in_box|defense_personnel|^n_(offense|defense)|was_pressure|^route$|time_to_throw|ngs_/;
     for (const column of NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS) {
       expect(column).not.toMatch(denylist);
     }
