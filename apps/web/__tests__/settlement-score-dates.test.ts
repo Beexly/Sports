@@ -72,10 +72,17 @@ describe("settlement-score-dates", () => {
     expect(espnKeys.every((k) => k <= "20260806")).toBe(true);
   });
 
-  it("compacts adjacent days into ESPN ranges", () => {
+  // ESPN rejects EVERY multi-day `dates` value with HTTP 400 (verified live
+  // 2026-10-15, MLB/NHL/NFL: ranges and comma lists both 400). The date key
+  // output is one day per request; nothing here may ever join keys together.
+  it("emits one single-day param per distinct day, never a range", () => {
     expect(compactEspnDateRanges(["20260703", "20260701", "20260702", "20260710"])).toEqual([
-      "20260701-20260703",
+      "20260701",
+      "20260702",
+      "20260703",
       "20260710",
     ]);
+    expect(compactEspnDateRanges(["20260703", "20260703"])).toEqual(["20260703"]);
+    expect(compactEspnDateRanges([])).toEqual([]);
   });
 });

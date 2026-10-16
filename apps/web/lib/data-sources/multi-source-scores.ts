@@ -140,7 +140,8 @@ async function fetchEspnForDates(
     return { games: [], errors, params };
   }
   const chunks: NormalizedGame[][] = [];
-  // Serial ranges keep ESPN friendly under cron; cap already applied upstream.
+  // Serial single-day requests keep ESPN friendly under cron; cap already applied upstream.
+  // (One request per day: ESPN 400s every multi-day dates value.)
   for (const dates of params) {
     try {
       const games = await fetchEspnScoreboard(sport, {
@@ -227,7 +228,7 @@ export type MultiSourceOpts = {
   readonly isoDateKeys?: readonly string[];
   /**
    * Dated ESPN path only: a date whose board came back with any division
-   * group missing is reported as an `espn <dates>: ...` error instead of a
+   * group missing is reported as an `espn <day>: ...` error instead of a
    * silently partial board. For callers that read absence as evidence.
    */
   readonly strictEspn?: boolean;
