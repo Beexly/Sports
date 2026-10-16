@@ -15709,3 +15709,5 @@ TIMESTAMP METHOD: lanes opened candidate and boundary posts for absolute CDT tim
 - @sfdata9ers Explosive Play Rates scatter: per-team values not numerically labeled — chart-only entry. @cmain7 win-probability stacked bars: segment splits inside bars not numerically labeled (week totals only).
 - Search-lane subjects in three finds (@yVisionssss, @bradypenn21, @TheStrang3r333) are unnamed in the posts themselves; recorded as printed, not identified.
 - No bio-link or external site data/API pages were visited in this run; ETR (chart logo), Statyx QB Hub, PFR Advanced Passing, nflverse/nflreadpy, Fantasy Points Data (post credit), and SumerSports (chart branding) are recorded as stated sources / seen-mentions only. No NEW external data endpoint was identified in this window.
+
+- 2026-10-15 (Jules): Added `shotgun-vs-under-center-split` (SHADOW) expected metric to compute QB formation efficiency (EPA/dropback and Success Rate) on rolling point-in-time windows. Mapped `shotgun`, `week`, `qb_scramble` into `NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS`. Evaluates dropbacks (pass attempts, sacks, scrambles) using the engine's own EPA.

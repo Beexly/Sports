@@ -62,6 +62,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
+  // formation split
+  "shotgun", "week", "qb_scramble",
 ] as const;
 
 /** One projected pbp row record, exactly as `parseCsv` emits it. */

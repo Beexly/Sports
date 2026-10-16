@@ -1413,8 +1413,14 @@ export {
   DRIVES_MODEL_VERSION,
   buildEpCalibration,
   buildWpCalibration,
+
+  computeShotgunSplit,
 } from "./expected-metrics/index.js";
 export type {
+
+  FormationDropbackPlay,
+  QbShotgunSplit,
+  ShotgunSplitArm,
   LinearModel,
   LogisticModel,
   LogisticFitOptions,

@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["public play-by-play pass attempts", "sacks", "qb scrambles", "engine own-EPA", "formation tracking"],
+    failureModes: ["formation misclassification", "missing plays from pbp", "insufficient per-arm dropbacks for shrinkage"],
+    family: "efficiency",
+    forbiddenInputs: ["private tracking feeds", "raw nflverse referee epa"],
+    formulaClass: "deterministic_rule",
+    formulaSummary: "Per-QB EPA/dropback and Success Rate split by shotgun vs under-center, shrunk toward overall QB mean.",
+    historicalPrecedent: [{ name: "Formation tendency and efficiency splits", reason: "Formation rate and differential efficiency informs game script and prop projections." }],
+    internalName: "shotgun_vs_under_center_split_shadow",
+    metricId: "shotgun-vs-under-center-split",
+    protectedComponents: ["shrinkage factor k", "floor dropback limits"],
+    publicExposure: "none",
+    publicName: "Shotgun vs Under-Center Split",
+    sourceRightsRequired: ["public play-by-play modeling allowed"],
+    status: "SHADOW",
+    targetQuestion: "Does this QB's efficiency change materially depending on formation?",
+    targetVariable: "formation efficiency differential",
+    validationMethods: ["walk_forward", "drift_test"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
