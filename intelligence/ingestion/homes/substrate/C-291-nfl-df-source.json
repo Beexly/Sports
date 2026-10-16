@@ -21,13 +21,35 @@
    {
     "name": "The Film Room",
     "url": "https://nfldraftfiles.com",
-    "definition": "searchable database of the author's prospect film cutups, filterable by player, position, and category; recorded as an external film-index endpoint relevant to the vision lane (organizational reference, not an ingested dataset)"
+    "definition": "searchable database of the author's prospect film cutups \u2014 CORRECTED in tranche 2 (2026-10-15 full read): the Film Room holds 297 cutups, of which only 3 are free (Arch Manning's 2026 games); full access is Pro at $8.99/mo, streaming only, no downloads observed. Filters: player text search, a position row, and a grade row (BAD to ELITE). Pro also unlocks scouting reports, attribute ratings, QB accuracy charts, and a custom board builder. Recorded as an external film-index endpoint relevant to the vision lane (organizational reference, not an ingested dataset)"
    }
   ],
   "sponsored_content_note": "the account's 2027 mock-draft post carries a Kalshi #1-overall market graphic labeled PAID PARTNERSHIP; recorded here as sponsored content, never as a signal",
   "metrics_homed": [
    "C-292 coverage-split WR YPRR"
   ],
-  "status_note": "deep-scroll catalog of the full page is in flight as tranche 2"
+  "status_note": "tranche 2 (deep-scroll catalog) landed: Film Room corrected (see endpoints), coverage limits recorded, grading methodology + signature stat added \u2014 see tranche2_enrichment",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "change_log": [
+    "endpoints: Film Room definition CORRECTED (297 cutups / 3 free / Pro $8.99/mo / streaming only / filters / Pro unlocks)",
+    "status_note replaced: tranche-1 'deep-scroll in flight' language superseded"
+   ],
+   "catalog_coverage": "~700 POSTS READ 2026-10-15 (tranche 2), Mar 17 - Oct 15 2026",
+   "coverage_limit": "Feb 2026 back to Oct 2025 is UNREACHABLE \u2014 X's search backend returned persistent errors for that range; two smaller gaps: Sep 1-8 2026 and Mar 1-16 2026. The catalog is complete for Mar 17 - Oct 15 2026 and silent before it, by platform failure, not by choice",
+   "grading_methodology": "the author's draft-pick grading uses a published letter scale; his stated anchor: 'A+ is a steal, best player available, a scheme fit, and fills a position of need' \u2014 grades are value-vs-slot + fit judgments on a stated rubric, not vibes",
+   "signature_stat": {
+    "name": "passer rating allowed",
+    "definition": "the author's signature charted defensive stat (passer rating when a defender is targeted)",
+    "stamped_instances": "Dillon Thieneman 2.8; Ashton Hampton 31.8 (as published)"
+   },
+   "recurring_series": [
+    "Weekly Draft Stock Watch",
+    "Draft Report articles",
+    "big boards",
+    "QB tiers"
+   ]
+  }
  }
 }

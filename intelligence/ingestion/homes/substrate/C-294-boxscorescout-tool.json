@@ -46,6 +46,23 @@
    }
   ],
   "stamped_instance": "2026-10-15 TNF QB card (2026 qualified-QB percentiles): Darnold EPA/play 13th pct (-0.08), CPOE 67th pct (+2.0%), Y/A 70th pct (7.7), TD% 97th pct (7.1%), INT% 0th pct (5.1%); Nix EPA/play 25th pct (-0.02), CPOE 15th pct (-2.4%), Y/A 7th pct (5.8), sack% 90th pct (3.2%); Week 6 matchup matrix placed DEN offense into SEA defense in the UGLY quadrant (medians 43.3% / 42.9%)",
-  "role": "external-tool record: a free nflverse-family reference whose EPA conventions are directly comparable to RBSDM \u2014 usable for cross-checks of in-house numbers; the engine does not depend on it"
+  "role": "external-tool record: a free nflverse-family reference whose EPA conventions are directly comparable to RBSDM \u2014 usable for cross-checks of in-house numbers; the engine does not depend on it",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "catalog_coverage": "FULL SITE MAP READ 2026-10-15 (tranche 2): boxscorescout.com is FREE with NO ACCOUNT everywhere; the X account's full history was also read (179 posts seen; header count 263 includes replies; gaps in posting verified as inactivity, not missed reads)",
+   "model_definitions_in_authors_terms": {
+    "xFP": "expected fantasy points \u2014 'the half-PPR points an average player would score with the same opportunities'. Per-opportunity model on field position, down/distance, time/score, formation, air yards + direction (targets), run direction (carries). DELIBERATELY EXCLUDES QB quality, offensive line, team strength, betting lines, and weather \u2014 it prices the opportunity, not the context. Trained on 2009-2025 and then FROZEN (the model does not refit in-season). AUTHOR'S STATED LIMIT: xFP holds up better season-to-season than raw points but 'is not a better forecast of future points than the points themselves' \u2014 recorded verbatim because a source that publishes its own ceiling is read differently from one that does not. NOTE: this xFP is Box Score Scout's own model; the PFF xFP at C-305 is a different model under the same label",
+    "kicker_model": "logistic regression per kick type on distance, season, indoors/outdoors, wind, cold, and altitude; rolling refit on the current season + prior 4 seasons. Outputs: make-prob per kick, xFG% (expected FG percentage), FGOE% (field goals over expected), KPA (kicking points added)",
+    "player_comps": "~12 role/efficiency stats per position, compared against the same-season position cohort (players with >=50% of team games); in-season profiles BLEND current games + the prior 2 seasons + the position average + draft round (years 1-2). Calibration as published: two random seasons score ~60% similarity; the closest comps land in the 80s-90s",
+    "team_comps": "10 percentiles per team season (offensive + defensive EPA/play, 4 success rates, 2 explosive rates, PROE, plays/game); comps are nearest by distance across those percentiles",
+    "athletic_score": "combine/pro-day drills ranked WITHIN position, weighted by how much each drill predicted draft position, then ranked across positions",
+    "excitement": "game excitement index = the sum of |win-probability change| across every play; 1.00 = one full swing",
+    "play_callers_db": "every offensive and defensive play caller since 1999, ranked on their unit's EPA/play, success %, etc. (data: @SamHoppen's play-caller file). CROSS-REFERENCE: this is an external, public instance of the coaching-transition premise family \u2014 SPEC-C P-014 analogue (play-caller changes as premises); a play-caller change is a stamped, checkable event and this DB is where the before/after unit numbers live in public",
+    "percentile_convention": "percentiles rank against ALL qualified seasons since 1999, NOT within-season; defensive-allowed percentiles are flipped (a high percentile = allowed little)",
+    "data_coverage": "tables from 1999; xFP from 2009; PROE from 2006; NGS from 2016 (source credit as the site states it)",
+    "features": "player/team stats + pages, statistical comps, a charts tool with PNG export, Fantasy Board (fantasy-points-over-replacement big board), Game Finder + Season Finder"
+   }
+  }
  }
 }

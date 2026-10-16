@@ -21,6 +21,13 @@
   "metrics_homed": [
    "C-296 referee-bias ATS trend source"
   ],
-  "status_note": "cataloged with its status per the nothing-gets-killed rule; the caveats live in C-296 and are part of this source's record, not a reason to skip it"
+  "status_note": "cataloged with its status per the nothing-gets-killed rule; the caveats live in C-296 and are part of this source's record, not a reason to skip it",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "catalog_coverage": "FULL HISTORY READ 2026-10-15 (tranche 2): all 1,319 posts, Oct 31 2024 - Oct 15 2026",
+   "integrity_findings_pointer": "the full-history read produced verified internal inconsistencies in the account's own record (arithmetic, a flipped bias label, chart-to-recap changes, abandoned record-keeping). They are recorded in full on the C-296 shadow ledger (tranche-2 appended record) and are the standing evidence under this source's DIAGNOSTIC-ONLY status",
+   "operator_note_addendum": "the account's own Oct 8 2026 statement confirms the same operator runs @goodelleakss (already noted in tranche 1)"
+  }
  }
 }
