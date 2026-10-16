@@ -1,0 +1,320 @@
+{
+  "append_rule": "Games the archiver adds after FINAL (2026 Week 7 onward) append to SCORING only, in (kickoff_utc, game_id) order, as the archiver adds them. CALIBRATION never grows and no game ever moves between sets; the abstention threshold tau is computed on this fixed CALIBRATION set (SPEC-A section 7.3). Any addition to CALIBRATION, removal from either list, or reordering voids the freeze (SPEC-A section 10.4) and requires a new freeze with a new hash and a ledger INTEGRITY entry.",
+  "artifact": "CALIBRATION and SCORING game-ID lists for the SPEC-A future filter (FFW-26), bound at FINAL (SPEC-A section 10.2)",
+  "bound_at": "FINAL freeze, 2026-10-15 (executed 2026-10-16T04:38Z)",
+  "calibration": [
+    {
+      "espn_event_id": "401872995",
+      "espn_game_id": "espn:americanfootball_nfl:401872995",
+      "game_id": "2026_06_SEA_DEN",
+      "kickoff_utc": "2026-10-16T00:15:00Z",
+      "matchup": "SEA @ DEN",
+      "mu_capture_stamp": "2026-10-15T22:15:20.659Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -2.5,
+          "price": -115
+        },
+        "home": {
+          "line": 2.5,
+          "price": -105
+        }
+      },
+      "set": "CALIBRATION",
+      "t_emit_utc": "2026-10-15T22:45:00Z"
+    },
+    {
+      "espn_event_id": "401872996",
+      "espn_game_id": "espn:americanfootball_nfl:401872996",
+      "game_id": "2026_06_HOU_JAX",
+      "kickoff_utc": "2026-10-18T13:30:00Z",
+      "matchup": "HOU @ JAX",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 2.5,
+          "price": -105
+        },
+        "home": {
+          "line": -2.5,
+          "price": -115
+        }
+      },
+      "set": "CALIBRATION",
+      "t_emit_utc": "2026-10-18T12:00:00Z"
+    },
+    {
+      "espn_event_id": "401872997",
+      "espn_game_id": "espn:americanfootball_nfl:401872997",
+      "game_id": "2026_06_BAL_CLE",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "BAL @ CLE",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -3.5,
+          "price": -115
+        },
+        "home": {
+          "line": 3.5,
+          "price": -105
+        }
+      },
+      "set": "CALIBRATION",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    },
+    {
+      "espn_event_id": "401872998",
+      "espn_game_id": "espn:americanfootball_nfl:401872998",
+      "game_id": "2026_06_CAR_PHI",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "CAR @ PHI",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -3.5,
+          "price": -110
+        },
+        "home": {
+          "line": 3.5,
+          "price": -110
+        }
+      },
+      "set": "CALIBRATION",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    }
+  ],
+  "counts": {
+    "calibration": 4,
+    "scoring": 10,
+    "window_games_bound": 14
+  },
+  "excluded_no_line": [],
+  "excluded_no_line_count": 0,
+  "mu_rule": "mu = archived spread line at T_emit = scheduled kickoff - 90 min, using the stamped capture closest to but not after T_emit (SPEC-A sections 2.2-2.3). A game with no such capture is EXCLUDED-NO-LINE (section 2.4). mu_capture_stamp and the spread at that stamp are recorded per game below from the normalized archive rows (book espn_public, source espn-public-dk); the closing line is never mu (section 2.5).",
+  "scoring": [
+    {
+      "espn_event_id": "401872999",
+      "espn_game_id": "espn:americanfootball_nfl:401872999",
+      "game_id": "2026_06_CHI_ATL",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "CHI @ ATL",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -1.5,
+          "price": -102
+        },
+        "home": {
+          "line": 1.5,
+          "price": -118
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    },
+    {
+      "espn_event_id": "401873000",
+      "espn_game_id": "espn:americanfootball_nfl:401873000",
+      "game_id": "2026_06_NO_NYG",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "NO @ NYG",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -1.5,
+          "price": 100
+        },
+        "home": {
+          "line": 1.5,
+          "price": -120
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    },
+    {
+      "espn_event_id": "401873001",
+      "espn_game_id": "espn:americanfootball_nfl:401873001",
+      "game_id": "2026_06_NYJ_NE",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "NYJ @ NE",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 7.5,
+          "price": -115
+        },
+        "home": {
+          "line": -7.5,
+          "price": -105
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    },
+    {
+      "espn_event_id": "401873002",
+      "espn_game_id": "espn:americanfootball_nfl:401873002",
+      "game_id": "2026_06_PIT_TB",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "PIT @ TB",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -2.5,
+          "price": -115
+        },
+        "home": {
+          "line": 2.5,
+          "price": -105
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    },
+    {
+      "espn_event_id": "401873003",
+      "espn_game_id": "espn:americanfootball_nfl:401873003",
+      "game_id": "2026_06_TEN_IND",
+      "kickoff_utc": "2026-10-18T17:00:00Z",
+      "matchup": "TEN @ IND",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 7,
+          "price": -115
+        },
+        "home": {
+          "line": -7,
+          "price": -105
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T15:30:00Z"
+    },
+    {
+      "espn_event_id": "401873004",
+      "espn_game_id": "espn:americanfootball_nfl:401873004",
+      "game_id": "2026_06_ARI_LA",
+      "kickoff_utc": "2026-10-18T20:05:00Z",
+      "matchup": "ARI @ LA",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 12.5,
+          "price": -108
+        },
+        "home": {
+          "line": -12.5,
+          "price": -112
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T18:35:00Z"
+    },
+    {
+      "espn_event_id": "401873005",
+      "espn_game_id": "espn:americanfootball_nfl:401873005",
+      "game_id": "2026_06_BUF_LV",
+      "kickoff_utc": "2026-10-18T20:25:00Z",
+      "matchup": "BUF @ LV",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": -4.5,
+          "price": -112
+        },
+        "home": {
+          "line": 4.5,
+          "price": -108
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T18:55:00Z"
+    },
+    {
+      "espn_event_id": "401873006",
+      "espn_game_id": "espn:americanfootball_nfl:401873006",
+      "game_id": "2026_06_LAC_KC",
+      "kickoff_utc": "2026-10-18T20:25:00Z",
+      "matchup": "LAC @ KC",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 8.5,
+          "price": -115
+        },
+        "home": {
+          "line": -8.5,
+          "price": -105
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T18:55:00Z"
+    },
+    {
+      "espn_event_id": "401873007",
+      "espn_game_id": "espn:americanfootball_nfl:401873007",
+      "game_id": "2026_06_DAL_GB",
+      "kickoff_utc": "2026-10-19T00:20:00Z",
+      "matchup": "DAL @ GB",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 1.5,
+          "price": -115
+        },
+        "home": {
+          "line": -1.5,
+          "price": -105
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-18T22:50:00Z"
+    },
+    {
+      "espn_event_id": "401873008",
+      "espn_game_id": "espn:americanfootball_nfl:401873008",
+      "game_id": "2026_06_WAS_SF",
+      "kickoff_utc": "2026-10-20T00:15:00Z",
+      "matchup": "WAS @ SF",
+      "mu_capture_stamp": "2026-10-15T23:14:21.349Z",
+      "mu_spread_at_capture": {
+        "away": {
+          "line": 7.5,
+          "price": -112
+        },
+        "home": {
+          "line": -7.5,
+          "price": -108
+        }
+      },
+      "set": "SCORING",
+      "t_emit_utc": "2026-10-19T22:45:00Z"
+    }
+  ],
+  "sources": {
+    "id_mapping": "Engine game_id <-> ESPN event id extracted from the archive's own pickcenter snapshot rows (the DraftKings tracking tags carry the ESPN gameId for each 2026_06_* row); 14 of 14 mapped, no unmapped games.",
+    "kickoff_calendar": {
+      "file": "introspection/trackrecords/t0_accrual_calendar_2026_w06_w07.json (SPEC-C S0/S1 accrual store, Motif workspace bundle copy)",
+      "note": "Scheduled kickoff_utc for all 14 Week 6 games; SEA_DEN kickoff independently matches r0_reference.json (2026-10-16T00:15:00Z) and the DAL_GB dossier v1 (kickoff 2026-10-19T00:20:00Z).",
+      "sha256": "7cc2d61404d2573d70398f99089758914d30be34ad7238bd18c7d59a62c4549c"
+    },
+    "ladder_archive": {
+      "file": "line-archive-oddsapi-2026-10-15.jsonl",
+      "note": "Alternate ladders for one game only (2026_06_SEA_DEN); see FINAL-FREEZE.json product_bar.",
+      "rows": 178,
+      "sha256": "71bbbc804f64612a506751665d15bdeb0c208fe2be08f1f0cbca7e4dafa027b6"
+    },
+    "line_archive": {
+      "file": "line-archive-2026-10-15.jsonl (goal gse-engine-v5-3-0-calibration-rebuild, Motif workspace)",
+      "note": "420 normalized rows (14 ESPN events x 30) + 42 raw pickcenter snapshot rows. Normalized rows carry the stamped SPREAD captures used for the mu-availability check.",
+      "rows": 462,
+      "sha256": "4ab752c323530da59993c0ceebfed30e88cfaf8263f19bb41df753b8555bb4b0"
+    }
+  },
+  "split_interpretation_recorded_at_FINAL": "The spec pins neither the rounding of 30% nor a tie-break for simultaneous kickoffs. FINAL records the deterministic reading, fixed before any scoring and unchangeable after (section 6.4): order by (kickoff_utc, game_id) ascending; CALIBRATION = first floor(0.30 x N) games. At FINAL, N = 14, floor(4.2) = 4 (28.6% of the bound set). Seven games share kickoff 2026-10-18T17:00:00Z; the game_id tie-break places BAL_CLE and CAR_PHI inside CALIBRATION and the other five in SCORING.",
+  "split_rule": "SPEC-A section 6 / FREEZE-1.json declaration: CALIBRATION = first 30% of the window's games by kickoff time; SCORING = the remaining 70%; no game appears in both sets.",
+  "window": "2026 Week 6 onward, regular season (SPEC-A section 2.1). Games enter the filter only via the archiver; no manual additions."
+}

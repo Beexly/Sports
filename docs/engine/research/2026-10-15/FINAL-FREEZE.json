@@ -1,0 +1,260 @@
+{
+  "base_commit": "058d78749113cde8d545cac323f752b3e7aeff53",
+  "base_note": "Branch created off Sports main at its head at execution time (main advanced past FREEZE-1's base 9a989b3e by the 2026-10-15 evening sweep, commit 058d7874). FREEZE-1 precedent: freeze branches carry the full docs/engine/research/2026-10-15/ directory; the four FREEZE-1 files are carried byte-identical and the ledger as appended.",
+  "branch": "motif/spec-final-freeze-2026-10-15",
+  "calibration_scoring_split": {
+    "append_rule": "See GAME-LISTS.json append_rule: post-FINAL archiver-added games append to SCORING only, in (kickoff_utc, game_id) order; CALIBRATION is fixed at the 4 bound games.",
+    "calibration_game_ids": [
+      "2026_06_SEA_DEN",
+      "2026_06_HOU_JAX",
+      "2026_06_BAL_CLE",
+      "2026_06_CAR_PHI"
+    ],
+    "declared_at": "Rule declared at FREEZE-1 (2026-10-15); concrete lists bound at FINAL (this record) per SPEC-A sections 6.1, 10.2.",
+    "excluded_no_line": {
+      "count": 0,
+      "note": "Every bound game has a stamped SPREAD capture at or before its T_emit (per-game stamps in GAME-LISTS.json), so no game is EXCLUDED-NO-LINE at FINAL (SPEC-A section 2.4). Future appended games are checked at scoring time under the same rule and counted in the ledger."
+    },
+    "lists_file": {
+      "path": "docs/engine/research/2026-10-15/GAME-LISTS.json",
+      "sha256": "b68298a6fd676abacb4ada7e8847d283acf05cdd50f07d5855e88062d7436582"
+    },
+    "rule": "CALIBRATION = first 30% of the window's games by kickoff time; SCORING = the remaining 70%; no overlap (SPEC-A section 6).",
+    "scoring_game_ids": [
+      "2026_06_CHI_ATL",
+      "2026_06_NO_NYG",
+      "2026_06_NYJ_NE",
+      "2026_06_PIT_TB",
+      "2026_06_TEN_IND",
+      "2026_06_ARI_LA",
+      "2026_06_BUF_LV",
+      "2026_06_LAC_KC",
+      "2026_06_DAL_GB",
+      "2026_06_WAS_SF"
+    ]
+  },
+  "confirmatory_family": {
+    "candidates": [
+      "PRJ-1"
+    ],
+    "m": 1,
+    "note": "Unchanged from FREEZE-1. PRJ-1's freeze hash (PENDING-BIND at FREEZE-1) is bound under prj1_binding above."
+  },
+  "contract": "SPEC-A \u2014 Future-Filter Evaluation Contract (FFW-26), section 10",
+  "directory": "docs/engine/research/2026-10-15/",
+  "drafting_notes": [
+    "z-convention for n: see pre_declared_n.derivation.z_convention_note. The bound n is the planning record's value, ceiled per section 5.1.",
+    "Split rounding and tie-break are not pinned by SPEC-A; the deterministic reading bound at FINAL is recorded in GAME-LISTS.json (split_interpretation_recorded_at_FINAL) and ledger entry 0015. It was fixed before any scoring and cannot be revisited after seeing scoring data (section 6.4).",
+    "The product bar's single-game basis is a data fact, not a choice: no second ladder had been captured by FINAL. If ladders accrue for later games, the bar does NOT silently change \u2014 re-derivation is a future freeze action.",
+    "Branch lineage: FREEZE-1 branched off main 9a989b3e; FINAL branches off main 058d7874 (main moved). The freeze directory content is what is hashed; lineage is recorded for provenance only.",
+    "Kickoff times come from the program's own SPEC-C accrual calendar (sha256 in GAME-LISTS.json sources), cross-checked for two games against independent records (r0_reference.json; DAL_GB dossier v1). The archive itself carries no kickoff field."
+  ],
+  "executed": "2026-10-15",
+  "executed_by": "Motif (freeze-execution lane), on the ratified 2026-10-15 program (Garrett Baxley)",
+  "executed_utc": "2026-10-16T04:38:45Z",
+  "files": {
+    "game_lists": {
+      "note": "The bound CALIBRATION (4) and SCORING (10) game-ID lists with per-game kickoff, T_emit, mu capture stamp, and spread at capture; append rule included in the file.",
+      "path": "docs/engine/research/2026-10-15/GAME-LISTS.json",
+      "sha256": "b68298a6fd676abacb4ada7e8847d283acf05cdd50f07d5855e88062d7436582"
+    },
+    "hypothesis_ledger": {
+      "note": "Re-hash as appended at FINAL (FREEZE-1 remainder item 5): entries 0001-0010 byte-identical to the FREEZE-1 opening (whose sha256 51cffcabed75891049f3578d933332270376d0cd5ba69c9b610888a37ae01c37 is recorded in FREEZE-1.json); entries 0011-0016 appended at FINAL per the append-only rule (SPEC-A section 8.4). The ledger schema (section 10.2) is the schema block of this file, covered by this hash.",
+      "path": "docs/engine/research/2026-10-15/HYPOTHESIS-LEDGER.md",
+      "sha256": "74a8a671fdc13a4951231e4f8bb32ba04d1a78ec2e5d2a09ed03623b206c8fc5"
+    },
+    "ruling_c1": {
+      "note": "Byte-identical to FREEZE-1; hash matches FREEZE-1.json.",
+      "path": "docs/engine/research/2026-10-15/RULING-C1_composition.md",
+      "sha256": "030833bb5357a0d3eb1819ec49e9ef8f23a72facd84c88d15b6c9766340393a4"
+    },
+    "spec_a": {
+      "note": "Byte-identical to FREEZE-1; hash matches FREEZE-1.json.",
+      "path": "docs/engine/research/2026-10-15/SPEC-A_future-filter.md",
+      "sha256": "68f79236a0c7bec032ab7390e655859b39e7ed152ff38202d64ed274e21f7bc6"
+    },
+    "spec_b": {
+      "note": "Byte-identical to FREEZE-1; hash matches FREEZE-1.json.",
+      "path": "docs/engine/research/2026-10-15/SPEC-B_pick-spec.md",
+      "sha256": "b5756915ef50fcee6bb75fd30b51d9eea49fe7f7b42bce39aa5b7b6d11573d70"
+    }
+  },
+  "final_freeze_remainder_resolution": [
+    "1. PRJ-1 module + config sha256 binding \u2014 BOUND (prj1_binding). P2-P4 verified on the module freeze record; P1 satisfied by record.",
+    "2. Product break-even bar value \u2014 BOUND (product_bar), single-game ladder basis named.",
+    "3. CALIBRATION / SCORING game-ID lists \u2014 BOUND and hashed (calibration_scoring_split; GAME-LISTS.json).",
+    "4. Pre-declared n \u2014 BOUND: 1,694 (pre_declared_n).",
+    "5. Hypothesis ledger re-hash as appended at FINAL \u2014 BOUND (files.hypothesis_ledger, entries 0001-0016)."
+  ],
+  "forward_shadows_no_alpha": [
+    "S-G",
+    "S-F2",
+    "S-ALL4",
+    "S-F1"
+  ],
+  "freeze": "FINAL",
+  "freeze_1_reference": {
+    "branch": "motif/spec-freeze1-2026-10-15",
+    "certificate": {
+      "note": "Carried byte-identical on this branch (sha256 re-verified at FINAL against the FREEZE-1 record).",
+      "path": "docs/engine/research/2026-10-15/FREEZE-1.json",
+      "sha256": "a91c09f1148742e6dc4c8afe1c1f897c4f9dbeb48d60c036656ea3b7290f17f3"
+    },
+    "commit": "bc9aa2209ec626547b4e82c125c9f3642580642a"
+  },
+  "gate_parameters": {
+    "abstention_tau": "80th percentile of predictive interval widths on the bound CALIBRATION set (SPEC-A section 7.3, ratified). Abstention never removes games from the gate (sections 4.4, 7.1).",
+    "baseline": "Homoscedastic Gaussian, mu = archived line at T_emit, sigma fit point-in-time on the scoring window only (expanding, kickoff-strict) (SPEC-A section 3). The frozen-filter baseline 7.154021 is NOT carried over.",
+    "emission": "ZERO_OBJECT. RVC: NOT_CLEARED (unchanged by this freeze).",
+    "multiplicity": "Holm step-down over the confirmatory family (SPEC-A sections 8.2, 4.3c). Family at FINAL: m = 1 (PRJ-1 sole member); the candidate's fitting procedure, including nu selection, is inside the family (section 8.5). Shadows S-G / S-F2 / S-ALL4 / S-F1 carry no alpha and are reported only (RULING-C1 section 1.5).",
+    "pass_rule": "All of SPEC-A section 4.3: (a) delta_hat < 0; (b) one-sided 95% bootstrap lower bound excludes 0 (5th percentile < 0); (c) Holm-adjusted p < 0.05.",
+    "quantity": "Relative paired delta CRPS: mean per-game (CRPS_candidate - CRPS_baseline) on the SCORING set; negative favors the candidate (SPEC-A section 4.1). No absolute CRPS level is specified.",
+    "t_emit": "T - 90 minutes before scheduled kickoff; mu from the archiver's stamped capture closest to but not after T_emit (SPEC-A sections 2.2-2.3).",
+    "uncertainty": "Paired bootstrap over games, B = 10,000 (SPEC-A section 4.2, ratified)."
+  },
+  "hash_algorithm": "sha256 over the exact landed file bytes",
+  "pre_declared_n": {
+    "applies_to": "Scoring games (SPEC-A section 5.1: n is pre-declared before FINAL; section 4.4: the gate is scored on the full SCORING set).",
+    "derivation": {
+      "ceiling": 1694,
+      "unceiled": 1693.1235451605846,
+      "z_alpha": 1.9599639845400536,
+      "z_convention_note": "The z values are z_0.975 = 1.959964 and z_0.80 = 0.841621 \u2014 the convention of the program's own planning artifacts: the sigma-d job's published family (579 at delta 0.0342; 1,693 at delta 0.02; 6,772 at delta 0.01) and SPEC-A section 5.4's table (approx 581 / 1,696 / 6,785) both reproduce only under z_0.975. The literal one-sided reading of section 5.1's z_{1-alpha} symbol (z_0.95 = 1.644854) yields ceil(1333.67) = 1,334. FINAL binds the LARGER value, 1,694: it matches the planning record the ratification relied on, and a larger pre-declared n can only extend the window (section 5.5) \u2014 it cannot loosen the gate. The discrepancy between section 5.1's symbol and section 5.4's arithmetic is recorded here, not silently resolved.",
+      "z_power": 0.8416212335729144
+    },
+    "formula": "n = ceil( ((z_{1-alpha} + z_{power}) * sigma_d / delta_min)^2 * DEFF ) (SPEC-A section 5.1)",
+    "inputs": {
+      "alpha": 0.05,
+      "alpha_power_source": "Ratified at FREEZE-1 (SPEC-A section 5.3)",
+      "deff": 1.0,
+      "deff_source": "Planning DEFF adopted (ledger entry 0002: measured 0.9525, no credit taken)",
+      "delta_min": 0.02,
+      "power": 0.8,
+      "sigma_d": 0.293745,
+      "sigma_d_source": "Measured on the frozen filter (ledger entry 0001; sigma-d planning job, branch grok/walk-forward-2026-10-14 @ 7297f2f)"
+    },
+    "n": 1694,
+    "supply_at_FINAL": {
+      "calibration_games_bound": 4,
+      "note": "The window cannot supply n at FINAL (10 of 1,694 scoring games bound). Per SPEC-A section 5.5 the gate is NOT scored early: the window extends via the GAME-LISTS.json append rule (Week 7 onward append to SCORING) across subsequent seasons until the SCORING set reaches n = 1,694.",
+      "scoring_games_bound": 10
+    }
+  },
+  "prj1_binding": {
+    "analytic_gradient": "NOT TAKEN. An analytic gradient would cut objective-evaluation counts severalfold but changes the L-BFGS-B trajectory and breaks bit-equivalence with the frozen procedure (perf report section 5). It remains a candidate-procedure change for a future freeze authority; it is not part of this freeze and must not be introduced under it.",
+    "candidate": "PRJ-1 (candidate #1, sole confirmatory family member, m = 1)",
+    "config": {
+      "blob_sha1": "47d2e918615857ac877429dca5d14024654116b8",
+      "note": "sha256 matches PRJ1-FREEZE.json exactly. Config pins ftol = 1e-12 and the mean-lock bisection bracket [-300, 300] (the two PRJ1-FREEZE.json freeze-completion confirmations; the landed RULING-C1 fleet text truncates both values, so the config pins stand as the bound values \u2014 recorded here so the pins are part of the freeze record).",
+      "path": "dfs/walk_forward/prj1_config.json",
+      "sha256": "5cfe41f6c9d076073b4f1f5c7d176bc9f54d6468e8260ba77d5015e76ea705b9"
+    },
+    "equivalence_suite": {
+      "blob_sha1": "0e93f6f54589e8f6ee2a5393ad9363eec11fbcda",
+      "path": "dfs/walk_forward/test_prj1_fast_equiv.py",
+      "result": "8/8 passed; max observed deviation 0.0 (contract was <= 1e-12). One recorded exception: F2-init objective VALUES cannot be bit-identical (libm vs scipy erf/exp differ by 1 ulp on 9-26% of inputs); F2 SELECTION matched on every tested set. Full record: prj1-perf-2026-10-15 deliverable and bus note 2026-10-15-prj1-perf-pass.md.",
+      "sha256": "225523687ea00da39ca2173e74df3f88c1d161900602fbcc9b5825de37fc929b"
+    },
+    "execution_path": {
+      "blob_sha1": "507b2cf9b1048231275837251741eacd366ef2a1",
+      "branch": "motif/prj1-perf-2026-10-15",
+      "commit": "1910e8e3715833ba725be544e27ea6a3f9ee6cb8",
+      "note": "Additional module only; the frozen module is unmodified on the perf branch (tree diff vs the freeze commit is exactly three additions).",
+      "path": "dfs/walk_forward/prj1_fast.py",
+      "sha256": "fc9e6bf7463b5951470abbad5f537c278f06e213418474320745b1dcc8232283"
+    },
+    "inherited_frozen_files": {
+      "pit_round2.py": {
+        "note": "Matches PRJ1-FREEZE.json (inherited, unmodified).",
+        "sha256": "5c3bfede161e4e82d57caa4ffe09548f30e2e6f083ccfbf7d0881c0dea43ea6c"
+      },
+      "pit_round2_result.json": {
+        "note": "Per PRJ1-FREEZE.json / ledger entry 0003 (P1 reproduction artifact).",
+        "sha256": "0fa72d05639fbccbf7fa7172e252ddf4da71be3d7723605bb86a1c249df962c7"
+      },
+      "test_prj1.py": {
+        "note": "Matches PRJ1-FREEZE.json; suite 19/19 on synthetic inputs.",
+        "sha256": "88560025cb8db55763dc84804487ade8cf547bbf1815833c0f590b29d74ef8d8"
+      }
+    },
+    "module_freeze_record": {
+      "blob_sha1": "ae644dae87750b7b8d60dd5aac568275f673f5a4",
+      "branch": "motif/prj1-freeze-2026-10-15",
+      "freeze_commit": "0ca813f8e90b0efcb76cea6e4ab876e9855c1439",
+      "hash_scheme": "sha256 over exact file bytes \u2014 the scheme PRJ1-FREEZE.json itself uses; FINAL binds in the same scheme.",
+      "path": "dfs/walk_forward/PRJ1-FREEZE.json",
+      "sha256": "0b913dd0b38498017e0d191d15f977db5931c50f2e17297a65accce64643ba71"
+    },
+    "path_decision": "Frozen prj1.py is the REFERENCE implementation; prj1_fast.py is the BOUND EXECUTION PATH. The decision records a proven fact, not a preference: the equivalence suite shows bit-identical outputs (max observed deviation 0.0 on pmf entries, centres, CRPS values, objective values, and fitted parameters across the frozen fixtures, a 245-game randomized suite over the full nu grid, and a full-grid anchor fit). Callers opt in per call site (prj1_fast.fit_week_fast et al., per the module header); any result produced by the execution path is a result of the frozen procedure.",
+    "prerequisites": {
+      "P1": "SATISFIED-BY-RECORD (ledger entry 0003): family-2's 7.133199 reproduced; pit_round2_result.json regenerated byte-identical.",
+      "P2": "SATISFIED (PRJ1-FREEZE.json): F2 mechanisms exposed as callable pieces (pit_round2.hetero_sd, pit_round2.keynum_components); no refactor needed; prj1 imports both.",
+      "P3": "SATISFIED (PRJ1-FREEZE.json): complete covariate list = total_line only (consumed by hetero_sd; mu itself is the archiver-stamped input); archiver-available at T_emit; no gaps. Note carried: hetero_sd's landed fallback substitutes total_line = 44.0 when a total is missing \u2014 retained as landed.",
+      "P4": "SATISFIED (PRJ1-FREEZE.json): pit_round2.crps_discrete is exact for integer-support pmfs; prj1 imports it."
+    },
+    "profile_script": {
+      "blob_sha1": "63be04e1515a688456a8df013c3663d3e3483908",
+      "path": "dfs/walk_forward/profile_prj1.py",
+      "sha256": "fa48c3e91a72d970db0905738269a04dbd532a94b1307ae5383fafe14db79390"
+    },
+    "reference_implementation": {
+      "blob_sha1": "3eff1cb58ed1495e18b0677482bd69373f0db170",
+      "branch": "motif/prj1-perf-2026-10-15",
+      "commit": "1910e8e3715833ba725be544e27ea6a3f9ee6cb8",
+      "note": "sha256 matches PRJ1-FREEZE.json exactly (recomputed from the perf-branch bytes at FINAL).",
+      "path": "dfs/walk_forward/prj1.py",
+      "sha256": "f463a9cece07f1f4cc5749a6422e4e78013db024a618596aff318c09299aa404"
+    },
+    "speedup_record": "Weekly joint fit at n = 2,400: frozen path projected 10,522 s CPU vs fast path measured 1,059.5 s (9.9x); 2026-season weekly refit projects to ~18-20 min CPU on the bound execution path.",
+    "status": "BOUND at FINAL (resolves FREEZE-1.json PENDING-BIND and ledger entry 0004)"
+  },
+  "product_bar": {
+    "artifacts": {
+      "branch": "motif/product-breakeven-2026-10-15",
+      "code": {
+        "blob_sha1": "7ecd07958ecd08780121a4ad2eeeefc4d4c5028e",
+        "path": "research/product_breakeven_2026-10-15.py",
+        "sha256": "d1c2b6226ddd4de3a6de82dde288568258c92f0bb39e75cf1c7d5b48a8393d97"
+      },
+      "commit": "92b7f9e",
+      "deliverable": "product-breakeven-mapping-2026-10-15.md (Motif workspace your_files)",
+      "results": {
+        "blob_sha1": "6d9471681006ee4d86b889d07340d934d4f432c7",
+        "path": "research/product_breakeven_results_2026-10-15.json",
+        "sha256": "617c8dad9d334e2b693d672f8bf26cfe9cee934bb8d3e77f0541776963f33051"
+      }
+    },
+    "ladder_basis": "SINGLE GAME, NAMED: SEA@DEN (ESPN 401872995) is the only game with a captured alternate ladder as of FINAL. 178 OddsAPI/DraftKings rows (92 ALT_SPREAD + 86 ALT_TOTAL), stamp 2026-10-15T18:29:17.979Z, file line-archive-oddsapi-2026-10-15.jsonl sha256 71bbbc804f64612a506751665d15bdeb0c208fe2be08f1f0cbca7e4dafa027b6. The Week 6 main-line archive (14 games) holds no ladders.",
+    "measured_holds_sea_den": {
+      "alt_spread_ladder_median": 0.07,
+      "alt_total_ladder_median": 0.0701,
+      "main_spread": 0.0475,
+      "main_total": 0.0471
+    },
+    "no_bet": "NO_BET carries no bar: it is the zero-edge default output (mapping section 9; SPEC-B section 6).",
+    "recompute_at_FINAL": "The mapping's own instruction was to recompute across all ladders captured by freeze time. FINAL inventoried: (1) the workspace line archives (462 main-line rows / 14 games; 178 ladder rows / 1 game); (2) Beexly/Sports branches motif/line-archiver-2026-10-15 lineage, motif/line-archiver-products-2026-10-15, motif/line-archiver-oddsapi-2026-10-15 \u2014 archiver CODE only (packages/ingestion-pipeline/src/line-archiver/*), no capture data files; (3) motif/product-breakeven-2026-10-15 \u2014 the original computation. No other ladder exists; recomputation across the full captured set is therefore the identical single-game computation, and the values above bind as computed. Cross-checked at FINAL against the landed results JSON (combined_joint_crps_equiv, keyset_joint_crps_equiv, atoms_joint_crps_equiv \u2014 all match).",
+    "status": "BOUND at FINAL for the product track (SPEC-B section 7.3 DECOUPLED = YES). The research-ledger CRPS gate is unchanged (RULING-C1 section 5.5 default (A)); this bar gates products only.",
+    "teasers": "NO BAR BOUND: teaser prices were never archived, so no break-even is computable from real prices (mapping section 5). The adoptable form, once teaser prices are archived: per-leg model probability >= sqrt(1/o_teaser) at the captured price. Binding a teaser bar requires a future freeze action with captured prices.",
+    "totals": "NOT ADOPTABLE (SPEC GAP): no totals distribution exists in the record (SPEC-B sections 1.4/7.2). Product-native totals numbers are recorded in the mapping (section 8) but no totals bar binds.",
+    "values_crps": {
+      "alternate_spread_lines": 0.003841,
+      "alternate_spread_lines_exact": 0.0038411614938521892,
+      "combined_spread_products": 0.006147,
+      "combined_spread_products_exact": 0.00614662960233133,
+      "key_number_push_atoms": 0.002385,
+      "key_number_push_atoms_exact": 0.002384821837411095,
+      "relative_to_frozen_baseline_7_154021": {
+        "combined": 0.000859,
+        "note": "0.0859% \u2014 the portable relative form (break-even mapping section 7, assumption A2)."
+      }
+    }
+  },
+  "repo": "Beexly/Sports",
+  "situational_slots": {
+    "cap": 2,
+    "slot_1": "SPESE (ledger entry 0005) \u2014 future-filter pre-registration only, no weight, not a look",
+    "slot_2": null
+  },
+  "state": "FINAL EXECUTED \u2014 all FINAL-freeze remainder items from FREEZE-1.json are bound below. FINAL precedes any scoring (SPEC-A section 10.5): no scoring has occurred, no look has been taken on the future filter, and no calibration has been run. Emission remains ZERO_OBJECT; RVC stays NOT_CLEARED.",
+  "void_conditions": "SPEC-A section 10.4 \u2014 any change to hashed files, any addition/removal of games from the declared sets, or any scoring of a candidate before FINAL voids the freeze; a voided freeze requires a new freeze with a new hash and a ledger INTEGRITY entry. (FINAL has now occurred; changes to the files hashed in this record void FINAL under the same rule.)"
+}
