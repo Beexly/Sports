@@ -155,8 +155,16 @@ export function bindCpoeCompSamples(
   requests: readonly CpoeCompBindRequest[],
 ): CpoeCompBindResult[] {
   const out: CpoeCompBindResult[] = [];
-  const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = { grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean", layer: "L2" };
-  const CPOE_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = { grain: "week_t_for_tplus1", provenance: GSE_CPOE_PROVENANCE, layer: "L1" };
+  const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+  grain: "week_t_for_tplus1",
+  provenance: "weekly_ngs_mean",
+  layer: "L2",
+};
+  const CPOE_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+    grain: "week_t_for_tplus1",
+    provenance: GSE_CPOE_PROVENANCE,
+    layer: "L2",
+  };
   for (const req of requests) {
     // GSE-CPOE as-of boundary: must be strictly prior to kickoff week AND
     // not the season-level aggregate (week=0). Season-level CPOE would leak the

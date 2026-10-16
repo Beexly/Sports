@@ -2,7 +2,16 @@ import { describe, expect, it, vi } from "vitest";
 
 /**
  * Fixture confirmation guard (ledger C-111). Pure helpers plus the per-run
- * confirmer with an injected fetch. The scoreboard fixture below is a TEST
+ * confirmer with an injected fetch.
+ *
+ * externalId form: the seed parser's ids are `espn:<odds sport key>:<event id>`
+ * (e.g. espn:americanfootball_ncaaf:402) since the C-85 unification (#882)
+ * aligned the schedule seed with the odds client's id space. These tests
+ * originally pinned the pre-unification short form (espn:ncaaf:402) and were
+ * updated to the canonical form in the 2026-10-12 CI repair; the matching
+ * behaviour under test was never affected.
+ *
+ * The scoreboard fixture below is a TEST
  * FIXTURE shaped like ESPN's public scoreboard JSON; its rows mirror what the
  * public board listed when the phantom picks were diagnosed (2026-09-06):
  * the three May-listed NCAAF rows dated 2026-09-05 are absent that day, while
@@ -149,13 +158,13 @@ describe("findListedFixture", () => {
 
   it("confirms a listed fixture, in either home/away orientation", () => {
     const board = parseBoard(CFB_BOARD);
-    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:ncaaf:402");
+    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:402");
     const flipped: FixtureProbe = {
       ...LISTED,
       homeTeamName: LISTED.awayTeamName,
       awayTeamName: LISTED.homeTeamName,
     };
-    expect(findListedFixture(flipped, board, NCAAF)?.externalId).toBe("espn:ncaaf:402");
+    expect(findListedFixture(flipped, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:402");
   });
 
   it("keeps college matching exact: Washington never confirms Washington State", () => {
@@ -181,7 +190,7 @@ describe("findListedFixture", () => {
       awayTeamName: "Stanford Cardinal",
       commenceTime: new Date("2026-09-05T23:00:00.000Z"),
     };
-    expect(findListedFixture(probe, board, NCAAF)?.externalId).toBe("espn:ncaaf:10");
+    expect(findListedFixture(probe, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:10");
   });
 
   it("rejects a same-teams candidate on a shared date key more than 12 hours from our clock", () => {
@@ -204,7 +213,7 @@ describe("findListedFixture", () => {
         board,
         NCAAF,
       )?.externalId,
-    ).toBe("espn:ncaaf:11");
+    ).toBe("espn:americanfootball_ncaaf:11");
   });
 });
 
@@ -271,12 +280,12 @@ describe("requiresReconfirmation and commenceTimeCorrection", () => {
     const board = parseBoard({
       events: [espnEvent("21", startedAt.toISOString(), "Cincinnati Bearcats", "Boston College Eagles")],
     });
-    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:ncaaf:21");
+    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:americanfootball_ncaaf:21");
     expect(commenceTimeCorrection(LISTED, startedAt, NOW)).toBeNull();
     const out = confirmFixturesAgainstScoreboard([LISTED], board, NCAAF, NOW);
     expect(out.get(LISTED.id)).toMatchObject({
       status: "event_already_started",
-      event: { externalId: "espn:ncaaf:21" },
+      event: { externalId: "espn:americanfootball_ncaaf:21" },
     });
     expect(out.get(LISTED.id)).not.toHaveProperty("correctedCommenceTime");
     // Exactly now is not after now either.
@@ -453,7 +462,7 @@ describe("FixtureConfirmer", () => {
     if (out.status === "ok") {
       expect(out.byGameId.get("g-fcs")).toMatchObject({
         status: "confirmed",
-        event: { externalId: "espn:ncaaf:777" },
+        event: { externalId: "espn:americanfootball_ncaaf:777" },
       });
       expect(out.byGameId.get("g-cincy")?.status).toBe("confirmed");
       // Merged board: four FBS events plus one FCS event, none duplicated.
@@ -486,7 +495,7 @@ describe("FixtureConfirmer", () => {
     if (out.status === "ok") {
       expect(out.byGameId.get("g-cincy-stale")).toMatchObject({
         status: "event_already_started",
-        event: { externalId: "espn:ncaaf:402" },
+        event: { externalId: "espn:americanfootball_ncaaf:402" },
       });
     }
   });

@@ -2180,9 +2180,6 @@ export type { PerformanceClaimInput } from "./edge-lab/honest-ceiling.js";
 
 // Recompute verifier: re-score a ledger of claims against stored outcomes.
 export { recomputeLedger } from "./edge-lab/recompute-verifier.js";
-// LedgerEntry is re-exported by recompute-verifier too, but it is the same
-// ledger-chain type exported above — listing it twice is a duplicate
-// identifier, so it is exported once, from ledger-chain.
 export type { RecomputeReport } from "./edge-lab/recompute-verifier.js";
 
 // Ladder + boost scanners: softness map across a market's price ladder.

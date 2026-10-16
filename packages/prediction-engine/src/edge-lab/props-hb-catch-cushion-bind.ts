@@ -121,7 +121,11 @@ export type CatchCushionBindResult =
  */
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = { grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean", layer: "L2" };
+const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+  grain: "week_t_for_tplus1",
+  provenance: "weekly_ngs_mean",
+  layer: "L2",
+};
 
 export function bindCatchCushionSamples(
   rows: readonly CovariateRow[],

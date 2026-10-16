@@ -394,6 +394,7 @@ export async function settleSport(
       return sportRowId;
     };
 
+
     for (const score of normalized) {
       if (!score.completed) continue;
 

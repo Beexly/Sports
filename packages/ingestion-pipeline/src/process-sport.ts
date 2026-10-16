@@ -612,30 +612,21 @@ export async function processSport(
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0 && !rd.complete) {
-          // FAIL CLOSED (main/#1160). This branch REPLACES the entire slate
-          // for the sport, so a truncated day-span here is not "some data is
-          // better than none" — it is a board that silently omits every game
-          // on the days Rundown failed to serve, written as though it were
-          // the whole slate. The run would then report SUCCESS,
-          // oddsInserted > 0 would advance the public freshness clock, and
-          // the missing games would be indistinguishable from games that
-          // simply are not scheduled. Refusing lets the ESPN tertiary path
-          // (and the next cycle) try again. The thin-fill branch below is
-          // deliberately NOT gated this way: it only ADDS bookmakers to games
-          // we already hold, so a short day-span there means fewer fills,
-          // never a missing game.
-          oddsProviderTag = "therundown-incomplete";
+          // TRUNCATED fan-out: the adapter read only part of its day span
+          // (a day 500'd, or a 429 aborted the rest), so the games on the
+          // unread days are simply absent — indistinguishable from games
+          // never scheduled. This leg REPLACES the whole board, so writing
+          // a partial slate through would report SUCCESS and advance the
+          // public freshness clock on half a board. Refuse it, exactly as
+          // an empty read is refused; the completeness signal is the
+          // adapter's own (`complete`/`failedDays` on RundownFetchResult).
+          oddsProviderTag = "therundown-empty";
           rundownAttemptNote =
-            `rundown incomplete — refusing partial board replacement ` +
-            `(unread days: ${rd.failedDays.join(", ") || "unknown"}): ${rd.error ?? ""}`;
-          console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
-        } else if (rd.complete === false) {
-          // Branch/#1158: incomplete span that returned no events at all.
-          // Nothing to replace either way, but the tag/note must say the
-          // slate was truncated, not merely empty.
-          oddsProviderTag = "therundown-truncated";
-          rundownAttemptNote = rd.error ?? "rundown slate truncated (incomplete day span)";
-          console.warn(`${logPrefix} ${sport.key}: rundown truncated — ${rundownAttemptNote}`);
+            rd.error ??
+            `rundown truncated: ${rd.failedDays.length} day(s) unread (${rd.failedDays.join(", ")})`;
+          console.warn(
+            `${logPrefix} ${sport.key}: rundown truncated, refusing partial slate as the board — ${rundownAttemptNote}`,
+          );
         } else if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
