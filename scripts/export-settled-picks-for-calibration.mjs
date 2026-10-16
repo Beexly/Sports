@@ -68,7 +68,7 @@ try {
       game: {
         select: {
           id: true,
-          startTime: true,
+          commenceTime: true,
           sportId: true,
           homeTeamId: true,
           awayTeamId: true,
@@ -102,7 +102,9 @@ try {
       game: r.game
         ? {
             ...r.game,
-            startTime: r.game.startTime?.toISOString?.() ?? r.game.startTime,
+            // Schema renamed Game.startTime -> commenceTime; the export key
+            // keeps `startTime` for downstream consumers' stability.
+            startTime: r.game.commenceTime?.toISOString?.() ?? r.game.commenceTime,
           }
         : null,
       exportedAt: new Date().toISOString(),
