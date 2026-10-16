@@ -1,0 +1,62 @@
+{
+ "census_id": "C-320",
+ "name": "Gridiron Grading public datasets (Google Sheets, dashboards, Shiny apps)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 public datasets recorded as substrate data sources with endpoints + structure; NOT downloaded in this tranche (download + in-house re-stamping are a named follow-on, as in tranche 1)",
+ "stamp_required": "public sheets versioned by season; endpoints + structure recorded 2026-10-15",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "existence + structure + endpoints are recorded from the authors' public link page (gridirongrading.carrd.co) and the deep-scroll catalog; the sheets themselves were not downloaded or re-stamped",
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-tranche2-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "gridirongrading.carrd.co link page + @GridironGrading deep-scroll catalog, read 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "authors' published datasets (Google Sheets / dashboards / Shiny apps)",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "datasets": [
+   {
+    "name": "2026 Big Board",
+    "form": "public Google Sheet, publicly downloadable",
+    "structure": "634 prospects, 11 tabs",
+    "sheet_id": "1oVGaSZXXcoWvu6RKICdaCT1mqXP1aqKC_FV6iE1riOQ"
+   },
+   {
+    "name": "Prospect & Team Grades Database (2020-2026)",
+    "form": "public Google Sheet",
+    "sheet_id": "1jJYPhxX4wV4hQ9kj9ObZaPLsU9rEHMjtcnAG6R-Vn14",
+    "stamped_instance": "top overall prospect scores in the database: Joe Burrow 99.9, Bryce Young 99.6, C.J. Stroud 99.1"
+   },
+   {
+    "name": "2020-2024 Impact Scores",
+    "form": "public Google Sheet",
+    "sheet_id": "1V8ipqpxq8ewGpDUBiuLt4epYFow9PuBHhAeb5HMUmaA",
+    "homed_as": "the dataset behind C-319"
+   },
+   {
+    "name": "annual draft boards 2021-2025",
+    "form": "public Google Sheets",
+    "endpoint": "https://gridirongrading.carrd.co"
+   },
+   {
+    "name": "2025 FA Rankings",
+    "form": "public spreadsheet (xlsx)",
+    "endpoint": "https://gridirongrading.carrd.co"
+   },
+   {
+    "name": "2026 Draft Board + 2025 board",
+    "form": "Shiny apps (interactive)",
+    "endpoint": "https://gridirongrading.carrd.co"
+   },
+   {
+    "name": "FA dashboard",
+    "form": "Patreon",
+    "status": "PAYWALLED \u2014 status note only; contents not read and not recorded beyond existence"
+   }
+  ],
+  "endpoint_of_record": "https://gridirongrading.carrd.co",
+  "status_note": "downloadable public datasets: existence + structure + endpoints recorded; download and in-house re-stamping are a named follow-on, not done here (same posture as tranche 1)"
+ }
+}

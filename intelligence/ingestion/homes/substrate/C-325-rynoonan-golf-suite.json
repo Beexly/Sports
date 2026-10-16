@@ -1,0 +1,41 @@
+{
+ "census_id": "C-325",
+ "name": "Multi-sport shelf: golf strokes-gained suite (@RyNoonan / Betsperts Golf)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 multi-sport shelf record: the engine's scope is multi-sport per Garrett's doctrine, while content focus stays NFL-first; this shelf holds the golf suite so it is cataloged, not dropped",
+ "stamp_required": "golf event data by tournament, as of capture",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "definitions held from the author's catalog; no golf series is ingested",
+ "reasoning_available": "QUALITATIVE",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-tranche2-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X account @RyNoonan deep-scroll catalog (full 12 months), read 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "Betsperts Golf (author's golf home); strokes-gained data family",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "sport": "golf",
+  "suite": [
+   {
+    "name": "Strokes Gained family",
+    "members": [
+     "SG: Tee-to-Green (T2G)",
+     "SG: Putting",
+     "SG: Ball Striking",
+     "SG: Around-the-Green (ARG)"
+    ]
+   },
+   {
+    "name": "Rabbit Hole custom models",
+    "definition": "the author's custom-model tooling at Betsperts Golf: user-weighted stat models whose outputs are converted to no-vig odds for comparison against the market"
+   },
+   {
+    "name": "course-fit stats",
+    "definition": "per-course fit profiling (which stat families a given course rewards) carried into the model weights"
+   }
+  ],
+  "lane_note": "NFL lane is primary per Garrett's content focus (2026-09-30); engine scope is multi-sport per his standing correction (2026-10-06). This record is the shelf: cataloged with its status, available to the reasoning layer when a golf question is actually asked, and not a content commitment."
+ }
+}

@@ -1,0 +1,84 @@
+{
+ "census_id": "C-318",
+ "name": "Gridiron Grading overall prospect score: production + athleticism + film (grade bands)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 the authors' published scoring system, held as a method record; class instances live in the public datasets at C-320 (recorded, not downloaded)",
+ "stamp_required": "prospect production + athletic testing + film grades by draft class",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "the system definition is fully published by the authors and held here; the per-prospect scores sit in the C-320 datasets, which were not downloaded in this tranche",
+ "reasoning_available": "QUALITATIVE",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-tranche2-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X account @GridironGrading deep-scroll catalog (~85 analytical posts over 12 months), read 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "authors' own model (Production / Athleticism / Film components); athletic component is the authors' own model, distinct from RAS",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "formula": "Overall Prospect Score = Production Score + Athleticism Score + Film Score (each component percentile-based)",
+  "components": [
+   {
+    "name": "Production Score",
+    "definition": "percentile-based college production score"
+   },
+   {
+    "name": "Athleticism Score (GG)",
+    "definition": "the authors' own athleticism model \u2014 explicitly distinct from RAS, which is a different published system; the two are not interchangeable"
+   },
+   {
+    "name": "Film Score",
+    "definition": "percentile-based film grade component"
+   }
+  ],
+  "age_adjustment": "applied \u2014 younger prospects receive a bump (authors' stated method)",
+  "grade_bands": [
+   {
+    "band": "93-99",
+    "label": "Blue-Chip"
+   },
+   {
+    "band": "90-93",
+    "label": "High-End R1"
+   },
+   {
+    "band": "85-90",
+    "label": "Solid R1"
+   },
+   {
+    "band": "83-85",
+    "label": "Borderline R1"
+   },
+   {
+    "band": "78-83",
+    "label": "R2"
+   },
+   {
+    "band": "74-78",
+    "label": "R3"
+   },
+   {
+    "band": "65-74",
+    "label": "Early Day 3"
+   },
+   {
+    "band": "55-65",
+    "label": "Late Day 3"
+   },
+   {
+    "band": "50-55",
+    "label": "PFA"
+   },
+   {
+    "band": "0-50",
+    "label": "UDFA"
+   }
+  ],
+  "method_notes": [
+   "authors' stated correlation benchmarks: 0.6+ is good; most positions run closer to 0.4 \u2014 recorded as their calibration honesty, in their terms",
+   "for interior defensive line, the two most predictive inputs are True Pass Set Win % and Run Defense Grade (authors' stated finding)",
+   "Career Zone Y/RR at the 3.0+ tier has, in the authors' words, a 'really strong hit rate'"
+  ],
+  "role": "draft-lane method reference: a fully published, three-component prospect grading system whose realized outcomes are checkable against C-319 (Impact Score) and the C-320 datasets"
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "census_id": "C-321",
+ "name": "AQ Production Score + P4 starter bar (@ArkansasQuant / cfbquant)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 fully published method (cfbquant.com/methodology), held as a method record; the site's standing series is not ingested",
+ "stamp_required": "player production within position x season cohorts, CFB as of capture",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "method fully specified and held; the site's player-level series is not ingested row-by-row",
+ "reasoning_available": "QUALITATIVE",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-tranche2-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "@ArkansasQuant deep-scroll catalog (full 12 months, ~258 analytical posts) + cfbquant.com/methodology, read 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "cfbquant.com (author's model); data: CollegeFootballData.com public API + school sites + 247Sports Composite; the site states NO PFF grades or scouting data are used anywhere",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "definition": "AQ Production Score (0-100): the percentile of a player's production within his position x season cohort, averaged across metrics, where each metric is weighted by its measured predictive power \u2014 (AUC - 0.5) \u2014 against the P4-starter label (did this player become a Power-4 starter). NO proprietary weighting: the weights are the measured AUCs, published with the method. Recruiting rating is deliberately NOT an input \u2014 production is scored on what a player did, not on what he was ranked.",
+  "p4_starter_bar": {
+   "definition": "the median component values among actual P4 starters at each position \u2014 the bar a prospect's components are read against",
+   "2025_bars_stated": {
+    "QB": 63,
+    "RB": 79,
+    "WR": 64,
+    "TE": 76.5,
+    "Edge": 70,
+    "DT": 65,
+    "LB": 75.5,
+    "CB": 67.5,
+    "S": 75
+   }
+  },
+  "role": "ratings-method reference (substrate), sibling to C-285: C-285 opponent-adjusts the TEAM context a QB number sits in; this record scores the PLAYER against his cohort with predictively-weighted metrics and an explicit no-reputation-input rule. The weighting discipline (weight = measured predictive power, published) is the transferable asset for the NFL lane."
+ }
+}
