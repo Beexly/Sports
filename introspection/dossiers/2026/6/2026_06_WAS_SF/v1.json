@@ -1,0 +1,107 @@
+{
+  "author_lane": "introspection T0 forecast (S1 accrual) - second live T0 authored in the store",
+  "author_model_id": "Motif (Muse) - judgment forecast from archived ESPN/DraftKings line evidence; no model output, no premises registered",
+  "authored_utc": "2026-10-16T20:16:39.002Z",
+  "commitments": [],
+  "game_id": "2026_06_WAS_SF",
+  "generator_version": "gse-introspection-s0s1/1.0.0",
+  "inputs_hash": "48c44c28149f53e4d5843b5843cea96b46ad6e5eb6a2150ce19fbe8abb52c920",
+  "inputs_manifest": [
+    {
+      "kind": "line_archive_captures",
+      "ref": "~/workspace/goals/gse-engine-v5-3-0-calibration-rebuild/hidden_files/line-archive-2026-10-15.jsonl - the 3 snapshot rows with game_id 2026_06_WAS_SF (captured 2026-10-15T15:19:41-05:00, 2026-10-15T16:20:15-05:00, 2026-10-15T19:15:25-05:00) and the 30 flat rows for espn event 401873008 (5 captures, 2026-10-15T17:15:55Z to 23:14:21Z), source espn-public-dk; flat extract at was-sf-line-archive-extract-2026-10-16.jsonl (first blob of inputs_hash)"
+    },
+    {
+      "kind": "opening_line_and_current_check",
+      "ref": "Oct 16 corroboration record at hidden_files/was-sf-stamp-2026-10-16/corroboration-2026-10-16.md (second blob of inputs_hash): opening line SF -5.5 per USA TODAY FTW (Oct 15); SF -7.5 still current Oct 16 per Fanatics and SportsJaw consensus (Oct 16 04:18 UTC). A live ESPN summary fetch for event 401873008 was attempted and read in the live browser, but its content extract was not returned to the stamping worker, so no value from it is claimed here; the anchor rests on the archived DraftKings captures."
+    },
+    {
+      "kind": "t0_accrual_calendar",
+      "ref": "introspection/trackrecords/t0_accrual_calendar_2026_w06_w07.json - 2026_06_WAS_SF: kickoff 2026-10-20T00:15:00Z, T0 2026-10-17T00:15:00Z (third blob of inputs_hash)"
+    }
+  ],
+  "line_move_forecast": {
+    "anchor": {
+      "book": "DraftKings via ESPN public API",
+      "espn_event_id": "401873008",
+      "evidence": [
+        {
+          "captured_at": "2026-10-15T15:19:41-05:00",
+          "details": "SF -7.5",
+          "home_spread": -7.5,
+          "kind": "line_archive_capture",
+          "ref": "line-archive-2026-10-15.jsonl snapshot row game_id 2026_06_WAS_SF (goal gse-engine-v5-3-0-calibration-rebuild hidden_files); pickcenter DraftKings, O/U 51.5, ML SF -425 / WAS +330"
+        },
+        {
+          "captured_at": "2026-10-15T16:20:15-05:00",
+          "details": "SF -7.5",
+          "home_spread": -7.5,
+          "kind": "line_archive_capture",
+          "ref": "line-archive-2026-10-15.jsonl snapshot row game_id 2026_06_WAS_SF; identical pickcenter to the 15:19 CT capture"
+        },
+        {
+          "captured_at": "2026-10-15T19:15:25-05:00",
+          "details": "SF -7.5",
+          "home_spread": -7.5,
+          "kind": "line_archive_capture",
+          "ref": "line-archive-2026-10-15.jsonl snapshot row game_id 2026_06_WAS_SF; identical pickcenter to the 15:19 CT capture"
+        },
+        {
+          "captured_at": "2026-10-15T17:15:55Z / 18:13:47Z / 19:17:38Z / 22:15:20Z / 23:14:21Z",
+          "details": "SF -7.5",
+          "home_spread": -7.5,
+          "kind": "line_archive_flat_captures",
+          "ref": "line-archive-2026-10-15.jsonl flat rows espn:americanfootball_nfl:401873008 - home SPREAD -7.5 at all 5 captures, TOTAL 51.5 at all 5, ML SF -425 / WAS +330 at all 5; extract at hidden_files/was-sf-line-archive-extract-2026-10-16.jsonl"
+        },
+        {
+          "details": "SF -7.5",
+          "home_spread": -7.5,
+          "kind": "opening_line_and_current_check",
+          "open_home_spread": -5.5,
+          "ref": "Oct 16 corroboration record (hidden_files/was-sf-stamp-2026-10-16/corroboration-2026-10-16.md): opening line 49ers -5.5 per USA TODAY FTW Week 6 picks page (published Oct 15); spread still SF -7.5 on Oct 16 per Fanatics (published Oct 16) and SportsJaw consensus (Oct 16 04:18 UTC)",
+          "sha256": "103ff5f1970f89c8a02924c64f49365f0e9ca6d8608069f6cc3459f3a7b2e4ba"
+        }
+      ],
+      "home_spread_line": -7.5,
+      "line_specA": 7.5,
+      "moneyline_at_anchor": {
+        "away_was": 330,
+        "home_sf": -425
+      },
+      "open_home_spread_line": -5.5,
+      "over_under_at_anchor": 51.5,
+      "rule": "line(T0) = last archived capture at or before T0 (reference.py); every archived observation of this game shows SF -7.5, so the anchor is unambiguous"
+    },
+    "categories": [
+      "AWAY",
+      "FLAT",
+      "HOME"
+    ],
+    "kickoff_utc": "2026-10-20T00:15:00Z",
+    "q": [
+      0.28,
+      0.4,
+      0.32
+    ],
+    "rationale": "The line has done its moving early: San Francisco opened -5.5 (USA TODAY FTW's Week 6 picks page, published Oct 15, lists the opening line as 49ers -5.5) and was bet up to -7.5 before T0, and it has not moved since - identical SF -7.5 at all eight of yesterday's archived observations (line-archive snapshot captures 15:19, 16:20 and 19:15 CT and flat captures 17:15, 18:13, 19:17, 22:15 and 23:14 UTC, all DraftKings via ESPN), moneyline steady at SF -425 / WAS +330, total steady at 51.5, and the number is still -7.5 in this morning's checks (Fanatics, published Oct 16, and the SportsJaw consensus timestamped Oct 16 04:18 UTC both show SF -7.5). R0 is INSUFFICIENT_DATA (zero completed trajectories), so there is no measured base rate to defer to and this forecast stays near the middle by design. FLAT carries the largest mass (0.40): the number has been pinned for a full day at 7.5, and the remaining news flow (practice reports, the final injury report, Monday inactives) is at least as likely to be absorbed via the total or the price as via the spread. But 72 hours remain on a standalone Monday-night game, so a move of 0.5 or more in some direction is collectively more likely (0.60) than an unchanged close. The directional lean is slightly toward HOME (0.32 vs 0.28): the only drift observed this week ran one way, toward San Francisco (-5.5 to -7.5, through the key number 7), and continuation of an established one-way drift is judged a more common late-week pattern than a full reversal back through 7 toward Washington. That lean is stated as judgment, not measurement.",
+    "status": "FORECAST",
+    "t0_utc": "2026-10-17T00:15:00Z"
+  },
+  "premises": [],
+  "prev_sha": "0000000000000000000000000000000000000000000000000000000000000000",
+  "read_status": {
+    "final_read": "THIS_VERSION (no revision authored yet)",
+    "t0_read": "THIS_VERSION"
+  },
+  "record_sha": "5f0f9694cf25ea5b95f9284bc4b07f32baef24311418a4e194d4209f48876b96",
+  "retro": false,
+  "retro_note": "Authored and server-stamped before this game's T0 (2026-10-17T00:15:00Z). Not RETRO under SPEC-C section 4.7.",
+  "scoring": {
+    "lms_forecast": "FORECAST",
+    "outcome": "PENDING"
+  },
+  "season": 2026,
+  "template_hash": "5d527e026479facb9d9437a97713bed8a645af8ed33a33b6e4e9b1c7710e059f",
+  "version": 1,
+  "week": 6
+}
