@@ -25,6 +25,20 @@
   ],
   "stamped_instance": "through CFB Week 6, FBS games only, ranks among 138 FBS: USC the only top-10 QB-play team facing a top-10 slate (#7 QB play, #9 faced, #6 toughest remaining); Miami #2 QB play sees one top-25 pass defense all season; Georgia #8 has none remaining; Purdue #25 QB play after facing 3 top-25 pass defenses",
   "nfl_port": "the adjustment lens ports to NFL QB evaluation (QB EPA vs pass-defense strength faced) as a method; no NFL instance is claimed by this record",
-  "role": "ratings-method reference (substrate): a standing instruction to opponent-adjust QB numbers before the reasoning layer reads them"
+  "role": "ratings-method reference (substrate): a standing instruction to opponent-adjust QB numbers before the reasoning layer reads them",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "methodology_fully_specified": {
+    "source": "cfbquant.com/methodology, public, read 2026-10-15 (tranche 2)",
+    "opponent_adjustment": "iterative ridge-style two-way fixed-effects adjustment, lambda = 50 plays, separating team strength from schedule strength \u2014 a team's numbers are re-expressed against the opponents that produced them",
+    "garbage_time_rule": "plays outside the 5-95% win-probability band are excluded by default (garbage time does not grade teams or QBs)",
+    "matchup_projections": "projected score = own offense + opponent defense - league average; the site posts its own line beside the market line, with two win-prob models (Pythagorean + normal) \u2014 the model-vs-market comparison is published, not hidden",
+    "glossary": "264 documented metrics, public on the site",
+    "data": "CollegeFootballData.com public API + school sites + 247Sports Composite; the site states NO PFF grades or scouting data are used anywhere on it",
+    "cadence_caveat": "FRESHNESS: the site's refresh is manually triggered, not scheduled \u2014 any instance pulled from it carries the pull date as its stamp, never an assumed currency"
+   },
+   "franchise_form": "the author's recurring X franchise is the method in public: 'Are [offense/defense] ranks justified?' (rank vs quality faced + remaining) and faced/remaining slate tables (see C-284 enrichment)"
+  }
  }
 }

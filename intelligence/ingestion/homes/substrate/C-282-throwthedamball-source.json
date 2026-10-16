@@ -23,9 +23,36 @@
   "endpoints": [
    {
     "url": "https://throwthedamball.com",
-    "state": "UNVISITED \u2014 recorded as endpoint of record 2026-10-15; contents not read in this tranche"
+    "state": "VISITED 2026-10-15 (tranche 2): a Substack publication (5,000+ subscribers) with paywalled articles and NO data tools or downloads \u2014 the X charts remain the harvest surface"
    }
   ],
-  "status_note": "site contents unread; deep-scroll catalog of the account is in flight as tranche 2"
+  "status_note": "source container; tranche 2 (deep-scroll catalog) landed the author's original-metric family at C-309-C-317 and the site note above; the metric records carry the definitions",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "change_log": [
+    "endpoints[0].state: 'UNVISITED' -> visited Substack note (the catalog read the site)",
+    "status_note replaced: tranche-1 'deep-scroll in flight' language superseded by the landed catalog"
+   ],
+   "catalog_coverage": "12 MONTHS READ 2026-10-15 (tranche 2): ~224 posts, ~209 analytical",
+   "author_role": "PFF R&D+Betting (author Judah Fortgang); chart footer reads 'Data: PFF'",
+   "coverage_caveat": "chart VALUES were transcribed in full for 1 of ~130 charts; the remaining charts are cataloged by their STATED DEFINITIONS \u2014 the metric records at C-309-C-317 therefore carry definitions at full strength and values only where the catalog transcribed them",
+   "metrics_homed_tranche2": [
+    "C-309 disruption",
+    "C-310 disruption pressure",
+    "C-311 create rate",
+    "C-312 destroy rate",
+    "C-313 perfect block rate",
+    "C-314 perfect coverage rate",
+    "C-315 system play rate",
+    "C-316 havoc rates",
+    "C-317 situational split families catalog"
+   ],
+   "site": {
+    "name": "throwthedamball.com",
+    "form": "Substack publication, 5,000+ subscribers, paywalled articles",
+    "data_tools": "NONE \u2014 no tools, no downloads; the X charts are the harvest surface"
+   }
+  }
  }
 }

@@ -21,6 +21,30 @@
    "C-281 TPRR x YPRR"
   ],
   "stamped_instance": "2026 WR Efficiency | Through Week 5 (posted 2026-10-15 08:01 CT): JSN (SEA) ~3.95 YPRR / ~34% TPRR (top-right elite quadrant); Puka Nacua 4.88 YPRR / 65.2% TPRR flagged by the author as a 2-game small sample",
-  "status_note": "source container only; the metric record carries the stamped values"
+  "status_note": "source container only; the metric record carries the stamped values",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "catalog_coverage": "FULL HISTORY READ 2026-10-15 (tranche 2): 22 of 22 posts, Feb-Oct 2026",
+   "additional_series": [
+    {
+     "name": "TE edition of TPRR x YPRR",
+     "axes": "same quadrant frame as C-281, tight ends",
+     "stamped_instance": "Brock Bowers elite quadrant (~31.5% TPRR / ~2.9 YPRR); Evan Engram in the low-low 'CARDIO' quadrant"
+    },
+    {
+     "name": "team Offensive EPA split",
+     "axes": "EPA/rush x EPA/pass, team level",
+     "stamped_instance": "Denver plotted in the BAD OFFENSE quadrant; Seattle in GREAT PASSING"
+    },
+    {
+     "name": "WR Target Outlook",
+     "axes": "targets/game x aDOT (average depth of target)",
+     "zones": "incl. 'PPR SCAM' = low aDOT + high targets (manufactured short volume)",
+     "stamped_instance": "JSN stamped in the PPR SCAM zone \u2014 elite volume at short depth; read beside C-281 (elite quadrant) and C-287 (2025 WOPR leader 0.89): the volume is real, its depth is the caveat"
+    }
+   ],
+   "provenance": "the author credits NO external data source anywhere in his full history \u2014 every chart is self-branded 'FFG' only. His charts are therefore held as STAMPED INSTANCES, not as a data feed: the metric definitions are ours to compute from nflverse (C-281), and no number in this source's records traces to a vendor the author named, because he named none"
+  }
  }
 }

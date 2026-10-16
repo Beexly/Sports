@@ -24,9 +24,25 @@
   "endpoints": [
    {
     "url": "https://cfbquant.com",
-    "state": "UNVISITED IN DEPTH \u2014 recorded as endpoint of record 2026-10-15"
+    "state": "VISITED IN FULL 2026-10-15 (tranche 2): methodology is public at cfbquant.com/methodology and is fully specified across C-285 (tranche-2 enrichment) and C-321"
    }
   ],
-  "status_note": "method is the asset; the NFL port is a method transfer, not a data feed"
+  "status_note": "method is the asset; tranche 2 specified the methodology in full (C-285 enrichment, C-321) and recorded the sister site + recurring franchise",
+  "tranche2_enrichment": {
+   "enriched_by": "x-intel-ingestion-tranche2-2026-10-15",
+   "enriched_at": "2026-10-15",
+   "change_log": [
+    "endpoints[0].state: 'UNVISITED IN DEPTH' -> visited-in-full note (the catalog read the methodology)",
+    "status_note replaced: tranche-1 language superseded by the fully specified methodology"
+   ],
+   "catalog_coverage": "FULL 12 MONTHS READ 2026-10-15 (tranche 2): ~258 analytical posts",
+   "methodology_endpoint": "https://cfbquant.com/methodology (public, fully specified \u2014 see C-285 tranche-2 enrichment + C-321)",
+   "recurring_franchise": "'Are [offense/defense] ranks justified?' \u2014 a unit's rank read against the quality it has FACED plus the quality REMAINING on its schedule, with faced/remaining slate tables (the recurring content form of the C-285 method)",
+   "sister_site": {
+    "name": "Basketball Quant",
+    "url": "https://basketballquant.com",
+    "note": "the same concept applied to college basketball; recorded as an endpoint, not read in depth"
+   }
+  }
  }
 }
