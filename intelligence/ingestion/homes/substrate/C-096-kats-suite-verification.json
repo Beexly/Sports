@@ -1,0 +1,67 @@
+{
+ "census_id": "C-096",
+ "name": "Kats time-series suite",
+ "home_kind": "calibration substrate record",
+ "census_status": "EVALUATED 2026-10-05/06 with ADOPT order issued (per packet); evaluation landed on a branch + deep-dive doc, but sibling-session landings are recorded UNVERIFIED",
+ "stamp_required": "per-item landed-artifact paths + test files (evaluation stack)",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "5 of 9 ADOPT sub-items have no Kats artifact in the repo (TSFeatures has only the adjacent FRANS implementation, a different method); the 4 landed items are modules with unit tests but no service wiring (app/main.py exposes only tda/etkf/free-energy/mps/irl)",
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "wiring-surge-a-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "verification_date": "2026-10-15",
+  "method": "main-tree inventory + file reads + repo code search (Beexly/Sports @ main 9a989b3)",
+  "adopt_order": "TSFeatures -> BOCPD/CUSUM/StatSig -> backtesters -> Prophet -> VAR -> HarmonicRegression -> simulators",
+  "items": [
+   {
+    "item": "TSFeatures",
+    "verdict": "NOT LANDED",
+    "evidence": "no Kats TSFeatures module in the vendored kats tree or gse-ml-service. Adjacent capability under a different method: packages/data-ingestion/src/frans-ts-features.ts implements FRANS (arXiv:2209.07018) automatic time-series feature extraction (offline; catch22-lite + stats) - not the Kats ADOPT item as specified. (Correction 2026-10-15: an earlier draft cited a code-search count of 0; the term actually returns 12 hits, incl. the FRANS module and Oct-06 wiring docs.)"
+   },
+   {
+    "item": "BOCPD",
+    "verdict": "LANDED (module, unwired)",
+    "evidence": "bocpd_lite() in gse-ml-service/app/models/simulator/changepoint_detectors.py - hand-rolled Adams-MacKay BOCPD; no endpoint in app/main.py"
+   },
+   {
+    "item": "CUSUM",
+    "verdict": "LANDED (module, unwired)",
+    "evidence": "cusum_detect() (two-sided Page CUSUM) in the same detectors file; no endpoint in app/main.py"
+   },
+   {
+    "item": "StatSig",
+    "verdict": "NOT LANDED",
+    "evidence": "no StatSig module anywhere in gse-ml-service or the vendored kats tree"
+   },
+   {
+    "item": "backtesters",
+    "verdict": "NOT LANDED",
+    "evidence": "no Kats backtester module vendored; the ADOPT item has no artifact in the service"
+   },
+   {
+    "item": "Prophet",
+    "verdict": "LANDED (module, unwired)",
+    "evidence": "full vendored Kats ProphetModel (44,530 B) at gse-ml-service/app/models/kats/models/prophet.py + ProphetSportsPredictor wrapper at app/models/prophet_preset.py + test_prophet_preset.py; wrapper docstring: real Kats uninstallable (numpy<1.22 / pandas<=1.3.5 pins) and Prophet is a Stan build with a fallback error if unavailable; no endpoint in app/main.py"
+   },
+   {
+    "item": "VAR",
+    "verdict": "NOT LANDED",
+    "evidence": "no VAR model in the vendored kats tree or the ML service"
+   },
+   {
+    "item": "HarmonicRegression",
+    "verdict": "NOT LANDED",
+    "evidence": "repo code search 'HarmonicRegression' = 0"
+   },
+   {
+    "item": "simulators",
+    "verdict": "LANDED (module, unwired)",
+    "evidence": "vendored Kats Simulator (28,298 B, Meta MIT header) at gse-ml-service/app/models/simulator/kats_simulator.py + harness.py + test_simulator.py; no endpoint in app/main.py"
+   }
+  ],
+  "landed_count": "4 of 9 sub-items landed as code (BOCPD, CUSUM, Prophet, simulators); 0 of 9 wired into the service API",
+  "constraint_honored": "real Kats never pip-installed (per packet); landed items are vendored shims/copies under gse-ml-service"
+ }
+}
