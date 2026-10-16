@@ -1,0 +1,55 @@
+{
+ "census_id": "C-286",
+ "name": "X source: @StephenKrupka weekly chart franchises (Establish The Run)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 analytics source account (Head of Media and Business Operations, Establish The Run); named metrics homed at C-287 and C-288",
+ "stamp_required": "weekly chart posts, platform-timestamped",
+ "stamp_available": "YES",
+ "stamp_gap": null,
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X account @StephenKrupka, profile + 10 recent posts read directly 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "per-series credits in the series records below",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "series": [
+   {
+    "name": "positional matchup quadrants (QB/RB/WR/TE/DST, weekly)",
+    "axes": "implied team total x opponent fantasy points allowed to the position",
+    "data_source_credit": "FantasyPoints (@FantasyPtsData) + EDS Football (@EDSFootball)",
+    "homed_as": "C-288"
+   },
+   {
+    "name": "TPRR vs WOPR (WR and TE editions, weekly)",
+    "axes": "targets per route run x Weighted Opportunity Rating",
+    "data_source_credit": "TruMedia; WOPR is Josh Hermsmeyer's metric (@friscojosh)",
+    "homed_as": "C-287"
+   },
+   {
+    "name": "RB opportunity (weekly)",
+    "axes": "% of team designed runs x target share",
+    "data_source_credit": "TruMedia",
+    "homed_as": "series record only (this file)"
+   },
+   {
+    "name": "YBC/ATT vs YAC/ATT (RB efficiency)",
+    "axes": "yards before contact per attempt x yards after contact per attempt (min 20 carries)",
+    "data_source_credit": "FantasyPtsData",
+    "homed_as": "series record only (this file)"
+   },
+   {
+    "name": "offensive line performance",
+    "axes": "QB pressure rate x run-blocking measure",
+    "data_source_credit": "TruMedia + Next Gen Stats",
+    "homed_as": "series record only (this file)",
+    "note": "NGS is INTERNAL-ONLY per Garrett's standing rule (2026-09-28): the source credit is recorded for internal reasoning use; NGS names/data never appear on a public surface"
+   }
+  ],
+  "newsletter": "moves (movesfantasy.com), free, 1,600+ subscribers per author bio",
+  "status_note": "franchise container; deep-scroll catalog of the full page is in flight as tranche 2"
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "census_id": "C-284",
+ "name": "X source: @ArkansasQuant CFB ratings + sims (cfbquant.com)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 CFB analytics source account; its method is homed separately at C-285",
+ "stamp_required": "source post + chart/table images, platform-timestamped",
+ "stamp_available": "YES",
+ "stamp_gap": null,
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X account @ArkansasQuant, posts read directly 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "author's own model + ratings + sims (cfbquant.com)",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "scope": "college football (Power 4 + Notre Dame); 138 FBS teams",
+  "content_model": "opponent-adjusted QB evaluation: QB play rank vs strength of pass defenses faced, with faced-vs-remaining slate tables",
+  "metrics_homed": [
+   "C-285 opponent-adjusted QB evaluation (CFB)"
+  ],
+  "endpoints": [
+   {
+    "url": "https://cfbquant.com",
+    "state": "UNVISITED IN DEPTH \u2014 recorded as endpoint of record 2026-10-15"
+   }
+  ],
+  "status_note": "method is the asset; the NFL port is a method transfer, not a data feed"
+ }
+}

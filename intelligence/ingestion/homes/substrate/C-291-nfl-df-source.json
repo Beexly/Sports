@@ -1,0 +1,33 @@
+{
+ "census_id": "C-291",
+ "name": "X source: @NFL_DF draft film + coverage-split charts (nfldraftfiles.com)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 independent draft-film creator; coverage-split WR metric homed at C-292; Film Room recorded as an external film-index endpoint",
+ "stamp_required": "source posts platform-timestamped; Film Room is a live external index",
+ "stamp_available": "YES",
+ "stamp_gap": null,
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X account @NFL_DF (NFL Draft Files), profile + 10 recent posts read directly 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "PFF (per chart credits) for data charts; author's own film work for cutups",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "content_model": "2027 NFL Draft prospect film cutups, PFF-sourced data charts, weekly QB performance rankings, mock drafts",
+  "endpoints": [
+   {
+    "name": "The Film Room",
+    "url": "https://nfldraftfiles.com",
+    "definition": "searchable database of the author's prospect film cutups, filterable by player, position, and category; recorded as an external film-index endpoint relevant to the vision lane (organizational reference, not an ingested dataset)"
+   }
+  ],
+  "sponsored_content_note": "the account's 2027 mock-draft post carries a Kalshi #1-overall market graphic labeled PAID PARTNERSHIP; recorded here as sponsored content, never as a signal",
+  "metrics_homed": [
+   "C-292 coverage-split WR YPRR"
+  ],
+  "status_note": "deep-scroll catalog of the full page is in flight as tranche 2"
+ }
+}

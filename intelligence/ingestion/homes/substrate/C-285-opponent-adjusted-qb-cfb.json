@@ -1,0 +1,30 @@
+{
+ "census_id": "C-285",
+ "name": "Opponent-adjusted QB evaluation, CFB (pass-defense strength faced)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 published ranks held as stamped instances; the adjustment method is the homed asset",
+ "stamp_required": "EPA/dropback ranks + schedule-strength ranks, FBS games as of capture",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "standing weekly series not ingested; only the 2026-10-15 published instance is held",
+ "reasoning_available": "QUALITATIVE",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X @ArkansasQuant, main post + self-reply table read 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "author's model (cfbquant.com); EPA/dropback basis",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "method": "never read a QB number raw: rank QB play (Pass EPA/dropback) AGAINST the strength of the pass defenses faced (schedule strength by EPA/dropback), and carry faced-vs-remaining slate context (counts of top-25 / top-50 pass defenses) with the rank",
+  "quadrants": [
+   "TESTED, PROVEN",
+   "TESTED, STRUGGLING",
+   "STRONG, LESS TESTED",
+   "STRUGGLING, SOFT SLATE"
+  ],
+  "stamped_instance": "through CFB Week 6, FBS games only, ranks among 138 FBS: USC the only top-10 QB-play team facing a top-10 slate (#7 QB play, #9 faced, #6 toughest remaining); Miami #2 QB play sees one top-25 pass defense all season; Georgia #8 has none remaining; Purdue #25 QB play after facing 3 top-25 pass defenses",
+  "nfl_port": "the adjustment lens ports to NFL QB evaluation (QB EPA vs pass-defense strength faced) as a method; no NFL instance is claimed by this record",
+  "role": "ratings-method reference (substrate): a standing instruction to opponent-adjust QB numbers before the reasoning layer reads them"
+ }
+}

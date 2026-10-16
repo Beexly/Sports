@@ -1,0 +1,58 @@
+{
+ "census_id": "C-289",
+ "name": "X source: @GridironGrading draft analytics + public data sheets",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 two-person draft analytics project (@winterapw & @ryanalbaum); trench metric homed at C-290; public sheets recorded as data-source assets, NOT downloaded in this tranche",
+ "stamp_required": "chart posts platform-timestamped; public sheets versioned by season",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "sheet contents recorded from the account's public link page as reported 2026-10-15; the sheets themselves were not downloaded or re-stamped in this tranche",
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "X account @GridironGrading, profile + recent posts read directly 2026-10-15",
+  "as_of": "2026-10-15",
+  "data_source_credit": "PFF (per chart footers) for in-season production charts; author's own boards for draft assets",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "public_data_assets": [
+   {
+    "name": "annual draft boards 2021-2025",
+    "form": "public Google Sheets",
+    "endpoint": "https://gridirongrading.carrd.co"
+   },
+   {
+    "name": "2020-2024 prospect database",
+    "form": "public Google Sheet",
+    "endpoint": "https://gridirongrading.carrd.co"
+   },
+   {
+    "name": "2020-2024 Impact Scores",
+    "form": "public Google Sheet",
+    "endpoint": "https://gridirongrading.carrd.co"
+   },
+   {
+    "name": "2026 Draft Dashboard",
+    "form": "linked dashboard",
+    "endpoint": "https://gridirongrading.carrd.co"
+   }
+  ],
+  "method_records": [
+   {
+    "name": "age-curve prospect trajectories",
+    "definition": "career production plotted by age against comparable careers (e.g., WR career receiving yards by age at start of final college season)",
+    "data_source_credit": "PFF"
+   },
+   {
+    "name": "production score / impact score",
+    "definition": "per-position prospect scores from predictive production + measurement data points, used comparatively across a class; no numeric scale published on the pages read",
+    "data_source_credit": "author's model"
+   }
+  ],
+  "metrics_homed": [
+   "C-290 pass rush wins + stops"
+  ],
+  "status_note": "downloadable public datasets: existence + structure recorded; download and in-house re-stamping are a named follow-on, not done here"
+ }
+}

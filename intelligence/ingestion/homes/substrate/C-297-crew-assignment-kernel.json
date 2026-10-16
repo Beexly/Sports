@@ -1,0 +1,32 @@
+{
+ "census_id": "C-297",
+ "name": "Officiating crew assignment + crew penalty-mix kernel (in-house form)",
+ "home_kind": "substrate record",
+ "census_status": "REGISTERED KERNEL \u2014 the durable, rigorous form of the C-296 trend source: crew assignment is a stamped pregame fact; crew tendencies are to be measured from play-by-play in-house, not mined from ATS trend cards. Not built; this record is its home until the computation lands",
+ "stamp_required": "crew assignment published pregame; penalty mix computable from settled PBP",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "no in-house crew penalty-mix series has been computed yet; assignments are knowable pregame from league releases",
+ "reasoning_available": "NO",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "registered by x-intel-ingestion-2026-10-15 from the @refereeinsider read + Grok WO-8 frontier brief (idea 5)",
+  "as_of": "2026-10-15",
+  "data_source_credit": "league crew assignments (pregame) + nflverse play-by-play penalty records (in-house computation)",
+  "computability_status": "INVOCABLE-CANDIDATE",
+  "weight": 0,
+  "kernel": [
+   {
+    "input": "officiating crew assignment",
+    "form": "stamped pregame input (crew chief + crew) attached to the game record before kickoff"
+   },
+   {
+    "measure": "crew penalty-mix tendencies",
+    "form": "per-crew penalty-type rates (e.g., offensive holding, defensive pass interference, false start) per game from settled play-by-play, with sample sizes carried; scheme-interaction reads stay qualitative until measured"
+   }
+  ],
+  "cross_reference": "Grok WO-8 frontier brief idea 5: officiating crew foul-mix x scheme (weakest of the five, kept with status); tonight's dossier premise P-SEA-DEN-007 (short-week penalty context) is the adjacent in-engine consumer shape",
+  "build_state": "not built; registered so the input is never again treated as invisible"
+ }
+}

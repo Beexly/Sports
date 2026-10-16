@@ -1,0 +1,51 @@
+{
+ "census_id": "C-294",
+ "name": "Box Score Scout external analytics tool (nflverse, RBSDM-comparable)",
+ "home_kind": "substrate record",
+ "census_status": "EXTERNAL-REFERENCE \u2014 free, no-account external tool; held as a methodology + spot-check reference, not an engine dependency",
+ "stamp_required": "site features read 2026-10-15; underlying data nflverse through Week 5",
+ "stamp_available": "PARTIAL",
+ "stamp_gap": "percentile conventions are published (10th/50th/90th of 2016-2025 regular seasons); site refresh cadence is not stamped per feature",
+ "reasoning_available": "QUALITATIVE",
+ "emission_status": "ZERO_OBJECT",
+ "homed_by": "x-intel-ingestion-2026-10-15",
+ "homed_at": "2026-10-15",
+ "record": {
+  "source": "boxscorescout.com, read directly 2026-10-15 (profile, pinned post, glossary description)",
+  "as_of": "2026-10-15",
+  "data_source_credit": "nflverse / nflfastR play-by-play, EPA and win-probability models; EPA conventions as rbsdm.com applies them (author's glossary)",
+  "computability_status": "EXTERNAL-REFERENCE",
+  "weight": 0,
+  "endpoint": "https://boxscorescout.com",
+  "methodology_endpoint": "site glossary (boxscorescout.com) \u2014 methodology of record for xFP, kicker and comp definitions",
+  "coverage": "data back to 1999 (with noted gaps for stats recorded later)",
+  "features": [
+   {
+    "name": "player/team statistical comps",
+    "definition": "similarity-scored comparable players/teams for every player and team (similarity % shown)"
+   },
+   {
+    "name": "expected fantasy points (xFP)",
+    "definition": "per the site glossary; opportunity-based expected fantasy scoring"
+   },
+   {
+    "name": "advanced kicker stats",
+    "definition": "xFG% (expected field-goal percentage) and FGOE (field goals over expected)"
+   },
+   {
+    "name": "percentile tables",
+    "definition": "player/team stats shown against 10th/50th/90th percentiles of 2016-2025 regular seasons"
+   },
+   {
+    "name": "matchup matrix",
+    "definition": "offensive success rate x defensive success rate allowed, FEAST / UGLY quadrant framing, weekly"
+   },
+   {
+    "name": "custom charting tool + cumulative history charts",
+    "definition": "self-serve chart builder; cumulative EPA/yards career-trajectory charts since 1999"
+   }
+  ],
+  "stamped_instance": "2026-10-15 TNF QB card (2026 qualified-QB percentiles): Darnold EPA/play 13th pct (-0.08), CPOE 67th pct (+2.0%), Y/A 70th pct (7.7), TD% 97th pct (7.1%), INT% 0th pct (5.1%); Nix EPA/play 25th pct (-0.02), CPOE 15th pct (-2.4%), Y/A 7th pct (5.8), sack% 90th pct (3.2%); Week 6 matchup matrix placed DEN offense into SEA defense in the UGLY quadrant (medians 43.3% / 42.9%)",
+  "role": "external-tool record: a free nflverse-family reference whose EPA conventions are directly comparable to RBSDM \u2014 usable for cross-checks of in-house numbers; the engine does not depend on it"
+ }
+}
