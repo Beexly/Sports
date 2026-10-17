@@ -1,0 +1,82 @@
+{
+  "step": "warehouse_and_shadow_validation",
+  "timestamp_utc": "2026-10-17T14:43:39.580424+00:00",
+  "database_target": "Neon PostgreSQL schema 'watch.*' (read-write CoW branch)",
+  "warehouse_tables": {
+    "watch.games": {
+      "rows_written": 3,
+      "sample_row": {
+        "game_id": "2026101200",
+        "season": 2026,
+        "week": 6,
+        "away": "BUF",
+        "home": "NYJ",
+        "frames_ingested": 1450,
+        "status": "live"
+      }
+    },
+    "watch.frames": {
+      "rows_written": 1450,
+      "sample_row": {
+        "game_id": "2026101200",
+        "frame_idx": 450,
+        "fps": 5.0,
+        "burst": true,
+        "detections_count": 23
+      }
+    },
+    "watch.tracklets": {
+      "rows_written": 33,
+      "sample_row": {
+        "game_id": "2026101200",
+        "tracklet_id": "trk_qb_01",
+        "team_hint": "away",
+        "role": "quarterback",
+        "n_frames": 42
+      }
+    },
+    "watch.field_positions": {
+      "rows_written": 31420,
+      "sample_row": {
+        "game_id": "2026101200",
+        "tracklet_id": "trk_qb_01",
+        "t": "2026-10-12T20:15:22.400Z",
+        "x_yd": 42.15,
+        "y_yd": 26.68,
+        "speed_yds": 3.82
+      }
+    },
+    "watch.derived_metrics": {
+      "rows_written": 165,
+      "sample_row": {
+        "game_id": "2026101200",
+        "tracklet_id": "trk_qb_01",
+        "segment": "pocket",
+        "metric": "pocket_depth_yd",
+        "value": 4.15,
+        "t": "2026-10-12T20:15:23.000Z"
+      }
+    }
+  },
+  "shadow_records_file": "C:\\Users\\Garrett\\Sports\\intelligence\\vision\\shadow\\vision_shadow.jsonl",
+  "shadow_records_written": 3,
+  "sample_shadow_entry": {
+    "shadow_event": "cv_play_derived_metrics",
+    "timestamp_utc": "2026-10-17T14:43:39.578687+00:00",
+    "game_id": "2026101200",
+    "play_id": "play_4579_high_pressure",
+    "derived_metrics": {
+      "pocket_depth_yards": 4.15,
+      "pass_rush_separation_yards": 0.85,
+      "strain_surface_cumulative": 4.92,
+      "coverage_shell": "Cover 0 Blitz",
+      "receiver_separation_at_break_yards": 1.12,
+      "separation_over_expected_yards": -0.88,
+      "box_defender_count": 8
+    },
+    "weight": 0.0,
+    "validation_spec_met": false,
+    "published_distribution_shift": 0.0
+  },
+  "verdict": "WAREHOUSE_AND_SHADOW_VERIFIED"
+}

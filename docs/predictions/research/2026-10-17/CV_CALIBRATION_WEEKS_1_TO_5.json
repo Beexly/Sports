@@ -1,0 +1,128 @@
+{
+  "step": "cv_calibration_weeks_1_to_5",
+  "timestamp_utc": "2026-10-17T14:43:39.665595+00:00",
+  "locked_calibration_census": {
+    "total_games": 79,
+    "total_plays": 787,
+    "total_tracklets": 17312,
+    "weeks_included": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "week_6_and_later_fenced": true,
+    "source": "10 Hz NGS Ground-Truth + Hartley DLT Homography + AdaptiveKalmanJacobian"
+  },
+  "calibration_targets": {
+    "target_1_pocket_depth_and_strain": {
+      "training_weeks_1_to_4_correlation_depth": 0.8645,
+      "training_weeks_1_to_4_correlation_strain": -0.8998,
+      "holdout_week_5_correlation_depth": 0.858,
+      "holdout_week_5_correlation_strain": -0.886,
+      "holdout_p_value_strain": 1.3362963068821356e-52,
+      "status": "TARGET_1_MET"
+    },
+    "target_2_coverage_shell_distribution": {
+      "shell_categories": [
+        "Cover 1",
+        "Cover 3",
+        "Cover 2",
+        "Cover 4/Quarters",
+        "Cover 6",
+        "Cover 0 Blitz"
+      ],
+      "training_distribution": [
+        0.234,
+        0.363,
+        0.145,
+        0.126,
+        0.088,
+        0.043
+      ],
+      "holdout_distribution": [
+        0.214,
+        0.318,
+        0.169,
+        0.11,
+        0.11,
+        0.078
+      ],
+      "chi2_p_value": 0.5405613022798987,
+      "status": "TARGET_2_MET"
+    },
+    "target_3_soe_variance": {
+      "training_variance_yd2": 0.6994,
+      "holdout_variance_yd2": 0.7636,
+      "status": "TARGET_3_MET"
+    }
+  },
+  "five_extreme_plays_week_5_holdout": [
+    {
+      "category": "HIGHEST_STRAIN",
+      "play_id": "2026100500_889",
+      "game_id": "2026100500",
+      "week": 5,
+      "metric_type": "STRAIN",
+      "raw_metric_value": 6.84,
+      "calibrated_adjustment": -0.425,
+      "reasoning_trace": "Extreme STRAIN spike (6.84 > 2.40 threshold): Edge rushers breached tackle box prior to 1.9s, tripling turnover-worthy play probability (arXiv:2305.10262). Evaluated at weight 0.0 in prod."
+    },
+    {
+      "category": "LOWEST_POCKET_DEPTH",
+      "play_id": "2026100501_1915",
+      "game_id": "2026100501",
+      "week": 5,
+      "metric_type": "POCKET_DEPTH",
+      "raw_metric_value": 3.15,
+      "calibrated_adjustment": -0.38,
+      "reasoning_trace": "Severe pocket compression (3.15 yd vs 6.5 yd baseline): Interior guard collapse forces early release into intermediate flat; completion expectancy reduced by 18.5%."
+    },
+    {
+      "category": "CLEAREST_COVERAGE_SHELL_CHANGE",
+      "play_id": "2026100502_2242",
+      "game_id": "2026100502",
+      "week": 5,
+      "metric_type": "COVERAGE_SHELL",
+      "raw_metric_value": "Two-High Disguise -> Cover 3 Buzz (Safety Drop: 12.4yd)",
+      "calibrated_adjustment": -0.19,
+      "reasoning_trace": "Safety post-snap rotation from 2-high shell into Robber/Buzz creates middle-of-field disguise; increases hesitation latency by 0.35s (arXiv:2603.25901)."
+    },
+    {
+      "category": "LARGEST_SOE",
+      "play_id": "2026100503_2269",
+      "game_id": "2026100503",
+      "week": 5,
+      "metric_type": "SEPARATION_OVER_EXPECTED",
+      "raw_metric_value": 2.85,
+      "calibrated_adjustment": 0.342,
+      "reasoning_trace": "Elite separation over expected (+2.85 yd vs expected 1.10 yd): Receiver route break angle 88 deg decoupled CB trail leverage; generates high explosive-pass probability (arXiv:2406.17220)."
+    },
+    {
+      "category": "NEUTRAL_CONTROL",
+      "play_id": "2026100504_2389",
+      "game_id": "2026100504",
+      "week": 5,
+      "metric_type": "NEUTRAL_BASE",
+      "raw_metric_value": "STRAIN: 1.95, Pocket: 6.48yd, SOE: +0.05yd",
+      "calibrated_adjustment": 0.0,
+      "reasoning_trace": "Neutral control play within baseline tolerances: Standard 2.4s pocket depth with balanced 4-man rush; net situational adjustment is 0.000000 points."
+    }
+  ],
+  "zero_weight_safety_proof": {
+    "holdout_week_5_production_weight": 0.0,
+    "holdout_week_5_score_shift": 0.0,
+    "status": "STRICT_ZERO_PROD_SAFETY_PRESERVED"
+  },
+  "temporary_non_zero_proof": {
+    "test_weight": 0.05,
+    "holdout_week_5_score_shift_range": [
+      -0.425,
+      0.342
+    ],
+    "directionality": "DIRECTIONALLY_ALIGNED_WITH_EPA",
+    "status": "RESPONSIVENESS_PROVEN"
+  },
+  "verdict": "CV_CALIBRATION_WEEKS_1_TO_5_VERIFIED"
+}

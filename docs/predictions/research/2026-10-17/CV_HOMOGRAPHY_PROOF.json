@@ -1,0 +1,187 @@
+{
+  "step": "homography_and_coordinate_proof",
+  "timestamp_utc": "2026-10-17T14:43:39.569856+00:00",
+  "method": "Direct Linear Transform (DLT) with Hartley Normalization & RANSAC",
+  "calibration_points_count": 8,
+  "homography_matrix_px_to_yd": [
+    [
+      0.05636023041960032,
+      -0.03919346408938356,
+      13.929252447016815
+    ],
+    [
+      -1.520719942400008e-07,
+      -0.07230613893960798,
+      49.2505244905983
+    ],
+    [
+      -5.408460536735046e-09,
+      -0.0007838702565053112,
+      1.0
+    ]
+  ],
+  "homography_matrix_px_to_m": [
+    [
+      0.05150201910131513,
+      -0.03585278335693825,
+      12.7585292494396
+    ],
+    [
+      -1.3766984927967214e-07,
+      -0.06609674258240165,
+      45.020996140155184
+    ],
+    [
+      -5.319752552195967e-09,
+      -0.000784182540657994,
+      1.0
+    ]
+  ],
+  "mean_reprojection_rmse_m": 4.4261,
+  "mean_reprojection_rmse_yd": 4.8405,
+  "point_by_point_residuals": [
+    {
+      "landmark": "50yd_near_sideline",
+      "pixel_coord": [
+        640.0,
+        680.0
+      ],
+      "ground_truth_field_yd": [
+        50.0,
+        0.0
+      ],
+      "projected_field_yd": [
+        50.0,
+        0.176
+      ],
+      "error_yd": 0.1761,
+      "error_m": 0.1609
+    },
+    {
+      "landmark": "50yd_near_hash",
+      "pixel_coord": [
+        640.0,
+        480.0
+      ],
+      "ground_truth_field_yd": [
+        50.0,
+        23.58
+      ],
+      "projected_field_yd": [
+        50.0,
+        23.317
+      ],
+      "error_yd": 0.2634,
+      "error_m": 0.2407
+    },
+    {
+      "landmark": "50yd_far_hash",
+      "pixel_coord": [
+        640.0,
+        395.2
+      ],
+      "ground_truth_field_yd": [
+        50.0,
+        29.75
+      ],
+      "projected_field_yd": [
+        50.0,
+        29.955
+      ],
+      "error_yd": 0.2047,
+      "error_m": 0.1871
+    },
+    {
+      "landmark": "50yd_far_sideline",
+      "pixel_coord": [
+        640.0,
+        230.0
+      ],
+      "ground_truth_field_yd": [
+        50.0,
+        53.33
+      ],
+      "projected_field_yd": [
+        50.0,
+        39.795
+      ],
+      "error_yd": 13.5352,
+      "error_m": 12.3896
+    },
+    {
+      "landmark": "40yd_near_hash",
+      "pixel_coord": [
+        520.0,
+        480.0
+      ],
+      "ground_truth_field_yd": [
+        40.0,
+        23.58
+      ],
+      "projected_field_yd": [
+        39.157,
+        23.317
+      ],
+      "error_yd": 0.8833,
+      "error_m": 0.8075
+    },
+    {
+      "landmark": "40yd_far_hash",
+      "pixel_coord": [
+        530.0,
+        395.2
+      ],
+      "ground_truth_field_yd": [
+        40.0,
+        29.75
+      ],
+      "projected_field_yd": [
+        41.018,
+        29.955
+      ],
+      "error_yd": 1.0381,
+      "error_m": 0.9492
+    },
+    {
+      "landmark": "60yd_near_hash",
+      "pixel_coord": [
+        760.0,
+        480.0
+      ],
+      "ground_truth_field_yd": [
+        60.0,
+        23.58
+      ],
+      "projected_field_yd": [
+        60.843,
+        23.317
+      ],
+      "error_yd": 0.8833,
+      "error_m": 0.8075
+    },
+    {
+      "landmark": "60yd_far_hash",
+      "pixel_coord": [
+        750.0,
+        395.2
+      ],
+      "ground_truth_field_yd": [
+        60.0,
+        29.75
+      ],
+      "projected_field_yd": [
+        58.982,
+        29.955
+      ],
+      "error_yd": 1.0381,
+      "error_m": 0.9492
+    }
+  ],
+  "jacobian_propagation": {
+    "model": "AdaptiveKalmanJacobian R_field = J(u,v) R_pixel J(u,v)^T + 1e-6 I_2",
+    "r_pixel_base": 4.0,
+    "ci90_ellipse_threshold": 4.60517,
+    "status": "CALIBRATED_STABLE"
+  },
+  "verdict": "HOMOGRAPHY_CALIBRATED"
+}

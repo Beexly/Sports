@@ -1,0 +1,78 @@
+{
+  "step": "three_play_end_to_end_battery",
+  "timestamp_utc": "2026-10-17T14:43:39.582092+00:00",
+  "total_plays_tested": 3,
+  "plays_passed": 3,
+  "plays": [
+    {
+      "game_id": "2026101200",
+      "play_id": "play_4579_high_pressure",
+      "scenario": "High-Pressure Pocket Collapse",
+      "video_timestamp": "Q2 3 & 8 @ LOS 35.0yd",
+      "frame_idx_range": [
+        120,
+        245
+      ],
+      "derived_metrics": {
+        "pocket_depth_yards": 4.15,
+        "pass_rush_separation_yards": 0.85,
+        "strain_surface_cumulative": 4.92,
+        "coverage_shell": "Cover 0 Blitz",
+        "receiver_separation_at_break_yards": 1.12,
+        "separation_over_expected_yards": -0.88,
+        "box_defender_count": 8
+      },
+      "vision_factor_contribution_production_w0": 0.0,
+      "vision_factor_contribution_experimental_w05": -0.0428,
+      "situational_interpretation": "Pocket Depth 4.15yd, STRAIN 4.92, Coverage: Cover 0 Blitz, SOE: -0.88yd. Signal: -0.857 units.",
+      "status": "PASS_CLEAN"
+    },
+    {
+      "game_id": "2026092200",
+      "play_id": "play_1820_clean_pocket",
+      "scenario": "Clean Pocket & High Protection",
+      "video_timestamp": "Q1 1 & 10 @ LOS 42.0yd",
+      "frame_idx_range": [
+        120,
+        245
+      ],
+      "derived_metrics": {
+        "pocket_depth_yards": 7.65,
+        "pass_rush_separation_yards": 4.25,
+        "strain_surface_cumulative": 0.42,
+        "coverage_shell": "Cover 2 Zone",
+        "receiver_separation_at_break_yards": 3.45,
+        "separation_over_expected_yards": 1.15,
+        "box_defender_count": 6
+      },
+      "vision_factor_contribution_production_w0": 0.0,
+      "vision_factor_contribution_experimental_w05": 0.0341,
+      "situational_interpretation": "Pocket Depth 7.65yd, STRAIN 0.42, Coverage: Cover 2 Zone, SOE: +1.15yd. Signal: +0.682 units.",
+      "status": "PASS_CLEAN"
+    },
+    {
+      "game_id": "2026092900",
+      "play_id": "play_2740_coverage_disguise",
+      "scenario": "Two-High Pre-Snap Disguise Rolling to Cover 3",
+      "video_timestamp": "Q3 2 & 6 @ LOS 28.0yd",
+      "frame_idx_range": [
+        120,
+        245
+      ],
+      "derived_metrics": {
+        "pocket_depth_yards": 6.1,
+        "pass_rush_separation_yards": 2.45,
+        "strain_surface_cumulative": 1.78,
+        "coverage_shell": "Two-High Disguise -> Cover 3 Buzz",
+        "receiver_separation_at_break_yards": 3.8,
+        "separation_over_expected_yards": 1.52,
+        "box_defender_count": 7
+      },
+      "vision_factor_contribution_production_w0": 0.0,
+      "vision_factor_contribution_experimental_w05": 0.0109,
+      "situational_interpretation": "Pocket Depth 6.1yd, STRAIN 1.78, Coverage: Two-High Disguise -> Cover 3 Buzz, SOE: +1.52yd. Signal: +0.218 units.",
+      "status": "PASS_CLEAN"
+    }
+  ],
+  "verdict": "ALL_THREE_PLAYS_COMPLETED_CLEANLY"
+}

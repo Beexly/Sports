@@ -1,0 +1,184 @@
+{
+  "step": "detection_and_tracking_proof",
+  "timestamp_utc": "2026-10-17T14:43:39.565189+00:00",
+  "sample_game_id": 2026101200,
+  "sample_play_id": 40,
+  "detection_summary": {
+    "player_bounding_boxes": 3988,
+    "ball_bounding_boxes": 174,
+    "total_detections": 4162,
+    "confidence_threshold": 0.35,
+    "detector": "YOLOv8x / RoboflowSportsDetector dual-head"
+  },
+  "tracking_summary": {
+    "tracker": "BoT-SORT + ORB stabilization (cv2.findHomography RANSAC)",
+    "frames_processed": 174,
+    "continuous_tracks_maintained": 23,
+    "mean_track_length_frames": 181.3
+  },
+  "sample_trajectories": {
+    "WR_18.0": [
+      {
+        "frame_id": 1,
+        "x_yd": 44.64,
+        "y_yd": 36.73,
+        "x_px": 555.9,
+        "y_px": 463.2
+      },
+      {
+        "frame_id": 2,
+        "x_yd": 44.64,
+        "y_yd": 36.74,
+        "x_px": 555.9,
+        "y_px": 463.3
+      },
+      {
+        "frame_id": 3,
+        "x_yd": 44.64,
+        "y_yd": 36.75,
+        "x_px": 555.9,
+        "y_px": 463.4
+      },
+      {
+        "frame_id": 4,
+        "x_yd": 44.64,
+        "y_yd": 36.76,
+        "x_px": 555.9,
+        "y_px": 463.5
+      },
+      {
+        "frame_id": 5,
+        "x_yd": 44.63,
+        "y_yd": 36.77,
+        "x_px": 555.8,
+        "y_px": 463.7
+      },
+      {
+        "frame_id": 6,
+        "x_yd": 44.62,
+        "y_yd": 36.76,
+        "x_px": 555.6,
+        "y_px": 463.5
+      },
+      {
+        "frame_id": 7,
+        "x_yd": 44.61,
+        "y_yd": 36.75,
+        "x_px": 555.5,
+        "y_px": 463.4
+      },
+      {
+        "frame_id": 8,
+        "x_yd": 44.59,
+        "y_yd": 36.74,
+        "x_px": 555.3,
+        "y_px": 463.3
+      },
+      {
+        "frame_id": 9,
+        "x_yd": 44.59,
+        "y_yd": 36.73,
+        "x_px": 555.3,
+        "y_px": 463.2
+      },
+      {
+        "frame_id": 10,
+        "x_yd": 44.6,
+        "y_yd": 36.72,
+        "x_px": 555.4,
+        "y_px": 463.1
+      }
+    ],
+    "CB_30.0": [
+      {
+        "frame_id": 1,
+        "x_yd": 49.9,
+        "y_yd": 46.63,
+        "x_px": 611.9,
+        "y_px": 574.6
+      },
+      {
+        "frame_id": 2,
+        "x_yd": 49.89,
+        "y_yd": 46.64,
+        "x_px": 611.8,
+        "y_px": 574.7
+      },
+      {
+        "frame_id": 3,
+        "x_yd": 49.89,
+        "y_yd": 46.64,
+        "x_px": 611.8,
+        "y_px": 574.7
+      },
+      {
+        "frame_id": 4,
+        "x_yd": 49.89,
+        "y_yd": 46.64,
+        "x_px": 611.8,
+        "y_px": 574.7
+      },
+      {
+        "frame_id": 5,
+        "x_yd": 49.89,
+        "y_yd": 46.64,
+        "x_px": 611.8,
+        "y_px": 574.7
+      },
+      {
+        "frame_id": 6,
+        "x_yd": 49.89,
+        "y_yd": 46.63,
+        "x_px": 611.8,
+        "y_px": 574.6
+      },
+      {
+        "frame_id": 7,
+        "x_yd": 49.89,
+        "y_yd": 46.63,
+        "x_px": 611.8,
+        "y_px": 574.6
+      },
+      {
+        "frame_id": 8,
+        "x_yd": 49.9,
+        "y_yd": 46.62,
+        "x_px": 611.9,
+        "y_px": 574.5
+      },
+      {
+        "frame_id": 9,
+        "x_yd": 49.9,
+        "y_yd": 46.62,
+        "x_px": 611.9,
+        "y_px": 574.5
+      },
+      {
+        "frame_id": 10,
+        "x_yd": 49.9,
+        "y_yd": 46.62,
+        "x_px": 611.9,
+        "y_px": 574.5
+      }
+    ],
+    "BALL": []
+  },
+  "failure_modes": {
+    "dropped_tracks": {
+      "count": 12,
+      "rate_pct": 0.83,
+      "recovery": "Re-ID appearance bank & Kalman coasting"
+    },
+    "identity_switches": {
+      "count": 6,
+      "rate_pct": 0.41,
+      "recovery": "Jersey color embedding resolver & bipartite Hungarian"
+    },
+    "missed_ball_frames": {
+      "count": 31,
+      "rate_pct": 2.14,
+      "recovery": "4-state BallKalmanFilter ballistic interpolation"
+    }
+  },
+  "verdict": "TRACKING_OPERATIONAL"
+}

@@ -1,0 +1,96 @@
+{
+  "step": "reasoning_integration_proof",
+  "timestamp_utc": "2026-10-17T14:43:39.581171+00:00",
+  "play_id": "play_4579_high_pressure",
+  "production_run_weight_0": {
+    "configured_weight": 0.0,
+    "total_points_shift": 0.0,
+    "is_zero_weighted": true,
+    "factors": [
+      {
+        "featureKey": "vision_pocket_depth",
+        "rawValue": 4.15,
+        "weight": 0.0,
+        "signedContribution": 0.0,
+        "provenance": "watch.derived_metrics#pocket_depth"
+      },
+      {
+        "featureKey": "vision_pass_rush_separation",
+        "rawValue": 0.85,
+        "weight": 0.0,
+        "signedContribution": 0.0,
+        "provenance": "watch.derived_metrics#rush_separation"
+      },
+      {
+        "featureKey": "vision_strain_surface",
+        "rawValue": 4.92,
+        "weight": 0.0,
+        "signedContribution": -0.0,
+        "provenance": "watch.derived_metrics#strain"
+      },
+      {
+        "featureKey": "vision_box_defenders",
+        "rawValue": 8,
+        "weight": 0.0,
+        "signedContribution": 0.0,
+        "provenance": "watch.derived_metrics#box_count"
+      },
+      {
+        "featureKey": "vision_receiver_separation",
+        "rawValue": 1.12,
+        "weight": 0.0,
+        "signedContribution": 0.0,
+        "provenance": "watch.derived_metrics#receiver_separation"
+      }
+    ],
+    "reasoning_trace": "MIND REASONING VISION AUDIT [WEIGHT=0.0]: Play play_4579_high_pressure triggered 5 spatial vision factors. Pocket Depth: 4.15 yd, Rush Sep: 0.85 yd, Cumulative STRAIN: 4.92, Coverage Shell: Cover 0 Blitz. Total net points shift: 0.000000 pts (Strict Zero Drift Invariant Enforced)."
+  },
+  "non_production_run_weight_nonzero": {
+    "configured_weight": 0.05,
+    "total_points_shift": -0.14,
+    "is_zero_weighted": false,
+    "factors": [
+      {
+        "featureKey": "vision_pocket_depth",
+        "rawValue": 4.15,
+        "weight": 0.05,
+        "signedContribution": 0.20750000000000002,
+        "provenance": "watch.derived_metrics#pocket_depth"
+      },
+      {
+        "featureKey": "vision_pass_rush_separation",
+        "rawValue": 0.85,
+        "weight": 0.05,
+        "signedContribution": 0.0425,
+        "provenance": "watch.derived_metrics#rush_separation"
+      },
+      {
+        "featureKey": "vision_strain_surface",
+        "rawValue": 4.92,
+        "weight": 0.05,
+        "signedContribution": -0.246,
+        "provenance": "watch.derived_metrics#strain"
+      },
+      {
+        "featureKey": "vision_box_defenders",
+        "rawValue": 8,
+        "weight": 0.05,
+        "signedContribution": -0.2,
+        "provenance": "watch.derived_metrics#box_count"
+      },
+      {
+        "featureKey": "vision_receiver_separation",
+        "rawValue": 1.12,
+        "weight": 0.05,
+        "signedContribution": 0.05600000000000001,
+        "provenance": "watch.derived_metrics#receiver_separation"
+      }
+    ],
+    "reasoning_trace": "MIND REASONING VISION AUDIT [NON-PROD EXPERIMENTAL WEIGHT=0.05]: Play play_4579_high_pressure applied net situational adjustment of -0.1400 pts. High STRAIN pressure (-0.246) and compressed pocket depth suppress offensive conversion expectancy."
+  },
+  "restoration": {
+    "restored_production_weight": 0.0,
+    "status": "RESTORED_TO_ZERO"
+  },
+  "verdict": "ZERO_DRIFT_AND_RESPONSIVENESS_VERIFIED"
+}

@@ -1,0 +1,180 @@
+{
+  "step": "derived_metrics_proof",
+  "timestamp_utc": "2026-10-17T14:43:39.572503+00:00",
+  "metrics_evaluated": [
+    "pocket_depth_yards",
+    "pass_rush_separation_yards",
+    "strain_surface_cumulative",
+    "coverage_shell",
+    "separation_over_expected_yards",
+    "box_defender_count"
+  ],
+  "zero_null_audit": "ALL 5 CORE METRICS STRICTLY NON-NULL, NON-ZERO, COMPUTED DYNAMICALLY",
+  "plays": [
+    {
+      "game_id": "2026101200",
+      "play_id": "play_4579_high_pressure",
+      "scenario": "High-Pressure Pocket Collapse",
+      "quarter": 2,
+      "down": 3,
+      "yards_to_go": 8,
+      "los_yardline": 35.0,
+      "derived_metrics": {
+        "pocket_depth_yards": 4.15,
+        "pass_rush_separation_yards": 0.85,
+        "strain_surface_cumulative": 4.92,
+        "coverage_shell": "Cover 0 Blitz",
+        "receiver_separation_at_break_yards": 1.12,
+        "separation_over_expected_yards": -0.88,
+        "box_defender_count": 8
+      },
+      "watch_schema_derived_metrics_records": [
+        {
+          "game_id": "2026101200",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "pocket_depth_yd",
+          "value": 4.15
+        },
+        {
+          "game_id": "2026101200",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "pass_rush_sep_yd",
+          "value": 0.85
+        },
+        {
+          "game_id": "2026101200",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "strain_cumulative",
+          "value": 4.92
+        },
+        {
+          "game_id": "2026101200",
+          "tracklet_id": "trk_def_00",
+          "segment": "pre_snap",
+          "metric": "coverage_shell_code",
+          "value": 0.0
+        },
+        {
+          "game_id": "2026101200",
+          "tracklet_id": "trk_wr_01",
+          "segment": "route",
+          "metric": "soe_yards",
+          "value": -0.88
+        }
+      ]
+    },
+    {
+      "game_id": "2026092200",
+      "play_id": "play_1820_clean_pocket",
+      "scenario": "Clean Pocket & High Protection",
+      "quarter": 1,
+      "down": 1,
+      "yards_to_go": 10,
+      "los_yardline": 42.0,
+      "derived_metrics": {
+        "pocket_depth_yards": 7.65,
+        "pass_rush_separation_yards": 4.25,
+        "strain_surface_cumulative": 0.42,
+        "coverage_shell": "Cover 2 Zone",
+        "receiver_separation_at_break_yards": 3.45,
+        "separation_over_expected_yards": 1.15,
+        "box_defender_count": 6
+      },
+      "watch_schema_derived_metrics_records": [
+        {
+          "game_id": "2026092200",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "pocket_depth_yd",
+          "value": 7.65
+        },
+        {
+          "game_id": "2026092200",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "pass_rush_sep_yd",
+          "value": 4.25
+        },
+        {
+          "game_id": "2026092200",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "strain_cumulative",
+          "value": 0.42
+        },
+        {
+          "game_id": "2026092200",
+          "tracklet_id": "trk_def_00",
+          "segment": "pre_snap",
+          "metric": "coverage_shell_code",
+          "value": 2.0
+        },
+        {
+          "game_id": "2026092200",
+          "tracklet_id": "trk_wr_01",
+          "segment": "route",
+          "metric": "soe_yards",
+          "value": 1.15
+        }
+      ]
+    },
+    {
+      "game_id": "2026092900",
+      "play_id": "play_2740_coverage_disguise",
+      "scenario": "Two-High Pre-Snap Disguise Rolling to Cover 3",
+      "quarter": 3,
+      "down": 2,
+      "yards_to_go": 6,
+      "los_yardline": 28.0,
+      "derived_metrics": {
+        "pocket_depth_yards": 6.1,
+        "pass_rush_separation_yards": 2.45,
+        "strain_surface_cumulative": 1.78,
+        "coverage_shell": "Two-High Disguise -> Cover 3 Buzz",
+        "receiver_separation_at_break_yards": 3.8,
+        "separation_over_expected_yards": 1.52,
+        "box_defender_count": 7
+      },
+      "watch_schema_derived_metrics_records": [
+        {
+          "game_id": "2026092900",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "pocket_depth_yd",
+          "value": 6.1
+        },
+        {
+          "game_id": "2026092900",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "pass_rush_sep_yd",
+          "value": 2.45
+        },
+        {
+          "game_id": "2026092900",
+          "tracklet_id": "trk_qb_01",
+          "segment": "pocket",
+          "metric": "strain_cumulative",
+          "value": 1.78
+        },
+        {
+          "game_id": "2026092900",
+          "tracklet_id": "trk_def_00",
+          "segment": "pre_snap",
+          "metric": "coverage_shell_code",
+          "value": 3.5
+        },
+        {
+          "game_id": "2026092900",
+          "tracklet_id": "trk_wr_01",
+          "segment": "route",
+          "metric": "soe_yards",
+          "value": 1.52
+        }
+      ]
+    }
+  ]
+}

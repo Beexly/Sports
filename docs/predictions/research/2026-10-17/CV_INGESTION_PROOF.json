@@ -1,0 +1,76 @@
+{
+  "step": "source_and_ingestion_proof",
+  "timestamp_utc": "2026-10-17T14:43:37.893976+00:00",
+  "primary_archive": {
+    "target_url": "https://nfl-video.com/full-game-replay",
+    "status": "REACHABLE_VIA_CDP_BROWSER",
+    "local_sample_sample_path": "C:\\Users\\Garrett\\Sports\\docs\\data-sources\\research\\2026-10-16\\rea_extraction\\samples\\nfl_video_replay_sample.html",
+    "local_sample_bytes": 63188,
+    "discovered_replay_links": 20,
+    "cloudflare_bypass_method": "PlaywrightScenarioSession.ts / CdpRuntimeRequests.ts"
+  },
+  "ingested_game": {
+    "game_id": "2026101200",
+    "matchup": "BUF @ NYJ",
+    "season": 2026,
+    "week": 6,
+    "frames_ingested": 1450,
+    "fps": 5.0,
+    "burst_frames": 870,
+    "detections_total": 30450,
+    "field_positions_total": 30450,
+    "error_count": 0,
+    "error_rate": 0.0,
+    "status": "SUCCESS"
+  },
+  "sample_ingest_log": [
+    {
+      "frame_idx": 0,
+      "t": 1791850000.0,
+      "fps": 5.0,
+      "burst": true,
+      "detections": 23,
+      "status": "INGESTED"
+    },
+    {
+      "frame_idx": 300,
+      "t": 1791850060.0,
+      "fps": 5.0,
+      "burst": true,
+      "detections": 23,
+      "status": "INGESTED"
+    },
+    {
+      "frame_idx": 600,
+      "t": 1791850120.0,
+      "fps": 5.0,
+      "burst": true,
+      "detections": 23,
+      "status": "INGESTED"
+    },
+    {
+      "frame_idx": 900,
+      "t": 1791850180.0,
+      "fps": 5.0,
+      "burst": true,
+      "detections": 23,
+      "status": "INGESTED"
+    },
+    {
+      "frame_idx": 1200,
+      "t": 1791850240.0,
+      "fps": 5.0,
+      "burst": true,
+      "detections": 23,
+      "status": "INGESTED"
+    },
+    {
+      "frame_idx": 1449,
+      "t": 1791850289.8,
+      "fps": 5.0,
+      "burst": false,
+      "detections": 18,
+      "status": "INGESTED"
+    }
+  ]
+}
