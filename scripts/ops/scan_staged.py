@@ -1,22 +1,8 @@
 import re
-import sys
+import subprocess
 from pathlib import Path
 
-files = [
-    'packages/prediction-engine/src/reasoning/mind-reasoning.ts',
-    'packages/prediction-engine/src/reasoning/corpus-evaluator.ts',
-    'packages/prediction-engine/src/reasoning/literature-registries.ts',
-    'packages/prediction-engine/src/reasoning/__tests__/literature-registries.test.ts',
-    'scripts/run-full-scale-backtest.py',
-    'scripts/run-intelligence-battery-12.ts',
-    'scripts/generate-before-after-proofs.ts',
-    'scripts/verify-dfs-optimizers.ts',
-    'docs/predictions/research/2026-10-17/BEFORE_AFTER_INTELLIGENCE_PROOFS.md',
-    'docs/predictions/research/2026-10-17/FULL_SCALE_2462_GAMES_MEASUREMENT.json',
-    'docs/predictions/research/2026-10-17/intelligence-battery-12-2026-10-17.json',
-    'docs/ops/AUDIT_INCORPORATION_LEDGER.md',
-]
-
+rx_name = re.compile(r'(?i)(credentials?|secrets?|passwords?|passwd|client_secret|^\.?env|hf_env|auth[_-]?token|access[_-]?token|bearer|refresh[_-]?token|api[_-]?key|id_rsa|private[_-]?key)')
 rx_content = [
     re.compile(r'\bsk-(?:proj|svcacct|admin)-[A-Za-z0-9_\-]{15,}\b'),
     re.compile(r'\bsk-[a-zA-Z0-9]{32,}\b'),
@@ -29,25 +15,29 @@ rx_content = [
 
 MOCK_RX = re.compile(r'(?i)(YOUR_API_KEY|ODDS_API_KEY|<API_KEY>|API_KEY|YOUR_KEY|REPLACE_ME|CHANGEME)')
 
-hits = []
-for f in files:
-    p = Path(f)
-    if not p.exists():
-        print(f"File missing: {f}")
-        continue
-    txt = p.read_text(encoding='utf-8', errors='ignore')
-    for rx in rx_content:
-        m = rx.search(txt)
-        if m:
-            matched_val = m.group(0)
-            if not MOCK_RX.search(matched_val):
-                hits.append((f, rx.pattern, matched_val[:40]))
+output = subprocess.check_output(['git', 'diff', '--name-only', '--cached'], text=True).strip()
+files = [f for f in output.split('\n') if f]
 
-print(f"Targeted Secret Scan: {len(files)} files checked. Violations: {len(hits)}")
-if hits:
-    for f, pat, val in hits:
-        print(f"[VIOLATION] {f}: {val}")
-    sys.exit(1)
-else:
-    print("SUCCESS: 0 sensitive credentials found in any staged or touched file.")
-    sys.exit(0)
+violations = []
+for file_str in files:
+    p = Path(file_str)
+    if rx_name.search(p.name):
+        violations.append((p, 'NAME MATCH', p.name))
+        continue
+    if not p.exists() or not p.is_file():
+        continue
+    text = p.read_text(encoding='utf-8', errors='ignore')
+    for rx in rx_content:
+        m = rx.search(text)
+        if m:
+            val = m.group(0)
+            if not MOCK_RX.search(val):
+                violations.append((p, 'CONTENT MATCH', f"{rx.pattern} -> {val[:40]}"))
+                break
+
+print(f"Staged files checked: {len(files)}")
+for p, typ, detail in violations:
+    print(f"[{typ}] {p}: {detail}")
+print(f"Total sensitive violations in staged files: {len(violations)}")
+if violations:
+    exit(1)
