@@ -129,6 +129,33 @@ describe("GET /api/ops/ranked-picks", () => {
           sport: { key: "americanfootball_ncaaf", name: "NCAAF" },
         },
       },
+      // 4. Row with no independentEdge -> should be kept (not dropped)
+      {
+        id: "pick-4",
+        gameId: "game-3",
+        bookmakerCount: 5,
+        pickType: "TOTAL",
+        selection: "Over 52.5",
+        line: 52.5,
+        confidence: 65,
+        edgeScore: 50,
+        tier: "FREE",
+        pickGrade: "B",
+        riskLevel: "LOW",
+        reasoningShort: "Pace leans over",
+        factorBreakdown: {
+          rankingP: 0.58,
+          // no independentEdge field at all
+        },
+        modelVersion: "v5.3.0",
+        generatedAt: new Date(),
+        game: {
+          homeTeamName: "Penn State",
+          awayTeamName: "Wisconsin",
+          commenceTime: new Date("2026-10-17T20:00:00Z"),
+          sport: { key: "americanfootball_ncaaf", name: "NCAAF" },
+        },
+      },
     ];
 
     vi.mocked(db.pick.findMany).mockResolvedValueOnce(mockPicks as any);
@@ -142,20 +169,24 @@ describe("GET /api/ops/ranked-picks", () => {
     const body = await res.json();
 
     expect(body.ok).toBe(true);
-    expect(body.queried).toBe(3);
+    expect(body.queried).toBe(4);
     expect(body.droppedContradictedModelSignals).toBe(1);
     expect(body.droppedAdverseEdge).toBe(1);
-    expect(body.total).toBe(1);
-    expect(body.returned).toBe(1);
+    expect(body.total).toBe(2);
+    expect(body.returned).toBe(2);
 
-    const pick = body.picks[0];
-    expect(pick.id).toBe("pick-1");
-    expect(pick.edgeScore).toBe(100);
-    expect(pick.edgeIndexStatus).toBe("SATURATED_UNUSABLE");
-    expect(pick.reasoningTrace).toContain("Ohio State at Indiana");
-    expect(pick.applicablePrinciples).toEqual(["P-001", "P-042"]);
-    expect(pick.corpusSituationalShift).toBe(0.012);
-    expect(pick.dlContinuityDelta).toBe(-0.15);
-    expect(pick.injuryEvidence?.sourceName).toBe("espn-injuries");
+    const pick1 = body.picks.find((p: any) => p.id === "pick-1");
+    expect(pick1.edgeScore).toBe(100);
+    expect(pick1.edgeIndexStatus).toBe("SATURATED_UNUSABLE");
+    expect(pick1.reasoningTrace).toContain("Ohio State at Indiana");
+    expect(pick1.applicablePrinciples).toEqual(["P-001", "P-042"]);
+    expect(pick1.corpusSituationalShift).toBe(0.012);
+    expect(pick1.dlContinuityDelta).toBe(-0.15);
+    expect(pick1.injuryEvidence?.sourceName).toBe("espn-injuries");
+
+    const pick4 = body.picks.find((p: any) => p.id === "pick-4");
+    expect(pick4).toBeDefined();
+    expect(pick4.id).toBe("pick-4");
+    expect(pick4.selection).toBe("Over 52.5");
   });
 });
