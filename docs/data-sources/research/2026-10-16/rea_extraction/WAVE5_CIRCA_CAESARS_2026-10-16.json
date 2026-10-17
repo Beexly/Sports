@@ -1,0 +1,58 @@
+[
+  {
+    "target_id": "CIRCA_SPORTS",
+    "name": "Circa Sportsbook",
+    "url": "https://www.circasports.com/",
+    "http_status": 200,
+    "verdict": "PASS",
+    "title": "Circa | Sports - High Limit Sports Betting NV; CO; IL; IA; KY; & MO",
+    "content_length": 314065,
+    "duration_ms": 4115,
+    "sample_hash": "72b738ae0281b38d",
+    "sample_file": "circa_sports_sample.html",
+    "intercepted_api_count": 48,
+    "category": "SHARP_SPORTSBOOK",
+    "rea_module_used": "src/browser/PlaywrightScenarioSession.ts / src/browser/execution/CdpRuntimeRequests.ts",
+    "verified_at_utc": "2026-10-17T05:01:38Z",
+    "sample_apis": [
+      "https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true",
+      "https://www.google.com/ccm/collect?rcb=16&frm=0&apvc=1&ae=g&auid=682007387.1792213296&dt=Circa%20%7C%20Sports%20-%20High%20Limit%20Sports%20Betting%20NV%2C%20CO%2C%20IL%2C%20IA%2C%20KY%2C%20%26%20MO&en=page_view&dl=https%3A%2F%2Fwww.circasports.com%2F&scrsrc=www.googletagmanager.com&rnd=1251403359.1792213296&navt=n&npa=0&ep.ads_data_redaction=0&gtm=45He6ae1v831671514za200zd831671514xeaxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938466~115938469~118897920~118897930~120385423~120469145~120469153~121246026~121246034~123322201&tft=1792213296071&tfd=1450&fmt=8",
+      "https://ad.doubleclick.net/ccm/s/collect?auid=682007387.1792213296&gtm=45He6ae1v831671514za200zd831671514xeaxf1&fmt=8",
+      "https://googleads.g.doubleclick.net/pagead/id",
+      "https://consentag.eu/manager/consent/user/getuam",
+      "https://c.amazon-adsystem.com/aat/amzn.js",
+      "https://c.amazon-adsystem.com/aat/amzn.js",
+      "https://s.amazon-adsystem.com/iu3?pid=418a891c-917b-42ce-9f38-ec16144fefca&event=PageView&ts=1792213296055&eventSource=amzn.js&uuid=50937d03-ac1b-43eb-bee3-af84defe3448",
+      "https://c.amazon-adsystem.com/aat/allowlist/allowlist.json",
+      "https://googleads.g.doubleclick.net/pagead/id?slf_rd=1"
+    ]
+  },
+  {
+    "target_id": "CAESARS_SPORTSBOOK",
+    "name": "Caesars Sportsbook",
+    "url": "https://sportsbook.caesars.com/",
+    "http_status": 200,
+    "verdict": "PASS",
+    "title": "Caesars Sportsbook Sports Betting Online",
+    "content_length": 7367417,
+    "duration_ms": 13120,
+    "sample_hash": "dcfcb7aacc2aba72",
+    "sample_file": "caesars_sportsbook_sample.html",
+    "intercepted_api_count": 33,
+    "category": "MAJOR_SPORTSBOOK",
+    "rea_module_used": "src/browser/PlaywrightScenarioSession.ts / src/browser/execution/CdpRuntimeRequests.ts",
+    "verified_at_utc": "2026-10-17T05:01:52Z",
+    "sample_apis": [
+      "https://cdn.geocomply.com/plc/config/default/geocomply-client-config.json",
+      "https://sportsbook.caesars.com/us/config/czr/co.json?v=20261017050",
+      "https://sportsbook.caesars.com/us/config/czr/availableRegions.json?v=20261017050",
+      "https://sportsbook.caesars.com/us/config/appConfigs.json?v=20261017050",
+      "https://api.americanwagering.com/regions/us/locations/co/brands/czr/sb/features",
+      "https://dpm.demdex.net/id?d_visid_ver=5.5.0&d_fieldgroup=MC&d_rtbd=json&d_ver=2&d_orgid=05C8485451E452E30A490D45%40AdobeOrg&d_nsid=0&ts=1792213300713",
+      "https://api.americanwagering.com/caesars-ui-assets/json/teams.json",
+      "https://cdn.contentstack.io/v3/content_types/app_status_messaging/entries/bltb82d7078fae2addf?environment=website",
+      "https://api.americanwagering.com/configs/sportsbook/co/splash",
+      "https://harrahs.tt.omtrdc.net/rest/v1/delivery?client=harrahs&sessionId=717903ba697c436eaf69b4cea04cee7f&version=2.11.7"
+    ]
+  }
+]
