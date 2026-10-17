@@ -125,3 +125,46 @@
 - **Source**: Kagan (2015) *The Physics of Football*; Open-Meteo verified Denver surface pressure: $841.5 \text{ hPa}$ vs $1013.25 \text{ hPa}$ at sea level ($\approx 17.0\%$ reduction in aerodynamic drag).
 - **Implementation Status**: Implemented in research dossier (`LAYER2_WEEKS_1_TO_5_SITUATIONAL_REASONING_DOSSIER.md`).
 - **Confidence**: HIGH | **Reusability**: HIGH.
+
+---
+
+## 5. Open Source Football Formulations (Extracted via REA)
+
+### 5.1 Completion Probability Over Expected (CPOE) via Generalized Additive Mixed Models (GAMM)
+- **LaTeX Formula**:
+  $$\text{logit}(P(\text{Complete}_i = 1)) = \beta_0 + f_1(\text{air\_yards}_i) + f_2(\text{distance\_to\_sideline}_i) + f_3(\text{pass\_rush\_separation}_i) + b_{\text{passer}[i]} + b_{\text{receiver}[i]}$$
+  $$\text{CPOE}_i = \mathbb{I}(\text{Complete}_i = 1) - \hat{P}(\text{Complete}_i = 1)$$
+- **Inputs**: Pass trajectory tracking coordinates, air yards, lateral target distance to sideline, closest pass rusher separation distance at release, passer/receiver random intercepts.
+- **Outputs**: Baseline completion probability $\hat{P}$, play-level completion surplus $\text{CPOE}_i \in [-1, 1]$.
+- **Assumptions**: Thin-plate regression splines $f_k(\cdot)$ capture non-linear aerodynamic and spatial boundary decay; QB skill is isolated from scheme/separation.
+- **Source**: Open Source Football (`opensourcefootball.com/posts/2020-08-28-expected-completion-using-logistic-generalized-additive-mixed-models/`); Baldwin (2020) `nflfastR`.
+- **Implementation Status**: Implemented in R/Python open-source scripts; ingested into GSE situational reasoning layer.
+- **Confidence**: VERY HIGH | **Reusability**: CRITICAL (NFL QB Prop pricing and true passing efficiency).
+
+---
+
+### 5.2 Expected Field Goal (xFG) Model
+- **LaTeX Formula**:
+  $$\text{logit}(P(\text{FG\_Good}_k = 1)) = \gamma_0 + \gamma_1 \cdot \text{distance}_k + \gamma_2 \cdot \text{distance}_k^2 + \gamma_3 \cdot \text{wind\_speed}_k + \gamma_4 \cdot \text{temperature}_k + \gamma_5 \cdot \mathbb{I}(\text{dome}_k) + u_{\text{kicker}[k]}$$
+  $$\text{xFG\_Value}_k = 3 \cdot \hat{P}(\text{FG\_Good}_k = 1) - \text{EPA}(\text{Missed FG turnover at spot})$$
+- **Inputs**: Field goal attempt distance (yards), stadium wind speed, ambient temperature, dome indicator, kicker random effect.
+- **Outputs**: Ex-ante field goal success probability $\hat{P}$, expected net points from attempt.
+- **Assumptions**: Distance penalty exhibits non-linear quadratic acceleration beyond 48 yards; temperature modulates ball hardness and air resistance.
+- **Source**: Open Source Football (`opensourcefootball.com/posts/2020-09-09-creating-an-expected-field-goal-metric/`).
+- **Implementation Status**: Validated against historical kicking records in `nflverse`; incorporated into fourth-down decision logic.
+- **Confidence**: HIGH | **Reusability**: HIGH (Game total adjustments and fourth-down conversion modeling).
+
+---
+
+### 5.3 Expected Turnovers (xTO) & Regression-to-the-Mean Decay
+- **LaTeX Formula**:
+  $$\text{xTO}_t = \sum_{j \in \text{Passes}_t} P(\text{INT} \mid \text{Turnover\_Worthy\_Play}_j) + \sum_{k \in \text{Fumbles}_t} P(\text{Lost} \mid \text{Fumble}_k)$$
+  $$P(\text{Lost} \mid \text{Fumble}_k) \approx 0.50 \quad (\text{independent of recovered team})$$
+  $$\Delta \text{EPA}_{\text{luck}} = \text{EPA}(\text{Actual Turnovers}) - \text{EPA}(\text{xTO})$$
+- **Inputs**: Charted turnover-worthy throws, interceptable pass rate, forced/unforced fumbles, recovery locations.
+- **Outputs**: Luck-adjusted turnover differential $\Delta \text{EPA}_{\text{luck}}$, mean-reverting regression slope $\lambda \approx 0.62$ per game.
+- **Assumptions**: Fumble recovery is indistinguishable from a 50/50 binomial coin flip; actual interceptions deviate substantially from turnover-worthy throws due to DB drop rates.
+- **Source**: Open Source Football (`opensourcefootball.com/posts/2020-08-25-expected-turnovers/`); Football Outsiders / PFF.
+- **Implementation Status**: Formulated in GSE Layer 2 narrative & regression engine.
+- **Confidence**: VERY HIGH | **Reusability**: CRITICAL (Key driver of market overreaction and contrarian spread value).
+

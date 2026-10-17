@@ -93,3 +93,28 @@
 - **Corpus Citation**: GSE Layer 2 Situational Dossier (`LAYER2_WEEKS_1_TO_5_SITUATIONAL_REASONING_DOSSIER.md`).
 - **Status**: **IMPLEMENTED IN DATA ENGINE** (Verified across Weeks 1–5 FTN tracking).
 - **Reusability**: CRITICAL (The primary Layer 2 overlay against sharp market lines).
+
+---
+
+## 3. Open Source Football Empirical Models (Extracted via REA)
+
+### Model 9: Open Source Fourth Down Conversion & Decision Model
+- **Category**: In-Game Situational Decision Modeling
+- **Target Output**: Ex-ante Expected Win Probability Delta $\Delta \text{WP} = \text{WP}(\text{Go}) - \max(\text{WP}(\text{FG}), \text{WP}(\text{Punt}))$.
+- **Features / Inputs**: Yardline, yards-to-go, time remaining, score differential, pre-game Vegas spread, timeouts, team offensive/defensive run/pass EPA tiers.
+- **Mathematical Assumptions**: Conversion probability modeled via calibrated logistic splines; conditional value evaluated via dynamic expected points surface.
+- **Repository Location / Citation**: Open Source Football (`opensourcefootball.com/posts/2020-09-28-nflfastr-ep-wp-and-cp-models/`); Baldwin (2020).
+- **Status**: **INGESTED & CALIBRATED** (Direct reference model for game leverage evaluation).
+- **Reusability**: HIGH.
+
+---
+
+### Model 10: Spatial Receiver Separation & Player Density Surface Estimator
+- **Category**: Computer Vision & Spatial Coordinate Modeling
+- **Target Output**: Continuous spatial player density $\hat{f}(x, y)$ and completion probability surface $\mathcal{S}(x, y)$.
+- **Features / Inputs**: 2D coordinate positions $(x_i, y_i)$, speed $s_i$, orientation $\theta_i$ of defensive backs and receivers at pass arrival.
+- **Mathematical Assumptions**: 2D bivariate Gaussian kernel density estimation (KDE) with bandwidth $\mathbf{H}$ parameterized by player velocity vectors.
+- **Repository Location / Citation**: Open Source Football (`opensourcefootball.com/posts/2020-08-29-player-density-and-completion-surface-estimates/` & `2021-05-31-computer-vision-in-r-using-torch/`).
+- **Status**: **VERIFIED IN ARTIFACT RECORD** (Integrated with Hugging Face YOLO + BoTSORT tracking pipeline).
+- **Reusability**: VERY HIGH (Next-gen pass coverage evaluation).
+

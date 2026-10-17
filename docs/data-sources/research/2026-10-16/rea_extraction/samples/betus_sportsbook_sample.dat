@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head><link href="../../App_Themes/responsive/bootstrap.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/responsive/bundle.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/responsive/icons.css" type="text/css" rel="stylesheet" /><link href="../../App_Themes/responsive/styles.css" type="text/css" rel="stylesheet" /><title>
+	NFL Odds - Moneylines, Spreads and Totals
+</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" /><meta http-equiv="Cache-Control" content="no-cache, max-age=0, must-revalidate, no-store" /><meta http-equiv="Pragma" content="no-cache" /><meta http-equiv="Expires" content="-1" /><link rel="manifest" href="/miscellaneous/manifest.json" /><link rel="alternate" type="application/rss+xml" title="BetUS Sportsbook &amp; Casino » Feed" href="/feed/" />
+
+    <link rel="preconnect" href="https://nx.betuscdn.com/cdn" crossorigin>
+    <link rel="preconnect" href="https://nx.betuscdn.com/web-platform" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://nx.betuscdn.com/cdn/libs/css/bootstrap-4.4.1.min.css" rel="stylesheet">
+    <link href="https://nx.betuscdn.com/web-platform/css/bundle.css?v=20260730" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <link href="https://nx.betuscdn.com/cdn/libs/css/fontawesome-5.13.0.min.css" rel="stylesheet">
+    <link href="https://nx.betuscdn.com/cdn/libs/css/jquery-confirm-3.3.0.min.css" rel="stylesheet">
+    <link href="https://nx.betuscdn.com/cdn/libs/css/bootstrap-toggle-2.2.0.min.css" rel="stylesheet">
+    <link href="https://nx.betuscdn.com/web-platform/css/shared.min.css?v=20260730" rel="stylesheet">
+    <link href="/app_themes/appthemes_icons.css" rel="stylesheet" />
+    <link href="/wageringengine60/css/icons.min.css?v=20260909" rel="stylesheet" />
+    <link href="https://nx.betuscdn.com/web-platform/common/lib/styles/global.min.css?v=20260805" type="text/css" rel="stylesheet">
+    <link rel="apple-touch-icon" type="image/png" href="https://nx.betuscdn.com/web-platform/apple-touch-icon.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="57x57" href="https://nx.betuscdn.com/web-platform/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="https://nx.betuscdn.com/web-platform/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="https://nx.betuscdn.com/web-platform/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="152x152" href="https://nx.betuscdn.com/web-platform/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="https://nx.betuscdn.com/web-platform/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="https://nx.betuscdn.com/web-platform/apple-touch-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://nx.betuscdn.com/web-platform/img/icon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="24x24" href="https://nx.betuscdn.com/web-platform/img/icon/favicon-24x24.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://nx.betuscdn.com/web-platform/img/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="https://nx.betuscdn.com/web-platform/img/icon/favicon-64x64.png">
+
+    
+
+	<style>
+		#chatBeaconBtn{
+			display: block;
+		}
+
+		@media screen and (max-width:900px) {
+			#chatBeaconBtn{
+				display:none;
+			}
+		}
+	</style>
+
+    
+		<script type="text/javascript" language="javascript">
+            var customerId = '0';
+            var objectId = '0';
+            var customerObjectId = '0';
+            var defaultChatQueueId = 45;
+            var joinPixelsUrl = "";
+        </script>
+	
+
+        <script src="https://nx.betuscdn.com/cdn/libs/js/jquery-3.7.1.min.js"></script>
+        <script src="https://nx.betuscdn.com/cdn/libs/js/popper-1.16.0.min.js"></script>
+        <script src="https://nx.betuscdn.com/cdn/libs/js/bootstrap-4.4.1.min.js"></script>
+        <script src="https://nx.betuscdn.com/cdn/libs/js/bootstrap-toggle-2.2.0.min.js"></script>
+        <script src="https://nx.betuscdn.com/cdn/libs/js/jquery.ui-1.12.1.min.js"></script>
+        <script src="https://nx.betuscdn.com/cdn/libs/js/jquery.ui.touch-punch-0.2.3.min.js"></script>
+        <script src="https://nx.betuscdn.com/cdn/libs/js/jquery-confirm-3.3.0.min.js"></script>
+        
+
+    
+
+         <script src="https://nx.betuscdn.com/web-platform/common/lib/js/global.min.js?v=20270804"></script>
+
+	
+
+    <script src="https://nx.betuscdn.com/cdn/libs/js/vue-2.6.14.min.js" defer></script>
+
+    
+    <script type="text/javascript" src="https://fhp-de-js.group-ib.com/main__20081820_603_1825_1.js"></script>
+    
+    <script type="text/javascript" language="javascript">
+        $.noConflict();
+    </script>
+
+    
+	
+    <link href="/wageringengine60/css/betslipTok.min.css?v=202609251510" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/sb/extensions/string.js?v=20260924"></script>
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/sb/common.js?v=20260924"></script>
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/sb/leftmenu.js?v=20260924"></script>
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/sb/schedule.js?v=20260924"></script>
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/sb/betslip.js?v=20260924"></script>
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/sb/gameline.js?v=20260924"></script>
+    <script type="text/javascript" language="javascript" src="/wageringengine60/scripts/betslip.js?v=20260924"></script>
+
+    
+    <script type="text/javascript" src="/wageringengine60/scripts/html2canvas.min.js?v=20260728" async></script>
+    <script type="text/javascript" src="/wageringengine60/scripts/share.js?v=20260728" async></script>
+    <script type="text/javascript" src="/wageringengine60/scripts/betslip_banner.js?v=20260728" async></script>
+    <script type="text/javascript" src="/wageringengine60/scripts/luxon.min.js?v=20260728" async></script>
+    <script type="text/javascript" src="/wageringengine60/scripts/follow.min.js?v=20260728" async></script>
+        
+        <link rel="stylesheet" href="/wageringengine60/css/lobby/styles.css?v=202609231157">
+    
+
+    <script type="text/javascript" src="/wageringengine60/scripts/html2canvas.min.js?v=202609241055" defer></script>
+    <script type="text/javascript" src="/wageringengine60/scripts/share.js?v=202609241055" defer></script>
+
+
+
+
+
+    <script type="text/javascript">
+
+        jQuery(document).ready(function () {
+		
+			var append = 1;
+		
+            if (append == 1)
+                jQuery('.betus-mobile-footer')
+				    .append('<a class="" title="BET SLIP" id="bNavBetSlip" onclick="javascript: BetslipMobileDisplay(event);"><i class="icon-betslip"></i>BET SLIP<span class="notification-count"></span></a>');
+
+        });
+
+        function DisplayBetslipIcon(itemsCount) {
+            jQuery('#bNavBetSlip .notification-count')
+                .text(itemsCount);
+        }
+
+        function updateStylesheet() {
+            const isMobile = window.innerWidth <= 991;
+            const newMode = isMobile ? "mobile" : "desktop";
+
+            if (newMode !== lastMode) {
+                link.href = isMobile
+                    ? "/wageringengine60/css/sportslinesPageStylesMobileTok.css?v=202610130930"
+                    : "/wageringengine60/css/sportslinesPageStylesDesktopTok.css?v=202609241110";
+
+                lastMode = newMode;
+            }
+        }
+
+
+        history.pushState(null, null, '');
+
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.id = "sportslines-dynamic-stylesheet";
+        document.head.appendChild(link);
+
+        let lastMode = null;
+
+
+        updateStylesheet();
+
+        let resizeTimeout;
+        window.addEventListener("resize", function () {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateStylesheet, 200);
+        });
+
+        window.addEventListener('popstate', function (event) {
+            history.pushState(null, null, '');
+        });
+
+        jQuery(document).keypress(function (event) {
+            return DisableEnterKey(event);
+        });
+
+
+        function AddToBetslipOptiEvent(params) {
+            try { optimoveSDK.API.reportEvent("add_to_betslip", params); } 
+	    catch { }
+        }
+
+        function clearItemsCount() {
+            sessionStorage.setItem('itemsCount', 0);
+        }
+
+
+        function ToggleMobileAllSportsMenu() {
+            jQuery("#left-col").toggleClass("d-block");
+            document.body.style.overflow = ""
+        }
+
+
+    
+
+          (function(h,o,u,n,d) {
+            h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+            d=o.createElement(u);d.async=1;d.src=n
+            n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+          })(window,document,'script','https://www.datadoghq-browser-agent.com/eu1/v5/datadog-rum.js','DD_RUM')
+          window.DD_RUM.onReady(function() {
+            window.DD_RUM.init({
+              clientToken: 'pub057373e07aae279b39cabb0507516226',
+              applicationId: 'f6ce5355-a2f2-4a18-8663-fb2fa4a76749',
+
+              site: 'datadoghq.eu',
+              service: 'bus-sb',
+              env: 'prod',
+
+              sessionSampleRate: 1,
+              sessionReplaySampleRate: 100,
+              trackUserInteractions: true,
+              trackResources: true,
+              trackLongTasks: true,
+              defaultPrivacyLevel: 'mask-user-input',
+            });
+          })
+
+    
+
+    </script>
+	
+    <meta id="ctl00_ctl00_head_metaRobots" name="robots" content="index" /><meta id="ctl00_ctl00_head_metaGoogleBot" name="googlebot" content="index" /><link href="https://www.betus.com.pa/sportsbook/nfl/" rel="canonical" />
+
+
+    <script type="text/javascript" language="javascript" src="/js/common.js"></script>
+
+    
+    
+        <!-- GA Tags -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XBEE6BZXGN"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-XBEE6BZXGN');
+        </script>
+        
+
+        <script type="text/javascript">
+
+            function getEnvironment() {
+                const domainName = window.location.hostname;
+                const isTestEnv =
+                    (
+                        domainName.includes('localhost') ||
+                        domainName.includes('tst.') ||
+                        domainName.includes('dev.') ||
+                        domainName.includes('stg.')
+                    );
+
+                return isTestEnv ? 'test' : 'prod';
+            }
+
+            var customerId = '0';
+            var customerCity = '';
+            var customerCountry = '';
+            var customerZip = '';
+            var customerGender = '';
+            var customerAge = '0';
+            var customerMembership = '';
+            var userLifetimePoints = '';
+            var userSeasonPoints = '';
+            var userLoyaltyPoints = '';
+            var customerObjectId = '0';
+
+            var depositCount = 0;
+            var vipStatus = '';
+            var testAccount = '';
+            var rmFlag = '';
+            var accountStatus = '';
+            var lastActivityDate = '';
+            var playerType = '';
+            var activityStatus = '';
+
+
+            function AutoChat() {
+                return;
+            }
+
+            // For Mobile NavBar
+            function DisplayBetslipIcon(itemsCount) {
+                jQuery('#bNavBetSlip .notification-count')
+                    .text(itemsCount);
+                jQuery('.betus-mobile-footer #bNavBetSlip').show();
+            }
+
+            /**
+            * Wagering slip bet confirmation handler
+            * @params: args: { hasFreePlay, hasFreeBet, ticketNumber, availableReal, availableFreePlay }
+            **/
+            function AfterConfirmation_Callback(args) {
+                // If customer balance is below 25$ and he placed a free bet then trigger a chat
+                if (args.hasFreeBet & args.availableReal < 25.00) {
+                    
+                    window.COMM100_CHAT?.TriggerFreeBetPlaced();
+                    
+                }
+            }
+        </script>
+
+
+        <script src="/miscellaneous/Sharedjs?v=20270730" type="text/javascript"></script>
+
+        
+        <script src="/miscellaneous/Comm100SharedJs" type="text/javascript"></script>
+        
+            <script type="text/javascript">
+                var cid = 'gib-w-betus-new';
+                var backUrl = '//fhp.betus.com.pa/api/fl';
+                var gafUrl = '//eu.id.group-ib.com/id.html';
+
+                function init() {
+                    window.gib.init({
+                        cid: cid,
+                        backUrl: backUrl,
+                        gafUrl: gafUrl,
+                    });
+
+		        
+                    window.gib.setAuthStatus(window.gib.IS_GUEST);
+                    window.gib.setLogin('');
+		        
+
+                    window.gib.setSessionID('4898547109');
+                }
+
+                //This code is being runned every time page is being reloaded:
+                function GibCheck() {
+                    return new Promise(resolve => {
+                        {
+                            if (typeof window.gib === 'undefined') {
+                                window.onGibLoad = function () {
+                                    init();
+                                };
+                            }
+                            else {
+                                init();
+                            }
+                        }
+
+                        resolve('resolved');
+                    });
+                }
+
+                async function NonBlockGibCheck() {
+                    await GibCheck();
+                    // expected output: "resolved"
+                }
+
+                NonBlockGibCheck();
+            </script>
+        <script type="application/ld+json">[{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {
+        "@id": "https://www.betus.com.pa/",
+        "name": "Home"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Home",
+      "item": {
+        "@id": "https://www.betus.com.pa/sportsbook/",
+        "name": "Sportsbook Home"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "NFL Odds",
+      "item": {
+        "@id": "https://www.betus.com.pa/sportsbook/nfl/",
+        "name": "NFL Odds"
+      }
+    }
+  ]
+}]</script><script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "WebPage",
+"headline": "NFL Odds, Lines, & Props | Super Bowl 58 Odds",
+"about":
+	[
+		{"@type": "Thing","name": "odds","sameAs": "https://en.wikipedia.org/wiki/Odds"},
+		{"@type": "Thing","name": "lines","sameAs": "https://en.wikipedia.org/wiki/Odds"},
+		{"@type": "Thing","name": "Super Bowl","sameAs": "https://en.wikipedia.org/wiki/Super_Bowl"},
+		{"@type": "Organization","name": "NFL","sameAs": "https://en.wikipedia.org/wiki/National_Football_League"},
+		{"@type": "Organization","name": "BetUS","sameAs": "https://en.wikipedia.org/wiki/BetUS"},
+		{"@type": "Thing","name": "Sportsbook","sameAs": "https://en.wikipedia.org/wiki/Sports_betting"},
+		{"@type": "Thing","name": "moneyline","sameAs": "https://en.wikipedia.org/wiki/Moneyline"},
+		{"@type": "Thing","name": "bet","sameAs": "https://en.wikipedia.org/wiki/Sports_betting"},
+		{"@type": "Thing","name": "betting","sameAs": "https://en.wikipedia.org/wiki/Sports_betting"}
+	],
+"mentions":
+	[
+		{"@type": "Thing","name": "team","sameAs": "https://en.wikipedia.org/wiki/Team_sport"},
+		{"@type": "Thing","name": "teams","sameAs": "https://en.wikipedia.org/wiki/Team_sport"},
+		{"@type": "Thing","name": "game","sameAs": "https://en.wikipedia.org/wiki/Game"},
+		{"@type": "Thing","name": "games","sameAs": "https://en.wikipedia.org/wiki/Game"},
+		{"@type": "Thing","name": "football","sameAs": "https://en.wikipedia.org/wiki/American_football"},
+		{"@type": "Thing","name": "markets","sameAs": "https://en.wikipedia.org/wiki/Prediction_market"}
+	]
+}
+</script><script type="application/ld+json">[{"@context": "http://schema.org","@type": "SportsEvent","name": "Texans @ Jaguars","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/texans-vs-jaguars/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T09:30:00-05:00","endDate": "2026-10-18T10:30:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Houston Texans"},"homeTeam":{"@type":"SportsTeam","name":"Jacksonville Jaguars"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Jets @ Patriots","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/jets-vs-patriots/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"New York Jets"},"homeTeam":{"@type":"SportsTeam","name":"New England Patriots"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Steelers @ Buccaneers","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/steelers-vs-buccaneers/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Pittsburgh Steelers"},"homeTeam":{"@type":"SportsTeam","name":"Tampa Bay Buccaneers"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Ravens @ Browns","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/ravens-vs-browns/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Baltimore Ravens"},"homeTeam":{"@type":"SportsTeam","name":"Cleveland Browns"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Bears @ Falcons","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/bears-vs-falcons/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Chicago Bears"},"homeTeam":{"@type":"SportsTeam","name":"Atlanta Falcons"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Titans @ Colts","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/titans-vs-colts/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Tennessee Titans"},"homeTeam":{"@type":"SportsTeam","name":"Indianapolis Colts"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Panthers @ Eagles","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/panthers-vs-eagles/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Carolina Panthers"},"homeTeam":{"@type":"SportsTeam","name":"Philadelphia Eagles"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Saints @ Giants","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/saints-vs-giants/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T13:00:00-05:00","endDate": "2026-10-18T14:00:00-05:00","awayTeam":{"@type":"SportsTeam","name":"New Orleans Saints"},"homeTeam":{"@type":"SportsTeam","name":"New York Giants"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Cardinals @ Rams","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/cardinals-vs-rams/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T16:05:00-05:00","endDate": "2026-10-18T17:05:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Arizona Cardinals"},"homeTeam":{"@type":"SportsTeam","name":"Los Angeles Rams"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Bills @ Raiders","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/bills-vs-raiders/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T16:25:00-05:00","endDate": "2026-10-18T17:25:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Buffalo Bills"},"homeTeam":{"@type":"SportsTeam","name":"Las Vegas Raiders"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Chargers @ Chiefs","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/chargers-vs-chiefs/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T16:25:00-05:00","endDate": "2026-10-18T17:25:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Los Angeles Chargers"},"homeTeam":{"@type":"SportsTeam","name":"Kansas City Chiefs"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Cowboys @ Packers","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/cowboys-vs-packers/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-18T20:20:00-05:00","endDate": "2026-10-18T21:20:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Dallas Cowboys"},"homeTeam":{"@type":"SportsTeam","name":"Green Bay Packers"}},{"@context": "http://schema.org","@type": "SportsEvent","name": "Commanders @ 49ers","description": "Latest NFL odds. Bet on point spreads, money lines, player props, game props, over/under, and live betting for every NFL game at BetUS Sportsbook","url": "https://www.betus.com.pa/sportsbook/nfl/commanders-vs-49ers/","image": "https://www.betus.com.pa/images/responsive/logo.png","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name": "BetUS Sportsbook"},"startDate": "2026-10-19T20:15:00-05:00","endDate": "2026-10-19T21:15:00-05:00","awayTeam":{"@type":"SportsTeam","name":"Washington Commanders"},"homeTeam":{"@type":"SportsTeam","name":"San Francisco 49ers"}}]</script><meta name="description" content="NFL odds for all upcoming games. See moneylines, point spreads, and totals over/under. Try live betting on every NFL game at BetUS Sportsbook.
+" /></head>
+<body id="ctl00_ctl00_bodyMaster" onload="javascript: PUSH_FLOATING_SLIP();
+" onresize="javascript: PUSH_FLOATING_SLIP();
+">
+    <form method="post" action="/sportsbook/nfl/" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE_KEY" id="__VIEWSTATE_KEY" value="ef911d6f5730571464b9e6c2f8467565cb0c148cff46beb11f43c94bb609791d" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZHOxb9RbG5_E4fENhiWSWRufHGYlo9eh35o23Jak7njOdb5LOw2&amp;t=638901392248157332" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=uHIkleVeDJf4xS50Krz-yC6IySQBiLea8ZdO8VArPIj-LXbHu2fExad19fcqpYiraRr8B1odN7xABWEE6w2_nylgnoTRXHq7w_dX973gTG8IIpBFX7NlcaAqdTI8n5EFJjXU-jHV62FOX74RovHRd9YB2hU1&amp;t=5c0e0825" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=Jw6tUGWnA15YEa3ai3FadCnquOWXuTOZA9adC7k8a3hMR2UNvUvTpG-qkyQUBTu7Jn9AxLowB9mucc8waXHMTd9JZqLJNC5Ylosfk7VrQyHoV6OZwrT82tjkFyZfXVJxuf5SAXuoI5Jr6dLvBJvH8oNAJk41&amp;t=5c0e0825" type="text/javascript"></script>
+
+        <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ctl00$ScriptMan', 'aspnetForm', ['tctl00$ctl00$M$middle$MarketConstructor1$MiddleUpdatePanel','','tctl00$ctl00$M$right$UpdatePanel1','','tctl00$ctl00$M$right$ConstructorSlip1$WageringUpdatePanel',''], [], [], 90, 'ctl00$ctl00');
+//]]>
+</script>
+
+
+        <div id="ctl00_ctl00_pnlClassControl" class="sportsbook-visitor">
+	
+            
+
+            <div id="wrapper" class="wrapper">
+
+                <i id="caret" class="fas fa-caret-up d-none"></i>
+
+                <div>
+                    
+ 
+
+<site-header id="sportsBookHeader"
+                   isLoggedIn='false'
+                   cashBalance=''
+                   fpBalance=''
+                   showJoin='true'
+                   showMyAccount="true"
+                   showNotifications="true"
+                   brand="sportsbook"
+                   mailCount='0'  
+                   restrictWageringGroup=''
+                   data-menu-overrides=''
+                >
+</site-header>
+
+
+
+<script type="text/javascript">
+    function loginRedirectBtn() {
+        window.location.replace('/authentication/login' + window.location.search);
+    }
+
+    function IsMobileDisplay() {
+        let mobileSize = 992;
+        return jQuery(window).width() < mobileSize
+
+    }
+
+    jQuery(window).resize(function () {
+
+        if (jQuery(window).width() >= 992) {
+            if (jQuery('.animated-icon').hasClass('open')) {
+                jQuery('.animated').click();
+            }
+        }
+
+    });
+
+    var GB_QueueID;
+
+    function displayChat(queueId) {
+        clicky();
+    }
+</script>
+
+
+                    
+
+<style type="text/css">
+    #iframeMain {
+        width: calc(100% - .875rem - .875rem);
+        background-color: #e5eaec;
+        border: none;
+        margin: 0 .875rem;
+    }
+
+
+    @media screen and (max-width:767px) {
+        #iframeMain {
+            width: 100%;
+            margin: 0;
+        }
+    }
+
+    @supports (-webkit-touch-callout: none) { /* iphone iframe height issue fix */
+        #iframe-wrapper {
+            overflow: scroll !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+    }
+</style>
+
+<input type="hidden" name="ctl00$ctl00$promoModal$txtJsonNavigation" id="txtJsonNavigation" />
+<input type="hidden" name="ctl00$ctl00$promoModal$txtAlter" id="ctl00_ctl00_promoModal_txtAlter" value="sportsbook|live-betting|e-sports|racebook|contests|casino" />
+
+
+
+<div id="modal-overlay" style="display: none;">
+</div>
+
+                    
+                </div>
+                <div>
+                    
+
+    
+
+
+    
+
+    <section class="header p-0">
+        <div class="container-xl">
+            <div class="row">
+                <div class="col-12 p-0 px-lg-2">
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main mt-lg-2">
+        <div class="container-xl container-fluid mt-lg-2">
+            <div class="row">
+                <div class=''></div>
+                <div id="left-col" class="col-lg-2 left-menu d-none d-lg-block px-lg-2">
+                    
+                    
+
+<div id="search-sports" class="search-sport mt-lg-2">
+    <div class="search-input-box position-relative">
+        <input name="ctl00$ctl00$M$NewLeftMenu1$SearchGame1$txtSearch" type="text" id="txtSearch" title="Search by Team Name or Rotation Number" class="form-control" placeholder="Team or ROT #" aria-label="Team or Rot#" aria-describedby="btnSearch" onkeypress="EnterPressed(&#39;ctl00_ctl00_M_NewLeftMenu1_SearchGame1_btnSearch&#39;, event)" />
+        <div class="input-group-append">
+            <a onclick="javascript: return ValidateSearch(&#39;txtSearch&#39;);" id="ctl00_ctl00_M_NewLeftMenu1_SearchGame1_btnSearch" title="Search by Team Name or Rotation Number" class="btn rounded py-1 px-2" href="javascript:__doPostBack(&#39;ctl00$ctl00$M$NewLeftMenu1$SearchGame1$btnSearch&#39;,&#39;&#39;)">
+                <i class="fas fa-search text-dark-blue" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="search-buttons ml-auto">
+        <a id="ctl00_ctl00_M_NewLeftMenu1_SearchGame1_btnMobileSearch" title="Search by Team Name or Rotation Number" class="d-lg-none text-center mobile-search" href="javascript:__doPostBack(&#39;ctl00$ctl00$M$NewLeftMenu1$SearchGame1$btnMobileSearch&#39;,&#39;&#39;)">
+            <i class="fas fa-search text-dark-blue" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="d-lg-none mobile-cross bg-super-dark-blue text-white" onclick="ToggleMobileAllSportsMenu()"><i class="icon-w icon-Times"></i></button>
+    </div>
+</div>
+
+<div id="new-sports-list" class="new-sports-list mt-lg-2 bg-white">
+
+    <div class="favorites-container">
+        <ul class="p-0 m-0">
+            
+        </ul>
+    </div>
+
+    <ul class="p-0 menu-container" style="z-index: 100;">
+        
+                 <li class="border-bottom border-light-gray  All-Sports" data-link="/sportsbook/all-sports/" data-id="/sportsbook/all-sports/">
+                    <a href="/sportsbook/all-sports/" id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl00_lnkSport" class="trk_All_Sports">
+                        <i class="icon iconAll-Sports mr-2"></i>
+                        <span class="sport" style="line-height: 30px;">
+                            All Sports
+                        </span>
+                        <span id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl00_lnkArrow" class="submenu-indicator fas fa-angle-right d-none"></span>
+                    </a>
+
+                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl00_btnFavoriteCta" class="btn btn-md favorite-cta d-none" type="button">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <ul id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl00_ulSubMenu" class="submenu">
+                        
+                    </ul>
+                </li>
+            
+                 <li class="border-bottom border-light-gray  Live-Betting" data-link="/live-betting/" data-id="/live-betting/">
+                    <a href="/live-betting/" id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl01_lnkSport" class="trk_Live_Betting">
+                        <i class="icon iconLive-Betting mr-2"></i>
+                        <span class="sport" style="line-height: 30px;">
+                            Live Betting
+                        </span>
+                        <span id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl01_lnkArrow" class="submenu-indicator fas fa-angle-right d-none"></span>
+                    </a>
+
+                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl01_btnFavoriteCta" class="btn btn-md favorite-cta d-none" type="button">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <ul id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl01_ulSubMenu" class="submenu">
+                        
+                    </ul>
+                </li>
+            
+                 <li class="border-bottom border-light-gray  Prop-Builder" data-link="/sportsbook/props-builder/" data-id="/sportsbook/props-builder/">
+                    <a href="/sportsbook/props-builder/" id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl02_lnkSport" class="trk_Prop_Builder">
+                        <i class="icon iconProp-Builder mr-2"></i>
+                        <span class="sport" style="line-height: 30px;">
+                            Prop Builder
+                        </span>
+                        <span id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl02_lnkArrow" class="submenu-indicator fas fa-angle-right d-none"></span>
+                    </a>
+
+                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl02_btnFavoriteCta" class="btn btn-md favorite-cta d-none" type="button">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <ul id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl02_ulSubMenu" class="submenu">
+                        
+                    </ul>
+                </li>
+            
+                 <li class="border-bottom border-light-gray  Odds-Boost" data-link="/sportsbook/odds-boost/" data-id="/sportsbook/odds-boost/">
+                    <a href="/sportsbook/odds-boost/" id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl03_lnkSport" class="trk_Odds_Boost">
+                        <i class="icon iconOdds-Boost mr-2"></i>
+                        <span class="sport" style="line-height: 30px;">
+                            Odds Boost
+                        </span>
+                        <span id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl03_lnkArrow" class="submenu-indicator fas fa-angle-right d-none"></span>
+                    </a>
+
+                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl03_btnFavoriteCta" class="btn btn-md favorite-cta d-none" type="button">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <ul id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl03_ulSubMenu" class="submenu">
+                        
+                    </ul>
+                </li>
+            
+                 <li class="border-bottom border-light-gray  Same-Game-Parlays" data-link="/sportsbook/same-game-parlays/" data-id="/sportsbook/same-game-parlays/">
+                    <a href="/sportsbook/same-game-parlays/" id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl04_lnkSport" class="trk_Same_Game_Parlays">
+                        <i class="icon iconSame-Game-Parlays mr-2"></i>
+                        <span class="sport" style="line-height: 30px;">
+                            Same Game Parlays
+                        </span>
+                        <span id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl04_lnkArrow" class="submenu-indicator fas fa-angle-right d-none"></span>
+                    </a>
+
+                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl04_btnFavoriteCta" class="btn btn-md favorite-cta d-none" type="button">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <ul id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl04_ulSubMenu" class="submenu">
+                        
+                    </ul>
+                </li>
+            
+                 <li class="border-bottom border-light-gray flex-column Football" data-link="/sportsbook/football/" data-id="/sportsbook/football/">
+                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_lnkSport" class="trk_Football">
+                        <i class="icon iconFootball mr-2"></i>
+                        <span class="sport" style="line-height: 30px;">
+                            Football
+                        </span>
+                        <span id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_lnkArrow" class="submenu-indicator fas fa-angle-right "></span>
+                    </a>
+
+                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_btnFavoriteCta" class="btn btn-md favorite-cta d-none" type="button">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <ul id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_ulSubMenu" class="submenu">
+                        
+                                <li data-id='/sportsbook/nfl/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl00_lnkLeague" class=" trk_NFL_Odds" title="NFL Odds" href="/sportsbook/nfl/">NFL Odds</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl00_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/props/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl01_lnkLeague" class=" trk_NFL_Game_Props" title="NFL Game Props" href="/sportsbook/nfl/props/">NFL Game Props</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl01_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/college-football/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl02_lnkLeague" class=" trk_College_Football" title="College Football" href="/sportsbook/college-football/">College Football</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl02_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/college-football/props/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl03_lnkLeague" class=" trk_College_Football_Props" title="College Football Props" href="/sportsbook/college-football/props/">College Football Props</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl03_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/futures/nfl-conferences/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl04_lnkLeague" class=" trk_NFL_Conferences" title="NFL Conferences" href="/sportsbook/nfl/futures/nfl-conferences/">NFL Conferences</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl04_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/futures/nfl-divisions/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl05_lnkLeague" class=" trk_NFL_Divisions" title="NFL Divisions" href="/sportsbook/nfl/futures/nfl-divisions/">NFL Divisions</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl05_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/futures/nfl-regular-season-wins/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl06_lnkLeague" class=" trk_NFL_Regular_Season_Wins" title="NFL Regular Season Wins" href="/sportsbook/nfl/futures/nfl-regular-season-wins/">NFL Regular Season Wins</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl06_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/futures/nfl-season-awards/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl07_lnkLeague" class=" trk_NFL_Season_Awards" title="NFL Season Awards" href="/sportsbook/nfl/futures/nfl-season-awards/">NFL Season Awards</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl07_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/futures/nfl-season-stat-leaders/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl08_lnkLeague" class=" trk_NFL_Season_Stat_Leaders" title="NFL Season Stat Leaders" href="/sportsbook/nfl/futures/nfl-season-stat-leaders/">NFL Season Stat Leaders</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl08_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/super-bowl/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl09_lnkLeague" class=" trk_NFL_Super_Bowl_LXI" title="NFL Super Bowl LXI" href="/sportsbook/nfl/super-bowl/">NFL Super Bowl LXI</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl09_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/nfl/futures/nfl-super-bowl-lxi-matchups/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl10_lnkLeague" class=" trk_NFL_Super_Bowl_LXI_Matchups" title="NFL Super Bowl LXI Matchups" href="/sportsbook/nfl/futures/nfl-super-bowl-lxi-matchups/">NFL Super Bowl LXI Matchups</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl10_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/college-football/futures/ncaaf-championship/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl11_lnkLeague" class=" trk_NCAAF_Championship" title="NCAAF Championship" href="/sportsbook/college-football/futures/ncaaf-championship/">NCAAF Championship</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl11_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/college-football/futures/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl12_lnkLeague" class=" trk_College_Football_Futures" title="College Football Futures" href="/sportsbook/college-football/futures/">College Football Futures</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl12_btnFavoriteCta" type="button" class="btn btn-md favorite-cta d-none">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </li>
+                            
+                                <li data-id='/sportsbook/college-football/futures/ncaaf-conferences/'>
+                                    <a id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_ctl13_lnkLeague" class=" trk_NCAAF_Conferences" title="NCAAF Conferences" href="/sportsbook/college-football/futures/ncaaf-conferences/">NCAAF Conferences</a>
+                                    <button id="ctl00_ctl00_M_NewLeftMenu1_repSports_ctl05_repLeagues_c
