@@ -570,6 +570,10 @@ export interface GameContextInput {
   hasTotalMarket?: boolean;
   hasH2HMarket?: boolean;
   shadowEvidence?: EvidenceRecord[];
+  olContinuityDelta?: number | null;
+  dlContinuityDelta?: number | null;
+  dbContinuityDelta?: number | null;
+  situationalReading?: unknown;
   // Independent fair-value estimates that did NOT look at the sportsbook line
   // (e.g. the Kalshi exchange). Pre-fetched in the ingestion layer (Kalshi reads
   // are async I/O) so the PURE, synchronous scorer can run the edge engine

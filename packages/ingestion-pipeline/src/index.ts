@@ -1,6 +1,12 @@
 export { processSport } from "./process-sport.js";
 export type { SportConfig, ProcessSportResult } from "./process-sport.js";
 export {
+  buildDynamicGameContext,
+  type BuildGameContextParams,
+  type DynamicContextResult,
+  type VenueInfo,
+} from "./dynamic-context-builder.js";
+export {
   settleSport,
   PAID_SCORES_DAYS_FROM,
   SCORELESS_COMPLETED_ANOMALY,

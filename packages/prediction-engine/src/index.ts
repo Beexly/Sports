@@ -2643,8 +2643,14 @@ export type { RedZoneEfficiencyContext, RedZoneTeLeverageResult } from "./signal
 export { evaluateDefensivePassRush } from "./signals/trench/defensive-pass-rush-win-rate.js";
 export type { DefensivePassRushInput, DefensivePassRushResult } from "./signals/trench/defensive-pass-rush-win-rate.js";
 
-export { evaluateOffensiveLineTrench } from "./signals/trench/offensive-line-continuity.js";
+export { evaluateOffensiveLineTrench, computeOlContinuityDelta } from "./signals/trench/offensive-line-continuity.js";
 export type { OffensiveLineTrenchInput, OffensiveLineTrenchResult } from "./signals/trench/offensive-line-continuity.js";
+
+export { evaluateDefensiveLineContinuity, computeDlContinuityDelta } from "./signals/trench/defensive-line-continuity.js";
+export type { DefensiveLineContinuityInput } from "./signals/trench/defensive-line-continuity.js";
+
+export { evaluateDefensiveBackContinuity, computeDbContinuityDelta } from "./signals/trench/defensive-back-continuity.js";
+export type { DefensiveBackContinuityInput } from "./signals/trench/defensive-back-continuity.js";
 
 export { evaluateRefereeCrewTendencies } from "./signals/situational/referee-crew-tendencies.js";
 export type { RefereeCrewContext, RefereeCrewTendencyResult } from "./signals/situational/referee-crew-tendencies.js";

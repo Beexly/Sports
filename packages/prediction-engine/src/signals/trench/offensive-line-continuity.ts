@@ -95,3 +95,13 @@ export function evaluateOffensiveLineTrench(
     leadRusherEfficiencyMultiplier,
   };
 }
+
+/**
+ * Computes olContinuityDelta from Out and Questionable OL counts.
+ * clamp(-(outOl * 0.15 + qOl * 0.08), -1, 0)
+ */
+export function computeOlContinuityDelta(outOl: number, qOl: number): number {
+  if (outOl <= 0 && qOl <= 0) return 0;
+  const raw = -(outOl * 0.15 + qOl * 0.08);
+  return Number(Math.max(-1, Math.min(0, raw)).toFixed(3));
+}

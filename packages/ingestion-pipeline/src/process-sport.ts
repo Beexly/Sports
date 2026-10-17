@@ -46,6 +46,7 @@ import {
   eventsBelowBookmakerThreshold,
   mergeBookmakersIntoPrimary,
   THIN_FILL_MIN_BOOKMAKERS,
+  fetchEspnInjuries,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -62,6 +63,11 @@ import {
   buildIndependentFairValues,
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
+import {
+  buildDynamicGameContext,
+  type DynamicContextResult,
+  type VenueInfo,
+} from "./dynamic-context-builder.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -133,9 +139,14 @@ import {
 function paidCallJustified(
   need: "odds" | "scores",
   _sportKey: SupportedSportKey,
+  env: Record<string, string | undefined> = process.env,
 ): boolean {
   // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified.
   if (need === "scores") return false;
+  // If ALL_ODDS_ENABLED or PAID_ODDS_ENABLED is explicitly enabled, paid call is justified.
+  if (env["ALL_ODDS_ENABLED"] === "true" || env["PAID_ODDS_ENABLED"] === "true") {
+    return true;
+  }
   // odds: galaxy-espn-inline is cleared-with-attribution and is the preferred free path
   // for spreads/totals. Paid Odds API is not justified when the free path can cover the need.
   return false;
@@ -567,15 +578,52 @@ export async function processSport(
         // dense slate (Sunday 16-game). commenceByEventId maps each Odds API
         // event id to its commence_time — events with a missing time sort last.
         const commenceByEventId: Record<string, Date> = {};
+        const oddsToEspnId = new Map<string, string>();
+        let targetEventIds: string[] = [];
+
         for (const event of events) {
           if (event.id && event.commence_time) {
             commenceByEventId[event.id] = new Date(event.commence_time);
           }
         }
+
+        // If events are ESPN-routed (id starts with "espn:"), resolve to The Odds API event IDs
+        if (events.some((ev) => ev.id?.startsWith("espn:")) && !oddsKeyIsSentinel) {
+          try {
+            const oddsEventsRes = await client.getEvents(sport.key as SupportedSportKey);
+            const oddsEvents = oddsEventsRes.data ?? [];
+            for (const ev of events) {
+              const evHome = (ev.home_team || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+              const evAway = (ev.away_team || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+              const match = oddsEvents.find((oe) => {
+                const oeHome = (oe.home_team || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+                const oeAway = (oe.away_team || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+                return (
+                  (oeHome.includes(evHome) || evHome.includes(oeHome)) &&
+                  (oeAway.includes(evAway) || evAway.includes(oeAway))
+                );
+              });
+              if (match?.id) {
+                oddsToEspnId.set(match.id, ev.id);
+                targetEventIds.push(match.id);
+                if (ev.commence_time) {
+                  commenceByEventId[match.id] = new Date(ev.commence_time);
+                }
+              } else if (ev.id) {
+                targetEventIds.push(ev.id);
+              }
+            }
+          } catch {
+            targetEventIds = events.map((event) => event.id).filter((id): id is string => Boolean(id));
+          }
+        } else {
+          targetEventIds = events.map((event) => event.id).filter((id): id is string => Boolean(id));
+        }
+
         const eventOddsReport = await ingestEventOddsIfEnabled({
           client: client as unknown as EventOddsClient,
           sportKey: sport.key,
-          eventIds: events.map((event) => event.id).filter((id): id is string => Boolean(id)),
+          eventIds: targetEventIds,
           commenceByEventId,
         });
         // Each licensed event-odds call is a paid request (fetched + failed =
@@ -589,7 +637,13 @@ export async function processSport(
         });
         for (const snap of eventOddsReport.snapshots) {
           const id = eventOddsId(snap as { id?: string });
-          if (id) eventOddsByExternalId.set(id, snap);
+          if (id) {
+            eventOddsByExternalId.set(id, snap);
+            const espnId = oddsToEspnId.get(id);
+            if (espnId) {
+              eventOddsByExternalId.set(espnId, snap);
+            }
+          }
         }
         if (eventOddsReport.enabled && eventOddsReport.fetched > 0) {
           console.log(`${logPrefix} ${sport.key}: event-odds ${eventOddsReport.reason}`);
@@ -1007,6 +1061,12 @@ export async function processSport(
     const confirmedGameIds = new Set<string>();
     const gateDecisionsToPersist: GateDecisionInput[] = [];
 
+    // Pre-fetch ESPN injury reports for the sport (NFL or NCAAF)
+    const injuryMap = await fetchEspnInjuries(sport.key).catch(() => new Map());
+
+    // Dynamic context & situational readings per game
+    const dynamicContexts = new Map<string, DynamicContextResult>();
+
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
     // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
@@ -1238,6 +1298,36 @@ export async function processSport(
         );
       }
 
+      // Venue information from game record or ESPN fixture
+      const venueInfo: VenueInfo = {
+        fullName: (gameRecord as Record<string, unknown>).venueName as string | undefined ?? fixture?.event?.venue ?? undefined,
+        city: (gameRecord as Record<string, unknown>).venueCity as string | undefined ?? undefined,
+        state: (gameRecord as Record<string, unknown>).venueState as string | undefined ?? undefined,
+        indoor: (gameRecord as Record<string, unknown>).isIndoor as boolean | undefined ?? undefined,
+      };
+
+      // Dynamic context assembly & interpretSituation invocation (injuries, continuity, NWS weather)
+      let dynamicCtx: DynamicContextResult | null = null;
+      try {
+        dynamicCtx = await buildDynamicGameContext({
+          gameId: gameRecord.id,
+          homeTeam: game.homeTeam,
+          awayTeam: game.awayTeam,
+          sportKey: sport.key,
+          kickoff,
+          fetchedAt,
+          restDaysHome: enrichedGame?.restDaysHome ?? 7,
+          restDaysAway: enrichedGame?.restDaysAway ?? 7,
+          avgSpread,
+          marketFairProb: null,
+          venue: venueInfo,
+          injuryMap,
+        });
+        dynamicContexts.set(gameRecord.id, dynamicCtx);
+      } catch (dynErr) {
+        console.warn(`${logPrefix} Dynamic context build failed for ${game.externalId}: ${dynErr instanceof Error ? dynErr.message : dynErr}`);
+      }
+
       const context: GameContextInput = {
         openingSpread: enrichedGame?.openingSpread ?? avgSpread,
         currentSpread: avgSpread,
@@ -1278,7 +1368,18 @@ export async function processSport(
         hasSpreadMarket: spreadOdds.length > 0,
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,
-        shadowEvidence: buildMissingContextEvidence(fetchedAt),
+        shadowEvidence: dynamicCtx
+          ? [
+              dynamicCtx.playerAvailabilityEvidence,
+              ...buildMissingContextEvidence(fetchedAt).filter(
+                (c) => c.sourceCategory !== "PLAYER_AVAILABILITY",
+              ),
+            ]
+          : buildMissingContextEvidence(fetchedAt),
+        olContinuityDelta: dynamicCtx?.gameContext.olContinuityDelta ?? null,
+        dlContinuityDelta: dynamicCtx?.gameContext.dlContinuityDelta ?? null,
+        dbContinuityDelta: dynamicCtx?.gameContext.dbContinuityDelta ?? null,
+        situationalReading: dynamicCtx?.situationalReading ?? null,
         ...(independentFairValues.length > 0
           ? { independentFairValues }
           : {}),
@@ -1335,6 +1436,9 @@ export async function processSport(
       // selection / line / reasoning / reasoningShort are NOT here. Those four
       // are the published bet, and settlement grades the write-once lock, so
       // refreshing them published a bet we do not grade. See publishedTerms below.
+      const dynCtx = dynamicContexts.get(pick.gameId);
+      const situationalReading = dynCtx?.situationalReading;
+
       const pickUpdateData = {
         confidence: pick.confidence,
         edgeScore: pick.edgeScore,
@@ -1343,7 +1447,29 @@ export async function processSport(
         tier: pick.tier,
         pickGrade: pick.pickGrade,
         riskLevel: pick.riskLevel,
-        factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
+        factorBreakdown: {
+          ...JSON.parse(JSON.stringify(pick.factorBreakdown || {})),
+          ...(situationalReading
+            ? {
+                situationalReading: {
+                  reasoningTrace: situationalReading.reasoningTrace,
+                  corpusSituationalShift: situationalReading.corpusSituationalShift,
+                  mindEvaluation: {
+                    applicablePrinciples: situationalReading.mindEvaluation?.applicablePrinciples ?? [],
+                    situationalPick: situationalReading.mindEvaluation?.situationalPick,
+                    sameGameParlay: situationalReading.mindEvaluation?.sameGameParlay,
+                  },
+                  olContinuityDelta: dynCtx?.gameContext.olContinuityDelta ?? 0,
+                  dlContinuityDelta: dynCtx?.gameContext.dlContinuityDelta ?? 0,
+                  dbContinuityDelta: dynCtx?.gameContext.dbContinuityDelta ?? 0,
+                  dlContinuityScore: dynCtx?.gameContext.dlContinuityScore,
+                  dbContinuityScore: dynCtx?.gameContext.dbContinuityScore,
+                  injuryEvidence: dynCtx?.playerAvailabilityEvidence,
+                  weather: dynCtx?.weatherReading,
+                },
+              }
+            : {}),
+        },
         modelVersion: pick.modelVersion,
         dataFreshnessAt: pick.dataFreshnessAt,
       };
@@ -1367,8 +1493,8 @@ export async function processSport(
       const publishedTerms = {
         selection: pick.selection,
         line: pick.line,
-        reasoning: pick.reasoning,
-        reasoningShort: pick.reasoningShort,
+        reasoning: pick.reasoning || situationalReading?.reasoningTrace || "",
+        reasoningShort: pick.reasoningShort || (situationalReading ? `Lean: ${situationalReading.mindEvaluation?.situationalPick?.selection || pick.selection}` : ""),
       };
 
       // Featured promotion gate: only auto-promote when explicitly enabled.

@@ -73,29 +73,19 @@ def main():
         blitz_rate = float(track_g["was_blitzing"].mean()) if len(track_g) > 0 and "was_blitzing" in track_g.columns else 0.28
         route_rate = float(track_g["was_running_route"].mean()) if len(track_g) > 0 and "was_running_route" in track_g.columns else 0.45
         
-        # Pocket depth, pass-rush separation, STRAIN
-        # Derive realistic game metrics from tracklet speed, epa, and pressure outcomes
-        # Seeded deterministically by game_id for reproducibility
-        rng = np.random.RandomState(abs(hash(g_id)) % 2**32)
-        mean_pocket_depth = round(float(np.clip(6.8 + (tot_pass_epa * 2.5) + rng.normal(0, 0.4), 4.2, 8.2)), 2)
-        min_pass_rush_sep = round(float(np.clip(2.6 + (tot_pass_epa * 1.8) + rng.normal(0, 0.3), 0.8, 4.5)), 2)
-        mean_strain = round(float(np.clip(1.85 - (tot_pass_epa * 3.0) + (blitz_rate * 2.0) + rng.normal(0, 0.25), 0.4, 5.2)), 2)
-        peak_strain = round(float(np.clip(mean_strain + 1.8 + rng.uniform(0.5, 1.8), 2.2, 6.8)), 2)
-        
-        # SOE (Separation Over Expected)
-        mean_soe = round(float(np.clip(0.15 + (tot_pass_epa * 1.2) + rng.normal(0, 0.2), -1.1, 2.2)), 2)
+        # Real optical tracking columns for pocket depth, STRAIN, and SOE do NOT exist
+        # in tracklet_outcome_enrichment_2026.parquet.
+        # Per doctrine: no synthetic metrics, no circular fit against target EPA.
+        # Write measured=False and do not generate synthetic covariates.
+        measured = False
+        mean_pocket_depth = None
+        min_pass_rush_sep = None
+        mean_strain = None
+        peak_strain = None
+        mean_soe = None
+        primary_shell = None
 
-        # Predicted EPA from calibrated formula
-        predicted_epa = round(b0 + b1 * mean_pocket_depth + b2 * mean_strain, 4)
         actual_epa = round(tot_pass_epa, 4)
-        residual = round(actual_epa - predicted_epa, 4)
-
-        # Primary coverage shell
-        shells = ["Cover 3", "Cover 1", "Cover 2", "Cover 4", "Cover 6", "2-High Disguise -> Cover 3", "Cover 0 Blitz"]
-        shell_probs = [0.34, 0.22, 0.17, 0.14, 0.07, 0.04, 0.02]
-        if blitz_rate > 0.35:
-            shell_probs = [0.20, 0.25, 0.10, 0.10, 0.05, 0.10, 0.20]
-        primary_shell = rng.choice(shells, p=np.array(shell_probs)/sum(shell_probs))
 
         # FTN context
         play_action_rate = round(float(ftn_g["is_play_action"].mean()), 3) if len(ftn_g) > 0 and "is_play_action" in ftn_g.columns else 0.210
@@ -135,22 +125,25 @@ def main():
                 "ci90_coverage": round(ci90_cov, 4)
             },
             "cv_derived_metrics": {
-                "mean_pocket_depth_yd": mean_pocket_depth,
-                "min_pass_rush_separation_yd": min_pass_rush_sep,
-                "mean_strain": mean_strain,
-                "peak_strain": peak_strain,
-                "mean_soe_yd": mean_soe,
-                "primary_coverage_shell": primary_shell,
+                "measured": False,
+                "mean_pocket_depth_yd": None,
+                "min_pass_rush_separation_yd": None,
+                "mean_strain": None,
+                "peak_strain": None,
+                "mean_soe_yd": None,
+                "primary_coverage_shell": None,
                 "blitz_rate": round(blitz_rate, 3),
                 "play_action_rate": play_action_rate,
                 "motion_rate": motion_rate,
                 "screen_rate": screen_rate
             },
             "calibration": {
-                "predicted_epa": predicted_epa,
+                "measured": False,
+                "predicted_epa": None,
                 "actual_epa": actual_epa,
-                "residual": residual,
-                "holdout_split": "Week 5 Holdout" if week == 5 else "Weeks 1-4 Training"
+                "residual": None,
+                "holdout_split": "Week 5 Holdout" if week == 5 else "Weeks 1-4 Training",
+                "note": "RETRACTED: No optical tracking pocket/strain columns exist in tracklet dataset. Circular fit rejected."
             }
         }
         all_games_data.append(game_record)

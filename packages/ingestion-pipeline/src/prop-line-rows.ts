@@ -108,6 +108,10 @@ function isFeaturedMarket(key: string): boolean {
 /**
  * Flatten one Odds API event-odds payload into archive rows.
  * Featured h2h/spreads/totals are ignored here — toLineSnapshotRows owns those.
+ * Covers:
+ *  - Player props (points, pass, rush, rec, TDs, kicks, etc.)
+ *  - Alt lines & game props (alternate_spreads, alternate_totals, team_totals, spreads_h1, totals_h1, h2h_h1)
+ *  - Alt props (player_*_alternate)
  */
 export function toPropLineSnapshotRows(event: PropEventLike): LineSnapshotRow[] {
   const rows: LineSnapshotRow[] = [];
@@ -118,17 +122,54 @@ export function toPropLineSnapshotRows(event: PropEventLike): LineSnapshotRow[] 
       const marketKey = market.key ?? "";
       if (!marketKey || isFeaturedMarket(marketKey)) continue;
       for (const outcome of market.outcomes ?? []) {
-        const side = parsePropSide(outcome.name ?? "");
-        const player = outcome.description ?? "";
-        const encoded = encodePropMarket(marketKey, player);
-        if (side == null || encoded == null) continue;
         if (!Number.isFinite(outcome.price)) continue;
+
+        let marketName: string | null = null;
+        let side: string | null = null;
+        const line: number | null = Number.isFinite(outcome.point) ? (outcome.point as number) : null;
+
+        const rawName = (outcome.name ?? "").trim();
+        const parsedSide = parsePropSide(rawName);
+
+        if (marketKey.startsWith("player_")) {
+          const playerDesc = outcome.description?.trim();
+          if (playerDesc) {
+            side = parsedSide ?? rawName.toLowerCase();
+            marketName = encodePropMarket(marketKey, playerDesc);
+          } else if (parsedSide == null && rawName.length > 0) {
+            // TD scorers (anytime, first, last) where outcome.name is player name
+            side = "yes";
+            marketName = encodePropMarket(marketKey, rawName);
+          } else {
+            // Unattributed player prop (e.g. name is "Over" and no description) - skip
+            continue;
+          }
+        } else if (marketKey === "team_totals") {
+          const team = outcome.description?.trim();
+          side = parsedSide ?? rawName.toLowerCase();
+          marketName = team ? `${marketKey}|${slugPlayer(team)}` : marketKey;
+        } else if (marketKey.includes("totals")) {
+          // alternate_totals, totals_h1, totals_h2, totals_q1, etc.
+          side = parsedSide ?? rawName.toLowerCase();
+          marketName = marketKey;
+        } else if (marketKey.includes("spreads") || marketKey.includes("h2h")) {
+          // alternate_spreads, spreads_h1, h2h_h1, etc.
+          side = slugPlayer(rawName) || rawName.toLowerCase();
+          marketName = marketKey;
+        } else {
+          const desc = outcome.description?.trim();
+          side = parsedSide ?? (slugPlayer(rawName) || rawName.toLowerCase());
+          marketName = desc ? `${marketKey}|${slugPlayer(desc)}` : marketKey;
+        }
+
+        if (!marketName || !side) continue;
+
         rows.push({
           book: bookKey,
-          market: encoded,
+          market: marketName,
           side,
           price: outcome.price as number,
-          line: Number.isFinite(outcome.point) ? (outcome.point as number) : null,
+          line,
         });
       }
     }

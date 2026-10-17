@@ -463,3 +463,30 @@ export {
   type SignalWeight,
   type PublishAction,
 } from "./calibration-weights.js";
+
+export {
+  fetchEspnInjuries,
+  getTeamInjuries,
+  computeTeamContinuity,
+  buildPlayerAvailabilityEvidence,
+  calculateContinuityDelta,
+  isOlPosition,
+  isDlPosition,
+  isDbPosition,
+  isSkillPosition,
+  isOutStatus,
+  isQuestionableStatus,
+  clearInjuryCacheForTests,
+  type NormalizedInjuryRecord,
+  type TeamContinuityMetrics,
+} from "./espn-injuries-client.js";
+
+export {
+  fetchNwsWeather,
+  resolveVenueCoordinates,
+  neutralWeatherFallback,
+  clearWeatherCacheForTests,
+  VENUE_COORDINATES,
+  CITY_COORDINATES,
+  type WeatherContextReading,
+} from "./nws-weather-client.js";

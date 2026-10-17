@@ -18,6 +18,7 @@ import { db } from "@sports/db";
 import { hasOpsAuth } from "@/lib/ops/ops-auth";
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
 import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
@@ -84,6 +85,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       id: true,
       gameId: true,
       bookmakerCount: true,
+      signalSnapshot: { select: { bookmakerCount: true } },
       pickType: true,
       selection: true,
       line: true,
@@ -108,20 +110,26 @@ export async function GET(request: Request): Promise<NextResponse> {
     take: 400,
   });
 
+  const queried = rows.length;
+
+  // Normalize effective bookmakerCount: snapshot if present, else pick column
+  const normalizedRows = rows.map((r) => ({
+    ...r,
+    bookmakerCount: r.signalSnapshot?.bookmakerCount ?? r.bookmakerCount,
+  }));
+
   // 1. One game, one story: drop unpriced model signals when a priced book line exists for the same game
-  const coherentRows = dropContradictedModelSignals(rows);
+  const coherentRows = dropContradictedModelSignals(normalizedRows);
+  const droppedContradictedModelSignals = queried - coherentRows.length;
 
   // 2. Never sell a pick our own model prices worse than the market (PASS / negative expected CLV)
   const soundRows = dropAdverseEdgePicks(coherentRows);
+  const droppedAdverseEdge = coherentRows.length - soundRows.length;
 
   const ranked = soundRows
     .map((pick) => {
-      // Edge Index sanitize: an edge of 100 is an artifact of multi-book odds averaging where rawEdge >= 0.
-      // Cap at 54 (honest fair juice ceiling) so 100 never displays as a false certainty indicator.
-      const sanitizedEdge =
-        pick.edgeScore != null && pick.edgeScore >= 100
-          ? 54
-          : pick.edgeScore;
+      const isSaturated = pick.edgeScore != null && pick.edgeScore >= 100;
+      const edgeIndexStatus = isSaturated ? "SATURATED_UNUSABLE" : "VALID";
 
       return {
         id: pick.id,
@@ -135,12 +143,31 @@ export async function GET(request: Request): Promise<NextResponse> {
         confidence: pick.confidence,
         pickGrade: pick.pickGrade,
         tier: pick.tier,
-        edgeScore: sanitizedEdge,
+        edgeScore: pick.edgeScore,
+        edgeIndexStatus,
         rankingP: readNumber(pick.factorBreakdown, "rankingP"),
         expectedClv: readExpectedClv(pick.factorBreakdown),
         riskLevel: pick.riskLevel,
         modelVersion: pick.modelVersion,
         reasoningShort: pick.reasoningShort,
+        reasoningTrace:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.reasoningTrace ??
+          pick.reasoningShort ??
+          null,
+        applicablePrinciples:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.mindEvaluation?.applicablePrinciples ??
+          [],
+        corpusSituationalShift:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.corpusSituationalShift ??
+          null,
+        olContinuityDelta:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.olContinuityDelta ?? null,
+        dlContinuityDelta:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.dlContinuityDelta ?? null,
+        dbContinuityDelta:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.dbContinuityDelta ?? null,
+        injuryEvidence:
+          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.injuryEvidence ?? null,
       };
     })
     .sort((a, b) => {
@@ -163,10 +190,14 @@ export async function GET(request: Request): Promise<NextResponse> {
       ok: true,
       date: slate.dayKey,
       order,
-      total: rows.length,
+      queried,
+      droppedContradictedModelSignals,
+      droppedAdverseEdge,
+      total: soundRows.length,
       returned: ranked.length,
       picks: ranked,
     },
     { headers: { "Cache-Control": "no-store" } },
   );
 }
+

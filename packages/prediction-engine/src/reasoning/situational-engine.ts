@@ -47,6 +47,10 @@ export interface GameContext {
   readonly publicHandlePct?: number;
   readonly timeZoneShiftHours?: number;
   readonly olContinuityDelta?: number;
+  readonly dlContinuityDelta?: number;
+  readonly dbContinuityDelta?: number;
+  readonly dlContinuityScore?: number;
+  readonly dbContinuityScore?: number;
   readonly coachAggressivenessDelta?: number;
   readonly turnoverMarginDelta?: number;
   readonly acuteChronicWorkloadRatio?: number;
@@ -77,6 +81,12 @@ export interface SituationalReading {
   readonly corpusSituationalShift: number;
   /** Autonomous Mind reasoning evaluation from 3,085 literature records */
   readonly mindEvaluation: MindEvaluationResult;
+  /** Trench and secondary continuity deltas & scores */
+  readonly olContinuityDelta?: number;
+  readonly dlContinuityDelta?: number;
+  readonly dbContinuityDelta?: number;
+  readonly dlContinuityScore?: number;
+  readonly dbContinuityScore?: number;
 }
 
 export type SituationalEval =
@@ -164,6 +174,7 @@ export function interpretSituation(
       ? "consistency passed"
       : `consistency failed: ${aggregated.data.consistency.violations.join(" | ")}`,
     aggregated.data.traceSummary,
+    `Trench/secondary continuity: OL delta ${context.olContinuityDelta ?? 0}, DL delta ${context.dlContinuityDelta ?? 0}, DB delta ${context.dbContinuityDelta ?? 0}.`,
     `Corpus evaluator: touched ${corpusEvaluation.itemsEvaluatedCount} items (${corpusEvaluation.totalLoadedCount} loaded, ${corpusEvaluation.itemsSkippedCount} skipped, ${corpusEvaluation.coveragePct.toFixed(1)}% coverage). Net shift: ${corpusSituationalShift.toFixed(6)} (weight ${corpusEvaluation.evaluatorWeight}).`,
     `Mind Reasoning: ${mindEvaluation.applicablePrinciples.length} principles active. Lean: ${mindEvaluation.situationalPick.selection} (${(mindEvaluation.situationalPick.modelFairProbability * 100).toFixed(1)}% fair vs ${(market * 100).toFixed(1)}% market). SGP: ${mindEvaluation.sameGameParlay.name}.`,
   ].join(". ");
@@ -185,6 +196,11 @@ export function interpretSituation(
       corpusEvaluation,
       corpusSituationalShift,
       mindEvaluation,
+      olContinuityDelta: context.olContinuityDelta ?? 0,
+      dlContinuityDelta: context.dlContinuityDelta ?? 0,
+      dbContinuityDelta: context.dbContinuityDelta ?? 0,
+      dlContinuityScore: context.dlContinuityScore,
+      dbContinuityScore: context.dbContinuityScore,
     },
   };
 }

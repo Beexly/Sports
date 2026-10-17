@@ -113,4 +113,137 @@ describe("toPropLineSnapshotRows", () => {
     });
     expect(rows).toEqual([]);
   });
+
+  it("flattens alternate totals and alternate spreads without dropping", () => {
+    const rows = toPropLineSnapshotRows({
+      bookmakers: [
+        {
+          key: "draftkings",
+          markets: [
+            {
+              key: "alternate_totals",
+              outcomes: [
+                { name: "Over", price: +135, point: 48.5 },
+                { name: "Under", price: -165, point: 48.5 },
+              ],
+            },
+            {
+              key: "alternate_spreads",
+              outcomes: [
+                { name: "Seattle Seahawks", price: +145, point: -6.5 },
+                { name: "Denver Broncos", price: -175, point: 6.5 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(rows).toHaveLength(4);
+    const altTotals = rows.filter((r) => r.market === "alternate_totals");
+    expect(altTotals).toHaveLength(2);
+    expect(altTotals.find((r) => r.side === "over")?.line).toBe(48.5);
+    expect(altTotals.find((r) => r.side === "over")?.price).toBe(135);
+
+    const altSpreads = rows.filter((r) => r.market === "alternate_spreads");
+    expect(altSpreads).toHaveLength(2);
+    expect(altSpreads.find((r) => r.side === "seattle_seahawks")?.line).toBe(-6.5);
+    expect(altSpreads.find((r) => r.side === "seattle_seahawks")?.price).toBe(145);
+  });
+
+  it("flattens team totals with team slug in market key", () => {
+    const rows = toPropLineSnapshotRows({
+      bookmakers: [
+        {
+          key: "fanduel",
+          markets: [
+            {
+              key: "team_totals",
+              outcomes: [
+                { name: "Over", description: "Detroit Lions", price: -110, point: 24.5 },
+                { name: "Under", description: "Detroit Lions", price: -110, point: 24.5 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.market).toBe("team_totals|detroit_lions");
+    expect(rows[0]?.side).toBe("over");
+    expect(rows[0]?.line).toBe(24.5);
+  });
+
+  it("flattens game props like first half spreads and totals", () => {
+    const rows = toPropLineSnapshotRows({
+      bookmakers: [
+        {
+          key: "draftkings",
+          markets: [
+            {
+              key: "spreads_h1",
+              outcomes: [
+                { name: "Kansas City Chiefs", price: -110, point: -3.5 },
+                { name: "Buffalo Bills", price: -110, point: 3.5 },
+              ],
+            },
+            {
+              key: "totals_h1",
+              outcomes: [
+                { name: "Over", price: -105, point: 23.5 },
+                { name: "Under", price: -115, point: 23.5 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(rows).toHaveLength(4);
+    expect(rows.find((r) => r.market === "spreads_h1" && r.side === "kansas_city_chiefs")?.line).toBe(-3.5);
+    expect(rows.find((r) => r.market === "totals_h1" && r.side === "over")?.line).toBe(23.5);
+  });
+
+  it("captures TD scorer props when player is in outcome.name", () => {
+    const rows = toPropLineSnapshotRows({
+      bookmakers: [
+        {
+          key: "draftkings",
+          markets: [
+            {
+              key: "player_anytime_td",
+              outcomes: [
+                { name: "Patrick Mahomes", price: +350 },
+                { name: "Travis Kelce", price: +110 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.market).toBe("player_anytime_td|patrick_mahomes");
+    expect(rows[0]?.side).toBe("yes");
+    expect(rows[0]?.price).toBe(350);
+  });
+
+  it("captures alternate player props", () => {
+    const rows = toPropLineSnapshotRows({
+      bookmakers: [
+        {
+          key: "fanduel",
+          markets: [
+            {
+              key: "player_pass_yds_alternate",
+              outcomes: [
+                { name: "Over", description: "Patrick Mahomes", price: +180, point: 300.5 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.market).toBe("player_pass_yds_alternate|patrick_mahomes");
+    expect(rows[0]?.line).toBe(300.5);
+    expect(rows[0]?.price).toBe(180);
+  });
 });

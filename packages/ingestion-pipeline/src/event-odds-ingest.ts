@@ -19,8 +19,81 @@ export const DEFAULT_EVENT_ODDS_MARKETS = [
   "player_points",
   "player_receptions",
 ] as const;
-export const NFL_EVENT_ODDS_MARKETS = ["player_pass_tds", "player_receptions"] as const;
-export const NBA_EVENT_ODDS_MARKETS = ["player_points"] as const;
+export const NFL_EVENT_ODDS_MARKETS = [
+  // Alternate lines & game/team totals
+  "alternate_spreads",
+  "alternate_totals",
+  "team_totals",
+  // Game props (halves)
+  "spreads_h1",
+  "spreads_h2",
+  "totals_h1",
+  "totals_h2",
+  "h2h_h1",
+  "h2h_h2",
+  // Passing props
+  "player_pass_tds",
+  "player_pass_yds",
+  "player_pass_completions",
+  "player_pass_attempts",
+  "player_pass_interceptions",
+  "player_pass_longest_completion",
+  // Rushing props
+  "player_rush_yds",
+  "player_rush_attempts",
+  "player_rush_longest",
+  // Receiving props
+  "player_receptions",
+  "player_reception_yds",
+  "player_reception_longest",
+  // Touchdown props
+  "player_anytime_td",
+  "player_first_td",
+  "player_last_td",
+  // Kicking & Defense props
+  "player_field_goals",
+  "player_tackles_assists",
+  "player_sacks",
+  "player_defensive_interceptions",
+  // Alternate props
+  "player_pass_yds_alternate",
+  "player_rush_yds_alternate",
+  "player_reception_yds_alternate",
+] as const;
+
+export const NBA_EVENT_ODDS_MARKETS = [
+  // Alternate lines & team totals
+  "alternate_spreads",
+  "alternate_totals",
+  "team_totals",
+  // Game props (halves)
+  "spreads_h1",
+  "spreads_h2",
+  "totals_h1",
+  "totals_h2",
+  "h2h_h1",
+  "h2h_h2",
+  // Player props
+  "player_points",
+  "player_rebounds",
+  "player_assists",
+  "player_threes",
+  "player_blocks",
+  "player_steals",
+  "player_blocks_steals",
+  "player_turnovers",
+  "player_points_rebounds_assists",
+  "player_points_rebounds",
+  "player_points_assists",
+  "player_rebounds_assists",
+  "player_double_double",
+  "player_triple_double",
+  // Alternate props
+  "player_points_alternate",
+  "player_rebounds_alternate",
+  "player_assists_alternate",
+  "player_threes_alternate",
+] as const;
 export const DEFAULT_EVENT_ODDS_CREDIT_CAP = 8;
 
 /**
@@ -101,7 +174,11 @@ function quotaHeadersOf(err: unknown): { remainingRequests?: number; usedRequest
 export function isEventOddsIngestEnabled(
   env: Record<string, string | undefined> = process.env,
 ): boolean {
-  return env["EVENT_ODDS_INGEST_ENABLED"] === "true";
+  return (
+    env["EVENT_ODDS_INGEST_ENABLED"] === "true" ||
+    env["ALL_ODDS_ENABLED"] === "true" ||
+    env["PROPS_INGEST_ENABLED"] === "true"
+  );
 }
 
 export function eventOddsCreditCap(

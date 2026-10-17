@@ -1,5 +1,7 @@
 # Computer Vision Pipeline Verification & Weeks 1–5 Calibration Report
 
+> **RETRACTION NOTICE (2026-10-17):** This verification and calibration report is RETRACTED. Ingestion frames, homography correspondences, and derived covariates were generated via synthetic simulation rather than real broadcast tracking; production weight remains strictly 0.0.
+
 **Date**: 2026-10-17  
 **Evaluator**: Autonomous GSE Vision Architecture Agent  
 **Doctrine**: The reasoning is the product. The engine's mind is the product. Computer vision feeds that mind with measured, calibrated metrics. Strictly fenced to NFL data before Week 6, 2026. Production weight remains strictly 0.0.
