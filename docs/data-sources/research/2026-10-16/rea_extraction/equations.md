@@ -395,3 +395,18 @@ abla^2 \mathbf{u} + \mathbf{f}_{	ext{ext}}
 - **Formula**:
   \hat{\mathbf{Y}}_{t+\Delta t} = \mathcal{W}_{	ext{spatial}} st \mathbf{S}_t + \mathcal{W}_{	ext{temporal}} \star \mathbf{H}_t + \mathbf{b}_{	ext{context}}
 - **Application**: Integrates optical player tracking tensor $\mathbf{S}_t$ with historical tendency matrix $\mathbf{H}_t$ to project drive success rates under fatigue degradation.
+
+
+### EQ-BETTING-003: Kelly Fractional Growth with Parameter Uncertainty & Model Variance
+- **Source**: Optimal Betting Strategies under Parameter Ambiguity and Model Uncertainty (arXiv betting series)
+- **Formula**:
+  f^* = rac{b \cdot \hat{p} - \hat{q}}{b} \cdot \max\left(0, 1 - rac{\sigma_p^2}{\hat{p}(1 - \hat{p})}ight)
+  	ext{AdjustedAllocation} = f^* \cdot \min\left(1.0, rac{	ext{ConsensusAgreement}}{2}ight)
+- **Application**: Dynamic sizing gate. Scales down Kelly stake fraction when probability estimates carry high variance across signal sources, preventing over-allocation on solo-source edges.
+
+### EQ-BETTING-004: Prediction Market Belief Aggregation & Truth Revelation
+- **Source**: Information Aggregation in Decentralized Betting and Prediction Markets (arXiv betting series)
+- **Formula**:
+  p^* = rg\min_p \sum_i w_i \cdot D_{	ext{KL}}\left(p \,||\, q_iight)
+  D_{	ext{KL}}(p \,||\, q_i) = p \ln\left(rac{p}{q_i}ight) + (1-p) \ln\left(rac{1-p}{1-q_i}ight)
+- **Application**: Weighted Kullback-Leibler consensus aggregation. Replaces naive arithmetic averaging with logarithmic opinion pooling across disparate predictive heads.

@@ -293,3 +293,10 @@
 - **Architecture**: 4th-order Runge-Kutta numerical integration of 3D projectile motion under turbulent wind fields:
   rac{d\mathbf{v}}{dt} = \mathbf{g} - rac{1}{2m} ho C_d A v_{	ext{rel}} \mathbf{v}_{	ext{rel}} + rac{1}{2m} ho C_L A \left(oldsymbol{\omega} 	imes \mathbf{v}_{	ext{rel}}ight)
 - **Application**: Real-time ball flight simulation under gusting winds, outputting exact field goal percentage drops and deep ball completion variance for live prop/total lines.
+
+
+### MOD-BETTING-002: Information-Theoretic Multi-Book Consensus Aggregator
+- **Source**: Mathematical Foundations of Betting Markets & Consensus Aggregation
+- **Architecture**: Iterative entropy-maximizing projection mapping sharp odds (Pinnacle/Circa) and peer-to-peer prediction exchanges (Polymarket/Betfair) into canonical fair probabilities:
+  p_{	ext{fair}} = rac{\prod_k (p_k)^{lpha_k}}{\prod_k (p_k)^{lpha_k} + \prod_k (1 - p_k)^{lpha_k}}
+- **Application**: Real-time de-vigging and market consensus fair price extraction, providing the baseline for Layer 2 situational overlays.
