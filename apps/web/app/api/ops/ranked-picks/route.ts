@@ -26,6 +26,24 @@ import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+interface SituationalReadingPayload {
+  readonly reasoningTrace?: string | null;
+  readonly corpusSituationalShift?: number | null;
+  readonly mindEvaluation?: {
+    readonly applicablePrinciples?: string[];
+  };
+  readonly olContinuityDelta?: number | null;
+  readonly dlContinuityDelta?: number | null;
+  readonly dbContinuityDelta?: number | null;
+  readonly injuryEvidence?: unknown;
+}
+
+interface FactorBreakdownPayload {
+  readonly rankingP?: number;
+  readonly independentEdge?: { readonly decision?: string; readonly expectedClv?: number };
+  readonly situationalReading?: SituationalReadingPayload;
+}
+
 function readNumber(fb: unknown, key: string): number | null {
   if (!fb || typeof fb !== "object") return null;
   const value = (fb as Record<string, unknown>)[key];
@@ -131,6 +149,12 @@ export async function GET(request: Request): Promise<NextResponse> {
       const isSaturated = pick.edgeScore != null && pick.edgeScore >= 100;
       const edgeIndexStatus = isSaturated ? "SATURATED_UNUSABLE" : "VALID";
 
+      const fb =
+        pick.factorBreakdown && typeof pick.factorBreakdown === "object"
+          ? (pick.factorBreakdown as FactorBreakdownPayload)
+          : null;
+      const sr = fb?.situationalReading;
+
       return {
         id: pick.id,
         sport: pick.game.sport.name,
@@ -150,24 +174,13 @@ export async function GET(request: Request): Promise<NextResponse> {
         riskLevel: pick.riskLevel,
         modelVersion: pick.modelVersion,
         reasoningShort: pick.reasoningShort,
-        reasoningTrace:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.reasoningTrace ??
-          pick.reasoningShort ??
-          null,
-        applicablePrinciples:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.mindEvaluation?.applicablePrinciples ??
-          [],
-        corpusSituationalShift:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.corpusSituationalShift ??
-          null,
-        olContinuityDelta:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.olContinuityDelta ?? null,
-        dlContinuityDelta:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.dlContinuityDelta ?? null,
-        dbContinuityDelta:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.dbContinuityDelta ?? null,
-        injuryEvidence:
-          (pick.factorBreakdown as Record<string, any>)?.situationalReading?.injuryEvidence ?? null,
+        reasoningTrace: sr?.reasoningTrace ?? pick.reasoningShort ?? null,
+        applicablePrinciples: sr?.mindEvaluation?.applicablePrinciples ?? [],
+        corpusSituationalShift: sr?.corpusSituationalShift ?? null,
+        olContinuityDelta: sr?.olContinuityDelta ?? null,
+        dlContinuityDelta: sr?.dlContinuityDelta ?? null,
+        dbContinuityDelta: sr?.dbContinuityDelta ?? null,
+        injuryEvidence: sr?.injuryEvidence ?? null,
       };
     })
     .sort((a, b) => {
