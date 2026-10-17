@@ -434,3 +434,17 @@ abla^2 \mathbf{u} + \mathbf{f}_{	ext{ext}}
   \lambda_{	ext{whistle}}(t) = \lambda_0 \cdot \exp\left(eta_d \cdot (	ext{DecibelLevel}(t) - 85) + eta_h \cdot \mathbb{I}(	ext{FoulOnVisiting})ight)
   \Delta 	ext{PenaltyRate}_{	ext{home}} = rac{1}{1 + e^{-(lpha_0 + \gamma \cdot 	ext{AcousticPressure})}} - 0.5
 - **Application**: Ground-truth parameterization of crowd auditory impact on 3rd down holding and pass-interference probability.
+
+
+### EQ-OPENALEX-002: NFL Combine Kinematic Trait Decay & Career Value Projection (2025/2026)
+- **Source**: Is the NFL Combine predictive of a defensive lineman's NFL career? (OpenAlex 2026 / DOI: 10.59720/24-208)
+- **Formula**:
+  	ext{PassRushProductivity}_{	ext{proj}} = eta_0 + eta_1 \cdot 	ext{SpeedScore}_{10	ext{yd}} + eta_2 \cdot 	ext{BroadJump} + eta_3 \cdot 	ext{WeightAdjustedShuttle} + \epsilon
+  	ext{TrenchBurstResidual} = 	ext{ActualSackPressures} - 	ext{ExpectedFromCombineBurst}
+- **Application**: Directly isolates athletic outlier defensive linemen whose pressure generation outpaces film grade, informing rookie and young pass-rusher disruption projections.
+
+### EQ-OPENALEX-003: Macro NFL Demand, TV Ratings & Public Steam Elasticity
+- **Source**: The Demand for NFL Football (OpenAlex DOI: 10.1007/978-1-4615-1461-9_2)
+- **Formula**:
+  	ext{HandleElasticity} = rac{\partial \ln(	ext{BettingVolume})}{\partial \ln(	ext{PrimetimeViewership})} pprox 1.42 \pm 0.11
+- **Application**: Quantifies the systematic retail liquidity premium on standalone primetime games (TNF, SNF, MNF), amplifying contrarian fade weighting on national broadcasts.

@@ -322,3 +322,10 @@ eq i ight\}
 - **Architecture**: Bi-directional citation graph mapping peer-reviewed sports science literature directly into Layer 2 situational priors:
   \mathbf{P}_{	ext{prior}} = \sum_{c \in \mathcal{C}} rac{	ext{CitationWeight}_c}{\sum 	ext{CitationWeight}} \cdot \mathbf{M}_c(\mathbf{X}_{	ext{game}})
 - **Application**: Continuous academic citation weighting validating situational adjustments against 250,000+ peer-reviewed sports science studies.
+
+
+### MOD-OPENALEX-002: Multi-Factor NFL Game Outcome Forecaster
+- **Source**: Modeling NFL Football Outcomes (OpenAlex DOI: 10.53555/eijms.v3i2.12)
+- **Architecture**: Penalized elastic net regression over composite efficiency metrics (EPA/play, success rate differential, turnover margin, trench pressure rate):
+  \hat{Y}_{	ext{margin}} = \mathbf{X} \hat{oldsymbol{eta}}, \quad \hat{oldsymbol{eta}} = rg\min_{oldsymbol{eta}} \left\{ \|\mathbf{y} - \mathbf{X}oldsymbol{eta}\|_2^2 + \lambda \left(lpha \|oldsymbol{eta}\|_1 + rac{1-lpha}{2} \|oldsymbol{eta}\|_2^2ight) ight\}
+- **Application**: Ground-truth statistical benchmark baseline ensuring Layer 2 situational overlays anchor around sparse, regularized football fundamentals.
