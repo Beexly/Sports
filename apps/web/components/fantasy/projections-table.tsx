@@ -40,6 +40,7 @@ export function ProjectionsTable({
   onToggleLock,
   onToggleExclude,
   isLive = false,
+  salaryIsReal = false,
 }: {
   players: readonly DfsPlayer[];
   locks: ReadonlySet<string>;
@@ -47,6 +48,8 @@ export function ProjectionsTable({
   onToggleLock: (id: string) => void;
   onToggleExclude: (id: string) => void;
   isLive?: boolean;
+  /** True only when a licensed salary feed priced these rows. */
+  salaryIsReal?: boolean;
 }) {
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "proj", dir: -1 });
 
@@ -92,7 +95,7 @@ export function ProjectionsTable({
               : { background: "rgba(196,191,182,0.12)", color: "#C4BFB6" }
           }
         >
-          {isLive ? "Live salaries" : "2026 NFL Slate"}
+          {salaryIsReal || isLive ? "Live salaries" : "Measured board"}
         </span>
       </div>
       <div className="overflow-x-auto">
@@ -147,9 +150,13 @@ export function ProjectionsTable({
                       {p.pos}
                     </span>
                   </td>
-                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">${(p.salary / 1000).toFixed(1)}k</td>
+                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">
+                    {salaryIsReal || isLive ? `$${(p.salary / 1000).toFixed(1)}k` : <span className="text-ion-3">—</span>}
+                  </td>
                   <td className="px-2 py-1.5 font-mono font-semibold tabular-nums text-ion-white">{p.proj.toFixed(1)}</td>
-                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">{value.toFixed(2)}</td>
+                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">
+                    {salaryIsReal || isLive ? value.toFixed(2) : <span className="text-ion-3">—</span>}
+                  </td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-2">{p.ceiling.toFixed(1)}</td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1" title="Last 5 games, points per game">
                     {p.formL5 != null ? p.formL5.toFixed(1) : <span className="text-ion-3">n/a</span>}
@@ -170,13 +177,15 @@ export function ProjectionsTable({
                   >
                     {p.matchupImpact != null ? Math.round(p.matchupImpact) : <span className="text-ion-3">n/a</span>}
                   </td>
-                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">{(p.own * 100).toFixed(1)}%</td>
+                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">
+                    {salaryIsReal || isLive ? `${(p.own * 100).toFixed(1)}%` : <span className="text-ion-3">n/a</span>}
+                  </td>
                   <td
                     className="px-2 py-1.5 font-mono font-semibold tabular-nums"
                     style={{ color: lev >= 0.35 ? "#FF4D2E" : lev <= 0.15 ? "#C4BFB6" : "#EDE8E0" }}
                     title="Leverage: ceiling vs ownership. Higher = more contrarian upside."
                   >
-                    {lev.toFixed(2)}
+                    {salaryIsReal || isLive ? lev.toFixed(2) : <span className="text-ion-3">—</span>}
                   </td>
                   <td className="px-2 py-1.5 text-right">
                     <button

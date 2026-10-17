@@ -266,6 +266,7 @@ export function DfsOptimizer({
             onToggleLock={(id) => toggle(locks, setLocks, id)}
             onToggleExclude={(id) => toggle(excludes, setExcludes, id)}
             isLive={imported}
+            salaryIsReal={salaryIsReal || imported}
           />
         </div>
       </div>
