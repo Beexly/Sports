@@ -24,10 +24,34 @@ callers are unaffected. Nothing here needs a paid API and nothing leaves the box
 import sys
 import os
 import argparse
+import json
 import queue
 import threading
 import time
+from pathlib import Path
 from typing import Callable, List, Optional, Tuple
+import urllib.request
+
+def _load_env_local() -> None:
+    """Load .env.local from repo root or parent directories if keys not in environ."""
+    candidates = [
+        Path(__file__).resolve().parents[2] / ".env.local",
+        Path.cwd() / ".env.local",
+        Path("C:/Users/Garrett/Sports/.env.local"),
+    ]
+    for p in candidates:
+        if p.exists():
+            try:
+                for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        os.environ.setdefault(k.strip(), v.strip(" '\""))
+                break
+            except Exception:
+                pass
+
+_load_env_local()
 
 #: SAPI Speak flags. SPF_ASYNC makes the COM call return immediately; the worker
 #: thread is a second layer, because some SAPI engines block on the audio device
@@ -44,6 +68,76 @@ def _clean_for_speech(text: str) -> str:
         text = text.replace(ch, "")
     text = text.replace("\u2014", ",").replace("\u2013", ",")
     return " ".join(text.split())
+
+def fish_audio_available() -> bool:
+    """True when FISH_AUDIO_API_KEY is configured."""
+    return bool(os.environ.get("FISH_AUDIO_API_KEY"))
+
+def speak_fish_audio(
+    text: str,
+    reference_id: Optional[str] = None,
+    model: Optional[str] = None,
+) -> bool:
+    """
+    Synthesizes and plays speech using Fish Audio's TTS API.
+    Uses Fish Audio's free S2.1 Pro tier ('s2.1-pro-free') and JARVIS voice model.
+    Plays in-memory WAV audio via winsound.PlaySound on Windows.
+    Returns True on success, False on error (allowing seamless SAPI fallback).
+    """
+    api_key = os.environ.get("FISH_AUDIO_API_KEY")
+    if not api_key:
+        return False
+
+    ref_id = reference_id or os.environ.get("FISH_AUDIO_MODEL_ID", "88b183bfbdda44a09ad4474712b967f4")
+    tts_model = model or os.environ.get("FISH_AUDIO_TTS_MODEL", "s2.1-pro-free")
+
+    cleaned = _clean_for_speech(text)
+    if not cleaned:
+        return False
+
+    payload = {
+        "text": cleaned,
+        "reference_id": ref_id,
+        "format": "wav",
+    }
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "model": tts_model,
+    }
+
+    try:
+        import winsound
+        import tempfile
+
+        req = urllib.request.Request(
+            "https://api.fish.audio/v1/tts",
+            data=json.dumps(payload).encode("utf-8"),
+            headers=headers,
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            audio_data = resp.read()
+
+        if audio_data and len(audio_data) > 44:
+            # Use temp wav file for reliable Windows sound device playback across all builds
+            temp_wav = os.path.join(tempfile.gettempdir(), f"gse_jarvis_{os.getpid()}_{int(time.time()*1000)}.wav")
+            try:
+                with open(temp_wav, "wb") as f:
+                    f.write(audio_data)
+                winsound.PlaySound(temp_wav, winsound.SND_FILENAME)
+                return True
+            finally:
+                if os.path.exists(temp_wav):
+                    try:
+                        os.remove(temp_wav)
+                    except Exception:
+                        pass
+        return False
+    except Exception as exc:
+        print(f"[Voice] Fish Audio TTS error ({exc}), falling back to SAPI.", file=sys.stderr)
+        return False
 
 
 def _com_voice():
@@ -99,15 +193,20 @@ def list_voices() -> List[Tuple[int, str]]:
         return []
 
 
-def speak(text: str, rate: int = 1, voice_index: Optional[int] = None) -> None:
+def speak(
+    text: str,
+    rate: int = 1,
+    voice_index: Optional[int] = None,
+    prefer_fish_audio: bool = True,
+) -> None:
     """
-    Speak text aloud using Windows native SAPI SpVoice. BLOCKING: returns when the
-    utterance finishes. Signature and behaviour are unchanged from the original,
-    apart from the optional voice selection.
+    Speak text aloud using Fish Audio JARVIS voice (if available) with Windows SAPI fallback.
+    BLOCKING: returns when the utterance finishes.
+    """
+    if prefer_fish_audio and fish_audio_available():
+        if speak_fish_audio(text):
+            return
 
-    A TTS failure is reported to stderr and swallowed: a machine that cannot speak
-    must never take down the caller.
-    """
     _co_init()  # defensive: correct on the main thread, essential if called elsewhere
     try:
         speaker = _com_voice()
@@ -131,7 +230,7 @@ class SpeechWorker:
     polling every few seconds must not repeat itself aloud every time it looks.
 
     ``enabled=False`` turns it into a logger, which is how a non-Windows host or a
-    ``--no-audio`` run behaves: identical call sites, no COM.
+    ``--no-audio`` run behaves.
     """
 
     def __init__(
@@ -141,18 +240,20 @@ class SpeechWorker:
         voice_index: Optional[int] = None,
         cooldown: float = 60.0,
         log_prefix: str = "[Voice]",
+        prefer_fish_audio: bool = True,
     ) -> None:
-        self.enabled = bool(enabled) and sapi_available()
+        self.enabled = bool(enabled) and (fish_audio_available() or sapi_available())
         self.rate = rate
         self.voice_index = voice_index
         self.cooldown = cooldown
         self.log_prefix = log_prefix
+        self.prefer_fish_audio = prefer_fish_audio
         self.spoken_count = 0
         self.suppressed_count = 0
         self._q: "queue.Queue[Optional[str]]" = queue.Queue()
         self._seen: dict = {}
         self._stop = threading.Event()
-        self._thread = threading.Thread(target=self._run, name="sapi-speaker", daemon=True)
+        self._thread = threading.Thread(target=self._run, name="speech-worker", daemon=True)
         self._thread.start()
 
     def say(self, text: str, cooldown: Optional[float] = None) -> bool:
@@ -199,6 +300,16 @@ class SpeechWorker:
                 continue
             if item is None:
                 break
+
+            if self.prefer_fish_audio and fish_audio_available():
+                try:
+                    if speak_fish_audio(item):
+                        self.spoken_count += 1
+                        print(f"{self.log_prefix} [JARVIS] spoke: {item[:90]}", flush=True)
+                        continue
+                except Exception as exc:
+                    print(f"{self.log_prefix} Fish Audio error ({exc}), falling back to SAPI", file=sys.stderr, flush=True)
+
             try:
                 speaker = _com_voice()
                 speaker.Rate = self.rate
@@ -208,7 +319,7 @@ class SpeechWorker:
                         speaker.Voice = voices.Item(self.voice_index)
                 speaker.Speak(item)
                 self.spoken_count += 1
-                print(f"{self.log_prefix} spoke: {item[:90]}", flush=True)
+                print(f"{self.log_prefix} [SAPI] spoke: {item[:90]}", flush=True)
             except Exception as exc:
                 # A device failure must not kill the thread: log and keep draining
                 # so the daemon stays responsive for the rest of the run.
@@ -255,11 +366,29 @@ def shutdown_shared_worker(timeout: float = 2.0) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="GSE Sovereign Voice Assistant")
     parser.add_argument("query", nargs="*", help="Query text to send to brain")
-    parser.add_argument("--speak", "-s", action="store_true", help="Speak the response aloud via Windows SAPI")
+    parser.add_argument("--speak", "-s", action="store_true", help="Speak the response aloud via voice assistant")
     parser.add_argument("--interactive", "-i", action="store_true", help="Interactive voice conversation loop")
     parser.add_argument("--list-voices", action="store_true", help="List installed SAPI voices and exit")
     parser.add_argument("--say", help="Speak this text directly (no brain round trip) and exit")
+    parser.add_argument("--test-jarvis", action="store_true", help="Test Fish Audio JARVIS voice synthesis and exit")
+    parser.add_argument("--sapi-only", action="store_true", help="Force local Windows SAPI only (bypass Fish Audio)")
     args = parser.parse_args()
+
+    prefer_fish = not args.sapi_only
+
+    if args.test_jarvis:
+        print("[Voice] Testing Fish Audio JARVIS TTS...")
+        print(f"  Fish Audio Key present: {fish_audio_available()}")
+        print(f"  Model ID: {os.environ.get('FISH_AUDIO_MODEL_ID', '88b183bfbdda44a09ad4474712b967f4')}")
+        print(f"  TTS Model: {os.environ.get('FISH_AUDIO_TTS_MODEL', 's2.1-pro-free')}")
+        test_msg = "Sovereign brain online. JARVIS speech synthesis operational."
+        success = speak_fish_audio(test_msg)
+        if success:
+            print("[Voice] SUCCESS: JARVIS voice synthesized and played successfully.")
+            return 0
+        else:
+            print("[Voice] FAIL: JARVIS voice synthesis failed.", file=sys.stderr)
+            return 1
 
     if args.list_voices:
         voices = list_voices()
@@ -271,8 +400,9 @@ def main() -> int:
         return 0
 
     if args.say:
+        print(f"Fish Audio available: {fish_audio_available()} (prefer_fish={prefer_fish})")
         print(f"SAPI available: {sapi_available()}")
-        speak(args.say)
+        speak(args.say, prefer_fish_audio=prefer_fish)
         return 0
 
     # Import router
@@ -284,14 +414,14 @@ def main() -> int:
         print("=== Sovereign Brain Voice Interface ===")
         print("Type your message (or 'exit' to quit). Responses will be spoken aloud.")
         print("-" * 50)
-        speak("Sovereign brain online. Standing by.")
+        speak("Sovereign brain online. Standing by.", prefer_fish_audio=prefer_fish)
         while True:
             try:
                 user_input = input("\nYou > ").strip()
                 if not user_input:
                     continue
                 if user_input.lower() in ("exit", "quit", "q"):
-                    speak("Shutting down voice interface.")
+                    speak("Shutting down voice interface.", prefer_fish_audio=prefer_fish)
                     print("Exiting.")
                     break
                 
@@ -299,7 +429,7 @@ def main() -> int:
                 response = query_brain(user_input)
                 print(f"\nBrain >\n{response}\n")
                 if args.speak or True:  # Default to voice in interactive mode
-                    speak(response)
+                    speak(response, prefer_fish_audio=prefer_fish)
             except (KeyboardInterrupt, EOFError):
                 print("\nInterrupted.")
                 break
@@ -308,7 +438,7 @@ def main() -> int:
         response = query_brain(query_str)
         print(response)
         if args.speak:
-            speak(response)
+            speak(response, prefer_fish_audio=prefer_fish)
     else:
         parser.print_help()
     return 0

@@ -17,8 +17,11 @@ dist/
 .env*
 !.env*.example
 
-# Prisma
+# Prisma & SQLite
 prisma/migrations/dev.db
+*.db
+*.db-shm
+*.db-wal
 
 # OS
 .DS_Store
