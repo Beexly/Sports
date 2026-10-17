@@ -73,7 +73,7 @@ export function PortfolioSim({
         </div>
       </div>
 
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-caution">{sampleLabel}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">{sampleLabel}</p>
 
       {lineups.length === 0 ? (
         <p className="text-sm text-ion-1">No lineups yet — generate kBest lineups first.</p>

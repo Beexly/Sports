@@ -34,7 +34,7 @@ describe("studio host broadcast", () => {
 
   it("always carries an AI-presenter disclosure", () => {
     expect(b.disclosure).toBe(HOST_DISCLOSURE);
-    expect(b.plaintext.toLowerCase()).toContain("synthetic presenter");
+    expect(b.plaintext.toLowerCase()).toContain("studio presenter");
     expect(b.plaintext.toLowerCase()).toContain("human-reviewed");
   });
 

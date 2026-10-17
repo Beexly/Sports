@@ -67,7 +67,7 @@ export function ProjectionsBadge({ pool }: { pool: ProjectionsPool }) {
   return (
     <div className={`inline-flex flex-wrap items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] ${tone.box}`}>
       <span aria-hidden="true" className={`inline-block h-1.5 w-1.5 rounded-full ${tone.dot}`} />
-      <span className={tone.text}>{live ? "Projections: live" : "Projections: 2026 Active Pool"}</span>
+      <span className={tone.text}>{live ? "Projections: live" : "Projections: illustrative"}</span>
       {live ? (
         <span className="text-ion-2">
           {fresh ? `· ${fresh}` : ""}
@@ -76,8 +76,8 @@ export function ProjectionsBadge({ pool }: { pool: ProjectionsPool }) {
       ) : (
         <span className="text-ion-2">
           {pool === "illustrative"
-            ? "· 2026 NFL Active Player Universe"
-            : "· 2026 active player universe"}
+            ? "· illustrative player pool"
+            : "· active player universe"}
         </span>
       )}
       <Link href="/integrations" className="text-ultraviolet underline underline-offset-2 hover:text-ultraviolet-glow">Data status →</Link>

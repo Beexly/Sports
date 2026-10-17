@@ -41,6 +41,7 @@ export default async function DfsSuitePage() {
     <FantasyShell
       eyebrow="DFS Optimizer"
       accent="cyan"
+      projectionsBadge={false}
       title={<>Build the lineup. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
       intro="Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
       note="2026 NFL Week 7 Main Slate. DraftKings Classic $50,000 cap. Projections, floors, ceilings, and ownership are live."

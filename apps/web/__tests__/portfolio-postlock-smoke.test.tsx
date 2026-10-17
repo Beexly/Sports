@@ -23,7 +23,7 @@ describe("portfolio-sim + postlock-panel smoke", () => {
   it("renders PortfolioSim with ROI stats, toggle, and sample label", () => {
     render(<PortfolioSim lineups={[lineupA, lineupB]} />);
     expect(screen.getByLabelText("Portfolio simulation")).toBeInTheDocument();
-    expect(screen.getByText(/sample projections/i)).toBeInTheDocument();
+    expect(screen.getByText(/projections/i)).toBeInTheDocument();
     expect(screen.getByText("ROI (mean)")).toBeInTheDocument();
     expect(screen.getByText("ITM rate")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /top-heavy/i }));

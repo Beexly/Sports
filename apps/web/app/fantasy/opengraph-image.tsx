@@ -9,7 +9,7 @@ import { BRAND_NAME } from "@/lib/brand";
  */
 
 export const runtime = "edge";
-export const alt = `${BRAND_NAME} · Galaxy Fantasy: DFS & season tools, sample until a licensed feed lands`;
+export const alt = `${BRAND_NAME} · Galaxy Fantasy: 2026 DFS & season-long analytical tools`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -82,7 +82,7 @@ export default async function Image() {
             maxWidth: 1000,
           }}
         >
-          DFS &amp; season tools. Sample until a licensed feed lands.
+          DFS &amp; season tools. 2026 NFL Active Slates.
         </div>
 
         <div
