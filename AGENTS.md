@@ -16117,3 +16117,5 @@ Window: posts after 4:20 PM CDT Fri 2026-10-16 through 9:08 PM CDT Fri 2026-10-1
 - @statyxio CeeDee Lamb post image, @DevyEusuf quoted 2027 consensus-board image, and @ScottBarrettDFB show thumbnail not transcribed. Videos were not played.
 - Home feed was checked only briefly in the first pass and not re-checked in the corrected pass.
 - No bio-link or external site data/API pages were visited; nflverse (nflreadpy), FantasyPtsData, FTN, ESPN and PFF are recorded as stated sources only. No NEW external data endpoint was identified in this window; the @GridironInfo_ drive-start chart footer re-confirms the nflverse (nflreadpy) source path for that account's charts.
+
+- 2026-10-16 (Jules): Added deterministic `GSE YoY Persistence` SHADOW metric in `packages/prediction-engine/src/expected-metrics/yoy-persistence.ts`. Calculates YoY EPA persistence with 200 play shrinkage.

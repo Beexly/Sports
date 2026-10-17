@@ -149,6 +149,16 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+
+// YoY Persistence (deterministic; SHADOW).
+export {
+  computeYoyEpaPersistence,
+  YOY_PERSISTENCE_SHRINKAGE_K,
+  type YoyPlay,
+  type YoyTeamSidePersistence,
+  type YoyPersistenceResult,
+} from "./yoy-persistence.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {
@@ -158,4 +168,5 @@ export {
   type PbpRow,
   type TransitionPair,
   type MappedExpectedMetricsPlays,
+  attachOwnEpaToYoyPlays,
 } from "./nflverse-pbp-mapper.js";
