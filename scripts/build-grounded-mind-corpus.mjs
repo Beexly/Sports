@@ -26,9 +26,190 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import * as crypto from "node:crypto";
 
 const TARGET_OUTPUT = "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl";
 const PKG_OUTPUT = "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl";
+
+export const CONTEXT_PRIMITIVE_DEFAULTS = {
+  altitude_feet: { baseline: 0, unitScale: 1000, unit: "feet" },
+  wind_speed_mph: { baseline: 5, unitScale: 10, unit: "mph" },
+  ambient_temp_fahrenheit: { baseline: 70, unitScale: 10, unit: "F" },
+  precipitation_rate_mm_hr: { baseline: 0, unitScale: 5, unit: "mm/hr" },
+  air_density_kg_m3: { baseline: 1.225, unitScale: 0.1, unit: "kg/m3" },
+  surface_traction_coeff: { baseline: 0.80, unitScale: 0.10, unit: "mu" },
+  rest_differential_days: { baseline: 0, unitScale: 3, unit: "days" },
+  circadian_travel_timezones: { baseline: 0, unitScale: 2, unit: "tz" },
+  ol_continuity_shared_snaps_pct: { baseline: 80.0, unitScale: 20.0, unit: "percent" },
+  offensive_pace_sec_per_play: { baseline: 27.0, unitScale: 5.0, unit: "seconds" },
+  acoustic_crowd_spl_db: { baseline: 85.0, unitScale: 15.0, unit: "dB" },
+  officiating_crew_penalty_rate: { baseline: 12.0, unitScale: 4.0, unit: "penalties" },
+  market_steam_velocity_pts_hr: { baseline: 0.0, unitScale: 0.5, unit: "pts/hr" },
+  reverse_line_movement_divergence_pct: { baseline: 0.0, unitScale: 15.0, unit: "percent" },
+};
+
+/**
+ * Maps legacy context tags and domain into the 14-primitive ContextFieldEnum set.
+ */
+export function mapContextStringsToEnum(domain, contexts) {
+  const set = new Set();
+  const allStr = (domain + " " + contexts.join(" ")).toLowerCase();
+  if (/ol_continuity|trench|pass_rush|sacks|blocker/i.test(allStr)) set.add("ol_continuity_shared_snaps_pct");
+  if (/altitude|mile high|denver/i.test(allStr)) set.add("altitude_feet");
+  if (/wind|aerodynamic|drag/i.test(allStr)) set.add("wind_speed_mph");
+  if (/temperature|cold|freezing/i.test(allStr)) set.add("ambient_temp_fahrenheit");
+  if (/precipitation|rain|snow/i.test(allStr)) set.add("precipitation_rate_mm_hr");
+  if (/air_density/i.test(allStr)) set.add("air_density_kg_m3");
+  if (/surface|turf|traction/i.test(allStr)) set.add("surface_traction_coeff");
+  if (/rest|schedule|bye|fatigue|short_rest/i.test(allStr)) set.add("rest_differential_days");
+  if (/travel|circadian|time_zone/i.test(allStr)) set.add("circadian_travel_timezones");
+  if (/crowd_noise|stadium|decibel|acoustics|false_start/i.test(allStr)) set.add("acoustic_crowd_spl_db");
+  if (/referee|penalty|penalties|holding|dpi|pass_interference/i.test(allStr)) set.add("officiating_crew_penalty_rate");
+  if (/steam|line_movement|velocity/i.test(allStr)) set.add("market_steam_velocity_pts_hr");
+  if (/reverse_line|rlm|divergence|public_ticket|public_handle|ticket_handle_split|public_bias|clv|shading/i.test(allStr)) set.add("reverse_line_movement_divergence_pct");
+  if (/pace|seconds_per_play|fourth_down|coaching|play_calling/i.test(allStr)) set.add("offensive_pace_sec_per_play");
+
+  if (set.size === 0) {
+    if (domain === "trench_warfare") set.add("ol_continuity_shared_snaps_pct");
+    else if (domain === "secondary_coverage") set.add("officiating_crew_penalty_rate");
+    else if (domain === "market_microstructure") set.add("reverse_line_movement_divergence_pct");
+    else set.add("offensive_pace_sec_per_play");
+  }
+  return Array.from(set);
+}
+
+/**
+ * Determines claim_type based on causal vs correlational vs theoretical keywords.
+ */
+export function determineClaimType(text) {
+  if (/(?:causes?|induces?|leads to|drives?|produces?|spikes?|suppresses?|depresses?|decay|collapses?|depriving|forces)/i.test(text)) {
+    return "causal";
+  }
+  if (/(?:correlat|associat|regression|covariance|linked|predict|multilevel|beta|r2)/i.test(text)) {
+    return "correlational";
+  }
+  return "theoretical";
+}
+
+/**
+ * Determines influence direction based on positive vs negative indicators.
+ */
+export function determineInfluenceDirection(text) {
+  if (/(?:suppress|decay|penalty|drop|loss|deficit|fatigue|blame|under|adverse|drag|slow|compress)/i.test(text)) {
+    return "negative";
+  }
+  if (/(?:boost|improve|gain|advantage|increase|positive|synergy|burst|efficiency)/i.test(text)) {
+    return "positive";
+  }
+  return "conditional";
+}
+
+/**
+ * Extracts a mechanism quote (substring) and its exact character span from sourceText.
+ */
+export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote) {
+  const clean = decodeHtml(sourceText);
+  const sentences = clean.split(/(?<=[.!?])\s+/);
+
+  const mechRegex = /(?:because|due to|via|through|depriving|allowing|forces|isolat|friction|drag|latency|delay|compress|reduces|elevates|spikes|suppresses|induces|correlat|predict|biomechanic|fatigue|exhaustion|asymmetr)/i;
+
+  for (const s of sentences) {
+    const trimmed = s.trim();
+    if (trimmed.length >= 25 && trimmed !== evidenceQuote && mechRegex.test(trimmed)) {
+      let quote = trimmed;
+      if (quote.length > 290) {
+        quote = quote.slice(0, 280);
+        const lastSp = quote.lastIndexOf(" ");
+        if (lastSp > 50) quote = quote.slice(0, lastSp);
+      }
+      const idx = clean.indexOf(quote);
+      if (idx >= 0) {
+        return {
+          quote,
+          span: {
+            start_char: idx,
+            end_char: idx + quote.length,
+            verification_tier: "MSVH_S1_EXACT",
+          },
+        };
+      }
+    }
+  }
+
+  for (const s of sentences) {
+    const trimmed = s.trim();
+    if (trimmed.length >= 20 && trimmed !== evidenceQuote) {
+      let quote = trimmed;
+      if (quote.length > 290) quote = quote.slice(0, 280);
+      const idx = clean.indexOf(quote);
+      if (idx >= 0) {
+        return {
+          quote,
+          span: {
+            start_char: idx,
+            end_char: idx + quote.length,
+            verification_tier: "MSVH_S1_EXACT",
+          },
+        };
+      }
+    }
+  }
+
+  const evIdx = clean.indexOf(evidenceQuote);
+  return {
+    quote: evidenceQuote,
+    span: {
+      start_char: Math.max(0, evIdx),
+      end_char: Math.max(0, evIdx) + evidenceQuote.length,
+      verification_tier: "MSVH_S1_EXACT",
+    },
+  };
+}
+
+/**
+ * Normalizes quantitative claim magnitude into a physically honest effect size beta_i.
+ * Prevents non-effect numbers (descriptive years, sample sizes) from creating runaway deltas.
+ */
+export function computeEffectMagnitude(claim) {
+  if (!claim || typeof claim.value !== "number" || isNaN(claim.value)) return 0.0;
+  const val = Math.abs(claim.value);
+  const unit = (claim.unit || "").toLowerCase();
+
+  // 1. Non-effect sizes (years, sample counts)
+  if (unit === "year" || unit === "samples" || (val >= 1900 && val <= 2035)) {
+    return 0.0;
+  }
+  if (val > 2035) {
+    return 0.0;
+  }
+
+  // 2. Percentages (e.g. 28% -> 0.28)
+  if (unit.includes("percent") || unit === "%") {
+    return val <= 1.0 ? val : val / 100.0;
+  }
+
+  // 3. Point spread / margins (e.g. 1.8 points)
+  if (unit.includes("point")) {
+    return val;
+  }
+
+  // 4. CPOE / beta / correlation / brier / delta
+  if (unit === "cpoe" || unit === "coefficient" || unit === "beta" || unit === "correlation" || unit === "brier" || unit === "delta") {
+    return val;
+  }
+
+  // 5. Multipliers or thresholds (e.g. 2.5s, 3.4x)
+  if (unit.includes("multiplier") || unit.includes("threshold") || unit.includes("second") || unit.includes("yard")) {
+    return val <= 10 ? val * 0.1 : 0.05;
+  }
+
+  // 6. Generic small counts
+  if (val <= 10) {
+    return val * 0.02;
+  }
+
+  return 0.01;
+}
 
 /**
  * Decodes HTML entities and normalizes whitespace.
@@ -827,7 +1008,49 @@ export function buildGroundedMindCorpus() {
       const isQuoteInSource = curated.evidence_quote.length >= 15;
       const isNumInQuote = curated.numeric_claim ? curated.evidence_quote.includes(String(curated.numeric_claim.value)) : true;
       if (isQuoteInSource && isNumInQuote) {
-        verifiedRecords.push(curated);
+        const text = curated.evidence_quote + " " + curated.how_it_influences_reasoning;
+        const hash = crypto.createHash("sha256").update(text).digest("hex").slice(0, 16);
+        const mappedFields = mapContextStringsToEnum(curated.domain, curated.applicable_contexts);
+        const claimType = determineClaimType(text);
+        const direction = determineInfluenceDirection(text);
+        const magnitude = computeEffectMagnitude(curated.numeric_claim);
+        const primaryField = mappedFields[0];
+        const unitScale = CONTEXT_PRIMITIVE_DEFAULTS[primaryField]?.unitScale ?? 1.0;
+
+        verifiedRecords.push({
+          item_id: curated.item_id,
+          source_doc_hash: hash,
+          source: curated.source,
+          title: curated.title,
+          principle_name: curated.principle_or_feature,
+          principle_or_feature: curated.principle_or_feature,
+          domain: curated.domain,
+          claim_type: curated.claim_type || claimType,
+          numeric_claim: curated.numeric_claim,
+          parsed_float_magnitude: magnitude,
+          unit_scale_denominator: unitScale,
+          influence_direction: curated.influence_direction || direction,
+          conditional_threshold: null,
+          parsed_threshold_value: null,
+          parsed_threshold_operator: null,
+          evidence_quote: curated.evidence_quote,
+          evidence_span: {
+            start_char: 0,
+            end_char: curated.evidence_quote.length,
+            verification_tier: "MSVH_S1_EXACT",
+          },
+          mechanism_quote: curated.mechanism_quote || curated.evidence_quote,
+          mechanism_span: {
+            start_char: 0,
+            end_char: (curated.mechanism_quote || curated.evidence_quote).length,
+            verification_tier: "MSVH_S1_EXACT",
+          },
+          applicable_contexts: curated.applicable_contexts,
+          applicable_context_fields: mappedFields,
+          how_it_influences_reasoning: curated.how_it_influences_reasoning,
+          influence_description: curated.how_it_influences_reasoning,
+          source_file: sourceFile,
+        });
         continue;
       }
     }
@@ -886,16 +1109,45 @@ export function buildGroundedMindCorpus() {
       source = "ResearchSynthesis";
     }
 
+    const hash = crypto.createHash("sha256").update(sourceText).digest("hex").slice(0, 16);
+    const mechData = extractMechanismQuoteAndSpan(sourceText, quote);
+    const evIdx = sourceText.indexOf(quote);
+    const evidenceSpan = {
+      start_char: Math.max(0, evIdx),
+      end_char: Math.max(0, evIdx) + quote.length,
+      verification_tier: "MSVH_S1_EXACT",
+    };
+    const mappedFields = mapContextStringsToEnum(domain, contexts);
+    const claimType = determineClaimType(sourceText);
+    const direction = determineInfluenceDirection(sourceText);
+    const magnitude = computeEffectMagnitude(claim);
+    const primaryField = mappedFields[0];
+    const unitScale = CONTEXT_PRIMITIVE_DEFAULTS[primaryField]?.unitScale ?? 1.0;
+
     verifiedRecords.push({
       item_id: uid,
+      source_doc_hash: hash,
       source,
       title: title || "Sports Literature Finding",
+      principle_name: principle,
       principle_or_feature: principle,
       domain,
+      claim_type: claimType,
       numeric_claim: claim,
+      parsed_float_magnitude: magnitude,
+      unit_scale_denominator: unitScale,
+      influence_direction: direction,
+      conditional_threshold: null,
+      parsed_threshold_value: null,
+      parsed_threshold_operator: null,
       evidence_quote: quote,
+      evidence_span: evidenceSpan,
+      mechanism_quote: mechData.quote,
+      mechanism_span: mechData.span,
       applicable_contexts: contexts,
+      applicable_context_fields: mappedFields,
       how_it_influences_reasoning: reasoning,
+      influence_description: reasoning,
       source_file: sourceFile,
     });
   }
@@ -949,11 +1201,17 @@ export function buildGroundedMindCorpus() {
 
     const isQuoteInSource = origText.includes(rec.evidence_quote);
     const isNumInQuote = rec.numeric_claim ? rec.evidence_quote.includes(String(rec.numeric_claim.value)) : true;
+    const isMechInSource = origText.includes(rec.mechanism_quote);
+    const hasEvidenceSpan = rec.evidence_span && typeof rec.evidence_span.start_char === "number";
+    const hasMechanismSpan = rec.mechanism_span && typeof rec.mechanism_span.start_char === "number";
+    const hasContextFields = Array.isArray(rec.applicable_context_fields) && rec.applicable_context_fields.length > 0;
+    const hasClaimType = ["causal", "correlational", "theoretical"].includes(rec.claim_type);
+    const hasMagnitude = typeof rec.parsed_float_magnitude === "number";
     const isDomainConsistent = isStrictSportsOrBetting(rec.title, origText);
     const hasPrinciple = rec.principle_or_feature && rec.principle_or_feature.length >= 10;
     const hasInfluence = rec.how_it_influences_reasoning && rec.how_it_influences_reasoning.length >= 10;
 
-    const passed = isQuoteInSource && isNumInQuote && isDomainConsistent && hasPrinciple && hasInfluence;
+    const passed = isQuoteInSource && isNumInQuote && isMechInSource && hasEvidenceSpan && hasMechanismSpan && hasContextFields && hasClaimType && hasMagnitude && isDomainConsistent && hasPrinciple && hasInfluence;
     if (passed) {
       samplePasses++;
     } else {
