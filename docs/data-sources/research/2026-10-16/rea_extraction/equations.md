@@ -362,3 +362,18 @@
 - **Formula**:
   p_{	ext{implied}}(p) = rac{p^\gamma}{p^\gamma + (1-p)^\gamma}, \quad \gamma \in (0, 1)
 - **Application**: Closed-form correction for longshot overpricing and heavy favorite underpricing across binary outcome markets.
+
+
+### EQ-BETTING-001: Odds-Only Efficient Market Hypothesis Regressor
+- **Source**: Forecast Sports Outcomes under Efficient Market Hypothesis: Theoretical and Experimental Analysis of Odds-Only and Generalised Linear Models (arXiv:2604.17194)
+- **Formula**:
+  \ln\left(rac{P_i}{1 - P_i}ight) = eta_0 + eta_1 \cdot \ln\left(rac{p_{	ext{odds}, i}}{1 - p_{	ext{odds}, i}}ight) + \sum_k \gamma_k X_{ik}
+  	ext{BiasDivergence} = eta_1 - 1.0
+- **Application**: Quantifies deviations from pure market efficiency ($eta_1 = 1$), isolating segments where supplementary situational factors {ik}$ possess positive explanatory weight over closing odds.
+
+### EQ-BETTING-002: Social Influencer / Public Noise Fade Differential
+- **Source**: The Statistical Profitability of Social Media Sports Betting Influencers (arXiv:2604.08251)
+- **Formula**:
+  	ext{NoisePressure}_j = \sum_{m} 	ext{FollowerWeight}_m \cdot 	ext{SentimentDirection}_{m, j}
+  	ext{CLVDivergence} = 	ext{CLV}(t_{	ext{close}}) - 	ext{CLV}(t_{	ext{influencer\_surge}})
+- **Application**: Formally captures retail liquidity surges caused by social media tout consensus, triggering contrarian value opportunities when lines inflate past fundamental pricing.

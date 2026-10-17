@@ -279,3 +279,10 @@
   A_{ijk} = 	ext{ScoreMargin}(i 	o j 	ext{ in regime } k)
   R_i = 	ext{TopEigenvector}\left(\sum_k \omega_k A_{\cdot\cdot k}ight)
 - **Application**: Non-transitive team strength rating that accounts for matchup style clashes and opponent strength adjustments beyond Elo.
+
+
+### MOD-BETTING-001: In-Play Anomalous Volatility Detector
+- **Source**: Integrity at Stake: Statistical Detection of Anomalous In-Play Betting in Football (arXiv:2605.30209)
+- **Architecture**: Poisson-hazard jump process monitoring real-time quote revisions:
+  \lambda_t = \lambda_0 \cdot \exp\left(	heta^T Z_tight) + \sum_{k: t_k < t} \delta \cdot e^{-eta (t - t_k)}
+- **Application**: Distinguishes structural injury/red-card information shocks from liquidity-driven head fakes in live in-game betting markets.
