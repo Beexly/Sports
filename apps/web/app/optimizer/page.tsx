@@ -53,7 +53,12 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
           </p>
         </section>
 
-        <OptimizerWorkspace pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
+        <OptimizerWorkspace
+          pool={gatedPool}
+          canUseFantasyFull={viewer.canUseFantasyFull}
+          dfsSlate={dfsRows}
+          dfsSlateLabel={dfsSlateLabel}
+        />
       </main>
       <Footer />
     </div>
