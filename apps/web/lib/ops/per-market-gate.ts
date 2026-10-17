@@ -94,6 +94,27 @@ export function evaluateMarketGate(
   const floors: MarketGateFloors =
     market === "MONEYLINE" && options.strictMl ? { ...base, resFloor: ML_RES_FLOOR_STRICT } : base;
 
+  const finiteFields: Array<[string, number | null]> = [
+    ["n", inputs.n],
+    ["ece", inputs.ece],
+    ["brier", inputs.brier],
+    ["reliability", inputs.reliability],
+    ["resolution", inputs.resolution],
+    ["baseRate", inputs.baseRate],
+    ["eceDebiased", inputs.eceDebiased],
+  ];
+  const nonFinite = finiteFields.filter(([, v]) => v !== null && !Number.isFinite(v));
+  if (nonFinite.length > 0) {
+    return {
+      status: "FAIL",
+      market,
+      floors,
+      reasons: [
+        `non-finite inputs (${nonFinite.map(([k]) => k).join(", ")}) — fail closed; garbage metrics never PASS`,
+      ],
+    };
+  }
+
   if (inputs.n < floors.minN) {
     return {
       status: "INSUFFICIENT",
