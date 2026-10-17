@@ -4480,6 +4480,24 @@ export {
   type DomainBreakdown,
 } from "./reasoning/corpus-evaluator.js";
 export {
+  evaluateMindReasoning,
+  loadMindCorpus,
+  findMindCorpusPaths,
+  matchApplicablePrinciples,
+  generateSituationalPick,
+  generateSameGameParlay,
+  generateFantasyDfsAdvice,
+  synthesizeMindReasoningTrace,
+  type MindRecord,
+  type MindPrincipleMatch,
+  type MindSituationalPick,
+  type ParlayLeg,
+  type MindSameGameParlay,
+  type FantasyDfsPlayerComp,
+  type MindFantasyDfsAdvice,
+  type MindEvaluationResult,
+} from "./reasoning/mind-reasoning.js";
+export {
   registerDeclarations,
   SIGNAL_FAMILIES,
   type SignalDeclaration,

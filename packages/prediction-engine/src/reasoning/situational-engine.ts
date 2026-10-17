@@ -17,6 +17,10 @@ import {
   evaluateFullCorpus,
   type CorpusEvaluation,
 } from "./corpus-evaluator.js";
+import {
+  evaluateMindReasoning,
+  type MindEvaluationResult,
+} from "./mind-reasoning.js";
 
 export interface GameContext {
   readonly homeTeam: string;
@@ -64,6 +68,8 @@ export interface SituationalReading {
   readonly corpusEvaluation: CorpusEvaluation;
   /** Final scaled shift applied in probability space */
   readonly corpusSituationalShift: number;
+  /** Autonomous Mind reasoning evaluation from 3,085 literature records */
+  readonly mindEvaluation: MindEvaluationResult;
 }
 
 export type SituationalEval =
@@ -134,6 +140,9 @@ export function interpretSituation(
   });
   const corpusSituationalShift = corpusEvaluation.situationalAdjustment * corpusEvaluation.evaluatorWeight;
 
+  // Autonomous Mind reasoning evaluation from 3,085 literature records
+  const mindEvaluation = evaluateMindReasoning(context);
+
   const signalImplied = weight > 0 ? weighted / weight : null;
   const divergence = signalImplied === null ? null : signalImplied - market;
   const reasoningTrace = [
@@ -149,6 +158,7 @@ export function interpretSituation(
       : `consistency failed: ${aggregated.data.consistency.violations.join(" | ")}`,
     aggregated.data.traceSummary,
     `Corpus evaluator: touched ${corpusEvaluation.itemsEvaluatedCount} items (${corpusEvaluation.totalLoadedCount} loaded, ${corpusEvaluation.itemsSkippedCount} skipped, ${corpusEvaluation.coveragePct.toFixed(1)}% coverage). Net shift: ${corpusSituationalShift.toFixed(6)} (weight ${corpusEvaluation.evaluatorWeight}).`,
+    `Mind Reasoning: ${mindEvaluation.applicablePrinciples.length} principles active. Lean: ${mindEvaluation.situationalPick.selection} (${(mindEvaluation.situationalPick.modelFairProbability * 100).toFixed(1)}% fair vs ${(market * 100).toFixed(1)}% market). SGP: ${mindEvaluation.sameGameParlay.name}.`,
   ].join(". ");
 
   return {
@@ -167,6 +177,7 @@ export function interpretSituation(
       publishablePick: false,
       corpusEvaluation,
       corpusSituationalShift,
+      mindEvaluation,
     },
   };
 }

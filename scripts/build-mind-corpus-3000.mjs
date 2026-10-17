@@ -337,12 +337,17 @@ export function buildMindCorpus() {
     const source = detectSource(raw, sourceFile);
     
     // Extract exact verbatim evidence quote
+    if (!sourceText || sourceText.trim().length < 20) {
+      // Must have actual descriptive content to be admitted to the mind
+      continue;
+    }
+
     const evidenceQuote = extractExactEvidenceQuote(sourceText);
     
-    // Rigorous assertion: evidence quote MUST be an exact verbatim substring
-    if (!sourceText.includes(evidenceQuote)) {
+    // Rigorous assertion: evidence quote MUST be a non-empty, exact verbatim substring >= 15 chars
+    if (!evidenceQuote || evidenceQuote.trim().length < 15 || !sourceText.includes(evidenceQuote)) {
       mismatchCount++;
-      console.error(`ERROR: Substring mismatch on ${uid}`);
+      console.error(`ERROR: Substring mismatch or empty quote on ${uid}`);
       continue;
     }
 
