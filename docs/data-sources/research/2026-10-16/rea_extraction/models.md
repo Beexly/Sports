@@ -286,3 +286,10 @@
 - **Architecture**: Poisson-hazard jump process monitoring real-time quote revisions:
   \lambda_t = \lambda_0 \cdot \exp\left(	heta^T Z_tight) + \sum_{k: t_k < t} \delta \cdot e^{-eta (t - t_k)}
 - **Application**: Distinguishes structural injury/red-card information shocks from liquidity-driven head fakes in live in-game betting markets.
+
+
+### MOD-PHYSICS-001: Atmospheric Drag & Magnus Trajectory Simulator
+- **Source**: Navier-Stokes PDE Solvers & Aerodynamic Boundary Layers
+- **Architecture**: 4th-order Runge-Kutta numerical integration of 3D projectile motion under turbulent wind fields:
+  rac{d\mathbf{v}}{dt} = \mathbf{g} - rac{1}{2m} ho C_d A v_{	ext{rel}} \mathbf{v}_{	ext{rel}} + rac{1}{2m} ho C_L A \left(oldsymbol{\omega} 	imes \mathbf{v}_{	ext{rel}}ight)
+- **Application**: Real-time ball flight simulation under gusting winds, outputting exact field goal percentage drops and deep ball completion variance for live prop/total lines.

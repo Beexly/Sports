@@ -377,3 +377,21 @@
   	ext{NoisePressure}_j = \sum_{m} 	ext{FollowerWeight}_m \cdot 	ext{SentimentDirection}_{m, j}
   	ext{CLVDivergence} = 	ext{CLV}(t_{	ext{close}}) - 	ext{CLV}(t_{	ext{influencer\_surge}})
 - **Application**: Formally captures retail liquidity surges caused by social media tout consensus, triggering contrarian value opportunities when lines inflate past fundamental pricing.
+
+
+### EQ-PHYSICS-001: Incompressible Navier-Stokes Spatial Density & Ball Aerodynamics
+- **Source**: Navier-Stokes Mathematical Corpus & Fluid Dynamics (arXiv:2610.15000+ series)
+- **Formula**:
+  ho \left(rac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot 
+abla \mathbf{u}ight) = -
+abla p + \mu 
+abla^2 \mathbf{u} + \mathbf{f}_{	ext{ext}}
+  \mathbf{F}_{	ext{drag}} = rac{1}{2} C_d(Re) \cdot ho(h, T) \cdot A \cdot \|\mathbf{v} - \mathbf{w}\| (\mathbf{v} - \mathbf{w})
+  ho(h, T) = ho_0 \cdot \exp\left(-rac{M g h}{R T}ight)
+- **Application**: Ground-truth barometric ball flight physics. Computes non-linear trajectory decay and air density $ho(h, T)$ as an exact function of altitude $ (e.g. Mile High 5,280 ft) and ambient temperature $, governing pass flight velocity and field goal maximum carry.
+
+### EQ-PRED-005: Multi-Modal Spatio-Temporal Prediction Tensor
+- **Source**: Prediction Model Sports Corpus (arXiv:2610.16383 & arXiv:2609.10498)
+- **Formula**:
+  \hat{\mathbf{Y}}_{t+\Delta t} = \mathcal{W}_{	ext{spatial}} st \mathbf{S}_t + \mathcal{W}_{	ext{temporal}} \star \mathbf{H}_t + \mathbf{b}_{	ext{context}}
+- **Application**: Integrates optical player tracking tensor $\mathbf{S}_t$ with historical tendency matrix $\mathbf{H}_t$ to project drive success rates under fatigue degradation.
