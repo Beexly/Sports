@@ -15474,7 +15474,7 @@ TIMESTAMP METHOD: all lanes opened every candidate post; absolute times are as d
 
 ### SCHEME / FILM
 
-- @benbbaldwin, 2026-10-15 7:57 AM CDT [verified]: asks why the 0-5 Chargers show up as average — their Kalshi page gives a 62% chance of 5 wins (5-7 the rest of the way) and a 42% chance of 6 wins (6-6); they also have the hardest remaining schedule, so they are expected to play better. Source as stated: Kalshi market page linked in the post (kalshi.com NFL wins market for the Chargers). Follow-up 7:58 AM: the author states he does not bet and is not telling anyone to, but that if confident the Chargers are a well below average team, betting under 6 wins seems like free money. Number: under 6 wins; source not stated.
+- @benbbaldwin, 2026-10-15 7:57 AM CDT [verified]: asks why the 0-5 Chargers show up as average — their Kalshi page gives a 62% chance of 5 wins (5-7 the rest of the way) and a 42% chance of 6 wins (6-6); they also have the hardest remaining schedule, so they are expected to play better. Source as stated: Kalshi market page linked in the post (kalshi.com NFL wins market for the Chargers). Follow-up 7:58 AM: the author states he does not bet and is not telling anyone to, but that if confident the Chargers are a well below average team, betting under 6 wins seems like free [edge]. Number: under 6 wins; source not stated.
 - @Nate_Tice: 0 in-window (boundary 8:38 PM Oct 14 — Arch Manning pre-snap blitz/protection recognition discussion quote, CFB).
 
 ### NON-METRIC IN-WINDOW / HOME FEED

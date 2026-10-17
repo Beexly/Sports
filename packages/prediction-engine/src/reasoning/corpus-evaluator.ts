@@ -648,7 +648,7 @@ export function parsePaperPremise(item: CorpusRawItem): ParsePaperResult {
     };
   }
 
-  if (/reverse line|steam|ticket handle|order book|liquidity|line movement|arbitrage|sharp money|sharpapi|public money|handle percentage/i.test(text)) {
+  if (/reverse line|steam|ticket handle|order book|liquidity|line movement|arbitrage|sharp capital|sharpapi|public money|handle percentage/i.test(text)) {
     const beta = (explicitPct ?? 5.2) / 100.0;
     return {
       skipped: false,
