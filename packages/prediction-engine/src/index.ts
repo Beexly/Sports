@@ -1411,6 +1411,8 @@ export {
   SUCCESS_YARDAGE_FRACTION,
   buildDrives,
   DRIVES_MODEL_VERSION,
+  computeSequencingVolatility,
+  SEQUENCING_VOLATILITY_MODEL_VERSION,
   buildEpCalibration,
   buildWpCalibration,
 } from "./expected-metrics/index.js";
@@ -1499,6 +1501,7 @@ export {
   isPublicPicksEnabled,
 } from "./honesty/commit-reveal.js";
 export type { PickCommitment, PickCommitmentBody } from "./honesty/commit-reveal.js";
+export type { SequencingVolatilityWindowOutput, SequencingVolatilityResult } from "./expected-metrics/sequencing-volatility.js";
 
 // Fire authority ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 // Glass Ledger hash-chain math (pure; persistence is ingestion-pipeline)

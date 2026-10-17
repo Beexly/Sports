@@ -42,7 +42,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -81,6 +81,17 @@ export interface TransitionPair {
   readonly refDelta: number;
 }
 
+export interface SequencingPlay {
+  readonly playId: string;
+  readonly gameId: string;
+  readonly season: number;
+  readonly week: number;
+  readonly teamId: string;
+  readonly driveId: number | null;
+  readonly playIndex: number;
+  readonly playType: "pass" | "run";
+}
+
 export interface MappedExpectedMetricsPlays {
   readonly season: number;
   readonly seasonType: "REG";
@@ -105,6 +116,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly sequencingPlays: readonly SequencingPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +392,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const sequencingPlays: SequencingPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -582,6 +595,18 @@ export function mapNflversePbpToExpectedMetrics(
             turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
           }
         : null;
+      if (isScrimmage) {
+        sequencingPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          season,
+          week: num(row["week"]),
+          teamId: row["posteam"] ?? "",
+          driveId: key,
+          playIndex: k,
+          playType: playType as "pass" | "run",
+        });
+      }
       drivePlays.push({
         playId,
         gameId: row["game_id"] ?? "",
@@ -611,6 +636,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    sequencingPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

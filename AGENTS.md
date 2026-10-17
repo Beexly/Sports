@@ -16117,3 +16117,7 @@ Window: posts after 4:20 PM CDT Fri 2026-10-16 through 9:08 PM CDT Fri 2026-10-1
 - @statyxio CeeDee Lamb post image, @DevyEusuf quoted 2027 consensus-board image, and @ScottBarrettDFB show thumbnail not transcribed. Videos were not played.
 - Home feed was checked only briefly in the first pass and not re-checked in the corrected pass.
 - No bio-link or external site data/API pages were visited; nflverse (nflreadpy), FantasyPtsData, FTN, ESPN and PFF are recorded as stated sources only. No NEW external data endpoint was identified in this window; the @GridironInfo_ drive-start chart footer re-confirms the nflverse (nflreadpy) source path for that account's charts.
+
+### SHADOW expected metric: sequencing-volatility
+
+Added `sequencing-volatility` shadow expected metric, computing the standard deviation of drive-to-drive predictability of caller play sequencing. Computes on point-in-time `season-to-date` and `rolling-8-distinct-games` windows using Shannon conditional entropy `H(next|current)`. Includes tests and exported interfaces in `index.ts`. No public exposure. Registered in birth certificates.

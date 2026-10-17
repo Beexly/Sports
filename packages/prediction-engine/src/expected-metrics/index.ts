@@ -159,3 +159,11 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Sequencing Volatility (SHADOW)
+export {
+  computeSequencingVolatility,
+  SEQUENCING_VOLATILITY_MODEL_VERSION,
+  type SequencingVolatilityWindowOutput,
+  type SequencingVolatilityResult,
+} from "./sequencing-volatility.js";
