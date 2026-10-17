@@ -13,6 +13,10 @@ import {
   type AggregationTrace,
   type SignalObservation,
 } from "./aggregation-trace.js";
+import {
+  evaluateFullCorpus,
+  type CorpusEvaluation,
+} from "./corpus-evaluator.js";
 
 export interface GameContext {
   readonly homeTeam: string;
@@ -30,6 +34,17 @@ export interface GameContext {
   readonly decisionWindowMs: number;
   /** Families that count as relevant. Omit to treat every family as relevant. */
   readonly relevantFamilies?: readonly SignalFamily[];
+  /** Optional physiological, aerodynamic, and market situational fields */
+  readonly altitudeFt?: number;
+  readonly windSpeedMph?: number;
+  readonly temperatureF?: number;
+  readonly crowdDecibels?: number;
+  readonly publicTicketPct?: number;
+  readonly publicHandlePct?: number;
+  readonly timeZoneShiftHours?: number;
+  readonly olContinuityDelta?: number;
+  readonly coachAggressivenessDelta?: number;
+  readonly turnoverMarginDelta?: number;
 }
 
 export interface SituationalReading {
@@ -45,6 +60,10 @@ export interface SituationalReading {
   readonly consistency: AggregationTrace["consistency"];
   readonly reasoningTrace: string;
   readonly publishablePick: false;
+  /** Corpus literature evaluation */
+  readonly corpusEvaluation: CorpusEvaluation;
+  /** Final scaled shift applied in probability space */
+  readonly corpusSituationalShift: number;
 }
 
 export type SituationalEval =
@@ -64,6 +83,9 @@ export function interpretSituation(
   context: GameContext,
   signals: readonly SignalObservation[],
   blockedProvenance: readonly string[] = [],
+  options?: {
+    readonly corpusEvaluatorWeight?: number;
+  },
 ): SituationalEval {
   if (context.homeTeam.trim().length === 0 || context.awayTeam.trim().length === 0) {
     return fail("situation: home and away teams are required");
@@ -106,6 +128,12 @@ export function interpretSituation(
     weighted += signal.probability * signal.effectiveWeight;
   }
 
+  // Layer 2 literature corpus evaluation
+  const corpusEvaluation = evaluateFullCorpus(context, {
+    evaluatorWeight: options?.corpusEvaluatorWeight,
+  });
+  const corpusSituationalShift = corpusEvaluation.situationalAdjustment * corpusEvaluation.evaluatorWeight;
+
   const signalImplied = weight > 0 ? weighted / weight : null;
   const divergence = signalImplied === null ? null : signalImplied - market;
   const reasoningTrace = [
@@ -120,6 +148,7 @@ export function interpretSituation(
       ? "consistency passed"
       : `consistency failed: ${aggregated.data.consistency.violations.join(" | ")}`,
     aggregated.data.traceSummary,
+    `Corpus evaluator: touched ${corpusEvaluation.itemsEvaluatedCount} items (${corpusEvaluation.totalLoadedCount} loaded, ${corpusEvaluation.itemsSkippedCount} skipped, ${corpusEvaluation.coveragePct.toFixed(1)}% coverage). Net shift: ${corpusSituationalShift.toFixed(6)} (weight ${corpusEvaluation.evaluatorWeight}).`,
   ].join(". ");
 
   return {
@@ -136,6 +165,8 @@ export function interpretSituation(
       consistency: aggregated.data.consistency,
       reasoningTrace,
       publishablePick: false,
+      corpusEvaluation,
+      corpusSituationalShift,
     },
   };
 }

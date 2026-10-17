@@ -4467,6 +4467,19 @@ export {
   type GameContext,
 } from "./reasoning/situational-engine.js";
 export {
+  evaluateFullCorpus,
+  getLoadedCorpusCensus,
+  findCorpusDirectories,
+  loadCorpusArtifacts,
+  CORPUS_EVALUATOR_DEFAULT_WEIGHT,
+  type CorpusEvaluation,
+  type CorpusItemLog,
+  type CorpusRawItem,
+  type CorpusEvaluationOptions,
+  type LiteratureDomain,
+  type DomainBreakdown,
+} from "./reasoning/corpus-evaluator.js";
+export {
   registerDeclarations,
   SIGNAL_FAMILIES,
   type SignalDeclaration,

@@ -52,6 +52,10 @@ export function deriveRankingProbability(
      * SPEAK/LEAN still control glass-box edge claim; ranking needs the model P.
      */
     readonly rankOnAnyTrueProb?: boolean;
+    /** Situational adjustment from Layer 2 corpus evaluation. */
+    readonly corpusAdjustment?: number;
+    /** Weight applied to corpusAdjustment (0.0 to 1.0). Default 0.0 unpromoted. */
+    readonly corpusWeight?: number;
   },
 ): RankingProbResult {
   const confP = clamp01(
@@ -74,9 +78,13 @@ export function deriveRankingProbability(
   const canPrice = ie != null && hasModelP && decisionOk;
 
   if (!canPrice) {
+    let p = confP;
+    if (options?.corpusAdjustment != null && options.corpusAdjustment !== 0 && options?.corpusWeight != null && options.corpusWeight > 0) {
+      p = clamp01(p + options.corpusWeight * options.corpusAdjustment);
+    }
     return {
-      rankingP: confP,
-      rankingScore: Math.round(confP * 100),
+      rankingP: p,
+      rankingScore: Math.round(p * 100),
       source: "confidence",
       priced: false,
     };
@@ -97,6 +105,10 @@ export function deriveRankingProbability(
   } else {
     rankingP = clamp01((1 - w) * confP + w * (trueProb as number));
     source = "blend_indep_conf";
+  }
+
+  if (options?.corpusAdjustment != null && options.corpusAdjustment !== 0 && options?.corpusWeight != null && options.corpusWeight > 0) {
+    rankingP = clamp01(rankingP + options.corpusWeight * options.corpusAdjustment);
   }
 
   return {
