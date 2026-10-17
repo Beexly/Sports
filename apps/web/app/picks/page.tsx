@@ -208,7 +208,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
   const session = await auth();
   const entitlements = session?.user?.id
-    ? await getUserEntitlements(session.user.id)
+    ? await getUserEntitlements(session.user.id, session.user.email)
     : getEntitlements("FREE");
 
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";

@@ -18,7 +18,6 @@
  *  - odds age: pick.dataFreshnessAt vs now
  */
 import { evaluateProductNoBet, type ProductNoBetResult } from "@sports/prediction-engine";
-import type { PickIntelligence } from "@/lib/picks/intelligence-enrichment";
 
 export interface NoBetInputs {
   readonly calibratedProb: number | null;

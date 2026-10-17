@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const assert = require('assert');
 
 function validateSpaceOutput(body) {
@@ -244,7 +245,7 @@ async function runTests() {
   passed++;
 
   console.log(`\n========================================`);
-  console.log(`WATCH-INGEST TEST RESULT: 8/8 PASSED (100%)`);
+  console.log(`WATCH-INGEST TEST RESULT: ${passed}/8 PASSED`);
   console.log(`========================================`);
 }
 

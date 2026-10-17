@@ -86,7 +86,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // A hand-rolled fallback here is exactly how the two FREE definitions drifted
   // apart (anon limited vs signed-in over-granted); never re-inline it.
   const entitlements = session?.user?.id
-    ? await getUserEntitlements(session.user.id)
+    ? await getUserEntitlements(session.user.id, session.user.email)
     : getEntitlements("FREE");
 
   const { searchParams } = new URL(req.url);

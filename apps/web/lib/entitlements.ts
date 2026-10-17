@@ -71,7 +71,10 @@ function ownerBypassesPaywall(role: string | null | undefined, email: string | n
   return list.includes(canonical);
 }
 
-export async function getUserEntitlements(userId: string): Promise<Entitlements> {
+export async function getUserEntitlements(
+  userId: string,
+  sessionEmail?: string | null,
+): Promise<Entitlements> {
   // Dev-only escalation, hard-gated to non-production. Without the NODE_ENV
   // guard a misconfigured prod (DEV_FAKE_ADMIN=true) would hand ELITE to any
   // session whose id is literally "dev-admin" — bypassing the paywall.
@@ -81,6 +84,13 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
     userId === "dev-admin"
   ) {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
+  }
+
+  // Session email is the NextAuth server session, same allowlist as admin.
+  // Checked before the id lookup so a stale session id cannot leave the
+  // owner on the free teaser.
+  if (ownerBypassesPaywall(undefined, sessionEmail)) {
+    return getEntitlements("ELITE");
   }
 
   // Owner bypass runs before the subscription lookup. Tests that mock only

@@ -86,12 +86,6 @@ function latestKalshiArtifact(): { file: string; rows: KalshiRow[] } | null {
   }
 }
 
-function toAmerican(q: number): number {
-  // Kalshi home prob -> American price on home (for the divergence scanner
-  // the book side must be American; Kalshi side is given in prob — convert).
-  return q >= 0.5 ? -100 * (q / (1 - q)) : 100 * ((1 - q) / q);
-}
-
 export async function buildMicrostructureReport(): Promise<MicrostructureReport> {
   const art = latestKalshiArtifact();
   if (!art || art.rows.length === 0) {
