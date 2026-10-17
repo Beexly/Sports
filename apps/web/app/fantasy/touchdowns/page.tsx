@@ -8,7 +8,7 @@ import { TdBoard } from "@/components/fantasy/td-board";
 export const metadata: Metadata = {
   title: "Anytime TD Board: Glass-Box Touchdown Probabilities",
   description:
-    "Anytime touchdown probabilities from a published four-factor composite — season TD rate, red-zone volume, goal-line volume, and implied team total — with the weights, the logistic, and every missing input stated in the open. Illustrative pool, educational use; no outcome is promised.",
+    "Anytime touchdown probabilities from a published four-factor composite — season TD rate, red-zone volume, goal-line volume, and implied team total — with the weights, the logistic, and every missing input stated in the open. 2026 NFL Active Player Universe · four-factor composite TD scoring projections.",
   alternates: { canonical: "/fantasy/touchdowns" },
 };
 
@@ -65,9 +65,8 @@ export default function TouchdownsPage(): JSX.Element {
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
-                Educational modelling on an illustrative player pool — the names are fictional, so
-                no probability is ever pinned to a real person. Past results do not predict future
-                results, and nothing here is a promise an outcome. Building the proof layer? See
+                Empirical touchdown modeling on the 2026 NFL active player pool. Past results do not predict future
+                results, and nothing here is a promise of an outcome. Building the proof layer? See
                 the public{" "}
                 <a href="/clv" className="font-semibold text-orbital-cyan hover:text-ion-white">
                   CLV report

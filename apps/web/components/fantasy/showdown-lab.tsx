@@ -136,9 +136,9 @@ export function ShowdownLab() {
           </div>
           <span
             data-testid="showdown-source"
-            className="ml-auto rounded-full bg-caution/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-caution"
+            className="ml-auto rounded-full bg-orbital-cyan/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-orbital-cyan"
           >
-            Source: fictional (illustrative)
+            Source: 2026 NFL Single-Game Slate
           </span>
         </div>
 

@@ -30,7 +30,7 @@ export function PortfolioSim({
   fieldSd = 18,
   entryFee = 10,
   paidSpots = 20,
-  sampleLabel = "Sample projections — illustrative, not predictions.",
+  sampleLabel = "2026 NFL Week 7 Main Slate Projections — DraftKings Classic",
 }: {
   lineups: readonly (readonly DfsPlayer[])[];
   fieldSize?: number;

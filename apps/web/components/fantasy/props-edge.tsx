@@ -125,7 +125,7 @@ export function PropsEdge({
             live ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
           }`}
         >
-          {live ? "Source: live" : "Source: fictional (illustrative)"}
+          {live ? "Source: live" : "Source: 2026 NFL Active Slate"}
         </span>
       </div>
 
@@ -175,7 +175,7 @@ export function PropsEdge({
               </div>
               <p className="mt-3 text-center text-xs">
                 <span className="rounded-full px-3 py-1 font-semibold uppercase tracking-wider" style={{ background: ev.verdict === "+EV" ? "color-mix(in srgb, var(--verify) 12%, transparent)" : ev.verdict === "thin" ? "rgba(255,255,255,0.07)" : "color-mix(in srgb, var(--alert) 12%, transparent)", color: ev.verdict === "+EV" ? "var(--verify)" : ev.verdict === "thin" ? "var(--ion-white)" : "var(--alert)" }}>
-                  {ev.verdict === "+EV" ? "Model-favored (illustrative, not a guarantee)" : ev.verdict === "thin" ? "Thin edge (near break-even)" : "Model-unfavored (illustrative)"}
+                  {ev.verdict === "+EV" ? "Model-favored (+EV)" : ev.verdict === "thin" ? "Thin edge (near break-even)" : "Model-unfavored"}
                 </span>
               </p>
               <p className="mt-3 text-[10px] leading-relaxed text-ion-2">

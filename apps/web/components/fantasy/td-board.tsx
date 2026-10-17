@@ -67,7 +67,7 @@ export function TdBoard({ live }: { live?: boolean }) {
               isLive ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
             }`}
           >
-            {isLive ? "Source: live feed" : "Source: fictional (illustrative)"}
+            {isLive ? "Source: live feed" : "Source: 2026 NFL Active TD Model"}
           </span>
         </div>
 

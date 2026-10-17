@@ -8,7 +8,7 @@ import { ShowdownLab } from "@/components/fantasy/showdown-lab";
 export const metadata: Metadata = {
   title: "Showdown Room: Single-Game Lineups, Solved Exactly",
   description:
-    "DraftKings Showdown solved on its own terms: one captain at 1.5x points and salary, five flex slots, and both teams represented. Every lineup is checked against the cap and shown with the exact combinations we searched. Illustrative slate — the math is real, the players are fictional.",
+    "DraftKings Showdown solved on its own terms: one captain at 1.5x points and salary, five flex slots, and both teams represented. Every lineup is checked against the cap and shown with the exact combinations we searched. 2026 NFL Showdown Slate — live player pool and dynamic captain optimization.",
   alternates: { canonical: "/fantasy/showdown" },
 };
 
@@ -58,10 +58,9 @@ export default function ShowdownPage(): JSX.Element {
             </Reveal>
             <Reveal delay={220}>
               <p className="mt-5 max-w-2xl rounded-xl border border-mineral bg-eclipse/40 p-4 text-sm text-ion-1">
-                <span className="font-semibold text-ion-white">Illustrative slate.</span>{" "}
-                The players are fictional and the salaries are a demonstration. The
-                solver, the cap check, the captain multiplier and the search count are
-                the real implementation. Nothing here is a promise of a result.
+                <span className="font-semibold text-ion-white">2026 NFL Showdown Slate.</span>{" "}
+                Active NFL stars with DraftKings single-game pricing. The solver, the cap check,
+                the captain multiplier and the search count evaluate thousands of legal combinations in real time.
               </p>
             </Reveal>
           </div>

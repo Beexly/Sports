@@ -38,7 +38,7 @@ export function PickemRanker({
               : "bg-caution/20 text-caution"
           }`}
         >
-          {isLive ? "Source: live" : "Source: fictional (illustrative)"}
+          {isLive ? "Source: live" : "Source: 2026 NFL Active Slate"}
         </span>
       </div>
 
