@@ -300,3 +300,11 @@
 - **Architecture**: Iterative entropy-maximizing projection mapping sharp odds (Pinnacle/Circa) and peer-to-peer prediction exchanges (Polymarket/Betfair) into canonical fair probabilities:
   p_{	ext{fair}} = rac{\prod_k (p_k)^{lpha_k}}{\prod_k (p_k)^{lpha_k} + \prod_k (1 - p_k)^{lpha_k}}
 - **Application**: Real-time de-vigging and market consensus fair price extraction, providing the baseline for Layer 2 situational overlays.
+
+
+### MOD-KAGGLE-001: Kaggle NFL Big Data Bowl Tracking Feature Extractor
+- **Source**: Kaggle Big Data Bowl (arrismo/kaggle-mcp & shepsci/kaggle-skill pipelines)
+- **Architecture**: Voronoi tessellation & Delaunay triangulation over 22-player tracking coordinates:
+  \mathcal{A}_i = \left\{ \mathbf{x} \in \mathbb{R}^2 \mid \|\mathbf{x} - \mathbf{p}_i\| \le \|\mathbf{x} - \mathbf{p}_j\| \ orall j 
+eq i ight\}
+- **Application**: Quantifies unassigned pitch control area and passing pocket integrity from raw NGS coordinates.

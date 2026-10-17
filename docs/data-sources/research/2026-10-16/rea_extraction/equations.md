@@ -410,3 +410,11 @@ abla^2 \mathbf{u} + \mathbf{f}_{	ext{ext}}
   p^* = rg\min_p \sum_i w_i \cdot D_{	ext{KL}}\left(p \,||\, q_iight)
   D_{	ext{KL}}(p \,||\, q_i) = p \ln\left(rac{p}{q_i}ight) + (1-p) \ln\left(rac{1-p}{1-q_i}ight)
 - **Application**: Weighted Kullback-Leibler consensus aggregation. Replaces naive arithmetic averaging with logarithmic opinion pooling across disparate predictive heads.
+
+
+### EQ-KAGGLE-001: Out-of-Fold Ensembling & Cross-Validated Stacking
+- **Source**: Kaggle Competition Winning Solution Synthesis (shepsci/kaggle-skill & BDB series)
+- **Formula**:
+  \hat{Y}_{	ext{ensemble}} = \sum_{m=1}^M w_m \hat{Y}_m, \quad 	ext{s.t.} \quad \sum_{m} w_m = 1, \ w_m \ge 0
+  w^* = rg\min_w \sum_{k=1}^K \mathcal{L}\left(Y_k, \sum_{m=1}^M w_m \hat{Y}_{m, -k}ight)
+- **Application**: Out-of-fold blended meta-learner ensuring zero target leakage across sports tabular features and game tracking epochs.
