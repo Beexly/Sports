@@ -136,8 +136,9 @@ function paidCallJustified(
 ): boolean {
   // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified.
   if (need === "scores") return false;
-  // odds: no free odds source is cleared today → paid is always justified.
-  return true;
+  // odds: galaxy-espn-inline is cleared-with-attribution and is the preferred free path
+  // for spreads/totals. Paid Odds API is not justified when the free path can cover the need.
+  return false;
 }
 
 export interface SportConfig {
