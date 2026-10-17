@@ -286,8 +286,8 @@ export function computeDataQuality(
   hasTotalMarket: boolean = false,
   hasH2HMarket: boolean = false
 ): { qualityScore: number; penalty: number; factor: FactorDetail | null } {
-  // Bookmaker coverage score (0–40): ideal = 10+ books
-  const coverageScore = clamp((bookmakerCoverageMax / 10) * 40, 0, 40);
+  // Bookmaker coverage score (0–40): ideal = 10+ books; 20 base for verified single book
+  const coverageScore = bookmakerCoverageMax >= 1 ? Math.max(20, clamp((bookmakerCoverageMax / 10) * 40, 0, 40)) : 0;
 
   // Freshness score (0–30): full credit at 0min, linear decay to 0 at 90min
   const freshnessScore = clamp(((90 - dataFreshnessMinutes) / 90) * 30, 0, 30);

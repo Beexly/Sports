@@ -377,7 +377,7 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
   //    packages/prediction-engine/src/game-context.ts so that game.dataQualityScore
   //    matches factorBreakdown.dataQualityScore when used as a fallback in the picks API.
   const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
-  const coverageScore = Math.min((bookmakerCoverageMax / 10) * 40, 40);
+  const coverageScore = bookmakerCoverageMax >= 1 ? Math.max(20, Math.min((bookmakerCoverageMax / 10) * 40, 40)) : 0;
   const freshnessScore = Math.max(((90 - freshnessMinutes) / 90) * 30, 0);
   // Market coverage: 10 pts each for spread, total, H2H (0–30 total).
   // Use actual flags when provided; fall back to inferring from avg values.
