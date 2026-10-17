@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F172A">
+<title>LiveSportsOdds · Back shortly</title>
+<style>
+:root{--bg:#0F172A;--card:#1E293B;--elev:#334155;--fg:#F1F5F9;--muted:#94A3B8;--dim:#64748B;--blue:#2563EB;--sky:#0EA5E9;--up:#059669;--amber:#F59E0B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;text-align:center;color:var(--fg);background:var(--bg) radial-gradient(ellipse 90% 55% at 50% -15%,rgba(37,99,235,.28),transparent 70%) no-repeat;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.logo{display:flex;align-items:center;gap:7px;font-size:22px;font-weight:800;letter-spacing:-.02em}
+.logo b{color:var(--sky);font-weight:800}
+.logo .o{opacity:.9}
+.pill{display:inline-flex;align-items:center;gap:8px;margin-top:44px;padding:6px 14px;border:1px solid rgba(14,165,233,.3);border-radius:999px;background:rgba(14,165,233,.08);color:var(--sky);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:ping 1.8s ease-out infinite}
+h1{max-width:18ch;text-wrap:balance;margin-top:20px;font-size:clamp(34px,7vw,56px);font-weight:800;line-height:1.04;letter-spacing:-.035em}
+.lede{max-width:46ch;text-wrap:pretty;margin-top:16px;color:var(--muted);font-size:17px;line-height:1.6}
+.trace{display:block;width:min(320px,100%);height:44px;margin:28px auto 0}
+.trace .base{stroke:var(--elev)}
+.trace .beat{stroke:var(--sky);stroke-dasharray:70 430;stroke-dashoffset:500;animation:sweep 2.4s linear infinite;filter:drop-shadow(0 0 4px rgba(14,165,233,.7))}
+.card{width:100%;max-width:360px;margin-top:32px;padding:18px;border:1px solid rgba(148,163,184,.12);border-radius:14px;background:var(--card);text-align:left;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.card-h{display:flex;justify-content:space-between;color:var(--dim);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.q{margin-top:8px;font-size:15px;font-weight:600}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.opt{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;background:var(--elev);font-size:14px;color:var(--muted)}
+.opt strong{color:var(--fg);font-size:16px}
+.opt.fav{background:rgba(5,150,105,.14);box-shadow:inset 0 0 0 1px rgba(5,150,105,.45)}
+.opt.fav strong{color:#34D399}
+.flash{animation:flash .9s ease-out}
+.fine{margin-top:12px;color:var(--dim);font-size:12px}
+.retry{margin-top:28px;color:var(--muted);font-size:14px}
+.retry a{color:var(--sky);text-decoration:none;font-weight:600}
+.retry a:hover{text-decoration:underline}
+footer{margin-top:48px;color:var(--dim);font-size:12px;letter-spacing:.02em}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(245,158,11,.65)}100%{box-shadow:0 0 0 10px rgba(245,158,11,0)}}
+@keyframes sweep{to{stroke-dashoffset:0}}
+@keyframes flash{0%{background:rgba(14,165,233,.35)}100%{background:var(--elev)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.trace .beat{stroke-dasharray:none;stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="logo" aria-label="LiveSportsOdds">
+<svg width="22" height="22" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7 L5 7 L6 4 L8 10 L9 7 L12 7" stroke="#0EA5E9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>LIVE<b>SPORTS</b><span class="o">ODDS</span></span>
+</div>
+<div class="pill"><i class="dot"></i>Half-time · Maintenance</div>
+<h1>We’re in the dressing room.</h1>
+<p class="lede">LiveSportsOdds is down for maintenance while we sort things out behind the scenes. Odds, live scores and sure bets will be back after the break.</p>
+<svg class="trace" viewBox="0 0 320 44" fill="none" aria-hidden="true">
+<path class="base" d="M0 22 H130 L140 22 L148 6 L162 38 L170 22 H320" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path class="beat" d="M0 22 H130 L140 22 L148 6 L162 38 L170 22 H320" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div class="card" role="group" aria-label="Just for fun">
+<div class="card-h"><span>Specials</span><span>Only market open</span></div>
+<p class="q">LiveSportsOdds back online soon?</p>
+<div class="row">
+<div class="opt fav"><span>Yes</span><strong class="mono">1.01</strong></div>
+<div class="opt" id="no"><span>No</span><strong class="mono" id="no-price">51.00</strong></div>
+</div>
+<p class="fine">Not a real market. Please don’t bet on our servers.</p>
+</div>
+<p class="retry"><span id="countdown">Checking again in <span class="mono" id="t">58</span>s · </span><a href="">Try now</a></p>
+<footer>18+ · Gamble Responsibly · © LiveSportsOdds</footer>
+<script>
+(function () {
+  var left = 60, t = document.getElementById('t');
+  setInterval(function () {
+    left -= 1;
+    if (left <= 0) { location.reload(); return; }
+    t.textContent = left;
+  }, 1000);
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var ladder = [51, 67, 81, 101, 151, 201, 251, 501, 1001], i = 0;
+  var cell = document.getElementById('no'), price = document.getElementById('no-price');
+  setInterval(function () {
+    if (i >= ladder.length - 1) return;
+    i += 1;
+    price.textContent = ladder[i].toFixed(2);
+    cell.classList.remove('flash'); void cell.offsetWidth; cell.classList.add('flash');
+  }, 4000);
+})();
+</script>
+
+
+</body></html>
