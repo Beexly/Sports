@@ -426,3 +426,11 @@ abla^2 \mathbf{u} + \mathbf{f}_{	ext{ext}}
   	ext{CLV}_{	ext{spread}} = 	ext{Spread}_{	ext{open}} - 	ext{Spread}_{	ext{close}}
   	ext{CoverProbability}(\Delta) = \Phi\left(rac{\mu_{	ext{model}} - 	ext{Spread}_{	ext{close}}}{\sigma_{	ext{residual}}}ight)
 - **Application**: Ground-truth historical ATS calibration evaluated over 10,000+ settled NFL matchups from 1966 to 2026.
+
+
+### EQ-OPENALEX-001: Auditory Stadium Acoustic Feedback & Referee Whistle Hazard
+- **Source**: Crowd Noise Influence on Referee Decisions in Professional Sports (OpenAlex ID: W2112469622 / CrossRef)
+- **Formula**:
+  \lambda_{	ext{whistle}}(t) = \lambda_0 \cdot \exp\left(eta_d \cdot (	ext{DecibelLevel}(t) - 85) + eta_h \cdot \mathbb{I}(	ext{FoulOnVisiting})ight)
+  \Delta 	ext{PenaltyRate}_{	ext{home}} = rac{1}{1 + e^{-(lpha_0 + \gamma \cdot 	ext{AcousticPressure})}} - 0.5
+- **Application**: Ground-truth parameterization of crowd auditory impact on 3rd down holding and pass-interference probability.

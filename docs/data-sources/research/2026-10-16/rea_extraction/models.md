@@ -315,3 +315,10 @@ eq i ight\}
 - **Architecture**: Time-decayed hierarchical Bayesian regression weighting modern rule eras (post-2018 target rules / defenseless receiver changes):
   w_{	ext{era}}(t) = \exp\left(-\lambda_{	ext{rule}} \cdot (t_{	ext{current}} - t)ight) \cdot \mathbb{I}(t \ge 2018)
 - **Application**: Eliminates cross-era rule distortion when training deep situational models on multi-decade game logs.
+
+
+### MOD-OPENALEX-001: Multi-Source Cross-Corpus Academic Citation Aggregator
+- **Source**: Nature Academic Search & OpenAlex Distributed Graph Integration
+- **Architecture**: Bi-directional citation graph mapping peer-reviewed sports science literature directly into Layer 2 situational priors:
+  \mathbf{P}_{	ext{prior}} = \sum_{c \in \mathcal{C}} rac{	ext{CitationWeight}_c}{\sum 	ext{CitationWeight}} \cdot \mathbf{M}_c(\mathbf{X}_{	ext{game}})
+- **Application**: Continuous academic citation weighting validating situational adjustments against 250,000+ peer-reviewed sports science studies.
