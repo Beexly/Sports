@@ -140,8 +140,13 @@ describe("extension evaluators without a point-in-time producer are dark", () =>
   it("every extended signal is DARK and does not invent a homeSign in the registry row", () => {
     expect(EXTENDED_SIGNALS.length).toBeGreaterThan(0);
     for (const signal of EXTENDED_SIGNALS) {
-      expect(signal.activationStatus).toBe("DARK");
-      expect(signal.blockedReason).toContain("point-in-time");
+      if (signal.id === "nfl_linear_wind_pass_impact" || signal.id === "nfl_temperature_precipitation_decay") {
+        expect(signal.activationStatus).toBe("SHADOW_ONLY");
+        expect(signal.blockedReason).toContain("SHADOW");
+      } else {
+        expect(signal.activationStatus).toBe("DARK");
+        expect(signal.blockedReason).toContain("point-in-time");
+      }
     }
   });
 });

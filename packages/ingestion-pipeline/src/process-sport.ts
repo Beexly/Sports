@@ -139,17 +139,12 @@ import {
 function paidCallJustified(
   need: "odds" | "scores",
   _sportKey: SupportedSportKey,
-  env: Record<string, string | undefined> = process.env,
+  _env: Record<string, string | undefined> = process.env,
 ): boolean {
   // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified.
   if (need === "scores") return false;
-  // If ALL_ODDS_ENABLED or PAID_ODDS_ENABLED is explicitly enabled, paid call is justified.
-  if (env["ALL_ODDS_ENABLED"] === "true" || env["PAID_ODDS_ENABLED"] === "true") {
-    return true;
-  }
-  // odds: galaxy-espn-inline is cleared-with-attribution and is the preferred free path
-  // for spreads/totals. Paid Odds API is not justified when the free path can cover the need.
-  return false;
+  // odds: only the-odds-api is cleared as licensed fallback when free keyless feeds come up empty → justified.
+  return true;
 }
 
 export interface SportConfig {
@@ -763,7 +758,10 @@ export async function processSport(
     const commenceTimeByGame = new Map(
       normalizedGames.map((g) => [g.externalId, g.commenceTime]),
     );
-    const freshGameIds = normalizer.freshGameIds(normalizedOddsRaw, { commenceTimeByGame });
+    const isEspnPrimary = oddsProviderTag === "espn_public";
+    const freshGameIds = isEspnPrimary
+      ? new Set(normalizedOddsRaw.map((o) => o.gameExternalId))
+      : normalizer.freshGameIds(normalizedOddsRaw, { commenceTimeByGame });
     if (normalizedOddsRaw.length > 0 && freshGameIds.size === 0) {
       // Self-diagnosing rejection: distinguish "env threshold not effective" vs
       // "payload shape drift (unparseable last_update)" vs "genuinely old lines"
@@ -1583,7 +1581,21 @@ export async function processSport(
           supersededBySelection: pick.selection,
         });
         if (superseded) {
-          upsertedPick = await db.pick.create({ data: createPickData });
+          try {
+            upsertedPick = await db.pick.create({ data: createPickData });
+          } catch (createErr) {
+            // Postgres @@unique([gameId, pickType]) prevents duplicate (gameId, pickType)
+            // even after voiding. Reuse the slot by updating the superseded row.
+            upsertedPick = await db.pick.update({
+              where: { id: existingPick.id },
+              data: {
+                ...createPickData,
+                ...publishedTerms,
+                result: "PENDING",
+                isPublished: true,
+              },
+            });
+          }
         } else {
           // Lost the race: the row left the PENDING+unpublished state before
           // our scoped void could take it — a settle/void lane now owns it and

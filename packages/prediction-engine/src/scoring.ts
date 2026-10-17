@@ -444,9 +444,11 @@ function computeMarketDepthScore(bookmakerCount: number): {
   score: number;
   factor: FactorDetail;
 } {
-  const normalized = Math.min(bookmakerCount / WEIGHTS.MARKET_DEPTH_IDEAL_BOOKS, 1);
+  const normalized = MIN_BOOKMAKERS === 1 && bookmakerCount === 1
+    ? 0.75
+    : Math.min(bookmakerCount / WEIGHTS.MARKET_DEPTH_IDEAL_BOOKS, 1);
   const score = normalized * WEIGHTS.MARKET_DEPTH_COMPONENT_MAX;
-  const impact: FactorDetail["impact"] = bookmakerCount >= 5 ? "positive" : bookmakerCount >= 3 ? "neutral" : "negative";
+  const impact: FactorDetail["impact"] = bookmakerCount >= 5 ? "positive" : bookmakerCount >= 3 ? "neutral" : MIN_BOOKMAKERS === 1 && bookmakerCount === 1 ? "neutral" : "negative";
 
   return {
     score,
@@ -542,11 +544,11 @@ function computeVolatilityPenalty(
   let penalty = 0;
   let description = "";
 
-  // Thin market penalty
-  if (bookmakerCount < 3) {
+  // Thin market penalty — not applicable when MIN_BOOKMAKERS allows single-bookmaker feeds
+  if (MIN_BOOKMAKERS > 1 && bookmakerCount < 3) {
     penalty -= 10;
     description = "Thin market — limited price discovery";
-  } else if (bookmakerCount < 5) {
+  } else if (MIN_BOOKMAKERS > 1 && bookmakerCount < 5) {
     penalty -= 5;
     description = "Limited bookmaker coverage";
   }

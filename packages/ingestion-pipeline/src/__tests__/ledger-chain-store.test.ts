@@ -158,6 +158,7 @@ describe("appendPickToChain", () => {
     vi.stubEnv("LEDGER_CHAIN_ENABLED", "true");
     const db = makeDb();
     const result = await appendPickToChain(db, pickFields);
+    if (!result.ok) console.log("DEBUG appendPickToChain error:", result);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.seq).toBe(0);

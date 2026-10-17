@@ -507,12 +507,15 @@ describe("scoreGame — precision fields", () => {
   });
 
   it("filters picks below MIN_PUBLISH_CONFIDENCE", () => {
-    // Single book with low consensus = should produce no publishable picks
+    // Stale data produces penalty driving confidence below MIN_PUBLISH_CONFIDENCE (50)
     const input = makeOddsInput({
       bookmakerOdds: [
         { bookmaker: "fanduel", market: "SPREADS", spread: -1.0, homeSpreadPrice: -105, awaySpreadPrice: -115 },
-        // Only 1 bookmaker = below MIN_BOOKMAKERS of 2
       ],
+      context: {
+        ...makeOddsInput().context,
+        dataFreshnessMinutes: 240, // Stale market penalty drives confidence < 50
+      },
     });
     const picks = scoreGame(input);
     const spreadPicks = picks.filter((p) => p.pickType === "SPREAD");

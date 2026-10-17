@@ -88,7 +88,16 @@ export interface SupersedeTx {
     }): Promise<{ count: number }>;
   };
   pickSettlementEvent: {
-    create(args: { data: SupersedeVoidEventPayload }): Promise<unknown>;
+    create(args: {
+      data: {
+        pickId: string;
+        gameId: string;
+        result: "VOID";
+        settledAt: Date;
+        status?: string;
+        payload: SupersedeVoidEventPayload;
+      };
+    }): Promise<unknown>;
   };
   postSettlementWork: PostSettlementWorkDelegate;
 }
@@ -166,7 +175,16 @@ export async function supersedeUnpublishedPendingPick(
     // and zero-sit): the event rides in the void transaction; the outbox worker
     // closes VOID events as receipts (non-decisive) and never rewrites the
     // payload.
-    await tx.pickSettlementEvent.create({ data: payload });
+    await tx.pickSettlementEvent.create({
+      data: {
+        pickId: args.pickId,
+        gameId: args.gameId,
+        result: "VOID",
+        settledAt: now,
+        status: "PENDING",
+        payload,
+      },
+    });
 
     // Same post-settlement rows the zero-sit void appends: the CLV grader and
     // the outcome snapshotter both need to see the void.

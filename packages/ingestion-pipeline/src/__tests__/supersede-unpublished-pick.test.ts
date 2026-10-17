@@ -61,19 +61,24 @@ describe("supersedeUnpublishedPendingPick", () => {
       | undefined;
     if (!event) throw new Error("pickSettlementEvent.create was not called");
     expect(event.data).toMatchObject({
-      schemaVersion: SUPERSEDE_EVENT_SCHEMA_VERSION,
-      kind: "SUPERSEDE_VOID",
-      lane: "mint-supersede",
-      result: "VOID",
-      rcaCode: SUPERSEDED_UNPUBLISHED_RCA_CODE,
       pickId: "pick-stale",
       gameId: "game-1",
-      sportKey: "americanfootball_nfl",
-      pickType: "SPREAD",
-      supersededSelection: "Atlanta Falcons -1.5",
-      supersededBySelection: "Carolina Panthers -2.5",
-      // C-120 settle-time evidence: a void grades against no score.
-      settledWith: { homeScore: null, awayScore: null, sources: [], path: "mint-supersede" },
+      result: "VOID",
+      status: "PENDING",
+      payload: {
+        schemaVersion: SUPERSEDE_EVENT_SCHEMA_VERSION,
+        kind: "SUPERSEDE_VOID",
+        lane: "mint-supersede",
+        result: "VOID",
+        rcaCode: SUPERSEDED_UNPUBLISHED_RCA_CODE,
+        pickId: "pick-stale",
+        gameId: "game-1",
+        sportKey: "americanfootball_nfl",
+        pickType: "SPREAD",
+        supersededSelection: "Atlanta Falcons -1.5",
+        supersededBySelection: "Carolina Panthers -2.5",
+        settledWith: { homeScore: null, awayScore: null, sources: [], path: "mint-supersede" },
+      },
     });
 
     // Same post-settlement rows the zero-sit void appends.

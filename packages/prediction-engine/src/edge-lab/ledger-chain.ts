@@ -202,6 +202,24 @@ function settlementCommittedFields(s: SettlementEntryInput): Canonical {
   };
 }
 
+export function mintPickEntry(pick: PickEntryInput): LedgerPickEntry {
+  const entryHash = sha256Hex(canonicalJson(pickCommittedFields(pick)));
+  return Object.freeze({ ...pick, entryHash });
+}
+
+export function mintSettlementEntry(settlement: SettlementEntryInput): LedgerSettlement {
+  const entryHash = sha256Hex(canonicalJson(settlementCommittedFields(settlement)));
+  return Object.freeze({ ...settlement, entryHash });
+}
+
+export function pickCommittedPayload(pick: PickEntryInput): string {
+  return canonicalJson(pickCommittedFields(pick));
+}
+
+export function settlementCommittedPayload(settlement: SettlementEntryInput): string {
+  return canonicalJson(settlementCommittedFields(settlement));
+}
+
 // ───────────────────────────── linkage helper ─────────────────────────────
 
 export interface ChainLinkage {
