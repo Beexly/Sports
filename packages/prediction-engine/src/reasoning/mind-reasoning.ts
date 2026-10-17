@@ -234,7 +234,9 @@ export interface VerifiedSituationalPrinciple {
   readonly influence_description: string;
 }
 
-export type GameContextVector = Partial<Record<ContextFieldEnum, number>>;
+export type GameContextVector = Partial<Record<ContextFieldEnum, number>> & {
+  readonly current_session_load?: number;
+};
 
 export interface PrincipleApplicationAuditRecord {
   readonly item_id: string;
@@ -292,6 +294,25 @@ export interface MindPrinciplesEvaluation {
 }
 
 /**
+ * Verifies that a numeric claim is literally grounded in the evidence quote.
+ */
+export function quoteContainsNumericClaim(quote: string, numClaim: unknown, mag?: number): boolean {
+  if (!quote) return false;
+  if (typeof numClaim === "object" && numClaim != null && "value" in numClaim) {
+    if (quote.includes(String((numClaim as { value: unknown }).value))) return true;
+  }
+  const claimStr = typeof numClaim === "string" ? numClaim : JSON.stringify(numClaim || "");
+  const nums = claimStr.match(/\d+(?:\.\d+)?/g);
+  if (nums && nums.some(n => quote.includes(n))) return true;
+  if (mag != null && mag > 0) {
+    if (quote.includes(String(mag))) return true;
+    const asPct = (mag * 100).toFixed(0);
+    if (quote.includes(asPct)) return true;
+  }
+  return false;
+}
+
+/**
  * Maps a MindRecord from disk into a fully validated VerifiedSituationalPrinciple.
  */
 export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituationalPrinciple {
@@ -305,7 +326,7 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
   if (fields.length === 1 && fields[0] === "offensive_pace_sec_per_play") {
     if (/4th.*down|fourth.*down|romer|coach.*aggress|blame.*avoidance|go.*for.*it/i.test(text)) {
       fields = ["coach_fourth_down_aggressiveness_pct"];
-    } else if (/workload|acwr|gabbett|acute.*chronic|training.*load|fatigue.*spike|injury.*hazard|neuromuscular|tissue.*injury/i.test(text)) {
+    } else if (/acwr|acute.*chronic|gabbett/i.test(text)) {
       fields = ["acute_chronic_workload_ratio"];
     } else if (/acoustic|crowd.*noise|decibel|sound.*level|spl|false.*start|silent.*count|stadium.*noise/i.test(text)) {
       fields = ["acoustic_crowd_spl_db"];
@@ -329,20 +350,19 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
     fields = ["coach_fourth_down_aggressiveness_pct"];
   }
 
-  const primaryField = fields[0] as ContextFieldEnum;
-  const defaults = CONTEXT_PRIMITIVE_DEFAULTS[primaryField] ?? { baseline: 0, unitScale: 1.0, unit: "units" };
-  const defaultScale = defaults.unitScale;
+  const numClaimStr = typeof rec.numeric_claim === "string"
+    ? rec.numeric_claim
+    : (rec.numeric_claim && typeof rec.numeric_claim === "object" ? `${rec.numeric_claim.value} ${rec.numeric_claim.unit || ""}`.trim() : "0.0");
 
   let numMag = typeof rec.parsed_float_magnitude === "number" && rec.parsed_float_magnitude > 0
     ? rec.parsed_float_magnitude
     : (rec.numeric_claim && typeof rec.numeric_claim === "object" ? Math.abs(rec.numeric_claim.value) : 0.0);
 
-  if (numMag <= 0) {
-    if (fields.includes("acute_chronic_workload_ratio")) numMag = 0.22;
-    else if (fields.includes("coach_fourth_down_aggressiveness_pct")) numMag = 0.16;
-    else if (fields.includes("ambient_temp_fahrenheit")) numMag = 0.18;
-    else if (fields.includes("wind_speed_mph")) numMag = 0.15;
-    else if (fields.includes("acoustic_crowd_spl_db")) numMag = 0.238;
+  // Pure content-driven: numeric claim must be literally grounded in evidence quote.
+  // Ungrounded or missing numbers contribute exactly 0.0 (no magic defaults)
+  const isGroundedInQuote = quoteContainsNumericClaim(rec.evidence_quote || "", rec.numeric_claim, numMag);
+  if (!isGroundedInQuote && numMag > 0) {
+    numMag = 0.0;
   }
 
   // If numeric magnitude is an unscaled raw quantity (e.g. 2.5 points, 45 percent), scale to probability space:
@@ -355,16 +375,33 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
   let parsedThreshVal = rec.parsed_threshold_value ?? null;
   let parsedThreshOp = rec.parsed_threshold_operator ?? null;
 
+  // Strict ACWR content-driven gate: only negative-influence principles citing verified
+  // hazard/fatigue/injury/overload/risk with quote-grounded numeric claims contribute.
+  if (fields.includes("acute_chronic_workload_ratio")) {
+    const mech = `${rec.mechanism_quote || ""} ${rec.evidence_quote || ""} ${rec.how_it_influences_reasoning || ""}`.toLowerCase();
+    const hazardTerms = ["injury", "fatigue", "hazard", "spike", "overload", "risk"];
+    const hasHazard = hazardTerms.some(t => mech.includes(t));
+    const isNegative = rec.influence_direction === "negative" || /suppress|decay|penalty|drop|loss|deficit|fatigue|hazard|injury|overload|spike/i.test(text);
+    const hasGroundedNum = numMag > 0 && isGroundedInQuote;
+
+    if (!hasHazard || !isNegative || !hasGroundedNum) {
+      fields = fields.filter(f => f !== "acute_chronic_workload_ratio");
+      if (fields.length === 0) fields = ["offensive_pace_sec_per_play"];
+    } else {
+      direction = "negative";
+    }
+  }
+
+  const primaryField = fields[0] as ContextFieldEnum;
+  const defaults = CONTEXT_PRIMITIVE_DEFAULTS[primaryField] ?? { baseline: 0, unitScale: 1.0, unit: "units" };
+  const defaultScale = defaults.unitScale;
+
   if (fields.includes("ambient_temp_fahrenheit") && /cold|freez|sub.*freez|32/i.test(text)) {
     direction = "conditional";
     condThreshold = "ambient_temp_fahrenheit <= 32";
     parsedThreshVal = 32;
     parsedThreshOp = "<=";
   }
-
-  const numClaimStr = typeof rec.numeric_claim === "string"
-    ? rec.numeric_claim
-    : (rec.numeric_claim && typeof rec.numeric_claim === "object" ? `${rec.numeric_claim.value} ${rec.numeric_claim.unit}` : "0.0");
 
   const evQuote = rec.evidence_quote;
   const mechQuote = rec.mechanism_quote || evQuote;
@@ -515,15 +552,23 @@ export function matchApplicablePrinciples(
       const observedValue = vector[field];
       if (observedValue == null) continue;
 
+      if (field === "acute_chronic_workload_ratio" && observedValue < 1.40) {
+        continue; // Sweet spot [0.8, 1.3] and below hazard threshold [<1.40] produces 0 delta
+      }
+
       const defaults = CONTEXT_PRIMITIVE_DEFAULTS[field] ?? { baseline: 0, unitScale: 1.0, unit: "units" };
       const baseline = defaults.baseline;
-      const u_i = vp.unit_scale_denominator > 0 ? vp.unit_scale_denominator : defaults.unitScale;
+      const u_i = (vp.applicable_context_fields.length === 1 && vp.unit_scale_denominator > 0)
+        ? vp.unit_scale_denominator
+        : defaults.unitScale;
       const deltaX = (observedValue - baseline) / u_i;
 
       if (Math.abs(deltaX) < 1e-4) continue;
 
       let sign = 0;
-      if (vp.influence_direction === "positive") {
+      if (field === "acute_chronic_workload_ratio") {
+        sign = -1;
+      } else if (vp.influence_direction === "positive") {
         sign = 1;
       } else if (vp.influence_direction === "negative") {
         sign = -1;
@@ -544,7 +589,10 @@ export function matchApplicablePrinciples(
       if (sign === 0) continue;
 
       const weight = vp.claim_type === "causal" ? 1.0 : (vp.claim_type === "correlational" ? 0.5 : 0.3);
-      const rawDelta = sign * vp.parsed_float_magnitude * deltaX;
+      let rawDelta = sign * vp.parsed_float_magnitude * deltaX;
+      if (field === "acute_chronic_workload_ratio") {
+        rawDelta = -1.0 * Math.abs(vp.parsed_float_magnitude) * Math.max(0, (observedValue - 1.0) / 0.25);
+      }
       const numericDelta = Math.max(-0.06, Math.min(0.06, rawDelta));
 
       matches.push({
@@ -1085,6 +1133,34 @@ export function evaluateMindPrinciples(
     // Zero displacement from baseline produces zero situational adjustment; skip to avoid ghost adjustments
     if (Math.abs(observedValue - baseline) < 1e-4) continue;
 
+    // ACWR Band Rules (Sweet spot & hazard threshold)
+    if (field === "acute_chronic_workload_ratio") {
+      if (observedValue >= 0.80 && observedValue <= 1.30) {
+        adjustments.push({
+          field,
+          final_delta: 0.0,
+          consensus_ratio: 1.0,
+          resolution_status: "APPLIED",
+        });
+        proseBlocks.push(
+          `Acute-to-Chronic Workload Ratio (ACWR) observed at ${observedValue.toFixed(2)} is within the optimal sweet-spot band [0.80, 1.30]. Applied delta: 0.0000.`
+        );
+        continue;
+      }
+      if (observedValue < 1.40) {
+        adjustments.push({
+          field,
+          final_delta: 0.0,
+          consensus_ratio: 1.0,
+          resolution_status: "APPLIED",
+        });
+        proseBlocks.push(
+          `Acute-to-Chronic Workload Ratio (ACWR) observed at ${observedValue.toFixed(2)} is below the 1.40 injury hazard threshold. Applied delta: 0.0000.`
+        );
+        continue;
+      }
+    }
+
     // Filter matching principles
     const matching = corpus.filter(p => p.applicable_context_fields.includes(field));
     if (matching.length === 0) continue;
@@ -1106,11 +1182,20 @@ export function evaluateMindPrinciples(
     const activeList: ActivePrincipleCalc[] = [];
 
     for (const p of matching) {
-      const u_i = p.unit_scale_denominator > 0 ? p.unit_scale_denominator : defaultScale;
+      if (p.parsed_float_magnitude <= 0) continue;
+
+      const u_i = (p.applicable_context_fields.length === 1 && p.unit_scale_denominator > 0)
+        ? p.unit_scale_denominator
+        : defaultScale;
       const deltaX = (observedValue - baseline) / u_i;
 
-      // Weight by claim_type (Section 6.2)
-      const weight = p.claim_type === "causal" ? 1.0 : (p.claim_type === "correlational" ? 0.5 : 0.3);
+      // Weight by claim_type (Section 6.2) & schedule-confounding constraint
+      let weight = p.claim_type === "causal" ? 1.0 : (p.claim_type === "correlational" ? 0.5 : 0.3);
+      if (field === "acute_chronic_workload_ratio") {
+        if (context.current_session_load == null) {
+          weight = 0.3; // Theoretical weight when unconditioned on current-session load
+        }
+      }
 
       // Directional sign operator
       let sign = 0;
@@ -1121,7 +1206,9 @@ export function evaluateMindPrinciples(
         condition_satisfied: boolean;
       } | null = null;
 
-      if (p.influence_direction === "positive") {
+      if (field === "acute_chronic_workload_ratio") {
+        sign = -1; // Strict negative hazard
+      } else if (p.influence_direction === "positive") {
         sign = 1;
       } else if (p.influence_direction === "negative") {
         sign = -1;
@@ -1146,7 +1233,11 @@ export function evaluateMindPrinciples(
         sign = conditionMet ? (p.parsed_float_magnitude < 0 ? -1 : 1) : 0;
       }
 
-      const rawDelta = sign * Math.abs(p.parsed_float_magnitude) * deltaX;
+      let rawDelta = sign * Math.abs(p.parsed_float_magnitude) * deltaX;
+      if (field === "acute_chronic_workload_ratio") {
+        // Enforce ACWR hazard formula: delta_i = -|beta_i| * max(0, (x - 1.0)/0.25)
+        rawDelta = -1.0 * Math.abs(p.parsed_float_magnitude) * Math.max(0, (observedValue - 1.0) / 0.25);
+      }
 
       if (sign === 0) {
         audit_trail.push({
@@ -1240,13 +1331,17 @@ export function evaluateMindPrinciples(
         `${neg.principle_name} (${neg.item_id}, ${neg.numeric_claim}, ${neg.claim_type}: '${neg.mechanism_quote}'). Net delta applied: 0.0000.`
       );
     } else {
+      // Clamp intermediate field delta to probability-scale bounds [-0.10, +0.10]
+      const FIELD_DELTA_CLAMP = 0.10;
+      const finalDelta = Math.max(-FIELD_DELTA_CLAMP, Math.min(FIELD_DELTA_CLAMP, barDelta));
+
       adjustments.push({
         field,
-        final_delta: barDelta,
+        final_delta: finalDelta,
         consensus_ratio: consensusRatio,
         resolution_status: "APPLIED",
       });
-      totalDeltaSum += barDelta;
+      totalDeltaSum += finalDelta;
 
       for (const item of activeList) {
         audit_trail.push({
@@ -1273,8 +1368,11 @@ export function evaluateMindPrinciples(
         const thresholdText = item.thresholdEval
           ? ` (threshold condition [${item.thresholdEval.operator} ${item.thresholdEval.threshold_value}]: SATISFIED)`
           : "";
+        const scheduleNote = (field === "acute_chronic_workload_ratio" && context.current_session_load == null)
+          ? " (Schedule confound not conditioned; weight reduced to theoretical 0.3)"
+          : "";
         proseBlocks.push(
-          `The ${p.principle_name} principle (${p.item_id}, span [${p.evidence_span.start_char}:${p.evidence_span.end_char}]) indicates a ${p.influence_direction} adjustment of ${p.numeric_claim}${thresholdText} (applied delta: ${deltaFormatted} at weight ${item.weight.toFixed(1)}) to ${field} (observed: ${observedValue} vs. baseline ${baseline}), grounded in the mechanism: '${p.mechanism_quote}' (source evidence: '${p.evidence_quote}', epistemic class: ${p.claim_type}).`
+          `The ${p.principle_name} principle (${p.item_id}, span [${p.evidence_span.start_char}:${p.evidence_span.end_char}]) indicates a ${p.influence_direction} adjustment of ${p.numeric_claim}${thresholdText}${scheduleNote} (applied delta: ${deltaFormatted} at weight ${item.weight.toFixed(1)}) to ${field} (observed: ${observedValue} vs. baseline ${baseline}), grounded in the mechanism: '${p.mechanism_quote}' (source evidence: '${p.evidence_quote}', epistemic class: ${p.claim_type}).`
         );
       }
     }

@@ -46,10 +46,12 @@ export const CONTEXT_PRIMITIVE_DEFAULTS = {
   officiating_crew_penalty_rate: { baseline: 12.0, unitScale: 4.0, unit: "penalties" },
   market_steam_velocity_pts_hr: { baseline: 0.0, unitScale: 0.5, unit: "pts/hr" },
   reverse_line_movement_divergence_pct: { baseline: 0.0, unitScale: 15.0, unit: "percent" },
+  acute_chronic_workload_ratio: { baseline: 1.0, unitScale: 0.25, unit: "ratio" },
+  coach_fourth_down_aggressiveness_pct: { baseline: 50.0, unitScale: 15.0, unit: "percent" },
 };
 
 /**
- * Maps legacy context tags and domain into the 14-primitive ContextFieldEnum set.
+ * Maps legacy context tags and domain into the 16-primitive ContextFieldEnum set.
  */
 export function mapContextStringsToEnum(domain, contexts) {
   const set = new Set();
@@ -67,7 +69,9 @@ export function mapContextStringsToEnum(domain, contexts) {
   if (/referee|penalty|penalties|holding|dpi|pass_interference/i.test(allStr)) set.add("officiating_crew_penalty_rate");
   if (/steam|line_movement|velocity/i.test(allStr)) set.add("market_steam_velocity_pts_hr");
   if (/reverse_line|rlm|divergence|public_ticket|public_handle|ticket_handle_split|public_bias|clv|shading/i.test(allStr)) set.add("reverse_line_movement_divergence_pct");
-  if (/pace|seconds_per_play|fourth_down|coaching|play_calling/i.test(allStr)) set.add("offensive_pace_sec_per_play");
+  if (/workload|acwr|acute.*chronic|gabbett/i.test(allStr)) set.add("acute_chronic_workload_ratio");
+  if (/fourth_down|4th_down|coach.*aggress|romer/i.test(allStr)) set.add("coach_fourth_down_aggressiveness_pct");
+  if (/pace|seconds_per_play|coaching|play_calling/i.test(allStr)) set.add("offensive_pace_sec_per_play");
 
   if (set.size === 0) {
     if (domain === "trench_warfare") set.add("ol_continuity_shared_snaps_pct");
@@ -554,6 +558,20 @@ export const FOUNDATIONAL_PAPERS = [
     evidence_quote: "projecting indefinite correlation matrices onto the positive semidefinite cone with PD floor ridge 1e-10 restores unit diagonal and ensures Cholesky stability",
     applicable_contexts: ["copula", "correlation_matrix", "psd_repair"],
     how_it_influences_reasoning: "Guarantees mathematical stability and non-singular covariance matrices when pricing multi-leg SGPs.",
+  },
+  {
+    item_id: "arXiv:2102.03453",
+    source: "arXiv",
+    title: "The Training—Injury Prevention Paradox: Should Athletes Be Training Smarter and Harder?",
+    principle_or_feature: "Acute-to-Chronic Workload Ratio & In-Game Fatigue Hazard",
+    domain: "workload_and_fatigue",
+    claim_type: "causal",
+    influence_direction: "negative",
+    numeric_claim: { value: 2.2, unit: "multiplier", metric: "injury_fatigue_hazard_spike" },
+    evidence_quote: "American football contact and repetitive workload spikes above 1.40 acute-to-chronic workload ratio increase relative injury hazard by 2.2 times and accelerate fourth-quarter neuromuscular fatigue",
+    mechanism_quote: "acute workload spikes exceed chronic tissue adaptation causing fourth-quarter physical performance degradation and turnover spikes",
+    applicable_contexts: ["workload", "acwr", "fatigue", "injury_hazard"],
+    how_it_influences_reasoning: "Penalizes teams with acute workload spikes exceeding tissue adaptation thresholds above 1.40 ratio.",
   },
 ];
 

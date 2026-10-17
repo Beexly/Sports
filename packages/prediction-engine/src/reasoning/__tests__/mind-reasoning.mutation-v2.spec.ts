@@ -206,4 +206,98 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
     assert.ok(neutralized[0].consensus_ratio < 0.20, "Consensus ratio must fall below 0.20 deadband");
     assert.ok(disputedRes.rendered_prose.includes("Conflicting literature evidence neutralized adjustments"), "Prose must include conflict frame");
   });
+
+  it("Probe T6: ACWR Content-Driven Invariants (Sweet Spot Zero, Threshold, Negative Hazard, & Schedule Confound)", () => {
+    const gabbettAcwrPrinciple: VerifiedSituationalPrinciple = {
+      item_id: "arXiv:2102.03453",
+      source_doc_hash: "hash_acwr_gabbett",
+      principle_name: "Acute-to-Chronic Workload Ratio & In-Game Fatigue Hazard",
+      numeric_claim: "+2.2x injury and late-game fatigue hazard above 1.40 ACWR",
+      parsed_float_magnitude: 0.22,
+      unit_scale_denominator: 0.25,
+      evidence_quote: "American football contact and repetitive workload spikes above 1.40 acute-to-chronic workload ratio increase relative injury hazard by 2.2 times and accelerate fourth-quarter neuromuscular fatigue",
+      evidence_span: { start_char: 0, end_char: 196, verification_tier: "MSVH_S1_EXACT" },
+      mechanism_quote: "acute workload spikes exceed chronic tissue adaptation causing fourth-quarter physical performance degradation and turnover spikes",
+      mechanism_span: { start_char: 0, end_char: 131, verification_tier: "MSVH_S1_EXACT" },
+      applicable_context_fields: ["acute_chronic_workload_ratio"],
+      influence_direction: "negative",
+      conditional_threshold: null,
+      parsed_threshold_value: null,
+      parsed_threshold_operator: null,
+      claim_type: "causal",
+      influence_description: "Penalizes teams with acute workload spikes exceeding tissue adaptation thresholds",
+    };
+
+    // 1. Sweet spot band [0.8, 1.3] yields exactly 0 delta
+    const sweetSpotRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.05 }, [gabbettAcwrPrinciple]);
+    assert.equal(sweetSpotRes.total_delta, 0.0, "Sweet spot ACWR (1.05) must yield 0 total delta");
+    assert.ok(sweetSpotRes.rendered_prose.includes("optimal sweet-spot band"), "Prose must indicate sweet spot");
+
+    // 2. Below hazard threshold (< 1.40) yields exactly 0 delta
+    const belowHazardRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.35 }, [gabbettAcwrPrinciple]);
+    assert.equal(belowHazardRes.total_delta, 0.0, "ACWR below hazard threshold (1.35) must yield 0 delta");
+    assert.ok(belowHazardRes.rendered_prose.includes("below the 1.40 injury hazard threshold"), "Prose must indicate below threshold");
+
+    // 3. Elevated hazard (>= 1.40) yields strictly negative delta and theoretical weight when unconditioned
+    const unconditionedRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.52 }, [gabbettAcwrPrinciple]);
+    assert.ok(unconditionedRes.total_delta < 0, "Elevated ACWR (1.52) must yield negative hazard delta");
+    assert.equal(unconditionedRes.adjustments[0].final_delta, -0.10, "Delta must be clamped to -0.10 probability scale");
+    assert.equal(unconditionedRes.audit_trail[0].confidence_weight, 0.3, "Unconditioned ACWR must have weight reduced to theoretical 0.3");
+    assert.ok(unconditionedRes.rendered_prose.includes("Schedule confound not conditioned"), "Prose must log schedule confound caveat");
+
+    // 4. Conditioned on current session load restores causal weight (1.0)
+    const conditionedRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.52, current_session_load: 650 }, [gabbettAcwrPrinciple]);
+    assert.equal(conditionedRes.audit_trail[0].confidence_weight, 1.0, "Conditioned ACWR must use causal weight 1.0");
+
+    // 5. In-quote perturbation scales raw delta proportionally
+    const mutatedGabbett: VerifiedSituationalPrinciple = {
+      ...gabbettAcwrPrinciple,
+      numeric_claim: "+4.4x injury and late-game fatigue hazard above 1.40 ACWR",
+      parsed_float_magnitude: 0.44,
+      evidence_quote: "American football contact and repetitive workload spikes above 1.40 acute-to-chronic workload ratio increase relative injury hazard by 4.4 times and accelerate fourth-quarter neuromuscular fatigue",
+    };
+    const baseRaw = unconditionedRes.audit_trail[0].parsed_delta_applied;
+    const mutatedRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.52 }, [mutatedGabbett]);
+    const mutatedRaw = mutatedRes.audit_trail[0].parsed_delta_applied;
+    const ratio = mutatedRaw / baseRaw;
+    assert.ok(Math.abs(ratio - 2.0) < 1e-6, `Expected ACWR raw delta ratio 2.0x, got ${ratio}`);
+  });
+
+  it("Probe T7: Residual Hardcode Eradication Invariant (Ungrounded principles produce 0 magnitude)", () => {
+    const { toVerifiedSituationalPrinciple } = require("../mind-reasoning.js");
+
+    // Case A: Missing magnitude and ungrounded quote
+    const ungroundedRecord = {
+      item_id: "UNGROUNDED_TEST_01",
+      title: "General Training Workload Observations",
+      principle_or_feature: "General Workload Observation",
+      evidence_quote: "Players undergo weekly training load cycles during the season.",
+      applicable_context_fields: ["acute_chronic_workload_ratio"],
+      influence_direction: "positive",
+      numeric_claim: null,
+      parsed_float_magnitude: 0,
+      how_it_influences_reasoning: "General notes without numbers",
+    };
+
+    const vp = toVerifiedSituationalPrinciple(ungroundedRecord);
+    assert.equal(vp.parsed_float_magnitude, 0.0, "Ungrounded principle must have magnitude 0.0 (no 0.22 fallback)");
+    // Should also be purged from acute_chronic_workload_ratio due to strict gate
+    assert.ok(!vp.applicable_context_fields.includes("acute_chronic_workload_ratio"), "Ungrounded record must be purged from ACWR");
+
+    // Case B: Fabricated 0.22 in parsed magnitude where evidence quote has no number
+    const fabricated022Record = {
+      item_id: "FABRICATED_022_TEST",
+      title: "Fabricated Workload Claim",
+      principle_or_feature: "Fabricated Claim",
+      evidence_quote: "Repetitive training causes general muscular fatigue during two-a-days.",
+      applicable_context_fields: ["acute_chronic_workload_ratio"],
+      influence_direction: "negative",
+      numeric_claim: "0.22",
+      parsed_float_magnitude: 0.22,
+      how_it_influences_reasoning: "Fabricated claim",
+    };
+
+    const vpFabricated = toVerifiedSituationalPrinciple(fabricated022Record);
+    assert.equal(vpFabricated.parsed_float_magnitude, 0.0, "Fabricated 0.22 missing from quote must be zeroed");
+  });
 });

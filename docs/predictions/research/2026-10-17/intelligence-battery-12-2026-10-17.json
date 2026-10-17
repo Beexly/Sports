@@ -1,5 +1,5 @@
 {
-  "execution_timestamp_utc": "2026-10-17T13:07:45.757Z",
+  "execution_timestamp_utc": "2026-10-17T14:32:52.751Z",
   "total_scenarios_evaluated": 12,
   "scenarios": [
     {
@@ -24,82 +24,82 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 247.2751338741222,
+        "total_delta": 0.6,
         "adjustments_count": 10,
         "adjustments": [
           {
             "field": "altitude_feet",
-            "final_delta": 7.258110471910107,
-            "consensus_ratio": 0.9939555022599845,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9997467203450683,
             "resolution_status": "APPLIED"
           },
           {
             "field": "wind_speed_mph",
-            "final_delta": -5.960793103448276,
-            "consensus_ratio": 0.8858908721922418,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.9017911999621908,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ambient_temp_fahrenheit",
-            "final_delta": 13.908517241379313,
-            "consensus_ratio": 0.8858908721922419,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9017911999621908,
             "resolution_status": "APPLIED"
           },
           {
             "field": "acoustic_crowd_spl_db",
-            "final_delta": 1.9075475150170609,
-            "consensus_ratio": 0.9630513174700199,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9961189688516064,
             "resolution_status": "APPLIED"
           },
           {
             "field": "circadian_travel_timezones",
-            "final_delta": 1.9938564173591866,
-            "consensus_ratio": 0.9379607470598953,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9384098094190738,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ol_continuity_shared_snaps_pct",
-            "final_delta": 0.22607732732732724,
+            "final_delta": 0.1,
             "consensus_ratio": 0.4218811949155988,
             "resolution_status": "APPLIED"
           },
           {
             "field": "market_steam_velocity_pts_hr",
-            "final_delta": 4.31064683544304,
+            "final_delta": 0.1,
             "consensus_ratio": 0.998692618396777,
             "resolution_status": "APPLIED"
           },
           {
             "field": "reverse_line_movement_divergence_pct",
-            "final_delta": 117.73601777777783,
-            "consensus_ratio": 0.9986928191966625,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9986986156808928,
             "resolution_status": "APPLIED"
           },
           {
             "field": "acute_chronic_workload_ratio",
-            "final_delta": 100.84694421152213,
-            "consensus_ratio": 0.9998308424315101,
+            "final_delta": -0.1,
+            "consensus_ratio": 1,
             "resolution_status": "APPLIED"
           },
           {
             "field": "coach_fourth_down_aggressiveness_pct",
-            "final_delta": 5.048209179834468,
-            "consensus_ratio": 0.7303621291211033,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.43179547806448737,
             "resolution_status": "APPLIED"
           }
         ],
-        "audit_records_count": 1093,
-        "rendered_prose_length": 633643
+        "audit_records_count": 773,
+        "rendered_prose_length": 478446
       },
       "product_outputs": {
-        "applicable_principles_matched": 767,
+        "applicable_principles_matched": 267,
         "net_situational_adjustment": 0.15,
         "situational_pick": {
           "selection": "DEN -1.5",
           "conviction": "SOLID",
-          "model_fair_probability": 0.554612971520287,
+          "model_fair_probability": 0.5563220691382766,
           "market_implied_probability": 0.525,
-          "raw_edge": 0.029612971520286968,
+          "raw_edge": 0.03132206913827662,
           "primary_citations": [
             {
               "id": "arXiv:2305.10262",
@@ -135,7 +135,7 @@
           "gpp_strategy": "Target contrarian tournament leverage on SEA short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.",
           "targets_count": 3
         },
-        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: SEA at DEN | Venue: Empower Field at Mile High, Denver | Weather: Clear, 28F, wind 18mph\nMIND KNOWLEDGE ACTIVATION: 767 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: DEN -1.5 (Conviction: SOLID)\nFair Probability: 55.5% vs Market: 52.5% (Edge: +2.96%)\nPrimary Mind Citations:\n  * [arXiv:2305.10262] Continuous Pocket STRAIN Surface & Non-Linear Turnover Spike: \"cumulative pocket strain crossing critical threshold prior to 2.2 seconds spikes QB off-target rate by 34 percent and triples interception rate\" -> Impact: +0.0600\n  * [arXiv:2309.00756] Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance: \"coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame\" -> Impact: -0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: DEN Trench & Altitude Correlated Under SGP (Estimated Fair: +177 vs Retail: +384)\nCorrelation Edge: +74.7% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] DEN ML (-130) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] UNDER 43.5 (-170) — Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion.\n  Leg: [PROP] SEA Under 20.5 Pts (-138) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with DEN ground volume and defensive unit; thin air (5280ft) and high decibels (98 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on SEA short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] DEN Primary RB / Ground Attack (DEN): High-volume floor protected by positive OL continuity delta (+0.25) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] SEA Slot WR / Receiving RB (SEA): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] SEA Perimeter Deep Threat WR (SEA): Aerodynamic drag in 18mph wind and 28°F cold suppresses deep ball trajectory completion rate; fade low-volume perimeter variance (arXiv:2401.16392).\n===================================================================="
+        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: SEA at DEN | Venue: Empower Field at Mile High, Denver | Weather: Clear, 28F, wind 18mph\nMIND KNOWLEDGE ACTIVATION: 267 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: DEN -1.5 (Conviction: SOLID)\nFair Probability: 55.6% vs Market: 52.5% (Edge: +3.13%)\nPrimary Mind Citations:\n  * [arXiv:2305.10262] Continuous Pocket STRAIN Surface & Non-Linear Turnover Spike: \"cumulative pocket strain crossing critical threshold prior to 2.2 seconds spikes QB off-target rate by 34 percent and triples interception rate\" -> Impact: +0.0600\n  * [arXiv:2309.00756] Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance: \"coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame\" -> Impact: -0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: DEN Trench & Altitude Correlated Under SGP (Estimated Fair: +177 vs Retail: +384)\nCorrelation Edge: +74.7% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] DEN ML (-130) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] UNDER 43.5 (-170) — Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion.\n  Leg: [PROP] SEA Under 20.5 Pts (-138) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with DEN ground volume and defensive unit; thin air (5280ft) and high decibels (98 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on SEA short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] DEN Primary RB / Ground Attack (DEN): High-volume floor protected by positive OL continuity delta (+0.25) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] SEA Slot WR / Receiving RB (SEA): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] SEA Perimeter Deep Threat WR (SEA): Aerodynamic drag in 18mph wind and 28°F cold suppresses deep ball trajectory completion rate; fade low-volume perimeter variance (arXiv:2401.16392).\n===================================================================="
       }
     },
     {
@@ -160,70 +160,70 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 12.412686106109337,
+        "total_delta": 0.3255574424460432,
         "adjustments_count": 8,
         "adjustments": [
           {
             "field": "altitude_feet",
-            "final_delta": 0.020619632022471895,
-            "consensus_ratio": 0.9939555022599841,
+            "final_delta": 0.02555744244604316,
+            "consensus_ratio": 0.9997467203450683,
             "resolution_status": "APPLIED"
           },
           {
             "field": "wind_speed_mph",
-            "final_delta": -1.986931034482759,
-            "consensus_ratio": 0.8858908721922418,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.901791199962191,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ambient_temp_fahrenheit",
-            "final_delta": -3.973862068965518,
-            "consensus_ratio": 0.8858908721922418,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.901791199962191,
             "resolution_status": "APPLIED"
           },
           {
             "field": "acoustic_crowd_spl_db",
-            "final_delta": 0.4402032726962451,
-            "consensus_ratio": 0.9630513174700199,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9961189688516063,
             "resolution_status": "APPLIED"
           },
           {
             "field": "rest_differential_days",
-            "final_delta": 5.978245152354568,
-            "consensus_ratio": 0.9369511170907515,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9351028584452922,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ol_continuity_shared_snaps_pct",
-            "final_delta": 0.09043093093093088,
+            "final_delta": 0.1,
             "consensus_ratio": 0.42188119491559867,
             "resolution_status": "APPLIED"
           },
           {
             "field": "reverse_line_movement_divergence_pct",
-            "final_delta": 11.212954074074089,
-            "consensus_ratio": 0.9986928191966628,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.998698615680893,
             "resolution_status": "APPLIED"
           },
           {
             "field": "coach_fourth_down_aggressiveness_pct",
-            "final_delta": 0.6310261474793085,
-            "consensus_ratio": 0.7303621291211033,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.43179547806448737,
             "resolution_status": "APPLIED"
           }
         ],
-        "audit_records_count": 561,
-        "rendered_prose_length": 328774
+        "audit_records_count": 304,
+        "rendered_prose_length": 181724
       },
       "product_outputs": {
-        "applicable_principles_matched": 354,
+        "applicable_principles_matched": 254,
         "net_situational_adjustment": 0.15,
         "situational_pick": {
           "selection": "MIA -2.5",
-          "conviction": "SOLID",
-          "model_fair_probability": 0.5855986213945323,
+          "conviction": "LEAN",
+          "model_fair_probability": 0.574525848872532,
           "market_implied_probability": 0.56,
-          "raw_edge": 0.025598621394532284,
+          "raw_edge": 0.014525848872531943,
           "primary_citations": [
             {
               "id": "arXiv:2408.10867",
@@ -238,9 +238,9 @@
               "delta": 0.06
             },
             {
-              "id": "2609.08249",
+              "id": "2505.21882",
               "principle": "Atmospheric Density & Aerodynamic Drag on Ball Flight",
-              "quote": "We examine two major factors that influence the optimum projection angle: aerodynamic forces and the effect of run-up.",
+              "quote": "Additionally, we construct a million-level tennis cross-tournament dataset spanning from 2012-2023 Wimbledon and 2013-2023 US Open, and validate the multi-granularity modeling capability of HydraNet for the MS metric on ",
               "delta": -0.06
             }
           ]
@@ -259,7 +259,7 @@
           "gpp_strategy": "Target contrarian tournament leverage on BUF short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.",
           "targets_count": 3
         },
-        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: BUF at MIA | Venue: Hard Rock Stadium, Miami | Weather: Warm, 82F, humid\nMIND KNOWLEDGE ACTIVATION: 354 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: MIA -2.5 (Conviction: SOLID)\nFair Probability: 58.6% vs Market: 56.0% (Edge: +2.56%)\nPrimary Mind Citations:\n  * [arXiv:2408.10867] Short-Rest Thursday Asymmetry & Fourth-Quarter Fatigue Decay: \"short-rest road teams suffer a 28 percent drop in fourth-quarter pass-rush rotation efficiency producing late-game scoring spikes\" -> Impact: -0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n  * [2609.08249] Atmospheric Density & Aerodynamic Drag on Ball Flight: \"We examine two major factors that influence the optimum projection angle: aerodynamic forces and the effect of run-up.\" -> Impact: -0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: MIA Trench & Altitude Correlated Under SGP (Estimated Fair: +199 vs Retail: +470)\nCorrelation Edge: +90.7% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] MIA ML (-138) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] OVER 43.5 (-117) — High fourth-down aggressiveness and fast paced drives elevate scoring ceiling.\n  Leg: [PROP] BUF Under 20.5 Pts (-127) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with MIA ground volume and defensive unit; thin air (15ft) and high decibels (88 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on BUF short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] MIA Primary RB / Ground Attack (MIA): High-volume floor protected by positive OL continuity delta (+0.10) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] BUF Slot WR / Receiving RB (BUF): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] BUF High-Snap Rotational DL / RB2 (BUF): Short-rest Thursday fatigue decay (Lopez et al. 28% workload drop, arXiv:2408.10867) limits 4th-quarter snap efficiency and pressure generation.\n===================================================================="
+        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: BUF at MIA | Venue: Hard Rock Stadium, Miami | Weather: Warm, 82F, humid\nMIND KNOWLEDGE ACTIVATION: 254 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: MIA -2.5 (Conviction: LEAN)\nFair Probability: 57.5% vs Market: 56.0% (Edge: +1.45%)\nPrimary Mind Citations:\n  * [arXiv:2408.10867] Short-Rest Thursday Asymmetry & Fourth-Quarter Fatigue Decay: \"short-rest road teams suffer a 28 percent drop in fourth-quarter pass-rush rotation efficiency producing late-game scoring spikes\" -> Impact: -0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n  * [2505.21882] Atmospheric Density & Aerodynamic Drag on Ball Flight: \"Additionally, we construct a million-level tennis cross-tournament dataset spanning from 2012-2023 Wimbledon and 2013-2023 US Open, and validate the multi-granularity modeling capability of HydraNet for the MS metric on \" -> Impact: -0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: MIA Trench & Altitude Correlated Under SGP (Estimated Fair: +199 vs Retail: +470)\nCorrelation Edge: +90.7% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] MIA ML (-138) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] OVER 43.5 (-117) — High fourth-down aggressiveness and fast paced drives elevate scoring ceiling.\n  Leg: [PROP] BUF Under 20.5 Pts (-127) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with MIA ground volume and defensive unit; thin air (15ft) and high decibels (88 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on BUF short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] MIA Primary RB / Ground Attack (MIA): High-volume floor protected by positive OL continuity delta (+0.10) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] BUF Slot WR / Receiving RB (BUF): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] BUF High-Snap Rotational DL / RB2 (BUF): Short-rest Thursday fatigue decay (Lopez et al. 28% workload drop, arXiv:2408.10867) limits 4th-quarter snap efficiency and pressure generation.\n===================================================================="
       }
     },
     {
@@ -284,71 +284,65 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 198.50894019391916,
+        "total_delta": 0.30000000000000004,
         "adjustments_count": 7,
         "adjustments": [
           {
             "field": "altitude_feet",
-            "final_delta": 0.8247852808988752,
-            "consensus_ratio": 0.9939555022599841,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9997467203450682,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ambient_temp_fahrenheit",
-            "final_delta": -0.6623103448275862,
-            "consensus_ratio": 0.8858908721922419,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.9017911999621907,
             "resolution_status": "APPLIED"
           },
           {
             "field": "acoustic_crowd_spl_db",
-            "final_delta": 1.0271409696245726,
-            "consensus_ratio": 0.96305131747002,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9961189688516062,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ol_continuity_shared_snaps_pct",
-            "final_delta": -0.1356463963963963,
+            "final_delta": -0.1,
             "consensus_ratio": 0.4218811949155985,
             "resolution_status": "APPLIED"
           },
           {
             "field": "market_steam_velocity_pts_hr",
-            "final_delta": 4.31064683544304,
+            "final_delta": 0.1,
             "consensus_ratio": 0.998692618396777,
             "resolution_status": "APPLIED"
           },
           {
             "field": "reverse_line_movement_divergence_pct",
-            "final_delta": 190.62021925925941,
-            "consensus_ratio": 0.9986928191966626,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9986986156808928,
             "resolution_status": "APPLIED"
           },
           {
             "field": "coach_fourth_down_aggressiveness_pct",
-            "final_delta": 2.524104589917234,
-            "consensus_ratio": 0.7303621291211033,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.43179547806448737,
             "resolution_status": "APPLIED"
           }
         ],
-        "audit_records_count": 590,
-        "rendered_prose_length": 339216
+        "audit_records_count": 356,
+        "rendered_prose_length": 206845
       },
       "product_outputs": {
-        "applicable_principles_matched": 327,
+        "applicable_principles_matched": 226,
         "net_situational_adjustment": 0.15,
         "situational_pick": {
           "selection": "DAL -3",
           "conviction": "SOLID",
-          "model_fair_probability": 0.6209643174204355,
+          "model_fair_probability": 0.6164303218913704,
           "market_implied_probability": 0.585,
-          "raw_edge": 0.03596431742043549,
+          "raw_edge": 0.031430321891370405,
           "primary_citations": [
-            {
-              "id": "arXiv:2309.00756",
-              "principle": "Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance",
-              "quote": "coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame",
-              "delta": -0.06
-            },
             {
               "id": "arXiv:1702.05982",
               "principle": "Probability-Calibrated Selective Pass Discipline Against Vig",
@@ -356,9 +350,15 @@
               "delta": 0.06
             },
             {
-              "id": "2608.08531",
-              "principle": "Mixed Integer Linear Programming DFS Roster Optimization",
-              "quote": "Deep learning-driven representations such as neural radiance fields (NeRFs) and 3D Gaussian splatting (3DGS) have revolutionized the field of dynamic 3D scene reconstruction with improved visual precision and scalability.",
+              "id": "2512.00312",
+              "principle": "Kinematic Route Separation & Receiver Velocity Trajectory",
+              "quote": "Using phase-level data from the 2018/19 Premiership Rugby season (35,199 phases across 132 matches) and an angle-distance model of penalty kick success estimated from international records, we construct two surfaces: (i)",
+              "delta": -0.06
+            },
+            {
+              "id": "The Effect of NFL and NCAA Football Games on the Spread of COVID-19 in the United States: An Empirical Analysis",
+              "principle": "Stadium Environmental Asymmetry & Acoustic Latency",
+              "quote": "ABSTRACT Importance In 2020 and early 2021, the National Football League (NFL) and National Collegiate Athletic Association (NCAA) had opted to host games in stadiums across the country.",
               "delta": 0.06
             }
           ]
@@ -377,7 +377,7 @@
           "gpp_strategy": "Target contrarian tournament leverage on PHI short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.",
           "targets_count": 3
         },
-        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: PHI at DAL | Venue: AT&T Stadium, Arlington | Weather: Retractable Roof Closed, 72F\nMIND KNOWLEDGE ACTIVATION: 327 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: DAL -3 (Conviction: SOLID)\nFair Probability: 62.1% vs Market: 58.5% (Edge: +3.60%)\nPrimary Mind Citations:\n  * [arXiv:2309.00756] Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance: \"coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame\" -> Impact: -0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n  * [2608.08531] Mixed Integer Linear Programming DFS Roster Optimization: \"Deep learning-driven representations such as neural radiance fields (NeRFs) and 3D Gaussian splatting (3DGS) have revolutionized the field of dynamic 3D scene reconstruction with improved visual precision and scalability.\" -> Impact: +0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: DAL Trench & Altitude Correlated Under SGP (Estimated Fair: +201 vs Retail: +476)\nCorrelation Edge: +91.6% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] DAL ML (-141) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] UNDER 43.5 (-113) — Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion.\n  Leg: [PROP] PHI Under 20.5 Pts (-127) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with DAL ground volume and defensive unit; thin air (600ft) and high decibels (92 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on PHI short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] PHI Primary RB / Ground Attack (PHI): Floor anchored by away trench protection advantage (OL continuity delta -0.15) exploiting home defensive interior.\n  [GPP_LEVERAGE] DAL Slot WR / Intermediate TE (DAL): Exploits intermediate middle-of-field coverage gaps against rotating safety shells.\n  [FADE_AVOID] PHI Backup RB / Change of Pace (PHI): Negative game script and front-seven penetration compresses secondary touch volume.\n===================================================================="
+        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: PHI at DAL | Venue: AT&T Stadium, Arlington | Weather: Retractable Roof Closed, 72F\nMIND KNOWLEDGE ACTIVATION: 226 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: DAL -3 (Conviction: SOLID)\nFair Probability: 61.6% vs Market: 58.5% (Edge: +3.14%)\nPrimary Mind Citations:\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n  * [2512.00312] Kinematic Route Separation & Receiver Velocity Trajectory: \"Using phase-level data from the 2018/19 Premiership Rugby season (35,199 phases across 132 matches) and an angle-distance model of penalty kick success estimated from international records, we construct two surfaces: (i)\" -> Impact: -0.0600\n  * [The Effect of NFL and NCAA Football Games on the Spread of COVID-19 in the United States: An Empirical Analysis] Stadium Environmental Asymmetry & Acoustic Latency: \"ABSTRACT Importance In 2020 and early 2021, the National Football League (NFL) and National Collegiate Athletic Association (NCAA) had opted to host games in stadiums across the country.\" -> Impact: +0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: DAL Trench & Altitude Correlated Under SGP (Estimated Fair: +201 vs Retail: +476)\nCorrelation Edge: +91.6% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] DAL ML (-141) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] UNDER 43.5 (-113) — Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion.\n  Leg: [PROP] PHI Under 20.5 Pts (-127) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with DAL ground volume and defensive unit; thin air (600ft) and high decibels (92 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on PHI short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] PHI Primary RB / Ground Attack (PHI): Floor anchored by away trench protection advantage (OL continuity delta -0.15) exploiting home defensive interior.\n  [GPP_LEVERAGE] DAL Slot WR / Intermediate TE (DAL): Exploits intermediate middle-of-field coverage gaps against rotating safety shells.\n  [FADE_AVOID] PHI Backup RB / Change of Pace (PHI): Negative game script and front-seven penetration compresses secondary touch volume.\n===================================================================="
       }
     },
     {
@@ -402,71 +402,65 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 19.13345728820783,
+        "total_delta": 0.30000000000000004,
         "adjustments_count": 7,
         "adjustments": [
           {
             "field": "altitude_feet",
-            "final_delta": 0.8247852808988752,
-            "consensus_ratio": 0.9939555022599841,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9997467203450682,
             "resolution_status": "APPLIED"
           },
           {
             "field": "wind_speed_mph",
-            "final_delta": -7.947724137931036,
-            "consensus_ratio": 0.8858908721922418,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.901791199962191,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ambient_temp_fahrenheit",
-            "final_delta": 15.233137931034483,
-            "consensus_ratio": 0.8858908721922418,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9017911999621908,
             "resolution_status": "APPLIED"
           },
           {
             "field": "acoustic_crowd_spl_db",
-            "final_delta": 1.0271409696245726,
-            "consensus_ratio": 0.96305131747002,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9961189688516062,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ol_continuity_shared_snaps_pct",
-            "final_delta": 0.04521546546546544,
+            "final_delta": 0.1,
             "consensus_ratio": 0.42188119491559867,
             "resolution_status": "APPLIED"
           },
           {
             "field": "reverse_line_movement_divergence_pct",
-            "final_delta": 11.212954074074089,
-            "consensus_ratio": 0.9986928191966628,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.998698615680893,
             "resolution_status": "APPLIED"
           },
           {
             "field": "coach_fourth_down_aggressiveness_pct",
-            "final_delta": -1.262052294958617,
-            "consensus_ratio": 0.7303621291211033,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.43179547806448737,
             "resolution_status": "APPLIED"
           }
         ],
-        "audit_records_count": 482,
-        "rendered_prose_length": 279432
+        "audit_records_count": 276,
+        "rendered_prose_length": 162419
       },
       "product_outputs": {
-        "applicable_principles_matched": 327,
+        "applicable_principles_matched": 226,
         "net_situational_adjustment": 0.15,
         "situational_pick": {
           "selection": "BUF -7",
           "conviction": "LEAN",
-          "model_fair_probability": 0.7265291247906198,
+          "model_fair_probability": 0.7369504955886408,
           "market_implied_probability": 0.72,
-          "raw_edge": 0.006529124790619845,
+          "raw_edge": 0.016950495588640813,
           "primary_citations": [
-            {
-              "id": "arXiv:2309.00756",
-              "principle": "Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance",
-              "quote": "coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame",
-              "delta": 0.06
-            },
             {
               "id": "arXiv:1702.05982",
               "principle": "Probability-Calibrated Selective Pass Discipline Against Vig",
@@ -474,9 +468,15 @@
               "delta": 0.06
             },
             {
-              "id": "2609.08249",
+              "id": "2512.00312",
+              "principle": "Kinematic Route Separation & Receiver Velocity Trajectory",
+              "quote": "Using phase-level data from the 2018/19 Premiership Rugby season (35,199 phases across 132 matches) and an angle-distance model of penalty kick success estimated from international records, we construct two surfaces: (i)",
+              "delta": 0.06
+            },
+            {
+              "id": "2505.21882",
               "principle": "Atmospheric Density & Aerodynamic Drag on Ball Flight",
-              "quote": "We examine two major factors that influence the optimum projection angle: aerodynamic forces and the effect of run-up.",
+              "quote": "Additionally, we construct a million-level tennis cross-tournament dataset spanning from 2012-2023 Wimbledon and 2013-2023 US Open, and validate the multi-granularity modeling capability of HydraNet for the MS metric on ",
               "delta": -0.06
             }
           ]
@@ -495,7 +495,7 @@
           "gpp_strategy": "Target contrarian tournament leverage on NE short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.",
           "targets_count": 3
         },
-        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: NE at BUF | Venue: Highmark Stadium, Orchard Park | Weather: Blustery, 24F, wind 24mph sustained, gusts 35mph\nMIND KNOWLEDGE ACTIVATION: 327 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: BUF -7 (Conviction: LEAN)\nFair Probability: 72.7% vs Market: 72.0% (Edge: +0.65%)\nPrimary Mind Citations:\n  * [arXiv:2309.00756] Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance: \"coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame\" -> Impact: +0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n  * [2609.08249] Atmospheric Density & Aerodynamic Drag on Ball Flight: \"We examine two major factors that influence the optimum projection angle: aerodynamic forces and the effect of run-up.\" -> Impact: -0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: BUF Trench & Altitude Correlated Under SGP (Estimated Fair: +159 vs Retail: +313)\nCorrelation Edge: +59.4% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] BUF ML (-257) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] UNDER 43.5 (-150) — Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion.\n  Leg: [PROP] NE Under 20.5 Pts (-127) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with BUF ground volume and defensive unit; thin air (600ft) and high decibels (92 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on NE short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] BUF Primary RB / Ground Attack (BUF): High-volume floor protected by positive OL continuity delta (+0.05) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] NE Slot WR / Receiving RB (NE): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] NE Perimeter Deep Threat WR (NE): Aerodynamic drag in 24mph wind and 24°F cold suppresses deep ball trajectory completion rate; fade low-volume perimeter variance (arXiv:2401.16392).\n===================================================================="
+        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: NE at BUF | Venue: Highmark Stadium, Orchard Park | Weather: Blustery, 24F, wind 24mph sustained, gusts 35mph\nMIND KNOWLEDGE ACTIVATION: 226 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: BUF -7 (Conviction: LEAN)\nFair Probability: 73.7% vs Market: 72.0% (Edge: +1.70%)\nPrimary Mind Citations:\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n  * [2512.00312] Kinematic Route Separation & Receiver Velocity Trajectory: \"Using phase-level data from the 2018/19 Premiership Rugby season (35,199 phases across 132 matches) and an angle-distance model of penalty kick success estimated from international records, we construct two surfaces: (i)\" -> Impact: +0.0600\n  * [2505.21882] Atmospheric Density & Aerodynamic Drag on Ball Flight: \"Additionally, we construct a million-level tennis cross-tournament dataset spanning from 2012-2023 Wimbledon and 2013-2023 US Open, and validate the multi-granularity modeling capability of HydraNet for the MS metric on \" -> Impact: -0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: BUF Trench & Altitude Correlated Under SGP (Estimated Fair: +159 vs Retail: +313)\nCorrelation Edge: +59.4% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] BUF ML (-257) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] UNDER 43.5 (-150) — Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion.\n  Leg: [PROP] NE Under 20.5 Pts (-127) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with BUF ground volume and defensive unit; thin air (600ft) and high decibels (92 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on NE short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] BUF Primary RB / Ground Attack (BUF): High-volume floor protected by positive OL continuity delta (+0.05) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] NE Slot WR / Receiving RB (NE): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] NE Perimeter Deep Threat WR (NE): Aerodynamic drag in 24mph wind and 24°F cold suppresses deep ball trajectory completion rate; fade low-volume perimeter variance (arXiv:2401.16392).\n===================================================================="
       }
     },
     {
@@ -520,70 +520,70 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 15.210481448200749,
+        "total_delta": 0.568153179856115,
         "adjustments_count": 8,
         "adjustments": [
           {
             "field": "altitude_feet",
-            "final_delta": 0.05498568539325836,
-            "consensus_ratio": 0.993955502259984,
+            "final_delta": 0.06815317985611506,
+            "consensus_ratio": 0.9997467203450682,
             "resolution_status": "APPLIED"
           },
           {
             "field": "wind_speed_mph",
-            "final_delta": -2.649241379310345,
-            "consensus_ratio": 0.8858908721922419,
+            "final_delta": -0.1,
+            "consensus_ratio": 0.9017911999621907,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ambient_temp_fahrenheit",
-            "final_delta": 1.655775862068966,
-            "consensus_ratio": 0.885890872192242,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9017911999621909,
             "resolution_status": "APPLIED"
           },
           {
             "field": "acoustic_crowd_spl_db",
-            "final_delta": 0.7336721211604081,
-            "consensus_ratio": 0.9630513174700199,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9961189688516064,
             "resolution_status": "APPLIED"
           },
           {
             "field": "rest_differential_days",
-            "final_delta": 1.9927483841181897,
-            "consensus_ratio": 0.9369511170907516,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.9351028584452922,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ol_continuity_shared_snaps_pct",
-            "final_delta": 0.316508258258258,
+            "final_delta": 0.1,
             "consensus_ratio": 0.4218811949155987,
             "resolution_status": "APPLIED"
           },
           {
             "field": "reverse_line_movement_divergence_pct",
-            "final_delta": 11.212954074074089,
-            "consensus_ratio": 0.9986928191966628,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.998698615680893,
             "resolution_status": "APPLIED"
           },
           {
             "field": "coach_fourth_down_aggressiveness_pct",
-            "final_delta": 1.8930784424379248,
-            "consensus_ratio": 0.7303621291211033,
+            "final_delta": 0.1,
+            "consensus_ratio": 0.4317954780644876,
             "resolution_status": "APPLIED"
           }
         ],
-        "audit_records_count": 561,
-        "rendered_prose_length": 328791
+        "audit_records_count": 304,
+        "rendered_prose_length": 181722
       },
       "product_outputs": {
-        "applicable_principles_matched": 354,
+        "applicable_principles_matched": 254,
         "net_situational_adjustment": 0.15,
         "situational_pick": {
           "selection": "SF -4.5",
           "conviction": "SOLID",
-          "model_fair_probability": 0.6674380601956358,
+          "model_fair_probability": 0.65550086084823,
           "market_implied_probability": 0.635,
-          "raw_edge": 0.032438060195635776,
+          "raw_edge": 0.020500860848229996,
           "primary_citations": [
             {
               "id": "arXiv:2305.10262",
@@ -598,10 +598,10 @@
               "delta": -0.06
             },
             {
-              "id": "arXiv:2309.00756",
-              "principle": "Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance",
-              "quote": "coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame",
-              "delta": -0.06
+              "id": "arXiv:1702.05982",
+              "principle": "Probability-Calibrated Selective Pass Discipline Against Vig",
+              "quote": "beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges",
+              "delta": 0.06
             }
           ]
         },
@@ -619,7 +619,7 @@
           "gpp_strategy": "Target contrarian tournament leverage on LAR short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.",
           "targets_count": 3
         },
-        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: LAR at SF | Venue: Levi's Stadium, Santa Clara | Weather: Mild, 65F, wind 8mph\nMIND KNOWLEDGE ACTIVATION: 354 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: SF -4.5 (Conviction: SOLID)\nFair Probability: 66.7% vs Market: 63.5% (Edge: +3.24%)\nPrimary Mind Citations:\n  * [arXiv:2305.10262] Continuous Pocket STRAIN Surface & Non-Linear Turnover Spike: \"cumulative pocket strain crossing critical threshold prior to 2.2 seconds spikes QB off-target rate by 34 percent and triples interception rate\" -> Impact: +0.0600\n  * [arXiv:2408.10867] Short-Rest Thursday Asymmetry & Fourth-Quarter Fatigue Decay: \"short-rest road teams suffer a 28 percent drop in fourth-quarter pass-rush rotation efficiency producing late-game scoring spikes\" -> Impact: -0.0600\n  * [arXiv:2309.00756] Inverse Reinforcement Learning Coach 4th-Down Blame Avoidance: \"coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down blame\" -> Impact: -0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: SF Trench & Altitude Correlated Under SGP (Estimated Fair: +179 vs Retail: +387)\nCorrelation Edge: +74.5% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] SF ML (-190) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] OVER 43.5 (-117) — High fourth-down aggressiveness and fast paced drives elevate scoring ceiling.\n  Leg: [PROP] LAR Under 20.5 Pts (-138) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with SF ground volume and defensive unit; thin air (40ft) and high decibels (90 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on LAR short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] SF Primary RB / Ground Attack (SF): High-volume floor protected by positive OL continuity delta (+0.35) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] LAR Slot WR / Receiving RB (LAR): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] LAR Backup RB / Change of Pace (LAR): Negative game script and front-seven penetration compresses secondary touch volume.\n===================================================================="
+        "master_reasoning_trace": "=== GSE ENGINE MIND: AUTONOMOUS LITERATURE SITUATIONAL SYNTHESIS ===\nMATCHUP: LAR at SF | Venue: Levi's Stadium, Santa Clara | Weather: Mild, 65F, wind 8mph\nMIND KNOWLEDGE ACTIVATION: 254 applicable scientific principles triggered from literature corpus.\n\n--- 1. SITUATIONAL PICK / LEAN ---\nSelection: SF -4.5 (Conviction: SOLID)\nFair Probability: 65.6% vs Market: 63.5% (Edge: +2.05%)\nPrimary Mind Citations:\n  * [arXiv:2305.10262] Continuous Pocket STRAIN Surface & Non-Linear Turnover Spike: \"cumulative pocket strain crossing critical threshold prior to 2.2 seconds spikes QB off-target rate by 34 percent and triples interception rate\" -> Impact: +0.0600\n  * [arXiv:2408.10867] Short-Rest Thursday Asymmetry & Fourth-Quarter Fatigue Decay: \"short-rest road teams suffer a 28 percent drop in fourth-quarter pass-rush rotation efficiency producing late-game scoring spikes\" -> Impact: -0.0600\n  * [arXiv:1702.05982] Probability-Calibrated Selective Pass Discipline Against Vig: \"beating bookmaker vigorish requires exceeding 52.38 percent break-even threshold through strict pass discipline on marginal edges\" -> Impact: +0.0600\n\n--- 2. SAME-GAME PARLAY (SGP) CORRELATION ---\nStructure: SF Trench & Altitude Correlated Under SGP (Estimated Fair: +179 vs Retail: +387)\nCorrelation Edge: +74.5% over independent pricing (Clayton Copula theta = 1.50)\n  Leg: [SPREAD] SF ML (-190) — Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.\n  Leg: [TOTAL] OVER 43.5 (-117) — High fourth-down aggressiveness and fast paced drives elevate scoring ceiling.\n  Leg: [PROP] LAR Under 20.5 Pts (-138) — Road offensive line continuity deficit compounded by stadium acoustic latency suppresses red zone conversions.\n\n--- 3. FANTASY & DFS SITUATIONAL DIRECTIVES ---\nCash Strategy: Anchor lineups with SF ground volume and defensive unit; thin air (40ft) and high decibels (90 dB) elevate turnover and sack floors while suppressing road conversion efficiency.\nGPP Strategy: Target contrarian tournament leverage on LAR short-route target earners who absorb quick checkdowns when trench pressure collapses pocket time under 2.2 seconds.\n  [CASH_CORE] SF Primary RB / Ground Attack (SF): High-volume floor protected by positive OL continuity delta (+0.35) against fatigued road defensive interior; blocker survival past 2.5s threshold maintains explosive run rate (arXiv:2609.33664).\n  [GPP_LEVERAGE] LAR Slot WR / Receiving RB (LAR): Quick-release target profile beats simulated blitz pressure; pocket strain under 2.2s boundary (arXiv:2305.10262) forces dump-offs into intermediate soft spots against two-high disguise shells (arXiv:2603.25901).\n  [FADE_AVOID] LAR Backup RB / Change of Pace (LAR): Negative game script and front-seven penetration compresses secondary touch volume.\n===================================================================="
       }
     },
     {
@@ -644,7 +644,7 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 0.4373333333333333,
+        "total_delta": 0.18333333333333335,
         "adjustments_count": 2,
         "adjustments": [
           {
@@ -655,7 +655,7 @@
           },
           {
             "field": "circadian_travel_timezones",
-            "final_delta": 0.354,
+            "final_delta": 0.1,
             "consensus_ratio": 1,
             "resolution_status": "APPLIED"
           }
@@ -726,12 +726,12 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": 0.21986666666666665,
+        "total_delta": 0.1,
         "adjustments_count": 1,
         "adjustments": [
           {
             "field": "acoustic_crowd_spl_db",
-            "final_delta": 0.21986666666666665,
+            "final_delta": 0.1,
             "consensus_ratio": 1,
             "resolution_status": "APPLIED"
           }
@@ -802,18 +802,18 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": -0.4576,
+        "total_delta": -0.1,
         "adjustments_count": 1,
         "adjustments": [
           {
             "field": "acute_chronic_workload_ratio",
-            "final_delta": -0.4576,
+            "final_delta": -0.1,
             "consensus_ratio": 1,
             "resolution_status": "APPLIED"
           }
         ],
         "audit_records_count": 1,
-        "rendered_prose_length": 704
+        "rendered_prose_length": 775
       },
       "product_outputs": {
         "applicable_principles_matched": 1,
@@ -1004,18 +1004,18 @@
         "surface_traction_coeff": 0.8
       },
       "principles_evaluation": {
-        "total_delta": -1.197,
+        "total_delta": -0.2,
         "adjustments_count": 2,
         "adjustments": [
           {
             "field": "wind_speed_mph",
-            "final_delta": -0.22499999999999998,
+            "final_delta": -0.1,
             "consensus_ratio": 1,
             "resolution_status": "APPLIED"
           },
           {
             "field": "ambient_temp_fahrenheit",
-            "final_delta": -0.972,
+            "final_delta": -0.1,
             "consensus_ratio": 1,
             "resolution_status": "APPLIED"
           }

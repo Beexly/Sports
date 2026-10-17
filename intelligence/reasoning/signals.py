@@ -191,3 +191,287 @@ def market_priors_from_kalshi(path: str | Path, event_contains: str) -> list[Mar
                     note=f"yes_ask {p} (0-1 prob scale); Kalshi public read API",
                 ))
     return priors
+
+
+# ---------------------------------------------------------------------------
+# 2026 Ingested Signal Loaders (All-Knowing Reasoning Engine Aperture)
+# ---------------------------------------------------------------------------
+
+NGS_TEAM_ID_MAP = {
+    "3700": "PHI", "4600": "GB", "2120": "DET", "3200": "NE", "2510": "LAR",
+    "0810": "CHI", "3300": "JAX", "4500": "SF", "0200": "ATL", "3430": "NYJ",
+    "2520": "LV", "2310": "SEA", "2250": "TEN", "2700": "MIA", "1050": "CLE",
+    "0920": "CIN", "5110": "TB", "3000": "MIN", "1540": "IND", "3410": "NYG",
+    "1200": "DEN", "4400": "WAS", "0325": "BAL", "1800": "HOU", "2200": "IND",
+    "3800": "PIT", "0610": "BUF", "1400": "LAC", "2400": "KC", "0900": "DAL",
+    "3900": "NO", "0100": "ARI",
+}
+
+
+def signals_from_ngs_2026(path: str | Path, hypotheses: dict[str, str]) -> list[Signal]:
+    """Extract on_field signals from live 2026 Next Gen Stats statboard.
+
+    hypotheses maps team abbreviation or player name -> hypothesis it bears on.
+    Ingests rushYardsOverExpected (RYOE), 8+ defender box %, timeToThrow,
+    and avgSeparation.
+    """
+    p = Path(path)
+    if not p.exists():
+        return []
+    data = _read_json(p)
+    out: list[Signal] = []
+    stats = data.get("stats") or []
+
+    for s in stats:
+        pname = s.get("playerName") or (s.get("player") or {}).get("displayName") or ""
+        tid = s.get("teamId") or (s.get("player") or {}).get("currentTeamId") or ""
+        team = NGS_TEAM_ID_MAP.get(str(tid), "")
+
+        hyp = hypotheses.get(pname) or hypotheses.get(team)
+        if not hyp:
+            continue
+
+        # 1. Rushing features (RYOE, 8+ box %)
+        ryoe = s.get("rushYardsOverExpected")
+        box_pct = s.get("percentAttemptsGteEightDefenders")
+        if ryoe is not None and isinstance(ryoe, (int, float)):
+            if ryoe > 15.0:
+                out.append(Signal(
+                    domain="on_field", metric="ngs_ryoe_positive",
+                    subject=f"{pname} ({team})", direction="supports", hypothesis=hyp,
+                    likelihood_ratio=1.12, verification="MEASURED", value=round(ryoe, 1),
+                    source=str(path),
+                    note=f"2026 NGS RYOE +{ryoe:.1f} yds over expectation indicates elite ground efficiency",
+                    observed_at=str(data.get("season", 2026)),
+                ))
+            elif ryoe < -20.0:
+                out.append(Signal(
+                    domain="on_field", metric="ngs_ryoe_negative",
+                    subject=f"{pname} ({team})", direction="contradicts", hypothesis=hyp,
+                    likelihood_ratio=1.08, verification="MEASURED", value=round(ryoe, 1),
+                    source=str(path),
+                    note=f"2026 NGS RYOE {ryoe:.1f} yds under expectation indicates rushing trench friction",
+                    observed_at=str(data.get("season", 2026)),
+                ))
+
+        if box_pct is not None and isinstance(box_pct, (int, float)) and box_pct > 25.0:
+            out.append(Signal(
+                domain="on_field", metric="ngs_stacked_box_pct",
+                subject=f"{pname} ({team})", direction="supports", hypothesis=hyp,
+                likelihood_ratio=1.07, verification="MEASURED", value=round(box_pct, 1),
+                source=str(path),
+                note=f"Facing 8+ defenders on {box_pct:.1f}% of attempts forces passing volume/play-action",
+                observed_at=str(data.get("season", 2026)),
+            ))
+
+        # 2. Passing features (timeToThrow, passerRating)
+        ttt = s.get("avgTimeToThrow") or s.get("timeToThrow")
+        if ttt is not None and isinstance(ttt, (int, float)):
+            if ttt > 2.85:
+                out.append(Signal(
+                    domain="on_field", metric="ngs_time_to_throw_high",
+                    subject=f"{pname} ({team})", direction="supports", hypothesis=hyp,
+                    likelihood_ratio=1.09, verification="MEASURED", value=round(ttt, 2),
+                    source=str(path),
+                    note=f"Avg time to throw {ttt:.2f}s indicates extended pocket / deep route development",
+                    observed_at=str(data.get("season", 2026)),
+                ))
+
+        # 3. Receiving features (avgSeparation)
+        sep = s.get("avgSeparation")
+        if sep is not None and isinstance(sep, (int, float)):
+            if sep > 3.2:
+                out.append(Signal(
+                    domain="on_field", metric="ngs_separation_elite",
+                    subject=f"{pname} ({team})", direction="supports", hypothesis=hyp,
+                    likelihood_ratio=1.14, verification="MEASURED", value=round(sep, 2),
+                    source=str(path),
+                    note=f"Elite target separation {sep:.2f} yards against coverage",
+                    observed_at=str(data.get("season", 2026)),
+                ))
+
+    return out
+
+
+def signals_from_action_network(path: str | Path, hypotheses: dict[str, str]) -> list[Signal]:
+    """Extract market signals from live Action Network multi-book scoreboard.
+
+    hypotheses maps game matchup (e.g. 'SEA@DEN') or team -> hypothesis.
+    Computes multi-book consensus, Caesars vs DraftKings shade, and spread dispersion.
+    """
+    p = Path(path)
+    if not p.exists():
+        return []
+    data = _read_json(p)
+    out: list[Signal] = []
+
+    for g in data.get("games", []):
+        teams = g.get("teams", [])
+        if len(teams) < 2:
+            continue
+        h_abbr = teams[1].get("abbr") if len(teams) > 1 else ""
+        a_abbr = teams[0].get("abbr") if len(teams) > 0 else ""
+        matchup = f"{a_abbr}@{h_abbr}"
+
+        hyp = hypotheses.get(matchup) or hypotheses.get(h_abbr) or hypotheses.get(a_abbr)
+        if not hyp:
+            continue
+
+        odds = g.get("odds", [])
+        spreads = [o.get("spread_home") for o in odds if o.get("spread_home") is not None]
+        totals = [o.get("total") for o in odds if o.get("total") is not None]
+
+        # Multi-book spread dispersion
+        if len(spreads) >= 2:
+            spread_range = max(spreads) - min(spreads)
+            if spread_range >= 1.0:
+                out.append(Signal(
+                    domain="market", metric="book_spread_dispersion",
+                    subject=matchup, direction="supports", hypothesis=hyp,
+                    likelihood_ratio=1.10, verification="MEASURED", value=spread_range,
+                    source=str(path),
+                    note=f"Multi-book spread dispersion is {spread_range:.1f} pts across {len(spreads)} books; pricing disagreement creates CLV entry",
+                    observed_at=str(g.get("start_time", "")),
+                ))
+
+        # Caesars shade vs market
+        caesars = next((o for o in odds if o.get("book_id") == 68), None)
+        dk = next((o for o in odds if o.get("book_id") == 15), None)
+        if caesars and dk:
+            c_ml = caesars.get("ml_home")
+            dk_ml = dk.get("ml_home")
+            if c_ml is not None and dk_ml is not None:
+                ml_diff = abs(c_ml - dk_ml)
+                if ml_diff >= 15:
+                    out.append(Signal(
+                        domain="market", metric="sharp_retail_shade",
+                        subject=matchup, direction="supports", hypothesis=hyp,
+                        likelihood_ratio=1.12, verification="MEASURED", value=ml_diff,
+                        source=str(path),
+                        note=f"Caesars ({c_ml}) vs DraftKings ({dk_ml}) moneyline shade difference is {ml_diff} cents",
+                        observed_at=str(g.get("start_time", "")),
+                    ))
+
+    return out
+
+
+def signals_from_firecrawl_injuries(path: str | Path, hypotheses: dict[str, str]) -> list[Signal]:
+    """Extract biophysical signals from Firecrawl Alexandria official practice & injury report.
+
+    hypotheses maps player name or team abbreviation -> hypothesis.
+    Tracks DNP count (DIDNOT practice), practice participation trajectory,
+    and game status designations.
+    """
+    p = Path(path)
+    if not p.exists():
+        return []
+    data = _read_json(p)
+    out: list[Signal] = []
+
+    alexandria = (data.get("data") or {}).get("alexandria", [])
+    reports = []
+    for item in alexandria:
+        item_reports = (item.get("data") or {}).get("reports", [])
+        reports.extend(item_reports)
+
+    for r in reports:
+        player = r.get("player") or {}
+        pname = player.get("display_name") or ""
+        pos = player.get("position") or ""
+        team = (r.get("team") or {}).get("abbreviation") or ""
+
+        hyp = hypotheses.get(pname) or hypotheses.get(team)
+        if not hyp:
+            continue
+
+        p_status = r.get("practice_status")
+        p_days = r.get("practice_days") or []
+        dnp_count = sum(1 for d in p_days if (d.get("status") or "").upper() in ("DIDNOT", "DNP"))
+
+        # 2+ consecutive DNPs
+        if dnp_count >= 2:
+            out.append(Signal(
+                domain="biophysical", metric="consecutive_dnp_days",
+                subject=f"{pname} ({pos}, {team})", direction="contradicts", hypothesis=hyp,
+                likelihood_ratio=1.16, verification="MEASURED", value=dnp_count,
+                source=str(path),
+                note=f"Official NFL practice report: {dnp_count} DNP days recorded ({', '.join(r.get('practice_injuries') or ['injury'])})",
+                observed_at=str(r.get("report_date", "")),
+            ))
+        elif p_status == "FULL":
+            out.append(Signal(
+                domain="biophysical", metric="full_practice_return",
+                subject=f"{pname} ({pos}, {team})", direction="supports", hypothesis=hyp,
+                likelihood_ratio=1.08, verification="MEASURED", value="FULL",
+                source=str(path),
+                note=f"Official NFL practice report: returned to FULL participation",
+                observed_at=str(r.get("report_date", "")),
+            ))
+
+    return out
+
+
+def signals_from_cognitive_digest(path: str | Path, hypotheses: dict[str, str]) -> list[Signal]:
+    """Extract cognitive and social signals from presser sentiment and coach-speak digests."""
+    p = Path(path)
+    if not p.exists():
+        return []
+    data = _read_json(p)
+    out: list[Signal] = []
+    sig = data.get("signals") or {}
+
+    for stype in ("presser_sentiment", "coach_speak_delta", "game_context_flag"):
+        for s in sig.get(stype) or []:
+            team = s.get("team") or ""
+            hyp = hypotheses.get(team)
+            if not hyp:
+                continue
+            val = s.get("sentiment_label") or s.get("direction") or s.get("flag") or ""
+            lr = 1.06 if stype == "presser_sentiment" else 1.08
+            direction: Direction = "supports" if val in ("positive", "aggressive", "bullish") else "contradicts"
+            out.append(Signal(
+                domain="cognitive", metric=stype,
+                subject=f"{team} coaching staff", direction=direction, hypothesis=hyp,
+                likelihood_ratio=lr, verification="REPORTED", value=val,
+                source=str(path),
+                note=f"Cognitive ingest: {s.get('evidence_excerpt', '')[:120]}",
+                observed_at=s.get("published_utc", ""),
+            ))
+
+    return out
+
+
+def signals_from_scouting_kinematics(kinematics_list: list[Any], hypotheses: dict[str, str]) -> list[Signal]:
+    """Extract biophysical & on_field kinematic features from NGS Combine/practice tracking."""
+    out: list[Signal] = []
+    for k in kinematics_list:
+        nfl_id = str(getattr(k, "nfl_id", ""))
+        hyp = hypotheses.get(nfl_id)
+        if not hyp:
+            continue
+        peak_s = getattr(k, "peak_speed", 0.0)
+        max_a = getattr(k, "max_acceleration", 0.0)
+        cod = getattr(k, "cod_cost", 0.0)
+
+        # High burst speed (> 20 mph ~= 9.77 yd/s)
+        if peak_s >= 9.5:
+            out.append(Signal(
+                domain="biophysical", metric="scouting_peak_burst_speed",
+                subject=f"Prospect {nfl_id} ({getattr(k, 'drill_type', '')})",
+                direction="supports", hypothesis=hyp,
+                likelihood_ratio=1.12, verification="MEASURED", value=round(peak_s, 2),
+                source="combine_tracking.csv",
+                note=f"10Hz tracking confirmed peak speed {peak_s:.2f} yd/s",
+            ))
+        # Efficient change of direction (low COD cost in 3-cone/shuttle)
+        if cod > 0 and cod < 45.0:
+            out.append(Signal(
+                domain="on_field", metric="scouting_cod_efficiency",
+                subject=f"Prospect {nfl_id} ({getattr(k, 'drill_type', '')})",
+                direction="supports", hypothesis=hyp,
+                likelihood_ratio=1.10, verification="MEASURED", value=round(cod, 1),
+                source="combine_tracking.csv",
+                note=f"High-efficiency change of direction cost {cod:.1f} (elite short-area translation)",
+            ))
+
+    return out

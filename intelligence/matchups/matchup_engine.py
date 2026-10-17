@@ -33,6 +33,8 @@ SOURCES = REPO / "docs" / "data-sources" / "research"
 OUTROOT = REPO / "docs" / "predictions" / "research"
 
 NGS_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json"
+# LineStar usage feed (keyless DNN API): target SHARE / carry SHARE / red zone.
+LINESTAR_USAGE = SOURCES / "2026-10-13" / "linestar" / "linestar_usage_2026-10-13.json"
 NGS_RUSH_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_rushing#yards.2026-07-03T13_53_05.758Z.json"
 INJ_FILE = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
 DC_FILE = SOURCES / "2026-10-13" / "depthcharts" / "espn-depthcharts-2026.json"
@@ -46,6 +48,43 @@ def _load(path: Path):
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
+
+
+_USAGE_CACHE: dict | None = None
+
+
+def _usage() -> dict[str, dict]:
+    """name(lower, suffix-stripped) -> LineStar usage row. Empty if unreadable."""
+    global _USAGE_CACHE
+    if _USAGE_CACHE is None:
+        d = _load(LINESTAR_USAGE)
+        out: dict[str, dict] = {}
+        for row in ((d or {}).get("players") or []):
+            nm = (row.get("name") or "").strip().lower()
+            for suf in (" jr.", " sr.", " iii", " ii", " iv"):
+                if nm.endswith(suf):
+                    nm = nm[: -len(suf)].strip()
+            if nm:
+                out[nm] = row
+        _USAGE_CACHE = out
+    return _USAGE_CACHE
+
+
+def _usage_row(name: str) -> dict:
+    nm = (name or "").strip().lower()
+    for suf in (" jr.", " sr.", " iii", " ii", " iv"):
+        if nm.endswith(suf):
+            nm = nm[: -len(suf)].strip()
+    return _usage() .get(nm) or {}
+
+
+def _pct(v) -> str:
+    """LineStar shares arrive as 0-1 floats; render as percent or name the gap."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return "n/a"
+    return f"{f * 100:.1f}%"
 
 
 def _receivers() -> dict[str, list[dict]]:
@@ -219,6 +258,11 @@ def build_matchups(home: str, away: str) -> dict:
                     "yac_over_expected": r.get("eyac_per_r"),
                     "catch_pct": r.get("catch_pct"),
                     "usage_basis": r.get("usage_title_basis", "targets"),
+                    # LineStar usage feed: real SHARES, trailing 4-week window
+                    "target_share_4wk": _usage_row(r["player"]).get("target_share_4wk"),
+                    "snap_share_4wk": _usage_row(r["player"]).get("snap_share_4wk"),
+                    "rz_targets_4wk": _usage_row(r["player"]).get("rz_targets_4wk"),
+                    "rz_recTD_4wk": _usage_row(r["player"]).get("rz_recTD_4wk"),
                 },
                 "opposing_coverage_status": {  # on-report statuses only (ESPN lists report players, not healthy starters)
                     "out_or_limited": [f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_out],
@@ -286,6 +330,16 @@ def emit_matchup_md(home: str, away: str, date: str) -> tuple[Path, dict]:
             lines.append(f"- targets {f['targets']} | separation {f['separation_yds']} yds | YAC/E R {f['yac_over_expected']} | catch {f['catch_pct']}% (2025-season snapshot, one season stale) [{p['source_receiver']}]")
         else:
             lines.append(f"- {basis} [{p['source_receiver']}]")
+        # LineStar usage feed fires for EVERY skill position that has a row,
+        # not only the rush-att branch: the share IS the usage basis.
+        u = _usage_row(p.get("receiver") or "")
+        if u:
+            lines.append(
+                f"- usage share (LineStar 4wk): target {_pct(u.get('target_share_4wk'))} | "
+                f"snap {_pct(u.get('snap_share_4wk'))} | "
+                f"red-zone targets {u.get('rz_targets_4wk', 'n/a')}, "
+                f"red-zone recTD {u.get('rz_recTD_4wk', 'n/a')}"
+            )
         if p.get("matched_cornerbacks"):
             lines.append(f"- matched slot-1 corners: {'; '.join(p['matched_cornerbacks'])}")
         cs = p["opposing_coverage_status"]

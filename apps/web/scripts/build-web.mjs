@@ -24,6 +24,7 @@ const result = spawnSync(process.execPath, [nextBin, "build"], {
   stdio: "inherit",
   env: {
     ...process.env,
+    SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION ?? "true",
     NODE_OPTIONS: "--max-old-space-size=8192",
   },
 });
