@@ -1,0 +1,27 @@
+{
+ "generated_utc": "2026-10-14T07:50:45.490577+00:00",
+ "model": "linear residual-vs-line on EPA/success/rest deltas (expanding window)",
+ "train_n": 1685,
+ "held_n": 787,
+ "coefficients": {
+  "intercept": 0.654,
+  "dEpaOff_vs_dEpaDef": 4.295,
+  "dEpaDef_vs_dEpaOff": -5.49,
+  "dSuccOff": -4.7727,
+  "dSuccDef": -8.6174,
+  "restHome": 0.19,
+  "restAway": -0.246
+ },
+ "model_sd": 13.33,
+ "market_sd_train": 13.361,
+ "held_out": {
+  "n": 787,
+  "market_logscore": 3.9771,
+  "model_logscore": 3.9758,
+  "market_coverage_90": 0.9022,
+  "model_coverage_90": 0.9009,
+  "model_beats_market_logscore": true,
+  "model_narrower": true
+ },
+ "market_half_verdict": "MODEL BEATS MARKET on the totals margin"
+}

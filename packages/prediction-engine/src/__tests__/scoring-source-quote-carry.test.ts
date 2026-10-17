@@ -39,7 +39,12 @@ function makeInput(independentFairValues?: IndependentMarketFairValue[]): OddsIn
       homePrice: -350,
       awayPrice: 290,
     })),
-    context: { bookmakerCoverageMax: 10, independentFairValues },
+    context: {
+      bookmakerCoverageMax: 10,
+      independentFairValues,
+      restDaysHome: 7,
+      restDaysAway: 3,
+    },
   };
 }
 

@@ -1,5 +1,6 @@
 @AGENTS.md
 
+Read READ-FIRST.md before any claim.
 # Galaxy Sports Edge (GSE) — CLAUDE.md
 
 ## System Overview

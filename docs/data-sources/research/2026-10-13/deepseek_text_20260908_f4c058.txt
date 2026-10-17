@@ -1,0 +1,276 @@
+# HERMES TOTAL COMPETITIVE INTELLIGENCE SKILL
+
+## MISSION
+
+You are a **reverse engineering agent** for Galaxy Sports Edge (GSE). Your mission is to extract **every piece of public engineering intelligence** from 50+ sports‑tech competitors. You will produce **one complete dossier per target** with the following sections. No summary. No marketing fluff. Only raw, verifiable engineering data.
+
+## TARGETS
+
+### Seed List (10 — Process First)
+1. https://oddsjam.com
+2. https://fantasylabs.com
+3. https://rotogrinders.com
+4. https://stokastic.com
+5. https://sabersim.com
+6. https://fantasycruncher.com
+7. https://props.cash
+8. https://outlier.bet
+9. https://rithmm.com
+10. https://dimers.com
+
+### Additional Targets (40 — Discover via Sitemaps, Related Links, SEO)
+- https://fantasyteamadvice.com
+- https://ftnfantasy.com
+- https://draftedge.com
+- https://thesolver.com
+- https://draftwise.app
+- https://dfsace.com
+- https://sharplines.ai
+- https://optimaldfs.com
+- https://bankrollszn.com
+- https://rotowire.com/dfs
+- https://playerprops.ai
+- https://propsbot.ai
+- https://propsiq.app
+- https://propsmadness.com
+- https://vsin.com/pro
+- https://truegamestats.com
+- https://dycers.app
+- https://oddsview.com
+- https://prophetx.com
+- https://novig.com
+- https://og.com
+- https://fanduel.com/predicts
+- https://draftkings.com/predictions
+- https://underdogfantasy.com/predict
+- https://onyxodds.com
+- https://yesorno.ai
+- https://sportmonks.com
+- https://api-sports.io
+- https://thesportsdb.com
+- https://fantasydata.com
+- https://goalserve.com
+- https://allsportsapi.com
+- https://football-data.org
+- https://github.com/floodlight-sports/floodlight
+- https://github.com/eddwebster/football_analytics
+- https://github.com/n-roth12/DFSLineupOptimizer
+- https://github.com/chanzer0/MLB-DFS-Tools
+- https://github.com/jscanga/Sports-Arbitrage-Finder
+- https://github.com/tonyntran/fantasy-auction-assistant
+- https://github.com/J-A-Stone-LLC/fantasy-football-gm
+
+**Discovery Rule:** While processing each target, crawl `sitemap.xml`, `robots.txt`, and outbound links to find **more** targets. Add any new sports‑tech domain you find to the queue.
+
+## EXTRACTION PROTOCOL (Per Target)
+
+For **every target**, you MUST perform ALL of the following. If you cannot find something, write `NOT CONFIRMED` and explain why.
+
+### 1. Network Traffic Analysis
+- Load the homepage in a **headless browser** (use Hermes browser tools).
+- Capture **every network request** (XHR, fetch, WebSocket).
+- Log all API endpoints: URL, method, headers, request/response bodies.
+- Identify **WebSocket connections** and their message formats.
+- Save the **full HAR file** or request log.
+
+### 2. JavaScript Bundle Analysis
+- Fetch **every `.js`, `.mjs`, `.js.map`** file from the page.
+- Parse each file (use Hermes `web_extract` or custom script) to find:
+  - **API base URLs** — `baseURL`, `apiRoot`, `endpoint`, `axios.create`
+  - **Model definitions** — TypeScript interfaces, JSDoc, class properties
+  - **Feature flags** — `user.tier`, `isPremium`, `hasAccess`, `featureEnabled`
+  - **Entitlement logic** — what features are gated by which tier
+  - **Scoring formulas** — look for `*`, `/`, `+`, `-` on player stats, weight constants (e.g., `0.35`), threshold arrays
+  - **Simulation parameters** — `numSims`, `correlationMatrix`, `gameScripts`, `monteCarlo`
+  - **Local storage keys** — what data is cached client‑side
+  - **Error messages** — reveal internal state names and validation rules
+- **Reconstruct each formula** in plain English. Quote the exact code snippet.
+
+### 3. API Discovery
+- Check these paths (use Hermes `web_extract` or browser):
+  - `/openapi.json`, `/swagger.json`, `/swagger.yaml`
+  - `/graphql` — test for introspection: `{__schema{types{name}}}`
+  - `/api`, `/api/v1`, `/api/v2`, `/rest`, `/rpc`
+  - `/docs`, `/api-docs`, `/help`, `/developer`
+  - `/.well-known/`, `/robots.txt`, `/sitemap.xml`
+- If OpenAPI/Swagger is found, **parse the entire spec**.
+- If GraphQL introspection is enabled, **dump the full schema**.
+- If public endpoints exist, make a sample request and save the response.
+
+### 4. Infrastructure Fingerprinting
+- Check **HTTP response headers** for:
+  - `Server`, `X-Powered-By`, `X-AspNet-Version`, `X-GitHub-Request-Id`
+  - `CF-RAY` (Cloudflare), `x-amz-*` (AWS), `X-Google-*` (GCP)
+  - `Set-Cookie` — reveals session management
+- Check **DNS records** for subdomains: `api.`, `app.`, `admin.`, `dev.`, `staging.`
+- Check **SSL certificate** details (issuer, SANs) for hosting provider.
+- Identify **CDN** (Cloudflare, Fastly, Akamai) from headers or asset URLs.
+
+### 5. Mobile Backend Discovery
+- If an iOS app exists:
+  - Fetch the App Store page using `https://apps.apple.com/us/app/<app-name>/id<id>`
+  - Extract **app ID**, **developer name**, **version history**, **IAP price tiers**
+  - Extract the **top 10 one‑star reviews** (customer pain)
+- If an Android app exists:
+  - Fetch the Google Play page
+  - Extract **package name**, **version**, **IAP tiers**, **reviews**
+- Search for **mobile‑specific API endpoints** (e.g., `api-mobile.`, `mobile.`)
+
+### 6. Social & Community Intelligence
+- Search **Reddit** for the domain:
+  - `r/dfsports`, `r/sportsbook`, `r/fantasyfootball`, `r/algobetting`
+- Extract **10 sharpest complaints** with exact quotes and source links.
+- Search **Discord** — look for public invite links on the website, join, observe public channels.
+- Search **Twitter/X** for mentions and complaints.
+- Search **GitHub** for:
+  - `"domain.com"` — find leaked API keys, unofficial clients, reverse‑engineered code
+  - `"domain.com/api"` — find public code samples
+
+### 7. Data Supply Chain
+- Look for attribution lines: "Data provided by...", "Powered by..."
+- Search JavaScript for known vendor names:
+  - `sportradar`, `statsperform`, `opta`, `geniussports`
+  - `the-odds-api`, `odds-api`, `sportsdata.io`
+  - `nflverse`, `nba_api`, `pybaseball`
+- Check help center / FAQ for data source documentation.
+- List every **external vendor** you can confirm.
+
+### 8. Product Limits & Entitlements
+- Look for upgrade boundaries on pricing pages:
+  - "150 lineups per export", "50K simulations per slate", "10 sports"
+- Check Terms of Service, FAQ, API docs for usage caps.
+- Identify the **most restrictive** limit that triggers an upgrade.
+- Map each feature to its required tier.
+
+### 9. Job Postings (Tech Stack Inference)
+- Check the company's **careers page**.
+- Check **LinkedIn** job listings.
+- Check **Greenhouse**, **Lever**, **Ashby** public boards.
+- Extract: programming languages, frameworks, databases, cloud providers, model types.
+- Infer their **future roadmap** from job titles (e.g., "Senior Quant — Monte Carlo Simulation").
+
+### 10. GitHub Repository Analysis (If Found)
+- If the target has a public GitHub org, **clone or fetch all repos**.
+- Parse source code for:
+  - Algorithm implementations (Monte Carlo, Bayesian, XGBoost)
+  - Data pipelines and ETL logic
+  - API clients and data fetchers
+  - Configuration files (revealing dependencies)
+- Identify the **primary algorithm** and **reusable logic**.
+- Check the **license** for reuse potential.
+
+## OUTPUT FORMAT
+
+For **every target**, produce a **JSON dossier** with this exact schema:
+
+```json
+{
+  "domain": "competitor.com",
+  "tech_stack": {
+    "frontend": ["Next.js", "React", "TypeScript"],
+    "backend": ["Node.js", "Python", "Go"],
+    "database": ["PostgreSQL", "Redis", "MongoDB"],
+    "cloud": ["AWS", "GCP", "Azure"],
+    "cdn": ["Cloudflare", "Fastly"],
+    "monitoring": ["Datadog", "Sentry", "NewRelic"],
+    "citations": ["https://..."]
+  },
+  "api_architecture": {
+    "rest_endpoints": [
+      {
+        "method": "GET",
+        "path": "/api/v1/projections",
+        "params": ["slate_id", "sport"],
+        "auth_required": true,
+        "tier": "Pro",
+        "sample_response": "{}",
+        "citation": "https://..."
+      }
+    ],
+    "graphql_schema": "Full schema dump if discovered",
+    "websocket_endpoints": ["wss://api.com/ws/live"],
+    "rate_limits": "100 requests per minute",
+    "citations": ["https://..."]
+  },
+  "data_model": {
+    "collections": [
+      {
+        "name": "players",
+        "fields": ["id", "name", "team", "position", "projections"],
+        "relationships": ["player_stats", "player_ownership"],
+        "citation": "https://..."
+      }
+    ]
+  },
+  "ml_model_infrastructure": {
+    "model_types": ["XGBoost", "Random Forest", "Neural Network"],
+    "training_data": ["Historical play-by-play", "Vegas lines", "Weather"],
+    "inference_endpoint": "https://api.com/v1/predict",
+    "update_frequency": "Daily",
+    "citation": "https://..."
+  },
+  "simulation_engine": {
+    "num_simulations": 10000,
+    "correlation_method": "Copula",
+    "game_scripts": ["scripted"],
+    "optimization_objective": "Max ROI",
+    "citation": "https://..."
+  },
+  "data_pipeline": {
+    "sources": [
+      {"name": "Sportradar", "type": "API", "frequency": "Live"},
+      {"name": "The Odds API", "type": "API", "frequency": "1s"}
+    ],
+    "transformation": "Python pandas ETL",
+    "storage": "S3 + PostgreSQL",
+    "citation": "https://..."
+  },
+  "security_auth": {
+    "auth_method": "JWT",
+    "entitlement": "Tier-based gating",
+    "rate_limiting": "IP-based, 100/min",
+    "citation": "https://..."
+  },
+  "mobile_backend": {
+    "api_endpoints": ["https://api-mobile.com/v1/"],
+    "ios_app_id": "123456789",
+    "android_package": "com.company.app",
+    "citation": "https://..."
+  },
+  "third_party_dependencies": [
+    {"name": "Sportradar", "purpose": "Live stats"},
+    {"name": "AWS S3", "purpose": "Static assets"},
+    {"name": "Datadog", "purpose": "Monitoring"}
+  ],
+  "deployment_infrastructure": {
+    "hosting": "AWS EC2",
+    "ci_cd": "GitHub Actions",
+    "containers": "Docker",
+    "orchestration": "Kubernetes",
+    "citation": "https://..."
+  },
+  "product_limits": {
+    "max_lineups": 150,
+    "max_simulations": 50000,
+    "sports_included": ["NFL", "NBA", "MLB"],
+    "upgrade_triggers": ["lineups > 150", "sims > 50000"],
+    "citation": "https://..."
+  },
+  "customer_pain": [
+    {
+      "quote": "The optimizer freezes when generating more than 100 lineups.",
+      "source": "https://reddit.com/r/dfsports/comments/xyz",
+      "date": "2026-09-01"
+    }
+  ],
+  "discovered_paths": [
+    "/api/internal/health",
+    "/admin/login",
+    "/v1/metrics"
+  ],
+  "discovery_metadata": {
+    "method": "Network analysis, JS parsing, header inspection, Reddit scraping",
+    "timestamp": "2026-09-08T12:00:00Z",
+    "citations": ["https://..."]
+  }
+}

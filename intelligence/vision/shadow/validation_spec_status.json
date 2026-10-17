@@ -1,0 +1,54 @@
+{
+ "spec_version": "1.0",
+ "evaluated_at": "2026-10-14T15:23:30.134948+00:00",
+ "mode": "SELF-TEST (real 2025 identity joins; no tracklet geometry)",
+ "criteria": {
+  "join_completeness": {
+   "threshold": 0.95,
+   "measured": 1.0,
+   "met": true,
+   "note": "measured on participation-identity joins; tracklet/OCR denominator still pending"
+  },
+  "join_accuracy": {
+   "measured": null,
+   "met": null,
+   "blocked": {
+    "threshold": 0.98,
+    "definition": "On a manually labeled sample of >=200 player-plays, joined player_id matches true roster identity.",
+    "ground_truth": "manual label sample; cross-checkable against depth_charts gsis_id",
+    "measured_on": "player-plays"
+   }
+  },
+  "temporal_alignment": {
+   "measured": true,
+   "met": true,
+   "note": "PBP-twin check over 500 joins"
+  },
+  "no_silent_imputation": {
+   "measured": 0,
+   "met": true,
+   "note": "identity_join refuses on mismatch; join_nflverse_when_identity null+reasons on missing jersey"
+  },
+  "downstream_calibration_check": {
+   "measured": null,
+   "met": null,
+   "blocked": {
+    "threshold": "post-join film features must IMPROVE or be NEUTRAL to held-out log-score; degradation FAILS even if the join is accurate",
+    "measurement": "reliability/log-score comparison on a held-out week, with vs without recomputed player-level features (route mix, avg separation)",
+    "baseline": "docs/data-sources/research/2026-10-14/reliability-baseline.json (log-score -0.6162 regular / -0.5867 enriched)"
+   }
+  },
+  "freshness_bound": {
+   "measured": null,
+   "met": null,
+   "blocked": {
+    "threshold": "joined row available to the decision layer before the relevant market moves more than the declared threshold",
+    "measurement": "join timestamp vs market-move timestamp (kalshi_full_slate captures at N-minute cadence)",
+    "late_rule": "late joins are marked STALE and do not count toward join_completeness"
+   }
+  }
+ },
+ "validation_spec_met": false,
+ "why": "join_accuracy (manual labels) and downstream_calibration (real tracklet features) cannot be measured without footage-derived data",
+ "next_action": "when tracklets + OCR crops land, rerun this harness; all criteria flip from the same functions"
+}

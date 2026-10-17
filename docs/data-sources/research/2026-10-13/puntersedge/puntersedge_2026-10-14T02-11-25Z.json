@@ -1,0 +1,353 @@
+{
+  "demo": true,
+  "note": "Free sandbox sample (truncated). Get a free API key for full data: https://puntersedge.online/api?utm_source=demo_api&utm_medium=sandbox",
+  "signup_url": "https://puntersedge.online/api?utm_source=demo_api&utm_medium=sandbox",
+  "shape": "Sandbox teaser: 3 races, 5 runners, best 3 prices, wrapped in this envelope. GET /v1/racing/next-to-go returns a bare array of full race objects. race_id matches, so anything you build here extends to /v1/racing/price-history, /results and /closing-lines.",
+  "as_of": "2026-10-14T02:11:13Z",
+  "races": [
+    {
+      "race_id": "dacfa250-ce65-4780-a8dd-1c6c378c22eb",
+      "venue": "Murray Bridge Straight",
+      "race_number": 5,
+      "category": "greyhound",
+      "start_time": "2026-10-14T02:15:00Z",
+      "country": "AU",
+      "books_quoting": 13,
+      "runners": [
+        {
+          "name": "Booterstown",
+          "number": 1,
+          "bookmakers": [
+            {
+              "key": "pointsbetau",
+              "win_price": 6.5,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Murray-Bridge-Straight/race/117010022"
+            },
+            {
+              "key": "tab",
+              "win_price": 6.5,
+              "source_url": "https://www.tab.com.au/racing/2026-10-14/MURRAY-BRIDGE-STRAIGHT/MTS/G/5"
+            },
+            {
+              "key": "bet365",
+              "win_price": 6.5
+            }
+          ]
+        },
+        {
+          "name": "Crystal Crown",
+          "number": 2,
+          "bookmakers": [
+            {
+              "key": "tab",
+              "win_price": 5.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-14/MURRAY-BRIDGE-STRAIGHT/MTS/G/5"
+            },
+            {
+              "key": "betgold",
+              "win_price": 4.8
+            },
+            {
+              "key": "betright",
+              "win_price": 4.8,
+              "source_url": "https://www.betright.com.au/racing/murray-bridge-straight/5/63918078/win"
+            }
+          ]
+        },
+        {
+          "name": "If I Could",
+          "number": 4,
+          "bookmakers": [
+            {
+              "key": "palmerbet",
+              "win_price": 13.0,
+              "source_url": "https://www.palmerbet.com/racing/greyhound/14-10-2026/murray%20bridge%20straight/5"
+            },
+            {
+              "key": "pointsbetau",
+              "win_price": 13.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Murray-Bridge-Straight/race/117010022"
+            },
+            {
+              "key": "unibet",
+              "win_price": 12.0,
+              "source_url": "https://www.unibet.com.au/racing#/event/202610140200.G.AUS.murray_bridge_straight.5"
+            }
+          ]
+        },
+        {
+          "name": "Cheat Code",
+          "number": 5,
+          "bookmakers": [
+            {
+              "key": "pointsbetau",
+              "win_price": 51.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Murray-Bridge-Straight/race/117010022"
+            },
+            {
+              "key": "sportsbet",
+              "win_price": 46.0,
+              "source_url": "https://www.sportsbet.com.au/greyhound-racing/australia-nz/murray-bridge-straight/race-5-11043105"
+            },
+            {
+              "key": "betright",
+              "win_price": 41.0,
+              "source_url": "https://www.betright.com.au/racing/murray-bridge-straight/5/63918078/win"
+            }
+          ]
+        },
+        {
+          "name": "Spring Diesel",
+          "number": 7,
+          "bookmakers": [
+            {
+              "key": "sportsbet",
+              "win_price": 101.0,
+              "source_url": "https://www.sportsbet.com.au/greyhound-racing/australia-nz/murray-bridge-straight/race-5-11043105"
+            },
+            {
+              "key": "pointsbetau",
+              "win_price": 101.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Murray-Bridge-Straight/race/117010022"
+            },
+            {
+              "key": "unibet",
+              "win_price": 81.0,
+              "source_url": "https://www.unibet.com.au/racing#/event/202610140200.G.AUS.murray_bridge_straight.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "race_id": "25731aa6-4bfb-47df-b19b-c72794533f0a",
+      "venue": "The Meadows",
+      "race_number": 7,
+      "category": "greyhound",
+      "start_time": "2026-10-14T02:20:00Z",
+      "country": "AU",
+      "books_quoting": 14,
+      "runners": [
+        {
+          "name": "Wyong Houston",
+          "number": 1,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 31.0,
+              "source_url": "https://www.betright.com.au/racing/the-meadows/7/63918126/win"
+            },
+            {
+              "key": "pointsbetau",
+              "win_price": 29.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/The-Meadows/race/117006009"
+            },
+            {
+              "key": "playup",
+              "win_price": 26.0,
+              "source_url": "https://www.playup.com.au/betting/racing/race/278453"
+            }
+          ]
+        },
+        {
+          "name": "Mighty Miss",
+          "number": 2,
+          "bookmakers": [
+            {
+              "key": "sportsbet",
+              "win_price": 6.0,
+              "source_url": "https://www.sportsbet.com.au/greyhound-racing/australia-nz/the-meadows/race-7-11042802"
+            },
+            {
+              "key": "unibet",
+              "win_price": 6.0,
+              "source_url": "https://www.unibet.com.au/racing#/event/202610140200.G.AUS.the_meadows.7"
+            },
+            {
+              "key": "betright",
+              "win_price": 6.0,
+              "source_url": "https://www.betright.com.au/racing/the-meadows/7/63918126/win"
+            }
+          ]
+        },
+        {
+          "name": "High Five Indi",
+          "number": 3,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 21.0,
+              "source_url": "https://www.betright.com.au/racing/the-meadows/7/63918126/win"
+            },
+            {
+              "key": "pointsbetau",
+              "win_price": 20.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/The-Meadows/race/117006009"
+            },
+            {
+              "key": "palmerbet",
+              "win_price": 19.0,
+              "source_url": "https://www.palmerbet.com/racing/greyhound/14-10-2026/the%20meadows/7"
+            }
+          ]
+        },
+        {
+          "name": "Zipping Tesfay",
+          "number": 4,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 5.25,
+              "source_url": "https://www.betright.com.au/racing/the-meadows/7/63918126/win"
+            },
+            {
+              "key": "betr_au",
+              "win_price": 5.0,
+              "source_url": "https://www.betr.com.au/racing/Australian-Greyhound/The%20Meadows/Race-7/92873099/win"
+            },
+            {
+              "key": "betdeluxe",
+              "win_price": 5.0,
+              "source_url": "https://www.betdeluxe.com.au/racing/Greyhound/AUS/The%20Meadows/846385/7/12129719"
+            }
+          ]
+        },
+        {
+          "name": "Opawa Leo",
+          "number": 6,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 6.0,
+              "source_url": "https://www.betright.com.au/racing/the-meadows/7/63918126/win"
+            },
+            {
+              "key": "betr_au",
+              "win_price": 5.5,
+              "source_url": "https://www.betr.com.au/racing/Australian-Greyhound/The%20Meadows/Race-7/92873099/win"
+            },
+            {
+              "key": "boostbet",
+              "win_price": 5.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "race_id": "cde0ae3f-d279-4f25-9d48-6bcf49446bac",
+      "venue": "Tauranga",
+      "race_number": 6,
+      "category": "horse",
+      "start_time": "2026-10-14T02:24:00Z",
+      "country": "NZ",
+      "books_quoting": 12,
+      "runners": [
+        {
+          "name": "Sacred Sin",
+          "number": 1,
+          "bookmakers": [
+            {
+              "key": "neds",
+              "win_price": 12.0,
+              "source_url": "https://www.neds.com.au/racing/tauranga/11778de2-bae5-4826-bc69-680013414d30"
+            },
+            {
+              "key": "betr_au",
+              "win_price": 12.0,
+              "source_url": "https://www.betr.com.au/racing/Australian-Racing/Tauranga/Race-6/92871472/win"
+            },
+            {
+              "key": "bet365",
+              "win_price": 12.0
+            }
+          ]
+        },
+        {
+          "name": "Casa Rubick",
+          "number": 2,
+          "bookmakers": [
+            {
+              "key": "tab",
+              "win_price": 14.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-14/TAURANGA/TAU/R/6"
+            },
+            {
+              "key": "neds",
+              "win_price": 13.0,
+              "source_url": "https://www.neds.com.au/racing/tauranga/11778de2-bae5-4826-bc69-680013414d30"
+            },
+            {
+              "key": "sportsbet",
+              "win_price": 13.0,
+              "source_url": "https://www.sportsbet.com.au/horse-racing/australia-nz/tauranga/race-6-11042491"
+            }
+          ]
+        },
+        {
+          "name": "Concise",
+          "number": 3,
+          "bookmakers": [
+            {
+              "key": "betdeluxe",
+              "win_price": 8.0,
+              "source_url": "https://www.betdeluxe.com.au/racing/Thoroughbred/NZL/Tauranga/846181/6/12126879"
+            },
+            {
+              "key": "betright",
+              "win_price": 8.0,
+              "source_url": "https://www.betright.com.au/racing/tauranga/6/63918573/win"
+            },
+            {
+              "key": "playup",
+              "win_price": 8.0,
+              "source_url": "https://www.playup.com.au/betting/racing/race/278177"
+            }
+          ]
+        },
+        {
+          "name": "Janka",
+          "number": 4,
+          "bookmakers": [
+            {
+              "key": "tab",
+              "win_price": 61.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-14/TAURANGA/TAU/R/6"
+            },
+            {
+              "key": "betright",
+              "win_price": 51.0,
+              "source_url": "https://www.betright.com.au/racing/tauranga/6/63918573/win"
+            },
+            {
+              "key": "bet365",
+              "win_price": 51.0
+            }
+          ]
+        },
+        {
+          "name": "The Darzi",
+          "number": 5,
+          "bookmakers": [
+            {
+              "key": "unibet",
+              "win_price": 3.6,
+              "source_url": "https://www.unibet.com.au/racing#/event/202610140200.T.NZL.tauranga.6"
+            },
+            {
+              "key": "ladbrokes_au",
+              "win_price": 3.5,
+              "source_url": "https://www.ladbrokes.com.au/racing/tauranga/11778de2-bae5-4826-bc69-680013414d30"
+            },
+            {
+              "key": "neds",
+              "win_price": 3.5,
+              "source_url": "https://www.neds.com.au/racing/tauranga/11778de2-bae5-4826-bc69-680013414d30"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cached": true
+}

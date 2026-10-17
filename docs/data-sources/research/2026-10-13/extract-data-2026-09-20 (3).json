@@ -1,0 +1,611 @@
+{
+  "extractions": [
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://github.com/sportsdataverse/cfbfastR",
+      "tier": 3,
+      "tier_citation": "https://github.com/sportsdataverse/cfbfastR",
+      "method": "CFB season loaders and CFBD API wrappers",
+      "method_citation": "https://github.com/sportsdataverse/cfbfastR",
+      "sport": "NCAAF",
+      "sport_citation": "https://github.com/sportsdataverse/cfbfastR",
+      "action": "cite repo",
+      "action_citation": "https://github.com/sportsdataverse/cfbfastR",
+      "tier_3_data_source_card": {
+        "coverage": "Classic cfbfastR PBP 2014+; ESPN-derived datasets mostly 2004+; ratings/recruiting coverage varies from 2002+; NCAA loaders 2013+ and include FCS/lower divisions.",
+        "coverage_citation": "https://github.com/sportsdataverse/cfbfastR",
+        "granularity": "PBP and game-level datasets, schedules, rosters, teams, drives, linescores, betting, participants, EPA/WPA/model fields, ratings and recruiting; loaders accept season vectors and can write to a database.",
+        "granularity_citation": "https://github.com/sportsdataverse/cfbfastR",
+        "update_frequency": "Repository was current and actively committed on 2026-09-19; the page describes release loaders rather than a fixed refresh SLA.",
+        "update_frequency_citation": "https://github.com/sportsdataverse/cfbfastR",
+        "known_gaps": "ESPN misses FCS/lower divisions; new CFBD passing/rushing endpoint family is documented as 2025+ only and some upstream play-level fields are unpopulated; provider clock semantics differ by season.",
+        "known_gaps_citation": "https://github.com/sportsdataverse/cfbfastR",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://github.com/sportsdataverse/cfbfastR",
+        "source_type": "github",
+        "source_type_citation": "https://github.com/sportsdataverse/cfbfastR"
+      },
+      "ncaaf_specifics": {
+        "datasets": "FBS classic PBP, ESPN-derived CFB data, NCAA stats.ncaa.org PBP including FCS/lower divisions, ratings, recruiting and talent",
+        "coverage": "2014+ classic PBP; mostly 2004+ ESPN; 2013+ NCAA; ratings/recruiting varies 2002+",
+        "citation": "https://github.com/sportsdataverse/cfbfastR"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://collegefootballdata.com/",
+      "tier": 3,
+      "tier_citation": "https://collegefootballdata.com/",
+      "method": "CollegeFootballData API/exporter/downloadable CFB workflows",
+      "method_citation": "https://collegefootballdata.com/",
+      "sport": "NCAAF",
+      "sport_citation": "https://collegefootballdata.com/",
+      "action": "cite docs",
+      "action_citation": "https://collegefootballdata.com/",
+      "tier_3_data_source_card": {
+        "coverage": "Homepage advertises a 2026 Starter Pack containing the full 2025 season and 2026 schedule; API/exporter offers live/recurring season data but the fetched page does not state a complete historical-year range.",
+        "coverage_citation": "https://collegefootballdata.com/",
+        "granularity": "API endpoints, exporter CSVs, downloadable packs, win-probability charts/calculator, box scores, metrics, SP+ trends and player-efficiency views.",
+        "granularity_citation": "https://collegefootballdata.com/",
+        "update_frequency": "The page says free-key testing, exporter first CSV, and heavier recurring/live access through API tiers during the season; no exact cadence is stated.",
+        "update_frequency_citation": "https://collegefootballdata.com/",
+        "known_gaps": "Historical coverage and endpoint-level field availability are not fully enumerated on the fetched homepage; access varies by key/tier.",
+        "known_gaps_citation": "https://collegefootballdata.com/",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://collegefootballdata.com/",
+        "source_type": "docs",
+        "source_type_citation": "https://collegefootballdata.com/"
+      },
+      "ncaaf_specifics": {
+        "datasets": "CFB API/exporter and 2025 season/2026 schedule pack",
+        "coverage": "2025 full season and 2026 schedule explicitly advertised on homepage",
+        "citation": "https://collegefootballdata.com/"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://github.com/jldbc/pybaseball",
+      "tier": 3,
+      "tier_citation": "https://github.com/jldbc/pybaseball",
+      "method": "Python wrappers for Baseball Savant/Statcast and aggregate baseball statistics",
+      "method_citation": "https://github.com/jldbc/pybaseball",
+      "sport": "MLB",
+      "sport_citation": "https://github.com/jldbc/pybaseball",
+      "action": "cite repo",
+      "action_citation": "https://github.com/jldbc/pybaseball",
+      "tier_3_data_source_card": {
+        "coverage": "MLB Statcast pitch data plus Baseball Reference/FanGraphs aggregate data; README examples include 2019 Statcast date queries and 2014-2016 season stats, but no fixed all-years boundary is promised.",
+        "coverage_citation": "https://github.com/jldbc/pybaseball",
+        "granularity": "Individual pitch rows; player-specific pitch rows; player-season aggregates; custom date ranges; team schedule/game-by-game records; batting, pitching, standings and awards.",
+        "granularity_citation": "https://github.com/jldbc/pybaseball",
+        "update_frequency": "Statcast can change even for prior seasons; the README says each season has 700,000+ pitches and is subject to update. Package releases are described as periodic.",
+        "update_frequency_citation": "https://github.com/jldbc/pybaseball",
+        "known_gaps": "Upstream sources may revise historical rows; Baseball Reference and FanGraphs endpoints have different query limits; Baseball Reference season query is noted as one season per request.",
+        "known_gaps_citation": "https://github.com/jldbc/pybaseball",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://github.com/jldbc/pybaseball",
+        "source_type": "github",
+        "source_type_citation": "https://github.com/jldbc/pybaseball"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "tier": 3,
+      "tier_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "method": "MLB Statcast Search CSV schema",
+      "method_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "sport": "MLB",
+      "sport_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "action": "cite docs",
+      "action_citation": "https://baseballsavant.mlb.com/csv-docs",
+      "tier_3_data_source_card": {
+        "coverage": "MLB Statcast Search data; the fetched documentation specifies the schema but does not publish a fixed historical year range.",
+        "coverage_citation": "https://baseballsavant.mlb.com/csv-docs",
+        "granularity": "Pitch-level fields including pitch type, game date, release metrics, player/batter/pitcher IDs and event attributes.",
+        "granularity_citation": "https://baseballsavant.mlb.com/csv-docs",
+        "update_frequency": "The fetched page documents the search schema but gives no explicit refresh cadence.",
+        "update_frequency_citation": "https://baseballsavant.mlb.com/csv-docs",
+        "known_gaps": "No fixed year/league coverage or archival retention policy is stated in the fetched documentation; fields may be deprecated or missing depending on event.",
+        "known_gaps_citation": "https://baseballsavant.mlb.com/csv-docs",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://baseballsavant.mlb.com/csv-docs",
+        "source_type": "docs",
+        "source_type_citation": "https://baseballsavant.mlb.com/csv-docs"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://github.com/nflverse/nflfastR",
+      "tier": 3,
+      "tier_citation": "https://github.com/nflverse/nflfastR",
+      "method": "NFL play-by-play scraping, derived metrics and open probability models",
+      "method_citation": "https://github.com/nflverse/nflfastR",
+      "sport": "NFL",
+      "sport_citation": "https://github.com/nflverse/nflfastR",
+      "action": "cite repo",
+      "action_citation": "https://github.com/nflverse/nflfastR",
+      "tier_3_data_source_card": {
+        "coverage": "NFL complete-season PBP back to 1999, including regular and postseason; CP/CPOE/XYAC fields are documented back to 2006.",
+        "coverage_citation": "https://github.com/nflverse/nflfastR",
+        "granularity": "Play-level PBP with drive and series information; EP, WP, CP and XYAC model outputs; database update helper; release files.",
+        "granularity_citation": "https://github.com/nflverse/nflfastR",
+        "update_frequency": "Complete-season files are updated nightly during the season.",
+        "update_frequency_citation": "https://github.com/nflverse/nflfastR",
+        "known_gaps": "Feature history is uneven: several advanced fields begin in 2006; 1999-2000 rely on a separate JSON source; the repository describes models but does not guarantee historical revision immutability.",
+        "known_gaps_citation": "https://github.com/nflverse/nflfastR",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://github.com/nflverse/nflfastR",
+        "source_type": "github",
+        "source_type_citation": "https://github.com/nflverse/nflfastR"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://github.com/nflverse/nflverse-data",
+      "tier": 3,
+      "tier_citation": "https://github.com/nflverse/nflverse-data",
+      "method": "Automated nflverse data releases",
+      "method_citation": "https://github.com/nflverse/nflverse-data",
+      "sport": "NFL",
+      "sport_citation": "https://github.com/nflverse/nflverse-data",
+      "action": "cite repo",
+      "action_citation": "https://github.com/nflverse/nflverse-data",
+      "tier_3_data_source_card": {
+        "coverage": "Repository holds automated data releases for nflverse projects; the fetched README does not enumerate a single year/league boundary.",
+        "coverage_citation": "https://github.com/nflverse/nflverse-data",
+        "granularity": "Downloadable release artifacts accessed through nflreadr or manually, organized around nflverse functions.",
+        "granularity_citation": "https://github.com/nflverse/nflverse-data",
+        "update_frequency": "Automated via GitHub Actions; the README links to an automation-status schedule but does not state a single universal interval.",
+        "update_frequency_citation": "https://github.com/nflverse/nflverse-data",
+        "known_gaps": "Coverage and revision policy vary by release/function; README does not provide a unified data dictionary or all source provenance on the landing page.",
+        "known_gaps_citation": "https://github.com/nflverse/nflverse-data",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://github.com/nflverse/nflverse-data",
+        "source_type": "github",
+        "source_type_citation": "https://github.com/nflverse/nflverse-data"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://github.com/nflverse/nflreadr",
+      "tier": 3,
+      "tier_citation": "https://github.com/nflverse/nflreadr",
+      "method": "nflreadr download/caching layer for nflverse datasets",
+      "method_citation": "https://github.com/nflverse/nflreadr",
+      "sport": "NFL",
+      "sport_citation": "https://github.com/nflverse/nflreadr",
+      "action": "cite repo",
+      "action_citation": "https://github.com/nflverse/nflreadr",
+      "tier_3_data_source_card": {
+        "coverage": "NFL data accessed from nflverse repositories; README example loads 2021 PBP and player stats and supports an upcoming season for injuries.",
+        "coverage_citation": "https://github.com/nflverse/nflreadr",
+        "granularity": "Load functions return play-level PBP (example 372 columns) and week-level player stats (example 114 columns), with caching, progress options and data dictionaries.",
+        "granularity_citation": "https://github.com/nflverse/nflreadr",
+        "update_frequency": "Data is primarily automated via GitHub Actions; example output includes a data-updated timestamp.",
+        "update_frequency_citation": "https://github.com/nflverse/nflreadr",
+        "known_gaps": "Data may be reorganized across nflverse repositories; README notes nflverse-data migration and version requirements; coverage depends on the selected load function.",
+        "known_gaps_citation": "https://github.com/nflverse/nflreadr",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://github.com/nflverse/nflreadr",
+        "source_type": "github",
+        "source_type_citation": "https://github.com/nflverse/nflreadr"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://www.sports-reference.com/cfb/",
+      "tier": 3,
+      "tier_citation": "https://www.sports-reference.com/cfb/",
+      "method": "Historical college-football and college-basketball reference tables",
+      "method_citation": "https://www.sports-reference.com/cfb/",
+      "sport": "NCAAF",
+      "sport_citation": "https://www.sports-reference.com/cfb/",
+      "action": "cite docs",
+      "action_citation": "https://www.sports-reference.com/cfb/",
+      "tier_3_data_source_card": {
+        "coverage": "College Football Stats and History page advertises current and historical players, schools, scores and leaders; a fetched 2025 page exposes year summary, schedules/scores, leaders, standings, bowls, ratings, polls and odds.",
+        "coverage_citation": "https://www.sports-reference.com/cfb/",
+        "granularity": "Season/team/player tables and linked schedules, leaders, standings, bowls, ratings and polls.",
+        "granularity_citation": "https://www.sports-reference.com/cfb/",
+        "update_frequency": "The page is a live reference site; no exact update cadence is stated.",
+        "update_frequency_citation": "https://www.sports-reference.com/cfb/",
+        "known_gaps": "No play-by-play or point-in-time odds history is exposed on the fetched landing/year page; premium Stathead tools are separately promoted.",
+        "known_gaps_citation": "https://www.sports-reference.com/cfb/",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://www.sports-reference.com/cfb/",
+        "source_type": "other",
+        "source_type_citation": "https://www.sports-reference.com/cfb/"
+      },
+      "ncaaf_specifics": {
+        "datasets": "CFB year summaries, schedules/scores, player leaders, team offense/defense, standings, bowls, ratings and polls",
+        "coverage": "Current and historical seasons; 2025 year page explicitly fetched",
+        "citation": "https://www.sports-reference.com/cfb/years/2025.html"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://www.sports-reference.com/cbb/",
+      "tier": 3,
+      "tier_citation": "https://www.sports-reference.com/cbb/",
+      "method": "Historical NCAA tournament and basketball reference tables",
+      "method_citation": "https://www.sports-reference.com/cbb/",
+      "sport": "multi",
+      "sport_citation": "https://www.sports-reference.com/cbb/",
+      "action": "cite docs",
+      "action_citation": "https://www.sports-reference.com/cbb/",
+      "tier_3_data_source_card": {
+        "coverage": "Sports Reference CBB postseason page lists NCAA tournament history for men and women from 2002 through 2026 in the fetched page.",
+        "coverage_citation": "https://www.sports-reference.com/cbb/",
+        "granularity": "Tournament brackets/champions, postseason history, school/player pages and Stathead finder links.",
+        "granularity_citation": "https://www.sports-reference.com/cbb/",
+        "update_frequency": "Live site; no exact refresh cadence is stated.",
+        "update_frequency_citation": "https://www.sports-reference.com/cbb/",
+        "known_gaps": "The fetched postseason page is not a full play-by-play or odds source, and it does not enumerate all regular-season table coverage in the page.",
+        "known_gaps_citation": "https://www.sports-reference.com/cbb/",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://www.sports-reference.com/cbb/",
+        "source_type": "other",
+        "source_type_citation": "https://www.sports-reference.com/cbb/"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://www.nfl.com/next-gen-stats/",
+      "tier": 3,
+      "tier_citation": "https://www.nfl.com/next-gen-stats/",
+      "method": "NFL player tracking and advanced-statistics landing site",
+      "method_citation": "https://www.nfl.com/next-gen-stats/",
+      "sport": "NFL",
+      "sport_citation": "https://www.nfl.com/next-gen-stats/",
+      "action": "cite docs",
+      "action_citation": "https://www.nfl.com/next-gen-stats/",
+      "tier_3_data_source_card": {
+        "coverage": "NFL Next Gen Stats landing page exposes current-season advanced-statistics news and links; the fetched page does not state historical years or a complete downloadable archive.",
+        "coverage_citation": "https://www.nfl.com/next-gen-stats/",
+        "granularity": "Player/team tracking-derived advanced metrics and editorial explainers are surfaced through the NFL site.",
+        "granularity_citation": "https://www.nfl.com/next-gen-stats/",
+        "update_frequency": "Current-season editorial content is updated as the season progresses; no formal cadence is stated.",
+        "update_frequency_citation": "https://www.nfl.com/next-gen-stats/",
+        "known_gaps": "Historical retention, downloadable access, field-level schema and point-in-time revision rules are not disclosed on the fetched landing page.",
+        "known_gaps_citation": "https://www.nfl.com/next-gen-stats/",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://www.nfl.com/next-gen-stats/",
+        "source_type": "other",
+        "source_type_citation": "https://www.nfl.com/next-gen-stats/"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://www.teamrankings.com/",
+      "tier": 3,
+      "tier_citation": "https://www.teamrankings.com/",
+      "method": "Public sports betting/picks and team-ranking pages",
+      "method_citation": "https://www.teamrankings.com/",
+      "sport": "multi",
+      "sport_citation": "https://www.teamrankings.com/",
+      "action": "cite docs",
+      "action_citation": "https://www.teamrankings.com/",
+      "tier_3_data_source_card": {
+        "coverage": "Landing page explicitly covers MLB, NFL and NCAAF picks/pool products and current 2026 NFL/NCAAF content.",
+        "coverage_citation": "https://www.teamrankings.com/",
+        "granularity": "Team/game pick pages, betting picks, props and survivor/pick-em pool content; not a raw odds API.",
+        "granularity_citation": "https://www.teamrankings.com/",
+        "update_frequency": "Current weekly content is presented, including Week 2 2026 material; no formal refresh SLA is stated.",
+        "update_frequency_citation": "https://www.teamrankings.com/",
+        "known_gaps": "The fetched page does not provide a stable historical odds archive, API schema, or point-in-time line snapshots.",
+        "known_gaps_citation": "https://www.teamrankings.com/",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://www.teamrankings.com/",
+        "source_type": "other",
+        "source_type_citation": "https://www.teamrankings.com/"
+      }
+    },
+    {
+      "relevance": "NON-ARXIV",
+      "relevance_citation": "https://www.circasports.com/",
+      "tier": 3,
+      "tier_citation": "https://www.circasports.com/",
+      "method": "Circa Sports sportsbook/app and football contest pages",
+      "method_citation": "https://www.circasports.com/",
+      "sport": "NFL",
+      "sport_citation": "https://www.circasports.com/",
+      "action": "cite docs",
+      "action_citation": "https://www.circasports.com/",
+      "tier_3_data_source_card": {
+        "coverage": "Current Circa Sports app/site, with 2026 football preview and pro-football contests; no historical league/year data archive is disclosed.",
+        "coverage_citation": "https://www.circasports.com/",
+        "granularity": "Sportsbook/app and contest information, including Survivor and football contest pages.",
+        "granularity_citation": "https://www.circasports.com/",
+        "update_frequency": "Current app/site and contest information; no data-update cadence is stated.",
+        "update_frequency_citation": "https://www.circasports.com/",
+        "known_gaps": "Not a documented public odds API in the fetched page; state availability is restricted to listed jurisdictions and historical line retention is unspecified.",
+        "known_gaps_citation": "https://www.circasports.com/",
+        "alignment_gse_tables": false,
+        "alignment_gse_tables_citation": "https://www.circasports.com/",
+        "source_type": "other",
+        "source_type_citation": "https://www.circasports.com/"
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1704.00197",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1704.00197",
+      "method": "Logistic-regression in-game win probability with 10 state variables",
+      "method_citation": "https://arxiv.org/abs/1704.00197",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/1704.00197",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1704.00197",
+      "tier_2_model_card": {
+        "model": "iWinRNFL logistic regression for running home-team win probability",
+        "features": "10 variables from detailed NFL play-by-play",
+        "training_window": "last 7 NFL seasons obtained through league API",
+        "reported_result": "75% winner-projection accuracy versus 63% for a baseline pre-game model; abstract says probabilities are well-calibrated",
+        "citation": "https://arxiv.org/abs/1704.00197"
+      },
+      "calibration_analysis": {
+        "focus": "Explicitly described as well-calibrated; compares in-game probabilities with baseline and evaluates nonlinear alternatives.",
+        "metric_or_finding": "Abstract reports well-calibrated probabilities and no significant improvement from more complex nonlinear models.",
+        "citation": "https://arxiv.org/abs/1704.00197"
+      }
+    },
+    {
+      "relevance": "MEASURE",
+      "relevance_citation": "https://arxiv.org/abs/2609.12878",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2609.12878",
+      "method": "Favorite-longshot bias in prediction-market returns",
+      "method_citation": "https://arxiv.org/abs/2609.12878",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2609.12878",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2609.12878",
+      "tier_2_model_card": {
+        "model": "Empirical return analysis of favorite and longshot purchases on Polymarket",
+        "sample": "588 million trades by 2.48 million accounts",
+        "finding": "Purchases below 10 cents lose 19.3 cents per dollar while purchases at or above 90 cents earn 0.83 cents; sports did not show the robust two-sided pattern seen in crypto/politics.",
+        "citation": "https://arxiv.org/abs/2609.12878"
+      },
+      "sgp_parlay_data": {
+        "focus": "Betting-market pricing bias, not SGP/parlay correlation.",
+        "relevance_note": "Useful market-pricing diagnostic but not a same-game parlay model.",
+        "citation": "https://arxiv.org/abs/2609.12878"
+      }
+    },
+    {
+      "relevance": "MEASURE",
+      "relevance_citation": "https://arxiv.org/abs/1811.12516",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/1811.12516",
+      "method": "Noisy-probability odds model generating favorite-longshot bias",
+      "method_citation": "https://arxiv.org/abs/1811.12516",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/1811.12516",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1811.12516",
+      "tier_2_model_card": {
+        "model": "Buyer/seller binary-option odds model with multiple noisy degrees of belief",
+        "finding": "Zero-expectation agreed odds differ from odds based on reciprocal average probabilities; the favorite-longshot bias emerges from the noisy-belief setup.",
+        "citation": "https://arxiv.org/abs/1811.12516"
+      },
+      "sgp_parlay_data": {
+        "focus": "General betting-market odds theory; no parlay or SGP dependence model.",
+        "citation": "https://arxiv.org/abs/1811.12516"
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2601.18774",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2601.18774",
+      "method": "Pathwise calibration benchmark for live win probabilities",
+      "method_citation": "https://arxiv.org/abs/2601.18774",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/abs/2601.18774",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2601.18774",
+      "tier_2_model_card": {
+        "model": "Continuous-path benchmark and probability-integral-transform diagnostic for the highest win probability attained by the eventual loser",
+        "data": "Public regular-season NFL and NBA feeds, 2018-2024",
+        "finding": "No global departure detected in NFL; systematic excess of extreme losing-team peaks detected in NBA.",
+        "citation": "https://arxiv.org/abs/2601.18774"
+      },
+      "calibration_analysis": {
+        "focus": "Pathwise/sequential calibration benchmark for live win-probability feeds.",
+        "metric_or_finding": "Exact continuous-path benchmark, conservative discrete-path bound, PIT diagnostic, and first-crossing test at published 0.95 win probability.",
+        "citation": "https://arxiv.org/abs/2601.18774"
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2607.00164",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/abs/2607.00164",
+      "method": "Verifiable-reward calibration of NFL in-game win probability",
+      "method_citation": "https://arxiv.org/abs/2607.00164",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/abs/2607.00164",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2607.00164",
+      "tier_2_model_card": {
+        "model": "Label-free state-conditioned empirical win-rate reward for probabilistic forecasting; NFL in-game win probability testbed with betting market reference",
+        "finding": "A 7B model trained with the reward reached betting-market calibration by direct prediction and outperformed a zero-shot frontier model on calibration; tabular estimator matched Brier score.",
+        "citation": "https://arxiv.org/abs/2607.00164"
+      },
+      "calibration_analysis": {
+        "focus": "Calibration is the central outcome; compares model forecasts with market and tabular estimator using Brier score/calibration.",
+        "metric_or_finding": "Abstract states the market retains a small live in-game information edge beyond shared inputs.",
+        "citation": "https://arxiv.org/abs/2607.00164"
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/1602.05801",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/1602.05801",
+      "method": "Leave-one-out residual prediction intervals in high-dimensional linear regression",
+      "method_citation": "https://arxiv.org/abs/1602.05801",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/abs/1602.05801",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/1602.05801",
+      "tier_1_method_card": {
+        "method": "Leave-one-out residual prediction intervals",
+        "setting": "Linear regression with many variables, including robust M-estimators, James-Stein estimators and penalized estimators such as LASSO",
+        "guarantee": "Uniform asymptotic validity conditional on the training sample under minimal assumptions on error distribution and high-dimensional design",
+        "sports_transfer": "Core regression uncertainty method; no sports application in the abstract.",
+        "citation": "https://arxiv.org/abs/1602.05801"
+      }
+    },
+    {
+      "relevance": "KEEP",
+      "relevance_citation": "https://arxiv.org/abs/2608.12008",
+      "tier": 1,
+      "tier_citation": "https://arxiv.org/abs/2608.12008",
+      "method": "Asymptotic risk calibration for non-monotone loss/acceptance scores",
+      "method_citation": "https://arxiv.org/abs/2608.12008",
+      "sport": "other",
+      "sport_citation": "https://arxiv.org/abs/2608.12008",
+      "action": "open PDF",
+      "action_citation": "https://arxiv.org/abs/2608.12008",
+      "tier_1_method_card": {
+        "method": "A-CRC-QA post-hoc calibration inspired by conformal risk control for a non-monotone instance-wise loss",
+        "setting": "Selective prediction/acceptance thresholding",
+        "guarantee": "Targets asymptotic rather than finite-sample risk control because the loss is generally non-monotone in the threshold",
+        "sports_transfer": "Directly relevant to calibration designs with non-monotone betting or decision scores, but evaluated on QA rather than sports.",
+        "citation": "https://arxiv.org/abs/2608.12008"
+      },
+      "calibration_analysis": {
+        "focus": "Non-monotone score/threshold calibration.",
+        "metric_or_finding": "Linear expectation constraint and monotonized empirical-risk calibration; favorable reliability/retention tradeoff on CoQA and MedMCQA.",
+        "citation": "https://arxiv.org/abs/2608.12008"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=copula+football+scoreline&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=copula+football+scoreline&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "copula football scoreline",
+      "method_citation": "https://arxiv.org/search/?query=copula+football+scoreline&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/search/?query=copula+football+scoreline&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=copula+football+scoreline&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=copula+football+scoreline&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=Frank+copula+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=Frank+copula+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "Frank copula football",
+      "method_citation": "https://arxiv.org/search/?query=Frank+copula+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "multi",
+      "sport_citation": "https://arxiv.org/search/?query=Frank+copula+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=Frank+copula+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=Frank+copula+football&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=QB+change+distribution+shift+NFL&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=QB+change+distribution+shift+NFL&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "QB change distribution shift NFL",
+      "method_citation": "https://arxiv.org/search/?query=QB+change+distribution+shift+NFL&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/search/?query=QB+change+distribution+shift+NFL&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=QB+change+distribution+shift+NFL&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=QB+change+distribution+shift+NFL&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "NCAAF Elo calibration",
+      "method_citation": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "NCAAF",
+      "sport_citation": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      },
+      "ncaaf_specifics": {
+        "status": "No arXiv result for this named NCAAF gap in the exact query.",
+        "query_url": "https://arxiv.org/search/?query=NCAAF+Elo+calibration&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "college football recruiting impact",
+      "method_citation": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "NCAAF",
+      "sport_citation": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      },
+      "ncaaf_specifics": {
+        "status": "No arXiv result for this named NCAAF gap in the exact query.",
+        "query_url": "https://arxiv.org/search/?query=college+football+recruiting+impact&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "Monte Carlo college football tournament",
+      "method_citation": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "NCAAF",
+      "sport_citation": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      },
+      "ncaaf_specifics": {
+        "status": "No arXiv result for this named NCAAF gap in the exact query.",
+        "query_url": "https://arxiv.org/search/?query=Monte+Carlo+college+football+tournament&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    },
+    {
+      "relevance": "CONFIRMED-EMPTY",
+      "relevance_citation": "https://arxiv.org/search/?query=Skellam+NFL+margin&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier": 2,
+      "tier_citation": "https://arxiv.org/search/?query=Skellam+NFL+margin&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "method": "Skellam NFL margin",
+      "method_citation": "https://arxiv.org/search/?query=Skellam+NFL+margin&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "sport": "NFL",
+      "sport_citation": "https://arxiv.org/search/?query=Skellam+NFL+margin&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "action": "skip",
+      "action_citation": "https://arxiv.org/search/?query=Skellam+NFL+margin&searchtype=all&abstracts=show&order=-announced_date_first&size=200",
+      "tier_2_model_card": {
+        "status": "No arXiv results returned for the exact query in this run; do not re-query this exact search.",
+        "query_url": "https://arxiv.org/search/?query=Skellam+NFL+margin&searchtype=all&abstracts=show&order=-announced_date_first&size=200"
+      }
+    }
+  ]
+}

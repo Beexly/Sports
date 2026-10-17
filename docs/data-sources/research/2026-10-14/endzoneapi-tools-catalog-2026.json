@@ -1,0 +1,939 @@
+{
+ "generated_utc": "2026-10-14T15:12:33.645641+00:00",
+ "source": "https://mcp.endzoneapi.com/v1/tools",
+ "brand": "EndzoneAPI",
+ "mcp_url": "https://mcp.endzoneapi.com/mcp",
+ "tools_count": 20,
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty": "Keyless GET /v1/tools catalog (HTTP 200, 20 NFL tools); data execution endpoints require an EndzoneAPI key (500 free credits/month tier, no card). Primary nflverse + sportsdataverse parquet pipelines pull the underlying NGS, FTN, snaps, injuries, and PBP tables directly with 0 credit limits.",
+ "tools": [
+  {
+   "name": "list_teams",
+   "description": "Use when you need team codes, or all 32 current teams with conference, division, colours, and logo URLs. Team codes are nflverse spelling (LA for the Rams, WAS for Washington). Cheapest tool at 1 credit.",
+   "credits": 1,
+   "category": "Static reference",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "conference": {
+      "description": "Filter by conference",
+      "type": "string",
+      "enum": [
+       "AFC",
+       "NFC"
+      ]
+     },
+     "division": {
+      "description": "Filter by division, e.g. 'AFC East' or 'NFC West'",
+      "type": "string"
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_standings",
+   "description": "Use for regular-season standings and playoff seeding: record, win%, points for/against, home/away/division/conference records, streak, division rank, and conference seed. Ranks apply the real NFL tiebreaking procedure and report which step decided each one. Computed from final scores. Defaults to the current season. Costs 2 credits.",
+   "credits": 2,
+   "category": "Basic lookup",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "season": {
+      "description": "Season year the regular season starts (e.g. 2025). Defaults to current.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "conference": {
+      "description": "Filter by conference",
+      "type": "string",
+      "enum": [
+       "AFC",
+       "NFC"
+      ]
+     },
+     "division": {
+      "description": "Filter by division, e.g. 'NFC North'",
+      "type": "string"
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_team_stats",
+   "description": "Use for one team's season: totals (passing, rushing, receiving, defense, kicking, penalties), EPA per play, yards per attempt/carry, the standings row, and every weekly stat line. Costs 5 credits.",
+   "credits": 5,
+   "category": "Stats + aggregation",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "team": {
+      "type": "string",
+      "description": "Team code (e.g. KC, BUF, PHI)"
+     },
+     "season": {
+      "description": "Season year (e.g. 2025). Defaults to current.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "season_type": {
+      "description": "Regular season (default) or postseason",
+      "type": "string",
+      "enum": [
+       "REG",
+       "POST"
+      ]
+     }
+    },
+    "required": [
+     "team"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_games",
+   "description": "Use when querying past or future games with filters: season, week, team, date range, game type, status. Returns scores, kickoff (UTC), venue, rest days, starting QBs, coaches, referee, and the consensus closing spread, total, and moneylines. For upcoming-only games prefer get_schedule (2 cr). Costs 5 credits.",
+   "credits": 5,
+   "category": "Stats + aggregation",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "season": {
+      "description": "Season year (e.g. 2025)",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "week": {
+      "description": "Week number (1-18 regular season; 19+ postseason)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+     },
+     "team": {
+      "description": "Team code (home or away)",
+      "type": "string"
+     },
+     "date_from": {
+      "description": "Start date YYYY-MM-DD",
+      "type": "string"
+     },
+     "date_to": {
+      "description": "End date YYYY-MM-DD",
+      "type": "string"
+     },
+     "game_type": {
+      "description": "REG, WC, DIV, CON, SB, or POST for any playoff game",
+      "type": "string",
+      "enum": [
+       "REG",
+       "WC",
+       "DIV",
+       "CON",
+       "SB",
+       "POST"
+      ]
+     },
+     "status": {
+      "description": "Game status",
+      "type": "string",
+      "enum": [
+       "FUT",
+       "LIVE",
+       "FINAL"
+      ]
+     },
+     "limit": {
+      "description": "Max results (default 100)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_schedule",
+   "description": "Use to see what is coming up: unplayed games in the next N days (default 7), or a specific week of the current season. Includes consensus lines where posted. Costs 2 credits.",
+   "credits": 2,
+   "category": "Basic lookup",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "team": {
+      "description": "Team code to filter",
+      "type": "string"
+     },
+     "week": {
+      "description": "A specific week of the current season (returns all games that week, played or not)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+     },
+     "days": {
+      "description": "Days ahead to look when week is not set (default 7)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_game_detail",
+   "description": "Use when you need everything about one game: both teams, full team box-score stats (EPA, success, drives), consensus closing line, per-bookmaker opening/closing/latest odds, weather, surface, and officials. Requires a game id from get_games or get_schedule. Costs 10 credits.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "type": "string",
+      "description": "Game id, e.g. 2025_01_KC_BUF"
+     }
+    },
+    "required": [
+     "game_id"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_head_to_head",
+   "description": "Use to compare two teams' history: recent meetings with scores, the win/loss record between them, and average margin. Filter by season or get all-time. Costs 10 credits.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "team1": {
+      "type": "string",
+      "description": "First team code"
+     },
+     "team2": {
+      "type": "string",
+      "description": "Second team code"
+     },
+     "season": {
+      "description": "Season year. Omit for all-time.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "limit": {
+      "description": "Max games (default 20)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     }
+    },
+    "required": [
+     "team1",
+     "team2"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "search_players",
+   "description": "Use to find a player by name (partial match). Searches ~25,000 players back to 1999; returns current-season players by default, falling back to all players back to 1999 when none match. Returns the GSIS player id needed by get_player_stats. Costs 2 credits.",
+   "credits": 2,
+   "category": "Basic lookup",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Player name or part of it"
+     },
+     "team": {
+      "description": "Filter by current team code",
+      "type": "string"
+     },
+     "position": {
+      "description": "Filter by position (e.g. QB, RB, WR, TE, OL, DL, LB, DB)",
+      "type": "string"
+     },
+     "active": {
+      "description": "Default true, but an active-only search that finds nobody automatically falls back to all players and says so. Set false to search everyone outright.",
+      "type": "boolean"
+     },
+     "limit": {
+      "description": "Max results (default 10)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50
+     }
+    },
+    "required": [
+     "query"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_player_stats",
+   "description": "Use for one player: bio, draft, physicals, headshot, id crosswalk (PFR, ESPN), summed season totals across passing, rushing, receiving, defense, kicking, returns, and fantasy points, every weekly stat line for the season, and games played per season. Defaults to the player's latest season. Costs 5 credits.",
+   "credits": 5,
+   "category": "Stats + aggregation",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "player_id": {
+      "type": "string",
+      "description": "GSIS player id from search_players (e.g. 00-0033873)"
+     },
+     "season": {
+      "description": "Season year. Defaults to the player's latest season.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "season_type": {
+      "description": "Regular season (default) or postseason",
+      "type": "string",
+      "enum": [
+       "REG",
+       "POST"
+      ]
+     }
+    },
+    "required": [
+     "player_id"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_player_leaders",
+   "description": "Use to rank players on any weekly stat over a season: passing_yards, passing_tds, rushing_yards, receiving_yards, receptions, targets, def_sacks, def_interceptions, fantasy_points_ppr, passing_epa, rushing_epa, receiving_epa, and ~130 more. Counting stats are summed, rate stats averaged. Filter by position, team, minimum games. Costs 5 credits.",
+   "credits": 5,
+   "category": "Stats + aggregation",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "stat": {
+      "type": "string",
+      "description": "Weekly stat column to rank by (e.g. passing_yards, receiving_epa, def_sacks)"
+     },
+     "season": {
+      "description": "Season year. Defaults to current.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "season_type": {
+      "description": "Regular season (default) or postseason",
+      "type": "string",
+      "enum": [
+       "REG",
+       "POST"
+      ]
+     },
+     "position": {
+      "description": "Position filter, e.g. QB, RB, WR, TE",
+      "type": "string"
+     },
+     "team": {
+      "description": "Team code filter",
+      "type": "string"
+     },
+     "min_games": {
+      "description": "Minimum games with a stat line (default 1)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+     },
+     "limit": {
+      "description": "Max results (default 20)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     }
+    },
+    "required": [
+     "stat"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_injuries",
+   "description": "Use for the official injury report: game status (Out, Doubtful, Questionable) and practice participation with the injury named, by team and week. Defaults to the latest reported week of the current season. Costs 2 credits.",
+   "credits": 2,
+   "category": "Basic lookup",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "team": {
+      "description": "Team code",
+      "type": "string"
+     },
+     "season": {
+      "description": "Season year. Defaults to current.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "week": {
+      "description": "Week. Defaults to the latest week with a report.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+     },
+     "status": {
+      "description": "Filter by game status: Out, Doubtful, Questionable",
+      "type": "string"
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_depth_chart",
+   "description": "Use for a team's depth chart by week: formation, position, depth rank, player. Defaults to the latest week available. Costs 2 credits.",
+   "credits": 2,
+   "category": "Basic lookup",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "team": {
+      "type": "string",
+      "description": "Team code"
+     },
+     "season": {
+      "description": "Season year. Defaults to current.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "week": {
+      "description": "Week. Defaults to latest.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+     },
+     "formation": {
+      "description": "Filter by formation/unit, e.g. Offense, Defense, Special Teams",
+      "type": "string"
+     }
+    },
+    "required": [
+     "team"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_snap_counts",
+   "description": "Use for playing time: offensive, defensive, and special-teams snaps and snap shares, for one game, one player (PFR id), or a team's season. Costs 5 credits.",
+   "credits": 5,
+   "category": "Stats + aggregation",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "description": "Game id, e.g. 2025_01_KC_BUF",
+      "type": "string"
+     },
+     "player_id": {
+      "description": "PFR player id (from search_players pfr_id)",
+      "type": "string"
+     },
+     "team": {
+      "description": "Team code",
+      "type": "string"
+     },
+     "season": {
+      "description": "Season year (with team or player)",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "week": {
+      "description": "Week filter",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+     },
+     "limit": {
+      "description": "Max rows (default 200)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_plays",
+   "description": "Use for play-by-play with nflfastR metrics: EPA, WPA, win probability, success, CPOE, air yards, formation flags, and the players involved. Filter by game, or by season plus week/team/player, plus play type, down, quarter, win-probability band, red zone, third down. Set include_charting for FTN manual charting from 2022 on: alignment, pre-snap motion, play action, screens, run-pass options, blitzer counts, drops: or filter directly on those flags. Returns a per-query EPA and success-rate summary. Paginate with offset. Costs 10 credits.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "description": "Game id, e.g. 2025_01_KC_BUF",
+      "type": "string"
+     },
+     "season": {
+      "description": "Season year (required when game_id is not set)",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "week": {
+      "description": "Week",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+     },
+     "posteam": {
+      "description": "Offense team code",
+      "type": "string"
+     },
+     "defteam": {
+      "description": "Defense team code",
+      "type": "string"
+     },
+     "play_type": {
+      "description": "Play type",
+      "type": "string",
+      "enum": [
+       "pass",
+       "run",
+       "punt",
+       "kickoff",
+       "field_goal",
+       "extra_point",
+       "qb_kneel",
+       "qb_spike",
+       "no_play"
+      ]
+     },
+     "down": {
+      "description": "Down",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+     },
+     "quarter": {
+      "description": "Quarter (5+ = overtime)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6
+     },
+     "passer_id": {
+      "description": "GSIS id of the passer",
+      "type": "string"
+     },
+     "rusher_id": {
+      "description": "GSIS id of the rusher",
+      "type": "string"
+     },
+     "receiver_id": {
+      "description": "GSIS id of the receiver",
+      "type": "string"
+     },
+     "min_wp": {
+      "description": "Minimum pre-play win probability for the offense",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "max_wp": {
+      "description": "Maximum pre-play win probability",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "red_zone": {
+      "description": "Only plays inside the 20",
+      "type": "boolean"
+     },
+     "third_down": {
+      "description": "Only third downs",
+      "type": "boolean"
+     },
+     "include_charting": {
+      "description": "Attach FTN manual charting to each play (2022+): alignment, motion, play action, screens, RPO, blitzers, drops",
+      "type": "boolean"
+     },
+     "is_play_action": {
+      "description": "Charting filter: play action (2022+)",
+      "type": "boolean"
+     },
+     "is_motion": {
+      "description": "Charting filter: pre-snap motion (2022+)",
+      "type": "boolean"
+     },
+     "is_rpo": {
+      "description": "Charting filter: run-pass option (2022+)",
+      "type": "boolean"
+     },
+     "is_screen_pass": {
+      "description": "Charting filter: screen pass (2022+)",
+      "type": "boolean"
+     },
+     "is_no_huddle": {
+      "description": "Charting filter: no huddle (2022+)",
+      "type": "boolean"
+     },
+     "is_trick_play": {
+      "description": "Charting filter: trick play (2022+)",
+      "type": "boolean"
+     },
+     "is_qb_out_of_pocket": {
+      "description": "Charting filter: quarterback out of the pocket (2022+)",
+      "type": "boolean"
+     },
+     "is_drop": {
+      "description": "Charting filter: charted drop (2022+)",
+      "type": "boolean"
+     },
+     "min_blitzers": {
+      "description": "Charting filter: at least this many blitzers (2022+). FTN counts rushers beyond the base rush, so this is typically 0-3; 5+ is almost never charted.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 11
+     },
+     "limit": {
+      "description": "Max plays (default 200)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+     },
+     "offset": {
+      "description": "Pagination offset",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_advanced_stats",
+   "description": "Use for tracking and charting metrics the box score does not carry. Next Gen Stats (2016+): time to throw, air yards, completion percentage above expectation, separation, cushion, rush yards over expected. Pro Football Reference advanced (2018+): pressures, hurries, blitzes, drops, bad throws, missed tackles, coverage yards allowed. Pick a source, then filter by season, week, player or team. Costs 5 credits.",
+   "credits": 5,
+   "category": "Stats + aggregation",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "source": {
+      "type": "string",
+      "enum": [
+       "ngs_passing",
+       "ngs_rushing",
+       "ngs_receiving",
+       "pfr_passing",
+       "pfr_rushing",
+       "pfr_receiving",
+       "pfr_defense"
+      ],
+      "description": "Which dataset: ngs_passing, ngs_rushing, ngs_receiving, pfr_passing, pfr_rushing, pfr_receiving, pfr_defense"
+     },
+     "season": {
+      "description": "Season year. Defaults to current. NGS from 2016, PFR from 2018.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "week": {
+      "description": "Week. NGS also publishes week 0 as the season aggregate.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 22
+     },
+     "player_id": {
+      "description": "GSIS id for an ngs_* source, PFR id for a pfr_* source; both are on search_players",
+      "type": "string"
+     },
+     "team": {
+      "description": "Team code",
+      "type": "string"
+     },
+     "limit": {
+      "description": "Max rows (default 50)",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200
+     }
+    },
+    "required": [
+     "source"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_odds",
+   "description": "Use for betting lines. Pass game_id for one game (10 credits): the consensus closing spread and total (every game since 1999; moneyline every game since 2010) plus each sportsbook's closing line from the 2014 season (4-9 books for 2014-2019, closing only) and per-bookmaker opening, closing and latest lines from the 2020 season (up to 8 books, including Pinnacle). Or pass season (optionally team) for a season of per-book closing lines in one call, with final scores and the consensus close, at 10 credits per game returned, 100 games a page by default (up to 500); each book's line is an array in the order given by columns. Each line says its source: espn (2014-2019 closing lines) or the_odds_api (from 2020); a season answer lists each game's sources. For consensus closing lines only, get_games returns a whole season for 5 credits. Set estimate_only to get the price without being charged.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "description": "Game id, e.g. 2026_01_KC_BUF. Omit and pass season for a whole season.",
+      "type": "string"
+     },
+     "season": {
+      "description": "Season year for a whole season of per-book lines, e.g. 2026. Used when game_id is not set.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "team": {
+      "description": "With season: only this team's games (e.g. KC).",
+      "type": "string"
+     },
+     "bookmaker": {
+      "description": "Bookmaker key (draftkings, fanduel, betmgm, espnbet, pinnacle, bovada, betonlineag, mybookieag; for 2014-2019 also westgate, caesars, wynn, unibet, 5dimes, sportsbettingag and others)",
+      "type": "string"
+     },
+     "snapshot_type": {
+      "description": "Single game: one snapshot type (default all). Season: opening or closing (default closing).",
+      "type": "string",
+      "enum": [
+       "opening",
+       "closing",
+       "latest"
+      ]
+     },
+     "limit": {
+      "description": "With season: games per page (default 100, max 500).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+     },
+     "offset": {
+      "description": "With season: page offset; use next_offset from the previous page.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "estimate_only": {
+      "description": "Return what this call would cost, without charging or running it.",
+      "type": "boolean"
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_line_movement",
+   "description": "Use to see how a game's lines moved: the full time series of hourly snapshots grouped by bookmaker. Most expensive tool (25 cr); use get_odds (10 cr) if you only need opening, closing, or current lines.",
+   "credits": 25,
+   "category": "Time-series",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "type": "string",
+      "description": "Game id"
+     },
+     "bookmaker": {
+      "description": "Bookmaker key filter",
+      "type": "string"
+     }
+    },
+    "required": [
+     "game_id"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_player_props",
+   "description": "Use for player prop lines by sportsbook: over/under on passing yards, passing TDs, rushing yards, receiving yards and receptions, plus anytime TD, from the 2023 season (7 books: DraftKings, FanDuel, BetMGM, ESPN BET, Pinnacle, Bovada, BetOnline). Pass game_id for every player's props in one game (10 credits), or player_id with season for one player across a season (10 credits per game returned). Returns the closing line by default (the last before kickoff) or the opening line. Set estimate_only to get the price without being charged.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "description": "Game id, e.g. 2025_01_KC_LAC.",
+      "type": "string"
+     },
+     "player_id": {
+      "description": "GSIS player id (00-00XXXXX) from search_players. With season: that player's props across the season.",
+      "type": "string"
+     },
+     "season": {
+      "description": "Season year, with player_id.",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "market": {
+      "description": "One market: player_pass_yds (passing yards), player_pass_tds (passing touchdowns), player_rush_yds (rushing yards), player_reception_yds (receiving yards), player_receptions (receptions), player_anytime_td (anytime touchdown (over = scores))",
+      "type": "string",
+      "enum": [
+       "player_pass_yds",
+       "player_pass_tds",
+       "player_rush_yds",
+       "player_reception_yds",
+       "player_receptions",
+       "player_anytime_td"
+      ]
+     },
+     "bookmaker": {
+      "description": "Bookmaker key, e.g. draftkings, fanduel, pinnacle.",
+      "type": "string"
+     },
+     "snapshot_type": {
+      "description": "closing (default): the last line before kickoff. opening: the first one captured.",
+      "type": "string",
+      "enum": [
+       "opening",
+       "closing"
+      ]
+     },
+     "estimate_only": {
+      "description": "Return what this call would cost, without charging or running it.",
+      "type": "boolean"
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_prop_history",
+   "description": "Use to see how a player did against his prop line over time: for one market (passing, rushing or receiving yards, passing touchdowns, completions, attempts, interceptions, carries, receptions or anytime touchdown), one row per game with the closing line (the median across books, or one book's), the opening line, the prices, what the player actually recorded from our box scores and the result against the line, plus the over rate. Costs 10 credits for up to 200 games.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "player_id": {
+      "type": "string",
+      "description": "Player id (a GSIS id such as 00-0033873) from search_players."
+     },
+     "market": {
+      "type": "string",
+      "enum": [
+       "player_pass_yds",
+       "player_pass_tds",
+       "player_pass_completions",
+       "player_pass_attempts",
+       "player_pass_interceptions",
+       "player_rush_yds",
+       "player_rush_attempts",
+       "player_receptions",
+       "player_reception_yds",
+       "player_anytime_td"
+      ],
+      "description": "The market: player_pass_yds (passing yards), player_pass_tds (passing touchdowns), player_pass_completions (pass completions), player_pass_attempts (pass attempts), player_pass_interceptions (interceptions thrown), player_rush_yds (rushing yards), player_rush_attempts (rush attempts), player_receptions (receptions), player_reception_yds (receiving yards), player_anytime_td (anytime touchdown (over = scores))"
+     },
+     "from_date": {
+      "description": "First date, YYYY-MM-DD (the game's date).",
+      "type": "string"
+     },
+     "to_date": {
+      "description": "Last date, YYYY-MM-DD (the game's date).",
+      "type": "string"
+     },
+     "bookmaker": {
+      "description": "One book's closing line instead of the median across books, e.g. draftkings.",
+      "type": "string"
+     },
+     "limit": {
+      "description": "Games to return, oldest first (default 50, max 200). next_from_date says where to continue.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200
+     }
+    },
+    "required": [
+     "player_id",
+     "market"
+    ],
+    "additionalProperties": false
+   }
+  },
+  {
+   "name": "get_alt_lines",
+   "description": "Use for alternate spreads and totals by sportsbook: every point on each book's ladder with its price (e.g. KC -10.5 at +260, over 51.5 at +140), for one game, from the 2023 to 2025 seasons (6 books: FanDuel, DraftKings, BetMGM, Bovada, Pinnacle, ESPN BET). Returns each book's closing ladder by default (the last before kickoff) or its opening one. side is home or away for spreads (point is that side's spread) and over or under for totals. 10 credits.",
+   "credits": 10,
+   "category": "Multi-table",
+   "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "game_id": {
+      "type": "string",
+      "description": "Game id, e.g. 2025_01_KC_LAC."
+     },
+     "market": {
+      "description": "One market (default both).",
+      "type": "string",
+      "enum": [
+       "alternate_spreads",
+       "alternate_totals"
+      ]
+     },
+     "bookmaker": {
+      "description": "Bookmaker key: fanduel, draftkings, betmgm, bovada, pinnacle, espnbet.",
+      "type": "string"
+     },
+     "snapshot_type": {
+      "description": "closing (default): each book's last ladder before kickoff. opening: its first.",
+      "type": "string",
+      "enum": [
+       "opening",
+       "closing"
+      ]
+     }
+    },
+    "required": [
+     "game_id"
+    ],
+    "additionalProperties": false
+   }
+  }
+ ]
+}

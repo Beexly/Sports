@@ -612,30 +612,21 @@ export async function processSport(
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0 && !rd.complete) {
-          // FAIL CLOSED (main/#1160). This branch REPLACES the entire slate
-          // for the sport, so a truncated day-span here is not "some data is
-          // better than none" — it is a board that silently omits every game
-          // on the days Rundown failed to serve, written as though it were
-          // the whole slate. The run would then report SUCCESS,
-          // oddsInserted > 0 would advance the public freshness clock, and
-          // the missing games would be indistinguishable from games that
-          // simply are not scheduled. Refusing lets the ESPN tertiary path
-          // (and the next cycle) try again. The thin-fill branch below is
-          // deliberately NOT gated this way: it only ADDS bookmakers to games
-          // we already hold, so a short day-span there means fewer fills,
-          // never a missing game.
-          oddsProviderTag = "therundown-incomplete";
+          // TRUNCATED fan-out: the adapter read only part of its day span
+          // (a day 500'd, or a 429 aborted the rest), so the games on the
+          // unread days are simply absent — indistinguishable from games
+          // never scheduled. This leg REPLACES the whole board, so writing
+          // a partial slate through would report SUCCESS and advance the
+          // public freshness clock on half a board. Refuse it, exactly as
+          // an empty read is refused; the completeness signal is the
+          // adapter's own (`complete`/`failedDays` on RundownFetchResult).
+          oddsProviderTag = "therundown-empty";
           rundownAttemptNote =
-            `rundown incomplete — refusing partial board replacement ` +
-            `(unread days: ${rd.failedDays.join(", ") || "unknown"}): ${rd.error ?? ""}`;
-          console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
-        } else if (rd.complete === false) {
-          // Branch/#1158: incomplete span that returned no events at all.
-          // Nothing to replace either way, but the tag/note must say the
-          // slate was truncated, not merely empty.
-          oddsProviderTag = "therundown-truncated";
-          rundownAttemptNote = rd.error ?? "rundown slate truncated (incomplete day span)";
-          console.warn(`${logPrefix} ${sport.key}: rundown truncated — ${rundownAttemptNote}`);
+            rd.error ??
+            `rundown truncated: ${rd.failedDays.length} day(s) unread (${rd.failedDays.join(", ")})`;
+          console.warn(
+            `${logPrefix} ${sport.key}: rundown truncated, refusing partial slate as the board — ${rundownAttemptNote}`,
+          );
         } else if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
@@ -1268,6 +1259,21 @@ export async function processSport(
         headToHeadForm: homeH2HForm ?? null,
         bookmakerCoverageMax,
         dataFreshnessMinutes: freshnessMinutes,
+        marketSpreadDispersion: dispersionByGame.get(gameRecord.id)?.SPREAD ?? null,
+        marketMlDispersion: dispersionByGame.get(gameRecord.id)?.moneylineHome ?? null,
+        // Biophysical & NGS tracking (Factor 2 - null defaults preserved when no provider row attached)
+        injuryDesignationHome: (enrichedGame as Record<string, unknown> | null)?.injuryDesignationHome as string | null ?? null,
+        injuryDesignationAway: (enrichedGame as Record<string, unknown> | null)?.injuryDesignationAway as string | null ?? null,
+        practiceStatusHome: (enrichedGame as Record<string, unknown> | null)?.practiceStatusHome as string | null ?? null,
+        practiceStatusAway: (enrichedGame as Record<string, unknown> | null)?.practiceStatusAway as string | null ?? null,
+        dnpDaysHome: (enrichedGame as Record<string, unknown> | null)?.dnpDaysHome as number | null ?? null,
+        dnpDaysAway: (enrichedGame as Record<string, unknown> | null)?.dnpDaysAway as number | null ?? null,
+        injuryFreshnessHours: (enrichedGame as Record<string, unknown> | null)?.injuryFreshnessHours as number | null ?? null,
+        ngsRyoeHome: (enrichedGame as Record<string, unknown> | null)?.ngsRyoeHome as number | null ?? null,
+        ngsRyoeAway: (enrichedGame as Record<string, unknown> | null)?.ngsRyoeAway as number | null ?? null,
+        ngsBoxStackedRateHome: (enrichedGame as Record<string, unknown> | null)?.ngsBoxStackedRateHome as number | null ?? null,
+        ngsBoxStackedRateAway: (enrichedGame as Record<string, unknown> | null)?.ngsBoxStackedRateAway as number | null ?? null,
+        trackingFreshnessMinutes: (enrichedGame as Record<string, unknown> | null)?.trackingFreshnessMinutes as number | null ?? null,
         hasSpreadMarket: spreadOdds.length > 0,
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,

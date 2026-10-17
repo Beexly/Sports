@@ -88,10 +88,10 @@ export type RpoeBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+const BUS_CELL: CovariateCell = {
+  value: 0,
   grain: "week_t_for_tplus1",
   provenance: "weekly_ngs_mean",
-  layer: "L2",
 };
 
 export function bindRpoeSamples(
@@ -137,7 +137,7 @@ export function bindRpoeSamples(
         rushAtt: req.rushTd.rushAtt,
         rushTds: req.rushTd.rushTds,
         // Weekly NGS mean % of rushes over expected — cell metadata from the bus contract.
-        rushPctOverExpected: { ...BUS_CELL, value: rpoe, knownAtWeek: row.week },
+        rushPctOverExpected: { ...BUS_CELL, value: rpoe },
       },
     });
   }

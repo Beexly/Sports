@@ -2180,9 +2180,6 @@ export type { PerformanceClaimInput } from "./edge-lab/honest-ceiling.js";
 
 // Recompute verifier: re-score a ledger of claims against stored outcomes.
 export { recomputeLedger } from "./edge-lab/recompute-verifier.js";
-// LedgerEntry is re-exported by recompute-verifier too, but it is the same
-// ledger-chain type exported above — listing it twice is a duplicate
-// identifier, so it is exported once, from ledger-chain.
 export type { RecomputeReport } from "./edge-lab/recompute-verifier.js";
 
 // Ladder + boost scanners: softness map across a market's price ladder.
@@ -4469,6 +4466,52 @@ export {
   type SituationalEval,
   type GameContext,
 } from "./reasoning/situational-engine.js";
+export {
+  evaluateFullCorpus,
+  getLoadedCorpusCensus,
+  findCorpusDirectories,
+  loadCorpusArtifacts,
+  CORPUS_EVALUATOR_DEFAULT_WEIGHT,
+  type CorpusEvaluation,
+  type CorpusItemLog,
+  type CorpusRawItem,
+  type CorpusEvaluationOptions,
+  type LiteratureDomain,
+  type DomainBreakdown,
+} from "./reasoning/corpus-evaluator.js";
+export {
+  evaluateMindReasoning,
+  evaluateMindPrinciples,
+  loadMindCorpus,
+  loadVerifiedMindCorpus,
+  toVerifiedSituationalPrinciple,
+  findMindCorpusPaths,
+  matchApplicablePrinciples,
+  generateSituationalPick,
+  generateSameGameParlay,
+  generateFantasyDfsAdvice,
+  synthesizeMindReasoningTrace,
+  mapGameContextToVector,
+  verifyCandidateExtraction,
+  verifyCandidateWithMechanismGate,
+  CONTEXT_PRIMITIVE_DEFAULTS,
+  type MindRecord,
+  type MindPrincipleMatch,
+  type MindSituationalPick,
+  type ParlayLeg,
+  type MindSameGameParlay,
+  type FantasyDfsPlayerComp,
+  type MindFantasyDfsAdvice,
+  type MindEvaluationResult,
+  type ContextFieldEnum,
+  type ClaimType,
+  type InfluenceDirection,
+  type CharacterSpan,
+  type VerifiedSituationalPrinciple,
+  type GameContextVector,
+  type PrincipleApplicationAuditRecord,
+  type MindPrinciplesEvaluation,
+} from "./reasoning/mind-reasoning.js";
 export {
   registerDeclarations,
   SIGNAL_FAMILIES,

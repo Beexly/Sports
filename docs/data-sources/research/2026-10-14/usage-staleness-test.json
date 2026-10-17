@@ -1,0 +1,21 @@
+{
+ "generated_utc": "2026-10-14T08:15:27.635111+00:00",
+ "tests": {
+  "recency_weighted_yards": {
+   "rmse_all_mean": 31.87,
+   "rmse_recency": 32.1,
+   "verdict": "recency weighting does NOT help (worse by 0.23 RMSE)"
+  },
+  "target_share_trend": {
+   "n": 570,
+   "shift_gt_8pct": 5,
+   "pct": 0.01,
+   "verdict": "roles are STABLE within the season at 5 weeks \u2014 99% of player-games shift <8% of team targets"
+  }
+ },
+ "verdict": "USAGE-STALENESS HYPOTHESIS mostly RETIRED: the pre-registration's flagged edges are not a systematic usage shift; they are the model lagging genuine week-of breakout/role news that only current-week information (injury slots, depth-chart bumps) can carry",
+ "implication": "the location feature stays the shrunk all-season mean; the Horton-class edges need INGESTED current-week signals (depth-chart move primitive from the catalog), not more history weighting",
+ "failure_taxonomy": [
+  "#6 avoided: the recency test could have 'confirmed' the hypothesis by tuning weights on the same weeks \u2014 expanding design instead"
+ ]
+}

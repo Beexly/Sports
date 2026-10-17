@@ -19,7 +19,9 @@
 import { describe, expect, it } from "vitest";
 import {
   computeClvPushDoctrineRates,
+  pricesWorseThanMarket,
   type ClvVerdictCounts,
+  type IndependentEdgeSummary,
 } from "../index.js";
 
 // The measured production counts, 2026-09-19.
@@ -80,5 +82,48 @@ describe("computeClvPushDoctrineRates (@sports/types): three denominators, side 
     });
     expect(rates.decidedClvBeatRate).toBeNull(); // beat+lost floored to 0
     expect(rates.clvPushRate).toBe(1); // 2/2
+  });
+});
+
+describe("pricesWorseThanMarket (@sports/types): PASS veto and adverse expectedClv", () => {
+  const baseEdge: IndependentEdgeSummary = {
+    decision: "LEAN",
+    agreement: "SOLO",
+    marketFairProb: 0.5,
+    trueProb: 0.55,
+    rawEdge: 0.05,
+    shrunkEdge: 0.04,
+    expectedClv: 0.03,
+    conviction: 75,
+    sources: ["kalshi"],
+    priced: true,
+    rationale: "positive edge",
+  };
+
+  it("returns false when edge is null", () => {
+    expect(pricesWorseThanMarket(null)).toBe(false);
+  });
+
+  it("returns true when decision is PASS, regardless of expectedClv", () => {
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "PASS", expectedClv: 0 })).toBe(true);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "PASS", expectedClv: -0.1 })).toBe(true);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "PASS", expectedClv: 0.05 })).toBe(true);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "PASS", expectedClv: Number.NaN })).toBe(true);
+  });
+
+  it("returns true when expectedClv is negative, even if decision is LEAN or SPEAK", () => {
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "LEAN", expectedClv: -0.01 })).toBe(true);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "SPEAK", expectedClv: -0.05 })).toBe(true);
+  });
+
+  it("returns false when expectedClv is non-negative and decision is not PASS", () => {
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "LEAN", expectedClv: 0 })).toBe(false);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "LEAN", expectedClv: 0.05 })).toBe(false);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "SPEAK", expectedClv: 0.02 })).toBe(false);
+  });
+
+  it("returns false when expectedClv is non-finite and decision is not PASS (silence, no vote)", () => {
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "LEAN", expectedClv: Number.NaN })).toBe(false);
+    expect(pricesWorseThanMarket({ ...baseEdge, decision: "LEAN", expectedClv: Number.POSITIVE_INFINITY })).toBe(false);
   });
 });

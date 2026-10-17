@@ -1,0 +1,1533 @@
+{
+  "competitor_analysis": [
+    {
+      "source_url": "https://www.carddealerpro.com/",
+      "source_url_citation": "https://www.carddealerpro.com/",
+      "entity_name": "Card Dealer Pro / CDP 2.0",
+      "entity_name_citation": "https://www.carddealerpro.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Native Mac and Windows desktop scanner app; visual-search AI; 20 million unique card-record database; eBay/Shopify/CollX/Whatnot connectors advertised (implementation not disclosed).",
+            "value_citation": "https://www.carddealerpro.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Scan with autofeed, flatbed or smartphone; auto-crop/add border margins/branded images; AI matches/documentation; pricing database and listing templates; validation; publish to eBay, Shopify, CollX or other marketplaces. Imports include scanner/phone/cert and eBay/CollX inventory; custom fields/views and Shopify metafield/tag mapping are advertised.",
+        "workflows_and_logic_citation": "https://www.carddealerpro.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Visual-search/card-identification AI; no condition-grading model is disclosed.",
+        "model_types_citation": "https://www.carddealerpro.com/",
+        "grading_criteria_logic": "Identification fills key card data from a claimed 20M-record database; no grading rubric or confidence protocol is disclosed.",
+        "grading_criteria_logic_citation": "https://www.carddealerpro.com/",
+        "automation_nodes": "Scan → visual match → price/prepare → validate → publish; human review is implied by listing preparation, but automation thresholds are not disclosed.",
+        "automation_nodes_citation": "https://www.carddealerpro.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Pricing database and custom listing templates; exact algorithm/data provenance not disclosed.",
+        "pricing_algorithms_citation": "https://www.carddealerpro.com/",
+        "inventory_management_logic": "Inventory management, custom fields/views, quantity additions, imports and marketplace publishing are advertised; conflict/reconciliation behavior is not disclosed.",
+        "inventory_management_logic_citation": "https://www.carddealerpro.com/",
+        "analytics_trackers": [
+          {
+            "value": "Cookies, web beacons, pixels and tags for operation, analytics, UX optimization and advertising.",
+            "value_citation": "https://www.carddealerpro.com/"
+          }
+        ]
+      },
+      "missed_opportunities_audit": "The page is strong on capture-to-list workflow but does not expose cloud provider, model, APIs, sync semantics, audit trail, pricing provenance or consignment/POS/portfolio intelligence. A second-pass design opportunity is an evidence-linked review queue and reversible channel reconciliation.",
+      "missed_opportunities_audit_citation": "https://www.carddealerpro.com/"
+    },
+    {
+      "source_url": "https://www.tcgautomate.com/",
+      "source_url_citation": "https://www.tcgautomate.com/",
+      "entity_name": "TCG Automate",
+      "entity_name_citation": "https://www.tcgautomate.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI image recognition; eBay/Shopify synchronization; CSV and API-created listing flows (underlying services not disclosed).",
+            "value_citation": "https://www.tcgautomate.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "Unspecified API-created batch/listing flow",
+            "endpoint_citation": "https://www.tcgautomate.com/",
+            "functionality": "Create supported batches for cross-listing; preview matches, combine duplicates and manage quantities across eBay/Shopify.",
+            "functionality_citation": "https://www.tcgautomate.com/",
+            "data_structure": "Batch of card/listing records with marketplace mappings, duplicate candidates and quantities; exact schema not disclosed.",
+            "data_structure_citation": "https://www.tcgautomate.com/"
+          }
+        ],
+        "workflows_and_logic": "Upload phone/scanner images → AI identifies cards → titles, prices, descriptions and item specifics populate → review/bulk edit → publish eBay/TCGplayer/Whatnot/Shopify-ready listings. Cross-listing keeps eligible eBay/Shopify quantities connected; sold quantity updates connected inventory; repricing runs daily/weekly and completed updates can be reviewed.",
+        "workflows_and_logic_citation": "https://www.tcgautomate.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI image recognition; model family/training data not disclosed.",
+        "model_types_citation": "https://www.tcgautomate.com/",
+        "grading_criteria_logic": "Market-price values and card identity are returned; no condition-grading defect logic or confidence calibration is disclosed.",
+        "grading_criteria_logic_citation": "https://www.tcgautomate.com/",
+        "automation_nodes": "Upload → identify → generate listing → duplicate preview/merge → publish → synchronize quantities; separate filters, floors/maxima and protection rules drive repricing.",
+        "automation_nodes_citation": "https://www.tcgautomate.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Rule-based repricing uses market data, game/set/rarity/printing/condition/price filters, floors, maxima, custom adjustments and marketplace-specific schedules; source and outlier handling are not disclosed.",
+        "pricing_algorithms_citation": "https://www.tcgautomate.com/",
+        "inventory_management_logic": "Duplicate-safe flow, managed inventory, cross-listing and quantity sync across connected channels are advertised; error/retry/idempotency behavior is not disclosed.",
+        "inventory_management_logic_citation": "https://www.tcgautomate.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "The product exposes a clear listing and repricing control plane but not API contracts, OAuth scopes, webhooks, queues, model details, failure handling or provenance. GSN can differentiate with public schemas, idempotent event logs, low-confidence review and comp-level evidence.",
+      "missed_opportunities_audit_citation": "https://www.tcgautomate.com/"
+    },
+    {
+      "source_url": "https://github.com/aahnik/tgcf",
+      "source_url_citation": "https://github.com/aahnik/tgcf",
+      "entity_name": "tgcf",
+      "entity_name_citation": "https://github.com/aahnik/tgcf",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Python 97.8%; pyproject.toml/Poetry lockfile; Dockerfile; Makefile; Pillow and requests evidenced in repository history; ffmpeg and tesseract-ocr system tools for optional features.",
+            "value_citation": "https://github.com/aahnik/tgcf"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Past or live Telegram message forwarding from source to destination chats; bot or user account; plugins filter blacklist/whitelist, format, regex replace, caption, watermark and OCR; JSON configuration, CLI and password-protected web interface; pip/venv and Docker/cloud deployment are documented.",
+        "workflows_and_logic_citation": "https://github.com/aahnik/tgcf"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "No card pricing logic; unrelated Telegram automation repository.",
+        "pricing_algorithms_citation": "https://github.com/aahnik/tgcf",
+        "inventory_management_logic": "No card inventory; message forwarding/transformation only.",
+        "inventory_management_logic_citation": "https://github.com/aahnik/tgcf",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Unrelated to cards, but the open repository demonstrates an extensible plugin pipeline, CLI/web dual interface and OCR/watermark nodes. It does not reveal a card data model, marketplace APIs or production persistence.",
+      "missed_opportunities_audit_citation": "https://github.com/aahnik/tgcf"
+    },
+    {
+      "source_url": "https://github.com/orangeduck/tgc",
+      "source_url_citation": "https://github.com/orangeduck/tgc",
+      "entity_name": "Tiny Garbage Collector (tgc)",
+      "entity_name_citation": "https://github.com/orangeduck/tgc",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "C 90.4%; Makefile; approximately 500-line conservative thread-local mark-and-sweep collector; destructors.",
+            "value_citation": "https://github.com/orangeduck/tgc"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "tgc_start / tgc_run / tgc_alloc family",
+            "endpoint_citation": "https://github.com/orangeduck/tgc",
+            "functionality": "Start collector, allocate/reallocate/free memory, manually or threshold-trigger collection, pause/resume and attach destructors.",
+            "functionality_citation": "https://github.com/orangeduck/tgc",
+            "data_structure": "C pointers and allocation metadata/flags; TGC_ROOT and TGC_LEAF flags; no HTTP/API schema.",
+            "data_structure_citation": "https://github.com/orangeduck/tgc"
+          }
+        ],
+        "workflows_and_logic": "Start with stack address; allocate via tgc_alloc/tgc_calloc; collector conservatively scans stack and managed heap; recursively marks reachable allocations; sweeps unreachable allocations; collection is triggered by allocation threshold or tgc_run; destructors run before free.",
+        "workflows_and_logic_citation": "https://github.com/orangeduck/tgc"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Not a card pricing system.",
+        "pricing_algorithms_citation": "https://github.com/orangeduck/tgc",
+        "inventory_management_logic": "Not a card inventory system.",
+        "inventory_management_logic_citation": "https://github.com/orangeduck/tgc",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "A second pass finds only a low-level memory-management lesson: explicit ownership flags and lifecycle hooks could inform an image-processing worker, but the README warns about undefined behavior, compiler/OS changes, non-tgc malloc, interior pointers and cross-thread pointers. It is not evidence for GSN application architecture.",
+      "missed_opportunities_audit_citation": "https://github.com/orangeduck/tgc"
+    },
+    {
+      "source_url": "https://github.com/SlavikMIPT/tgcloud",
+      "source_url_citation": "https://github.com/SlavikMIPT/tgcloud",
+      "entity_name": "tgcloud",
+      "entity_name_citation": "https://github.com/SlavikMIPT/tgcloud",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Python 91.3%; Python 2.7/3.6; Telethon 0.19.1 evidenced in repository history; FUSE; dedupfs; Redis/Docker appear as topics, not implementation proof.",
+            "value_citation": "https://github.com/SlavikMIPT/tgcloud"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "telegram_create_session.py and dedupfs/dedupfs.py VFS interface",
+            "endpoint_citation": "https://github.com/SlavikMIPT/tgcloud",
+            "functionality": "Create Telegram session and mount cloud-storage VFS; debug command is documented.",
+            "functionality_citation": "https://github.com/SlavikMIPT/tgcloud",
+            "data_structure": "Telegram api_id/api_hash/session plus mounted filesystem blocks; exact protocol/schema not disclosed.",
+            "data_structure_citation": "https://github.com/SlavikMIPT/tgcloud"
+          }
+        ],
+        "workflows_and_logic": "Create secret.py with Telegram api_hash/api_id; install Python requirements and create session; mount storage using FUSE; dedupfs VFS uses 20,971,520-byte block-size example; optional systemd service. Repository labels project under development/proof of concept.",
+        "workflows_and_logic_citation": "https://github.com/SlavikMIPT/tgcloud"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Not a card pricing system.",
+        "pricing_algorithms_citation": "https://github.com/SlavikMIPT/tgcloud",
+        "inventory_management_logic": "Not a card inventory system; storage/deduplication prototype.",
+        "inventory_management_logic_citation": "https://github.com/SlavikMIPT/tgcloud",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Unrelated prototype. Reusable architectural signal is chunked object storage and service separation, but the page explicitly reports instability/slow/crash risk and does not disclose encryption, persistence schema, API calls or production controls.",
+      "missed_opportunities_audit_citation": "https://github.com/SlavikMIPT/tgcloud"
+    },
+    {
+      "source_url": "https://github.com/nahar122/carddealerpro_export_tool",
+      "source_url_citation": "https://github.com/nahar122/carddealerpro_export_tool",
+      "entity_name": "carddealerpro_export_tool",
+      "entity_name_citation": "https://github.com/nahar122/carddealerpro_export_tool",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Python 56.5%, Go 35.5%, HTML, PowerShell, Shell; tkinter/tkinterdnd2 GUI; PyInstaller; Go web UI; GitHub Actions/release-on-tag.",
+            "value_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "Local CSV transformation GUI/web flow",
+            "endpoint_citation": "https://github.com/nahar122/carddealerpro_export_tool",
+            "functionality": "Accept dropped/browsed Card Dealer Pro CSV, transform/normalize and save output locally; exact HTTP routes are not disclosed.",
+            "functionality_citation": "https://github.com/nahar122/carddealerpro_export_tool",
+            "data_structure": "CSV rows; parallel vocabulary and normalized set/season serial fields; exact schema is not disclosed.",
+            "data_structure_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+          }
+        ],
+        "workflows_and_logic": "Read Card Dealer Pro CSV → detect/normalize set names and season serials using parallel vocabulary → validate/bucket disagreements → write CRLF-compatible output. Python GUI wraps transformation; Go rewrite opens a local browser tab for file upload and retains Python fallback.",
+        "workflows_and_logic_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Not a pricing engine; migration/export utility only.",
+        "pricing_algorithms_citation": "https://github.com/nahar122/carddealerpro_export_tool",
+        "inventory_management_logic": "No inventory system; transforms export CSV.",
+        "inventory_management_logic_citation": "https://github.com/nahar122/carddealerpro_export_tool",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Most concrete migration evidence in corpus. The landing page exposes filenames/commit summaries but not full source, dependency versions, routes, threat model or database driver. GSN should make import schemas versioned, previewable, reversible and auditable.",
+      "missed_opportunities_audit_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+    },
+    {
+      "source_url": "https://home.kronozio.com/",
+      "source_url_citation": "https://home.kronozio.com/",
+      "entity_name": "Kronozio / KronoScan",
+      "entity_name_citation": "https://home.kronozio.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Scanner/feeder workflow; AI documentation; spreadsheet-style bulk editor; eBay connector advertised; Google Analytics and Segment technologies appear in fetched page.",
+            "value_citation": "https://home.kronozio.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Flatbed/feeder capture associates front/back, crops and straightens; documentation/AI fills card data; spreadsheet editing at advertised throughput; batch eBay listing up to 10,000+ cards; bidirectional eBay inventory updates and CSV export are advertised.",
+        "workflows_and_logic_citation": "https://home.kronozio.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Price source and algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://home.kronozio.com/",
+        "inventory_management_logic": "Inventory for thousands, eBay updates and CSV export advertised; reconciliation details not disclosed.",
+        "inventory_management_logic_citation": "https://home.kronozio.com/",
+        "analytics_trackers": [
+          {
+            "value": "Google Analytics",
+            "value_citation": "https://home.kronozio.com/"
+          },
+          {
+            "value": "Segment",
+            "value_citation": "https://home.kronozio.com/"
+          }
+        ]
+      },
+      "missed_opportunities_audit": "Hardware protocol, card database, eBay API, sync conflict rules and price provenance are not disclosed. Opportunity: open inventory events and scan evidence rather than spreadsheet-only correction.",
+      "missed_opportunities_audit_citation": "https://home.kronozio.com/"
+    },
+    {
+      "source_url": "https://www.cardluma.com/",
+      "source_url_citation": "https://www.cardluma.com/",
+      "entity_name": "CardLuma",
+      "entity_name_citation": "https://www.cardluma.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI/card identification advertised; eBay direct publishing; Shopify catalog push; Whatnot CSV workflow; reusable seller rules.",
+            "value_citation": "https://www.cardluma.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Scan batches up to 500 → identify → price using real sold comps → auto-fill 20+ item specifics → apply seller rules → human review → publish eBay; push Shopify catalog; export CSV for Whatnot.",
+        "workflows_and_logic_citation": "https://www.cardluma.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Card matching/identification AI; exact model not disclosed.",
+        "model_types_citation": "https://www.cardluma.com/",
+        "grading_criteria_logic": "The source emphasizes match rate and item fields but does not disclose condition grading or defect criteria.",
+        "grading_criteria_logic_citation": "https://www.cardluma.com/",
+        "automation_nodes": "Reusable if/then rules by grade, sport, set, player, value and condition; review-before-publish is explicit.",
+        "automation_nodes_citation": "https://www.cardluma.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Real sold comps are surfaced before publishing; exact feed, fees, normalization and estimator are not disclosed.",
+        "pricing_algorithms_citation": "https://www.cardluma.com/",
+        "inventory_management_logic": "Cross-channel inventory status across eBay, Shopify and Whatnot is advertised; duplicate/oversell and retry semantics are not disclosed.",
+        "inventory_management_logic_citation": "https://www.cardluma.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Strong listing ergonomics and seller rules, but no public model, provenance, confidence, API schema, sync semantics or consignment/POS capability. Build those as trust differentiators.",
+      "missed_opportunities_audit_citation": "https://www.cardluma.com/"
+    },
+    {
+      "source_url": "https://slabfy.com/blog/card-dealer-pro-alternative",
+      "source_url_citation": "https://slabfy.com/blog/card-dealer-pro-alternative",
+      "entity_name": "Slabfy (Card Dealer Pro alternative comparison)",
+      "entity_name_citation": "https://slabfy.com/blog/card-dealer-pro-alternative",
+      "backend_architecture": {
+        "engines_and_frameworks": [],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Vendor-authored comparison says CDP is bulk desktop scanner/listing tool; Slabfy positions itself with card-show POS, QR storefront, Price Check, grade-ladder ROI, consignment, portfolio intelligence and an AI analyst/agent.",
+        "workflows_and_logic_citation": "https://slabfy.com/blog/card-dealer-pro-alternative"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI analyst/agent and price-check automation are advertised; model/provider not disclosed.",
+        "model_types_citation": "https://slabfy.com/blog/card-dealer-pro-alternative",
+        "grading_criteria_logic": "Price Check is described as slab scan → live comps → grade-ladder ROI/BUY decision; exact formula not disclosed.",
+        "grading_criteria_logic_citation": "https://slabfy.com/blog/card-dealer-pro-alternative",
+        "automation_nodes": "Show POS, QR browse, consignment and portfolio workflows are advertised; automation nodes are not technically described.",
+        "automation_nodes_citation": "https://slabfy.com/blog/card-dealer-pro-alternative"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Live comps and grade-ladder ROI are advertised; data source and pricing method not disclosed.",
+        "pricing_algorithms_citation": "https://slabfy.com/blog/card-dealer-pro-alternative",
+        "inventory_management_logic": "Show sales/P&L, consignment ownership and portfolio tracking are advertised; data model and integrations not disclosed.",
+        "inventory_management_logic_citation": "https://slabfy.com/blog/card-dealer-pro-alternative",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "The gap list is vendor-authored marketing. Validate demand and do not assume the AI agent has production depth; GSN can target transparent, exportable workflows.",
+      "missed_opportunities_audit_citation": "https://slabfy.com/blog/card-dealer-pro-alternative"
+    },
+    {
+      "source_url": "https://www.tcgsync.com/",
+      "source_url_citation": "https://www.tcgsync.com/",
+      "entity_name": "TCG Sync",
+      "entity_name_citation": "https://www.tcgsync.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Cloud storefront/POS; catalogue and scanning support; rules-based pricing; seven marketplace connectors advertised; API implementation not disclosed.",
+            "value_citation": "https://www.tcgsync.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Onboard store/catalog/theme within 48h → add singles, sealed, graded and supplies once → choose channels → synchronize prices/stock/listings → unify orders → surface conflicts/errors. Features include buylist/1Cart trade-ins, POS, events, deckbuilder, wishlists, kiosks, store credit and reports.",
+        "workflows_and_logic_citation": "https://www.tcgsync.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Rules-based pricing uses market data, margins, conditions and merchant rules; 2% Storefront Pro fee applies to TCG singles/sealed; exact estimator not disclosed.",
+        "pricing_algorithms_citation": "https://www.tcgsync.com/",
+        "inventory_management_logic": "One inventory source across CardNexus, Cardmarket, eBay, Cardtrader, Mana Pool, CardSynced and Shopify; 70+ catalogues; conflict/retry semantics not disclosed.",
+        "inventory_management_logic_citation": "https://www.tcgsync.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Broad commerce coverage but no technical sync contract, OAuth, webhooks, queue, schema, audit log or offline mode disclosed. GSN can win with channel-neutral canonical records and replayable reconciliation.",
+      "missed_opportunities_audit_citation": "https://www.tcgsync.com/"
+    },
+    {
+      "source_url": "https://withmascot.com/",
+      "source_url_citation": "https://withmascot.com/",
+      "entity_name": "Mascot / Mascot Network",
+      "entity_name_citation": "https://withmascot.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Scanner/cert/CSV/eBay imports; AI bulk scanner; marketplace network; eBay, Walmart Marketplace and Shopify examples; API internals not disclosed.",
+            "value_citation": "https://withmascot.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Ingest scanner/cert/CSV/eBay → tag/filter/bulk actions → publish to 10+ marketplaces; network distributes to partner buyer pools; instant delisting, no-duplicate intent and prepaid labels advertised.",
+        "workflows_and_logic_citation": "https://withmascot.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "3% network fee; up to 50% more sales is a marketing claim; pricing algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://withmascot.com/",
+        "inventory_management_logic": "Collection sync, instant delisting and multi-marketplace inventory are advertised; inventory state/reconciliation details not disclosed.",
+        "inventory_management_logic_citation": "https://withmascot.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Network mechanics, buyer-pool matching, API contracts, seller account model and failure handling are not disclosed. Opportunity: expose buyer offers, immutable listing states and deterministic delisting.",
+      "missed_opportunities_audit_citation": "https://withmascot.com/"
+    },
+    {
+      "source_url": "https://www.rocarobotics.com/",
+      "source_url_citation": "https://www.rocarobotics.com/",
+      "entity_name": "Roca Robotics (Roca Sifter / Roca Sorter)",
+      "entity_name_citation": "https://www.rocarobotics.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Physical automated sorting hardware; Sifter and Sorter; recognition/robotics stack not disclosed.",
+            "value_citation": "https://www.rocarobotics.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Sifter identifies price, rarity and foil and separates valuable inventory from bulk; Sorter automates sorting; products work together; supported ecosystems include Magic, Pokémon, Lorcana and One Piece (Sorters only for Yu-Gi-Oh per page).",
+        "workflows_and_logic_citation": "https://www.rocarobotics.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Sifter uses price/rarity signals; source and formula not disclosed.",
+        "pricing_algorithms_citation": "https://www.rocarobotics.com/",
+        "inventory_management_logic": "Automated physical separation/sorting; throughput, error handling and inventory writes not disclosed.",
+        "inventory_management_logic_citation": "https://www.rocarobotics.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Hardware is an under-leveraged operational signal: GSN could define a device-ingestion event protocol and human exception bins, but the page gives no model/API or throughput evidence.",
+      "missed_opportunities_audit_citation": "https://www.rocarobotics.com/"
+    },
+    {
+      "source_url": "https://cardcastle.co/",
+      "source_url_citation": "https://cardcastle.co/",
+      "entity_name": "CardCastle / CardBot",
+      "entity_name_citation": "https://cardcastle.co/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "iOS/Android smartphone app; web collection manager; CardBot automated scanning/sorting machine; backend not disclosed.",
+            "value_citation": "https://cardcastle.co/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Smartphone scan including multiple cards → collection record → web search/filter/sort, tags, import/export, decks and playtesting → daily-updated real-time prices; CardBot targets automated scanning/sorting.",
+        "workflows_and_logic_citation": "https://cardcastle.co/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Card prices updated daily; exact price source/algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://cardcastle.co/",
+        "inventory_management_logic": "Collection supports tags, nested organization, decks and export/import; limits vary by Squire/Knight; sync semantics not disclosed.",
+        "inventory_management_logic_citation": "https://cardcastle.co/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Collector UX is strong but backend/catalog, API, hardware mechanics and price provenance are undisclosed. GSN can add seller-grade identity, condition evidence and channel reconciliation.",
+      "missed_opportunities_audit_citation": "https://cardcastle.co/"
+    },
+    {
+      "source_url": "https://www.ludex.com/",
+      "source_url_citation": "https://www.ludex.com/",
+      "entity_name": "Ludex",
+      "entity_name_citation": "https://www.ludex.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Mobile photo scanner; listing generator; marketplace connection not named; backend/model not disclosed.",
+            "value_citation": "https://www.ludex.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Snap sports/TCG card → instant identification → real-time price based on actual sales → organize collection → generate listing → review and list on preferred marketplace; hobby-trend discovery is advertised.",
+        "workflows_and_logic_citation": "https://www.ludex.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Photo identification AI/scanner is advertised; model/OCR details not disclosed.",
+        "model_types_citation": "https://www.ludex.com/",
+        "grading_criteria_logic": "No condition-grade criteria or authenticity logic is disclosed.",
+        "grading_criteria_logic_citation": "https://www.ludex.com/",
+        "automation_nodes": "Capture → identify → price → list; “about 98% first-scan success” appears as user testimony, not controlled benchmark.",
+        "automation_nodes_citation": "https://www.ludex.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Real-time actual-sales pricing; source, sample window, normalization and fee treatment not disclosed.",
+        "pricing_algorithms_citation": "https://www.ludex.com/",
+        "inventory_management_logic": "Collection organization and generated listings; named APIs, marketplace sync and conflict handling not disclosed.",
+        "inventory_management_logic_citation": "https://www.ludex.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "The product claims speed/accuracy without exposing benchmark or provenance. GSN should make confidence, candidate matches and comp-level evidence first-class.",
+      "missed_opportunities_audit_citation": "https://www.ludex.com/"
+    },
+    {
+      "source_url": "https://www.collx.app/",
+      "source_url_citation": "https://www.collx.app/",
+      "entity_name": "CollX",
+      "entity_name_citation": "https://www.collx.app/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Mobile photo recognition; marketplace transaction valuation; collection/portfolio/community service; implementation not disclosed.",
+            "value_citation": "https://www.collx.app/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Snap photo → identify against claimed every-known-card database → current market price → add to collection → track portfolio → buy/sell/grade/trade; professional bulk sellers are directed to Card Dealer Pro.",
+        "workflows_and_logic_citation": "https://www.collx.app/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Photo/card recognition is explicit; no named model or OCR stack.",
+        "model_types_citation": "https://www.collx.app/",
+        "grading_criteria_logic": "No condition-grading or fake-detection criteria disclosed.",
+        "grading_criteria_logic_citation": "https://www.collx.app/",
+        "automation_nodes": "Image capture → match → market-value lookup → collection/community transaction.",
+        "automation_nodes_citation": "https://www.collx.app/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Market value is described as average of recent marketplace transactions; feeds, exclusions and normalization are not disclosed.",
+        "pricing_algorithms_citation": "https://www.collx.app/",
+        "inventory_management_logic": "Collection and portfolio tracking plus buy/sell/trade offers; inventory sync/API not disclosed.",
+        "inventory_management_logic_citation": "https://www.collx.app/",
+        "analytics_trackers": [
+          {
+            "value": "Cookies, web beacons, pixels and tags for operation, analytics, UX and advertising.",
+            "value_citation": "https://www.collx.app/"
+          }
+        ]
+      },
+      "missed_opportunities_audit": "Consumer scanner and portfolio loop is clear, but model, feed, identity confidence, seller operations and data rights are opaque.",
+      "missed_opportunities_audit_citation": "https://www.collx.app/"
+    },
+    {
+      "source_url": "https://www.openbraceapps.com/",
+      "source_url_citation": "https://www.openbraceapps.com/",
+      "entity_name": "Cardstock (OpenBraceApps)",
+      "entity_name_citation": "https://www.openbraceapps.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI and OCR advertised; mobile app; no backend stack disclosed.",
+            "value_citation": "https://www.openbraceapps.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Scan → AI/OCR extracts player, card number, year → edit/refine details → organize in infinitely nested folders/groups → value collection using historical eBay sales.",
+        "workflows_and_logic_citation": "https://www.openbraceapps.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI + OCR recognition; model/provider not disclosed.",
+        "model_types_citation": "https://www.openbraceapps.com/",
+        "grading_criteria_logic": "No condition grading or authenticity criteria disclosed.",
+        "grading_criteria_logic_citation": "https://www.openbraceapps.com/",
+        "automation_nodes": "Capture → OCR/identify → edit → historical-sales valuation → folder organization.",
+        "automation_nodes_citation": "https://www.openbraceapps.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Historical eBay sales data; update cadence, estimator and licensing not disclosed.",
+        "pricing_algorithms_citation": "https://www.openbraceapps.com/",
+        "inventory_management_logic": "Custom folders, sorting and user edits; no marketplace inventory sync/export/API disclosed.",
+        "inventory_management_logic_citation": "https://www.openbraceapps.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Good low-friction collector workflow but no provenance, model transparency, grading, seller integrations or technical contract.",
+      "missed_opportunities_audit_citation": "https://www.openbraceapps.com/"
+    },
+    {
+      "source_url": "https://getcollectr.com/",
+      "source_url_citation": "https://getcollectr.com/",
+      "entity_name": "Collectr",
+      "entity_name_citation": "https://getcollectr.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Mobile scanning; real-sales valuation; raw/graded/pop data; app/web social portfolio; backend not disclosed.",
+            "value_citation": "https://getcollectr.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Scan → exact set/number/variant identification → add collection → daily value updates → gains/losses/cost basis/currency/time-series views; trade analyzer, social showcase and 5+ years history; paid plan adds export/unlimited scan.",
+        "workflows_and_logic_citation": "https://getcollectr.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Scan identifies exact set, number and variant; AI/model not disclosed.",
+        "model_types_citation": "https://getcollectr.com/",
+        "grading_criteria_logic": "Raw/graded pricing and pop reports are exposed; no visual condition grading logic disclosed.",
+        "grading_criteria_logic_citation": "https://getcollectr.com/",
+        "automation_nodes": "Scan → catalog match → valuation/history → trade analysis/social.",
+        "automation_nodes_citation": "https://getcollectr.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Daily real-sales values, raw/graded/pop reports and 5+ years history; comp methodology and estimator not disclosed.",
+        "pricing_algorithms_citation": "https://getcollectr.com/",
+        "inventory_management_logic": "Collection, cost basis and export; not a seller inventory/channel reconciliation system in fetched page.",
+        "inventory_management_logic_citation": "https://getcollectr.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Retention is strong, but pricing provenance, matching confidence and seller operations are not disclosed. GSN can combine portfolio retention with dealer controls and evidence.",
+      "missed_opportunities_audit_citation": "https://getcollectr.com/"
+    },
+    {
+      "source_url": "https://www.sportscardinvestor.com/",
+      "source_url_citation": "https://www.sportscardinvestor.com/",
+      "entity_name": "Sports Card Investor",
+      "entity_name_citation": "https://www.sportscardinvestor.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "App/content platform; no technical stack disclosed.",
+            "value_citation": "https://www.sportscardinvestor.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Fetched page is primarily video/content and app-promotion experience; no detailed card-ingestion backend workflow is exposed.",
+        "workflows_and_logic_citation": "https://www.sportscardinvestor.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Investment-market content is present; pricing algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://www.sportscardinvestor.com/",
+        "inventory_management_logic": "No inventory-management logic disclosed.",
+        "inventory_management_logic_citation": "https://www.sportscardinvestor.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "The page is technically sparse; do not infer Market Movers internals, feed licensing or analytics from a marketing landing page.",
+      "missed_opportunities_audit_citation": "https://www.sportscardinvestor.com/"
+    },
+    {
+      "source_url": "https://www.psacard.com/psasetregistry/",
+      "source_url_citation": "https://www.psacard.com/psasetregistry/",
+      "entity_name": "PSA Set Registry",
+      "entity_name_citation": "https://www.psacard.com/psasetregistry/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Web/mobile set registry; PSA Price Guide and Pop Report linked; backend not disclosed.",
+            "value_citation": "https://www.psacard.com/psasetregistry/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Add inventory → complete checklist-based sets → earn points/compete on leaderboards and awards; mobile app promotes registry; set categories cover checklists.",
+        "workflows_and_logic_citation": "https://www.psacard.com/psasetregistry/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "PSA Price Guide and Pop Report are linked; exact price algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://www.psacard.com/psasetregistry/",
+        "inventory_management_logic": "Inventory-to-checklist matching, completion points, ranks and awards; API/sync details not disclosed.",
+        "inventory_management_logic_citation": "https://www.psacard.com/psasetregistry/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Gamification is under-leveraged by dealer tools. GSN could connect set completion to actual inventory, provenance and sale decisions without copying opaque scoring.",
+      "missed_opportunities_audit_citation": "https://www.psacard.com/psasetregistry/"
+    },
+    {
+      "source_url": "https://guredo.ai/",
+      "source_url_citation": "https://guredo.ai/",
+      "entity_name": "Guredo.AI",
+      "entity_name_citation": "https://guredo.ai/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI image analysis; mobile app; verified-original reference database; community feed/voting; model stack not disclosed.",
+            "value_citation": "https://guredo.ai/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Take clear front/back/detail photos → AI pre-grade report → fake detection compares against thousands of verified originals → community posts/votes can add feedback → link eBay listings to graded cards.",
+        "workflows_and_logic_citation": "https://guredo.ai/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI pre-grading and counterfeit detection; no model family/training metrics disclosed.",
+        "model_types_citation": "https://guredo.ai/",
+        "grading_criteria_logic": "Report covers corners, edges, surface and centering; fake detection compares against verified originals; results are explicitly non-official and error-prone with poor images/sophisticated counterfeits.",
+        "grading_criteria_logic_citation": "https://guredo.ai/",
+        "automation_nodes": "Capture/quality gate → card match/authenticity comparison → condition assessment → community feedback → share/eBay linkage.",
+        "automation_nodes_citation": "https://guredo.ai/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "",
+        "pricing_algorithms_citation": "https://guredo.ai/",
+        "inventory_management_logic": "Card catalog, fake database, community feedback and eBay link are advertised; no review queue or API disclosed.",
+        "inventory_management_logic_citation": "https://guredo.ai/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Clear limitations are a competitive lesson: label pre-grade/non-certification, expose image quality and confidence, and route high-value cases to human review.",
+      "missed_opportunities_audit_citation": "https://guredo.ai/"
+    },
+    {
+      "source_url": "https://acegrading.com/",
+      "source_url_citation": "https://acegrading.com/",
+      "entity_name": "Ace Grading",
+      "entity_name_citation": "https://acegrading.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Human expert grading; bespoke dashboard; slabs/labels; no AI/backend stack disclosed.",
+            "value_citation": "https://acegrading.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Submit cards → dashboard handles submissions, label types and grade reveal → experts grade → slab/label returned; free subgrades expose corners, edges, surface and centering.",
+        "workflows_and_logic_citation": "https://acegrading.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "",
+        "pricing_algorithms_citation": "https://acegrading.com/",
+        "inventory_management_logic": "Submission status and grade records in dashboard; API/inventory sync not disclosed.",
+        "inventory_management_logic_citation": "https://acegrading.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Transparency of free subgrades and dashboard evidence is valuable, but no machine pipeline/API is disclosed. GSN should not imply partnership or certification equivalence.",
+      "missed_opportunities_audit_citation": "https://acegrading.com/"
+    },
+    {
+      "source_url": "https://www.psacard.com/",
+      "source_url_citation": "https://www.psacard.com/",
+      "entity_name": "PSA",
+      "entity_name_citation": "https://www.psacard.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Professional authentication/grading service; smart photo recognition in app; vault/eBay pathway; stack not disclosed.",
+            "value_citation": "https://www.psacard.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Use app smart photo recognition to build submission → PSA authentication/grading → preserve/value → list to eBay or use vault; page claims over 80M authenticated/graded collectibles.",
+        "workflows_and_logic_citation": "https://www.psacard.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "",
+        "pricing_algorithms_citation": "https://www.psacard.com/",
+        "inventory_management_logic": "Certification records, vault and eBay listing pathway advertised; external API/state model not disclosed.",
+        "inventory_management_logic_citation": "https://www.psacard.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Large trust moat but little public automation detail on the fetched homepage. GSN opportunity is pre-submission evidence and ROI, clearly separated from official grading.",
+      "missed_opportunities_audit_citation": "https://www.psacard.com/"
+    },
+    {
+      "source_url": "https://www.cgcgrading.com/en-US",
+      "source_url_citation": "https://www.cgcgrading.com/en-US",
+      "entity_name": "CGC",
+      "entity_name_citation": "https://www.cgcgrading.com/en-US",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Expert grading; multi-collectible service divisions; “latest technology” claim; no model/API disclosed.",
+            "value_citation": "https://www.cgcgrading.com/en-US"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Submit collectibles → sophisticated internal grading/authentication → certification; services cover cards, comics, video games, home video and more; Grade School content discusses grader criteria.",
+        "workflows_and_logic_citation": "https://www.cgcgrading.com/en-US"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "",
+        "pricing_algorithms_citation": "https://www.cgcgrading.com/en-US",
+        "inventory_management_logic": "Certification/service workflow only; inventory API and submission state machine not disclosed.",
+        "inventory_management_logic_citation": "https://www.cgcgrading.com/en-US",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "The page communicates trust and scale but not backend. GSN can compete upstream with transparent evidence, not certification claims.",
+      "missed_opportunities_audit_citation": "https://www.cgcgrading.com/en-US"
+    },
+    {
+      "source_url": "https://taggrading.com/",
+      "source_url_citation": "https://taggrading.com/",
+      "entity_name": "TAG Grading",
+      "entity_name_citation": "https://taggrading.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Photometric Stereoscopic Imaging; multi-patented technology; OCR/Card ID department; QR/DIG web report; exact software stack not disclosed.",
+            "value_citation": "https://taggrading.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "QR/cert-number Digital Image & Grading Report lookup",
+            "endpoint_citation": "https://taggrading.com/",
+            "functionality": "Open high-resolution images, identified defects/DINGS, centering, score, population, rankings and chronology.",
+            "functionality_citation": "https://taggrading.com/",
+            "data_structure": "Cert/QR identifier mapped to card identity, 1–10 grade, optional 1000-point TAG Score, defect evidence and metadata.",
+            "data_structure_citation": "https://taggrading.com/"
+          }
+        ],
+        "workflows_and_logic": "Capture with photometric stereoscopic imaging → verify year/set/card number/variations with OCR/Card ID → score defects/attributes → translate 1000-point score to 1–10 grade → inscribe tag/slab → QR opens DIG report with zoom/surface slider.",
+        "workflows_and_logic_citation": "https://taggrading.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Photometric stereoscopic imaging and 1000-point grading system; AI layer/training not disclosed.",
+        "model_types_citation": "https://taggrading.com/",
+        "grading_criteria_logic": "Centering, defects/DINGS, high-res evidence, individual attribute scoring and population/ranking are exposed; exact mapping and human-review logic not disclosed.",
+        "grading_criteria_logic_citation": "https://taggrading.com/",
+        "automation_nodes": "Imaging → OCR/Card ID → scoring → report/QR → physical slab; 800% zoom and surface-defect slider are evidence nodes.",
+        "automation_nodes_citation": "https://taggrading.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "",
+        "pricing_algorithms_citation": "https://taggrading.com/",
+        "inventory_management_logic": "Cert lookup/report/QR and population metadata; inventory syncing/API not disclosed.",
+        "inventory_management_logic_citation": "https://taggrading.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Most concrete evidence/report design, but regular tiers shown paused and no public API/model details. GSN can adopt explainable defect evidence without claiming TAG equivalence.",
+      "missed_opportunities_audit_citation": "https://taggrading.com/"
+    },
+    {
+      "source_url": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+      "source_url_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+      "entity_name": "Ximilar AI card grading",
+      "entity_name_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "REST API; multiple ML models; computer vision; own dataset of smartphone-like/damaged/tilted images; model family not disclosed.",
+            "value_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "Card Grading endpoint",
+            "endpoint_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+            "functionality": "Evaluate corners, edges, surface and centering and return final grade/breakdown.",
+            "functionality_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+            "data_structure": "Image input; final grade plus component values/report visualization; exact JSON schema not shown in fetched page.",
+            "data_structure_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+          },
+          {
+            "endpoint": "Card Centering endpoint",
+            "endpoint_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+            "functionality": "Compute centering, including relative/absolute offsets and visualization.",
+            "functionality_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+            "data_structure": "Left/right/top/bottom border offsets and centering value; exact response schema not shown.",
+            "data_structure_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+          },
+          {
+            "endpoint": "Card Condition endpoint (/v2/condition named in article)",
+            "endpoint_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+            "functionality": "Return rough marketplace condition such as Near Mint, Lightly Played, Heavily Played and Damaged; intended for high-volume images.",
+            "functionality_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+            "data_structure": "Image plus rough condition classification; exact request/response schema not shown.",
+            "data_structure_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+          }
+        ],
+        "workflows_and_logic": "Photo → detect card position → identify sports vs TCG → identify front/back → run specialized corner, edge, surface and centering models → detect autograph → compute final grade/breakdown; condition endpoint supports high-volume scanner images.",
+        "workflows_and_logic_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Multiple specialized ML/CV models; distinct corner models for sports sharp corners vs TCG rounded corners; training data includes intentionally damaged cards and real-world smartphone conditions.",
+        "model_types_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+        "grading_criteria_logic": "Final grade combines component assessments; corners/edges described as averages; centering trained to Beckett scale and returned values can support custom formula. Article calls this pre-grading, not replacement for PSA/BGS/SGC/CGC, and warns about blur, lighting, upscaling and single-image limits.",
+        "grading_criteria_logic_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+        "automation_nodes": "Position detection → type/front-back recognition → per-attribute grading → autograph detection → score/report; REST endpoint is the clearest external automation node.",
+        "automation_nodes_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "No pricing engine; article describes using visual search/card ID to obtain a price guide after grading.",
+        "pricing_algorithms_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+        "inventory_management_logic": "No card inventory management; downstream price-guide use/eBay decision only.",
+        "inventory_management_logic_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Strongest technical reference. Second-pass design should add image-quality gates, calibration, confidence, human-review routing, signed evidence and versioned model outputs.",
+      "missed_opportunities_audit_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+    },
+    {
+      "source_url": "https://edgegrading.com/",
+      "source_url_citation": "https://edgegrading.com/",
+      "entity_name": "EDGE Grading",
+      "entity_name_citation": "https://edgegrading.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI + human grading; ultra-high-resolution capture; custom slab/security features; model stack not disclosed.",
+            "value_citation": "https://edgegrading.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Scan/photograph ultra-high-res → AI analyzes centering, edge sharpness, surface quality and print clarity → expert graders verify/contextualize → final report with photos/metrics and slab with security/verification features.",
+        "workflows_and_logic_citation": "https://edgegrading.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI plus human graders; architecture/training not disclosed.",
+        "model_types_citation": "https://edgegrading.com/",
+        "grading_criteria_logic": "Four subgrades and two-decimal overall grade; transparent photos/metrics cover centering, corners, edges and surface.",
+        "grading_criteria_logic_citation": "https://edgegrading.com/",
+        "automation_nodes": "Capture → AI analysis → expert review → final report/slab; disagreement resolution/thresholds not disclosed.",
+        "automation_nodes_citation": "https://edgegrading.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "",
+        "pricing_algorithms_citation": "https://edgegrading.com/",
+        "inventory_management_logic": "Report/cert/slab workflow; no inventory/channel API disclosed.",
+        "inventory_management_logic_citation": "https://edgegrading.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Evidence-rich human-in-loop model is promising, but no public API or reproducible rubric.",
+      "missed_opportunities_audit_citation": "https://edgegrading.com/"
+    },
+    {
+      "source_url": "https://www.sportscardspro.com/",
+      "source_url_citation": "https://www.sportscardspro.com/",
+      "entity_name": "SportsCardsPro",
+      "entity_name_citation": "https://www.sportscardspro.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Photo search; centering calculator; price-guide site; backend/matching algorithm not disclosed.",
+            "value_citation": "https://www.sportscardspro.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Browse current/historic prices by sport/brand/set → photo search → upload/take card photo → match database; centering calculator guides photo quality and retry; deal scanner surfaces eBay deals.",
+        "workflows_and_logic_citation": "https://www.sportscardspro.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Free PSA/BGS/ungraded current and historic guide; algorithm, comps and fees not disclosed.",
+        "pricing_algorithms_citation": "https://www.sportscardspro.com/",
+        "inventory_management_logic": "Collection totals, photo matching and deal discovery are advertised; no seller inventory sync/API disclosed.",
+        "inventory_management_logic_citation": "https://www.sportscardspro.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Useful simple entry point but no transparent methodology, API, benchmark or portfolio/dealer workflow.",
+      "missed_opportunities_audit_citation": "https://www.sportscardspro.com/"
+    },
+    {
+      "source_url": "https://www.truegrade.com/",
+      "source_url_citation": "https://www.truegrade.com/",
+      "entity_name": "TrueGrade",
+      "entity_name_citation": "https://www.truegrade.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI assistance; video upload; weighted community/expert votes; proprietary algorithm; implementation not disclosed.",
+            "value_citation": "https://www.truegrade.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Upload card images (video can improve accuracy) → AI assists authenticity and formatting → community/experts vote with profile-weighted votes → proprietary algorithm combines AI grade, votes and other variables → True Grade/value.",
+        "workflows_and_logic_citation": "https://www.truegrade.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI-assisted authenticity and grade estimate; model not disclosed.",
+        "model_types_citation": "https://www.truegrade.com/",
+        "grading_criteria_logic": "Algorithm combines AI estimate, weighted votes and unspecified variables; no explicit centering/corner rubric disclosed.",
+        "grading_criteria_logic_citation": "https://www.truegrade.com/",
+        "automation_nodes": "Image/video upload → AI estimate → weighted votes → proprietary aggregation → certified True Grade.",
+        "automation_nodes_citation": "https://www.truegrade.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Values are linked as a product feature; valuation method not disclosed.",
+        "pricing_algorithms_citation": "https://www.truegrade.com/",
+        "inventory_management_logic": "User grades/votes and collection functions; API/state/moderation not disclosed.",
+        "inventory_management_logic_citation": "https://www.truegrade.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Community weighting is interesting but opaque; GSN should publish voter weighting, moderation, uncertainty and provenance if adopting the pattern.",
+      "missed_opportunities_audit_citation": "https://www.truegrade.com/"
+    },
+    {
+      "source_url": "https://www.tcgrader.com/",
+      "source_url_citation": "https://www.tcgrader.com/",
+      "entity_name": "TCGrader",
+      "entity_name_citation": "https://www.tcgrader.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "AI grading; mobile/web app; image rectification/flattening and high-magnification scan advertised; model/provider not disclosed.",
+            "value_citation": "https://www.tcgrader.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Two photos → Quick Grade (overall plus corner/edge/surface/centering) or Precision Scan (flatten/zoom, corner-by-corner front/back) → defect notes/evidence → live value at each grade → shareable graded page/marketplace.",
+        "workflows_and_logic_citation": "https://www.tcgrader.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "Computer vision/AI card grading; site says it trains on professionally graded cards but gives no model/benchmark.",
+        "model_types_citation": "https://www.tcgrader.com/",
+        "grading_criteria_logic": "Centering; corners for sharpness/fraying/whitening; edges front/back for whitening/chipping/silvering; surface for scratches, print lines, indentations, stains and holo scuffing; Quick vs Precision evidence outputs.",
+        "grading_criteria_logic_citation": "https://www.tcgrader.com/",
+        "automation_nodes": "Image capture → quick or precision processing → subgrades/defect evidence → valuation/marketplace; free first credit and 1/2-credit modes are product nodes.",
+        "automation_nodes_citation": "https://www.tcgrader.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Live value at every grade; valuation source/algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://www.tcgrader.com/",
+        "inventory_management_logic": "Graded-card pages, search, marketplace and shareable results; APIs, human review and failure handling not disclosed.",
+        "inventory_management_logic_citation": "https://www.tcgrader.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Rich evidence UX but no reproducibility, calibration, model/API or official certification. GSN can make reports machine-readable and uncertainty-aware.",
+      "missed_opportunities_audit_citation": "https://www.tcgrader.com/"
+    },
+    {
+      "source_url": "https://www.cardladder.com/",
+      "source_url_citation": "https://www.cardladder.com/",
+      "entity_name": "Card Ladder",
+      "entity_name_citation": "https://www.cardladder.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Historical sales database; Research Team verification; indexes; population reports; implementation/ingestion stack not disclosed.",
+            "value_citation": "https://www.cardladder.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Aggregate public sales from eBay, Goldin, Heritage, Fanatics and other platforms → research team vets/updates sales → search card/sale → estimate current value → track collection, alerts and market/character/player indexes.",
+        "workflows_and_logic_citation": "https://www.cardladder.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Claims every public sale since 2000, 100M+ sales, total-market indexes and current estimates; exact estimator/outlier/grade normalization not disclosed.",
+        "pricing_algorithms_citation": "https://www.cardladder.com/",
+        "inventory_management_logic": "Daily collection value updates, alerts, population reports and indexes; writeback/API not disclosed.",
+        "inventory_management_logic_citation": "https://www.cardladder.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Strongest market-data positioning but no per-comp provenance, licensing, confidence or public API. GSN should expose all of these.",
+      "missed_opportunities_audit_citation": "https://www.cardladder.com/"
+    },
+    {
+      "source_url": "https://www.pricecharting.com/",
+      "source_url_citation": "https://www.pricecharting.com/",
+      "entity_name": "PriceCharting",
+      "entity_name_citation": "https://www.pricecharting.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Price-guide and collection-tracker web platform; no stack disclosed.",
+            "value_citation": "https://www.pricecharting.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Browse price guides for games, trading cards, sports cards, comics, Funko, LEGO and coins; scan UPC; use collection tracker and premium tools.",
+        "workflows_and_logic_citation": "https://www.pricecharting.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Price guides/collection tools are advertised; sales feeds, formulas, grading normalization and API not disclosed.",
+        "pricing_algorithms_citation": "https://www.pricecharting.com/",
+        "inventory_management_logic": "Collection tracker is advertised; card inventory schema/sync not disclosed.",
+        "inventory_management_logic_citation": "https://www.pricecharting.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Broad category coverage but card-specific technical details are sparse.",
+      "missed_opportunities_audit_citation": "https://www.pricecharting.com/"
+    },
+    {
+      "source_url": "https://collectibles.com/",
+      "source_url_citation": "https://collectibles.com/",
+      "entity_name": "Collectibles.com",
+      "entity_name_citation": "https://collectibles.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Web/mobile community and marketplace; images served through CDN/Next image paths; AI-assisted identification/valuations qualified in legal copy; stack not disclosed.",
+            "value_citation": "https://collectibles.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Discover/community posts → view collectible records/repackz/marketplace items → use app for collecting/valuation/identification; iOS/Android links appear.",
+        "workflows_and_logic_citation": "https://collectibles.com/"
+      },
+      "ai_and_grading_mechanics": {
+        "model_types": "AI-assisted identification is qualified as informational; model not disclosed.",
+        "model_types_citation": "https://collectibles.com/",
+        "grading_criteria_logic": "No condition-grading criteria disclosed; valuations/estimates are not guaranteed.",
+        "grading_criteria_logic_citation": "https://collectibles.com/",
+        "automation_nodes": "Community/content/marketplace browsing → collection action; no automation API disclosed.",
+        "automation_nodes_citation": "https://collectibles.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Valuations/price estimates are informational and may not be accurate; algorithm/market data not disclosed.",
+        "pricing_algorithms_citation": "https://collectibles.com/",
+        "inventory_management_logic": "Marketplace/community item records and app collection; no sync/API disclosed.",
+        "inventory_management_logic_citation": "https://collectibles.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "The legal disclaimers are important. GSN can make provenance and uncertainty a product feature instead of a buried caveat.",
+      "missed_opportunities_audit_citation": "https://collectibles.com/"
+    },
+    {
+      "source_url": "http://collectors.com/",
+      "source_url_citation": "http://collectors.com/",
+      "entity_name": "Collectors",
+      "entity_name_citation": "http://collectors.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "No specific technical stack disclosed; brand-level trust/security positioning only.",
+            "value_citation": "http://collectors.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Fetched page presents infrastructure/trust/security/opportunity positioning and collectible imagery; no operational workflow is exposed.",
+        "workflows_and_logic_citation": "http://collectors.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Not disclosed.",
+        "pricing_algorithms_citation": "http://collectors.com/",
+        "inventory_management_logic": "Not disclosed.",
+        "inventory_management_logic_citation": "http://collectors.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Do not infer PSA/CGC/other brand internals from this page.",
+      "missed_opportunities_audit_citation": "http://collectors.com/"
+    },
+    {
+      "source_url": "http://getcardbase.com/",
+      "source_url_citation": "http://getcardbase.com/",
+      "entity_name": "Cardbase",
+      "entity_name_citation": "http://getcardbase.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Web/iOS/Android collection/discovery product; marketplace/auction aggregation advertised; no stack disclosed.",
+            "value_citation": "http://getcardbase.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Discover cards across 30+ marketplaces/auction houses → view graded records/estimated prices → manage collection, sets, years and blog/app content; affiliate links are disclosed.",
+        "workflows_and_logic_citation": "http://getcardbase.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Estimated grade-specific prices are displayed; methodology, refresh and source normalization not disclosed.",
+        "pricing_algorithms_citation": "http://getcardbase.com/",
+        "inventory_management_logic": "Collection/discovery and marketplace aggregation advertised; transaction sync/API not disclosed.",
+        "inventory_management_logic_citation": "http://getcardbase.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Aggregation is useful but affiliate incentives and pricing provenance need explicit separation.",
+      "missed_opportunities_audit_citation": "http://getcardbase.com/"
+    },
+    {
+      "source_url": "https://www.sportlots.com/",
+      "source_url_citation": "https://www.sportlots.com/",
+      "entity_name": "Sportlots",
+      "entity_name_citation": "https://www.sportlots.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Marketplace web application; operational modules exposed by navigation; backend framework not disclosed.",
+            "value_citation": "https://www.sportlots.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Buyer/seller accounts → inventory search by set/player → seller intake → auctions/offers → order processing → buyer shipment → credit/sales-tax/problem-order maintenance; seller history and featured auctions.",
+        "workflows_and_logic_citation": "https://www.sportlots.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "No pricing algorithm disclosed.",
+        "pricing_algorithms_citation": "https://www.sportlots.com/",
+        "inventory_management_logic": "Operational inventory, seller intake, orders, shipment, credit and tax modules visible; APIs/sync not disclosed.",
+        "inventory_management_logic_citation": "https://www.sportlots.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Concrete business workflow but legacy-looking surface gives no architecture. GSN opportunity is modern auditability and channel adapters.",
+      "missed_opportunities_audit_citation": "https://www.sportlots.com/"
+    },
+    {
+      "source_url": "https://www.comc.com/",
+      "source_url_citation": "https://www.comc.com/",
+      "entity_name": "COMC",
+      "entity_name_citation": "https://www.comc.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Consignment/vault operations; high-resolution front/back imaging; eBay posting; storage/insurance/shipping; stack/API not disclosed.",
+            "value_citation": "https://www.comc.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Send cards → COMC researches/identifies, scans front/back, evaluates condition/value, advertises, stores/insures → automatically posts eBay → packages/ships/customer service; buyers consolidate multi-seller orders and ship later.",
+        "workflows_and_logic_citation": "https://www.comc.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Condition/value evaluation and historical sales service are advertised; exact comp/pricing algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://www.comc.com/",
+        "inventory_management_logic": "49M cards, seller consignment, storage, insurance, listing, order consolidation and eBay posting; state transitions/API not disclosed.",
+        "inventory_management_logic_citation": "https://www.comc.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "End-to-end physical operations are a moat. GSN can serve as pre-consignment intake/provenance and multi-vendor reconciliation without owning a vault.",
+      "missed_opportunities_audit_citation": "https://www.comc.com/"
+    },
+    {
+      "source_url": "https://goldin.co/",
+      "source_url_citation": "https://goldin.co/",
+      "entity_name": "Goldin",
+      "entity_name_citation": "https://goldin.co/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "High-end auction marketplace; auction calendar/lot search; backend/API not disclosed.",
+            "value_citation": "https://goldin.co/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Scheduled auctions → browse lots → bid/buy/sold-item discovery → seller/buyer accounts; categories include cards, memorabilia, comics, games and more.",
+        "workflows_and_logic_citation": "https://goldin.co/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Auction/lot pricing via bids; reserve/fee/estimator logic not disclosed.",
+        "pricing_algorithms_citation": "https://goldin.co/",
+        "inventory_management_logic": "Lot/auction inventory and buyer/seller flow; API/sync not disclosed.",
+        "inventory_management_logic_citation": "https://goldin.co/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Fetched homepage exposes marketplace merchandising, not backend. Build transparent auction ingestion and provenance, not assumptions about Goldin internals.",
+      "missed_opportunities_audit_citation": "https://goldin.co/"
+    },
+    {
+      "source_url": "https://www.cardmarket.com/",
+      "source_url_citation": "https://www.cardmarket.com/",
+      "entity_name": "Cardmarket",
+      "entity_name_citation": "https://www.cardmarket.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Peer-to-peer TCG marketplace; card/shipping cost database; backend/API not disclosed.",
+            "value_citation": "https://www.cardmarket.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Search card/product → list offer using card and shipping database → buyer/seller transaction → marketplace fee; no listing fee/time constraint is stated.",
+        "workflows_and_logic_citation": "https://www.cardmarket.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "5% sales commission; no listing fee; best-price/fair-fee positioning; matching/price estimator not disclosed.",
+        "pricing_algorithms_citation": "https://www.cardmarket.com/",
+        "inventory_management_logic": "Offers and peer-to-peer inventory; sync/API/schema not disclosed.",
+        "inventory_management_logic_citation": "https://www.cardmarket.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "European marketplace mechanics are clear but no external integration contract.",
+      "missed_opportunities_audit_citation": "https://www.cardmarket.com/"
+    },
+    {
+      "source_url": "https://www.tcgplayer.com/",
+      "source_url_citation": "https://www.tcgplayer.com/",
+      "entity_name": "TCGplayer",
+      "entity_name_citation": "https://www.tcgplayer.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Marketplace/catalog/content platform; product/set catalog; seller API not evidenced on fetched homepage.",
+            "value_citation": "https://www.tcgplayer.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Browse best sellers/latest sets → search product/set → product detail and marketplace purchase; direct marketplace navigation and content/editorial set guides are visible.",
+        "workflows_and_logic_citation": "https://www.tcgplayer.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Product marketplace prices shown; pricing algorithm/sales comps not disclosed.",
+        "pricing_algorithms_citation": "https://www.tcgplayer.com/",
+        "inventory_management_logic": "Catalog products/sets and marketplace listings; seller API/inventory sync not disclosed on fetched page.",
+        "inventory_management_logic_citation": "https://www.tcgplayer.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Do not infer TCGplayer API behavior from a homepage; GSN should treat integration as a separately verified contract.",
+      "missed_opportunities_audit_citation": "https://www.tcgplayer.com/"
+    },
+    {
+      "source_url": "https://snkrdunk.com/",
+      "source_url_citation": "https://snkrdunk.com/",
+      "entity_name": "SNKRDUNK",
+      "entity_name_citation": "https://snkrdunk.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Japanese marketplace; authentication promotion; product/category/search experience; backend/API not disclosed.",
+            "value_citation": "https://snkrdunk.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Browse campaigns and categories across apparel, sneakers and trading cards → search/view items → marketplace purchase; authentication landing is linked.",
+        "workflows_and_logic_citation": "https://snkrdunk.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Marketplace pricing/buying flow; algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://snkrdunk.com/",
+        "inventory_management_logic": "Product listings and category search; inventory/state/API not disclosed.",
+        "inventory_management_logic_citation": "https://snkrdunk.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Card-specific technical evidence is minimal; avoid importing sneaker-market assumptions without validation.",
+      "missed_opportunities_audit_citation": "https://snkrdunk.com/"
+    },
+    {
+      "source_url": "https://www.binderpos.com/",
+      "source_url_citation": "https://www.binderpos.com/",
+      "entity_name": "BinderPOS",
+      "entity_name_citation": "https://www.binderpos.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Cloud POS; CSV importer/exporter; Shopify and TCGplayer integrations; catalog database; reporting; implementation/API not disclosed.",
+            "value_citation": "https://www.binderpos.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Bulk import/export products → maintain central in-store/online inventory → sync TCGplayer and Shopify orders/stock → POS and event sales → buylist rule generator → approve/deny submissions → add stock/apply store credit → reports.",
+        "workflows_and_logic_citation": "https://www.binderpos.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Prices auto-update from TCGplayer transaction data; customizable price algorithms; updates every 12 hours are advertised.",
+        "pricing_algorithms_citation": "https://www.binderpos.com/",
+        "inventory_management_logic": "Central catalog, bulk CSV, marketplaces, POS, buylist, store credit, events and reports; conflict handling/API not disclosed.",
+        "inventory_management_logic_citation": "https://www.binderpos.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Excellent retailer scope but cloud/POS claims omit tenancy, payment boundaries, offline mode and event semantics.",
+      "missed_opportunities_audit_citation": "https://www.binderpos.com/"
+    },
+    {
+      "source_url": "https://www.crystalcommerce.com/",
+      "source_url_citation": "https://www.crystalcommerce.com/",
+      "entity_name": "CrystalCommerce",
+      "entity_name_citation": "https://www.crystalcommerce.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Ecommerce/POS/inventory platform; free SSL; stated robust API with documentation for technology partners; backend stack not disclosed.",
+            "value_citation": "https://www.crystalcommerce.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [
+          {
+            "endpoint": "Robust API (unnamed)",
+            "endpoint_citation": "https://www.crystalcommerce.com/",
+            "functionality": "Technology partners may build applications/integrations against catalog, price and inventory feeds; exact routes/schema/auth not shown.",
+            "functionality_citation": "https://www.crystalcommerce.com/",
+            "data_structure": "Over 2M product catalog, live price/inventory feed and retailer records; exact schema not disclosed.",
+            "data_structure_citation": "https://www.crystalcommerce.com/"
+          }
+        ],
+        "workflows_and_logic": "Retailer signs up → chooses template → imports from catalog → sells online/in-store/events; platform connects community and supports eBay, Amazon, TCGplayer, CardTrader, Mana Pool and more; daily live support.",
+        "workflows_and_logic_citation": "https://www.crystalcommerce.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Automated pricing and live feed of prices/inventory from sellers are advertised; formula not disclosed.",
+        "pricing_algorithms_citation": "https://www.crystalcommerce.com/",
+        "inventory_management_logic": "2M+ product catalog, inventory/POS/ecommerce and channel integrations; sync semantics not disclosed.",
+        "inventory_management_logic_citation": "https://www.crystalcommerce.com/",
+        "analytics_trackers": [
+          {
+            "value": "Google reCAPTCHA",
+            "value_citation": "https://www.crystalcommerce.com/"
+          }
+        ]
+      },
+      "missed_opportunities_audit": "API existence is explicit but docs/routes absent from fetched page. GSN could prioritize adapter contract testing and data lineage.",
+      "missed_opportunities_audit_citation": "https://www.crystalcommerce.com/"
+    },
+    {
+      "source_url": "https://storepass.co/",
+      "source_url_citation": "https://storepass.co/",
+      "entity_name": "Storepass",
+      "entity_name_citation": "https://storepass.co/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Shopify/BigCommerce apps; POS; catalog; buylist; rules engine; custom/code-based rules; backend/API not disclosed.",
+            "value_citation": "https://storepass.co/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Import/catalog setup → buylist/trade-in with cash or Shopify credit → POS across locations/conventions → bulk listing edits → price automation rules → approval safety gate → publish/storefront; supports product lines and migrations.",
+        "workflows_and_logic_citation": "https://storepass.co/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Rules can use price/set/release date/rarity and margins, rounding, floors/base price; price approval thresholds flag suspicious changes; TCGplayer market prices versus BinderPOS comparison shown.",
+        "pricing_algorithms_citation": "https://storepass.co/",
+        "inventory_management_logic": "Multi-location inventory, buylist, POS, storefront, bulk import/export and pricing rule logs; sync/API details not disclosed.",
+        "inventory_management_logic_citation": "https://storepass.co/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Strong safety pattern: approval workflow for outlier price changes. GSN should generalize it across identity, grading and channel changes with audit/replay.",
+      "missed_opportunities_audit_citation": "https://storepass.co/"
+    },
+    {
+      "source_url": "https://cardmavin.com/",
+      "source_url_citation": "https://cardmavin.com/",
+      "entity_name": "CardMavin",
+      "entity_name_citation": "https://cardmavin.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Price-guide/checklist website; no stack disclosed.",
+            "value_citation": "https://cardmavin.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Select price guide → browse set symbols/checklists and card entries; page links searches and set-specific content.",
+        "workflows_and_logic_citation": "https://cardmavin.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Price-guide output shown; data source/algorithm not disclosed.",
+        "pricing_algorithms_citation": "https://cardmavin.com/",
+        "inventory_management_logic": "No inventory management/sync/API disclosed.",
+        "inventory_management_logic_citation": "https://cardmavin.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Taxonomy/content utility but no transaction or technical backend evidence.",
+      "missed_opportunities_audit_citation": "https://cardmavin.com/"
+    },
+    {
+      "source_url": "https://mavin.io/category/Collectibles",
+      "source_url_citation": "https://mavin.io/category/Collectibles",
+      "entity_name": "Mavin (mavin.io category page)",
+      "entity_name_citation": "https://mavin.io/category/Collectibles",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "The fetched page is a GoDaddy domain-for-sale/placeholder experience; no operating product stack evidenced.",
+            "value_citation": "https://mavin.io/category/Collectibles"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "No card-product workflow could be verified from the fetched page.",
+        "workflows_and_logic_citation": "https://mavin.io/category/Collectibles"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Not disclosed.",
+        "pricing_algorithms_citation": "https://mavin.io/category/Collectibles",
+        "inventory_management_logic": "Not disclosed.",
+        "inventory_management_logic_citation": "https://mavin.io/category/Collectibles",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Do not attribute active marketplace, APIs, pricing or analytics to this URL; verify ownership/product separately before integration.",
+      "missed_opportunities_audit_citation": "https://mavin.io/category/Collectibles"
+    },
+    {
+      "source_url": "https://www.shipmycards.com/",
+      "source_url_citation": "https://www.shipmycards.com/",
+      "entity_name": "ShipMyCards",
+      "entity_name_citation": "https://www.shipmycards.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Warehouse/storage and personalized inventory service; photography/upload workflow; backend/API not disclosed.",
+            "value_citation": "https://www.shipmycards.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Buy with USA address → packages received → each processed, photographed and uploaded to personal inventory → secure storage → ship home or directly to buyer; memberships/sign-in and white-glove delivery are advertised.",
+        "workflows_and_logic_citation": "https://www.shipmycards.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Postage/tax savings positioning; no pricing algorithm disclosed.",
+        "pricing_algorithms_citation": "https://www.shipmycards.com/",
+        "inventory_management_logic": "Personal inventory with photos, storage and fulfillment; warehouse state/API not disclosed.",
+        "inventory_management_logic_citation": "https://www.shipmycards.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Physical intake imagery is a valuable provenance event. GSN could integrate receipt/photo/condition evidence while leaving custody with provider.",
+      "missed_opportunities_audit_citation": "https://www.shipmycards.com/"
+    },
+    {
+      "source_url": "https://www.reddit.com/r/PokeGrading/",
+      "source_url_citation": "https://www.reddit.com/r/PokeGrading/",
+      "entity_name": "Reddit r/PokeGrading (page unavailable in this run)",
+      "entity_name_citation": "https://www.reddit.com/r/PokeGrading/",
+      "backend_architecture": {
+        "engines_and_frameworks": [],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "The requested Reddit page could not be fetched by the allowed scraper; no page-derived workflow or backend facts are available.",
+        "workflows_and_logic_citation": "https://www.reddit.com/r/PokeGrading/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Not available.",
+        "pricing_algorithms_citation": "https://www.reddit.com/r/PokeGrading/",
+        "inventory_management_logic": "Not available.",
+        "inventory_management_logic_citation": "https://www.reddit.com/r/PokeGrading/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "No second-pass audit is possible without page content; do not infer community norms or API behavior from the URL alone.",
+      "missed_opportunities_audit_citation": "https://www.reddit.com/r/PokeGrading/"
+    },
+    {
+      "source_url": "https://www.fanaticscollect.com/",
+      "source_url_citation": "https://www.fanaticscollect.com/",
+      "entity_name": "Fanatics Collect",
+      "entity_name_citation": "https://www.fanaticscollect.com/",
+      "backend_architecture": {
+        "engines_and_frameworks": [
+          {
+            "value": "Auction/Buy Now marketplace; seller intake/authentication/vault pathways; backend/API not disclosed.",
+            "value_citation": "https://www.fanaticscollect.com/"
+          }
+        ],
+        "api_endpoints_and_schemas": [],
+        "workflows_and_logic": "Browse scheduled auctions/weekly auctions/Buy Now → search/trending lots → seller submits collectibles → grading/authentication/vault pathway → auction or fixed-price merchandising.",
+        "workflows_and_logic_citation": "https://www.fanaticscollect.com/"
+      },
+      "market_and_analytics_data": {
+        "pricing_algorithms": "Auction bids and fixed prices are visible; estimator/fee/pricing logic not disclosed.",
+        "pricing_algorithms_citation": "https://www.fanaticscollect.com/",
+        "inventory_management_logic": "Lots, auction calendars, sellers, authentication and vault/marketplace records; API/state/reconciliation not disclosed.",
+        "inventory_management_logic_citation": "https://www.fanaticscollect.com/",
+        "analytics_trackers": []
+      },
+      "missed_opportunities_audit": "Merchandising and auction segmentation are strong, but no external contracts or provenance model are public on the fetched page.",
+      "missed_opportunities_audit_citation": "https://www.fanaticscollect.com/"
+    }
+  ],
+  "gsn_cards_product_blueprint": {
+    "integrated_tech_stack": [
+      {
+        "value": "Multi-input capture layer: phone, flatbed/autofeed scanner, cert lookup, batch upload and hardware-ingestion events, with standardized front/back image capture.",
+        "value_citation": "https://www.carddealerpro.com/"
+      },
+      {
+        "value": "Canonical inventory control plane with immutable card identity, variant/parallel, condition, grade/certification, quantity, location, cost basis and channel-SKU mappings; adapter-based sync for eBay, Shopify, TCGplayer, Whatnot, Cardmarket and POS.",
+        "value_citation": "https://www.tcgautomate.com/"
+      },
+      {
+        "value": "Explainable computer-vision decision layer: card localization, front/back and type recognition, identity candidates, image-quality gate, centering, corners, edges, surface, autograph and counterfeit-risk outputs.",
+        "value_citation": "https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/"
+      },
+      {
+        "value": "Evidence/report layer inspired by DIG/TCGrader/EDGE: original and rectified images, defect coordinates, subgrades, confidence, model version, human corrections and signed/shareable report.",
+        "value_citation": "https://taggrading.com/"
+      },
+      {
+        "value": "Provenance-aware comp service: retain source marketplace, sale timestamp, grade/raw state, fees/shipping normalization and confidence rather than only a single market price.",
+        "value_citation": "https://www.cardladder.com/"
+      },
+      {
+        "value": "Rules and safety engine for seller templates, grade/sport/set/player/value conditions, margins, floors, rounding and approval thresholds, with a complete change log and replay.",
+        "value_citation": "https://storepass.co/"
+      },
+      {
+        "value": "Operational modules beyond listing: buylist/trade-in, card-show POS with offline queue, consignment intake, vault/fulfillment handoff, store credit, portfolio and set-completion views.",
+        "value_citation": "https://www.tcgsync.com/"
+      },
+      {
+        "value": "Migration/export contract with versioned CSV/JSON mappings, validation preview, byte-stable exports, reversible imports and dead-letter/error review.",
+        "value_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+      }
+    ],
+    "advanced_python_modules": [
+      {
+        "value": "Python 3.10+ packaging/CLI/web deployment pattern; tgcf documents venv, pip install, CLI and web-server execution.",
+        "value_citation": "https://github.com/aahnik/tgcf"
+      },
+      {
+        "value": "Pillow for image handling (dependency update is visible in tgcf repository history).",
+        "value_citation": "https://github.com/aahnik/tgcf"
+      },
+      {
+        "value": "requests for HTTP integration (dependency update is visible in tgcf repository history).",
+        "value_citation": "https://github.com/aahnik/tgcf"
+      },
+      {
+        "value": "Telethon for Telegram API/session automation in the tgcloud repository; useful as an architectural reference for async external-service clients, not a card dependency.",
+        "value_citation": "https://github.com/SlavikMIPT/tgcloud"
+      },
+      {
+        "value": "ffmpeg and tesseract-ocr system tools for optional media/OCR processing, evidenced by tgcf documentation.",
+        "value_citation": "https://github.com/aahnik/tgcf"
+      },
+      {
+        "value": "tkinter and tkinterdnd2 for a drag-and-drop local CSV utility, plus PyInstaller for a self-contained desktop binary, evidenced by the Card Dealer Pro export repository history.",
+        "value_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+      },
+      {
+        "value": "Python/Go dual implementation with a local browser upload surface and golden CSV fixtures as a migration-tool pattern; exact Go module details are not disclosed.",
+        "value_citation": "https://github.com/nahar122/carddealerpro_export_tool"
+      }
+    ],
+    "competitive_advantages": "GSN Cards should not compete only on another fast scanner. The defensible advantage is an evidence-first operating system for cards: (1) every match produces candidate identities, field-level confidence, source images and a human correction trail; (2) every price carries comp provenance, time, grade/raw normalization, fees and uncertainty; (3) every AI condition result is explicitly pre-grade/risk guidance rather than counterfeit-proof certification, with quality gates and escalation; (4) every marketplace write is idempotent, replayable and visible in a reconciliation ledger, avoiding the opaque sync semantics left undisclosed by the leading multi-channel products; (5) one graph joins collector portfolio, dealer inventory, show POS, buylist, consignment, vault/fulfillment and set completion; (6) outlier price changes and low-confidence identities use approval workflows rather than silent automation; and (7) versioned imports/exports let users leave without data lock-in. This combines the capture/listing strengths of Card Dealer Pro, TCG Automate and CardLuma; the data/retention patterns of Card Ladder, Collectr and PSA Set Registry; the report transparency of TAG, EDGE and TCGrader; the specialist API decomposition disclosed by Ximilar; and the operational breadth of TCG Sync, BinderPOS, Storepass, COMC and ShipMyCards. Claims of accuracy, scale and AI capability should be benchmarked publicly per game and image condition, because the fetched sources generally do not disclose test sets, calibration, model architecture, OAuth scopes, rate limits or failure behavior.",
+    "competitive_advantages_citation": "https://www.carddealerpro.com/; https://www.tcgautomate.com/; https://www.cardluma.com/; https://www.cardladder.com/; https://getcollectr.com/; https://www.psacard.com/psasetregistry/; https://taggrading.com/; https://edgegrading.com/; https://www.tcgrader.com/; https://www.ximilar.com/ai-card-grading-automate-sports-cards-pre-grading/; https://www.tcgsync.com/; https://www.binderpos.com/; https://storepass.co/; https://www.comc.com/; https://www.shipmycards.com/"
+  }
+}

@@ -1,0 +1,37 @@
+{
+ "generated_utc": "2026-10-14T07:53:47.930590+00:00",
+ "honesty_rules": [
+  "all widths out-of-fold (5-fold on train)",
+  "verdict = OOF sd < market sd AND held-out log-score >= market"
+ ],
+ "n_train": 1261,
+ "n_held": 582,
+ "market_sd_train": 13.319,
+ "models": {
+  "A_epa_only": {
+   "oof_sd": 13.369
+  },
+  "B_epa_plus_injuries": {
+   "oof_sd": 13.429,
+   "injury_coefs": {
+    "OL": 2.261,
+    "QB": 2.865,
+    "WR": 7.081,
+    "RB": -12.51,
+    "TE": 0.248,
+    "DEF": -0.27
+   }
+  },
+  "C_injuries_only": {
+   "oof_sd": 13.384
+  }
+ },
+ "held_out": {
+  "market_logscore": 3.9589,
+  "A_logscore": 3.9575,
+  "B_logscore": 3.9647,
+  "market_coverage_90": 0.9107,
+  "B_coverage_90": 0.9158
+ },
+ "verdict": "MODEL DOES NOT BEAT MARKET \u2014 recorded; A/B/C OOF widths vs market 13.319: 13.369/13.429/13.384"
+}

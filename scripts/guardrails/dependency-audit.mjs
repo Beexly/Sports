@@ -80,9 +80,9 @@ const MAX_REVIEW_HORIZON_DAYS = 180;
 const ACCEPTED = [
   {
     package: "next",
-    reviewBy: "2027-01-15",
-    reason: "Fix requires next@16.3.0, a semver-major jump from the pinned 14.2.x line. Tracked as its own migration (docs/ops/OPERATOR_TASKS.md -> NEXT-MAJOR); not shippable as a patch bump.",
-    maxSeverity: "high",
+    reviewBy: "2026-12-31",
+    reason: "Re-argued 2026-10-13 after the advisory set escalated high -> critical (DoS classes against self-hosted deployments, cache poisoning, and XSS-class findings; no RCE or auth-bypass). Fixed only in 15.5.16+/16.x - there is no 14.2.x backport - so the remedy is the semver-major migration already tracked as its own task (docs/ops/OPERATOR_TASKS.md -> NEXT-MAJOR), not a patch bump.",
+    maxSeverity: "critical",
   },
   {
     package: "source-map-js",

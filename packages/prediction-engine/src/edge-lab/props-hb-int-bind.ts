@@ -60,10 +60,10 @@ export type IntBindResult =
     };
 
 /** Cell template matching the covariate bus contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+const BUS_CELL: CovariateCell = {
+  value: 0,
   grain: "week_t_for_tplus1",
   provenance: "weekly_pfr_def_mean",
-  layer: "L2",
 };
 
 /**
@@ -121,7 +121,7 @@ export function bindIntSamples(
       sample: {
         attempts: req.int.attempts,
         ints: req.int.ints,
-        intRate: { ...BUS_CELL, value: rate, knownAtWeek: row.week },
+        intRate: { ...BUS_CELL, value: rate },
       },
     });
   }

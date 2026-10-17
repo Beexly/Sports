@@ -84,7 +84,7 @@ const CFB_BOARD = {
 const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: { passed: true } });
 }
 
 /** The row an operator has already withdrawn: still PENDING, no longer public. */

@@ -229,3 +229,28 @@ docs/fantasy/research/*/statrankings/
 **/statrankings/*.csv
 .venv/
 venv/
+
+# Local Confidential Vault (Never committed or pushed)
+brain/local_vault/
+
+# Detached worktrees
+.worktrees/
+
+
+# Python bytecode — generated artifacts, never commit
+__pycache__/
+*.pyc
+
+# Trainer feeds are local corpus; never tracked (see brain/feeds/*/EXCLUDED.md)
+brain/feeds/*/trainer_feed.jsonl
+
+# BDB raw tracking CSVs (hundreds of MB, re-downloadable — see intelligence/vision/data/README.md)
+intelligence/vision/data/tracking_week_*.csv
+intelligence/vision/data/plays.csv
+intelligence/vision/data/players.csv
+intelligence/vision/data/games.csv
+intelligence/vision/data/player_play.csv
+intelligence/vision/data/ngs_highlight_tracking_*.parquet
+intelligence/vision/data/bdb_archive/
+intelligence/coaching/data/pbp_participation_201*.parquet
+intelligence/coaching/data/pbp_participation_202[0-4].parquet

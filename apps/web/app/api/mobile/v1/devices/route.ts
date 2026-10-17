@@ -112,7 +112,8 @@ export async function POST(request: Request): Promise<NextResponse> {
   const d = parsed.data;
 
   try {
-    const existing = await db.mobileDevice.findUnique({ where: { pushToken: d.pushToken } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
+    const existing = await (db as any).mobileDevice.findUnique({ where: { pushToken: d.pushToken } });
     if (existing && existing.userId !== userId) {
       // Do not echo which account owns it — the same information-leak rule the
       // web push route states explicitly.
@@ -123,7 +124,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const row = existing
-      ? await db.mobileDevice.update({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
+      ? await (db as any).mobileDevice.update({
           where: { pushToken: d.pushToken },
           data: {
             appVersion: d.appVersion,
@@ -133,7 +135,8 @@ export async function POST(request: Request): Promise<NextResponse> {
             lastSeenAt: new Date(),
           },
         })
-      : await db.mobileDevice.create({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
+      : await (db as any).mobileDevice.create({
           data: {
             userId,
             pushToken: d.pushToken,
@@ -194,7 +197,8 @@ export async function DELETE(request: Request): Promise<NextResponse> {
   try {
     // Scoped by userId: a caller can only release their OWN token, so a guessed
     // token cannot be used to silence another account's alerts.
-    const result = await db.mobileDevice.deleteMany({ where: { userId, pushToken } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mobile model delegate is not in the generated Prisma client (schema migration pending)
+    const result = await (db as any).mobileDevice.deleteMany({ where: { userId, pushToken } });
     return NextResponse.json({ success: true, data: { removed: result.count } });
   } catch {
     return NextResponse.json(

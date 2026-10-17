@@ -317,4 +317,8 @@ describe("createGalaxySecondBook (default OFF — founder flips PREDEXON_INGEST 
     expect(createGalaxySecondBook({ PREDEXON_API_KEY: "test-not-a-real-key" })).toBeUndefined();
     expect(createGalaxySecondBook(ENV)).toBeInstanceOf(PredExonKalshiCatalog);
   });
+
+  it("returns ActionNetworkSecondBook when ACTION_NETWORK_SECOND_BOOK_ENABLED is true", () => {
+    expect(createGalaxySecondBook({ ACTION_NETWORK_SECOND_BOOK_ENABLED: "true" })).toBeDefined();
+  });
 });

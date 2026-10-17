@@ -1,0 +1,73 @@
+{
+ "generated_utc": "2026-10-14T14:52:45.997828+00:00",
+ "budget_hours": {
+  "injury_report": 168,
+  "depth_chart": 336,
+  "market_two_sided": 6,
+  "weather_forecast": 72,
+  "intent_priors": 2160,
+  "identity_participation": 2160
+ },
+ "entries": [
+  {
+   "family": "injury_report",
+   "source": "nflverse injuries release",
+   "file": "intelligence\\coaching\\data\\injuries_2026.parquet",
+   "age_hours": 0.2,
+   "budget_hours": 168,
+   "verdict": "FRESH",
+   "event_time": null,
+   "note": "week-5 report; week-6 unpublished - OL provider falls back labeled"
+  },
+  {
+   "family": "depth_chart",
+   "source": "nflverse depth charts",
+   "file": "intelligence\\coaching\\data\\depth_charts_2026.parquet",
+   "age_hours": 0.2,
+   "budget_hours": 336,
+   "verdict": "FRESH",
+   "event_time": null,
+   "note": ""
+  },
+  {
+   "family": "market_two_sided",
+   "source": "kalshi events sweep",
+   "file": "docs\\data-sources\\research\\2026-10-14\\kalshi\\kalshi_full_slate_2026-10-14T14-00-17Z.json",
+   "age_hours": 0.9,
+   "budget_hours": 6,
+   "verdict": "FRESH",
+   "event_time": "2026-10-14T14:00:17.230361+00:00",
+   "note": "both sides w/ spread; NO depth/limits (structural)"
+  },
+  {
+   "family": "weather_forecast",
+   "source": "open-meteo pilot",
+   "file": "docs\\data-sources\\research\\2026-10-13\\weather-pilot\\weather-stadium-pilot.json",
+   "age_hours": 18.8,
+   "budget_hours": 72,
+   "verdict": "FRESH",
+   "event_time": null,
+   "note": "venue kickoff-bucket forecast; not in-game telemetry"
+  },
+  {
+   "family": "intent_priors",
+   "source": "pbp_participation 2025 beliefs",
+   "file": "docs\\data-sources\\research\\2026-10-14\\intent\\intent_beliefs_2025_2026-10-14T06-04-10Z.json",
+   "age_hours": 8.8,
+   "budget_hours": 2160,
+   "verdict": "FRESH",
+   "event_time": null,
+   "note": "seasonal prior; updates when nflverse republishes"
+  },
+  {
+   "family": "identity_participation",
+   "source": "pbp_participation 2025",
+   "file": "intelligence\\coaching\\data\\pbp_participation_2025.parquet",
+   "age_hours": 8.8,
+   "budget_hours": 2160,
+   "verdict": "FRESH",
+   "event_time": null,
+   "note": "identity backbone; jersey<->gsis per play"
+  }
+ ]
+}

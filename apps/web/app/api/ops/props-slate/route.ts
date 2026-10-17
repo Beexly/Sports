@@ -247,8 +247,8 @@ export async function GET(req: Request): Promise<NextResponse> {
                 isSharp: false,
                 capturedAt: book.last_update ?? market.last_update,
               });
-              const ageMin =
-                (nowMs - new Date(book.last_update ?? market.last_update).getTime()) / 60000;
+              const rawUpdate = book.last_update ?? market.last_update;
+              const ageMin = rawUpdate ? (nowMs - new Date(rawUpdate).getTime()) / 60000 : 0;
               if (ageMin > oldestMs) oldestMs = ageMin;
             }
           }

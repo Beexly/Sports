@@ -205,6 +205,20 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // :05/:20/:35/:50 signal-slate ticks for the cron's time budget. Writes no
   // Pick: it rules on which of two recorded claims stands, nothing more.
   cronEntry("/api/cron/arbiter-adjudication", "41 * * * *"),
+  // C-416: refresh reporter wire into stored Signal rows (~100 public RSS/Atom feeds).
+  cronEntry("/api/cron/refresh-wire", "*/10 * * * *"),
+  // Polymarket Gamma free quote plane.
+  cronEntry("/api/cron/gamma", "0,30 * * * *"),
+  // Signal ledger census and shadow compose (Tier 1 #1).
+  cronEntry("/api/cron/signal-ledger-census", "43 * * * *"),
+  // Chunked nflverse player data backfill (Tuesday mornings).
+  cronEntry("/api/cron/backfill-player-data", "0 4 * * 2"),
+  // nflverse historical games ingestion (Tuesday early morning).
+  cronEntry("/api/cron/backfill-historical-games", "0 3 * * 2"),
+  // Continuous calibration backtest harness (Sunday 12:00 UTC).
+  cronEntry("/api/cron/backtest-calibration", "0 12 * * 0"),
+  // Feature recipe backtest harness (Sunday 13:00 UTC).
+  cronEntry("/api/cron/feature-recipe-backtest", "0 13 * * 0"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */

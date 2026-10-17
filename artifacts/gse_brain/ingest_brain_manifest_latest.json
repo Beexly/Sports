@@ -1,0 +1,167 @@
+{
+ "generated_utc": "2026-10-14T17:10:21.297454+00:00",
+ "ngs_public_surfaces": {
+  "artifact_path": "artifacts/gse_brain/ngs_public_surfaces_2026-10-14T13-26-57Z.json",
+  "endpoints": {
+   "schedule_2026_reg": {
+    "status": 200,
+    "count": 272
+   },
+   "schedule_current": {
+    "status": 200,
+    "count": 14
+   },
+   "league_teams": {
+    "status": 200,
+    "count": 34
+   },
+   "statboard_passing_2026": {
+    "status": 200,
+    "count": 37
+   },
+   "statboard_rushing_2026": {
+    "status": 200,
+    "count": 42
+   },
+   "statboard_receiving_2026": {
+    "status": 200,
+    "count": 118
+   },
+   "statboard_leaders_2026": {
+    "status": 200,
+    "count": 35
+   },
+   "leaders_speed_ball_carrier_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_time_sack_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_distance_ball_carrier_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_expectation_completion_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_expectation_ery_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "leaders_expectation_yac_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "plays_highlights_2026": {
+    "status": 200,
+    "count": 20
+   },
+   "teams_bare_deprecated": {
+    "status": 403,
+    "count": 0
+   },
+   "fastest_ball_carriers_statboard_restricted": {
+    "status": 403,
+    "count": 0
+   },
+   "pass_rush_statboard_restricted": {
+    "status": 403,
+    "count": 0
+   },
+   "plays_tracking_restricted": {
+    "status": 403,
+    "count": 0
+   }
+  }
+ },
+ "ngs_gamecenter_overviews": {
+  "artifact_path": "artifacts/gse_brain/ngs_gamecenter_overviews_2026-10-14T13-26-57Z.json",
+  "games_count": 7,
+  "total_rows": 180,
+  "gsis_joined": 180,
+  "restricted_subroutes": {
+   "/gamecenter/drives": 403,
+   "/gamecenter/plays": 403,
+   "/gamecenter/scores": 403
+  }
+ },
+ "espn_4th_down_decisions": {
+  "artifact_path": "artifacts/gse_brain/espnanalytics_4th_down_2026-10-14T13-26-57Z.json",
+  "status": 200,
+  "rows": 236
+ },
+ "sleeper_wk6_projections": {
+  "artifact_path": "artifacts/gse_brain/sleeper_projections_wk6_2026-10-14T13-26-57Z.json",
+  "status": 200,
+  "active_rows": 345,
+  "gsis_joined": 341
+ },
+ "nflverse_data_plane": {
+  "artifact_path": "artifacts/gse_brain/nflverse_data_plane_2026-10-14T17-10-21Z.json",
+  "stores_count": 43
+ },
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and Identity Loop validation spec are met.",
+ "open_meteo_week6_weather": {
+  "artifact_path": "artifacts/gse_brain/open_meteo_week6_weather_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "games": 14,
+  "outdoor": 11,
+  "indoor": 3
+ },
+ "nflverse_qbr_and_players_crosswalk": {
+  "artifact_path": "artifacts/gse_brain/nflverse_qbr_and_players_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "players_total": 24854,
+  "qbr_season_2026": "51/51 gsis_id joined",
+  "qbr_week_2026": "158/158 gsis_id joined"
+ },
+ "espn_summary_drive_charts": {
+  "artifact_path": "artifacts/gse_brain/espn_summary_drive_charts_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "week5_games_synced_with_pbp": "15/15"
+ },
+ "ngs_leaders_expanded": {
+  "artifact_path": "artifacts/gse_brain/ngs_leaders_expanded_2026-10-14T13-42-15Z.json",
+  "status": 200,
+  "leaders_gsis_joined": "95/95"
+ },
+ "kalshi_full_slate": {
+  "artifact_path": "artifacts/gse_brain/kalshi_full_slate_2026-10-14T14-00-17Z.json",
+  "status": 200,
+  "events": 28,
+  "markets_count": 56
+ },
+ "espn_scoreboard_odds": {
+  "artifact_path": "artifacts/gse_brain/espn_scoreboard_odds_2026-10-14T14-00-17Z.json",
+  "status": 200,
+  "games_count": 14,
+  "games_with_odds": 14
+ },
+ "ngs_highlights_and_bdb_archive": {
+  "artifact_path": "artifacts/gse_brain/ngs_highlights_and_bdb_archive_latest.json",
+  "status": 200,
+  "highlight_plays_2018_2026": 17770,
+  "highlight_participation_rows_2018_2026": 390899,
+  "highlight_tracking_2026_rows": 7345682,
+  "pbp_participation_seasons_resident": "2016-2025 (NGS 2016-2022, FTN 2023-2025; 2026 expected post-season release)"
+ },
+ "endzoneapi_tools_catalog": {
+  "artifact_path": "artifacts/gse_brain/endzoneapi_tools_catalog_latest.json",
+  "status": 200,
+  "tools_count": 20
+ },
+ "validation_2026_highlights_787": {
+  "artifact_path": "artifacts/gse_brain/validation_2026_highlights_summary_latest.json",
+  "outcome_enrichment_parquet": "intelligence/vision/data/tracklet_outcome_enrichment_2026.parquet",
+  "plays_evaluated": 787,
+  "tracklets_enriched": 17312,
+  "single_view_mean_rmse_m": 0.0955,
+  "multi_view_mean_rmse_m": 0.0669,
+  "shadow_color_unmatched_rate": 0.0
+ }
+}

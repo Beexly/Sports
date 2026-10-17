@@ -302,7 +302,6 @@ function eventFromInlineOdds(
   const book: OddsApiBookmaker = {
     key: "espn_public",
     title: `ESPN/${providerName}`,
-    // no last_update: ESPN exposes no upstream timestamp (see note in fetchEspnOddsForSport)
     markets,
   };
   return {
@@ -414,6 +413,10 @@ export async function fetchEspnOddsForSport(
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
+  // The ceiling every request below actually aborts on — the same value as
+  // fetchTimeoutMs, because the `timeoutMs` test seam is already resolved
+  // into it above (timeoutMs wins, then fetchTimeoutMs, then 8s).
+  const requestTimeoutMs = fetchTimeoutMs;
   const errors: string[] = [];
   const now = new Date();
   const dateParams = scoreboardDateParams(now, horizonDays);
@@ -437,7 +440,7 @@ export async function fetchEspnOddsForSport(
         const res = await fetchImpl(scoreboardUrl, {
           headers: { Accept: "application/json" },
           cache: "no-store",
-          signal: AbortSignal.timeout(fetchTimeoutMs),
+          signal: AbortSignal.timeout(requestTimeoutMs),
         });
         if (!res.ok) {
           errors.push(`scoreboard${dates ? ` ${dates}` : ""}:${host}:HTTP ${res.status}`);
@@ -500,7 +503,7 @@ export async function fetchEspnOddsForSport(
       const res = await fetchImpl(oddsUrl, {
         headers: { Accept: "application/json" },
         cache: "no-store",
-        signal: AbortSignal.timeout(fetchTimeoutMs),
+        signal: AbortSignal.timeout(requestTimeoutMs),
       });
       if (!res.ok) {
         errors.push(`${ev.id}:HTTP ${res.status}`);

@@ -120,17 +120,14 @@ describe("modelProb reaches the receipt from a real scored pick", () => {
     expect(mintFor(pick, "pick_e2e_none").payload).toContain("modelProb=none");
   });
 
-  it("PASS edges still yield a modelProb (ranking needs the probability, not the edge claim)", () => {
-    // A PASS says "no edge", NOT "no opinion". The probability is what Brier needs.
-    const pick = ml(
-      scoreGame(
-        makeInput([
-          { source: "kalshi", homeFairProb: 0.93, awayFairProb: 0.07 },
-          { source: "poisson", homeFairProb: 0.60, awayFairProb: 0.40 },
-        ]),
-      ),
+  it("PASS edges are withheld from publication (v5.3.0 hard veto in pricesWorseThanMarket)", () => {
+    // Under v5.3.0 doctrine, PASS edges must never publish.
+    const picks = scoreGame(
+      makeInput([
+        { source: "kalshi", homeFairProb: 0.93, awayFairProb: 0.07 },
+        { source: "poisson", homeFairProb: 0.60, awayFairProb: 0.40 },
+      ]),
     );
-    expect(pick.factorBreakdown.independentEdge!.decision).toBe("PASS");
-    expect(modelProbForReceipt(pick)).not.toBeNull();
+    expect(picks.find((p) => p.pickType === "MONEYLINE")).toBeUndefined();
   });
 });

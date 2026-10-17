@@ -416,9 +416,9 @@ export type RundownFetchResult = {
    * text for "429" would break the moment the message is reworded (C-278a).
    */
   readonly rateLimited?: boolean;
-  /** True only when every requested day was read successfully. */
+  /** True when every day in the fan-out was read successfully. */
   readonly complete: boolean;
-  /** ISO dates (YYYY-MM-DD) of the requested days that could not be read. */
+  /** ISO dates (yyyy-mm-dd) whose fetch failed or was refused this call. */
   readonly failedDays: readonly string[];
 };
 

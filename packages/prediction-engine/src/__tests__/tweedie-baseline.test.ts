@@ -138,22 +138,39 @@ describe("clarkWestTest", () => {
 
 describe("adaptiveConformalIntervals", () => {
   it("adapts interval width by position after misses", () => {
+    // Seed 60 baseline calibration samples per position so n >= 49
+    // WR has higher variance / misses (residuals up to 15), RB is tightly calibrated (residuals 1-2)
+    const seedWr = Array.from({ length: 60 }, (_, i) => ({
+      sampleId: `wr-seed-${i}`,
+      position: "WR",
+      predictedMean: 10,
+      actualFantasyPoints: i % 3 === 0 ? 25 : 11, // 1/3 misses with residual 15
+    }));
+    const seedRb = Array.from({ length: 60 }, (_, i) => ({
+      sampleId: `rb-seed-${i}`,
+      position: "RB",
+      predictedMean: 10,
+      actualFantasyPoints: 10 + (i % 2), // residual 0 or 1
+    }));
+
     const intervals = adaptiveConformalIntervals(
       [
-        { sampleId: "wr-1", position: "WR", predictedMean: 10, actualFantasyPoints: 10 },
-        { sampleId: "rb-1", position: "RB", predictedMean: 10, actualFantasyPoints: 10 },
-        { sampleId: "wr-2", position: "WR", predictedMean: 10, actualFantasyPoints: 25 },
-        { sampleId: "rb-2", position: "RB", predictedMean: 10, actualFantasyPoints: 11 },
-        { sampleId: "wr-3", position: "WR", predictedMean: 10, actualFantasyPoints: 14 },
+        ...seedWr,
+        ...seedRb,
+        { sampleId: "wr-eval", position: "WR", predictedMean: 10, actualFantasyPoints: 14 },
+        { sampleId: "rb-eval", position: "RB", predictedMean: 10, actualFantasyPoints: 11 },
       ],
       0.8,
       0.1,
     );
 
-    const wrThird = intervals.find((interval) => interval.sampleId === "wr-3");
-    const rbSecond = intervals.find((interval) => interval.sampleId === "rb-2");
+    const wrEval = intervals.find((interval) => interval.sampleId === "wr-eval");
+    const rbEval = intervals.find((interval) => interval.sampleId === "rb-eval");
 
-    expect(wrThird?.residualQuantile).toBeGreaterThan(rbSecond?.residualQuantile ?? 0);
+    expect(Number.isFinite(wrEval?.residualQuantile)).toBe(true);
+    expect(Number.isFinite(rbEval?.residualQuantile)).toBe(true);
+    expect(wrEval?.residualQuantile).toBeGreaterThan(rbEval?.residualQuantile ?? 0);
+    expect(intervals.every((interval) => interval.lower >= 0)).toBe(true);
     expect(intervals.every((interval) => interval.lower >= 0)).toBe(true);
   });
 });

@@ -1,0 +1,21 @@
+{
+ "generated_utc": "2026-10-14T07:41:49.833692+00:00",
+ "criterion": "family blend must BEAT context prior on held-out log-score (w=0.5 pre-registered)",
+ "heldout_tracked_plays": 1429,
+ "skipped_no_prior": 0,
+ "prior_only": {
+  "n": 1429,
+  "top1": 0.1679,
+  "brier": 0.8839,
+  "logscore": 2.3583
+ },
+ "prior_x_family": {
+  "n": 1429,
+  "top1": 0.1721,
+  "brier": 0.879,
+  "logscore": 2.3206
+ },
+ "logscore_delta": 0.0377,
+ "criterion_met": true,
+ "honesty": "tracked-subset comparison; untracked plays still score prior-only in production"
+}

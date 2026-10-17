@@ -112,10 +112,10 @@ export function bindPasserRatingSamples(
   requests: readonly PasserRatingBindRequest[],
 ): PasserRatingBindResult[] {
   const out: PasserRatingBindResult[] = [];
-  const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+  const BUS_CELL: CovariateCell = {
+    value: 0,
     grain: "week_t_for_tplus1",
     provenance: "weekly_ngs_mean",
-    layer: "L2",
   };
   for (const req of requests) {
     // Single strict-prior scan — not one per covariate field.
@@ -154,7 +154,7 @@ export function bindPasserRatingSamples(
       sample: {
         attempts: req.passTd.attempts,
         passTds: req.passTd.passTds,
-        passerRating: { ...BUS_CELL, value: rating, knownAtWeek: row.week },
+        passerRating: { ...BUS_CELL, value: rating },
       },
     });
   }

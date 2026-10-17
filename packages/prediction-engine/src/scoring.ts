@@ -666,11 +666,14 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // chosen side would move avgPrice while contributing nothing to fairProb, and
   // a single one-sided outlier could manufacture an edge that no complete
   // market shows (Devin Review, #717).
-  // Average price for chosen side, over the same complete books.
+  // Average price for chosen side, averaged in probability space (averageAmericanPrices).
   const chosenPrices = pricedOdds.map((o) =>
     homeIsChosen ? o.homeSpreadPrice! : o.awaySpreadPrice!,
   );
-  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
+  const counterpartSpreadPrices = pricedOdds.map((o) =>
+    homeIsChosen ? o.awaySpreadPrice! : o.homeSpreadPrice!,
+  );
+  const avgPrice = averageAmericanPrices(chosenPrices, counterpartSpreadPrices)!;
 
   // Fair value — assume consensus spread IS fair line, edge from vig removal.
   const homeImpliedAvg =
@@ -738,6 +741,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const crossMarketScore = ctx?.crossMarketScore ?? 0;
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
+  const injuryScore = ctx?.injuryScore ?? 0;
+  const ngsTrackingScore = ctx?.ngsTrackingScore ?? 0;
+  const dispersionScore = ctx?.dispersionScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
@@ -789,7 +795,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
       headToHeadScore + venueFormScore + uncertaintyPenalty +
-      scheduleStressScore + 10,
+      scheduleStressScore + injuryScore + ngsTrackingScore + dispersionScore + 10,
       0, 100
     )
   );
@@ -884,6 +890,11 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (lineMovementScore > 5) contextClauses.push("confirming line movement");
   else if (lineMovementScore < -5) contextClauses.push("fading line movement");
   if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals noted");
+  if (injuryScore > 1) contextClauses.push("biophysical injury advantage");
+  else if (injuryScore < -1) contextClauses.push("biophysical injury impact");
+  if (ngsTrackingScore > 1) contextClauses.push("favorable NGS tracking efficiency");
+  else if (ngsTrackingScore < -1) contextClauses.push("NGS tracking deficit");
+  if (dispersionScore < -2) contextClauses.push("market dispersion uncertainty");
 
   const contextNote = contextClauses.length > 0
     ? ` Context: ${contextClauses.join(", ")}.`
@@ -913,6 +924,20 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // this only stops the SENTENCE from overclaiming what it means.
   const isFixedLadderSpreadMarket = isBaseballSport(input.sport);
 
+  const homeFavouredCount = pricedOdds.filter((o) => o.spread! < 0).length;
+  const awayFavouredCount = pricedOdds.filter((o) => o.spread! > 0).length;
+  const chosenFavouredCount = homeIsChosen ? homeFavouredCount : awayFavouredCount;
+  const totalPriced = pricedOdds.length;
+
+  let consensusClause: string;
+  if (chosenFavouredCount === totalPriced && totalPriced > 0) {
+    consensusClause = `When we published, every book pricing this game had ${chosenTeam} favoured. We are on ${selection}.`;
+  } else if (chosenFavouredCount > totalPriced / 2) {
+    consensusClause = `When we published, most books pricing this game had ${chosenTeam} favoured, but not every book did. We are on ${selection}.`;
+  } else {
+    consensusClause = `When we published, it was not unanimous that ${chosenTeam} was favoured. We are on ${selection}.`;
+  }
+
   const reasoning = isFixedLadderSpreadMarket
     ? `${chosenTeam} ${spreadDisplay}, the run line priced by ${pricedOdds.length} ` +
       `bookmaker${pricedOdds.length === 1 ? "" : "s"}. The run line is a fixed number, so book ` +
@@ -920,8 +945,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
-    : `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
-      `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+    : `${chosenTeam} ${spreadDisplay}. Fair value: ${Math.round(fairProb * 100)}%. ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
@@ -929,8 +953,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const reasoningShort = isFixedLadderSpreadMarket
     ? `${pricedOdds.length} bookmaker${pricedOdds.length === 1 ? "" : "s"} price ${chosenTeam} ${spreadDisplay} ` +
       `on the fixed run line.` + firstContextClause
-    : `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
-      firstContextClause;
+    : `${consensusClause}` + firstContextClause;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -946,6 +969,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
+    injuryScore: injuryScore !== 0 ? injuryScore : undefined,
+    ngsTrackingScore: ngsTrackingScore !== 0 ? ngsTrackingScore : undefined,
+    dispersionScore: dispersionScore !== 0 ? dispersionScore : undefined,
     dataQualityScore,
     independentEdge: independentEdge ?? undefined,
     rankingP: rank.rankingP,
@@ -1082,9 +1108,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
-  // Avg price for chosen direction
+  // Avg price for chosen direction, averaged in probability space (averageAmericanPrices).
   const chosenPrices = pricedTotals.map((o) => (overIsChosen ? o.overPrice! : o.underPrice!));
-  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
+  const counterpartTotalPrices = pricedTotals.map((o) => (overIsChosen ? o.underPrice! : o.overPrice!));
+  const avgPrice = averageAmericanPrices(chosenPrices, counterpartTotalPrices)!;
 
   // Fair value, over the same complete books.
   const overImpliedAvg =
@@ -1130,6 +1157,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : null;
 
   const lineMovementScore = ctx?.lineMovementScore ?? 0;
+  const dispersionScore = ctx?.dispersionScore ?? 0;
   const dataQualityPenalty = ctx?.dataQualityPenalty ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
@@ -1193,6 +1221,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     fairProbability: null,
     lineMovementScore,
     volatilityPenalty,
+    dispersionScore: dispersionScore !== 0 ? dispersionScore : undefined,
     dataQualityScore,
     rankingP: Math.min(1 - 1e-6, Math.max(1e-6, confidence / 100)),
     rankingSource: "confidence", // no independent total model yet
@@ -1431,6 +1460,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
+  const injuryScore = ctx?.injuryScore ?? 0;
+  const ngsTrackingScore = ctx?.ngsTrackingScore ?? 0;
+  const dispersionScore = ctx?.dispersionScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
@@ -1460,7 +1492,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     clamp(
       consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
+      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore +
+      injuryScore + ngsTrackingScore + dispersionScore + 10,
       0, 100
     )
   );
@@ -1524,6 +1557,11 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
   if (venueFormScore > 0) contextClauses.push("strong venue form");
   if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals");
+  if (injuryScore > 1) contextClauses.push("biophysical injury advantage");
+  else if (injuryScore < -1) contextClauses.push("biophysical injury impact");
+  if (ngsTrackingScore > 1) contextClauses.push("favorable NGS tracking efficiency");
+  else if (ngsTrackingScore < -1) contextClauses.push("NGS tracking deficit");
+  if (dispersionScore < -2) contextClauses.push("market dispersion uncertainty");
   if (rank.priced) contextClauses.push("independent model edge priced into ranking");
   const contextNote = contextClauses.length > 0
     ? ` Context: ${contextClauses.join(", ")}.`
@@ -1556,6 +1594,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
+    injuryScore: injuryScore !== 0 ? injuryScore : undefined,
+    ngsTrackingScore: ngsTrackingScore !== 0 ? ngsTrackingScore : undefined,
+    dispersionScore: dispersionScore !== 0 ? dispersionScore : undefined,
     dataQualityScore,
     independentEdge: independentEdge ?? undefined,
     // Persist ranking law for later metrics / bake-off (never edge-as-p).

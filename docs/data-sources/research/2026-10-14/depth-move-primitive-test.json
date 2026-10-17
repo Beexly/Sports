@@ -1,0 +1,32 @@
+{
+ "generated_utc": "2026-10-14T09:00:52.054710+00:00",
+ "primitive_tested": "depth-chart-move (promotion -> next-week production gain)",
+ "data": "nflverse depth charts + pbp 2015-2024, 32,038 analyzable player-weeks (top-3 slots, >=2 targets, exact next-week)",
+ "result": {
+  "raw": {
+   "moved_up_next_yds": 21.65,
+   "stayed_next_yds": 29.34
+  },
+  "controlled_by_prior_band": {
+   "low(0-15yd)": {
+    "promoted": 4.9,
+    "stayed": 8.51
+   },
+   "mid(15-40)": {
+    "promoted": -5.13,
+    "stayed": -1.58
+   },
+   "high(40-100)": {
+    "promoted": -27.79,
+    "stayed": -22.86
+   },
+   "star(100+)": {
+    "promoted": -74.97,
+    "stayed": -72.71
+   }
+  }
+ },
+ "finding": "PROMOTIONS DO NOT PREDICT GAINS: in every prior-production band the promoted player's next-week delta is slightly WORSE than non-moved players (regression to the mean + replacement dynamics \u2014 the promoted player fills a vacancy but the vacated targets do not transfer proportionally)",
+ "verdict": "the naive depth-chart-bump template is falsified on 10 seasons; the honest primitive is 'promotion = replacement, expect mean reversion, not breakout'",
+ "doctrine": "one primitive measured beats ten assumed \u2014 and a KILLED hypothesis is a success of the funnel"
+}

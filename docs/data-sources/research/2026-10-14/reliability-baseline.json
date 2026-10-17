@@ -1,0 +1,148 @@
+{
+ "generated_note": "baseline calibration on the exact market type the decision layer bets (closing moneyline, de-vigged implied). The enriched slice marks seasons where intent_beliefs/identity data exist; film signals themselves are still weight-0, so this is the BAR they must beat, not a before/after of the film features.",
+ "regular_slice": {
+  "slice": "regular",
+  "buckets": {
+   "0.0-0.1": {
+    "n": 13,
+    "avg_predicted": 0.0881,
+    "empirical_win_rate": 0.0769,
+    "miscalibration": 0.0112
+   },
+   "0.1-0.2": {
+    "n": 174,
+    "avg_predicted": 0.1533,
+    "empirical_win_rate": 0.1552,
+    "miscalibration": 0.0019
+   },
+   "0.2-0.3": {
+    "n": 568,
+    "avg_predicted": 0.2528,
+    "empirical_win_rate": 0.2095,
+    "miscalibration": 0.0433
+   },
+   "0.3-0.4": {
+    "n": 753,
+    "avg_predicted": 0.3532,
+    "empirical_win_rate": 0.3825,
+    "miscalibration": 0.0292
+   },
+   "0.4-0.5": {
+    "n": 763,
+    "avg_predicted": 0.4476,
+    "empirical_win_rate": 0.4325,
+    "miscalibration": 0.0151
+   },
+   "0.5-0.6": {
+    "n": 676,
+    "avg_predicted": 0.5547,
+    "empirical_win_rate": 0.5444,
+    "miscalibration": 0.0103
+   },
+   "0.6-0.7": {
+    "n": 791,
+    "avg_predicted": 0.6477,
+    "empirical_win_rate": 0.6043,
+    "miscalibration": 0.0434
+   },
+   "0.7-0.8": {
+    "n": 611,
+    "avg_predicted": 0.7474,
+    "empirical_win_rate": 0.7381,
+    "miscalibration": 0.0093
+   },
+   "0.8-0.9": {
+    "n": 275,
+    "avg_predicted": 0.839,
+    "empirical_win_rate": 0.8291,
+    "miscalibration": 0.0099
+   },
+   "0.9-1.0": {
+    "n": 58,
+    "avg_predicted": 0.9207,
+    "empirical_win_rate": 0.8793,
+    "miscalibration": 0.0414
+   }
+  },
+  "summary": {
+   "n_plays_sides": 4682,
+   "log_score": -0.6162,
+   "brier": 0.2139
+  }
+ },
+ "enriched_slice": {
+  "slice": "enriched",
+  "buckets": {
+   "0.0-0.1": {
+    "n": 2,
+    "avg_predicted": 0.0839,
+    "empirical_win_rate": 0.0,
+    "miscalibration": 0.0839
+   },
+   "0.1-0.2": {
+    "n": 13,
+    "avg_predicted": 0.1585,
+    "empirical_win_rate": 0.0769,
+    "miscalibration": 0.0816
+   },
+   "0.2-0.3": {
+    "n": 64,
+    "avg_predicted": 0.2614,
+    "empirical_win_rate": 0.2656,
+    "miscalibration": 0.0042
+   },
+   "0.3-0.4": {
+    "n": 74,
+    "avg_predicted": 0.348,
+    "empirical_win_rate": 0.2162,
+    "miscalibration": 0.1318
+   },
+   "0.4-0.5": {
+    "n": 104,
+    "avg_predicted": 0.4422,
+    "empirical_win_rate": 0.3365,
+    "miscalibration": 0.1056
+   },
+   "0.5-0.6": {
+    "n": 81,
+    "avg_predicted": 0.5563,
+    "empirical_win_rate": 0.5556,
+    "miscalibration": 0.0008
+   },
+   "0.6-0.7": {
+    "n": 95,
+    "avg_predicted": 0.6467,
+    "empirical_win_rate": 0.7579,
+    "miscalibration": 0.1112
+   },
+   "0.7-0.8": {
+    "n": 80,
+    "avg_predicted": 0.7487,
+    "empirical_win_rate": 0.75,
+    "miscalibration": 0.0013
+   },
+   "0.8-0.9": {
+    "n": 24,
+    "avg_predicted": 0.8361,
+    "empirical_win_rate": 0.7917,
+    "miscalibration": 0.0444
+   },
+   "0.9-1.0": {
+    "n": 7,
+    "avg_predicted": 0.9222,
+    "empirical_win_rate": 1.0,
+    "miscalibration": 0.0778
+   }
+  },
+  "summary": {
+   "n_plays_sides": 544,
+   "log_score": -0.5867,
+   "brier": 0.1999
+  }
+ },
+ "comparison": {
+  "log_score_delta(enriched-regular)": 0.0295,
+  "brier_delta(enriched-regular)": -0.014,
+  "honesty": "same instrument across eras; season-mix differs. The film-signal before/after on IDENTICAL games requires the shadow dry-run to cross - protocol documented, not yet run."
+ }
+}

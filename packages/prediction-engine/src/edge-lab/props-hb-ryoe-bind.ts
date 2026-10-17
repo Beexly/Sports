@@ -87,10 +87,10 @@ export type RyoeBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+const BUS_CELL: CovariateCell = {
+  value: 0,
   grain: "week_t_for_tplus1",
   provenance: "weekly_ngs_mean",
-  layer: "L2",
 };
 
 export function bindRyoeSamples(
@@ -136,7 +136,7 @@ export function bindRyoeSamples(
         rushAtt: req.rushTd.rushAtt,
         rushTds: req.rushTd.rushTds,
         // Weekly NGS mean RYOE per attempt — cell metadata from the bus contract.
-        ryoePerAtt: { ...BUS_CELL, value: ryoe, knownAtWeek: row.week },
+        ryoePerAtt: { ...BUS_CELL, value: ryoe },
       },
     });
   }

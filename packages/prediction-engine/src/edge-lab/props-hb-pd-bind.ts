@@ -76,11 +76,7 @@ export type PdBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_pfr_def_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_pfr_def_mean" };
 
 /**
  * Bind PFR weekly-mean `pdRate` (from the covariate bus) into a batch
@@ -147,7 +143,7 @@ export function bindPdSamples(
         games: req.pd.games,
         pd: req.pd.pd,
         // Weekly PFR mean PD rate (pd per target) — cell metadata from bus contract.
-        pdRate: { ...BUS_CELL, value: rate, knownAtWeek: row.week },
+        pdRate: { ...BUS_CELL, value: rate },
       },
     });
   }

@@ -69,11 +69,7 @@ export type SnapShareBindResult =
     };
 
 /** Covariate cell for snap share — PFR defensive weekly mean. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
-  grain: "week_t_for_tplus1",
-  provenance: "weekly_pfr_def_mean",
-  layer: "L2",
-};
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_pfr_def_mean" };
 
 export function bindSnapShareSamples(
   rows: readonly CovariateRow[],
@@ -101,7 +97,7 @@ export function bindSnapShareSamples(
       sample: {
         games: req.snap.games,
         snaps: req.snap.snaps,
-        snapShare: { ...BUS_CELL, value: share, knownAtWeek: row.week },
+        snapShare: { ...BUS_CELL, value: share },
       },
     });
   }

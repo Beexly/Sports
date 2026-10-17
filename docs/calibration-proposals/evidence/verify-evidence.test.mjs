@@ -189,9 +189,43 @@ test("the a8 artifact says it ran on the SYNTHETIC fixture, not a real export", 
   assert.ok(Number.isFinite(Date.parse(a8.runAt)), "runAt must be a real timestamp");
 });
 
-test("the MODEL_VERSION this evidence was measured against is the frozen one", () => {
-  const constants = read("../../../packages/prediction-engine/src/constants.ts");
-  const m = constants.match(/MODEL_VERSION\s*=\s*"([^"]+)"/);
-  assert.ok(m, "constants.ts must define MODEL_VERSION");
-  assert.equal(m[1], "v5.2.7", "this proposal set was measured against a frozen v5.2.7");
+test("the evidence still names the version it was measured against", () => {
+  // MEASUREMENT PROVENANCE — read before "fixing" this pin.
+  //
+  // Both artifacts were measured on 2026-09-15 against the frozen v5.2.7
+  // model: their PICKS-H1 rows are that model's output, and each artifact
+  // records the run that produced it (runSha / runAt). MODEL_VERSION has
+  // since moved — legitimately — to v5.3.0: scoring changed, and the bump
+  // carried its own IMPLEMENTED evidence
+  // (../2026-09-27-narrative-contract-live-v5.3.0.md). The model-freeze
+  // guardrail is the control for version moves, and it is green.
+  //
+  // An earlier form of this test pinned the LIVE constant to v5.2.7. That
+  // made every legitimate future bump fail this file — and worse, it
+  // invited the one edit this guard exists to prevent: re-pinning the
+  // measurement record to a version the measurement never ran under.
+  // There is no v5.3.0 PICKS-H1 export on main to re-measure against, so
+  // the honest state of this evidence is, permanently, "measured against
+  // v5.2.7".
+  //
+  // The pin therefore lives on the record, not on the constant: the README
+  // must keep naming the measurement version, and each artifact must keep
+  // its measuring run attached. If this evidence is ever genuinely
+  // re-measured (a real export, new runShas in the artifacts), update
+  // MEASURED_AGAINST, the README, and the artifacts in the same change.
+  const MEASURED_AGAINST = "v5.2.7";
+  assert.ok(
+    read("README.md").includes(`frozen \`${MEASURED_AGAINST}\``),
+    "the evidence README must keep naming the version these numbers were measured against",
+  );
+  for (const [name, doc] of [["a2", a2], ["a8", a8]]) {
+    assert.ok(
+      doc.runSha && /^[0-9a-f]{40}$/.test(doc.runSha),
+      `${name}: the measuring run's sha must stay recorded`,
+    );
+    assert.ok(
+      Number.isFinite(Date.parse(doc.runAt)),
+      `${name}: the measuring run's time must stay recorded`,
+    );
+  }
 });

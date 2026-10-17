@@ -1,0 +1,23 @@
+{
+ "generated_utc": "2026-10-14T07:32:26.794320+00:00",
+ "run": "falsifier dry-run EXTENSION: 5-feature family vs 1-feature vs base rate",
+ "train_n": 813,
+ "heldout_n": 709,
+ "deep_base_rate_heldout": 0.1453,
+ "single_feature": {
+  "auc": 0.7026,
+  "logloss": 0.3889
+ },
+ "feature_family": {
+  "auc": 0.8458,
+  "logloss": 0.3064
+ },
+ "base_rate_logloss": 0.4144,
+ "coefficients_standardized": {
+  "sep_arrival": -0.1071,
+  "sep_min": -0.7702,
+  "speed_at_arrival": 0.0982,
+  "speed_max": 1.3467,
+  "break_intensity": 0.1388
+ }
+}

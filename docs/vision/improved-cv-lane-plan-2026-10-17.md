@@ -64,3 +64,16 @@ All original Gemini steps retained. Changes noted in change log below.
 ## GAP AUDIT
 - Could not verify: exact test pass for watch-ingest.ts (rate limit); existence of ngs_*.parquet files (absent); vision_shadow.jsonl (absent); specific OSF 82% and mAP numbers (unverified).
 - Closes each: re-run tests locally; confirm file presence on current branch; recreate shadow if required; source citations for external numbers.
+
+---
+
+## Step 0 — Recorded Amendments (Garrett / Gemini Audit 2026-10-17 00:30 CT)
+
+1. **Shadow Records Ground Truth**:
+   - intelligence/vision/shadow/vision_shadow.jsonl exists on this working branch (14 real JSON records, 20.9 KB). It does NOT need to be recreated or mocked. Ingested at weight 0.0 to watch.field_positions and watch.derived_metrics on Neon branch dev-cv-watch-2026-10.
+2. **Step 3 Video Extraction Adapter & Rolling Buffer Cap**:
+   - Primary Capture Adapter: Headless Chrome CDP stream grabber (PlaywrightScenarioSession.ts via REA) and yt-dlp stream extraction against nfl-video.com/full-game-replay.
+   - Rolling Buffer Cap: Maximum 1 quarter of footage (~1.2 GB disk buffer cap) on host drive. Raw frames/video segments are immediately pruned/deleted post-feature extraction to protect host disk limit (4.85 GB free).
+3. **Features Table Architecture (features.vision_play)**:
+   - Schema Design: Direct foreign keys linking to watch.games(game_id).
+   - Player Identity: Joins via standard gsis_id (and nfl_id) from intelligence/roster/ so computer vision metrics cleanly integrate with the Layer 2 reasoning docket and narrative matrices at weight 0.0.

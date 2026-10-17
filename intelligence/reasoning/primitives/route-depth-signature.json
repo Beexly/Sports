@@ -1,0 +1,132 @@
+{
+ "name": "Route-Depth Signature (measured)",
+ "family": "scheme",
+ "version": "1.0",
+ "built_at": "2026-10-14",
+ "source_evidence": {
+  "data": "NFL BDB 2025 tracking (real 10Hz), weeks 1 (train n=813) and 7 (held-out n=709) targeted receivers",
+  "artifact": "docs/data-sources/research/2026-10-14/falsifier-dryrun-family.json",
+  "tier": "MEASURED"
+ },
+ "mechanism_text": "Deep routes (GO/POST/CORNER/WHEEL) are distinguishable from short routes by the receiver's kinematic signature alone: they are run at higher top speed, released from tighter press, and carry their speed to the arrival point. The tracking signature precedes the ball's arrival, so the classification is available pre-throw.",
+ "measured_separation": {
+  "auc_single_feature_sep_arrival": 0.7026,
+  "auc_feature_family": 0.8458,
+  "logloss_family": 0.3064,
+  "logloss_base_rate": 0.4144,
+  "logloss_reduction_pct": 26.1
+ },
+ "standardized_coefficients": {
+  "sep_arrival": -0.1071,
+  "sep_min": -0.7702,
+  "speed_at_arrival": 0.0982,
+  "speed_max": 1.3467,
+  "break_intensity": 0.1388
+ },
+ "magnitude_ladder": [
+  {
+   "condition": "speed_max > 8.5 m/s AND sep_min > 1.0 m (clean release)",
+   "mag": "deep-likely (high P)"
+  },
+  {
+   "condition": "speed_max < 5.5 m/s AND sep_min < 0.9 m (press trail)",
+   "mag": "short-likely (low P)"
+  },
+  {
+   "condition": "intermediate band",
+   "mag": "ambiguous \u2014 defer to context prior"
+  }
+ ],
+ "falsifiers": [
+  "held-out AUC drops below 0.65 on a second week split (week 8 replication)",
+  "coefficients flip sign on the replication split (mechanism unstable)",
+  "the feature set fails to beat the context prior's log-loss when blended at w=0.5"
+ ],
+ "composes_with": [],
+ "use_in_decision": "SHADOW \u2014 weight 0 until the falsifier's full validation spec crosses",
+ "precedent_hook": "structural match on (speed_max>8.5, sep_min>1.0, 3rd&long)",
+ "replication": {
+  "week8_n": 720,
+  "week8_auc": 0.8786,
+  "week8_logloss": 0.2983,
+  "threshold": "AUC >= 0.65 (pre-registered falsifier)",
+  "coefficient_sign_stability": true,
+  "artifact": "docs/data-sources/research/2026-10-14/route-depth-replication.json",
+  "verdict": "REPLICATED"
+ },
+ "honesty_note": "Two independent week splits (7, 8) both exceed the pre-registered AUC bar; the mechanism is stable across samples. Still SHADOW weight-0: measured signal quality is necessary but not sufficient \u2014 the full validation spec (calibration half + market half on the same margin) governs the flip.",
+ "composition_note": {
+  "tested": "cover-tier (CB1/CB2/CB3+/S-DB, 925 pooled plays, chi2 p=0.88)",
+  "result": "NO interaction \u2014 the kinematic signature is coverage-agnostic",
+  "artifact": "docs/data-sources/research/2026-10-14/composite-tier-null-result.json",
+  "doctrine": "primitives compose only when effects touch the same mechanism; the cover-tier path was tested and does not touch this mechanism"
+ },
+ "third_criterion": {
+  "test": "family blend (w=0.5 pre-registered) vs context prior, held-out tracked plays n=1429 (wk7+8)",
+  "prior_only_logscore": 2.3583,
+  "prior_x_family_logscore": 2.3206,
+  "delta": 0.0377,
+  "met": true,
+  "artifact": "docs/data-sources/research/2026-10-14/falsifier-third-criterion.json"
+ },
+ "gate_progress": {
+  "calibration_half": "dry-run PASSED on real data (this artifact + falsifier-dryrun-real.json)",
+  "family_model": "AUC 0.846 wk7 / 0.879 wk8, blend delta +0.0377 held-out",
+  "market_half": "PENDING \u2014 per-play market margin comparison needs the game-margin rollout",
+  "final_flip": "STILL weight-0: both halves on the SAME margin required by VISION-CONTRACT"
+ },
+ "market_half": {
+  "status": "MEASURED \u2014 location improves marginally, width claim FAILS out-of-fold",
+  "totals_model": "EPA/success deltas (expanding window, pbp 2015-2024)",
+  "location": {
+   "rmse_market": 12.896,
+   "rmse_model": 12.88,
+   "logscore_same_width": "market 3.9771 vs model 3.9759",
+   "beats_market_location": true
+  },
+  "width": {
+   "model_sd_oof": 13.376,
+   "market_sd": 13.361,
+   "in_sample_claim": "13.33 < 13.361 \u2014 RETRACTED (fit flattery, failure #6)",
+   "model_narrower": false
+  },
+  "verdict": "MARKET HALF NOT MET: the contract requires strictly smaller uncertainty; out-of-fold the width edge vanishes. The EPA deltas add real but tiny location skill.",
+  "artifacts": [
+   "docs/data-sources/research/2026-10-14/totals-efficiency-model.json",
+   "docs/data-sources/research/2026-10-14/totals-model-oof-sd.json",
+   "docs/data-sources/research/2026-10-14/totals-model-honest-verdict.json"
+  ],
+  "injury_extension": {
+   "tested": "Out/Doubtful counts by position group (OL/QB/WR/RB/TE/DEF), 2015-24 injuries releases, joined pre-game",
+   "results": {
+    "A_epa_only_oof_sd": 13.369,
+    "B_epa_plus_inj_oof_sd": 13.429,
+    "C_inj_only_oof_sd": 13.384,
+    "market_sd": 13.319,
+    "heldout_logscore": {
+     "market": 3.9589,
+     "A": 3.9575,
+     "B": 3.9647
+    }
+   },
+   "findings": [
+    "injury counts WIDEN the model (B worst) \u2014 raw counts are noise at this granularity",
+    "A (EPA-only) edges the market on location (3.9575 < 3.9589) but fails the width half (13.369 > 13.319)",
+    "suspicious coefficients (RB -12.5) flag count-feature instability \u2014 role-weighted availability is the next granularity"
+   ],
+   "verdict": "MARKET HALF STILL NOT MET \u2014 both halves recorded; availability data does not break the collinearity at count granularity",
+   "artifact": "docs/data-sources/research/2026-10-14/totals-injury-model.json"
+  },
+  "totals_margin_close": {
+   "status": "CLOSED HONESTLY \u2014 four feature families tested, none beats the closing width OOF",
+   "ladder": {
+    "C_injury_counts_oof": 13.384,
+    "D_role_weighted_oof": 13.355,
+    "A_epa_only_oof": 13.369,
+    "market": 13.319
+   },
+   "finding": "role-weighting improves on counts (+0.029) but the residual gap (0.036 pts) requires information the line does not already encode \u2014 the line is built from these same public signals",
+   "verdict": "TOTALS MARGIN CLOSED as a keyless-public-data edge path; remaining priced path = per-play props (propline-intake) and freshness-critical windows (pre-injury-move)"
+  }
+ }
+}

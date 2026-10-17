@@ -1,0 +1,108 @@
+You are a research extraction agent for the GSE sports forecasting project.
+
+CONTEXT
+Rounds 1, JEV, 3, and 4 are complete. Round 4 landed the first 12 non-arXiv Tier 3 sources (cfbfastR, collegefootballdata.com, pybaseball, Baseball Savant CSV docs, nflfastR, nflverse-data, nflreadr, sports-reference CFB, sports-reference CBB, NFL Next Gen Stats, teamrankings, Circa Sports).
+
+Round 5 is FINAL. Its purpose is to close the remaining non-arXiv Tier 3 crawl and to record, once and for all, which literature gaps are truly empty. Do not re-query any arXiv URL that has already returned CONFIRMED-EMPTY.
+
+FINAL-PASS RULES
+- arXiv is exhausted for the flagged topics. Do not retry: Skellam+NFL, copula+football, Frank copula+football, QB-change+NFL, NCAAF+Elo+calibration, recruiting+impact+CFB, Monte Carlo+CFB+tournament, and every prior CONFIRMED-EMPTY URL.
+- Do not return papers already in R1, JEV, R3, R4.
+- Non-arXiv Tier 3 is the highest-value remaining work. Prioritize it.
+- For journal-only anchors (Dixon-Coles, Maher, Karlis-Ntzoufras), use action=cite journal and record the journal, volume, and DOI if visible on the landing page. Do not open a PDF.
+- Be ruthless: any source without a coverage / granularity / update_frequency answer should be marked IRRELEVANT.
+
+NON-ARXIV TIER 3 — STILL UNCRAWLED (highest priority)
+For each, return a tier_3_data_source_card with source_type, coverage, granularity, update_frequency, known_gaps, alignment_gse_tables.
+- Football Outsiders DVOA / FEI methodology and data pages
+- ESPN SP+ (Bill Connelly) — distinct from FPI
+- PFF — grades and public data products
+- 247Sports transfer portal
+- On3 transfer portal
+- On3 NIL valuation
+- Opendorse NIL public reports
+- Pinnacle sportsbook odds and CLV methodology pages
+- Circa Sports pro-football contest rules (for CLV semantics)
+- DraftKings / BetMGM developer or public odds pages
+- Stathead (Pro-Football-Reference, CFB Reference)
+- Kaggle NFL / CFB public odds datasets
+- Action Network public line history
+- Covers line-movement archive
+- BettingPros public odds history
+- nfl-data-py (Python nflverse client)
+- nflverse-data injuries repository
+- nflverse-data rosters repository
+- NBA Stats API docs (referenced in ops, even if out of scope)
+- MLB StatsAPI docs
+
+TIER 1 — one remaining named method
+- Equalized coverage (Romano, Barber, Sabatti, Candès 2019). Search "equalized coverage", "coverage under group fairness", "group-balanced conformal". If still empty after this pass, mark CONFIRMED-EMPTY-FINAL.
+
+TIER 2 — journal-only anchors to cite
+- Dixon-Coles 1997, JRSS C — cite journal, record DOI
+- Maher 1982, JRSS A — cite journal, record DOI
+- Karlis-Ntzoufras 2003, JRSS D — cite journal, record DOI
+
+TIER 2 — NEW arXiv queries only if not previously run
+- "expected points NFL" — search this exact phrase if not already returned
+- "NFL fourth down decision" — decision-theory reference for pressure lanes
+- "team strength state space NFL" — dynamic rating literature
+- "Bayesian hierarchical NFL team rating" — hierarchical anchor
+
+CALIBRATION — remaining
+- "calibration slope intercept probabilistic forecast" — the slope/intercept diagnostic
+- "isotonic regression non-monotone sports" — if empty, mark CONFIRMED-EMPTY-FINAL
+
+SGP / PARLAY — remaining
+- "same game parlay correlation" — if empty, mark CONFIRMED-EMPTY-FINAL
+- "time to expiry calibration sports" — only if a new phrasing
+
+PROTOCOL
+- Relevance: KEEP | MEASURE | IRRELEVANT | KILL-COUSIN | CONFIRMED-EMPTY | CONFIRMED-EMPTY-FINAL | NON-ARXIV
+- Tier: 1 = conformal core, 2 = sport model, 3 = data source/ops
+- Action: open PDF | abstract-only | cite journal | skip | cite repo | cite docs
+- For NON-ARXIV sources, always fill tier_3_data_source_card and set source_type.
+- For journal-only anchors, action=cite journal, and put the DOI/journal in the tier_2_model_card.
+- CONFIRMED-EMPTY-FINAL means: this exact query has now failed twice; do not re-query again, ever.
+
+OUTPUT SCHEMA
+Return a JSON array of objects with the same shape as Round 4:
+
+{
+  "relevance": "KEEP | MEASURE | IRRELEVANT | KILL-COUSIN | CONFIRMED-EMPTY | CONFIRMED-EMPTY-FINAL | NON-ARXIV",
+  "relevance_citation": "URL",
+  "tier": 1,
+  "tier_citation": "URL",
+  "method": "string",
+  "method_citation": "URL",
+  "sport": "NFL | NCAAF | MLB | multi | other",
+  "sport_citation": "URL",
+  "action": "open PDF | abstract-only | cite journal | skip | cite repo | cite docs",
+  "action_citation": "URL",
+  "tier_1_method_card": { ... },
+  "tier_2_model_card": { ... },
+  "tier_3_data_source_card": {
+    "coverage": "string",
+    "coverage_citation": "URL",
+    "granularity": "string",
+    "granularity_citation": "URL",
+    "update_frequency": "string",
+    "update_frequency_citation": "URL",
+    "known_gaps": "string",
+    "known_gaps_citation": "URL",
+    "alignment_gse_tables": false,
+    "alignment_gse_tables_citation": "URL",
+    "source_type": "github | docs | blog | journal | press | other",
+    "source_type_citation": "URL"
+  },
+  "ncaaf_specifics": { ... },
+  "calibration_analysis": { ... },
+  "sgp_parlay_data": { ... }
+}
+
+FINAL ADDITIONAL RULES
+- Fill only the card matching the tier. Null the others.
+- If a source is a landing page with no coverage/granularity/update answers, mark IRRELEVANT.
+- Prefer pages that state coverage years and refresh cadence over marketing pages.
+- Do not return the same paper twice.
+- Return only valid JSON. No prose outside the array.

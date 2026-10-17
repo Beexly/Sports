@@ -75,7 +75,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   let board: Awaited<ReturnType<typeof loadBoardState>> | null = null;
   let boardError: string | null = null;
   try {
-    const payload = await loadBoardState(new Date(), entitlements);
+    const payload = await loadBoardState(new Date(), entitlements ?? undefined);
     const canSeeConfidence = entitlements?.canSeeConfidence ?? false;
     board = canSeeConfidence ? payload : redactBoardConfidence(payload);
   } catch {

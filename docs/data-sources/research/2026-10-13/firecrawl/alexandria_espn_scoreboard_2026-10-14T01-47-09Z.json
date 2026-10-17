@@ -1,0 +1,168 @@
+{
+  "success": true,
+  "scrape_id": "01a13817-b76e-7539-b231-df5bd5ae75d3",
+  "data": {
+    "alexandria": [
+      {
+        "provider": "espn-com",
+        "capability": "sports-data/scoreboard",
+        "creditsCost": 5,
+        "data": {
+          "count": 1,
+          "count_by_status": {
+            "final": 1
+          },
+          "date": "20261012",
+          "day": null,
+          "events": [
+            {
+              "attendance": 73882,
+              "broadcasts": [
+                "ESPN",
+                "ABC"
+              ],
+              "competitors": [
+                {
+                  "abbreviation": "LAR",
+                  "athlete_id": null,
+                  "display_name": "Los Angeles Rams",
+                  "form": null,
+                  "home_away": "home",
+                  "location": "Los Angeles",
+                  "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png",
+                  "order": 0,
+                  "rank": null,
+                  "records": [
+                    {
+                      "name": "overall",
+                      "summary": "2-3",
+                      "type": "total"
+                    },
+                    {
+                      "name": "Home",
+                      "summary": "1-2",
+                      "type": "home"
+                    },
+                    {
+                      "name": "Road",
+                      "summary": "1-1",
+                      "type": "road"
+                    }
+                  ],
+                  "score": "34",
+                  "score_value": 34,
+                  "short_display_name": "Rams",
+                  "team_id": "14",
+                  "type": "team",
+                  "uid": "s:20~l:28~t:14",
+                  "url": "https://www.espn.com/nfl/team/_/name/lar/los-angeles-rams",
+                  "winner": false
+                },
+                {
+                  "abbreviation": "BUF",
+                  "athlete_id": null,
+                  "display_name": "Buffalo Bills",
+                  "form": null,
+                  "home_away": "away",
+                  "location": "Buffalo",
+                  "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png",
+                  "order": 1,
+                  "rank": null,
+                  "records": [
+                    {
+                      "name": "overall",
+                      "summary": "4-1",
+                      "type": "total"
+                    },
+                    {
+                      "name": "Home",
+                      "summary": "2-1",
+                      "type": "home"
+                    },
+                    {
+                      "name": "Road",
+                      "summary": "2-0",
+                      "type": "road"
+                    }
+                  ],
+                  "score": "37",
+                  "score_value": 37,
+                  "short_display_name": "Bills",
+                  "team_id": "2",
+                  "type": "team",
+                  "uid": "s:20~l:28~t:2",
+                  "url": "https://www.espn.com/nfl/team/_/name/buf/buffalo-bills",
+                  "winner": true
+                }
+              ],
+              "end_time": null,
+              "event_id": "401872994",
+              "name": "Buffalo Bills at Los Angeles Rams",
+              "neutral_site": false,
+              "season": {
+                "name": "regular-season",
+                "type": 2,
+                "year": 2026
+              },
+              "short_name": "BUF @ LAR",
+              "start_time": "2026-10-13T00:15Z",
+              "status": {
+                "category": "final",
+                "clock": 0,
+                "completed": true,
+                "description": "Final",
+                "detail": "Final/OT",
+                "display_clock": "0:00",
+                "id": "3",
+                "name": "STATUS_FINAL",
+                "period": 5,
+                "short_detail": "Final/OT",
+                "state": "post"
+              },
+              "time_valid": true,
+              "uid": "s:20~l:28~e:401872994",
+              "url": "https://www.espn.com/nfl/game/_/gameId/401872994/bills-rams",
+              "venue": {
+                "city": "Inglewood",
+                "country": "USA",
+                "id": "7065",
+                "indoor": false,
+                "name": "SoFi Stadium",
+                "state": "CA"
+              },
+              "week": 5
+            }
+          ],
+          "league": {
+            "abbreviation": "NFL",
+            "id": "28",
+            "name": "National Football League",
+            "season": {
+              "end_date": "2027-02-16T07:59Z",
+              "name": "2026",
+              "start_date": "2026-08-06T07:00Z",
+              "type": 2,
+              "type_id": "2",
+              "year": 2026
+            },
+            "slug": "nfl",
+            "uid": "s:20~l:28"
+          },
+          "observed_at_ms": 1791942442503,
+          "sport": "football",
+          "week": 5
+        },
+        "workflow": {
+          "version": "1.1.0",
+          "digest": "sha256:2186288dea9432ba0432489e77cdd8f68fbcc4deefaf2cf621da47acd1008ced"
+        },
+        "records": 1,
+        "upstreamStatus": 200,
+        "alexandriaId": "625d31bacc4b4c49f323eb169f8f125640a936d50957b89ea4044823c9c9f782",
+        "providerRequestId": "c356d353-3bef-445f-a2b5-313bb8b93dbf",
+        "workflowRunId": "c356d353-3bef-445f-a2b5-313bb8b93dbf"
+      }
+    ],
+    "creditsCost": 5
+  }
+}

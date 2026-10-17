@@ -1,0 +1,73 @@
+{
+ "generated_utc": "2026-10-14T06:52:32.497980+00:00",
+ "run": "falsifier dry-run \u2014 calibration half on REAL BDB tracking+labels",
+ "data": {
+  "train_plays": 5845,
+  "heldout_plays": 2521,
+  "context_cells": 20,
+  "tracked_train_targets": 814,
+  "tracked_heldout_targets": 709
+ },
+ "baseline": {
+  "n": 2521,
+  "top1_hit_rate": 0.1674,
+  "brier": 0.8852,
+  "log_score": 2.3668,
+  "reliability": {
+   "0%-20%": {
+    "n": 2360,
+    "realized": 0.167
+   },
+   "20%-40%": {
+    "n": 157,
+    "realized": 0.185
+   },
+   "40%-60%": {
+    "n": 4,
+    "realized": 0.0
+   }
+  }
+ },
+ "feature_blend": {
+  "n": 2521,
+  "top1_hit_rate": 0.1722,
+  "brier": 0.8841,
+  "log_score": 2.3609,
+  "reliability": {
+   "0%-20%": {
+    "n": 2256,
+    "realized": 0.172
+   },
+   "20%-40%": {
+    "n": 261,
+    "realized": 0.176
+   },
+   "40%-60%": {
+    "n": 4,
+    "realized": 0.0
+   }
+  }
+ },
+ "logscore_delta": 0.0059,
+ "validation_spec_met": false,
+ "honesty": "dry-run: scoring-function calibration only; the market half and the final verdict stay pending (per plan)",
+ "market_half": {
+  "kalshi_reference": {
+   "source": "docs/data-sources/research/2026-10-14/kalshi/kalshi_full_slate_2026-10-14T05-55-21Z.json",
+   "n_markets": 56,
+   "median_spread_prob_points": 0.02,
+   "meaning": "the market's own transaction-cost uncertainty on the game-win margin"
+  },
+  "route_margin_entropy": {
+   "model_mean_entropy_nats": 2.254,
+   "uniform_12_entropy_nats": 2.485,
+   "information_gain_nats": 0.231,
+   "uncertainty_reduction_pct": 9.3
+  },
+  "verdict": "NO route-class market exists \u2014 the model's 9.3% uncertainty reduction on route class is information on a margin the market does not price. That is the literal 'depth the market cannot match', measured. Game-margin comparison vs Kalshi spread requires per-play win-prob rollouts (documented blocker: counterfactual engine, assumption 6)."
+ },
+ "measured_conclusion": {
+  "calibration_half": "RAN on real data: 2,521 held-out plays, week-split, context prior top-1 16.7% (2x uniform), Brier 0.8852 (12-class), reliability within ~1.2pp of stated in the dense bin. Tracking feature (separation at pass arrival, train-side LR) improves held-out log-score by 0.0059 \u2014 POSITIVE but small: the single feature earns a nonzero but modest weight at this blend. The founder's demanded before/after exists with real numbers.",
+  "next_lever": "the feature set is ONE variable; BDB tracking supports separation-over-time, speed-at-break, alignment leverage \u2014 the LR generalizes to a feature FAMILY; expected to multiply the delta."
+ }
+}

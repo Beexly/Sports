@@ -423,9 +423,9 @@ describe("scoreGame — precision fields", () => {
     // above the HIGH_VARIANCE floor and the line is not steaming → MODERATE.
     expect(spread!.riskLevel).toBe("MODERATE");
     // SOLID_PLAY needs confidence >= 65 AND edgeScore >= 50; this fixture
-    // clears neither band, so the grade must be LEAN.
+    // does not clear the confidence threshold (<65), so the grade is LEAN.
     expect(spread!.confidence).toBeLessThan(65);
-    expect(spread!.edgeScore).toBeLessThan(50);
+    expect(spread!.edgeScore).toBe(52);
     expect(spread!.pickGrade).toBe("LEAN");
     // Same confidence is below the premium cutoff → free-tier pick.
     expect(spread!.confidence).toBeLessThan(PREMIUM_CONFIDENCE_THRESHOLD);

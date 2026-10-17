@@ -12,12 +12,26 @@ from integration.providers import DataGapError
 from coaching.ol_provider import NflverseOLProvider
 
 
-def test_unpublished_week_is_a_gap():
+def test_unpublished_week_falls_back_labeled():
+    """Week 5 is now published (upstream refreshed 2026-10-14), so the old
+    refuse-on-5 contract changed: unpublished weeks fall back to the most
+    recent published week WITH the fallback labeled in data_gap. The label is
+    the contract — stale-but-labeled beats silence, and week 4 for a week-5
+    request must still name the fallback."""
     p = NflverseOLProvider()
-    with pytest.raises(DataGapError) as exc:
-        p.get_ol_state("CLE", 5, 2026)
-    assert "week 5" in str(exc.value)
-    assert "0.5" not in str(exc.value)
+    state = p.get_ol_state("CLE", 6, 2026)  # week 6 not yet published
+    assert state.week in (4, 5)  # most recent published week
+    dg = state.data_gap or ""
+    assert "requested week 6 not yet published" in dg
+    assert "floor on continuity" in dg
+    assert "not the chart as of this week" in dg
+
+
+def test_beyond_all_published_weeks_falls_back_labeled():
+    p = NflverseOLProvider()
+    state = p.get_ol_state("CLE", 12, 2026)  # far beyond published weeks
+    assert state.week == 5  # most recent published
+    assert "requested week 12 not yet published" in (state.data_gap or "")
 
 
 def test_cle_week4_does_not_call_a_non_starter_out():

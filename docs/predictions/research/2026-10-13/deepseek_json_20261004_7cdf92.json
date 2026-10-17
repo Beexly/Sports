@@ -1,0 +1,11 @@
+{
+  "source_url": "string (the exact URL crawled)",
+  "extraction_timestamp": "ISO 8601 timestamp (UTC)",
+  "title": "string (the page title or paper title)",
+  "content_type": "research_paper | odds_data | injury_report | weather_data | analytics_article | dataset | api_documentation",
+  "summary": "string (max 500 tokens, concise summary of the extracted content)",
+  "key_data_points": ["array of strings (specific data points extracted, e.g., 'XGBoost accuracy: 92.4%', 'Poisson model calibration: 5% deviation', 'Bills +3.5 odds: -110')"],
+  "intelligent_equation_extracted": "string or null (if the source contains a mathematical equation, formula, or model specification relevant to sports prediction, extract it here in LaTeX format; otherwise null)",
+  "validation_status": "verified | unverified | conflict",
+  "raw_text_snippet": "string (first 1000 characters of extracted content, stripped of HTML tags)"
+}

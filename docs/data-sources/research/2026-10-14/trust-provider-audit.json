@@ -1,0 +1,202 @@
+{
+ "generated_utc": "2026-10-14T15:23:02.795989+00:00",
+ "source": "trust_provider_guard",
+ "live_evaluation": {
+  "overall_status": "VALID",
+  "cards_valid": "14/14",
+  "espn_receivers_freshness_check": {
+   "store_name": "espnanalytics_receivers_2026",
+   "required": false,
+   "path": "artifacts/gse_brain/espnanalytics_receivers_latest.json",
+   "exists": true,
+   "non_empty": true,
+   "row_count": 93,
+   "age_hours": 24.21,
+   "budget_hours": 168.0,
+   "verdict": "FRESH",
+   "reason": "FRESH (93 rows, 100% gsis_id join, S3 Last-Modified 2026-10-13T15:10:17Z, age 24.21h <= 168.0h)",
+   "max_season": 2026,
+   "max_week": null,
+   "last_modified_utc": "2026-10-13T15:10:17Z"
+  },
+  "failed_required_count": 0,
+  "optional_missing_stores_flagged": [
+   "pbp_participation_2026: MISSING store file: intelligence/coaching/data/pbp_participation_2026.parquet (HTTP 404 upstream; FTN participation is published only after post-season completes; 2025 fallback + 2026 reconstructed participation active)"
+  ],
+  "store_checks": [
+   {
+    "store_name": "injuries_2026_parquet",
+    "required": true,
+    "path": "intelligence/coaching/data/injuries_2026.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 1428,
+    "age_hours": 0.74,
+    "budget_hours": 168.0,
+    "verdict": "FRESH",
+    "reason": "OK (1428 rows, age 0.74h <= 168.0h, max_season=2026, max_week=6)",
+    "max_season": 2026,
+    "max_week": 6,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "espn_live_injuries_2026",
+    "required": true,
+    "path": "docs/data-sources/research/2026-10-14/espn/public_injuries_2026-10-14T05-29-35Z.json",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 32,
+    "age_hours": 9.89,
+    "budget_hours": 168.0,
+    "verdict": "FRESH",
+    "reason": "FRESH (32 teams, age 9.89h vs budget 168.0h)",
+    "max_season": null,
+    "max_week": null,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "depth_charts_2026_parquet",
+    "required": true,
+    "path": "intelligence/coaching/data/depth_charts_2026.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 650071,
+    "age_hours": 0.74,
+    "budget_hours": 336.0,
+    "verdict": "FRESH",
+    "reason": "OK (650071 rows, age 0.74h <= 336.0h, max_season=None, max_week=None)",
+    "max_season": null,
+    "max_week": null,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "trust_signals_intake_2026",
+    "required": true,
+    "path": "intelligence/trust-signals/intake/signals.jsonl",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 225,
+    "age_hours": 0.59,
+    "budget_hours": 168.0,
+    "verdict": "FRESH",
+    "reason": "FRESH (225 trust signals across 32 teams, age 0.59h <= 168.0h)",
+    "max_season": 2026,
+    "max_week": 6,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "espnanalytics_receivers_2026",
+    "required": false,
+    "path": "artifacts/gse_brain/espnanalytics_receivers_latest.json",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 93,
+    "age_hours": 24.21,
+    "budget_hours": 168.0,
+    "verdict": "FRESH",
+    "reason": "FRESH (93 rows, 100% gsis_id join, S3 Last-Modified 2026-10-13T15:10:17Z, age 24.21h <= 168.0h)",
+    "max_season": 2026,
+    "max_week": null,
+    "last_modified_utc": "2026-10-13T15:10:17Z"
+   },
+   {
+    "store_name": "snap_counts_2026",
+    "required": false,
+    "path": "intelligence/coaching/data/snap_counts_2026.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 7370,
+    "age_hours": 0.74,
+    "budget_hours": 336.0,
+    "verdict": "FRESH",
+    "reason": "OK (7370 rows, age 0.74h <= 336.0h, max_season=2026, max_week=5)",
+    "max_season": 2026,
+    "max_week": 5,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "snap_counts_2025",
+    "required": false,
+    "path": "intelligence/coaching/data/snap_counts_2025.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 26613,
+    "age_hours": 2.61,
+    "budget_hours": 336.0,
+    "verdict": "FRESH",
+    "reason": "OK (26613 rows, age 2.61h <= 336.0h, max_season=2025, max_week=22)",
+    "max_season": 2025,
+    "max_week": 22,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "pbp_participation_2025",
+    "required": false,
+    "path": "intelligence/coaching/data/pbp_participation_2025.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 45184,
+    "age_hours": 9.34,
+    "budget_hours": 2160.0,
+    "verdict": "FRESH",
+    "reason": "OK (45184 rows, age 9.34h <= 2160.0h, max_season=None, max_week=None)",
+    "max_season": null,
+    "max_week": null,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "pbp_participation_2026_reconstructed",
+    "required": false,
+    "path": "intelligence/coaching/data/pbp_participation_2026_reconstructed.parquet",
+    "exists": true,
+    "non_empty": true,
+    "row_count": 13842,
+    "age_hours": 0.39,
+    "budget_hours": 2160.0,
+    "verdict": "FRESH",
+    "reason": "OK (13842 rows, age 0.39h <= 2160.0h, max_season=2026, max_week=5)",
+    "max_season": 2026,
+    "max_week": 5,
+    "last_modified_utc": null
+   },
+   {
+    "store_name": "pbp_participation_2026",
+    "required": false,
+    "path": "intelligence/coaching/data/pbp_participation_2026.parquet",
+    "exists": false,
+    "non_empty": false,
+    "row_count": 0,
+    "age_hours": null,
+    "budget_hours": 2160.0,
+    "verdict": "MISSING_EMPTY",
+    "reason": "MISSING store file: intelligence/coaching/data/pbp_participation_2026.parquet (HTTP 404 upstream; FTN participation is published only after post-season completes; 2025 fallback + 2026 reconstructed participation active)",
+    "max_season": null,
+    "max_week": null,
+    "last_modified_utc": null
+   }
+  ]
+ },
+ "fail_closed_verification_when_required_store_missing": {
+  "overall_status": "INVALID",
+  "cards_invalid": "14/14",
+  "explicit_invalid_reasons": [
+   "MISSING store file: intelligence/coaching/data/pbp_participation_2026.parquet (HTTP 404 upstream; FTN participation is published only after post-season completes; 2025 fallback + 2026 reconstructed participation active)"
+  ]
+ },
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty": {
+  "http_status": "LOCAL_STORE_GUARD_PLUS_S3_LAST_MODIFIED_CHECK",
+  "truncation": false,
+  "access_restriction": "injuries_2026.parquet (1,428 rows, wks 1-6; TNF SEA/DEN week 6 live, per-team week-5 fallback for Sun/Mon teams), depth_charts_2026.parquet (650,071 rows, dt 2026-10-14T12:51:31Z), trust_signals_intake_2026 (225 signals across 32 teams in intelligence/trust-signals/intake/signals.jsonl), espnanalytics_receivers_latest.json (93 rows, Last-Modified 2026-10-13T15:10:17Z, 100% gsis_id join), snap_counts_2026.parquet (7,370 rows, wks 1-5), pbp_participation_2025.parquet (45,184 rows), and pbp_participation_2026_reconstructed.parquet (13,842 rows) are FRESH; pbp_participation_2026.parquet is HTTP 404 upstream (FTN post-season release only) and flagged explicitly",
+  "derivation": "Fail-closed empty-store + freshness guard over required (injuries, depth_charts) and optional (espn_receivers, snap_counts, participation) stores.",
+  "joins_on": [
+   "game_id",
+   "team",
+   "gsis_id"
+  ],
+  "weight": 0.0,
+  "validation_spec_met": false,
+  "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and downstream calibration validation spec are met."
+ }
+}

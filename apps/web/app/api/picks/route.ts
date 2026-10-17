@@ -23,6 +23,7 @@ import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-pu
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
+import { evaluateNoBet } from "@/lib/picks/no-bet-evaluation";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
@@ -521,10 +522,29 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           );
           // FREE: numeric spine only — no percent-formatted model prose /
           // "(model signal)" leak in intelligence.summary or sixQuestions.
-          return projectPickIntelligenceForViewer(
+          const projected = projectPickIntelligenceForViewer(
             raw,
             entitlements.canSeeConfidence,
           );
+          // NO-BET GATE (honesty/no-bet-gate.ts — wired 2026-10-14): the
+          // publish surface now carries the gate's verdict. Fires on
+          // calibrated edge vs the de-vigged market prob, never confidence.
+          // Fail-open: a gate error must not block the pick response.
+          const noBet = (() => {
+            try {
+              return evaluateNoBet({
+                calibratedProb: projected.calibratedProb,
+                marketFairProb: factorBreakdown?.marketFairProb ?? null,
+                dbRowCount: projected.dbRowCount,
+                dataFreshnessAt: pick.dataFreshnessAt,
+                now,
+                liveBoardEnabled: false,
+              });
+            } catch {
+              return null;
+            }
+          })();
+          return { ...projected, noBet };
         } catch {
           return null;
         }

@@ -1,0 +1,9 @@
+{
+ "measurement": "SEA@DEN prop targets T08:13 -> T08:50 UTC (37 min), 205 tracked markets",
+ "moved": 0,
+ "unchanged": 205,
+ "context": "Tuesday morning, ~54h before kickoff",
+ "finding": "DK prop lines are INERT intraday at this distance from kickoff \u2014 line movement concentrates near news events and kickoff",
+ "implication": "the snapshot cadence should be adaptive: sparse far out, dense inside T-24h (the freshness window the market-half analysis identified). A uniform 6h cadence wastes captures.",
+ "next": "second capture at T-24h tonight will measure the news-driven movement event; the cadence policy updates after that data point"
+}

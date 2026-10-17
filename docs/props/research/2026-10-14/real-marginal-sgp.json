@@ -1,0 +1,45 @@
+{
+ "generated_by": "intelligence/sgp/price_real_marginals.py",
+ "qb": {
+  "id": "00-0033077",
+  "games": 5,
+  "yards_mean": 247.7,
+  "yards_sd": 79.1,
+  "td_rate": 1.62
+ },
+ "wr": {
+  "id": "00-0036358",
+  "games": 5,
+  "yards_mean": 74.2,
+  "yards_sd": 62.1,
+  "td_rate": 0.55
+ },
+ "qb_line": 250.5,
+ "wr_line": 75.5,
+ "copula": "gaussian",
+ "correlation_source": "docs\\props\\research\\2026-10-13\\sgp_correlations.json",
+ "correlation_n_team_games": 1088,
+ "result": {
+  "n_draws": 50000,
+  "copula": "gaussian",
+  "leg_probabilities": [
+   0.4248,
+   0.80116,
+   0.34894,
+   0.41856
+  ],
+  "true_joint": 0.14924,
+  "independent_joint": 0.04970639251655147,
+  "correlation_lift": 2.0024307225736684,
+  "joint_std_error": 0.0015935333218982275,
+  "z_score": 62.46095146908095,
+  "book_implied": null,
+  "alpha": null,
+  "edge_standard_error": null,
+  "edge_z_score": null,
+  "is_edge": false,
+  "repaired_correlation": false,
+  "notes": []
+ },
+ "honesty": "marginals REAL (2026 pbp, shrunk n<=5); dependence MEASURED (2024-25); no book price = no edge claim"
+}

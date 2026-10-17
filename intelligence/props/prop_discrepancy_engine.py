@@ -565,6 +565,19 @@ def build_board(
         r["tier"] = confidence_tier(r, breakeven)
 
     return {
+        # Doctrine stamp, mirroring intelligence/sgp/price_from_real_prices.py:
+        # every emitted board carries its gate metadata so no downstream
+        # consumer (watchdog announcer, page surface, bus reader) can mistake
+        # model diagnostics for a cleared pick or an edge claim.
+        "label": "DIAGNOSTIC",
+        "is_pick": False,
+        "is_edge_claim": False,
+        "rvc_cleared": False,
+        "caveat": (
+            "DIAGNOSTIC ONLY — residual-versus-close has NOT cleared. EV and "
+            "Kelly figures on this board are model diagnostics computed from "
+            "price-less input sheets, not picks, edges, or recommendations."
+        ),
         "market": market,
         "breakeven": breakeven,
         "alt_market": alt_scenario,
@@ -617,6 +630,9 @@ def confidence_tier(row: Dict[str, object], breakeven: float) -> str:
 def render_markdown(result: Dict[str, object], top_n: int = 20) -> str:
     lines = [
         "# Props EV board",
+        "",
+        "> **DIAGNOSTIC ONLY** — residual-versus-close has NOT cleared. "
+        "Not picks, edges, or recommendations.",
         "",
         f"Market: **{result['market']}** (breakeven {result['breakeven']:.3f}) · "
         f"alt: {result['alt_market']} (breakeven {result['alt_breakeven']:.3f})",

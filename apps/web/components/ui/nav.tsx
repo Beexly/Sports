@@ -94,12 +94,17 @@ const GSN_MENU: readonly NavGroup[] = [
 ];
 
 /**
- * NavChrome — the shared bar markup. Nav and NavSkeleton differ ONLY in the
- * right rail they pass in, so the chrome lives once, here. (This file briefly
- * carried two full copies of the bar plus two references to a NavChrome that
- * was never defined; the copies are gone and this is that component.)
+ * NavChrome — the shared static shell of the global bar: brand lockup and
+ * the four top-bar doors on the left, the caller's right rail in the slot.
+ * Nav and NavSkeleton below differ ONLY in what they pass as `right`.
+ *
+ * (This body spent a bad merge mislabeled as a second `export function
+ * Nav()` — with its `right` slot unbound — while the real Nav and
+ * NavSkeleton referenced the NavChrome name that no longer existed. The
+ * dedupe restored the name; the PPR correction that used to sit in this
+ * comment lives on Nav below, where the Suspense boundary actually is.)
  */
-function NavChrome({ right }: { right: ReactNode }) {
+function NavChrome({ right }: { readonly right: ReactNode }) {
   return (
     <header className="nav">
       <div className="container nav-inner">

@@ -39,8 +39,10 @@ import {
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { stalenessBlockers } from "./signal-staleness.js";
+import { envWithStoredSignals } from "./stored-signal-env-bridge.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
+import { emissionBlocked, zeroEmissionNote } from "./walk-forward-emission-gate.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -182,14 +184,27 @@ export function blendIndependentHomeFair(
  */
 const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
-/** A signal-board grade is a PickGrade from the one shared ladder. */
+/**
+ * A signal-board grade. The ladder is the market board's (`PickGrade` from
+ * @sports/types): the disclosure below exists precisely to say a signal-board
+ * grade is confidence-only and is NOT that ladder's market grade.
+ */
 export type SignalGrade = PickGrade;
 
 /**
- * Grade a signal pick: the shared computePickGrade with no priced market
- * (`null` Edge Index), which applies the confidence rungs and caps the
- * result at UNPRICED_MAX_GRADE. Delegation is the whole point — a private
- * ladder here is how "STRONG_PLAY" once meant two different things.
+ * How the ONE shared ladder grades a signal pick: delegate to
+ * `computePickGrade` with a null price. The confidence rungs apply and the
+ * result is capped at `UNPRICED_MAX_GRADE`, because the rungs above it are
+ * claims about a price and a signal pick has none. This is the delegation
+ * the test suite pins (generate-signal-slate.test.ts) — it replaced this
+ * lane's retired private ladder (`>=80 STRONG_PLAY, >=65 SOLID_PLAY`).
+ *
+ * It is NOT what the mint path below writes: minted model signals are
+ * graded `MODEL_SIGNAL_GRADE` (LEAN, always — see its doctrine comment),
+ * because a stored grade is a claim and this lane has no measured edge to
+ * back a higher one. This function exists so that anything which needs the
+ * shared ladder's answer for an unpriced pick gets it from the ladder
+ * itself, never from a local re-implementation.
  */
 export function gradeSignalPick(confidence: number): SignalGrade {
   return computePickGrade(confidence, null);
@@ -245,6 +260,21 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       mindWithheld: 0,
       errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
       note: "slate refused: no association trace",
+    };
+  }
+  if (emissionBlocked(opts.emissionGate)) {
+    return {
+      ok: true,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      mindWithheld: 0,
+      errors: [],
+      note: zeroEmissionNote(),
     };
   }
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
@@ -564,13 +594,23 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     let homeP = blend.homeP;
     let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
     try {
+      // Stored-signal bridge: the weather cron writes wind/temp/precip to the
+      // DB, not to env. Without this bridge the wind-elasticity tilt reads an
+      // empty env and abstains silently. DB-first, env-fallback, fail-open.
+      const storedEnv = await envWithStoredSignals(
+        game.id,
+        process.env as Record<string, string | undefined>,
+      );
+      if (storedEnv.fromDb.length && opts.logPrefix) {
+        console.info(`${logPrefix} ${storedEnv.note}`);
+      }
       const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
         sportKey,
         homeTeam,
         awayTeam,
         commenceTime,
         spreadHome: null,
-        env: process.env as Record<string, string | undefined>,
+        env: storedEnv.env,
         now: () => now,
       });
       if (tilt.applied) {

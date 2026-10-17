@@ -99,10 +99,10 @@ export type AggressivenessBindResult =
     };
 
 /** Cell template matching the covariate bus's contract — single source of truth. */
-const BUS_CELL: Omit<CovariateCell, "value" | "knownAtWeek"> = {
+const BUS_CELL: CovariateCell = {
+  value: 0,
   grain: "week_t_for_tplus1",
   provenance: "weekly_ngs_mean",
-  layer: "L2",
 };
 
 /**
@@ -162,7 +162,7 @@ export function bindAggressivenessSamples(
         attempts: req.passTd.attempts,
         passTds: req.passTd.passTds,
         // Weekly NGS mean aggressiveness — cell metadata from the bus contract.
-        aggressiveness: { ...BUS_CELL, value: agg, knownAtWeek: row.week },
+        aggressiveness: { ...BUS_CELL, value: agg },
       },
     });
   }

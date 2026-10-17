@@ -327,9 +327,7 @@ export function evaluateGeneratedBlogPolicy(
   // hallucinated stat before it could ever be persisted/published. Only runs when
   // the caller supplies grounding.
   if (grounding) {
-    // Grounding TEXT, not flattened values — the kind of each number lives in
-    // its label. See lib/claude-api/numeric-guard.ts.
-    if (!validateNumericClaims(publicText, { text: grounding.promptText }).grounded) {
+    if (!validateNumericClaims(publicText, { text: grounding.dataText, allowed: grounding.values }).grounded) {
       return { allowed: false, reason: "UNGROUNDED_NUMERIC" };
     }
   }

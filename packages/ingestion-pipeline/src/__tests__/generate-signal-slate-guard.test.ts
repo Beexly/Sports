@@ -99,8 +99,21 @@ function boardResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 }
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: { passed: true } });
 }
+
+it("emits the 0-object and writes no Pick rows while the walk-forward gate is closed", async () => {
+  const out = await generateSignalSlate({
+    now: NOW,
+    skipSeed: true,
+    fetchImpl: espnFetch as unknown as typeof fetch,
+    trace: associationTrace(),
+  });
+  expect(out.picksUpserted).toBe(0);
+  expect(out.note).toContain("0 picks, 0 parlays, 0 DFS");
+  expect(mocks.pickCreate).not.toHaveBeenCalled();
+  expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+});
 
 beforeEach(() => {
   vi.clearAllMocks();

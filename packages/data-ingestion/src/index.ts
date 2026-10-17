@@ -98,6 +98,8 @@ export {
   decodeDatasetText,
   fetchNflverseText,
   fetchNflverse,
+  fetchNflversePlayerStatsWeek,
+  mergePlayerStatsWeekCurrency,
   type CsvTable,
   type NflverseDataset,
   type NflverseDatasetKey,
@@ -142,8 +144,11 @@ export {
 export {
   currentNflSeasonLabel,
   latestCompletedNflSeasonFloor,
+  ingestionTargetNflSeason,
   resolveFootballStatsSeason,
+  resolveFootballStatsSeasonAsync,
   type StatsSeasonResolution,
+  type RegRowsProbe,
 } from "./nflverse-season.js";
 export {
   probeNflverseSourceCurrency,
@@ -302,6 +307,8 @@ export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 export {
   fetchEspnOddsForSport,
   ESPN_ODDS_SPORT_MAP,
+  type GalaxySecondBook,
+  type GalaxySecondBookGameRef,
 } from "./espn-odds-client.js";
 export type { EspnOddsFetchResult } from "./espn-odds-client.js";
 
@@ -325,9 +332,9 @@ export {
   parseEspnScoreboardForSeed,
   fetchEspnSeedGamesForSport,
   fetchAllEspnSeedGames,
-  ESPN_SCOREBOARD_LIMIT,
   SHORT_TO_ODDS_SPORT,
   sportMetaForKey,
+  ESPN_SCOREBOARD_LIMIT,
 } from "./espn-schedule-seed.js";
 export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";
 
@@ -341,62 +348,118 @@ export {
 } from "./mlb-statsapi-client.js";
 export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";
 
-// Paid-odds governor + credit ledger surface. These modules were added with
-// the paid-run accounting work but never re-exported here, while
-// @sports/ingestion-pipeline (process-sport, refresh-odds, settle-sport and
-// their tests) imports them through the package barrel.
 export {
+  MONTHLY_CREDITS,
+  DAILY_BUDGET,
+  HOURLY_BUDGET,
+  EVENT_HORIZON_HOURS,
   PAID_CALL_MIN_INTERVAL_MS,
   PAID_CALL_PURPOSES,
+  PROJECTION_BASIS,
+  hoursToMonthEnd,
+  reservePaceOk,
+  zeroObservationIsStale,
   evaluatePaidOddsCall,
   decidePaidOddsCall,
+  projectCreditExhaustion,
+  emptyOddsCreditTruth,
+  buildOddsCreditTruth,
+  type PaidCallPurpose,
+  type PaidCallDecisionInput,
+  type PaidCallDecision,
+  type HourlySlot,
+  type PaidCallEvaluation,
+  type OddsCreditObservation,
+  type OddsCreditTruth,
 } from "./odds-credit-governor.js";
-export type { PaidCallPurpose, PaidCallDecisionInput, PaidCallDecision, PaidCallEvaluation } from "./odds-credit-governor.js";
+
 export {
+  ODDS_CREDITS_SCOPE,
+  ODDS_PAID_CALL_SCOPE,
+  CREDIT_OBSERVATION_WINDOW_LIMIT,
   recordCreditObservation,
   loadLatestCreditObservation,
+  loadCreditObservationsSince,
   recordPaidCall,
   loadLatestPaidCallAt,
   loadLatestPaidCallAnyPurposeAt,
-  reservePaidCallSlot,
+  paidCallMutexKey,
   resetPaidCallReservationWarning,
+  reservePaidCallSlot,
+  loadOddsCreditTruthOutcome,
+  loadOddsCreditTruth,
+  type PaidCallMarker,
+  type OddsCreditLedgerRows,
+  type OddsCreditLedgerTx,
+  type OddsCreditLedgerDb,
+  type ReservePaidCallSlotInput,
+  type PaidCallSlotReservation,
+  type OddsCreditTruthOutcome,
 } from "./odds-credit-ledger.js";
-export type { OddsCreditLedgerDb } from "./odds-credit-ledger.js";
-export { buildPaidOddsGovernor, espnScoreboardDateRange, STARTED_GRACE_HOURS } from "./paid-odds-governor.js";
-export type { PaidOddsGovernor, PaidOddsGovernorDeps } from "./paid-odds-governor.js";
-export { getOddsPaymentCircuitBreaker } from "./odds-api-circuit-breaker.js";
-export type { OddsPaymentCircuitBreaker } from "./odds-api-circuit-breaker.js";
+
 export {
+  ODDS_KEY_TO_ESPN_SHORT,
+  STARTED_GRACE_HOURS,
+  ESPN_GOVERNOR_GROUPS,
+  espnGovernorGroups,
+  espnScoreboardDateRange,
+  hasEventWithinHorizon,
+  sportHasEventWithin48h,
+  buildPaidOddsGovernor,
+  type PaidOddsGovernor,
+  type PaidOddsGovernorDeps,
+} from "./paid-odds-governor.js";
+
+export {
+  OddsPaymentCircuitBreaker,
+  getOddsPaymentCircuitBreaker,
+  setOddsPaymentCircuitBreakerForTests,
+  type OddsCircuitState,
+  type OddsCircuitBreakerConfig,
+  type CircuitRefusalCause,
+  type CircuitAcquireResult,
+  type CircuitSnapshot,
+} from "./odds-api-circuit-breaker.js";
+
+export {
+  ActionNetworkSecondBook,
+  createActionNetworkSecondBook,
+  ACTION_NETWORK_BOOK_TITLES,
+  ACTION_NETWORK_PREFERRED_BOOKS,
+  ACTION_NETWORK_SYNTHETIC_BOOKS,
+  isSyntheticActionNetworkBook,
+  type ActionNetworkBookOptions,
+} from "./action-network-book.js";
+
+export {
+  KALSHI_BOOK_KEY,
+  KALSHI_BOOK_TITLE,
+  KALSHI_LINE_SERIES,
+  probToAmerican,
+  kalshiH2hBookmaker,
+  predexonTwoWay,
   parseKalshiSpreadLine,
   parseKalshiTotalLine,
   PredExonKalshiCatalog,
   createGalaxySecondBook,
+  type PredExonTwoWay,
+  type KalshiSpreadLine,
+  type PredExonCatalogSeries,
+  type PredExonKalshiCatalogOptions,
 } from "./galaxy-kalshi-book.js";
 
-// Consumer surface restored with the barrel: web routes/libs and the
-// ingestion pipeline import these through the package entry point, and the
-// production build (webpack) fails on any name the barrel does not carry.
 export {
-  EVENT_HORIZON_HOURS,
-  MONTHLY_CREDITS,
-  emptyOddsCreditTruth,
-} from "./odds-credit-governor.js";
-export type { OddsCreditTruth } from "./odds-credit-governor.js";
-export {
-  loadOddsCreditTruth,
-  loadOddsCreditTruthOutcome,
-} from "./odds-credit-ledger.js";
-export type { OddsCreditLedgerTx } from "./odds-credit-ledger.js";
-export {
-  WEIGHT_BY_GRADE,
-  WEIGHT_BY_MODEL_VERSION,
+  CONFIDENCE_RECALIBRATION,
   WEIGHT_BY_PICK_TYPE,
   WEIGHT_BY_SPORT,
+  WEIGHT_BY_GRADE,
+  WEIGHT_BY_MODEL_VERSION,
+  PUBLISH_ACTIONS,
+  SIGNAL_COVERAGE_LIVE,
   calibratedWinProb,
   combinedSignalWeight,
   shouldSuppress,
+  type ConfidenceRecalibration,
+  type SignalWeight,
+  type PublishAction,
 } from "./calibration-weights.js";
-export type { SignalWeight } from "./calibration-weights.js";
-export { ingestionTargetNflSeason, resolveFootballStatsSeasonAsync } from "./nflverse-season.js";
-export type { RegRowsProbe } from "./nflverse-season.js";
-export { fetchNflversePlayerStatsWeek, mergePlayerStatsWeekCurrency } from "./nflverse-source.js";

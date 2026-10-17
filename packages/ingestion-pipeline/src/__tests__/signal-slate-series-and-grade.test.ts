@@ -90,7 +90,7 @@ const BOARD = {
 const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 
 const runSlate = () =>
-  generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
+  generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: { passed: true } });
 
 const createdData = (): Array<Record<string, unknown>> =>
   mocks.pickCreate.mock.calls.map((c) => (c[0] as { data: Record<string, unknown> }).data);

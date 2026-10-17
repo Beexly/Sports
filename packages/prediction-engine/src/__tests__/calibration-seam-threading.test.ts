@@ -105,14 +105,23 @@ function mlInput(calibrator?: { predict: (p: number) => number }): OddsInput {
     bookmakerOdds: TEN_BOOKS.map((bookmaker) => ({
       bookmaker,
       market: "H2H" as const,
-      homePrice: -800,
-      awayPrice: 650,
+      homePrice: -160,
+      awayPrice: 135,
     })),
     context: {
       bookmakerCoverageMax: TEN_BOOKS.length,
+      restDaysHome: 7,
+      restDaysAway: 3,
+      homeAtsForm: {
+        wins: 8,
+        losses: 2,
+        pushes: 0,
+        sampleSize: 10,
+        atsPercentage: 0.8,
+      },
       independentFairValues: [
-        { source: "kalshi", homeFairProb: 0.95, awayFairProb: 0.05 },
-        { source: "poisson", homeFairProb: 0.93, awayFairProb: 0.07 },
+        { source: "kalshi", homeFairProb: 0.65, awayFairProb: 0.35 },
+        { source: "poisson", homeFairProb: 0.64, awayFairProb: 0.36 },
       ] as IndependentMarketFairValue[],
       probabilityCalibrator: calibrator,
     },

@@ -1,0 +1,30 @@
+{
+  "label": "DIAGNOSTIC — walk-forward gate. Emission stays the 0-object while passed is false.",
+  "n": 2462,
+  "crps": null,
+  "gaussian_close_crps": 7.154021,
+  "delta": null,
+  "passed": false,
+  "filter": "REG seasons, expanding window, prior weeks only, scored 2017 W1 through 2026 W5. mu = nflverse spread_line. sigma = 13.45.",
+  "timestamp": "2026-10-14T22:15:09Z",
+  "sandbox_reference_not_a_rerun": {
+    "n": 2462,
+    "crps": 7.1597,
+    "gaussian_close_crps": 7.154,
+    "delta": -0.0057
+  },
+  "rerun": {
+    "n": 2462,
+    "gaussian_close_crps": 7.154021,
+    "crps": null,
+    "reason": "Gaussian line reproduced with crps_gaussian from intelligence/ratings/engine_math.py. Laplace CRPS 7.1597 was not recomputed: no Laplace margin module on this branch, and none was written."
+  },
+  "cvi": {
+    "branch": "origin/grok/walk-forward-2026-10-14",
+    "sha": "e51c4c91eb00f618bf89564bfa35b5a542fa9b90",
+    "passed": false,
+    "nflverse_gaussian_plus_cvi_crps": 7.1455,
+    "nflverse_n_cvi_filtered": 2438,
+    "reason": "CVI scale delta does not reach CRPS <= 7.099. Not an emission weight."
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "generated_utc": "2026-10-14T01-18-15Z",
+  "source": "NFL Next Gen Stats (cookie-warmed live fetch)",
+  "gate_note": "Captured via cookie-warmed browser session (homepage GET to seed cookies + UA/Referer) on 2026-10-13: 53 rows. Pure anonymous curl returns intermittent 401 (flaky/session-dependent gate, not route-specific). Full payload in raw_statboard_rushing.json and inlined in the digest (total 221 with passing/receiving). Re-probe at ~19:59 with bare requests returned 401 on all three. Weekly slices may return empty stats arrays under default threshold.",
+  "season": 2026,
+  "seasonType": "REG",
+  "payloads": {
+    "rushing_season": {
+      "rows": 53,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_season_2026-10-14T01-18-15Z.json",
+      "top_player": "Saquon Barkley"
+    },
+    "passing_season": {
+      "rows": 40,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_season_2026-10-14T01-18-15Z.json",
+      "top_player": "Jared Goff"
+    },
+    "receiving_season": {
+      "rows": 128,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_season_2026-10-14T01-18-15Z.json",
+      "top_player": "Adonai Mitchell"
+    },
+    "rushing_week1": {
+      "rows": 34,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week1_2026-10-14T01-18-15Z.json"
+    },
+    "rushing_week2": {
+      "rows": 33,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week2_2026-10-14T01-18-15Z.json"
+    },
+    "rushing_week3": {
+      "rows": 31,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week3_2026-10-14T01-18-15Z.json"
+    },
+    "rushing_week4": {
+      "rows": 30,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week4_2026-10-14T01-18-15Z.json"
+    },
+    "rushing_week5": {
+      "rows": 30,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week5_2026-10-14T01-18-15Z.json"
+    },
+    "rushing_week6": {
+      "rows": 0,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week6_2026-10-14T01-18-15Z.json"
+    },
+    "rushing_week7": {
+      "rows": 0,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_rushing_week7_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week1": {
+      "rows": 32,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week1_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week2": {
+      "rows": 34,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week2_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week3": {
+      "rows": 32,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week3_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week4": {
+      "rows": 32,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week4_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week5": {
+      "rows": 31,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week5_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week6": {
+      "rows": 0,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week6_2026-10-14T01-18-15Z.json"
+    },
+    "passing_week7": {
+      "rows": 0,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_passing_week7_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week1": {
+      "rows": 74,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week1_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week2": {
+      "rows": 69,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week2_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week3": {
+      "rows": 75,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week3_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week4": {
+      "rows": 75,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week4_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week5": {
+      "rows": 71,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week5_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week6": {
+      "rows": 0,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week6_2026-10-14T01-18-15Z.json"
+    },
+    "receiving_week7": {
+      "rows": 0,
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_receiving_week7_2026-10-14T01-18-15Z.json"
+    },
+    "leaders": {
+      "path": "docs\\data-sources\\research\\2026-10-13\\ngs\\raw_statboard_leaders_2026-10-14T01-18-15Z.json",
+      "keys": [
+        "season",
+        "seasonType",
+        "fastestBallCarriers",
+        "fastestSacks",
+        "longestCompletions",
+        "highestSeparation",
+        "rushYardsOverExpected",
+        "completionPctAboveExpected",
+        "avgYACAboveExpected"
+      ]
+    }
+  }
+}

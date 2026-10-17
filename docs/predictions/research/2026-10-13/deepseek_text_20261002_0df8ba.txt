@@ -1,0 +1,523 @@
+MISSION BRIEF — GALAXY SPORTS EDGE
+
+Read every word. This brief corrects a ten-month recurring failure and
+states an architectural fact that no prior brief has stated. If you
+skim it, you will repeat the failure.
+
+===============================================================================
+PART ONE — THE VISION
+===============================================================================
+
+GSE is a REASONING ENGINE. An expert system. Not a model. Not a
+classifier. A reasoner.
+
+It ingests everything knowable about a game — lineup discrepancies,
+pace, in-field and out-of-field conditions, cognitive state, nutrition,
+travel, rest, weather, officials, coaching tendencies, narrative,
+historical settlement, market pricing, calibration outputs, Brier,
+ECE, Kelly — and REASONS THROUGH IT to produce a pick.
+
+Signals are FACTS. The reasoning layer is an INFERENCE ENGINE. The
+reasoning trace is the PRODUCT. Brier, ECE, Kelly, calibration are
+FACTS in working memory — inputs, not objectives. There is no loss
+function. There is an expert system reasoning over everything it
+knows.
+
+The edge is coverage. Ingest more. Weight better. Reason more
+completely. The engine does not beat the book by minimizing a scalar.
+It beats the book by being smarter about everything than the book is.
+
+A reasoning engine that cannot show its reasoning is not reasoning.
+We are not fitting.
+
+===============================================================================
+PART TWO — THE ARCHITECTURE, STATED FOR THE FIRST TIME
+===============================================================================
+
+GSE is FOUR TIERS, split across GitHub and Hugging Face. Every prior
+audit has treated GitHub as the whole system. It is not.
+
+TIER 4 — DELIVERY (GitHub)
+  apps/web — Next.js, subscriptions, cockpit, guardrails.
+  Hugging Face: GSE Proof MCP — external proof verification.
+
+TIER 3 — REASONING (Hugging Face)
+  Hugging Face Space: Beexly/mimo-brain-engine.
+  Model: MiMo-V2.6 (Xiaomi, open-weight, MIT, 1.02T total / 42B
+  active, 1M context, native text/image/video/audio).
+  Runtime: ZeroGPU. Free.
+  Function: generate data-grounded answers with citations.
+  This IS the reasoner. This IS the product.
+
+TIER 2 — SIGNALS / FORECASTING (Hugging Face)
+  Bucket: Beexly/timesfm-3.0-pytorch-bucket (1.32 GB, private).
+  Model: TimesFM 3.0 (Google Research, zero-shot multivariate
+  forecaster, 330M params, 1T training points).
+  LICENSE: TimesFM Non-Commercial License v1.0.
+  Space: Beexly/gse-watch-pipeline (T4 small, $2.45/period).
+  Function: live data watching and pipeline execution.
+
+TIER 1 — CORE ENGINE (GitHub)
+  packages/prediction-engine — edge-engine.ts, scoring.ts,
+  calibration-map.ts.
+  intelligence/ — DataContext, TauFitter, SituationalEngine,
+  behavior.expected_wp_given_coach.
+
+THE FACTS THE PRIOR BRIEFS MISSED:
+
+1. The producers the GitHub agent cannot find may be the HF layers.
+   `gse-watch-pipeline` is likely a producer. The TimesFM bucket is
+   likely a producer. Do not assume the producer lives on the local
+   disk. Look in the HF runtime.
+
+2. The reasoner already exists and is running. It is MiMo-V2.6 on
+   ZeroGPU. The GitHub core engine produces facts; MiMo reasons over
+   them; the MCP exports proof. The engine is not "to be built." It
+   is split across two platforms and must be reconciled.
+
+3. TimesFM 3.0 is Non-Commercial. Every forecast it produces is
+   NC-licensed. Any downstream signal that consumes a TimesFM output
+   inherits that constraint. Flag it. Do not silently use TimesFM
+   output in a commercial path. This is the kind of thing that
+   surfaces in a demand letter years later.
+
+4. ZeroGPU is free (40 min/period). T4 small is not ($2.45/period).
+   Prefer ZeroGPU for inference. Use T4 small only for persistent
+   watching.
+
+YOUR FIRST JOB: state in writing how the four tiers connect. Which
+tier produces which fact. Where a fact crosses from Python to TS.
+Where a fact crosses from GitHub to HF. Where the MCP reads from.
+
+This document goes in `docs/architecture/FOUR_TIERS.md`. It does not
+exist yet. Write it.
+
+===============================================================================
+PART THREE — WHY THIS KEEPS HAPPENING
+===============================================================================
+
+Ten months of metric-chasing. Agents return to Brier, ECE, Kelly, and
+calibration as if those were the objective. Work stops on the engine
+and starts on the metrics.
+
+Beneath that: THE PRODUCERS DO NOT EXIST.
+
+Coaching seed CSVs — fabricated. 161 pbp parquet files — every one an
+8KB fixture. No `tau_hat.csv`. The +6.77pp Hamming result was measured
+on uncommitted pbp. 14 tests fail on this one gap. 4.3G free of 476G.
+
+Same class of bug, one layer deeper, every time.
+
+THE CORRECTION: PRODUCERS FIRST.
+
+A producer generates the fact. Build it before wiring the signal.
+Build it before writing the test. Build it before reporting a number.
+Producers are the foundation.
+
+THE SECOND CORRECTION: THE PRODUCER MAY LIVE ON HUGGING FACE.
+
+Check the HF runtime before concluding a producer does not exist. The
+`gse-watch-pipeline` Space and the TimesFM bucket are candidates. A
+producer running on a T4 small may be writing back to a bucket, a
+dataset, or the repo. Look.
+
+===============================================================================
+PART FOUR — IRON LAWS
+===============================================================================
+
+Each law ends with HOW.
+
+LAW 1 — PRODUCERS FIRST.
+No signal is real until a producer generates its facts.
+HOW: For every signal, ask "what produces this fact?" Check three
+places: the local repo, the HF Spaces, the HF buckets. If none
+produce it, build the producer. Name it. Commit its output. Then
+wire the signal.
+
+LAW 2 — THE ENGINE IS AN EXPERT SYSTEM.
+Brier, ECE, Kelly, calibration are facts, not objectives.
+HOW: Put them in the reasoning trace as facts. Never report as
+headline.
+
+LAW 3 — FIXTURES ARE NOT DATA.
+A green test on a fixture is not a verified result.
+HOW: Every data file gets a manifest — source, producer, hash, row
+count, date range, commit. No manifest → it is a fixture. Label it.
+Unit tests may use fixtures. Integration tests may not.
+
+LAW 4 — YOU CANNOT CALIBRATE AN UNFINISHED ENGINE.
+HOW: Leave the seam unfitted. Move on.
+
+LAW 5 — ORDER OF OPERATIONS IS FIXED.
+Producers → wired → weighted → reasoning traces → THEN calibrate.
+HOW: Return to the current stage. It is not complete until every
+artifact at that stage exists.
+
+LAW 6 — NOTHING SHIPS HALF-WIRED.
+HOW: If a signal has two call sites and one is wired, wire the other
+or remove the unwired one.
+
+LAW 7 — EVERY SIGNAL GETS ALL SEVEN.
+Producer. Wired. Weighted. Tested. Demonstrated. Backed by real data.
+Honest about its gate.
+
+LAW 8 — GUARDRAILS STAY STRICT.
+HOW: Reword the change. Do not loosen the guardrail.
+
+LAW 9 — NO FITTED MAPS. NO FABRICATED ROWS. NO SILENT FALLBACKS.
+HOW: Raise `DataGapError` naming the artifact, producer, refit
+command. Never 0.5. Never league mean. Never a synthetic row.
+
+LAW 10 — THE DB CREDS ARE NOT A BLOCKER. THE DISK IS. AND SO IS THE
+HF RUNTIME.
+HOW: Free the disk. Check the HF runtime. Stop chasing creds.
+
+LAW 11 — WORK GETS COMMITTED. FROM A CLEAN STATE.
+HOW: Commit. Push. PR. Re-run suites from clean after edits settle.
+
+LAW 12 — ALWAYS DIG ONE LAYER DEEPER.
+HOW: Every gap hides another. CSVs, parquet, producer, disk, HF
+runtime, bucket license. Find the next layer.
+
+LAW 13 — STATE THE FOUR-TIER ARCHITECTURE.
+HOW: Write `docs/architecture/FOUR_TIERS.md`. One paragraph per
+tier. Where facts cross boundaries. Which platform owns which
+artifact.
+
+LAW 14 — RESPECT THE TIMESFM LICENSE.
+HOW: TimesFM 3.0 is Non-Commercial. Any signal derived from TimesFM
+output inherits NC. Document the constraint in the signal's manifest.
+Do not silently route TimesFM output into a commercial path.
+
+===============================================================================
+PART FIVE — PATHS FORWARD
+===============================================================================
+
+PLAYBOOK 1 — FREE THE DISK
+
+Symptom: 4.3G free of 476G.
+Steps:
+  1. `df -h` — baseline.
+  2. `du -sh /* 2>/dev/null | sort -h | tail -20`.
+  3. `du -sh ~/.* 2>/dev/null | sort -h | tail -20`.
+  4. Safe to delete: node_modules across worktrees, .next/cache,
+     __pycache__, .pytest_cache, .mypy_cache, docker prunes, old
+     logs, stale worktrees.
+  5. `du -sh .git`; if large, `git gc --aggressive --prune=now`.
+  6. Do NOT delete: source, migrations, committed data, seeds.
+  7. Document in `DISK_CLEANUP.md`.
+  8. `df -h` — final.
+
+PLAYBOOK 2 — BUILD THE MISSING PRODUCER (coaching.refit_tau)
+
+Symptom: `TauFitter.fit()` exists; `tau_hat.csv` does not; 14 tests
+fail; `load_fourth_downs` rejects every local pbp file.
+Steps:
+  1. Check three places for the producer:
+     a. Local repo: `scripts/`, `intelligence/`, `producers/`.
+     b. HF Spaces: inspect `gse-watch-pipeline` for a producer step.
+     c. HF buckets: check for a pbp artifact already produced.
+  2. If no producer exists, build one:
+       fetch nflverse pbp → parse → filter → fit τ̂ → write
+       `tau_hat.csv` → write manifest.
+  3. Producer must be idempotent and resumable.
+  4. Re-run the 14 failing tests. They should pass on real data.
+  5. Commit producer script, `tau_hat.csv`, and manifest.
+
+PLAYBOOK 3 — STATE AND BUILD THE FOUR-TIER BOUNDARY
+
+Symptom: Two platforms, four tiers, no stated integration.
+Steps:
+  1. Write `docs/architecture/FOUR_TIERS.md` with one paragraph per
+     tier: what it produces, who consumes it, where it lives.
+  2. Identify fact flow:
+     - GitHub Python → GitHub TS (how?)
+     - GitHub core → HF `mimo-brain-engine` (how?)
+     - HF `gse-watch-pipeline` → where does its output go?
+     - HF TimesFM bucket → who reads it?
+     - HF `GSE Proof MCP` → what does it read from?
+  3. For each boundary without an integration, build the simplest
+     bridge:
+     - JSONL files on disk (Python writes, TS reads).
+     - Shared Postgres table.
+     - HF dataset as the exchange medium (this is likely correct for
+       GitHub ↔ HF).
+  4. Add integration tests for each boundary.
+
+PLAYBOOK 4 — DETECT A FIXTURE MASQUERADING AS DATA
+
+Symptom: test passes, signal "wired," number suspicious.
+Steps:
+  1. For every data file, find its manifest.
+  2. No manifest → fixture.
+  3. Under 1MB, under 1,000 rows, or test-generated → fixture.
+  4. Fixtures may test code paths. May NOT be reported as signal
+     evidence.
+  5. Two tests per signal: `test_signal_fires_on_fixture` (unit) and
+     `test_signal_backed_by_real_data` (integration).
+  6. If integration test fails → signal is blocked-on-data. Report as
+     such.
+
+PLAYBOOK 5 — PRODUCE A REASONING TRACE
+
+Symptom: engine produces a pick but cannot show its work.
+Steps:
+  1. Schema (JSON):
+       {
+         "pick_id": "...", "game_id": "...",
+         "bet_type": "MONEYLINE" | "SPREAD",
+         "facts": [{"signal": "...", "value": ..., "weight": ...,
+                    "source": "real" | "fixture",
+                    "license": "commercial" | "noncommercial",
+                    "fired": true | false}],
+         "combination": "...",
+         "probability_before_calibration": ...,
+         "probability_after_calibration": ...,
+         "pick": "...", "confidence": ...,
+         "gaps": ["..."]
+       }
+  2. Write the generator.
+  3. Emit three traces — MONEYLINE, SPREAD, one of choice.
+  4. Commit to `data/reasoning-traces/*.json`.
+  5. `source` must be honest. `license` must be honest.
+  6. Verify: a reader understands why the engine picked.
+
+PLAYBOOK 6 — AUDIT THE HF LAYER
+
+Symptom: the repo appears hermetic but the engine is split.
+Steps:
+  1. Inspect each HF Space's `app.py` / `README.md` / config.
+  2. For `mimo-brain-engine`: what model loads, what it reads, what
+     it outputs, what it cites.
+  3. For `gse-watch-pipeline`: what it watches, what it produces,
+     where it writes.
+  4. For `timesfm-3.0-pytorch-bucket`: confirm license, confirm
+     consumer.
+  5. For `GSE Proof MCP`: what it fetches, what it verifies, who
+     consumes it.
+  6. Write findings into `docs/architecture/HF_AUDIT.md`.
+  7. Identify every fact produced by HF that the GitHub engine should
+     consume but does not.
+
+===============================================================================
+PART SIX — CURRENT PRIORITY
+===============================================================================
+
+You are executing batch 3 (L3 chain convergence + T1 e2e through
+analyze()). Complete it. Obey Laws 1, 3, 12. If batch 3 requires real
+data that isn't there, raise loud and continue. DO NOT ask permission.
+DO NOT end with "say the word."
+
+After batch 3, in this exact order:
+
+1. FREE THE DISK. Playbook 1. Document in `DISK_CLEANUP.md`.
+
+2. AUDIT THE HF LAYER. Playbook 6. Write `docs/architecture/
+   HF_AUDIT.md`. Determine whether `gse-watch-pipeline` or the
+   TimesFM bucket is the missing producer.
+
+3. STATE THE FOUR-TIER ARCHITECTURE. Playbook 3. Write
+   `docs/architecture/FOUR_TIERS.md`. Build bridges where missing.
+   Add integration tests.
+
+4. BUILD THE MISSING PRODUCERS. Playbook 2. Start with
+   `coaching.refit_tau`. Produce `tau_hat.csv`. Re-run the 14
+   failing tests.
+
+5. COMMIT AND PUSH the calibration branch. It sits uncommitted in
+   `.worktrees/calib-boundary` on
+   `feat/trueprob-calibration-boundary`. Commit. Push. PR.
+
+6. WIRE the second `assessIndependentEdge` call site in `scoring.ts`
+   (~line 1294). Only the first (~line 675) is wired.
+
+7. RE-RUN the full prediction-engine suite from a clean state.
+
+8. CONTINUE signal coverage — one signal at a time, all seven
+   requirements per Law 7.
+
+Do not touch DB creds for measurement. Do not re-measure prod. Do not
+fit a map. Do not calibrate.
+
+===============================================================================
+PART SEVEN — THE REAL WORK
+===============================================================================
+
+SIGNAL COVERAGE
+
+For every signal, document:
+
+  - Producer — what generates the fact? Local, HF Space, or HF bucket?
+  - Source data — committed, or fixture?
+  - Wiring — end-to-end?
+  - Weight — documented rationale?
+  - Test — proves the signal fires AND contributes?
+  - Reasoning trace — demonstrated in a real pick?
+  - Honesty gate — DARK? Leave DARK.
+  - License — commercial or non-commercial? (TimesFM = NC.)
+
+Every signal gets all eight. No exceptions.
+
+REASONING TRACES
+
+At least three full traces — MONEYLINE, SPREAD, one of choice. Each
+shows every fact, fired/not-fired, weight, combination, probability
+before/after seam, pick, confidence, source (real/fixture), license
+(commercial/non-commercial), gaps.
+
+===============================================================================
+PART EIGHT — AUTONOMY
+===============================================================================
+
+You are authorized to make all decisions required.
+
+DO NOT ask clarifying questions.
+DO NOT request confirmation.
+DO NOT propose alternatives and wait for approval.
+DO NOT stop to summarize and check in.
+DO NOT end with "say the word and I'll proceed."
+
+If ambiguous, decide, proceed, document. If blocked, use the
+playbook. If a guardrail blocks, reword. If a test fails, fix. If
+data is missing, check the HF layer, then build the producer. If disk
+is full, free it. If the four-tier boundary is undefined, define it.
+
+Be aggressive. Push until every signal has a producer, is wired,
+weighted, tested, demonstrated, and backed by real data.
+
+SUBAGENTS
+
+Spawn as many as needed. Use them for:
+
+  - Parallel producer audits (local + HF)
+  - Parallel data-layer audits (fixtures, one layer deeper)
+  - Parallel HF Space inspection
+  - Parallel signal wiring
+  - Parallel test authoring
+  - Parallel reasoning-trace production
+  - Red-team review of your own work
+  - Adversarial testing of the calibration seam
+  - Adversarial testing of the four-tier boundary
+  - License audit (which signals carry NC constraints?)
+
+Verify every subagent's output yourself. Read the diff. Run the
+tests. Check the producer. Check the license.
+
+===============================================================================
+PART NINE — SELF-CHECK BEFORE FINAL REPORT
+===============================================================================
+
+REPORT ORDER (non-negotiable)
+  - Opens with DISK? (y/n)
+  - Second: HF LAYER AUDIT? (y/n)
+  - Third: FOUR-TIER ARCHITECTURE? (y/n)
+  - Fourth: PRODUCERS? (y/n)
+  - Fifth: SIGNALS? (y/n)
+  - Sixth: TRACES? (y/n)
+  If any is "no," reorder before submitting.
+
+COMPLETION
+  - Is batch 3 complete and verified? (y/n)
+  - Is the disk freed? GB? (y/n, GB)
+  - Is the full suite re-run clean? (y/n, counts)
+  - Is the calibration branch committed and pushed? (y/n)
+  - Is the second `assessIndependentEdge` call site wired? (y/n)
+  - Is the worktree clean? (y/n)
+
+HF LAYER
+  - Have you audited every Beexly HF Space? (y/n)
+  - Have you inspected the TimesFM bucket? (y/n)
+  - Do you know what `gse-watch-pipeline` produces and where it
+    writes? (y/n)
+  - Do you know what `mimo-brain-engine` reads and cites? (y/n)
+  - Have you written `docs/architecture/HF_AUDIT.md`? (y/n)
+
+ARCHITECTURE
+  - Is `docs/architecture/FOUR_TIERS.md` written? (y/n)
+  - Does an integration test pass a fact across a tier boundary?
+    (y/n)
+
+PRODUCERS
+  - Have you audited every signal for a producer, in all three
+    locations? (y/n)
+  - Have you built `coaching.refit_tau`'s producer? (y/n)
+  - Is `tau_hat.csv` fitted on real data? (y/n)
+  - Are the 14 failing tests passing on real data? (y/n)
+  - Have you dug one layer deeper than the last audit? (y/n)
+
+DATA LAYER
+  - Have you labeled every fixture? (y/n)
+  - Is every reported number backed by committed data? (y/n)
+
+SIGNAL COVERAGE
+  - Every signal has a producer? (y/n, count)
+  - Every signal wired? (y/n, exceptions)
+  - Every signal weighted? (y/n)
+  - Every signal tested? (y/n, count)
+  - Every signal demonstrated in a trace? (y/n)
+  - Every signal backed by real data? (y/n)
+  - Every signal's license documented? (y/n)
+  - DARK signals still DARK? (y/n)
+
+REASONING
+  - Three full traces? (y/n, picks)
+  - Backed by real data? (y/n)
+  - Honest source and license marking? (y/n)
+
+DRIFT DETECTION
+  - Fit a map? (y/n — must be n)
+  - Reported Brier or ECE as headline? (y/n — must be n)
+  - Chased DB creds? (y/n — must be n)
+  - Re-measured prod? (y/n — must be n)
+  - Treated calibration as current frontier? (y/n — must be n)
+  - Called a fixture-backed signal "wired"? (y/n — must be n)
+  - Manufactured a row or added a silent fallback? (y/n — must be n)
+  - Asked permission to proceed? (y/n — must be n)
+  - Ended with "say the word"? (y/n — must be n)
+  - Used TimesFM output without documenting the NC constraint?
+    (y/n — must be n)
+
+CORRECT-BEHAVIOR RECOGNITION
+  - If you hit missing data, raised loud, and continued on
+    independent paths: (y/n — YES is correct)
+  - If you found a producer on HF instead of the local disk and
+    documented it: (y/n — YES is correct)
+
+===============================================================================
+PART TEN — FINAL REPORT
+===============================================================================
+
+Output in this exact order. Deviation is a fail.
+
+  1. DISK — freed GB, what was removed, where documented
+  2. HF LAYER AUDIT — every Beexly Space and bucket, what each does,
+     what each produces
+  3. FOUR-TIER ARCHITECTURE — stated, bridges built or not
+  4. PRODUCERS — missing, built, remaining, and where they live
+  5. SIGNALS — inventory: total, produced, wired, weighted, tested,
+     demonstrated, real-data-backed, DARK, license
+  6. REASONING TRACES — three picks with traces
+  7. BATCH 3 — status
+  8. COMMITS — calibration branch and others
+  9. AMBIGUOUS DECISIONS — reasoning
+  10. GUARDRAIL BLOCKS — how reworded
+  11. TEST FAILURES — how fixed
+  12. SUBAGENTS — what each produced
+  13. NEXT PRIORITY — your judgment
+  14. REFUSALS — what you declined to compromise
+
+Do not paper over caveats. Do not round up. Do not call something
+done when it is half-done. Do not fit a map. Do not chase DB creds.
+Do not measure prod. Do not call a fixture a signal. Do not ask
+permission. Do not end with "say the word." Do not use TimesFM output
+without flagging its Non-Commercial license.
+
+Free the disk. Audit the HF layer. State the four tiers. Build the
+producers. Wire the engine. Weight the signals. Test the paths. Show
+the reasoning. Make the data real. THEN, and only then, calibrate.
+
+===============================================================================
+BEGIN NOW.
+Do not respond with a plan. Do not respond with questions. Execute
+and report.
+===============================================================================

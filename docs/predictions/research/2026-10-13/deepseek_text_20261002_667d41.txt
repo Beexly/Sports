@@ -1,0 +1,310 @@
+HANDOFF — GSE 2026-10-02
+From: prior session (Machine A, Beexly Windows)
+To: DeepSeek, new session
+Purpose: pick up the wiring mission without re-deriving state
+
+Read this once. Then execute. Do not ask questions. If you compact,
+read PROGRESS.md first, then this handoff.
+
+===============================================================================
+1. WHAT GSE IS
+===============================================================================
+
+Galaxy Sports Edge is a reasoning engine. Not a model. Not a classifier.
+An expert system that ingests everything knowable about a game — lineup
+discrepancies, pace, weather, officials, coaching tendencies, cognitive
+state, market pricing, calibration outputs, Brier, ECE, Kelly — and
+reasons through all of it to produce a pick.
+
+Signals are FACTS. The reasoning trace is the PRODUCT. Brier, ECE,
+Kelly, calibration are facts in working memory — inputs, not objectives.
+There is no loss function. Coverage is the edge.
+
+A reasoning engine that cannot show its reasoning is not reasoning.
+We are not fitting. We never fit.
+
+===============================================================================
+2. TWO-HOST RULE (critical)
+===============================================================================
+
+Two hosts are in play. They have different workspaces.
+
+  MACHINE A — Beexly (Windows 10.0.26200)
+    Working tree: C:/Users/Garrett/Sports-wt-intel
+    Has: Sports repo, tau_hat.csv, agent-bus local clone at
+         C:/Users/Garrett/agent-bus/inbox/from-motif
+    Does NOT have: the shadow corpus, the 40+ dirs
+
+  MACHINE B — Motif's host (VM, hostname unknown)
+    Has: shadow corpus, 40+ top-level dirs, seed CSV origin
+
+A full-disk search on one host does not establish global absence.
+Verify on both, or state which host you searched.
+
+THE FIX PATTERN: commit the artifact to the branch. In-repo artifacts
+resolve on any checkout. Never rsync between machines when a commit
+will do.
+
+===============================================================================
+3. CURRENT STATE (labeled)
+===============================================================================
+
+VERIFIED:
+  - Working tree: C:/Users/Garrett/Sports-wt-intel, Windows 10.0.26200
+  - Branch: motif/gse-intelligence-build-2026-10-02
+  - HEAD before pull: f880c7f67. After Motif's push: fceb123.
+  - Disk: 10.49 GB free of 476 GB
+  - Calibration branch: f5a83452e, committed and pushed
+  - tau_hat.csv at intelligence/coaching/data/, 1,523 cells,
+    manifest-pinned, held-out +6.77pp Hamming on n=3,988
+  - 4 absence tests passing (test_tau_gate_wiring.py,
+    test_tau_artifact_contract.py — 9 passed)
+  - Agent bus docs pushed at e34078f (inventory + wire package)
+  - Seed CSVs committed to branch by Motif at fceb123 — NOT YET
+    PULLED on Machine A
+  - PR #1002 is DIRTY (merge conflicts with main)
+
+UNVERIFIED (do not present as fact):
+  - "47 signals, 0 wired, 9 null, 38 dark-gated" — prose only, no
+    registry file found
+  - HF Spaces "RUNNING on zero-a10g" — existence confirmed via API,
+    runtime/hardware not
+  - Every test count from the field report predates current HEAD
+  - The 1.45MB artifact markdown on the bus — never pulled, never read
+  - Hermes' second-wave outputs — never seen
+
+UNKNOWN:
+  - Whether fceb123's four CSVs reproduce the 1e-6 pinned expectations
+  - What Hermes built last night
+  - Whether the tau 2026 leak (in-season weeks pooled) affects live
+    numbers
+  - Whether PR #1012's exit-128 push is auth, hook, or file size
+
+===============================================================================
+4. EPISTEMIC DISCIPLINE (required in every report)
+===============================================================================
+
+Every factual claim carries a label:
+
+  VERIFIED — you ran the command or read the file this session.
+    Attach SHA or path. Timestamp it.
+  UNVERIFIED — you believe it because a report said so, but you have
+    not checked on your host this session.
+  UNKNOWN — you do not know, and no source resolves it.
+
+Rules:
+  1. Never present unverified as verified.
+  2. Commit-anchor every verified claim. Timestamp every SHA.
+  3. If the brief asserts something you cannot verify, say so.
+  4. If another agent's output contradicts a fact you rely on,
+     surface the contradiction. Do not resolve silently.
+
+Motif's disclosure (4 unverified, 5 missing, 3 unknowns) is the bar.
+
+===============================================================================
+5. PRIORITIES (in dependency order)
+===============================================================================
+
+PHASE 0 — RECONCILE (30 min cap)
+  1. git fetch origin. Pull fceb123. Note HEAD + time.
+  2. Read agent-bus docs at e34078f.
+  3. Pull the 1.45MB artifact markdown from the bus. Read it.
+     Extract: report.md claims, 170 CSVs list, 14 digests,
+     2,204-file manifest, 3 feature kernels.
+  4. Fetch Hermes' second-wave outputs if present. Reconcile against
+     inventory. Note contradictions.
+  5. HF API verify each Beexly Space's runtime + hardware.
+  6. Locate intelligence/signals/registry.json. If absent, mark the
+     47-count UNVERIFIED.
+  Report each item VERIFIED / UNVERIFIED / CONTRADICTED with evidence.
+
+PHASE 1 — CLOSE THE 10 COACHING TESTS (15 min)
+  1. Verify intelligence/coaching/data/ holds the four CSVs after
+     pull: coach_offense.csv, coach_defense.csv, off_tendencies.csv,
+     def_tendencies.csv
+  2. Extract pinned 1e-6 expectations from the 10 failing tests.
+  3. Run the 10 tests. Report VERIFIED result with counts.
+  4. If 1e-6 fails: do NOT adjust expectations. Do NOT manufacture
+     rows. Report exact delta. Mark blocked-on-precision.
+  5. Verify base_data.py resolves CSVs in-repo without env overrides.
+     If it needs an override, that is a bug.
+
+PHASE 2 — REGISTRY + TAU (highest leverage)
+  2a. Write intelligence/signals/registry.json
+      Schema per entry (12 fields):
+        signal_id, producer, wired_state, weight,
+        weight_rationale_path, gate, evidence_path, homeSign,
+        license, source_data_committed, requires_arxiv_fulltext,
+        manifest_path
+      Populate from the CODE, not from prose counts. Label each
+      entry's source VERIFIED or INFERRED.
+  2b. First real producer end-to-end:
+      Pick one signal with producer present. Wire producer →
+      DataContext → bridge → TS. One test proving a fire on a real
+      pick. Real committed source data. Not a fixture.
+  2c. Fix the gate: homeSign set to +1/-1 or flip gate=DISABLED on
+      every signal. Zero nulls. Same for the 9 ACTIVE evaluators
+      returning null. Continuous tilt must accept at least one real
+      signal after.
+  2d. Wire tau_hat.csv into reasoning context:
+      _build_data_context → DataContext.observations → EdgeInput.
+      One test proving a pick changes. Stamp table and every
+      consumer surface: "point fit — not pre-kickoff. 2026 unit
+      cells pool in-season weeks."
+  2e. Rebuild three fixture traces with real data:
+      data/reasoning-traces/moneyline.json, spread.json, total.json
+      currently source=fixture, real_pick=false. Rebuild using local
+      pbp (2025, 2026) + kalshi-*.json + espn-pitcle.json. source
+      field honest per fact.
+
+PHASE 3 — OL PROVIDER + DOCTRINES + P1 FIXES
+  3a. OL provider: Locate RECONCILED-SOURCES-2026-10-02.md. Build
+      get_ol_status / get_ol_starters. nflverse injuries +
+      depth_charts. Alexandria only for live daily practice detail.
+      DataGapError on unpublished weeks. No silent fallback.
+      Re-run test_t1_real_e2e.py. Mark
+      TestT1PressureFunnelRejected as @pytest.mark.adversary.
+  3b. Seven doctrines in doctrine/, linked from AGENTS.md:
+      1. paired-audit.md — two auditors, reconcile
+      2. honest-refusal.md — INVALID/L1/UNCHECKED is correct
+      3. manifest-provenance.md — every dataset gets a manifest
+      4. held-out-discipline.md — contaminated fits discarded
+      5. two-host-rule.md — a single-host search is not absence
+      6. epistemic-discipline.md — VERIFIED/UNVERIFIED/UNKNOWN
+      7. evidence-taxonomy.md — Free rows / Open schema / Key
+         required / Private mechanics
+  3c. Fix 5 P1 audit findings: target_hhi 0.0, swallowed
+      DataGapError, CLEAR-on-missing-evidence, tau-not-in-context
+      (2d handles), pipeline.py divergence. Report file, line, fix.
+
+PHASE 4 — MACHINE B RECONCILIATION (30 min cap)
+  Attempt to reach Machine B. If reachable: shadow corpus
+  inventory, muse.ai extraction, arXiv join (1,115 fulltexts vs
+  585/750 tracker). If not: write MACHINE_B_BLOCKED.md naming what
+  was searched. Move on.
+
+PHASE 5 — AGENT BUS WRITE-BACK
+  Write completion report to
+  C:/Users/Garrett/agent-bus/inbox/from-gse-agent-2026-10-02/
+  AND push it. The bus is two-way. Future agents inherit this.
+
+===============================================================================
+6. IRON LAWS (compact)
+===============================================================================
+
+1. Producers first. No signal is real until a producer generates facts.
+2. Brier/ECE/Kelly in the trace as facts. Never as headline.
+3. Every data file gets a manifest. No manifest → fixture.
+4. Leave the calibration seam unfitted.
+5. Producers → wired → weighted → traces → calibrate.
+6. Finish or remove half-wired signals. Never leave both.
+7. Every signal gets all eight: producer, wired, weighted, tested,
+   demonstrated, real-backed, honest gate, license documented.
+8. Guardrails strict. Reword the change; never loosen.
+9. DataGapError on missing data. Never 0.5, never league mean, never
+   a synthetic row.
+10. Commit. Push. Re-run from clean.
+11. Dig one layer deeper than the last audit.
+12. TimesFM weights are Non-Commercial. Flag every derived signal.
+13. Cost-conscious: ZeroGPU free, T4 $2.45/period. Justify paid.
+14. HONOR GAPS OVER GREENS. A raised DataGapError is a better
+    outcome than a passing test on a fixture.
+15. TWO-HOST RULE.
+16. BRANCH-AS-SOURCE-OF-TRUTH.
+17. EPISTEMIC DISCIPLINE.
+18. YOU MAY CORRECT THIS HANDOFF. Test facts before relying.
+    Update PROGRESS.md. Proceed with the corrected fact.
+
+===============================================================================
+7. DO NOT
+===============================================================================
+
+- Fit a calibration map.
+- Re-measure prod. Chase DB creds.
+- Report Brier/ECE as a headline.
+- Call a fixture-backed signal "wired."
+- Manufacture rows to make tests pass.
+- Loosen a guardrail. Reword the change.
+- Delete iPhone backups (68.9 GB) or Documents/Codex without
+  explicit per-item approval.
+- Ask permission. End with "say the word."
+- Present unverified claims as verified.
+- Assert global absence from a single-host search.
+- Touch PR #1002 (read-only conflict mapping is fine).
+
+===============================================================================
+8. AUTONOMY
+===============================================================================
+
+Authorized to make every execution decision. Two exceptions that stop
+you:
+  1. Credentials found in a file about to be deleted.
+  2. Legal or license question you cannot route around.
+
+Otherwise: decide, proceed, document. Do not stall. Do not
+hyper-fixate on a blocked priority. Move to the next reachable one.
+
+Subagent spawning encouraged. Verify every subagent's output yourself.
+Read the diff. Run the tests. Check the data source.
+
+===============================================================================
+9. DEFINITION OF DONE
+===============================================================================
+
+  - Phase 0: unverified list reconciled. Contradictions surfaced.
+  - fceb123 pulled. 10 tests run. Result VERIFIED with counts.
+  - registry.json committed, populated from code.
+  - One signal wired end-to-end with real-data fire test.
+  - homeSign zero nulls. 9 evaluators zero nulls.
+  - tau wired with test proving a pick changes. Stamped.
+  - Three traces rebuilt with real data, honest source.
+  - OL provider implemented. T1 clears UNCHECKED or raises
+    DataGapError with week named.
+  - Seven doctrines in doctrine/. Linked from AGENTS.md.
+  - 5 P1 findings fixed or located-and-deferred.
+  - Machine B reached or MACHINE_B_BLOCKED.md written.
+  - Completion report on agent bus.
+
+===============================================================================
+10. REPORT FORMAT (exact order, every claim labeled)
+===============================================================================
+
+  1. Step 0 — host, HEAD, disk, timestamp. VERIFIED.
+  2. Phase 0 — reconciliation. Each item VERIFIED / UNVERIFIED /
+     CONTRADICTED with evidence.
+  3. Phase 1 — fceb123 pull, 10 test result.
+  4. Phase 2 — registry, wired count, tau test, traces.
+  5. Phase 3 — OL provider, doctrines, P1 fixes.
+  6. Phase 4 — Machine B status.
+  7. Tests — every suite with counts, SHA-anchored, timestamped.
+  8. Commits — sha, branch, message, timestamp.
+  9. Subagents — what each produced.
+  10. Epistemic summary — count of VERIFIED / UNVERIFIED / UNKNOWN
+      claims in this report. Motif disclosed 4 / 5 / 3. Match or
+      exceed that honesty.
+  11. Refusals — what you declined to fake.
+  12. Next priority — your judgment.
+
+If any reachable item is "no," fix before submitting.
+
+===============================================================================
+11. DEEPER REFERENCES (on the agent bus at e34078f)
+===============================================================================
+
+  - GSE-MASTER-INVENTORY-2026-10-02.md — the full inventory,
+    reconciled dual-sweep, gap + leverage audit, watchlist.
+  - gse-intelligence-program-2026-10-02.md — program brief.
+  - RECONCILED-SOURCES-2026-10-02.md — OL provider spec, sources.
+  - BUILD-BIBLE.md — architectural reference.
+  - TASK-001 through TASK-015 — prior handoffs.
+  - nfl-analytics-reverse-engineering.md (1.45MB) — the muse.ai
+    artifact. Contains 3 copy-ready feature kernels unassigned.
+
+Read the inventory §4 (40+ shadow dirs) and §7 (44 reconciled
+findings) before your first report.
+
+===============================================================================
+BEGIN.
+Pull fceb123. Execute Phase 0. Then reachable phases in order.
+Do not respond with a plan. Do not respond with questions. Report
+Step 0 and then execute.

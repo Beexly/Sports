@@ -54,6 +54,7 @@ const SECRET_RULES = [
   { id: "github.pat.fine-grained", re: /\bgithub_pat_[A-Za-z0-9_]{50,}\b/ },
   { id: "slack.token", re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/ },
   { id: "neon.api-key", re: /\bnapi_[A-Za-z0-9]{40,}\b/ },
+  { id: "alibaba.access-key", re: /\bLTAI[A-Za-z0-9]{16,24}\b/ },
   { id: "private-key-block", re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/ },
   // A Postgres/Redis connection URL that embeds a password AND points at a
   // real remote host (not localhost / docker service names). Dev strings
