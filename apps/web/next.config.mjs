@@ -60,11 +60,31 @@ const nextConfig = {
       "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
       "@": path.resolve(process.cwd()),
     };
+
+    // Client components import @sports/prediction-engine's barrel, which
+    // re-exports corpus-evaluator (node:fs / node:path). Those builtins are
+    // server-only; shim the scheme on the client build so production compiles.
+    // The server build keeps the real modules.
+    if (!isServer) {
+      const fsShim = path.resolve(here, "lib/shims/empty-fs.js");
+      const pathShim = path.resolve(here, "lib/shims/empty-path.js");
+      config.plugins.push({
+        apply(compiler) {
+          compiler.hooks.normalModuleFactory.tap("shim-node-corpus", (nmf) => {
+            nmf.hooks.beforeResolve.tap("shim-node-corpus", (data) => {
+              if (!data?.request) return;
+              if (data.request === "node:fs") data.request = fsShim;
+              else if (data.request === "node:path") data.request = pathShim;
+            });
+          });
+        },
+      });
+    }
 
     // Resolve .js extension imports to .ts source files for transpiled workspace packages.
     // Workspace packages use ESM-style `.js` extension imports in TypeScript source,

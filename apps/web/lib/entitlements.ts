@@ -56,6 +56,21 @@ function isDatabaseUnreachable(error: unknown): boolean {
   return code === "P1001" || message.includes("Can't reach database server");
 }
 
+const OWNER_EMAILS = ["baxley.garrett@gmail.com", "dbax66@icloud.com"];
+
+/** Founder/admin sees the full board even with no Stripe subscription. */
+function ownerBypassesPaywall(role: string | null | undefined, email: string | null | undefined): boolean {
+  if (role === "ADMIN") return true;
+  if (!email || /[^\x00-\x7F]/.test(email)) return false;
+  const canonical = email.trim().toLowerCase();
+  if (OWNER_EMAILS.includes(canonical)) return true;
+  const list = (process.env["ADMIN_EMAILS"] ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return list.includes(canonical);
+}
+
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
   // Dev-only escalation, hard-gated to non-production. Without the NODE_ENV
   // guard a misconfigured prod (DEV_FAKE_ADMIN=true) would hand ELITE to any
@@ -66,6 +81,26 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
     userId === "dev-admin"
   ) {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
+  }
+
+  // Owner bypass runs before the subscription lookup. Tests that mock only
+  // db.subscription skip this when db.user is absent.
+  const users = (db as { user?: { findUnique?: (args: {
+    where: { id: string };
+    select: { role: true; email: true };
+  }) => Promise<{ role: string; email: string | null } | null> } }).user;
+  if (typeof users?.findUnique === "function") {
+    try {
+      const user = await users.findUnique({
+        where: { id: userId },
+        select: { role: true, email: true },
+      });
+      if (user && ownerBypassesPaywall(user.role, user.email)) {
+        return getEntitlements("ELITE");
+      }
+    } catch (error) {
+      if (!isDatabaseUnreachable(error)) throw error;
+    }
   }
 
   const graceCutoff = new Date(Date.now() - PAST_DUE_GRACE_DAYS * 24 * 60 * 60 * 1000);
