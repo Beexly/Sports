@@ -18,8 +18,9 @@ import { db } from "@sports/db";
 import { hasOpsAuth } from "@/lib/ops/ops-auth";
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
-import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { displaySelection } from "@/lib/picks/display-selection";
+import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
+import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -81,6 +82,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     },
     select: {
       id: true,
+      gameId: true,
+      bookmakerCount: true,
       pickType: true,
       selection: true,
       line: true,
@@ -105,26 +108,41 @@ export async function GET(request: Request): Promise<NextResponse> {
     take: 400,
   });
 
-  const ranked = rows
-    .map((pick) => ({
-      id: pick.id,
-      sport: pick.game.sport.name,
-      sportKey: pick.game.sport.key,
-      matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-      commenceTime: pick.game.commenceTime.toISOString(),
-      pickType: pick.pickType,
-      selection: displaySelection(pick.selection),
-      line: pick.line,
-      confidence: pick.confidence,
-      pickGrade: pick.pickGrade,
-      tier: pick.tier,
-      edgeScore: pick.edgeScore,
-      rankingP: readNumber(pick.factorBreakdown, "rankingP"),
-      expectedClv: readExpectedClv(pick.factorBreakdown),
-      riskLevel: pick.riskLevel,
-      modelVersion: pick.modelVersion,
-      reasoningShort: pick.reasoningShort,
-    }))
+  // 1. One game, one story: drop unpriced model signals when a priced book line exists for the same game
+  const coherentRows = dropContradictedModelSignals(rows);
+
+  // 2. Never sell a pick our own model prices worse than the market (PASS / negative expected CLV)
+  const soundRows = dropAdverseEdgePicks(coherentRows);
+
+  const ranked = soundRows
+    .map((pick) => {
+      // Edge Index sanitize: an edge of 100 is an artifact of multi-book odds averaging where rawEdge >= 0.
+      // Cap at 54 (honest fair juice ceiling) so 100 never displays as a false certainty indicator.
+      const sanitizedEdge =
+        pick.edgeScore != null && pick.edgeScore >= 100
+          ? 54
+          : pick.edgeScore;
+
+      return {
+        id: pick.id,
+        sport: pick.game.sport.name,
+        sportKey: pick.game.sport.key,
+        matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
+        commenceTime: pick.game.commenceTime.toISOString(),
+        pickType: pick.pickType,
+        selection: displaySelection(pick.selection),
+        line: pick.line,
+        confidence: pick.confidence,
+        pickGrade: pick.pickGrade,
+        tier: pick.tier,
+        edgeScore: sanitizedEdge,
+        rankingP: readNumber(pick.factorBreakdown, "rankingP"),
+        expectedClv: readExpectedClv(pick.factorBreakdown),
+        riskLevel: pick.riskLevel,
+        modelVersion: pick.modelVersion,
+        reasoningShort: pick.reasoningShort,
+      };
+    })
     .sort((a, b) => {
       if (order === "edge") {
         const ea = a.expectedClv;
