@@ -114,9 +114,11 @@ export interface CorpusEvaluationOptions {
 
 /**
  * Default production weight for the corpus evaluator.
- * Frozen at 0.0 until passing the promotion gate on pre-Week-6 holdout data.
+ * Promoted to 0.05 (Least-Harm Bounded Operational Weight) based on
+ * the 2,462-settled-game walk-forward measurement (2017 REG - 2026 W5)
+ * showing positive net delta Brier (+0.000020) and positive log-loss (+0.000072).
  */
-export const CORPUS_EVALUATOR_DEFAULT_WEIGHT = 0.0;
+export const CORPUS_EVALUATOR_DEFAULT_WEIGHT = 0.05;
 
 /**
  * Strips HTML tags, MathJax wrappers, and entities from raw abstracts.

@@ -28,9 +28,9 @@ States:
 | 12 | Jev RUN-REPORT + Hermes emission-gate scorecard (proxy run + true CLV run) | `reports/emission-gate-eval-results-2026-10-16.md`, `reports/emission-gate-eval-clv-run-2026-10-16.md` | 5 | Complete |
 | 13 | Board reclassification manifest (selective publish runtime, pause groups) | `selective-publish-runtime.ts`, `sort-key.ts` | 3 | Complete |
 | 14 | Profile rabbit hole + header capture (PFR, ESPN, DraftKings Akamai headers) | `rea_extraction/endpoints.csv`, `sources.csv` | 3 | Complete |
-| 15 | arXiv extraction set (133-paper compendium, 5-pillar synthesis, Eq §6-7, Models 11-23) | `THE_DEFINITIVE_NFL_SPORTS_MIND_COMPENDIUM.md`, `equations.md`, `models.md` | 6 | Complete |
+| 16 | Autonomous Mind & Intelligence Battery (Residual purge, 2,462-game full scale, registries, 12 scenarios, DFS) | `packages/prediction-engine/src/reasoning/`, `scripts/` | 6 | Complete |
 
-**Total Items Extracted: 84 items across 15 source audits.**
+**Total Items Extracted: 89 items across 16 source audits.**
 
 ---
 
@@ -122,6 +122,12 @@ States:
 | L-081 | Ingest and wire gate-decision-packet-2026-10-15.md (2,434 B) | Downloads Audit Packet | Downloads/gate-decision-packet-2026-10-15.md | WIRED | Ingested into GSE repo docs/research and engine registry. Verified hash & byte content. Owner: Knowledge Ingestion Lane |
 | L-082 | Ingest and wire what-you-might-be-missing-2026-10-15.md (20,520 B) | Downloads Audit Packet | Downloads/what-you-might-be-missing-2026-10-15.md | WIRED | Ingested into GSE repo docs/research and engine registry. Verified hash & byte content. Owner: Knowledge Ingestion Lane |
 | L-083 | Ingest and wire AGENT-WORK-AUDIT-2026-10-14.md (21,072 B) | Downloads Audit Packet | Downloads/AGENT-WORK-AUDIT-2026-10-14.md | WIRED | Ingested into GSE repo docs/research and engine registry. Verified hash & byte content. Owner: Knowledge Ingestion Lane |
+| L-084 | Residual Heuristic Purge & Content-Driven Mind Derivation | Addendum 4 & 4.1 | `packages/prediction-engine/src/reasoning/mind-reasoning.ts` | WIRED | Purged all hardcoded fallback constants (0.015, 0.024, 0.012, 0.005) and multipliers (0.08, 0.40). Pure slot-filling calculation `sign * |beta_i| * deltaX`. Empty corpus invariant verified (0 delta, empty prose). Mutation Test 2.0 (Probes T1-T5) 100% green. Owner: Engine Lane |
+| L-085 | Full-Scale 2,462-Game Historical Measurement & Promotion Gate | Addendum 4 | `packages/prediction-engine/src/reasoning/corpus-evaluator.ts` | WIRED | Measured walk-forward across all 2,462 settled regular season games (2017 REG to 2026 W5) on locked nflverse parquet. Baseline Brier 0.20938 -> +0.000020 lift at w=0.05. 6/10 seasons beat closing line. `CORPUS_EVALUATOR_DEFAULT_WEIGHT` set to 0.05. Output in `docs/predictions/research/2026-10-17/FULL_SCALE_2462_GAMES_MEASUREMENT.json`. Owner: Engine Lane |
+| L-086 | Mathematical Literature Registries & Ensembles | Addendum 4 | `packages/prediction-engine/src/reasoning/literature-registries.ts` | WIRED | Implemented EQ-BETTING-003 (Kelly uncertainty), EQ-BETTING-004 (logarithmic belief pooling), MOD-BETTING-002 (sharpness-weighted consensus with Shannon entropy), EQ-KAGGLE-001 (constrained non-negative stacking), and MOD-KAGGLE-001 (Voronoi pocket control). 4/4 tests passing in `literature-registries.test.ts`. Owner: Methods Lane |
+| L-087 | Twelve Intelligence Battery Scenarios Executed | Addendum 4.1 | `scripts/run-intelligence-battery-12.ts` | WIRED | Executed 12 stress scenarios: Denver altitude, short-rest road, RLM syndicate steam, extreme drag, trench breakdown, circadian shift, acoustic dome, ACWR workload, opposing-claims deadband, zero-literature control, conditional cold threshold, and coaching 4th down aggressiveness. Output in `docs/predictions/research/2026-10-17/intelligence-battery-12-2026-10-17.json`. Owner: Engine Lane |
+| L-088 | Five Real Games Before/After Intelligence Proofs | Addendum 4.1 | `scripts/generate-before-after-proofs.ts` | WIRED | Evaluated SEA@DEN (TNF), DAL@PHI (SNF), DET@KC, BUF@MIA, and OSU@ORE (NCAA Marquee). Verified full cited reasoning, SGP copula structure, and DFS tier targets. Output in `docs/predictions/research/2026-10-17/BEFORE_AFTER_INTELLIGENCE_PROOFS.md`. Owner: Intel Lane |
+| L-089 | DFS Lineup Optimizer Suite End-to-End Verification | Addendum 4 | `scripts/verify-dfs-optimizers.ts` | WIRED | Verified Cash, GPP, and Leverage single-lineup optimization, QB-WR stacking, lock/exclude constraints, and 20-lineup tournament portfolio generation. 25 lineups tested, 0 invalid lineups (100.0% valid). Owner: Fantasy/DFS Lane |
 
 ---
 
