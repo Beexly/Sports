@@ -72,7 +72,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
   // opportunity counts) are raw data rows, which are internal.
   if (!isPagePublic("/nflverse")) notFound();
 
-  const [_viewer, pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
+  const [, pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
     getViewerEntitlements(),
     loadNflverseUsagePulse(),
     loadQbAgeRbTrendReport(),
