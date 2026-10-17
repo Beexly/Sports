@@ -418,3 +418,11 @@ abla^2 \mathbf{u} + \mathbf{f}_{	ext{ext}}
   \hat{Y}_{	ext{ensemble}} = \sum_{m=1}^M w_m \hat{Y}_m, \quad 	ext{s.t.} \quad \sum_{m} w_m = 1, \ w_m \ge 0
   w^* = rg\min_w \sum_{k=1}^K \mathcal{L}\left(Y_k, \sum_{m=1}^M w_m \hat{Y}_{m, -k}ight)
 - **Application**: Out-of-fold blended meta-learner ensuring zero target leakage across sports tabular features and game tracking epochs.
+
+
+### EQ-KAGGLE-002: Historical Spread & Total Market Line Shift Decay
+- **Source**: Kaggle NFL Scores & Betting Data Synthesis (tobycrabtree/nfl-scores-and-betting-data)
+- **Formula**:
+  	ext{CLV}_{	ext{spread}} = 	ext{Spread}_{	ext{open}} - 	ext{Spread}_{	ext{close}}
+  	ext{CoverProbability}(\Delta) = \Phi\left(rac{\mu_{	ext{model}} - 	ext{Spread}_{	ext{close}}}{\sigma_{	ext{residual}}}ight)
+- **Application**: Ground-truth historical ATS calibration evaluated over 10,000+ settled NFL matchups from 1966 to 2026.

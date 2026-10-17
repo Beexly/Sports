@@ -308,3 +308,10 @@
   \mathcal{A}_i = \left\{ \mathbf{x} \in \mathbb{R}^2 \mid \|\mathbf{x} - \mathbf{p}_i\| \le \|\mathbf{x} - \mathbf{p}_j\| \ orall j 
 eq i ight\}
 - **Application**: Quantifies unassigned pitch control area and passing pocket integrity from raw NGS coordinates.
+
+
+### MOD-KAGGLE-002: Long-Horizon Multi-Era Game Performance Calibrator
+- **Source**: European Soccer Database & Global Football Tracking Corpus (hugomathien/soccer & maxhorowitz/nflplaybyplay)
+- **Architecture**: Time-decayed hierarchical Bayesian regression weighting modern rule eras (post-2018 target rules / defenseless receiver changes):
+  w_{	ext{era}}(t) = \exp\left(-\lambda_{	ext{rule}} \cdot (t_{	ext{current}} - t)ight) \cdot \mathbb{I}(t \ge 2018)
+- **Application**: Eliminates cross-era rule distortion when training deep situational models on multi-decade game logs.
