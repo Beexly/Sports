@@ -329,3 +329,16 @@ eq i ight\}
 - **Architecture**: Penalized elastic net regression over composite efficiency metrics (EPA/play, success rate differential, turnover margin, trench pressure rate):
   \hat{Y}_{	ext{margin}} = \mathbf{X} \hat{oldsymbol{eta}}, \quad \hat{oldsymbol{eta}} = rg\min_{oldsymbol{eta}} \left\{ \|\mathbf{y} - \mathbf{X}oldsymbol{eta}\|_2^2 + \lambda \left(lpha \|oldsymbol{eta}\|_1 + rac{1-lpha}{2} \|oldsymbol{eta}\|_2^2ight) ight\}
 - **Application**: Ground-truth statistical benchmark baseline ensuring Layer 2 situational overlays anchor around sparse, regularized football fundamentals.
+
+
+### MOD-SGP-001: Multi-Leg Correlation Copula Engine
+- **Source**: Automated Market Making for Parlay-Style Joint Contracts (LIPICS 2026)
+- **Architecture**: Clayton-Gumbel Archimedean copula modeling asymmetric lower and upper tail dependence:
+  C_{	heta}(u, v) = \left(u^{-	heta} + v^{-	heta} - 1ight)^{-1/	heta}
+- **Application**: Simultaneously simulates player prop distributions conditional on game script outcomes, identifying multi-leg parlays that books systematically misprice.
+
+### MOD-TRENCH-001: Offensive Line Continuity vs. Simulated Pressure Matrix
+- **Source**: NFL Defensive Scheme Tendency & Trench Geometry
+- **Architecture**: Asymmetric matchup matrix contrasting defensive simulated pressure / disguised blitz frequency against offensive line continuity snaps:
+  	ext{SackHazard}(t) = h_0(t) \exp\left(oldsymbol{\gamma}^T \mathbf{OL\_Continuity} + oldsymbol{\delta}^T \mathbf{DefBlitzTendency}ight)
+- **Application**: Identifies blowout and negative game script risks for QBs facing high disguised pressure with compromised tackle protection.

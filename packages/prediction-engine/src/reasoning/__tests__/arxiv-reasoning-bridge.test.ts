@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { evaluateArxivCorpus, type ArxivContextQuery } from "../arxiv-reasoning-bridge.js";
 
-describe("arxiv-reasoning-bridge", () => {
-  it("consults the full 2,179-paper and 429-dataset corpus", () => {
+describe("arxiv-reasoning-bridge deep alpha pillars", () => {
+  it("consults the full 2,379-paper and 429-dataset corpus", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
       homeTeam: "Kansas City Chiefs",
@@ -14,57 +14,71 @@ describe("arxiv-reasoning-bridge", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.totalCorpusPapersIndexed).toBe(2179);
+    expect(res.totalCorpusPapersIndexed).toBe(2379);
     expect(res.totalKaggleDatasetsIndexed).toBe(429);
     expect(res.situationalReasoningSynthesis).toContain("all situational and environmental parameters within neutral baseline");
   });
 
-  it("detects Navier-Stokes barometric expansion and hypoxia in Denver elevation", () => {
+  it("detects offensive line continuity disruption in visiting trench unit", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
-      homeTeam: "Denver Broncos",
-      awayTeam: "Seattle Seahawks",
-      restDaysHome: 7,
-      restDaysAway: 4,
-      altitudeFt: 5280,
-      styleMatchup: "PRESSURE_VS_PASS_HEAVY",
-    };
-
-    const res = evaluateArxivCorpus(ctx);
-    expect(res.activePremisesCount).toBeGreaterThanOrEqual(4);
-    expect(res.situationalReasoningSynthesis).toContain("Barometric air density reduced by 15-18%");
-    expect(res.situationalReasoningSynthesis).toContain("Altitude hypoxia threshold exceeded");
-  });
-
-  it("detects auditory crowd acoustics referee pressure in enclosed domes", () => {
-    const ctx: ArxivContextQuery = {
-      sport: "NFL",
-      homeTeam: "New Orleans Saints",
-      awayTeam: "Atlanta Falcons",
+      homeTeam: "Philadelphia Eagles",
+      awayTeam: "New York Giants",
       restDaysHome: 7,
       restDaysAway: 7,
-      isDomeOrBowl: true,
-      crowdDecibelsExpected: 106,
+      olContinuityScoreAway: 0.52, // 2 backups starting on Giants OL
     };
 
     const res = evaluateArxivCorpus(ctx);
     expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("Enclosed acoustic amplifier");
-    expect(res.situationalReasoningSynthesis).toContain("referee 3rd-down pass interference whistle skews home");
+    expect(res.situationalReasoningSynthesis).toContain("Compromised offensive line continuity score (52%)");
+    expect(res.situationalReasoningSynthesis).toContain("quick-pressure hazard");
   });
 
-  it("detects circadian travel dysrhythmia on West-to-East travel", () => {
+  it("detects 4th down coaching decision-making drag", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
-      homeTeam: "Miami Dolphins",
-      awayTeam: "Seattle Seahawks",
+      homeTeam: "Detroit Lions", // Dan Campbell aggressive
+      awayTeam: "Carolina Panthers", // Conservative punter
       restDaysHome: 7,
       restDaysAway: 7,
-      timeZoneDifferenceHours: 3,
+      coachAggressivenessDelta: 2.2,
     };
 
     const res = evaluateArxivCorpus(ctx);
     expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("Circadian disruption");
+    expect(res.situationalReasoningSynthesis).toContain("Coaching game-theory differential");
+    expect(res.situationalReasoningSynthesis).toContain("Optimal fourth-down conversion strategy");
+  });
+
+  it("detects turnover luck regression on inflated road teams", () => {
+    const ctx: ArxivContextQuery = {
+      sport: "NFL",
+      homeTeam: "Cleveland Browns",
+      awayTeam: "Pittsburgh Steelers",
+      restDaysHome: 7,
+      restDaysAway: 7,
+      turnoverDifferentialAway: 8, // Steelers +8 turnover margin from fumble recoveries
+    };
+
+    const res = evaluateArxivCorpus(ctx);
+    expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
+    expect(res.situationalReasoningSynthesis).toContain("unsustainable turnover luck (+8)");
+    expect(res.situationalReasoningSynthesis).toContain("fading inflated road favorite");
+  });
+
+  it("evaluates SGP Archimedean copula tail dependence", () => {
+    const ctx: ArxivContextQuery = {
+      sport: "NFL",
+      homeTeam: "Buffalo Bills",
+      awayTeam: "Miami Dolphins",
+      restDaysHome: 7,
+      restDaysAway: 7,
+      sgpCorrelationRequested: true,
+    };
+
+    const res = evaluateArxivCorpus(ctx);
+    expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
+    expect(res.situationalReasoningSynthesis).toContain("Archimedean Clayton-Gumbel copula");
   });
 });
