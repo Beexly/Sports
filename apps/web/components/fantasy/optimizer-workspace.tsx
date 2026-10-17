@@ -12,6 +12,7 @@ import Link from "next/link";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
+import type { DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import type { Player } from "@/lib/fantasy/players";
 
 type Tab = "dfs" | "startsit" | "draft";
@@ -33,7 +34,17 @@ const TABS: { key: Tab; label: string; blurb: string }[] = [
 export function OptimizerWorkspace({
   pool,
   canUseFantasyFull = false,
-}: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+  dfsSlate = [],
+  dfsSalaryIsReal = false,
+  dfsSlateLabel = "No NFL slate resolved",
+}: {
+  pool?: readonly Player[];
+  canUseFantasyFull?: boolean;
+  /** Real DFS board resolved server-side (measured production for the slate teams). */
+  dfsSlate?: readonly DfsPlayer[];
+  dfsSalaryIsReal?: boolean;
+  dfsSlateLabel?: string;
+} = {}) {
   const [tab, setTab] = useState<Tab>("dfs");
   const active = TABS.find((t) => t.key === tab)!;
 
@@ -76,7 +87,7 @@ export function OptimizerWorkspace({
               Open full DFS page →
             </Link>
           </div>
-          <DfsOptimizer />
+          <DfsOptimizer slate={dfsSlate} salaryIsReal={dfsSalaryIsReal} slateLabel={dfsSlateLabel} />
         </div>
       )}
       {tab === "startsit" && (

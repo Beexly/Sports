@@ -5,12 +5,17 @@
  *
  * Cash / GPP / Leverage objectives, QB stacking, locks & excludes, and N unique
  * lineups with real exposure control — every lineup shipped with its salary,
- * stack, total field-ownership, and a leverage score. The reasoning LineStar
- * buries, surfaced. Illustrative slate.
+ * stack, total field-ownership, and a leverage score.
+ *
+ * THE POOL IS PASSED IN. It used to default to `DFS_SLATE`, a hand-written
+ * fixture with invented salaries; that fallback is gone. `slate` is the real
+ * board resolved by the page (measured production for the teams playing). When
+ * `salaryIsReal` is false, no salary is printed and the cap is not applied —
+ * an unpriced lineup must never be dressed up as a DraftKings-priced one.
  */
 
 import { useMemo, useState } from "react";
-import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
+import { DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
 import { ProjectionsTable } from "@/components/fantasy/projections-table";
@@ -21,7 +26,15 @@ const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: low-owned upside." },
 ];
 
-export function DfsOptimizer() {
+export function DfsOptimizer({
+  slate: initialSlate,
+  salaryIsReal,
+  slateLabel,
+}: {
+  slate: readonly DfsPlayer[];
+  salaryIsReal: boolean;
+  slateLabel: string;
+}) {
   const [mode, setMode] = useState<Mode>("gpp");
   const [stack, setStack] = useState(true);
   const [count, setCount] = useState(3);
@@ -30,7 +43,7 @@ export function DfsOptimizer() {
   const [excludes, setExcludes] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<GenResult | null>(null);
   const [busy, setBusy] = useState(false);
-  const [slate, setSlate] = useState<DfsPlayer[]>(() => [...DFS_SLATE]);
+  const [slate, setSlate] = useState<DfsPlayer[]>(() => [...initialSlate]);
   const [imported, setImported] = useState(false);
 
   const run = (s: DfsPlayer[] = slate) => {
@@ -49,14 +62,20 @@ export function DfsOptimizer() {
     setSlate(players); setImported(true); setLocks(new Set()); setExcludes(new Set()); run(players);
   };
   const onReset = () => {
-    const base = [...DFS_SLATE]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); run(base);
+    const base = [...initialSlate]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); run(base);
   };
 
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, id: string) => {
     const n = new Set(set); if (n.has(id)) n.delete(id); else n.add(id); setter(n);
   };
 
-  const pool = useMemo(() => [...slate].sort((a, b) => b.salary - a.salary), [slate]);
+  const pool = useMemo(
+    () =>
+      salaryIsReal
+        ? [...slate].sort((a, b) => b.salary - a.salary)
+        : [...slate].sort((a, b) => b.proj - a.proj),
+    [slate, salaryIsReal],
+  );
 
   return (
     <div className="space-y-6">
@@ -64,11 +83,20 @@ export function DfsOptimizer() {
       {!imported && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-orbital-cyan/30 bg-orbital-cyan/5 px-4 py-3">
           <span className="rounded-full bg-orbital-cyan px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
-            2026 NFL Week 7 Slate
+            {slateLabel}
           </span>
           <p className="text-xs text-ion-1">
-            <strong className="text-ion-white">DraftKings Classic Main Slate</strong> · Standard $50,000 salary cap · Real-time player pool,
-            projections, ceiling bands, and tournament leverage. To import your custom DraftKings CSV: use the panel below ⤵
+            {salaryIsReal ? (
+              <>
+                <strong className="text-ion-white">Licensed DFS salary feed</strong> · Standard $50,000 salary cap · measured projections,
+                observed ceiling bands, and tournament leverage. To import your own DraftKings CSV: use the panel below ⤵
+              </>
+            ) : (
+              <>
+                <strong className="text-ion-white">Measured board, no licensed salary feed</strong> · salaries are blank and the cap is not
+                applied until a priced slate arrives. Import your own DraftKings CSV below to price it ⤵
+              </>
+            )}
           </p>
         </div>
       )}
@@ -130,7 +158,8 @@ export function DfsOptimizer() {
         )}
       </div>
       <p className="-mt-3 text-xs text-ion-2">
-        {MODES.find((m) => m.key === mode)!.blurb} · Cap ${SALARY_CAP.toLocaleString()}
+        {MODES.find((m) => m.key === mode)!.blurb}
+        {salaryIsReal || imported ? ` · Cap $${SALARY_CAP.toLocaleString()}` : " · cap inactive (no priced salaries)"}
         {imported && <span className="text-orbital-cyan"> · imported DK slate ({slate.length} players)</span>}
       </p>
 
@@ -164,17 +193,23 @@ export function DfsOptimizer() {
                   <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Lineup {idx + 1}{m.stacked > 0 && <span className="text-ultraviolet"> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
                   <div className="flex items-center gap-4 font-mono text-[11px] tabular-nums">
                     {/* over the cap is a broken lineup — alert, never plasma */}
-                    <span className="text-ion-1">${m.salary.toLocaleString()} <span className={left < 0 ? "text-alert" : "text-ion-2"}>(${left.toLocaleString()} left)</span></span>
+                    {salaryIsReal || imported ? (
+                      <span className="text-ion-1">${m.salary.toLocaleString()} <span className={left < 0 ? "text-alert" : "text-ion-2"}>(${left.toLocaleString()} left)</span></span>
+                    ) : (
+                      <span className="text-ion-2">unpriced</span>
+                    )}
                     <span className="text-orbital-cyan">{m.proj} proj</span>
                     <span className="text-ultraviolet">{m.ceiling} ceil</span>
                   </div>
                 </div>
-                {/* live salary-cap meter */}
-                <div className="px-4 pb-2 pt-2">
-                  <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: left < 0 ? "var(--alert)" : "var(--orbital-cyan)" }} />
+                {/* live salary-cap meter — only when a real salary is on the row */}
+                {(salaryIsReal || imported) && (
+                  <div className="px-4 pb-2 pt-2">
+                    <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
+                      <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: left < 0 ? "var(--alert)" : "var(--orbital-cyan)" }} />
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   {lu.players.map((p, j) => {
                     const c = DFS_POS_HEX[p.pos];
@@ -184,7 +219,9 @@ export function DfsOptimizer() {
                         <span className="w-8 shrink-0 font-mono text-[9px] font-bold" style={{ color: c }}>{DFS_SLOTS[j]}</span>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-xs font-semibold text-ion-white">{p.name}{inStack && <span title="stack" className="text-ultraviolet"> ◆</span>}</p>
-                          <p className="font-mono text-[9px] tabular-nums text-ion-2">${p.salary} · {Math.round(p.own * 100)}%own</p>
+                          <p className="font-mono text-[9px] tabular-nums text-ion-2">
+                            {salaryIsReal || imported ? `$${p.salary}` : "unpriced"} · {(salaryIsReal || imported) ? `${Math.round(p.own * 100)}%own` : "own n/a"}
+                          </p>
                         </div>
                       </div>
                     );

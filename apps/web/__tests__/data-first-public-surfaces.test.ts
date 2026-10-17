@@ -95,7 +95,7 @@ describe("data-first public surfaces", () => {
     expect(fantasy).toMatch(/No fake projections/);
     expect(fantasy).toMatch(/Connect your league/);
     const dfs = read("apps/web/app/fantasy/dfs/page.tsx");
-    expect(dfs).toMatch(/Illustrative classic-format sample pool|feed not connected/);
+    expect(dfs).toMatch(/salaries not licensed|no licensed DFS salary feed/i);
     const trade = read("apps/web/app/fantasy/trade/page.tsx");
     expect(trade).toMatch(/ILLUSTRATIVE_NOTE|LIVE_NOTE/);
   });

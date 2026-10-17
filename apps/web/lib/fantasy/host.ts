@@ -15,7 +15,7 @@
  * Pure, deterministic, illustrative.
  */
 
-import { rankWire, type SignalType } from "../news/impact";
+import { rankWire, type NewsItem, type SignalType } from "../news/impact";
 import { DEMO_WIRE } from "../news/wire";
 import { generateWeeklyBrief } from "./studio";
 import { scanText, type SafetyVerdict } from "../safety/content-safety";
@@ -148,16 +148,74 @@ export type Broadcast = {
   readonly plaintext: string;
 };
 
-// Honest and brand-safe: these scripts are composed deterministically from
-// templates in this module (no language model is involved), and the previous
-// wording used a phrase banned by apps/web/lib/positioning-vocab.json (rule 8).
-// The second sentence is load-bearing and was missing. The first only disclosed
-// WHO the anchors are, which a reader can take as "synthetic voice, real news".
-// The script reads out injury and transaction claims about named players, and on
-// an NFL Sunday a visitor could act on one. The players, reporters and reports are
-// invented, and the disclosure has to say so, not merely say the anchors are.
+// Honest and brand-safe. These scripts are composed deterministically from the
+// fictional DEMO_WIRE and the illustrative roster in lib/fantasy/studio.ts —
+// no language model, and no real report. The previous wording said the segments
+// were "compiled from verified news signals" and "human-reviewed", which read as
+// a claim about the content; this says what the content actually is.
 export const HOST_DISCLOSURE =
-  "Nova and Orion are Galaxy Sports Edge's studio presenters. Segments are compiled from verified news signals, real-time injury reports, and predictive intelligence models; scripts are human-reviewed before broadcast.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters: studio presenters reading a sample rundown. The players, reporters and reports in it are illustrative, not live news. Any broadcast that goes out is human-reviewed before it ships.";
+
+// The wire path's disclosure. The demo disclosure above says the segments are
+// "compiled from verified news signals ... human-reviewed", which is true only
+// of the review workflow, not of a script auto-composed from a headline. A
+// broadcast built from the live RSS wire says exactly what it is.
+export const WIRE_DISCLOSURE =
+  "Nova and Orion are Galaxy Sports Edge's synthetic studio presenters. Each segment quotes one public headline and names its source; the tier, urgency and suggested move are this site's model read, not the source's claim. No human edits these scripts before they render.";
+
+/**
+ * A broadcast built ONLY from the live wire. There is no fixture fallback: with
+ * an empty wire the rundown is empty and the surface shows its empty state.
+ * Deterministic for the same items.
+ */
+export function buildWireBroadcast(
+  persona: Persona,
+  items: readonly NewsItem[],
+  week?: number,
+): Broadcast {
+  const wire = rankWire(items).slice(0, 3);
+  const field = reporterTag(persona);
+  const desk = reporterTag(ORION);
+  const coldOpen = `${persona.signOn} Orion's at the desk; let's get you the edge before everybody else does.`;
+
+  const segments: Segment[] = wire.map((read, i) => {
+    const item = read.item;
+    const scene = sceneForSignal(item.signal);
+    return {
+      id: `seg-wire-${i}`,
+      scene,
+      kicker: i === 0 ? "Top story" : i === 1 ? "Second on the wire" : "Also landing",
+      script: `From ${SCENES[scene].setting}: ${item.headline} (${item.source}, ${item.minutesAgo}m ago). ${read.action}`,
+      broll: `${SCENES[scene].label}. Lower-third with the source, the player and the modelled delta.`,
+      reporter: i % 2 === 0 ? field : desk,
+    };
+  });
+
+  const plaintext = [
+    `GALAXY STUDIOS. THE GALAXY BRIEF · WIRE TRANSMISSION${week ? ` · WEEK ${week}` : ""}`,
+    `Anchors: ${persona.name} (${persona.role}) · ${ORION.name} (${ORION.role})`,
+    "",
+    `[COLD OPEN · ${SCENES.studio.label}]`,
+    coldOpen,
+    "",
+    ...segments.flatMap((s) => [`[${s.kicker.toUpperCase()} · ${SCENES[s.scene].label} · ${s.reporter.name}]`, s.script, `(B-roll: ${s.broll})`, ""]),
+    `[SIGN-OFF · ${SCENES.studio.label}]`,
+    persona.signOff,
+    "",
+    `,  ${WIRE_DISCLOSURE}`,
+  ].join("\n");
+
+  return {
+    persona,
+    week: week ?? 0,
+    title: `The Galaxy Brief, with ${persona.name}`,
+    coldOpen,
+    segments,
+    signOff: persona.signOff,
+    disclosure: WIRE_DISCLOSURE,
+    plaintext,
+  };
+}
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 

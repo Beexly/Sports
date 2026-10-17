@@ -56,8 +56,9 @@ describe("the DFS page discloses the pool state as a function of that state", ()
   });
 
   it("carries both disclosures, so neither the live nor the dark state is silent", () => {
-    expect(PAGE).toMatch(/live\s*\?\s*[\s\S]{0,2000}?(?:live salaries|real|connected)/i);
-    expect(PAGE).toMatch(/No licensed salary feed is connected/i);
+    // live branch names the licensed feed; dark branch says the column is empty.
+    expect(PAGE).toMatch(/salaryIsReal\s*\n?\s*\?\s*[\s\S]{0,400}?Licensed DFS/i);
+    expect(PAGE).toMatch(/no licensed DFS salary feed is connected/i);
   });
 
   it("keeps the page out of the index while the pool can be illustrative", () => {
@@ -67,11 +68,19 @@ describe("the DFS page discloses the pool state as a function of that state", ()
     expect(PAGE).toMatch(/robots:\s*\{\s*index:\s*false/);
   });
 
-  it("still tells the truth about the math when the pool is not real", () => {
-    // The distinction the customer needs: the ALGORITHM is real, the POOL is
-    // not. Losing the first half would understate the product; losing the
-    // second would overstate it.
-    expect(PAGE).toMatch(/math is real/i);
-    expect(PAGE).toMatch(/player pool is illustrative|illustrative pool|sample pool/i);
+  it("never ships the hand-written fixture as the board", () => {
+    // The old defect: the page fell back to DFS_SLATE — invented salaries — and
+    // printed them as DraftKings Week 7. The page must not import or reference
+    // the fixture at all now; the board comes from measured production only.
+    expect(PAGE).not.toMatch(/import[^;]*from "@\/lib\/fantasy\/dfs-slate"/);
+    expect(PAGE).toMatch(/loadCurrentDfsSlate/);
+  });
+
+  it("still tells the truth about what is and is not real", () => {
+    // The distinction the customer needs: the projections are MEASURED, the
+    // salary is absent until licensed. Losing the first half understates the
+    // product; losing the second overstates it.
+    expect(PAGE).toMatch(/measured/i);
+    expect(PAGE).toMatch(/r\.salary !== null \?/);
   });
 });

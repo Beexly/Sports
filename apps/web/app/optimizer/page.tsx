@@ -6,6 +6,7 @@ import { OptimizerWorkspace } from "@/components/fantasy/optimizer-workspace";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
+import { loadCurrentDfsSlate } from "@/lib/fantasy/dfs-current-slate";
 
 export const metadata: Metadata = {
   title: "The Optimizer: One Workspace for Every Lineup",
@@ -22,11 +23,19 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 export default async function OptimizerPage(): Promise<JSX.Element> {
   // Live graded pool for Start/Sit + Draft tabs when projections are on; DFS uses
   // its own slate seam regardless.
-  const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  const [pool, viewer, dfsSlate] = await Promise.all([
+    resolveToolPoolAsync(),
+    getViewerEntitlements(),
+    loadCurrentDfsSlate().catch(() => null),
+  ]);
   // Server-side paywall enforcement (CLAUDE.md rule 3): a FREE viewer never receives the
   // paid rows of the live pool — only the trial subset is serialized to the client, so
   // the Draft tab's cap is real, not a bypassable client-side slice.
   const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
+  const dfsRows = dfsSlate?.players ?? [];
+  const dfsSlateLabel = dfsSlate
+    ? `NFL · ${dfsSlate.slateGames} game${dfsSlate.slateGames === 1 ? "" : "s"} in the window · measured through Week ${dfsSlate.measuredThroughWeek}`
+    : "No NFL slate resolved";
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />

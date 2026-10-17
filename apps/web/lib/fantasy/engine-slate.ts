@@ -51,9 +51,14 @@ import {
 /** How many recent games form a player's projection window. */
 export const PROJECTION_WINDOW = 5;
 
+/**
+ * Position mapping. ONLY the four DFS skill positions are mapped. Kickers and
+ * punters used to be mapped to "DST" — that dressed a kicker up as a team
+ * defense, which is an invented player at a position he does not play. A
+ * position we cannot map is dropped, never coerced.
+ */
 const POS_TO_DFS: Readonly<Record<string, DfsPos>> = {
   QB: "QB", RB: "RB", WR: "WR", TE: "TE",
-  K: "DST", P: "DST",
 };
 
 export interface EngineSlateOptions {
@@ -67,6 +72,20 @@ export interface EngineSlateOptions {
   readonly magnitudes?: Readonly<Record<string, number>>;
   /** Minimum games in the window for a player to be projectable at all. */
   readonly minGames?: number;
+  /**
+   * Team abbreviations actually on the slate being priced. When supplied, a
+   * player whose team is not on it is dropped — the board is the games being
+   * played, not the whole season's stat table.
+   */
+  readonly teams?: readonly string[];
+  /** Team abbreviation → this slate's opponent abbreviation (from the games table). */
+  readonly opponentByTeam?: Readonly<Record<string, string>>;
+  /**
+   * playerId → team abbreviation. The `player_game_stats.team` column and
+   * `players.recentTeam` are both NULL for the current season cohort, so the
+   * live depth chart is the only real team association on the row.
+   */
+  readonly teamByPlayerId?: Readonly<Record<string, string>>;
 }
 
 export interface EngineSlateReport {
@@ -184,6 +203,7 @@ export async function buildEngineSlate(
   // ── Assemble the slate ──────────────────────────────────────────────────
   const out: DfsPlayer[] = [];
   const dropped: EngineSlateReport["dropped"] extends ReadonlyArray<infer T> ? T[] : never[] = [];
+  const teamSet = options.teams ? new Set(options.teams) : null;
 
   for (const [playerId, w] of windows) {
     const meta = byId.get(playerId);
@@ -191,6 +211,9 @@ export async function buildEngineSlate(
     const pos = parsePosition(meta.position);
     const dfsPos = POS_TO_DFS[pos];
     if (!dfsPos) continue; // no invented position
+
+    const team = options.teamByPlayerId?.[playerId] ?? w.team ?? meta.recentTeam ?? "";
+    if (teamSet && !teamSet.has(team)) continue; // not on this slate — no row
 
     if (w.games < minGames) {
       dropped.push({
@@ -216,8 +239,8 @@ export async function buildEngineSlate(
       id: playerId,
       name: meta.fullName,
       pos: dfsPos,
-      team: w.team ?? meta.recentTeam ?? "",
-      opp: w.opp ?? "",
+      team,
+      opp: options.opponentByTeam?.[team] ?? w.opp ?? "",
       salary: salary ?? 0,
       proj: round2(finalProj),
       // Shift the observed band by the same adjustment, keeping it a band the

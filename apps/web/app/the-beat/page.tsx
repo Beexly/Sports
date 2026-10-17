@@ -3,7 +3,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { TheBeat } from "@/components/news/the-beat";
 import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
-import { buildBroadcast } from "@/lib/fantasy/host";
+import { buildWireBroadcast, NOVA } from "@/lib/fantasy/host";
 import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
 import { fetchLiveWireRead } from "@/lib/news/rss";
 import type { NewsItem } from "@/lib/news/impact";
@@ -26,11 +26,9 @@ export const metadata: Metadata = {
 };
 
 export default async function TheBeatPage() {
-  const broadcast = buildBroadcast();
   // Live RSS wire when NEWS_RSS_FEEDS is configured (headlines only,
   // source-attributed, classified into the signal taxonomy); null means no
-  // feeds are configured, which is the one case that shows the labeled
-  // fictional sample.
+  // feeds are configured.
   //
   // An OUTAGE is not that case. This used to read `.catch(() => null)`, and
   // null is the sample signal, so a failed fetch put fiction on the page
@@ -53,6 +51,14 @@ export default async function TheBeatPage() {
   } catch {
     wireUnavailable = true;
   }
+
+  // THE BROADCAST IS BUILT FROM THE WIRE, NOT FROM A FIXTURE. It used to be
+  // `buildBroadcast()`, which ranks DEMO_WIRE — a module whose own header calls
+  // the sources, players and reports "fully FICTIONAL" — and printed those
+  // injury claims under a disclosure saying segments are "compiled from
+  // verified news signals". With no wire there is no rundown at all; the
+  // surface shows its empty state instead of inventing a week of news.
+  const broadcast = liveWire && liveWire.length > 0 ? buildWireBroadcast(NOVA, liveWire) : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -155,7 +161,13 @@ export default async function TheBeatPage() {
                 the script on screen, never a robotic voice in your ear.
               </p>
             </div>
-            <GalaxyBroadcast broadcast={broadcast} />
+            {broadcast ? (
+              <GalaxyBroadcast broadcast={broadcast} />
+            ) : (
+              <div className="surface-card p-6 text-sm text-ion-2">
+                No transmission is queued right now. The rundown is built from the live wire, so with nothing landing there is nothing to read.
+              </div>
+            )}
           </div>
         </section>
 
