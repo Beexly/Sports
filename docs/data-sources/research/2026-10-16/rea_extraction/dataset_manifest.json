@@ -108,7 +108,7 @@
     {
       "canonical_id": "DS_OPENMETEO_STADIUM_HOURLY",
       "source": "Open-Meteo Public Weather API",
-      "endpoint": "https://api.open-meteo.com/v1/forecast",
+      "endpoint": "https://api.open-meteo.com/v1/forecast?latitude=39.7392&longitude=-104.9903&hourly=temperature_2m,surface_pressure,wind_speed_10m&forecast_days=1",
       "fields": [
         "time",
         "temperature_2m",
@@ -129,7 +129,7 @@
     {
       "canonical_id": "DS_NWS_STADIUM_FORECAST",
       "source": "National Weather Service (NWS) API",
-      "endpoint": "https://api.weather.gov/points/{lat},{lon}",
+      "endpoint": "https://api.weather.gov/points/39.7392,-104.9903",
       "fields": [
         "gridId",
         "gridX",
