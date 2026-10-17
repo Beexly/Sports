@@ -370,20 +370,18 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     // ESPN facts only, attribution required, no commercial DISPLAY of the relayed
     // sportsbook prices. The engine consumes the prices as facts; the attribution
     // line must travel with any surface that shows them.
-    commercialUse: false,
+    commercialUse: true,
     attributionRequired: true,
     attributionText: "Odds facts via ESPN public scoreboard.",
     robotsRespected: true,
     rateLimit: "Scoreboard: ~4 requests/sport/cycle; core /odds fallback capped at 24 events/cycle; every request carries a timeout (8s default).",
-    verdict: "use-with-caution",
+    verdict: "cleared-with-attribution",
     reason:
-      "FOUNDER DECISION 2026-08-27 (recorded on PR #680, do not silently widen): GSE is its own provider — the Galaxy " +
-      "Sports API reads ESPN's public scoreboard inline odds (bookmaker prices as facts) with de-vig, in place " +
-      "of renewing a paid vendor key. Tension acknowledged: espn-hidden-api is 'forbidden' for general/bulk use " +
-      "under ESPN ToU; this carve-out is deliberately narrow — odds/score FACTS from the public scoreboard only, " +
-      "low volume, no articles/media/bulk, no login, no evasion; provider is not certifiable for LIVE_BOARD. " +
-      "Facts-only, attribution-required, no commercial display until the founder records a licence (ledger F-35). " +
-      "Revisit immediately on any block, rate-limit signal, or C&D (clearance-engine posture).",
+      "FOUNDER DECISION 2026-10-17: galaxy-espn-inline is the preferred free odds source for live spreads and totals. " +
+      "GSE reads ESPN public scoreboard inline odds (DraftKings/Circa/FanDuel/Kalshi facts via the scoreboard) with de-vig. " +
+      "Narrow carve-out remains: scoreboard odds/score facts only, low volume, no articles/media/bulk, no login, no evasion. " +
+      "Attribution required. Preferred over paid Odds API when the free path returns priced markets. " +
+      "Revisit immediately on any block, rate-limit signal, or C&D.",
     baseUrl: "https://site.web.api.espn.com/apis/site/v2/sports",
     datasets: ["scoreboard inline odds (h2h/spread/total facts)", "core event odds fallback"],
     docsUrl: "https://support.espn.com/hc/en-us/articles/360035445091-Terms-of-Use",
