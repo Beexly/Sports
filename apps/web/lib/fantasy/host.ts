@@ -255,7 +255,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const signOff = persona.signOff;
 
   const plaintext = [
-    `GALAXY STUDIOS. THE GALAXY BRIEF · SAMPLE SCRIPT`,
+    `GALAXY STUDIOS. THE GALAXY BRIEF · 2026 NFL WEEK 7 TRANSMISSION`,
     `Anchors: ${persona.name} (${persona.role}) · ${ORION.name} (${ORION.role})`,
     "",
     `[COLD OPEN · ${SCENES.studio.label}]`,

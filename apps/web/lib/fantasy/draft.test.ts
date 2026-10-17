@@ -64,31 +64,34 @@ describe("parseAdpCsv", () => {
 
 describe("valueVsAdp", () => {
   const vale = playerById("rb-marcus-vale")!;
+  const nameKey = vale.name.toLowerCase();
 
   it("labels a player falling well past ADP a steal", () => {
-    const v = valueVsAdp(vale, new Map([["marcus vale", 20]]), 5);
+    const v = valueVsAdp(vale, new Map([[nameKey, 20]]), 5);
     expect(v.delta).toBe(15);
     expect(v.label).toBe("steal");
   });
 
   it("labels reaching well ahead of ADP a reach", () => {
-    expect(valueVsAdp(vale, new Map([["marcus vale", 5]]), 20).label).toBe("reach");
+    expect(valueVsAdp(vale, new Map([[nameKey, 5]]), 20).label).toBe("reach");
   });
 
   it("labels near-ADP picks on-time, and unknown players none", () => {
-    expect(valueVsAdp(vale, new Map([["marcus vale", 6]]), 5).label).toBe("on-time");
+    expect(valueVsAdp(vale, new Map([[nameKey, 6]]), 5).label).toBe("on-time");
     expect(valueVsAdp(vale, new Map(), 5).label).toBe("none");
   });
 });
 
 describe("marketAdpMap (real FFC ADP riding on pool rows)", () => {
   it("builds the lowercased-name map from rows carrying adp, skipping rows without one", () => {
+    const vale = playerById("rb-marcus-vale")!;
+    const nameKey = vale.name.toLowerCase();
     const pool: Player[] = [
-      { ...playerById("rb-marcus-vale")!, adp: 3.4, adpDelta: -2.4 },
+      { ...vale, adp: 3.4, adpDelta: -2.4 },
       playerById("wr-julian-roe")!, // no adp on the row
     ];
     const m = marketAdpMap(pool);
-    expect(m.get("marcus vale")).toBe(3.4);
+    expect(m.get(nameKey)).toBe(3.4);
     expect(m.has("julian roe")).toBe(false);
   });
 

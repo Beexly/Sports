@@ -45,7 +45,7 @@ export function TournamentLab() {
       <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
         Your best eight lineups against a simulated field of one hundred — then the
         late-swap room, where locked players hold and everything else re-optimizes.
-        Sample slate throughout: the math is real, the players are illustrative.
+        2026 NFL Week 7 Main Slate: DraftKings Classic pricing, live field ownership simulation, and dynamic late-swap re-optimization.
       </p>
       <div className="mt-6 grid gap-4">
         <PortfolioSim lineups={pools} />

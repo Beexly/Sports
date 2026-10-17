@@ -120,7 +120,7 @@ describe("rosterNeedsNext", () => {
 
 describe("adpDeltaValue", () => {
   it("delegates to the draft module's user-CSV ADP compare", () => {
-    const v = adpDeltaValue(vale, new Map([["marcus vale", 20]]), 5);
+    const v = adpDeltaValue(vale, new Map([[vale.name.toLowerCase(), 20]]), 5);
     expect(v.delta).toBe(15);
     expect(v.label).toBe("steal");
   });
