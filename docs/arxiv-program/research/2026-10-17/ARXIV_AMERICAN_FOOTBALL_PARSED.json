@@ -1,0 +1,1421 @@
+[
+  {
+    "id": "2609.35562",
+    "title": "Revisiting Risky Tackle Detection with Vision Transformers",
+    "authors": [
+      "Syed Ahsan Masud Zaidi",
+      "Lior Shamir",
+      "Scott Dietrich"
+    ],
+    "date": "",
+    "abstract": "This paper is a Track 2 reproducibility companion to an ICPR 2026 study on risky tackle detection in American",
+    "tags": [
+      "cs.CV"
+    ],
+    "link": "https://arxiv.org/abs/2609.35562"
+  },
+  {
+    "id": "2609.33664",
+    "title": "Who Blocks Whom? Probabilistic Pass-Blocking Assignments for Evaluating Blockers and Pass Rushers in American Football",
+    "authors": [
+      "Abhijit Brahme",
+      "Ishan Mehta",
+      "Gregory J. Matthews",
+      "Alexander Franks"
+    ],
+    "date": "",
+    "abstract": "Historically, statistical analysis of offensive lineman has been hindered by the lack of easily measurable quantities. More recently, with the introduction of player tracking data new methodological advances are now possible. Using high-dimensional spatio-temporal data, we adapt the defensive-matchup hidden Markov model of \\cite{franks2015characterizing} from basketball to football",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2609.33664"
+  },
+  {
+    "id": "2608.16642",
+    "title": "Throwing a Tight Spiral American Football by a Humanoid Robot",
+    "authors": [
+      "Zaid Mahboob",
+      "Bowen Weng"
+    ],
+    "date": "",
+    "abstract": "Accurate throwing of the American",
+    "tags": [
+      "cs.RO"
+    ],
+    "link": "https://arxiv.org/abs/2608.16642"
+  },
+  {
+    "id": "2606.17503",
+    "title": "What Prediction Markets Can See: Market Formation, Settlement Legibility, and the Geography of Tradable Uncertainty in Africa and Latin America",
+    "authors": [
+      "Ade Adegbenro"
+    ],
+    "date": "",
+    "abstract": "Prediction markets are usually evaluated after their contracts exist, by asking how well prices forecast outcomes. We study the prior institutional margin of market formation, asking which uncertainties become tradable contracts at all. Using an audited dataset of 6,047 Africa-topic and Latin America-topic contracts listed on Polymarket and Kalshi, we construct a coded measure of settlement legibility, the degree to which an uncertainty can be worded, sourced, and credibly resolved by third parties, and validate it on 451 units under a frozen codebook, where independent double scoring reaches ordinal reliabilities of 0.92 and 0.96 on the primary dimensions and blind human benchmarks reach 0.97 and 0.92. Using this measure, we find that formation is selective in ways that public importance does not explain, with African inventory concentrated overwhelmingly in football",
+    "tags": [
+      "econ.GN"
+    ],
+    "link": "https://arxiv.org/abs/2606.17503"
+  },
+  {
+    "id": "2604.11786",
+    "title": "GenTac: Generative Modeling and Forecasting of Soccer Tactics",
+    "authors": [
+      "Jiayuan Rao",
+      "Tianlin Gui",
+      "Haoning Wu",
+      "Yanfeng Wang",
+      "Weidi Xie"
+    ],
+    "date": "",
+    "abstract": "Modeling open-play soccer tactics is a formidable challenge due to the stochastic, multi-agent nature of the game. Existing computational approaches typically produce single, deterministic trajectory forecasts or focus on highly structured set-pieces, fundamentally failing to capture the inherent variance and branching possibilities of real-world match evolution. Here, we introduce GenTac, a diffusion-based generative framework that conceptualizes soccer tactics as a stochastic process over continuous multi-player trajectories and discrete semantic events. By learning the underlying distribution of player movements from historical tracking data, GenTac samples diverse, plausible, long-horizon future trajectories. The framework supports rich contextual conditioning, including opponent behavior, specific team or league playing styles, and strategic objectives, while grounding continuous spatial dynamics into a 15-class tactical event space. Extensive evaluations on our proposed benchmark, TacBench, demonstrate four key capabilities: (1) GenTac achieves high geometric accuracy while strictly preserving the collective structural consistency of the team; (2) it accurately simulates stylistic nuances, distinguishing between specific teams (e.g., Auckland FC) and leagues (e.g., A-League versus German leagues); (3) it enables controllable counterfactual simulations, demonstrably altering spatial control and expected threat metrics based on offensive or defensive guidance; and (4) it reliably anticipates future tactical outcomes directly from generated rollouts. Finally, we demonstrate that GenTac can be successfully trained to generalize to other dynamic team sports, including basketball, American",
+    "tags": [
+      "cs.AI",
+      "cs.MA"
+    ],
+    "link": "https://arxiv.org/abs/2604.11786"
+  },
+  {
+    "id": "2604.02447",
+    "title": "PlayGen-MoG: Framework for Diverse Multi-Agent Play Generation via Mixture-of-Gaussians Trajectory Prediction",
+    "authors": [
+      "Kevin Song"
+    ],
+    "date": "",
+    "abstract": "Multi-agent trajectory generation in team sports requires models that capture both the diversity of possible plays and realistic spatial coordination between players on plays. Standard generative approaches such as Conditional Variational Autoencoders (CVAE) and diffusion models struggle with this task, exhibiting posterior collapse or convergence to the dataset mean. Moreover, most trajectory prediction methods operate in a forecasting regime that requires multiple frames of observed history, limiting their use for play design where only the initial formation is available. We present PlayGen-MoG, an extensible framework for formation-conditioned play generation that addresses these challenges through three design choices: 1/ a Mixture-of-Gaussians (MoG) output head with shared mixture weights across all agents, where a single set of weights selects a play scenario that couples all players' trajectories, 2/ relative spatial attention that encodes pairwise player positions and distances as learned attention biases, and 3/ non-autoregressive prediction of absolute displacements from the initial formation, eliminating cumulative error drift and removing the dependence on observed trajectory history, enabling realistic play generation from a single static formation alone. On American",
+    "tags": [
+      "cs.CV",
+      "cs.AI",
+      "cs.LG"
+    ],
+    "link": "https://arxiv.org/abs/2604.02447"
+  },
+  {
+    "id": "2604.01383",
+    "title": "GRAZE: Grounded Refinement and Motion-Aware Zero-Shot Event Localization",
+    "authors": [
+      "Syed Ahsan Masud Zaidi",
+      "Lior Shamir",
+      "William Hsu",
+      "Scott Dietrich",
+      "Talha Zaidi"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "cs.CV",
+      "cs.AI"
+    ],
+    "link": "https://arxiv.org/abs/2604.01383"
+  },
+  {
+    "id": "2604.01318",
+    "title": "ViTs for Action Classification in Videos: An Approach to Risky Tackle Detection in American Football Practice Videos",
+    "authors": [
+      "Syed Ahsan Masud Zaidi",
+      "William Hsu",
+      "Scott Dietrich"
+    ],
+    "date": "",
+    "abstract": "Early identification of hazardous actions in contact sports enables timely intervention and improves player safety. We present a method for detecting risky tackles in American",
+    "tags": [
+      "cs.CV"
+    ],
+    "link": "https://arxiv.org/abs/2604.01318"
+  },
+  {
+    "id": "2603.25901",
+    "title": "Decoding Defensive Coverage Responsibilities in American Football Using Factorized Attention Based Transformer Models",
+    "authors": [
+      "Kevin Song",
+      "Evan Diewald",
+      "Ornob Siddiquee",
+      "Chris Boomhower",
+      "Keegan Abdoo",
+      "Mike Band",
+      "Amy Lee"
+    ],
+    "date": "",
+    "abstract": "Defensive coverage schemes in the National Football",
+    "tags": [
+      "cs.LG",
+      "cs.AI",
+      "cs.CV"
+    ],
+    "link": "https://arxiv.org/abs/2603.25901"
+  },
+  {
+    "id": "2603.17866",
+    "title": "NFL step-and-turn: A generative framework for evaluating player movement in American football",
+    "authors": [
+      "Quang Nguyen",
+      "Ronald Yurko"
+    ],
+    "date": "",
+    "abstract": "In sports analytics, player tracking data have driven significant advancements in the task of player evaluation. We present a novel generative framework for evaluating the observed frame-by-frame player positioning against a distribution of hypothetical alternatives. We illustrate our approach by modeling the within-play movement of an individual ball carrier in the National Football",
+    "tags": [
+      "stat.AP",
+      "stat.ME"
+    ],
+    "link": "https://arxiv.org/abs/2603.17866"
+  },
+  {
+    "id": "2603.17336",
+    "title": "Leg Drain: Quantifying the Global Redistribution of Football Talent through Multi-National Eligibility",
+    "authors": [
+      "Alexander Lehner",
+      "Giovanni Righetto"
+    ],
+    "date": "",
+    "abstract": "Brain drain -- the emigration of skilled individuals toward higher-wage economies -- is a well-documented phenomenon, yet its aggregate economic cost remains difficult to quantify because individual productivity is rarely observed. We offer a novel angle on this measurement challenge by studying professional football",
+    "tags": [
+      "econ.GN"
+    ],
+    "link": "https://arxiv.org/abs/2603.17336"
+  },
+  {
+    "id": "2602.10784",
+    "title": "Integrating Unsupervised and Supervised Learning for the Prediction of Defensive Schemes in American football",
+    "authors": [
+      "Rouven Michels",
+      "Robert Bajons",
+      "Jan-Ole Fischer"
+    ],
+    "date": "",
+    "abstract": "Anticipating defensive coverage schemes is a crucial yet challenging task for offenses in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2602.10784"
+  },
+  {
+    "id": "2601.13971",
+    "title": "Rigid Body Dynamics in Ambient Fluids",
+    "authors": [
+      "Marcel Padilla",
+      "Aviv Segall",
+      "Olga Sorkine-Hornung"
+    ],
+    "date": "",
+    "abstract": "We present a novel framework for rigid body dynamics in ambient media, such as air or water, enabling the reproduction of complex motion phenomena of objects without requiring computational fluid dynamics simulations. Our method computes the added mass of the fluid and estimates dynamic pressure forces from the surface slip velocity, replacing shape-specific drag and lift coefficients with a geometry-driven pressure computation. A physically motivated flow separation criterion then estimates where the fluid detaches from the body surface, governed by a single free parameter with a clear physical interpretation. Our method is the first within the rigid body dynamics context to reproduce the full range of falling plate behaviors: fluttering, tumbling, chaotic and steady modes, as well as phenomena such as the Magnus effect and the flight dynamics of an American",
+    "tags": [
+      "physics.flu-dyn",
+      "math.NA"
+    ],
+    "link": "https://arxiv.org/abs/2601.13971"
+  },
+  {
+    "id": "2511.09455",
+    "title": "Hand Held Multi-Object Tracking Dataset in American Football",
+    "authors": [
+      "Rintaro Otsubo",
+      "Kanta Sawafuji",
+      "Hideo Saito"
+    ],
+    "date": "",
+    "abstract": "Multi-Object Tracking (MOT) plays a critical role in analyzing player behavior from videos, enabling performance evaluation. Current MOT methods are often evaluated using publicly available datasets. However, most of these focus on everyday scenarios such as pedestrian tracking or are tailored to specific sports, including soccer and basketball. Despite the inherent challenges of tracking players in American",
+    "tags": [
+      "cs.CV"
+    ],
+    "link": "https://arxiv.org/abs/2511.09455"
+  },
+  {
+    "id": "2509.20083",
+    "title": "Rethinking player evaluation in sports: Goals above expectation and beyond",
+    "authors": [
+      "Robert Bajons",
+      "Lucas Kook"
+    ],
+    "date": "",
+    "abstract": "A popular quantitative approach to evaluating player performance in sports involves comparing an observed outcome to the expected outcome ignoring player involvement, which is estimated using statistical or machine learning methods. In soccer, for instance, goals above expectation (GAX) of a player measure how often shots of this player led to a goal compared to the model-derived expected outcome of the shots. Typically, sports data analysts rely on flexible machine learning models, which are capable of handling complex nonlinear effects and feature interactions, but fail to provide valid statistical inference due to finite-sample bias and slow convergence rates. In this paper, we close this gap by presenting a framework for player evaluation with metrics derived from differences in actual and expected outcomes using flexible machine learning algorithms, which nonetheless allows for valid frequentist inference. We first show that the commonly used metrics are directly related to Rao's score test in parametric regression models for the expected outcome. Motivated by this finding and recent developments in double machine learning, we then propose the use of residualized versions of the original metrics. For GAX, the residualization step corresponds to an additional regression predicting whether a given player would take the shot under the circumstances described by the features. We further relate metrics in the proposed framework to player-specific effect estimates in interpretable semiparametric regression models, allowing us to infer directional effects, e.g., to determine players that have a positive impact on the outcome. Our primary use case are GAX in soccer. We further apply our framework to evaluate goal-stopping ability of goalkeepers, shooting skill in basketball, quarterback passing skill in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2509.20083"
+  },
+  {
+    "id": "2507.06122",
+    "title": "A Bayesian circular mixed-effects model for explaining variability in directional movement in American football",
+    "authors": [
+      "Quang Nguyen",
+      "Ronald Yurko"
+    ],
+    "date": "",
+    "abstract": "Change of direction is a key element of player movement in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2507.06122"
+  },
+  {
+    "id": "2506.03057",
+    "title": "Partially Regularized Ordinal Regression to Adjust Teams' Scoring for Strength of Schedule and Complementary Unit Performance in American Football",
+    "authors": [
+      "Andrey Skripnikov",
+      "Sujit Sivadanam"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2506.03057"
+  },
+  {
+    "id": "2502.16313",
+    "title": "A multilevel model with heterogeneous variances for snap timing in the National Football League",
+    "authors": [
+      "Quang Nguyen",
+      "Ronald Yurko"
+    ],
+    "date": "",
+    "abstract": "Player tracking data have provided great opportunities to generate novel insights into understudied areas of American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2502.16313"
+  },
+  {
+    "id": "2502.15405",
+    "title": "Concussion and head acceleration exposure in elite rugby union and American football: Interpreting indicative trends",
+    "authors": [
+      "Gregory Tierney"
+    ],
+    "date": "",
+    "abstract": "Elite-level American",
+    "tags": [
+      "physics.med-ph"
+    ],
+    "link": "https://arxiv.org/abs/2502.15405"
+  },
+  {
+    "id": "2502.14710",
+    "title": "Instrumented mouthguards in elite sports: Validity and head acceleration event (HAE) incidence in NCAA American Football",
+    "authors": [
+      "Mario Rotundo",
+      "Nicholas Murray",
+      "David Allan",
+      "Gregory Tierney"
+    ],
+    "date": "",
+    "abstract": "Objectives: To determine the on-field validity of instrumented mouthguards (iMGs) in American",
+    "tags": [
+      "physics.med-ph"
+    ],
+    "link": "https://arxiv.org/abs/2502.14710"
+  },
+  {
+    "id": "2501.10449",
+    "title": "Improving Student Self-Confidence in Quantum Computing with the Qubit Touchdown Board Game",
+    "authors": [
+      "Kristina Armbruster",
+      "Gintaras Duda",
+      "Thomas G. Wong"
+    ],
+    "date": "",
+    "abstract": "Qubit Touchdown is a two-player, competitive board game that was developed to introduce students to quantum computing. A quantum computer is a new kind of computer that is based on the laws of quantum physics, and it can solve certain problems faster than normal computers because it follows a different set of rules. Qubit Touchdown's game play mirrors the rules of (American",
+    "tags": [
+      "physics.ed-ph",
+      "quant-ph"
+    ],
+    "link": "https://arxiv.org/abs/2501.10449"
+  },
+  {
+    "id": "2409.04889",
+    "title": "Moving from Machine Learning to Statistics: the case of Expected Points in American football",
+    "authors": [
+      "Ryan S. Brill",
+      "Ryan Yee",
+      "Sameer K. Deshpande",
+      "Abraham J. Wyner"
+    ],
+    "date": "",
+    "abstract": "Expected points is a value function fundamental to player evaluation and strategic in-game decision-making across sports analytics, particularly in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2409.04889"
+  },
+  {
+    "id": "2408.10867",
+    "title": "Bye-Bye, Bye Advantage: Estimating the competitive impact of rest differential in the National Football League",
+    "authors": [
+      "Michael J Lopez",
+      "Thompson J Bliss"
+    ],
+    "date": "",
+    "abstract": "The National Football",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2408.10867"
+  },
+  {
+    "id": "2408.09435",
+    "title": "A modified Ricci flow on arbitrary weighted graph",
+    "authors": [
+      "Jicheng Ma",
+      "Yunyan Yang"
+    ],
+    "date": "",
+    "abstract": "In this paper, we propose a modified Ricci flow, as well as a quasi-normalized Ricci flow, on arbitrary weighted graph. Each of these two flows has a unique global solution. In particular, these global existence and uniqueness results do not require an exit condition proposed by Bai et al in a recent work [2]. As applications, these two Ricci flows are applied to community detection for complex networks, including Karate Club, American",
+    "tags": [
+      "math.AP"
+    ],
+    "link": "https://arxiv.org/abs/2408.09435"
+  },
+  {
+    "id": "2407.08508",
+    "title": "PEP: a tackle value measuring the prevention of expected points",
+    "authors": [
+      "Robert Bajons",
+      "Jan-Ole Koslik",
+      "Rouven Michels",
+      "Marius \u00d6tting"
+    ],
+    "date": "",
+    "abstract": "Traditional assessments of tackling in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2407.08508"
+  },
+  {
+    "id": "2407.06866",
+    "title": "ChatGPT Doesn't Trust Chargers Fans: Guardrail Sensitivity in Context",
+    "authors": [
+      "Victoria R. Li",
+      "Yida Chen",
+      "Naomi Saphra"
+    ],
+    "date": "",
+    "abstract": "While the biases of language models in production are extensively documented, the biases of their guardrails have been neglected. This paper studies how contextual information about the user influences the likelihood of an LLM to refuse to execute a request. By generating user biographies that offer ideological and demographic information, we find a number of biases in guardrail sensitivity on GPT-3.5. Younger, female, and Asian-American",
+    "tags": [
+      "cs.CL",
+      "cs.AI"
+    ],
+    "link": "https://arxiv.org/abs/2407.06866"
+  },
+  {
+    "id": "2406.17220",
+    "title": "NFL Ghosts: A framework for evaluating defender positioning with conditional density estimation",
+    "authors": [
+      "Ronald Yurko",
+      "Quang Nguyen",
+      "Konstantinos Pelechrinis"
+    ],
+    "date": "",
+    "abstract": "Player attribution in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2406.17220"
+  },
+  {
+    "id": "2403.14769",
+    "title": "Fractional Tackles: Leveraging Player Tracking Data for Within-Play Tackling Evaluation in American Football",
+    "authors": [
+      "Quang Nguyen",
+      "Ruitong Jiang",
+      "Meg Ellingwood",
+      "Ronald Yurko"
+    ],
+    "date": "",
+    "abstract": "Tackling is a fundamental defensive move in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2403.14769"
+  },
+  {
+    "id": "2401.16392",
+    "title": "A comprehensive survey of the home advantage in American football",
+    "authors": [
+      "Luke S. Benz",
+      "Thompson J. Bliss",
+      "Michael J. Lopez"
+    ],
+    "date": "",
+    "abstract": "The existence and justification to the home advantage -- the benefit a sports team receives when playing at home -- has been studied across sport. The majority of research on this topic is limited to individual leagues in short time frames, which hinders extrapolation and a deeper understanding of possible causes. Using nearly two decades of data from the National Football",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2401.16392"
+  },
+  {
+    "id": "2311.16559",
+    "title": "Graph Partitioning with Fujitsu Digital Annealer",
+    "authors": [
+      "Yu-Ting Kao",
+      "Hsiu-Chuan Hsu"
+    ],
+    "date": "",
+    "abstract": "Graph partitioning, or community detection, is the cornerstone of many fields, such as logistics, transportation and smart power grids. Efficient computation and efficacious evaluation of communities are both essential, especially in commercial and industrial settings. However, the solution space of graph partitioning increases drastically with the number of vertices and subgroups. With an eye to solving large scale graph partitioning and other optimization problems within a short period of time, the Digital Annealer (DA), a specialized CMOS hardware also featuring improved algorithms, has been devised by Fujitsu Ltd. This study gauges Fujitsu DA's performance and running times. The modularity was implemented as both the objective function and metric for the solutions. The graph partitioning problems were formatted into Quadratic Unconstrained Binary Optimization (QUBO) structures so that they could be adequately imported into the DA. The DA yielded the highest modularity among other studies when partitioning Karate Club, Les Miserables, American",
+    "tags": [
+      "math.OC",
+      "quant-ph"
+    ],
+    "link": "https://arxiv.org/abs/2311.16559"
+  },
+  {
+    "id": "2311.03490",
+    "title": "Analytics, have some humility: a statistical view of fourth-down decision making",
+    "authors": [
+      "Ryan S. Brill",
+      "Ronald Yurko",
+      "Abraham J. Wyner"
+    ],
+    "date": "",
+    "abstract": "The standard mathematical approach to fourth-down decision making in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2311.03490"
+  },
+  {
+    "id": "2310.13719",
+    "title": "Analysis of ELO Rating Scheme in MOBA Games",
+    "authors": [
+      "Yuhan Song"
+    ],
+    "date": "",
+    "abstract": "ELO rating system is proposed by Arpad Elo, a Hungarian-American",
+    "tags": [
+      "cs.HC",
+      "cs.GT"
+    ],
+    "link": "https://arxiv.org/abs/2310.13719"
+  },
+  {
+    "id": "2310.11459",
+    "title": "Ratings of European and South American Football Leagues Based on Glicko-2 with Modifications",
+    "authors": [
+      "Andrei Shelopugin",
+      "Alexander Sirotkin"
+    ],
+    "date": "",
+    "abstract": "One of the key problems in the field of soccer analytics is predicting how a player performance changes when transitioning from one league to another. One potential solution to address this issue lies in the evaluation of the respective league strength. This article endeavors to compute club ratings of the first and second European and South American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2310.11459"
+  },
+  {
+    "id": "2305.10262",
+    "title": "Here Comes the STRAIN: Analyzing Defensive Pass Rush in American Football with Player Tracking Data",
+    "authors": [
+      "Quang Nguyen",
+      "Ronald Yurko",
+      "Gregory J. Matthews"
+    ],
+    "date": "",
+    "abstract": "In American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2305.10262"
+  },
+  {
+    "id": "2302.11038",
+    "title": "Preliminary Examination of Guardian Cap Head Impact Data Using Instrumented Mouthguards",
+    "authors": [
+      "Kristen G. Quigley",
+      "Dustin Hopfe",
+      "Madison R. Taylor",
+      "Philip Pavilionis",
+      "Vincentia Owusu-Amankonah",
+      "Arthur Islas",
+      "Nicholas G. Murray"
+    ],
+    "date": "",
+    "abstract": "Purpose The objective of this study is to present preliminary on-field head kinematics data for NCAA Division I American",
+    "tags": [
+      "physics.med-ph"
+    ],
+    "link": "https://arxiv.org/abs/2302.11038"
+  },
+  {
+    "id": "2211.14921",
+    "title": "Padded Helmet Shell Covers in American Football: A Comprehensive Laboratory Evaluation with Preliminary On-Field Findings",
+    "authors": [
+      "Nicholas J. Cecchi",
+      "Ashlyn A. Callan",
+      "Landon P. Watson",
+      "Yuzhe Liu",
+      "Xianghao Zhan",
+      "Ramanand V. Vegesna",
+      "Collin Pang",
+      "Enora Le Flao",
+      "Gerald A. Grant",
+      "Michael M. Zeineh",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "Protective headgear effects measured in the laboratory may not always translate to the field. In this study, we evaluated the impact attenuation capabilities of a commercially available padded helmet shell cover in the laboratory and field. In the laboratory, we evaluated the efficacy of the padded helmet shell cover in attenuating impact magnitude across six impact locations and three impact velocities when equipped to three different helmet models. In a preliminary on-field investigation, we used instrumented mouthguards to monitor head impact magnitude in collegiate linebackers during practice sessions while not wearing the padded helmet shell covers (i.e., bare helmets) for one season and whilst wearing the padded helmet shell covers for another season. The addition of the padded helmet shell cover was effective in attenuating the magnitude of angular head accelerations and two brain injury risk metrics (DAMAGE, HARM) across most laboratory impact conditions, but did not significantly attenuate linear head accelerations for all helmets. Overall, HARM values were reduced in laboratory impact tests by an average of 25% at 3.5 m/s (range: 9.7 - 39.6%), 18% at 5.5 m/s (range: -5.5 - 40.5%), and 10% at 7.4 m/s (range: -6.0 - 31.0%). However, on the field, no significant differences in any measure of head impact magnitude were observed between the bare helmet impacts and padded helmet impacts. Further laboratory tests were conducted to evaluate the ability of the padded helmet shell cover to maintain its performance after exposure to repeated, successive impacts and across a range of temperatures. This research provides a detailed assessment of padded helmet shell covers and supports the continuation of in vivo helmet research to validate laboratory testing results.",
+    "tags": [
+      "physics.med-ph"
+    ],
+    "link": "https://arxiv.org/abs/2211.14921"
+  },
+  {
+    "id": "2210.12519",
+    "title": "Partially Constrained Group Variable Selection to Adjust for Complementary Unit Performance in American College Football",
+    "authors": [
+      "Andrey Skripnikov"
+    ],
+    "date": "",
+    "abstract": "Given the importance of accurate team rankings in American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2210.12519"
+  },
+  {
+    "id": "2210.03195",
+    "title": "Brain structure can mediate or moderate the relationship of behavior to brain function and transcriptome. A preliminary study",
+    "authors": [
+      "Sumra Bari",
+      "Nicole L Vike",
+      "Khrystyna Stetsiv",
+      "Anne J Blood",
+      "Eric A Nauman",
+      "Thomas M Talavage",
+      "Semyon Slobounov",
+      "Hans C Breiter"
+    ],
+    "date": "",
+    "abstract": "Abnormalities in motor-control behavior, which have been with concussion and head acceleration events (HAE), can be quantified using virtual reality (VR) technologies. Motor-control behavior has been consistently mapped to the brain's somatomotor network (SM) using both structural (sMRI) and functional MRI (fMRI). However, no studies habe integrated HAE, motor-control behavior, sMRI and fMRI measures. Here, brain networks important for motor-control were hypothesized to show changes in tractography-based diffusion weighted imaging [difference in fractional anisotropy (dFA)] and resting-state fMRI (rs-fMRI) measures in collegiate American",
+    "tags": [
+      "q-bio.QM"
+    ],
+    "link": "https://arxiv.org/abs/2210.03195"
+  },
+  {
+    "id": "2207.14124",
+    "title": "Graph Neural Networks to Predict Sports Outcomes",
+    "authors": [
+      "Peter Xenopoulos",
+      "Claudio Silva"
+    ],
+    "date": "",
+    "abstract": "Predicting outcomes in sports is important for teams, leagues, bettors, media, and fans. Given the growing amount of player tracking data, sports analytics models are increasingly utilizing spatially-derived features built upon player tracking data. However, player-specific information, such as location, cannot readily be included as features themselves, since common modeling techniques rely on vector input. Accordingly, spatially-derived features are commonly constructed in relation to anchor objects, such as the distance to a ball or goal, through global feature aggregations, or via role-assignment schemes, where players are designated a distinct role in the game. In doing so, we sacrifice inter-player and local relationships in favor of global ones. To address this issue, we introduce a sport-agnostic graph-based representation of game states. We then use our proposed graph representation as input to graph neural networks to predict sports outcomes. Our approach preserves permutation invariance and allows for flexible player interaction weights. We demonstrate how our method provides statistically significant improvements over the state of the art for prediction tasks in both American",
+    "tags": [
+      "cs.LG"
+    ],
+    "link": "https://arxiv.org/abs/2207.14124"
+  },
+  {
+    "id": "2207.13747",
+    "title": "Bayesian estimation of in-game home team win probability for Division-I FBS college football",
+    "authors": [
+      "Jason T. Maddox",
+      "Ryan Sides",
+      "Jane L. Harvill"
+    ],
+    "date": "",
+    "abstract": "Maddox, et al. [9, 10] establish Bayesian methods for estimating home-team in-game win probability for college and NBA basketball. This paper introduces a Bayesian approach for estimating in-game home-team win probability for Division-I FBS college (American",
+    "tags": [
+      "stat.ME"
+    ],
+    "link": "https://arxiv.org/abs/2207.13747"
+  },
+  {
+    "id": "2204.13809",
+    "title": "Automated player identification and indexing using two-stage deep learning network",
+    "authors": [
+      "Hongshan Liu",
+      "Colin Aderon",
+      "Noah Wagon",
+      "Abdul Latif Bamba",
+      "Xueshen Li",
+      "Huapu Liu",
+      "Steven MacCall",
+      "Yu Gan"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "cs.CV",
+      "eess.IV"
+    ],
+    "link": "https://arxiv.org/abs/2204.13809"
+  },
+  {
+    "id": "2111.03435",
+    "title": "On the role of tournament design in sporting success: A study of the North, Central American and Caribbean qualification for the 2022 FIFA World Cup",
+    "authors": [
+      "L\u00e1szl\u00f3 Csat\u00f3"
+    ],
+    "date": "",
+    "abstract": "Playing in the FIFA World Cup finals is an ambition shared by several nations. Since, besides luck and skill, the probability of qualification depends on the design of the qualifiers, the study of these competitions forms an integral part of sports analytics. The Confederation of North, Central America and Caribbean Association Football",
+    "tags": [
+      "physics.soc-ph"
+    ],
+    "link": "https://arxiv.org/abs/2111.03435"
+  },
+  {
+    "id": "2110.13505",
+    "title": "Part &amp; Whole Extraction: Towards A Deep Understanding of Quantitative Facts for Percentages in Text",
+    "authors": [
+      "Lei Fang",
+      "Jian-Guang Lou"
+    ],
+    "date": "",
+    "abstract": "We study the problem of quantitative facts extraction for text with percentages. For example, given the sentence \"30 percent of Americans",
+    "tags": [
+      "cs.CL"
+    ],
+    "link": "https://arxiv.org/abs/2110.13505"
+  },
+  {
+    "id": "2109.08051",
+    "title": "Frame by frame completion probability of an NFL pass",
+    "authors": [
+      "Gustavo Pompeu da Silva",
+      "Rafael de Andrade Moral"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "stat.ML",
+      "cs.LG"
+    ],
+    "link": "https://arxiv.org/abs/2109.08051"
+  },
+  {
+    "id": "2108.13577",
+    "title": "Rapidly and accurately estimating brain strain and strain rate across head impact types with transfer learning and data fusion",
+    "authors": [
+      "Xianghao Zhan",
+      "Yuzhe Liu",
+      "Nicholas J. Cecchi",
+      "Olivier Gevaert",
+      "Michael M. Zeineh",
+      "Gerald A. Grant",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "Brain strain and strain rate are effective in predicting traumatic brain injury (TBI) caused by head impacts. However, state-of-the-art finite element modeling (FEM) demands considerable computational time in the computation, limiting its application in real-time TBI risk monitoring. To accelerate, machine learning head models (MLHMs) were developed, and the model accuracy was found to decrease when the training/test datasets were from different head impacts types. However, the size of dataset for specific impact types may not be enough for model training. To address the computational cost of FEM, the limited strain rate prediction, and the generalizability of MLHMs to on-field datasets, we propose data fusion and transfer learning to develop a series of MLHMs to predict the maximum principal strain (MPS) and maximum principal strain rate (MPSR). We trained and tested the MLHMs on 13,623 head impacts from simulations, American",
+    "tags": [
+      "cs.LG",
+      "physics.med-ph",
+      "q-bio.QM",
+      "q-bio.TO"
+    ],
+    "link": "https://arxiv.org/abs/2108.13577"
+  },
+  {
+    "id": "2108.08797",
+    "title": "Physics-informed machine learning improves detection of head impacts",
+    "authors": [
+      "Samuel J. Raymond",
+      "Nicholas J. Cecchi",
+      "Hossein Vahid Alizadeh",
+      "Ashlyn A. Callan",
+      "Eli Rice",
+      "Yuzhe Liu",
+      "Zhou Zhou",
+      "Michael Zeineh",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "In this work we present a new physics-informed machine learning model that can be used to analyze kinematic data from an instrumented mouthguard and detect impacts to the head. Monitoring player impacts is vitally important to understanding and protecting from injuries like concussion. Typically, to analyze this data, a combination of video analysis and sensor data is used to ascertain the recorded events are true impacts and not false positives. In fact, due to the nature of using wearable devices in sports, false positives vastly outnumber the true positives. Yet, manual video analysis is time-consuming. This imbalance leads traditional machine learning approaches to exhibit poor performance in both detecting true positives and preventing false negatives. Here, we show that by simulating head impacts numerically using a standard Finite Element head-neck model, a large dataset of synthetic impacts can be created to augment the gathered, verified, impact data from mouthguards. This combined physics-informed machine learning impact detector reported improved performance on test datasets compared to traditional impact detectors with negative predictive value and positive predictive values of 88% and 87% respectively. Consequently, this model reported the best results to date for an impact detection algorithm for American",
+    "tags": [
+      "cs.CE"
+    ],
+    "link": "https://arxiv.org/abs/2108.08797"
+  },
+  {
+    "id": "2108.08763",
+    "title": "A comparison of sports-related head accelerations with and without direct head impacts",
+    "authors": [
+      "Samuel J. Raymond",
+      "Yuzhe Liu",
+      "Nicholas J. Cecchi",
+      "Eli Rice",
+      "Ashlyn A. Callan",
+      "Landon P. Watson",
+      "Sohrab Sami",
+      "Zhou Zhou",
+      "Xiaogai Li",
+      "Svein Kleiven",
+      "Michael Zeineh",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "Concussion and repeated exposure to mild traumatic brain injury are risks for athletes in many sports. While direct head impacts are analyzed to improve the detection and awareness of head acceleration events so that an athlete's brain health can be appropriately monitored and treated. However, head accelerations can also be induced by impacts with little or no head involvement. In this work we evaluated if impacts that do not involve direct head contact, such as being pushed in the torso, can be sufficient in collegiate American",
+    "tags": [
+      "physics.data-an"
+    ],
+    "link": "https://arxiv.org/abs/2108.08763"
+  },
+  {
+    "id": "2104.11595",
+    "title": "Does home advantage without crowd exist in American football?",
+    "authors": [
+      "D\u00e1vid Zolt\u00e1n Szab\u00f3",
+      "Diego Andr\u00e9s P\u00e9rez"
+    ],
+    "date": "",
+    "abstract": "It is well-known that home team has an inherent advantage against visiting teams when playing team sports. One of the most obvious underlying reasons, the presence of supporting fans has mostly disappeared in major leagues with the emergence of COVID-19 pandemic. This paper investigates with the help of historical National Football",
+    "tags": [
+      "econ.GN"
+    ],
+    "link": "https://arxiv.org/abs/2104.11595"
+  },
+  {
+    "id": "2104.09082",
+    "title": "Machine-learning-based head impact subtyping based on the spectral densities of the measurable head kinematics",
+    "authors": [
+      "Xianghao Zhan",
+      "Yiheng Li",
+      "Yuzhe Liu",
+      "Nicholas J. Cecchi",
+      "Samuel J. Raymond",
+      "Zhou Zhou",
+      "Hossein Vahid Alizadeh",
+      "Jesse Ruan",
+      "Saeed Barbat",
+      "Stephen Tiernan",
+      "Olivier Gevaert",
+      "Michael M. Zeineh",
+      "Gerald A. Grant",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "Objective: Traumatic brain injury can be caused by head impacts, but many brain injury risk estimation models are not equally accurate across the variety of impacts that patients may undergo and the characteristics of different types of impacts are not well studied. We investigated the spectral characteristics of different head impact types with kinematics classification. Methods: Data was analyzed from 3,262 head impacts from lab reconstruction, American",
+    "tags": [
+      "q-bio.QM",
+      "cs.LG",
+      "physics.bio-ph"
+    ],
+    "link": "https://arxiv.org/abs/2104.09082"
+  },
+  {
+    "id": "2102.05728",
+    "title": "Time Window of Head Impact Kinematics Measurement for Calculation of Brain Strain and Strain Rate in American Football",
+    "authors": [
+      "Yuzhe Liu",
+      "August G. Domel",
+      "Nicholas J. Cecchi",
+      "Eli Rice",
+      "Ashlyn A. Callan",
+      "Samuel J. Raymond",
+      "Zhou Zhou",
+      "Xianghao Zhan",
+      "Michael Zeineh",
+      "Gerald Grant",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "Wearable devices have been shown to effectively measure the head movement during impacts in sports like American",
+    "tags": [
+      "physics.med-ph",
+      "physics.bio-ph"
+    ],
+    "link": "https://arxiv.org/abs/2102.05728"
+  },
+  {
+    "id": "2102.05020",
+    "title": "Predictive Factors of Kinematics in Traumatic Brain Injury from Head Impacts Based on Statistical Interpretation",
+    "authors": [
+      "Xianghao Zhan",
+      "Yiheng Li",
+      "Yuzhe Liu",
+      "August G. Domel",
+      "Hossein Vahid Alizadeh",
+      "Zhou Zhou",
+      "Nicholas J. Cecchi",
+      "Samuel J. Raymond",
+      "Stephen Tiernan",
+      "Jesse Ruan",
+      "Saeed Barbat",
+      "Olivier Gevaert",
+      "Michael M. Zeineh",
+      "Gerald A. Grant",
+      "David B. Camarillo"
+    ],
+    "date": "",
+    "abstract": "Brain tissue deformation resulting from head impacts is primarily caused by rotation and can lead to traumatic brain injury. To quantify brain injury risk based on measurements of kinematics on the head, finite element (FE) models and various brain injury criteria based on different factors of these kinematics have been developed, but the contribution of different kinematic factors has not been comprehensively analyzed across different types of head impacts in a data-driven manner. To better design brain injury criteria, the predictive power of rotational kinematics factors, which are different in 1) the derivative order (angular velocity, angular acceleration, angular jerk), 2) the direction and 3) the power (e.g., square-rooted, squared, cubic) of the angular velocity, were analyzed based on different datasets including laboratory impacts, American",
+    "tags": [
+      "physics.bio-ph",
+      "cs.LG",
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2102.05020"
+  },
+  {
+    "id": "2102.03453",
+    "title": "Collision Prediction and Prevention in Contact Sports Using RFID tags and Haptic Feedback",
+    "authors": [
+      "Moeen Mostafavi",
+      "Fateme Nikseresht",
+      "Jacob Earl Resch",
+      "Laura Barnes",
+      "Mehdi Boukhechba"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "eess.SY"
+    ],
+    "link": "https://arxiv.org/abs/2102.03453"
+  },
+  {
+    "id": "2102.03106",
+    "title": "ROBustness In Network (robin): an R package for Comparison and Validation of communities",
+    "authors": [
+      "Valeria Policastro",
+      "Dario Righelli",
+      "Annamaria Carissimo",
+      "Luisa Cutillo",
+      "Italia De Feis"
+    ],
+    "date": "",
+    "abstract": "In network analysis, many community detection algorithms have been developed, however, their implementation leaves unaddressed the question of the statistical validation of the results. Here we present robin(ROBustness In Network), an R package to assess the robustness of the community structure of a network found by one or more methods to give indications about their reliability. The procedure initially detects if the community structure found by a set of algorithms is statistically significant and then compares two selected detection algorithms on the same graph to choose the one that better fits the network of interest. We demonstrate the use of our package on the American",
+    "tags": [
+      "stat.CO",
+      "stat.ME",
+      "stat.OT"
+    ],
+    "link": "https://arxiv.org/abs/2102.03106"
+  },
+  {
+    "id": "2010.11187",
+    "title": "G-Elo: Generalization of the Elo algorithm by modelling the discretized margin of victory",
+    "authors": [
+      "Leszek Szczecinski"
+    ],
+    "date": "",
+    "abstract": "In this work we develop a new algorithm for rating of teams (or players) in one-on-one games by exploiting the observed difference of the game-points (such as goals), also known as a margin of victory (MOV). Our objective is to obtain the Elo-style algorithm whose operation is simple to implement and to understand intuitively. This is done in three steps: first, we define the probabilistic model between the teams' skills and the discretized MOV variable: this generalizes the model underpinning the Elo algorithm, where the MOV variable is discretized into three categories (win/loss/draw). Second, with the formal probabilistic model at hand, the optimization required by the maximum likelihood rule is implemented via stochastic gradient; this yields simple on-line equations for the rating updates which are identical in their general form to those characteristic of the Elo algorithm: the main difference lies in the way the scores and the expected scores are defined. Third, we propose a simple method to estimate the coefficients of the model, and thus define the operation of the algorithm; it is done in a closed form using the historical data so the algorithm is tailored to the sport of interest and the coefficients defining its operation are determined in entirely transparent manner. The alternative, optimization-based strategy to find the coefficients is also presented. We show numerical examples based on the results of the association football",
+    "tags": [
+      "stat.ME",
+      "cs.LG",
+      "math.OC"
+    ],
+    "link": "https://arxiv.org/abs/2010.11187"
+  },
+  {
+    "id": "2006.14930",
+    "title": "A metabolomic measure of energy metabolism moderates how an inflammatory miRNA relates to rs-fMRI network and motor control in football athletes",
+    "authors": [
+      "Sumra Bari",
+      "Nicole L. Vike",
+      "Khrystyna Stetsiv",
+      "Linda Papa",
+      "Eric A. Nauman",
+      "Thomas M. Talavage",
+      "Semyon Slobounov",
+      "Hans C. Breiter"
+    ],
+    "date": "",
+    "abstract": "Collision sports athletes experience many head acceleration events (HAEs) per season. The effects of these subconcussive events are largely understudied since HAEs may produce no overt symptoms, and are likely to diffusely manifest across multiple scales of study (e.g., molecular, cellular network, and behavior). This study integrated resting-state fMRI with metabolome, transcriptome and computational virtual reality (VR) behavior measures to assess the effects of exposure to HAEs on players in a collegiate American",
+    "tags": [
+      "q-bio.QM"
+    ],
+    "link": "https://arxiv.org/abs/2006.14930"
+  },
+  {
+    "id": "2006.13264",
+    "title": "Metabolomic measures of altered energy metabolism mediate the relationship of inflammatory miRNAs to motor control in collegiate football athletes",
+    "authors": [
+      "Nicole L. Vike",
+      "Sumra Bari",
+      "Khrystyna Stetsiv",
+      "Linda Papa",
+      "Eric A. Nauman",
+      "Thomas M. Talavage",
+      "Semyon Slobounov",
+      "Hans C. Breiter"
+    ],
+    "date": "",
+    "abstract": "Recent research has shown there can be detrimental neurological effects of short- and long-term exposure to contact sports. In the present study, metabolomic profiling was combined with inflammatory miRNA quantification, computational behavior with virtual reality (VR) testing of motor control, and head collision event monitoring to explore trans-omic and collision effects on human behavior across a season of players on a collegiate American",
+    "tags": [
+      "q-bio.QM"
+    ],
+    "link": "https://arxiv.org/abs/2006.13264"
+  },
+  {
+    "id": "2003.05428",
+    "title": "Template Matching Route Classification",
+    "authors": [
+      "Mitchell Kinney"
+    ],
+    "date": "",
+    "abstract": "This paper details a route classification method for American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/2003.05428"
+  },
+  {
+    "id": "1910.07722",
+    "title": "Prevention of Traumatic Brain Injury with Liquid Shock Absorption",
+    "authors": [
+      "Hossein Vahid Alizadeh",
+      "Michael G. Fanton",
+      "August G. Domel",
+      "Gerald Grant",
+      "David Benjamin Camarillo"
+    ],
+    "date": "",
+    "abstract": "The discovery that repetitive mild traumatic brain injury (mTBI) can result in chronic traumatic encephalopathy (CTE) in high risk contact sports has led to increased scrutiny of head protective gear. In this work, we asked if it was physically possible to prevent mTBI in American",
+    "tags": [
+      "q-bio.QM"
+    ],
+    "link": "https://arxiv.org/abs/1910.07722"
+  },
+  {
+    "id": "1909.03343",
+    "title": "Investigating Sports Commentator Bias within a Large Corpus of American Football Broadcasts",
+    "authors": [
+      "Jack Merullo",
+      "Luke Yeh",
+      "Abram Handler",
+      "Alvin Grissom II",
+      "Brendan O'Connor",
+      "Mohit Iyyer"
+    ],
+    "date": "",
+    "abstract": "Sports broadcasters inject drama into play-by-play commentary by building team and player narratives through subjective analyses and anecdotes. Prior studies based on small datasets and manual coding show that such theatrics evince commentator bias in sports broadcasts. To examine this phenomenon, we assemble FOOTBALL",
+    "tags": [
+      "cs.CL"
+    ],
+    "link": "https://arxiv.org/abs/1909.03343"
+  },
+  {
+    "id": "1906.11373",
+    "title": "Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data",
+    "authors": [
+      "Rishav Dutta",
+      "Ronald Yurko",
+      "Samuel Ventura"
+    ],
+    "date": "",
+    "abstract": "Analysis of player tracking data for American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1906.11373"
+  },
+  {
+    "id": "1906.05029",
+    "title": "A Bayesian Approach to In-Game Win Probability in Soccer",
+    "authors": [
+      "Pieter Robberechts",
+      "Jan Van Haaren",
+      "Jesse Davis"
+    ],
+    "date": "",
+    "abstract": "In-game win probability models, which provide a sports team's likelihood of winning at each point in a game based on historical observations, are becoming increasingly popular. In baseball, basketball and American",
+    "tags": [
+      "cs.LG",
+      "stat.ML"
+    ],
+    "link": "https://arxiv.org/abs/1906.05029"
+  },
+  {
+    "id": "1906.01760",
+    "title": "Going Deep: Models for Continuous-Time Within-Play Valuation of Game Outcomes in American Football with Tracking Data",
+    "authors": [
+      "Ronald Yurko",
+      "Francesca Matano",
+      "Lee F. Richardson",
+      "Nicholas Granered",
+      "Taylor Pospisil",
+      "Konstantinos Pelechrinis",
+      "Samuel L. Ventura"
+    ],
+    "date": "",
+    "abstract": "Continuous-time assessments of game outcomes in sports have become increasingly common in the last decade. In American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1906.01760"
+  },
+  {
+    "id": "1904.03102",
+    "title": "Passive Cervical Spine Ligaments Provide Stability during Head Impacts in Vivo",
+    "authors": [
+      "Calvin Kuo",
+      "Jodie Sheffels",
+      "Michael Fanton",
+      "Ina Bianca Yu",
+      "Rosa Hamalainen",
+      "David Camarillo"
+    ],
+    "date": "",
+    "abstract": "It has long been suggested that neck muscle strength and anticipatory cocontraction can decrease head motions during head impacts. Here, we quantify the relative angular impulse contributions of neck soft tissue to head stabilization using a musculoskeletal model with Hill-type muscles and rate-dependent ligaments. We simulated sagittal extension and lateral flexion mild experimental head impacts performed on 10 subjects with relaxed or cocontracted muscles, and median American",
+    "tags": [
+      "q-bio.TO"
+    ],
+    "link": "https://arxiv.org/abs/1904.03102"
+  },
+  {
+    "id": "1902.10106",
+    "title": "Protocol for an Observational Study of the Association of High School Football Participation on Health in Late Adulthood",
+    "authors": [
+      "Timothy G. Gaulton",
+      "Sameer K. Deshpande",
+      "Dylan S. Small",
+      "Mark D. Neuman"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1902.10106"
+  },
+  {
+    "id": "1901.10666",
+    "title": "Tidally-Distorted, Iron-Enhanced Exoplanets Closely Orbiting Their Stars",
+    "authors": [
+      "Ellen M. Price",
+      "Leslie A. Rogers"
+    ],
+    "date": "",
+    "abstract": "The transiting planet candidate KOI 1843.03 (",
+    "tags": [
+      "astro-ph.EP"
+    ],
+    "link": "https://arxiv.org/abs/1901.10666"
+  },
+  {
+    "id": "1808.03934",
+    "title": "Protocol for an observational study on the effects of playing football in adolescence on mental health in early adulthood",
+    "authors": [
+      "Sameer K. Deshpande",
+      "Raiden B. Hasegawa",
+      "Jordan Weiss",
+      "Dylan S. Small"
+    ],
+    "date": "",
+    "abstract": "More than 1 million students play high school American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1808.03934"
+  },
+  {
+    "id": "1802.00998",
+    "title": "nflWAR: A Reproducible Method for Offensive Player Evaluation in Football",
+    "authors": [
+      "Ronald Yurko",
+      "Samuel Ventura",
+      "Maksim Horowitz"
+    ],
+    "date": "",
+    "abstract": "Unlike other major professional sports, American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1802.00998"
+  },
+  {
+    "id": "1710.05284",
+    "title": "Multivariate Generalized Linear Mixed Models for Joint Estimation of Sporting Outcomes",
+    "authors": [
+      "Jennifer E. Broatch",
+      "Andrew T. Karl"
+    ],
+    "date": "",
+    "abstract": "This paper explores improvements in prediction accuracy and inference capability when allowing for potential correlation in team-level random effects across multiple game-level responses from different assumed distributions. First-order and fully exponential Laplace approximations are used to fit normal-binary and Poisson-binary multivariate generalized linear mixed models with non-nested random effects structures. We have built these models into the R package mvglmmRank, which is used to explore several seasons of American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1710.05284"
+  },
+  {
+    "id": "1705.04600",
+    "title": "Concussion classification via deep learning using whole-brain white matter fiber strains",
+    "authors": [
+      "Yunliang Cai",
+      "Shaoju Wu",
+      "Wei Zhao",
+      "Zhigang Li",
+      "Songbai Ji"
+    ],
+    "date": "",
+    "abstract": "Developing an accurate and reliable injury predictor is central to the biomechanical studies of traumatic brain injury. State-of-the-art efforts continue to rely on empirical, scalar metrics based on kinematics or model-estimated tissue responses explicitly pre-defined in a specific brain region of interest. They could suffer from loss of information. A single training dataset has also been used to evaluate performance but without cross-validation. In this study, we developed a deep learning approach for concussion classification using implicit features of the entire voxel-wise white matter fiber strains. Using reconstructed American",
+    "tags": [
+      "q-bio.QM"
+    ],
+    "link": "https://arxiv.org/abs/1705.04600"
+  },
+  {
+    "id": "1701.05976",
+    "title": "How often does the best team win? A unified approach to understanding randomness in North American sport",
+    "authors": [
+      "Michael J. Lopez",
+      "Gregory J. Matthews",
+      "Benjamin S. Baumer"
+    ],
+    "date": "",
+    "abstract": "Statistical applications in sports have long centered on how to best separate signal (e.g. team talent) from random noise. However, most of this work has concentrated on a single sport, and the development of meaningful cross-sport comparisons has been impeded by the difficulty of translating luck from one sport to another. In this manuscript, we develop Bayesian state-space models using betting market data that can be uniformly applied across sporting organizations to better understand the role of randomness in game outcomes. These models can be used to extract estimates of team strength, the between-season, within-season, and game-to-game variability of team strengths, as well each team's home advantage. We implement our approach across a decade of play in each of the National Football",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1701.05976"
+  },
+  {
+    "id": "1612.07395",
+    "title": "Jacobi-Maupertius metric and Kepler equation",
+    "authors": [
+      "Sumanto Chanda",
+      "G. W. Gibbons",
+      "Partha Guha"
+    ],
+    "date": "",
+    "abstract": "This article studies the application of the Jacobi-Eisenhart lift, Jacobi metric and Maupertius transformation to the Kepler system. We start by reviewing fundamentals and the Jacobi metric. Then we study various ways to apply the lift to Kepler related systems: first as conformal description and Bohlin transformation of Hooke's oscillator, second in contact geometry, third in Houri's transformation (Houri, Liouville integrability of Hamiltonian systems and spacetime symmetry, http://www.geocities.jp/football",
+    "tags": [
+      "math-ph",
+      "gr-qc"
+    ],
+    "link": "https://arxiv.org/abs/1612.07395"
+  },
+  {
+    "id": "1601.04302",
+    "title": "Footballonomics: The Anatomy of American Football; Evidence from 7 years of NFL game data",
+    "authors": [
+      "Konstantinos Pelechrinis",
+      "Evangelos Papalexakis"
+    ],
+    "date": "",
+    "abstract": "Do NFL teams make rational decisions? What factors potentially affect the probability of wining a game in NFL? How can a team come back from a demoralizing interception? In this study we begin by examining the hypothesis of rational coaching, that is, coaching decisions are always rational with respect to the maximization of the expected points scored. We reject this hypothesis by analyzing the decisions made in the past 7 NFL seasons for two particular plays; (i) the Point(s) After Touchdown (PAT) and (ii) the fourth down decisions. Having rejected the rational coaching hypothesis we move on to examine how the detailed game data collected can potentially inform game-day decisions. While NFL teams personnel definitely have an intuition on which factors are crucial for winning a game, in this work we take a data-driven approach and provide quantifiable evidence using a large dataset of NFL games for the 7-year period between 2009 and 2015. In particular, we use a logistic regression model to identify the impact and the corresponding statistical significance of factors such as possession time, number of penalty yards, balance between passing and rushing offense etc. Our results clearly imply that avoiding turnovers is the best strategy for winning a game but turnovers can be overcome with letting the offense on the field for more time. Finally we combine our descriptive model with statistical bootstrap in order to provide a prediction engine for upcoming NFL games. Our evaluations indicate that even by only considering a small number of (straightforward) factors, we can achieve a very good prediction accuracy. In particular, the average accuracy during seasons 2014 and 2015 is approximately 63%. This performance is comparable to the more complicated state-of-the-art prediction systems, while it outperforms expert analysts 60% of the time.",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1601.04302"
+  },
+  {
+    "id": "1501.07179",
+    "title": "Who's good this year? Comparing the Information Content of Games in the Four Major US Sports",
+    "authors": [
+      "Julian Wolfson",
+      "Joseph S. Koopmeiners"
+    ],
+    "date": "",
+    "abstract": "In the four major North American",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1501.07179"
+  },
+  {
+    "id": "1501.06881",
+    "title": "On convergence to a football",
+    "authors": [
+      "Hao Fang",
+      "Mijia Lai"
+    ],
+    "date": "",
+    "abstract": "We show that spheres of positive constant curvature with",
+    "tags": [
+      "math.DG",
+      "math.AP"
+    ],
+    "link": "https://arxiv.org/abs/1501.06881"
+  },
+  {
+    "id": "1411.4783",
+    "title": "The other optimal Stokes drag profile",
+    "authors": [
+      "Thomas D. Montenegro-Johnson",
+      "Eric Lauga"
+    ],
+    "date": "",
+    "abstract": "The lowest drag shape of fixed volume in Stokes flow has been known for some 40 years. It is front-back symmetric and similar to an American",
+    "tags": [
+      "physics.flu-dyn"
+    ],
+    "link": "https://arxiv.org/abs/1411.4783"
+  },
+  {
+    "id": "1310.4461",
+    "title": "Scoring dynamics across professional team sports: tempo, balance and predictability",
+    "authors": [
+      "Sears Merritt",
+      "Aaron Clauset"
+    ],
+    "date": "",
+    "abstract": "Despite growing interest in quantifying and modeling the scoring dynamics within professional sports games, relative little is known about what patterns or principles, if any, cut across different sports. Using a comprehensive data set of scoring events in nearly a dozen consecutive seasons of college and professional (American",
+    "tags": [
+      "stat.AP",
+      "cs.CY",
+      "physics.data-an",
+      "physics.soc-ph"
+    ],
+    "link": "https://arxiv.org/abs/1310.4461"
+  },
+  {
+    "id": "1301.2954",
+    "title": "The ranking lasso and its application to sport tournaments",
+    "authors": [
+      "Guido Masarotto",
+      "Cristiano Varin"
+    ],
+    "date": "",
+    "abstract": "Ranking a vector of alternatives on the basis of a series of paired comparisons is a relevant topic in many instances. A popular example is ranking contestants in sport tournaments. To this purpose, paired comparison models such as the Bradley-Terry model are often used. This paper suggests fitting paired comparison models with a lasso-type procedure that forces contestants with similar abilities to be classified into the same group. Benefits of the proposed method are easier interpretation of rankings and a significant improvement of the quality of predictions with respect to the standard maximum likelihood fitting. Numerical aspects of the proposed method are discussed in detail. The methodology is illustrated through ranking of the teams of the National Football",
+    "tags": [
+      "stat.AP"
+    ],
+    "link": "https://arxiv.org/abs/1301.2954"
+  },
+  {
+    "id": "1207.4148",
+    "title": "Dynamical Systems Trees",
+    "authors": [
+      "Andrew Howard",
+      "Tony S. Jebara"
+    ],
+    "date": "",
+    "abstract": "We propose dynamical systems trees (DSTs) as a flexible class of models for describing multiple processes that interact via a hierarchy of aggregating parent chains. DSTs extend Kalman filters, hidden Markov models and nonlinear dynamical systems to an interactive group scenario. Various individual processes interact as communities and sub-communities in a tree structure that is unrolled in time. To accommodate nonlinear temporal activity, each individual leaf process is modeled as a dynamical system containing discrete and/or continuous hidden states with discrete and/or Gaussian emissions. Subsequent higher level parent processes act like hidden Markov models and mediate the interaction between leaf processes or between other parent processes in the hierarchy. Aggregator chains are parents of child processes that they combine and mediate, yielding a compact overall parameterization. We provide tractable inference and learning algorithms for arbitrary DST topologies via an efficient structured mean-field algorithm. The diverse applicability of DSTs is demonstrated by experiments on gene expression data and by modeling group behavior in the setting of an American",
+    "tags": [
+      "cs.LG",
+      "stat.ML"
+    ],
+    "link": "https://arxiv.org/abs/1207.4148"
+  },
+  {
+    "id": "1111.0693",
+    "title": "Scoring Strategies for the Underdog: A general, quantitative method for determining optimal sports strategies",
+    "authors": [
+      "Brian Skinner"
+    ],
+    "date": "",
+    "abstract": "When facing a heavily-favored opponent, an underdog must be willing to assume greater-than-average risk. In statistical language, one would say that an underdog must be willing to adopt a strategy whose outcome has a larger-than-average variance. The difficult question is how much risk a team should be willing to accept. This is equivalent to asking how much the team should be willing to sacrifice from its mean score in order to increase the score's variance. In this paper a general, analytical method is developed for addressing this question quantitatively. Under the assumption that every play in a game is statistically independent, both the mean and the variance of a team's offensive output can be described using the binomial distribution. This description allows for direct calculations of the winning probability when a particular strategy is employed, and therefore allows one to calculate optimal offensive strategies. This paper develops this method for calculating optimal strategies exactly and then presents a simple heuristic for determining whether a given strategy should be adopted. A number of interesting and counterintuitive examples are then explored, including the merits of stalling for time, the run/pass/Hail Mary choice in American",
+    "tags": [
+      "physics.soc-ph",
+      "physics.data-an"
+    ],
+    "link": "https://arxiv.org/abs/1111.0693"
+  },
+  {
+    "id": "1106.0041",
+    "title": "Assessing the consistency of community structure in complex networks",
+    "authors": [
+      "Matthew Steen",
+      "Satoru Hayasaka",
+      "Karen Joyce",
+      "Paul Laurienti"
+    ],
+    "date": "",
+    "abstract": "In recent years, community structure has emerged as a key component of complex network analysis. As more data has been collected, researchers have begun investigating changing community structure across multiple networks. Several methods exist to analyze changing communities, but most of these are limited to evolution of a single network over time. In addition, most of the existing methods are more concerned with change at the community level than at the level of the individual node. In this paper, we introduce scaled inclusivity, which is a method to quantify the change in community structure across networks. Scaled inclusivity evaluates the consistency of the classiffication of every node in a network independently. In addition, the method can be applied cross-sectionally as well as longitudinally. In this paper, we calculate the scaled inclusivity for a set of simulated networks of United States cities and a set of real networks consisting of teams that play in the top division of American",
+    "tags": [
+      "cs.SI",
+      "nlin.AO",
+      "physics.soc-ph"
+    ],
+    "link": "https://arxiv.org/abs/1106.0041"
+  },
+  {
+    "id": "0706.1758",
+    "title": "Statistics of football dynamics",
+    "authors": [
+      "R. S. Mendes",
+      "L. C. Malacarne",
+      "C. Anteneodo"
+    ],
+    "date": "",
+    "abstract": "We investigate the dynamics of football",
+    "tags": [
+      "physics.data-an"
+    ],
+    "link": "https://arxiv.org/abs/0706.1758"
+  },
+  {
+    "id": "0706.0366",
+    "title": "On the flight of an American Football",
+    "authors": [
+      "Curtis Horn",
+      "Heidi Fearn"
+    ],
+    "date": "",
+    "abstract": "In this paper we examine the detailed theory of the American",
+    "tags": [
+      "physics.pop-ph",
+      "physics.gen-ph"
+    ],
+    "link": "https://arxiv.org/abs/0706.0366"
+  },
+  {
+    "id": "physics/0505169",
+    "title": "A network-based ranking system for American college football",
+    "authors": [
+      "Juyong Park",
+      "M. E. J. Newman"
+    ],
+    "date": "",
+    "abstract": "American",
+    "tags": [
+      "physics.soc-ph",
+      "cond-mat.dis-nn",
+      "physics.data-an"
+    ],
+    "link": "https://arxiv.org/abs/physics/0505169"
+  },
+  {
+    "id": "physics/0403049",
+    "title": "The Bowl Championship Series: A Mathematical Review",
+    "authors": [
+      "Thomas Callaghan",
+      "Peter J. Mucha",
+      "Mason A. Porter"
+    ],
+    "date": "",
+    "abstract": "We discuss individual components of the college football",
+    "tags": [
+      "physics.pop-ph",
+      "physics.data-an"
+    ],
+    "link": "https://arxiv.org/abs/physics/0403049"
+  },
+  {
+    "id": "physics/0310148",
+    "title": "Random Walker Ranking for NCAA Division I-A Football",
+    "authors": [
+      "Thomas Callaghan",
+      "Peter J. Mucha",
+      "Mason A. Porter"
+    ],
+    "date": "",
+    "abstract": "Each December, college football",
+    "tags": [
+      "physics.pop-ph",
+      "cond-mat.stat-mech",
+      "physics.data-an"
+    ],
+    "link": "https://arxiv.org/abs/physics/0310148"
+  },
+  {
+    "id": "hep-th/0302067",
+    "title": "Sidestepping the Cosmological Constant with Football-Shaped Extra Dimensions",
+    "authors": [
+      "Sean M. Carroll",
+      "Monica M. Guica"
+    ],
+    "date": "",
+    "abstract": "We present an exact solution for a factorizable brane-world spacetime with two extra dimensions and explicit brane sources. The compactification manifold has the topology of a two-sphere, and is stabilized by a bulk cosmological constant and magnetic flux. The geometry of the sphere is locally round except for conical singularities at the locations of two antipodal branes, deforming the sphere into an American",
+    "tags": [
+      "hep-th",
+      "astro-ph",
+      "gr-qc",
+      "hep-ph"
+    ],
+    "link": "https://arxiv.org/abs/hep-th/0302067"
+  },
+  {
+    "id": "math/9705204",
+    "title": "The football player and the infinite series",
+    "authors": [
+      "Harold P. Boas"
+    ],
+    "date": "",
+    "abstract": "This is the text of an expository talk given at the May 1997 Detroit meeting of the American",
+    "tags": [
+      "math.CV"
+    ],
+    "link": "https://arxiv.org/abs/math/9705204"
+  }
+]

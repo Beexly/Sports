@@ -277,3 +277,59 @@
 - **Source**: Ting Yan, Jinfeng Xu, Yaning Yang (2011) *Grouped sparse paired comparisons in the Bradley-Terry model* (`arXiv:1111.5110`).
 - **Implementation Status**: Layer 1 team rating backbone anchor.
 - **Confidence**: HIGH | **Reusability**: UNIVERSAL (Eliminates weak-division rating inflation).
+
+
+---
+
+## 7. Extended American Football Discoveries (`query=american+football`)
+
+### 7.1 Prevention of Expected Points (PEP) via Tackling Tracking Data
+- **LaTeX Formula**:
+  $$\text{PEP}_i = \mathbb{E}[\text{EP}(\text{TackleSpot}_i)] - \mathbb{E}[\text{EP}(\text{CounterfactualCarrySpot}_i)]$$
+  $$\text{FractionalTackleCredit}_j(t) = \frac{\exp(-\|\vec{x}_j(t) - \vec{x}_{\text{carrier}}(t)\|_2^2 / 2\sigma^2)}{\sum_{k \in \text{Tacklers}} \exp(-\|\vec{x}_k(t) - \vec{x}_{\text{carrier}}(t)\|_2^2 / 2\sigma^2)}$$
+- **Inputs**: Player tracking coordinates, velocity vectors, ball carrier trajectory, tackle point of contact.
+- **Outputs**: Tackle value in prevented expected points $\text{PEP} \in [0, 6]$, fractional tackling attribution across swarm defenders.
+- **Assumptions**: Counterfactual continuation of ball carrier without tackle follows an empirical probability cone parameterized by surrounding defender angles.
+- **Source**: Robert Bajons, Jan-Ole Koslik (2024) *PEP: a tackle value measuring the prevention of expected points* (`arXiv:2407.08508`) & Quang Nguyen, Ruitong Jiang (2024) *Fractional Tackles* (`arXiv:2403.14769`).
+- **Implementation Status**: Target for defensive tackle props and inside run defense metrics.
+- **Confidence**: HIGH | **Reusability**: CRITICAL.
+
+---
+
+### 7.2 Underdog Scoring Strategies & Variance Sacrifice Heuristic
+- **LaTeX Formula**:
+  $$\Delta \text{WinProb} = \frac{\partial P(\text{Win})}{\partial \mu} \Delta \mu + \frac{\partial P(\text{Win})}{\partial \sigma^2} \Delta \sigma^2$$
+  $$\text{SacrificeCondition}: \quad \frac{\Delta \sigma^2}{|\Delta \mu|} > 2 \cdot (S_{\text{favorite}} - S_{\text{underdog}})$$
+- **Inputs**: Mean offensive output $\mu$, offensive variance $\sigma^2$, current point deficit $(S_F - S_U)$, possessions remaining.
+- **Outputs**: Optimal offensive strategy flag (high-variance deep shots / Hail Mary vs low-variance run plays).
+- **Assumptions**: Underdog winning probability increases non-linearly with play outcome variance; accepting negative expected yards $(-\Delta \mu)$ is optimal if variance expansion exceeds point deficit ratio.
+- **Source**: Brian Skinner (2011) *Scoring Strategies for the Underdog: A general, quantitative method for determining optimal sports strategies* (`arXiv:1111.0693`).
+- **Implementation Status**: Game leverage & late-game live in-game betting strategy engine.
+- **Confidence**: VERY HIGH | **Reusability**: CRITICAL (Directly explains live in-game contrarian underdog volatility).
+
+---
+
+### 7.3 Graph Neural Networks for Spatial Outcome Prediction
+- **LaTeX Formula**:
+  $$\mathbf{h}_v^{(l+1)} = \text{Update}\left(\mathbf{h}_v^{(l)}, \bigoplus_{u \in \mathcal{N}(v)} \text{Message}(\mathbf{h}_v^{(l)}, \mathbf{h}_u^{(l)}, \mathbf{e}_{uv})\right)$$
+  $$\mathbf{e}_{uv} = [\vec{x}_u - \vec{x}_v, \|\vec{x}_u - \vec{x}_v\|_2, \vec{v}_u - \vec{v}_v, \theta_{uv}]$$
+- **Inputs**: Node features $\mathbf{h}_v$ (player position, speed, acceleration), edge features $\mathbf{e}_{uv}$ (relative displacement and closing velocity).
+- **Outputs**: Permutation-invariant play outcome prediction (EPA, success probability).
+- **Assumptions**: Relational inductive bias over 22 interacting players preserves permutation invariance and models local spatial battles without fixed role anchors.
+- **Source**: Peter Xenopoulos, Claudio Silva (2022) *Graph Neural Networks to Predict Sports Outcomes* (`arXiv:2207.14124`).
+- **Implementation Status**: Spatial tracking architecture target.
+- **Confidence**: VERY HIGH | **Reusability**: CRITICAL.
+
+---
+
+### 7.4 Aerodynamic Flight of an American Football
+- **LaTeX Formula**:
+  $$\mathbf{F}_{\text{total}} = \mathbf{F}_g + \mathbf{F}_D + \mathbf{F}_L + \mathbf{F}_{\text{Magnus}}$$
+  $$\mathbf{F}_D = -\frac{1}{2} C_D(\alpha) \rho A v^2 \hat{\mathbf{v}}, \quad C_D(\alpha) = C_{D,0} + C_{D,1} \sin^2(\alpha)$$
+  $$\vec{\tau}_{\text{spin}} = I \vec{\omega} \times \vec{\Omega}_{\text{precession}}$$
+- **Inputs**: Attack angle $\alpha$, spin rate $\omega$ (spiral rpm), air density $\rho$, cross-sectional area $A$.
+- **Outputs**: 3D ball trajectory, wobble damping, lateral Magnus drift.
+- **Assumptions**: Tight spiral minimizes cross-sectional drag coefficient $C_D$; ball precession causes wobble that increases effective drag by up to 25%.
+- **Source**: Curtis Horn, Heidi Fearn (2007) *On the flight of an American Football* (`arXiv:0706.0366`).
+- **Implementation Status**: Ball flight physics model in altitude/weather adjustments.
+- **Confidence**: VERY HIGH | **Reusability**: HIGH.

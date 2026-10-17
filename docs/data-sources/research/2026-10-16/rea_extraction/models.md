@@ -230,3 +230,37 @@
 - **Corpus Citation**: Marius Ötting (2020) *Predicting play calls in the National Football League using hidden Markov models* (`arXiv:2003.10791`).
 - **Status**: **INGESTED IN ARTIFACT RECORD** (Informs in-game live prop modeling and play-by-play simulation).
 - **Reusability**: HIGH (Anticipates play-calling tendencies before snap).
+
+
+---
+
+### Model 21: Bajons-Koslik Prevention of Expected Points (PEP) Model
+- **Category**: Defensive Run Stopping & Tackling Attribution
+- **Target Output**: Net prevented expected points per tackle $\text{PEP}_i$ and broken-tackle liability.
+- **Features / Inputs**: Ball carrier velocity vector, distance to sideline, tackler angle of approach, closing speed, nearest secondary defenders.
+- **Mathematical Assumptions**: Evaluates the defensive tackle against a counterfactual continuation surface; isolates solo open-field tackle difficulty from group pile-ups.
+- **Corpus Citation**: Robert Bajons, Jan-Ole Koslik (2024) *PEP: a tackle value measuring the prevention of expected points* (`arXiv:2407.08508`).
+- **Status**: **INGESTED IN ARTIFACT RECORD** (Run defense evaluation).
+- **Reusability**: HIGH (Player prop under/over on RB rushing yards).
+
+---
+
+### Model 22: Skinner Underdog Variance Sacrifice Engine
+- **Category**: Game Theory & Live In-Game Optimal Strategy
+- **Target Output**: Optimal risk-tolerance threshold and strategy recommendation (high-variance deep passing vs low-variance ball control).
+- **Features / Inputs**: Point deficit, offensive mean yardage $\mu$, play variance $\sigma^2$, possessions remaining.
+- **Mathematical Assumptions**: Analytical calculation of win probability using binomial expansions proves underdogs maximize equity by sacrificing mean yards to expand outcome variance.
+- **Corpus Citation**: Brian Skinner (2011) *Scoring Strategies for the Underdog: A general, quantitative method for determining optimal sports strategies* (`arXiv:1111.0693`).
+- **Status**: **INGESTED IN ARTIFACT RECORD** (Live in-game market betting).
+- **Reusability**: CRITICAL (Guides live in-game total and moneyline volatility valuation).
+
+---
+
+### Model 23: Xenopoulos-Silva Spatial Graph Neural Network
+- **Category**: Relational Graph Modeling & Outcome Prediction
+- **Target Output**: Win probability and expected drive success from 22-player tracking graph representations.
+- **Features / Inputs**: Relative spatial vectors between all 22 players, velocities, player acceleration, down and distance.
+- **Mathematical Assumptions**: Graph neural networks preserve permutation invariance and capture complex spatial interactions without rigid role anchors.
+- **Corpus Citation**: Peter Xenopoulos, Claudio Silva (2022) *Graph Neural Networks to Predict Sports Outcomes* (`arXiv:2207.14124`).
+- **Status**: **INGESTED & ARCHIVED** (Future graph learning target).
+- **Reusability**: HIGH.
