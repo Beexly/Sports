@@ -104,6 +104,7 @@ for (const r of raw.sort((a, b) => String(a.settledAt).localeCompare(String(b.se
   }
 
   const startIso = r.game?.startTime;
+  const clvVal = typeof r.clvValue === "number" && Number.isFinite(r.clvValue) ? r.clvValue : undefined;
   rows.push({
     rowId: r.id,
     gameKey: r.game?.id ?? r.gameId,
@@ -113,7 +114,14 @@ for (const r of raw.sort((a, b) => String(a.settledAt).localeCompare(String(b.se
     marketPrior,
     outcome,
     units,
-    clvValue: typeof r.clvValue === "number" && Number.isFinite(r.clvValue) ? r.clvValue : undefined,
+    // CLV-bearing-run fields (protocol §1: true CLV becomes the primary metric
+    // once the production pull lands). clvKind is load-bearing — POINTS
+    // (spread/total) and PROBABILITY (moneyline) values are different units and
+    // must never be pooled; beatClose comes from the recorded verdict.
+    clvValue: clvVal,
+    clvKind: clvVal !== undefined && typeof r.clvKind === "string" ? r.clvKind : undefined,
+    beatClose: clvVal !== undefined && r.clvVerdict === "BEAT_CLOSE",
+    settledAt: typeof r.settledAt === "string" ? r.settledAt : undefined,
     period: typeof startIso === "string" && startIso.length >= 7 ? startIso.slice(0, 7) : undefined,
     tier: "prod",
     modelVersion: r.modelVersion,
