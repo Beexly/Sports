@@ -158,7 +158,21 @@ describe("GET /api/ops/ranked-picks", () => {
       },
     ];
 
-    vi.mocked(db.pick.findMany).mockResolvedValueOnce(mockPicks as any);
+interface TestPick {
+  id: string;
+  edgeScore?: number;
+  edgeIndexStatus?: string;
+  reasoningTrace?: string;
+  applicablePrinciples?: string[];
+  corpusSituationalShift?: number;
+  dlContinuityDelta?: number;
+  injuryEvidence?: { sourceName?: string };
+  selection?: string;
+}
+
+    vi.mocked(db.pick.findMany).mockResolvedValueOnce(
+      mockPicks as unknown as Awaited<ReturnType<typeof db.pick.findMany>>
+    );
 
     const req = new Request("http://localhost/api/ops/ranked-picks", {
       headers: { authorization: "Bearer test-cron-secret" },
@@ -175,7 +189,7 @@ describe("GET /api/ops/ranked-picks", () => {
     expect(body.total).toBe(2);
     expect(body.returned).toBe(2);
 
-    const pick1 = body.picks.find((p: any) => p.id === "pick-1");
+    const pick1 = body.picks.find((p: TestPick) => p.id === "pick-1");
     expect(pick1.edgeScore).toBe(100);
     expect(pick1.edgeIndexStatus).toBe("SATURATED_UNUSABLE");
     expect(pick1.reasoningTrace).toContain("Ohio State at Indiana");
@@ -184,7 +198,7 @@ describe("GET /api/ops/ranked-picks", () => {
     expect(pick1.dlContinuityDelta).toBe(-0.15);
     expect(pick1.injuryEvidence?.sourceName).toBe("espn-injuries");
 
-    const pick4 = body.picks.find((p: any) => p.id === "pick-4");
+    const pick4 = body.picks.find((p: TestPick) => p.id === "pick-4");
     expect(pick4).toBeDefined();
     expect(pick4.id).toBe("pick-4");
     expect(pick4.selection).toBe("Over 52.5");
