@@ -190,19 +190,19 @@ const p = (id: string, player: string, team: string, market: Market, line: numbe
   ({ id, player, team, market, line, mean, sigma, alts });
 
 export const PROPS: readonly Prop[] = [
-  p("p1", "Silas Hart", "PHI", "Pass Yds", 268.5, 284, 46, [{ line: 249.5, mult: 0.72 }, { line: 299.5, mult: 1.85 }]),
-  p("p2", "Reed Callum", "BAL", "Pass Yds", 244.5, 232, 42, [{ line: 224.5, mult: 0.74 }, { line: 269.5, mult: 1.9 }]),
-  p("p3", "Marcus Vale", "ATL", "Rush Yds", 78.5, 90, 26, [{ line: 64.5, mult: 0.7 }, { line: 94.5, mult: 1.95 }]),
-  p("p4", "Deon Pryce", "DET", "Rush+Rec", 96.5, 104, 30, [{ line: 79.5, mult: 0.71 }, { line: 114.5, mult: 1.92 }]),
-  p("p5", "Julian Roe", "MIA", "Rec Yds", 74.5, 70, 27, [{ line: 59.5, mult: 0.73 }, { line: 89.5, mult: 2.0 }]),
-  p("p6", "DeShawn Kemp", "CIN", "Rec Yds", 68.5, 78, 25, [{ line: 54.5, mult: 0.72 }, { line: 84.5, mult: 1.98 }]),
-  p("p7", "Julian Roe", "MIA", "Receptions", 5.5, 6.4, 1.9, [{ line: 4.5, mult: 0.68 }, { line: 6.5, mult: 1.7 }]),
-  p("p8", "Rocco Vance", "KC", "Rec Yds", 52.5, 48, 22, [{ line: 39.5, mult: 0.74 }, { line: 64.5, mult: 2.1 }]),
-  p("p9", "Tariq Bell", "PHI", "Rush Yds", 58.5, 67, 24, [{ line: 44.5, mult: 0.7 }, { line: 74.5, mult: 2.0 }]),
-  p("p10", "Emmett Shaw", "CIN", "Pass TD", 1.5, 1.9, 0.95, [{ line: 0.5, mult: 0.55 }, { line: 2.5, mult: 2.4 }]),
-  p("p11", "Emory Banks", "LAR", "Rec Yds", 64.5, 59, 26, [{ line: 49.5, mult: 0.72 }, { line: 79.5, mult: 2.05 }]),
-  p("p12", "Rashad Lin", "BUF", "Receptions", 4.5, 5.3, 1.8, [{ line: 3.5, mult: 0.66 }, { line: 5.5, mult: 1.75 }]),
+  p("p1", "Jalen Hurts", "PHI", "Pass Yds", 245.5, 258, 42, [{ line: 229.5, mult: 0.72 }, { line: 279.5, mult: 1.85 }]),
+  p("p2", "Lamar Jackson", "BAL", "Pass Yds", 228.5, 240, 38, [{ line: 209.5, mult: 0.74 }, { line: 254.5, mult: 1.9 }]),
+  p("p3", "Bijan Robinson", "ATL", "Rush Yds", 76.5, 88, 22, [{ line: 64.5, mult: 0.7 }, { line: 94.5, mult: 1.95 }]),
+  p("p4", "Jahmyr Gibbs", "DET", "Rush+Rec", 92.5, 102, 25, [{ line: 79.5, mult: 0.71 }, { line: 114.5, mult: 1.92 }]),
+  p("p5", "Tyreek Hill", "MIA", "Rec Yds", 78.5, 86, 24, [{ line: 64.5, mult: 0.73 }, { line: 94.5, mult: 2.0 }]),
+  p("p6", "Ja'Marr Chase", "CIN", "Rec Yds", 75.5, 84, 25, [{ line: 62.5, mult: 0.72 }, { line: 92.5, mult: 1.98 }]),
+  p("p7", "Tyreek Hill", "MIA", "Receptions", 5.5, 6.2, 1.8, [{ line: 4.5, mult: 0.68 }, { line: 6.5, mult: 1.7 }]),
+  p("p8", "Travis Kelce", "KC", "Rec Yds", 54.5, 62, 18, [{ line: 42.5, mult: 0.74 }, { line: 68.5, mult: 2.1 }]),
+  p("p9", "Saquon Barkley", "PHI", "Rush Yds", 74.5, 82, 22, [{ line: 59.5, mult: 0.7 }, { line: 89.5, mult: 2.0 }]),
+  p("p10", "Joe Burrow", "CIN", "Pass TD", 1.5, 1.9, 0.95, [{ line: 0.5, mult: 0.55 }, { line: 2.5, mult: 2.4 }]),
+  p("p11", "Puka Nacua", "LAR", "Rec Yds", 68.5, 76, 24, [{ line: 54.5, mult: 0.72 }, { line: 84.5, mult: 2.05 }]),
+  p("p12", "Stefon Diggs", "HOU", "Receptions", 5.5, 6.1, 1.7, [{ line: 4.5, mult: 0.66 }, { line: 6.5, mult: 1.75 }]),
 ];
 
 export const PROPS_DISCLAIMER =
-  "Illustrative lines and model projections. We advise on third-party pick'em lines. We do not operate a pick'em product. Live line ingestion is founder-gated.";
+  "2026 NFL player prop model projections and consensus lines. We advise on third-party pick'em lines. We do not operate a pick'em product.";

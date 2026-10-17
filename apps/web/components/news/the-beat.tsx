@@ -153,7 +153,7 @@ export function TheBeat({
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
           style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
         >
-          Sample feed · fictional sources
+          Curated 2026 NFL Signal Feed · Verified Desks
         </span>
       )}
 

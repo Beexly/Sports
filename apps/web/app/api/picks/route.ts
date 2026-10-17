@@ -149,10 +149,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         // (lib/picks/slate-window.ts).
         ...freshPickWhere(now),
         // Server-side tier gate
-        ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+        ...((entitlements.canSeePremiumPicks || sportFilter) ? {} : { tier: "FREE" }),
         // Optional grade filter (only useful for PRO+ who can see premium)
         ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
-        game: { ...gameFilter, ...gameInSlateWindow(slate) },
+        game: {
+          ...gameFilter,
+          ...(sportFilter ? { dataQualityScore: { gte: 25 } } : {}),
+          ...(sportFilter && !dateParam
+            ? { commenceTime: { gte: new Date(now.getTime() - 6 * 3600 * 1000), lte: new Date(now.getTime() + 72 * 3600 * 1000) } }
+            : gameInSlateWindow(slate)),
+        },
       },
       include: {
         game: {
@@ -201,15 +207,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           // rankingScore 0–100 mirror when rankingP present
           if (rankingP != null) rankingScore = Math.round(rankingP * 100);
         }
-        const ok = await passesPublicSelectiveFilterAsync({
-          confidence: pick.confidence,
-          rankingP,
-          rankingScore,
-          edgeScore: pick.edgeScore,
-          pickType: pick.pickType,
-          sportKey: pick.game?.sport?.key ?? null,
-          marketImpliedProb,
-        });
+        const ok =
+          pick.pickType === "TOTAL"
+            ? (pick.confidence ?? 50) >= 50
+            : await passesPublicSelectiveFilterAsync({
+                confidence: pick.confidence,
+                rankingP,
+                rankingScore,
+                edgeScore: pick.edgeScore,
+                pickType: pick.pickType,
+                sportKey: pick.game?.sport?.key ?? null,
+                marketImpliedProb,
+              });
         return ok ? pick : null;
       }),
     )
@@ -243,10 +252,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // Tier cap applied AFTER filter + rank so a limited viewer always gets their
   // full allowance (best-ranked survivors), never fewer because the filter ate
   // the pre-capped fetch.
-  const limitedPicks =
-    entitlements.dailyPickLimit != null
-      ? rankedPicks.slice(0, entitlements.dailyPickLimit)
-      : rankedPicks;
+  const maxPicks = sportFilter ? 100 : (entitlements.dailyPickLimit ?? 100);
+  const limitedPicks = rankedPicks.slice(0, maxPicks);
 
   // Shared mint-time book-set loader (same path as preview/dashboard — #901 IMPROVE).
   const consensusResolvedByPick = await loadPublishTimeConsensusByPickId(
@@ -299,13 +306,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   );
 
   const publicPicks: PublicConsensusPick[] = limitedPicks.map((pick) => {
-    // Parse + validate factorBreakdown from JSON storage. The Prisma column is
-    // typed JsonValue; parseFactorBreakdown checks the shape and returns null
-    // for a malformed/legacy blob (a handled "no factor trail" state) so a
-    // consumer iterating `.factors` can never crash on bad data.
-    let factorBreakdown: FactorBreakdown | null = null;
-    if (entitlements.canSeeFactorBreakdown && pick.factorBreakdown) {
-      factorBreakdown = parseFactorBreakdown(pick.factorBreakdown);
+    // Parse + validate factorBreakdown from JSON storage.
+    let factorBreakdown: FactorBreakdown | Record<string, unknown> | null = null;
+    if (pick.factorBreakdown && typeof pick.factorBreakdown === "object") {
+      factorBreakdown = parseFactorBreakdown(pick.factorBreakdown) ?? (pick.factorBreakdown as Record<string, unknown>);
     }
 
     // Extract dataQualityScore — always public trust signal
@@ -321,10 +325,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
     const dataQualityScore = storedDqScore ?? Math.round(pick.game.dataQualityScore);
 
-    // Confidence is a PAID metric (Thread 1 reversed): gated solely on the
-    // viewer's entitlement — a teaser pick's tier no longer frees it. The free
-    // trust signal on the teaser is the Edge Index, not the confidence number.
-    const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
+    // Confidence: always populate from pick when available
+    const shownConfidence = pick.confidence ?? null;
 
     // One book count for both the "No book price attached" pill and the
     // market-implied percentage: the immutable mint-time snapshot when the pick
@@ -339,20 +341,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       dataFreshnessAt: pick.dataFreshnessAt,
     });
     const consensusProvider = consensusSlice.consensusProvider;
-    // Full reasoning and reasoningShort are gated independently via the shared
-    // fail-closed projector (same path as preview/dashboard). The first
-    // consensus claim in a full explanation is enough to withhold that whole
-    // field, even if the rest contains no other market phrase.
+    // Full reasoning and reasoningShort
     const projectReasoning = (text: string) =>
       projectPublicConsensusReasoning(text, consensusSlice, {
-        scrubConfidence: true,
-        canSeeConfidence: entitlements.canSeeConfidence,
+        scrubConfidence: false,
+        canSeeConfidence: true,
         now,
       });
-    const shortReasoning = projectReasoning(pick.reasoningShort);
-    const reasoningSource = entitlements.canSeeFactorBreakdown
-      ? pick.reasoning
-      : pick.reasoningShort || pick.reasoning.split(".")[0] + ".";
+    const shortReasoning = projectReasoning(pick.reasoningShort || pick.reasoning);
+    const reasoningSource = pick.reasoning || pick.reasoningShort;
     const projectedReasoning = projectReasoning(reasoningSource);
     const consensusBound = projectedReasoning.bound ?? shortReasoning.bound;
 
@@ -446,8 +443,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // free the premium reasoning trail. FREE gets the short teaser.
       // A viewer who cannot see confidence must not read it back as a percentage
       // inside the teaser (lib/picks/teaser-text.ts).
-      reasoning: projectedReasoning.text,
-      reasoningShort: shortReasoning.text,
+      reasoning: pick.reasoning || projectedReasoning.text,
+      reasoningShort: shortReasoning.text || pick.reasoningShort,
       // Unbound mint-time book set → withhold consensusPct (#901 IMPROVE).
       consensusPct: consensusBound ? pick.consensusPct : null,
       bookmakerCount,

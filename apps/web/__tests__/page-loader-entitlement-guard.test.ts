@@ -194,7 +194,7 @@ for (const routeFile of ROUTE_FILES) {
     // Only internal library values: type-only imports carry no data, and the
     // gate helpers themselves are not loaders.
     if (i.typeOnly || !i.mod.startsWith("@/lib/") || i.mod === GATE_MODULE) continue;
-    PAID_LOADERS.set(`${i.mod}::${i.name}`, relative(WEB_ROOT, routeFile));
+    PAID_LOADERS.set(`${i.mod}::${i.name}`, relative(WEB_ROOT, routeFile).replace(/\\/g, "/"));
   }
 }
 
@@ -253,7 +253,7 @@ for (const pageFile of PAGE_FILES) {
   const hasResolver = parseImports(pageFile).some(
     (i) => !i.typeOnly && ENTITLEMENT_RESOLVERS.has(i.name),
   );
-  FLAGGED.push({ page: relative(WEB_ROOT, pageFile), reaches, hasResolver });
+  FLAGGED.push({ page: relative(WEB_ROOT, pageFile).replace(/\\/g, "/"), reaches, hasResolver });
 }
 
 function describeReaches(f: Flagged): string {

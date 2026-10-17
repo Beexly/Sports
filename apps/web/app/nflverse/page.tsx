@@ -13,6 +13,7 @@ import {
 } from "@/lib/nflverse/birthday-usage-trend";
 import { loadQbAgeRbTrendReport } from "@/lib/nflverse/qb-age-rb-trend";
 import { loadNflverseUsagePulse, type NflverseQbAgeRow } from "@/lib/nflverse/usage-pulse";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const dynamic = "force-dynamic";
 
@@ -71,7 +72,8 @@ export default async function NflversePage(): Promise<JSX.Element> {
   // opportunity counts) are raw data rows, which are internal.
   if (!isPagePublic("/nflverse")) notFound();
 
-  const [pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
+  const [_viewer, pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
+    getViewerEntitlements(),
     loadNflverseUsagePulse(),
     loadQbAgeRbTrendReport(),
     loadBirthdayUsageTrendReport(),

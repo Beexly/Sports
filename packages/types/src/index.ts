@@ -196,6 +196,8 @@ export interface FactorBreakdown {
    * Null when the book is degenerate. Display only: no scoring path reads this.
    */
   marketFairShinProb?: number | null;
+  situationalReading?: Record<string, unknown> | null;
+  [key: string]: unknown;
   factors: FactorDetail[];     // human-readable factor list
 }
 
