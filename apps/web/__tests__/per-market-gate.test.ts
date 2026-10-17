@@ -79,4 +79,25 @@ describe("per-market gate", () => {
     expect(v.status).toBe("FAIL");
     expect(v.reasons.join(" ")).toContain("BSS <= 0");
   });
+
+  it("fails closed when every metric is NaN (G-06 garbage inputs never PASS)", () => {
+    const garbage: MarketGateInputs = {
+      n: Number.NaN,
+      baseRate: Number.NaN,
+      ece: Number.NaN,
+      eceDebiased: Number.NaN,
+      brier: Number.NaN,
+      reliability: Number.NaN,
+      resolution: Number.NaN,
+    };
+    const v = evaluateMarketGate("MONEYLINE", garbage);
+    expect(v.status).toBe("FAIL");
+    expect(v.reasons.join(" ")).toMatch(/non-finite|fail closed/i);
+  });
+
+  it("fails closed when a single metric is Infinity", () => {
+    const v = evaluateMarketGate("SPREAD", { ...LIVE.SPREAD, ece: Number.POSITIVE_INFINITY });
+    expect(v.status).toBe("FAIL");
+    expect(v.reasons.join(" ")).toContain("ece");
+  });
 });
