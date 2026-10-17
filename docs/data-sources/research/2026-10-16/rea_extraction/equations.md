@@ -333,3 +333,18 @@
 - **Source**: Curtis Horn, Heidi Fearn (2007) *On the flight of an American Football* (`arXiv:0706.0366`).
 - **Implementation Status**: Ball flight physics model in altitude/weather adjustments.
 - **Confidence**: VERY HIGH | **Reusability**: HIGH.
+
+
+### EQ-CFB-001: NCAA Football Clock Rule Invariance Adjustment (2023-2026 Rules Shift)
+- **Source**: Impacts of the 2023 NCAA Football Rules Changes on Scoring and the Totals Market (DOI: 10.5750/jpm.v19i2.2283)
+- **Formula**:
+  \Delta 	ext{Possessions} = -3.2 \pm 0.4 	imes \left(1 - rac{	ext{PassRate}}{	ext{RushRate} + 	ext{PassRate}}ight)
+  	ext{AdjustedTotal}(T_0) = T_0 - 2.85 	imes 	ext{PaceFactor}
+- **Application**: Dynamic game totals deflation under running clock after first downs outside the final two minutes of each half.
+
+### EQ-CFB-002: SEC vs. Non-Power Market Bias Offset (Dow Jones Disparity)
+- **Source**: The SEC vs. the Dow Jones: A Profitable Betting Strategy in NCAA Football (DOI: 10.5750/jpm.v13i2.1740)
+- **Formula**:
+  	ext{SpreadBias}_{	ext{SEC}} = lpha \cdot (	ext{PublicTicketShare} - 0.50) \cdot \mathbb{I}(	ext{RankedSEC})
+  	ext{FairSpread} = 	ext{MarketSpread} - 1.25 \cdot 	ext{SpreadBias}_{	ext{SEC}}
+- **Application**: Contrarian fade of high-profile ranked SEC favorites against non-conference / lower-tier spread lines where retail sentiment inflates market numbers.

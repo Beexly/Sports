@@ -264,3 +264,10 @@
 - **Corpus Citation**: Peter Xenopoulos, Claudio Silva (2022) *Graph Neural Networks to Predict Sports Outcomes* (`arXiv:2207.14124`).
 - **Status**: **INGESTED & ARCHIVED** (Future graph learning target).
 - **Reusability**: HIGH.
+
+
+### MOD-CFB-001: NCAA Football Volume & Market Efficiency Regressor
+- **Source**: The Relationship between Sportsbook Volume, Forecast Accuracy, and Market Efficiency: The NFL and NCAA Football (DOI: 10.5750/jpm.v8i2.888)
+- **Architecture**: Hierarchical Bayesian market volume weighting:
+  \sigma_{	ext{eff}}^2 = \sigma_{	ext{model}}^2 \cdot \left(1 + \kappa \cdot \ln(1 + 	ext{Volume}_{	ext{CFB}})ight)
+- **Application**: Differentiates high-volume national broadcast games from low-volume FCS/G5 early windows, expanding edge tolerances for thin liquidity markets.
