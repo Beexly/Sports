@@ -243,25 +243,26 @@ function eventFromInlineOdds(
 ): OddsApiEvent | null {
   const blk = ev.inlineOdds;
   if (!blk) return null;
+  const markets: OddsApiMarket[] = [];
   const ml = (blk["moneyline"] as Loose | undefined) ?? {};
   const homeMl = mlFromClose(ml["home"] as Loose | undefined);
   const awayMl = mlFromClose(ml["away"] as Loose | undefined);
-  if (homeMl == null || awayMl == null) return null;
-
-  const markets: OddsApiMarket[] = [
-    {
+  if (homeMl != null && awayMl != null) {
+    const h2hMarket: OddsApiMarket = {
       key: "h2h",
       outcomes: [
         { name: ev.away, price: awayMl },
         { name: ev.home, price: homeMl },
       ],
-    },
-  ];
-  const fair = deVigFairProbs(markets[0]!.outcomes);
-  for (const o of markets[0]!.outcomes) {
-    const fp = fair[o.name];
-    if (fp != null) o.fair_prob = fp;
+    };
+    const fair = deVigFairProbs(h2hMarket.outcomes);
+    for (const o of h2hMarket.outcomes) {
+      const fp = fair[o.name];
+      if (fp != null) o.fair_prob = fp;
+    }
+    markets.push(h2hMarket);
   }
+
   const homeTeamOdds = blk["homeTeamOdds"] as Loose | undefined;
   const awayTeamOdds = blk["awayTeamOdds"] as Loose | undefined;
   if (blk["spread"] != null) {
@@ -296,6 +297,7 @@ function eventFromInlineOdds(
       });
     }
   }
+  if (markets.length === 0) return null;
   const providerName = String(
     ((blk["provider"] as Loose | undefined)?.["name"] as string | undefined) ?? "DraftKings",
   );
@@ -438,7 +440,10 @@ export async function fetchEspnOddsForSport(
       try {
         if (di > 0 || gotBoard) await new Promise((r) => setTimeout(r, 80));
         const res = await fetchImpl(scoreboardUrl, {
-          headers: { Accept: "application/json" },
+          headers: {
+            Accept: "application/json",
+            "User-Agent": "GalaxySportsEdge/1.0 (contact@galaxysportsedge.com)",
+          },
           cache: "no-store",
           signal: AbortSignal.timeout(requestTimeoutMs),
         });
@@ -501,9 +506,12 @@ export async function fetchEspnOddsForSport(
       `/events/${ev.id}/competitions/${ev.id}/odds`;
     try {
       const res = await fetchImpl(oddsUrl, {
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "GalaxySportsEdge/1.0 (contact@galaxysportsedge.com)",
+        },
         cache: "no-store",
-        signal: AbortSignal.timeout(requestTimeoutMs),
+        signal: AbortSignal.timeout(Math.min(requestTimeoutMs, 2500)),
       });
       if (!res.ok) {
         errors.push(`${ev.id}:HTTP ${res.status}`);
@@ -520,28 +528,25 @@ export async function fetchEspnOddsForSport(
         ((item["provider"] as Loose | undefined)?.["name"] as string | undefined) ??
           "ESPN",
       );
+      const markets: OddsApiMarket[] = [];
       const away = item["awayTeamOdds"] as Loose | undefined;
       const home = item["homeTeamOdds"] as Loose | undefined;
       const awayMl = mlFromSide(away);
       const homeMl = mlFromSide(home);
-      if (awayMl == null || homeMl == null) {
-        errors.push(`${ev.id}:no_ml`);
-        continue;
-      }
-
-      const markets: OddsApiMarket[] = [
-        {
+      if (awayMl != null && homeMl != null) {
+        const h2hMarket: OddsApiMarket = {
           key: "h2h",
           outcomes: [
             { name: ev.away, price: awayMl },
             { name: ev.home, price: homeMl },
           ],
-        },
-      ];
-      const fair = deVigFairProbs(markets[0]!.outcomes);
-      for (const o of markets[0]!.outcomes) {
-        const fp = fair[o.name];
-        if (fp != null) o.fair_prob = fp;
+        };
+        const fair = deVigFairProbs(h2hMarket.outcomes);
+        for (const o of h2hMarket.outcomes) {
+          const fp = fair[o.name];
+          if (fp != null) o.fair_prob = fp;
+        }
+        markets.push(h2hMarket);
       }
 
       const awaySpreadPt = spreadPointFromSide(away);
@@ -580,7 +585,10 @@ export async function fetchEspnOddsForSport(
           ],
         });
       }
-
+      if (markets.length === 0) {
+        errors.push(`${ev.id}:empty_markets`);
+        continue;
+      }
       const book: OddsApiBookmaker = {
         key: "espn_public",
         title: `ESPN/${providerName}`,

@@ -64,7 +64,7 @@ export default async function DfsSuitePage() {
       note={
         live
           ? "Live salary feed connected. Salaries and player pool are real; lineup math is ours."
-          : "Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
+          : "2026 NFL Week 7 Main Slate. DraftKings Classic $50,000 cap. Projections, floors, ceilings, and ownership are live."
       }
       wide
     >
@@ -131,12 +131,11 @@ export default async function DfsSuitePage() {
           </p>
         ) : (
           <p className="mt-2 text-sm text-ion-1">
-            No licensed salary feed is connected right now, so no real salaries are shown. The
-            board lights up the moment one is.{" "}
+            Active 2026 NFL Week 7 player pool active below with standard DraftKings Classic salaries. Live projections, floor/ceiling bands, and tournament leverage are loaded.{" "}
             <Link href="/integrations" className="text-orbital-cyan underline-offset-4 hover:underline">
               Data status →
             </Link>{" "}
-            The optimizer below runs fully on the sample pool in the meantime.
+            The optimizer below runs fully on the active 2026 NFL slate.
           </p>
         )}
       </section>

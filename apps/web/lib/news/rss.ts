@@ -83,18 +83,15 @@ export function parseFeedConfig(raw: string | undefined): RssFeedConfig[] {
 }
 
 
+import { toCuratedRssFeeds } from "./reporter-roster";
+
 /**
  * Curated free sports RSS catalog (sports-skills harvest).
  * Opt-in via NEWS_RSS_USE_CURATED_DEFAULTS=true when NEWS_RSS_FEEDS is empty.
  * Headlines only; never invent signals.
  */
 export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
-  {
-    url: "https://www.espn.com/espn/rss/nfl/news",
-    source: "ESPN NFL",
-    tier: "Aggregator",
-    team: "NFL",
-  },
+  ...toCuratedRssFeeds(),
   {
     url: "https://www.espn.com/espn/rss/nba/news",
     source: "ESPN NBA",
@@ -251,7 +248,7 @@ export async function fetchLiveWireRead(
   let feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
   if (
     feeds.length === 0 &&
-    process.env["NEWS_RSS_USE_CURATED_DEFAULTS"]?.trim() === "true"
+    process.env["NEWS_RSS_USE_CURATED_DEFAULTS"]?.trim() !== "false"
   ) {
     feeds = [...CURATED_SPORTS_NEWS_RSS];
   }

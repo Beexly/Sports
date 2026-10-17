@@ -161,9 +161,9 @@ function parseIntSafe(val: string | undefined, defaultVal: number): number {
 
 export function getPlatformConfig(): PlatformConfig {
   return {
-    canonicalHistoryEnabled:      parseBool(process.env["CANONICAL_HISTORY_ENABLED"],      false),
+    canonicalHistoryEnabled:      parseBool(process.env["CANONICAL_HISTORY_ENABLED"],      true),
     derivedModelHistoryEnabled:   parseBool(process.env["DERIVED_MODEL_HISTORY_ENABLED"],   false),
-    publicPicksEnabled:           parseBool(process.env["PUBLIC_PICKS_ENABLED"],            false),
+    publicPicksEnabled:           parseBool(process.env["PUBLIC_PICKS_ENABLED"],            true),
     publicBlogEnabled:            parseBool(process.env["PUBLIC_BLOG_ENABLED"],             false),
     performanceStatsEnabled:      parseBool(process.env["PERFORMANCE_STATS_ENABLED"],       false),
     confidenceDisplayMode:        parseConfidenceMode(process.env["CONFIDENCE_DISPLAY_MODE"]),

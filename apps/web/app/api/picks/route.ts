@@ -174,15 +174,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       },
       orderBy: [
         { isFeatured: "desc" },
-        { confidence: "desc" },
         { generatedAt: "desc" },
       ],
-      // Over-fetch a bounded pool when the viewer has a daily limit: the
-      // selective-publish filter below can only REMOVE rows, so taking exactly
-      // the limit here meant a FREE user (limit 2) could receive 0-1 picks
-      // whenever fetched rows failed the filter. The real cap is applied
-      // AFTER filter + ranking (see limitedPicks).
-      take: entitlements.dailyPickLimit != null ? 48 : 200,
+      take: 200,
     })
     .catch(() => null);
   if (picks === null) {
@@ -236,9 +230,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // nothing, so a suppressed row still settles into the public record.
   const soundPicks = dropAdverseEdgePicks(coherentPicks);
 
+  // Strict Market Integrity: Unpriced Elo model signals with line 0 and hasBookPrice: false
+  // must never be exposed on the public picks surface.
+  const pricedPicks = soundPicks.filter(
+    (pick) => pick.hasBookPrice || (pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount) > 0 || pick.line !== 0,
+  );
+
   // Display order must match generation ranking law (rankingP, not confidence).
   // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
-  const rankedPicks = [...soundPicks].sort(comparePicksByRanking);
+  const rankedPicks = [...pricedPicks].sort(comparePicksByRanking);
 
   // Tier cap applied AFTER filter + rank so a limited viewer always gets their
   // full allowance (best-ranked survivors), never fewer because the filter ate

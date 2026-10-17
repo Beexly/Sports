@@ -108,5 +108,8 @@ export const RISK_THRESHOLDS = {
   LOW_RISK_BOOK_THRESHOLD: 7,
 } as const;
 
-// Minimum bookmakers required to generate a pick
-export const MIN_BOOKMAKERS = 2;
+// Minimum bookmakers required to generate a pick.
+// Defaults to 1 so that single-bookmaker feeds (e.g. ESPN DraftKings inline)
+// can generate valid spread, total, and moneyline picks. Can be overridden via env.
+export const MIN_BOOKMAKERS = Math.max(1, parseInt(process.env["MIN_BOOKMAKERS"] ?? "1", 10));
+

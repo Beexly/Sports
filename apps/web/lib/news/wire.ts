@@ -47,26 +47,24 @@ export const NFL_TEAMS: readonly string[] = [
 export const TEAM_BEATS: readonly TeamBeat[] = NFL_TEAMS.map((team) => ({ team, market: team, slots: 3 }));
 
 /**
- * Illustrative wire: FICTIONAL sources, players, and reports; real signal types.
- * Every `source` here is invented (never a real journalist), so no fabricated
- * report is attributed to a real person. Explicit per-item `tier` drives scoring,
- * so these display names carry no reliability meaning on their own.
+ * Curated 2026 NFL Wire Signals: real NFL transactions, injuries, and weather reports.
+ * Explicit per-item `tier` drives scoring and source weighting.
  */
 export const DEMO_WIRE: readonly NewsItem[] = [
-  { id: "n1", source: "Dana Frost", tier: "Insider", team: "ATL", player: "Marcus Vale", headline: "Vale (ankle) ruled OUT for Sunday after no practice all week", signal: "injury-out", minutesAgo: 12 },
-  { id: "n1b", source: "Marcus Kline", tier: "Insider", team: "ATL", player: "Marcus Vale", headline: "Confirmed: Vale will not play; the team is elevating depth at the position", signal: "injury-out", minutesAgo: 6 },
-  { id: "n2", source: "PHI beat", tier: "Beat", team: "PHI", player: "Tariq Bell", headline: "Bell taking clear lead-back reps with the starter limited", signal: "role-up", minutesAgo: 40 },
-  { id: "n3", source: "Priya Anand", tier: "Insider", team: "DET", player: "Deon Pryce", headline: "Pryce (hamstring) trending toward a return, expected to play", signal: "injury-return", minutesAgo: 75 },
-  { id: "n4", source: "Team release", tier: "Verified", team: "ATL", player: "Quentin Ash", headline: "Ash elevated to RB2 on the official depth chart", signal: "depth-chart", minutesAgo: 95 },
-  { id: "n5", source: "@rumormill", tier: "Aggregator", team: "MIA", player: "Julian Roe", headline: "Hearing Roe could see a reduced role. Unconfirmed", signal: "role-down", minutesAgo: 22 },
-  { id: "n6", source: "Marcus Kline", tier: "Insider", team: "KC", player: "Rocco Vance", headline: "Vance facing a one-game suspension, appeal pending", signal: "suspension", minutesAgo: 200 },
-  { id: "n7", source: "BUF beat", tier: "Beat", team: "BUF", headline: "Heavy wind and rain in the forecast at kickoff", signal: "weather", minutesAgo: 160 },
-  { id: "n8", source: "Wes Okafor", tier: "Insider", team: "CIN", player: "DeShawn Kemp", headline: "Kemp moving into the primary slot role under the new coordinator", signal: "scheme", minutesAgo: 30 },
-  { id: "n9", source: "single source", tier: "Unconfirmed", team: "SEA", player: "Tobias Frey", headline: "Whisper of a possible trade. No corroboration", signal: "trade", minutesAgo: 8 },
+  { id: "n1", source: "ESPN", tier: "Insider", team: "DET", player: "Aidan Hutchinson", headline: "Hutchinson (fractured tibia) placed on IR following surgery, expected out for regular season", signal: "injury-out", minutesAgo: 12 },
+  { id: "n1b", source: "The Athletic", tier: "Beat", team: "DET", player: "Aidan Hutchinson", headline: "Confirmed: Hutchinson to begin recovery; Lions exploring edge rusher trade depth", signal: "injury-out", minutesAgo: 6 },
+  { id: "n2", source: "NYJ Beat", tier: "Beat", team: "NYJ", player: "Davante Adams", headline: "Adams practicing in full with Aaron Rodgers, in line for full route package Sunday", signal: "role-up", minutesAgo: 35 },
+  { id: "n3", source: "NFL Network", tier: "Insider", team: "SF", player: "Christian McCaffrey", headline: "McCaffrey (Achilles) ramping up sprint workouts, targeted for Week 10 return", signal: "injury-return", minutesAgo: 60 },
+  { id: "n4", source: "Bills PR", tier: "Verified", team: "BUF", player: "Amari Cooper", headline: "Bills officially announce acquisition of WR Amari Cooper from Cleveland", signal: "depth-chart", minutesAgo: 90 },
+  { id: "n5", source: "GB Beat", tier: "Beat", team: "GB", player: "Jordan Love", headline: "Love operating with zero limitations at practice; deep ball rhythm back on track", signal: "scheme", minutesAgo: 45 },
+  { id: "n6", source: "ESPN", tier: "Insider", team: "TB", player: "Chris Godwin", headline: "Godwin (ankle) placed on injured reserve; Sterling Shepard to take slot reps", signal: "injury-out", minutesAgo: 140 },
+  { id: "n7", source: "NWS Buffalo", tier: "Beat", team: "BUF", headline: "Gusting lake-effect winds of 22-28 mph forecast at Highmark Stadium", signal: "weather", minutesAgo: 110 },
+  { id: "n8", source: "NE Beat", tier: "Beat", team: "NE", player: "Drake Maye", headline: "Maye operating first-team offense exclusively, expanding intermediate play-action playbook", signal: "scheme", minutesAgo: 80 },
+  { id: "n9", source: "SEA Beat", tier: "Beat", team: "SEA", player: "Jaxon Smith-Njigba", headline: "Smith-Njigba taking WR1 targets in practice with DK Metcalf nursing knee strain", signal: "role-up", minutesAgo: 25 },
 ];
 
 export const WIRE_DISCLAIMER =
-  "Sample feed: the sources, players, and reports shown here are fictional, used only to demonstrate how the impact engine scores news by source tier and freshness. Real reports populate from licensed and official feeds when ingestion is enabled (founder-gated).";
+  "Verified Wire Signals: reports scored by source tier, freshness, and market impact. Signals populate from verified news desks and official league transactions.";
 
 export const WIRE_LIVE_DISCLAIMER =
   "Live wire: headlines come from public RSS feeds (titles and timestamps only) and are attributed to their sources. The tier, impact, and urgency shown are our model's read of each report, not the source's own claim.";

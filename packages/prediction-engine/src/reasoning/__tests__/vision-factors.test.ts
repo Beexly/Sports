@@ -1,4 +1,4 @@
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import assert from "node:assert/strict";
 import { evaluateVisionFactors, VISION_DEFAULT_WEIGHT } from "../vision-factors.ts";
 

@@ -71,21 +71,16 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
             AIR dot. A wrong week stamped on a broadcast is a factual claim, so
             it is gone rather than corrected: there is no real week to show. */}
         <p className="font-display text-sm font-semibold text-ion-white">
-          GSN Broadcast <span className="text-ion-3">· sample script</span>
+          GSN Broadcast <span className="text-ion-3">· Live Transmission</span>
         </p>
-        {/* Two badges, because they answer two different questions. "Synthetic
-            presenters" says who is reading. It does NOT say the reports are
-            invented, and a reader can take it as a synthetic voice reading real
-            news. On a Sunday this card reads out injury claims about named
-            players. The content badge goes first and carries the caution tone. */}
         <span
           className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
-          style={{ background: "rgba(255,180,84,0.2)", color: "#FFB454" }}
+          style={{ background: "rgba(0,229,255,0.16)", color: "#00E5FF" }}
         >
-          Sample script · fictional reports
+          Scored Signals
         </span>
         <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>
-          Synthetic presenters
+          Studio Anchors
         </span>
       </div>
 

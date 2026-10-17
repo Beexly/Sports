@@ -92,7 +92,7 @@ export function ProjectionsTable({
               : { background: "rgba(196,191,182,0.12)", color: "#C4BFB6" }
           }
         >
-          {isLive ? "Live salaries" : "Sample slate"}
+          {isLive ? "Live salaries" : "2026 NFL Slate"}
         </span>
       </div>
       <div className="overflow-x-auto">

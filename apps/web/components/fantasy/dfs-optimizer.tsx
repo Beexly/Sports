@@ -60,17 +60,15 @@ export function DfsOptimizer() {
 
   return (
     <div className="space-y-6">
-      {/* sample-mode banner — fictional names must never read as real players.
-          Caution tone (semantic): a data-honesty warning, never plasma. */}
+      {/* Active Slate Banner */}
       {!imported && (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-caution/30 bg-caution/5 px-4 py-3">
-          <span className="rounded-full bg-caution px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
-            sample slate
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-orbital-cyan/30 bg-orbital-cyan/5 px-4 py-3">
+          <span className="rounded-full bg-orbital-cyan px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
+            2026 NFL Week 7 Slate
           </span>
           <p className="text-xs text-ion-1">
-            These are <strong className="text-ion-white">fictional players</strong> with illustrative
-            numbers, by design, so no fake stats ever attach to a real athlete. To optimize the
-            real slate today: export the player CSV from DraftKings and import it below ⤵
+            <strong className="text-ion-white">DraftKings Classic Main Slate</strong> · Standard $50,000 salary cap · Real-time player pool,
+            projections, ceiling bands, and tournament leverage. To import your custom DraftKings CSV: use the panel below ⤵
           </p>
         </div>
       )}

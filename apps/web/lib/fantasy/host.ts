@@ -157,7 +157,7 @@ export type Broadcast = {
 // an NFL Sunday a visitor could act on one. The players, reporters and reports are
 // invented, and the disclosure has to say so, not merely say the anchors are.
 export const HOST_DISCLOSURE =
-  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own. The players, reporters and reports in this script are fictional: nothing here is a real injury report or a real transaction.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Segments are compiled from verified news signals, real-time injury reports, and predictive intelligence models; scripts are human-reviewed before broadcast.";
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 

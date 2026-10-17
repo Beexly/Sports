@@ -1,4 +1,4 @@
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import * as assert from "node:assert/strict";
 import { evaluateArxivCorpus, type ArxivContextQuery } from "../arxiv-reasoning-bridge.js";
 
