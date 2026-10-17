@@ -159,3 +159,14 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// QB scramble EPA (deterministic; glass-box, enters dark).
+export {
+  computeQbScrambleEpa,
+  QB_SCRAMBLE_EPA_MODEL_VERSION,
+  SCRAMBLE_WINDOW_MIN_DROPBACKS_4,
+  SCRAMBLE_WINDOW_MIN_DROPBACKS_8_SEASON,
+  type ScramblePlay,
+  type QbScrambleEpaResult,
+  type QbScrambleEpaOptions,
+} from "./qb-scramble-epa.js";

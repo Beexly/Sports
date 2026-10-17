@@ -733,4 +733,28 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    metricId: "qb-scramble-epa",
+    publicName: "QB Scramble EPA",
+    internalName: "qb_scramble_epa_shadow",
+    family: "rushing",
+    targetQuestion: "How much value did the quarterback create by escaping the pocket and scrambling vs a standard dropback?",
+    targetVariable: "scramble epa and differential",
+    historicalPrecedent: [
+      {
+        name: "QB scramble contribution (PattonAnalytics / Nate_Tice / Timo Riske)",
+        reason: "Scramble production is a distinct, repeatable QB rushing-value layer that designed-run and dropback metrics both miss.",
+      },
+    ],
+    allowedInputs: ["nflverse play-by-play"],
+    forbiddenInputs: ["referee epa column directly (must use engine epa)"],
+    formulaClass: "composite_score",
+    formulaSummary: "Computes scramble rate, shrunk scramble EPA/play, non-scramble dropback EPA/play, and the differential using our own expected points model.",
+    protectedComponents: ["dropback floors", "shrinkage constant k=20"],
+    validationMethods: ["walk_forward"],
+    failureModes: ["small-sample QBs can show extreme scramble EPA without proper shrinkage", "null-EPA plays can distort averages if treated as 0"],
+    publicExposure: "none",
+    sourceRightsRequired: ["public play-by-play modeling allowed"],
+    status: "SHADOW",
+  },
 ] as const;

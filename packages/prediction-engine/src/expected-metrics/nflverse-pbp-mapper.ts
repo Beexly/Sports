@@ -42,7 +42,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -57,7 +57,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "spread_line", "result",
   // success rate
   "play_type", "yards_gained", "interception", "fumble_lost",
-  "rusher_player_id", "receiver_player_id",
+  "rusher_player_id", "receiver_player_id", "qb_scramble",
   // drives
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric

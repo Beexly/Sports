@@ -1411,6 +1411,10 @@ export {
   SUCCESS_YARDAGE_FRACTION,
   buildDrives,
   DRIVES_MODEL_VERSION,
+  computeQbScrambleEpa,
+  QB_SCRAMBLE_EPA_MODEL_VERSION,
+  SCRAMBLE_WINDOW_MIN_DROPBACKS_4,
+  SCRAMBLE_WINDOW_MIN_DROPBACKS_8_SEASON,
   buildEpCalibration,
   buildWpCalibration,
 } from "./expected-metrics/index.js";
@@ -1445,6 +1449,9 @@ export type {
   DrivePlay,
   Drive,
   DriveResult,
+  ScramblePlay,
+  QbScrambleEpaResult,
+  QbScrambleEpaOptions,
 } from "./expected-metrics/index.js";
 
 // Model Promotion Gate ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pure eligibility evaluator (paired-Brier EB-LCB +
