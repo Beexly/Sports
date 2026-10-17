@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { evaluateArxivCorpus, type ArxivContextQuery } from "../arxiv-reasoning-bridge.js";
 
 describe("arxiv-reasoning-bridge", () => {
-  it("consults the full 596-paper corpus and returns neutral synthesis when baseline is normal", () => {
+  it("consults the full 2,179-paper and 429-dataset corpus", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
       homeTeam: "Kansas City Chiefs",
@@ -14,58 +14,57 @@ describe("arxiv-reasoning-bridge", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.totalPremisesConsulted).toBe(596);
-    expect(res.activePremisesCount).toBe(0);
+    expect(res.totalCorpusPapersIndexed).toBe(2179);
+    expect(res.totalKaggleDatasetsIndexed).toBe(429);
     expect(res.situationalReasoningSynthesis).toContain("all situational and environmental parameters within neutral baseline");
   });
 
-  it("detects hypoxia and rest compression mismatch based on sports kinematics literature", () => {
+  it("detects Navier-Stokes barometric expansion and hypoxia in Denver elevation", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
       homeTeam: "Denver Broncos",
       awayTeam: "Seattle Seahawks",
       restDaysHome: 7,
-      restDaysAway: 4, // Thursday short rest
-      altitudeFt: 5280, // Mile High
+      restDaysAway: 4,
+      altitudeFt: 5280,
       styleMatchup: "PRESSURE_VS_PASS_HEAVY",
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.totalPremisesConsulted).toBe(596);
-    expect(res.activePremisesCount).toBeGreaterThanOrEqual(3); // Fatigue + Hypoxia + Style
+    expect(res.activePremisesCount).toBeGreaterThanOrEqual(4);
+    expect(res.situationalReasoningSynthesis).toContain("Barometric air density reduced by 15-18%");
     expect(res.situationalReasoningSynthesis).toContain("Altitude hypoxia threshold exceeded");
-    expect(res.situationalReasoningSynthesis).toContain("Rest compression");
-    expect(res.situationalReasoningSynthesis).toContain("Higher-order network style mismatch");
   });
 
-  it("triggers profit-bias identity fade under extreme retail ticket concentration", () => {
+  it("detects auditory crowd acoustics referee pressure in enclosed domes", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
-      homeTeam: "Dallas Cowboys",
-      awayTeam: "Philadelphia Eagles",
+      homeTeam: "New Orleans Saints",
+      awayTeam: "Atlanta Falcons",
       restDaysHome: 7,
       restDaysAway: 7,
-      publicTicketPct: 74,
+      isDomeOrBowl: true,
+      crowdDecibelsExpected: 106,
     };
 
     const res = evaluateArxivCorpus(ctx);
     expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("profit-bias identity fade");
+    expect(res.situationalReasoningSynthesis).toContain("Enclosed acoustic amplifier");
+    expect(res.situationalReasoningSynthesis).toContain("referee 3rd-down pass interference whistle skews home");
   });
 
-  it("triggers total depression under high wind aerodynamics literature", () => {
+  it("detects circadian travel dysrhythmia on West-to-East travel", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
-      homeTeam: "Buffalo Bills",
-      awayTeam: "New England Patriots",
+      homeTeam: "Miami Dolphins",
+      awayTeam: "Seattle Seahawks",
       restDaysHome: 7,
       restDaysAway: 7,
-      weatherWindMph: 22,
+      timeZoneDifferenceHours: 3,
     };
 
     const res = evaluateArxivCorpus(ctx);
     expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("Sustained surface winds");
-    expect(res.situationalReasoningSynthesis).toContain("UNDER");
+    expect(res.situationalReasoningSynthesis).toContain("Circadian disruption");
   });
 });
