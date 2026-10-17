@@ -271,3 +271,11 @@
 - **Architecture**: Hierarchical Bayesian market volume weighting:
   \sigma_{	ext{eff}}^2 = \sigma_{	ext{model}}^2 \cdot \left(1 + \kappa \cdot \ln(1 + 	ext{Volume}_{	ext{CFB}})ight)
 - **Application**: Differentiates high-volume national broadcast games from low-volume FCS/G5 early windows, expanding edge tolerances for thin liquidity markets.
+
+
+### MOD-SPORTS-002: Higher-Order Performance Network Decomposition
+- **Source**: Ranking football teams via the higher-order decomposition of performance networks (arXiv:2606.21814)
+- **Architecture**: Tensor decomposition over directed multi-graph match results:
+  A_{ijk} = 	ext{ScoreMargin}(i 	o j 	ext{ in regime } k)
+  R_i = 	ext{TopEigenvector}\left(\sum_k \omega_k A_{\cdot\cdot k}ight)
+- **Application**: Non-transitive team strength rating that accounts for matchup style clashes and opponent strength adjustments beyond Elo.

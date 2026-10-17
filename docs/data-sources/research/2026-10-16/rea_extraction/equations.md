@@ -348,3 +348,17 @@
   	ext{SpreadBias}_{	ext{SEC}} = lpha \cdot (	ext{PublicTicketShare} - 0.50) \cdot \mathbb{I}(	ext{RankedSEC})
   	ext{FairSpread} = 	ext{MarketSpread} - 1.25 \cdot 	ext{SpreadBias}_{	ext{SEC}}
 - **Application**: Contrarian fade of high-profile ranked SEC favorites against non-conference / lower-tier spread lines where retail sentiment inflates market numbers.
+
+
+### EQ-SPORTS-003: The Profit-Bias Identity in Sports Betting
+- **Source**: The profit-bias identity in sports betting: bookmaker profit as the public prediction error (arXiv:2609.06739)
+- **Formula**:
+  \Pi_{	ext{book}} = \sum_{i} w_i \cdot \left(p_{	ext{market}, i} - p_{	ext{true}, i}ight) + 	ext{Vig}
+  	ext{PublicBiasError} = \mathbb{E}\left[(P_{	ext{public}} - Y)^2ight] - \mathbb{E}\left[(P_{	ext{sharp}} - Y)^2ight]
+- **Application**: Formally proves bookmaker profitability is bounded by public miscalibration rather than directional margin, reinforcing Layer 2's focus on fading public cognitive bias.
+
+### EQ-SPORTS-004: Prediction Market Favorite-Longshot Decomposition
+- **Source**: The Favorite-Longshot Bias in Prediction Markets: Evidence from Polymarket (arXiv:2609.12878)
+- **Formula**:
+  p_{	ext{implied}}(p) = rac{p^\gamma}{p^\gamma + (1-p)^\gamma}, \quad \gamma \in (0, 1)
+- **Application**: Closed-form correction for longshot overpricing and heavy favorite underpricing across binary outcome markets.
