@@ -17,7 +17,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-const CONTROLLED_VOCABULARY_14_KEYS = new Set([
+const CONTROLLED_VOCABULARY_16_KEYS = new Set([
   "altitude_feet",
   "wind_speed_mph",
   "ambient_temp_fahrenheit",
@@ -32,6 +32,8 @@ const CONTROLLED_VOCABULARY_14_KEYS = new Set([
   "officiating_crew_penalty_rate",
   "market_steam_velocity_pts_hr",
   "reverse_line_movement_divergence_pct",
+  "acute_chronic_workload_ratio",
+  "coach_fourth_down_aggressiveness_pct",
 ]);
 
 interface GateRecordAudit {
@@ -112,7 +114,7 @@ function runAdmissionGateAudit() {
     // L4: Mechanism Entailment Gate
     let l4 = false;
     if (l1 && l2 && l3) {
-      const allFieldsValid = Array.isArray(fields) && fields.length > 0 && fields.every((f: string) => CONTROLLED_VOCABULARY_14_KEYS.has(f));
+      const allFieldsValid = Array.isArray(fields) && fields.length > 0 && fields.every((f: string) => CONTROLLED_VOCABULARY_16_KEYS.has(f));
       const hasMechanism = typeof mechQuote === "string" && mechQuote.length >= 10;
       l4 = allFieldsValid && hasMechanism;
     }
@@ -151,7 +153,7 @@ function runAdmissionGateAudit() {
     total_admitted_principles: admittedCount,
     admission_rate_pct: Math.round((admittedCount / rawLines.length) * 1000) / 10,
     rejections_by_layer: rejectionsByLayer,
-    controlled_vocabulary_keys_enforced: Array.from(CONTROLLED_VOCABULARY_14_KEYS),
+    controlled_vocabulary_keys_enforced: Array.from(CONTROLLED_VOCABULARY_16_KEYS),
     sample_admitted_records: records.slice(0, 10),
   };
 

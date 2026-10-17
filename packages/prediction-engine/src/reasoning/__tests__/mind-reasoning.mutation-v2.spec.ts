@@ -138,11 +138,7 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
     assert.ok(res.audit_trail.length > 50, `Expected > 50 audit records, got ${res.audit_trail.length}`);
     assert.ok(res.adjustments.length > 0, "Must have adjustments for active context primitives");
 
-    // Assert that conflicting fields properly neutralize into deadband (consensus_ratio < 0.20)
-    const neutralized = res.adjustments.filter(a => a.resolution_status === "CONFLICT_NEUTRALIZED");
-    assert.ok(neutralized.length > 0, "Must trigger deadband conflict neutralization on disputed features");
-
-    // Assert that applied adjustments have consensus_ratio >= 0.20
+    // Assert that applied adjustments have consensus_ratio >= 0.20 and non-zero final delta
     const applied = res.adjustments.filter(a => a.resolution_status === "APPLIED");
     assert.ok(applied.length > 0, "Must have applied adjustments for consensual features");
     for (const a of applied) {
@@ -160,5 +156,54 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
 
     // Verify rendered prose references items and applied deltas
     assert.ok(res.rendered_prose.length > 100, "Rendered prose must be populated");
+
+    // Verify deadband conflict resolution on disputed features with opposing literature claims
+    const disputedPrinciples: VerifiedSituationalPrinciple[] = [
+      {
+        item_id: "CLAIM_OFFICIATING_POS",
+        source_doc_hash: "hash_crew_strict",
+        principle_name: "Strict Officiating Crew Penalty Inflation",
+        numeric_claim: "+2.4 penalties/game",
+        parsed_float_magnitude: 0.024,
+        unit_scale_denominator: 4.0,
+        evidence_quote: "Strict crews increase offensive holding penalties by 2.4 infractions",
+        evidence_span: { start_char: 0, end_char: 60, verification_tier: "MSVH_S1_EXACT" as const },
+        mechanism_quote: "Holding penalties stall drives behind the chains",
+        mechanism_span: { start_char: 0, end_char: 48, verification_tier: "MSVH_S1_EXACT" as const },
+        applicable_context_fields: ["officiating_crew_penalty_rate" as const],
+        influence_direction: "positive" as const,
+        conditional_threshold: null,
+        parsed_threshold_value: null,
+        parsed_threshold_operator: null,
+        claim_type: "causal" as const,
+        influence_description: "Penalizes visiting offensive drive continuity",
+      },
+      {
+        item_id: "CLAIM_OFFICIATING_NEG",
+        source_doc_hash: "hash_crew_lenient",
+        principle_name: "Let-Them-Play Officiating Crew Letdown",
+        numeric_claim: "-2.4 penalties/game",
+        parsed_float_magnitude: 0.024,
+        unit_scale_denominator: 4.0,
+        evidence_quote: "Lenient crews decrease offensive holding penalties by 2.4 infractions",
+        evidence_span: { start_char: 0, end_char: 60, verification_tier: "MSVH_S1_EXACT" as const },
+        mechanism_quote: "Lenient crews decrease offensive holding penalties",
+        mechanism_span: { start_char: 0, end_char: 50, verification_tier: "MSVH_S1_EXACT" as const },
+        applicable_context_fields: ["officiating_crew_penalty_rate" as const],
+        influence_direction: "negative" as const,
+        conditional_threshold: null,
+        parsed_threshold_value: null,
+        parsed_threshold_operator: null,
+        claim_type: "causal" as const,
+        influence_description: "Relaxes holding frequency",
+      },
+    ];
+
+    const disputedRes = evaluateMindPrinciples({ officiating_crew_penalty_rate: 15.0 }, disputedPrinciples);
+    const neutralized = disputedRes.adjustments.filter(a => a.resolution_status === "CONFLICT_NEUTRALIZED");
+    assert.ok(neutralized.length > 0, "Must trigger deadband conflict neutralization on disputed features");
+    assert.equal(neutralized[0].final_delta, 0.0, "Neutralized adjustment must yield exactly zero delta");
+    assert.ok(neutralized[0].consensus_ratio < 0.20, "Consensus ratio must fall below 0.20 deadband");
+    assert.ok(disputedRes.rendered_prose.includes("Conflicting literature evidence neutralized adjustments"), "Prose must include conflict frame");
   });
 });

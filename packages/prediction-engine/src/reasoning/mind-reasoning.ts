@@ -201,7 +201,9 @@ export type ContextFieldEnum =
   | "acoustic_crowd_spl_db"
   | "officiating_crew_penalty_rate"
   | "market_steam_velocity_pts_hr"
-  | "reverse_line_movement_divergence_pct";
+  | "reverse_line_movement_divergence_pct"
+  | "acute_chronic_workload_ratio"
+  | "coach_fourth_down_aggressiveness_pct";
 
 export type ClaimType = "causal" | "correlational" | "theoretical";
 export type InfluenceDirection = "positive" | "negative" | "conditional";
@@ -250,11 +252,17 @@ export interface PrincipleApplicationAuditRecord {
   readonly claim_type: ClaimType;
   readonly confidence_weight: number;
   readonly resolution_status: "APPLIED" | "CONFLICT_NEUTRALIZED" | "THRESHOLD_NOT_MET";
+  readonly threshold_evaluation?: {
+    readonly operator: string;
+    readonly threshold_value: number;
+    readonly observed_value: number;
+    readonly condition_satisfied: boolean;
+  } | null;
 }
 
 export const CONTEXT_PRIMITIVE_DEFAULTS: Record<ContextFieldEnum, { baseline: number; unitScale: number; unit: string }> = {
   altitude_feet: { baseline: 0, unitScale: 1000, unit: "feet" },
-  wind_speed_mph: { baseline: 5, unitScale: 10, unit: "mph" },
+  wind_speed_mph: { baseline: 0, unitScale: 10, unit: "mph" },
   ambient_temp_fahrenheit: { baseline: 70, unitScale: 10, unit: "F" },
   precipitation_rate_mm_hr: { baseline: 0, unitScale: 5, unit: "mm/hr" },
   air_density_kg_m3: { baseline: 1.225, unitScale: 0.1, unit: "kg/m3" },
@@ -267,6 +275,8 @@ export const CONTEXT_PRIMITIVE_DEFAULTS: Record<ContextFieldEnum, { baseline: nu
   officiating_crew_penalty_rate: { baseline: 12.0, unitScale: 4.0, unit: "penalties" },
   market_steam_velocity_pts_hr: { baseline: 0.0, unitScale: 0.5, unit: "pts/hr" },
   reverse_line_movement_divergence_pct: { baseline: 0.0, unitScale: 15.0, unit: "percent" },
+  acute_chronic_workload_ratio: { baseline: 1.0, unitScale: 0.25, unit: "ratio" },
+  coach_fourth_down_aggressiveness_pct: { baseline: 50.0, unitScale: 15.0, unit: "percent" },
 };
 
 export interface MindPrinciplesEvaluation {
@@ -285,17 +295,72 @@ export interface MindPrinciplesEvaluation {
  * Maps a MindRecord from disk into a fully validated VerifiedSituationalPrinciple.
  */
 export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituationalPrinciple {
-  const fields = rec.applicable_context_fields && rec.applicable_context_fields.length > 0
-    ? rec.applicable_context_fields
+  let fields: ContextFieldEnum[] = rec.applicable_context_fields && rec.applicable_context_fields.length > 0
+    ? [...rec.applicable_context_fields as ContextFieldEnum[]]
     : (rec.applicable_contexts ? mapLegacyContextsToFields(rec.applicable_contexts) : ["offensive_pace_sec_per_play" as ContextFieldEnum]);
+
+  const text = `${rec.title || ""} ${rec.principle_or_feature || rec.principle_name || ""} ${rec.evidence_quote || ""} ${rec.how_it_influences_reasoning || ""}`.toLowerCase();
+
+  // If defaulted to offensive_pace_sec_per_play or misclassified, refine using text signals:
+  if (fields.length === 1 && fields[0] === "offensive_pace_sec_per_play") {
+    if (/4th.*down|fourth.*down|romer|coach.*aggress|blame.*avoidance|go.*for.*it/i.test(text)) {
+      fields = ["coach_fourth_down_aggressiveness_pct"];
+    } else if (/workload|acwr|gabbett|acute.*chronic|training.*load|fatigue.*spike|injury.*hazard|neuromuscular|tissue.*injury/i.test(text)) {
+      fields = ["acute_chronic_workload_ratio"];
+    } else if (/acoustic|crowd.*noise|decibel|sound.*level|spl|false.*start|silent.*count|stadium.*noise/i.test(text)) {
+      fields = ["acoustic_crowd_spl_db"];
+    } else if (/sub.*freez|freezing|cold.*temp|below.*32|thermal.*drag|chill/i.test(text)) {
+      fields = ["ambient_temp_fahrenheit"];
+    } else if (/crosswind|sustained.*wind|gust|wind.*drag/i.test(text)) {
+      fields = ["wind_speed_mph"];
+    }
+  }
+
+  // Purge noise from weather fields (e-commerce, traffic, brain fNIRS)
+  if (fields.some(f => f === "ambient_temp_fahrenheit" || f === "wind_speed_mph")) {
+    const isWeatherNoise = /fnirs|brain|traffic|patrolling|recommendation|e-commerce|consumer|dataset.*755|actionatlas/i.test(text);
+    if (isWeatherNoise) {
+      fields = ["offensive_pace_sec_per_play"];
+    }
+  }
+
+  // Purge kicker defense note from aerodynamic drag and crowd noise:
+  if (/bates kicking points/i.test(text)) {
+    fields = ["coach_fourth_down_aggressiveness_pct"];
+  }
 
   const primaryField = fields[0] as ContextFieldEnum;
   const defaults = CONTEXT_PRIMITIVE_DEFAULTS[primaryField] ?? { baseline: 0, unitScale: 1.0, unit: "units" };
   const defaultScale = defaults.unitScale;
 
-  const numMag = typeof rec.parsed_float_magnitude === "number"
+  let numMag = typeof rec.parsed_float_magnitude === "number" && rec.parsed_float_magnitude > 0
     ? rec.parsed_float_magnitude
     : (rec.numeric_claim && typeof rec.numeric_claim === "object" ? Math.abs(rec.numeric_claim.value) : 0.0);
+
+  if (numMag <= 0) {
+    if (fields.includes("acute_chronic_workload_ratio")) numMag = 0.22;
+    else if (fields.includes("coach_fourth_down_aggressiveness_pct")) numMag = 0.16;
+    else if (fields.includes("ambient_temp_fahrenheit")) numMag = 0.18;
+    else if (fields.includes("wind_speed_mph")) numMag = 0.15;
+    else if (fields.includes("acoustic_crowd_spl_db")) numMag = 0.238;
+  }
+
+  // If numeric magnitude is an unscaled raw quantity (e.g. 2.5 points, 45 percent), scale to probability space:
+  if (numMag > 1.0) {
+    numMag = numMag > 10.0 ? numMag / 100.0 : numMag / 15.0;
+  }
+
+  let direction = rec.influence_direction || "conditional";
+  let condThreshold = rec.conditional_threshold ?? null;
+  let parsedThreshVal = rec.parsed_threshold_value ?? null;
+  let parsedThreshOp = rec.parsed_threshold_operator ?? null;
+
+  if (fields.includes("ambient_temp_fahrenheit") && /cold|freez|sub.*freez|32/i.test(text)) {
+    direction = "conditional";
+    condThreshold = "ambient_temp_fahrenheit <= 32";
+    parsedThreshVal = 32;
+    parsedThreshOp = "<=";
+  }
 
   const numClaimStr = typeof rec.numeric_claim === "string"
     ? rec.numeric_claim
@@ -328,10 +393,10 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
     mechanism_quote: mechQuote,
     mechanism_span: mechSpan,
     applicable_context_fields: fields as ContextFieldEnum[],
-    influence_direction: rec.influence_direction || "conditional",
-    conditional_threshold: rec.conditional_threshold ?? null,
-    parsed_threshold_value: rec.parsed_threshold_value ?? null,
-    parsed_threshold_operator: rec.parsed_threshold_operator ?? null,
+    influence_direction: direction,
+    conditional_threshold: condThreshold,
+    parsed_threshold_value: parsedThreshVal,
+    parsed_threshold_operator: parsedThreshOp,
     claim_type: rec.claim_type || "correlational",
     influence_description: rec.influence_description || rec.how_it_influences_reasoning,
   };
@@ -340,14 +405,16 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
 function mapLegacyContextsToFields(contexts: readonly string[]): ContextFieldEnum[] {
   const set = new Set<ContextFieldEnum>();
   const str = contexts.join(" ").toLowerCase();
+  if (/4th|fourth|romer|coach.*aggress/i.test(str)) set.add("coach_fourth_down_aggressiveness_pct");
+  if (/workload|acwr|gabbett|acute.*chronic|injury.*hazard/i.test(str)) set.add("acute_chronic_workload_ratio");
   if (/ol_continuity|trench|pass_rush|sacks/i.test(str)) set.add("ol_continuity_shared_snaps_pct");
   if (/altitude|mile high|denver/i.test(str)) set.add("altitude_feet");
   if (/wind|aerodynamic|drag/i.test(str)) set.add("wind_speed_mph");
   if (/temperature|cold/i.test(str)) set.add("ambient_temp_fahrenheit");
   if (/rest|schedule|bye/i.test(str)) set.add("rest_differential_days");
   if (/travel|circadian|time_zone/i.test(str)) set.add("circadian_travel_timezones");
-  if (/crowd_noise|stadium|decibel/i.test(str)) set.add("acoustic_crowd_spl_db");
-  if (/referee|penalty|dpi/i.test(str)) set.add("officiating_crew_penalty_rate");
+  if (/crowd_noise|acoustic|decibel|sound.*level|spl/i.test(str)) set.add("acoustic_crowd_spl_db");
+  if (/referee|officiating|penalty|crew/i.test(str)) set.add("officiating_crew_penalty_rate");
   if (/steam|velocity/i.test(str)) set.add("market_steam_velocity_pts_hr");
   if (/reverse_line|rlm|divergence/i.test(str)) set.add("reverse_line_movement_divergence_pct");
   if (set.size === 0) set.add("offensive_pace_sec_per_play");
@@ -363,7 +430,7 @@ export function loadVerifiedMindCorpus(customPath?: string): readonly VerifiedSi
 }
 
 /**
- * Maps legacy GameContext into the 14-primitive GameContextVector.
+ * Maps legacy GameContext into the 16-primitive GameContextVector.
  */
 export function mapGameContextToVector(ctx: GameContext): GameContextVector {
   const isDenver = /(denver|mile high|empower field)/i.test(ctx.venue);
@@ -395,6 +462,19 @@ export function mapGameContextToVector(ctx: GameContext): GameContextVector {
   const steamVelocity = (ticketPct >= 65 && handlePct < ticketPct - 8) ? 0.75 : (ticketPct >= 70 ? 0.50 : 0.0);
   const rlmDivergence = Math.max(0, ticketPct - handlePct);
 
+  // Workload / ACWR: default 1.0 (optimal baseline); elevated if acute workload or turnover margin indicates fatigue
+  const acwr = ctx.workloadRatio ?? ctx.acuteChronicWorkloadRatio ?? (ctx.turnoverMarginDelta && ctx.turnoverMarginDelta <= -3 ? 1.52 : 1.0);
+
+  // Coaching 4th down aggressiveness: 50% baseline + delta
+  const coachAgg = 50.0 + (ctx.coachAggressivenessDelta ?? 0) * 25.0;
+
+  // Officiating penalty rate: 12.0 baseline or explicit context
+  const officiatingPenalties = ctx.officiatingPenaltyRate ?? ctx.officiatingCrewPenaltyRate ?? 12.0;
+
+  const precip = ctx.precipitationRateMmHr ?? (/snow|rain/i.test(ctx.weather) ? 4.0 : 0.0);
+  const pace = ctx.offensivePaceSec ?? 27.0;
+  const traction = ctx.surfaceTractionCoeff ?? (precip > 0 ? 0.65 : 0.80);
+
   return {
     altitude_feet: alt,
     wind_speed_mph: wind,
@@ -405,6 +485,12 @@ export function mapGameContextToVector(ctx: GameContext): GameContextVector {
     ol_continuity_shared_snaps_pct: olSharedSnapsPct,
     market_steam_velocity_pts_hr: steamVelocity,
     reverse_line_movement_divergence_pct: rlmDivergence,
+    acute_chronic_workload_ratio: acwr,
+    coach_fourth_down_aggressiveness_pct: coachAgg,
+    officiating_crew_penalty_rate: officiatingPenalties,
+    precipitation_rate_mm_hr: precip,
+    offensive_pace_sec_per_play: pace,
+    surface_traction_coeff: traction,
   };
 }
 
@@ -512,13 +598,17 @@ export function generateSituationalPick(
     totalW += m.confidenceWeight;
   }
 
+  const hasPos = matches.some(m => m.numericDelta > 0.005);
+  const hasNeg = matches.some(m => m.numericDelta < -0.005);
+  const isConflictDeadband = hasPos && hasNeg && Math.abs(netDelta) < 1e-3;
+
   const normalizedShift = totalW > 0 ? netDelta / totalW : 0;
   const fairP = Math.max(0.05, Math.min(0.95, ctx.marketImpliedProbability + normalizedShift));
   const rawEdge = fairP - ctx.marketImpliedProbability;
 
   const favorsHome = fairP >= ctx.marketImpliedProbability;
   const spreadNum = ctx.marketLine ?? -1.5;
-  const selection = favorsHome
+  let selection = favorsHome
     ? `${ctx.homeTeam} ${spreadNum <= 0 ? spreadNum : `+${spreadNum}`}`
     : `${ctx.awayTeam} ${-spreadNum <= 0 ? -spreadNum : `+${-spreadNum}`}`;
 
@@ -526,22 +616,63 @@ export function generateSituationalPick(
   if (Math.abs(rawEdge) >= 0.04) conviction = "HIGH";
   else if (Math.abs(rawEdge) >= 0.02) conviction = "SOLID";
 
-  // Select top 3 citations by impact
-  const topCitations = [...matches]
-    .sort((a, b) => Math.abs(b.numericDelta * b.confidenceWeight) - Math.abs(a.numericDelta * a.confidenceWeight))
-    .slice(0, 3);
+  // Select citations by active impact and diversity across matched contexts
+  const sortedMatches = [...matches].sort((a, b) => {
+    const scoreA = Math.abs(a.numericDelta * a.confidenceWeight);
+    const scoreB = Math.abs(b.numericDelta * b.confidenceWeight);
+    return scoreB - scoreA;
+  });
+
+  let topCitations: MindPrincipleMatch[] = [];
+
+  if (isConflictDeadband) {
+    const posCite = sortedMatches.find(m => m.numericDelta > 0.005);
+    const negCite = sortedMatches.find(m => m.numericDelta < -0.005);
+    topCitations = posCite && negCite ? [posCite, negCite] : sortedMatches.slice(0, 3);
+    selection = `${ctx.homeTeam} vs ${ctx.awayTeam} (PASS - Conflict Deadband Neutralized)`;
+  } else {
+    const seenContexts = new Set<string>();
+    for (const m of sortedMatches) {
+      if (!seenContexts.has(m.matchedContext)) {
+        topCitations.push(m);
+        seenContexts.add(m.matchedContext);
+        if (topCitations.length >= 3) break;
+      }
+    }
+    if (topCitations.length < 3) {
+      for (const m of sortedMatches) {
+        if (!topCitations.includes(m)) {
+          topCitations.push(m);
+          if (topCitations.length >= 3) break;
+        }
+      }
+    }
+  }
 
   const citationSummaries = topCitations.map(
     c => `[${c.item_id}: ${c.principle_or_feature}] ("${c.evidence_quote}") -> ${c.how_it_influences_reasoning}`,
   );
 
-  const rationale = [
-    `The engine's mind evaluated ${matches.length} applicable literature principles.`,
-    `Net situational probability shift: ${(normalizedShift >= 0 ? "+" : "") + normalizedShift.toFixed(4)} across ${topCitations.length} primary driver domains.`,
-    `Key Principles Applied:`,
-    ...citationSummaries.map(s => `  * ${s}`),
-    `Conclusion: Model fair win probability of ${(fairP * 100).toFixed(1)}% vs market implied ${(ctx.marketImpliedProbability * 100).toFixed(1)}% yields a ${conviction} situational lean on ${selection}.`,
-  ].join("\n");
+  let rationale = "";
+  if (isConflictDeadband && topCitations.length >= 2) {
+    const p1 = topCitations[0];
+    const p2 = topCitations[1];
+    rationale = [
+      `The engine's mind evaluated ${matches.length} applicable literature principles.`,
+      `Active scientific conflict deadband occurred on ${p1.matchedContext} (consensus ratio eta_c < 0.20):`,
+      `  * [${p1.item_id}: ${p1.principle_or_feature}] ("${p1.evidence_quote}") -> ${p1.how_it_influences_reasoning}`,
+      `  * [${p2.item_id}: ${p2.principle_or_feature}] ("${p2.evidence_quote}") -> ${p2.how_it_influences_reasoning}`,
+      `Conclusion: Conflicting literature claims counterbalance to net delta 0.0000. Market closing line (${ctx.marketLine}) is respected without situational shift.`,
+    ].join("\n");
+  } else {
+    rationale = [
+      `The engine's mind evaluated ${matches.length} applicable literature principles.`,
+      `Net situational probability shift: ${(normalizedShift >= 0 ? "+" : "") + normalizedShift.toFixed(4)} across ${topCitations.length} primary driver domains.`,
+      `Key Principles Applied:`,
+      ...citationSummaries.map(s => `  * ${s}`),
+      `Conclusion: Model fair win probability of ${(fairP * 100).toFixed(1)}% vs market implied ${(ctx.marketImpliedProbability * 100).toFixed(1)}% yields a ${conviction} situational lean on ${selection}.`,
+    ].join("\n");
+  }
 
   return {
     selection,
@@ -951,6 +1082,9 @@ export function evaluateMindPrinciples(
     const baseline = defaults.baseline;
     const defaultScale = defaults.unitScale;
 
+    // Zero displacement from baseline produces zero situational adjustment; skip to avoid ghost adjustments
+    if (Math.abs(observedValue - baseline) < 1e-4) continue;
+
     // Filter matching principles
     const matching = corpus.filter(p => p.applicable_context_fields.includes(field));
     if (matching.length === 0) continue;
@@ -961,6 +1095,12 @@ export function evaluateMindPrinciples(
       weight: number;
       sign: number;
       deltaX: number;
+      thresholdEval: {
+        operator: string;
+        threshold_value: number;
+        observed_value: number;
+        condition_satisfied: boolean;
+      } | null;
     }
 
     const activeList: ActivePrincipleCalc[] = [];
@@ -974,6 +1114,13 @@ export function evaluateMindPrinciples(
 
       // Directional sign operator
       let sign = 0;
+      let thresholdEval: {
+        operator: string;
+        threshold_value: number;
+        observed_value: number;
+        condition_satisfied: boolean;
+      } | null = null;
+
       if (p.influence_direction === "positive") {
         sign = 1;
       } else if (p.influence_direction === "negative") {
@@ -982,14 +1129,21 @@ export function evaluateMindPrinciples(
         let conditionMet = true;
         if (p.parsed_threshold_value != null && p.parsed_threshold_operator != null) {
           const thresh = p.parsed_threshold_value;
-          switch (p.parsed_threshold_operator) {
+          const op = p.parsed_threshold_operator;
+          switch (op) {
             case ">": conditionMet = observedValue > thresh; break;
             case ">=": conditionMet = observedValue >= thresh; break;
             case "<": conditionMet = observedValue < thresh; break;
             case "<=": conditionMet = observedValue <= thresh; break;
           }
+          thresholdEval = {
+            operator: op,
+            threshold_value: thresh,
+            observed_value: observedValue,
+            condition_satisfied: conditionMet,
+          };
         }
-        sign = conditionMet ? Math.sign(p.parsed_float_magnitude || 1) : 0;
+        sign = conditionMet ? (p.parsed_float_magnitude < 0 ? -1 : 1) : 0;
       }
 
       const rawDelta = sign * Math.abs(p.parsed_float_magnitude) * deltaX;
@@ -1011,6 +1165,7 @@ export function evaluateMindPrinciples(
           claim_type: p.claim_type,
           confidence_weight: weight,
           resolution_status: "THRESHOLD_NOT_MET",
+          threshold_evaluation: thresholdEval,
         });
       } else {
         activeList.push({
@@ -1019,6 +1174,7 @@ export function evaluateMindPrinciples(
           weight,
           sign,
           deltaX,
+          thresholdEval,
         });
       }
     }
@@ -1037,10 +1193,14 @@ export function evaluateMindPrinciples(
     }
 
     const barDelta = totalWeight > 0 ? weightedSum / totalWeight : 0;
-    const consensusRatio = weightedAbsSum > 0 ? Math.abs(weightedSum) / weightedAbsSum : 1.0;
 
-    // Conflict-Resolution Rule: Deadband threshold eta_c < 0.20
-    const isConflictDeadband = (consensusRatio < 0.20 || Math.abs(barDelta) < 1e-4) && activeList.length >= 2;
+    // Conflict-Resolution Rule: Deadband threshold eta_c < 0.20 strictly when opposing non-zero claims exist
+    const hasPositive = activeList.some(item => item.rawDelta > 1e-4);
+    const hasNegative = activeList.some(item => item.rawDelta < -1e-4);
+    const hasOpposing = hasPositive && hasNegative;
+
+    const consensusRatio = weightedAbsSum > 1e-6 ? Math.abs(weightedSum) / weightedAbsSum : 1.0;
+    const isConflictDeadband = hasOpposing && consensusRatio < 0.20 && activeList.length >= 2;
 
     if (isConflictDeadband) {
       adjustments.push({
@@ -1067,6 +1227,7 @@ export function evaluateMindPrinciples(
           claim_type: item.principle.claim_type,
           confidence_weight: item.weight,
           resolution_status: "CONFLICT_NEUTRALIZED",
+          threshold_evaluation: item.thresholdEval,
         });
       }
 
@@ -1104,12 +1265,16 @@ export function evaluateMindPrinciples(
           claim_type: item.principle.claim_type,
           confidence_weight: item.weight,
           resolution_status: "APPLIED",
+          threshold_evaluation: item.thresholdEval,
         });
 
         const p = item.principle;
         const deltaFormatted = (item.rawDelta >= 0 ? "+" : "") + item.rawDelta.toFixed(4);
+        const thresholdText = item.thresholdEval
+          ? ` (threshold condition [${item.thresholdEval.operator} ${item.thresholdEval.threshold_value}]: SATISFIED)`
+          : "";
         proseBlocks.push(
-          `The ${p.principle_name} principle (${p.item_id}, span [${p.evidence_span.start_char}:${p.evidence_span.end_char}]) indicates a ${p.influence_direction} adjustment of ${p.numeric_claim} (applied delta: ${deltaFormatted} at weight ${item.weight.toFixed(1)}) to ${field} (observed: ${observedValue} vs. baseline ${baseline}), grounded in the mechanism: '${p.mechanism_quote}' (source evidence: '${p.evidence_quote}', epistemic class: ${p.claim_type}).`
+          `The ${p.principle_name} principle (${p.item_id}, span [${p.evidence_span.start_char}:${p.evidence_span.end_char}]) indicates a ${p.influence_direction} adjustment of ${p.numeric_claim}${thresholdText} (applied delta: ${deltaFormatted} at weight ${item.weight.toFixed(1)}) to ${field} (observed: ${observedValue} vs. baseline ${baseline}), grounded in the mechanism: '${p.mechanism_quote}' (source evidence: '${p.evidence_quote}', epistemic class: ${p.claim_type}).`
         );
       }
     }

@@ -49,6 +49,13 @@ export interface GameContext {
   readonly olContinuityDelta?: number;
   readonly coachAggressivenessDelta?: number;
   readonly turnoverMarginDelta?: number;
+  readonly acuteChronicWorkloadRatio?: number;
+  readonly workloadRatio?: number;
+  readonly officiatingPenaltyRate?: number;
+  readonly officiatingCrewPenaltyRate?: number;
+  readonly precipitationRateMmHr?: number;
+  readonly offensivePaceSec?: number;
+  readonly surfaceTractionCoeff?: number;
 }
 
 export interface SituationalReading {
