@@ -1,4 +1,5 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "node:test";
+import * as assert from "node:assert/strict";
 import { evaluateArxivCorpus, type ArxivContextQuery } from "../arxiv-reasoning-bridge.js";
 
 describe("arxiv-reasoning-bridge deep alpha pillars", () => {
@@ -14,9 +15,9 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.totalCorpusPapersIndexed).toBe(2379);
-    expect(res.totalKaggleDatasetsIndexed).toBe(429);
-    expect(res.situationalReasoningSynthesis).toContain("all situational and environmental parameters within neutral baseline");
+    assert.equal(res.totalCorpusPapersIndexed, 2379);
+    assert.equal(res.totalKaggleDatasetsIndexed, 429);
+    assert.ok(res.situationalReasoningSynthesis.includes("all situational and environmental parameters within neutral baseline"));
   });
 
   it("detects offensive line continuity disruption in visiting trench unit", () => {
@@ -30,9 +31,9 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("Compromised offensive line continuity score (52%)");
-    expect(res.situationalReasoningSynthesis).toContain("quick-pressure hazard");
+    assert.ok(res.activePremisesCount >= 1);
+    assert.ok(res.situationalReasoningSynthesis.includes("Compromised offensive line continuity score (52%)"));
+    assert.ok(res.situationalReasoningSynthesis.includes("quick-pressure hazard"));
   });
 
   it("detects 4th down coaching decision-making drag", () => {
@@ -46,9 +47,9 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("Coaching game-theory differential");
-    expect(res.situationalReasoningSynthesis).toContain("Optimal fourth-down conversion strategy");
+    assert.ok(res.activePremisesCount >= 1);
+    assert.ok(res.situationalReasoningSynthesis.includes("Coaching game-theory differential"));
+    assert.ok(res.situationalReasoningSynthesis.includes("Optimal fourth-down conversion strategy"));
   });
 
   it("detects turnover luck regression on inflated road teams", () => {
@@ -62,9 +63,9 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("unsustainable turnover luck (+8)");
-    expect(res.situationalReasoningSynthesis).toContain("fading inflated road favorite");
+    assert.ok(res.activePremisesCount >= 1);
+    assert.ok(res.situationalReasoningSynthesis.includes("unsustainable turnover luck (+8)"));
+    assert.ok(res.situationalReasoningSynthesis.includes("fading inflated road favorite"));
   });
 
   it("evaluates SGP Archimedean copula tail dependence", () => {
@@ -78,7 +79,7 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    expect(res.activePremisesCount).toBeGreaterThanOrEqual(1);
-    expect(res.situationalReasoningSynthesis).toContain("Archimedean Clayton-Gumbel copula");
+    assert.ok(res.activePremisesCount >= 1);
+    assert.ok(res.situationalReasoningSynthesis.includes("Archimedean Clayton-Gumbel copula"));
   });
 });

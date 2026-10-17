@@ -93,8 +93,12 @@ export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
     pillar: "MARKET_GRAVITY_AND_BIAS",
     situationalConcept: "Extreme longshots are structurally overpriced; heavy favorites carry systematic risk premium.",
     greyAreaSignal: "Penalizes moneyline longshots beyond +350 unless verified structural matchup advantage exists.",
-    evaluateContext: () => {
-      return { applicable: true, reason: "Active favorite-longshot dampening enabled.", situationalBiasDirection: "PASS", situationalNarrative: "Market pricing curvature verified." };
+    evaluateContext: (ctx) => {
+      const ml = ctx.moneylinePriceAway ?? ctx.moneylinePriceHome;
+      if (ml !== undefined && (ml >= 350 || ml <= -350)) {
+        return { applicable: true, reason: "Active favorite-longshot dampening enabled.", situationalBiasDirection: "PASS", situationalNarrative: "Market pricing curvature verified." };
+      }
+      return { applicable: false, reason: "Moneyline inside normal curvature.", situationalBiasDirection: "PASS", situationalNarrative: "" };
     },
   },
 
