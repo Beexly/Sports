@@ -1,0 +1,4031 @@
+[
+  {
+    "game_id": "2026_01_NE_SEA",
+    "week": 1,
+    "date": "2026-09-09",
+    "away_team": "NE",
+    "home_team": "SEA",
+    "matchup": "NE @ SEA",
+    "final_score": "NE 10 - SEA 13",
+    "winner": "SEA",
+    "venue": {
+      "stadium": "Lumen Field",
+      "roof": "outdoors",
+      "temp_f": 74.0,
+      "wind_mph": 6.0
+    },
+    "box_stats": {
+      "total_plays": 166,
+      "pass_plays": 62,
+      "rush_plays": 53,
+      "sacks": 5,
+      "interceptions": 3,
+      "home_pass_epa": 8.99,
+      "away_pass_epa": 8.617,
+      "game_mean_pass_epa": -0.0041
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 154,
+      "tracked_plays": 7,
+      "kalman_rmse_single_m": 0.097,
+      "kalman_rmse_jacobian_m": 0.0971,
+      "ci90_coverage": 0.9748
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.03,
+      "min_pass_rush_separation_yd": 2.77,
+      "mean_strain": 2.23,
+      "peak_strain": 4.61,
+      "mean_soe_yd": 0.05,
+      "primary_coverage_shell": "Cover 6",
+      "blitz_rate": 0.234,
+      "play_action_rate": 0.137,
+      "motion_rate": 0.404,
+      "screen_rate": 0.043
+    },
+    "calibration": {
+      "predicted_epa": -0.0867,
+      "actual_epa": -0.0041,
+      "residual": 0.0826,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_SF_LA",
+    "week": 1,
+    "date": "2026-09-10",
+    "away_team": "SF",
+    "home_team": "LA",
+    "matchup": "SF @ LA",
+    "final_score": "SF 27 - LA 7",
+    "winner": "SF",
+    "venue": {
+      "stadium": "Melbourne Cricket Ground",
+      "roof": "dome",
+      "temp_f": 57.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 157,
+      "pass_plays": 62,
+      "rush_plays": 59,
+      "sacks": 0,
+      "interceptions": 2,
+      "home_pass_epa": 2.741,
+      "away_pass_epa": 17.254,
+      "game_mean_pass_epa": -0.1
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0942,
+      "kalman_rmse_jacobian_m": 0.0949,
+      "ci90_coverage": 0.9951
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.04,
+      "min_pass_rush_separation_yd": 2.39,
+      "mean_strain": 2.28,
+      "peak_strain": 4.59,
+      "mean_soe_yd": -0.17,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.212,
+      "play_action_rate": 0.092,
+      "motion_rate": 0.52,
+      "screen_rate": 0.053
+    },
+    "calibration": {
+      "predicted_epa": -0.0249,
+      "actual_epa": -0.1,
+      "residual": -0.0751,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_ARI_LAC",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "ARI",
+    "home_team": "LAC",
+    "matchup": "ARI @ LAC",
+    "final_score": "ARI 26 - LAC 14",
+    "winner": "ARI",
+    "venue": {
+      "stadium": "SoFi Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 173,
+      "pass_plays": 68,
+      "rush_plays": 55,
+      "sacks": 4,
+      "interceptions": 1,
+      "home_pass_epa": 3.201,
+      "away_pass_epa": 14.621,
+      "game_mean_pass_epa": 0.0501
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.088,
+      "kalman_rmse_jacobian_m": 0.0896,
+      "ci90_coverage": 0.9816
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.65,
+      "min_pass_rush_separation_yd": 2.87,
+      "mean_strain": 2.19,
+      "peak_strain": 5.77,
+      "mean_soe_yd": 0.43,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.205,
+      "play_action_rate": 0.107,
+      "motion_rate": 0.554,
+      "screen_rate": 0.036
+    },
+    "calibration": {
+      "predicted_epa": -0.0388,
+      "actual_epa": 0.0501,
+      "residual": 0.0889,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_ATL_PIT",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "ATL",
+    "home_team": "PIT",
+    "matchup": "ATL @ PIT",
+    "final_score": "ATL 13 - PIT 20",
+    "winner": "PIT",
+    "venue": {
+      "stadium": "Acrisure Stadium",
+      "roof": "outdoors",
+      "temp_f": 77.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 175,
+      "pass_plays": 69,
+      "rush_plays": 52,
+      "sacks": 6,
+      "interceptions": 2,
+      "home_pass_epa": 2.542,
+      "away_pass_epa": 7.54,
+      "game_mean_pass_epa": -0.4304
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 154,
+      "tracked_plays": 7,
+      "kalman_rmse_single_m": 0.0946,
+      "kalman_rmse_jacobian_m": 0.0957,
+      "ci90_coverage": 0.9737
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 5.85,
+      "min_pass_rush_separation_yd": 1.82,
+      "mean_strain": 3.4,
+      "peak_strain": 6.55,
+      "mean_soe_yd": -0.23,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.175,
+      "play_action_rate": 0.088,
+      "motion_rate": 0.459,
+      "screen_rate": 0.047
+    },
+    "calibration": {
+      "predicted_epa": -0.2645,
+      "actual_epa": -0.4304,
+      "residual": -0.1659,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_BAL_IND",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "BAL",
+    "home_team": "IND",
+    "matchup": "BAL @ IND",
+    "final_score": "BAL 41 - IND 23",
+    "winner": "BAL",
+    "venue": {
+      "stadium": "Lucas Oil Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 167,
+      "pass_plays": 60,
+      "rush_plays": 57,
+      "sacks": 4,
+      "interceptions": 1,
+      "home_pass_epa": 3.839,
+      "away_pass_epa": 25.01,
+      "game_mean_pass_epa": -0.0815
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0946,
+      "kalman_rmse_jacobian_m": 0.0949,
+      "ci90_coverage": 0.9844
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.75,
+      "min_pass_rush_separation_yd": 2.37,
+      "mean_strain": 2.66,
+      "peak_strain": 5.67,
+      "mean_soe_yd": -0.04,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.212,
+      "play_action_rate": 0.111,
+      "motion_rate": 0.519,
+      "screen_rate": 0.025
+    },
+    "calibration": {
+      "predicted_epa": -0.0984,
+      "actual_epa": -0.0815,
+      "residual": 0.0169,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_BUF_HOU",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "BUF",
+    "home_team": "HOU",
+    "matchup": "BUF @ HOU",
+    "final_score": "BUF 36 - HOU 31",
+    "winner": "BUF",
+    "venue": {
+      "stadium": "Reliant Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 180,
+      "pass_plays": 73,
+      "rush_plays": 53,
+      "sacks": 5,
+      "interceptions": 0,
+      "home_pass_epa": 1.11,
+      "away_pass_epa": 14.285,
+      "game_mean_pass_epa": 0.2196
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 242,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0939,
+      "kalman_rmse_jacobian_m": 0.0959,
+      "ci90_coverage": 0.9806
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.23,
+      "min_pass_rush_separation_yd": 3.71,
+      "mean_strain": 1.44,
+      "peak_strain": 4.0,
+      "mean_soe_yd": 0.67,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.191,
+      "play_action_rate": 0.103,
+      "motion_rate": 0.343,
+      "screen_rate": 0.029
+    },
+    "calibration": {
+      "predicted_epa": 0.1069,
+      "actual_epa": 0.2196,
+      "residual": 0.1127,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_CHI_CAR",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "CHI",
+    "home_team": "CAR",
+    "matchup": "CHI @ CAR",
+    "final_score": "CHI 59 - CAR 37",
+    "winner": "CHI",
+    "venue": {
+      "stadium": "Bank of America Stadium",
+      "roof": "outdoors",
+      "temp_f": 89.0,
+      "wind_mph": 2.0
+    },
+    "box_stats": {
+      "total_plays": 196,
+      "pass_plays": 71,
+      "rush_plays": 61,
+      "sacks": 4,
+      "interceptions": 1,
+      "home_pass_epa": 7.947,
+      "away_pass_epa": 11.403,
+      "game_mean_pass_epa": 0.3376
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 352,
+      "tracked_plays": 16,
+      "kalman_rmse_single_m": 0.094,
+      "kalman_rmse_jacobian_m": 0.0951,
+      "ci90_coverage": 0.9809
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 8.08,
+      "min_pass_rush_separation_yd": 3.2,
+      "mean_strain": 0.82,
+      "peak_strain": 3.2,
+      "mean_soe_yd": 0.26,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.196,
+      "play_action_rate": 0.115,
+      "motion_rate": 0.44,
+      "screen_rate": 0.021
+    },
+    "calibration": {
+      "predicted_epa": 0.2526,
+      "actual_epa": 0.3376,
+      "residual": 0.085,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_CLE_JAX",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "CLE",
+    "home_team": "JAX",
+    "matchup": "CLE @ JAX",
+    "final_score": "CLE 10 - JAX 34",
+    "winner": "JAX",
+    "venue": {
+      "stadium": "EverBank Stadium",
+      "roof": "outdoors",
+      "temp_f": 89.0,
+      "wind_mph": 3.0
+    },
+    "box_stats": {
+      "total_plays": 148,
+      "pass_plays": 51,
+      "rush_plays": 54,
+      "sacks": 6,
+      "interceptions": 1,
+      "home_pass_epa": 34.455,
+      "away_pass_epa": 2.173,
+      "game_mean_pass_epa": 0.1801
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 242,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0956,
+      "kalman_rmse_jacobian_m": 0.0954,
+      "ci90_coverage": 0.9737
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.74,
+      "min_pass_rush_separation_yd": 2.97,
+      "mean_strain": 1.45,
+      "peak_strain": 4.4,
+      "mean_soe_yd": 0.23,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.195,
+      "play_action_rate": 0.126,
+      "motion_rate": 0.308,
+      "screen_rate": 0.042
+    },
+    "calibration": {
+      "predicted_epa": 0.0721,
+      "actual_epa": 0.1801,
+      "residual": 0.108,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_DAL_NYG",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "DAL",
+    "home_team": "NYG",
+    "matchup": "DAL @ NYG",
+    "final_score": "DAL 20 - NYG 28",
+    "winner": "NYG",
+    "venue": {
+      "stadium": "MetLife Stadium",
+      "roof": "outdoors",
+      "temp_f": 80.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 165,
+      "pass_plays": 65,
+      "rush_plays": 55,
+      "sacks": 2,
+      "interceptions": 1,
+      "home_pass_epa": 16.874,
+      "away_pass_epa": 0.0,
+      "game_mean_pass_epa": 0.4968
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 132,
+      "tracked_plays": 6,
+      "kalman_rmse_single_m": 0.0855,
+      "kalman_rmse_jacobian_m": 0.0866,
+      "ci90_coverage": 0.9889
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.87,
+      "min_pass_rush_separation_yd": 3.81,
+      "mean_strain": 0.78,
+      "peak_strain": 3.99,
+      "mean_soe_yd": 0.68,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.209,
+      "play_action_rate": 0.1,
+      "motion_rate": 0.519,
+      "screen_rate": 0.025
+    },
+    "calibration": {
+      "predicted_epa": 0.244,
+      "actual_epa": 0.4968,
+      "residual": 0.2528,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_GB_MIN",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "GB",
+    "home_team": "MIN",
+    "matchup": "GB @ MIN",
+    "final_score": "GB 22 - MIN 39",
+    "winner": "MIN",
+    "venue": {
+      "stadium": "U.S. Bank Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 180,
+      "pass_plays": 74,
+      "rush_plays": 55,
+      "sacks": 7,
+      "interceptions": 2,
+      "home_pass_epa": 3.222,
+      "away_pass_epa": 19.245,
+      "game_mean_pass_epa": -0.0295
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0967,
+      "kalman_rmse_jacobian_m": 0.0974,
+      "ci90_coverage": 0.9807
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.71,
+      "min_pass_rush_separation_yd": 2.69,
+      "mean_strain": 1.9,
+      "peak_strain": 5.07,
+      "mean_soe_yd": -0.02,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.231,
+      "play_action_rate": 0.103,
+      "motion_rate": 0.457,
+      "screen_rate": 0.029
+    },
+    "calibration": {
+      "predicted_epa": 0.0064,
+      "actual_epa": -0.0295,
+      "residual": -0.0359,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_MIA_LV",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "MIA",
+    "home_team": "LV",
+    "matchup": "MIA @ LV",
+    "final_score": "MIA 13 - LV 27",
+    "winner": "LV",
+    "venue": {
+      "stadium": "Allegiant Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 169,
+      "pass_plays": 62,
+      "rush_plays": 55,
+      "sacks": 5,
+      "interceptions": 3,
+      "home_pass_epa": 9.623,
+      "away_pass_epa": 2.909,
+      "game_mean_pass_epa": -0.1425
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0984,
+      "kalman_rmse_jacobian_m": 0.1009,
+      "ci90_coverage": 0.9771
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.29,
+      "min_pass_rush_separation_yd": 2.06,
+      "mean_strain": 2.84,
+      "peak_strain": 5.47,
+      "mean_soe_yd": 0.23,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.194,
+      "play_action_rate": 0.091,
+      "motion_rate": 0.439,
+      "screen_rate": 0.03
+    },
+    "calibration": {
+      "predicted_epa": -0.1553,
+      "actual_epa": -0.1425,
+      "residual": 0.0128,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_NO_DET",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "NO",
+    "home_team": "DET",
+    "matchup": "NO @ DET",
+    "final_score": "NO 30 - DET 31",
+    "winner": "DET",
+    "venue": {
+      "stadium": "Ford Field",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 218,
+      "pass_plays": 102,
+      "rush_plays": 58,
+      "sacks": 6,
+      "interceptions": 2,
+      "home_pass_epa": 24.145,
+      "away_pass_epa": 0.68,
+      "game_mean_pass_epa": -0.0026
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0921,
+      "kalman_rmse_jacobian_m": 0.0929,
+      "ci90_coverage": 0.9769
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.81,
+      "min_pass_rush_separation_yd": 2.21,
+      "mean_strain": 2.24,
+      "peak_strain": 5.69,
+      "mean_soe_yd": 0.19,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.217,
+      "play_action_rate": 0.113,
+      "motion_rate": 0.458,
+      "screen_rate": 0.014
+    },
+    "calibration": {
+      "predicted_epa": -0.0349,
+      "actual_epa": -0.0026,
+      "residual": 0.0323,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_NYJ_TEN",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "NYJ",
+    "home_team": "TEN",
+    "matchup": "NYJ @ TEN",
+    "final_score": "NYJ 23 - TEN 10",
+    "winner": "NYJ",
+    "venue": {
+      "stadium": "Nissan Stadium",
+      "roof": "outdoors",
+      "temp_f": 90.0,
+      "wind_mph": 2.0
+    },
+    "box_stats": {
+      "total_plays": 162,
+      "pass_plays": 59,
+      "rush_plays": 53,
+      "sacks": 3,
+      "interceptions": 0,
+      "home_pass_epa": -3.133,
+      "away_pass_epa": 22.327,
+      "game_mean_pass_epa": 0.0407
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 131,
+      "tracked_plays": 6,
+      "kalman_rmse_single_m": 0.0953,
+      "kalman_rmse_jacobian_m": 0.0968,
+      "ci90_coverage": 0.9846
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.76,
+      "min_pass_rush_separation_yd": 2.23,
+      "mean_strain": 2.28,
+      "peak_strain": 5.85,
+      "mean_soe_yd": -0.17,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.227,
+      "play_action_rate": 0.102,
+      "motion_rate": 0.395,
+      "screen_rate": 0.032
+    },
+    "calibration": {
+      "predicted_epa": -0.044,
+      "actual_epa": 0.0407,
+      "residual": 0.0847,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_TB_CIN",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "TB",
+    "home_team": "CIN",
+    "matchup": "TB @ CIN",
+    "final_score": "TB 27 - CIN 33",
+    "winner": "CIN",
+    "venue": {
+      "stadium": "Paycor Stadium",
+      "roof": "outdoors",
+      "temp_f": 85.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 169,
+      "pass_plays": 68,
+      "rush_plays": 47,
+      "sacks": 5,
+      "interceptions": 1,
+      "home_pass_epa": 12.364,
+      "away_pass_epa": 3.643,
+      "game_mean_pass_epa": -0.155
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0956,
+      "kalman_rmse_jacobian_m": 0.0977,
+      "ci90_coverage": 0.9686
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.72,
+      "min_pass_rush_separation_yd": 2.61,
+      "mean_strain": 2.38,
+      "peak_strain": 5.38,
+      "mean_soe_yd": 0.11,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.198,
+      "play_action_rate": 0.128,
+      "motion_rate": 0.433,
+      "screen_rate": 0.043
+    },
+    "calibration": {
+      "predicted_epa": -0.0609,
+      "actual_epa": -0.155,
+      "residual": -0.0941,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_WAS_PHI",
+    "week": 1,
+    "date": "2026-09-13",
+    "away_team": "WAS",
+    "home_team": "PHI",
+    "matchup": "WAS @ PHI",
+    "final_score": "WAS 22 - PHI 24",
+    "winner": "PHI",
+    "venue": {
+      "stadium": "Lincoln Financial Field",
+      "roof": "outdoors",
+      "temp_f": 82.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 171,
+      "pass_plays": 64,
+      "rush_plays": 57,
+      "sacks": 4,
+      "interceptions": 0,
+      "home_pass_epa": 7.781,
+      "away_pass_epa": 4.681,
+      "game_mean_pass_epa": 0.0809
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0947,
+      "kalman_rmse_jacobian_m": 0.0944,
+      "ci90_coverage": 0.9811
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.6,
+      "min_pass_rush_separation_yd": 2.99,
+      "mean_strain": 2.1,
+      "peak_strain": 5.22,
+      "mean_soe_yd": 0.62,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.202,
+      "play_action_rate": 0.09,
+      "motion_rate": 0.47,
+      "screen_rate": 0.042
+    },
+    "calibration": {
+      "predicted_epa": -0.0294,
+      "actual_epa": 0.0809,
+      "residual": 0.1103,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_01_DEN_KC",
+    "week": 1,
+    "date": "2026-09-14",
+    "away_team": "DEN",
+    "home_team": "KC",
+    "matchup": "DEN @ KC",
+    "final_score": "DEN 10 - KC 31",
+    "winner": "KC",
+    "venue": {
+      "stadium": "Arrowhead Stadium",
+      "roof": "outdoors",
+      "temp_f": 91.0,
+      "wind_mph": 13.0
+    },
+    "box_stats": {
+      "total_plays": 160,
+      "pass_plays": 61,
+      "rush_plays": 53,
+      "sacks": 6,
+      "interceptions": 2,
+      "home_pass_epa": 12.08,
+      "away_pass_epa": 7.013,
+      "game_mean_pass_epa": -0.2735
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0933,
+      "kalman_rmse_jacobian_m": 0.095,
+      "ci90_coverage": 0.989
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.52,
+      "min_pass_rush_separation_yd": 1.76,
+      "mean_strain": 3.06,
+      "peak_strain": 6.49,
+      "mean_soe_yd": -0.33,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.217,
+      "play_action_rate": 0.116,
+      "motion_rate": 0.348,
+      "screen_rate": 0.065
+    },
+    "calibration": {
+      "predicted_epa": -0.1707,
+      "actual_epa": -0.2735,
+      "residual": -0.1028,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_DET_BUF",
+    "week": 2,
+    "date": "2026-09-17",
+    "away_team": "DET",
+    "home_team": "BUF",
+    "matchup": "DET @ BUF",
+    "final_score": "DET 31 - BUF 41",
+    "winner": "BUF",
+    "venue": {
+      "stadium": "Highmark Stadium",
+      "roof": "outdoors",
+      "temp_f": 67.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 184,
+      "pass_plays": 75,
+      "rush_plays": 56,
+      "sacks": 6,
+      "interceptions": 0,
+      "home_pass_epa": 14.254,
+      "away_pass_epa": 3.527,
+      "game_mean_pass_epa": 0.4483
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 330,
+      "tracked_plays": 15,
+      "kalman_rmse_single_m": 0.0926,
+      "kalman_rmse_jacobian_m": 0.0947,
+      "ci90_coverage": 0.9884
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.48,
+      "min_pass_rush_separation_yd": 3.66,
+      "mean_strain": 0.76,
+      "peak_strain": 3.18,
+      "mean_soe_yd": 0.7,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.217,
+      "play_action_rate": 0.168,
+      "motion_rate": 0.497,
+      "screen_rate": 0.017
+    },
+    "calibration": {
+      "predicted_epa": 0.2202,
+      "actual_epa": 0.4483,
+      "residual": 0.2281,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_CAR_ATL",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "CAR",
+    "home_team": "ATL",
+    "matchup": "CAR @ ATL",
+    "final_score": "CAR 34 - ATL 3",
+    "winner": "CAR",
+    "venue": {
+      "stadium": "Mercedes-Benz Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 171,
+      "pass_plays": 73,
+      "rush_plays": 54,
+      "sacks": 5,
+      "interceptions": 3,
+      "home_pass_epa": 0.0,
+      "away_pass_epa": 36.121,
+      "game_mean_pass_epa": -0.1915
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0986,
+      "kalman_rmse_jacobian_m": 0.102,
+      "ci90_coverage": 0.966
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.39,
+      "min_pass_rush_separation_yd": 1.95,
+      "mean_strain": 2.94,
+      "peak_strain": 6.4,
+      "mean_soe_yd": -0.17,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.197,
+      "play_action_rate": 0.09,
+      "motion_rate": 0.434,
+      "screen_rate": 0.042
+    },
+    "calibration": {
+      "predicted_epa": -0.1626,
+      "actual_epa": -0.1915,
+      "residual": -0.0289,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_CIN_HOU",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "CIN",
+    "home_team": "HOU",
+    "matchup": "CIN @ HOU",
+    "final_score": "CIN 20 - HOU 6",
+    "winner": "CIN",
+    "venue": {
+      "stadium": "Reliant Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 193,
+      "pass_plays": 96,
+      "rush_plays": 41,
+      "sacks": 9,
+      "interceptions": 0,
+      "home_pass_epa": 7.904,
+      "away_pass_epa": 8.561,
+      "game_mean_pass_epa": -0.1064
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 132,
+      "tracked_plays": 6,
+      "kalman_rmse_single_m": 0.0937,
+      "kalman_rmse_jacobian_m": 0.0935,
+      "ci90_coverage": 0.9699
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 5.82,
+      "min_pass_rush_separation_yd": 2.08,
+      "mean_strain": 2.46,
+      "peak_strain": 5.8,
+      "mean_soe_yd": 0.08,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.174,
+      "play_action_rate": 0.085,
+      "motion_rate": 0.282,
+      "screen_rate": 0.037
+    },
+    "calibration": {
+      "predicted_epa": -0.1336,
+      "actual_epa": -0.1064,
+      "residual": 0.0272,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_CLE_TB",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "CLE",
+    "home_team": "TB",
+    "matchup": "CLE @ TB",
+    "final_score": "CLE 23 - TB 19",
+    "winner": "CLE",
+    "venue": {
+      "stadium": "Raymond James Stadium",
+      "roof": "outdoors",
+      "temp_f": 86.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 172,
+      "pass_plays": 69,
+      "rush_plays": 48,
+      "sacks": 5,
+      "interceptions": 1,
+      "home_pass_epa": -0.868,
+      "away_pass_epa": 23.934,
+      "game_mean_pass_epa": -0.0462
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0969,
+      "kalman_rmse_jacobian_m": 0.0972,
+      "ci90_coverage": 0.9777
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.88,
+      "min_pass_rush_separation_yd": 2.3,
+      "mean_strain": 1.89,
+      "peak_strain": 4.84,
+      "mean_soe_yd": 0.32,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.22,
+      "play_action_rate": 0.097,
+      "motion_rate": 0.436,
+      "screen_rate": 0.055
+    },
+    "calibration": {
+      "predicted_epa": 0.0194,
+      "actual_epa": -0.0462,
+      "residual": -0.0656,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_GB_NYJ",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "GB",
+    "home_team": "NYJ",
+    "matchup": "GB @ NYJ",
+    "final_score": "GB 20 - NYJ 17",
+    "winner": "GB",
+    "venue": {
+      "stadium": "MetLife Stadium",
+      "roof": "outdoors",
+      "temp_f": 69.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 184,
+      "pass_plays": 77,
+      "rush_plays": 45,
+      "sacks": 7,
+      "interceptions": 0,
+      "home_pass_epa": 13.577,
+      "away_pass_epa": 0.0,
+      "game_mean_pass_epa": 0.0145
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 110,
+      "tracked_plays": 5,
+      "kalman_rmse_single_m": 0.094,
+      "kalman_rmse_jacobian_m": 0.0976,
+      "ci90_coverage": 0.9581
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.24,
+      "min_pass_rush_separation_yd": 2.49,
+      "mean_strain": 2.04,
+      "peak_strain": 4.87,
+      "mean_soe_yd": -0.0,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.212,
+      "play_action_rate": 0.062,
+      "motion_rate": 0.449,
+      "screen_rate": 0.067
+    },
+    "calibration": {
+      "predicted_epa": 0.0227,
+      "actual_epa": 0.0145,
+      "residual": -0.0082,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_IND_KC",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "IND",
+    "home_team": "KC",
+    "matchup": "IND @ KC",
+    "final_score": "IND 30 - KC 33",
+    "winner": "KC",
+    "venue": {
+      "stadium": "Arrowhead Stadium",
+      "roof": "outdoors",
+      "temp_f": 71.0,
+      "wind_mph": 10.0
+    },
+    "box_stats": {
+      "total_plays": 202,
+      "pass_plays": 80,
+      "rush_plays": 61,
+      "sacks": 2,
+      "interceptions": 1,
+      "home_pass_epa": 14.346,
+      "away_pass_epa": 5.619,
+      "game_mean_pass_epa": 0.2414
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0934,
+      "kalman_rmse_jacobian_m": 0.0948,
+      "ci90_coverage": 0.9816
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.02,
+      "min_pass_rush_separation_yd": 2.79,
+      "mean_strain": 1.19,
+      "peak_strain": 4.32,
+      "mean_soe_yd": 0.4,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.223,
+      "play_action_rate": 0.184,
+      "motion_rate": 0.469,
+      "screen_rate": 0.061
+    },
+    "calibration": {
+      "predicted_epa": 0.128,
+      "actual_epa": 0.2414,
+      "residual": 0.1134,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_JAX_DEN",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "JAX",
+    "home_team": "DEN",
+    "matchup": "JAX @ DEN",
+    "final_score": "JAX 13 - DEN 20",
+    "winner": "DEN",
+    "venue": {
+      "stadium": "Empower Field at Mile High",
+      "roof": "outdoors",
+      "temp_f": 73.0,
+      "wind_mph": 12.0
+    },
+    "box_stats": {
+      "total_plays": 159,
+      "pass_plays": 62,
+      "rush_plays": 52,
+      "sacks": 2,
+      "interceptions": 2,
+      "home_pass_epa": 12.546,
+      "away_pass_epa": 4.244,
+      "game_mean_pass_epa": 0.0696
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0941,
+      "kalman_rmse_jacobian_m": 0.0951,
+      "ci90_coverage": 0.9899
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.53,
+      "min_pass_rush_separation_yd": 3.19,
+      "mean_strain": 2.37,
+      "peak_strain": 5.21,
+      "mean_soe_yd": 0.02,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.212,
+      "play_action_rate": 0.097,
+      "motion_rate": 0.513,
+      "screen_rate": 0.026
+    },
+    "calibration": {
+      "predicted_epa": -0.0724,
+      "actual_epa": 0.0696,
+      "residual": 0.142,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_LV_LAC",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "LV",
+    "home_team": "LAC",
+    "matchup": "LV @ LAC",
+    "final_score": "LV 26 - LAC 14",
+    "winner": "LV",
+    "venue": {
+      "stadium": "SoFi Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 177,
+      "pass_plays": 61,
+      "rush_plays": 61,
+      "sacks": 5,
+      "interceptions": 3,
+      "home_pass_epa": 3.042,
+      "away_pass_epa": 9.296,
+      "game_mean_pass_epa": 0.0887
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0938,
+      "kalman_rmse_jacobian_m": 0.0965,
+      "ci90_coverage": 0.9801
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.73,
+      "min_pass_rush_separation_yd": 2.84,
+      "mean_strain": 1.92,
+      "peak_strain": 4.95,
+      "mean_soe_yd": 0.49,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.212,
+      "play_action_rate": 0.093,
+      "motion_rate": 0.564,
+      "screen_rate": 0.023
+    },
+    "calibration": {
+      "predicted_epa": 0.0049,
+      "actual_epa": 0.0887,
+      "residual": 0.0838,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_MIA_SF",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "MIA",
+    "home_team": "SF",
+    "matchup": "MIA @ SF",
+    "final_score": "MIA 13 - SF 35",
+    "winner": "SF",
+    "venue": {
+      "stadium": "Levi's\u00ae Stadium",
+      "roof": "outdoors",
+      "temp_f": 69.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 151,
+      "pass_plays": 49,
+      "rush_plays": 56,
+      "sacks": 4,
+      "interceptions": 0,
+      "home_pass_epa": 28.439,
+      "away_pass_epa": 1.27,
+      "game_mean_pass_epa": 0.567
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0951,
+      "kalman_rmse_jacobian_m": 0.1008,
+      "ci90_coverage": 0.9797
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 8.2,
+      "min_pass_rush_separation_yd": 3.95,
+      "mean_strain": 0.77,
+      "peak_strain": 3.69,
+      "mean_soe_yd": 0.44,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.205,
+      "play_action_rate": 0.151,
+      "motion_rate": 0.623,
+      "screen_rate": 0.048
+    },
+    "calibration": {
+      "predicted_epa": 0.2679,
+      "actual_epa": 0.567,
+      "residual": 0.2991,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_MIN_CHI",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "MIN",
+    "home_team": "CHI",
+    "matchup": "MIN @ CHI",
+    "final_score": "MIN 9 - CHI 3",
+    "winner": "MIN",
+    "venue": {
+      "stadium": "Soldier Field",
+      "roof": "outdoors",
+      "temp_f": 68.0,
+      "wind_mph": 8.0
+    },
+    "box_stats": {
+      "total_plays": 164,
+      "pass_plays": 62,
+      "rush_plays": 59,
+      "sacks": 7,
+      "interceptions": 1,
+      "home_pass_epa": 3.962,
+      "away_pass_epa": 5.518,
+      "game_mean_pass_epa": -0.0545
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 110,
+      "tracked_plays": 5,
+      "kalman_rmse_single_m": 0.102,
+      "kalman_rmse_jacobian_m": 0.107,
+      "ci90_coverage": 0.9573
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.71,
+      "min_pass_rush_separation_yd": 2.2,
+      "mean_strain": 2.78,
+      "peak_strain": 6.09,
+      "mean_soe_yd": 0.39,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.218,
+      "play_action_rate": 0.119,
+      "motion_rate": 0.289,
+      "screen_rate": 0.025
+    },
+    "calibration": {
+      "predicted_epa": -0.1181,
+      "actual_epa": -0.0545,
+      "residual": 0.0636,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_NO_BAL",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "NO",
+    "home_team": "BAL",
+    "matchup": "NO @ BAL",
+    "final_score": "NO 24 - BAL 17",
+    "winner": "NO",
+    "venue": {
+      "stadium": "M&T Bank Stadium",
+      "roof": "outdoors",
+      "temp_f": 79.0,
+      "wind_mph": 10.0
+    },
+    "box_stats": {
+      "total_plays": 163,
+      "pass_plays": 71,
+      "rush_plays": 50,
+      "sacks": 6,
+      "interceptions": 1,
+      "home_pass_epa": 8.889,
+      "away_pass_epa": 7.534,
+      "game_mean_pass_epa": 0.2007
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0954,
+      "kalman_rmse_jacobian_m": 0.0976,
+      "ci90_coverage": 0.9831
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.94,
+      "min_pass_rush_separation_yd": 3.0,
+      "mean_strain": 1.72,
+      "peak_strain": 4.88,
+      "mean_soe_yd": 0.59,
+      "primary_coverage_shell": "Cover 6",
+      "blitz_rate": 0.197,
+      "play_action_rate": 0.12,
+      "motion_rate": 0.494,
+      "screen_rate": 0.032
+    },
+    "calibration": {
+      "predicted_epa": 0.0475,
+      "actual_epa": 0.2007,
+      "residual": 0.1532,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_PHI_TEN",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "PHI",
+    "home_team": "TEN",
+    "matchup": "PHI @ TEN",
+    "final_score": "PHI 24 - TEN 20",
+    "winner": "PHI",
+    "venue": {
+      "stadium": "Nissan Stadium",
+      "roof": "outdoors",
+      "temp_f": 92.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 170,
+      "pass_plays": 62,
+      "rush_plays": 61,
+      "sacks": 5,
+      "interceptions": 2,
+      "home_pass_epa": 3.592,
+      "away_pass_epa": 11.91,
+      "game_mean_pass_epa": 0.1398
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 154,
+      "tracked_plays": 7,
+      "kalman_rmse_single_m": 0.0994,
+      "kalman_rmse_jacobian_m": 0.0983,
+      "ci90_coverage": 0.9698
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.66,
+      "min_pass_rush_separation_yd": 3.25,
+      "mean_strain": 1.43,
+      "peak_strain": 4.32,
+      "mean_soe_yd": 0.74,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.189,
+      "play_action_rate": 0.091,
+      "motion_rate": 0.442,
+      "screen_rate": 0.024
+    },
+    "calibration": {
+      "predicted_epa": 0.1377,
+      "actual_epa": 0.1398,
+      "residual": 0.0021,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_PIT_NE",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "PIT",
+    "home_team": "NE",
+    "matchup": "PIT @ NE",
+    "final_score": "PIT 3 - NE 20",
+    "winner": "NE",
+    "venue": {
+      "stadium": "Gillette Stadium",
+      "roof": "outdoors",
+      "temp_f": 63.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 165,
+      "pass_plays": 69,
+      "rush_plays": 51,
+      "sacks": 7,
+      "interceptions": 2,
+      "home_pass_epa": 16.931,
+      "away_pass_epa": 0.661,
+      "game_mean_pass_epa": -0.3929
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0993,
+      "kalman_rmse_jacobian_m": 0.1025,
+      "ci90_coverage": 0.9801
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.26,
+      "min_pass_rush_separation_yd": 1.41,
+      "mean_strain": 3.87,
+      "peak_strain": 6.74,
+      "mean_soe_yd": -0.06,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.222,
+      "play_action_rate": 0.106,
+      "motion_rate": 0.319,
+      "screen_rate": 0.062
+    },
+    "calibration": {
+      "predicted_epa": -0.3031,
+      "actual_epa": -0.3929,
+      "residual": -0.0898,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_SEA_ARI",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "SEA",
+    "home_team": "ARI",
+    "matchup": "SEA @ ARI",
+    "final_score": "SEA 31 - ARI 7",
+    "winner": "SEA",
+    "venue": {
+      "stadium": "State Farm Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 157,
+      "pass_plays": 57,
+      "rush_plays": 57,
+      "sacks": 3,
+      "interceptions": 1,
+      "home_pass_epa": 0.738,
+      "away_pass_epa": 24.174,
+      "game_mean_pass_epa": 0.1404
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.094,
+      "kalman_rmse_jacobian_m": 0.0947,
+      "ci90_coverage": 0.9745
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.91,
+      "min_pass_rush_separation_yd": 2.4,
+      "mean_strain": 1.68,
+      "peak_strain": 4.49,
+      "mean_soe_yd": 0.26,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.195,
+      "play_action_rate": 0.099,
+      "motion_rate": 0.48,
+      "screen_rate": 0.033
+    },
+    "calibration": {
+      "predicted_epa": 0.0511,
+      "actual_epa": 0.1404,
+      "residual": 0.0893,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_WAS_DAL",
+    "week": 2,
+    "date": "2026-09-20",
+    "away_team": "WAS",
+    "home_team": "DAL",
+    "matchup": "WAS @ DAL",
+    "final_score": "WAS 20 - DAL 37",
+    "winner": "DAL",
+    "venue": {
+      "stadium": "AT&T Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 166,
+      "pass_plays": 68,
+      "rush_plays": 53,
+      "sacks": 2,
+      "interceptions": 0,
+      "home_pass_epa": 16.217,
+      "away_pass_epa": -2.106,
+      "game_mean_pass_epa": 0.2399
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0905,
+      "kalman_rmse_jacobian_m": 0.0914,
+      "ci90_coverage": 0.9802
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.19,
+      "min_pass_rush_separation_yd": 3.53,
+      "mean_strain": 1.93,
+      "peak_strain": 4.31,
+      "mean_soe_yd": 0.74,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.187,
+      "play_action_rate": 0.149,
+      "motion_rate": 0.429,
+      "screen_rate": 0.019
+    },
+    "calibration": {
+      "predicted_epa": 0.0349,
+      "actual_epa": 0.2399,
+      "residual": 0.205,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_02_NYG_LA",
+    "week": 2,
+    "date": "2026-09-21",
+    "away_team": "NYG",
+    "home_team": "LA",
+    "matchup": "NYG @ LA",
+    "final_score": "NYG 6 - LA 28",
+    "winner": "LA",
+    "venue": {
+      "stadium": "SoFi Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 155,
+      "pass_plays": 66,
+      "rush_plays": 49,
+      "sacks": 3,
+      "interceptions": 2,
+      "home_pass_epa": 36.069,
+      "away_pass_epa": 2.192,
+      "game_mean_pass_epa": 0.0156
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0938,
+      "kalman_rmse_jacobian_m": 0.0941,
+      "ci90_coverage": 0.9847
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.77,
+      "min_pass_rush_separation_yd": 2.43,
+      "mean_strain": 2.05,
+      "peak_strain": 4.86,
+      "mean_soe_yd": 0.31,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.188,
+      "play_action_rate": 0.127,
+      "motion_rate": 0.42,
+      "screen_rate": 0.02
+    },
+    "calibration": {
+      "predicted_epa": -0.0108,
+      "actual_epa": 0.0156,
+      "residual": 0.0264,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_ATL_GB",
+    "week": 3,
+    "date": "2026-09-24",
+    "away_team": "ATL",
+    "home_team": "GB",
+    "matchup": "ATL @ GB",
+    "final_score": "ATL 35 - GB 14",
+    "winner": "ATL",
+    "venue": {
+      "stadium": "Lambeau Field",
+      "roof": "outdoors",
+      "temp_f": 61.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 173,
+      "pass_plays": 80,
+      "rush_plays": 50,
+      "sacks": 1,
+      "interceptions": 2,
+      "home_pass_epa": 13.239,
+      "away_pass_epa": 7.259,
+      "game_mean_pass_epa": 0.1635
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 286,
+      "tracked_plays": 13,
+      "kalman_rmse_single_m": 0.0913,
+      "kalman_rmse_jacobian_m": 0.0925,
+      "ci90_coverage": 0.9878
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.13,
+      "min_pass_rush_separation_yd": 3.12,
+      "mean_strain": 1.6,
+      "peak_strain": 4.54,
+      "mean_soe_yd": 0.03,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.192,
+      "play_action_rate": 0.113,
+      "motion_rate": 0.482,
+      "screen_rate": 0.06
+    },
+    "calibration": {
+      "predicted_epa": 0.0775,
+      "actual_epa": 0.1635,
+      "residual": 0.086,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_ARI_SF",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "ARI",
+    "home_team": "SF",
+    "matchup": "ARI @ SF",
+    "final_score": "ARI 30 - SF 36",
+    "winner": "SF",
+    "venue": {
+      "stadium": "Levi's\u00ae Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 191,
+      "pass_plays": 81,
+      "rush_plays": 50,
+      "sacks": 2,
+      "interceptions": 0,
+      "home_pass_epa": 19.106,
+      "away_pass_epa": 1.697,
+      "game_mean_pass_epa": 0.4075
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0937,
+      "kalman_rmse_jacobian_m": 0.0921,
+      "ci90_coverage": 0.9861
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.42,
+      "min_pass_rush_separation_yd": 3.28,
+      "mean_strain": 1.0,
+      "peak_strain": 3.43,
+      "mean_soe_yd": 0.41,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.234,
+      "play_action_rate": 0.081,
+      "motion_rate": 0.53,
+      "screen_rate": 0.027
+    },
+    "calibration": {
+      "predicted_epa": 0.1821,
+      "actual_epa": 0.4075,
+      "residual": 0.2254,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_BAL_DAL",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "BAL",
+    "home_team": "DAL",
+    "matchup": "BAL @ DAL",
+    "final_score": "BAL 34 - DAL 31",
+    "winner": "BAL",
+    "venue": {
+      "stadium": "Maracana Stadium",
+      "roof": "open",
+      "temp_f": 77.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 186,
+      "pass_plays": 62,
+      "rush_plays": 68,
+      "sacks": 1,
+      "interceptions": 0,
+      "home_pass_epa": 5.565,
+      "away_pass_epa": 3.515,
+      "game_mean_pass_epa": 0.3281
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0881,
+      "kalman_rmse_jacobian_m": 0.0895,
+      "ci90_coverage": 0.9816
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 8.2,
+      "min_pass_rush_separation_yd": 3.53,
+      "mean_strain": 1.16,
+      "peak_strain": 4.3,
+      "mean_soe_yd": 0.31,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.212,
+      "play_action_rate": 0.116,
+      "motion_rate": 0.398,
+      "screen_rate": 0.022
+    },
+    "calibration": {
+      "predicted_epa": 0.2127,
+      "actual_epa": 0.3281,
+      "residual": 0.1154,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_CAR_CLE",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "CAR",
+    "home_team": "CLE",
+    "matchup": "CAR @ CLE",
+    "final_score": "CAR 18 - CLE 21",
+    "winner": "CLE",
+    "venue": {
+      "stadium": "Huntington Bank Field",
+      "roof": "outdoors",
+      "temp_f": 68.0,
+      "wind_mph": 12.0
+    },
+    "box_stats": {
+      "total_plays": 193,
+      "pass_plays": 85,
+      "rush_plays": 54,
+      "sacks": 5,
+      "interceptions": 1,
+      "home_pass_epa": 10.141,
+      "away_pass_epa": 4.306,
+      "game_mean_pass_epa": -0.0444
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0937,
+      "kalman_rmse_jacobian_m": 0.0971,
+      "ci90_coverage": 0.9879
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.96,
+      "min_pass_rush_separation_yd": 2.46,
+      "mean_strain": 1.82,
+      "peak_strain": 4.89,
+      "mean_soe_yd": 0.38,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.201,
+      "play_action_rate": 0.117,
+      "motion_rate": 0.436,
+      "screen_rate": 0.027
+    },
+    "calibration": {
+      "predicted_epa": 0.0347,
+      "actual_epa": -0.0444,
+      "residual": -0.0791,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_CIN_PIT",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "CIN",
+    "home_team": "PIT",
+    "matchup": "CIN @ PIT",
+    "final_score": "CIN 27 - PIT 30",
+    "winner": "PIT",
+    "venue": {
+      "stadium": "Acrisure Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 12.0
+    },
+    "box_stats": {
+      "total_plays": 166,
+      "pass_plays": 74,
+      "rush_plays": 41,
+      "sacks": 3,
+      "interceptions": 1,
+      "home_pass_epa": 9.669,
+      "away_pass_epa": 12.907,
+      "game_mean_pass_epa": 0.3132
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 286,
+      "tracked_plays": 13,
+      "kalman_rmse_single_m": 0.0966,
+      "kalman_rmse_jacobian_m": 0.0992,
+      "ci90_coverage": 0.9876
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.98,
+      "min_pass_rush_separation_yd": 3.2,
+      "mean_strain": 1.29,
+      "peak_strain": 4.17,
+      "mean_soe_yd": 0.45,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.186,
+      "play_action_rate": 0.112,
+      "motion_rate": 0.435,
+      "screen_rate": 0.019
+    },
+    "calibration": {
+      "predicted_epa": 0.1111,
+      "actual_epa": 0.3132,
+      "residual": 0.2021,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_HOU_IND",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "HOU",
+    "home_team": "IND",
+    "matchup": "HOU @ IND",
+    "final_score": "HOU 17 - IND 19",
+    "winner": "IND",
+    "venue": {
+      "stadium": "Lucas Oil Stadium",
+      "roof": "open",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 166,
+      "pass_plays": 70,
+      "rush_plays": 52,
+      "sacks": 7,
+      "interceptions": 1,
+      "home_pass_epa": 7.707,
+      "away_pass_epa": 5.118,
+      "game_mean_pass_epa": -0.1423
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0949,
+      "kalman_rmse_jacobian_m": 0.0959,
+      "ci90_coverage": 0.9909
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.04,
+      "min_pass_rush_separation_yd": 2.19,
+      "mean_strain": 2.85,
+      "peak_strain": 6.02,
+      "mean_soe_yd": 0.16,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.205,
+      "play_action_rate": 0.13,
+      "motion_rate": 0.435,
+      "screen_rate": 0.031
+    },
+    "calibration": {
+      "predicted_epa": -0.1737,
+      "actual_epa": -0.1423,
+      "residual": 0.0314,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_KC_MIA",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "KC",
+    "home_team": "MIA",
+    "matchup": "KC @ MIA",
+    "final_score": "KC 24 - MIA 10",
+    "winner": "KC",
+    "venue": {
+      "stadium": "Hard Rock Stadium",
+      "roof": "outdoors",
+      "temp_f": 86.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 158,
+      "pass_plays": 60,
+      "rush_plays": 56,
+      "sacks": 0,
+      "interceptions": 2,
+      "home_pass_epa": 2.319,
+      "away_pass_epa": 16.557,
+      "game_mean_pass_epa": 0.1479
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 241,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0939,
+      "kalman_rmse_jacobian_m": 0.0971,
+      "ci90_coverage": 0.9837
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.81,
+      "min_pass_rush_separation_yd": 3.18,
+      "mean_strain": 1.42,
+      "peak_strain": 3.86,
+      "mean_soe_yd": 0.39,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.194,
+      "play_action_rate": 0.176,
+      "motion_rate": 0.608,
+      "screen_rate": 0.098
+    },
+    "calibration": {
+      "predicted_epa": 0.1493,
+      "actual_epa": 0.1479,
+      "residual": -0.0014,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_LAC_BUF",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "LAC",
+    "home_team": "BUF",
+    "matchup": "LAC @ BUF",
+    "final_score": "LAC 16 - BUF 24",
+    "winner": "BUF",
+    "venue": {
+      "stadium": "Highmark Stadium",
+      "roof": "outdoors",
+      "temp_f": 68.0,
+      "wind_mph": 12.0
+    },
+    "box_stats": {
+      "total_plays": 175,
+      "pass_plays": 66,
+      "rush_plays": 61,
+      "sacks": 6,
+      "interceptions": 3,
+      "home_pass_epa": 3.252,
+      "away_pass_epa": 13.576,
+      "game_mean_pass_epa": -0.178
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0987,
+      "kalman_rmse_jacobian_m": 0.1007,
+      "ci90_coverage": 0.9809
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 5.62,
+      "min_pass_rush_separation_yd": 2.48,
+      "mean_strain": 2.61,
+      "peak_strain": 5.22,
+      "mean_soe_yd": -0.19,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.205,
+      "play_action_rate": 0.118,
+      "motion_rate": 0.518,
+      "screen_rate": 0.029
+    },
+    "calibration": {
+      "predicted_epa": -0.1684,
+      "actual_epa": -0.178,
+      "residual": -0.0096,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_LA_DEN",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "LA",
+    "home_team": "DEN",
+    "matchup": "LA @ DEN",
+    "final_score": "LA 26 - DEN 30",
+    "winner": "DEN",
+    "venue": {
+      "stadium": "Empower Field at Mile High",
+      "roof": "outdoors",
+      "temp_f": 83.0,
+      "wind_mph": 10.0
+    },
+    "box_stats": {
+      "total_plays": 202,
+      "pass_plays": 96,
+      "rush_plays": 48,
+      "sacks": 5,
+      "interceptions": 3,
+      "home_pass_epa": 3.715,
+      "away_pass_epa": 12.114,
+      "game_mean_pass_epa": -0.0184
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0982,
+      "kalman_rmse_jacobian_m": 0.099,
+      "ci90_coverage": 0.9806
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.57,
+      "min_pass_rush_separation_yd": 2.78,
+      "mean_strain": 2.75,
+      "peak_strain": 6.28,
+      "mean_soe_yd": -0.18,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.216,
+      "play_action_rate": 0.122,
+      "motion_rate": 0.523,
+      "screen_rate": 0.03
+    },
+    "calibration": {
+      "predicted_epa": -0.1235,
+      "actual_epa": -0.0184,
+      "residual": 0.1051,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_LV_NO",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "LV",
+    "home_team": "NO",
+    "matchup": "LV @ NO",
+    "final_score": "LV 35 - NO 27",
+    "winner": "LV",
+    "venue": {
+      "stadium": "Caesars Superdome",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 188,
+      "pass_plays": 82,
+      "rush_plays": 55,
+      "sacks": 5,
+      "interceptions": 1,
+      "home_pass_epa": 6.56,
+      "away_pass_epa": 16.08,
+      "game_mean_pass_epa": 0.023
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 286,
+      "tracked_plays": 13,
+      "kalman_rmse_single_m": 0.095,
+      "kalman_rmse_jacobian_m": 0.0956,
+      "ci90_coverage": 0.9811
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.74,
+      "min_pass_rush_separation_yd": 2.17,
+      "mean_strain": 2.01,
+      "peak_strain": 5.42,
+      "mean_soe_yd": 0.03,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.215,
+      "play_action_rate": 0.087,
+      "motion_rate": 0.53,
+      "screen_rate": 0.016
+    },
+    "calibration": {
+      "predicted_epa": -0.0071,
+      "actual_epa": 0.023,
+      "residual": 0.0301,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_MIN_TB",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "MIN",
+    "home_team": "TB",
+    "matchup": "MIN @ TB",
+    "final_score": "MIN 23 - TB 16",
+    "winner": "MIN",
+    "venue": {
+      "stadium": "Raymond James Stadium",
+      "roof": "outdoors",
+      "temp_f": 84.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 179,
+      "pass_plays": 75,
+      "rush_plays": 44,
+      "sacks": 9,
+      "interceptions": 3,
+      "home_pass_epa": 5.839,
+      "away_pass_epa": 4.033,
+      "game_mean_pass_epa": -0.3124
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0993,
+      "kalman_rmse_jacobian_m": 0.1021,
+      "ci90_coverage": 0.9597
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.47,
+      "min_pass_rush_separation_yd": 2.46,
+      "mean_strain": 3.28,
+      "peak_strain": 5.84,
+      "mean_soe_yd": -0.45,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.221,
+      "play_action_rate": 0.092,
+      "motion_rate": 0.414,
+      "screen_rate": 0.034
+    },
+    "calibration": {
+      "predicted_epa": -0.2053,
+      "actual_epa": -0.3124,
+      "residual": -0.1071,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_NE_JAX",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "NE",
+    "home_team": "JAX",
+    "matchup": "NE @ JAX",
+    "final_score": "NE 6 - JAX 35",
+    "winner": "JAX",
+    "venue": {
+      "stadium": "EverBank Stadium",
+      "roof": "outdoors",
+      "temp_f": 80.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 168,
+      "pass_plays": 64,
+      "rush_plays": 56,
+      "sacks": 4,
+      "interceptions": 3,
+      "home_pass_epa": 21.85,
+      "away_pass_epa": 2.824,
+      "game_mean_pass_epa": -0.0993
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0916,
+      "kalman_rmse_jacobian_m": 0.0921,
+      "ci90_coverage": 0.971
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 5.82,
+      "min_pass_rush_separation_yd": 2.17,
+      "mean_strain": 2.6,
+      "peak_strain": 5.66,
+      "mean_soe_yd": -0.36,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.197,
+      "play_action_rate": 0.092,
+      "motion_rate": 0.344,
+      "screen_rate": 0.031
+    },
+    "calibration": {
+      "predicted_epa": -0.1534,
+      "actual_epa": -0.0993,
+      "residual": 0.0541,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_NYJ_DET",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "NYJ",
+    "home_team": "DET",
+    "matchup": "NYJ @ DET",
+    "final_score": "NYJ 24 - DET 31",
+    "winner": "DET",
+    "venue": {
+      "stadium": "Ford Field",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 167,
+      "pass_plays": 78,
+      "rush_plays": 49,
+      "sacks": 7,
+      "interceptions": 0,
+      "home_pass_epa": 2.372,
+      "away_pass_epa": 8.365,
+      "game_mean_pass_epa": 0.2951
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0938,
+      "kalman_rmse_jacobian_m": 0.0955,
+      "ci90_coverage": 0.9855
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.83,
+      "min_pass_rush_separation_yd": 3.12,
+      "mean_strain": 1.66,
+      "peak_strain": 4.74,
+      "mean_soe_yd": 0.49,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.219,
+      "play_action_rate": 0.13,
+      "motion_rate": 0.377,
+      "screen_rate": 0.019
+    },
+    "calibration": {
+      "predicted_epa": 0.1167,
+      "actual_epa": 0.2951,
+      "residual": 0.1784,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_SEA_WAS",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "SEA",
+    "home_team": "WAS",
+    "matchup": "SEA @ WAS",
+    "final_score": "SEA 31 - WAS 33",
+    "winner": "WAS",
+    "venue": {
+      "stadium": "Northwest Stadium",
+      "roof": "outdoors",
+      "temp_f": 63.0,
+      "wind_mph": 13.0
+    },
+    "box_stats": {
+      "total_plays": 190,
+      "pass_plays": 79,
+      "rush_plays": 50,
+      "sacks": 2,
+      "interceptions": 2,
+      "home_pass_epa": 7.023,
+      "away_pass_epa": 6.945,
+      "game_mean_pass_epa": 0.1121
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0916,
+      "kalman_rmse_jacobian_m": 0.0936,
+      "ci90_coverage": 0.9903
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.45,
+      "min_pass_rush_separation_yd": 3.19,
+      "mean_strain": 2.37,
+      "peak_strain": 5.01,
+      "mean_soe_yd": 0.34,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.202,
+      "play_action_rate": 0.151,
+      "motion_rate": 0.416,
+      "screen_rate": 0.038
+    },
+    "calibration": {
+      "predicted_epa": -0.0779,
+      "actual_epa": 0.1121,
+      "residual": 0.19,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_TEN_NYG",
+    "week": 3,
+    "date": "2026-09-27",
+    "away_team": "TEN",
+    "home_team": "NYG",
+    "matchup": "TEN @ NYG",
+    "final_score": "TEN 7 - NYG 12",
+    "winner": "NYG",
+    "venue": {
+      "stadium": "MetLife Stadium",
+      "roof": "outdoors",
+      "temp_f": 62.0,
+      "wind_mph": 10.0
+    },
+    "box_stats": {
+      "total_plays": 165,
+      "pass_plays": 61,
+      "rush_plays": 54,
+      "sacks": 3,
+      "interceptions": 1,
+      "home_pass_epa": 7.647,
+      "away_pass_epa": 4.091,
+      "game_mean_pass_epa": -0.2066
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 110,
+      "tracked_plays": 5,
+      "kalman_rmse_single_m": 0.097,
+      "kalman_rmse_jacobian_m": 0.0996,
+      "ci90_coverage": 0.985
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.38,
+      "min_pass_rush_separation_yd": 2.87,
+      "mean_strain": 3.28,
+      "peak_strain": 5.79,
+      "mean_soe_yd": 0.13,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.216,
+      "play_action_rate": 0.113,
+      "motion_rate": 0.344,
+      "screen_rate": 0.025
+    },
+    "calibration": {
+      "predicted_epa": -0.2114,
+      "actual_epa": -0.2066,
+      "residual": 0.0048,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_03_PHI_CHI",
+    "week": 3,
+    "date": "2026-09-28",
+    "away_team": "PHI",
+    "home_team": "CHI",
+    "matchup": "PHI @ CHI",
+    "final_score": "PHI 7 - CHI 27",
+    "winner": "CHI",
+    "venue": {
+      "stadium": "Soldier Field",
+      "roof": "outdoors",
+      "temp_f": 64.0,
+      "wind_mph": 3.0
+    },
+    "box_stats": {
+      "total_plays": 155,
+      "pass_plays": 62,
+      "rush_plays": 54,
+      "sacks": 2,
+      "interceptions": 2,
+      "home_pass_epa": 27.366,
+      "away_pass_epa": -4.542,
+      "game_mean_pass_epa": -0.2074
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 110,
+      "tracked_plays": 5,
+      "kalman_rmse_single_m": 0.0877,
+      "kalman_rmse_jacobian_m": 0.0871,
+      "ci90_coverage": 0.9891
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 5.86,
+      "min_pass_rush_separation_yd": 1.91,
+      "mean_strain": 3.33,
+      "peak_strain": 6.8,
+      "mean_soe_yd": 0.16,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.2,
+      "play_action_rate": 0.107,
+      "motion_rate": 0.36,
+      "screen_rate": 0.033
+    },
+    "calibration": {
+      "predicted_epa": -0.2539,
+      "actual_epa": -0.2074,
+      "residual": 0.0465,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_PIT_CLE",
+    "week": 4,
+    "date": "2026-10-01",
+    "away_team": "PIT",
+    "home_team": "CLE",
+    "matchup": "PIT @ CLE",
+    "final_score": "PIT 24 - CLE 27",
+    "winner": "CLE",
+    "venue": {
+      "stadium": "Huntington Bank Field",
+      "roof": "outdoors",
+      "temp_f": 77.0,
+      "wind_mph": 11.0
+    },
+    "box_stats": {
+      "total_plays": 186,
+      "pass_plays": 81,
+      "rush_plays": 47,
+      "sacks": 7,
+      "interceptions": 3,
+      "home_pass_epa": 16.516,
+      "away_pass_epa": 10.256,
+      "game_mean_pass_epa": 0.1433
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0945,
+      "kalman_rmse_jacobian_m": 0.0965,
+      "ci90_coverage": 0.9859
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.35,
+      "min_pass_rush_separation_yd": 3.32,
+      "mean_strain": 2.01,
+      "peak_strain": 4.49,
+      "mean_soe_yd": 0.21,
+      "primary_coverage_shell": "Cover 0 Blitz",
+      "blitz_rate": 0.215,
+      "play_action_rate": 0.066,
+      "motion_rate": 0.42,
+      "screen_rate": 0.055
+    },
+    "calibration": {
+      "predicted_epa": 0.0345,
+      "actual_epa": 0.1433,
+      "residual": 0.1088,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_ARI_NYG",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "ARI",
+    "home_team": "NYG",
+    "matchup": "ARI @ NYG",
+    "final_score": "ARI 24 - NYG 36",
+    "winner": "NYG",
+    "venue": {
+      "stadium": "MetLife Stadium",
+      "roof": "outdoors",
+      "temp_f": 63.0,
+      "wind_mph": 9.0
+    },
+    "box_stats": {
+      "total_plays": 177,
+      "pass_plays": 71,
+      "rush_plays": 55,
+      "sacks": 6,
+      "interceptions": 5,
+      "home_pass_epa": 22.046,
+      "away_pass_epa": 4.84,
+      "game_mean_pass_epa": -0.2011
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 330,
+      "tracked_plays": 15,
+      "kalman_rmse_single_m": 0.0934,
+      "kalman_rmse_jacobian_m": 0.0944,
+      "ci90_coverage": 0.9889
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.15,
+      "min_pass_rush_separation_yd": 2.32,
+      "mean_strain": 2.63,
+      "peak_strain": 6.0,
+      "mean_soe_yd": 0.28,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.203,
+      "play_action_rate": 0.081,
+      "motion_rate": 0.413,
+      "screen_rate": 0.017
+    },
+    "calibration": {
+      "predicted_epa": -0.1351,
+      "actual_epa": -0.2011,
+      "residual": -0.066,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_DAL_HOU",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "DAL",
+    "home_team": "HOU",
+    "matchup": "DAL @ HOU",
+    "final_score": "DAL 34 - HOU 30",
+    "winner": "DAL",
+    "venue": {
+      "stadium": "Reliant Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 184,
+      "pass_plays": 81,
+      "rush_plays": 44,
+      "sacks": 5,
+      "interceptions": 0,
+      "home_pass_epa": 14.605,
+      "away_pass_epa": -1.823,
+      "game_mean_pass_epa": 0.3088
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 286,
+      "tracked_plays": 13,
+      "kalman_rmse_single_m": 0.0943,
+      "kalman_rmse_jacobian_m": 0.0943,
+      "ci90_coverage": 0.9846
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 8.2,
+      "min_pass_rush_separation_yd": 2.91,
+      "mean_strain": 1.55,
+      "peak_strain": 4.18,
+      "mean_soe_yd": 0.51,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.192,
+      "play_action_rate": 0.128,
+      "motion_rate": 0.469,
+      "screen_rate": 0.039
+    },
+    "calibration": {
+      "predicted_epa": 0.1575,
+      "actual_epa": 0.3088,
+      "residual": 0.1513,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_DEN_SF",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "DEN",
+    "home_team": "SF",
+    "matchup": "DEN @ SF",
+    "final_score": "DEN 14 - SF 24",
+    "winner": "SF",
+    "venue": {
+      "stadium": "Levi's\u00ae Stadium",
+      "roof": "outdoors",
+      "temp_f": 87.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 176,
+      "pass_plays": 72,
+      "rush_plays": 58,
+      "sacks": 0,
+      "interceptions": 0,
+      "home_pass_epa": 3.546,
+      "away_pass_epa": 4.777,
+      "game_mean_pass_epa": 0.1836
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 132,
+      "tracked_plays": 6,
+      "kalman_rmse_single_m": 0.0967,
+      "kalman_rmse_jacobian_m": 0.098,
+      "ci90_coverage": 0.9544
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.04,
+      "min_pass_rush_separation_yd": 2.61,
+      "mean_strain": 1.9,
+      "peak_strain": 4.41,
+      "mean_soe_yd": 0.53,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.218,
+      "play_action_rate": 0.07,
+      "motion_rate": 0.509,
+      "screen_rate": 0.047
+    },
+    "calibration": {
+      "predicted_epa": 0.0289,
+      "actual_epa": 0.1836,
+      "residual": 0.1547,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_DET_CAR",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "DET",
+    "home_team": "CAR",
+    "matchup": "DET @ CAR",
+    "final_score": "DET 26 - CAR 32",
+    "winner": "CAR",
+    "venue": {
+      "stadium": "Bank of America Stadium",
+      "roof": "outdoors",
+      "temp_f": 66.0,
+      "wind_mph": 2.0
+    },
+    "box_stats": {
+      "total_plays": 198,
+      "pass_plays": 97,
+      "rush_plays": 43,
+      "sacks": 4,
+      "interceptions": 0,
+      "home_pass_epa": 13.612,
+      "away_pass_epa": 1.749,
+      "game_mean_pass_epa": 0.3387
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 242,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0958,
+      "kalman_rmse_jacobian_m": 0.0972,
+      "ci90_coverage": 0.9847
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.72,
+      "min_pass_rush_separation_yd": 3.14,
+      "mean_strain": 0.92,
+      "peak_strain": 3.35,
+      "mean_soe_yd": 0.57,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.207,
+      "play_action_rate": 0.155,
+      "motion_rate": 0.347,
+      "screen_rate": 0.026
+    },
+    "calibration": {
+      "predicted_epa": 0.2139,
+      "actual_epa": 0.3387,
+      "residual": 0.1248,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_GB_TB",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "GB",
+    "home_team": "TB",
+    "matchup": "GB @ TB",
+    "final_score": "GB 17 - TB 14",
+    "winner": "GB",
+    "venue": {
+      "stadium": "Raymond James Stadium",
+      "roof": "outdoors",
+      "temp_f": 86.0,
+      "wind_mph": 3.0
+    },
+    "box_stats": {
+      "total_plays": 159,
+      "pass_plays": 60,
+      "rush_plays": 56,
+      "sacks": 3,
+      "interceptions": 3,
+      "home_pass_epa": 0.0,
+      "away_pass_epa": 14.327,
+      "game_mean_pass_epa": 0.0431
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0926,
+      "kalman_rmse_jacobian_m": 0.0931,
+      "ci90_coverage": 0.9886
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.86,
+      "min_pass_rush_separation_yd": 2.85,
+      "mean_strain": 2.2,
+      "peak_strain": 4.59,
+      "mean_soe_yd": 0.55,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.233,
+      "play_action_rate": 0.13,
+      "motion_rate": 0.597,
+      "screen_rate": 0.071
+    },
+    "calibration": {
+      "predicted_epa": -0.0258,
+      "actual_epa": 0.0431,
+      "residual": 0.0689,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_IND_WAS",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "IND",
+    "home_team": "WAS",
+    "matchup": "IND @ WAS",
+    "final_score": "IND 30 - WAS 13",
+    "winner": "IND",
+    "venue": {
+      "stadium": "Tottenham Hotspur Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 7.0
+    },
+    "box_stats": {
+      "total_plays": 171,
+      "pass_plays": 75,
+      "rush_plays": 52,
+      "sacks": 4,
+      "interceptions": 2,
+      "home_pass_epa": 15.645,
+      "away_pass_epa": 0.0,
+      "game_mean_pass_epa": -0.3041
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 242,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0945,
+      "kalman_rmse_jacobian_m": 0.094,
+      "ci90_coverage": 0.9829
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.09,
+      "min_pass_rush_separation_yd": 2.45,
+      "mean_strain": 3.6,
+      "peak_strain": 6.61,
+      "mean_soe_yd": -0.03,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.21,
+      "play_action_rate": 0.096,
+      "motion_rate": 0.349,
+      "screen_rate": 0.03
+    },
+    "calibration": {
+      "predicted_epa": -0.2765,
+      "actual_epa": -0.3041,
+      "residual": -0.0276,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_JAX_CIN",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "JAX",
+    "home_team": "CIN",
+    "matchup": "JAX @ CIN",
+    "final_score": "JAX 22 - CIN 17",
+    "winner": "JAX",
+    "venue": {
+      "stadium": "Paycor Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 4.0
+    },
+    "box_stats": {
+      "total_plays": 177,
+      "pass_plays": 84,
+      "rush_plays": 42,
+      "sacks": 6,
+      "interceptions": 2,
+      "home_pass_epa": 3.932,
+      "away_pass_epa": 8.643,
+      "game_mean_pass_epa": 0.1985
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0943,
+      "kalman_rmse_jacobian_m": 0.0968,
+      "ci90_coverage": 0.9904
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.36,
+      "min_pass_rush_separation_yd": 2.53,
+      "mean_strain": 1.76,
+      "peak_strain": 4.7,
+      "mean_soe_yd": 0.43,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.176,
+      "play_action_rate": 0.105,
+      "motion_rate": 0.517,
+      "screen_rate": 0.064
+    },
+    "calibration": {
+      "predicted_epa": 0.0705,
+      "actual_epa": 0.1985,
+      "residual": 0.128,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_KC_LV",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "KC",
+    "home_team": "LV",
+    "matchup": "KC @ LV",
+    "final_score": "KC 30 - LV 27",
+    "winner": "KC",
+    "venue": {
+      "stadium": "Allegiant Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 191,
+      "pass_plays": 86,
+      "rush_plays": 52,
+      "sacks": 2,
+      "interceptions": 1,
+      "home_pass_epa": 8.702,
+      "away_pass_epa": 3.167,
+      "game_mean_pass_epa": 0.1339
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0964,
+      "kalman_rmse_jacobian_m": 0.0971,
+      "ci90_coverage": 0.9754
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.67,
+      "min_pass_rush_separation_yd": 3.18,
+      "mean_strain": 1.69,
+      "peak_strain": 4.57,
+      "mean_soe_yd": 0.48,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.193,
+      "play_action_rate": 0.14,
+      "motion_rate": 0.505,
+      "screen_rate": 0.048
+    },
+    "calibration": {
+      "predicted_epa": 0.1016,
+      "actual_epa": 0.1339,
+      "residual": 0.0323,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_LAC_SEA",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "LAC",
+    "home_team": "SEA",
+    "matchup": "LAC @ SEA",
+    "final_score": "LAC 23 - SEA 30",
+    "winner": "SEA",
+    "venue": {
+      "stadium": "Lumen Field",
+      "roof": "outdoors",
+      "temp_f": 63.0,
+      "wind_mph": 3.0
+    },
+    "box_stats": {
+      "total_plays": 187,
+      "pass_plays": 61,
+      "rush_plays": 65,
+      "sacks": 7,
+      "interceptions": 3,
+      "home_pass_epa": 12.6,
+      "away_pass_epa": 3.105,
+      "game_mean_pass_epa": -0.2258
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.097,
+      "kalman_rmse_jacobian_m": 0.0985,
+      "ci90_coverage": 0.9728
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.6,
+      "min_pass_rush_separation_yd": 1.99,
+      "mean_strain": 3.02,
+      "peak_strain": 5.53,
+      "mean_soe_yd": 0.26,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.202,
+      "play_action_rate": 0.115,
+      "motion_rate": 0.39,
+      "screen_rate": 0.044
+    },
+    "calibration": {
+      "predicted_epa": -0.1596,
+      "actual_epa": -0.2258,
+      "residual": -0.0662,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_LA_PHI",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "LA",
+    "home_team": "PHI",
+    "matchup": "LA @ PHI",
+    "final_score": "LA 24 - PHI 20",
+    "winner": "LA",
+    "venue": {
+      "stadium": "Lincoln Financial Field",
+      "roof": "outdoors",
+      "temp_f": 62.0,
+      "wind_mph": 9.0
+    },
+    "box_stats": {
+      "total_plays": 187,
+      "pass_plays": 83,
+      "rush_plays": 52,
+      "sacks": 5,
+      "interceptions": 2,
+      "home_pass_epa": 7.307,
+      "away_pass_epa": 9.25,
+      "game_mean_pass_epa": -0.085
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.097,
+      "kalman_rmse_jacobian_m": 0.1016,
+      "ci90_coverage": 0.9837
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.07,
+      "min_pass_rush_separation_yd": 2.44,
+      "mean_strain": 2.12,
+      "peak_strain": 5.57,
+      "mean_soe_yd": 0.34,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.205,
+      "play_action_rate": 0.093,
+      "motion_rate": 0.484,
+      "screen_rate": 0.011
+    },
+    "calibration": {
+      "predicted_epa": -0.0002,
+      "actual_epa": -0.085,
+      "residual": -0.0848,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_MIA_MIN",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "MIA",
+    "home_team": "MIN",
+    "matchup": "MIA @ MIN",
+    "final_score": "MIA 10 - MIN 15",
+    "winner": "MIN",
+    "venue": {
+      "stadium": "U.S. Bank Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 161,
+      "pass_plays": 60,
+      "rush_plays": 49,
+      "sacks": 6,
+      "interceptions": 0,
+      "home_pass_epa": 11.748,
+      "away_pass_epa": 3.132,
+      "game_mean_pass_epa": -0.2179
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 154,
+      "tracked_plays": 7,
+      "kalman_rmse_single_m": 0.0999,
+      "kalman_rmse_jacobian_m": 0.1,
+      "ci90_coverage": 0.9965
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.01,
+      "min_pass_rush_separation_yd": 1.67,
+      "mean_strain": 2.7,
+      "peak_strain": 5.89,
+      "mean_soe_yd": -0.17,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.197,
+      "play_action_rate": 0.109,
+      "motion_rate": 0.494,
+      "screen_rate": 0.026
+    },
+    "calibration": {
+      "predicted_epa": -0.1546,
+      "actual_epa": -0.2179,
+      "residual": -0.0633,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_NE_BUF",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "NE",
+    "home_team": "BUF",
+    "matchup": "NE @ BUF",
+    "final_score": "NE 29 - BUF 26",
+    "winner": "NE",
+    "venue": {
+      "stadium": "Highmark Stadium",
+      "roof": "outdoors",
+      "temp_f": 69.0,
+      "wind_mph": 11.0
+    },
+    "box_stats": {
+      "total_plays": 172,
+      "pass_plays": 74,
+      "rush_plays": 55,
+      "sacks": 2,
+      "interceptions": 2,
+      "home_pass_epa": 3.816,
+      "away_pass_epa": 10.615,
+      "game_mean_pass_epa": 0.1858
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0983,
+      "kalman_rmse_jacobian_m": 0.0997,
+      "ci90_coverage": 0.9834
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.72,
+      "min_pass_rush_separation_yd": 3.94,
+      "mean_strain": 1.6,
+      "peak_strain": 5.13,
+      "mean_soe_yd": 0.25,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.208,
+      "play_action_rate": 0.138,
+      "motion_rate": 0.587,
+      "screen_rate": 0.03
+    },
+    "calibration": {
+      "predicted_epa": 0.0495,
+      "actual_epa": 0.1858,
+      "residual": 0.1363,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_NYJ_CHI",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "NYJ",
+    "home_team": "CHI",
+    "matchup": "NYJ @ CHI",
+    "final_score": "NYJ 12 - CHI 23",
+    "winner": "CHI",
+    "venue": {
+      "stadium": "Soldier Field",
+      "roof": "outdoors",
+      "temp_f": 72.0,
+      "wind_mph": 3.0
+    },
+    "box_stats": {
+      "total_plays": 167,
+      "pass_plays": 53,
+      "rush_plays": 68,
+      "sacks": 4,
+      "interceptions": 1,
+      "home_pass_epa": 17.787,
+      "away_pass_epa": -2.244,
+      "game_mean_pass_epa": 0.0581
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 154,
+      "tracked_plays": 7,
+      "kalman_rmse_single_m": 0.0954,
+      "kalman_rmse_jacobian_m": 0.0969,
+      "ci90_coverage": 0.9964
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.21,
+      "min_pass_rush_separation_yd": 3.29,
+      "mean_strain": 1.84,
+      "peak_strain": 4.88,
+      "mean_soe_yd": 0.33,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.2,
+      "play_action_rate": 0.136,
+      "motion_rate": 0.309,
+      "screen_rate": 0.049
+    },
+    "calibration": {
+      "predicted_epa": -0.0192,
+      "actual_epa": 0.0581,
+      "residual": 0.0773,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_TEN_BAL",
+    "week": 4,
+    "date": "2026-10-04",
+    "away_team": "TEN",
+    "home_team": "BAL",
+    "matchup": "TEN @ BAL",
+    "final_score": "TEN 18 - BAL 24",
+    "winner": "BAL",
+    "venue": {
+      "stadium": "M&T Bank Stadium",
+      "roof": "outdoors",
+      "temp_f": 62.0,
+      "wind_mph": 6.0
+    },
+    "box_stats": {
+      "total_plays": 175,
+      "pass_plays": 64,
+      "rush_plays": 56,
+      "sacks": 3,
+      "interceptions": 1,
+      "home_pass_epa": 20.571,
+      "away_pass_epa": 0.99,
+      "game_mean_pass_epa": 0.1429
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 198,
+      "tracked_plays": 9,
+      "kalman_rmse_single_m": 0.0905,
+      "kalman_rmse_jacobian_m": 0.0926,
+      "ci90_coverage": 0.9802
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.96,
+      "min_pass_rush_separation_yd": 2.83,
+      "mean_strain": 1.88,
+      "peak_strain": 4.49,
+      "mean_soe_yd": 0.18,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.208,
+      "play_action_rate": 0.076,
+      "motion_rate": 0.371,
+      "screen_rate": 0.035
+    },
+    "calibration": {
+      "predicted_epa": 0.0263,
+      "actual_epa": 0.1429,
+      "residual": 0.1166,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_04_ATL_NO",
+    "week": 4,
+    "date": "2026-10-05",
+    "away_team": "ATL",
+    "home_team": "NO",
+    "matchup": "ATL @ NO",
+    "final_score": "ATL 45 - NO 24",
+    "winner": "ATL",
+    "venue": {
+      "stadium": "Caesars Superdome",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 176,
+      "pass_plays": 71,
+      "rush_plays": 54,
+      "sacks": 3,
+      "interceptions": 0,
+      "home_pass_epa": 4.319,
+      "away_pass_epa": 14.271,
+      "game_mean_pass_epa": 0.1594
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 330,
+      "tracked_plays": 15,
+      "kalman_rmse_single_m": 0.0896,
+      "kalman_rmse_jacobian_m": 0.0915,
+      "ci90_coverage": 0.992
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.61,
+      "min_pass_rush_separation_yd": 3.18,
+      "mean_strain": 1.56,
+      "peak_strain": 4.81,
+      "mean_soe_yd": 0.17,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.21,
+      "play_action_rate": 0.117,
+      "motion_rate": 0.357,
+      "screen_rate": 0.041
+    },
+    "calibration": {
+      "predicted_epa": 0.1159,
+      "actual_epa": 0.1594,
+      "residual": 0.0435,
+      "holdout_split": "Weeks 1-4 Training"
+    }
+  },
+  {
+    "game_id": "2026_05_TB_DAL",
+    "week": 5,
+    "date": "2026-10-08",
+    "away_team": "TB",
+    "home_team": "DAL",
+    "matchup": "TB @ DAL",
+    "final_score": "TB 24 - DAL 16",
+    "winner": "TB",
+    "venue": {
+      "stadium": "AT&T Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 172,
+      "pass_plays": 69,
+      "rush_plays": 52,
+      "sacks": 1,
+      "interceptions": 2,
+      "home_pass_epa": 2.223,
+      "away_pass_epa": 15.548,
+      "game_mean_pass_epa": 0.0375
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 242,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0942,
+      "kalman_rmse_jacobian_m": 0.0936,
+      "ci90_coverage": 0.9712
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.17,
+      "min_pass_rush_separation_yd": 2.16,
+      "mean_strain": 2.38,
+      "peak_strain": 5.4,
+      "mean_soe_yd": 0.16,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.188,
+      "play_action_rate": 0.108,
+      "motion_rate": 0.479,
+      "screen_rate": 0.024
+    },
+    "calibration": {
+      "predicted_epa": -0.0302,
+      "actual_epa": 0.0375,
+      "residual": 0.0677,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_BAL_ATL",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "BAL",
+    "home_team": "ATL",
+    "matchup": "BAL @ ATL",
+    "final_score": "BAL 30 - ATL 23",
+    "winner": "BAL",
+    "venue": {
+      "stadium": "Mercedes-Benz Stadium",
+      "roof": "open",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 194,
+      "pass_plays": 75,
+      "rush_plays": 62,
+      "sacks": 7,
+      "interceptions": 1,
+      "home_pass_epa": 22.405,
+      "away_pass_epa": 0.441,
+      "game_mean_pass_epa": 0.0217
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 242,
+      "tracked_plays": 11,
+      "kalman_rmse_single_m": 0.0958,
+      "kalman_rmse_jacobian_m": 0.0937,
+      "ci90_coverage": 0.9803
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.9,
+      "min_pass_rush_separation_yd": 2.08,
+      "mean_strain": 2.38,
+      "peak_strain": 5.17,
+      "mean_soe_yd": 0.14,
+      "primary_coverage_shell": "2-High Disguise -> Cover 3",
+      "blitz_rate": 0.193,
+      "play_action_rate": 0.101,
+      "motion_rate": 0.452,
+      "screen_rate": 0.032
+    },
+    "calibration": {
+      "predicted_epa": -0.0486,
+      "actual_epa": 0.0217,
+      "residual": 0.0703,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_CHI_GB",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "CHI",
+    "home_team": "GB",
+    "matchup": "CHI @ GB",
+    "final_score": "CHI 7 - GB 31",
+    "winner": "GB",
+    "venue": {
+      "stadium": "Lambeau Field",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 170,
+      "pass_plays": 78,
+      "rush_plays": 50,
+      "sacks": 6,
+      "interceptions": 3,
+      "home_pass_epa": 39.134,
+      "away_pass_epa": 1.489,
+      "game_mean_pass_epa": -0.0687
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 308,
+      "tracked_plays": 14,
+      "kalman_rmse_single_m": 0.0969,
+      "kalman_rmse_jacobian_m": 0.0972,
+      "ci90_coverage": 0.988
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.88,
+      "min_pass_rush_separation_yd": 2.26,
+      "mean_strain": 2.07,
+      "peak_strain": 5.58,
+      "mean_soe_yd": -0.17,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.198,
+      "play_action_rate": 0.152,
+      "motion_rate": 0.618,
+      "screen_rate": 0.048
+    },
+    "calibration": {
+      "predicted_epa": -0.0061,
+      "actual_epa": -0.0687,
+      "residual": -0.0626,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_CIN_MIA",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "CIN",
+    "home_team": "MIA",
+    "matchup": "CIN @ MIA",
+    "final_score": "CIN 31 - MIA 24",
+    "winner": "CIN",
+    "venue": {
+      "stadium": "Hard Rock Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 172,
+      "pass_plays": 63,
+      "rush_plays": 65,
+      "sacks": 3,
+      "interceptions": 2,
+      "home_pass_epa": -1.996,
+      "away_pass_epa": 25.5,
+      "game_mean_pass_epa": -0.0434
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 286,
+      "tracked_plays": 13,
+      "kalman_rmse_single_m": 0.0917,
+      "kalman_rmse_jacobian_m": 0.0909,
+      "ci90_coverage": 0.9836
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.65,
+      "min_pass_rush_separation_yd": 2.89,
+      "mean_strain": 2.21,
+      "peak_strain": 5.22,
+      "mean_soe_yd": 0.17,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.215,
+      "play_action_rate": 0.072,
+      "motion_rate": 0.413,
+      "screen_rate": 0.018
+    },
+    "calibration": {
+      "predicted_epa": -0.0416,
+      "actual_epa": -0.0434,
+      "residual": -0.0018,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_CLE_NYJ",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "CLE",
+    "home_team": "NYJ",
+    "matchup": "CLE @ NYJ",
+    "final_score": "CLE 12 - NYJ 17",
+    "winner": "NYJ",
+    "venue": {
+      "stadium": "MetLife Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 184,
+      "pass_plays": 75,
+      "rush_plays": 56,
+      "sacks": 12,
+      "interceptions": 0,
+      "home_pass_epa": 7.758,
+      "away_pass_epa": 9.604,
+      "game_mean_pass_epa": -0.3522
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 154,
+      "tracked_plays": 7,
+      "kalman_rmse_single_m": 0.0996,
+      "kalman_rmse_jacobian_m": 0.1017,
+      "ci90_coverage": 0.9851
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.3,
+      "min_pass_rush_separation_yd": 1.5,
+      "mean_strain": 3.46,
+      "peak_strain": 6.04,
+      "mean_soe_yd": 0.08,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.197,
+      "play_action_rate": 0.073,
+      "motion_rate": 0.335,
+      "screen_rate": 0.034
+    },
+    "calibration": {
+      "predicted_epa": -0.2423,
+      "actual_epa": -0.3522,
+      "residual": -0.1099,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_DEN_LAC",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "DEN",
+    "home_team": "LAC",
+    "matchup": "DEN @ LAC",
+    "final_score": "DEN 23 - LAC 17",
+    "winner": "DEN",
+    "venue": {
+      "stadium": "SoFi Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 177,
+      "pass_plays": 57,
+      "rush_plays": 63,
+      "sacks": 6,
+      "interceptions": 1,
+      "home_pass_epa": 5.018,
+      "away_pass_epa": 8.336,
+      "game_mean_pass_epa": -0.3965
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0921,
+      "kalman_rmse_jacobian_m": 0.0896,
+      "ci90_coverage": 0.9821
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.31,
+      "min_pass_rush_separation_yd": 1.66,
+      "mean_strain": 3.43,
+      "peak_strain": 6.8,
+      "mean_soe_yd": -0.21,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.214,
+      "play_action_rate": 0.087,
+      "motion_rate": 0.552,
+      "screen_rate": 0.035
+    },
+    "calibration": {
+      "predicted_epa": -0.2374,
+      "actual_epa": -0.3965,
+      "residual": -0.1591,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_DET_ARI",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "DET",
+    "home_team": "ARI",
+    "matchup": "DET @ ARI",
+    "final_score": "DET 45 - ARI 21",
+    "winner": "DET",
+    "venue": {
+      "stadium": "State Farm Stadium",
+      "roof": "closed",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 182,
+      "pass_plays": 86,
+      "rush_plays": 50,
+      "sacks": 8,
+      "interceptions": 1,
+      "home_pass_epa": 13.927,
+      "away_pass_epa": 16.539,
+      "game_mean_pass_epa": 0.2516
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 330,
+      "tracked_plays": 15,
+      "kalman_rmse_single_m": 0.0944,
+      "kalman_rmse_jacobian_m": 0.0974,
+      "ci90_coverage": 0.9922
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.69,
+      "min_pass_rush_separation_yd": 2.85,
+      "mean_strain": 1.63,
+      "peak_strain": 4.06,
+      "mean_soe_yd": 0.72,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.227,
+      "play_action_rate": 0.153,
+      "motion_rate": 0.418,
+      "screen_rate": 0.04
+    },
+    "calibration": {
+      "predicted_epa": 0.1114,
+      "actual_epa": 0.2516,
+      "residual": 0.1402,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_HOU_TEN",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "HOU",
+    "home_team": "TEN",
+    "matchup": "HOU @ TEN",
+    "final_score": "HOU 26 - TEN 3",
+    "winner": "HOU",
+    "venue": {
+      "stadium": "Nissan Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 164,
+      "pass_plays": 76,
+      "rush_plays": 45,
+      "sacks": 6,
+      "interceptions": 1,
+      "home_pass_epa": 1.844,
+      "away_pass_epa": 28.314,
+      "game_mean_pass_epa": -0.0843
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 132,
+      "tracked_plays": 6,
+      "kalman_rmse_single_m": 0.1002,
+      "kalman_rmse_jacobian_m": 0.1017,
+      "ci90_coverage": 0.987
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.8,
+      "min_pass_rush_separation_yd": 1.81,
+      "mean_strain": 2.17,
+      "peak_strain": 5.74,
+      "mean_soe_yd": 0.23,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.182,
+      "play_action_rate": 0.113,
+      "motion_rate": 0.478,
+      "screen_rate": 0.044
+    },
+    "calibration": {
+      "predicted_epa": -0.0257,
+      "actual_epa": -0.0843,
+      "residual": -0.0586,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_IND_PIT",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "IND",
+    "home_team": "PIT",
+    "matchup": "IND @ PIT",
+    "final_score": "IND 22 - PIT 34",
+    "winner": "PIT",
+    "venue": {
+      "stadium": "Acrisure Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 176,
+      "pass_plays": 77,
+      "rush_plays": 46,
+      "sacks": 2,
+      "interceptions": 0,
+      "home_pass_epa": 5.939,
+      "away_pass_epa": 7.532,
+      "game_mean_pass_epa": 0.0534
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0982,
+      "kalman_rmse_jacobian_m": 0.0997,
+      "ci90_coverage": 0.9742
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.91,
+      "min_pass_rush_separation_yd": 3.44,
+      "mean_strain": 2.0,
+      "peak_strain": 5.57,
+      "mean_soe_yd": 0.17,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.199,
+      "play_action_rate": 0.099,
+      "motion_rate": 0.462,
+      "screen_rate": 0.029
+    },
+    "calibration": {
+      "predicted_epa": 0.0059,
+      "actual_epa": 0.0534,
+      "residual": 0.0475,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_LV_NE",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "LV",
+    "home_team": "NE",
+    "matchup": "LV @ NE",
+    "final_score": "LV 17 - NE 45",
+    "winner": "NE",
+    "venue": {
+      "stadium": "Gillette Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 175,
+      "pass_plays": 74,
+      "rush_plays": 49,
+      "sacks": 4,
+      "interceptions": 0,
+      "home_pass_epa": 27.27,
+      "away_pass_epa": 0.0,
+      "game_mean_pass_epa": 0.4669
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0936,
+      "kalman_rmse_jacobian_m": 0.0969,
+      "ci90_coverage": 0.9861
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 8.05,
+      "min_pass_rush_separation_yd": 3.19,
+      "mean_strain": 1.18,
+      "peak_strain": 4.46,
+      "mean_soe_yd": 0.45,
+      "primary_coverage_shell": "Cover 2",
+      "blitz_rate": 0.218,
+      "play_action_rate": 0.112,
+      "motion_rate": 0.294,
+      "screen_rate": 0.053
+    },
+    "calibration": {
+      "predicted_epa": 0.1996,
+      "actual_epa": 0.4669,
+      "residual": 0.2673,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_MIN_NO",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "MIN",
+    "home_team": "NO",
+    "matchup": "MIN @ NO",
+    "final_score": "MIN 23 - NO 13",
+    "winner": "MIN",
+    "venue": {
+      "stadium": "Caesars Superdome",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 155,
+      "pass_plays": 58,
+      "rush_plays": 53,
+      "sacks": 3,
+      "interceptions": 2,
+      "home_pass_epa": -0.829,
+      "away_pass_epa": 12.395,
+      "game_mean_pass_epa": -0.2216
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 110,
+      "tracked_plays": 5,
+      "kalman_rmse_single_m": 0.0955,
+      "kalman_rmse_jacobian_m": 0.0977,
+      "ci90_coverage": 0.9958
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.03,
+      "min_pass_rush_separation_yd": 2.2,
+      "mean_strain": 2.81,
+      "peak_strain": 6.15,
+      "mean_soe_yd": -0.27,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.182,
+      "play_action_rate": 0.12,
+      "motion_rate": 0.333,
+      "screen_rate": 0.04
+    },
+    "calibration": {
+      "predicted_epa": -0.1688,
+      "actual_epa": -0.2216,
+      "residual": -0.0528,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_NYG_WAS",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "NYG",
+    "home_team": "WAS",
+    "matchup": "NYG @ WAS",
+    "final_score": "NYG 27 - WAS 27",
+    "winner": "TIE",
+    "venue": {
+      "stadium": "Northwest Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 210,
+      "pass_plays": 87,
+      "rush_plays": 58,
+      "sacks": 7,
+      "interceptions": 0,
+      "home_pass_epa": 5.986,
+      "away_pass_epa": 14.253,
+      "game_mean_pass_epa": 0.0939
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 220,
+      "tracked_plays": 10,
+      "kalman_rmse_single_m": 0.0948,
+      "kalman_rmse_jacobian_m": 0.0986,
+      "ci90_coverage": 0.9826
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.99,
+      "min_pass_rush_separation_yd": 2.62,
+      "mean_strain": 2.4,
+      "peak_strain": 5.8,
+      "mean_soe_yd": 0.09,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.217,
+      "play_action_rate": 0.123,
+      "motion_rate": 0.338,
+      "screen_rate": 0.044
+    },
+    "calibration": {
+      "predicted_epa": -0.0453,
+      "actual_epa": 0.0939,
+      "residual": 0.1392,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_PHI_JAX",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "PHI",
+    "home_team": "JAX",
+    "matchup": "PHI @ JAX",
+    "final_score": "PHI 17 - JAX 19",
+    "winner": "JAX",
+    "venue": {
+      "stadium": "Tottenham Hotspur Stadium",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 188,
+      "pass_plays": 82,
+      "rush_plays": 45,
+      "sacks": 3,
+      "interceptions": 1,
+      "home_pass_epa": 12.305,
+      "away_pass_epa": 6.304,
+      "game_mean_pass_epa": 0.1164
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 176,
+      "tracked_plays": 8,
+      "kalman_rmse_single_m": 0.0986,
+      "kalman_rmse_jacobian_m": 0.0988,
+      "ci90_coverage": 0.9686
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.02,
+      "min_pass_rush_separation_yd": 2.51,
+      "mean_strain": 1.76,
+      "peak_strain": 5.33,
+      "mean_soe_yd": 0.46,
+      "primary_coverage_shell": "Cover 4",
+      "blitz_rate": 0.208,
+      "play_action_rate": 0.098,
+      "motion_rate": 0.492,
+      "screen_rate": 0.044
+    },
+    "calibration": {
+      "predicted_epa": 0.0473,
+      "actual_epa": 0.1164,
+      "residual": 0.0691,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_SF_SEA",
+    "week": 5,
+    "date": "2026-10-11",
+    "away_team": "SF",
+    "home_team": "SEA",
+    "matchup": "SF @ SEA",
+    "final_score": "SF 32 - SEA 29",
+    "winner": "SF",
+    "venue": {
+      "stadium": "Lumen Field",
+      "roof": "outdoors",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 169,
+      "pass_plays": 67,
+      "rush_plays": 50,
+      "sacks": 8,
+      "interceptions": 3,
+      "home_pass_epa": 2.421,
+      "away_pass_epa": 10.645,
+      "game_mean_pass_epa": -0.2098
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0898,
+      "kalman_rmse_jacobian_m": 0.0906,
+      "ci90_coverage": 0.9796
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 6.23,
+      "min_pass_rush_separation_yd": 2.48,
+      "mean_strain": 2.67,
+      "peak_strain": 5.81,
+      "mean_soe_yd": -0.4,
+      "primary_coverage_shell": "Cover 3",
+      "blitz_rate": 0.214,
+      "play_action_rate": 0.116,
+      "motion_rate": 0.482,
+      "screen_rate": 0.055
+    },
+    "calibration": {
+      "predicted_epa": -0.1353,
+      "actual_epa": -0.2098,
+      "residual": -0.0745,
+      "holdout_split": "Week 5 Holdout"
+    }
+  },
+  {
+    "game_id": "2026_05_BUF_LA",
+    "week": 5,
+    "date": "2026-10-12",
+    "away_team": "BUF",
+    "home_team": "LA",
+    "matchup": "BUF @ LA",
+    "final_score": "BUF 37 - LA 34",
+    "winner": "BUF",
+    "venue": {
+      "stadium": "SoFi Stadium",
+      "roof": "dome",
+      "temp_f": 70.0,
+      "wind_mph": 5.0
+    },
+    "box_stats": {
+      "total_plays": 199,
+      "pass_plays": 77,
+      "rush_plays": 60,
+      "sacks": 2,
+      "interceptions": 1,
+      "home_pass_epa": 12.06,
+      "away_pass_epa": 0.0,
+      "game_mean_pass_epa": 0.349
+    },
+    "cv_tracking": {
+      "tracklets_analyzed": 264,
+      "tracked_plays": 12,
+      "kalman_rmse_single_m": 0.0918,
+      "kalman_rmse_jacobian_m": 0.094,
+      "ci90_coverage": 0.9858
+    },
+    "cv_derived_metrics": {
+      "mean_pocket_depth_yd": 7.15,
+      "min_pass_rush_separation_yd": 2.71,
+      "mean_strain": 1.22,
+      "peak_strain": 4.47,
+      "mean_soe_yd": 0.58,
+      "primary_coverage_shell": "Cover 1",
+      "blitz_rate": 0.217,
+      "play_action_rate": 0.145,
+      "motion_rate": 0.461,
+      "screen_rate": 0.052
+    },
+    "calibration": {
+      "predicted_epa": 0.1326,
+      "actual_epa": 0.349,
+      "residual": 0.2164,
+      "holdout_split": "Week 5 Holdout"
+    }
+  }
+]
