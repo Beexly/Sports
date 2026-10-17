@@ -1298,10 +1298,10 @@ export async function processSport(
 
       // Venue information from game record or ESPN fixture
       const venueInfo: VenueInfo = {
-        fullName: (gameRecord as Record<string, unknown>).venueName as string | undefined ?? fixture?.event?.venue ?? undefined,
-        city: (gameRecord as Record<string, unknown>).venueCity as string | undefined ?? undefined,
-        state: (gameRecord as Record<string, unknown>).venueState as string | undefined ?? undefined,
-        indoor: (gameRecord as Record<string, unknown>).isIndoor as boolean | undefined ?? undefined,
+        fullName: ((gameRecord as Record<string, unknown>).venueName as string | undefined) ?? (fixture?.event as { venue?: string } | undefined)?.venue ?? undefined,
+        city: ((gameRecord as Record<string, unknown>).venueCity as string | undefined) ?? undefined,
+        state: ((gameRecord as Record<string, unknown>).venueState as string | undefined) ?? undefined,
+        indoor: ((gameRecord as Record<string, unknown>).isIndoor as boolean | undefined) ?? undefined,
       };
 
       // Dynamic context assembly & interpretSituation invocation (injuries, continuity, NWS weather)

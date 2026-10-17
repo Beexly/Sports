@@ -1903,9 +1903,6 @@ export {
   latestPriorRow,
   nextGameCovariate,
   sepForKickoff,
-  P_SIDE_COVARIATE_REGISTRY,
-  assertPSideHasNoMarketProp,
-  lookupFieldMeta,
 } from "./edge-lab/covariate-bus.js";
 export type {
   CovariateRow,
@@ -1913,7 +1910,6 @@ export type {
   CovariateCell,
   CovariateGrain,
   CovariateProvenance,
-  CovariateLayer,
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
@@ -2215,12 +2211,8 @@ export {
   fitIntPrior,
   intPosterior,
   probOverInt,
-  fitIntPerAttemptPrior,
-  posteriorIntPerAttempt,
-  intProbZero,
-  probIntGivenAttempts,
 } from "./edge-lab/props-hb-int.js";
-export type { IntSample } from "./edge-lab/props-hb-int.js";
+export type { IntSample, IntPosterior, IntPrior } from "./edge-lab/props-hb-int.js";
 
 // H2 Edge — Fumbles | touches. Beta-Binomial over touches (bounded).
 export {

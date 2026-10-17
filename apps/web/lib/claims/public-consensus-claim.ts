@@ -47,6 +47,13 @@ export type PublicConsensusPick = Omit<PublicPick, "reasoning" | "reasoningShort
   consensusBookSetId?: string | null;
   consensusCapturedAt?: string | null;
   consensusEvidence?: string | null;
+  continuityDeltas?: {
+    olContinuityDelta: number;
+    dlContinuityDelta: number;
+    dbContinuityDelta: number;
+  } | null;
+  injuryEvidence?: Record<string, unknown> | null;
+  reasoningTrace?: string | null;
 };
 
 export type ConsensusClaimPickSlice = {

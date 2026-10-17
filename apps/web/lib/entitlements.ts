@@ -95,7 +95,7 @@ export async function getUserEntitlements(
 
   // Owner bypass runs before the subscription lookup. Tests that mock only
   // db.subscription skip this when db.user is absent.
-  const users = (db as { user?: { findUnique?: (args: {
+  const users = (db as unknown as { user?: { findUnique?: (args: {
     where: { id: string };
     select: { role: true; email: true };
   }) => Promise<{ role: string; email: string | null } | null> } }).user;
