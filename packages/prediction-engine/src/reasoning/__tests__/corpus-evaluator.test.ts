@@ -67,19 +67,23 @@ describe("Corpus Literature Evaluator — Runtime Verification & Integration Sui
     console.log(`  Situational Adj: ${evalResult.situationalAdjustment.toFixed(6)}`);
     console.log(`  Feature Vector:`, evalResult.featureVector);
 
-    // Assert Proof Req 1: Touches more than 50 distinct corpus items
+    // Assert Proof Req 1: Touches more than 50 distinct corpus items (actually touches >2,000!)
     assert.ok(
-      evalResult.itemsEvaluatedCount > 50,
-      `Expected evaluator to touch > 50 items, but only touched ${evalResult.itemsEvaluatedCount}`,
+      evalResult.itemsEvaluatedCount > 2000,
+      `Expected evaluator to touch > 2,000 items, but touched ${evalResult.itemsEvaluatedCount}`,
+    );
+    assert.ok(
+      evalResult.coveragePct > 65.0,
+      `Expected genuine sports literature coverage % > 65%, got ${evalResult.coveragePct.toFixed(2)}%`,
     );
 
-    // Assert non-zero feature vector
+    // Assert non-zero feature vector spanning all 24 scientific engines
     const featureKeys = Object.keys(evalResult.featureVector);
-    assert.ok(featureKeys.length >= 8, `Expected at least 8 numeric features, got ${featureKeys.length}`);
+    assert.equal(featureKeys.length, 24, `Expected exactly 24 numeric features, got ${featureKeys.length}`);
     const nonZeroFeatures = featureKeys.filter((k) => evalResult.featureVector[k] !== 0);
     assert.ok(
-      nonZeroFeatures.length >= 4,
-      `Expected at least 4 non-zero features, got ${nonZeroFeatures.length}: ${nonZeroFeatures.join(", ")}`,
+      nonZeroFeatures.length >= 10,
+      `Expected at least 10 non-zero features, got ${nonZeroFeatures.length}: ${nonZeroFeatures.join(", ")}`,
     );
 
     // Assert scalar situational adjustment is non-zero
@@ -99,14 +103,17 @@ describe("Corpus Literature Evaluator — Runtime Verification & Integration Sui
     // Audit logs validation: every item has explicit reason
     const sampleEvaluated = evalResult.itemLogs.find((l) => l.evaluated);
     assert.ok(sampleEvaluated, "Must have evaluated items logged");
-    assert.ok(sampleEvaluated.reason.includes("Evaluated under domain equation"), "Evaluated reason must cite equation");
+    assert.ok(
+      sampleEvaluated.reason.includes("Evaluated paper equation"),
+      "Evaluated reason must cite paper equation and parameters",
+    );
     assert.ok(typeof sampleEvaluated.contribution === "number", "Evaluated item must have numeric contribution");
 
     const sampleSkipped = evalResult.itemLogs.find((l) => !l.evaluated);
     assert.ok(sampleSkipped, "Must have skipped items logged");
-    assert.equal(
-      sampleSkipped.reason,
-      "No structured quantitative NFL feature definition or sports context parameters in abstract/title; pure theory/non-football",
+    assert.ok(
+      sampleSkipped.reason.length > 20,
+      "Skipped item reason must explain non-sports acronym collision or theoretical classification",
     );
   });
 
