@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1200px;
+    height: 1350px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(251, 191, 36, 0.24) 0%, transparent 55%),
+      radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.20) 0%, transparent 50%),
+      linear-gradient(180deg, #041F13 0%, #03140C 60%, #020C07 100%);
+    font-family: 'Inter', sans-serif;
+    color: #FFFBEB;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Yard-line field markings in background */
+  .field-lines {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 2px,
+      transparent 2px,
+      transparent 90px
+    );
+    pointer-events: none;
+  }
+  .gold-frame {
+    position: absolute;
+    inset: 22px;
+    border: 2px solid rgba(251, 191, 36, 0.35);
+    border-radius: 26px;
+    pointer-events: none;
+  }
+  .hero-header {
+    text-align: center;
+    padding: 46px 60px 24px;
+    position: relative;
+  }
+  .snf-crown {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, #F59E0B, #FDE68A, #F59E0B);
+    color: #03140C;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 7px 22px;
+    border-radius: 999px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4);
+  }
+  .matchup-poster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 18px;
+  }
+  .team-block {
+    text-align: center;
+  }
+  .team-city {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: #FCD34D;
+    letter-spacing: 3px;
+    font-weight: 700;
+  }
+  .team-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 0.95;
+    color: #FFFFFF;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  .vs-circle {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(251, 191, 36, 0.15);
+    border: 2px solid #FBBF24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    color: #FBBF24;
+  }
+  .sub-meta {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: #A7F3D0;
+    letter-spacing: 1px;
+  }
+  .content-wrap {
+    padding: 0 54px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  /* Two Giant Main Plays */
+  .main-plays-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .hammer-card {
+    background: linear-gradient(155deg, rgba(8, 53, 32, 0.95) 0%, rgba(4, 28, 17, 0.98) 100%);
+    border: 2px solid #FBBF24;
+    border-radius: 22px;
+    padding: 24px 28px;
+    position: relative;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.55);
+  }
+  .hammer-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 800;
+    color: #FBBF24;
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hammer-pick {
+    font-family: 'Outfit', sans-serif;
+    font-size: 46px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin: 8px 0 6px;
+    letter-spacing: -1px;
+  }
+  .hammer-proj {
+    display: inline-block;
+    background: rgba(251, 191, 36, 0.16);
+    border: 1px solid rgba(251, 191, 36, 0.5);
+    color: #FDE68A;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .hammer-why {
+    font-size: 14.5px;
+    line-height: 1.45;
+    color: #D1FAE5;
+  }
+  /* 3 Player Props Row */
+  .section-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 800;
+    color: #FBBF24;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .section-bar::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(251,191,36,0.5), transparent);
+  }
+  .props-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .prop-poster-card {
+    background: rgba(6, 38, 23, 0.9);
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    border-radius: 18px;
+    padding: 18px 20px;
+  }
+  .prop-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #34D399;
+    font-weight: 800;
+  }
+  .prop-player {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-top: 2px;
+  }
+  .prop-line {
+    font-family: 'Outfit', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #FBBF24;
+    margin: 8px 0 4px;
+  }
+  .prop-delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #A7F3D0;
+    font-weight: 700;
+  }
+  .prop-note {
+    font-size: 13px;
+    color: #CBD5E1;
+    margin-top: 8px;
+    line-height: 1.35;
+  }
+  /* Golden Perforated SGP Ticket Stub */
+  .sgp-stub {
+    background: linear-gradient(90deg, #1E1303 0%, #2E1D04 50%, #1E1303 100%);
+    border: 2px dashed #FBBF24;
+    border-radius: 20px;
+    padding: 22px 30px;
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+  }
+  .sgp-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #FBBF24;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+  .sgp-legs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
+    margin-top: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+  .sgp-payout-box {
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    color: #03140C;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+  }
+  .sgp-odds {
+    font-family: 'Outfit', sans-serif;
+    font-size: 46px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .sgp-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 4px;
+  }
+  .poster-footer {
+    position: absolute;
+    bottom: 34px;
+    left: 54px;
+    right: 54px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: #A7F3D0;
+  }
+</style>
+</head>
+<body>
+  <div class="field-lines"></div>
+  <div class="gold-frame"></div>
+
+  <div class="hero-header">
+    <div class="snf-crown">👑 SUNDAY NIGHT FOOTBALL • GSE ENGINE #1 HAMMER OF WEEK 6</div>
+    <div class="matchup-poster">
+      <div class="team-block">
+        <div class="team-city">DALLAS</div>
+        <div class="team-name">COWBOYS</div>
+      </div>
+      <div class="vs-circle">AT</div>
+      <div class="team-block">
+        <div class="team-city">GREEN BAY</div>
+        <div class="team-name">PACKERS</div>
+      </div>
+    </div>
+    <div class="sub-meta">7:20 PM CST • LAMBEAU FIELD • NBC / PEACOCK • 100% FREE CARD</div>
+  </div>
+
+  <div class="content-wrap">
+    <!-- 2 MAIN GAME PLAYS -->
+    <div class="main-plays-grid">
+      <div class="hammer-card">
+        <div class="hammer-tag">
+          <span>🔥 #1 TOTAL OF THE SLATE</span>
+          <span>GSE SCORE 69/100</span>
+        </div>
+        <div class="hammer-pick">OVER 53.5 (-110)</div>
+        <div class="hammer-proj">GSE ENGINE PROJECTION: 56.5 PTS (+10.8% GSE EDGE)</div>
+        <div class="hammer-why">
+          Both defenses enter missing their top pass-rush &amp; coverage anchors (Micah Parsons OUT, Javon Hargrave IR, DeMarvion Overshown OUT, Cobie Durant OUT). With RB Josh Jacobs OUT, Green Bay shifts into an aggressive 4-wideout passing script.
+        </div>
+      </div>
+
+      <div class="hammer-card">
+        <div class="hammer-tag">
+          <span>🧀 PRIMETIME SIDE &amp; ML</span>
+          <span>GSE SCORE 69/100</span>
+        </div>
+        <div class="hammer-pick">PACKERS -1.5 (-110)</div>
+        <div class="hammer-proj">GSE ENGINE MARGIN: GB BY +4.5 PTS (+10.5% GSE EDGE)</div>
+        <div class="hammer-why">
+          Green Bay owns the cleanest pocket in football (5.31 yds average depth) while Dallas travels north without Overshown or Durant. Also playable outright on <strong>Packers ML (-125, 61.2% GSE Win Prob)</strong>.
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 PRIMETIME PROPS -->
+    <div class="section-bar">🎯 GSE ENGINE SNF PLAYER PROP PROJECTIONS</div>
+    <div class="props-3col">
+      <div class="prop-poster-card">
+        <div class="prop-role">GB QUARTERBACK</div>
+        <div class="prop-player">JORDAN LOVE</div>
+        <div class="prop-line">OVER 263.5 PASS YDS</div>
+        <div class="prop-delta">GSE PROJ: 288.5 YDS (+25.0 YD CUSHION)</div>
+        <div class="prop-note">Josh Jacobs OUT forces 38+ dropbacks behind Green Bay's #1 pass-blocking pocket.</div>
+      </div>
+
+      <div class="prop-poster-card">
+        <div class="prop-role">GB WIDE RECEIVER</div>
+        <div class="prop-player">CHRISTIAN WATSON</div>
+        <div class="prop-line">OVER 74.5 REC YDS</div>
+        <div class="prop-delta">GSE PROJ: 86.2 YDS (+11.7 YD CUSHION)</div>
+        <div class="prop-note">Averaging 94.8 yds/gm with 5 TDs in 2026; faces Dallas missing CB Cobie Durant.</div>
+      </div>
+
+      <div class="prop-poster-card">
+        <div class="prop-role">DAL WIDE RECEIVER</div>
+        <div class="prop-player">CEEDEE LAMB</div>
+        <div class="prop-line">OVER 86.5 REC YDS</div>
+        <div class="prop-delta">GSE PROJ: 97.4 YDS (+10.9 YD CUSHION)</div>
+        <div class="prop-note">51 targets in 5 games (101.4 yds/gm); GB missing Micah Parsons &amp; CB Benjamin St-Juste.</div>
+      </div>
+    </div>
+
+    <!-- GOLDEN SGP TICKET -->
+    <div class="sgp-stub">
+      <div>
+        <div class="sgp-title">🎟️ OFFICIAL SNF LAMBEAU SHOOTOUT SAME-GAME PARLAY</div>
+        <div class="sgp-legs">
+          <div>✔ DAL @ GB OVER 53.5 TOTAL PTS</div>
+          <div>✔ JORDAN LOVE OVER 263.5 PASS YDS</div>
+          <div>✔ CHRISTIAN WATSON OVER 74.5 REC YDS</div>
+          <div>✔ CEEDEE LAMB OVER 86.5 REC YDS</div>
+        </div>
+      </div>
+      <div class="sgp-payout-box">
+        <div class="sgp-odds">+485</div>
+        <div class="sgp-sub">+61.3% GSE EDGE</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="poster-footer">
+    <span>@GalaxySportsHQ • 100% POWERED BY THE GSE ENGINE</span>
+    <span style="color:#FBBF24; font-weight:800;">FULL SNF CARD FREE AT GALAXYSPORTSEDGE.COM →</span>
+  </div>
+</body>
+</html>

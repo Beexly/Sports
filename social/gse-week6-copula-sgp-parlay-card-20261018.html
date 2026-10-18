@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1200px;
+    height: 1350px;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(192, 132, 252, 0.22) 0%, transparent 45%),
+      radial-gradient(circle at 15% 85%, rgba(251, 191, 36, 0.18) 0%, transparent 45%),
+      linear-gradient(160deg, #0B0514 0%, #150926 55%, #090410 100%);
+    font-family: 'Inter', sans-serif;
+    color: #FAF5FF;
+    overflow: hidden;
+    position: relative;
+  }
+  .header {
+    padding: 34px 48px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid rgba(192, 132, 252, 0.28);
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(251, 191, 36, 0.16);
+    border: 1px solid #FBBF24;
+    color: #FBBF24;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 14px;
+    border-radius: 999px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1;
+    color: #FFFFFF;
+  }
+  .title span {
+    color: #FBBF24;
+  }
+  .sub {
+    font-size: 16px;
+    color: #D8B4FE;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .summary-pill {
+    background: rgba(26, 12, 46, 0.9);
+    border: 1px solid #C084FC;
+    border-radius: 16px;
+    padding: 14px 22px;
+    text-align: right;
+  }
+  .summary-pill .big {
+    font-family: 'Outfit', sans-serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: #FBBF24;
+  }
+  .summary-pill .sm {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #E9D5FF;
+    letter-spacing: 1px;
+  }
+
+  .tickets-grid {
+    padding: 26px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .ticket-card {
+    background: linear-gradient(180deg, #1B0E30 0%, #120821 100%);
+    border: 1.5px solid rgba(192, 132, 252, 0.45);
+    border-radius: 20px;
+    padding: 20px 24px 16px;
+    position: relative;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .ticket-card.gold {
+    background: linear-gradient(180deg, #271705 0%, #170D02 100%);
+    border: 2px solid #FBBF24;
+  }
+  .notch-left, .notch-right {
+    position: absolute;
+    top: 86px;
+    width: 20px;
+    height: 20px;
+    background: #0D0618;
+    border-radius: 50%;
+    border: 1.5px solid rgba(192, 132, 252, 0.45);
+  }
+  .ticket-card.gold .notch-left, .ticket-card.gold .notch-right {
+    border-color: #FBBF24;
+  }
+  .notch-left { left: -11px; }
+  .notch-right { right: -11px; }
+
+  .t-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .t-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 800;
+    color: #C084FC;
+    letter-spacing: 1.2px;
+  }
+  .ticket-card.gold .t-code {
+    color: #FBBF24;
+  }
+  .t-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-top: 3px;
+  }
+  .t-odds-box {
+    text-align: right;
+  }
+  .t-odds {
+    font-family: 'Outfit', sans-serif;
+    font-size: 34px;
+    font-weight: 900;
+    color: #FBBF24;
+    line-height: 1;
+  }
+  .t-edge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: #34D399;
+    font-weight: 800;
+    margin-top: 3px;
+  }
+  .t-divider {
+    margin: 14px 0;
+    border-top: 1.5px dashed rgba(192, 132, 252, 0.35);
+  }
+  .ticket-card.gold .t-divider {
+    border-top-color: rgba(251, 191, 36, 0.5);
+  }
+  .t-legs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .t-leg {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #F3E8FF;
+  }
+  .chk {
+    color: #34D399;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 900;
+  }
+  .t-barcode {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: #94A3B8;
+    letter-spacing: 1px;
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #07030D;
+    border-top: 1px solid rgba(192, 132, 252, 0.3);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="badge">🎟️ GSE ENGINE CORRELATED SGP &amp; PARLAY TICKETS</div>
+      <div class="title">OFFICIAL PARLAY SLIP <span>PORTFOLIO</span></div>
+      <div class="sub">Game-Script Matched Same-Game Parlays &amp; Multi-Game Tickets Across All 5 Remaining Games</div>
+    </div>
+    <div class="summary-pill">
+      <div class="big">6 OFFICIAL SLIPS</div>
+      <div class="sm">UP TO +1228 ODDS • 100% FREE</div>
+    </div>
+  </div>
+
+  <div class="tickets-grid">
+    
+        <div class="ticket-card gold">
+          <div class="notch-left"></div>
+          <div class="notch-right"></div>
+          <div class="t-head">
+            <div>
+              <div class="t-code">TICKET #01 • SNF PRIMETIME SGP</div>
+              <div class="t-title">COWBOYS @ PACKERS (7:20 PM CST)</div>
+            </div>
+            <div class="t-odds-box">
+              <div class="t-odds">+485</div>
+              <div class="t-edge">+61.3% GSE EDGE</div>
+            </div>
+          </div>
+          <div class="t-divider"></div>
+          <div class="t-legs">
+            <div class="t-leg"><span class="chk">✔</span><span>DAL @ GB Game Total OVER 53.5 (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>Jordan Love OVER 263.5 Pass Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>Christian Watson OVER 74.5 Rec Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>CeeDee Lamb OVER 86.5 Rec Yds (-115)</span></div>
+          </div>
+          <div class="t-barcode">
+            <span>||| || |||| | ||| |||| || | ||| ||||</span>
+            <span>VERIFIED BY GSE ENGINE</span>
+          </div>
+        </div>
+        
+        <div class="ticket-card">
+          <div class="notch-left"></div>
+          <div class="notch-right"></div>
+          <div class="t-head">
+            <div>
+              <div class="t-code">TICKET #02 • SOFI INDOOR SGP</div>
+              <div class="t-title">CARDINALS @ RAMS (3:05 PM CST)</div>
+            </div>
+            <div class="t-odds-box">
+              <div class="t-odds">+475</div>
+              <div class="t-edge">+60.5% GSE EDGE</div>
+            </div>
+          </div>
+          <div class="t-divider"></div>
+          <div class="t-legs">
+            <div class="t-leg"><span class="chk">✔</span><span>ARI @ LAR Game Total OVER 51.5 (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>Tyler Higbee OVER 31.5 Rec Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>Davante Adams OVER 57.5 Rec Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>Puka Nacua OVER 94.5 Rec Yds (-115)</span></div>
+          </div>
+          <div class="t-barcode">
+            <span>||| || |||| | ||| |||| || | ||| ||||</span>
+            <span>VERIFIED BY GSE ENGINE</span>
+          </div>
+        </div>
+        
+        <div class="ticket-card">
+          <div class="notch-left"></div>
+          <div class="notch-right"></div>
+          <div class="t-head">
+            <div>
+              <div class="t-code">TICKET #03 • ALLEGIANT DOME SGP</div>
+              <div class="t-title">BILLS @ RAIDERS (3:25 PM CST)</div>
+            </div>
+            <div class="t-odds-box">
+              <div class="t-odds">+460</div>
+              <div class="t-edge">+43.7% GSE EDGE</div>
+            </div>
+          </div>
+          <div class="t-divider"></div>
+          <div class="t-legs">
+            <div class="t-leg"><span class="chk">✔</span><span>BUF @ LV Game Total OVER 53.5 (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>Khalil Shakir OVER 38.5 Rec Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>James Cook OVER 93.5 Rush Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>Josh Allen OVER 239.5 Pass Yds (-115)</span></div>
+          </div>
+          <div class="t-barcode">
+            <span>||| || |||| | ||| |||| || | ||| ||||</span>
+            <span>VERIFIED BY GSE ENGINE</span>
+          </div>
+        </div>
+        
+        <div class="ticket-card">
+          <div class="notch-left"></div>
+          <div class="notch-right"></div>
+          <div class="t-head">
+            <div>
+              <div class="t-code">TICKET #04 • ARROWHEAD BYE SCRIPT SGP</div>
+              <div class="t-title">CHARGERS @ CHIEFS (3:25 PM CST)</div>
+            </div>
+            <div class="t-odds-box">
+              <div class="t-odds">+425</div>
+              <div class="t-edge">+51.2% GSE EDGE</div>
+            </div>
+          </div>
+          <div class="t-divider"></div>
+          <div class="t-legs">
+            <div class="t-leg"><span class="chk">✔</span><span>Kansas City Chiefs -7.5 Spread (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>LAC @ KC Game Total UNDER 41.5 (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>Kenneth Walker III OVER 90.5 Rush Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>Post-Bye Clock Control Trench Script</span></div>
+          </div>
+          <div class="t-barcode">
+            <span>||| || |||| | ||| |||| || | ||| ||||</span>
+            <span>VERIFIED BY GSE ENGINE</span>
+          </div>
+        </div>
+        
+        <div class="ticket-card">
+          <div class="notch-left"></div>
+          <div class="notch-right"></div>
+          <div class="t-head">
+            <div>
+              <div class="t-code">TICKET #05 • MONDAY NIGHT CLOSER SGP</div>
+              <div class="t-title">COMMANDERS @ 49ERS (MON 7:15 PM CST)</div>
+            </div>
+            <div class="t-odds-box">
+              <div class="t-odds">+450</div>
+              <div class="t-edge">+61.6% GSE EDGE</div>
+            </div>
+          </div>
+          <div class="t-divider"></div>
+          <div class="t-legs">
+            <div class="t-leg"><span class="chk">✔</span><span>San Francisco 49ers -7.5 Spread (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>WSH @ SF Game Total OVER 50.5 (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>Brock Purdy OVER 258.5 Pass Yds (-115)</span></div><div class="t-leg"><span class="chk">✔</span><span>George Kittle OVER 58.5 Rec Yds (-115)</span></div>
+          </div>
+          <div class="t-barcode">
+            <span>||| || |||| | ||| |||| || | ||| ||||</span>
+            <span>VERIFIED BY GSE ENGINE</span>
+          </div>
+        </div>
+        
+        <div class="ticket-card gold">
+          <div class="notch-left"></div>
+          <div class="notch-right"></div>
+          <div class="t-head">
+            <div>
+              <div class="t-code">TICKET #06 • CROSS-GAME BOARD SWEEP</div>
+              <div class="t-title">LATE SUNDAY + SNF + MNF PARLAY</div>
+            </div>
+            <div class="t-odds-box">
+              <div class="t-odds">+1228</div>
+              <div class="t-edge">4-LEG HEAVYWEIGHT SWEEP</div>
+            </div>
+          </div>
+          <div class="t-divider"></div>
+          <div class="t-legs">
+            <div class="t-leg"><span class="chk">✔</span><span>Buffalo Bills -5.5 (-110) @ Raiders</span></div><div class="t-leg"><span class="chk">✔</span><span>Kansas City Chiefs -7.5 (-110) vs Chargers</span></div><div class="t-leg"><span class="chk">✔</span><span>DAL @ GB SNF Total OVER 53.5 (-110)</span></div><div class="t-leg"><span class="chk">✔</span><span>San Francisco 49ers -7.5 (-110) vs WSH</span></div>
+          </div>
+          <div class="t-barcode">
+            <span>||| || |||| | ||| |||| || | ||| ||||</span>
+            <span>VERIFIED BY GSE ENGINE</span>
+          </div>
+        </div>
+        
+  </div>
+
+  <div class="footer">
+    <span style="color:#D8B4FE;font-weight:700;">@GalaxySportsHQ • BUILT EXCLUSIVELY BY THE GSE ENGINE</span>
+    <span style="color:#FBBF24;font-weight:800;">ALL PARLAYS FREE AT GALAXYSPORTSEDGE.COM/SGP-PROJECTIONS →</span>
+  </div>
+</body>
+</html>

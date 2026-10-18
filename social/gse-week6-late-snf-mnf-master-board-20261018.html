@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1200px;
+    height: 1350px;
+    background: radial-gradient(circle at 18% 12%, #0C254E 0%, #050D1E 52%, #02060F 100%);
+    font-family: 'Inter', sans-serif;
+    color: #F8FAFC;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Perspective grid overlay */
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .top-ticker {
+    height: 54px;
+    background: linear-gradient(90deg, #00F0FF 0%, #0072FF 50%, #00F5A0 100%);
+    color: #02060F;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .header {
+    padding: 28px 44px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.22);
+  }
+  .brand-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #00F0FF;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+  .title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #FFFFFF 0%, #93C5FD 60%, #00F0FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 17px;
+    color: #94A3B8;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .stat-cluster {
+    display: flex;
+    gap: 14px;
+  }
+  .stat-box {
+    background: rgba(9, 24, 52, 0.9);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    border-radius: 14px;
+    padding: 12px 20px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .stat-box .num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #00F5A0;
+    line-height: 1;
+  }
+  .stat-box .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #93C5FD;
+    letter-spacing: 1.2px;
+    margin-top: 4px;
+  }
+  /* 2x2 Grid for first 4 games + 1 Full-Width Hero Card for SNF */
+  .matrix-container {
+    padding: 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .snf-spotlight {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.16) 0%, rgba(10, 28, 62, 0.95) 55%, rgba(0, 245, 160, 0.14) 100%);
+    border: 2px solid #00F0FF;
+    border-radius: 20px;
+    padding: 22px 28px;
+    position: relative;
+    box-shadow: 0 12px 35px rgba(0, 240, 255, 0.15);
+    display: grid;
+    grid-template-columns: 310px 1fr 195px;
+    gap: 24px;
+    align-items: center;
+  }
+  .window-tag {
+    display: inline-block;
+    background: #00F0FF;
+    color: #02060F;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .matchup-big {
+    font-family: 'Outfit', sans-serif;
+    font-size: 34px;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+  }
+  .venue-sub {
+    font-size: 14px;
+    color: #93C5FD;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .markets-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .mkt-pill {
+    background: rgba(3, 10, 26, 0.85);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .mkt-pill.primary {
+    border-color: #00F5A0;
+    background: rgba(0, 245, 160, 0.09);
+  }
+  .mkt-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #94A3B8;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .mkt-pick {
+    font-family: 'Outfit', sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-top: 4px;
+  }
+  .mkt-pill.primary .mkt-pick {
+    color: #00F5A0;
+  }
+  .mkt-edge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #00F0FF;
+    margin-top: 4px;
+    font-weight: 700;
+  }
+  .edge-gauge {
+    background: rgba(3, 10, 26, 0.9);
+    border: 2px solid #00F5A0;
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+  }
+  .edge-gauge .gse-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #00F5A0;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+  }
+  .edge-gauge .gse-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1.05;
+    margin: 4px 0;
+  }
+  .edge-gauge .gse-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #00F0FF;
+    font-weight: 700;
+  }
+  .grid-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .game-tile {
+    background: linear-gradient(165deg, rgba(12, 31, 68, 0.92) 0%, rgba(5, 14, 34, 0.96) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.32);
+    border-radius: 18px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+  }
+  .tile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .tile-matchup {
+    font-family: 'Outfit', sans-serif;
+    font-size: 27px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-top: 4px;
+  }
+  .tile-badge {
+    background: rgba(0, 245, 160, 0.14);
+    border: 1px solid #00F5A0;
+    border-radius: 12px;
+    padding: 8px 14px;
+    text-align: right;
+  }
+  .tile-badge .e-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #00F5A0;
+    line-height: 1;
+  }
+  .tile-badge .e-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #E2E8F0;
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
+  .tile-note {
+    font-size: 13.5px;
+    color: #CBD5E1;
+    line-height: 1.4;
+    background: rgba(2, 6, 15, 0.65);
+    border-left: 3px solid #00F0FF;
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 68px;
+    background: rgba(2, 6, 15, 0.95);
+    border-top: 1px solid rgba(0, 240, 255, 0.25);
+    padding: 0 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+  }
+  .footer-left {
+    color: #93C5FD;
+    font-weight: 700;
+  }
+  .footer-cta {
+    background: linear-gradient(90deg, #00F0FF, #00F5A0);
+    color: #02060F;
+    font-weight: 800;
+    padding: 9px 22px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="top-ticker">
+    <span>⚡ GALAXY SPORTS EDGE — POST-12PM KICKOFF LIVE BOARD</span>
+    <span>5 REMAINING GAMES • 15 OFFICIAL PLAYS • 100% FREE ACCESS</span>
+  </div>
+
+  <div class="header">
+    <div>
+      <div class="brand-pill">🛰️ GSE ENGINE OFFICIAL SLATE MATRIX</div>
+      <div class="title">LATE SUNDAY + SNF + MNF</div>
+      <div class="subtitle">Every Remaining Spread, Total &amp; Moneyline Powered Exclusively by the GSE Engine</div>
+    </div>
+    <div class="stat-cluster">
+      <div class="stat-box">
+        <div class="num">15 / 15</div>
+        <div class="lbl">PLAYS UNLOCKED</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">+10.8%</div>
+        <div class="lbl">PEAK GSE EDGE</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">$0</div>
+        <div class="lbl">100% FREE TODAY</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="matrix-container">
+    <!-- HERO SPOTLIGHT: SUNDAY NIGHT FOOTBALL -->
+    <div class="snf-spotlight">
+      <div>
+        <span class="window-tag" style="background:#00F5A0;">★ SNF FEATURE • 7:20 PM CST</span>
+        <div class="matchup-big">COWBOYS @ PACKERS</div>
+        <div class="venue-sub">Lambeau Field • #1 Play of the Night</div>
+        <div style="margin-top:8px; font-size:13px; color:#E2E8F0;">
+          Josh Jacobs OUT + Micah Parsons &amp; Hargrave OUT — GSE Engine projects a 56.5-point primetime track meet.
+        </div>
+      </div>
+      <div class="markets-3col">
+        <div class="mkt-pill primary">
+          <div class="mkt-type">TOTAL PLAY</div>
+          <div class="mkt-pick">OVER 53.5</div>
+          <div class="mkt-edge">GSE Proj: 56.5 Pts</div>
+        </div>
+        <div class="mkt-pill primary">
+          <div class="mkt-type">SPREAD PLAY</div>
+          <div class="mkt-pick">PACKERS -1.5</div>
+          <div class="mkt-edge">GSE Margin: +4.5</div>
+        </div>
+        <div class="mkt-pill">
+          <div class="mkt-type">MONEYLINE</div>
+          <div class="mkt-pick">PACKERS -125</div>
+          <div class="mkt-edge">GSE Win: 61.2%</div>
+        </div>
+      </div>
+      <div class="edge-gauge">
+        <div class="gse-lbl">GSE EDGE</div>
+        <div class="gse-val">+10.8%</div>
+        <div class="gse-score">GSE SCORE 69/100</div>
+      </div>
+    </div>
+
+    <!-- 2x2 SCOREBOARD FOR OTHER 4 REMAINING GAMES -->
+    <div class="grid-2x2">
+      <!-- TILE 1: ARI @ LAR -->
+      <div class="game-tile">
+        <div class="tile-top">
+          <div>
+            <span class="window-tag">3:05 PM CST • SOFI DOME</span>
+            <div class="tile-matchup">CARDINALS @ RAMS</div>
+          </div>
+          <div class="tile-badge">
+            <div class="e-num">+10.5%</div>
+            <div class="e-lbl">GSE EDGE • 69/100</div>
+          </div>
+        </div>
+        <div class="markets-3col">
+          <div class="mkt-pill primary">
+            <div class="mkt-type">TOTAL</div>
+            <div class="mkt-pick">OVER 51.5</div>
+            <div class="mkt-edge">Proj: 54.8 Pts</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">SPREAD</div>
+            <div class="mkt-pick">RAMS -12.5</div>
+            <div class="mkt-edge">Edge +10.2%</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">MONEYLINE</div>
+            <div class="mkt-pick">RAMS -750</div>
+            <div class="mkt-edge">Win: 88.5%</div>
+          </div>
+        </div>
+        <div class="tile-note">
+          Puka Nacua (112.3 yds/G) &amp; Davante Adams (88.2 yds/G) attack an Arizona secondary missing both starting safeties indoors.
+        </div>
+      </div>
+
+      <!-- TILE 2: BUF @ LV -->
+      <div class="game-tile">
+        <div class="tile-top">
+          <div>
+            <span class="window-tag">3:25 PM CST • ALLEGIANT DOME</span>
+            <div class="tile-matchup">BILLS @ RAIDERS</div>
+          </div>
+          <div class="tile-badge">
+            <div class="e-num">+10.4%</div>
+            <div class="e-lbl">GSE EDGE • 69/100</div>
+          </div>
+        </div>
+        <div class="markets-3col">
+          <div class="mkt-pill primary">
+            <div class="mkt-type">TOTAL</div>
+            <div class="mkt-pick">OVER 53.5</div>
+            <div class="mkt-edge">Proj: 56.2 Pts</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">SPREAD</div>
+            <div class="mkt-pick">BILLS -5.5</div>
+            <div class="mkt-edge">Edge +10.3%</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">MONEYLINE</div>
+            <div class="mkt-pick">BILLS -245</div>
+            <div class="mkt-edge">Win: 73.8%</div>
+          </div>
+        </div>
+        <div class="tile-note">
+          Josh Allen + James Cook (106.4 rush yds/G) on a fast indoor Vegas track against a Raiders interior missing DT Tonka Hemingway.
+        </div>
+      </div>
+
+      <!-- TILE 3: LAC @ KC -->
+      <div class="game-tile">
+        <div class="tile-top">
+          <div>
+            <span class="window-tag">3:25 PM CST • ARROWHEAD</span>
+            <div class="tile-matchup">CHARGERS @ CHIEFS</div>
+          </div>
+          <div class="tile-badge">
+            <div class="e-num">+10.6%</div>
+            <div class="e-lbl">GSE EDGE • 69/100</div>
+          </div>
+        </div>
+        <div class="markets-3col">
+          <div class="mkt-pill primary">
+            <div class="mkt-type">SPREAD</div>
+            <div class="mkt-pick">CHIEFS -7.5</div>
+            <div class="mkt-edge">14d Bye Rest</div>
+          </div>
+          <div class="mkt-pill primary">
+            <div class="mkt-type">TOTAL</div>
+            <div class="mkt-pick">UNDER 41.5</div>
+            <div class="mkt-edge">Proj: 38.0 Pts</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">MONEYLINE</div>
+            <div class="mkt-pick">CHIEFS -360</div>
+            <div class="mkt-edge">Win: 79.5%</div>
+          </div>
+        </div>
+        <div class="tile-note">
+          Chiefs off Week 5 bye (14d rest) with Kenneth Walker III (134.2 rush yds/G) vs Chargers OL missing All-Pro LT Joe Alt.
+        </div>
+      </div>
+
+      <!-- TILE 4: WSH @ SF -->
+      <div class="game-tile">
+        <div class="tile-top">
+          <div>
+            <span class="window-tag" style="background:#38BDF8;">MON 7:15 PM CST • MNF</span>
+            <div class="tile-matchup">COMMANDERS @ 49ERS</div>
+          </div>
+          <div class="tile-badge">
+            <div class="e-num">+10.4%</div>
+            <div class="e-lbl">GSE EDGE • 68/100</div>
+          </div>
+        </div>
+        <div class="markets-3col">
+          <div class="mkt-pill primary">
+            <div class="mkt-type">SPREAD</div>
+            <div class="mkt-pick">49ERS -7.5</div>
+            <div class="mkt-edge">61.7% Motion</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">TOTAL</div>
+            <div class="mkt-pick">OVER 50.5</div>
+            <div class="mkt-edge">Proj: 54.0 Pts</div>
+          </div>
+          <div class="mkt-pill">
+            <div class="mkt-type">MONEYLINE</div>
+            <div class="mkt-pick">49ERS -355</div>
+            <div class="mkt-edge">Win: 79.2%</div>
+          </div>
+        </div>
+        <div class="tile-note">
+          Brock Purdy, CMC &amp; George Kittle (Deebo OUT) dissect a Washington defense missing Charles Omenihu with 3 safeties Questionable.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">@GalaxySportsHQ • GALAXYSPORTSEDGE.COM/PICKS</div>
+    <div class="footer-cta">ALL 15 PLAYS LIVE &amp; FREE RIGHT NOW →</div>
+  </div>
+</body>
+</html>
