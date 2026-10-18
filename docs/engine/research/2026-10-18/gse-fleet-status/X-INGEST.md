@@ -26,7 +26,7 @@ Generated Sun 2026-10-18, about 4:20 AM CT, by gse-main-bot/executor. Every coun
 4. `cd /workspace/xdm && python3 proc.py` classifies profile posts and writes `prof_rows.json`.
 5. `python3 write.py` writes `ingested.jsonl`, `training-and-tools.jsonl` and `unclear-log.jsonl` using `.tmp` files and atomic rename.
 6. `python3 write2.py` writes `profile-intel.jsonl` and `progress.json`, which holds per-author status and `resume_pagination_token`.
-- Later repairs (RO-02/03, the canon remap, RO-13–RO-17) are applied by `/workspace/xdm/write2.py` (profile-intel/dfs) and `stamp_eligible.py` (ingested/training/unclear). **Re-running those scripts with the documented flags reproduces live files byte-for-byte** and does not regress repairs. Ad hoc edits alone are no longer the source of truth for profile-intel.
+- Later repairs (RO-02/03, the canon remap, RO-13–RO-18) are applied by `/workspace/xdm/write2.py` (profile-intel/dfs) and `stamp_eligible.py` (ingested/training/unclear). **Re-running those scripts with the documented flags reproduces live files byte-for-byte** and does not regress repairs. Ad hoc edits alone are no longer the source of truth for profile-intel.
 
 ### x-search (`/workspace/xsearch`), run in this order
 1. Search and timeline calls go through the free `x` namespace (MCP). Each result is saved to `/workspace/agent-tools/<8-hex prefix>*.txt`, and one line per call (`prefix<TAB>label`) is appended to `qlog.tsv`.
@@ -57,16 +57,18 @@ Generated Sun 2026-10-18, about 4:20 AM CT, by gse-main-bot/executor. Every coun
 - `versions/pass2/` (archive): situational 3,297, tools 717, quant 329, bias 929, dfs 350, unclear 2,535, plus new-authors, queries, summary.md and `_ARCHIVE_MANIFEST.json`. The jsonl row counts match `pass2_counts.json`. Every row has `archive_only=true, eligible=false, snapshot_of`.
 - `versions/pre-ro/`: a pass2 copy and `situational-intel.jsonl` (3,802).
 
+<!-- XDM_INVENTORY_BEGIN -->
 ### x-dms: `/workspace/gse/blackboard/ingest/x-dms/2026-10-18/`
 | file | rows | breakdown |
 |---|---|---|
-| ingested.jsonl | 79 | subtype situational_intel 37 (DIV-1), tool_or_data_source 26 (DIV-2), ai_content_generation_or_other_sport 16 (DIV-4). hype_flag true 8 |
-| profile-intel.jsonl | 1,196 | kind football 877, ai_quant 214, weak 105. DIV-1 982, DIV-3 214. l2: SITUATIONAL 773, NONE_PURE_LAYER1 401, REPLACEMENT 22. 30 duplicate_of with eligible=false. 187 have repair_note. lease_version 2: 985, 3: 205, 4: 6 |
-| training-and-tools.jsonl | 51 | 49 posts + 2 profile_share. hype_flag true **22** (README says 30; the README is stale). eligible=false 5 (3 dup, 2 profile share) |
-| unclear-log.jsonl | 10 | eligible=false 2 (1 dup, 1 undecryptable) |
-| **total** | **1,336** | |
-| progress.json | 116 authors | complete 50, pending_more_pages 65, skipped 1 (@grok) |
-| README.md, summary.md, routing.md | 49 / 49 / 6 lines | |
+| ingested.jsonl | 79 | subtype situational_intel 37 (DIV-1), tool_or_data_source 26 (DIV-2), ai_content_generation_or_other_sport 16 (DIV-4). hype_flag true 8. eligible true 79 |
+| profile-intel.jsonl | 1,117 | kind football 798, ai_quant 214, weak 105. DIV-1 658, DIV-3 459 (of which 245 quarantined routing=NONE, eligible=false; 214 ai_quant eligible=true). l2: SITUATIONAL 575, NONE_PURE_LAYER1 526, REPLACEMENT 16. 31 duplicate_of with eligible=false. eligible true/false 872/245. lease_version 9: 1117 |
+| dfs.jsonl | 79 | moved_from=profile-intel. eligible true 79/79. lease 9 |
+| training-and-tools.jsonl | 51 | 49 posts + 2 profile_share. hype_flag true 22. eligible=false 5 |
+| unclear-log.jsonl | 10 | eligible=false 2 |
+| **total** | **1,336** | profile+dfs+ingested+training+unclear |
+| progress.json | 116 authors | complete 50, pending_more_pages 65, skipped 1 |
+<!-- XDM_INVENTORY_END -->
 
 - Snapshots: `versions/pre-ro/` (79 / 1,196 / 51 / 10), `versions/pre-canon/` (79 / 1,196 / 51 / 10), `versions/pre-ro13/` (training-and-tools 51, unclear 10).
 - `/workspace/gse/blackboard/ingest/row-id-map-2026-10-18.jsonl` has 1,333 lines with fields `legacy_row_id, row_id, post_id, file`. It has only 1,299 unique row_ids because the 34 cross-file duplicate posts map to the same canonical id. 1,336 x-dms rows minus the 3 rows without a post id gives 1,333.
@@ -108,10 +110,12 @@ if cat!='skip' and score<1.5: cat = 'unclear' if score>0 else 'skip'
 ## 6. IDs and versioning
 - **Rule as stated (canonical_url_rule, about 02:06 CT):** `row_id = sha1('https://x.com/i/status/'+post_id)[:16]`.
 - **Actual state (verified by recomputing):**
-  - x-dms: all 1,334 rows that have a post_id match the i/status rule (ingested 79/79, profile 1,196/1,196, training 49/49, unclear 9/9). The 3 rows without a post_id use other hashes; 2 of them are `sha1(url)` of the profile URL.
+  - x-dms: all 1,334 rows that have a post_id match the i/status rule (ingested 79/79, profile 1,117/1,117, training 49/49, unclear 9/9). The 3 rows without a post_id use other hashes; 2 of them are `sha1(url)` of the profile URL.
   - **x-search: 0 of 9,798 rows are guaranteed i/status.** All 9,798 equal `sha1(stored url)[:16]`. Only 1,932 of them coincide with i/status: situational 795, unclear 756, bias 167, tools 121, dfs 69, quant 24. The rest hash `https://x.com/<handle>/status/<id>`. This was a deliberate choice to keep DIV-1 and overheard citations stable. **Consumers must not recompute x-search row_ids with the i/status formula.**
 - `legacy_row_id` holds the pre-canon handle-URL hash on x-dms rows, and is also mapped in row-id-map.
-- `duplicate_of` gives `<file>:L<n>` (0-based) of the kept copy, and `duplicate_of_row_id` gives that copy's row_id. Duplicate rows carry `eligible=false`. There are 34 in total: profile 30, training 3, unclear 1.
+- <!-- XDM_DUP_BEGIN -->
+`duplicate_of` gives `<file>:L<n>` (0-based) of the kept copy, and `duplicate_of_row_id` gives that copy's row_id. Duplicate rows carry `eligible=false`. There are 35 in total: profile 31, training 3, unclear 1.
+<!-- XDM_DUP_END -->
 - **Every row has an explicit `eligible` field (RO-17).** `eligible=false` marks rows that must not be promoted (ineligible_reason, duplicates, archive_only, or quarantine `routing=="NONE"`). Consumers filter `eligible==true`. There is no missing-field fallback.
 - `archive_only=true` plus `snapshot_of=<live path>` (plus eligible=false) are on every row in `versions/*` snapshot folders.
 - `moved_from`, `moved_from_category` and `moved_from_line` appear on 2 situational rows that were moved between buckets.
@@ -207,4 +211,8 @@ Full DIV-1 row-level review for RO-16: blackboard path `ingest/x-dms/2026-10-18/
 - `eligible=false` when the row has `ineligible_reason`, `duplicate_of`, `duplicate_of_row_id`, `archive_only`, or is quarantined (`routing=="NONE"`).
 - Otherwise `eligible=true` (including all DIV-1 keeps, genuine DIV-3 `ai_quant`, dfs rows, and previously missing ingested/training/unclear rows).
 - Do **not** select on `division` or `kind` alone (see RO-16 table below). Quarantined rows are `division=DIV-3` with `routing="NONE"` and `eligible=false`.
-- `write2.py` is the reproducible transform from `versions/pre-ro14/profile-intel.jsonl` (plus `--stabilize-from` for reason-text stability). `stamp_eligible.py` stamps ingested/training/unclear. Re-running both with the documented flags reproduces live files byte-for-byte; it does **not** regress repairs.
+
+## Consumer rule (RO-18) — 2026-10-18T08:02:00-05:00 (America/Chicago)
+- Inventory numbers in §4 x-dms table and the duplicate-total bullet are generated by `/workspace/xdm/gen_inventory.py` between HTML markers so they cannot go stale. Re-run that script after any live-file change.
+- `write2.py` no longer accepts `--stabilize-from`. Reason text comes only from the classifier; profile-intel and retag-log reasons agree. Plain dual-rerun from `versions/pre-ro14` + `stamp_eligible.py` is byte-identical (diff=0). Eligible and quarantine sets are unchanged vs RO-17.
+- Eligible consumer rule is unchanged from RO-16/RO-17: every consumer filters on `eligible==true`. There is no missing-field fallback.
