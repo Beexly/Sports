@@ -997,3 +997,149 @@ export function computeGameContext(
     factors,
   };
 }
+
+// ============================================================
+// Sovereign Signal Plane Consumption (Vision + FTN + QBR + Snaps + Cognitive + NGS)
+// ============================================================
+
+/**
+ * Production weights for the 17 active Week 6 Sovereign Signal Plane keys
+ * persisted in the Neon DB `signals` and `game_signals` tables.
+ */
+export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({
+  "vision.soe_yd": 0.085,
+  "vision.art_mean": 0.075,
+  "vision.pocket_depth_yd": 0.065,
+  "ftn.play_action_rate": 0.090,
+  "ftn.motion_rate": 0.080,
+  "ftn.screen_rate": 0.055,
+  "ftn.rpo_rate": 0.060,
+  "ftn.def_blitz_rate": 0.095,
+  "qbr.total_qbr": 0.110,
+  "snaps.starter_snap_share": 0.070,
+  "cognitive.presser_sentiment": 0.050,
+  "cognitive.coach_speak_delta": 0.065,
+  "cognitive.scheme_shift": 0.075,
+  "cognitive.tendency_break": 0.080,
+  "ngs.avg_separation": 0.085,
+  "ngs.ryoe_per_att": 0.095,
+  "ngs.cpoe": 0.105,
+});
+
+export interface SovereignSignalContribution {
+  readonly key: string;
+  readonly weight: number;
+  readonly homeValue: number;
+  readonly awayValue: number;
+  readonly directionalReading: number;
+  readonly probContribution: number;
+}
+
+export interface SovereignSignalPlaneSummary {
+  readonly equation: string;
+  readonly marketFairProb: number;
+  readonly structuralDeltaProb: number;
+  readonly continuityDeltaProb: number;
+  readonly signalPlaneDeltaProb: number;
+  readonly trueProb: number;
+  readonly rawEdge: number;
+  readonly shrunkEdge: number;
+  readonly expectedClv: number;
+  readonly edgeScore: number;
+  readonly signalContributions: readonly SovereignSignalContribution[];
+}
+
+/**
+ * Combines persisted `signals` / `game_signals` rows for the 17 Sovereign Signal
+ * Plane keys (`vision.*`, `ftn.*`, `qbr.*`, `snaps.*`, `cognitive.*`, `ngs.*`)
+ * with the structural base probability and Week 5 -> Week 6 continuity deltas
+ * to produce the pick's model `trueProb`, `rawEdge`, and `edgeScore`.
+ *
+ * Equation:
+ *   c_k = weight_k * directionalReading_k * 0.065
+ *   signalPlaneDeltaProb = sum_k(c_k)
+ *   trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + signalPlaneDeltaProb, 0.05, 0.95)
+ *   rawEdge = trueProb - marketFairProb
+ *   edgeScore = clamp(50 + 180 * rawEdge, 0, 100)
+ */
+export function computeSovereignSignalPlaneContribution(
+  homeSignals: Readonly<Record<string, { value: number; weight?: number }>>,
+  awaySignals: Readonly<Record<string, { value: number; weight?: number }>>,
+  marketType: "SPREAD" | "TOTAL" | "MONEYLINE",
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER",
+  marketFairProb: number,
+  structuralDeltaProb: number = 0,
+  continuityDeltaProb: number = 0,
+): SovereignSignalPlaneSummary {
+  const PROB_SCALE = 0.065;
+  const totalUnderKeys = new Set([
+    "vision.art_mean",
+    "ftn.def_blitz_rate",
+    "ftn.screen_rate",
+    "cognitive.tendency_break",
+  ]);
+
+  const contributions: SovereignSignalContribution[] = [];
+  let signalPlaneDeltaProb = 0;
+
+  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {
+    const hEntry = homeSignals[key];
+    const aEntry = awaySignals[key];
+    if (!hEntry && !aEntry) continue;
+
+    const hVal = hEntry?.value ?? 0;
+    const aVal = aEntry?.value ?? 0;
+    const weight = hEntry?.weight ?? aEntry?.weight ?? defaultWeight;
+
+    let directionalReading = 0;
+    if (marketType === "SPREAD" || marketType === "MONEYLINE") {
+      const diff = hVal - aVal;
+      directionalReading = pickedSide === "HOME" ? diff : -diff;
+    } else {
+      // TOTAL market: combine both teams' offensive/pace vs defensive/disruption signals
+      const meanSignal = (hVal + aVal) / 2;
+      const overAligned = totalUnderKeys.has(key) ? -meanSignal : meanSignal;
+      directionalReading = pickedSide === "OVER" ? overAligned : -overAligned;
+    }
+
+    const probContribution = Number((weight * directionalReading * PROB_SCALE).toFixed(5));
+    signalPlaneDeltaProb += probContribution;
+    contributions.push({
+      key,
+      weight: Number(weight.toFixed(4)),
+      homeValue: Number(hVal.toFixed(4)),
+      awayValue: Number(aVal.toFixed(4)),
+      directionalReading: Number(directionalReading.toFixed(4)),
+      probContribution,
+    });
+  }
+
+  signalPlaneDeltaProb = Number(signalPlaneDeltaProb.toFixed(4));
+  const trueProb = Number(
+    clamp(
+      marketFairProb + structuralDeltaProb + continuityDeltaProb + signalPlaneDeltaProb,
+      0.05,
+      0.95,
+    ).toFixed(4),
+  );
+  const rawEdge = Number((trueProb - marketFairProb).toFixed(4));
+  const shrunkEdge = Number((rawEdge * 0.82).toFixed(4));
+  const expectedClv = Number((rawEdge * 0.75).toFixed(4));
+  const edgeScore = Number(clamp(50 + 180 * rawEdge, 0, 100).toFixed(1));
+
+  return {
+    equation:
+      "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.065), 0.05, 0.95)",
+    marketFairProb: Number(marketFairProb.toFixed(4)),
+    structuralDeltaProb: Number(structuralDeltaProb.toFixed(4)),
+    continuityDeltaProb: Number(continuityDeltaProb.toFixed(4)),
+    signalPlaneDeltaProb,
+    trueProb,
+    rawEdge,
+    shrunkEdge,
+    expectedClv,
+    edgeScore,
+    signalContributions: contributions,
+  };
+}
+

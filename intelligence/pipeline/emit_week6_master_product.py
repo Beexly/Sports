@@ -250,6 +250,7 @@ def load_db_published_picks() -> List[Dict[str, Any]]:
         fb = r[13] or {}
         ie = fb.get("independentEdge") or {}
         cd = fb.get("continuityDeltas") or {}
+        spa = fb.get("signalPlaneAttribution") or {}
         out.append({
             "id": r[0],
             "matchup": f"{r[1]} @ {r[2]}",
@@ -271,6 +272,7 @@ def load_db_published_picks() -> List[Dict[str, Any]]:
                 "dl": cd.get("dlContinuityDelta"),
                 "db": cd.get("dbContinuityDelta"),
             },
+            "signal_plane_attribution": spa,
             "reasoning": r[12],
         })
     cur.close()
@@ -1123,7 +1125,7 @@ def main() -> int:
         "GSE WEEK 6 UPCOMING HIGH-ALPHA SGPs — 50,000-DRAW STUDENT-T COPULA (EXCLUDES LIVE HOU@JAX)",
         "--------------------------------------------------------------------------------------------------------------",
     ])
-    for sgp in sgps[:5]:
+    for sgp in [s for s in sgps if s.get("correlation_lift_pct", 0) > 0][:5]:
         legs_str = " + ".join(sgp["legs"])
         md.append(f"• {sgp['game']} [{sgp['window']}] (+{sgp['book_american_price']:.0f} Book vs {sgp['fair_american_price']:+.0f} Fair)")
         md.append(f"  Legs: {legs_str}")
@@ -1153,21 +1155,44 @@ def main() -> int:
         "",
         "---",
         "",
-        "## 1. Verified Signal Plane Manifest (Committed Files, SHA-256 Hashes & Live Neon DB Signal Keys)",
+        "## 1. Verified Signal Plane Manifest & Mathematical Attribution Proof (`picks.factorBreakdown.signalPlaneAttribution`)",
         "",
+        "- **Exact Scoring Functions Consuming the 14-Key Signal Plane**:",
+        "  - TypeScript Engine: `packages/prediction-engine/src/game-context.ts` -> `computeSovereignSignalPlaneContribution()` (`lines 1009-1146`), re-exported & wired in `packages/prediction-engine/src/scoring.ts` (`lines 24-38`) and `packages/prediction-engine/src/index.ts` (`lines 34-44`).",
+        "  - Python Production Scoring & Neon DB Writer: `scripts/sync_week6_db.py` -> `load_active_db_signals()` & `compute_pick_probability_from_db_signals()` (`lines 116-274`), invoked in Step 5 (`lines 680-765`).",
+        "  - Matchup Causal Chain Engine: `intelligence/matchups/matchup_engine.py` -> `_sovereign_signal_plane()` & `build_matchups()` (`lines 285-652`).",
         "- **Vision Physical State-Estimator (`intelligence/vision/VISION-CONTRACT.md` — `BUILT & WIRED`)**:",
-        f"  - `intelligence/vision/data/derived_metrics_pre_week6_2026.parquet` (`528` plays, `25,342` bytes, `sha256: a0dfab6ffea48552`) — Separation Over Expected (`soe_yd` mean `+0.231 yd`) & QB Pocket Depth (`pocket_depth_yd` mean `4.27 yd`).",
-        f"  - `intelligence/vision/data/art_pre_week6_2026.parquet` (`528` plays, `23,370` bytes, `sha256: 8f1c7a49b5a0441c`) — Angular Rush Threat (`art_mean = 0.077`, `metric_type = 'angular_rush_threat'`).",
-        f"  - `intelligence/vision/data/sep_with_soe_pre_week6_2026.parquet` (`522` plays, `21,804` bytes) & `pocket_pre_week6_2026.parquet` (`528` plays, `22,019` bytes).",
+        "  - `intelligence/vision/data/derived_metrics_pre_week6_2026.parquet` (`528` plays, `25,342` bytes, `sha256: a0dfab6ffea48552`) — Separation Over Expected (`soe_yd` mean `+0.231 yd`) & QB Pocket Depth (`pocket_depth_yd` mean `4.27 yd`).",
+        "  - `intelligence/vision/data/art_pre_week6_2026.parquet` (`528` plays, `23,370` bytes, `sha256: 8f1c7a49b5a0441c`) — Angular Rush Threat (`art_mean = 0.077`, `metric_type = 'angular_rush_threat'`).",
+        "  - `intelligence/vision/data/sep_with_soe_pre_week6_2026.parquet` (`522` plays, `21,804` bytes) & `pocket_pre_week6_2026.parquet` (`528` plays, `22,019` bytes).",
         "- **2026 In-Season FTN Play Charting & PFR Snaps / ESPN QBR**:",
-        f"  - `intelligence/coaching/data/ftn_charting_2026.parquet` (`13,438` plays, `175,862` bytes, `sha256: 6e0e7479d3fdb0c7`) — Play-Action Rate (`11.2%`), Pre-Snap Motion Rate (`44.4%`), Screen Rate (`5.0%`), Blitz Rate (`15.2%`).",
-        f"  - `intelligence/coaching/data/snap_counts_2026.parquet` (`7,370` player-week rows, `94,521` bytes, `sha256: e61c4343f9224e5b`) & `qbr_week_level.parquet` (`10,867` rows, `298,718` bytes).",
+        "  - `intelligence/coaching/data/ftn_charting_2026.parquet` (`13,438` plays, `175,862` bytes, `sha256: 6e0e7479d3fdb0c7`) — Play-Action Rate (`11.2%`), Pre-Snap Motion Rate (`44.4%`), Screen Rate (`5.0%`), Blitz Rate (`15.2%`).",
+        "  - `intelligence/coaching/data/snap_counts_2026.parquet` (`7,370` player-week rows, `94,521` bytes, `sha256: e61c4343f9224e5b`) & `qbr_week_level.parquet` (`10,867` rows, `298,718` bytes).",
         "- **Cognitive Tuesday-to-Sunday Loop (`docs/data-sources/research/2026-10-18/cognitive/cognitive_signals.json`)**:",
-        f"  - `1,467,833` bytes (`sha256: 8d783b3a31265cde`) — `137` presser sentiment vectors, `52` coach-speak deltas, `96` scheme shifts, `158` defensive tendency breaks.",
+        "  - `1,467,833` bytes (`sha256: 8d783b3a31265cde`) — `137` presser sentiment vectors, `52` coach-speak deltas, `96` scheme shifts, `158` defensive tendency breaks.",
         "- **Live Neon Postgres Database Wiring (`signals` + `game_signals` via `scripts/ingest_week6_signals_db.py`)**:",
         "  - `signals` table (`season = 2026, week = 6`): `448` active team-level rows across 14 signal keys (`vision.soe_yd`, `vision.pocket_depth_yd`, `vision.art_mean`, `ftn.play_action_rate`, `ftn.motion_rate`, `ftn.screen_rate`, `ftn.rpo_rate`, `ftn.def_blitz_rate`, `qbr.total_qbr`, `snaps.starter_snap_share`, `cognitive.presser_sentiment`, `cognitive.coach_speak_delta`, `cognitive.scheme_shift`, `cognitive.tendency_break`) with non-zero weights (`0.050` to `0.110`).",
         "  - `game_signals` table: `126` matchup-level rows (`9` signal keys × `14` Week 6 NFL games).",
         "",
+    ])
+    chi_atl = next((p for p in db_picks if "Chicago Bears @ Atlanta Falcons" in p["matchup"]), None)
+    if chi_atl and chi_atl.get("signal_plane_attribution"):
+        spa = chi_atl["signal_plane_attribution"]
+        md.extend([
+            "### 📐 Full 14-Key Signal Attribution Dump: `Chicago Bears @ Atlanta Falcons -> OVER 49.5`",
+            f"- **Equation**: `{spa.get('equation')}`",
+            f"- **Decomposition**: `marketFairProb = {spa.get('marketFairProb'):.4f}` + `structuralDeltaProb = {spa.get('structuralDeltaProb'):+.4f}` + `continuityDeltaProb = {spa.get('continuityDeltaProb'):+.4f}` + `signalPlaneDeltaProb = {spa.get('signalPlaneDeltaProb'):+.4f}` = **`trueProb = {spa.get('trueProb'):.4f}` (`{spa.get('trueProb')*100:.2f}%`)**",
+            f"- **Edge & Score**: `rawEdge = {spa.get('rawEdge'):+.4f}` (`{spa.get('rawEdge')*100:+.2f}%`), `shrunkEdge = {spa.get('shrunkEdge'):+.4f}`, `expectedClv = {spa.get('expectedClv'):+.4f}`, `EdgeIdx = {spa.get('edgeScore')}/100`, `Score = {spa.get('confidence')}/100`",
+            "",
+            "| Signal Key | DB Weight ($w_k$) | Home (`ATL`) $z$ | Home (`ATL`) Raw | Away (`CHI`) $z$ | Away (`CHI`) Raw | Directional Reading ($d_k$) | $\\Delta p_k = w_k \\cdot d_k \\cdot 0.065$ |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|",
+        ])
+        for c in (spa.get("signalContributions") or []):
+            md.append(
+                f"| `{c['key']}` | `{c['weight']:.3f}` | `{c['homeValue']:+.3f}` | `{c['homeRaw']:+.3f}` | `{c['awayValue']:+.3f}` | `{c['awayRaw']:+.3f}` | `{c['directionalReading']:+.4f}` | `{c['probContribution']:+.5f}` |"
+            )
+        md.append("")
+    md.extend([
         "---",
         "",
         "## 2. Week 6 Full 14-Game Sovereign Slate & Matchup Board",

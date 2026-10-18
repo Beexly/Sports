@@ -31,8 +31,17 @@ export {
   computeUncertaintyPenalty,
   // v5
   computeScheduleStressScore,
+  // v5.3 Sovereign Signal Plane (vision.*, ftn.*, qbr.*, snaps.*, cognitive.*, ngs.*)
+  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,
+  computeSovereignSignalPlaneContribution,
 } from "./game-context.js";
-export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
+export type {
+  GameContextInput,
+  GameContextScores,
+  AtsFormBucket,
+  SovereignSignalContribution,
+  SovereignSignalPlaneSummary,
+} from "./game-context.js";
 export { calculatePickResult, selectGradingLine, selectionIsHomeSide } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
 // Mint-time calibration history builder — pure mapper from settled picks to

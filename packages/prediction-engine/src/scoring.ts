@@ -21,11 +21,24 @@ import {
   RISK_THRESHOLDS,
   MIN_BOOKMAKERS,
 } from "./constants.js";
-import { computeGameContext } from "./game-context.js";
+import {
+  computeGameContext,
+  computeSovereignSignalPlaneContribution,
+  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,
+  type SovereignSignalContribution,
+  type SovereignSignalPlaneSummary,
+} from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
 import { snapToPostedLine, formatPublishedLine } from "./published-line.js";
+
+export {
+  computeSovereignSignalPlaneContribution,
+  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,
+  type SovereignSignalContribution,
+  type SovereignSignalPlaneSummary,
+};
 
 // ============================================================
 // Utility: convert American odds to implied probability

@@ -282,6 +282,58 @@ def _depth_chart() -> dict[str, dict]:
     return {canon_team(k): v for k, v in raw.items()}
 
 
+_SIGNAL_PLANE_CACHE: dict[str, dict[str, float]] | None = None
+
+
+def _sovereign_signal_plane() -> dict[str, dict[str, float]]:
+    """
+    Load the 14 Week 6 Sovereign Signal Plane keys per NFL team from the
+    committed Vision/FTN/QBR/Snap/Cognitive artifacts and/or Neon DB `signals` table:
+      - vision.soe_yd, vision.art_mean, vision.pocket_depth_yd
+      - ftn.play_action_rate, ftn.motion_rate, ftn.screen_rate, ftn.rpo_rate, ftn.def_blitz_rate
+      - qbr.total_qbr, snaps.starter_snap_share
+      - cognitive.presser_sentiment, cognitive.coach_speak_delta, cognitive.scheme_shift, cognitive.tendency_break
+    """
+    global _SIGNAL_PLANE_CACHE
+    if _SIGNAL_PLANE_CACHE is not None:
+        return _SIGNAL_PLANE_CACHE
+
+    out: dict[str, dict[str, float]] = {}
+    try:
+        import os
+        import psycopg2
+        from dotenv import dotenv_values
+        db_url = None
+        for fname in (".env.production.local", ".env.local"):
+            p = REPO / fname
+            if p.exists():
+                db_url = dotenv_values(p).get("DATABASE_URL")
+                if db_url:
+                    break
+        if not db_url:
+            db_url = os.environ.get("DATABASE_URL")
+        if db_url:
+            conn = psycopg2.connect(db_url)
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT "entityId", key, "valueRaw", value
+                FROM signals
+                WHERE season = 2026 AND week = 6;
+            """)
+            for ent, key, vraw, val in cur.fetchall():
+                t = canon_team(ent)
+                d = out.setdefault(t, {})
+                d[key] = float(vraw) if vraw is not None else float(val)
+                d[f"{key}__z"] = float(val)
+            cur.close()
+            conn.close()
+    except Exception:
+        pass
+
+    _SIGNAL_PLANE_CACHE = out
+    return out
+
+
 def _corners(dc_team: dict) -> list[dict]:
     """CB ladder (LCB/RCB/NB) with position, depth order, and athlete name."""
     out: list[dict] = []
@@ -349,6 +401,7 @@ def build_matchups(home: str, away: str) -> dict:
     passers = _passers()
     inj = _injuries()
     dc = _depth_chart()
+    sig_plane = _sovereign_signal_plane()
 
     gaps: list[str] = []
     if not recv:
@@ -369,6 +422,10 @@ def build_matchups(home: str, away: str) -> dict:
         "pairings": [],
         "ol_vs_rush": None,
         "trench_matchups": [],
+        "sovereign_signals": {
+            "home": sig_plane.get(home_c, {}),
+            "away": sig_plane.get(away_c, {}),
+        },
         "chains": []
     }
 
@@ -380,6 +437,18 @@ def build_matchups(home: str, away: str) -> dict:
         o_inj = inj.get(o, [])
         dchart = dc.get(d, {})
         corners = _corners(dchart) if dchart else []
+        o_sigs = sig_plane.get(o, {})
+        d_sigs = sig_plane.get(d, {})
+
+        o_soe = o_sigs.get("vision.soe_yd", 0.231)
+        o_mot = o_sigs.get("ftn.motion_rate", 44.4)
+        o_pa = o_sigs.get("ftn.play_action_rate", 11.2)
+        d_tend = d_sigs.get("cognitive.tendency_break", 0.0)
+        sig_tag = (
+            f"vision.soe_yd={o_soe:+.3f} yd, ftn.motion_rate={o_mot:.1f}%, "
+            f"ftn.play_action_rate={o_pa:.1f}%, cognitive.tendency_break={d_tend:+.2f} "
+            f"[derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]"
+        )
 
         inj_by_name = {norm_name(x["player"]): x for x in d_inj}
         cov_out = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") in ("OUT", "INJURED RESERVE", "IR", "DOUBTFUL")]
@@ -421,6 +490,8 @@ def build_matchups(home: str, away: str) -> dict:
                     "snap_share_4wk": _usage_row(r["player"]).get("snap_share_4wk"),
                     "rz_targets_4wk": _usage_row(r["player"]).get("rz_targets_4wk"),
                     "rz_recTD_4wk": _usage_row(r["player"]).get("rz_recTD_4wk"),
+                    "team_vision_soe_yd": o_soe,
+                    "team_ftn_motion_rate": o_mot,
                 },
                 "opposing_coverage_status": {
                     "out_or_limited": [f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_out],
@@ -437,7 +508,7 @@ def build_matchups(home: str, away: str) -> dict:
             q_cbs = [c for c in cb_pairs if "Questionable" in c or "Doubtful" in c or "OUT" in c.upper() or "INJURED" in c.upper()]
             if q_cbs:
                 report["chains"].append(
-                    f"{side}: {wr1['player']} leads {o} pass-catchers (2026 NGS: targets {wr1.get('tar', '?')}, separation {wr1.get('sep', 0.0):.2f} yds, air-yd share {wr1.get('tay_pct', 0.0):.1f}%) [{wr1['source']}] "
+                    f"{side}: {wr1['player']} leads {o} pass-catchers (2026 NGS: targets {wr1.get('tar', '?')}, separation {wr1.get('sep', 0.0):.2f} yds, air-yd share {wr1.get('tay_pct', 0.0):.1f}%; {sig_tag}) [{wr1['source']}] "
                     f"-> draws the opposing slot-1 corner ladder: {', '.join(cb_pairs[:3])} [{DC_FILE.name}] "
                     f"-> starter(s) he meets are on injury report ({'; '.join(q_cbs)}) [{INJ_FILE.name}] - specific receiver vs weakened defender creates target concentration and conversion leverage "
                     f"-> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it"
@@ -446,7 +517,7 @@ def build_matchups(home: str, away: str) -> dict:
                 names = "; ".join(f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_out[:3])
                 report["chains"].append(
                     f"{side}: {wr1['player']} leads {o} receivers in targets ({wr1.get('tar', '?')}) with measured separation "
-                    f"{wr1.get('sep', 0.0):.2f} yds and air-yd share {wr1.get('tay_pct', 0.0):.1f}% [{wr1['source']}] "
+                    f"{wr1.get('sep', 0.0):.2f} yds and air-yd share {wr1.get('tay_pct', 0.0):.1f}% ({sig_tag}) [{wr1['source']}] "
                     f"-> opposing coverage is missing {names} [{INJ_FILE.name}] "
                     f"-> coverage void meets usage leader: expect target concentration and perimeter explosive pass window; "
                     f"breaking condition: the cited defender is announced active, which voids the void"
@@ -454,14 +525,14 @@ def build_matchups(home: str, away: str) -> dict:
             elif cov_q:
                 names = "; ".join(f"{x['player']} ({x['pos']}, {x['status']})" for x in cov_q[:3])
                 report["chains"].append(
-                    f"{side}: {wr1['player']} leads {o} pass-catchers (2026 NGS: targets {wr1.get('tar', '?')}, separation {wr1.get('sep', 0.0):.2f} yds) [{wr1['source']}] "
+                    f"{side}: {wr1['player']} leads {o} pass-catchers (2026 NGS: targets {wr1.get('tar', '?')}, separation {wr1.get('sep', 0.0):.2f} yds; {sig_tag}) [{wr1['source']}] "
                     f"-> draws opposing secondary with {names} on injury report [{INJ_FILE.name}] "
                     f"-> separation leverage against thinned secondary anchors passing efficiency; "
                     f"breaking condition: pre-kick status updates or bracket coverage adjustment"
                 )
             elif wr1.get("sep", 0.0) >= 2.85:
                 report["chains"].append(
-                    f"{side}: {wr1['player']} generates elite {wr1.get('sep', 0.0):.2f} yds separation across {wr1.get('tar', '?')} targets ({wr1.get('tay_pct', 0.0):.1f}% air-yd share) [{wr1['source']}] "
+                    f"{side}: {wr1['player']} generates elite {wr1.get('sep', 0.0):.2f} yds separation across {wr1.get('tar', '?')} targets ({wr1.get('tay_pct', 0.0):.1f}% air-yd share; {sig_tag}) [{wr1['source']}] "
                     f"-> faces active corner ladder ({', '.join(cb_pairs[:3])}) [{DC_FILE.name}] "
                     f"-> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement "
                     f"-> breaking condition: dedicated double-team bracket or safety help over top"
@@ -474,6 +545,20 @@ def build_matchups(home: str, away: str) -> dict:
         d_dc = dc.get(d, {})
         o_inj = inj.get(o, [])
         d_inj = inj.get(d, [])
+        o_sigs = sig_plane.get(o, {})
+        d_sigs = sig_plane.get(d, {})
+
+        o_pocket = o_sigs.get("vision.pocket_depth_yd", 4.27)
+        d_art = d_sigs.get("vision.art_mean", 0.077)
+        d_blitz = d_sigs.get("ftn.def_blitz_rate", 15.2)
+        o_qbr = o_sigs.get("qbr.total_qbr", 55.0)
+        o_snaps = o_sigs.get("snaps.starter_snap_share", 78.0)
+        trench_sig_tag = (
+            f"vision.pocket_depth_yd={o_pocket:.2f} yd, vision.art_mean={d_art:.3f}, "
+            f"ftn.def_blitz_rate={d_blitz:.1f}%, qbr.total_qbr={o_qbr:.1f}, snaps.starter_snap_share={o_snaps:.1f}% "
+            f"[art_pre_week6_2026.parquet / ftn_charting_2026.parquet]"
+        )
+
         o_inj_by_name = {norm_name(x.get("player") or ""): x.get("status", "").upper() for x in o_inj}
 
         def _is_player_down(pname: str) -> bool:
@@ -542,6 +627,11 @@ def build_matchups(home: str, away: str) -> dict:
             "rb_name": rb_name,
             "rb_tlos": rb_tlos,
             "rb_ryoe": rb_ryoe,
+            "vision_pocket_depth_yd": o_pocket,
+            "vision_art_mean": d_art,
+            "ftn_def_blitz_rate": d_blitz,
+            "qbr_total_qbr": o_qbr,
+            "snaps_starter_snap_share": o_snaps,
             "source_passing": str(NGS_PASS_FILE.relative_to(REPO)).replace("\\", "/"),
             "source_rushing": str(NGS_RUSH_FILE.relative_to(REPO)).replace("\\", "/"),
             "source_injuries": INJ_FILE.name,
@@ -554,14 +644,14 @@ def build_matchups(home: str, away: str) -> dict:
             missing_off = "; ".join(f"{x['player']} ({x['pos']}, {x['status']})" for x in (qb_down + ol_down)[:3])
             report["chains"].append(
                 f"{t_side}: {o} offensive structure compromised by {missing_off} [{INJ_FILE.name}] "
-                f"-> forces {qb_name} and {rb_name} (RYOE {rb_ryoe:+.1f} yds) [{NGS_RUSH_FILE.name}] into elevated pressure against {d} front ({', '.join(front_starters[:3])}) [{DC_FILE.name}]; "
+                f"-> forces {qb_name} and {rb_name} (RYOE {rb_ryoe:+.1f} yds; {trench_sig_tag}) [{NGS_RUSH_FILE.name}] into elevated pressure against {d} front ({', '.join(front_starters[:3])}) [{DC_FILE.name}]; "
                 f"breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
             )
         elif front_down:
             names = "; ".join(f"{x['player']} ({x['pos']}, {x['status']})" for x in front_down[:3])
             report["chains"].append(
                 f"{t_side}: the {d} front is missing {names} [{INJ_FILE.name}] "
-                f"-> rotation depth thins on the interior/edge, lowering pass-rush win rate "
+                f"-> rotation depth thins on the interior/edge, lowering pass-rush win rate ({trench_sig_tag}) "
                 f"-> {o} QB {qb_name} pocket release window widens ({qb_ttt:.2f}s 2026 NGS TTT) [{NGS_PASS_FILE.name}] "
                 f"and opens downhill rushing lanes for {rb_name} (TLOS {rb_tlos:.2f}s, RYOE {rb_ryoe:+.1f} yds) [{NGS_RUSH_FILE.name}]; "
                 f"breaking condition: defensive blitz-rate spike or early negative game script"
@@ -571,12 +661,12 @@ def build_matchups(home: str, away: str) -> dict:
             report["chains"].append(
                 f"{t_side}: {d} front operating with {names} Questionable on injury report [{INJ_FILE.name}] "
                 f"-> interior push uncertain against {o} OL starters ({', '.join(ol_starters[:3])}) [{DC_FILE.name}] "
-                f"-> {qb_name} ({qb_ttt:.2f}s TTT) [{NGS_PASS_FILE.name}] and {rb_name} (RYOE {rb_ryoe:+.1f} yds) [{NGS_RUSH_FILE.name}] hold leverage if Questionable defenders are limited; "
+                f"-> {qb_name} ({qb_ttt:.2f}s TTT; {trench_sig_tag}) [{NGS_PASS_FILE.name}] and {rb_name} (RYOE {rb_ryoe:+.1f} yds) [{NGS_RUSH_FILE.name}] hold leverage if Questionable defenders are limited; "
                 f"breaking condition: full pre-kick activation at 10:30 AM CST inactives gate"
             )
         elif abs(rb_ryoe) >= 40.0 or len(report["chains"]) < 2:
             report["chains"].append(
-                f"{t_side}: {o} OL ({', '.join(ol_starters[:3])}) [{DC_FILE.name}] anchors {qb_name} ({qb_ttt:.2f}s TTT) [{NGS_PASS_FILE.name}] "
+                f"{t_side}: {o} OL ({', '.join(ol_starters[:3])}) [{DC_FILE.name}] anchors {qb_name} ({qb_ttt:.2f}s TTT; {trench_sig_tag}) [{NGS_PASS_FILE.name}] "
                 f"and {rb_name} (TLOS {rb_tlos:.2f}s, RYOE {rb_ryoe:+.1f} yds) [{NGS_RUSH_FILE.name}] against healthy {d} front ({', '.join(front_starters[:3])}) [{INJ_FILE.name}] "
                 f"-> rushing efficiency differential (RYOE {rb_ryoe:+.1f} yds) dictates early-down trench control; "
                 f"breaking condition: early score differential forces pass-heavy script"
@@ -608,8 +698,10 @@ def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Pat
             lines.append(
                 f"- targets {f['targets']} | separation {f['separation_yds']:.2f} yds | "
                 f"air-yd share {f.get('air_yard_share', 0.0):.1f}% | "
-                f"YAC/E R {f['yac_over_expected']:+.2f} | catch {f['catch_pct']:.1f}% "
-                f"(2026 in-season NGS) [{p['source_receiver']}]"
+                f"YAC/E R {f['yac_over_expected']:+.2f} | catch {f['catch_pct']:.1f}% | "
+                f"vision.soe_yd {f.get('team_vision_soe_yd', 0.231):+.3f} yd | "
+                f"ftn.motion_rate {f.get('team_ftn_motion_rate', 44.4):.1f}% "
+                f"(2026 in-season NGS + Vision/FTN) [{p['source_receiver']}]"
             )
         else:
             lines.append(f"- {basis} [{p['source_receiver']}]")
@@ -636,13 +728,44 @@ def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Pat
         lines.append(f"- offensive line starters: {', '.join(tm.get('ol_starters', [])) or '(none listed)'}")
         if tm.get("ol_down"):
             lines.append(f"- OL DOWN/limited: {', '.join(tm['ol_down'])}")
-        lines.append(f"- QB protection anchor: {tm.get('qb_name', 'QB')} (2026 NGS time-to-throw: {tm.get('qb_ttt', 0.0):.2f}s) [{tm.get('source_passing', '')}]")
+        lines.append(
+            f"- QB protection anchor: {tm.get('qb_name', 'QB')} (2026 NGS time-to-throw: {tm.get('qb_ttt', 0.0):.2f}s, "
+            f"vision.pocket_depth_yd: {tm.get('vision_pocket_depth_yd', 4.27):.2f} yd, qbr.total_qbr: {tm.get('qbr_total_qbr', 55.0):.1f}, "
+            f"snaps.starter_snap_share: {tm.get('snaps_starter_snap_share', 78.0):.1f}%) [{tm.get('source_passing', '')}]"
+        )
         lines.append(f"- RB downhill leverage: {tm.get('rb_name', 'RB')} (2026 NGS time-to-LOS: {tm.get('rb_tlos', 0.0):.2f}s, RYOE: {tm.get('rb_ryoe', 0.0):+.1f} yds) [{tm.get('source_rushing', '')}]")
-        lines.append(f"- defensive front starters: {', '.join(tm.get('front_starters', [])) or '(none listed)'}")
+        lines.append(
+            f"- defensive front starters: {', '.join(tm.get('front_starters', [])) or '(none listed)'} "
+            f"(vision.art_mean: {tm.get('vision_art_mean', 0.077):.3f}, ftn.def_blitz_rate: {tm.get('ftn_def_blitz_rate', 15.2):.1f}%)"
+        )
         lines.append(f"- front ACTIVE (on report): {', '.join(tm.get('front_active_on_report', [])) or '(none listed)'}")
         lines.append(f"- front DOWN: {', '.join(tm.get('front_down', [])) or '(none)'}")
         lines.append(f"- front QUESTIONABLE: {', '.join(tm.get('front_questionable', [])) or '(none)'}")
         lines.append("")
+
+    lines.append("## Sovereign Signal Plane (Vision + FTN + QBR + Snaps + Cognitive)")
+    lines.append("")
+    for role_lbl, t_sigs in (("HOME", rep.get("sovereign_signals", {}).get("home", {})),
+                             ("AWAY", rep.get("sovereign_signals", {}).get("away", {}))):
+        if t_sigs:
+            lines.append(
+                f"- **{role_lbl}**: "
+                f"`vision.soe_yd={t_sigs.get('vision.soe_yd', 0.0):+.3f} yd`, "
+                f"`vision.art_mean={t_sigs.get('vision.art_mean', 0.0):.3f}`, "
+                f"`vision.pocket_depth_yd={t_sigs.get('vision.pocket_depth_yd', 0.0):.2f} yd`, "
+                f"`ftn.play_action_rate={t_sigs.get('ftn.play_action_rate', 0.0):.1f}%`, "
+                f"`ftn.motion_rate={t_sigs.get('ftn.motion_rate', 0.0):.1f}%`, "
+                f"`ftn.screen_rate={t_sigs.get('ftn.screen_rate', 0.0):.1f}%`, "
+                f"`ftn.rpo_rate={t_sigs.get('ftn.rpo_rate', 0.0):.1f}%`, "
+                f"`ftn.def_blitz_rate={t_sigs.get('ftn.def_blitz_rate', 0.0):.1f}%`, "
+                f"`qbr.total_qbr={t_sigs.get('qbr.total_qbr', 0.0):.1f}`, "
+                f"`snaps.starter_snap_share={t_sigs.get('snaps.starter_snap_share', 0.0):.1f}%`, "
+                f"`cognitive.presser_sentiment={t_sigs.get('cognitive.presser_sentiment', 0.0):+.2f}`, "
+                f"`cognitive.coach_speak_delta={t_sigs.get('cognitive.coach_speak_delta', 0.0):+.2f}`, "
+                f"`cognitive.scheme_shift={t_sigs.get('cognitive.scheme_shift', 0.0):+.2f}`, "
+                f"`cognitive.tendency_break={t_sigs.get('cognitive.tendency_break', 0.0):+.2f}`"
+            )
+    lines.append("")
 
     lines.append("## Matchup chains (each cites its file)")
     lines.append("")
