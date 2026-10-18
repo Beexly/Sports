@@ -149,6 +149,15 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Third-down sacks (SHADOW)
+export {
+  computeThirdDownSacks,
+  THIRD_DOWN_SACKS_MODEL_VERSION,
+  MIN_THIRD_DOWN_DROPBACKS_TO_FIT,
+  type ThirdDownSackPlay,
+  type ThirdDownSackRollup,
+} from "./third-down-sacks.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

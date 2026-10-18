@@ -27,6 +27,7 @@
 import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected-points.js";
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
+import type { ThirdDownSackPlay } from "./third-down-sacks.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
 
 /**
@@ -59,6 +60,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "play_type", "yards_gained", "interception", "fumble_lost",
   "rusher_player_id", "receiver_player_id",
   // drives
+  "sack", "pass_attempt", "passer_player_id", "week",
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
@@ -105,6 +107,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly thirdDownDropbackPlays: readonly ThirdDownSackPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const thirdDownDropbackPlays: ThirdDownSackPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -420,6 +424,22 @@ export function mapNflversePbpToExpectedMetrics(
       const ydstogo = num(row["ydstogo"]);
       const yardline100 = num(row["yardline_100"]);
       const isScoringRow = scoring[k] !== null;
+
+      const isPassAttempt = num(row["pass_attempt"]);
+      const isSack = num(row["sack"]);
+
+      if (down === 3 && (isPassAttempt === 1 || isSack === 1)) {
+        thirdDownDropbackPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          week: num(row["week"]),
+          posteam: row["posteam"] ?? "",
+          passerId: row["passer_player_id"] ?? "",
+          down: 3,
+          passAttempt: isPassAttempt,
+          sack: isSack,
+        });
+      }
 
       // (b) EP series. Terminal scoring rows STAY in epPlays (the fit needs
       //     TD/FG-labelled states as positives) but are NaN-masked in epRef so
@@ -611,6 +631,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    thirdDownDropbackPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
