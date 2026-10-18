@@ -62,3 +62,7 @@ See [`X-INGEST.md`](../../docs/engine/research/2026-10-18/gse-fleet-status/X-ING
 ## Consumer rule (RO-17) — 2026-10-18
 
 Every x-dms row now has an explicit `eligible` field. Consumers filter `eligible==true` (see X-INGEST.md § Consumer rule (RO-17)). The RO-16 table still applies; the missing-field fallback is retired.
+
+## Consumer rule (RO-18) — 2026-10-18
+
+X-INGEST inventory numbers (profile-intel 1,117 / dfs 79 / duplicates 35 / hype_flag 22 / lease 9) are generated from live files by `/workspace/xdm/gen_inventory.py`. `write2.py` no longer uses `--stabilize-from`; plain rerun is byte-identical. Eligible consumer rule unchanged: filter `eligible==true`. No missing-field fallback.
