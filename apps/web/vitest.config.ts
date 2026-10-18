@@ -47,7 +47,7 @@ export default defineConfig({
       // alias silently breaks those.
       "@sports/ingestion-pipeline": resolve(
         __dirname,
-        "../../packages/ingestion-pipeline/src/index.ts",
+        "../../packages/ingestion-pipeline",
       ),
       // Deep `.js` specifiers INTO a workspace package must resolve to `.ts`.
       // Same class of bug as #969: a specifier like
