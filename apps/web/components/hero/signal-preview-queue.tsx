@@ -296,7 +296,7 @@ export function SignalPreviewQueue() {
           the slate doesn&apos;t earn it.
         </p>
         <a
-          href="/methodology"
+          href="/how-it-works"
           style={{
             font: "600 12px/1 var(--f-mono)",
             letterSpacing: "0.16em",
@@ -307,7 +307,7 @@ export function SignalPreviewQueue() {
             paddingBottom: 2,
           }}
         >
-          How the gate works →
+          How a pick gets made →
         </a>
       </div>
     </div>

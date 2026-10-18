@@ -25,13 +25,13 @@ export function CipherConsole({ state, codename, week, shardCount }: Props) {
     const accent = "color:#FF4D2E;font-weight:600";
     /* eslint-disable no-console */
     if (state === "live") {
-      console.log("%c◬ THE GLASS BOX CIPHER", head);
+      console.log("%c◬ THE CIPHER", head);
       console.log(
         `%cChapter ${week}: "${codename}" is LIVE. %c${shardCount} shards%c are hidden across the site.\nInspect what others only read. Assemble them in order, then bring the key to %c/cipher%c.`,
         body, accent, body, accent, body,
       );
     } else {
-      console.log("%c◬ THE GLASS BOX CIPHER", head);
+      console.log("%c◬ THE CIPHER", head);
       console.log(
         `%cThe box is sealed. The next transmission opens %cMon 11:59am ET%c.\nWhen it does, the shards return. %c/cipher%c`,
         body, accent, body, accent, body,

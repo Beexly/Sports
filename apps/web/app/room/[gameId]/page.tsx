@@ -114,8 +114,8 @@ export default async function GameRoomPage({
               // depth). It is withheld server-side for FREE/anonymous viewers —
               // the loader returns premortem: null — so nothing paid renders here.
               <p className="text-sm text-ion-3">
-                The pre-mortem — the model&apos;s own case for what would beat this pick, with the
-                confidence and factor trail behind it — is part of Pro.{" "}
+                The pre-mortem, our own case for what would beat this pick with the
+                confidence and Analysis behind it, is part of Pro.{" "}
                 <Link href="/pricing" className="font-semibold text-orbital-cyan hover:text-ion-white">
                   See what Pro unlocks
                 </Link>
@@ -162,9 +162,8 @@ export default async function GameRoomPage({
             the decision itself.
           </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <NextStep href="/ledger" label="Public Ledger" hint="Every settled pick: win or loss, fully auditable." />
-            <NextStep href="/performance" label="Calibration Report" hint="How the model has scored over time." />
-            <NextStep href="/methodology" label="Methodology" hint="The exact factors behind this call, and how it was built." />
+            <NextStep href="/ledger" label="Public record" hint="Every settled pick, win or loss." />
+            <NextStep href="/how-it-works" label="How a pick gets made" hint="How a pick gets made, in plain words." />
             <NextStep href="/responsible-play" label="Set Your Limits" hint="Risk you can understand, before emotion enters." />
           </div>
         </Panel>

@@ -4,8 +4,6 @@ import { db } from "@sports/db";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { ProofOfRecord } from "@/components/trust-ledger/proof-of-record";
-import { buildProofDemo } from "@/lib/trust-ledger/proof-demo";
 import { Reveal } from "@/components/motion/reveal";
 
 // Settlement outcomes carry the semantic tokens (doctrine: WIN = verify mint,
@@ -20,7 +18,7 @@ const RESULT_CLASS: Record<string, string> = {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Public Ledger - Galaxy Sports Edge" },
+  title: { absolute: "Public Record - Galaxy Sports Edge" },
   description:
     "Settled canonical picks with the original signal snapshot preserved against the outcome.",
   alternates: { canonical: "/ledger" },
@@ -97,7 +95,6 @@ async function loadLedgerRows(): Promise<LedgerRow[]> {
 
 export default async function LedgerPage(): Promise<JSX.Element> {
   const rows = await loadLedgerRows();
-  const proofDemo = buildProofDemo();
 
   return (
     <div className="flex min-h-screen flex-col bg-carbon">
@@ -114,7 +111,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             <Reveal>
               <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
-                Public ledger
+                Public record
               </p>
             </Reveal>
             <Reveal delay={90}>
@@ -122,58 +119,33 @@ export default async function LedgerPage(): Promise<JSX.Element> {
                 className="mt-5 max-w-3xl font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.25rem, 6vw, 4.25rem)", lineHeight: 1.02, letterSpacing: "-0.02em" }}
               >
-                Every settled pick keeps its receipt.
+                Every settled pick, win or loss.
               </h1>
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">
-                The ledger preserves the original signal snapshot next to the outcome, and commits
-                a tamper-evident root at lock time. Bootstrap-era and synthetic seed records are
-                excluded.
+                Each settled pick sits next to its result and the signals that were active when it
+                posted. Picks from the early test period and sample data are left out.
               </p>
-            </Reveal>
-            <Reveal delay={240}>
-              <div className="mt-7">
-                <Link href="/performance/losses" className="btn btn-ghost">
-                  Open the Loss Room →
-                </Link>
-              </div>
             </Reveal>
           </div>
         </section>
 
-        {/* Tamper-evident proof of record — the cryptographic backbone */}
-        <section className="px-4 pb-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <h2 className="font-display text-2xl text-ion-white sm:text-3xl">A record that can&apos;t be rewritten.</h2>
-            </Reveal>
-            <Reveal delay={90}>
-              <p className="mt-3 max-w-2xl text-ion-1">
-                Every published pick is a Merkle leaf; we commit the root at lock time. Anyone can
-                recompute it and verify a pick was in the set, and that no loss was quietly turned
-                into a win. Toggle the tamper to see the commitment break.
-              </p>
-            </Reveal>
-            <Reveal delay={140} className="mt-8">
-              <ProofOfRecord demo={proofDemo} />
-            </Reveal>
-          </div>
-        </section>
+        {/* Customer copy pass: the Merkle proof-of-record demo was removed
+            from the public record page. */}
 
-        {/* Settled receipts */}
+        {/* Settled picks */}
         <section className="px-4 pb-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <h2 className="font-display text-2xl text-ion-white sm:text-3xl">Settled receipts</h2>
+              <h2 className="font-display text-2xl text-ion-white sm:text-3xl">Settled picks</h2>
             </Reveal>
             {rows.length === 0 ? (
               <Reveal delay={100}>
                 <div className="surface-card mt-6 p-8">
-                  <p className="text-base font-semibold text-ion-white">Building ledger history</p>
+                  <p className="text-base font-semibold text-ion-white">Building the record</p>
                   <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ion-1">
-                    No settled canonical picks yet. The ledger populates after real picks settle
-                    with their signal snapshots attached.
+                    No settled picks yet. The record fills in after real picks settle.
                   </p>
                 </div>
               </Reveal>

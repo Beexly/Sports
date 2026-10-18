@@ -52,8 +52,8 @@ export default function ClvCalculatorPage(): JSX.Element {
             <Reveal delay={80}>
               <HonestyNote className="mt-4">
                 CLV is not win rate. Positive CLV means better price than the
-                close; it does not prove long-run profit. Galaxy performance
-                pages stay gated while calibration eligibility is RED.
+                close; it does not prove long-run profit. Galaxy holds back its
+                own win-rate numbers until enough picks have settled.
               </HonestyNote>
             </Reveal>
           </div>

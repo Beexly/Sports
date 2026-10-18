@@ -13,12 +13,11 @@ import { Reveal } from "@/components/motion/reveal";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const SURFACES: ReadonlyArray<{ title: string; href: string; desc: string; tag: string; accent: string }> = [
-  { title: "Inside the Signal", href: "/intelligence", desc: "See the reasoning, not just the number. The engine prosecutes every call.", tag: "Engine", accent: BRAND_COLORS.orbitalCyan },
+  { title: "Inside the Signal", href: "/intelligence", desc: "See the reasoning, not just the number.", tag: "Engine", accent: BRAND_COLORS.orbitalCyan },
   { title: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's hidden risk and correlation before you ever place it.", tag: "Surgeon", accent: BRAND_COLORS.ionMagenta },
   { title: "GSN", href: "/gsn", desc: "The daily intelligence transmission: the whole board read as a briefing.", tag: "Network", accent: BRAND_COLORS.softUltraviolet },
-  { title: "Trust Ledger", href: "/ledger", desc: "A record that can't be rewritten: a tamper-evident commitment you can verify.", tag: "Proof", accent: BRAND_COLORS.orbitalCyan },
+  { title: "Public record", href: "/ledger", desc: "Every settled pick, win or loss, kept in the open.", tag: "Record", accent: BRAND_COLORS.orbitalCyan },
   { title: "The Bias Mirror", href: "/responsible-play", desc: "A private check on how you decide. Protective, never predatory.", tag: "Responsible", accent: BRAND_COLORS.softUltraviolet },
-  { title: "The Cipher", href: "/cipher", desc: "A weekly hunt hidden in plain sight. Solve it for a free week of Elite.", tag: "Hunt", accent: BRAND_COLORS.ionMagenta },
 ];
 
 export function IntelligenceLayer() {

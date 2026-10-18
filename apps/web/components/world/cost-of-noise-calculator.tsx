@@ -70,7 +70,7 @@ export function CostOfNoiseCalculator(): JSX.Element {
       workflow.push({ label: "Today's Board", href: "/board", why: "see line movement and price context before accepting a number" });
     if (noBet > 0)
       workflow.push({ label: "The Academy", href: "/academy", why: "train the pass and get graded on restraint, not action" });
-    workflow.push({ label: "Calibration Report", href: "/performance", why: "judge any process, ours included, by its public receipts" });
+    workflow.push({ label: "Public record", href: "/ledger", why: "judge any process, ours included, by its public record" });
 
     return { leakage, exposedStake, discipline, band, workflow, weeklyTurnover };
   }, [betsPerWeek, unitSize, parlay, shopping, narrative, noBet]);

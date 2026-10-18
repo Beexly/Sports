@@ -228,7 +228,7 @@ export default async function DashboardPage({
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs text-ion-2">
             <Link href="/picks" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Picks</Link>
-            <Link href="/performance" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Performance</Link>
+            <Link href="/ledger" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Record</Link>
             <Link href="/pricing" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Pricing</Link>
             <span aria-hidden="true" className="hidden text-mineral-hi sm:inline">|</span>
             <span className="max-w-[45vw] truncate text-ion-2">{user.email}</span>
@@ -252,9 +252,9 @@ export default async function DashboardPage({
               {demoActive && (
                 <span
                   data-testid="dashboard-sample-mode"
-                  aria-label="Sample mode: picks are deterministic samples, not live data"
+                  aria-label="Sample mode: picks are fixed samples, not live data"
                   className="rounded-md bg-caution/15 px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-caution"
-                  title="Stub mode + demo samples: picks shown are deterministic samples, not live model output."
+                  title="Sample mode: picks shown are fixed samples, not live picks."
                 >
                   Sample mode
                 </span>
@@ -308,7 +308,7 @@ export default async function DashboardPage({
               <p className="mt-1 text-xs leading-relaxed text-ion-1">
                 {entitlements.tier === "FANTASY"
                   ? "The fantasy suite is now live on your account."
-                  : "Confidence scores, the full factor trail, and line movement are now live on every pick."}
+                  : "Confidence scores, the full Analysis, and line movement are now live on every pick."}
                 {entitlements.tier === "ELITE"
                   ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
                   : ""}
@@ -421,7 +421,7 @@ export default async function DashboardPage({
               <nav className="flex flex-col gap-1">
                 {[
                   { href: "/picks", label: "Today's Picks" },
-                  { href: "/performance", label: "Performance" },
+                  { href: "/ledger", label: "Public record" },
                   { href: "/pricing", label: "View Plans" },
                   { href: "/blog", label: "Analysis Blog" },
                 ].map(({ href, label }) => (
@@ -478,7 +478,7 @@ function SampleDataBanner() {
         Sample data
       </span>
       <p className="flex-1 text-caution/90 leading-relaxed">
-        These picks are deterministic samples shown while live ingestion is
+        These picks are fixed samples shown while live ingestion is
         being wired up. They never settle, they never count toward a
         verified record, and no win-rate claim is published from them.
       </p>

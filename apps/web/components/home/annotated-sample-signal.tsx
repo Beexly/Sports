@@ -27,7 +27,7 @@ const CALLOUTS_LEFT = [
 
 const CALLOUTS_RIGHT = [
   {
-    label: "04 · Factor trail",
+    label: "04 · Analysis",
     body: "Every factor the model weighed: market consensus, line movement, book depth, freshness, intelligence layers. You read what the model read.",
   },
   {
@@ -336,7 +336,7 @@ function SampleCard() {
             marginBottom: 10,
           }}
         >
-          Factor trail
+          Analysis
         </p>
         <div
           style={{

@@ -246,7 +246,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {demoActive && (
             <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-caution/50 bg-caution/10 p-3 text-xs">
               <span className="mt-0.5 rounded-md bg-caution/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">Sample data</span>
-              <p className="flex-1 text-ion-1 leading-relaxed">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
+              <p className="flex-1 text-ion-1 leading-relaxed">These picks are fixed samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
             </div>
           )}
           {/* Header */}
@@ -428,10 +428,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
-                  href="/methodology"
+                  href="/how-it-works"
                   className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
                 >
-                  Read methodology
+                  How a pick gets made
                 </Link>
                 <Link
                   href="/vault"
@@ -762,16 +762,15 @@ function PicksTrustStrip() {
             Trust context
           </p>
           <p className="mt-2 text-sm leading-relaxed text-ion-1">
-            Picks only post once the numbers check out. The methodology page
-            explains what enters the score, what stays hidden, and why some
-            slates publish no pick.
+            Picks only post once the numbers check out. See how a pick gets
+            made, what goes into it, and why some slates publish no pick.
           </p>
         </div>
         <Link
-          href="/methodology"
+          href="/how-it-works"
           className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
         >
-          Read methodology
+          How a pick gets made
         </Link>
       </div>
       <RiskDisclosure

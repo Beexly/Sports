@@ -422,12 +422,6 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                     QB-age-to-RB-target-share question: join rosters, player weekly stats,
                     snap counts, and schedules, then let the engine compare age cohorts to the field.
                   </p>
-                  <Link
-                    href="/integrations"
-                    className="mt-5 inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-4 py-2 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
-                  >
-                    View data readiness
-                  </Link>
                 </div>
               </div>
             )}
@@ -488,8 +482,8 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-ion-white">Questions worth mining first</h2>
             </div>
-            <Link href="/methodology" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-              Methodology
+            <Link href="/how-it-works" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+              How picks get made
             </Link>
           </div>
           <div className="mt-5 grid gap-px overflow-hidden border border-mineral bg-mineral lg:grid-cols-5">

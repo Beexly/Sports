@@ -102,16 +102,14 @@ function ReferenceLinks({ entry }: { readonly entry: PublicJournalEntry }): JSX.
           )}
         </div>
         <div>
-          <p className="font-mono text-xs uppercase tracking-wide text-ion-2">Autopsies cited</p>
+          <p className="font-mono text-xs uppercase tracking-wide text-ion-2">Loss reviews cited</p>
           {entry.referencedAutopsyIds.length === 0 ? (
-            <p className="mt-2 text-sm text-ion-2">No autopsy references attached.</p>
+            <p className="mt-2 text-sm text-ion-2">No loss reviews attached.</p>
           ) : (
             <ul className="mt-2 space-y-2 text-sm">
               {entry.referencedAutopsyIds.map((autopsyId) => (
-                <li key={autopsyId}>
-                  <Link href={`/performance/losses/${autopsyId}`} className="font-mono text-ion-1 transition-colors hover:text-ion-white">
-                    {autopsyId}
-                  </Link>
+                <li key={autopsyId} className="font-mono text-ion-1">
+                  {autopsyId}
                 </li>
               ))}
             </ul>

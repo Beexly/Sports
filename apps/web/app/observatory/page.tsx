@@ -110,8 +110,8 @@ export default async function ObservatoryPage() {
             </Reveal>
             <Reveal delay={260}>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/methodology" className="btn btn-primary">
-                  How it works →
+                <Link href="/how-it-works" className="btn btn-primary">
+                  How a pick gets made →
                 </Link>
                 <Link href="/intelligence" className="btn btn-ghost">
                   Inside the signal
@@ -229,8 +229,8 @@ export default async function ObservatoryPage() {
                 meantime, the methodology page explains exactly what feeds into it.
               </p>
               <div className="mt-2 flex flex-wrap gap-3">
-                <Link href="/methodology" className="btn btn-primary">
-                  Read the methodology
+                <Link href="/how-it-works" className="btn btn-primary">
+                  How a pick gets made
                 </Link>
                 <Link href="/picks" className="btn btn-ghost">
                   Today&apos;s board

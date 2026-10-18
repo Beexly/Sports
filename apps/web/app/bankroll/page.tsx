@@ -58,9 +58,7 @@ export default function BankrollPage(): JSX.Element {
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
                 A personal record keeper: no books, no money, no advice. Past results do not
-                predict future results. Sizing the next stake? See the Kelly calculator on the{" "}
-                <a href="/track" className="font-semibold text-orbital-cyan hover:text-ion-white">CLV tracker</a>,
-                or learn how closing lines grade edge on our public{" "}
+                predict future results. Learn how closing lines grade edge on our public{" "}
                 <a href="/clv" className="font-semibold text-orbital-cyan hover:text-ion-white">CLV report</a>.
               </p>
             </Reveal>

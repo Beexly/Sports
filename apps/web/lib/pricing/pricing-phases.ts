@@ -69,7 +69,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     name: "Founding",
     order: 0,
     trigger:
-      "Bootstrap: no public track record yet. The lowest price GSE will ever offer.",
+      "Launch: no public record yet. The lowest price GSE will ever offer.",
     triggerMetrics: {
       minCanonicalSettledPicks: null,
       requiresPublishedCalibration: false,
@@ -86,7 +86,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     name: "Proven",
     order: 1,
     trigger:
-      "≥100 canonical settled picks AND a published calibration curve (Brier computed, discrimination trending up).",
+      "At least 100 settled picks and a published accuracy report.",
     triggerMetrics: {
       minCanonicalSettledPicks: 100,
       requiresPublishedCalibration: true,
@@ -120,7 +120,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     name: "Authority",
     order: 3,
     trigger:
-      "Multi-season verified positive units record and category authority: pricing power earned under public gates, not claimed early.",
+      "A multi-season verified positive record and category authority: pricing power earned under public gates, not claimed early.",
     triggerMetrics: {
       minCanonicalSettledPicks: 2000,
       requiresPublishedCalibration: true,

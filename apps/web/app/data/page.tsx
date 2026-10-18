@@ -46,12 +46,6 @@ export default function DataSourcingPage(): JSX.Element {
             <Link href="/api/legal/sources" className="btn-primary min-h-11 px-5 py-3">
               JSON registry
             </Link>
-            <Link
-              href="/integrations"
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
-            >
-              Live readiness
-            </Link>
           </div>
           <dl className="mt-7 grid grid-cols-2 gap-3 sm:max-w-md sm:grid-cols-2">
             <div className="border border-mineral bg-carbon px-3 py-2">

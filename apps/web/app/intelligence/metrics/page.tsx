@@ -12,7 +12,7 @@ import {
 import { coverageMapUiData, type CoverageMapUiData } from "@/lib/metrics/coverage-map";
 
 export const metadata: Metadata = {
-  title: "How We Read the Numbers: Metric Methodology",
+  title: "How We Read the Numbers",
   description:
     "Every signal behind the picks, explained in plain terms.",
   alternates: { canonical: "/intelligence/metrics" },
@@ -126,7 +126,7 @@ export default function MetricsMethodologyPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
         <section className="border-b border-mineral pb-8">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Methodology</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The numbers</p>
           <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
             How we read the numbers.
           </h1>

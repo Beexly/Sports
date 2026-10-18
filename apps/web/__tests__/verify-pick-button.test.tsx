@@ -32,7 +32,9 @@ describe("VerifyPickButton", () => {
     expect(screen.queryByText(/content hash/i)).toBeNull();
   });
 
-  it("reveals the hash and timestamp on click, with a link to /verify", async () => {
+  // Customer copy pass: /verify is direct-URL only, so the panel no longer
+  // links into it. The hash and timestamp still reveal on click.
+  it("reveals the hash and timestamp on click, without a link to /verify", async () => {
     vi.stubGlobal("fetch", okFetch);
     render(<VerifyPickButton receiptHash={"a".repeat(64)} />);
     fireEvent.click(screen.getByRole("button", { name: /verify this pick/i }));
@@ -42,8 +44,7 @@ describe("VerifyPickButton", () => {
       expect(screen.getByText(/committed timestamp/i)).toBeTruthy();
     });
 
-    const verifyLink = screen.getByRole("link", { name: /open \/verify/i });
-    expect(verifyLink).toHaveAttribute("href", expect.stringContaining("/verify?hash="));
+    expect(screen.queryByRole("link", { name: /open \/verify/i })).toBeNull();
   });
 
   it("hides the panel on a second click", async () => {

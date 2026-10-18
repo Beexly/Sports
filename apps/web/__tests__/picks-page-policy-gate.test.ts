@@ -47,7 +47,7 @@ describe("/picks policy-gate contract", () => {
     expect(start).toBeGreaterThan(-1);
     const end = src.indexOf("</div>", start);
     const block = src.slice(start, end);
-    expect(block).toMatch(/deterministic samples/i);
+    expect(block).toMatch(/fixed samples/i);
     expect(block).toMatch(/never settle/i);
     expect(block).toMatch(/verified record/i);
     expect(block).toMatch(/no win-rate claim/i);
@@ -78,7 +78,7 @@ describe("/picks policy-gate contract", () => {
     expect(src).toMatch(/data-testid="picks-trust-strip"/);
     expect(src).toMatch(/<RiskDisclosure[\s\S]{0,120}variant="card"/);
     expect(src).toMatch(/<RiskDisclosure[\s\S]{0,160}includePastPerformance/);
-    expect(src).toMatch(/href="\/methodology"[\s\S]{0,300}Read methodology/);
+    expect(src).toMatch(/href="\/how-it-works"[\s\S]{0,300}How a pick gets made/);
   });
 
   it("renders no PickCard array literal that would imply fake fixtures", () => {

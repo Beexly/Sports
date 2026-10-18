@@ -41,8 +41,11 @@ describe("Game Intelligence Room v0", () => {
   it("offers an in-content onward path so the room is not a dead end", () => {
     expect(page).toContain("Where This Goes Next");
     expect(page).toContain('href="/ledger"');
-    expect(page).toContain('href="/performance"');
-    expect(page).toContain('href="/methodology"');
+    expect(page).toContain('href="/how-it-works"');
+    // Customer copy pass: /performance and /methodology are unlinked from
+    // customer pages (direct URL only).
+    expect(page).not.toContain('href="/performance"');
+    expect(page).not.toContain('href="/methodology"');
     expect(page).toContain('href="/responsible-play"');
   });
 

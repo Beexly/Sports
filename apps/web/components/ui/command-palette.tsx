@@ -25,9 +25,8 @@ const COMMANDS: Command[] = [
   { label: "Parlay MRI", href: "/parlay-mri", group: "Intelligence", keywords: "parlay risk genome" },
   // Customer copy pass: Trust Ledger (/ledger) and CLV Tracker (/track) are
   // proof surfaces customers are no longer walked into; routes stay reachable.
-  { label: "FABLE Evidence Lab", href: "/fable", group: "Intelligence", keywords: "proof evidence source rights claims aws gates fable" },
-  { label: "The Cipher", href: "/cipher", group: "Intelligence", keywords: "puzzle hunt easter egg" },
-  { label: "Methodology", href: "/methodology", group: "Intelligence", keywords: "how method" },
+  // FABLE (/fable) and the Cipher (/cipher) are direct-URL only as well.
+  { label: "How a pick gets made", href: "/how-it-works", group: "Intelligence", keywords: "how method explained" },
   { label: "Pricing", href: "/pricing", group: "Intelligence", keywords: "plans subscribe cost" },
   // Fantasy
   { label: "Fantasy Home", href: "/fantasy", group: "Fantasy", keywords: "football roster" },

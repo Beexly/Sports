@@ -136,7 +136,7 @@ export function EnterGate() {
         >
           Open the{" "}
           <span className="gse-editorial gse-sheen" style={{ fontSize: "1.12em" }}>
-            glass box.
+            full picture.
           </span>
         </h1>
 

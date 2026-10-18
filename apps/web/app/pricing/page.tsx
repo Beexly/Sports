@@ -42,7 +42,7 @@ const phase = getCurrentPricingPhase();
  */
 const HERO_SUB_BY_ORDER: readonly string[] = [
   "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later.",
-  "Start free. The calibration report is live and gated in public. Your price is fixed the day you join; earlier members keep theirs.",
+  "Start free. The public record has passed its first proof milestone. Your price is fixed the day you join; earlier members keep theirs.",
   "Start free. Closing-line value is measured in public over a meaningful sample. Your price is fixed the day you join; earlier members keep theirs.",
   "Start free. The public record now spans multiple seasons. Your price is fixed the day you join; earlier members keep theirs.",
 ];
@@ -75,7 +75,7 @@ const FREE_FEATURES = [
   { label: "Founding waitlist for early operator updates", included: true },
   { label: "The full daily board, every signal (Pro)", included: false },
   { label: "Confidence rating on every pick (Pro)", included: false },
-  { label: "Factor trail & evidence audit (Pro)", included: false },
+  { label: "Analysis on every pick (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Graded-pick alerts (Elite)", included: false },
   { label: "Line-value tracker + staking toolkit (Elite)", included: false },
@@ -87,14 +87,13 @@ const PRO_FEATURES = [
   // not a larger pile of picks. Seeing THAT we passed on a game stays free for
   // everyone (see the honesty-surface block in Entitlements) — paying is how
   // you see why, and check it yourself.
-  { label: "No-Bet reasoning: the code, model version, and evidence behind every pass we make", included: true },
-  { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
-  { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
-  { label: "Recompute any claim yourself — the verifier is named, not hand-waved", included: true },
-  { label: "Public record + methodology", included: true },
+  { label: "No-Bet reasoning: the evidence behind every pass we make", included: true },
+  { label: "Probability ranges: the honest range, not a confident-sounding single number", included: true },
+  { label: "Pick receipts: every published number with where it came from", included: true },
+  { label: "Public record of wins and losses", included: true },
   { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
-  { label: "Full factor trail & reasoning", included: true },
+  { label: "Full Analysis on every pick", included: true },
   { label: "Evidence audit: full forensic detail", included: true },
   { label: "Ask the model why, on any pick", included: true },
   { label: "Line-movement intel", included: true },
@@ -110,11 +109,10 @@ const ELITE_FEATURES = [
   { label: "Staking calculator: Kelly-aware sizing", included: true },
   { label: "Deeper market-movement context", included: true },
   { label: "Advanced filters and saved watchlists", included: true },
-  { label: "Calibration reports: how confidence has matched outcomes", included: true },
   { label: "First access to new intelligence surfaces", included: true },
   { label: "Every signal, every day: all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
-  { label: "Full factor trail & evidence audit", included: true },
+  { label: "Full Analysis & evidence audit", included: true },
   { label: "Ask the model why + line-movement intel", included: true },
   { label: "Trend Lab: full cohort workbench", included: true },
   { label: "Parlay MRI: the portfolio surgeon", included: true },
@@ -127,7 +125,7 @@ const FANTASY_FEATURES = [
   { label: "Start/Sit, Waivers, Trade, and Pick'em tools", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
   { label: "Everything free plus Fantasy depth tools", included: true },
-  { label: "Betting depth: factor trail & line movement (Pro)", included: false },
+  { label: "Betting depth: Analysis & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Graded-pick alerts (Elite)", included: false },
 ] as const;
@@ -164,7 +162,7 @@ const PLANS: PlanView[] = [
     annual: phase.pro.annual,
     annualSavingsPct: annualSavingsPct(phase.pro),
     annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
+    description: "See why we pass. Every No-Bet with its reasoning and probabilities as honest ranges, plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
     badge: "Recommended",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
@@ -188,7 +186,7 @@ const COMPARISON_FEATURES = [
   "Sports covered",
   "Edge",
   "Confidence rating",
-  "Factor trail & reasoning",
+  "Analysis on every pick",
   "Evidence audit detail",
   "Ask the model why",
   "Line-movement intel",
@@ -291,7 +289,7 @@ const productJsonLd = {
   "@type": "Product",
   name: `${BRAND_NAME} Membership`,
   description:
-    "Free calculators, methodology, and paper contests. Paid tiers unlock the full board, confidence ratings, factor trails, and alerts.",
+    "Free calculators, the Academy, and paper contests. Paid tiers unlock the full board, confidence ratings, Analysis on every pick, and alerts.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
     "@type": "Offer",

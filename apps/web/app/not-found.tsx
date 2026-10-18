@@ -51,10 +51,10 @@ export default function NotFound() {
               Back to home
             </Link>
             <Link
-              href="/methodology"
+              href="/how-it-works"
               className="btn-secondary px-6 py-3 text-sm"
             >
-              See methodology
+              How a pick gets made
             </Link>
             <Link href="/pricing" className="btn-secondary px-6 py-3 text-sm">
               See pricing

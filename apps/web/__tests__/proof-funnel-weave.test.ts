@@ -70,8 +70,11 @@ describe("proof-funnel weave", () => {
     expect(failureBranch).not.toContain("VerifiedNextSteps");
   });
 
+  // Customer copy pass: /proof is direct-URL only, so the Vault's onward path
+  // to the settled record now points at the public record (/ledger).
   it("/vault routes to the living settled record", () => {
     const vault = read("app/vault/page.tsx");
-    expect(vault).toContain('href="/proof"');
+    expect(vault).toContain('href="/ledger"');
+    expect(vault).not.toContain('href="/proof"');
   });
 });

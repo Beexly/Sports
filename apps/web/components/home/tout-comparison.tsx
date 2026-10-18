@@ -22,7 +22,7 @@ const ROWS = [
   },
   {
     feature: "Reasoning behind each pick",
-    galaxy: "Full factor trail on every signal: consensus, line movement, depth, freshness",
+    galaxy: "Full Analysis on every signal: consensus, line movement, depth, freshness",
     galaxyOk: true,
     tout: "Vibes, narrative, occasional stat reference",
     toutOk: false,

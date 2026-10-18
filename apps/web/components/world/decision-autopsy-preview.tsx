@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 /**
  * DecisionAutopsyPreview — the evidence trail a finished decision leaves.
  *
@@ -56,12 +54,6 @@ export function DecisionAutopsyPreview(): JSX.Element {
           the market did, what changed, and what the engine learned. Good
           process with a bad outcome is respected; a lucky win is flagged.
         </p>
-        <Link
-          href="/performance/losses"
-          className="mt-6 inline-block text-sm font-semibold text-orbital-cyan hover:text-ion-white"
-        >
-          Open the autopsy room ▸
-        </Link>
       </div>
 
       <ol className="relative space-y-0 border-l border-mineral pl-6">

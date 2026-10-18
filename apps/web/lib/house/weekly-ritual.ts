@@ -35,9 +35,9 @@ export const WEEKLY_RITUAL: readonly RitualBeat[] = [
     dayIndex: 1,
     day: "Mon",
     beat: "What we learned",
-    surface: "journal + performance autopsies",
+    surface: "journal + the public record",
     action: "Read the week's record",
-    actionHref: "/performance",
+    actionHref: "/ledger",
     urgency: "desk",
   },
   {

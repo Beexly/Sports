@@ -24,7 +24,6 @@
  * premise.
  */
 
-import Link from "next/link";
 import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 
 /**
@@ -80,7 +79,6 @@ export function ProjectionsBadge({ pool }: { pool: ProjectionsPool }) {
             : "· live projections coming soon"}
         </span>
       )}
-      <Link href="/integrations" className="text-ultraviolet underline underline-offset-2 hover:text-ultraviolet-glow">Data status →</Link>
     </div>
   );
 }

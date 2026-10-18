@@ -47,8 +47,8 @@ export default function GlobalError({
           Something broke on my side.
         </h1>
         <p className="mt-2 text-sm text-ion-1">
-          The page hit a runtime error. Hit retry, or head home. The
-          observatory has the trace either way.
+          The page hit a runtime error. Hit retry, or head home. We have
+          the error logged either way.
         </p>
         <pre className="mt-3 overflow-x-auto rounded-lg bg-carbon/70 p-3 text-[11px] text-ion-2">
           {visibleDetail}

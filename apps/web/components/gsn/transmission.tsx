@@ -83,7 +83,7 @@ export function GSNTransmission({ transmission }: { transmission: Transmission }
         <span className="text-[10px] uppercase tracking-[0.22em] text-ion-2">
           {transmission.source === "board"
             ? "Decrypted · board-sourced"
-            : "Decrypted · methodology structure"}
+            : "Decrypted · standard format"}
         </span>
       </div>
 

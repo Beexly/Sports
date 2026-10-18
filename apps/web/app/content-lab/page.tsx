@@ -5,7 +5,7 @@ import { CONTENT_PILLARS } from "@/lib/media-revenue/content-pillars";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/content-lab" },
-  description: "GSE content pillars for market mirage, no-bet clinic, loss autopsy, player signal lab, GSE lab, and board meeting formats.",
+  description: "GSE content pillars for market mirage, no-bet clinic, loss review, player signal lab, GSE lab, and board meeting formats.",
   title: "GSE Content Lab",
 };
 

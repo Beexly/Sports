@@ -13,7 +13,7 @@ const WAYPOINTS = [
   { n: "02", label: "Signal vs Noise", href: "#signal" },
   { n: "03", label: "Market Mirage", href: "#mirage" },
   { n: "04", label: "No-Bet Gate", href: "#gate" },
-  { n: "05", label: "Autopsy", href: "#autopsy" },
+  { n: "05", label: "Loss review", href: "#autopsy" },
   { n: "06", label: "Parlay MRI", href: "#mri" },
   { n: "07", label: "GSN · The Beat", href: "#gsn" },
   { n: "08", label: "Cost of Noise", href: "#noise" },

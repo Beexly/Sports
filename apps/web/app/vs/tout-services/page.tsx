@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title:
     "Galaxy Sports Edge vs. Tout Services: Transparent Picks With Reasoning Attached",
   description:
-    "Tout services publish curated wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and refuses to show a win-rate it can't honestly back. Here's the category contrast, no competitor named.",
+    "Tout services publish curated wins and quietly delete the losses. Galaxy Sports Edge publishes the full Analysis behind every signal and refuses to show a win-rate it can't honestly back. Here's the category contrast, no competitor named.",
   alternates: { canonical: "/vs/tout-services" },
   openGraph: {
     title:
@@ -122,8 +122,8 @@ export default function VsToutServicesPage() {
                 </em>
               </p>
               <p>
-                That&apos;s what {BRAND_NAME} is. The Calibration Report stays
-                gated until enough signals have settled to publish a defensible
+                That&apos;s what {BRAND_NAME} is. Win-rate numbers stay off
+                the page until enough signals have settled to publish a defensible
                 number. The Vault holds every published pick, every reasoning
                 trail, every outcome. If the work can&apos;t be shown, it
                 doesn&apos;t get published.
@@ -168,15 +168,14 @@ export default function VsToutServicesPage() {
             </h2>
             <p className="text-ion-1">
               The Signal Feed opens once the readiness gate clears. In the
-              meantime, the methodology page walks through exactly how a
-              signal gets scored, gated, and shipped.
+              meantime, see how a pick gets made, in plain words.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/methodology"
+                href="/how-it-works"
                 className="btn-primary px-7 py-3.5 text-base"
               >
-                See the methodology →
+                How a pick gets made →
               </Link>
               <Link
                 href="/auth/signin"
@@ -212,7 +211,7 @@ const WATCHLIST = [
   },
   {
     number: "04",
-    title: "The reasoning is a vibe, not a factor trail.",
-    body: "\"Sharp money is on the dog\" isn't a factor trail. The factor trail is: consensus across N books, line movement of X bps in Y minutes, market depth deep / shallow, freshness Z seconds, public lean P percent. If a service can't show the breakdown, the breakdown doesn't exist.",
+    title: "The reasoning is a vibe, not an analysis.",
+    body: "\"Sharp money is on the dog\" isn't an analysis. A real analysis is: consensus across N books, line movement of X bps in Y minutes, market depth deep / shallow, freshness Z seconds, public lean P percent. If a service can't show the breakdown, the breakdown doesn't exist.",
   },
 ] as const;

@@ -160,8 +160,11 @@ describe("payments surfaces — live page source", () => {
     expect(flags.map((flag) => flag.id)).toContain("L4-BET-VOCAB");
   });
 
-  it("methodology copy still contains moneyline vocabulary the layer is meant to see", () => {
-    const source = readPage("app/methodology/page.tsx");
+  it("line-movement tool copy still contains moneyline vocabulary the layer is meant to see", () => {
+    // /methodology became a one-line deferred placeholder (owner directive,
+    // 2026-10-17), so the positive control moved to a public page that still
+    // carries sportsbook market copy.
+    const source = readPage("app/tools/line-movement/page.tsx");
     const flags = scanPaymentsSurfaceCopy(extractDetectableCopy(source));
     expect(flags.map((flag) => flag.id)).toContain("L4-MONEYLINE-MARKET");
   });

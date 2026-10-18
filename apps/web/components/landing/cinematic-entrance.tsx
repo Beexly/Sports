@@ -361,10 +361,6 @@ export function CinematicEntrance() {
                   Today&apos;s board
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/observatory" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  Galaxy Twin
-                </Link>
-                <span aria-hidden className="text-ink-500">·</span>
                 <Link href="/fantasy" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
                   Fantasy Galaxy
                 </Link>

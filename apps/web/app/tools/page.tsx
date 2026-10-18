@@ -182,13 +182,12 @@ export default function ToolsHubPage(): JSX.Element {
             <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
               <h2 className="font-display text-3xl tracking-tight text-ion-white sm:text-4xl">Want to see the model these formulas feed?</h2>
               <p className="text-sm leading-6 text-ion-1">
-                These calculators are generic — the same math anyone can run
-                by hand. Our methodology page explains how the pick engine
-                itself reads the board.
+                These calculators are generic, the same math anyone can run
+                by hand. See how a pick gets made on our board, in plain words.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/methodology" className="btn btn-primary">
-                  Read the methodology
+                <Link href="/how-it-works" className="btn btn-primary">
+                  How a pick gets made
                 </Link>
                 <Link href="/board" className="btn btn-ghost">
                   Today&apos;s board

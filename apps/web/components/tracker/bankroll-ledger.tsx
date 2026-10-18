@@ -17,7 +17,6 @@
  */
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { summarizeLedger, type BankrollEntry, type LedgerResult } from "@/lib/tracker/bankroll";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 
@@ -334,11 +333,6 @@ export function BankrollLedger() {
       </section>
 
       <p className="text-center text-xs leading-relaxed text-ion-1">
-        Sizing the next one?{" "}
-        <Link href="/track" className="font-semibold text-orbital-cyan hover:text-ion-white">
-          Size it with the Kelly staking calculator →
-        </Link>
-        <br />
         <span className="text-ion-2">
           Educational record-keeping — nothing here is betting advice, and nothing leaves your device.
         </span>

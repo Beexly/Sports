@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 interface VerifyPickButtonProps {
   readonly receiptHash: string | null;
@@ -82,18 +81,6 @@ export function VerifyPickButton({ receiptHash }: VerifyPickButtonProps): JSX.El
                   timeStyle: "short",
                 })}
               </p>
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Link
-                  href={`/verify?hash=${encodeURIComponent(receiptHash)}`}
-                  className="rounded-md border border-mineral px-2 py-1 font-semibold text-orbital-cyan hover:bg-eclipse/80"
-                >
-                  Open /verify →
-                </Link>
-                <span className="text-ion-2">
-                  Paste the hash above to confirm the receipt was frozen before kickoff and has not been altered.
-                </span>
-              </div>
             </>
           )}
 

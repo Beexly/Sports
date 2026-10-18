@@ -103,7 +103,7 @@ export default async function GSNPage() {
                 When the board is empty or unreachable, GSN reports offline with zero invented counts.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <Link href="/observatory" className="btn btn-primary">
+                <Link href="/board" className="btn btn-primary">
                   Enter the slate
                 </Link>
                 <Link href="/academy" className="btn btn-ghost">

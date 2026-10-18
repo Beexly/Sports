@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 const REVENUE_SOURCES = [
   {
     title: "Subscriptions: the primary business",
-    body: `${BRAND_NAME} is a subscription product first. Pro and Elite unlock the full board, confidence scores, and the deeper tools; Free stays a real product with a public Edge Index and the same published track record. Subscription revenue is what the business is built to run on.`,
+    body: `${BRAND_NAME} is a subscription product first. Pro and Elite unlock the full board, confidence scores, and the deeper tools; Free stays a real product with a daily free sample and the same public record of wins and losses. Subscription revenue is what the business is built to run on.`,
   },
   {
     title: "No sportsbook or DFS affiliate links. Permanently.",
@@ -209,34 +209,30 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
           </div>
         </section>
 
-        {/* Track record stays independent */}
+        {/* The public record stays independent */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow">The record doesn&apos;t move for this</p>
               <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
-                Track record, published either way.
+                The public record, published either way.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
-                The calibration report, closing-line value, and loss autopsies
-                publish on the same gate and the same schedule whether or not
-                any partner relationship exists. Nothing about a commission
+                Wins, losses, and closing-line value publish on the same
+                schedule whether or not any partner relationship exists. Nothing about a commission
                 changes how those numbers are computed or when they&apos;re
                 allowed to appear.
               </p>
             </Reveal>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/performance" className="btn btn-ghost">
-                View calibration
+              <Link href="/ledger" className="btn btn-ghost">
+                The public record
               </Link>
               <Link href="/clv" className="btn btn-ghost">
                 See our CLV
               </Link>
-              <Link href="/accountability" className="btn btn-ghost">
-                Read accountability
-              </Link>
-              <Link href="/methodology" className="btn btn-ghost">
-                Read methodology
+              <Link href="/how-it-works" className="btn btn-ghost">
+                How a pick gets made
               </Link>
             </div>
           </div>

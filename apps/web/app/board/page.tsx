@@ -116,7 +116,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
                   </span>
                   <span className="break-words sm:ml-3">
                     Board is temporarily stale — awaiting fresh data. The board
-                    reopens on the next real ingestion. Methodology and pricing
+                    reopens on the next real ingestion. How it works and pricing
                     stay available while it refreshes.
                   </span>
                 </>
@@ -160,7 +160,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               </span>
               <span className="break-words sm:ml-3">
                 Board is temporarily stale — awaiting fresh data. The board
-                reopens on the next real ingestion. Methodology and pricing
+                reopens on the next real ingestion. How it works and pricing
                 stay available while it refreshes.
               </span>
             </div>

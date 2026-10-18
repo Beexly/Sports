@@ -242,10 +242,10 @@ export default function FaqPage() {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/methodology"
+                href="/how-it-works"
                 className="btn-primary px-7 py-3.5 text-base"
               >
-                Read the methodology →
+                How a pick gets made →
               </Link>
               <Link
                 href="/pricing"

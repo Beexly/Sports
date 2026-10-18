@@ -15,7 +15,6 @@
  */
 
 import { useState } from "react";
-import Link from "next/link";
 
 type NodeState = "signal" | "heat" | "caution" | "gated" | "quiet";
 
@@ -245,11 +244,6 @@ export function GalaxyTwinPreview(): JSX.Element {
         <div className="mt-5 border-t border-mineral pt-4">
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">System verdict</p>
           <p className="mt-2 text-sm font-semibold leading-6 text-ion-white">{active.verdict}</p>
-        </div>
-        <div className="mt-auto pt-6">
-          <Link href="/observatory" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-            Open the full Edge Map ▸
-          </Link>
         </div>
       </div>
     </div>

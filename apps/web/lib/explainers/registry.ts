@@ -43,8 +43,8 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
     beats: [
       { tag: "The idea", body: "The market is mostly noise. Galaxy turns real sportsbook data into picks you can check. And tells you when not to bet." },
       { tag: "Four doors", body: "Board is today's plays. Players is the lab. Intelligence is how we think. Fantasy & Daily is the toolkit. Pick the decision you came to make." },
-      { tag: "The proof", body: "Every claim has a receipt. The Proof door shows calibration, closing line value, and the public ledger. Nothing is hidden." },
-      { tag: "Your move", body: "Start at the Board if you want a play today, or open the Proof room first if you want to trust us before you do." },
+      { tag: "The record", body: "Every settled pick stays in the public record, wins and losses alike. Nothing is hidden." },
+      { tag: "Your move", body: "Start at the Board if you want a play today, or read the public record first if you want to trust us before you do." },
     ],
   },
   {
@@ -56,7 +56,7 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
       { tag: "What it is", body: "Every game we have a real read on, ranked by edge. If a game isn't here, the data wasn't strong enough. That's the gate doing its job." },
       { tag: "No-Bet", body: "A pass is a first-class call. When we hold, we log why. Restraint is the edge, not a missing pick." },
       { tag: "Open a card", body: "Tap a game to see the signal breakdown. The factors, the line, the confidence, and what moved." },
-      { tag: "Then what", body: "Want the why behind a number? Jump to Intelligence. Want to verify the record? The Proof room is one click away." },
+      { tag: "Then what", body: "Want the why behind a number? Jump to Intelligence. Want to check the record? The public record is one click away." },
     ],
   },
   {
@@ -77,10 +77,10 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
     durationLabel: "0:45",
     intro: "This is how Galaxy thinks. Every engine we run, in one place.",
     beats: [
-      { tag: "Engines", body: "Each engine answers one question. Usage, scoring equity, market value, calibration. Together they form the read." },
+      { tag: "Engines", body: "Each engine answers one question. Usage, scoring equity, market value, accuracy. Together they form the read." },
       { tag: "Plain mode", body: "Every engine explains itself in plain terms first; the expert detail is one tap deeper when you want it." },
       { tag: "What changed", body: "When an engine's read moves, you can see what changed it. A new snap count, a line move, an injury." },
-      { tag: "Proof", body: "Think we're guessing? The Proof room shows whether the reads actually predict. Numbers, not vibes." },
+      { tag: "Record", body: "Think we're guessing? The public record shows how the reads have done. Numbers, not vibes." },
     ],
   },
   {

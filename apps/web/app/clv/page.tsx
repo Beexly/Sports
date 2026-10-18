@@ -128,38 +128,26 @@ export default async function ClvPage() {
               the Elite toolkit.
             </p>
             <Link
-              href="/track"
+              href="/pricing"
               className="mt-4 inline-flex items-center rounded-lg border border-orbital-cyan/50 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan hover:bg-orbital-cyan/20"
             >
-              Open the CLV Tracker (Elite) →
+              See what Elite includes →
             </Link>
           </div>
 
           {/* Cross-links */}
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <Link
-              href="/methodology"
+              href="/how-it-works"
               className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
             >
-              How a signal is scored &amp; graded →
+              How a pick gets made →
             </Link>
             <Link
-              href="/performance"
+              href="/ledger"
               className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
             >
-              The Calibration Report →
-            </Link>
-            <Link
-              href="/observatory"
-              className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
-            >
-              Live market &amp; line shop →
-            </Link>
-            <Link
-              href="/accountability"
-              className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
-            >
-              Full accountability →
+              The public record →
             </Link>
           </div>
 

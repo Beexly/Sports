@@ -58,7 +58,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "methodology",
     displayName: "How Galaxy thinks",
-    customerExplanation: "The methodology preview: how signals, confidence, and No-Bet are built, before you pay anything.",
+    customerExplanation: "A plain-words preview of how signals, confidence, and No-Bet work, before you pay anything.",
     internalNote: "Static educational content. Always open.",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "open", upgradeCtaTier: null,
   },
@@ -78,7 +78,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   },
   {
     key: "proof-ledger-preview",
-    displayName: "Proof ledger: preview",
+    displayName: "Pick receipts: preview",
     customerExplanation: "Public proof snippets: the receipts behind Galaxy's claims, with source and freshness.",
     internalNote: "Public subset of /proof.",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "open", upgradeCtaTier: null,
@@ -93,7 +93,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "sample-signal",
     displayName: "Daily free teaser",
-    customerExplanation: "Two picks a day free — the matchup and pick type — with the open, honest verified record. Pro unlocks the full board, the confidence score, the full factor trail, line movement, and the tools.",
+    customerExplanation: "Two picks a day free — the matchup and pick type — with the open, honest verified record. Pro unlocks the full board, the confidence score, the full Analysis, line movement, and the tools.",
     internalNote: "FREE is a 2-pick/day teaser (packages/types: dailyPickLimit=2, canSeePremiumPicks=false). Earlier copy here claimed picks were de-paywalled, which never matched the shipped entitlements and overpromised the free tier (C-31).",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
@@ -109,7 +109,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "signal-reasoning",
     displayName: "Signal reasoning",
-    customerExplanation: "The factor trail behind each signal: what's driving it and how stable it is.",
+    customerExplanation: "The Analysis behind each signal: what's driving it and how stable it is.",
     internalNote: "Full factor breakdown.",
     minTier: "PRO", status: "live", freePreview: false, lockBehaviorForFree: "blurred", upgradeCtaTier: "PRO",
   },
@@ -129,8 +129,8 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   },
   {
     key: "proof-ledger-full",
-    displayName: "Proof ledger: full",
-    customerExplanation: "The full proof ledger with source freshness and what would change each claim.",
+    displayName: "Pick receipts: full",
+    customerExplanation: "Every pick receipt with source freshness and what would change each claim.",
     internalNote: "Full /proof depth.",
     minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
@@ -195,7 +195,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   },
   {
     key: "calibration-report",
-    displayName: "Calibration reports",
+    displayName: "Accuracy reports",
     customerExplanation: "How well the market-implied probability fixed in each proof receipt has matched real outcomes on settled two-way moneyline picks, the honesty check on the number. Confidence is a ranking score and is not part of that measurement.",
     internalNote: "Calibration depth for Elite.",
     minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",

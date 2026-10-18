@@ -23,7 +23,7 @@ const FACTS = [
 ];
 
 const SOUNDBITES = [
-  "Galaxy Sports Edge publishes a calibrated, fully-reasoned signal, not a tout.",
+  "Galaxy Sports Edge publishes a fully-reasoned signal, not a tout.",
   "Outcomes are uncertain. Variance is described, not hidden.",
   "Every pick traces back to a real market line. No synthetic numbers.",
   "Performance stats stay gated until the data can honestly support them.",
@@ -143,14 +143,11 @@ export default function PressPage() {
               . Include outlet, deadline, and angle for a useful reply.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/methodology" className="btn btn-primary">
-                Methodology →
+              <Link href="/how-it-works" className="btn btn-primary">
+                How a pick gets made →
               </Link>
               <Link href="/about" className="btn btn-ghost">
                 About {BRAND_NAME}
-              </Link>
-              <Link href="/proof" className="btn btn-ghost">
-                Proof surface
               </Link>
             </div>
           </div>

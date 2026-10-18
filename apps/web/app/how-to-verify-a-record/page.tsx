@@ -135,21 +135,14 @@ export default function HowToVerifyARecordPage() {
             </h2>
             <p className="mt-5 text-base text-ion-1">
               We built the platform so this checklist could be run against us
-              by a stranger with no account. Picks publish with tamper-evident
-              receipts frozen before kickoff. The settled ledger keeps every
-              outcome, wins and losses alike, under one published master
-              fingerprint. The public win rate stays withheld until the sample
-              can honestly carry it. And the receipt math recomputes in your
-              own browser, so no part of the proof asks you to trust our
-              servers.
+              by a stranger with no account. Every settled pick stays in the
+              public record, wins and losses alike, and the public win rate
+              stays withheld until the sample can honestly carry it.
             </p>
             <ul className="mt-8 flex flex-col gap-3">
               {[
-                { href: "/engine", label: "Watch the engine commit today's work", note: "check 1: pre-kickoff commitment, live" },
-                { href: "/proof", label: "Browse the full settled ledger", note: "check 2: every outcome kept, none scrubbed" },
-                { href: "/performance", label: "See the public record and its honesty floor", note: "check 3: sample size, stated plainly" },
-                { href: "/clv", label: "Read our closing line value report", note: "check 4: graded against the close" },
-                { href: "/verify", label: "Recompute a receipt in your browser", note: "check 5: independent, zero trust in us" },
+                { href: "/ledger", label: "Browse the public record", note: "every outcome kept, none scrubbed" },
+                { href: "/clv", label: "Read our closing line value report", note: "graded against the close" },
               ].map((l) => (
                 <li key={l.href}>
                   <Link

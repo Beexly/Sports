@@ -136,10 +136,13 @@ describe("/how-we-make-money page source pins", () => {
     expect(pageSource.toLowerCase()).toMatch(/fail(s|ing)? the build/);
   });
 
-  it("links to /performance, /clv, and /accountability rather than restating numbers", () => {
-    expect(pageSource).toContain('href="/performance"');
+  // Customer copy pass: /performance and /accountability are direct-URL only,
+  // so the record links point at the public record (/ledger) and /clv.
+  it("links to /ledger and /clv rather than restating numbers", () => {
+    expect(pageSource).toContain('href="/ledger"');
     expect(pageSource).toContain('href="/clv"');
-    expect(pageSource).toContain('href="/accountability"');
+    expect(pageSource).not.toContain('href="/performance"');
+    expect(pageSource).not.toContain('href="/accountability"');
   });
 
   it("links to /pricing and /responsible-play from the closing CTA", () => {

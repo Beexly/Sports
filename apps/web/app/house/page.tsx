@@ -71,10 +71,10 @@ const ROOM_DOORS: readonly RoomDoor[] = [
   },
   {
     name: "The Record",
-    href: "/performance",
+    href: "/ledger",
     whose: "For the skeptic who's been burned before",
     promise:
-      "Calibration before claims, losses dissected in public. Every number on this site has to earn its place, and this is where it does.",
+      "Every settled pick, wins and losses alike. Every number on this site has to earn its place, and this is where it does.",
     accent: ACCENT_UV,
     live: "receipts",
   },

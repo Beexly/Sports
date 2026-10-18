@@ -238,6 +238,6 @@ describe("/calibration/market — honest non-claims", () => {
     const container = await renderPage();
     const hrefs = Array.from(container.querySelectorAll("a")).map((a) => a.getAttribute("href"));
     expect(hrefs).toContain("/calibration");
-    expect(hrefs).toContain("/methodology");
+    expect(hrefs).toContain("/how-it-works");
   });
 });
