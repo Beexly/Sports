@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350" role="img">
+  <defs>
+    <radialGradient id="cosmic-ul" cx="0%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.30"/>
+      <stop offset="40%" stop-color="#7A5CFF" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cosmic-lr" cx="100%" cy="100%" r="90%">
+      <stop offset="0%" stop-color="#FF2DD6" stop-opacity="0.34"/>
+      <stop offset="40%" stop-color="#7A5CFF" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card-glass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141824" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#0A0D14" stop-opacity="0.96"/>
+    </linearGradient>
+    <linearGradient id="cyan-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#7A5CFF"/>
+    </linearGradient>
+    <linearGradient id="magenta-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF2DD6"/>
+      <stop offset="100%" stop-color="#7A5CFF"/>
+    </linearGradient>
+    <linearGradient id="gold-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFB800"/>
+      <stop offset="100%" stop-color="#FF2DD6"/>
+    </linearGradient>
+    <linearGradient id="green-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E676"/>
+      <stop offset="100%" stop-color="#00E5FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Obsidian Canvas -->
+  <rect width="1080" height="1350" fill="#050608"/>
+  <rect width="1080" height="1350" fill="url(#cosmic-ul)"/>
+  <rect width="1080" height="1350" fill="url(#cosmic-lr)"/>
+
+  <!-- Star Accents -->
+  <circle cx="140" cy="180" r="1.4" fill="#F6F7FA" fill-opacity="0.6"/>
+  <circle cx="920" cy="140" r="1.6" fill="#00E5FF" fill-opacity="0.8"/>
+  <circle cx="980" cy="420" r="1.2" fill="#FF2DD6" fill-opacity="0.6"/>
+  <circle cx="80" cy="980" r="1.5" fill="#F6F7FA" fill-opacity="0.5"/>
+  <circle cx="990" cy="1120" r="1.3" fill="#7A5CFF" fill-opacity="0.7"/>
+
+  <!-- HEADER & BRANDING -->
+  <g transform="translate(60, 48)">
+    <g transform="translate(0, 0)">
+      <path d="M 8 46 A 24 24 0 1 0 54 42" fill="none" stroke="#F6F7FA" stroke-width="3" stroke-linecap="round"/>
+      <line x1="4" y1="12" x2="58" y2="60" stroke="#F6F7FA" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="36" cy="31" r="5" fill="#FF2DD6"/>
+      <circle cx="36" cy="31" r="11" fill="none" stroke="#FF2DD6" stroke-opacity="0.4" stroke-width="1"/>
+    </g>
+    <text x="80" y="32" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="34" letter-spacing="7" fill="#F6F7FA">GALAXY</text>
+    <text x="262" y="32" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="5" fill="#00E5FF">SPORTS EDGE</text>
+    <g transform="translate(680, 4)">
+      <rect width="280" height="36" rx="18" fill="#00E676" fill-opacity="0.14" stroke="#00E676" stroke-width="1.5"/>
+      <circle cx="20" cy="18" r="5" fill="#00E676"/>
+      <text x="36" y="23" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="800" letter-spacing="1.5" fill="#00E676">100% FREE BOARD UNLOCK</text>
+    </g>
+  </g>
+  <line x1="60" y1="108" x2="1020" y2="108" stroke="#F6F7FA" stroke-opacity="0.14" stroke-width="1"/>
+
+  <g transform="translate(60, 130)">
+    <text x="0" y="20" font-family="Consolas, 'Courier New', monospace" font-size="14" font-weight="700" letter-spacing="3" fill="#FF2DD6">SUNDAY NIGHT FOOTBALL · 7:20 PM CST · LAMBEAU FIELD</text>
+    <text x="0" y="62" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="36" fill="#F6F7FA" letter-spacing="1">COWBOYS <tspan fill="#00E5FF">@</tspan> PACKERS HAMMER</text>
+    <g transform="translate(710, 14)">
+      <rect width="250" height="50" rx="10" fill="#00E5FF" fill-opacity="0.14" stroke="#00E5FF" stroke-width="1.5"/>
+      <text x="125" y="22" font-family="Consolas, 'Courier New', monospace" font-size="11" font-weight="700" letter-spacing="1.5" fill="#00E5FF" text-anchor="middle">PRIMETIME RANKING</text>
+      <text x="125" y="42" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="18" font-weight="900" fill="#F6F7FA" text-anchor="middle">#1 JEV SPOT (0.91)</text>
+    </g>
+  </g>
+
+  <g transform="translate(60, 235)">
+    <rect width="960" height="152" rx="14" fill="url(#card-glass)" stroke="url(#cyan-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="152" rx="4" fill="#00E5FF"/>
+    <rect x="26" y="16" width="195" height="24" rx="5" fill="#00E5FF" fill-opacity="0.16"/>
+    <text x="123" y="33" font-family="Consolas, 'Courier New', monospace" font-size="11.5" font-weight="800" letter-spacing="1" fill="#00E5FF" text-anchor="middle">MAX CONVICTION TOTAL</text>
+    <text x="236" y="33" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#8089A0">SUNDAY NIGHT FOOTBALL · LAMBEAU FIELD</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#00E5FF" text-anchor="middle">EDGE 69.7</text>
+    <text x="26" y="78" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="31" fill="#F6F7FA" letter-spacing="0.5">OVER 53.5 POINTS (-110)</text>
+    <text x="26" y="112" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#00E5FF">> Jordan Love ranks #1 in NFL Pocket Depth (5.31 yds) & #1 in Total QBR (71.5)</text>
+    <text x="26" y="136" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Both defenses missing alpha disruptors: Micah Parsons (OUT), Hargrave (IR), Overshown (OUT)</text>
+  </g>
+
+  <g transform="translate(60, 405)">
+    <rect width="960" height="152" rx="14" fill="url(#card-glass)" stroke="url(#green-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="152" rx="4" fill="#00E676"/>
+    <rect x="26" y="16" width="195" height="24" rx="5" fill="#00E676" fill-opacity="0.16"/>
+    <text x="123" y="33" font-family="Consolas, 'Courier New', monospace" font-size="11.5" font-weight="800" letter-spacing="1" fill="#00E676" text-anchor="middle">PRIMETIME SIDE & ML</text>
+    <text x="236" y="33" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#8089A0">14-KEY SOVEREIGN SIGNAL PLANE (+3.70% LIFT)</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#00E676" fill-opacity="0.18" stroke="#00E676" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#00E676" text-anchor="middle">JEV 0.91</text>
+    <text x="26" y="78" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="31" fill="#F6F7FA" letter-spacing="0.5">PACKERS -1.5 (-110) & ML (-125)</text>
+    <text x="26" y="112" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#00E5FF">> Green Bay ranks #2 in NFL Separation Over Expectation (+0.404 yds) vs Dallas -0.056 yds</text>
+    <text x="26" y="136" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Josh Jacobs OUT shifts LaFleur into high-PROE dropback offense vs depleted Dallas secondary</text>
+  </g>
+
+  <g transform="translate(60, 575)">
+    <rect width="960" height="152" rx="14" fill="url(#card-glass)" stroke="url(#magenta-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="152" rx="4" fill="#FF2DD6"/>
+    <rect x="26" y="16" width="195" height="24" rx="5" fill="#FF2DD6" fill-opacity="0.16"/>
+    <text x="123" y="33" font-family="Consolas, 'Courier New', monospace" font-size="11.5" font-weight="800" letter-spacing="1" fill="#FF2DD6" text-anchor="middle">QB PASSING VOLUME</text>
+    <text x="236" y="33" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#8089A0">DRAFTKINGS LIVE PROP · MODEL MU = 288.5 YDS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#FF2DD6" fill-opacity="0.18" stroke="#FF2DD6" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#FF2DD6" text-anchor="middle">P = 68.4%</text>
+    <text x="26" y="78" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="31" fill="#F6F7FA" letter-spacing="0.5">JORDAN LOVE OVER 263.5 PASS YDS</text>
+    <text x="26" y="112" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#00E5FF">> Cleanest pocket in football (5.31 yds) + neutral pass rate spike with RB Josh Jacobs ruled OUT</text>
+    <text x="26" y="136" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> +25.0 yard model cushion over the live 263.5 line (-115) in a projected 55.5-point track meet</text>
+  </g>
+
+  <g transform="translate(60, 745)">
+    <rect width="960" height="152" rx="14" fill="url(#card-glass)" stroke="url(#gold-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="152" rx="4" fill="#FFB800"/>
+    <rect x="26" y="16" width="195" height="24" rx="5" fill="#FFB800" fill-opacity="0.16"/>
+    <text x="123" y="33" font-family="Consolas, 'Courier New', monospace" font-size="11.5" font-weight="800" letter-spacing="1" fill="#FFB800" text-anchor="middle">DEEP PERIMETER ALPHA</text>
+    <text x="236" y="33" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#8089A0">DRAFTKINGS LIVE PROP · MODEL MU = 86.4 YDS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#FFB800" fill-opacity="0.18" stroke="#FFB800" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#FFB800" text-anchor="middle">P = 66.2%</text>
+    <text x="26" y="78" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="31" fill="#F6F7FA" letter-spacing="0.5">CHRISTIAN WATSON OVER 74.5 REC YDS</text>
+    <text x="26" y="112" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#00E5FF">> Averaging 94.8 rec yds/gm (474 yds, 5 TDs in 5 GP) with 16.9 aDOT & 38.2% air-yard share</text>
+    <text x="26" y="136" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Attacks a Dallas secondary missing starting CB Cobie Durant (OUT) and LB DeMarvion Overshown</text>
+  </g>
+
+  <g transform="translate(60, 915)">
+    <rect width="960" height="152" rx="14" fill="url(#card-glass)" stroke="url(#cyan-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="152" rx="4" fill="#7A5CFF"/>
+    <rect x="26" y="16" width="195" height="24" rx="5" fill="#00E5FF" fill-opacity="0.16"/>
+    <text x="123" y="33" font-family="Consolas, 'Courier New', monospace" font-size="11.5" font-weight="800" letter-spacing="1" fill="#00E5FF" text-anchor="middle">COWBOYS ALPHA BRING-BACK</text>
+    <text x="236" y="33" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#8089A0">DRAFTKINGS LIVE PROP · MODEL MU = 97.5 YDS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#00E5FF" text-anchor="middle">P = 64.9%</text>
+    <text x="26" y="78" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="31" fill="#F6F7FA" letter-spacing="0.5">CEEDEE LAMB OVER 86.5 REC YDS</text>
+    <text x="26" y="112" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#00E5FF">> 507 rec yds on 51 targets in 5 GP (101.4 yds/gm, 31.8% target share) + +0.312 yd SOE</text>
+    <text x="26" y="136" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Green Bay missing Edge Micah Parsons (OUT), DT Javon Hargrave (IR) & CB Benjamin St-Juste (OUT)</text>
+  </g>
+
+  <g transform="translate(60, 1088)">
+    <rect width="960" height="130" rx="14" fill="url(#card-glass)" stroke="url(#gold-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="130" rx="4" fill="#FFB800"/>
+    <text x="28" y="32" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="800" letter-spacing="2" fill="#FFB800">EMPIRICAL COPULA SNF SAME-GAME PARLAY · BOOK +485 vs MODEL FAIR +184 (+105.8% EV)</text>
+    <text x="28" y="68" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#F6F7FA">OVER 53.5 + LOVE O263.5 PASS + WATSON O74.5 REC + LAMB O86.5 REC</text>
+    <text x="28" y="102" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#00E676">&gt; Joint Copula Win Prob: 35.2% (Naive Indep: 24.5%) · +10.7% Positive Covariance Shootout Boost</text>
+  </g>
+
+  <line x1="60" y1="1240" x2="1020" y2="1240" stroke="#F6F7FA" stroke-opacity="0.14" stroke-width="1"/>
+  <text x="60" y="1272" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" letter-spacing="2.5" fill="#8089A0">BUILT BY GARRETT BAXLEY · FOUNDER</text>
+  <text x="60" y="1298" font-family="Consolas, 'Courier New', monospace" font-size="14" font-weight="800" letter-spacing="2" fill="#00E5FF">GALAXYSPORTSEDGE.COM/PICKS · ALL PLAYS FREE TODAY</text>
+  <text x="1020" y="1272" text-anchor="end" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" letter-spacing="2" fill="#8089A0">VALIDATED BY JEV &amp; GSE ENGINE v5.3.0</text>
+  <text x="1020" y="1298" text-anchor="end" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" letter-spacing="1.5" fill="#FF2DD6">14-KEY SOVEREIGN SIGNAL PLANE · EMPIRICAL COPULA</text>
+</svg>

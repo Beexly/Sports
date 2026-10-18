@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350" role="img">
+  <defs>
+    <radialGradient id="cosmic-ul" cx="0%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.30"/>
+      <stop offset="40%" stop-color="#7A5CFF" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cosmic-lr" cx="100%" cy="100%" r="90%">
+      <stop offset="0%" stop-color="#FF2DD6" stop-opacity="0.34"/>
+      <stop offset="40%" stop-color="#7A5CFF" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card-glass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141824" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#0A0D14" stop-opacity="0.96"/>
+    </linearGradient>
+    <linearGradient id="cyan-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#7A5CFF"/>
+    </linearGradient>
+    <linearGradient id="magenta-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF2DD6"/>
+      <stop offset="100%" stop-color="#7A5CFF"/>
+    </linearGradient>
+    <linearGradient id="gold-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFB800"/>
+      <stop offset="100%" stop-color="#FF2DD6"/>
+    </linearGradient>
+    <linearGradient id="green-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E676"/>
+      <stop offset="100%" stop-color="#00E5FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Obsidian Canvas -->
+  <rect width="1080" height="1350" fill="#050608"/>
+  <rect width="1080" height="1350" fill="url(#cosmic-ul)"/>
+  <rect width="1080" height="1350" fill="url(#cosmic-lr)"/>
+
+  <!-- Star Accents -->
+  <circle cx="140" cy="180" r="1.4" fill="#F6F7FA" fill-opacity="0.6"/>
+  <circle cx="920" cy="140" r="1.6" fill="#00E5FF" fill-opacity="0.8"/>
+  <circle cx="980" cy="420" r="1.2" fill="#FF2DD6" fill-opacity="0.6"/>
+  <circle cx="80" cy="980" r="1.5" fill="#F6F7FA" fill-opacity="0.5"/>
+  <circle cx="990" cy="1120" r="1.3" fill="#7A5CFF" fill-opacity="0.7"/>
+
+  <!-- HEADER & BRANDING -->
+  <g transform="translate(60, 48)">
+    <g transform="translate(0, 0)">
+      <path d="M 8 46 A 24 24 0 1 0 54 42" fill="none" stroke="#F6F7FA" stroke-width="3" stroke-linecap="round"/>
+      <line x1="4" y1="12" x2="58" y2="60" stroke="#F6F7FA" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="36" cy="31" r="5" fill="#FF2DD6"/>
+      <circle cx="36" cy="31" r="11" fill="none" stroke="#FF2DD6" stroke-opacity="0.4" stroke-width="1"/>
+    </g>
+    <text x="80" y="32" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="34" letter-spacing="7" fill="#F6F7FA">GALAXY</text>
+    <text x="262" y="32" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="5" fill="#00E5FF">SPORTS EDGE</text>
+    <g transform="translate(680, 4)">
+      <rect width="280" height="36" rx="18" fill="#00E676" fill-opacity="0.14" stroke="#00E676" stroke-width="1.5"/>
+      <circle cx="20" cy="18" r="5" fill="#00E676"/>
+      <text x="36" y="23" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="800" letter-spacing="1.5" fill="#00E676">100% FREE BOARD UNLOCK</text>
+    </g>
+  </g>
+  <line x1="60" y1="108" x2="1020" y2="108" stroke="#F6F7FA" stroke-opacity="0.14" stroke-width="1"/>
+
+  <g transform="translate(60, 130)">
+    <text x="0" y="20" font-family="Consolas, 'Courier New', monospace" font-size="14" font-weight="700" letter-spacing="3" fill="#00E5FF">NFL WEEK 6 · LATE SUNDAY + SUNDAY NIGHT + MONDAY NIGHT</text>
+    <text x="0" y="62" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="34" fill="#F6F7FA" letter-spacing="1">REMAINING 5-GAME MASTER BOARD</text>
+    <g transform="translate(720, 14)">
+      <rect width="240" height="50" rx="10" fill="#FF2DD6" fill-opacity="0.14" stroke="#FF2DD6" stroke-width="1.5"/>
+      <text x="120" y="22" font-family="Consolas, 'Courier New', monospace" font-size="11" font-weight="700" letter-spacing="1.5" fill="#FF2DD6" text-anchor="middle">VERIFIED LIVE PICKS</text>
+      <text x="120" y="42" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="18" font-weight="900" fill="#F6F7FA" text-anchor="middle">15 / 15 UNLOCKED FREE</text>
+    </g>
+  </g>
+
+  <g transform="translate(60, 225)">
+    <rect width="960" height="175" rx="14" fill="url(#card-glass)" stroke="url(#magenta-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="175" rx="4" fill="#FF2DD6"/>
+    <rect x="26" y="18" width="235" height="24" rx="5" fill="#FF2DD6" fill-opacity="0.16"/>
+    <text x="143" y="35" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" letter-spacing="1" fill="#FF2DD6" text-anchor="middle">7:20 PM CST · SNF HAMMER</text>
+    <text x="278" y="36" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="22" font-weight="900" fill="#F6F7FA" letter-spacing="1">COWBOYS @ PACKERS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#FF2DD6" fill-opacity="0.18" stroke="#FF2DD6" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#FF2DD6" text-anchor="middle">EDGE 69.7</text>
+    <text x="26" y="82" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="26" fill="#00E5FF" letter-spacing="0.5">OVER 53.5 (-110)  |  PACKERS -1.5 (-110)  |  GB ML (-125)</text>
+    <text x="26" y="122" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#F6F7FA">> #1 JEV Spot (0.91) · Jordan Love #1 Pocket (5.31 yd) & #1 QBR (71.5) · GB #2 SOE (+0.404 yd)</text>
+    <text x="26" y="148" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Jacobs OUT -> Watson (94.8 yds/gm) & Lamb (101.4 yds/gm) vs Parsons & Overshown OUT</text>
+  </g>
+
+  <g transform="translate(60, 420)">
+    <rect width="960" height="175" rx="14" fill="url(#card-glass)" stroke="url(#cyan-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="175" rx="4" fill="#00E5FF"/>
+    <rect x="26" y="18" width="235" height="24" rx="5" fill="#00E5FF" fill-opacity="0.16"/>
+    <text x="143" y="35" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" letter-spacing="1" fill="#00E5FF" text-anchor="middle">3:25 PM CST · ARROWHEAD</text>
+    <text x="278" y="36" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="22" font-weight="900" fill="#F6F7FA" letter-spacing="1">CHARGERS @ CHIEFS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#00E5FF" text-anchor="middle">EDGE 69.4</text>
+    <text x="26" y="82" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="26" fill="#00E5FF" letter-spacing="0.5">CHIEFS -7.5 (-110)  |  UNDER 41.5 (-110)  |  KC ML (-360)</text>
+    <text x="26" y="122" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#F6F7FA">> KC off Week 5 Bye (14d rest vs 7d) · Kenneth Walker III 134.2 rush yds/gm (+211.8 RYOE)</text>
+    <text x="26" y="148" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Chargers missing All-Pro LT Joe Alt (OUT), G Kayode Awosika (OUT) & CB Donte Jackson (OUT)</text>
+  </g>
+
+  <g transform="translate(60, 615)">
+    <rect width="960" height="175" rx="14" fill="url(#card-glass)" stroke="url(#green-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="175" rx="4" fill="#00E676"/>
+    <rect x="26" y="18" width="235" height="24" rx="5" fill="#00E676" fill-opacity="0.16"/>
+    <text x="143" y="35" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" letter-spacing="1" fill="#00E676" text-anchor="middle">3:05 PM CST · SOFI INDOOR</text>
+    <text x="278" y="36" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="22" font-weight="900" fill="#F6F7FA" letter-spacing="1">CARDINALS @ RAMS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#00E676" fill-opacity="0.18" stroke="#00E676" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#00E676" text-anchor="middle">EDGE 69.3</text>
+    <text x="26" y="82" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="26" fill="#00E5FF" letter-spacing="0.5">OVER 51.5 (-110)  |  RAMS -12.5 (-110)  |  LAR ML (-750)</text>
+    <text x="26" y="122" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#F6F7FA">> Rams #1 Late-Window Motion (52.55%) · Stafford 66.0 QBR · Nacua (112.3/gm) + Adams (88.2/gm)</text>
+    <text x="26" y="148" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Arizona missing 2 starting safeties (Andrew Wingard OUT, Wydett Williams Jr. OUT)</text>
+  </g>
+
+  <g transform="translate(60, 810)">
+    <rect width="960" height="175" rx="14" fill="url(#card-glass)" stroke="url(#gold-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="175" rx="4" fill="#FFB800"/>
+    <rect x="26" y="18" width="235" height="24" rx="5" fill="#FFB800" fill-opacity="0.16"/>
+    <text x="143" y="35" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" letter-spacing="1" fill="#FFB800" text-anchor="middle">3:25 PM CST · ALLEGIANT DOME</text>
+    <text x="278" y="36" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="22" font-weight="900" fill="#F6F7FA" letter-spacing="1">BILLS @ RAIDERS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#FFB800" fill-opacity="0.18" stroke="#FFB800" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#FFB800" text-anchor="middle">EDGE 69.0</text>
+    <text x="26" y="82" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="26" fill="#00E5FF" letter-spacing="0.5">OVER 53.5 (-110)  |  BILLS -5.5 (-110)  |  BUF ML (-245)</text>
+    <text x="26" y="122" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#F6F7FA">> Josh Allen 66.0 QBR & 4.44 yd Pocket · James Cook 106.4 rush yds/gm (+88.5 RYOE)</text>
+    <text x="26" y="148" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Khalil Shakir #1 NFL Separation (4.03 yds) + Jeanty 506 scrimmage yds vs LV DT Hemingway OUT</text>
+  </g>
+
+  <g transform="translate(60, 1005)">
+    <rect width="960" height="175" rx="14" fill="url(#card-glass)" stroke="url(#cyan-glow)" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="175" rx="4" fill="#7A5CFF"/>
+    <rect x="26" y="18" width="235" height="24" rx="5" fill="#00E5FF" fill-opacity="0.16"/>
+    <text x="143" y="35" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" letter-spacing="1" fill="#00E5FF" text-anchor="middle">MON 7:15 PM CST · MNF CLOSER</text>
+    <text x="278" y="36" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="22" font-weight="900" fill="#F6F7FA" letter-spacing="1">COMMANDERS @ 49ERS</text>
+    <rect x="805" y="16" width="130" height="36" rx="8" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.5"/>
+    <text x="870" y="39" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#00E5FF" text-anchor="middle">EDGE 70.4</text>
+    <text x="26" y="82" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="26" fill="#00E5FF" letter-spacing="0.5">49ERS -7.5 (-110)  |  OVER 50.5 (-110)  |  SF ML (-355)</text>
+    <text x="26" y="122" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#F6F7FA">> Brock Purdy #1 NFL CPOE (+10.5%) · Shanahan #1 Motion (61.68%) · CMC 423 scrimmage yds</text>
+    <text x="26" y="148" font-family="Consolas, 'Courier New', monospace" font-size="13.5" font-weight="600" fill="#B8C0D4">> Washington missing DE Charles Omenihu (OUT) + 3 Safeties (Cross, Owens, Butler) Questionable</text>
+  </g>
+
+  <line x1="60" y1="1240" x2="1020" y2="1240" stroke="#F6F7FA" stroke-opacity="0.14" stroke-width="1"/>
+  <text x="60" y="1272" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" letter-spacing="2.5" fill="#8089A0">BUILT BY GARRETT BAXLEY · FOUNDER</text>
+  <text x="60" y="1298" font-family="Consolas, 'Courier New', monospace" font-size="14" font-weight="800" letter-spacing="2" fill="#00E5FF">GALAXYSPORTSEDGE.COM/PICKS · ALL PLAYS FREE TODAY</text>
+  <text x="1020" y="1272" text-anchor="end" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" letter-spacing="2" fill="#8089A0">VALIDATED BY JEV &amp; GSE ENGINE v5.3.0</text>
+  <text x="1020" y="1298" text-anchor="end" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" letter-spacing="1.5" fill="#FF2DD6">14-KEY SOVEREIGN SIGNAL PLANE · EMPIRICAL COPULA</text>
+</svg>

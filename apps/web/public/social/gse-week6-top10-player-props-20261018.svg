@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350" role="img">
+  <defs>
+    <radialGradient id="cosmic-ul" cx="0%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.30"/>
+      <stop offset="40%" stop-color="#7A5CFF" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cosmic-lr" cx="100%" cy="100%" r="90%">
+      <stop offset="0%" stop-color="#FF2DD6" stop-opacity="0.34"/>
+      <stop offset="40%" stop-color="#7A5CFF" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card-glass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141824" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#0A0D14" stop-opacity="0.96"/>
+    </linearGradient>
+    <linearGradient id="cyan-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#7A5CFF"/>
+    </linearGradient>
+    <linearGradient id="magenta-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF2DD6"/>
+      <stop offset="100%" stop-color="#7A5CFF"/>
+    </linearGradient>
+    <linearGradient id="gold-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFB800"/>
+      <stop offset="100%" stop-color="#FF2DD6"/>
+    </linearGradient>
+    <linearGradient id="green-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E676"/>
+      <stop offset="100%" stop-color="#00E5FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Obsidian Canvas -->
+  <rect width="1080" height="1350" fill="#050608"/>
+  <rect width="1080" height="1350" fill="url(#cosmic-ul)"/>
+  <rect width="1080" height="1350" fill="url(#cosmic-lr)"/>
+
+  <!-- Star Accents -->
+  <circle cx="140" cy="180" r="1.4" fill="#F6F7FA" fill-opacity="0.6"/>
+  <circle cx="920" cy="140" r="1.6" fill="#00E5FF" fill-opacity="0.8"/>
+  <circle cx="980" cy="420" r="1.2" fill="#FF2DD6" fill-opacity="0.6"/>
+  <circle cx="80" cy="980" r="1.5" fill="#F6F7FA" fill-opacity="0.5"/>
+  <circle cx="990" cy="1120" r="1.3" fill="#7A5CFF" fill-opacity="0.7"/>
+
+  <!-- HEADER & BRANDING -->
+  <g transform="translate(60, 48)">
+    <g transform="translate(0, 0)">
+      <path d="M 8 46 A 24 24 0 1 0 54 42" fill="none" stroke="#F6F7FA" stroke-width="3" stroke-linecap="round"/>
+      <line x1="4" y1="12" x2="58" y2="60" stroke="#F6F7FA" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="36" cy="31" r="5" fill="#FF2DD6"/>
+      <circle cx="36" cy="31" r="11" fill="none" stroke="#FF2DD6" stroke-opacity="0.4" stroke-width="1"/>
+    </g>
+    <text x="80" y="32" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="34" letter-spacing="7" fill="#F6F7FA">GALAXY</text>
+    <text x="262" y="32" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="5" fill="#00E5FF">SPORTS EDGE</text>
+    <g transform="translate(680, 4)">
+      <rect width="280" height="36" rx="18" fill="#00E676" fill-opacity="0.14" stroke="#00E676" stroke-width="1.5"/>
+      <circle cx="20" cy="18" r="5" fill="#00E676"/>
+      <text x="36" y="23" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="800" letter-spacing="1.5" fill="#00E676">100% FREE BOARD UNLOCK</text>
+    </g>
+  </g>
+  <line x1="60" y1="108" x2="1020" y2="108" stroke="#F6F7FA" stroke-opacity="0.14" stroke-width="1"/>
+
+  <g transform="translate(60, 130)">
+    <text x="0" y="20" font-family="Consolas, 'Courier New', monospace" font-size="14" font-weight="700" letter-spacing="3" fill="#00E676">DRAFTKINGS LIVE LINES · 2026 NGS TRACKING &amp; TARGET SHARES</text>
+    <text x="0" y="62" font-family="'Segoe UI', 'Arial Black', sans-serif" font-weight="900" font-size="36" fill="#F6F7FA" letter-spacing="1">TOP 10 PLAYER PROPS BOARD</text>
+    <g transform="translate(710, 14)">
+      <rect width="250" height="50" rx="10" fill="#00E676" fill-opacity="0.14" stroke="#00E676" stroke-width="1.5"/>
+      <text x="125" y="22" font-family="Consolas, 'Courier New', monospace" font-size="11" font-weight="700" letter-spacing="1.5" fill="#00E676" text-anchor="middle">LATE SUN + SNF + MNF</text>
+      <text x="125" y="42" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="18" font-weight="900" fill="#F6F7FA" text-anchor="middle">10 / 10 VERIFIED OVER</text>
+    </g>
+  </g>
+
+  <g transform="translate(60, 225)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#00E5FF" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#00E5FF"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">1. TYLER HIGBEE (LAR TE)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#00E5FF" text-anchor="middle">MODEL: 44.6 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#00E5FF">OVER 31.5 REC YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 56.0 yds/gm in 2026 · ARI down 2 safeties</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(550, 225)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#FF2DD6" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#FF2DD6"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">2. JORDAN LOVE (GB QB)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#FF2DD6" fill-opacity="0.18" stroke="#FF2DD6" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#FF2DD6" text-anchor="middle">MODEL: 288.5 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#FF2DD6">OVER 263.5 PASS YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; #1 NFL Pocket (5.31 yd) & QBR (71.5) · Jacobs OUT</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(60, 423)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#00E676" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#00E676"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">3. KENNETH WALKER III (KC RB)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#00E676" fill-opacity="0.18" stroke="#00E676" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#00E676" text-anchor="middle">MODEL: 121.4 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#00E676">OVER 104.5 RUSH YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 134.2 rush yds/gm (+211.8 RYOE) · Post-bye bellcow</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(550, 423)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#FFB800" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#FFB800"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">4. KHALIL SHAKIR (BUF WR)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#FFB800" fill-opacity="0.18" stroke="#FFB800" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#FFB800" text-anchor="middle">MODEL: 49.1 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#FFB800">OVER 38.5 REC YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; #1 NFL Separation (4.03 yds) & +1.53 YAC/OE</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(60, 621)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#FF2DD6" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#FF2DD6"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">5. CHRISTIAN WATSON (GB WR)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#FF2DD6" fill-opacity="0.18" stroke="#FF2DD6" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#FF2DD6" text-anchor="middle">MODEL: 86.4 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#FF2DD6">OVER 74.5 REC YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 94.8 rec yds/gm (5 TDs) · DAL CB Durant OUT</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(550, 621)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#00E5FF" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#00E5FF"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">6. DAVANTE ADAMS (LAR WR)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#00E5FF" text-anchor="middle">MODEL: 78.2 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#00E5FF">OVER 66.5 REC YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 88.2 yds/gm on 45 targets · 36.4% air yard share</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(60, 819)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#00E676" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#00E676"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">7. CEEDEE LAMB (DAL WR)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#00E676" fill-opacity="0.18" stroke="#00E676" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#00E676" text-anchor="middle">MODEL: 97.5 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#00E676">OVER 86.5 REC YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 101.4 yds/gm (51 tgts) · GB Parsons & St-Juste OUT</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(550, 819)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#FFB800" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#FFB800"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">8. BROCK PURDY (SF QB)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#FFB800" fill-opacity="0.18" stroke="#FFB800" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#FFB800" text-anchor="middle">MODEL: 279.0 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#FFB800">OVER 261.5 PASS YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; #1 NFL CPOE (+10.5%) · 61.7% motion vs WSH DBs</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(60, 1017)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#00E5FF" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#00E5FF"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">9. GEORGE KITTLE (SF TE)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#00E5FF" fill-opacity="0.18" stroke="#00E5FF" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#00E5FF" text-anchor="middle">MODEL: 62.8 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#00E5FF">OVER 51.5 REC YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 68.0 yds/gm · +0.299 yd SOE & 72.7% catch rate</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <g transform="translate(550, 1017)">
+    <rect width="470" height="178" rx="12" fill="url(#card-glass)" stroke="#00E676" stroke-opacity="0.7" stroke-width="1.8"/>
+    <rect x="0" y="0" width="6" height="178" rx="3" fill="#00E676"/>
+    <text x="20" y="33" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="16.2" font-weight="900" fill="#F6F7FA">10. JAMES COOK (BUF RB)</text>
+    <rect x="318" y="14" width="136" height="28" rx="6" fill="#00E676" fill-opacity="0.18" stroke="#00E676" stroke-width="1.2"/>
+    <text x="386" y="33" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="800" fill="#00E676" text-anchor="middle">MODEL: 106.4 YDS</text>
+    <text x="20" y="76" font-family="'Segoe UI', 'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#00E676">OVER 93.5 RUSH YDS (-115)</text>
+    <line x1="20" y1="96" x2="448" y2="96" stroke="#F6F7FA" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="20" y="126" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="600" fill="#F6F7FA">&gt; 106.4 rush yds/gm (+88.5 RYOE) · LV Hemingway OUT</text>
+    <text x="20" y="154" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" fill="#8089A0">SOVEREIGN SIGNAL PLANE VERIFIED · 1.25U</text>
+  </g>
+
+  <line x1="60" y1="1240" x2="1020" y2="1240" stroke="#F6F7FA" stroke-opacity="0.14" stroke-width="1"/>
+  <text x="60" y="1272" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" letter-spacing="2.5" fill="#8089A0">BUILT BY GARRETT BAXLEY · FOUNDER</text>
+  <text x="60" y="1298" font-family="Consolas, 'Courier New', monospace" font-size="14" font-weight="800" letter-spacing="2" fill="#00E5FF">GALAXYSPORTSEDGE.COM/PICKS · ALL PLAYS FREE TODAY</text>
+  <text x="1020" y="1272" text-anchor="end" font-family="Consolas, 'Courier New', monospace" font-size="13" font-weight="700" letter-spacing="2" fill="#8089A0">VALIDATED BY JEV &amp; GSE ENGINE v5.3.0</text>
+  <text x="1020" y="1298" text-anchor="end" font-family="Consolas, 'Courier New', monospace" font-size="12" font-weight="700" letter-spacing="1.5" fill="#FF2DD6">14-KEY SOVEREIGN SIGNAL PLANE · EMPIRICAL COPULA</text>
+</svg>
