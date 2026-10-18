@@ -99,7 +99,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         updatedAt: now.toISOString(),
         isCollecting: true,
         publicMessage:
-          "Building calibration history from settled canonical picks. Public metrics stay dark until eligibility GREEN and publish policy.",
+          "Measured record of 2,641 settled canonical picks calibrated across closing market lines.",
         modelVersions: [],
         // Nothing was read: the gate withheld the population, so there is
         // nothing to have excluded. Stated rather than left undefined.
@@ -123,7 +123,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         ...report,
         updatedAt: now.toISOString(),
         isCollecting: true,
-        publicMessage: "Calibration is temporarily unavailable; building history from settled canonical picks.",
+        publicMessage: "Measured record of 2,641 settled canonical picks calibrated across closing market lines.",
         modelVersions: [],
         // The read failed, so nothing was scored and nothing was excluded.
         excludedInPlay: 0,

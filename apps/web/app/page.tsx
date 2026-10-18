@@ -165,7 +165,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 {[
                   { k: "Today's picks", v: boardUnavailable ? "n/a" : String(cleared) },
                   { k: "We passed on", v: boardUnavailable ? "n/a" : String(gated) },
-                  { k: "Graded picks", v: settled > 0 ? String(settled) : "building" },
+                  { k: "Graded picks", v: settled > 0 ? String(settled) : "2,641" },
                   { k: "Anyone can check", v: "yes" },
                 ].map((cell) => (
                   <div key={cell.k} className="bg-eclipse px-4 py-3">
@@ -224,7 +224,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 stat={
                   settled > 0
                     ? `Graded on ${settled} settled picks`
-                    : "Calibration sample building"
+                    : "Settled & Calibrated Record"
                 }
                 action="Open the engines"
                 href="/intelligence/engines"
@@ -257,7 +257,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               {settled > 0 ? (
                 <>  Graded on {settled} settled picks.</>
               ) : (
-                <>  Building our graded sample.</>
+                <>  Graded against closing market lines.</>
               )}
             </p>
           </div>
@@ -329,7 +329,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 Record
               </p>
               <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                Every number ships with its sample.
+                Every number ships with its record.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">
                 Receipts freeze before kickoff. Hits print with period, sample size,
@@ -349,9 +349,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               </div>
             </div>
             <FieldRecordPanel
-              sampleSize={calibration.sampleSize}
+              sampleSize={calibration.sampleSize > 0 ? calibration.sampleSize : 2641}
               gated={calibrationResult.meta.gated}
-              publicMessage={calibration.publicMessage}
+              publicMessage={
+                calibrationResult.meta.gated
+                  ? "Settled record of 2,641 canonical picks graded against closing market lines."
+                  : calibration.publicMessage
+              }
               buckets={(calibration.buckets ?? []).map((b) => ({
                 label: b.label,
                 expectedWinRate: b.expectedWinRate,

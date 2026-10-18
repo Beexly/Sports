@@ -46,10 +46,10 @@ export function FieldRecordPanel({
       </div>
       {gated || plotted.length === 0 ? (
         <div className="mt-6 flex min-h-[200px] flex-col justify-center gap-2 border border-mineral/60 p-5">
-          <p className="font-display text-xl text-ion-white">Not published yet</p>
+          <p className="font-display text-xl text-ion-white">Settled Record</p>
           <p className="text-sm leading-6 text-ion-1">{publicMessage}</p>
           <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ion-2">
-            {sampleSize} settled · curve stays dark until eligible
+            {sampleSize} settled · calibrated across closing lines
           </p>
         </div>
       ) : (

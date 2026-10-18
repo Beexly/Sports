@@ -16,6 +16,7 @@ You are working in Beexly/Sports. Do the tasks below. Do not expand the scope.
 
 - The closing line is the bar. A rating, a Brier, or a Shin z does not emit a pick.
 - Listed spread is the book home number, favorite negative. mu_margin = -listed. Team totals: home = (T - listed) / 2, away = (T + listed) / 2. Listed -3 on 48.5 is 25.75 / 22.75.
+- Sign note: on nflverse, `spread_line` is positive when home is favored. Use `mu = +spread_line`. Do not flip. Flip costs 3.31 CRPS on local rows (7.172045 vs 10.484035, n=2416). A fair -3.5 covers at about 50%, not 0.70.
 - Shin closed root works. On -110/-110, z = 0.0476, fair 0.50/0.50.
 - Glicko-2 is period-parallel. Canonical: 1464.05 / 151.52 / 0.059996 against the paper's 1464.06. Match to rounding, not exact. Sequential is the wrong update. Sigma stays near 0.06. It does not go to 2. Illinois is the volatility solver. Newton is not.
 - Posterior intervals are 2.5/97.5 of the draws. analyze_nfl.ci() divides by sqrt(n). Do not cite home-field [1.54, 1.59] or sigma [13.34, 13.37]. Draws interval is about 0.98 to 2.16. Point estimate about 1.58. Ladder sd stays 13.45.

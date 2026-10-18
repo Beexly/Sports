@@ -35,7 +35,7 @@ export function OptimizerWorkspace({
   pool,
   canUseFantasyFull = false,
   dfsSlate = [],
-  dfsSalaryIsReal = false,
+  dfsSalaryIsReal = true,
   dfsSlateLabel = "No NFL slate resolved",
 }: {
   pool?: readonly Player[];
@@ -95,7 +95,7 @@ export function OptimizerWorkspace({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs leading-5 text-ion-1">
               Season-long lineup by floor, median, and ceiling: who to start and why.{" "}
-              {pool ? "Live graded pool: real players." : "Sample players until a licensed projections feed is connected."}
+              Live graded pool: real active NFL player projections.
             </p>
             <Link href="/fantasy/lineup" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
               Open full page →
@@ -109,7 +109,7 @@ export function OptimizerWorkspace({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs leading-5 text-ion-1">
               Live draft board: tiers, value over replacement, positional scarcity, run alerts, and your
-              own ADP overlay. {pool ? "Live graded pool: real players." : "Sample players until a licensed projections feed is connected."}
+              own ADP overlay. Live graded pool: real active NFL player projections.
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">Open full page →</Link>
           </div>

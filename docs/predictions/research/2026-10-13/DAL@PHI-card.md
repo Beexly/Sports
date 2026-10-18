@@ -1,6 +1,6 @@
 # DAL@PHI - Analyst Card (Trench Funnel)
 
-generated_utc: 2026-10-13T21:36:18.384661+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
+generated_utc: 2026-10-13T21:55:49.238763+00:00  |  trace: 2026-10-13T173138Z0000-3fdf15a4  |  corpus date: 2026-10-13
 
 ## Named thesis
 
@@ -14,7 +14,7 @@ generated_utc: 2026-10-13T21:36:18.384661+00:00  |  trace: 2026-10-13T173138Z000
 4. AVAILABILITY: Drew Kendall (PHI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 5. AVAILABILITY: Marcus Epps (PHI) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength
 6. MICROSTRUCTURE: Kalshi prints 0.51 on this game [docs/data-sources/research/2026-10-13/kalshi/kalshi-nfl-digest.json] -> an independent Layer-1 anchor exists beside the de-vigged book line -> when the two agree within ~2 points, the prior is solid and L2 signals apply cleanly; divergence would flag a stale book
-7. TRACKING: George Pickens (DAL) carries NGS ngs_separation = 2.3 [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> measured athletic/tracking performance, not box-score residue -> usage and matchup edges the market prices late
+7. TRACKING (BASELINE, 2025 season): George Pickens (DAL) carried NGS ngs_separation_2025baseline = 2.3 last season [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> a measured 2025 form floor, NOT this season's number -> if 2026 usage matches, the baseline makes the market's late pricing of matchup edges visible; breaking condition: a fresh in-season 2026 NGS capture showing materially different separation/usage voids this link
 
 ## Confluence
 

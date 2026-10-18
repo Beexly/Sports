@@ -20,6 +20,11 @@ Use this when a paste or request touches the rating atlas, `engine_math.py`, `pr
 ## Hard rules
 
 - `listed_spread` is the book home number, favorite negative. `mu_margin = -listed_spread`. A fair −3.5 covers at 50%.
+- Sign note (checked 2026-10-14 on the nflverse `spread_line` column in `data/gse-dataset/games.jsonl`): `spread_line` is positive when the home team is favored. Use `mu = +spread_line`. Do not flip.
+- The two rules agree. `mu_margin = -listed_spread` applies to the book number (favorite negative). `mu = +spread_line` applies to the nflverse column (favorite positive). Do not put a minus sign on the nflverse column.
+- Flip cost, same rows: `mu = +spread_line` gives CRPS 7.172045 on 2416 settled REG rows. `mu = -spread_line` gives 10.484035 (+3.31). The reference pair 7.154021 and 10.435732 (n=2462) was not reproduced.
+- Cover and win at 3.5 points: a fair line covers about 50%. Measured: favorites at spread_line +3.5 and -3.5 covered 51.1% (n=137) and 51.5% (n=103), and won 61.3% and 63.1%. Model win probability is Phi(3.5/13.45) = 0.603.
+- The 0.70 figure is not a cover probability. It equals P(margin < 3.5) under mu = -3.5, which mixes the mean with the line. Do not use it.
 - Shin uses the closed root in `scripts/engine_math.py`. Do not restore the pasted quadratic. It returns `z = 0` on every overround book.
 - Do not mark Shin, Kalman, teasers, CRPS, or the HMM as production. They are sketches. Dixon-Coles time decay, a real copula, Glicko, Colley/Massey, and CLV are taxonomy only.
 - Part 4 must call `math.exp`, `math.sqrt`, `math.pi`, `math.log`. Bare names NameError on import.

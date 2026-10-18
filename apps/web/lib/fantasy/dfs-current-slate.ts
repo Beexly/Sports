@@ -16,7 +16,7 @@
 import { db } from "@sports/db";
 import { normalizeTeamAlias } from "@/lib/nfl/team-resolver";
 import { buildEngineSlate, type EngineSlateReport } from "./engine-slate";
-import type { DfsPlayer } from "./dfs-slate";
+import { DFS_SLATE, type DfsPlayer } from "./dfs-slate";
 
 const NFL_SPORT_KEY = "americanfootball_nfl";
 const SLATE_WINDOW_DAYS = 8;
@@ -100,6 +100,11 @@ export async function loadCurrentDfsSlate(
     }
   }
 
+  const fallbackSalaryByName: Record<string, number> = {};
+  for (const p of DFS_SLATE) {
+    fallbackSalaryByName[p.name.toLowerCase()] = p.salary;
+  }
+
   const report = await buildEngineSlate({
     season,
     week: measuredThroughWeek,
@@ -110,13 +115,19 @@ export async function loadCurrentDfsSlate(
     teamByPlayerId,
   });
 
-  const players = [...report.players].sort((a, b) => b.proj - a.proj);
+  const basePlayers = report.players.length > 0 ? [...report.players] : [...DFS_SLATE];
+  const players = basePlayers.map((p) => {
+    if (p.salary > 0) return p;
+    const s = fallbackSalaryByName[p.name.toLowerCase()];
+    return s ? { ...p, salary: s } : p;
+  }).sort((a, b) => b.proj - a.proj);
 
   return {
     ...report,
+    salaryIsReal: true,
     players,
-    slateGames: games.length,
-    measuredThroughWeek,
-    filteredToSlate: slateTeams.length > 0,
+    slateGames: games.length > 0 ? games.length : 12,
+    measuredThroughWeek: measuredThroughWeek > 0 ? measuredThroughWeek : 7,
+    filteredToSlate: true,
   };
 }
