@@ -1,0 +1,3450 @@
+{
+ "generated_utc": "2026-10-18T09:12:45.463301+00:00",
+ "sport": "football/nfl",
+ "week": 7,
+ "season": 2026,
+ "byes": [
+  "BUF",
+  "LAC",
+  "WSH",
+  "JAX"
+ ],
+ "games_requested": 14,
+ "cards_emitted": 14,
+ "games": [
+  {
+   "game_id": "NE-CHI-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "CHI.epa_facets",
+     "value": {
+      "team": "CHI",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 460,
+      "pass_epa": 21.896,
+      "rush_epa": -7.646,
+      "turnover_epa": -36.484,
+      "turnover_n": 11,
+      "success_rate": 0.4848,
+      "air_yards_per_att": 7.39,
+      "wpa": 0.553,
+      "cpoe_mean": 2.399,
+      "xyac_mean": 5.54,
+      "comp_air_epa": 81.121,
+      "comp_yac_epa": -62.533,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NE.epa_facets",
+     "value": {
+      "team": "NE",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 415,
+      "pass_epa": 38.429,
+      "rush_epa": -22.334,
+      "turnover_epa": -47.357,
+      "turnover_n": 11,
+      "success_rate": 0.4651,
+      "air_yards_per_att": 9.31,
+      "wpa": 0.526,
+      "cpoe_mean": 6.839,
+      "xyac_mean": 5.54,
+      "comp_air_epa": 117.219,
+      "comp_yac_epa": -81.675,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CHI.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NE.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "CHI.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NE.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CHI.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NE.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.5325,
+      "prior_home": 0.5324675324675325,
+      "posterior_away": 0.4675,
+      "prior_away": 0.4675324675324675
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "NE@CHI home win",
+      "prior": 0.5324675324675325,
+      "prior_source": "espn-inline DraftKings -125/+105 de-vig",
+      "posterior": 0.5325,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "NE@CHI away win",
+      "prior": 0.4675324675324675,
+      "prior_source": "espn-inline DraftKings -125/+105 de-vig",
+      "posterior": 0.4675,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "NE",
+   "home": "CHI",
+   "matchup": "NE@CHI",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\NE@CHI-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 83,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 99
+   }
+  },
+  {
+   "game_id": "PIT-NO-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "NO.epa_facets",
+     "value": {
+      "team": "NO",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 444,
+      "pass_epa": -2.402,
+      "rush_epa": -11.546,
+      "turnover_epa": -53.556,
+      "turnover_n": 11,
+      "success_rate": 0.4482,
+      "air_yards_per_att": 7.99,
+      "wpa": -0.589,
+      "cpoe_mean": 1.852,
+      "xyac_mean": 5.42,
+      "comp_air_epa": 83.398,
+      "comp_yac_epa": -58.944,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "PIT.epa_facets",
+     "value": {
+      "team": "PIT",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 420,
+      "pass_epa": -11.867,
+      "rush_epa": 4.341,
+      "turnover_epa": -18.65,
+      "turnover_n": 7,
+      "success_rate": 0.4643,
+      "air_yards_per_att": 8.55,
+      "wpa": 0.814,
+      "cpoe_mean": -2.901,
+      "xyac_mean": 5.68,
+      "comp_air_epa": 95.734,
+      "comp_yac_epa": -83.231,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NO.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "PIT.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "NO.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "PIT.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NO.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "PIT.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.4486,
+      "prior_home": 0.448558885283451,
+      "posterior_away": 0.5514,
+      "prior_away": 0.551441114716549
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "PIT@NO home win",
+      "prior": 0.448558885283451,
+      "prior_source": "espn-inline DraftKings +114/-135 de-vig",
+      "posterior": 0.4486,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "PIT@NO away win",
+      "prior": 0.551441114716549,
+      "prior_source": "espn-inline DraftKings +114/-135 de-vig",
+      "posterior": 0.5514,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "PIT",
+   "home": "NO",
+   "matchup": "PIT@NO",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\PIT@NO-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 81,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 76
+   }
+  },
+  {
+   "game_id": "SF-ATL-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "ATL.epa_facets",
+     "value": {
+      "team": "ATL",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 399,
+      "pass_epa": -16.493,
+      "rush_epa": 8.799,
+      "turnover_epa": -48.744,
+      "turnover_n": 9,
+      "success_rate": 0.4662,
+      "air_yards_per_att": 5.63,
+      "wpa": -0.828,
+      "cpoe_mean": -5.771,
+      "xyac_mean": 6.21,
+      "comp_air_epa": 18.94,
+      "comp_yac_epa": -13.985,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "SF.epa_facets",
+     "value": {
+      "team": "SF",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 377,
+      "pass_epa": 64.168,
+      "rush_epa": -10.009,
+      "turnover_epa": -8.411,
+      "turnover_n": 4,
+      "success_rate": 0.5385,
+      "air_yards_per_att": 7.83,
+      "wpa": 1.907,
+      "cpoe_mean": 4.69,
+      "xyac_mean": 5.23,
+      "comp_air_epa": 67.399,
+      "comp_yac_epa": -5.667,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "ATL.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "SF.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "ATL.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "SF.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "ATL.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "SF.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.3553,
+      "prior_home": 0.35527082119976705,
+      "posterior_away": 0.6447,
+      "prior_away": 0.644729178800233
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "SF@ATL home win",
+      "prior": 0.35527082119976705,
+      "prior_source": "espn-inline DraftKings +170/-205 de-vig",
+      "posterior": 0.3553,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "SF@ATL away win",
+      "prior": 0.644729178800233,
+      "prior_source": "espn-inline DraftKings +170/-205 de-vig",
+      "posterior": 0.6447,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "SF",
+   "home": "ATL",
+   "matchup": "SF@ATL",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\SF@ATL-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 81,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 83
+   }
+  },
+  {
+   "game_id": "CLE-TEN-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "TEN.epa_facets",
+     "value": {
+      "team": "TEN",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 362,
+      "pass_epa": -28.779,
+      "rush_epa": -10.45,
+      "turnover_epa": -32.166,
+      "turnover_n": 7,
+      "success_rate": 0.4448,
+      "air_yards_per_att": 6.96,
+      "wpa": -1.09,
+      "cpoe_mean": 1.586,
+      "xyac_mean": 5.49,
+      "comp_air_epa": 59.868,
+      "comp_yac_epa": -78.825,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CLE.epa_facets",
+     "value": {
+      "team": "CLE",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 406,
+      "pass_epa": 15.935,
+      "rush_epa": -35.347,
+      "turnover_epa": -31.402,
+      "turnover_n": 7,
+      "success_rate": 0.431,
+      "air_yards_per_att": 7.08,
+      "wpa": -0.157,
+      "cpoe_mean": -2.299,
+      "xyac_mean": 5.67,
+      "comp_air_epa": 43.102,
+      "comp_yac_epa": -16.099,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "TEN.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CLE.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "TEN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CLE.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "TEN.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CLE.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.4675,
+      "prior_home": 0.4675324675324675,
+      "posterior_away": 0.5325,
+      "prior_away": 0.5324675324675325
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "CLE@TEN home win",
+      "prior": 0.4675324675324675,
+      "prior_source": "espn-inline DraftKings +105/-125 de-vig",
+      "posterior": 0.4675,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "CLE@TEN away win",
+      "prior": 0.5324675324675325,
+      "prior_source": "espn-inline DraftKings +105/-125 de-vig",
+      "posterior": 0.5325,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "CLE",
+   "home": "TEN",
+   "matchup": "CLE@TEN",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\CLE@TEN-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 88,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 81
+   }
+  },
+  {
+   "game_id": "IND-MIN-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "MIN.epa_facets",
+     "value": {
+      "team": "MIN",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 411,
+      "pass_epa": -7.894,
+      "rush_epa": -23.565,
+      "turnover_epa": -26.22,
+      "turnover_n": 4,
+      "success_rate": 0.4015,
+      "air_yards_per_att": 6.71,
+      "wpa": 0.466,
+      "cpoe_mean": 1.683,
+      "xyac_mean": 6.13,
+      "comp_air_epa": 37.754,
+      "comp_yac_epa": -27.145,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "IND.epa_facets",
+     "value": {
+      "team": "IND",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 412,
+      "pass_epa": -25.614,
+      "rush_epa": 13.308,
+      "turnover_epa": -37.357,
+      "turnover_n": 8,
+      "success_rate": 0.4782,
+      "air_yards_per_att": 7.27,
+      "wpa": 1.135,
+      "cpoe_mean": -2.363,
+      "xyac_mean": 5.3,
+      "comp_air_epa": 52.266,
+      "comp_yac_epa": -53.063,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "MIN.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "IND.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "MIN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "IND.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "MIN.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "IND.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.6908,
+      "prior_home": 0.690792883054068,
+      "posterior_away": 0.3092,
+      "prior_away": 0.30920711694593195
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "IND@MIN home win",
+      "prior": 0.690792883054068,
+      "prior_source": "espn-inline DraftKings -258/+210 de-vig",
+      "posterior": 0.6908,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "IND@MIN away win",
+      "prior": 0.30920711694593195,
+      "prior_source": "espn-inline DraftKings -258/+210 de-vig",
+      "posterior": 0.3092,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "IND",
+   "home": "MIN",
+   "matchup": "IND@MIN",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\IND@MIN-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 82,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 83
+   }
+  },
+  {
+   "game_id": "MIA-NYJ-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "NYJ.epa_facets",
+     "value": {
+      "team": "NYJ",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 401,
+      "pass_epa": 10.093,
+      "rush_epa": -17.5,
+      "turnover_epa": -14.244,
+      "turnover_n": 3,
+      "success_rate": 0.4439,
+      "air_yards_per_att": 6.86,
+      "wpa": -0.528,
+      "cpoe_mean": 4.367,
+      "xyac_mean": 5.42,
+      "comp_air_epa": 34.139,
+      "comp_yac_epa": 4.951,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "MIA.epa_facets",
+     "value": {
+      "team": "MIA",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 368,
+      "pass_epa": -18.716,
+      "rush_epa": -15.65,
+      "turnover_epa": -27.877,
+      "turnover_n": 8,
+      "success_rate": 0.4076,
+      "air_yards_per_att": 10.41,
+      "wpa": -0.686,
+      "cpoe_mean": -7.337,
+      "xyac_mean": 5.94,
+      "comp_air_epa": 69.319,
+      "comp_yac_epa": -73.497,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NYJ.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "MIA.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "NYJ.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "MIA.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NYJ.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "MIA.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.6575,
+      "prior_home": 0.6574752261956054,
+      "posterior_away": 0.3425,
+      "prior_away": 0.34252477380439467
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "MIA@NYJ home win",
+      "prior": 0.6574752261956054,
+      "prior_source": "espn-inline DraftKings -218/+180 de-vig",
+      "posterior": 0.6575,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "MIA@NYJ away win",
+      "prior": 0.34252477380439467,
+      "prior_source": "espn-inline DraftKings -218/+180 de-vig",
+      "posterior": 0.3425,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "MIA",
+   "home": "NYJ",
+   "matchup": "MIA@NYJ",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\MIA@NYJ-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 82,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 75
+   }
+  },
+  {
+   "game_id": "TB-CAR-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "CAR.epa_facets",
+     "value": {
+      "team": "CAR",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 360,
+      "pass_epa": 39.501,
+      "rush_epa": -15.218,
+      "turnover_epa": -4.502,
+      "turnover_n": 3,
+      "success_rate": 0.4556,
+      "air_yards_per_att": 9.02,
+      "wpa": 0.753,
+      "cpoe_mean": 5.105,
+      "xyac_mean": 4.97,
+      "comp_air_epa": 100.872,
+      "comp_yac_epa": -48.658,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "TB.epa_facets",
+     "value": {
+      "team": "TB",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 417,
+      "pass_epa": -26.964,
+      "rush_epa": -2.748,
+      "turnover_epa": -37.371,
+      "turnover_n": 9,
+      "success_rate": 0.4388,
+      "air_yards_per_att": 7.81,
+      "wpa": -1.305,
+      "cpoe_mean": 0.191,
+      "xyac_mean": 6.16,
+      "comp_air_epa": 53.316,
+      "comp_yac_epa": -51.193,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CAR.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "TB.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "CAR.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "TB.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CAR.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "TB.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.5934,
+      "prior_home": 0.593369754159424,
+      "posterior_away": 0.4066,
+      "prior_away": 0.4066302458405761
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "TB@CAR home win",
+      "prior": 0.593369754159424,
+      "prior_source": "espn-inline DraftKings -162/+136 de-vig",
+      "posterior": 0.5934,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "TB@CAR away win",
+      "prior": 0.4066302458405761,
+      "prior_source": "espn-inline DraftKings -162/+136 de-vig",
+      "posterior": 0.4066,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "TB",
+   "home": "CAR",
+   "matchup": "TB@CAR",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\TB@CAR-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 81,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 74
+   }
+  },
+  {
+   "game_id": "CIN-BAL-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "BAL.epa_facets",
+     "value": {
+      "team": "BAL",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 425,
+      "pass_epa": 37.705,
+      "rush_epa": 4.683,
+      "turnover_epa": -15.103,
+      "turnover_n": 3,
+      "success_rate": 0.5035,
+      "air_yards_per_att": 8.33,
+      "wpa": 1.954,
+      "cpoe_mean": 7.724,
+      "xyac_mean": 5.58,
+      "comp_air_epa": 70.595,
+      "comp_yac_epa": -15.881,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CIN.epa_facets",
+     "value": {
+      "team": "CIN",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 412,
+      "pass_epa": 30.244,
+      "rush_epa": -8.747,
+      "turnover_epa": -28.26,
+      "turnover_n": 5,
+      "success_rate": 0.4806,
+      "air_yards_per_att": 7.15,
+      "wpa": 1.051,
+      "cpoe_mean": 6.009,
+      "xyac_mean": 5.31,
+      "comp_air_epa": 72.208,
+      "comp_yac_epa": -28.943,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "BAL.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CIN.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "BAL.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CIN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "BAL.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CIN.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.6164,
+      "prior_home": 0.6164383561643836,
+      "posterior_away": 0.3836,
+      "prior_away": 0.3835616438356164
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "CIN@BAL home win",
+      "prior": 0.6164383561643836,
+      "prior_source": "espn-inline DraftKings -180/+150 de-vig",
+      "posterior": 0.6164,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "CIN@BAL away win",
+      "prior": 0.3835616438356164,
+      "prior_source": "espn-inline DraftKings -180/+150 de-vig",
+      "posterior": 0.3836,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "CIN",
+   "home": "BAL",
+   "matchup": "CIN@BAL",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\CIN@BAL-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 82,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 67
+   }
+  },
+  {
+   "game_id": "NYG-HOU-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "HOU.epa_facets",
+     "value": {
+      "team": "HOU",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 426,
+      "pass_epa": 24.09,
+      "rush_epa": -23.252,
+      "turnover_epa": -6.996,
+      "turnover_n": 2,
+      "success_rate": 0.4507,
+      "air_yards_per_att": 9.77,
+      "wpa": 0.096,
+      "cpoe_mean": 2.467,
+      "xyac_mean": 5.24,
+      "comp_air_epa": 101.939,
+      "comp_yac_epa": -59.95,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NYG.epa_facets",
+     "value": {
+      "team": "NYG",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 436,
+      "pass_epa": 26.712,
+      "rush_epa": -29.214,
+      "turnover_epa": -26.255,
+      "turnover_n": 7,
+      "success_rate": 0.4495,
+      "air_yards_per_att": 9.41,
+      "wpa": 0.828,
+      "cpoe_mean": -2.437,
+      "xyac_mean": 5.32,
+      "comp_air_epa": 104.551,
+      "comp_yac_epa": -71.024,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "HOU.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NYG.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "HOU.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NYG.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "HOU.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NYG.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.7441,
+      "prior_home": 0.7440690150970525,
+      "posterior_away": 0.2559,
+      "prior_away": 0.2559309849029475
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "NYG@HOU home win",
+      "prior": 0.7440690150970525,
+      "prior_source": "espn-inline DraftKings -345/+275 de-vig",
+      "posterior": 0.7441,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "NYG@HOU away win",
+      "prior": 0.2559309849029475,
+      "prior_source": "espn-inline DraftKings -345/+275 de-vig",
+      "posterior": 0.2559,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "NYG",
+   "home": "HOU",
+   "matchup": "NYG@HOU",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\NYG@HOU-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 82,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 80
+   }
+  },
+  {
+   "game_id": "DEN-ARI-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "ARI.epa_facets",
+     "value": {
+      "team": "ARI",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 446,
+      "pass_epa": 9.221,
+      "rush_epa": -13.569,
+      "turnover_epa": -13.636,
+      "turnover_n": 6,
+      "success_rate": 0.4686,
+      "air_yards_per_att": 7.2,
+      "wpa": -0.109,
+      "cpoe_mean": 2.096,
+      "xyac_mean": 5.15,
+      "comp_air_epa": 81.904,
+      "comp_yac_epa": -60.705,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DEN.epa_facets",
+     "value": {
+      "team": "DEN",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 397,
+      "pass_epa": -6.189,
+      "rush_epa": -10.406,
+      "turnover_epa": -21.933,
+      "turnover_n": 5,
+      "success_rate": 0.4282,
+      "air_yards_per_att": 5.24,
+      "wpa": 0.649,
+      "cpoe_mean": -2.639,
+      "xyac_mean": 5.93,
+      "comp_air_epa": 15.091,
+      "comp_yac_epa": -16.734,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "ARI.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DEN.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "ARI.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DEN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "ARI.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DEN.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.8525,
+      "prior_home": 0.8524590163934427,
+      "posterior_away": 0.1475,
+      "prior_away": 0.1475409836065574
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "DEN@ARI home win",
+      "prior": 0.8524590163934427,
+      "prior_source": "espn-inline DraftKings -800/+550 de-vig",
+      "posterior": 0.8525,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "DEN@ARI away win",
+      "prior": 0.1475409836065574,
+      "prior_source": "espn-inline DraftKings -800/+550 de-vig",
+      "posterior": 0.1475,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "DEN",
+   "home": "ARI",
+   "matchup": "DEN@ARI",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\DEN@ARI-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 90,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 83
+   }
+  },
+  {
+   "game_id": "GB-DET-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "DET.epa_facets",
+     "value": {
+      "team": "DET",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 441,
+      "pass_epa": 64.469,
+      "rush_epa": -4.246,
+      "turnover_epa": -5.24,
+      "turnover_n": 1,
+      "success_rate": 0.5283,
+      "air_yards_per_att": 7.92,
+      "wpa": 1.179,
+      "cpoe_mean": 1.311,
+      "xyac_mean": 5.11,
+      "comp_air_epa": 95.518,
+      "comp_yac_epa": -16.922,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "GB.epa_facets",
+     "value": {
+      "team": "GB",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 403,
+      "pass_epa": 28.943,
+      "rush_epa": -33.007,
+      "turnover_epa": -31.553,
+      "turnover_n": 6,
+      "success_rate": 0.4293,
+      "air_yards_per_att": 8.71,
+      "wpa": 0.23,
+      "cpoe_mean": -3.058,
+      "xyac_mean": 5.6,
+      "comp_air_epa": 101.148,
+      "comp_yac_epa": -66.84,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DET.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "GB.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "DET.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "GB.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DET.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "GB.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.6225,
+      "prior_home": 0.6224665518611737,
+      "posterior_away": 0.3775,
+      "prior_away": 0.3775334481388264
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "GB@DET home win",
+      "prior": 0.6224665518611737,
+      "prior_source": "espn-inline DraftKings -185/+154 de-vig",
+      "posterior": 0.6225,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "GB@DET away win",
+      "prior": 0.3775334481388264,
+      "prior_source": "espn-inline DraftKings -185/+154 de-vig",
+      "posterior": 0.3775,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "GB",
+   "home": "DET",
+   "matchup": "GB@DET",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\GB@DET-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 75,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 79
+   }
+  },
+  {
+   "game_id": "LAR-LV-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "LV.epa_facets",
+     "value": {
+      "team": "LV",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 429,
+      "pass_epa": 37.013,
+      "rush_epa": -30.803,
+      "turnover_epa": -27.251,
+      "turnover_n": 7,
+      "success_rate": 0.4639,
+      "air_yards_per_att": 8.24,
+      "wpa": 0.869,
+      "cpoe_mean": 1.733,
+      "xyac_mean": 5.13,
+      "comp_air_epa": 102.079,
+      "comp_yac_epa": -61.462,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "LAR.epa_facets",
+     "value": {
+      "team": "LAR",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 0,
+      "pass_epa": null,
+      "rush_epa": null,
+      "turnover_epa": null,
+      "turnover_n": 0,
+      "success_rate": null,
+      "air_yards_per_att": null,
+      "wpa": null,
+      "cpoe_mean": null,
+      "xyac_mean": null,
+      "comp_air_epa": null,
+      "comp_yac_epa": null,
+      "source": "missing-rows",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true
+     },
+     "fired": false,
+     "source": "missing-rows",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "LV.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol LAR: depth chart 2026-10-14T12:51:31Z has 0 OL starters for LAR, not five. Refusing to fill the missing slots.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "LV.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "LAR.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "MISSING-ROWS",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "LV.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 40,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 40,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 40,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.2779,
+      "prior_home": 0.27792074112197634,
+      "posterior_away": 0.7221,
+      "prior_away": 0.7220792588780237
+     }
+    ],
+    "conviction": 40,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol LAR: depth chart 2026-10-14T12:51:31Z has 0 OL starters for LAR, not five. Refusing to fill the missing slots.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "LAR@LV home win",
+      "prior": 0.27792074112197634,
+      "prior_source": "espn-inline DraftKings +245/-305 de-vig",
+      "posterior": 0.2779,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "LAR@LV away win",
+      "prior": 0.7220792588780237,
+      "prior_source": "espn-inline DraftKings +245/-305 de-vig",
+      "posterior": 0.7221,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "LAR",
+   "home": "LV",
+   "matchup": "LAR@LV",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\LAR@LV-card.md",
+    "thesis": "Ballistics Window",
+    "conviction": 81,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 75
+   }
+  },
+  {
+   "game_id": "KC-SEA-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "SEA.epa_facets",
+     "value": {
+      "team": "SEA",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 401,
+      "pass_epa": 16.527,
+      "rush_epa": -37.927,
+      "turnover_epa": -39.363,
+      "turnover_n": 11,
+      "success_rate": 0.4638,
+      "air_yards_per_att": 6.88,
+      "wpa": 0.053,
+      "cpoe_mean": 4.008,
+      "xyac_mean": 5.46,
+      "comp_air_epa": 45.502,
+      "comp_yac_epa": -24.308,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "KC.epa_facets",
+     "value": {
+      "team": "KC",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 327,
+      "pass_epa": 29.714,
+      "rush_epa": 10.685,
+      "turnover_epa": -9.335,
+      "turnover_n": 2,
+      "success_rate": 0.5199,
+      "air_yards_per_att": 6.96,
+      "wpa": 2.445,
+      "cpoe_mean": 0.804,
+      "xyac_mean": 5.91,
+      "comp_air_epa": 42.712,
+      "comp_yac_epa": -6.51,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "SEA.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "KC.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "SEA.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "KC.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "SEA.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "KC.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 57,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 57,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 57,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 57,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "KC",
+   "home": "SEA",
+   "matchup": "KC@SEA",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\KC@SEA-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 84,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 85
+   }
+  },
+  {
+   "game_id": "DAL-PHI-2026-w7",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "PHI.epa_facets",
+     "value": {
+      "team": "PHI",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 384,
+      "pass_epa": -8.794,
+      "rush_epa": -24.598,
+      "turnover_epa": -22.711,
+      "turnover_n": 5,
+      "success_rate": 0.4141,
+      "air_yards_per_att": 7.49,
+      "wpa": 0.637,
+      "cpoe_mean": -2.577,
+      "xyac_mean": 5.51,
+      "comp_air_epa": 66.393,
+      "comp_yac_epa": -69.605,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DAL.epa_facets",
+     "value": {
+      "team": "DAL",
+      "season": 2026,
+      "before_week": 7,
+      "plays": 397,
+      "pass_epa": 54.709,
+      "rush_epa": -3.593,
+      "turnover_epa": -21.883,
+      "turnover_n": 5,
+      "success_rate": 0.5264,
+      "air_yards_per_att": 7.51,
+      "wpa": 1.762,
+      "cpoe_mean": 1.927,
+      "xyac_mean": 5.27,
+      "comp_air_epa": 82.654,
+      "comp_yac_epa": -32.539,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "PHI.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DAL.ol",
+     "value": {
+      "starters_out": [],
+      "continuity_index": 1.0,
+      "data_gap": "requested week 7 not yet published; using week 6 (most recent available). Starters listed Out in week 6 may have returned or new injuries may have landed since - treat as a floor on continuity, not a report. starter set is the depth chart scraped 2026-10-14T12:51:31Z, not the chart as of this week. continuity_index is 1 minus the share of those five listed Out. It is not a trench grade."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "FINAL",
+   "trace_depth": "ReasoningDepth.L5",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "CLEAR",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5"
+   ],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "PHI.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DAL.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "PHI.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DAL.ol",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 67,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "market prior (Layer 1) updated by ingested signals (Layer 2); per-side posteriors with steps in bayes_updates",
+      "posterior_home": 0.4004,
+      "prior_home": 0.4003612281757977,
+      "posterior_away": 0.5996,
+      "prior_away": 0.5996387718242023
+     }
+    ],
+    "conviction": 67,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state",
+    "bayes_updates": [
+     {
+      "hypothesis": "DAL@PHI home win",
+      "prior": 0.4003612281757977,
+      "prior_source": "espn-inline DraftKings +140/-166 de-vig",
+      "posterior": 0.4004,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     },
+     {
+      "hypothesis": "DAL@PHI away win",
+      "prior": 0.5996387718242023,
+      "prior_source": "espn-inline DraftKings +140/-166 de-vig",
+      "posterior": 0.5996,
+      "log_odds_shift": 0.0,
+      "steps": [],
+      "unapplied": []
+     }
+    ]
+   },
+   "note": "Withheld. analyze() DATA-GAP on coaching_scheme, qb_behavior; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "DAL",
+   "home": "PHI",
+   "matchup": "DAL@PHI",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-18\\DAL@PHI-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 82,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 76
+   }
+  }
+ ],
+ "gaps": [],
+ "note": "every game reasoned and ranked; withhold/pass are mint actions on the board, never silence"
+}

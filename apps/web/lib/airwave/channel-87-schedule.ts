@@ -5,7 +5,7 @@
  * intelligence source for Galaxy Sports Edge and Galaxy Sports Network.
  *
  * KEY CONSTRAINTS (enforced in code + tests):
- *   1. Channel 87 capture window is 05:00–23:00 CT only.
+ *   1. Channel 87 capture window is 04:00–23:00 CT (4:00 AM – 11:00 PM Central).
  *   2. Schedule data is OPERATOR-PROVIDED / MANUAL. This module defines the
  *      contract and sample placeholders only — no scraping of SiriusXM
  *      schedules, no automated endpoint calls.
@@ -18,8 +18,8 @@ export const CH87_CHANNEL_NUMBER = 87 as const;
 export const CH87_CHANNEL_NAME = "SiriusXM Fantasy Sports Radio" as const;
 export const CH87_TIMEZONE = "America/Chicago" as const;
 
-/** Capture window: 05:00–23:00 Central Time. */
-export const CH87_WINDOW = { startHour: 5, endHour: 23 } as const;
+/** Capture window: 04:00–23:00 Central Time (4:00 AM – 11:00 PM CT). */
+export const CH87_WINDOW = { startHour: 4, endHour: 23 } as const;
 
 export type ShowRightsStatus =
   | "OPERATOR_NOTED"
@@ -130,7 +130,7 @@ export function validateShowBlock(block: ShowBlock): string[] {
   }
   if (!isWithinChannel87Window(block.startHour)) {
     errors.push(
-      `Show start hour ${block.startHour} is outside the 05:00-23:00 CT capture window.`,
+      `Show start hour ${block.startHour} is outside the 04:00-23:00 (05:00-23:00 legacy) CT capture window.`,
     );
   }
   if (block.rightsStatus === "HELD" || block.rightsStatus === "LEGAL_REVIEW_REQUIRED") {
@@ -227,14 +227,31 @@ export function summarizeChannel87Schedule(
 }
 
 /**
- * Sample/manual show blocks for CH87.
+ * Sample/manual show blocks for CH87 covering 04:00–23:00 CT (4am–11pm Central).
  * These are ILLUSTRATIVE ONLY — marked SAMPLE_PLACEHOLDER.
  * Replace with operator-verified schedule data.
  */
 const SAMPLE_CH87_SHOWS: readonly ShowBlock[] = [
   {
+    showId: "ch87-early-look",
+    showName: "Early Look & Waiver Replay (Sample)",
+    startsAtCt: "04:00",
+    endsAtCt: "06:00",
+    startHour: 4,
+    endHour: 6,
+    expectedHosts: ["SiriusXM Fantasy Desk"],
+    sportFocus: ["NFL", "DFS"],
+    fantasyFocus: true,
+    bettingRelevance: true,
+    sourceConfidence: "SAMPLE_PLACEHOLDER",
+    manualReviewRequired: true,
+    rightsStatus: "MANUAL_IMPORT_ONLY",
+    operatorNotes:
+      "SAMPLE PLACEHOLDER (04:00-06:00 CT early window). Replace with verified CH87 early show data.",
+  },
+  {
     showId: "ch87-morning-drive",
-    showName: "Morning Drive (Sample)",
+    showName: "Morning Drive / RotoBaller & RotoWire (Sample)",
     startsAtCt: "06:00",
     endsAtCt: "10:00",
     startHour: 6,
@@ -251,7 +268,7 @@ const SAMPLE_CH87_SHOWS: readonly ShowBlock[] = [
   },
   {
     showId: "ch87-midday",
-    showName: "Midday Fantasy (Sample)",
+    showName: "Midday Fantasy / FantasyGuru Elite (Sample)",
     startsAtCt: "10:00",
     endsAtCt: "14:00",
     startHour: 10,
@@ -268,7 +285,7 @@ const SAMPLE_CH87_SHOWS: readonly ShowBlock[] = [
   },
   {
     showId: "ch87-afternoon-lines",
-    showName: "Afternoon Lines (Sample)",
+    showName: "Afternoon Lines / Fantasy Alarm (Sample)",
     startsAtCt: "14:00",
     endsAtCt: "18:00",
     startHour: 14,
@@ -299,6 +316,23 @@ const SAMPLE_CH87_SHOWS: readonly ShowBlock[] = [
     rightsStatus: "MANUAL_IMPORT_ONLY",
     operatorNotes:
       "SAMPLE PLACEHOLDER. Replace with verified CH87 evening show data. Capture held pending legal acknowledgement.",
+  },
+  {
+    showId: "ch87-late-night-wrap",
+    showName: "Late Night Slate Lock Wrap (Sample)",
+    startsAtCt: "22:00",
+    endsAtCt: "23:00",
+    startHour: 22,
+    endHour: 23,
+    expectedHosts: ["SiriusXM Late Desk"],
+    sportFocus: ["NFL", "DFS", "Props"],
+    fantasyFocus: true,
+    bettingRelevance: true,
+    sourceConfidence: "SAMPLE_PLACEHOLDER",
+    manualReviewRequired: true,
+    rightsStatus: "MANUAL_IMPORT_ONLY",
+    operatorNotes:
+      "SAMPLE PLACEHOLDER (22:00-23:00 CT close window). Replace with verified CH87 late wrap data.",
   },
 ];
 

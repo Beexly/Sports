@@ -31,7 +31,11 @@ const SAMPLE_BLOCK: ShowBlock = {
 
 describe("Channel 87 Schedule", () => {
   describe("isWithinChannel87Window", () => {
-    it("returns true for hour 5 (start of window)", () => {
+    it("returns true for hour 4 (start of 04:00-23:00 CT window)", () => {
+      expect(isWithinChannel87Window(4)).toBe(true);
+    });
+
+    it("returns true for hour 5", () => {
       expect(isWithinChannel87Window(5)).toBe(true);
     });
 
@@ -43,16 +47,16 @@ describe("Channel 87 Schedule", () => {
       expect(isWithinChannel87Window(23)).toBe(false);
     });
 
-    it("returns false for hour 4 (before window)", () => {
-      expect(isWithinChannel87Window(4)).toBe(false);
+    it("returns false for hour 3 (before window)", () => {
+      expect(isWithinChannel87Window(3)).toBe(false);
     });
 
     it("returns false for hour 0", () => {
       expect(isWithinChannel87Window(0)).toBe(false);
     });
 
-    it("window is 05:00-23:00 CT", () => {
-      expect(CH87_WINDOW.startHour).toBe(5);
+    it("window is 04:00-23:00 CT", () => {
+      expect(CH87_WINDOW.startHour).toBe(4);
       expect(CH87_WINDOW.endHour).toBe(23);
     });
   });

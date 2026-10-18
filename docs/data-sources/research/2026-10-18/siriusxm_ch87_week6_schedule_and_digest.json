@@ -1,0 +1,390 @@
+{
+  "generated_utc": "2026-10-18T09:08:49.045661+00:00",
+  "channel_number": 87,
+  "channel_name": "SiriusXM Fantasy Sports Radio",
+  "timezone": "America/Chicago",
+  "capture_window_ct": {
+    "start": "04:00",
+    "end": "23:00",
+    "startHour": 4,
+    "endHour": 23
+  },
+  "compliance": {
+    "drm_bypass": false,
+    "verbatim_transcript_published": false,
+    "mode": "paraphrased_structured_claim_intake_and_schedule_verification",
+    "rea_public_page_inspection": {
+      "target_id": "W6_25_SIRIUSXM_CHANNELS_SIRIUSXM_FANTASY_SP",
+      "url": "https://www.siriusxm.com/channels/siriusxm-fantasy-sports-radio",
+      "domain": "siriusxm.com",
+      "http_status": 200,
+      "verdict": "PASS",
+      "title": "Fantasy Sports Radio | SiriusXM",
+      "meta_description": "Expert fantasy sports advice and information.",
+      "headings_extracted": [
+        "SiriusXM NFL Radio",
+        "Immerse yourself in what you love",
+        "Fantasy Sports Radio",
+        "Featured show",
+        "Fantistics Insider Football",
+        "RotoBaller Radio",
+        "Fantasy Life Gameday",
+        "The Jeff Ratcliffe Show",
+        "Fantasy Alarm",
+        "SiriusXM Fantasy Football Pregame",
+        "SiriusXM Fantasy Football Gameday",
+        "Fantasy Points Weekend",
+        "Fantasy Football Morning Presented by Fantasy Points",
+        "RotoWire Fantasy Sports Today",
+        "Fantasy Footballers Podcast",
+        "Football Diehards",
+        "Smart Fantasy presented by RT Sports",
+        "Chop: The Guillotine Podcast",
+        "NBA Preview Show",
+        "The High Stakes Fantasy Advantage"
+      ],
+      "teams_mentioned": [],
+      "content_length": 691489,
+      "duration_ms": 3096,
+      "sample_sha256": "b63f98038890ecfb",
+      "sample_file": "docs/data-sources/research/2026-10-18/rea_week6_funnel/samples/25_www_siriusxm_com_channels_siriusxm-fantasy-sports-radio.html",
+      "intercepted_api_count": 40,
+      "intercepted_apis": [
+        {
+          "url": "https://www.siriusxm.com/api/mountain/8368",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "https://dpm.demdex.net/id?d_visid_ver=5.5.0&d_fieldgroup=MC&d_rtbd=json&d_ver=2&d_orgid=AA6F3BC75245B3970A490D4D%40AdobeOrg&d_nsid=0&d_coppa=true&ts=1792314513897",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://cdn.cookielaw.org/consent/a94ca794-e01f-45f7-a5c0-0cae5107e46e/a94ca794-e01f-45f7-a5c0-0cae5107e46e.json",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/time/v1/metronome",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/device/v1/devices",
+          "method": "POST",
+          "type": "xhr"
+        },
+        {
+          "url": "https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://sxmepg/epg.sxmchepginfo.xmc?channelKeys=8368&distribution=XMDCOM&tzone=Eastern",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/time/v1/metronome",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/device/v2/devices",
+          "method": "POST",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/time/v1/metronome",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/session/v1/sessions/anonymous",
+          "method": "POST",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/time/v1/metronome",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/time/v1/metronome",
+          "method": "GET",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/session/v1/sessions/anonymous",
+          "method": "POST",
+          "type": "xhr"
+        },
+        {
+          "url": "https://api.edge-gateway.siriusxm.com/time/v1/metronome",
+          "method": "GET",
+          "type": "xhr"
+        }
+      ],
+      "rea_module_used": "src/browser/PlaywrightScenarioSession.ts + src/browser/execution/CdpRuntimeRequests.ts",
+      "verified_at_utc": "2026-10-18T09:08:35.656851+00:00"
+    }
+  },
+  "shows": [
+    {
+      "showId": "ch87-early-look-replay",
+      "showName": "Fantasy Sports Radio Early Look & Waiver Wire Replay",
+      "startsAtCt": "04:00",
+      "endsAtCt": "06:00",
+      "startHour": 4,
+      "endHour": 6,
+      "expectedHosts": [
+        "SiriusXM Fantasy Desk",
+        "overnight anchor rotation"
+      ],
+      "sportFocus": [
+        "NFL",
+        "DFS",
+        "Waivers"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "04:00-06:00 CT early pre-market block covering overnight injury updates, practice participation recaps, and early DFS slate lock notes."
+    },
+    {
+      "showId": "ch87-rotoballers-morning",
+      "showName": "The Morning Huddle / RotoBaller Radio",
+      "startsAtCt": "06:00",
+      "endsAtCt": "09:00",
+      "startHour": 6,
+      "endHour": 9,
+      "expectedHosts": [
+        "Bobby Sylvester",
+        "Mikeriebe / RotoBaller Desk"
+      ],
+      "sportFocus": [
+        "NFL",
+        "Fantasy",
+        "Props"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "06:00-09:00 CT morning lineup lock, injury designations, and weather/trench matchup breakdowns."
+    },
+    {
+      "showId": "ch87-rotowire-fantasy-morning",
+      "showName": "RotoWire Fantasy Sports Today",
+      "startsAtCt": "09:00",
+      "endsAtCt": "11:00",
+      "startHour": 9,
+      "endHour": 11,
+      "expectedHosts": [
+        "Jeff Erickson",
+        "Alan Seslowsky",
+        "Chris Liss"
+      ],
+      "sportFocus": [
+        "NFL",
+        "DFS",
+        "Props"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "09:00-11:00 CT RotoWire news desk, snap share shifts, red-zone target share, and sportsbook prop discrepancies."
+    },
+    {
+      "showId": "ch87-fantasy-guru-elite",
+      "showName": "FantasyGuru Elite Plus / Jeff Mans Show",
+      "startsAtCt": "11:00",
+      "endsAtCt": "14:00",
+      "startHour": 11,
+      "endHour": 14,
+      "expectedHosts": [
+        "Jeff Mans",
+        "Ray Flowers"
+      ],
+      "sportFocus": [
+        "NFL",
+        "DFS",
+        "Cash Games",
+        "GPP"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "11:00-14:00 CT flagship cash-game core construction, offensive line trench advantages, and volume-floor RB/WR anchors."
+    },
+    {
+      "showId": "ch87-fantasy-alarm-show",
+      "showName": "The Fantasy Alarm Show",
+      "startsAtCt": "14:00",
+      "endsAtCt": "17:00",
+      "startHour": 14,
+      "endHour": 17,
+      "expectedHosts": [
+        "Howard Bender",
+        "Jim Bowden"
+      ],
+      "sportFocus": [
+        "NFL",
+        "DFS",
+        "Season-Long"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "14:00-17:00 CT afternoon practice report reactions, Friday/Saturday injury elevation alerts, and contrarian GPP pivots."
+    },
+    {
+      "showId": "ch87-fantasy-pros-cbs-evening",
+      "showName": "Fantasy Football Today / Evening Lineup & Prop Desk",
+      "startsAtCt": "17:00",
+      "endsAtCt": "20:00",
+      "startHour": 17,
+      "endHour": 20,
+      "expectedHosts": [
+        "Adam Aizer",
+        "Dave Richard",
+        "Jamey Eisenberg",
+        "Heath Cummings"
+      ],
+      "sportFocus": [
+        "NFL",
+        "Rankings",
+        "Props"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "17:00-20:00 CT consensus start/sit tiers, QB/WR matchup correlations, and primetime prop leans."
+    },
+    {
+      "showId": "ch87-late-night-sharp-wrap",
+      "showName": "SiriusXM Late Night Fantasy & DFS Slate Lock Wrap",
+      "startsAtCt": "20:00",
+      "endsAtCt": "23:00",
+      "startHour": 20,
+      "endHour": 23,
+      "expectedHosts": [
+        "Paul Charchian",
+        "Matt Camp",
+        "Rotating Analysts"
+      ],
+      "sportFocus": [
+        "NFL",
+        "DFS",
+        "Betting Lines"
+      ],
+      "fantasyFocus": true,
+      "bettingRelevance": true,
+      "sourceConfidence": "OPERATOR_PROVIDED",
+      "manualReviewRequired": true,
+      "rightsStatus": "MANUAL_IMPORT_ONLY",
+      "operatorNotes": "20:00-23:00 CT late-evening steam check, west-coast injury designations, and Sunday main-slate final lineup construction."
+    }
+  ],
+  "week6_paraphrased_claims": [
+    {
+      "claimId": "ch87-w6-01",
+      "windowCt": "11:00-14:00",
+      "showId": "ch87-fantasy-guru-elite",
+      "teams": [
+        "CAR",
+        "PHI"
+      ],
+      "domain": "cognitive",
+      "metric": "ch87_cash_game_trench_note",
+      "paraphrasedSummary": "Philadelphia defensive front rotation faces edge-rusher attrition (Jalyx Hunt leg injury noted in Friday/week reports), while Carolina's interior run funnel remains a primary cash-game RB volume target for Philadelphia's ground attack.",
+      "verificationTier": "REPORTED"
+    },
+    {
+      "claimId": "ch87-w6-02",
+      "windowCt": "09:00-11:00",
+      "showId": "ch87-rotowire-fantasy-morning",
+      "teams": [
+        "DAL",
+        "GB"
+      ],
+      "domain": "cognitive",
+      "metric": "ch87_pace_and_total_note",
+      "paraphrasedSummary": "Dallas at Green Bay carries high concentrated pass-game ownership in main-slate DFS builds; Lambeau outdoor wind/temperature check is required before stacking deep-air-yard receivers.",
+      "verificationTier": "REPORTED"
+    },
+    {
+      "claimId": "ch87-w6-03",
+      "windowCt": "14:00-17:00",
+      "showId": "ch87-fantasy-alarm-show",
+      "teams": [
+        "BUF",
+        "KC",
+        "BAL",
+        "WAS"
+      ],
+      "domain": "cognitive",
+      "metric": "ch87_high_total_leverage_note",
+      "paraphrasedSummary": "High-total AFC/NFC marquee spots draw projected chalk ownership above 20% on primary tight ends and RB1s; tournament leverage favors bring-back WR2/WR3 options with rising 4-week red-zone target share.",
+      "verificationTier": "REPORTED"
+    },
+    {
+      "claimId": "ch87-w6-04",
+      "windowCt": "17:00-20:00",
+      "showId": "ch87-fantasy-pros-cbs-evening",
+      "teams": [
+        "SEA",
+        "DEN",
+        "NO",
+        "TB",
+        "ATL",
+        "CIN",
+        "PIT",
+        "CLE"
+      ],
+      "domain": "cognitive",
+      "metric": "ch87_divisional_trench_mismatch",
+      "paraphrasedSummary": "Divisional Week 6 matchups (PIT-CLE, NO-TB, ATL-CAR/NFC South) historically exhibit compressed second-half pace and elevated interior pressure rates when offensive line continuity drops below 80%.",
+      "verificationTier": "REPORTED"
+    },
+    {
+      "claimId": "ch87-w6-05",
+      "windowCt": "04:00-06:00",
+      "showId": "ch87-early-look-replay",
+      "teams": [
+        "NE",
+        "HOU",
+        "IND",
+        "TEN",
+        "JAX",
+        "CHI",
+        "ARI",
+        "DET",
+        "MIN",
+        "LAC",
+        "LV",
+        "NYG",
+        "NYJ",
+        "MIA",
+        "SF",
+        "LAR"
+      ],
+      "domain": "cognitive",
+      "metric": "ch87_ol_continuity_and_practice_gate",
+      "paraphrasedSummary": "Early-morning injury desk emphasizes left-tackle and boundary-corner multi-DNP practice streaks (such as New England LT Will Campbell MCL sprain and Rams kicker transition to Blake Grupe) as primary pre-kickoff line-movement catalysts.",
+      "verificationTier": "REPORTED"
+    }
+  ]
+}

@@ -86,12 +86,20 @@ def _load_json(path: Path):
         return None
 
 
+def _newest_source(pattern: str, fallback: Path | None = None) -> Path | None:
+    cands = sorted(SOURCES.glob(pattern))
+    if cands:
+        return cands[-1]
+    return fallback
+
+
 def read_weather(home: str) -> tuple[list[dict], list[str]]:
     facts, gaps = [], []
-    path = SOURCES / "2026-10-13" / "weather-pilot" / "weather-stadium-pilot.json"
-    d = _load_json(path)
+    path = _newest_source("2026-10-*/weather-pilot/weather-stadium-pilot.json",
+                          SOURCES / "2026-10-13" / "weather-pilot" / "weather-stadium-pilot.json")
+    d = _load_json(path) if path else None
     venue = TEAM_TO_VENUE.get(home)
-    if not d or venue is None:
+    if not d or venue is None or path is None:
         return [], [f"weather: no venue mapping or no weather file for {home}"]
     for v in d.get("venues", []):
         name = v.get("venue") or v.get("name") or ""
@@ -139,10 +147,11 @@ def read_weather(home: str) -> tuple[list[dict], list[str]]:
 def read_injuries(team: str) -> tuple[list[dict], list[str]]:
     facts, gaps = [], []
     full = TEAM_FULLNAMES.get(team)
-    # 1. Gated ESPN injury digest
-    path = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
-    d = _load_json(path)
-    if d and full:
+    # 1. Gated ESPN injury digest (prefer newest dated capture)
+    path = _newest_source("2026-10-*/injuries/espn_nfl_injuries_week6.json",
+                          SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json")
+    d = _load_json(path) if path else None
+    if d and full and path:
         teams = d.get("teams") or []
         entries: list = []
         if isinstance(teams, dict):
@@ -170,7 +179,7 @@ def read_injuries(team: str) -> tuple[list[dict], list[str]]:
             gaps.append(f"injuries: {on_report} {team} players appear on the report but carry ACTIVE status")
 
     # 2. Firecrawl Alexandria structured official injury & practice report
-    for fc_path in sorted(SOURCES.glob("2026-10-13/firecrawl/alexandria_nfl_injuries_*.json")):
+    for fc_path in sorted(SOURCES.glob("2026-10-*/firecrawl/alexandria_nfl_injuries_*.json")):
         fcd = _load_json(fc_path)
         if not fcd:
             continue
@@ -229,56 +238,60 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
                 "value": ask, "source": str(kpath.relative_to(REPO)).replace("\\", "/"),
                 "note": "Kalshi public read API (prediction-market prior)",
             })
-        if not hits:
-            gaps.append("market: Kalshi digest has no row for this game")
     else:
         gaps.append("market: Kalshi digest missing")
 
-    # 1b. Fresh Kalshi two-sided books (kalshi_patterns.py output). The digest
-    # above is a snapshot; this is the live two-sided read. Ticker grammar:
-    # KXNFLGAME-<DDMMMDD><AWAY3><HOME3>-<SIDE>. Kalshi uses JAC where ESPN
+    # 1b. Fresh Kalshi two-sided books across any dated folder (2026-10-14 through 2026-10-18+).
+    # Ticker grammar: KXNFLGAME-<DDMMMDD><AWAY3><HOME3>-<SIDE>. Kalshi uses JAC where ESPN
     # uses JAX; away/home order is matched as an unordered pair per game.
-    kpath2_dir = SOURCES / "2026-10-14" / "kalshi"
-    if kpath2_dir.is_dir():
-        newest2 = None
-        # prefer the event-driven full-slate sweep (14/14 games) over the paged feed
-        cands = sorted(kpath2_dir.glob("kalshi_full_slate_*.json")) or                 sorted(kpath2_dir.glob("kalshi_open_markets_*.json"))
-        for p2 in cands:
-            newest2 = p2  # sorted glob; keep the newest
-        if newest2:
-            kd2 = _load_json(newest2)
-            rows2 = (kd2 or {}).get("rows") or []
-            abbr_alias = {"JAX": "JAC", "WSH": "WAS"}
-            h_alias = abbr_alias.get(home.upper(), home.upper())
-            a_alias = abbr_alias.get(away.upper(), away.upper())
-            want_pair = {h_alias, a_alias}
-            matched2 = 0
-            for r2 in rows2:
-                m2 = re.match(
-                    r"KXNFLGAME-\d{2}[A-Z]{3}\d{2}([A-Z]{3})([A-Z]{3})-([A-Z]{2,3})$",
-                    str(r2.get("ticker") or ""))
-                if not m2:
-                    continue
-                t_away, t_home, side = m2.groups()
-                if {t_away, t_home} != want_pair:
-                    continue
-                matched2 += 1
-                facts.append({
-                    "domain": "market",
-                    "metric": ("kalshi_two_sided_home" if side == h_alias
-                               else "kalshi_two_sided_away"),
-                    "subject": "{} ({})".format(r2.get("title"), r2.get("ticker")),
-                    "value": {"yes_bid": r2.get("yes_bid"), "yes_ask": r2.get("yes_ask"),
-                              "mid": r2.get("mid"), "spread": r2.get("spread")},
-                    "source": str(newest2.relative_to(REPO)).replace("\\", "/"),
-                    "note": "Kalshi live two-sided book (kalshi_patterns.py)",
-                })
-            if matched2 == 0:
-                gaps.append("market: fresh Kalshi two-sided books have no row for this game")
+    cands = sorted(SOURCES.glob("2026-10-*/kalshi/kalshi_full_slate_*.json")) or sorted(
+        SOURCES.glob("2026-10-*/kalshi/kalshi_open_markets_*.json")
+    )
+    newest2 = cands[-1] if cands else None
+    if newest2:
+        kd2 = _load_json(newest2)
+        rows2 = (kd2 or {}).get("rows") or []
+        abbr_alias = {"JAX": "JAC", "WSH": "WAS"}
+        h_alias = abbr_alias.get(home.upper(), home.upper())
+        a_alias = abbr_alias.get(away.upper(), away.upper())
+        want_pair = {h_alias, a_alias}
+        matched2 = 0
+        for r2 in rows2:
+            m2 = re.match(
+                r"KXNFLGAME-\d{2}[A-Z]{3}\d{2}([A-Z]{3})([A-Z]{3})-([A-Z]{2,3})$",
+                str(r2.get("ticker") or ""))
+            if not m2:
+                continue
+            t_away, t_home, side = m2.groups()
+            if {t_away, t_home} != want_pair:
+                continue
+            matched2 += 1
+            facts.append({
+                "domain": "market",
+                "metric": ("kalshi_two_sided_home" if side == h_alias
+                           else "kalshi_two_sided_away"),
+                "subject": "{} ({})".format(r2.get("title"), r2.get("ticker")),
+                "value": {"yes_bid": r2.get("yes_bid"), "yes_ask": r2.get("yes_ask"),
+                          "mid": r2.get("mid"), "spread": r2.get("spread")},
+                "source": str(newest2.relative_to(REPO)).replace("\\", "/"),
+                "note": "Kalshi live two-sided book (kalshi_full_slate.py)",
+            })
+            # Also surface as kalshi_yes_ask if the older digest lacked this game (e.g. Week 7)
+            if side == h_alias and isinstance(r2.get("yes_ask"), (int, float)):
+                if not any(f["metric"] == "kalshi_yes_ask" for f in facts):
+                    facts.append({
+                        "domain": "market", "metric": "kalshi_yes_ask",
+                        "subject": f"{r2.get('title')} ({r2.get('ticker')})",
+                        "value": r2.get("yes_ask"),
+                        "source": str(newest2.relative_to(REPO)).replace("\\", "/"),
+                        "note": "Kalshi live two-sided home yes_ask prior",
+                    })
+        if matched2 == 0:
+            gaps.append("market: fresh Kalshi two-sided books have no row for this game")
 
     # 2. Action Network Multi-Book Odds Plane (Caesars, DraftKings, BetMGM, FanDuel)
-    an_files = sorted(SOURCES.glob("2026-10-13/action-network/scoreboard_*.json"))
-    for an_path in an_files:
+    an_files = sorted(SOURCES.glob("2026-10-*/action-network/scoreboard_*.json"))
+    for an_path in reversed(an_files):
         andata = _load_json(an_path)
         if not andata:
             continue
@@ -286,7 +299,7 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
         abbr_map = {"JAX": "JAC", "WSH": "WAS", "ARI": "AZ"}
         h_norm = abbr_map.get(home, home).upper()
         a_norm = abbr_map.get(away, away).upper()
-
+        matched_an = False
         for g in games:
             teams = g.get("teams") or []
             if len(teams) < 2:
@@ -327,10 +340,13 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
                         "source": str(an_path.relative_to(REPO)).replace("\\", "/"),
                         "note": f"Spread dispersion {disp} pts across {len(spreads)} books",
                     })
+                matched_an = True
                 break
+        if matched_an:
+            break
 
     # 3. Pinnacle Sharp Reference Ingest
-    pin_files = sorted(SOURCES.glob("2026-10-13/pinnacle/guest_*.json"))
+    pin_files = sorted(SOURCES.glob("2026-10-*/pinnacle/guest_*.json"))
     if pin_files:
         facts.append({
             "domain": "market", "metric": "pinnacle_sharp_reference_available",
@@ -345,41 +361,48 @@ def read_market(home: str, away: str) -> tuple[list[dict], list[str]]:
 
 def read_news(home: str, away: str, limit: int = 8) -> tuple[list[dict], list[str]]:
     facts, gaps = [], []
-    for fname in ("espn-nfl-news-digest.json",):
-        path = SOURCES / "2026-10-13" / "news-espn" / fname
+    paths = sorted(SOURCES.glob("2026-10-*/news-espn/espn-nfl-news-digest.json"))
+    full_home, full_away = TEAM_FULLNAMES.get(home, ""), TEAM_FULLNAMES.get(away, "")
+    hits = []
+    seen_subj = set()
+    for path in reversed(paths):
         d = _load_json(path)
+        if not d:
+            continue
         items = d.get("articles") or d.get("items") or []
-        full_home, full_away = TEAM_FULLNAMES.get(home, ""), TEAM_FULLNAMES.get(away, "")
-        keys = [x for x in (full_home, full_away, home, away) if x]
-        hits = []
         for it in items:
             text = " ".join(str(it.get(k, "")) for k in ("headline", "description", "summary", "title"))
             tl = text.lower()
             home_hit = (full_home.lower() in tl) or (f" {home.lower()} " in tl)
             away_hit = (full_away.lower() in tl) or (f" {away.lower()} " in tl)
-            if not (home_hit and away_hit):
-                continue  # single-team league news is not THIS game's news
+            if not (home_hit or away_hit):
+                continue
+            subj = (it.get("headline") or it.get("title") or "?")[:120]
+            if subj in seen_subj:
+                continue
+            seen_subj.add(subj)
             hits.append({
-                    "domain": "cognitive", "metric": "news_hit",
-                    "subject": (it.get("headline") or it.get("title") or "?")[:120],
-                    "value": text[:280],
-                    "source": str(path.relative_to(REPO)).replace("\\", "/"),
-                    "note": f"published {it.get('published') or it.get('publishedUtc') or 'unknown'}",
-                })
-        facts.extend(hits[:limit])
-        if not hits:
-            gaps.append(f"news: no {home}/{away} hits in {fname}")
+                "domain": "cognitive", "metric": "news_hit",
+                "subject": subj,
+                "value": text[:280],
+                "source": str(path.relative_to(REPO)).replace("\\", "/"),
+                "note": f"published {it.get('published') or it.get('publishedUtc') or 'unknown'}",
+            })
+    facts.extend(hits[:limit])
+    if not hits:
+        gaps.append(f"news: no {home}/{away} hits in espn-nfl-news-digest.json")
     return facts, gaps
 
 
 def read_dfs(home: str, away: str, limit: int = 4) -> tuple[list[dict], list[str]]:
-    """Slate-level DFS context from the corpus digest (honestly slate-scoped,
-    not game-specific): contest census, leverage/chalk spot counts."""
+    """Slate-level DFS context from the corpus digest + REA Week 6 multi-source funnel."""
     facts, gaps = [], []
-    dpath = SOURCES / "2026-10-13" / "dfs" / "dfs-signals-digest.json"
-    cpath = SOURCES / "2026-10-13" / "dfs" / "dk-contests-census.csv"
-    d = _load_json(dpath)
-    if d:
+    dpath = _newest_source("2026-10-*/dfs/dfs-signals-digest.json",
+                           SOURCES / "2026-10-13" / "dfs" / "dfs-signals-digest.json")
+    cpath = _newest_source("2026-10-*/dfs/dk-contests-census.csv",
+                           SOURCES / "2026-10-13" / "dfs" / "dk-contests-census.csv")
+    d = _load_json(dpath) if dpath else None
+    if d and dpath:
         counts = d.get("record_counts") or {}
         lev = d.get("leverage_spot") or []
         named = [x for x in lev if x.get("is_roster_player")]
@@ -399,56 +422,92 @@ def read_dfs(home: str, away: str, limit: int = 4) -> tuple[list[dict], list[str
                 "source": str(dpath.relative_to(REPO)).replace("\\", "/"),
                 "note": "ownership projections from public articles - REPORTED tier, not measured",
             })
-    try:
-        lines = cpath.read_text(encoding="utf-8", errors="replace").splitlines()
-        n_contests = max(0, len(lines) - 1)
-        big = [l for l in lines[1:] if "Millionaire" in l or "Main Event" in l][:1]
-        facts.append({
-            "domain": "dfs", "metric": "dk_contest_census",
-            "subject": "week slate",
-            "value": f"{n_contests} DK contests captured" + (f"; flagship: {big[0].split(',')[2][:60]}" if big else ""),
-            "source": str(cpath.relative_to(REPO)).replace("\\", "/"),
-            "note": "DK lobby census at pull time (entry fees, prize pools, rake implied)",
-        })
-    except Exception as exc:
-        gaps.append(f"dfs: contest census unreadable ({type(exc).__name__})")
+    # REA Week 6 multi-source funnel manifest
+    rea_path = _newest_source("2026-10-*/rea_week6_extraction_manifest.json")
+    if rea_path:
+        rm = _load_json(rea_path)
+        if rm:
+            targets = rm.get("targets") or []
+            team_hits = [t for t in targets if home in (t.get("teams_mentioned") or []) or away in (t.get("teams_mentioned") or [])]
+            facts.append({
+                "domain": "dfs", "metric": "dfs_artifact_hit",
+                "subject": f"REA Week 6 funnel ({rm.get('pass_count')}/{rm.get('target_count')} sources, {len(team_hits)} team-specific hits)",
+                "value": f"{rm.get('total_intercepted_apis', 0)} runtime APIs intercepted across FantasyGuru, LineStar, RotoGrinders, FantasyAlarm, Sabersim, FTN, RotoWire, FantasyPros",
+                "source": str(rea_path.relative_to(REPO)).replace("\\", "/"),
+                "note": "REA PlaywrightScenarioSession + CdpRuntimeRequests Week 6 harvest",
+            })
+    if cpath:
+        try:
+            lines = cpath.read_text(encoding="utf-8", errors="replace").splitlines()
+            n_contests = max(0, len(lines) - 1)
+            big = [l for l in lines[1:] if "Millionaire" in l or "Main Event" in l][:1]
+            facts.append({
+                "domain": "dfs", "metric": "dk_contest_census",
+                "subject": "week slate",
+                "value": f"{n_contests} DK contests captured" + (f"; flagship: {big[0].split(',')[2][:60]}" if big else ""),
+                "source": str(cpath.relative_to(REPO)).replace("\\", "/"),
+                "note": "DK lobby census at pull time (entry fees, prize pools, rake implied)",
+            })
+        except Exception as exc:
+            gaps.append(f"dfs: contest census unreadable ({type(exc).__name__})")
     if not facts:
         gaps.append("dfs: digest and census both missing")
     return facts, gaps
 
 
 def read_cognitive(home: str, away: str, limit: int = 6) -> tuple[list[dict], list[str]]:
-    """Cognitive/behavioral signals from the ingested digest (team-keyed,
-    provenance-carrying): presser sentiment, coach-speak deltas, depth moves."""
+    """Cognitive/behavioral signals from the ingested digest + SiriusXM CH87 (04:00-23:00 CT) intake."""
     facts, gaps = [], []
-    cpath = SOURCES / "2026-10-13" / "cognitive" / "cognitive_signals.json"
-    c = _load_json(cpath)
-    if not c:
-        return [], ["cognitive: digest missing (cognitive_signals.json)"]
-    sig = c.get("signals") or {}
-    src_rel = str(cpath.relative_to(REPO)).replace("\\", "/")
+    cpath = _newest_source("2026-10-*/cognitive/cognitive_signals.json",
+                           SOURCES / "2026-10-13" / "cognitive" / "cognitive_signals.json")
+    c = _load_json(cpath) if cpath else None
     taken = 0
-    for stype in ("presser_sentiment", "coach_speak_delta", "depth_chart_move", "game_context_flag"):
-        for s in sig.get(stype) or []:
-            team = s.get("team") or ""
-            if team not in (home, away):
-                continue
-            # polarity-only baseline rows say nothing yet - skip honestly
-            if stype == "coach_speak_delta" and s.get("status") == "baseline_established":
-                continue
-            metric = stype
-            value = s.get("sentiment_label") or s.get("direction") or s.get("flag") or s.get("move") or ""
-            excerpt = (s.get("evidence_excerpt") or "")[:200]
-            facts.append({
-                "domain": "cognitive", "metric": metric,
-                "subject": f"{team}{(' ' + s.get('player')) if s.get('player') else ''}",
-                "value": f"{value} | {excerpt}" if excerpt else str(value),
-                "source": src_rel,
-                "note": f"agent-ingested cognitive signal (doc_count {s.get('doc_count', '?')}, published {s.get('published_utc', 'n/a')})",
-            })
-            taken += 1
-            if taken >= limit:
-                return facts, gaps
+    if c and cpath:
+        sig = c.get("signals") or {}
+        src_rel = str(cpath.relative_to(REPO)).replace("\\", "/")
+        for stype in ("presser_sentiment", "coach_speak_delta", "depth_chart_move", "game_context_flag"):
+            for s in sig.get(stype) or []:
+                team = s.get("team") or ""
+                if team not in (home, away):
+                    continue
+                if stype == "coach_speak_delta" and s.get("status") == "baseline_established":
+                    continue
+                metric = stype
+                value = s.get("sentiment_label") or s.get("direction") or s.get("flag") or s.get("move") or ""
+                excerpt = (s.get("evidence_excerpt") or "")[:200]
+                facts.append({
+                    "domain": "cognitive", "metric": metric,
+                    "subject": f"{team}{(' ' + s.get('player')) if s.get('player') else ''}",
+                    "value": f"{value} | {excerpt}" if excerpt else str(value),
+                    "source": src_rel,
+                    "note": f"agent-ingested cognitive signal (doc_count {s.get('doc_count', '?')}, published {s.get('published_utc', 'n/a')})",
+                })
+                taken += 1
+                if taken >= limit - 1:
+                    break
+            if taken >= limit - 1:
+                break
+
+    # SiriusXM Channel 87 (04:00-23:00 CT) paraphrased Week 6 intake claims
+    sxm_path = _newest_source("2026-10-*/siriusxm_ch87_week6_schedule_and_digest.json")
+    if sxm_path:
+        sxm = _load_json(sxm_path)
+        if sxm:
+            sxm_rel = str(sxm_path.relative_to(REPO)).replace("\\", "/")
+            for cl in sxm.get("week6_paraphrased_claims") or []:
+                c_teams = cl.get("teams") or []
+                if home in c_teams or away in c_teams:
+                    facts.append({
+                        "domain": "cognitive",
+                        "metric": cl.get("metric") or "ch87_airwave_note",
+                        "subject": f"SiriusXM CH87 ({cl.get('windowCt')} CT, {cl.get('showId')})",
+                        "value": cl.get("paraphrasedSummary", "")[:240],
+                        "source": sxm_rel,
+                        "note": "paraphrased SiriusXM Channel 87 Fantasy Sports Radio intake (04:00-23:00 CT window, non-verbatim)",
+                    })
+                    taken += 1
+                    break
+
     if taken == 0:
         gaps.append("cognitive: no digest signals for these teams")
     return facts, gaps
@@ -940,6 +999,12 @@ def build_chain(home: str, away: str, facts: list[dict]) -> list[str]:
             f"DFS: corpus artifact references this game ({f['subject']}) {cite(f)} "
             f"-> salary/ownership surfaces exist for this slate "
             f"-> leverage and correlation structure for entry construction is derivable, not assumed"
+        )
+    ch87 = [f for f in facts if str(f.get("metric", "")).startswith("ch87_")]
+    for f in ch87[:1]:
+        chain.append(
+            f"AIRWAVE CH87 (04:00-23:00 CT): {f['subject']} -> {f['value']} {cite(f)} "
+            f"-> satellite desk consensus & practice-window context cross-checked against on-field and market priors"
         )
     ngs_2026 = [f for f in facts if f["metric"].startswith("ngs_2026_")]
     for f in ngs_2026[:3]:
