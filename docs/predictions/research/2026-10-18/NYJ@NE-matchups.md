@@ -1,6 +1,6 @@
 # NYJ@NE - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.187832+00:00
+generated_utc: 2026-10-18T16:18:08.463751+00:00
 
 ## Receiver vs coverage pairings
 
@@ -10,8 +10,8 @@ generated_utc: 2026-10-18T16:11:14.187832+00:00
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
 
-### AWAY-OFF vs HOME-DEF - WR2: Adonai Mitchell
-- targets 15 | separation 2.69 yds | air-yd share 24.4% | YAC/E R -0.88 | catch 60.0% | vision.soe_yd +0.037 yd | ftn.motion_rate 0.4% (2026 in-season NGS + Vision/FTN) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+### AWAY-OFF vs HOME-DEF - WR2: Isaiah Williams
+- targets 14 | separation 3.21 yds | air-yd share 11.1% | YAC/E R +0.57 | catch 78.6% | vision.soe_yd +0.037 yd | ftn.motion_rate 0.4% (2026 in-season NGS + Vision/FTN) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
 - matched slot-1 corners: Carlton Davis III (LCB, slot-1, not-on-report); Christian Gonzalez (RCB, slot-1, not-on-report); Marcus Jones (NB, slot-1, not-on-report)
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
@@ -79,7 +79,4 @@ generated_utc: 2026-10-18T16:11:14.187832+00:00
 
 1. HOME-OFF vs AWAY-DEF: Romeo Doubs generates elite 3.19 yds separation across 23 targets (26.0% air-yd share; vision.soe_yd=+0.158 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Azareye'h Thomas (LCB, slot-1, not-on-report), Brandon Stephens (RCB, slot-1, not-on-report), Jarvis Brownlee Jr. (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top
 2. AWAY-OL vs HOME-FRONT: NYJ OL (Olu Fashanu (LT), Dylan Parham (LG), Josh Myers (C)) [espn-depthcharts-2026.json] anchors Geno Smith (2.93s TTT; vision.pocket_depth_yd=4.01 yd, vision.art_mean=0.075, ftn.def_blitz_rate=0.2%, qbr.total_qbr=41.7, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Braelon Allen (TLOS 2.75s, RYOE +36.9 yds) [raw_statboard_rushing.json] against healthy NE front (Christian Barmore (LDE), Cory Durden (NT), Milton Williams (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +36.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (NE/NYJ)
+3. HOME-OL vs AWAY-FRONT: NE offensive structure compromised by Behren Morton (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Drake Maye and Rhamondre Stevenson (RYOE +30.3 yds; vision.pocket_depth_yd=4.25 yd, vision.art_mean=0.083, ftn.def_blitz_rate=0.2%, qbr.total_qbr=67.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against NYJ front (David Bailey (LDE), T'Vondre Sweat (LDT), Harrison Phillips (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

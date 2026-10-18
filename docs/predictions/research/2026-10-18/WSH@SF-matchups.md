@@ -1,6 +1,6 @@
 # WSH@SF - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.499619+00:00
+generated_utc: 2026-10-18T16:18:09.208486+00:00
 
 ## Receiver vs coverage pairings
 
@@ -22,19 +22,13 @@ generated_utc: 2026-10-18T16:11:14.499619+00:00
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
 
-### AWAY-OFF vs HOME-DEF - RB1: Jacory Croskey-Merritt
-- rush att 67, RYOE -29.7 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+### AWAY-OFF vs HOME-DEF - RB1: Rachaad White
+- rush att 29, RYOE -24.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
 
 ### HOME-OFF vs AWAY-DEF - WR1: Mike Evans
 - targets 34 | separation 1.62 yds | air-yd share 43.9% | YAC/E R -0.40 | catch 70.6% | vision.soe_yd +0.340 yd | ftn.motion_rate 0.6% (2026 in-season NGS + Vision/FTN) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
-- matched slot-1 corners: Rasul Douglas (LCB, slot-1, not-on-report); Fabian Moreau (RCB, slot-1, not-on-report); Amik Robertson (NB, slot-1, not-on-report)
-- opposing coverage OUT/limited: (none listed)
-- opposing coverage QUESTIONABLE: (none)
-
-### HOME-OFF vs AWAY-DEF - WR2: Deebo Samuel Sr.
-- targets 20 | separation 4.73 yds | air-yd share 5.5% | YAC/E R +0.62 | catch 80.0% | vision.soe_yd +0.340 yd | ftn.motion_rate 0.6% (2026 in-season NGS + Vision/FTN) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
 - matched slot-1 corners: Rasul Douglas (LCB, slot-1, not-on-report); Fabian Moreau (RCB, slot-1, not-on-report); Amik Robertson (NB, slot-1, not-on-report)
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
@@ -55,7 +49,7 @@ generated_utc: 2026-10-18T16:11:14.499619+00:00
 ### AWAY-OL vs HOME-FRONT
 - offensive line starters: Brandon Coleman (LT), Chris Paul (LG), Lucas Patrick (C), Sam Cosmi (RG), Josh Conerly Jr. (RT)
 - QB protection anchor: Jayden Daniels (2026 NGS time-to-throw: 2.97s, vision.pocket_depth_yd: 3.39 yd, qbr.total_qbr: 54.1, snaps.starter_snap_share: 0.9%) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
-- RB downhill leverage: Jacory Croskey-Merritt (2026 NGS time-to-LOS: 2.75s, RYOE: -29.7 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- RB downhill leverage: Rachaad White (2026 NGS time-to-LOS: 2.89s, RYOE: -24.9 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
 - defensive front starters: Keion White (LDE), Osa Odighizuwa (LDT), Gracen Halton (RDT), Nick Bosa (RDE) (vision.art_mean: 0.065, ftn.def_blitz_rate: 0.1%)
 - front ACTIVE (on report): (none listed)
 - front DOWN: (none)
@@ -78,8 +72,4 @@ generated_utc: 2026-10-18T16:11:14.499619+00:00
 ## Matchup chains (each cites its file)
 
 1. AWAY-OFF vs HOME-DEF: Stefon Diggs leads WSH pass-catchers (2026 NGS: targets 31, separation 2.60 yds, air-yd share 19.8%; vision.soe_yd=+0.133 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+9.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> draws the opposing slot-1 corner ladder: Renardo Green (LCB, slot-1, not-on-report), Deommodore Lenoir (RCB, slot-1, not-on-report), Upton Stout (NB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> starter(s) he meets are on injury report (Upton Stout (NB, slot-1, not-on-report)) [espn_nfl_injuries_week6.json] - specific receiver vs weakened defender creates target concentration and conversion leverage -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it
-2. AWAY-OL vs HOME-FRONT: WSH OL (Brandon Coleman (LT), Chris Paul (LG), Lucas Patrick (C)) [espn-depthcharts-2026.json] anchors Jayden Daniels (2.97s TTT; vision.pocket_depth_yd=3.39 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.1, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Jacory Croskey-Merritt (TLOS 2.75s, RYOE -29.7 yds) [raw_statboard_rushing.json] against healthy SF front (Keion White (LDE), Osa Odighizuwa (LDT), Gracen Halton (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -29.7 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (SF/WSH)
+2. AWAY-OL vs HOME-FRONT: WSH offensive structure compromised by Marcus Mariota (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Jayden Daniels and Rachaad White (RYOE -24.9 yds; vision.pocket_depth_yd=3.39 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.1, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against SF front (Keion White (LDE), Osa Odighizuwa (LDT), Gracen Halton (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

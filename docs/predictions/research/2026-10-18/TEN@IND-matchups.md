@@ -1,6 +1,6 @@
 # TEN@IND - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.160868+00:00
+generated_utc: 2026-10-18T16:18:08.363840+00:00
 
 ## Receiver vs coverage pairings
 
@@ -83,7 +83,4 @@ generated_utc: 2026-10-18T16:11:14.160868+00:00
 
 1. AWAY-OFF vs HOME-DEF: Carnell Tate generates elite 2.96 yds separation across 37 targets (47.4% air-yd share; vision.soe_yd=+0.100 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Sauce Gardner (LCB, slot-1, not-on-report), Charvarius Ward (RCB, slot-1, not-on-report), Justin Walley (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top
 2. AWAY-OL vs HOME-FRONT: TEN OL (Dan Moore Jr. (LT), Peter Skoronski (LG), Austin Schlottmann (C)) [espn-depthcharts-2026.json] anchors Cam Ward (2.96s TTT; vision.pocket_depth_yd=4.96 yd, vision.art_mean=0.087, ftn.def_blitz_rate=0.1%, qbr.total_qbr=33.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Tony Pollard (TLOS 2.77s, RYOE +12.5 yds) [raw_statboard_rushing.json] against healthy IND front (Jaylahn Tuimoloau (LDE), Grover Stewart (LDT), DeForest Buckner (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +12.5 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (IND/TEN)
+3. HOME-OL vs AWAY-FRONT: IND offensive structure compromised by Riley Leonard (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Daniel Jones and Jonathan Taylor (RYOE -25.0 yds; vision.pocket_depth_yd=4.38 yd, vision.art_mean=0.083, ftn.def_blitz_rate=0.1%, qbr.total_qbr=56.3, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against TEN front (John Franklin-Myers (LDE), Jeffery Simmons (LDT), Jordan Elliott (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

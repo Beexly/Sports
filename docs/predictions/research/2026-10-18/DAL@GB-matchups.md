@@ -1,6 +1,6 @@
 # DAL@GB - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.430979+00:00
+generated_utc: 2026-10-18T16:18:09.041633+00:00
 
 ## Receiver vs coverage pairings
 
@@ -80,7 +80,3 @@ generated_utc: 2026-10-18T16:11:14.430979+00:00
 1. AWAY-OFF vs HOME-DEF: CeeDee Lamb generates elite 3.00 yds separation across 51 targets (37.4% air-yd share; vision.soe_yd=+0.045 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Keisean Nixon (LCB, slot-1, not-on-report), Brandon Cisse (RCB, slot-1, not-on-report), Javon Bullard (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top
 2. AWAY-OL vs HOME-FRONT: DAL OL (Tyler Guyton (LT), Tyler Smith (LG), Cooper Beebe (C)) [espn-depthcharts-2026.json] anchors Dak Prescott (2.70s TTT; vision.pocket_depth_yd=4.05 yd, vision.art_mean=0.078, ftn.def_blitz_rate=0.2%, qbr.total_qbr=71.0, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Javonte Williams (TLOS 2.78s, RYOE -10.2 yds) [raw_statboard_rushing.json] against healthy GB front (Karl Brooks (LDE), Jonathan Ford (NT), Devonte Wyatt (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -10.2 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
 3. HOME-OL vs AWAY-FRONT: GB OL (Jordan Morgan (LT), Aaron Banks (LG), Sean Rhyan (C)) [espn-depthcharts-2026.json] anchors Jordan Love (2.51s TTT; vision.pocket_depth_yd=5.31 yd, vision.art_mean=0.074, ftn.def_blitz_rate=0.1%, qbr.total_qbr=71.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and MarShawn Lloyd (TLOS 2.80s, RYOE -54.3 yds) [raw_statboard_rushing.json] against healthy DAL front (Quinnen Williams (LDE), Otito Ogbonnia (NT), Kenny Clark (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -54.3 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (GB/DAL)

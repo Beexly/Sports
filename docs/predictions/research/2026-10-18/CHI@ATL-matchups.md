@@ -1,6 +1,6 @@
 # CHI@ATL - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.082992+00:00
+generated_utc: 2026-10-18T16:18:08.210851+00:00
 
 ## Receiver vs coverage pairings
 
@@ -78,9 +78,5 @@ generated_utc: 2026-10-18T16:11:14.082992+00:00
 ## Matchup chains (each cites its file)
 
 1. HOME-OFF vs AWAY-DEF: Drake London generates elite 3.33 yds separation across 37 targets (43.8% air-yd share; vision.soe_yd=+0.462 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Jaylon Johnson (LCB, slot-1, not-on-report), Tyrique Stevenson Sr. (RCB, slot-1, not-on-report), Cam Lewis (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top
-2. AWAY-OL vs HOME-FRONT: CHI OL (Ozzy Trapilo (LT), Joe Thuney (LG), Garrett Bradbury (C)) [espn-depthcharts-2026.json] anchors Tyson Bagent (2.88s TTT; vision.pocket_depth_yd=4.58 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=57.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and D'Andre Swift (TLOS 2.69s, RYOE -4.1 yds) [raw_statboard_rushing.json] against healthy ATL front (LaCale London (LDE), Gervon Dexter Sr. (NT), Brandon Dorlus (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -4.1 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-3. HOME-OL vs AWAY-FRONT: ATL OL (Jake Matthews (LT), Matthew Bergeron (LG), Ryan Neuzil (C)) [espn-depthcharts-2026.json] anchors Michael Penix Jr. (2.55s TTT; vision.pocket_depth_yd=3.45 yd, vision.art_mean=0.081, ftn.def_blitz_rate=0.2%, qbr.total_qbr=49.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Bijan Robinson (TLOS 2.78s, RYOE +161.2 yds) [raw_statboard_rushing.json] against healthy CHI front (Montez Sweat (LDE), Grady Jarrett (LDT), Kentavius Street (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +161.2 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (ATL/CHI)
+2. AWAY-OL vs HOME-FRONT: CHI offensive structure compromised by Case Keenum (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Tyson Bagent and D'Andre Swift (RYOE -4.1 yds; vision.pocket_depth_yd=4.58 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=57.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against ATL front (LaCale London (LDE), Gervon Dexter Sr. (NT), Brandon Dorlus (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush
+3. HOME-OL vs AWAY-FRONT: ATL offensive structure compromised by Cooper Rush (QB, OUT); Jack Strand (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Michael Penix Jr. and Bijan Robinson (RYOE +161.2 yds; vision.pocket_depth_yd=3.45 yd, vision.art_mean=0.081, ftn.def_blitz_rate=0.2%, qbr.total_qbr=49.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against CHI front (Montez Sweat (LDE), Grady Jarrett (LDT), Kentavius Street (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

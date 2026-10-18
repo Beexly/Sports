@@ -1,6 +1,6 @@
 # ARI@LAR - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.307877+00:00
+generated_utc: 2026-10-18T16:18:08.800578+00:00
 
 ## Receiver vs coverage pairings
 
@@ -22,8 +22,8 @@ generated_utc: 2026-10-18T16:11:14.307877+00:00
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
 
-### AWAY-OFF vs HOME-DEF - RB1: Jeremiyah Love
-- rush att 67, RYOE -26.3 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+### AWAY-OFF vs HOME-DEF - RB1: Tyler Allgeier
+- rush att 35, RYOE -5.6 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
 
@@ -59,7 +59,7 @@ generated_utc: 2026-10-18T16:11:14.307877+00:00
 ### AWAY-OL vs HOME-FRONT
 - offensive line starters: Jayden Williams (LT), Isaac Seumalo (LG), Hjalte Froholdt (C), Jon Gaines II (RG), Elijah Wilkinson (RT)
 - QB protection anchor: Jacoby Brissett (2026 NGS time-to-throw: 2.62s, vision.pocket_depth_yd: 5.24 yd, qbr.total_qbr: 45.8, snaps.starter_snap_share: 0.9%) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
-- RB downhill leverage: Jeremiyah Love (2026 NGS time-to-LOS: 2.94s, RYOE: -26.3 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- RB downhill leverage: Tyler Allgeier (2026 NGS time-to-LOS: 2.75s, RYOE: -5.6 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
 - defensive front starters: Kobie Turner (LDE), Poona Ford (NT), Aaron Donald (RDE) (vision.art_mean: 0.079, ftn.def_blitz_rate: 0.2%)
 - front ACTIVE (on report): (none listed)
 - front DOWN: (none)
@@ -81,9 +81,5 @@ generated_utc: 2026-10-18T16:11:14.307877+00:00
 
 ## Matchup chains (each cites its file)
 
-1. AWAY-OL vs HOME-FRONT: ARI OL (Jayden Williams (LT), Isaac Seumalo (LG), Hjalte Froholdt (C)) [espn-depthcharts-2026.json] anchors Jacoby Brissett (2.62s TTT; vision.pocket_depth_yd=5.24 yd, vision.art_mean=0.079, ftn.def_blitz_rate=0.2%, qbr.total_qbr=45.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Jeremiyah Love (TLOS 2.94s, RYOE -26.3 yds) [raw_statboard_rushing.json] against healthy LAR front (Kobie Turner (LDE), Poona Ford (NT), Aaron Donald (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -26.3 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-2. HOME-OL vs AWAY-FRONT: LAR OL (Alaric Jackson (LT), Steve Avila (LG), Coleman Shelton (C)) [espn-depthcharts-2026.json] anchors Matthew Stafford (2.76s TTT; vision.pocket_depth_yd=4.72 yd, vision.art_mean=0.088, ftn.def_blitz_rate=0.1%, qbr.total_qbr=66.0, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Kyren Williams (TLOS 2.86s, RYOE +40.8 yds) [raw_statboard_rushing.json] against healthy ARI front (Josh Sweat (LDE), Roy Lopez (LDT), Walter Nolen III (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +40.8 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (LAR/ARI)
+1. AWAY-OL vs HOME-FRONT: ARI OL (Jayden Williams (LT), Isaac Seumalo (LG), Hjalte Froholdt (C)) [espn-depthcharts-2026.json] anchors Jacoby Brissett (2.62s TTT; vision.pocket_depth_yd=5.24 yd, vision.art_mean=0.079, ftn.def_blitz_rate=0.2%, qbr.total_qbr=45.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Tyler Allgeier (TLOS 2.75s, RYOE -5.6 yds) [raw_statboard_rushing.json] against healthy LAR front (Kobie Turner (LDE), Poona Ford (NT), Aaron Donald (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -5.6 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
+2. HOME-OL vs AWAY-FRONT: LAR offensive structure compromised by Matthew Caldwell (QB, IR) [espn_nfl_injuries_week6.json] -> forces Matthew Stafford and Kyren Williams (RYOE +40.8 yds; vision.pocket_depth_yd=4.72 yd, vision.art_mean=0.088, ftn.def_blitz_rate=0.1%, qbr.total_qbr=66.0, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against ARI front (Josh Sweat (LDE), Roy Lopez (LDT), Walter Nolen III (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

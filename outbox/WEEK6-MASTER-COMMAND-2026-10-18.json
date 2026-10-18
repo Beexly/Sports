@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-18T16:11:15.279845+00:00",
+  "generated_utc": "2026-10-18T16:18:09.937325+00:00",
   "season": 2026,
   "active_week": 6,
   "next_week_transition": 7,
@@ -237,308 +237,6 @@
     ]
   },
   "locked_published_picks": [
-    {
-      "id": "cmvcqdphc00e645ukzeniy5tt",
-      "matchup": "Pittsburgh Steelers @ Tampa Bay Buccaneers",
-      "commence_utc": "2026-10-18T17:00:00",
-      "pick_type": "SPREAD",
-      "selection": "Pittsburgh Steelers -1.5",
-      "line": -1.5,
-      "confidence": 66,
-      "edge_score": 66.6,
-      "tier": "FREE",
-      "pick_grade": "SOLID_PLAY",
-      "bookmaker_count": 13,
-      "raw_edge_pct": 9.22,
-      "true_prob_pct": 59.6,
-      "market_fair_pct": 50.3,
-      "expected_clv_pct": 6.92,
-      "continuity_deltas": {
-        "ol": 0.0,
-        "dl": 0.0,
-        "db": 0.0
-      },
-      "signal_plane_attribution": {
-        "rawEdge": 0.0922,
-        "equation": "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.25), 0.05, 0.95)",
-        "trueProb": 0.5955,
-        "edgeScore": 66.6,
-        "confidence": 66,
-        "shrunkEdge": 0.0756,
-        "expectedClv": 0.0692,
-        "marketFairProb": 0.5033,
-        "continuityDeltaProb": 0.0,
-        "signalContributions": [
-          {
-            "key": "vision.soe_yd",
-            "weight": 0.085,
-            "awayRaw": 0.3158,
-            "homeRaw": 0.5965,
-            "awayValue": 0.3158,
-            "homeValue": 0.5965,
-            "probContribution": -0.00596,
-            "directionalReading": -0.2807
-          },
-          {
-            "key": "vision.art_mean",
-            "weight": 0.075,
-            "awayRaw": 0.0848,
-            "homeRaw": 0.0801,
-            "awayValue": 0.848,
-            "homeValue": 0.801,
-            "probContribution": 0.00088,
-            "directionalReading": 0.047
-          },
-          {
-            "key": "vision.pocket_depth_yd",
-            "weight": 0.065,
-            "awayRaw": 4.5588,
-            "homeRaw": 5.6269,
-            "awayValue": 0.4559,
-            "homeValue": 0.5627,
-            "probContribution": -0.00174,
-            "directionalReading": -0.1068
-          },
-          {
-            "key": "ftn.play_action_rate",
-            "weight": 0.09,
-            "awayRaw": 0.0993,
-            "homeRaw": 0.1302,
-            "awayValue": 0.0993,
-            "homeValue": 0.1302,
-            "probContribution": -0.0007,
-            "directionalReading": -0.0309
-          },
-          {
-            "key": "ftn.motion_rate",
-            "weight": 0.08,
-            "awayRaw": 0.3947,
-            "homeRaw": 0.5774,
-            "awayValue": 0.3947,
-            "homeValue": 0.5774,
-            "probContribution": -0.00365,
-            "directionalReading": -0.1827
-          },
-          {
-            "key": "ftn.screen_rate",
-            "weight": 0.055,
-            "awayRaw": 0.0533,
-            "homeRaw": 0.0442,
-            "awayValue": 0.0533,
-            "homeValue": 0.0442,
-            "probContribution": 0.00013,
-            "directionalReading": 0.0091
-          },
-          {
-            "key": "ftn.rpo_rate",
-            "weight": 0.06,
-            "awayRaw": 0.063,
-            "homeRaw": 0.0369,
-            "awayValue": 0.063,
-            "homeValue": 0.0369,
-            "probContribution": 0.00039,
-            "directionalReading": 0.0261
-          },
-          {
-            "key": "ftn.def_blitz_rate",
-            "weight": 0.095,
-            "awayRaw": 0.1266,
-            "homeRaw": 0.2032,
-            "awayValue": 0.1266,
-            "homeValue": 0.2032,
-            "probContribution": -0.00182,
-            "directionalReading": -0.0766
-          },
-          {
-            "key": "qbr.total_qbr",
-            "weight": 0.11,
-            "awayRaw": 44.5,
-            "homeRaw": 54.49,
-            "awayValue": 0.445,
-            "homeValue": 0.5449,
-            "probContribution": -0.00275,
-            "directionalReading": -0.0999
-          },
-          {
-            "key": "snaps.starter_snap_share",
-            "weight": 0.07,
-            "awayRaw": 0.9251,
-            "homeRaw": 0.9458,
-            "awayValue": 0.9251,
-            "homeValue": 0.9458,
-            "probContribution": -0.00036,
-            "directionalReading": -0.0207
-          },
-          {
-            "key": "cognitive.presser_sentiment",
-            "weight": 0.05,
-            "awayRaw": 1.0,
-            "homeRaw": 13.0,
-            "awayValue": 0.1,
-            "homeValue": 1.0,
-            "probContribution": -0.01125,
-            "directionalReading": -0.9
-          },
-          {
-            "key": "cognitive.coach_speak_delta",
-            "weight": 0.065,
-            "awayRaw": 2.0,
-            "homeRaw": 2.0,
-            "awayValue": 0.4,
-            "homeValue": 0.4,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          },
-          {
-            "key": "cognitive.scheme_shift",
-            "weight": 0.075,
-            "awayRaw": 3.0,
-            "homeRaw": 3.0,
-            "awayValue": 0.5,
-            "homeValue": 0.5,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          },
-          {
-            "key": "cognitive.tendency_break",
-            "weight": 0.08,
-            "awayRaw": 11.0,
-            "homeRaw": 12.0,
-            "awayValue": 1.0,
-            "homeValue": 1.0,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          }
-        ],
-        "structuralDeltaProb": 0.119,
-        "signalPlaneDeltaProb": -0.0268,
-        "gameSignalContributions": [
-          {
-            "signalKey": "cognitive.total_signals",
-            "sourceName": "cognitive_loop_w6",
-            "signalValue": {
-              "away": {
-                "scheme_shift": 3,
-                "total_signals": 26,
-                "tendency_break": 11,
-                "coach_speak_delta": 2,
-                "presser_sentiment": 1
-              },
-              "home": {
-                "scheme_shift": 3,
-                "total_signals": 42,
-                "tendency_break": 12,
-                "coach_speak_delta": 2,
-                "presser_sentiment": 13
-              },
-              "sha256": "8d783b3a31265cde"
-            }
-          },
-          {
-            "signalKey": "ftn.def_blitz_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.1266,
-              "home": 0.2032,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "ftn.motion_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.3947,
-              "home": 0.5774,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "ftn.play_action_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.0993,
-              "home": 0.1302,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "precip_pct",
-            "sourceName": "nws",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "qbr.total_qbr",
-            "sourceName": "espn_qbr_2026",
-            "signalValue": {
-              "away": 44.5,
-              "home": 54.49,
-              "sha256": "d5780214ad8b903b"
-            }
-          },
-          {
-            "signalKey": "schedule_density_7d_away",
-            "sourceName": "schedule-internal",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "schedule_density_7d_home",
-            "sourceName": "schedule-internal",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "snaps.starter_snap_share",
-            "sourceName": "pfr_snaps_2026",
-            "signalValue": {
-              "away": 0.9251,
-              "home": 0.9458,
-              "sha256": "e61c4343f9224e5b"
-            }
-          },
-          {
-            "signalKey": "temp_f",
-            "sourceName": "nws",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "vision.art_mean",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 0.0848,
-              "home": 0.0801,
-              "metric": "angular_rush_threat",
-              "sha256": "b087b0f3f03e6e8f",
-              "global_mean": 0.0773
-            }
-          },
-          {
-            "signalKey": "vision.pocket_depth_yd",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 4.5588,
-              "home": 5.6269,
-              "sha256": "a0dfab6ffea48552",
-              "global_mean": 4.2734
-            }
-          },
-          {
-            "signalKey": "vision.soe_yd",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 0.3158,
-              "home": 0.5965,
-              "sha256": "a0dfab6ffea48552",
-              "global_mean": 0.2305
-            }
-          },
-          {
-            "signalKey": "wind_mph",
-            "sourceName": "nws",
-            "signalValue": {}
-          }
-        ]
-      },
-      "reasoning": "Pittsburgh Steelers -1.5: Snapped to live 10:55 AM CDT REA multi-book consensus (-1.5, mean TB +1.81, de-vigged marketFairProb=0.5033). Decisive quarterback and safety advantage swings to Pittsburgh with Tampa Bay QB Baker Mayfield ruled OUT and All-Pro safety Antoine Winfield Jr. OUT alongside cornerback Benjamin Morrison (Doubtful) [espn_nfl_injuries_week6.json]. Pittsburgh RB Jaylen Warren has posted 410 rushing yards and 230 receiving yards across 5 games (+126.9 RYOE in 2026 NGS / player_game_stats), while T.J. Watt attacks a backup quarterback behind a Tampa Bay unit with -0.20 DB starter retention and Sovereign Signal Plane inputs. [Signal Plane Attribution: marketFair=0.503, structural=+0.1190, continuity=+0.0000, signalPlane14Keys=-0.0268 -> trueProb=0.5955 (+9.22% raw edge, EdgeIdx=66.6/100, Score=66/100)]."
-    },
     {
       "id": "cmvcqdlkm00cl45ukzx9b4kpy",
       "matchup": "Chicago Bears @ Atlanta Falcons",
@@ -1431,6 +1129,54 @@
       "reasoning": "Cleveland Browns +3.0: Snapped to the live 10:55 AM CDT REA multi-book consensus (+3.0, mean +3.19, de-vigged marketFairProb=0.5000), reflecting Baltimore QB Lamar Jackson ruled OUT alongside starting center Cam Jurgens (OUT) and DT Broderick Washington Jr. (OUT) [espn_nfl_injuries_week6.json]. With Baltimore forced onto a backup quarterback in a hostile AFC North road spot without its starting center (-0.20 OL starter retention), Cleveland's pass rush and Sovereign Signal Plane (vision.art_mean, ftn.def_blitz_rate) compress Baltimore's offensive ceiling. [Signal Plane Attribution: marketFair=0.500, structural=+0.0880, continuity=+0.0000, signalPlane14Keys=-0.0072 -> trueProb=0.5808 (+8.08% raw edge, EdgeIdx=64.5/100, Score=64/100)]."
     },
     {
+      "id": "cmvcqdphc00e645ukzeniy5tt",
+      "matchup": "Pittsburgh Steelers @ Tampa Bay Buccaneers",
+      "commence_utc": "2026-10-18T17:00:00",
+      "pick_type": "SPREAD",
+      "selection": "Pittsburgh Steelers -1.5",
+      "line": -1.5,
+      "confidence": 59,
+      "edge_score": 77.0,
+      "tier": "FREE",
+      "pick_grade": "LEAN",
+      "bookmaker_count": 2,
+      "raw_edge_pct": 0.0,
+      "true_prob_pct": 59.0,
+      "market_fair_pct": 50.0,
+      "expected_clv_pct": 0.0,
+      "continuity_deltas": {
+        "ol": null,
+        "dl": null,
+        "db": null
+      },
+      "signal_plane_attribution": {},
+      "reasoning": "Pittsburgh Steelers -1.5: Snapped to live 10:55 AM CDT REA multi-book consensus (-1.5, mean TB +1.81, de-vigged marketFairProb=0.5033). Decisive quarterback and safety advantage swings to Pittsburgh with Tampa Bay QB Baker Mayfield ruled OUT and All-Pro safety Antoine Winfield Jr. OUT alongside cornerback Benjamin Morrison (Doubtful) [espn_nfl_injuries_week6.json]. Pittsburgh RB Jaylen Warren has posted 410 rushing yards and 230 receiving yards across 5 games (+126.9 RYOE in 2026 NGS / player_game_stats), while T.J. Watt attacks a backup quarterback behind a Tampa Bay unit with -0.20 DB starter retention and Sovereign Signal Plane inputs. [Signal Plane Attribution: marketFair=0.503, structural=+0.1190, continuity=+0.0000, signalPlane14Keys=-0.0268 -> trueProb=0.5955 (+9.22% raw edge, EdgeIdx=66.6/100, Score=66/100)]."
+    },
+    {
+      "id": "cmvdywejd007t131pmwhp0mxo",
+      "matchup": "Pittsburgh Steelers @ Tampa Bay Buccaneers",
+      "commence_utc": "2026-10-18T17:00:00",
+      "pick_type": "TOTAL",
+      "selection": "UNDER 38.5",
+      "line": 38.5,
+      "confidence": 59,
+      "edge_score": 76.0,
+      "tier": "FREE",
+      "pick_grade": "LEAN",
+      "bookmaker_count": 2,
+      "raw_edge_pct": 0.0,
+      "true_prob_pct": 59.0,
+      "market_fair_pct": 50.0,
+      "expected_clv_pct": 0.0,
+      "continuity_deltas": {
+        "ol": null,
+        "dl": null,
+        "db": null
+      },
+      "signal_plane_attribution": {},
+      "reasoning": "UNDER 38.5 backed by 100% of 2 bookmakers. Fair value: 51%. Edge: -1.2%. Total line moving in pick direction. Confidence: 59/100 (LEAN)."
+    },
+    {
       "id": "cmvcqdnl400df45uk3c1dxdrt",
       "matchup": "Arizona Cardinals @ Los Angeles Rams",
       "commence_utc": "2026-10-18T20:05:00",
@@ -1718,6 +1464,30 @@
       "reasoning": "ARI @ LAR OVER 51.5: Snapped to the live 10:55 AM CDT REA multi-book total of 51.50 (mean 51.50, de-vigged marketFairProb=0.5022) at SoFi Stadium. Canonical 2026 player_game_stats verify Puka Nacua is averaging 112.3 receiving yards per game (337 yds on 45 targets across 3 GP, 33.9% target share) alongside Davante Adams (441 yds in 5 GP) and Kyren Williams (343 rush yds, 200 rec yds in 5 GP). Arizona's deep secondary is missing safeties Andrew Wingard (OUT) and Wydett Williams Jr. (OUT) [espn_nfl_injuries_week6.json], backed by +3.62% Sovereign Signal Plane lift. [Signal Plane Attribution: marketFair=0.502, structural=+0.0560, continuity=-0.0012, signalPlane14Keys=+0.0360 -> trueProb=0.5930 (+9.08% raw edge, EdgeIdx=66.3/100, Score=66/100)]."
     },
     {
+      "id": "cmt4ffeu508y5eat5jg0sfbs1",
+      "matchup": "Los Angeles Chargers @ Kansas City Chiefs",
+      "commence_utc": "2026-10-18T20:25:00",
+      "pick_type": "SPREAD",
+      "selection": "Kansas City Chiefs -7.5",
+      "line": -7.5,
+      "confidence": 70,
+      "edge_score": 76.0,
+      "tier": "PREMIUM",
+      "pick_grade": "SOLID_PLAY",
+      "bookmaker_count": 2,
+      "raw_edge_pct": 0.0,
+      "true_prob_pct": 70.0,
+      "market_fair_pct": 50.0,
+      "expected_clv_pct": 0.0,
+      "continuity_deltas": {
+        "ol": null,
+        "dl": null,
+        "db": null
+      },
+      "signal_plane_attribution": {},
+      "reasoning": "Kansas City Chiefs -7.5: Snapped to the live 10:55 AM CDT REA multi-book consensus (-7.50, de-vigged marketFairProb=0.5000). Kansas City enters off its Week 5 bye with a verified 14-day rest advantage (last played 2026-10-04) against a Chargers roster on 7 days rest missing All-Pro left tackle Joe Alt (OUT), guard Kayode Awosika (OUT), and starting cornerback Donte Jackson (OUT) [espn_nfl_injuries_week6.json]. Kansas City RB Kenneth Walker III has 537 rushing yards across 4 GP in 2026 player_game_stats, while KC holds +1.97% Sovereign Signal Plane lift. [Signal Plane Attribution: marketFair=0.500, structural=+0.0580, continuity=+0.0000, signalPlane14Keys=+0.0196 -> trueProb=0.5776 (+7.76% raw edge, EdgeIdx=64.0/100, Score=64/100)]."
+    },
+    {
       "id": "cmvcqdohm00dr45ukjn46l267",
       "matchup": "Buffalo Bills @ Las Vegas Raiders",
       "commence_utc": "2026-10-18T20:25:00",
@@ -2003,308 +1773,6 @@
         ]
       },
       "reasoning": "BUF @ LV OVER 53.5: Snapped to the live 10:55 AM CDT REA multi-book Allegiant Stadium indoor total (53.5, mean 53.44, de-vigged marketFairProb=0.5000). Canonical 2026 player_game_stats confirm Buffalo RB James Cook has 532 rushing yards on 95 carries in 5 GP (+88.5 RYOE) while Raiders RB Ashton Jeanty has 291 rushing yards and 215 receiving yards (30 targets) in 5 GP. With Las Vegas missing interior DT Tonka Hemingway (OUT) and Buffalo DTs Ed Oliver and T.J. Sanders Questionable [espn_nfl_injuries_week6.json], indoor pace and +2.70% Sovereign Signal Plane lift back the Over. [Signal Plane Attribution: marketFair=0.500, structural=+0.0560, continuity=+0.0000, signalPlane14Keys=+0.0270 -> trueProb=0.5830 (+8.30% raw edge, EdgeIdx=64.9/100, Score=65/100)]."
-    },
-    {
-      "id": "cmt4ffeu508y5eat5jg0sfbs1",
-      "matchup": "Los Angeles Chargers @ Kansas City Chiefs",
-      "commence_utc": "2026-10-18T20:25:00",
-      "pick_type": "SPREAD",
-      "selection": "Kansas City Chiefs -7.5",
-      "line": -7.5,
-      "confidence": 64,
-      "edge_score": 64.0,
-      "tier": "FREE",
-      "pick_grade": "SOLID_PLAY",
-      "bookmaker_count": 13,
-      "raw_edge_pct": 7.76,
-      "true_prob_pct": 57.8,
-      "market_fair_pct": 50.0,
-      "expected_clv_pct": 5.82,
-      "continuity_deltas": {
-        "ol": 0.0,
-        "dl": 0.0,
-        "db": 0.0
-      },
-      "signal_plane_attribution": {
-        "rawEdge": 0.0776,
-        "equation": "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.25), 0.05, 0.95)",
-        "trueProb": 0.5776,
-        "edgeScore": 64.0,
-        "confidence": 64,
-        "shrunkEdge": 0.0636,
-        "expectedClv": 0.0582,
-        "marketFairProb": 0.5,
-        "continuityDeltaProb": 0.0,
-        "signalContributions": [
-          {
-            "key": "vision.soe_yd",
-            "weight": 0.085,
-            "awayRaw": -0.1239,
-            "homeRaw": 0.3856,
-            "awayValue": -0.1239,
-            "homeValue": 0.3856,
-            "probContribution": 0.01083,
-            "directionalReading": 0.5095
-          },
-          {
-            "key": "vision.art_mean",
-            "weight": 0.075,
-            "awayRaw": 0.0665,
-            "homeRaw": 0.0766,
-            "awayValue": 0.665,
-            "homeValue": 0.766,
-            "probContribution": 0.00189,
-            "directionalReading": 0.101
-          },
-          {
-            "key": "vision.pocket_depth_yd",
-            "weight": 0.065,
-            "awayRaw": 3.1743,
-            "homeRaw": 4.7883,
-            "awayValue": 0.3174,
-            "homeValue": 0.4788,
-            "probContribution": 0.00262,
-            "directionalReading": 0.1614
-          },
-          {
-            "key": "ftn.play_action_rate",
-            "weight": 0.09,
-            "awayRaw": 0.1211,
-            "homeRaw": 0.1693,
-            "awayValue": 0.1211,
-            "homeValue": 0.1693,
-            "probContribution": 0.00108,
-            "directionalReading": 0.0482
-          },
-          {
-            "key": "ftn.motion_rate",
-            "weight": 0.08,
-            "awayRaw": 0.5884,
-            "homeRaw": 0.4796,
-            "awayValue": 0.5884,
-            "homeValue": 0.4796,
-            "probContribution": -0.00218,
-            "directionalReading": -0.1088
-          },
-          {
-            "key": "ftn.screen_rate",
-            "weight": 0.055,
-            "awayRaw": 0.0387,
-            "homeRaw": 0.0878,
-            "awayValue": 0.0387,
-            "homeValue": 0.0878,
-            "probContribution": 0.00068,
-            "directionalReading": 0.0491
-          },
-          {
-            "key": "ftn.rpo_rate",
-            "weight": 0.06,
-            "awayRaw": 0.0266,
-            "homeRaw": 0.0815,
-            "awayValue": 0.0266,
-            "homeValue": 0.0815,
-            "probContribution": 0.00082,
-            "directionalReading": 0.0549
-          },
-          {
-            "key": "ftn.def_blitz_rate",
-            "weight": 0.095,
-            "awayRaw": 0.1171,
-            "homeRaw": 0.1391,
-            "awayValue": 0.1171,
-            "homeValue": 0.1391,
-            "probContribution": 0.00052,
-            "directionalReading": 0.022
-          },
-          {
-            "key": "qbr.total_qbr",
-            "weight": 0.11,
-            "awayRaw": 48.23,
-            "homeRaw": 57.37,
-            "awayValue": 0.4823,
-            "homeValue": 0.5737,
-            "probContribution": 0.00251,
-            "directionalReading": 0.0914
-          },
-          {
-            "key": "snaps.starter_snap_share",
-            "weight": 0.07,
-            "awayRaw": 0.9268,
-            "homeRaw": 0.9044,
-            "awayValue": 0.9268,
-            "homeValue": 0.9044,
-            "probContribution": -0.00039,
-            "directionalReading": -0.0224
-          },
-          {
-            "key": "cognitive.presser_sentiment",
-            "weight": 0.05,
-            "awayRaw": 4.0,
-            "homeRaw": 5.0,
-            "awayValue": 0.4,
-            "homeValue": 0.5,
-            "probContribution": 0.00125,
-            "directionalReading": 0.1
-          },
-          {
-            "key": "cognitive.coach_speak_delta",
-            "weight": 0.065,
-            "awayRaw": 2.0,
-            "homeRaw": 2.0,
-            "awayValue": 0.4,
-            "homeValue": 0.4,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          },
-          {
-            "key": "cognitive.scheme_shift",
-            "weight": 0.075,
-            "awayRaw": 3.0,
-            "homeRaw": 3.0,
-            "awayValue": 0.5,
-            "homeValue": 0.5,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          },
-          {
-            "key": "cognitive.tendency_break",
-            "weight": 0.08,
-            "awayRaw": 10.0,
-            "homeRaw": 10.0,
-            "awayValue": 1.0,
-            "homeValue": 1.0,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          }
-        ],
-        "structuralDeltaProb": 0.058,
-        "signalPlaneDeltaProb": 0.0196,
-        "gameSignalContributions": [
-          {
-            "signalKey": "cognitive.total_signals",
-            "sourceName": "cognitive_loop_w6",
-            "signalValue": {
-              "away": {
-                "scheme_shift": 3,
-                "total_signals": 27,
-                "tendency_break": 10,
-                "coach_speak_delta": 2,
-                "presser_sentiment": 4
-              },
-              "home": {
-                "scheme_shift": 3,
-                "total_signals": 26,
-                "tendency_break": 10,
-                "coach_speak_delta": 2,
-                "presser_sentiment": 5
-              },
-              "sha256": "8d783b3a31265cde"
-            }
-          },
-          {
-            "signalKey": "ftn.def_blitz_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.1171,
-              "home": 0.1391,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "ftn.motion_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.5884,
-              "home": 0.4796,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "ftn.play_action_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.1211,
-              "home": 0.1693,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "precip_pct",
-            "sourceName": "nws",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "qbr.total_qbr",
-            "sourceName": "espn_qbr_2026",
-            "signalValue": {
-              "away": 48.23,
-              "home": 57.37,
-              "sha256": "d5780214ad8b903b"
-            }
-          },
-          {
-            "signalKey": "schedule_density_7d_away",
-            "sourceName": "schedule-internal",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "schedule_density_7d_home",
-            "sourceName": "schedule-internal",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "snaps.starter_snap_share",
-            "sourceName": "pfr_snaps_2026",
-            "signalValue": {
-              "away": 0.9268,
-              "home": 0.9044,
-              "sha256": "e61c4343f9224e5b"
-            }
-          },
-          {
-            "signalKey": "temp_f",
-            "sourceName": "nws",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "vision.art_mean",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 0.0665,
-              "home": 0.0766,
-              "metric": "angular_rush_threat",
-              "sha256": "b087b0f3f03e6e8f",
-              "global_mean": 0.0773
-            }
-          },
-          {
-            "signalKey": "vision.pocket_depth_yd",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 3.1743,
-              "home": 4.7883,
-              "sha256": "a0dfab6ffea48552",
-              "global_mean": 4.2734
-            }
-          },
-          {
-            "signalKey": "vision.soe_yd",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": -0.1239,
-              "home": 0.3856,
-              "sha256": "a0dfab6ffea48552",
-              "global_mean": 0.2305
-            }
-          },
-          {
-            "signalKey": "wind_mph",
-            "sourceName": "nws",
-            "signalValue": {}
-          }
-        ]
-      },
-      "reasoning": "Kansas City Chiefs -7.5: Snapped to the live 10:55 AM CDT REA multi-book consensus (-7.50, de-vigged marketFairProb=0.5000). Kansas City enters off its Week 5 bye with a verified 14-day rest advantage (last played 2026-10-04) against a Chargers roster on 7 days rest missing All-Pro left tackle Joe Alt (OUT), guard Kayode Awosika (OUT), and starting cornerback Donte Jackson (OUT) [espn_nfl_injuries_week6.json]. Kansas City RB Kenneth Walker III has 537 rushing yards across 4 GP in 2026 player_game_stats, while KC holds +1.97% Sovereign Signal Plane lift. [Signal Plane Attribution: marketFair=0.500, structural=+0.0580, continuity=+0.0000, signalPlane14Keys=+0.0196 -> trueProb=0.5776 (+7.76% raw edge, EdgeIdx=64.0/100, Score=64/100)]."
     },
     {
       "id": "cmvcqdo0w00dl45uk92ig5q7i",
@@ -2917,284 +2385,21 @@
       "pick_type": "SPREAD",
       "selection": "San Francisco 49ers -7.5",
       "line": -7.5,
-      "confidence": 63,
-      "edge_score": 63.2,
-      "tier": "FREE",
+      "confidence": 75,
+      "edge_score": 52.0,
+      "tier": "PREMIUM",
       "pick_grade": "SOLID_PLAY",
-      "bookmaker_count": 11,
-      "raw_edge_pct": 7.35,
-      "true_prob_pct": 57.4,
+      "bookmaker_count": 1,
+      "raw_edge_pct": 0.0,
+      "true_prob_pct": 75.0,
       "market_fair_pct": 50.0,
-      "expected_clv_pct": 5.51,
+      "expected_clv_pct": 0.0,
       "continuity_deltas": {
-        "ol": 0.0,
-        "dl": 0.0,
-        "db": 0.0
+        "ol": null,
+        "dl": null,
+        "db": null
       },
-      "signal_plane_attribution": {
-        "rawEdge": 0.0735,
-        "equation": "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.25), 0.05, 0.95)",
-        "trueProb": 0.5735,
-        "edgeScore": 63.2,
-        "confidence": 63,
-        "shrunkEdge": 0.0603,
-        "expectedClv": 0.0551,
-        "marketFairProb": 0.5,
-        "continuityDeltaProb": 0.0,
-        "signalContributions": [
-          {
-            "key": "vision.soe_yd",
-            "weight": 0.085,
-            "awayRaw": 0.1328,
-            "homeRaw": 0.3403,
-            "awayValue": 0.1328,
-            "homeValue": 0.3403,
-            "probContribution": 0.00441,
-            "directionalReading": 0.2075
-          },
-          {
-            "key": "vision.art_mean",
-            "weight": 0.075,
-            "awayRaw": 0.0602,
-            "homeRaw": 0.065,
-            "awayValue": 0.602,
-            "homeValue": 0.65,
-            "probContribution": 0.0009,
-            "directionalReading": 0.048
-          },
-          {
-            "key": "vision.pocket_depth_yd",
-            "weight": 0.065,
-            "awayRaw": 3.3915,
-            "homeRaw": 4.0918,
-            "awayValue": 0.3392,
-            "homeValue": 0.4092,
-            "probContribution": 0.00114,
-            "directionalReading": 0.07
-          },
-          {
-            "key": "ftn.play_action_rate",
-            "weight": 0.09,
-            "awayRaw": 0.1101,
-            "homeRaw": 0.106,
-            "awayValue": 0.1101,
-            "homeValue": 0.106,
-            "probContribution": -9e-05,
-            "directionalReading": -0.0041
-          },
-          {
-            "key": "ftn.motion_rate",
-            "weight": 0.08,
-            "awayRaw": 0.4098,
-            "homeRaw": 0.6168,
-            "awayValue": 0.4098,
-            "homeValue": 0.6168,
-            "probContribution": 0.00414,
-            "directionalReading": 0.207
-          },
-          {
-            "key": "ftn.screen_rate",
-            "weight": 0.055,
-            "awayRaw": 0.0234,
-            "homeRaw": 0.0462,
-            "awayValue": 0.0234,
-            "homeValue": 0.0462,
-            "probContribution": 0.00031,
-            "directionalReading": 0.0228
-          },
-          {
-            "key": "ftn.rpo_rate",
-            "weight": 0.06,
-            "awayRaw": 0.0468,
-            "homeRaw": 0.0054,
-            "awayValue": 0.0468,
-            "homeValue": 0.0054,
-            "probContribution": -0.00062,
-            "directionalReading": -0.0414
-          },
-          {
-            "key": "ftn.def_blitz_rate",
-            "weight": 0.095,
-            "awayRaw": 0.2404,
-            "homeRaw": 0.1473,
-            "awayValue": 0.2404,
-            "homeValue": 0.1473,
-            "probContribution": -0.00221,
-            "directionalReading": -0.0931
-          },
-          {
-            "key": "qbr.total_qbr",
-            "weight": 0.11,
-            "awayRaw": 54.11,
-            "homeRaw": 68.16,
-            "awayValue": 0.5411,
-            "homeValue": 0.6816,
-            "probContribution": 0.00386,
-            "directionalReading": 0.1405
-          },
-          {
-            "key": "snaps.starter_snap_share",
-            "weight": 0.07,
-            "awayRaw": 0.9224,
-            "homeRaw": 0.9331,
-            "awayValue": 0.9224,
-            "homeValue": 0.9331,
-            "probContribution": 0.00019,
-            "directionalReading": 0.0107
-          },
-          {
-            "key": "cognitive.presser_sentiment",
-            "weight": 0.05,
-            "awayRaw": 3.0,
-            "homeRaw": 1.0,
-            "awayValue": 0.3,
-            "homeValue": 0.1,
-            "probContribution": -0.0025,
-            "directionalReading": -0.2
-          },
-          {
-            "key": "cognitive.coach_speak_delta",
-            "weight": 0.065,
-            "awayRaw": 2.0,
-            "homeRaw": 2.0,
-            "awayValue": 0.4,
-            "homeValue": 0.4,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          },
-          {
-            "key": "cognitive.scheme_shift",
-            "weight": 0.075,
-            "awayRaw": 3.0,
-            "homeRaw": 3.0,
-            "awayValue": 0.5,
-            "homeValue": 0.5,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          },
-          {
-            "key": "cognitive.tendency_break",
-            "weight": 0.08,
-            "awayRaw": 12.0,
-            "homeRaw": 9.0,
-            "awayValue": 1.0,
-            "homeValue": 1.0,
-            "probContribution": 0.0,
-            "directionalReading": 0.0
-          }
-        ],
-        "structuralDeltaProb": 0.064,
-        "signalPlaneDeltaProb": 0.0095,
-        "gameSignalContributions": [
-          {
-            "signalKey": "cognitive.total_signals",
-            "sourceName": "cognitive_loop_w6",
-            "signalValue": {
-              "away": {
-                "scheme_shift": 3,
-                "total_signals": 34,
-                "tendency_break": 12,
-                "coach_speak_delta": 2,
-                "presser_sentiment": 3
-              },
-              "home": {
-                "scheme_shift": 3,
-                "total_signals": 25,
-                "tendency_break": 9,
-                "coach_speak_delta": 2,
-                "presser_sentiment": 1
-              },
-              "sha256": "8d783b3a31265cde"
-            }
-          },
-          {
-            "signalKey": "ftn.def_blitz_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.2404,
-              "home": 0.1473,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "ftn.motion_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.4098,
-              "home": 0.6168,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "ftn.play_action_rate",
-            "sourceName": "ftn_charting_2026",
-            "signalValue": {
-              "away": 0.1101,
-              "home": 0.106,
-              "sha256": "6e0e7479d3fdb0c7"
-            }
-          },
-          {
-            "signalKey": "qbr.total_qbr",
-            "sourceName": "espn_qbr_2026",
-            "signalValue": {
-              "away": 54.11,
-              "home": 68.16,
-              "sha256": "d5780214ad8b903b"
-            }
-          },
-          {
-            "signalKey": "schedule_density_7d_away",
-            "sourceName": "schedule-internal",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "schedule_density_7d_home",
-            "sourceName": "schedule-internal",
-            "signalValue": {}
-          },
-          {
-            "signalKey": "snaps.starter_snap_share",
-            "sourceName": "pfr_snaps_2026",
-            "signalValue": {
-              "away": 0.9224,
-              "home": 0.9331,
-              "sha256": "e61c4343f9224e5b"
-            }
-          },
-          {
-            "signalKey": "vision.art_mean",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 0.0602,
-              "home": 0.065,
-              "metric": "angular_rush_threat",
-              "sha256": "b087b0f3f03e6e8f",
-              "global_mean": 0.0773
-            }
-          },
-          {
-            "signalKey": "vision.pocket_depth_yd",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 3.3915,
-              "home": 4.0918,
-              "sha256": "a0dfab6ffea48552",
-              "global_mean": 4.2734
-            }
-          },
-          {
-            "signalKey": "vision.soe_yd",
-            "sourceName": "ngs_vision_2026",
-            "signalValue": {
-              "away": 0.1328,
-              "home": 0.3403,
-              "sha256": "a0dfab6ffea48552",
-              "global_mean": 0.2305
-            }
-          }
-        ]
-      },
+      "signal_plane_attribution": {},
       "reasoning": "San Francisco 49ers -7.5: Exact match to the live 10:55 AM CDT REA multi-book Monday Night Football consensus (-7.50, de-vigged marketFairProb=0.5000). Brock Purdy leads the NFL with +10.5% CPOE on 2026 NGS passing surfaces while Christian McCaffrey has posted 286 rushing yards and 137 receiving yards across 5 GP in 2026 player_game_stats. Washington's defensive front is missing DE Charles Omenihu (OUT) with three safeties (Nick Cross, Tyler Owens, Percy Butler) listed Questionable [espn_nfl_injuries_week6.json], while SF leads in FTN motion and SOE. [Signal Plane Attribution: marketFair=0.500, structural=+0.0640, continuity=+0.0000, signalPlane14Keys=+0.0095 -> trueProb=0.5735 (+7.35% raw edge, EdgeIdx=63.2/100, Score=63/100)]."
     }
   ],
@@ -3253,8 +2458,8 @@
       "chains_count": 3,
       "chains": [
         "HOME-OFF vs AWAY-DEF: Drake London generates elite 3.33 yds separation across 37 targets (43.8% air-yd share; vision.soe_yd=+0.462 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Jaylon Johnson (LCB, slot-1, not-on-report), Tyrique Stevenson Sr. (RCB, slot-1, not-on-report), Cam Lewis (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "AWAY-OL vs HOME-FRONT: CHI OL (Ozzy Trapilo (LT), Joe Thuney (LG), Garrett Bradbury (C)) [espn-depthcharts-2026.json] anchors Tyson Bagent (2.88s TTT; vision.pocket_depth_yd=4.58 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=57.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and D'Andre Swift (TLOS 2.69s, RYOE -4.1 yds) [raw_statboard_rushing.json] against healthy ATL front (LaCale London (LDE), Gervon Dexter Sr. (NT), Brandon Dorlus (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -4.1 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
-        "HOME-OL vs AWAY-FRONT: ATL OL (Jake Matthews (LT), Matthew Bergeron (LG), Ryan Neuzil (C)) [espn-depthcharts-2026.json] anchors Michael Penix Jr. (2.55s TTT; vision.pocket_depth_yd=3.45 yd, vision.art_mean=0.081, ftn.def_blitz_rate=0.2%, qbr.total_qbr=49.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Bijan Robinson (TLOS 2.78s, RYOE +161.2 yds) [raw_statboard_rushing.json] against healthy CHI front (Montez Sweat (LDE), Grady Jarrett (LDT), Kentavius Street (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +161.2 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: CHI offensive structure compromised by Case Keenum (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Tyson Bagent and D'Andre Swift (RYOE -4.1 yds; vision.pocket_depth_yd=4.58 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=57.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against ATL front (LaCale London (LDE), Gervon Dexter Sr. (NT), Brandon Dorlus (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush",
+        "HOME-OL vs AWAY-FRONT: ATL offensive structure compromised by Cooper Rush (QB, OUT); Jack Strand (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Michael Penix Jr. and Bijan Robinson (RYOE +161.2 yds; vision.pocket_depth_yd=3.45 yd, vision.art_mean=0.081, ftn.def_blitz_rate=0.2%, qbr.total_qbr=49.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against CHI front (Montez Sweat (LDE), Grady Jarrett (LDT), Kentavius Street (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3297,10 +2502,12 @@
       "matchup": "BAL@CLE",
       "path": "docs/predictions/research/2026-10-18/BAL@CLE-matchups.md",
       "pairings_count": 8,
-      "chains_count": 2,
+      "chains_count": 4,
       "chains": [
         "AWAY-OFF vs HOME-DEF: Zay Flowers generates elite 2.94 yds separation across 31 targets (22.3% air-yd share; vision.soe_yd=-0.016 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Denzel Ward (LCB, slot-1, not-on-report), Tyson Campbell (RCB, slot-1, not-on-report), Myles Harden (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "HOME-OFF vs AWAY-DEF: KC Concepcion generates elite 3.32 yds separation across 29 targets (16.6% air-yd share; vision.soe_yd=+0.092 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+9.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Nate Wiggins (LCB, slot-1, not-on-report), Marlon Humphrey (RCB, slot-1, not-on-report), Kyle Hamilton (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top"
+        "HOME-OFF vs AWAY-DEF: KC Concepcion generates elite 3.32 yds separation across 29 targets (16.6% air-yd share; vision.soe_yd=+0.092 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+9.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Nate Wiggins (LCB, slot-1, not-on-report), Marlon Humphrey (RCB, slot-1, not-on-report), Kyle Hamilton (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
+        "AWAY-OL vs HOME-FRONT: BAL offensive structure compromised by Lamar Jackson (QB, OUT); Skylar Thompson (QB, IR) [espn_nfl_injuries_week6.json] -> forces Tyler Huntley and Derrick Henry (RYOE +22.8 yds; vision.pocket_depth_yd=5.02 yd, vision.art_mean=0.078, ftn.def_blitz_rate=0.1%, qbr.total_qbr=62.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against CLE front (Isaiah McGuire (LDE), Mason Graham (LDT), Maliek Collins (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush",
+        "HOME-OL vs AWAY-FRONT: CLE offensive structure compromised by Taylen Green (QB, OUT); Dillon Gabriel (QB, IR) [espn_nfl_injuries_week6.json] -> forces Deshaun Watson and Jaleel McLaughlin (RYOE +0.0 yds; vision.pocket_depth_yd=4.52 yd, vision.art_mean=0.066, ftn.def_blitz_rate=0.2%, qbr.total_qbr=31.9, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against BAL front (Nnamdi Madubuike (LDE), Travis Jones (NT), Calais Campbell (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3324,9 +2531,9 @@
         "front_questionable": [],
         "qb_name": "Deshaun Watson",
         "qb_ttt": 2.8942567567567568,
-        "rb_name": "Quinshon Judkins",
-        "rb_tlos": 2.6628030303030306,
-        "rb_ryoe": -34.654008275106605,
+        "rb_name": "Jaleel McLaughlin",
+        "rb_tlos": 2.8,
+        "rb_ryoe": 0.0,
         "vision_pocket_depth_yd": 4.5158,
         "vision_art_mean": 0.0662,
         "ftn_def_blitz_rate": 0.1633,
@@ -3342,10 +2549,11 @@
       "matchup": "TEN@IND",
       "path": "docs/predictions/research/2026-10-18/TEN@IND-matchups.md",
       "pairings_count": 8,
-      "chains_count": 2,
+      "chains_count": 3,
       "chains": [
         "AWAY-OFF vs HOME-DEF: Carnell Tate generates elite 2.96 yds separation across 37 targets (47.4% air-yd share; vision.soe_yd=+0.100 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Sauce Gardner (LCB, slot-1, not-on-report), Charvarius Ward (RCB, slot-1, not-on-report), Justin Walley (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "AWAY-OL vs HOME-FRONT: TEN OL (Dan Moore Jr. (LT), Peter Skoronski (LG), Austin Schlottmann (C)) [espn-depthcharts-2026.json] anchors Cam Ward (2.96s TTT; vision.pocket_depth_yd=4.96 yd, vision.art_mean=0.087, ftn.def_blitz_rate=0.1%, qbr.total_qbr=33.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Tony Pollard (TLOS 2.77s, RYOE +12.5 yds) [raw_statboard_rushing.json] against healthy IND front (Jaylahn Tuimoloau (LDE), Grover Stewart (LDT), DeForest Buckner (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +12.5 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: TEN OL (Dan Moore Jr. (LT), Peter Skoronski (LG), Austin Schlottmann (C)) [espn-depthcharts-2026.json] anchors Cam Ward (2.96s TTT; vision.pocket_depth_yd=4.96 yd, vision.art_mean=0.087, ftn.def_blitz_rate=0.1%, qbr.total_qbr=33.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Tony Pollard (TLOS 2.77s, RYOE +12.5 yds) [raw_statboard_rushing.json] against healthy IND front (Jaylahn Tuimoloau (LDE), Grover Stewart (LDT), DeForest Buckner (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +12.5 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
+        "HOME-OL vs AWAY-FRONT: IND offensive structure compromised by Riley Leonard (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Daniel Jones and Jonathan Taylor (RYOE -25.0 yds; vision.pocket_depth_yd=4.38 yd, vision.art_mean=0.083, ftn.def_blitz_rate=0.1%, qbr.total_qbr=56.3, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against TEN front (John Franklin-Myers (LDE), Jeffery Simmons (LDT), Jordan Elliott (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3388,10 +2596,11 @@
       "matchup": "NYJ@NE",
       "path": "docs/predictions/research/2026-10-18/NYJ@NE-matchups.md",
       "pairings_count": 8,
-      "chains_count": 2,
+      "chains_count": 3,
       "chains": [
         "HOME-OFF vs AWAY-DEF: Romeo Doubs generates elite 3.19 yds separation across 23 targets (26.0% air-yd share; vision.soe_yd=+0.158 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Azareye'h Thomas (LCB, slot-1, not-on-report), Brandon Stephens (RCB, slot-1, not-on-report), Jarvis Brownlee Jr. (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "AWAY-OL vs HOME-FRONT: NYJ OL (Olu Fashanu (LT), Dylan Parham (LG), Josh Myers (C)) [espn-depthcharts-2026.json] anchors Geno Smith (2.93s TTT; vision.pocket_depth_yd=4.01 yd, vision.art_mean=0.075, ftn.def_blitz_rate=0.2%, qbr.total_qbr=41.7, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Braelon Allen (TLOS 2.75s, RYOE +36.9 yds) [raw_statboard_rushing.json] against healthy NE front (Christian Barmore (LDE), Cory Durden (NT), Milton Williams (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +36.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: NYJ OL (Olu Fashanu (LT), Dylan Parham (LG), Josh Myers (C)) [espn-depthcharts-2026.json] anchors Geno Smith (2.93s TTT; vision.pocket_depth_yd=4.01 yd, vision.art_mean=0.075, ftn.def_blitz_rate=0.2%, qbr.total_qbr=41.7, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Braelon Allen (TLOS 2.75s, RYOE +36.9 yds) [raw_statboard_rushing.json] against healthy NE front (Christian Barmore (LDE), Cory Durden (NT), Milton Williams (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +36.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
+        "HOME-OL vs AWAY-FRONT: NE offensive structure compromised by Behren Morton (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Drake Maye and Rhamondre Stevenson (RYOE +30.3 yds; vision.pocket_depth_yd=4.25 yd, vision.art_mean=0.083, ftn.def_blitz_rate=0.2%, qbr.total_qbr=67.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against NYJ front (David Bailey (LDE), T'Vondre Sweat (LDT), Harrison Phillips (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3434,11 +2643,12 @@
       "matchup": "NO@NYG",
       "path": "docs/predictions/research/2026-10-18/NO@NYG-matchups.md",
       "pairings_count": 8,
-      "chains_count": 3,
+      "chains_count": 4,
       "chains": [
         "AWAY-OFF vs HOME-DEF: Chris Olave generates elite 2.94 yds separation across 54 targets (45.1% air-yd share; vision.soe_yd=+0.232 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Deonte Banks (LCB, slot-1, not-on-report), Greg Newsome II (RCB, slot-1, not-on-report), Dru Phillips (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
         "HOME-OFF vs AWAY-DEF: Malik Nabers generates elite 2.98 yds separation across 46 targets (35.8% air-yd share; vision.soe_yd=+0.253 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+12.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Kool-Aid McKinstry (LCB, slot-1, not-on-report), Quincy Riley (RCB, slot-1, not-on-report), Jonas Sanker (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "HOME-OL vs AWAY-FRONT: NYG OL (Andrew Thomas (LT), Jon Runyan (LG), Bryan Hudson (C)) [espn-depthcharts-2026.json] anchors Jameis Winston (2.71s TTT; vision.pocket_depth_yd=3.99 yd, vision.art_mean=0.082, ftn.def_blitz_rate=0.2%, qbr.total_qbr=52.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Cam Skattebo (TLOS 2.68s, RYOE -43.9 yds) [raw_statboard_rushing.json] against healthy NO front (Cameron Jordan (LDE), Nathan Shepherd (NT), Vernon Broughton (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -43.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: NO offensive structure compromised by Zach Wilson (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Tyler Shough and Kendre Miller (RYOE -37.5 yds; vision.pocket_depth_yd=4.07 yd, vision.art_mean=0.085, ftn.def_blitz_rate=0.2%, qbr.total_qbr=51.9, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against NYG front (Shelby Harris (LDE), DJ Reader (NT), Darius Alexander (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush",
+        "HOME-OL vs AWAY-FRONT: NYG offensive structure compromised by Jake Haener (QB, OUT); Jaxson Dart (QB, IR) [espn_nfl_injuries_week6.json] -> forces Jameis Winston and Cam Skattebo (RYOE -43.9 yds; vision.pocket_depth_yd=3.99 yd, vision.art_mean=0.082, ftn.def_blitz_rate=0.2%, qbr.total_qbr=52.6, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against NO front (Cameron Jordan (LDE), Nathan Shepherd (NT), Vernon Broughton (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3484,8 +2694,8 @@
       "chains": [
         "AWAY-OFF vs HOME-DEF: Tetairoa McMillan generates elite 2.91 yds separation across 39 targets (32.4% air-yd share; vision.soe_yd=+0.272 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Riq Woolen (LCB, slot-1, not-on-report), Quinyon Mitchell (RCB, slot-1, not-on-report), Cooper DeJean (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
         "HOME-OFF vs AWAY-DEF: Dontayvion Wicks generates elite 3.06 yds separation across 28 targets (32.3% air-yd share; vision.soe_yd=+0.130 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Akayleb Evans (LCB, slot-1, not-on-report), Will Lee III (RCB, slot-1, not-on-report), Chau Smith-Wade (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "AWAY-OL vs HOME-FRONT: CAR OL (Rasheed Walker (LT), Corey Bullock (LG), Luke Fortner (C)) [espn-depthcharts-2026.json] anchors Bryce Young (2.93s TTT; vision.pocket_depth_yd=2.94 yd, vision.art_mean=0.074, ftn.def_blitz_rate=0.1%, qbr.total_qbr=51.7, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Chuba Hubbard (TLOS 2.65s, RYOE +78.3 yds) [raw_statboard_rushing.json] against healthy PHI front (Jalen Carter (LDE), Jordan Davis (NT), Moro Ojomo (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +78.3 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
-        "HOME-OL vs AWAY-FRONT: PHI OL (Jordan Mailata (LT), Willie Lampkin (LG), Drew Kendall (C)) [espn-depthcharts-2026.json] anchors Jalen Hurts (3.04s TTT; vision.pocket_depth_yd=4.17 yd, vision.art_mean=0.078, ftn.def_blitz_rate=0.2%, qbr.total_qbr=51.9, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Saquon Barkley (TLOS 3.14s, RYOE +40.2 yds) [raw_statboard_rushing.json] against healthy CAR front (Derrick Brown (LDE), Lee Hunter (NT), Bobby Brown III (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +40.2 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: CAR offensive structure compromised by Haynes King (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Bryce Young and Chuba Hubbard (RYOE +78.3 yds; vision.pocket_depth_yd=2.94 yd, vision.art_mean=0.074, ftn.def_blitz_rate=0.1%, qbr.total_qbr=51.7, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against PHI front (Jalen Carter (LDE), Jordan Davis (NT), Moro Ojomo (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush",
+        "HOME-OL vs AWAY-FRONT: PHI offensive structure compromised by Jalen Hurts (QB, IR); Joe Milton III (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Tanner McKee (backup for Jalen Hurts [IR]) and Dameon Pierce (RYOE +0.0 yds; vision.pocket_depth_yd=4.17 yd, vision.art_mean=0.078, ftn.def_blitz_rate=0.2%, qbr.total_qbr=51.9, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against CAR front (Derrick Brown (LDE), Lee Hunter (NT), Bobby Brown III (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3507,11 +2717,11 @@
         "front_active_on_report": [],
         "front_down": [],
         "front_questionable": [],
-        "qb_name": "Jalen Hurts",
-        "qb_ttt": 3.0362792207792206,
-        "rb_name": "Saquon Barkley",
-        "rb_tlos": 3.1408709677419355,
-        "rb_ryoe": 40.15138885589599,
+        "qb_name": "Tanner McKee (backup for Jalen Hurts [IR])",
+        "qb_ttt": 2.85,
+        "rb_name": "Dameon Pierce",
+        "rb_tlos": 2.8,
+        "rb_ryoe": 0.0,
         "vision_pocket_depth_yd": 4.165,
         "vision_art_mean": 0.078,
         "ftn_def_blitz_rate": 0.176,
@@ -3530,8 +2740,8 @@
       "chains_count": 3,
       "chains": [
         "HOME-OFF vs AWAY-DEF: Emeka Egbuka generates elite 3.06 yds separation across 33 targets (31.0% air-yd share; vision.soe_yd=+0.597 yd, ftn.motion_rate=0.6%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Asante Samuel Jr. (LCB, slot-1, not-on-report), Jamel Dean (RCB, slot-1, not-on-report), Jalen Ramsey (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
-        "AWAY-OL vs HOME-FRONT: PIT OL (Troy Fautanu (LT), Mason McCormick (LG), Zach Frazier (C)) [espn-depthcharts-2026.json] anchors Aaron Rodgers (2.82s TTT; vision.pocket_depth_yd=4.56 yd, vision.art_mean=0.080, ftn.def_blitz_rate=0.2%, qbr.total_qbr=44.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Jaylen Warren (TLOS 2.78s, RYOE +126.9 yds) [raw_statboard_rushing.json] against healthy TB front (Calijah Kancey (LDE), Vita Vea (NT), A'Shawn Robinson (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +126.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
-        "HOME-OL vs AWAY-FRONT: TB OL (Tristan Wirfs (LT), Ben Bredeson (LG), Graham Barton (C)) [espn-depthcharts-2026.json] anchors Baker Mayfield (2.99s TTT; vision.pocket_depth_yd=5.63 yd, vision.art_mean=0.085, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Bucky Irving (TLOS 2.93s, RYOE +85.2 yds) [raw_statboard_rushing.json] against healthy PIT front (Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +85.2 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: PIT offensive structure compromised by Will Howard (QB, OUT); Drew Allar (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Aaron Rodgers and Jaylen Warren (RYOE +126.9 yds; vision.pocket_depth_yd=4.56 yd, vision.art_mean=0.080, ftn.def_blitz_rate=0.2%, qbr.total_qbr=44.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against TB front (Calijah Kancey (LDE), Vita Vea (NT), A'Shawn Robinson (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush",
+        "HOME-OL vs AWAY-FRONT: TB offensive structure compromised by Baker Mayfield (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Jalon Daniels and Bucky Irving (RYOE +85.2 yds; vision.pocket_depth_yd=5.63 yd, vision.art_mean=0.085, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against PIT front (Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3553,8 +2763,8 @@
         "front_active_on_report": [],
         "front_down": [],
         "front_questionable": [],
-        "qb_name": "Baker Mayfield",
-        "qb_ttt": 2.9888020833333333,
+        "qb_name": "Jalon Daniels",
+        "qb_ttt": 2.9782545454545457,
         "rb_name": "Bucky Irving",
         "rb_tlos": 2.9258611111111112,
         "rb_ryoe": 85.15474960965628,
@@ -3575,8 +2785,8 @@
       "pairings_count": 8,
       "chains_count": 2,
       "chains": [
-        "AWAY-OL vs HOME-FRONT: ARI OL (Jayden Williams (LT), Isaac Seumalo (LG), Hjalte Froholdt (C)) [espn-depthcharts-2026.json] anchors Jacoby Brissett (2.62s TTT; vision.pocket_depth_yd=5.24 yd, vision.art_mean=0.079, ftn.def_blitz_rate=0.2%, qbr.total_qbr=45.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Jeremiyah Love (TLOS 2.94s, RYOE -26.3 yds) [raw_statboard_rushing.json] against healthy LAR front (Kobie Turner (LDE), Poona Ford (NT), Aaron Donald (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -26.3 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
-        "HOME-OL vs AWAY-FRONT: LAR OL (Alaric Jackson (LT), Steve Avila (LG), Coleman Shelton (C)) [espn-depthcharts-2026.json] anchors Matthew Stafford (2.76s TTT; vision.pocket_depth_yd=4.72 yd, vision.art_mean=0.088, ftn.def_blitz_rate=0.1%, qbr.total_qbr=66.0, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Kyren Williams (TLOS 2.86s, RYOE +40.8 yds) [raw_statboard_rushing.json] against healthy ARI front (Josh Sweat (LDE), Roy Lopez (LDT), Walter Nolen III (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +40.8 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: ARI OL (Jayden Williams (LT), Isaac Seumalo (LG), Hjalte Froholdt (C)) [espn-depthcharts-2026.json] anchors Jacoby Brissett (2.62s TTT; vision.pocket_depth_yd=5.24 yd, vision.art_mean=0.079, ftn.def_blitz_rate=0.2%, qbr.total_qbr=45.8, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Tyler Allgeier (TLOS 2.75s, RYOE -5.6 yds) [raw_statboard_rushing.json] against healthy LAR front (Kobie Turner (LDE), Poona Ford (NT), Aaron Donald (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -5.6 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script",
+        "HOME-OL vs AWAY-FRONT: LAR offensive structure compromised by Matthew Caldwell (QB, IR) [espn_nfl_injuries_week6.json] -> forces Matthew Stafford and Kyren Williams (RYOE +40.8 yds; vision.pocket_depth_yd=4.72 yd, vision.art_mean=0.088, ftn.def_blitz_rate=0.1%, qbr.total_qbr=66.0, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against ARI front (Josh Sweat (LDE), Roy Lopez (LDT), Walter Nolen III (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",
@@ -3618,11 +2828,11 @@
     {
       "matchup": "LAC@KC",
       "path": "docs/predictions/research/2026-10-18/LAC@KC-matchups.md",
-      "pairings_count": 8,
+      "pairings_count": 7,
       "chains_count": 3,
       "chains": [
-        "AWAY-OFF vs HOME-DEF: Tre Harris generates elite 3.17 yds separation across 25 targets (23.0% air-yd share; vision.soe_yd=-0.124 yd, ftn.motion_rate=0.6%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Nohl Williams (LCB, slot-1, not-on-report), Mansoor Delane (RCB, slot-1, not-on-report), L'Jarius Sneed (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
         "HOME-OFF vs AWAY-DEF: Xavier Worthy generates elite 3.54 yds separation across 22 targets (25.1% air-yd share; vision.soe_yd=+0.386 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.2%, cognitive.tendency_break=+10.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Cam Hart (LCB, slot-1, not-on-report), Donte Jackson (RCB, slot-1, not-on-report), Tarheeb Still (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top",
+        "AWAY-OL vs HOME-FRONT: LAC offensive structure compromised by Trey Lance (QB, IR) [espn_nfl_injuries_week6.json] -> forces Justin Herbert and Omarion Hampton (RYOE -35.7 yds; vision.pocket_depth_yd=3.17 yd, vision.art_mean=0.077, ftn.def_blitz_rate=0.1%, qbr.total_qbr=48.2, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against KC front (George Karlaftis (LDE), Chris Jones (LDT), Khyiris Tonga (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush",
         "HOME-OL vs AWAY-FRONT: KC OL (Josh Simmons (LT), Kingsley Suamataia (LG), Creed Humphrey (C)) [espn-depthcharts-2026.json] anchors Patrick Mahomes (2.70s TTT; vision.pocket_depth_yd=4.79 yd, vision.art_mean=0.067, ftn.def_blitz_rate=0.1%, qbr.total_qbr=57.4, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Kenneth Walker III (TLOS 2.77s, RYOE +211.8 yds) [raw_statboard_rushing.json] against healthy LAC front (Teair Tart (LDE), Jamaree Caldwell (NT), Justin Eboigbe (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +211.8 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
       ],
       "ol_vs_rush": {
@@ -3801,11 +3011,11 @@
     {
       "matchup": "WSH@SF",
       "path": "docs/predictions/research/2026-10-18/WSH@SF-matchups.md",
-      "pairings_count": 8,
+      "pairings_count": 7,
       "chains_count": 2,
       "chains": [
         "AWAY-OFF vs HOME-DEF: Stefon Diggs leads WSH pass-catchers (2026 NGS: targets 31, separation 2.60 yds, air-yd share 19.8%; vision.soe_yd=+0.133 yd, ftn.motion_rate=0.4%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+9.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> draws the opposing slot-1 corner ladder: Renardo Green (LCB, slot-1, not-on-report), Deommodore Lenoir (RCB, slot-1, not-on-report), Upton Stout (NB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> starter(s) he meets are on injury report (Upton Stout (NB, slot-1, not-on-report)) [espn_nfl_injuries_week6.json] - specific receiver vs weakened defender creates target concentration and conversion leverage -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it",
-        "AWAY-OL vs HOME-FRONT: WSH OL (Brandon Coleman (LT), Chris Paul (LG), Lucas Patrick (C)) [espn-depthcharts-2026.json] anchors Jayden Daniels (2.97s TTT; vision.pocket_depth_yd=3.39 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.1, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Jacory Croskey-Merritt (TLOS 2.75s, RYOE -29.7 yds) [raw_statboard_rushing.json] against healthy SF front (Keion White (LDE), Osa Odighizuwa (LDT), Gracen Halton (RDT)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE -29.7 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script"
+        "AWAY-OL vs HOME-FRONT: WSH offensive structure compromised by Marcus Mariota (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Jayden Daniels and Rachaad White (RYOE -24.9 yds; vision.pocket_depth_yd=3.39 yd, vision.art_mean=0.065, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.1, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against SF front (Keion White (LDE), Osa Odighizuwa (LDT), Gracen Halton (RDT)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush"
       ],
       "ol_vs_rush": {
         "side": "HOME-OL vs AWAY-FRONT",

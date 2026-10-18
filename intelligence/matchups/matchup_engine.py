@@ -257,21 +257,44 @@ def _passers() -> dict[str, list[dict]]:
 
 
 def _injuries() -> dict[str, list[dict]]:
-    """team -> list of player injury entries from ESPN Week 6 digest."""
+    """team -> list of player injury entries from ESPN Week 6 digest + Official DK DraftGroup 154941/154943 IR/OUT tags."""
     d = _load(INJ_FILE)
     out: dict[str, list[dict]] = {}
+    seen_per_team: dict[str, set[str]] = {}
     for t in (d or {}).get("teams") or []:
         team = canon_team(t.get("team"))
         entries = []
+        seen = seen_per_team.setdefault(team, set())
         for e in t.get("injuries") or []:
+            nm = e.get("athlete") or ""
+            seen.add(norm_name(nm))
             entries.append({
-                "player": e.get("athlete"),
+                "player": nm,
                 "pos": e.get("position"),
                 "status": (e.get("status") or "").upper(),
                 "detail": e.get("detail") or e.get("comment"),
                 "source": str(INJ_FILE.relative_to(REPO)).replace("\\", "/"),
             })
         out[team] = entries
+
+    for dk_fname in ("dk_draftables_154941_main_slate.json", "dk_draftables_154943_sun_mon.json"):
+        dk_path = REPO / "docs" / "data-sources" / "research" / "2026-10-18" / "dfs" / dk_fname
+        dk_data = _load(dk_path) if dk_path.exists() else None
+        for r in (dk_data or {}).get("draftables") or []:
+            st = (r.get("status") or "").upper()
+            if st in ("IR", "OUT", "D", "DOUBTFUL", "PUP"):
+                team = canon_team(r.get("teamAbbreviation"))
+                nm = r.get("displayName") or ""
+                seen = seen_per_team.setdefault(team, set())
+                if nm and norm_name(nm) not in seen:
+                    seen.add(norm_name(nm))
+                    out.setdefault(team, []).append({
+                        "player": nm,
+                        "pos": r.get("position"),
+                        "status": "DOUBTFUL" if st == "D" else st,
+                        "detail": f"Official DK Draftables status={st}",
+                        "source": f"docs/data-sources/research/2026-10-18/dfs/{dk_fname}",
+                    })
     return out
 
 
@@ -354,7 +377,7 @@ def _corners(dc_team: dict) -> list[dict]:
 
 
 def usage_titles(team_receivers: list[dict], rushers: list[dict] | None = None,
-                 injuries: list[dict] | None = None) -> dict[str, dict]:
+                 injuries: list[dict] | None = None, dc_team: dict | None = None) -> dict[str, dict]:
     """WR1/WR2/TE1 by targets; RB1 from rushing table by carries.
     Filters out offensive weapons with status OUT/IR/DOUBTFUL from taking top titles.
     """
@@ -382,12 +405,24 @@ def usage_titles(team_receivers: list[dict], rushers: list[dict] | None = None,
         titles["TE1"] = active_tes[0]
 
     active_rush = [r for r in (rushers or []) if not is_down(r["player"])]
-    if not active_rush and rushers:
-        active_rush = rushers
-    for r in active_rush[:1]:
-        r_copy = dict(r)
+    if active_rush:
+        r_copy = dict(active_rush[0])
         r_copy["usage_title_basis"] = f"rush att {r_copy.get('att', 0)}, RYOE {r_copy.get('ryoe', 0.0):+.1f}"
         titles["RB1"] = r_copy
+    elif dc_team:
+        dc_rbs = []
+        for k, rows in dc_team.items():
+            if k.split("|")[-1] == "RB":
+                dc_rbs.extend(r.get("athlete") for r in rows if r.get("athlete") and not is_down(r.get("athlete")))
+        if dc_rbs:
+            titles["RB1"] = {
+                "player": dc_rbs[0],
+                "pos": "RB",
+                "att": 0,
+                "ryoe": 0.0,
+                "usage_title_basis": "Active Depth-Chart RB1 (Primary NGS Rushers OUT/IR)",
+                "source": DC_FILE.name,
+            }
 
     return titles
 
@@ -454,7 +489,7 @@ def build_matchups(home: str, away: str) -> dict:
         cov_out = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") in ("OUT", "INJURED RESERVE", "IR", "DOUBTFUL")]
         cov_q = [x for x in d_inj if (x.get("pos") in COVERAGE_POS) and x.get("status") == "QUESTIONABLE"]
 
-        titles = usage_titles(o_recv, rush.get(o, []), o_inj)
+        titles = usage_titles(o_recv, rush.get(o, []), o_inj, dc.get(o, {}))
 
         cb_starters = [c for c in corners if c.get("depth") == 1]
         cb_pairs = []

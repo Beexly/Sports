@@ -1,6 +1,6 @@
 # PIT@TB - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.276937+00:00
+generated_utc: 2026-10-18T16:18:08.707175+00:00
 
 ## Receiver vs coverage pairings
 
@@ -10,8 +10,8 @@ generated_utc: 2026-10-18T16:11:14.276937+00:00
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
 
-### AWAY-OFF vs HOME-DEF - WR2: Roman Wilson
-- targets 25 | separation 2.57 yds | air-yd share 26.2% | YAC/E R -0.02 | catch 56.0% | vision.soe_yd +0.316 yd | ftn.motion_rate 0.4% (2026 in-season NGS + Vision/FTN) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+### AWAY-OFF vs HOME-DEF - WR2: Germie Bernard
+- targets 20 | separation 2.38 yds | air-yd share 9.9% | YAC/E R +0.11 | catch 65.0% | vision.soe_yd +0.316 yd | ftn.motion_rate 0.4% (2026 in-season NGS + Vision/FTN) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
 - matched slot-1 corners: Zyon McCollum (LCB, slot-1, not-on-report); Benjamin Morrison (RCB, slot-1, not-on-report); Jacob Parrish (NB, slot-1, not-on-report)
 - opposing coverage OUT/limited: (none listed)
 - opposing coverage QUESTIONABLE: (none)
@@ -63,7 +63,7 @@ generated_utc: 2026-10-18T16:11:14.276937+00:00
 
 ### HOME-OL vs AWAY-FRONT
 - offensive line starters: Tristan Wirfs (LT), Ben Bredeson (LG), Graham Barton (C), Cody Mauch (RG), Luke Goedeke (RT)
-- QB protection anchor: Baker Mayfield (2026 NGS time-to-throw: 2.99s, vision.pocket_depth_yd: 5.63 yd, qbr.total_qbr: 54.5, snaps.starter_snap_share: 0.9%) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
+- QB protection anchor: Jalon Daniels (2026 NGS time-to-throw: 2.98s, vision.pocket_depth_yd: 5.63 yd, qbr.total_qbr: 54.5, snaps.starter_snap_share: 0.9%) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
 - RB downhill leverage: Bucky Irving (2026 NGS time-to-LOS: 2.93s, RYOE: +85.2 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
 - defensive front starters: Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE) (vision.art_mean: 0.085, ftn.def_blitz_rate: 0.1%)
 - front ACTIVE (on report): (none listed)
@@ -78,9 +78,5 @@ generated_utc: 2026-10-18T16:11:14.276937+00:00
 ## Matchup chains (each cites its file)
 
 1. HOME-OFF vs AWAY-DEF: Emeka Egbuka generates elite 3.06 yds separation across 33 targets (31.0% air-yd share; vision.soe_yd=+0.597 yd, ftn.motion_rate=0.6%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Asante Samuel Jr. (LCB, slot-1, not-on-report), Jamel Dean (RCB, slot-1, not-on-report), Jalen Ramsey (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top
-2. AWAY-OL vs HOME-FRONT: PIT OL (Troy Fautanu (LT), Mason McCormick (LG), Zach Frazier (C)) [espn-depthcharts-2026.json] anchors Aaron Rodgers (2.82s TTT; vision.pocket_depth_yd=4.56 yd, vision.art_mean=0.080, ftn.def_blitz_rate=0.2%, qbr.total_qbr=44.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Jaylen Warren (TLOS 2.78s, RYOE +126.9 yds) [raw_statboard_rushing.json] against healthy TB front (Calijah Kancey (LDE), Vita Vea (NT), A'Shawn Robinson (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +126.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-3. HOME-OL vs AWAY-FRONT: TB OL (Tristan Wirfs (LT), Ben Bredeson (LG), Graham Barton (C)) [espn-depthcharts-2026.json] anchors Baker Mayfield (2.99s TTT; vision.pocket_depth_yd=5.63 yd, vision.art_mean=0.085, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and Bucky Irving (TLOS 2.93s, RYOE +85.2 yds) [raw_statboard_rushing.json] against healthy PIT front (Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +85.2 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (TB/PIT)
+2. AWAY-OL vs HOME-FRONT: PIT offensive structure compromised by Will Howard (QB, OUT); Drew Allar (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Aaron Rodgers and Jaylen Warren (RYOE +126.9 yds; vision.pocket_depth_yd=4.56 yd, vision.art_mean=0.080, ftn.def_blitz_rate=0.2%, qbr.total_qbr=44.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against TB front (Calijah Kancey (LDE), Vita Vea (NT), A'Shawn Robinson (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush
+3. HOME-OL vs AWAY-FRONT: TB offensive structure compromised by Baker Mayfield (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Jalon Daniels and Bucky Irving (RYOE +85.2 yds; vision.pocket_depth_yd=5.63 yd, vision.art_mean=0.085, ftn.def_blitz_rate=0.1%, qbr.total_qbr=54.5, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_rushing.json] into elevated pressure against PIT front (Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

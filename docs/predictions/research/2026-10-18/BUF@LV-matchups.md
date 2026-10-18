@@ -1,6 +1,6 @@
 # BUF@LV - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.393157+00:00
+generated_utc: 2026-10-18T16:18:08.961357+00:00
 
 ## Receiver vs coverage pairings
 
@@ -79,7 +79,3 @@ generated_utc: 2026-10-18T16:11:14.393157+00:00
 
 1. AWAY-OFF vs HOME-DEF: Khalil Shakir generates elite 4.03 yds separation across 26 targets (12.6% air-yd share; vision.soe_yd=+0.169 yd, ftn.motion_rate=0.5%, ftn.play_action_rate=0.1%, cognitive.tendency_break=+11.00 [derived_metrics_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> faces active corner ladder (Eric Stokes (LCB, slot-1, not-on-report), Hezekiah Masses (RCB, slot-1, not-on-report), Taron Johnson (NB, slot-1, not-on-report)) [espn-depthcharts-2026.json] -> pure route-separation advantage over healthy man/zone coverage drives high-efficiency chain movement -> breaking condition: dedicated double-team bracket or safety help over top
 2. AWAY-OL vs HOME-FRONT: BUF OL (Dion Dawkins (LT), Alec Anderson (LG), Connor McGovern (C)) [espn-depthcharts-2026.json] anchors Josh Allen (2.94s TTT; vision.pocket_depth_yd=4.43 yd, vision.art_mean=0.083, ftn.def_blitz_rate=0.1%, qbr.total_qbr=66.0, snaps.starter_snap_share=0.9% [art_pre_week6_2026.parquet / ftn_charting_2026.parquet]) [raw_statboard_passing.json] and James Cook (TLOS 2.52s, RYOE +88.5 yds) [raw_statboard_rushing.json] against healthy LV front (Jonah Laulu (LDE), Adam Butler (NT), Tonka Hemingway (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +88.5 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
-
-## Honest gaps
-
-- injury digest missing a team block (LV/BUF)

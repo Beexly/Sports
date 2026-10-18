@@ -1,6 +1,6 @@
 # SEA@DEN - Matchup Report
 
-generated_utc: 2026-10-18T16:11:14.469375+00:00
+generated_utc: 2026-10-18T16:18:09.132430+00:00
 
 ## Receiver vs coverage pairings
 
