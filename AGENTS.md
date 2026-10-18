@@ -16739,3 +16739,103 @@ Window: posts after 12:20 AM CDT Sun 2026-10-18 through 9:08 AM CDT Sun 2026-10-
 - Partials flagged, never completed: @GridironInfo_ chart footer and attempts subtext; @statyxio Game Lab carousel (most image values unread); @TheHallmanAlgo post sentence and projection-card sublabels; @_Locksmiths__ truncated search-term portion (no value recorded).
 - @PFF's newest post at sweep time (18m) was post-window and excluded; the in-window @PFF find is the 7:32 AM item above.
 - Videos not played. No external/bio-link sites visited; statyx.io/game-lab, MCAnalytics.co and statsbench.com are recorded as stated on X only. The SeahawkNerd neutral-script weighted EPA item surfaced again as a boundary check in the pass-rush-win-rate search (exact 11:44 PM CDT Oct 17) — pre-window, already inventoried in the 2026-10-18 00:20 run, not re-filed.
+
+## X INTEL SWEEP 2026-10-18 (08:20 RUN, MORNING)
+
+Window: posts after 12:20 AM CDT Sun 2026-10-18 through 8:20 AM CDT Sun 2026-10-18 (Week 7 game day; early game HOU vs JAX in London). Read-only as @GalaxySportsHQ; login verified in all lanes (account menu: Galaxy Sports Edge, @GalaxySportsHQ); no likes/reposts/replies/follows/DMs/bookmarks. Coverage: home feed (Following) + all assigned metrics, news, market, and scheme accounts + five Latest searches (EPA / CPOE / TPRR / pass rush win rate / aggressiveness), plus a completion pass for the accounts Lane B left unchecked (@MikeGarafolo, @FTNData, @NFL_Researcher). Lane timestamps arrived in CDT, GMT, and Eastern display; all times below are converted to CDT (GMT minus 5; Eastern display minus 1, the Eastern/GMT pairing was explicit in the Lane B market segment). Numbers, ranks and sources are as rendered; post texts are summarized, not quoted at length. Partial captures are flagged and never completed.
+
+### VERIFICATION NOTE (unverified interim claims excluded)
+
+An interim report received during this run claimed overnight posts the verified lanes do not support: Christian McCaffrey ruled INACTIVE, @GridironInfo_ Week 7 matchup cards posted overnight, and an overnight @sfdata9ers chart burst. These are NOT inventoried. Basis: Lane A's final verified manifest records @sfdata9ers 5 scanned / 0 in-window (newest 16h), @jmthrivept 4/0 (all 10h), @GridironInfo_ 4/1 (only the 7:00 AM aDOT post below); the full news lane (Schefter / RapSheet / Pelissero / Fowler / Garafolo) reports the 49ers news as Aiyuk expected to play and Pearsall questionable, with no McCaffrey item anywhere; and the searches show McCaffrey only as an EPA stat line (see SEARCH FINDS). The completion pass's Part 2 newest-6 verification lists were not delivered as a manifest segment, so Lane A's verified counts stand as the record for those accounts and the missing lists are recorded as a gap below, not filled in.
+
+### NEW METRIC / ANGLE ENTRIES
+
+- **2026 aDOT leaders (top 10)** — @GridironInfo_, 7:00 AM CDT 2026-10-18: post body lists the top 3 (Willis 10.7, Jackson 10.3, Stroud 10.1); the attached chart, titled as a 2026 average-depth-of-target ranking with a Next Gen Stats header, gives the top 10 row-by-row: 1. Malik Willis (MIA) 10.7; 2. Lamar Jackson (BAL) 10.3; 3. C.J. Stroud (HOU) 10.1; 4. Drake Maye 9.7; 5. Bryce Young 9.7; 6. Jameis Winston 9.6; 7. Josh Allen 9.2; 8. Jordan Love 9.1; 9. Jayden Daniels 9.0; 10. Matthew Stafford 8.9. Data source: NOT stated in the post body; the chart header states Next Gen Stats. PARTIAL: the attempt-count sublabel under each name and the chart footer line were too small to read and are not recorded. -> gridironinfo-adot-leaders-2026.csv.
+- **Statyx Game Lab sim promo (product note, no table)** — @statyxio, 12:44 AM CDT: a Texans vs Jaguars game-simulation product post (real rosters/depth/injuries, coach play-calling habits, formations/coverages as described) noting Jacksonville runs far more than expected on short yardage in the sim, plus a companion carousel post. PARTIAL carousel values (only legible values recorded): projected dropbacks 30.6; projected rushes 27.1; a third box at 53.1% whose label was not fully readable; expected pass rate 58.8%. Data source: the account's own Game Lab product as rendered; no external provider stated. -> statyx-gamelab-hou-jax-projections-partial-2026.csv.
+- **Dynatyze win-probability model outputs (10 matchups)** — @DynatyzeFF, ~5:24-5:37 AM CDT (segment timestamps in Eastern display, converted): DEN 53% vs NYG; KC 69% vs LV; PIT 62% vs CIN; PHI 58% vs MIN; LAR 57% vs JAX; NE 67% vs TEN; MIA 54% vs CLE; CHI 59% vs NO; NYJ 52% vs CAR (a second post gives NYJ 52.7% vs CAR); DAL 55% vs WSH. Data source: the account's own model as rendered; no external provider stated. -> dynatyze-win-probabilities-2026-10-18.csv.
+- **Bo Nix recent-form line** — @PFF, 6:39 AM CDT: Nix described as the NFL's highest-graded QB over the past four games with a 90.2 PFF passing grade and zero interceptions in that span, as rendered. Data source: PFF's own grades as rendered.
+- **PFF grade-to-GPA rescaling (methodology note)** — @PFF, 6:40 AM CDT: a post presenting PFF grades rescaled onto a 0.00-4.00 GPA scale. Recorded as a presentation/methodology item; no player values inventoried from it. Data source: PFF as rendered.
+- **Isaiah Likely target share [PARTIAL]** — @PFF_Fantasy, 5:21 AM CDT: a target-share comparison giving 9.5% for the current period and 14.7% for 2024 as rendered; the remainder of the post was cut in the manifest and is not completed. Data source: PFF as rendered.
+- **TPRR-allowed team chart [PARTIAL — chart values unread]** — @FantasyPtsData, 3:31 AM CDT: a chart post on the percentage of routes / TPRR allowed by team; the chart's team values were not transcribed in the manifest and are not recorded. Data source: Fantasy Points Data as rendered (account's own chart).
+
+### SEARCH FINDS (Latest tab; in-window only unless marked)
+
+- **Baltimore rushing EPA (search find)** — via EPA search, 8:03 AM CDT (author not named in the lane manifest): Baltimore at 0.55 EPA per rush, described as the NFL's best, in a Weeks 5-6 context vs Cleveland as rendered. Data source: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **Fields vs Cover-2 line (search find, boundary-in)** — via EPA search, 8:19 AM CDT (author not named in the manifest): Justin Fields vs Cover-2 as rendered — 36.4% aggressiveness, -5.2 CPOE, -0.08 EPA per attempt. Data source: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **Houston passing EPA (search find)** — @BetUSProFB, in-window via EPA search (exact time not stated in the manifest): Houston passing EPA per play -0.06 and passing success rate 41.2% as rendered, in a Stroud-vs-Jacksonville preview context. Data source: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **RB EPA trio (search find)** — via EPA search, 1:01 AM CDT (author not named in the manifest): EPA values as rendered — McCaffrey 0.15, James Cook 0.27, Alvin Kamara 0.26 (metric basis as rendered in the post). Data source: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **Tony Mason EPA/target (search find)** — via EPA search, 12:53 AM CDT (author/subject as rendered): 0.17 EPA per target on 2 targets. Data source: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **Fields CPOE (search find)** — via CPOE search, 1:13 AM CDT (author not named in the manifest): Justin Fields at -8.0% CPOE, described as a career-worst pace. Data source: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **TPRR finds** — via TPRR search: Drake London TPRR 0.32 at 7:07 AM CDT and George Pickens TPRR 0.27 at 2:13 AM CDT (authors not named in the manifest); a second search pass also returned a London TPRR of 27% in a different basis/context as rendered (exact basis not stated) — both recorded as rendered, not reconciled. Data sources: NOT stated. -> search-finds-2026-10-18-08.csv.
+- **Pass rush win rate finds** — via PRWR search, 6:40 AM CDT (author not named in the manifest): Myles Garrett 33% PRWR (26 wins on 79 pass rushes as rendered); Micah Parsons 20.5%; Danielle Hunter 20.5%; Brian Burns 18.3%. A second pass over the same search returned a PFF-sourced graphic listing Garrett, Parsons, Burns, Hunter, T.J. Watt, Trey Hendrickson, Jared Verse, Byron Young, Nik Bonitto, Josh Hines-Allen, Will Anderson Jr., Jonathan Greenard, and others, with Fiske 17.9% and Latu 16.5% among the legible values. Data source: PFF as rendered. -> search-finds-2026-10-18-08.csv.
+- **Aggressiveness: qualifying count 0** — two passes (84 and ~30 results scanned) found no NFL Aggressiveness-index post in-window; in-window results use the ordinary word only, and the metric-bearing results are dated Oct 17 or earlier.
+- **Arch Manning right-side EPA (via assigned account)** — @DevyEusuf, 1:55 AM CDT, quoting @CamMellor as rendered: Arch Manning at -0.49 EPA per attempt on throws to the right side this year, described as last among 124 qualified QBs (college; quote truncated with an ellipsis as rendered). Data source: NOT stated in the quote as rendered. -> search-finds-2026-10-18-08.csv.
+
+### NEWS
+
+- Marvin Harrison Jr. active for his Texans debut today vs Jacksonville (London) — @AdamSchefter, 2:24 AM CDT; corroborated @RapSheet, 5:37 AM CDT ("officially active").
+- A.J. Brown expected to be active today for Philadelphia vs Minnesota — @AdamSchefter, 2:35 AM CDT.
+- Justin Fields expected to be active today (opponent not stated in the manifest) — @AdamSchefter, 2:45 AM CDT.
+- Cowboys CB Joey Porter Jr. (questionable, ankle) expected to play today vs Green Bay, per source — @JFowlerESPN, 4:47 AM CDT.
+- Chiefs post-bye note: Andy Reid 22-5 (.815) after a regular-season bye, second to John Harbaugh 15-3 (.833) — @AdamSchefter (time as rendered in the news segment; general note, not an injury item).
+- Brandon Aiyuk expected to play (season debut) — @MikeGarafolo, 6:32 AM CDT; @TomPelissero, 6:19 AM CDT, reported Aiyuk could play vs Washington per source.
+- Ricky Pearsall questionable (pec, groin) — @MikeGarafolo, 6:47 AM CDT; @TomPelissero, 6:53 AM CDT (reposted via @32BeatWriters at the same time).
+- Cardinals QB situation: Jacoby Brissett in line with Kyler Murray's status in doubt — @MikeGarafolo, 6:49 AM CDT; Harrison Jr. status also addressed by @TomPelissero, 6:30 AM CDT, in the same context.
+- London / Drake Maye / Christian Kirk availability items — @TomPelissero, 6:32 AM CDT (players named as rendered; detail beyond the names was not expanded in the manifest — PARTIAL).
+- Weather: Baltimore at Miami — wind 14-18 mph with a 34% chance of rain, as rendered — @EstablishTheRun, 4:02 AM CDT.
+- Boundary/out-of-window news item (NOT counted in-window): Justin Herbert's clean injury status and a no-fracture update — @MikeGarafolo, Oct 17, 9:35 PM CDT as converted — before the window start.
+
+### MARKET
+
+- Drake Maye MVP odds move: +5000 to +1800 — @ActionNetworkHQ, 7:58 AM CDT, via DraftKings as rendered. This is the run's one clean opener-to-current NFL move.
+- Joe Burrow MVP +2500 (single price, no opener) — @ActionNetworkHQ, 12:26 AM CDT, via DraftKings as rendered. Bengals Super Bowl +6000 and Burrow MVP +3000 also listed at 7:36 AM CDT (different market/post as rendered; recorded as rendered, not reconciled).
+- Jets +2 (-110) vs Carolina — @ActionNetworkHQ, 12:29 AM CDT, via FanDuel as rendered (single price, no opener/splits).
+- DET/TB two-team teaser: Lions +11.5 / Bucs +12 — @ActionNetworkHQ, 12:37 AM CDT, via FanDuel as rendered.
+- Top-10 handle list (handle % only; bets % not listed; book not named in the manifest) — @ActionNetworkHQ, 8:16 AM CDT: LAR -6.5 96%, an unnamed two-team teaser 96%, DEN -7 93%, NE -7 91%, IND +1.5 91%, KC -11.5 89%, GB -2.5 88%, DET +5.5 85%, CHI -4.5 84%, NYJ +2 83%. -> actionnetwork-top-handle-2026-10-18.csv.
+- Jacksonville defensive quote in a market post: Jacksonville ranks third in defensive DVOA, allowing the fifth-lowest EPA per play and the second-fewest points per drive, as quoted — @Covers, 8:03 AM CDT (attributed in the post to @NeilParkerBets / Kalshi as rendered; no line move attached).
+- Player-prop posts with prices (no opener/move/splits): @Covers, 7:14 AM CDT — Christian McCaffrey, D'Andre Swift, Malik Willis (London), Rashee Rice props as rendered (individual prices not transcribed in the manifest — PARTIAL); @Covers, boundary item at exactly 12:20 AM CDT — Colts props (Jonathan Taylor, Daniel Jones, Tyler Warren) as rendered, flagged boundary, not counted.
+- Bet Labs systems (college, as rendered): home underdogs in ranked matchups 65-35 ATS (65%) for UAB; Indiana big-favorite system 31-14 ATS (68.9%); James Madison home system 20-5 ATS (80%) — @Bet_Labs, 5:09-5:37 AM CDT. An NFL primetime Overs system item in its list is dated Oct 17 and is out of window.
+- Boundary market items (flagged, not counted): @vsininsights Average Joe Contest picks list (Texans -2.5 at the top) timestamped exactly 8:20 AM CDT; a @Covers Texans -2.5 "kickoff special" at the same boundary time; a @Covers primetime-props item at Oct 17, 9:13 PM CDT is out of window. @VSiN itself remains the dormant handle (0 posts).
+
+### SCHEME / FILM
+
+- No NFL scheme post appeared in the assigned scheme accounts in-window. @Nate_Tice: 8 scanned / 0 in-window (latest exact-verified Oct 17, 11:38 PM CDT — before the window). @benbbaldwin: 5 scanned / 0 in-window (all Oct 16). The only scheme-adjacent in-window item is the @statyxio Game Lab sim note above (Jacksonville short-yardage run tendency in the sim).
+
+### ENGINE IDEAS (attributed; ideas, not build orders)
+
+- aDOT leaderboards sourced to Next Gen Stats as a QB aggressiveness/depth cut, with attempt counts as a required companion column (the counts were the unread part of the chart) — from @GridironInfo_ above.
+- A game-simulation surface (projected dropbacks/rushes, expected pass rate) as a pre-game projection display shape — from @statyxio Game Lab above; values PARTIAL.
+- Win-probability model outputs from a public model (@DynatyzeFF, 10 matchups) as an external benchmark column next to GSE's own probabilities — from @DynatyzeFF above.
+- QB performance splits vs a named coverage (Fields vs Cover-2: aggressiveness / CPOE / EPA in one line) as a coverage-split feature shape — from the EPA search find above; source NOT stated.
+- Handle-only top-10 lists (no bets %) as a market-attention signal, with the missing bets % recorded as a data gap — from @ActionNetworkHQ above.
+
+### CONTENT ANGLES (attributed; facts as rendered)
+
+- Malik Willis leads the NFL in aDOT at 10.7 (Next Gen Stats per chart header) ahead of Lamar Jackson 10.3 and C.J. Stroud 10.1 — @GridironInfo_.
+- Myles Garrett's 33% pass rush win rate (PFF as rendered) is nearly double the next names in the same post (Parsons and Hunter at 20.5%) — via PRWR search.
+- Drake Maye's MVP odds moved from +5000 to +1800 (DraftKings via @ActionNetworkHQ).
+- Marvin Harrison Jr. is active for his Texans debut in London today — @AdamSchefter / @RapSheet.
+- Baltimore's 0.55 EPA per rush (best in the NFL as rendered, source not stated) — via EPA search.
+
+### IN-WINDOW NON-METRIC RECORDS (assigned accounts)
+
+- @DevyEusuf: 19 scanned / 10 in-window, all college/devy commentary (times 1:50-5:16 AM CDT); the only hard metric among them is the Arch Manning item in SEARCH FINDS.
+- Home feed: 16 scanned / 0 qualifying — all Houston Texans / London game promo posts (~7:20-8:21 AM CDT).
+- Zero in-window (verified lanes): @cmain7 6/0, @RyanPaganetti 8/0, @sfdata9ers 5/0, @hawkblogger 4/0, @MagicSportsGuy 4/0, @SumerSports 4/0, @ScottBarrettDFB 4/0, @PattonAnalytics 0 (newest Oct 16), @NerdingonNFL 0 (only a pinned Oct 12 post rendered), @NFLResearcher rendering-limited (only the bio/header loaded in Lane B; the completion pass found @NFL_Researcher posts all dated Oct 16 or older, 0 in-window).
+
+### COVERAGE COUNTS
+
+- Lane A (scanned / in-window): home feed 16/0 qualifying, @cmain7 6/0, @RyanPaganetti 8/0, @jmthrivept 4/0, @sfdata9ers 5/0, @hawkblogger 4/0, @MagicSportsGuy 4/0, @SumerSports 4/0, @GridironInfo_ 4/1, @DevyEusuf 19/10, @statyxio 6/2, @ScottBarrettDFB 4/0, @Nate_Tice 8/0, @benbbaldwin 5/0.
+- Lane B (scanned / in-window, as delivered in segments): @PattonAnalytics 25/0, @EstablishTheRun 20/1 (weather), @FantasyPtsData 20/1 (partial chart), @DonAtkinsonNFL 20/0, @DynatyzeFF 20/11 (win-probability posts as counted by the lane), @PFF 20/3 (incl. @PFF_Fantasy), @32BeatWriters 20/1 (Pearsall repost sighting), @NFLResearcher rendering-limited, @AdamSchefter 30/3, @RapSheet 30/1, @TomPelissero 30/3, @JFowlerESPN 30/1, @Covers 30/4 listed (2 counted in-window here after boundary review, 2 flagged boundary/out), @ActionNetworkHQ 40/8 listed, @Bet_Labs 15/3 college systems counted, @vsininsights 1 listed at the exact boundary.
+- Completion pass: @MikeGarafolo 9/4 listed (3 counted in-window here after boundary review, 1 out), @FTNData 0 posts displayed (see gaps), @NFL_Researcher 12 posts seen, all Oct 16 or older, 0 in-window.
+- Searches (two passes): EPA ~60 + 25 scanned, CPOE ~40 + 30, TPRR ~35 + 22, pass rush win rate ~30 + 18, aggressiveness 84 + ~30 (qualifying 0 in both).
+
+### GAPS / FLAGS
+
+- The completion pass's Part 2 newest-6 verification lists for @sfdata9ers / @jmthrivept / @GridironInfo_ / @ScottBarrettDFB / @SumerSports were not delivered as a manifest segment — recorded as a gap; Lane A's verified final counts are the record used (see VERIFICATION NOTE).
+- @FTNData: the completion pass found no posts displayed (account shows a locked/join state) — in-window count UNKNOWN, not zero; same gap family as prior runs.
+- @NFLResearcher: Lane B render was limited to the bio/header (count UNKNOWN from that lane); the completion pass's @NFL_Researcher check (all Oct 16 or older) is the basis for the 0 in-window record.
+- Boundary items flagged and not counted: Garafolo Herbert item (Oct 17 evening), Covers Colts-props post (exactly 12:20 AM CDT), Covers primetime-props post (Oct 17 evening), Covers Texans -2.5 post and vsinsights contest list (exactly 8:20 AM CDT), Bet Labs primetime Overs item (Oct 17).
+- Several search finds arrived without the author named in the lane manifest — recorded exactly that way; no author was guessed.
+- Lane B timestamps arrived in mixed GMT / Eastern display; conversions are stated in the header. Two TPRR values for Drake London (0.32 and 27%) and two Burrow MVP prices (+2500 and +3000) appear in different posts/bases as rendered and are recorded as rendered, not reconciled.
+- PARTIALS: GridironInfo chart sublabels/footer unread; Statyx carousel body text unread beyond the four values; Likely target-share post cut; FantasyPtsData TPRR-allowed chart values not transcribed; Covers prop prices not transcribed; Pelissero London/Maye/Kirk item not expanded. Videos not played. No external data/API pages visited.
