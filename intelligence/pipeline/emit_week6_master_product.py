@@ -876,10 +876,10 @@ def _order_lineup(lu: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 def build_week6_dfs_optimal_suite(inj_map: Dict[str, Dict[str, str]]) -> Dict[str, Any]:
-    """Run all 4 DFS engines over the Week 6 Period 412 slate grid with strict slate filtering and 100% 2026 team resolution."""
-    grid_path = SOURCES / "2026-10-13" / "linestar" / "linestar_slate_grid_2026-10-13.json"
-    grid = _load_json(grid_path) or {}
-    raw_players = grid.get("players") or []
+    """Run all 4 DFS engines over the Official DraftKings DraftGroup 154941 (Sun 1:00 PM EST 10-Game Main Slate) salaries."""
+    dk_path = SOURCES / "2026-10-18" / "dfs" / "dk_draftables_154941_main_slate.json"
+    dk_raw = _load_json(dk_path) or {}
+    draftables = dk_raw.get("draftables") or []
 
     usage_data = _load_json(SOURCES / "2026-10-13" / "linestar" / "linestar_usage_2026-10-13.json") or {}
     usage_by_name = {_norm_name(r.get("name") or ""): r for r in (usage_data.get("players") or [])}
@@ -895,48 +895,49 @@ def build_week6_dfs_optimal_suite(inj_map: Dict[str, Dict[str, str]]) -> Dict[st
     sigma: Dict[int, float] = {}
     own: Dict[int, float] = {}
     blocked_players: List[str] = []
+    seen_pid = set()
 
-    for p in raw_players:
-        pid = int(p.get("playerId") or 0)
-        if not pid:
+    for d in draftables:
+        pid = int(d.get("playerId") or 0)
+        sal = int(d.get("salary") or 0)
+        if not pid or pid in seen_pid or sal < 2000:
             continue
-        name = (p.get("name") or "").strip()
-        pos = (p.get("pos") or "").strip().upper()
-        if pos == "D":
-            pos = "DST"
+        seen_pid.add(pid)
+        name = (d.get("displayName") or "").strip()
+        pos = (d.get("position") or "").strip().upper()
         if pos not in ("QB", "RB", "WR", "TE", "DST"):
             continue
-        sal = int(p.get("salary") or 0)
-        if sal < 2000:
-            continue
-        s_ord = int(p.get("starting_order") or 0)
-        if pos != "DST" and s_ord <= 0:
-            continue
-
-        tid = p.get("teamId")
-        team = LINESTAR_TID_MAP.get(tid, "")
+        team = (d.get("teamAbbreviation") or "").strip().upper()
         if not team or team in DFS_EXCLUDED_TEAMS:
             continue
 
-        blocked, reason = is_player_blocked(name, inj_map, extra_status=str(p.get("injury_status") or ""))
+        fppg = 0.0
+        for attr in d.get("draftStatAttributes") or []:
+            if attr.get("id") == 90:
+                try:
+                    fppg = float(attr.get("value"))
+                except Exception:
+                    pass
+        if pos != "DST" and fppg < 8.5:
+            continue
+
+        blocked, reason = is_player_blocked(name, inj_map, extra_status=str(d.get("status") or ""))
         if blocked:
             blocked_players.append(f"{name} ({pos}, ${sal}): {reason}")
             continue
 
         nm = _norm_name(name)
         u = usage_by_name.get(nm) or {}
-        stars = float(p.get("stars_new") or p.get("stars") or 3.0)
-        base_pts = (sal / 1000.0) * (2.55 if pos == "QB" else 2.35 if pos in ("RB", "WR") else 2.15 if pos == "TE" else 2.20)
-        star_mult = 1.0 + (stars - 3.0) * 0.08
         usage_bonus = 0.0
         if pos in ("WR", "TE"):
-            usage_bonus = float(u.get("target_share_4wk") or 0.0) * 14.0 + float(u.get("rz_targets_4wk") or 0) * 0.35
+            usage_bonus = float(u.get("target_share_4wk") or 0.0) * 6.0 + float(u.get("rz_targets_4wk") or 0) * 0.20
         elif pos == "RB":
-            usage_bonus = float(u.get("snap_share_4wk") or 0.0) * 8.0 + float(u.get("carry_share_4wk") or 0.0) * 6.0
-        elif pos == "QB" and s_ord == 1:
-            usage_bonus = 4.5
+            usage_bonus = float(u.get("snap_share_4wk") or 0.0) * 4.0 + float(u.get("carry_share_4wk") or 0.0) * 3.0
+        elif pos == "QB":
+            usage_bonus = 2.0
 
-        proj = round(max(3.0, base_pts * star_mult + usage_bonus), 2)
+        base_fppg = fppg if fppg > 0 else (sal / 1000.0) * 2.5
+        proj = round(max(3.0, 0.78 * base_fppg + 0.22 * ((sal / 1000.0) * 2.65) + usage_bonus), 2)
         vol = round(max(2.5, proj * (0.48 if pos in ("WR", "TE") else 0.38)), 2)
         p_own = round(own_by_name.get(nm, min(0.28, max(0.03, (proj / sal) * 35.0))), 3)
 
@@ -983,7 +984,7 @@ def build_week6_dfs_optimal_suite(inj_map: Dict[str, Dict[str, str]]) -> Dict[st
         }
 
     return {
-        "source": "docs/data-sources/research/2026-10-13/linestar/linestar_slate_grid_2026-10-13.json (Period 412 Sunday 12:00 PM CST Main Slate)",
+        "source": "docs/data-sources/research/2026-10-18/dfs/dk_draftables_154941_main_slate.json (Official DraftKings DraftGroupId=154941, Sun 1:00 PM EST 10-Game Main Slate)",
         "active_pool_size": len(pool),
         "blocked_inactive_count": len(blocked_players),
         "sample_blocked_players": blocked_players[:25],
@@ -1179,12 +1180,12 @@ def main() -> int:
     if chi_atl and chi_atl.get("signal_plane_attribution"):
         spa = chi_atl["signal_plane_attribution"]
         md.extend([
-            "### 📐 Full 14-Key Signal Attribution Dump: `Chicago Bears @ Atlanta Falcons -> OVER 49.5`",
+            f"### 📐 Full 14-Key Signal Attribution Dump: `Chicago Bears @ Atlanta Falcons -> {chi_atl['selection']}`",
             f"- **Equation**: `{spa.get('equation')}`",
             f"- **Decomposition**: `marketFairProb = {spa.get('marketFairProb'):.4f}` + `structuralDeltaProb = {spa.get('structuralDeltaProb'):+.4f}` + `continuityDeltaProb = {spa.get('continuityDeltaProb'):+.4f}` + `signalPlaneDeltaProb = {spa.get('signalPlaneDeltaProb'):+.4f}` = **`trueProb = {spa.get('trueProb'):.4f}` (`{spa.get('trueProb')*100:.2f}%`)**",
             f"- **Edge & Score**: `rawEdge = {spa.get('rawEdge'):+.4f}` (`{spa.get('rawEdge')*100:+.2f}%`), `shrunkEdge = {spa.get('shrunkEdge'):+.4f}`, `expectedClv = {spa.get('expectedClv'):+.4f}`, `EdgeIdx = {spa.get('edgeScore')}/100`, `Score = {spa.get('confidence')}/100`",
             "",
-            "| Signal Key | DB Weight ($w_k$) | Home (`ATL`) $z$ | Home (`ATL`) Raw | Away (`CHI`) $z$ | Away (`CHI`) Raw | Directional Reading ($d_k$) | $\\Delta p_k = w_k \\cdot d_k \\cdot 0.065$ |",
+            "| Signal Key | DB Weight ($w_k$) | Home (`ATL`) $z$ | Home (`ATL`) Raw | Away (`CHI`) $z$ | Away (`CHI`) Raw | Directional Reading ($d_k$) | $\\Delta p_k = w_k \\cdot d_k \\cdot 0.25$ |",
             "|---|---:|---:|---:|---:|---:|---:|---:|",
         ])
         for c in (spa.get("signalContributions") or []):

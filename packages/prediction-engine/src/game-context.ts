@@ -1071,7 +1071,7 @@ export function computeSovereignSignalPlaneContribution(
   structuralDeltaProb: number = 0,
   continuityDeltaProb: number = 0,
 ): SovereignSignalPlaneSummary {
-  const PROB_SCALE = 0.065;
+  const PROB_SCALE = 0.25;
   const totalUnderKeys = new Set([
     "vision.art_mean",
     "ftn.def_blitz_rate",
@@ -1129,7 +1129,7 @@ export function computeSovereignSignalPlaneContribution(
 
   return {
     equation:
-      "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.065), 0.05, 0.95)",
+      "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.25), 0.05, 0.95)",
     marketFairProb: Number(marketFairProb.toFixed(4)),
     structuralDeltaProb: Number(structuralDeltaProb.toFixed(4)),
     continuityDeltaProb: Number(continuityDeltaProb.toFixed(4)),

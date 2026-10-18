@@ -192,7 +192,7 @@ def compute_pick_probability_from_db_signals(
     compute `trueProb`, `rawEdge`, `shrunkEdge`, `expectedClv`, `edgeScore`, and `confidence`.
 
     Equation:
-      c_k = weight_k * directionalReading_k * 0.065
+      c_k = weight_k * directionalReading_k * 0.25
       signalPlaneDeltaProb = sum_{k=1..14} c_k
       continuityDeltaProb = continuity_adjustment(cont_deltas, pick_type, side_dir)
       trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + signalPlaneDeltaProb, 0.05, 0.95)
@@ -200,7 +200,7 @@ def compute_pick_probability_from_db_signals(
       edgeScore = round(50.0 + 180.0 * rawEdge, 1)
       confidence = int(round(50.0 + 175.0 * rawEdge))
     """
-    PROB_SCALE = 0.065
+    PROB_SCALE = 0.25
     contributions = []
     signal_plane_delta = 0.0
 
@@ -258,7 +258,7 @@ def compute_pick_probability_from_db_signals(
     confidence = int(round(max(50.0, min(95.0, 50.0 + 175.0 * raw_edge))))
 
     return {
-        "equation": "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.065), 0.05, 0.95)",
+        "equation": "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.25), 0.05, 0.95)",
         "marketFairProb": round(market_fair_prob, 4),
         "structuralDeltaProb": round(structural_delta_prob, 4),
         "continuityDeltaProb": cont_delta_prob,
@@ -478,58 +478,58 @@ def sync_database(dry_run: bool = False):
                 "matchup": "Pittsburgh Steelers @ Tampa Bay Buccaneers",
                 "home": "Tampa Bay Buccaneers", "away": "Pittsburgh Steelers",
                 "pick_type": "SPREAD",
-                "selection": "Pittsburgh Steelers -2.5",
-                "line": -2.5,
+                "selection": "Pittsburgh Steelers -1.5",
+                "line": -1.5,
                 "side_dir": "AWAY",
-                "structural_delta_prob": 0.1112,
+                "structural_delta_prob": 0.1190,
                 "risk_level": "LINE_STEAM",
-                "market_fair_prob": 0.495,
+                "market_fair_prob": 0.5033,
                 "bookmaker_count": 13,
                 "picked_abbr": "PIT",
                 "reasoning": (
-                    "Pittsburgh Steelers -2.5: Decisive quarterback and safety advantage swings to Pittsburgh with Tampa Bay QB "
-                    "Baker Mayfield ruled OUT and All-Pro safety Antoine Winfield Jr. OUT alongside cornerback Benjamin Morrison (Doubtful) "
-                    "[espn_nfl_injuries_week6.json]. Pittsburgh RB Jaylen Warren has posted 410 rushing yards and 230 receiving yards across "
-                    "5 games (+126.9 RYOE in 2026 NGS / player_game_stats), while T.J. Watt attacks a backup quarterback behind a Tampa Bay "
-                    "unit with -0.20 DB starter retention and Sovereign Signal Plane inputs (vision.soe_yd, vision.art_mean, ftn.def_blitz_rate, qbr.total_qbr)."
+                    "Pittsburgh Steelers -1.5: Snapped to live 10:55 AM CDT REA multi-book consensus (-1.5, mean TB +1.81, de-vigged marketFairProb=0.5033). "
+                    "Decisive quarterback and safety advantage swings to Pittsburgh with Tampa Bay QB Baker Mayfield ruled OUT and All-Pro safety Antoine "
+                    "Winfield Jr. OUT alongside cornerback Benjamin Morrison (Doubtful) [espn_nfl_injuries_week6.json]. Pittsburgh RB Jaylen Warren has "
+                    "posted 410 rushing yards and 230 receiving yards across 5 games (+126.9 RYOE in 2026 NGS / player_game_stats), while T.J. Watt attacks "
+                    "a backup quarterback behind a Tampa Bay unit with -0.20 DB starter retention and Sovereign Signal Plane inputs."
                 )
             },
             {
                 "matchup": "Chicago Bears @ Atlanta Falcons",
                 "home": "Atlanta Falcons", "away": "Chicago Bears",
                 "pick_type": "TOTAL",
-                "selection": "OVER 49.5",
-                "line": 49.5,
+                "selection": "OVER 51.5",
+                "line": 51.5,
                 "side_dir": "OVER",
-                "structural_delta_prob": 0.0981,
+                "structural_delta_prob": 0.0398,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.498,
+                "market_fair_prob": 0.5034,
                 "bookmaker_count": 12,
                 "picked_abbr": None,
                 "reasoning": (
-                    "CHI @ ATL OVER 49.5: Live 12-book total sits at 49.5 (mean 49.79) inside the fast Mercedes-Benz Stadium dome "
-                    "with both defenses missing key starters: Chicago DE Dayo Odeyingbo (IR) and S Anthony Johnson Jr. (OUT), plus Atlanta CB "
-                    "C.J. Henderson (OUT) and DE Za'Darius Smith (Questionable) [espn_nfl_injuries_week6.json]. Canonical 2026 player_game_stats "
-                    "confirm Bijan Robinson has 580 rushing yards and 152 receiving yards in 5 GP (+161.2 RYOE), while Drake London has 488 "
-                    "receiving yards on 36 targets (28.6% target share, 3.33 yds NGS separation), reinforced by 14-key Sovereign Signal Plane "
-                    "(vision.soe_yd, vision.art_mean, vision.pocket_depth_yd, ftn.motion_rate, ftn.play_action_rate, cognitive.scheme_shift)."
+                    "CHI @ ATL OVER 51.5: Snapped to live 10:55 AM CDT REA multi-book consensus total of 51.5 (mean 51.62 across 8 live books, Over -108 / "
+                    "Under -111, de-vigged marketFairProb=0.5034) inside the fast Mercedes-Benz Stadium dome with both defenses missing key starters: "
+                    "Chicago DE Dayo Odeyingbo (IR) and S Anthony Johnson Jr. (OUT), plus Atlanta CB C.J. Henderson (OUT) and DE Za'Darius Smith (Questionable) "
+                    "[espn_nfl_injuries_week6.json]. Canonical 2026 player_game_stats confirm Bijan Robinson has 580 rushing yards and 152 receiving yards in "
+                    "5 GP (+161.2 RYOE), while Drake London has 488 receiving yards on 36 targets (28.6% target share, 3.33 yds NGS separation), driven by a "
+                    "+4.39% 14-key Sovereign Signal Plane delta (vision.soe_yd, vision.pocket_depth_yd, ftn.motion_rate, qbr.total_qbr, snaps.starter_snap_share, cognitive.scheme_shift)."
                 )
             },
             {
                 "matchup": "Baltimore Ravens @ Cleveland Browns",
                 "home": "Cleveland Browns", "away": "Baltimore Ravens",
                 "pick_type": "SPREAD",
-                "selection": "Cleveland Browns +4.5",
-                "line": 4.5,
+                "selection": "Cleveland Browns +3.0",
+                "line": 3.0,
                 "side_dir": "HOME",
-                "structural_delta_prob": 0.0885,
+                "structural_delta_prob": 0.0880,
                 "risk_level": "LINE_STEAM",
-                "market_fair_prob": 0.501,
+                "market_fair_prob": 0.5000,
                 "bookmaker_count": 12,
                 "picked_abbr": "CLE",
                 "reasoning": (
-                    "Cleveland Browns +4.5: Snapped to the live 12-book consensus (+4.38, widely posted +4.5), reflecting Baltimore QB "
-                    "Lamar Jackson ruled OUT alongside starting center Cam Jurgens (OUT) and DT Broderick Washington Jr. (OUT) "
+                    "Cleveland Browns +3.0: Snapped to the live 10:55 AM CDT REA multi-book consensus (+3.0, mean +3.19, de-vigged marketFairProb=0.5000), "
+                    "reflecting Baltimore QB Lamar Jackson ruled OUT alongside starting center Cam Jurgens (OUT) and DT Broderick Washington Jr. (OUT) "
                     "[espn_nfl_injuries_week6.json]. With Baltimore forced onto a backup quarterback in a hostile AFC North road spot without its "
                     "starting center (-0.20 OL starter retention), Cleveland's pass rush and Sovereign Signal Plane (vision.art_mean, ftn.def_blitz_rate) "
                     "compress Baltimore's offensive ceiling."
@@ -539,38 +539,38 @@ def sync_database(dry_run: bool = False):
                 "matchup": "Carolina Panthers @ Philadelphia Eagles",
                 "home": "Philadelphia Eagles", "away": "Carolina Panthers",
                 "pick_type": "TOTAL",
-                "selection": "UNDER 41.5",
-                "line": 41.5,
+                "selection": "UNDER 39.5",
+                "line": 39.5,
                 "side_dir": "UNDER",
-                "structural_delta_prob": 0.0836,
+                "structural_delta_prob": 0.1120,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.500,
+                "market_fair_prob": 0.4968,
                 "bookmaker_count": 13,
                 "picked_abbr": None,
                 "reasoning": (
-                    "CAR @ PHI UNDER 41.5: Snapped to the live 13-book total (41.38) with Philadelphia missing QB Jalen Hurts (IR) "
-                    "and RB Saquon Barkley (OUT) on offense plus CB Michael Carter II (OUT) and CB Jakorian Bennett (IR) on defense "
-                    "[espn_nfl_injuries_week6.json]. Carolina enters off a 13-day rest window leaning on RB Chuba Hubbard (306 rush yds in 4 GP "
-                    "in 2026 player_game_stats, +78.3 RYOE) and short-area clock control, reinforced by Sovereign Signal Plane pressure and pace inputs."
+                    "CAR @ PHI UNDER 39.5: Snapped to the live 10:55 AM CDT REA multi-book total of 39.5 (mean 39.06, de-vigged marketFairProb=0.4968) with "
+                    "Philadelphia missing QB Jalen Hurts (IR) and RB Saquon Barkley (OUT) on offense plus CB Michael Carter II (OUT) and CB Jakorian Bennett "
+                    "(IR) on defense [espn_nfl_injuries_week6.json]. Carolina enters off a 13-day rest window leaning on RB Chuba Hubbard (306 rush yds in "
+                    "4 GP in 2026 player_game_stats, +78.3 RYOE) and short-area clock control, reinforced by Sovereign Signal Plane pressure and pace inputs."
                 )
             },
             {
                 "matchup": "Arizona Cardinals @ Los Angeles Rams",
                 "home": "Los Angeles Rams", "away": "Arizona Cardinals",
                 "pick_type": "TOTAL",
-                "selection": "OVER 49.5",
-                "line": 49.5,
+                "selection": "OVER 51.5",
+                "line": 51.5,
                 "side_dir": "OVER",
-                "structural_delta_prob": 0.1046,
+                "structural_delta_prob": 0.0560,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.502,
-                "bookmaker_count": 4,
+                "market_fair_prob": 0.5022,
+                "bookmaker_count": 8,
                 "picked_abbr": None,
                 "reasoning": (
-                    "ARI @ LAR OVER 49.5: Snapped to the live bookmaker total of 49.50 at SoFi Stadium. Canonical 2026 player_game_stats "
-                    "verify Puka Nacua is averaging 112.3 receiving yards per game (337 yds on 45 targets across 3 GP, 33.9% target share) alongside "
-                    "Davante Adams (441 yds in 5 GP) and Kyren Williams (343 rush yds, 200 rec yds in 5 GP). Arizona's deep secondary is missing "
-                    "safeties Andrew Wingard (OUT) and Wydett Williams Jr. (OUT) [espn_nfl_injuries_week6.json], with high FTN motion and SOE signals."
+                    "ARI @ LAR OVER 51.5: Snapped to the live 10:55 AM CDT REA multi-book total of 51.50 (mean 51.50, de-vigged marketFairProb=0.5022) at SoFi "
+                    "Stadium. Canonical 2026 player_game_stats verify Puka Nacua is averaging 112.3 receiving yards per game (337 yds on 45 targets across 3 GP, "
+                    "33.9% target share) alongside Davante Adams (441 yds in 5 GP) and Kyren Williams (343 rush yds, 200 rec yds in 5 GP). Arizona's deep "
+                    "secondary is missing safeties Andrew Wingard (OUT) and Wydett Williams Jr. (OUT) [espn_nfl_injuries_week6.json], backed by +3.62% Sovereign Signal Plane lift."
                 )
             },
             {
@@ -580,74 +580,74 @@ def sync_database(dry_run: bool = False):
                 "selection": "Kansas City Chiefs -7.5",
                 "line": -7.5,
                 "side_dir": "HOME",
-                "structural_delta_prob": 0.0724,
+                "structural_delta_prob": 0.0580,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.501,
+                "market_fair_prob": 0.5000,
                 "bookmaker_count": 13,
                 "picked_abbr": "KC",
                 "reasoning": (
-                    "Kansas City Chiefs -7.5: Kansas City enters off its Week 5 bye with a verified 14-day rest advantage (last played "
-                    "2026-10-04) against a Chargers roster on 7 days rest missing All-Pro left tackle Joe Alt (OUT), guard Kayode Awosika (OUT), "
-                    "and starting cornerback Donte Jackson (OUT) [espn_nfl_injuries_week6.json]. Kansas City RB Kenneth Walker III has 537 rushing "
-                    "yards across 4 GP in 2026 player_game_stats, while KC holds decisive QBR, FTN motion, and Spagnuolo blitz-rate advantages."
+                    "Kansas City Chiefs -7.5: Snapped to the live 10:55 AM CDT REA multi-book consensus (-7.50, de-vigged marketFairProb=0.5000). Kansas City "
+                    "enters off its Week 5 bye with a verified 14-day rest advantage (last played 2026-10-04) against a Chargers roster on 7 days rest missing "
+                    "All-Pro left tackle Joe Alt (OUT), guard Kayode Awosika (OUT), and starting cornerback Donte Jackson (OUT) [espn_nfl_injuries_week6.json]. "
+                    "Kansas City RB Kenneth Walker III has 537 rushing yards across 4 GP in 2026 player_game_stats, while KC holds +1.97% Sovereign Signal Plane lift."
                 )
             },
             {
                 "matchup": "Los Angeles Chargers @ Kansas City Chiefs",
                 "home": "Kansas City Chiefs", "away": "Los Angeles Chargers",
                 "pick_type": "TOTAL",
-                "selection": "UNDER 42.0",
-                "line": 42.0,
+                "selection": "UNDER 41.5",
+                "line": 41.5,
                 "side_dir": "UNDER",
-                "structural_delta_prob": 0.0772,
+                "structural_delta_prob": 0.1050,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.499,
+                "market_fair_prob": 0.5000,
                 "bookmaker_count": 13,
                 "picked_abbr": None,
                 "reasoning": (
-                    "LAC @ KC UNDER 42.0: Snapped to the live 13-book total (42.08). Both offenses face severe trench and perimeter "
-                    "attrition: Kansas City is without WR1 Rashee Rice (OUT) and LT Josh Simmons (OUT), while the Chargers are missing LT Joe Alt "
-                    "(OUT) and G Kayode Awosika (OUT) [espn_nfl_injuries_week6.json]. With KC leaning on Kenneth Walker III's ground game (87 carries "
-                    "in 4 GP) and both Spagnuolo and Jesse Minter deploying two-high shell coverage and high screen/checkdown rates, Under 42.0 grades as a play."
+                    "LAC @ KC UNDER 41.5: Snapped to the live 10:55 AM CDT REA multi-book total (41.50, de-vigged marketFairProb=0.5000). Both offenses face "
+                    "severe trench and perimeter attrition: Kansas City is without WR1 Rashee Rice (OUT) and LT Josh Simmons (OUT), while the Chargers are "
+                    "missing LT Joe Alt (OUT) and G Kayode Awosika (OUT) [espn_nfl_injuries_week6.json]. With KC leaning on Kenneth Walker III's ground game "
+                    "(87 carries in 4 GP) and both Spagnuolo and Jesse Minter deploying two-high shell coverage, Under 41.5 grades as a play."
                 )
             },
             {
                 "matchup": "Buffalo Bills @ Las Vegas Raiders",
                 "home": "Las Vegas Raiders", "away": "Buffalo Bills",
                 "pick_type": "TOTAL",
-                "selection": "OVER 50.5",
-                "line": 50.5,
+                "selection": "OVER 53.5",
+                "line": 53.5,
                 "side_dir": "OVER",
-                "structural_delta_prob": 0.0958,
+                "structural_delta_prob": 0.0560,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.500,
-                "bookmaker_count": 4,
+                "market_fair_prob": 0.5000,
+                "bookmaker_count": 8,
                 "picked_abbr": None,
                 "reasoning": (
-                    "BUF @ LV OVER 50.5: Snapped to the live Allegiant Stadium indoor total (50.75 across priced books). Canonical 2026 "
-                    "player_game_stats confirm Buffalo RB James Cook has 532 rushing yards on 95 carries in 5 GP (+88.5 RYOE) while Raiders RB "
-                    "Ashton Jeanty has 291 rushing yards and 215 receiving yards (30 targets) in 5 GP. With Las Vegas missing interior DT Tonka "
-                    "Hemingway (OUT) and Buffalo DTs Ed Oliver and T.J. Sanders Questionable [espn_nfl_injuries_week6.json], indoor pace and QBR signals back the Over."
+                    "BUF @ LV OVER 53.5: Snapped to the live 10:55 AM CDT REA multi-book Allegiant Stadium indoor total (53.5, mean 53.44, de-vigged "
+                    "marketFairProb=0.5000). Canonical 2026 player_game_stats confirm Buffalo RB James Cook has 532 rushing yards on 95 carries in 5 GP "
+                    "(+88.5 RYOE) while Raiders RB Ashton Jeanty has 291 rushing yards and 215 receiving yards (30 targets) in 5 GP. With Las Vegas missing "
+                    "interior DT Tonka Hemingway (OUT) and Buffalo DTs Ed Oliver and T.J. Sanders Questionable [espn_nfl_injuries_week6.json], indoor pace and +2.70% Sovereign Signal Plane lift back the Over."
                 )
             },
             {
                 "matchup": "Dallas Cowboys @ Green Bay Packers",
                 "home": "Green Bay Packers", "away": "Dallas Cowboys",
                 "pick_type": "TOTAL",
-                "selection": "OVER 52.5",
-                "line": 52.5,
+                "selection": "OVER 53.5",
+                "line": 53.5,
                 "side_dir": "OVER",
-                "structural_delta_prob": 0.0802,
+                "structural_delta_prob": 0.0490,
                 "risk_level": "LINE_STEAM",
-                "market_fair_prob": 0.499,
+                "market_fair_prob": 0.4978,
                 "bookmaker_count": 13,
                 "picked_abbr": None,
                 "reasoning": (
-                    "DAL @ GB OVER 52.5: Snapped to the live 13-book Sunday Night Football total (52.92). Canonical 2026 player_game_stats "
-                    "confirm CeeDee Lamb (507 rec yds on 51 targets in 5 GP) and George Pickens (355 rec yds in 5 GP) face a Green Bay defense "
-                    "missing edge rusher Micah Parsons (OUT), DT Javon Hargrave (IR), and CB Benjamin St-Juste (OUT), while Jordan Love and "
-                    "Christian Watson (474 rec yds in 5 GP) attack a Dallas defense missing LB DeMarvion Overshown (OUT) and CB Cobie Durant (OUT) "
-                    "[espn_nfl_injuries_week6.json]."
+                    "DAL @ GB OVER 53.5: Snapped to the live 10:55 AM CDT REA multi-book Sunday Night Football total (53.5, mean 53.50, de-vigged "
+                    "marketFairProb=0.4978). Canonical 2026 player_game_stats confirm CeeDee Lamb (507 rec yds on 51 targets in 5 GP) and George Pickens "
+                    "(355 rec yds in 5 GP) face a Green Bay defense missing edge rusher Micah Parsons (OUT), DT Javon Hargrave (IR), and CB Benjamin St-Juste "
+                    "(OUT), while Jordan Love and Christian Watson (474 rec yds in 5 GP) attack a Dallas defense missing LB DeMarvion Overshown (OUT) and CB "
+                    "Cobie Durant (OUT) [espn_nfl_injuries_week6.json], backed by +3.70% Sovereign Signal Plane lift."
                 )
             },
             {
@@ -657,16 +657,16 @@ def sync_database(dry_run: bool = False):
                 "selection": "San Francisco 49ers -7.5",
                 "line": -7.5,
                 "side_dir": "HOME",
-                "structural_delta_prob": 0.0725,
+                "structural_delta_prob": 0.0640,
                 "risk_level": "MODERATE",
-                "market_fair_prob": 0.499,
+                "market_fair_prob": 0.5000,
                 "bookmaker_count": 11,
                 "picked_abbr": "SF",
                 "reasoning": (
-                    "San Francisco 49ers -7.5: Exact match to the live 11-book Monday Night Football consensus (-7.50). Brock Purdy "
-                    "leads the NFL with +10.5% CPOE on 2026 NGS passing surfaces while Christian McCaffrey has posted 286 rushing yards and "
-                    "137 receiving yards across 5 GP in 2026 player_game_stats. Washington's defensive front is missing DE Charles Omenihu (OUT) "
-                    "with three safeties (Nick Cross, Tyler Owens, Percy Butler) listed Questionable [espn_nfl_injuries_week6.json], while SF leads in FTN motion and SOE."
+                    "San Francisco 49ers -7.5: Exact match to the live 10:55 AM CDT REA multi-book Monday Night Football consensus (-7.50, de-vigged "
+                    "marketFairProb=0.5000). Brock Purdy leads the NFL with +10.5% CPOE on 2026 NGS passing surfaces while Christian McCaffrey has posted "
+                    "286 rushing yards and 137 receiving yards across 5 GP in 2026 player_game_stats. Washington's defensive front is missing DE Charles "
+                    "Omenihu (OUT) with three safeties (Nick Cross, Tyler Owens, Percy Butler) listed Questionable [espn_nfl_injuries_week6.json], while SF leads in FTN motion and SOE."
                 )
             },
         ]
@@ -820,7 +820,7 @@ def sync_database(dry_run: bool = False):
             }
 
             if play["matchup"] == "Chicago Bears @ Atlanta Falcons":
-                print("\n  [PROOF DUMP — CHI @ ATL OVER 49.5 SIGNAL PLANE ATTRIBUTION]")
+                print(f"\n  [PROOF DUMP — CHI @ ATL {play['selection']} SIGNAL PLANE ATTRIBUTION]")
                 print(f"    Equation: {sig_attr['equation']}")
                 print(f"    marketFairProb      = {sig_attr['marketFairProb']:.4f}")
                 print(f"    structuralDeltaProb = {sig_attr['structuralDeltaProb']:+.4f}")
