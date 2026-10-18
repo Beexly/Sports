@@ -35,3 +35,9 @@ A note needs a game id, a tier, and a timestamp. situational_notes is not in sch
 | Learning label | calibration-metrics reads settled rows with eligibleForLearning |
 
 Do not reconstruct this from chat. Do not open the long AGENTS.md to find a rule.
+
+## GSE fleet handoffs (2026-10-18)
+
+Before engine, ingest or QA work, read `docs/handoff/INDEX.md`. It indexes the dated
+GSE fleet status reports and their read order. Treat `UNKNOWN` items as unverified.
+`ERRATA-DIV-3.md` overrides `DIV-3.md` and `README.md` where they conflict.

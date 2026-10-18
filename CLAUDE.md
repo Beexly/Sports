@@ -161,3 +161,9 @@ A task is NOT complete until: tests pass, types pass, build succeeds, and `npm r
 Domain runbooks live in `.claude/skills/<name>/SKILL.md` (canonical, indexed by `.claude/skills/README.md`) so Claude Code loads them directly. Path-scoped rules live in `.claude/rules/`. Operator console steps: `docs/ops/OPERATOR.md`; operator-only remediation items: `docs/ops/OPERATOR_TASKS.md`. Run `npm run agent:eval` for the thin harness.
 
 Per-developer overrides go in `CLAUDE.local.md` and `.claude/settings.local.json` (both gitignored); the shared files are frozen by AGENTS.md law 2.
+
+## GSE fleet handoffs (2026-10-18)
+
+Before engine, ingest or QA work, read `docs/handoff/INDEX.md`. It indexes the dated
+GSE fleet status reports and their read order. Treat `UNKNOWN` items as unverified.
+`ERRATA-DIV-3.md` overrides `DIV-3.md` and `README.md` where they conflict.
