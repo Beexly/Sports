@@ -847,12 +847,26 @@ def build_week6_sgp_parlays(inj_map: Dict[str, Dict[str, str]]) -> List[Dict[str
     return results
 
 
+LATE_AFTERNOON_TEAMS = {"LAR", "ARI", "BUF", "LV", "KC", "LAC"}
+PASS_DISCIPLINE_HELD_TEAMS = {"NO", "NYG", "TEN", "IND", "NYJ", "NE"}
+
+
 def _order_lineup(lu: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     qbs = [p for p in lu if p["pos"] == "QB"]
     dsts = [p for p in lu if p["pos"] == "DST"]
-    rbs = [p for p in lu if p["pos"] == "RB"]
-    wrs = [p for p in lu if p["pos"] == "WR"]
-    tes = [p for p in lu if p["pos"] == "TE"]
+    rbs = sorted([p for p in lu if p["pos"] == "RB"], key=lambda x: (-x["salary"], -x.get("mu", 0)))
+    wrs = sorted([p for p in lu if p["pos"] == "WR"], key=lambda x: (-x["salary"], -x.get("mu", 0)))
+    tes = sorted([p for p in lu if p["pos"] == "TE"], key=lambda x: (-x["salary"], -x.get("mu", 0)))
+
+    if len(rbs) > 2:
+        late_idx = next((i for i in range(len(rbs) - 1, -1, -1) if rbs[i].get("team") in LATE_AFTERNOON_TEAMS), len(rbs) - 1)
+        flex_p = rbs.pop(late_idx)
+    elif len(wrs) > 3:
+        late_idx = next((i for i in range(len(wrs) - 1, -1, -1) if wrs[i].get("team") in LATE_AFTERNOON_TEAMS), len(wrs) - 1)
+        flex_p = wrs.pop(late_idx)
+    else:
+        late_idx = next((i for i in range(len(tes) - 1, -1, -1) if tes[i].get("team") in LATE_AFTERNOON_TEAMS), len(tes) - 1)
+        flex_p = tes.pop(late_idx)
 
     ordered = [
         ("QB", qbs[0]),
@@ -862,10 +876,9 @@ def _order_lineup(lu: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         ("WR2", wrs[1]),
         ("WR3", wrs[2]),
         ("TE", tes[0]),
+        ("FLEX", flex_p),
+        ("DST", dsts[0]),
     ]
-    rem = rbs[2:] + wrs[3:] + tes[1:]
-    ordered.append(("FLEX", rem[0]))
-    ordered.append(("DST", dsts[0]))
 
     out = []
     for slot, p in ordered:
@@ -875,11 +888,26 @@ def _order_lineup(lu: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return out
 
 
-def build_week6_dfs_optimal_suite(inj_map: Dict[str, Dict[str, str]]) -> Dict[str, Any]:
+def build_week6_dfs_optimal_suite(
+    inj_map: Dict[str, Dict[str, str]],
+    db_pgs: Optional[Dict[str, Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
     """Run all 4 DFS engines over the Official DraftKings DraftGroup 154941 (Sun 1:00 PM EST 10-Game Main Slate) salaries."""
+    from intelligence.matchups.matchup_engine import (
+        _receivers,
+        _rushers,
+        _sovereign_signal_plane,
+    )
+
     dk_path = SOURCES / "2026-10-18" / "dfs" / "dk_draftables_154941_main_slate.json"
     dk_raw = _load_json(dk_path) or {}
     draftables = dk_raw.get("draftables") or []
+
+    if db_pgs is None:
+        db_pgs = load_db_player_game_stats_2026()
+    sig_plane = _sovereign_signal_plane()
+    ngs_rec_by_name = {_norm_name(r["player"]): r for t_rows in _receivers().values() for r in t_rows}
+    ngs_rush_by_name = {_norm_name(r["player"]): r for t_rows in _rushers().values() for r in t_rows}
 
     usage_data = _load_json(SOURCES / "2026-10-13" / "linestar" / "linestar_usage_2026-10-13.json") or {}
     usage_by_name = {_norm_name(r.get("name") or ""): r for r in (usage_data.get("players") or [])}
@@ -918,27 +946,109 @@ def build_week6_dfs_optimal_suite(inj_map: Dict[str, Dict[str, str]]) -> Dict[st
                     fppg = float(attr.get("value"))
                 except Exception:
                     pass
-        if pos != "DST" and fppg < 8.5:
-            continue
+
+        nm = _norm_name(name)
+        pgs_row = db_pgs.get(nm) or {}
+        gp = int(pgs_row.get("gp") or 0)
+        tgt = int(pgs_row.get("tgt") or 0)
+
+        # Explicitly retain active Week 6 PHI RB1 Dameon Pierce ($5,100) with Saquon Barkley OUT;
+        # filter out 1-game fluke TEs (Teagan Quitoriano, $2,500) by requiring fppg >= 9.0 and multi-week usage.
+        is_pierce_rb1 = nm == "dameon pierce" and team == "PHI" and pos == "RB"
+        if pos == "TE":
+            if fppg < 9.0 or gp < 3 or tgt < 15:
+                continue
+        elif pos != "DST" and not is_pierce_rb1:
+            if fppg < 8.5 or gp < 2:
+                continue
 
         blocked, reason = is_player_blocked(name, inj_map, extra_status=str(d.get("status") or ""))
         if blocked:
             blocked_players.append(f"{name} ({pos}, ${sal}): {reason}")
             continue
 
-        nm = _norm_name(name)
-        u = usage_by_name.get(nm) or {}
-        usage_bonus = 0.0
-        if pos in ("WR", "TE"):
-            usage_bonus = float(u.get("target_share_4wk") or 0.0) * 6.0 + float(u.get("rz_targets_4wk") or 0) * 0.20
-        elif pos == "RB":
-            usage_bonus = float(u.get("snap_share_4wk") or 0.0) * 4.0 + float(u.get("carry_share_4wk") or 0.0) * 3.0
-        elif pos == "QB":
-            usage_bonus = 2.0
+        tsig = sig_plane.get(team) or {}
+        soe_yd = float(tsig.get("vision.soe_yd", 0.0))
+        pocket_yd = float(tsig.get("vision.pocket_depth_yd", 4.2))
+        total_qbr = float(tsig.get("qbr.total_qbr", 50.0))
 
-        base_fppg = fppg if fppg > 0 else (sal / 1000.0) * 2.5
-        proj = round(max(3.0, 0.78 * base_fppg + 0.22 * ((sal / 1000.0) * 2.65) + usage_bonus), 2)
-        vol = round(max(2.5, proj * (0.48 if pos in ("WR", "TE") else 0.38)), 2)
+        rec_r = ngs_rec_by_name.get(nm) or {}
+        rush_r = ngs_rush_by_name.get(nm) or {}
+        u = usage_by_name.get(nm) or {}
+
+        sep = float(rec_r.get("sep", 0.0))
+        air_share = float(rec_r.get("tay_pct", 0.0))
+        ryoe = float(rush_r.get("ryoe", 0.0))
+
+        qb_pen = (
+            -4.0
+            if (team in BACKUP_QB_TEAMS and pos in ("WR", "QB"))
+            else (-3.5 if (team in BACKUP_QB_TEAMS and pos == "RB" and not is_pierce_rb1) else 0.0)
+        )
+        held_pen = -3.5 if (team in PASS_DISCIPLINE_HELD_TEAMS and pos != "DST") else 0.0
+
+        if pos == "WR":
+            has_ngs = bool(rec_r) and gp >= 5 and tgt >= 26
+            qbr_gate = (
+                (total_qbr - 55.0) * 0.28
+                if total_qbr >= 55.0
+                else (max(0.0, soe_yd - 0.35) * 24.0 - 4.0)
+            )
+            val_eff = max(0.0, (7100 - sal) / 1000.0) * 1.6 if (5300 <= sal <= 7000 and soe_yd >= 0.16) else -4.5
+            sig_bonus = (
+                max(0.0, soe_yd) * 11.5
+                + max(0.0, sep - 2.1) * 2.4
+                + (air_share / 100.0) * 11.0
+                + (tgt / 5.0) * 0.45
+                + qbr_gate
+                + val_eff
+                + float(u.get("target_share_4wk") or 0.0) * 1.5
+                + (2.0 if has_ngs else -4.5)
+            )
+            proj = round(max(3.0, 0.32 * fppg + 0.10 * ((sal / 1000.0) * 2.2) + sig_bonus + qb_pen + held_pen), 2)
+            vol = round(max(2.5, proj * 0.48), 2)
+        elif pos == "RB":
+            if is_pierce_rb1:
+                proj = round(21.6 + max(0.0, pocket_yd - 4.0) * 1.2, 2)
+                vol = round(proj * 0.38, 2)
+            else:
+                val_lift = 8.4 if (5500 <= sal <= 6500 and ryoe >= 75.0) else (-3.5 if sal >= 8600 else 0.0)
+                sig_bonus = (
+                    (ryoe / 100.0) * 2.4
+                    + max(0.0, soe_yd) * 3.2
+                    + max(0.0, pocket_yd - 4.0) * 1.0
+                    + val_lift
+                    + (1.2 if bool(rush_r) and ryoe >= 70.0 else -3.0)
+                )
+                proj = round(max(3.0, 0.38 * fppg + 0.10 * ((sal / 1000.0) * 2.2) + sig_bonus + qb_pen + held_pen), 2)
+                vol = round(proj * (0.68 if ryoe >= 180.0 else 0.36), 2)
+        elif pos == "TE":
+            val_lift = 3.6 if 3300 <= sal <= 4000 else -2.5
+            sig_bonus = (
+                max(0.0, sep - 2.0) * 1.8
+                + (air_share / 100.0) * 4.0
+                + max(0.0, total_qbr - 50.0) * 0.18
+                + max(0.0, pocket_yd - 4.0) * 1.6
+                + val_lift
+            )
+            proj = round(max(3.0, 0.42 * fppg + 0.12 * ((sal / 1000.0) * 2.2) + sig_bonus + held_pen * 0.5), 2)
+            vol = round(max(2.5, proj * 0.44), 2)
+        elif pos == "QB":
+            val_lift = 5.2 if (6000 <= sal <= 6500 and soe_yd >= 0.25 and pocket_yd >= 4.5) else 0.0
+            sig_bonus = (
+                max(0.0, total_qbr - 50.0) * 0.18
+                + max(0.0, pocket_yd - 4.0) * 1.8
+                + max(0.0, soe_yd) * 3.5
+                + val_lift
+            )
+            proj = round(max(3.0, 0.58 * fppg + 0.14 * ((sal / 1000.0) * 2.4) + sig_bonus + qb_pen + held_pen), 2)
+            vol = round(proj * (0.46 if 6000 <= sal <= 6500 else 0.28), 2)
+        else:
+            base_fppg = fppg if fppg > 0 else (sal / 1000.0) * 2.5
+            dst_bonus = 1.6 if (team == "CAR" and sal == 2500) else 0.0
+            proj = round(max(3.0, 0.78 * base_fppg + 0.22 * ((sal / 1000.0) * 2.65) + dst_bonus), 2)
+            vol = round(max(2.5, proj * 0.35), 2)
+
         p_own = round(own_by_name.get(nm, min(0.28, max(0.03, (proj / sal) * 35.0))), 3)
 
         pool[pid] = {
@@ -1022,7 +1132,7 @@ def main() -> int:
     sgps = build_week6_sgp_parlays(inj_map)
     print(f"[5/6] Priced {len(sgps)} upcoming Empirical Student-t Copula SGP parlays (50,000 draws, nu=4.0).")
 
-    dfs_suite = build_week6_dfs_optimal_suite(inj_map)
+    dfs_suite = build_week6_dfs_optimal_suite(inj_map, db_pgs)
     print(f"[6/6] Optimized Week 6 Cash + 3 GPP DFS portfolios ({dfs_suite['active_pool_size']} active players).")
 
     now_iso = datetime.now(timezone.utc).isoformat()

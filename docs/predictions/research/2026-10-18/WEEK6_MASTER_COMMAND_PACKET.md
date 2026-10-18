@@ -1,6 +1,6 @@
 # NFL WEEK 6 MASTER COMMAND PACKET & WEEK 7 TRANSITION (2026-10-18)
 
-**Generated UTC**: `2026-10-18T16:18:09.937325+00:00` | **Engine**: GSE Sovereign Reasoning Core (`v5.3.0`) | **Live Roster Gate**: `PASS (Fail-Closed)`
+**Generated UTC**: `2026-10-18T16:48:15.385001+00:00` | **Engine**: GSE Sovereign Reasoning Core (`v5.3.0`) | **Live Roster Gate**: `PASS (Fail-Closed)`
 
 ---
 
@@ -27,14 +27,12 @@ Engine: v5.3.0 | 9 Upcoming Games (10 Plays) | 3 Games Passed (NO@NYG, TEN@IND, 
 • Chicago Bears @ Atlanta Falcons: TOTAL OVER 51.5 (Line: 51.5) | Model: 59.2% vs Mkt: 50.3% (Raw Edge: +8.8%, EdgeIdx: 65.9/100, Score: 65/100)
 • Carolina Panthers @ Philadelphia Eagles: TOTAL UNDER 39.5 (Line: 39.5) | Model: 57.7% vs Mkt: 49.7% (Raw Edge: +8.0%, EdgeIdx: 64.5/100, Score: 64/100)
 • Baltimore Ravens @ Cleveland Browns: SPREAD Cleveland Browns +3.0 (Line: 3.0) | Model: 58.1% vs Mkt: 50.0% (Raw Edge: +8.1%, EdgeIdx: 64.5/100, Score: 64/100)
-• Pittsburgh Steelers @ Tampa Bay Buccaneers: SPREAD Pittsburgh Steelers -1.5 (Line: -1.5) | Model: 59.0% vs Mkt: 50.0% (Raw Edge: +0.0%, EdgeIdx: 77.0/100, Score: 59/100)
-• Pittsburgh Steelers @ Tampa Bay Buccaneers: TOTAL UNDER 38.5 (Line: 38.5) | Model: 59.0% vs Mkt: 50.0% (Raw Edge: +0.0%, EdgeIdx: 76.0/100, Score: 59/100)
 • Arizona Cardinals @ Los Angeles Rams: TOTAL OVER 51.5 (Line: 51.5) | Model: 59.3% vs Mkt: 50.2% (Raw Edge: +9.1%, EdgeIdx: 66.3/100, Score: 66/100)
-• Los Angeles Chargers @ Kansas City Chiefs: SPREAD Kansas City Chiefs -7.5 (Line: -7.5) | Model: 70.0% vs Mkt: 50.0% (Raw Edge: +0.0%, EdgeIdx: 76.0/100, Score: 70/100)
 • Buffalo Bills @ Las Vegas Raiders: TOTAL OVER 53.5 (Line: 53.5) | Model: 58.3% vs Mkt: 50.0% (Raw Edge: +8.3%, EdgeIdx: 64.9/100, Score: 65/100)
+• Los Angeles Chargers @ Kansas City Chiefs: SPREAD Kansas City Chiefs -7.5 (Line: -7.5) | Model: 57.8% vs Mkt: 50.0% (Raw Edge: +7.8%, EdgeIdx: 64.0/100, Score: 64/100)
 • Los Angeles Chargers @ Kansas City Chiefs: TOTAL UNDER 41.5 (Line: 41.5) | Model: 56.6% vs Mkt: 50.0% (Raw Edge: +6.6%, EdgeIdx: 61.9/100, Score: 62/100)
 • Dallas Cowboys @ Green Bay Packers: TOTAL OVER 53.5 (Line: 53.5) | Model: 58.5% vs Mkt: 49.8% (Raw Edge: +8.8%, EdgeIdx: 65.8/100, Score: 65/100)
-• Washington Commanders @ San Francisco 49ers: SPREAD San Francisco 49ers -7.5 (Line: -7.5) | Model: 75.0% vs Mkt: 50.0% (Raw Edge: +0.0%, EdgeIdx: 52.0/100, Score: 75/100)
+• Washington Commanders @ San Francisco 49ers: SPREAD San Francisco 49ers -7.5 (Line: -7.5) | Model: 57.4% vs Mkt: 50.0% (Raw Edge: +7.3%, EdgeIdx: 63.2/100, Score: 63/100)
 --------------------------------------------------------------------------------------------------------------
 ```
 
@@ -81,18 +79,27 @@ GSE WEEK 6 UPCOMING HIGH-ALPHA SGPs — 50,000-DRAW STUDENT-T COPULA (EXCLUDES L
 ```text
 DRAFTKINGS DFS 12:00 PM CST OPTIMAL CARDS ($50,000 CAP, 9 SLOTS)
 --------------------------------------------------------------------------------------------------------------
-CASH MODE OPTIMAL (Floor: 0.00 pts | Salary: $0):
+CASH MODE OPTIMAL (Floor: 182.58 pts | Salary: $49,100):
+  QB   | Josh Allen         | BUF | $7500 | 24.6 pts
+  RB1  | Chuba Hubbard      | CAR | $6300 | 21.5 pts
+  RB2  | Dameon Pierce      | PHI | $5100 | 21.8 pts
+  WR1  | Drake London       | ATL | $7000 | 24.0 pts
+  WR2  | Davante Adams      | LAR | $6600 | 24.3 pts
+  WR3  | Luther Burden III  | CHI | $5400 | 20.7 pts
+  TE   | Tyler Higbee       | LAR | $3400 | 14.3 pts
+  FLEX | Khalil Shakir      | BUF | $5300 | 22.1 pts
+  DST  | Panthers           | CAR | $2500 | 9.1 pts
 
-GPP LEVERAGE FLAGSHIP (Ceiling: 173.56 pts | Salary: $49,800):
-  QB   | Josh Allen         | BUF | $7500 | 30.4 pts
-  RB1  | Kenneth Walker III | KC  | $8500 | 28.2 pts
-  RB2  | Kyren Williams     | LAR | $6800 | 24.9 pts
-  WR1  | Puka Nacua         | LAR | $8100 | 27.9 pts
-  WR2  | Davante Adams      | LAR | $6600 | 20.5 pts
-  WR3  | Kalif Raymond      | CHI | $3900 | 10.5 pts
-  TE   | Teagan Quitoriano  | ARI | $2500 | 13.6 pts
-  FLEX | Tyler Higbee       | LAR | $3400 | 10.1 pts
-  DST  | Panthers           | CAR | $2500 | 7.5 pts
+GPP LEVERAGE FLAGSHIP (Ceiling: 181.92 pts | Salary: $50,000):
+  QB   | Caleb Williams     | CHI | $6200 | 24.0 pts
+  RB1  | Kenneth Walker III | KC  | $8500 | 21.5 pts
+  RB2  | Dameon Pierce      | PHI | $5100 | 21.8 pts
+  WR1  | Drake London       | ATL | $7000 | 24.0 pts
+  WR2  | Davante Adams      | LAR | $6600 | 24.3 pts
+  WR3  | Luther Burden III  | CHI | $5400 | 20.7 pts
+  TE   | Tyler Higbee       | LAR | $3400 | 14.3 pts
+  FLEX | Khalil Shakir      | BUF | $5300 | 22.1 pts
+  DST  | Panthers           | CAR | $2500 | 9.1 pts
 --------------------------------------------------------------------------------------------------------------
 ```
 
@@ -290,32 +297,41 @@ GPP LEVERAGE FLAGSHIP (Ceiling: 173.56 pts | Salary: $49,800):
 
 ## 5. Week 6 DraftKings DFS Optimal Lineups (Sunday 12:00 PM CST Main Slate)
 
-- **Active Verified Player Pool**: `104` starters/rotation players | **Blocked OUT/IR/Doubtful Players**: `16`
+- **Active Verified Player Pool**: `100` starters/rotation players | **Blocked OUT/IR/Doubtful Players**: `16`
 - **Time Gate Enforcement**: Completed TNF (`SEA, DEN`), Bye teams (`MIN, DET, MIA, CIN`), and 08:30 AM CST London (`HOU, JAX`) strictly excluded.
 
 ### A. Cash Mode Optimal Lineup (Variance-Minimized Floor)
 
 | Slot | Player | Team | Pos | Salary | Projected Pts | Est. Ownership |
 |---|---|---|---|---:|---:|---:|
+| `QB` | **Josh Allen** | `BUF` | `QB` | `$7,500` | `24.64` | `10.0%` |
+| `RB1` | **Chuba Hubbard** | `CAR` | `RB` | `$6,300` | `21.53` | `12.0%` |
+| `RB2` | **Dameon Pierce** | `PHI` | `RB` | `$5,100` | `21.80` | `15.0%` |
+| `WR1` | **Drake London** | `ATL` | `WR` | `$7,000` | `23.96` | `12.0%` |
+| `WR2` | **Davante Adams** | `LAR` | `WR` | `$6,600` | `24.34` | `12.9%` |
+| `WR3` | **Luther Burden III** | `CHI` | `WR` | `$5,400` | `20.71` | `13.4%` |
+| `TE` | **Tyler Higbee** | `LAR` | `TE` | `$3,400` | `14.32` | `14.7%` |
+| `FLEX` | **Khalil Shakir** | `BUF` | `WR` | `$5,300` | `22.14` | `14.6%` |
+| `DST` | **Panthers** | `CAR` | `DST` | `$2,500` | `9.14` | `12.8%` |
 
-**Total Salary**: `$0` / `$50,000` | **Projected Points**: `0.00`
+**Total Salary**: `$49,100` / `$50,000` | **Projected Points**: `182.58`
 
 ### B. Flagship GPP Leverage Lineup (`Tabu Search #1` + `FieldSim` 99.5th Pctile Tail)
-- **Simulated 1,000-Entry Field 99.5th Percentile Target**: `164.50 pts` | **3-Lineup Portfolio Tail Hit Prob**: `86.97%`
+- **Simulated 1,000-Entry Field 99.5th Percentile Target**: `180.04 pts` | **3-Lineup Portfolio Tail Hit Prob**: `90.14%`
 
 | Slot | Player | Team | Pos | Salary | Projected Pts | Est. Ownership |
 |---|---|---|---|---:|---:|---:|
-| `QB` | **Josh Allen** | `BUF` | `QB` | `$7,500` | `30.40` | `10.0%` |
-| `RB1` | **Kenneth Walker III** | `KC` | `RB` | `$8,500` | `28.20` | `11.6%` |
-| `RB2` | **Kyren Williams** | `LAR` | `RB` | `$6,800` | `24.87` | `12.8%` |
-| `WR1` | **Puka Nacua** | `LAR` | `WR` | `$8,100` | `27.92` | `12.1%` |
-| `WR2` | **Davante Adams** | `LAR` | `WR` | `$6,600` | `20.49` | `10.9%` |
-| `WR3` | **Kalif Raymond** | `CHI` | `WR` | `$3,900` | `10.46` | `9.4%` |
-| `TE` | **Teagan Quitoriano** | `ARI` | `TE` | `$2,500` | `13.55` | `19.0%` |
-| `FLEX` | **Tyler Higbee** | `LAR` | `TE` | `$3,400` | `10.13` | `10.4%` |
-| `DST` | **Panthers** | `CAR` | `DST` | `$2,500` | `7.54` | `10.6%` |
+| `QB` | **Caleb Williams** | `CHI` | `QB` | `$6,200` | `24.01` | `13.6%` |
+| `RB1` | **Kenneth Walker III** | `KC` | `RB` | `$8,500` | `21.50` | `8.9%` |
+| `RB2` | **Dameon Pierce** | `PHI` | `RB` | `$5,100` | `21.80` | `15.0%` |
+| `WR1` | **Drake London** | `ATL` | `WR` | `$7,000` | `23.96` | `12.0%` |
+| `WR2` | **Davante Adams** | `LAR` | `WR` | `$6,600` | `24.34` | `12.9%` |
+| `WR3` | **Luther Burden III** | `CHI` | `WR` | `$5,400` | `20.71` | `13.4%` |
+| `TE` | **Tyler Higbee** | `LAR` | `TE` | `$3,400` | `14.32` | `14.7%` |
+| `FLEX` | **Khalil Shakir** | `BUF` | `WR` | `$5,300` | `22.14` | `14.6%` |
+| `DST` | **Panthers** | `CAR` | `DST` | `$2,500` | `9.14` | `12.8%` |
 
-**Total Salary**: `$49,800` / `$50,000` | **Projected Points**: `173.56`
+**Total Salary**: `$50,000` / `$50,000` | **Projected Points**: `181.92`
 
 ---
 

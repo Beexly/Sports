@@ -1,6 +1,6 @@
 # BUF@LV - Matchup Report
 
-generated_utc: 2026-10-18T16:18:08.961357+00:00
+generated_utc: 2026-10-18T16:48:14.274802+00:00
 
 ## Receiver vs coverage pairings
 

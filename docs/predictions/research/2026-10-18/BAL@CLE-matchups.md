@@ -1,6 +1,6 @@
 # BAL@CLE - Matchup Report
 
-generated_utc: 2026-10-18T16:18:08.289754+00:00
+generated_utc: 2026-10-18T16:48:13.586040+00:00
 
 ## Receiver vs coverage pairings
 

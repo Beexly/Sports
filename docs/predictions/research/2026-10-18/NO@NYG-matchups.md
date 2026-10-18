@@ -1,6 +1,6 @@
 # NO@NYG - Matchup Report
 
-generated_utc: 2026-10-18T16:18:08.539545+00:00
+generated_utc: 2026-10-18T16:48:13.850075+00:00
 
 ## Receiver vs coverage pairings
 

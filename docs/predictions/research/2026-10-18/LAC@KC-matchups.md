@@ -1,6 +1,6 @@
 # LAC@KC - Matchup Report
 
-generated_utc: 2026-10-18T16:18:08.885844+00:00
+generated_utc: 2026-10-18T16:48:14.191515+00:00
 
 ## Receiver vs coverage pairings
 

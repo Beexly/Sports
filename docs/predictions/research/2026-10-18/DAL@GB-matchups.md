@@ -1,6 +1,6 @@
 # DAL@GB - Matchup Report
 
-generated_utc: 2026-10-18T16:18:09.041633+00:00
+generated_utc: 2026-10-18T16:48:14.370476+00:00
 
 ## Receiver vs coverage pairings
 
