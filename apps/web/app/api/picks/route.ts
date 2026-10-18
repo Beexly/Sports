@@ -48,6 +48,7 @@ import {
   resolvePickTeamAbbreviation,
   type TeamUnitContinuity,
 } from "@/lib/picks/depth-chart-continuity";
+import { resolveNflTeamAbbreviation } from "@/lib/nfl/team-resolver";
 
 export const dynamic = "force-dynamic";
 
@@ -281,6 +282,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // below gets null rather than a number: one snapshot cannot produce a delta.
   const continuitySeason = nflSeasonForKickoff(now);
   const pickTeamAbbr = new Map<string, string>();
+  // Totals have no picked side, so they carry BOTH clubs and report the
+  // home/away mean per unit (see meanTotalContinuity below). The unit deltas
+  // are still row-derived; only the aggregation across the two clubs is new.
+  const totalTeamAbbrs = new Map<string, string[]>();
   for (const pick of limitedPicks) {
     // Odds-API sport keys are `americanfootball_nfl`; seeded rows use `NFL`.
     // NCAAF (`americanfootball_ncaaf`) must never enter this map.
@@ -288,6 +293,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const sportKey = (pick.game?.sport?.key ?? "").toLowerCase();
     const isNfl = sportName === "nfl" || sportKey === "americanfootball_nfl" || sportKey === "nfl";
     if (!isNfl) continue;
+    if ((pick.pickType ?? "").toUpperCase() === "TOTAL") {
+      const both = [pick.game?.homeTeamName, pick.game?.awayTeamName]
+        .map((name) => (name ? resolveNflTeamAbbreviation(name.trim()) : null))
+        .filter((abbr): abbr is string => Boolean(abbr));
+      if (both.length > 0) totalTeamAbbrs.set(pick.id, both);
+      continue;
+    }
     const abbr = resolvePickTeamAbbreviation({
       selection: pick.selection,
       pickType: pick.pickType,
@@ -296,7 +308,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     });
     if (abbr) pickTeamAbbr.set(pick.id, abbr);
   }
-  const continuityByTeam = await loadDepthChartContinuity([...new Set(pickTeamAbbr.values())], {
+  const continuityAbbrs = [
+    ...new Set([
+      ...pickTeamAbbr.values(),
+      ...Array.from(totalTeamAbbrs.values()).flat(),
+    ]),
+  ];
+  const continuityByTeam = await loadDepthChartContinuity(continuityAbbrs, {
     season: continuitySeason,
   });
 
@@ -445,14 +463,48 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const teamContinuity: TeamUnitContinuity | undefined = pickTeamAbbr.has(pick.id)
         ? continuityByTeam.get(pickTeamAbbr.get(pick.id)!)
         : undefined;
-      const olDelta = fbOlDelta ?? teamContinuity?.olContinuityDelta ?? null;
-      const dlDelta = fbDlDelta ?? teamContinuity?.dlContinuityDelta ?? null;
-      const dbDelta = fbDbDelta ?? teamContinuity?.dbContinuityDelta ?? null;
+
+      // Totals: both clubs contribute to the line, so the reported delta is the
+      // home/away MEAN of each unit's real week-over-week retention. A unit is
+      // null only when NEITHER club has a baseline — never defaulted to zero.
+      const totalContinuities: TeamUnitContinuity[] = (totalTeamAbbrs.get(pick.id) ?? [])
+        .map((abbr) => continuityByTeam.get(abbr))
+        .filter((row): row is TeamUnitContinuity => Boolean(row));
+      const meanUnit = (unit: "olContinuityDelta" | "dlContinuityDelta" | "dbContinuityDelta"): number | null => {
+        const values = totalContinuities
+          .map((row) => row[unit])
+          .filter((value): value is number => typeof value === "number");
+        if (values.length === 0) return null;
+        return Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 1000) / 1000;
+      };
+      const totalContinuity =
+        totalContinuities.length > 0
+          ? {
+              olContinuityDelta: meanUnit("olContinuityDelta"),
+              dlContinuityDelta: meanUnit("dlContinuityDelta"),
+              dbContinuityDelta: meanUnit("dbContinuityDelta"),
+              week: Math.max(...totalContinuities.map((row) => row.week)),
+              priorWeek: Math.min(...totalContinuities.map((row) => row.priorWeek)),
+              olStarters: Math.round(
+                totalContinuities.reduce((sum, row) => sum + row.olStarters, 0) / totalContinuities.length,
+              ),
+              dlStarters: Math.round(
+                totalContinuities.reduce((sum, row) => sum + row.dlStarters, 0) / totalContinuities.length,
+              ),
+              dbStarters: Math.round(
+                totalContinuities.reduce((sum, row) => sum + row.dbStarters, 0) / totalContinuities.length,
+              ),
+            }
+          : undefined;
+
+      const olDelta = fbOlDelta ?? teamContinuity?.olContinuityDelta ?? totalContinuity?.olContinuityDelta ?? null;
+      const dlDelta = fbDlDelta ?? teamContinuity?.dlContinuityDelta ?? totalContinuity?.dlContinuityDelta ?? null;
+      const dbDelta = fbDbDelta ?? teamContinuity?.dbContinuityDelta ?? totalContinuity?.dbContinuityDelta ?? null;
 
       // Provenance is only claimed when ALL THREE numbers came from the depth
       // chart read — a mixed object would mislabel the engine's own values.
       const depthChartSourced =
-        fbOlDelta === null && fbDlDelta === null && fbDbDelta === null && teamContinuity;
+        fbOlDelta === null && fbDlDelta === null && fbDbDelta === null && (teamContinuity ?? totalContinuity);
 
       // Only include continuityDeltas if at least one field is non-null
       const continuityDeltas = (olDelta !== null || dlDelta !== null || dbDelta !== null)
@@ -468,6 +520,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                   olStarters: depthChartSourced.olStarters,
                   dlStarters: depthChartSourced.dlStarters,
                   dbStarters: depthChartSourced.dbStarters,
+                  // A total has no picked side: the figure is the home/away
+                  // mean, and the reader is told so rather than left to assume
+                  // it belongs to one club.
+                  ...(teamContinuity ? {} : { scope: "home_away_mean" as const }),
                 }
               : {}),
           }
