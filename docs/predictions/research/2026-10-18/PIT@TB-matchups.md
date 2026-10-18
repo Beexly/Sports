@@ -1,26 +1,78 @@
 # PIT@TB - Matchup Report
 
-generated_utc: 2026-10-18T09:43:09.527598+00:00
+generated_utc: 2026-10-18T15:10:39.880187+00:00
 
 ## Receiver vs coverage pairings
 
-### HOME-OFF vs AWAY-DEF - WR1: Emeka Egbuka
-- targets 127 | separation 2.6 yds | YAC/E R 4.7 | catch 49.61% (2025-season snapshot, one season stale) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json]
-- matched slot-1 corners: Asante Samuel Jr. (LCB, slot-1, not-on-report); Sean Murphy-Bunting (LCB, slot-1, not-on-report); Terell Smith (LCB, slot-1, ACTIVE)
-- opposing coverage OUT/limited: DeShon Elliott (S, INJURED RESERVE)
-- opposing coverage QUESTIONABLE: Jalen Ramsey (CB, QUESTIONABLE), Jamel Dean (CB, QUESTIONABLE)
-
 ### AWAY-OFF vs HOME-DEF - WR1: DK Metcalf
-- targets 99 | separation 2.6 yds | YAC/E R 4.8 | catch 59.6% (2025-season snapshot, one season stale) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json]
-- matched slot-1 corners: Zyon McCollum (LCB, slot-1, not-on-report); Kevin Knowles (LCB, slot-1, not-on-report)
+- targets 37 | separation 2.23 yds | air-yd share 33.4% | YAC/E R +0.38 | catch 51.4% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Zyon McCollum (LCB, slot-1, not-on-report); Benjamin Morrison (RCB, slot-1, DOUBTFUL); Ayden Garnes (RCB, depth-2, QUESTIONABLE); Jacob Parrish (NB, slot-1, ACTIVE)
 - opposing coverage OUT/limited: Benjamin Morrison (CB, DOUBTFUL), Antoine Winfield Jr. (S, OUT)
 - opposing coverage QUESTIONABLE: Ayden Garnes (CB, QUESTIONABLE)
 
+### AWAY-OFF vs HOME-DEF - WR2: Germie Bernard
+- targets 20 | separation 2.38 yds | air-yd share 9.9% | YAC/E R +0.11 | catch 65.0% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Zyon McCollum (LCB, slot-1, not-on-report); Benjamin Morrison (RCB, slot-1, DOUBTFUL); Ayden Garnes (RCB, depth-2, QUESTIONABLE); Jacob Parrish (NB, slot-1, ACTIVE)
+- opposing coverage OUT/limited: Benjamin Morrison (CB, DOUBTFUL), Antoine Winfield Jr. (S, OUT)
+- opposing coverage QUESTIONABLE: Ayden Garnes (CB, QUESTIONABLE)
+
+### AWAY-OFF vs HOME-DEF - TE1: Pat Freiermuth
+- targets 26 | separation 2.91 yds | air-yd share 15.6% | YAC/E R +1.03 | catch 73.1% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Zyon McCollum (LCB, slot-1, not-on-report); Benjamin Morrison (RCB, slot-1, DOUBTFUL); Ayden Garnes (RCB, depth-2, QUESTIONABLE); Jacob Parrish (NB, slot-1, ACTIVE)
+- opposing coverage OUT/limited: Benjamin Morrison (CB, DOUBTFUL), Antoine Winfield Jr. (S, OUT)
+- opposing coverage QUESTIONABLE: Ayden Garnes (CB, QUESTIONABLE)
+
+### AWAY-OFF vs HOME-DEF - RB1: Jaylen Warren
+- rush att 70, RYOE +126.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- opposing coverage OUT/limited: Benjamin Morrison (CB, DOUBTFUL), Antoine Winfield Jr. (S, OUT)
+- opposing coverage QUESTIONABLE: Ayden Garnes (CB, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - WR1: Emeka Egbuka
+- targets 33 | separation 3.06 yds | air-yd share 31.0% | YAC/E R +0.26 | catch 63.6% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Asante Samuel Jr. (LCB, slot-1, not-on-report); Jamel Dean (RCB, slot-1, QUESTIONABLE); Jalen Ramsey (NB, slot-1, QUESTIONABLE)
+- opposing coverage OUT/limited: DeShon Elliott (S, INJURED RESERVE)
+- opposing coverage QUESTIONABLE: Jalen Ramsey (CB, QUESTIONABLE), Jamel Dean (CB, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - WR2: Chris Godwin Jr.
+- targets 21 | separation 4.02 yds | air-yd share 6.2% | YAC/E R +0.93 | catch 90.5% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Asante Samuel Jr. (LCB, slot-1, not-on-report); Jamel Dean (RCB, slot-1, QUESTIONABLE); Jalen Ramsey (NB, slot-1, QUESTIONABLE)
+- opposing coverage OUT/limited: DeShon Elliott (S, INJURED RESERVE)
+- opposing coverage QUESTIONABLE: Jalen Ramsey (CB, QUESTIONABLE), Jamel Dean (CB, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - TE1: Cade Otton
+- targets 27 | separation 3.72 yds | air-yd share 13.3% | YAC/E R +0.07 | catch 66.7% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Asante Samuel Jr. (LCB, slot-1, not-on-report); Jamel Dean (RCB, slot-1, QUESTIONABLE); Jalen Ramsey (NB, slot-1, QUESTIONABLE)
+- opposing coverage OUT/limited: DeShon Elliott (S, INJURED RESERVE)
+- opposing coverage QUESTIONABLE: Jalen Ramsey (CB, QUESTIONABLE), Jamel Dean (CB, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - RB1: Bucky Irving
+- rush att 77, RYOE +85.2 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- opposing coverage OUT/limited: DeShon Elliott (S, INJURED RESERVE)
+- opposing coverage QUESTIONABLE: Jalen Ramsey (CB, QUESTIONABLE), Jamel Dean (CB, QUESTIONABLE)
+
 ## OL vs pass-rush
 
+### AWAY-OL vs HOME-FRONT
+- offensive line starters: Troy Fautanu (LT), Mason McCormick (LG), Zach Frazier (C), Brock Hoffman (RG), Max Iheanachor (RT)
+- QB protection anchor: Aaron Rodgers (2026 NGS time-to-throw: 2.82s) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
+- RB downhill leverage: Jaylen Warren (2026 NGS time-to-LOS: 2.78s, RYOE: +126.9 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- defensive front starters: Calijah Kancey (LDE), Vita Vea (NT), A'Shawn Robinson (RDE)
+- front ACTIVE (on report): DeMonte Capehart (DT)
+- front DOWN: (none)
+- front QUESTIONABLE: (none)
+
+### HOME-OL vs AWAY-FRONT
+- offensive line starters: Tristan Wirfs (LT), Ben Bredeson (LG), Graham Barton (C), Cody Mauch (RG), Luke Goedeke (RT)
+- QB protection anchor: Jalon Daniels (2026 NGS time-to-throw: 2.98s) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
+- RB downhill leverage: Bucky Irving (2026 NGS time-to-LOS: 2.93s, RYOE: +85.2 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- defensive front starters: Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE)
 - front ACTIVE (on report): Kevin Jobity Jr. (DT), Yahya Black (DE)
 - front DOWN: (none)
 - front QUESTIONABLE: Keeanu Benton (DT, QUESTIONABLE)
 
 ## Matchup chains (each cites its file)
 
+1. AWAY-OFF vs HOME-DEF: DK Metcalf leads PIT receivers in targets (37) with measured separation 2.23 yds and air-yd share 33.4% [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> opposing coverage is missing Benjamin Morrison (CB, DOUBTFUL); Antoine Winfield Jr. (S, OUT) [espn_nfl_injuries_week6.json] -> coverage void meets usage leader: expect target concentration and perimeter explosive pass window; breaking condition: the cited defender is announced active, which voids the void
+2. HOME-OFF vs AWAY-DEF: Emeka Egbuka leads TB receivers in targets (33) with measured separation 3.06 yds and air-yd share 31.0% [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> opposing coverage is missing DeShon Elliott (S, INJURED RESERVE) [espn_nfl_injuries_week6.json] -> coverage void meets usage leader: expect target concentration and perimeter explosive pass window; breaking condition: the cited defender is announced active, which voids the void
+3. AWAY-OL vs HOME-FRONT: PIT OL (Troy Fautanu (LT), Mason McCormick (LG), Zach Frazier (C)) [espn-depthcharts-2026.json] anchors Aaron Rodgers (2.82s TTT) [raw_statboard_passing.json] and Jaylen Warren (TLOS 2.78s, RYOE +126.9 yds) [raw_statboard_rushing.json] against healthy TB front (Calijah Kancey (LDE), Vita Vea (NT), A'Shawn Robinson (RDE)) [espn_nfl_injuries_week6.json] -> rushing efficiency differential (RYOE +126.9 yds) dictates early-down trench control; breaking condition: early score differential forces pass-heavy script
+4. HOME-OL vs AWAY-FRONT: TB offensive structure compromised by Baker Mayfield (QB, OUT) [espn_nfl_injuries_week6.json] -> forces Jalon Daniels and Bucky Irving (RYOE +85.2 yds) [raw_statboard_rushing.json] into elevated pressure against PIT front (Yahya Black (LDE), Keeanu Benton (NT), Cameron Heyward (RDE)) [espn-depthcharts-2026.json]; breaking condition: quick-game RPO/screen script or max-protect chip help neutralizes pass rush

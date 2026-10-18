@@ -1,27 +1,78 @@
 # NO@NYG - Matchup Report
 
-generated_utc: 2026-10-18T09:43:09.457069+00:00
+generated_utc: 2026-10-18T15:10:39.791736+00:00
 
 ## Receiver vs coverage pairings
 
-### HOME-OFF vs AWAY-DEF - WR1: Wan'Dale Robinson
-- targets 140 | separation 3.4 yds | YAC/E R 4.2 | catch 65.71% (2025-season snapshot, one season stale) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json]
-- matched slot-1 corners: Kool-Aid McKinstry (LCB, slot-1, not-on-report); Decamerion Richardson (LCB, slot-1, not-on-report); Mike Reid (LCB, slot-1, ACTIVE); David Long Jr. (LCB, slot-1, not-on-report)
-- opposing coverage OUT/limited: (none listed)
-- opposing coverage QUESTIONABLE: Lorenzo Styles Jr. (S, QUESTIONABLE)
-
 ### AWAY-OFF vs HOME-DEF - WR1: Chris Olave
-- targets 156 | separation 2.9 yds | YAC/E R 3.6 | catch 64.1% (2025-season snapshot, one season stale) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json]
-- matched slot-1 corners: Deonte Banks (LCB, slot-1, not-on-report); Colton Hood (LCB, slot-1, OUT); Paulson Adebo (LCB, slot-1, not-on-report); Thaddeus Dixon (LCB, slot-1, not-on-report)
+- targets 54 | separation 2.94 yds | air-yd share 45.1% | YAC/E R -0.40 | catch 72.2% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Deonte Banks (LCB, slot-1, not-on-report); Greg Newsome II (RCB, slot-1, ACTIVE); Dru Phillips (NB, slot-1, ACTIVE)
 - opposing coverage OUT/limited: Colton Hood (CB, OUT), Tyler Nubin (S, OUT)
 - opposing coverage QUESTIONABLE: (none)
 
+### AWAY-OFF vs HOME-DEF - WR2: Devaughn Vele
+- targets 37 | separation 2.07 yds | air-yd share 23.9% | YAC/E R -0.17 | catch 67.6% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Deonte Banks (LCB, slot-1, not-on-report); Greg Newsome II (RCB, slot-1, ACTIVE); Dru Phillips (NB, slot-1, ACTIVE)
+- opposing coverage OUT/limited: Colton Hood (CB, OUT), Tyler Nubin (S, OUT)
+- opposing coverage QUESTIONABLE: (none)
+
+### AWAY-OFF vs HOME-DEF - TE1: Juwan Johnson
+- targets 32 | separation 3.88 yds | air-yd share 11.1% | YAC/E R +1.22 | catch 78.1% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Deonte Banks (LCB, slot-1, not-on-report); Greg Newsome II (RCB, slot-1, ACTIVE); Dru Phillips (NB, slot-1, ACTIVE)
+- opposing coverage OUT/limited: Colton Hood (CB, OUT), Tyler Nubin (S, OUT)
+- opposing coverage QUESTIONABLE: (none)
+
+### AWAY-OFF vs HOME-DEF - RB1: Travis Etienne
+- rush att 30, RYOE -15.8 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- opposing coverage OUT/limited: Colton Hood (CB, OUT), Tyler Nubin (S, OUT)
+- opposing coverage QUESTIONABLE: (none)
+
+### HOME-OFF vs AWAY-DEF - WR1: Malik Nabers
+- targets 46 | separation 2.98 yds | air-yd share 35.8% | YAC/E R -0.95 | catch 63.0% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Kool-Aid McKinstry (LCB, slot-1, not-on-report); Quincy Riley (RCB, slot-1, not-on-report); Jonas Sanker (NB, slot-1, not-on-report)
+- opposing coverage OUT/limited: (none listed)
+- opposing coverage QUESTIONABLE: Lorenzo Styles Jr. (S, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - WR2: Darnell Mooney
+- targets 17 | separation 3.82 yds | air-yd share 16.0% | YAC/E R -0.96 | catch 47.1% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Kool-Aid McKinstry (LCB, slot-1, not-on-report); Quincy Riley (RCB, slot-1, not-on-report); Jonas Sanker (NB, slot-1, not-on-report)
+- opposing coverage OUT/limited: (none listed)
+- opposing coverage QUESTIONABLE: Lorenzo Styles Jr. (S, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - TE1: Isaiah Likely
+- targets 48 | separation 2.64 yds | air-yd share 22.7% | YAC/E R -0.07 | catch 68.8% (2026 in-season NGS) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json]
+- matched slot-1 corners: Kool-Aid McKinstry (LCB, slot-1, not-on-report); Quincy Riley (RCB, slot-1, not-on-report); Jonas Sanker (NB, slot-1, not-on-report)
+- opposing coverage OUT/limited: (none listed)
+- opposing coverage QUESTIONABLE: Lorenzo Styles Jr. (S, QUESTIONABLE)
+
+### HOME-OFF vs AWAY-DEF - RB1: Cam Skattebo
+- rush att 81, RYOE -43.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- opposing coverage OUT/limited: (none listed)
+- opposing coverage QUESTIONABLE: Lorenzo Styles Jr. (S, QUESTIONABLE)
+
 ## OL vs pass-rush
 
+### AWAY-OL vs HOME-FRONT
+- offensive line starters: Asim Richards (LT), David Edwards (LG), Erik McCoy (C), Cesar Ruiz (RG), Taliese Fuaga (RT)
+- QB protection anchor: Tyler Shough (2026 NGS time-to-throw: 2.75s) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
+- RB downhill leverage: Travis Etienne (2026 NGS time-to-LOS: 2.64s, RYOE: -15.8 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- defensive front starters: Shelby Harris (LDE), DJ Reader (NT), Darius Alexander (RDE)
+- front ACTIVE (on report): Bobby Jamison-Travis (DT)
+- front DOWN: Chauncey Golston (DE, INJURED RESERVE)
+- front QUESTIONABLE: (none)
+
+### HOME-OL vs AWAY-FRONT
+- offensive line starters: Andrew Thomas (LT), Jon Runyan (LG), Bryan Hudson (C), Francis Mauigoa (RG), Jermaine Eluemunor (RT)
+- QB protection anchor: Jameis Winston (2026 NGS time-to-throw: 2.71s) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_passing.json]
+- RB downhill leverage: Cam Skattebo (2026 NGS time-to-LOS: 2.68s, RYOE: -43.9 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json]
+- defensive front starters: Cameron Jordan (LDE), Nathan Shepherd (NT), Vernon Broughton (RDE)
 - front ACTIVE (on report): Vernon Broughton (DT), Colby Wooden (DT), Tyree Wilson (DE), Christen Miller (DT)
 - front DOWN: (none)
 - front QUESTIONABLE: Nathan Shepherd (DT, QUESTIONABLE)
 
 ## Matchup chains (each cites its file)
 
-1. AWAY-OFF vs HOME-DEF: Chris Olave leads NO pass-catchers (2025-baseline targets 156, separation 2.9 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Deonte Banks (LCB, slot-1, not-on-report), Colton Hood (LCB, slot-1, OUT), Paulson Adebo (LCB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Colton Hood (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it
+1. AWAY-OFF vs HOME-DEF: Chris Olave leads NO receivers in targets (54) with measured separation 2.94 yds and air-yd share 45.1% [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> opposing coverage is missing Colton Hood (CB, OUT); Tyler Nubin (S, OUT) [espn_nfl_injuries_week6.json] -> coverage void meets usage leader: expect target concentration and perimeter explosive pass window; breaking condition: the cited defender is announced active, which voids the void
+2. HOME-OFF vs AWAY-DEF: Malik Nabers leads NYG pass-catchers (2026 NGS: targets 46, separation 2.98 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_receiving.json] -> draws opposing secondary with Lorenzo Styles Jr. (S, QUESTIONABLE) on injury report [espn_nfl_injuries_week6.json] -> separation leverage against thinned secondary anchors passing efficiency; breaking condition: pre-kick status updates or bracket coverage adjustment
+3. AWAY-OL vs HOME-FRONT: the NYG front is missing Chauncey Golston (DE, INJURED RESERVE) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge, lowering pass-rush win rate -> NO QB Tyler Shough pocket release window widens (2.75s 2026 NGS TTT) [raw_statboard_passing.json] and opens downhill rushing lanes for Travis Etienne (TLOS 2.64s, RYOE -15.8 yds) [raw_statboard_rushing.json]; breaking condition: defensive blitz-rate spike or early negative game script
+4. HOME-OL vs AWAY-FRONT: NO front operating with Nathan Shepherd (DT, QUESTIONABLE) Questionable on injury report [espn_nfl_injuries_week6.json] -> interior push uncertain against NYG OL starters (Andrew Thomas (LT), Jon Runyan (LG), Bryan Hudson (C)) [espn-depthcharts-2026.json] -> Jameis Winston (2.71s TTT) [raw_statboard_passing.json] and Cam Skattebo (RYOE -43.9 yds) [raw_statboard_rushing.json] hold leverage if Questionable defenders are limited; breaking condition: full pre-kick activation at 10:30 AM CST inactives gate
