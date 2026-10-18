@@ -113,8 +113,13 @@ export async function ingestDepthCharts(
   // erased with only some of the replacement written.
   const chunks: (typeof data)[] = [];
   for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  // Replace only the week buckets THIS run writes. A season-wide delete erased
+  // every labelled week (the backfilled week N-1/N pair among them), which
+  // silently turned the picks route's week-over-week continuity back into null
+  // on the next ingest. Weeks this run does not write are left alone.
+  const weeksWritten = [...new Set(data.map((row) => row.week))];
   const [, ...createdChunks] = await db.$transaction([
-    db.depthChartEntry.deleteMany({ where: { season } }),
+    db.depthChartEntry.deleteMany({ where: { season, week: { in: weeksWritten } } }),
     ...chunks.map((c) => db.depthChartEntry.createMany({ data: c })),
   ]);
   const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);

@@ -554,8 +554,26 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const storedInjuryEvidence = isNcaaf
         ? null
         : ((fbObj["injuryEvidence"] ?? situational["injuryEvidence"] ?? null) as Record<string, unknown> | null);
+      // NCAAF has no injury feed: `injuries` is NFL-only (nflverse). The surface
+      // says so explicitly rather than omitting the field — an absent key reads
+      // as "nothing to report", which is a claim we cannot make. No players, no
+      // status verdict, trustLevel 0.
+      const ncaafUnavailable: Record<string, unknown> | null = isNcaaf
+        ? {
+            sourceCategory: "PLAYER_AVAILABILITY",
+            sourceName: "nflverse",
+            status: "UNAVAILABLE",
+            reason:
+              "No NCAAF injury feed is ingested — the injuries table covers the NFL only. No player availability is claimed for this pick.",
+            fetchedAt: now.toISOString(),
+            trustLevel: 0,
+            isBootstrap: false,
+          }
+        : null;
       const injuryEvidence: Record<string, unknown> | null =
-        (dbInjuryEvidence as unknown as Record<string, unknown> | null) ?? storedInjuryEvidence;
+        (dbInjuryEvidence as unknown as Record<string, unknown> | null) ??
+        storedInjuryEvidence ??
+        ncaafUnavailable;
 
       const reasoningTrace = (situational["reasoningTrace"] as string | undefined) ?? (pick.reasoning || projectedReasoning.text);
 
