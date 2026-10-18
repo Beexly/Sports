@@ -49,7 +49,7 @@ export default async function GameRoomPage({
         </header>
 
         <section className="grid gap-4 md:grid-cols-4">
-          <Metric label="Edge Index" value={room.node.marketPulse.edgeIndex === null ? "N/A" : String(room.node.marketPulse.edgeIndex)} />
+          <Metric label="Edge" value={room.node.marketPulse.edgeIndex === null ? "N/A" : String(room.node.marketPulse.edgeIndex)} />
           <Metric label="Books" value={String(room.node.marketPulse.bookmakerCoverage)} />
           <Metric label="Evidence" value={`${room.node.evidenceHealth.score}/100`} />
           <Metric label="Status" value={room.node.evidenceHealth.status} />

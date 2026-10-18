@@ -263,9 +263,6 @@ export default function IntegrityPage() {
                 <em>the claims we make about picks</em>.
               </p>
               <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                <Link href="/board/gate" className="underline hover:text-orbital-cyan">
-                  How the gate decides
-                </Link>
                 <Link href="/glass-ledger" className="underline hover:text-orbital-cyan">
                   Glass Ledger
                 </Link>
@@ -336,12 +333,16 @@ export default function IntegrityPage() {
                   <br />
                   {item.weDo}
                 </p>
-                <Link
-                  href={item.verifyHref}
-                  className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
-                >
-                  {item.verifyLabel}
-                </Link>
+                {/* /board/gate ships illustrative rows and is not a public
+                    destination; items pointing there render without a link. */}
+                {item.verifyHref !== "/board/gate" && (
+                  <Link
+                    href={item.verifyHref}
+                    className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
+                  >
+                    {item.verifyLabel}
+                  </Link>
+                )}
               </li>
             ))}
           </ol>

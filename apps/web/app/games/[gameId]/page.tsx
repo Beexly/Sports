@@ -98,8 +98,8 @@ export default async function GamePage({
                 {detail.matchup}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
-                Our readings below are the engine&apos;s, per market. Edge is a ranking
-                score, not a probability. Held readings show their reason.
+                Our readings below are the engine&apos;s, per market. Edge is a strength
+                score, not a win chance. Held readings show their reason.
               </p>
             </Reveal>
 
@@ -169,14 +169,9 @@ export default async function GamePage({
                               {r.gateReason}
                             </>
                           ) : (
-                            "Cleared the gates with its reasoning attached."
+                            "Posted with its Analysis attached."
                           )}
                         </p>
-                        {r.rankingSource && (
-                          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ion-2">
-                            {r.rankingSource}
-                          </p>
-                        )}
                       </div>
                       <div className="flex gap-8 sm:text-right">
                         <div>
@@ -186,9 +181,9 @@ export default async function GamePage({
                           </p>
                         </div>
                         <div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Conf</p>
+                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Confidence</p>
                           <p className="font-display text-2xl font-semibold tabular-nums text-ion-white">
-                            {r.confidence ?? (r.rankingP !== null ? r.rankingP.toFixed(2) : "n/a")}
+                            {typeof r.confidence === "number" ? `${r.confidence}/100` : "—"}
                           </p>
                         </div>
                       </div>

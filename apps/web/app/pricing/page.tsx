@@ -190,7 +190,7 @@ const PLANS: PlanView[] = [
 const COMPARISON_FEATURES = [
   "Signals per day",
   "Sports covered",
-  "Edge Index",
+  "Edge",
   "Confidence rating",
   "Factor trail & reasoning",
   "Evidence audit detail",
@@ -223,7 +223,7 @@ const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | b
 /** The free teaser as it exists once the public board is open (packages/types dailyPickLimit 2, no confidence). */
 const FREE_TEASER_CELL = "2 per day (teaser, no confidence score)";
 const FREE_TEASER_FEATURE = {
-  label: "Two picks a day with the public Edge Index (no confidence score)",
+  label: "Two picks a day with the free Edge (no confidence score)",
   included: true,
 } as const;
 
@@ -235,7 +235,7 @@ function plansForGate(publicPicksOpen: boolean): PlanView[] {
       ? {
           ...plan,
           description:
-            "Two picks a day with the public Edge Index, plus tools, the Academy and the transparent process. The full board, the confidence score and the factor trail are on Pro.",
+            "Two picks a day with the free Edge, plus tools, the Academy and the transparent process. The full board, the confidence score and the full Analysis are on Pro.",
           features: [FREE_TEASER_FEATURE, ...plan.features],
         }
       : plan,
@@ -630,12 +630,16 @@ export default function PricingPage() {
                 >
                   <h3 className="text-sm font-semibold text-white">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-ink-300">{item.weDo}</p>
-                  <Link
-                    href={item.verifyHref}
-                    className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
-                  >
-                    Check it
-                  </Link>
+                  {/* /board/gate ships illustrative rows and is not a public
+                      destination; items pointing there render without a link. */}
+                  {item.verifyHref !== "/board/gate" && (
+                    <Link
+                      href={item.verifyHref}
+                      className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
+                    >
+                      Check it
+                    </Link>
+                  )}
                 </div>
               ))}
             </div>

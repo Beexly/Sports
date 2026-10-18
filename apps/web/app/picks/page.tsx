@@ -27,7 +27,7 @@ export function generateMetadata(): Metadata {
     title: "Today's Picks",
     description: publicPicksOpen
       ? "What we're on today, with the line, the timing, and the reason. Free gets a daily teaser; Pro and Elite unlock the full set."
-      : "Picks open when our sample and gates allow. Until then this page stays dark — no invented slate, no fake certainty.",
+      : "Today's picks, posted when the numbers are there.",
     alternates: { canonical: "/picks" },
   };
 }
@@ -350,7 +350,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               bootstrap/stale gate lands here. Per the T-picks-outage doctrine
               this is a CONNECTION problem, never a verdict on the board — so it
               is rendered as a calm, designed state that stays visually and
-              textually DISTINCT from the "Signal gate collecting" gate below
+              textually DISTINCT from the "Picks coming" gate below
               (caution amber vs the gate's cyan) and NEVER leaks the raw HTTP
               status the way a bare `{fetchError}` dump would. */}
           {fetchError && (
@@ -411,19 +411,17 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </div>
               <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-orbital-cyan">
                 {bootstrapState.kind === "stale"
-                  ? "Freshness guard active"
-                  : "Signal gate collecting"}
+                  ? "Waiting on fresh lines"
+                  : "Picks coming"}
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
-                  ? "Quiet board — waiting on fresh odds (not broken)."
-                  : "Public picks are still gated. The board is closed until the data checks pass."}
+                  ? "Quiet board. We're waiting on fresh odds."
+                  : "No picks yet. The board is closed until the data checks pass."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
-                  ? "This is the honesty guard: we hide picks when odds are past the refresh " +
-                    "window or no games are insertable. The board reopens on the next real " +
-                    "odds insert — never on stale lines. Methodology and pricing stay available."
+                  ? "No lines posted yet. The board fills in as books post lines."
                   : "We're building up odds and settlement history before we " +
                     "publish picks. That keeps the record clean and weak signals " +
                     "off the board."}
@@ -464,10 +462,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 Upgrade to Pro to see them.
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
-                Free includes a daily teaser of up to {teaserSize} picks with the
-                public Edge Index and no confidence scores. Pro unlocks the full
-                board plus the confidence score, the full factor trail, and line
-                movement behind each pick.
+                Free includes a daily teaser of up to {teaserSize} picks with Edge
+                and no confidence scores. Pro unlocks the full board plus the
+                confidence score, the full Analysis, and line movement behind each
+                pick.
               </p>
               <Link
                 href="/pricing"
@@ -551,12 +549,12 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <p className="text-sm font-semibold text-ultraviolet">
                 {hasAccount
                   ? entitlements.tier !== "FREE"
-                    ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
-                    : `You're on Free: a daily teaser of up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
-                  : `Today's free teaser: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`}
+                    ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with Edge, no confidence scores.`
+                    : `You're on Free: a daily teaser of up to ${teaserSize} picks with Edge, no confidence scores.`
+                  : `Today's free teaser: up to ${teaserSize} picks with Edge, no confidence scores.`}
               </p>
               <p className="mt-1 text-xs text-ultraviolet">
-                Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
+                Pro unlocks the full board plus the confidence score, the full Analysis, and line movement behind each pick.
               </p>
               <Link
                 href="/pricing"
@@ -710,9 +708,9 @@ function PaywallBanner({
       ? `${totalAvailableToday} picks published for this date. Upgrade to Pro to see the full board.`
       : hasAccount
         ? isPaidTeaser
-          ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks, with the public Edge Index and no confidence scores.`
-          : `You're on Free: a daily teaser of up to ${teaserSize} picks, with the public Edge Index and no confidence scores.`
-        : `You're seeing today's free teaser: up to ${teaserSize} picks, with the public Edge Index and no confidence scores.`;
+          ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks, with Edge and no confidence scores.`
+          : `You're on Free: a daily teaser of up to ${teaserSize} picks, with Edge and no confidence scores.`
+        : `You're seeing today's free teaser: up to ${teaserSize} picks, with Edge and no confidence scores.`;
   return (
     <div
       data-testid="paywall-banner"
@@ -721,7 +719,7 @@ function PaywallBanner({
       <div>
         <p className="text-sm font-semibold text-caution">{headline}</p>
         <p className="mt-0.5 text-xs text-ion-1">
-          Pro and Elite add confidence scores, the full factor trail, line movement, and the tools.
+          Pro and Elite add confidence scores, the full Analysis, line movement, and the tools.
         </p>
       </div>
       <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
@@ -764,7 +762,7 @@ function PicksTrustStrip() {
             Trust context
           </p>
           <p className="mt-2 text-sm leading-relaxed text-ion-1">
-            Picks only appear after the gate clears. The methodology page
+            Picks only post once the numbers check out. The methodology page
             explains what enters the score, what stays hidden, and why some
             slates publish no pick.
           </p>

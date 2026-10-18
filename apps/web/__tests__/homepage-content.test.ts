@@ -96,7 +96,7 @@ describe("Homepage — Phase 2 trust invariants", () => {
     // Board door, outage: says unavailable rather than showing a calm zero.
     expect(pageCode).toContain("Board temporarily unavailable");
     // Calibration, thin sample: names the gap.
-    expect(pageCode).toContain("Calibration sample building");
+    expect(pageCode).toContain("Results build as picks settle");
     // Lab door, where the player fallbacks actually live.
     expect(labCode).toContain("Intake warming up");
     expect(labCode).toContain("Live player data unavailable");

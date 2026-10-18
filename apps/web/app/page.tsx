@@ -221,7 +221,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 stat={
                   settled > 0
                     ? `Graded on ${settled} settled picks`
-                    : "Calibration sample building"
+                    : "Results build as picks settle"
                 }
                 action="Open the engines"
                 href="/intelligence/engines"
@@ -329,9 +329,9 @@ export default async function HomePage(): Promise<JSX.Element> {
                 Every number ships with its sample.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">
-                Receipts freeze before kickoff. Hits print with period, sample size,
-                model version, and the definition used. Thin samples stay dark with the
-                gap named. Recompute any seal yourself.
+                Receipts freeze before kickoff. Every result shows its date range and
+                sample size. Thin samples stay dark with the gap named. Recompute any
+                seal yourself.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/calibration" className="btn-primary min-h-11 px-5 py-2.5">
