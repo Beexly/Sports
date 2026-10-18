@@ -26,7 +26,7 @@ Generated Sun 2026-10-18, about 4:20 AM CT, by gse-main-bot/executor. Every coun
 4. `cd /workspace/xdm && python3 proc.py` classifies profile posts and writes `prof_rows.json`.
 5. `python3 write.py` writes `ingested.jsonl`, `training-and-tools.jsonl` and `unclear-log.jsonl` using `.tmp` files and atomic rename.
 6. `python3 write2.py` writes `profile-intel.jsonl` and `progress.json`, which holds per-author status and `resume_pagination_token`.
-- Later repairs (RO-02/03, the canon remap, RO-13) were applied by ad hoc edits that are not in these scripts. **Re-running write.py or write2.py now would overwrite the repaired files and regress them** (lease_version, legacy_row_id, eligible, duplicate_of).
+- Later repairs (RO-02/03, the canon remap, RO-13–RO-17) are applied by `/workspace/xdm/write2.py` (profile-intel/dfs) and `stamp_eligible.py` (ingested/training/unclear). **Re-running those scripts with the documented flags reproduces live files byte-for-byte** and does not regress repairs. Ad hoc edits alone are no longer the source of truth for profile-intel.
 
 ### x-search (`/workspace/xsearch`), run in this order
 1. Search and timeline calls go through the free `x` namespace (MCP). Each result is saved to `/workspace/agent-tools/<8-hex prefix>*.txt`, and one line per call (`prefix<TAB>label`) is appended to `qlog.tsv`.
@@ -112,7 +112,7 @@ if cat!='skip' and score<1.5: cat = 'unclear' if score>0 else 'skip'
   - **x-search: 0 of 9,798 rows are guaranteed i/status.** All 9,798 equal `sha1(stored url)[:16]`. Only 1,932 of them coincide with i/status: situational 795, unclear 756, bias 167, tools 121, dfs 69, quant 24. The rest hash `https://x.com/<handle>/status/<id>`. This was a deliberate choice to keep DIV-1 and overheard citations stable. **Consumers must not recompute x-search row_ids with the i/status formula.**
 - `legacy_row_id` holds the pre-canon handle-URL hash on x-dms rows, and is also mapped in row-id-map.
 - `duplicate_of` gives `<file>:L<n>` (0-based) of the kept copy, and `duplicate_of_row_id` gives that copy's row_id. Duplicate rows carry `eligible=false`. There are 34 in total: profile 30, training 3, unclear 1.
-- `eligible=false` plus `ineligible_reason` mark rows that must not be promoted (RO-13: "no post_id / profile share" ×2, "no post_id / undecryptable chat note" ×1). Rows without the field are treated as eligible.
+- **Every row has an explicit `eligible` field (RO-17).** `eligible=false` marks rows that must not be promoted (ineligible_reason, duplicates, archive_only, or quarantine `routing=="NONE"`). Consumers filter `eligible==true`. There is no missing-field fallback.
 - `archive_only=true` plus `snapshot_of=<live path>` (plus eligible=false) are on every row in `versions/*` snapshot folders.
 - `moved_from`, `moved_from_category` and `moved_from_line` appear on 2 situational rows that were moved between buckets.
 - `lease_version` increments on each edit of a row or file. Edits go into a new lease and are never made in place without a snapshot.
@@ -195,6 +195,16 @@ Do **not** select on `division` or `kind` alone. Quarantined rows are stored as 
 | account-book / DIV-1 merge | `division=DIV-1` | `division=DIV-1` **and** `eligible==true` |
 | DFS bot | `dfs.jsonl` | rows in `dfs.jsonl` with `eligible==true` |
 
-Genuine DIV-3 `ai_quant` rows carry `eligible=true`. Quarantined rows carry `eligible=false`. DIV-1 keeps and dfs rows also carry `eligible=true`. Rows missing the field must be treated as ineligible for promotion until an explicit value is set.
+Genuine DIV-3 `ai_quant` rows carry `eligible=true`. Quarantined rows carry `eligible=false`. DIV-1 keeps and dfs rows also carry `eligible=true`. As of RO-17 every row has an explicit `eligible` value; filter `eligible==true`.
 
 Full DIV-1 row-level review for RO-16: blackboard path `ingest/x-dms/2026-10-18/div1-row-review-ro16.tsv` (661 data lines + header). Quarantines from that review: `4bb2fd658831510f` (self-help), `1db5f00f335dc3fd` (drone), `8554cc65d97b318a` (soccer DFS).
+
+
+## Consumer rule (RO-17) — 2026-10-18
+
+**Every x-dms row now carries an explicit `eligible` field.** Consumers filter `eligible == true`.
+
+- `eligible=false` when the row has `ineligible_reason`, `duplicate_of`, `duplicate_of_row_id`, `archive_only`, or is quarantined (`routing=="NONE"`).
+- Otherwise `eligible=true` (including all DIV-1 keeps, genuine DIV-3 `ai_quant`, dfs rows, and previously missing ingested/training/unclear rows).
+- Do **not** select on `division` or `kind` alone (see RO-16 table below). Quarantined rows are `division=DIV-3` with `routing="NONE"` and `eligible=false`.
+- `write2.py` is the reproducible transform from `versions/pre-ro14/profile-intel.jsonl` (plus `--stabilize-from` for reason-text stability). `stamp_eligible.py` stamps ingested/training/unclear. Re-running both with the documented flags reproduces live files byte-for-byte; it does **not** regress repairs.
