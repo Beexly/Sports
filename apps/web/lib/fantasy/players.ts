@@ -186,4 +186,4 @@ export function playerById(id: string, pool: readonly Player[] = PLAYERS): Playe
 }
 
 export const ILLUSTRATIVE_NOTE =
-  "Illustrative player universe: fictional players, illustrative projections. A demonstration of the intelligence, not live data.";
+  "Illustrative player universe: fictional players, illustrative projections. Practice slate. Not live data.";

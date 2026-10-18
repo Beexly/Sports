@@ -43,9 +43,9 @@ describe("ShowdownLab — lineups", () => {
 });
 
 describe("ShowdownLab — honesty surfaces", () => {
-  it("labels the slate as fictional", () => {
+  it("labels the slate as not live (practice slate)", () => {
     render(<ShowdownLab />);
-    expect(screen.getByTestId("showdown-source")).toHaveTextContent("fictional");
+    expect(screen.getByTestId("showdown-source")).toHaveTextContent(/practice slate/i);
   });
 
   it("reports how many combinations were searched", () => {

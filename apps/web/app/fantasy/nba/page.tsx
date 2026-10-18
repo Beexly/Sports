@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import {
   NBA_SLATE,
   NBA_SALARY_CAP,
@@ -13,9 +14,9 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Fictional NBA DFS Slate — Validator Demo",
+  title: "NBA DFS",
   description:
-    "A fictional NBA DFS slate for optimizer and lineup-validation testing. All players, salaries, and projections are invented — not real contest data.",
+    "NBA DFS practice slate: build and check a DraftKings Classic lineup against the cap. Sample players, not live data.",
   alternates: { canonical: "/fantasy/nba" },
   // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
   robots: { index: false },
@@ -57,7 +58,7 @@ export default function NbaFantasyPage() {
           <div className="mx-auto max-w-5xl">
             <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
               <span className="live-dot" />
-              Fantasy · NBA · Validator demo
+              Fantasy · NBA DFS
             </p>
             <h1
               className="mt-5 font-display text-balance text-ion-white"
@@ -65,26 +66,16 @@ export default function NbaFantasyPage() {
             >
               A slate that never happened.
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ion-1">
-              Every player, salary, and projection below is invented for
-              optimizer and validation testing — not real contest data.
-            </p>
+            <PracticeSlateTag className="mt-5" testId="nba-practice-slate" />
           </div>
         </section>
 
         <section className="px-4 pb-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="rounded-xl border border-caution/40 bg-caution/[0.08] px-4 py-3">
-              <p className="font-mono text-xs uppercase tracking-[0.16em] text-caution">
-                Fictional slate — not real contest data
-              </p>
-              <p className="mt-1 text-sm leading-relaxed text-ion-1">
-                All {NBA_SLATE.length} players, salaries, and projections are
-                invented. Real NBA team codes appear for roster-shape realism
-                only. Salary cap ${NBA_SALARY_CAP.toLocaleString()} · {NBA_LINEUP_SIZE}-man
-                DraftKings Classic shape (PG, SG, SF, PF, C, G, F, UTIL).
-              </p>
-            </div>
+            <p className="text-sm leading-relaxed text-ion-1">
+              Salary cap ${NBA_SALARY_CAP.toLocaleString()} · {NBA_LINEUP_SIZE}-man
+              DraftKings Classic shape (PG, SG, SF, PF, C, G, F, UTIL).
+            </p>
           </div>
         </section>
 
@@ -94,7 +85,7 @@ export default function NbaFantasyPage() {
               <div className="border-b border-titanium px-4 py-3 sm:px-5">
                 <h2 className="text-lg font-semibold text-ion-white">The slate</h2>
                 <p className="mt-1 text-xs text-ion-2">
-                  {NBA_SLATE.length} fictional players · projections in fantasy points
+                  {NBA_SLATE.length} sample players · projections in fantasy points
                 </p>
               </div>
               <div className="overflow-x-auto">
@@ -132,11 +123,10 @@ export default function NbaFantasyPage() {
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="surface-card p-5 sm:p-6">
-              <h2 className="text-lg font-semibold text-ion-white">Validator demo</h2>
+              <h2 className="text-lg font-semibold text-ion-white">Lineup check</h2>
               <p className="mt-1 text-sm leading-relaxed text-ion-1">
-                An 8-man fictional lineup run through{" "}
-                <span className="font-mono text-[13px]">validateNbaLineup</span> at
-                render time — the verdict below is the validator&apos;s output.
+                An 8-man sample lineup checked against the cap and roster slots. The
+                verdict below comes from that check, run on every page load.
               </p>
               <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                 {demoLineup.map((p) => (

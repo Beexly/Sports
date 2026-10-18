@@ -8,7 +8,7 @@
  */
 
 export function LivePoolEmpty({
-  message = "The live graded pool is unavailable right now, so this tool has nothing real to show. Rather than fall back to illustrative data and present it as live, it stays empty until the source returns.",
+  message = "Live player data isn't available right now. Rather than show sample players as if they were live, this tool stays empty until the data returns.",
 }: { message?: string } = {}) {
   return (
     <div

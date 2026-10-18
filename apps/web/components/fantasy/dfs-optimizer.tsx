@@ -14,6 +14,7 @@ import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
 import { ProjectionsTable } from "@/components/fantasy/projections-table";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "cash", label: "Cash", blurb: "Maximise projection: highest median." },
@@ -60,17 +61,14 @@ export function DfsOptimizer() {
 
   return (
     <div className="space-y-6">
-      {/* sample-mode banner — fictional names must never read as real players.
-          Caution tone (semantic): a data-honesty warning, never plasma. */}
+      {/* sample-mode marker: renders only while the default sample pool is in
+          use (`imported` is false). Fictional names must never read as real
+          players, so the tag stays until a DK CSV replaces the pool. */}
       {!imported && (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-caution/30 bg-caution/5 px-4 py-3">
-          <span className="rounded-full bg-caution px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
-            sample slate
-          </span>
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-mineral px-4 py-3">
+          <PracticeSlateTag testId="dfs-practice-slate" />
           <p className="text-xs text-ion-1">
-            These are <strong className="text-ion-white">fictional players</strong> with illustrative
-            numbers, by design, so no fake stats ever attach to a real athlete. To optimize the
-            real slate today: export the player CSV from DraftKings and import it below ⤵
+            To optimize today&apos;s real slate, export the player CSV from DraftKings and import it below.
           </p>
         </div>
       )}
@@ -148,7 +146,7 @@ export function DfsOptimizer() {
             partial
           </span>
           <p className="text-xs text-ion-1">
-            Only <strong className="text-ion-white">{result.lineups.length} of {result.requested} requested</strong> lineups generated — the search
+            Only <strong className="text-ion-white">{result.lineups.length} of {result.requested} requested</strong> lineups generated. The search
             stopped under the current locks, salary cap, and exposure target. This is not proof no other combination exists: request fewer lineups or loosen pins/fades and generate again.
           </p>
         </div>
@@ -167,8 +165,8 @@ export function DfsOptimizer() {
                   <div className="flex items-center gap-4 font-mono text-[11px] tabular-nums">
                     {/* over the cap is a broken lineup — alert, never plasma */}
                     <span className="text-ion-1">${m.salary.toLocaleString()} <span className={left < 0 ? "text-alert" : "text-ion-2"}>(${left.toLocaleString()} left)</span></span>
-                    <span className="text-orbital-cyan">{m.proj} proj</span>
-                    <span className="text-ultraviolet">{m.ceiling} ceil</span>
+                    <span className="text-orbital-cyan">Projection {m.proj}</span>
+                    <span className="text-ultraviolet">Ceiling {m.ceiling}</span>
                   </div>
                 </div>
                 {/* live salary-cap meter */}

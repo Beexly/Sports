@@ -39,7 +39,7 @@ export function GmAutopilot() {
           Sleeper
           <span className="text-[9px] uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>connect →</span>
         </a>
-        <span className="ml-auto text-[10px] text-ink-600">Read-only sync + write-back are founder-gated behind OAuth & compliance.</span>
+        <span className="ml-auto text-[10px] text-ink-600">League sync and write-back are coming soon.</span>
       </div>
 
       {/* the dial */}

@@ -6,7 +6,7 @@ import { buildGmLedger, GM_LEDGER_DISCLAIMER } from "@/lib/fantasy/gm-ledger";
 export const metadata: Metadata = {
   title: "The GM Ledger · Galaxy Fantasy",
   description:
-    "Every roster decision committed before the games to a tamper-evident Merkle record, then graded on process, not luck. A calibrated GM Rating that can't be cherry-picked after the fact.",
+    "Every roster decision committed before the games to a tamper-evident Merkle record, then graded on process, not luck. A GM Rating graded on your decisions that can't be cherry-picked after the fact.",
   alternates: { canonical: "/fantasy/gm-ledger" },
   robots: { index: false, follow: true },
 };

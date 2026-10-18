@@ -181,4 +181,4 @@ export const PROPS: readonly Prop[] = [
 ];
 
 export const PROPS_DISCLAIMER =
-  "Illustrative lines and model projections. We advise on third-party pick'em lines. We do not operate a pick'em product. Live line ingestion is founder-gated.";
+  "Illustrative lines and model projections. We advise on third-party pick'em lines. We do not operate a pick'em product. Live lines are coming soon.";

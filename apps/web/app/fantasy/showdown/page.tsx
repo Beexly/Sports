@@ -4,11 +4,12 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { ShowdownLab } from "@/components/fantasy/showdown-lab";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 export const metadata: Metadata = {
   title: "Showdown Room: Single-Game Lineups, Solved Exactly",
   description:
-    "DraftKings Showdown solved on its own terms: one captain at 1.5x points and salary, five flex slots, and both teams represented. Every lineup is checked against the cap and shown with the exact combinations we searched. Illustrative slate — the math is real, the players are fictional.",
+    "DraftKings Showdown solved on its own terms: one captain at 1.5x points and salary, five flex slots, and both teams represented. Every lineup is checked against the cap and shown with the exact combinations we searched. Practice slate. Sample players, not live data.",
   alternates: { canonical: "/fantasy/showdown" },
   // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
   robots: { index: false },
@@ -59,11 +60,9 @@ export default function ShowdownPage(): JSX.Element {
               </p>
             </Reveal>
             <Reveal delay={220}>
-              <p className="mt-5 max-w-2xl rounded-xl border border-mineral bg-eclipse/40 p-4 text-sm text-ion-1">
-                <span className="font-semibold text-ion-white">Illustrative slate.</span>{" "}
-                The players are fictional and the salaries are a demonstration. The
-                solver, the cap check, the captain multiplier and the search count are
-                the real implementation. Nothing here is a promise of a result.
+              <p className="mt-5 flex max-w-2xl flex-wrap items-center gap-3 text-sm text-ion-1">
+                <PracticeSlateTag testId="showdown-practice-slate" />
+                <span>Nothing here is a promise of a result.</span>
               </p>
             </Reveal>
           </div>

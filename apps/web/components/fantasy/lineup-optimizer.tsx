@@ -41,7 +41,7 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
       <div className="surface-card overflow-hidden p-0">
         <div className="flex items-center justify-between border-b border-mineral px-5 py-3">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Optimal lineup</p>
-          <p className="font-mono text-sm tabular-nums text-orbital-cyan">{opt.total} proj</p>
+          <p className="font-mono text-sm tabular-nums text-orbital-cyan">Projection {opt.total}</p>
         </div>
         <div>
           {opt.starters.map((call) => {

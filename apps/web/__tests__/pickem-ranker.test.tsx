@@ -70,10 +70,10 @@ describe("PickemRanker (Beexly/Sports#799)", () => {
     expect(row.textContent).toMatch(/\+0\.26/);
   });
 
-  it("labels the source fictional vs live via isLivePickem", () => {
+  it("labels the source practice slate vs live via isLivePickem", () => {
     const { rerender } = render(<PickemRanker lines={[bigEdge]} live={false} />);
     expect(screen.getByTestId("pickem-ranker-source").textContent).toMatch(
-      /fictional/i,
+      /practice slate/i,
     );
     rerender(<PickemRanker lines={[bigEdge]} live />);
     expect(screen.getByTestId("pickem-ranker-source").textContent).toMatch(

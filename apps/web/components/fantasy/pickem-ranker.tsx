@@ -13,6 +13,7 @@ import { useMemo } from "react";
 import { rankPickem } from "@/lib/fantasy/pickem-optimizer";
 import { isLivePickem } from "@/lib/integrations/pickem";
 import type { Prop } from "@/lib/fantasy/props";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 export function PickemRanker({
   lines,
@@ -30,16 +31,16 @@ export function PickemRanker({
         <span className="text-[10px] uppercase tracking-[0.18em] text-ion-3">
           Pick&apos;em ranker
         </span>
-        <span
-          data-testid="pickem-ranker-source"
-          className={`ml-auto rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
-            isLive
-              ? "bg-orbital-cyan/20 text-orbital-cyan"
-              : "bg-caution/20 text-caution"
-          }`}
-        >
-          {isLive ? "Source: live" : "Source: fictional (illustrative)"}
-        </span>
+        {isLive ? (
+          <span
+            data-testid="pickem-ranker-source"
+            className="ml-auto rounded-full bg-orbital-cyan/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-orbital-cyan"
+          >
+            Source: live
+          </span>
+        ) : (
+          <PracticeSlateTag className="ml-auto" testId="pickem-ranker-source" />
+        )}
       </div>
 
       {ranked.length === 0 ? (
@@ -55,8 +56,8 @@ export function PickemRanker({
                 <th scope="col" className="py-2 pr-3 font-semibold">Player</th>
                 <th scope="col" className="py-2 pr-3 font-semibold">Market</th>
                 <th scope="col" className="py-2 pr-3 font-semibold">Side</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Edge pts</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Best alt EV</th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">Edge</th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">Best alt value</th>
                 <th scope="col" className="py-2 font-semibold">Status</th>
               </tr>
             </thead>

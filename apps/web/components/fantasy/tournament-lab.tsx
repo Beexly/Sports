@@ -15,6 +15,7 @@ import { activeDfsSlate } from "@/lib/integrations/dfs";
 import { PortfolioSim } from "./portfolio-sim";
 import { PostLockPanel } from "./postlock-panel";
 import { StackExposurePanel } from "./stack-exposure-panel";
+import { PracticeSlateTag } from "./practice-slate-tag";
 
 export function TournamentLab() {
   const { pools, pre, post, locked } = useMemo(() => {
@@ -43,10 +44,10 @@ export function TournamentLab() {
         Contests are won <span className="gse-editorial" style={{ fontSize: "1.08em" }}>after lock.</span>
       </h2>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-        Your best eight lineups against a simulated field of one hundred — then the
+        Your best eight lineups against a simulated field of one hundred, then the
         late-swap room, where locked players hold and everything else re-optimizes.
-        Sample slate throughout: the math is real, the players are illustrative.
       </p>
+      <PracticeSlateTag className="mt-3" testId="tournament-lab-practice-slate" />
       <div className="mt-6 grid gap-4">
         <PortfolioSim lineups={pools} />
         <StackExposurePanel lineups={pools} />

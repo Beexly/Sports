@@ -12,6 +12,7 @@ import Link from "next/link";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import type { Player } from "@/lib/fantasy/players";
 
 type Tab = "dfs" | "startsit" | "draft";
@@ -84,7 +85,7 @@ export function OptimizerWorkspace({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs leading-5 text-ion-1">
               Season-long lineup by floor, median, and ceiling: who to start and why.{" "}
-              {pool ? "Live graded pool: real players." : "Sample players until a licensed projections feed is connected."}
+              {pool ? "Live data: real players." : <PracticeSlateTag className="ml-1 align-middle" />}
             </p>
             <Link href="/fantasy/lineup" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
               Open full page →
@@ -98,7 +99,7 @@ export function OptimizerWorkspace({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs leading-5 text-ion-1">
               Live draft board: tiers, value over replacement, positional scarcity, run alerts, and your
-              own ADP overlay. {pool ? "Live graded pool: real players." : "Sample players until a licensed projections feed is connected."}
+              own ADP overlay. {pool ? "Live data: real players." : <PracticeSlateTag className="ml-1 align-middle" />}
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">Open full page →</Link>
           </div>

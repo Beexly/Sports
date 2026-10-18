@@ -30,7 +30,8 @@ export function FantasyShell({
   /** Accent token name ("ultraviolet" | "plasma" | "cyan") or a raw CSS color (legacy). */
   accent?: string;
   children: ReactNode;
-  note?: string;
+  /** Footer note. A string, or a node such as the PracticeSlateTag on sample pools. */
+  note?: ReactNode;
   /** Source-attribution footer line (required on live-data surfaces by the rights registry). */
   attribution?: string;
   wide?: boolean;

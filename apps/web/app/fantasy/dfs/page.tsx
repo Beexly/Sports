@@ -33,8 +33,10 @@ export default async function DfsSuitePage() {
       eyebrow="DFS Optimizer"
       accent="cyan"
       title="DFS"
-      intro="Build the lineup. See the why. Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
-      note="Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
+      intro="Build the lineup. See the why. Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, Projection, Ceiling, ownership, and Leverage. Export straight to DraftKings CSV."
+      // No page-level sample note: the optimizer shows the practice-slate tag
+      // itself, and only while its default sample pool is in use (it hides once
+      // a DraftKings CSV is imported). This page cannot see that client state.
       wide
     >
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}

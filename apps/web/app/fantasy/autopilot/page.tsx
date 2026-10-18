@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { GmAutopilot } from "@/components/fantasy/gm-autopilot";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 export const metadata: Metadata = {
   title: "GM Autopilot · Galaxy Fantasy",
@@ -17,7 +18,7 @@ export default function AutopilotPage() {
       accent="cyan"
       title={<>Delegate as much as you <span className="gse-editorial" style={{ fontSize: "1.08em" }}>trust</span>.</>}
       intro="Sync your leagues and choose your level, from pure advisor to a fully remote GM that runs the team to your strategy. The difference from every other tool and every concierge service: nothing happens in the dark. Every move is explained before it's made, committed to your tamper-evident GM Ledger and graded on process, fully reversible where it can be. And it teaches you, so your GM IQ climbs even when the engine is driving. Control and proof, not one or the other."
-      note="Illustrative. The Autopilot proposes and records; executing on a real ESPN/Yahoo/Sleeper account is gated behind your explicit consent, OAuth, and compliance review; there are no autonomous account actions or payments."
+      note={<><PracticeSlateTag /> The Autopilot proposes and records. It takes no actions on a real ESPN, Yahoo, or Sleeper account and makes no payments.</>}
       wide
     >
       <GmAutopilot />

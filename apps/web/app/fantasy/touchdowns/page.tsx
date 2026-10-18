@@ -6,9 +6,9 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { TdBoard } from "@/components/fantasy/td-board";
 
 export const metadata: Metadata = {
-  title: "Anytime TD Board: Glass-Box Touchdown Probabilities",
+  title: "Anytime TD Board: Touchdown Chances",
   description:
-    "Anytime touchdown probabilities from a published four-factor composite — season TD rate, red-zone volume, goal-line volume, and implied team total — with the weights, the logistic, and every missing input stated in the open. Illustrative pool, educational use; no outcome is promised.",
+    "Anytime TD chances built from usage, red-zone role, scoring rate and team total. Practice slate, not live data. No outcome is promised.",
   alternates: { canonical: "/fantasy/touchdowns" },
   // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
   robots: { index: false },
@@ -45,9 +45,8 @@ export default function TouchdownsPage(): JSX.Element {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">
-                Anytime-touchdown probability from four public factors, weighted in the open and
-                pushed through a stated logistic. Hand the board to a skeptic and they can
-                recompute every number without trusting us.
+                Anytime touchdown chances built from usage, red-zone role, scoring rate and
+                team total.
               </p>
             </Reveal>
             <Reveal delay={220}>
@@ -67,10 +66,8 @@ export default function TouchdownsPage(): JSX.Element {
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
-                Educational modelling on an illustrative player pool — the names are fictional, so
-                no probability is ever pinned to a real person. Past results do not predict future
-                results, and nothing here is a promise an outcome. Building the proof layer? See
-                the public{" "}
+                Past results do not predict future results, and nothing here promises an
+                outcome. See the public{" "}
                 <a href="/clv" className="font-semibold text-orbital-cyan hover:text-ion-white">
                   CLV report
                 </a>{" "}

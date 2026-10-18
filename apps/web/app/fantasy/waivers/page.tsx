@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { FANTASY_VALUE_BASIS_NOTE } from "@/lib/fantasy/attribution";
 import { WaiverBoard } from "@/components/fantasy/waiver-board";
-import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
@@ -22,7 +22,7 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 
 const LIVE_NOTE =
   FANTASY_VALUE_BASIS_NOTE +
-  " Live graded pool: real players with model-derived projections. Targets, FAAB tiers, and drop candidates are computed from real grades.";
+  " Live player data: real players with model-derived projections. Targets, FAAB tiers, and drop candidates are computed from real grades.";
 
 export default async function WaiversPage() {
   const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
@@ -35,7 +35,7 @@ export default async function WaiversPage() {
       accent="cyan"
       title={<>Spend the budget where the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>upside</span> is.</>}
       intro="Targets ranked on ceiling, trend, usage, and scheme fit, tiered from Priority to Dart, with a FAAB bid that re-prices the moment you set your remaining budget. And the part most tools skip: who to drop, judged on the floor of your bench, not last week's points."
-      note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
+      note={pool ? LIVE_NOTE : <PracticeSlateTag />}
       wide
       projectionsPool={pool ? "real" : "illustrative"}
     >

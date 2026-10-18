@@ -11,6 +11,7 @@
 
 import { useMemo, useState } from "react";
 import { PROPS, readProp, evalEntry, type Prop, type PropRead } from "@/lib/fantasy/props";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 // Side identity (not semantic outcome): over = cyan, under = plasma — the two
 // poles of a call, mirroring trade-analyzer's give/get. Signed EV reads use
@@ -62,7 +63,7 @@ export function PropsEdge({
         <p className="text-sm text-ion-1">No pick&apos;em lines are connected right now.</p>
         <p className="mx-auto mt-2 max-w-md text-[11px] leading-relaxed text-ion-2">
           The Pick&apos;em Edge reads a licensed lines feed (obtained under agreement, never scraped). Until
-          one is connected it shows the illustrative slate, never fabricated live lines.
+          one is connected, no live lines are shown here.
         </p>
       </div>
     );
@@ -119,14 +120,16 @@ export function PropsEdge({
             because that is where a visitor's eye already is when they start
             reading conviction percentages and EV figures. Mirrors the pill
             PickemRanker already ships. */}
-        <span
-          data-testid="props-edge-source"
-          className={`ml-auto rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
-            live ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
-          }`}
-        >
-          {live ? "Source: live" : "Source: fictional (illustrative)"}
-        </span>
+        {live ? (
+          <span
+            data-testid="props-edge-source"
+            className="ml-auto rounded-full bg-orbital-cyan/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-orbital-cyan"
+          >
+            Source: live
+          </span>
+        ) : (
+          <PracticeSlateTag className="ml-auto" testId="props-edge-source" />
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.55fr_1fr]">
@@ -146,7 +149,7 @@ export function PropsEdge({
       <div className="lg:sticky lg:top-24 self-start">
         <div className="surface-card p-5">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Power-Play entry</p>
-          <p className="mt-1 text-xs text-ion-1">Add 2-6 legs. Every leg must hit. We show your true odds and EV.</p>
+          <p className="mt-1 text-xs text-ion-1">Add 2-6 legs. Every leg must hit. We show the fair odds and the value.</p>
 
           {entryReads.length === 0 && (
             <p className="mt-5 text-sm text-ion-2">Tap a prop's <span className="text-orbital-cyan">+</span> to build an entry.</p>
@@ -168,14 +171,14 @@ export function PropsEdge({
           {ev && (
             <div className="mt-5 border-t border-mineral pt-4">
               <div className="grid grid-cols-3 gap-2 text-center">
-                <Metric label="True odds" value={`${(ev.combinedP * 100).toFixed(1)}%`} />
+                <Metric label="Fair odds" value={`${(ev.combinedP * 100).toFixed(1)}%`} />
                 <Metric label="Pays" value={`${ev.payout}×`} />
                 {/* Signed EV — verify when positive, alert when negative, neutral in between. */}
-                <Metric label="EV / $1" value={`${ev.ev >= 0 ? "+" : ""}${ev.ev.toFixed(2)}`} tone={ev.ev > 0.08 ? "var(--verify)" : ev.ev > -0.05 ? "var(--ion-white)" : "var(--alert)"} />
+                <Metric label="Value per $1" value={`${ev.ev >= 0 ? "+" : ""}${ev.ev.toFixed(2)}`} tone={ev.ev > 0.08 ? "var(--verify)" : ev.ev > -0.05 ? "var(--ion-white)" : "var(--alert)"} />
               </div>
               <p className="mt-3 text-center text-xs">
                 <span className="rounded-full px-3 py-1 font-semibold uppercase tracking-wider" style={{ background: ev.verdict === "+EV" ? "color-mix(in srgb, var(--verify) 12%, transparent)" : ev.verdict === "thin" ? "rgba(255,255,255,0.07)" : "color-mix(in srgb, var(--alert) 12%, transparent)", color: ev.verdict === "+EV" ? "var(--verify)" : ev.verdict === "thin" ? "var(--ion-white)" : "var(--alert)" }}>
-                  {ev.verdict === "+EV" ? "Model-favored (illustrative, not a guarantee)" : ev.verdict === "thin" ? "Thin edge (near break-even)" : "Model-unfavored (illustrative)"}
+                  {ev.verdict === "+EV" ? "Our lean (not a guarantee)" : ev.verdict === "thin" ? "Thin edge (near break-even)" : "Not our lean"}
                 </span>
               </p>
               <p className="mt-3 text-[10px] leading-relaxed text-ion-2">
@@ -225,10 +228,17 @@ function PropRow({ r, active, onToggle }: { r: PropRead; active: boolean; onTogg
 
       {/* pick + conviction */}
       <div className="hidden shrink-0 text-right sm:block">
-        <p className="font-mono text-sm font-bold uppercase tabular-nums" style={{ color: tone }}>{r.side} {Math.round(r.pSide * 100)}%</p>
+        <p className="font-mono text-sm font-bold uppercase tabular-nums" style={{ color: tone }}>
+          <span className="font-normal text-ion-2">Projection:</span> {r.side} {Math.round(r.pSide * 100)}%
+        </p>
         <div className="mt-1 h-1 w-24 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
           <div className="h-full rounded-full" style={{ width: `${Math.round(r.edge * 100)}%`, background: tone }} />
         </div>
+        {r.priced && (
+          <p className="mt-1 font-mono text-[10px] tabular-nums text-ion-2">
+            Edge {r.edge >= 0 ? "+" : ""}{(r.edge * 100).toFixed(1)} pts
+          </p>
+        )}
       </div>
 
       {/* best alt */}
@@ -238,7 +248,7 @@ function PropRow({ r, active, onToggle }: { r: PropRead; active: boolean; onTogg
           <p className="text-xs text-ion-white">{r.side} <span className="font-mono tabular-nums">{alt.line}</span> @ <span className="font-mono tabular-nums text-ultraviolet">{alt.mult}×</span></p>
           {/* signed EV: verify up, alert down — never plasma for a negative */}
           <p className={`font-mono text-[10px] tabular-nums ${alt.ev >= 0 ? "text-verify" : "text-alert"}`}>
-            EV {alt.ev >= 0 ? "+" : ""}{alt.ev.toFixed(2)}
+            Value {alt.ev >= 0 ? "+" : ""}{alt.ev.toFixed(2)}
           </p>
         </div>
       )}

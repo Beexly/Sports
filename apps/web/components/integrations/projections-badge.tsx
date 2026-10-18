@@ -77,7 +77,7 @@ export function ProjectionsBadge({ pool }: { pool: ProjectionsPool }) {
         <span className="text-ion-2">
           {pool === "illustrative"
             ? "· illustrative player pool"
-            : "· a licensed source is founder-gated"}
+            : "· live projections coming soon"}
         </span>
       )}
       <Link href="/integrations" className="text-ultraviolet underline underline-offset-2 hover:text-ultraviolet-glow">Data status →</Link>

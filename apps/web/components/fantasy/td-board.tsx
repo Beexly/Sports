@@ -8,14 +8,23 @@
  *   - It never shows an "edge" it cannot price. With no licensed odds feed every
  *     row renders edge as an em-dash with the reason, not a zero.
  *   - It never presents proxy-derived red-zone shares as measured data; the
- *     caveat strip states the basis and the source badge flips on live data.
- *   - It never claims a hit rate. The model's weights are published; its
- *     accuracy is not yet proven on GSE data and the panel says so.
+ *     practice-slate tag marks the sample pool and flips only on live data.
+ *   - It never claims a hit rate. The weights stay in td-model.ts (not
+ *     rendered here); accuracy is not yet proven on GSE data.
  */
 
 import { useMemo } from "react";
-import { gradeTdScorers, illustrativeTdInputs, rankByEdge, PROXY_BASIS_NOTE, TD_WEIGHTS, TD_LOGISTIC, type TdGrade } from "@/lib/fantasy/td-model";
+import { gradeTdScorers, illustrativeTdInputs, rankByEdge, type TdComponentKey, type TdGrade } from "@/lib/fantasy/td-model";
 import { isLiveProjections } from "@/lib/integrations/projections";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
+
+/** Customer labels for the inputs a row can be missing (tooltip only). */
+const INPUT_LABEL: Record<TdComponentKey, string> = {
+  seasonHit: "season TD rate",
+  redZone: "red-zone role",
+  goalLine: "goal-line role",
+  teamTotal: "team total",
+};
 
 function posColor(pos: string): string {
   switch (pos) {
@@ -56,50 +65,25 @@ export function TdBoard({ live }: { live?: boolean }) {
             <h2 className="mt-1 text-2xl font-semibold tracking-tight text-ion-white">
               Anytime TD board
             </h2>
-            <p className="mt-1 max-w-2xl text-sm text-ion-2">
-              Every score below is recomputable by hand: a weighted composite of the four
-              published factors, pushed through a stated logistic.
+            <p className="mt-1 max-w-2xl text-sm text-ion-2" data-testid="td-board-basis">
+              Built from usage, red-zone role, scoring rate and team total.
             </p>
           </div>
-          <span
-            data-testid="td-board-source"
-            className={`ml-auto rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${
-              isLive ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
-            }`}
-          >
-            {isLive ? "Source: live feed" : "Source: fictional (illustrative)"}
-          </span>
+          {isLive ? (
+            <span
+              data-testid="td-board-source"
+              className="ml-auto rounded-full bg-orbital-cyan/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-orbital-cyan"
+            >
+              Source: live feed
+            </span>
+          ) : (
+            <PracticeSlateTag className="ml-auto" testId="td-board-source" />
+          )}
         </div>
-
-        {/* The published formula, in the open. */}
-        <dl className="relative mt-5 grid gap-2 sm:grid-cols-4" data-testid="td-board-formula">
-          {(
-            [
-              ["Season TD rate", TD_WEIGHTS.seasonHit],
-              ["Red-zone volume", TD_WEIGHTS.redZone],
-              ["Goal-line volume", TD_WEIGHTS.goalLine],
-              ["Vegas team total", TD_WEIGHTS.teamTotal],
-            ] as const
-          ).map(([label, w]) => (
-            <div key={label} className="rounded-lg border border-ion-1/20 bg-ion-1/5 px-3 py-2">
-              <dt className="text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</dt>
-              <dd className="mt-0.5 font-mono text-lg text-ion-white">{(w * 100).toFixed(0)}%</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="relative mt-3 font-mono text-[11px] text-ion-3">
-          prob = logistic((score − {TD_LOGISTIC.center}) × {TD_LOGISTIC.slope})
-        </p>
+        {/* The weights, logistic, and proxy-basis note (TD_WEIGHTS, TD_LOGISTIC,
+            PROXY_BASIS_NOTE in lib/fantasy/td-model.ts) are unchanged and still
+            exported; this surface simply no longer renders the internals. */}
       </section>
-
-      {/* Caveat strip — stated once, plainly, above the numbers. */}
-      <div
-        data-testid="td-board-basis"
-        className="rounded-lg border border-caution/30 bg-caution/10 px-4 py-3 text-xs text-ion-2"
-      >
-        <span className="font-semibold text-caution">Basis: </span>
-        {PROXY_BASIS_NOTE}
-      </div>
 
       {/* Headline three — the cinematic flare. */}
       {headline.length > 0 && (
@@ -114,7 +98,7 @@ export function TdBoard({ live }: { live?: boolean }) {
                 className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-gradient-to-b from-plasma/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
               <p className="relative text-[10px] uppercase tracking-[0.2em] text-ion-3">
-                Model rank {i + 1}
+                Rank {i + 1}
               </p>
               <p className="relative mt-1 truncate text-lg font-semibold text-ion-white">{g.name}</p>
               <div className="relative mt-1 flex items-center gap-2">
@@ -124,7 +108,7 @@ export function TdBoard({ live }: { live?: boolean }) {
                 <span className="text-xs text-ion-3">{g.team}</span>
               </div>
               <p className="relative mt-3 font-mono text-3xl text-ion-white">{probPct(g.prob)}</p>
-              <p className="relative text-[11px] text-ion-3">anytime-TD probability</p>
+              <p className="relative text-[11px] text-ion-3">anytime TD projection</p>
             </article>
           ))}
         </div>
@@ -173,7 +157,7 @@ export function TdBoard({ live }: { live?: boolean }) {
                 {g.partial && (
                   <span
                     data-testid="td-board-missing"
-                    title={`Missing inputs: ${g.missing.join(", ")} — weight renormalized, not backfilled`}
+                    title={`Missing: ${g.missing.map((k) => INPUT_LABEL[k]).join(", ")}. Built from the inputs we have.`}
                     className="rounded border border-caution/40 px-1.5 py-0.5 text-[10px] text-caution"
                   >
                     {g.missing.length} missing
@@ -185,8 +169,8 @@ export function TdBoard({ live }: { live?: boolean }) {
         )}
 
         <p className="px-4 py-3 text-[11px] text-ion-3">
-          Edge is model probability minus the vig-stripped market probability. Rows without a
-          market price show an em-dash — an unpriceable board is reported, never dressed up.
+          Edge is our projection minus the market&apos;s no-vig chance. Rows without a market
+          price show a dash, never a zero.
         </p>
       </section>
     </div>

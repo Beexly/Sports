@@ -82,6 +82,13 @@ const STATUS_TONE: Record<ToolStatus, string> = {
   sample: "text-ion-2",
 };
 
+/** Customer-facing label per status; "sample" reads as the practice-slate tag. */
+const STATUS_LABEL: Record<ToolStatus, string> = {
+  live: "live",
+  "partly live": "partly live",
+  sample: "Practice slate",
+};
+
 export default async function FantasyHubPage({
   searchParams,
 }: {
@@ -144,8 +151,8 @@ export default async function FantasyHubPage({
                 <ReadinessMetric label="Actions" value="no-write" />
               </dl>
               <p className="mt-4 text-sm leading-6 text-ion-1">
-                This page no longer presents fictional player pools as the primary product.
-                Demo tools can remain internal methodology references, but the public path is data-first.
+                Real data comes first. A tool without a live feed opens on a Practice slate of
+                sample players, tagged so you always know.
               </p>
             </div>
           </div>
@@ -214,12 +221,12 @@ export default async function FantasyHubPage({
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
                   One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
                   live, partly live, or running on sample players until a licensed feed is connected.
-                  Never a design delay, never a fictional input presented as live advice.
+                  Sample players are always tagged Practice slate, never shown as live advice.
                 </p>
                 <p className="mt-2 text-xs leading-5 text-ion-2">
                   <span className="text-orbital-cyan">Live</span> = real public data today.{" "}
                   <span className="text-ultraviolet">Partly live</span> = real in some tabs, sample in others.{" "}
-                  Sample = opens now, clearly labelled, not advice.
+                  Practice slate = opens now on sample players, clearly labelled, not advice.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">
@@ -237,7 +244,7 @@ export default async function FantasyHubPage({
                   <p className="font-semibold text-ion-white group-hover:text-orbital-cyan">{tool}</p>
                   <p className="text-sm leading-6 text-ion-1">{requirement}</p>
                   <span className={`font-mono text-[11px] uppercase tracking-[0.16em] ${STATUS_TONE[status]}`}>
-                    {status}
+                    {STATUS_LABEL[status]}
                   </span>
                 </Link>
               ))}

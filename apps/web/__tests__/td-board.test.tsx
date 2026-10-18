@@ -3,26 +3,25 @@ import { render, screen } from "@testing-library/react";
 import { TdBoard } from "@/components/fantasy/td-board";
 
 describe("TdBoard", () => {
-  it("renders the board with the published formula in the open", () => {
+  it("renders the board with a plain-language basis, not the internal formula", () => {
+    // Customer copy pass (owner-approved): the weights breakdown and the
+    // logistic are no longer rendered. The math in td-model.ts is unchanged.
     render(<TdBoard />);
     expect(screen.getByTestId("td-board")).toBeTruthy();
-    const formula = screen.getByTestId("td-board-formula");
-    expect(formula.textContent).toContain("Season TD rate");
-    expect(formula.textContent).toContain("Red-zone volume");
-    expect(formula.textContent).toContain("Goal-line volume");
-    expect(formula.textContent).toContain("Vegas team total");
-    expect(formula.textContent).toContain("40%");
-    expect(formula.textContent).toContain("20%");
+    expect(screen.queryByTestId("td-board-formula")).toBeNull();
+    const text = document.body.textContent ?? "";
+    expect(text).not.toContain("logistic");
+    expect(text).not.toContain("Vegas team total");
   });
 
-  it("labels an unlicensed pool as fictional rather than live", () => {
+  it("labels an unlicensed pool as a practice slate rather than live", () => {
     render(<TdBoard live={false} />);
-    expect(screen.getByTestId("td-board-source").textContent).toContain("fictional");
+    expect(screen.getByTestId("td-board-source").textContent).toMatch(/practice slate/i);
   });
 
-  it("states the proxy basis above the numbers", () => {
+  it("states the basis above the numbers", () => {
     render(<TdBoard />);
-    expect(screen.getByTestId("td-board-basis").textContent).toContain("not from a measured");
+    expect(screen.getByTestId("td-board-basis").textContent).toContain("Built from usage");
   });
 
   it("renders headline cards and ranked rows for the pool", () => {

@@ -425,9 +425,9 @@ function edgeColumns(tok: Tok, tone: "buy" | "sell"): ReadonlyArray<Column<EdgeS
     { key: "avgSeparation", label: "Sep", align: "right", numeric: true, render: (r) => r.avgSeparation.toFixed(2) },
     { key: "yacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, render: (r) => formatSigned(r.yacAboveExpectation, 2) },
     { key: "shareIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareIntendedAirYards) },
-    { key: "underlyingZ", label: "Undr z", align: "right", numeric: true, tooltip: "z-score of the underlying tracking signal", render: (r) => formatSigned(r.underlyingZ, 2) },
-    { key: "productionZ", label: "Prod z", align: "right", numeric: true, tooltip: "z-score of actual production", render: (r) => formatSigned(r.productionZ, 2) },
-    { key: "gap", label: "Gap", align: "right", numeric: true, tooltip: "underlying z minus production z", render: (r) => <span className={`font-semibold ${gapCls}`}>{formatSigned(r.gap, 2)}</span> },
+    { key: "underlyingZ", label: "Underlying", align: "right", numeric: true, tooltip: "Compared with league average", render: (r) => formatSigned(r.underlyingZ, 2) },
+    { key: "productionZ", label: "Production", align: "right", numeric: true, tooltip: "Compared with league average", render: (r) => formatSigned(r.productionZ, 2) },
+    { key: "gap", label: "Gap", align: "right", numeric: true, tooltip: "Underlying minus Production, both compared with league average", render: (r) => <span className={`font-semibold ${gapCls}`}>{formatSigned(r.gap, 2)}</span> },
   ];
 }
 

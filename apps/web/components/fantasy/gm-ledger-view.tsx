@@ -37,10 +37,10 @@ export function GmLedgerView({ data }: { data: GmLedger }) {
             <span className="font-display leading-none text-white" style={{ fontSize: "4rem" }}>{r.grade}</span>
             <span className="mb-2 font-mono text-2xl" style={{ color: BRAND_COLORS.orbitalCyan }}>{r.composite}</span>
           </div>
-          <p className="mt-1 text-xs text-ink-500">Process-weighted, calibration-checked, luck-adjusted.</p>
+          <p className="mt-1 text-xs text-ink-500">Graded on process, checked against results, luck-adjusted.</p>
           <div className="mt-5 space-y-3">
             <Bar label="Process" value={r.processScore} hex={BRAND_COLORS.orbitalCyan} />
-            <Bar label="Calibration" value={r.calibration} hex={BRAND_COLORS.softUltraviolet} />
+            <Bar label="Accuracy check" value={r.calibration} hex={BRAND_COLORS.softUltraviolet} />
             <Bar label="Luck-adjusted" value={r.luckAdjusted} hex={BRAND_COLORS.ionMagenta} />
           </div>
         </div>

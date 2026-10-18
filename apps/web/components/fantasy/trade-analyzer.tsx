@@ -8,6 +8,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { evaluateTrade, tradeValue, type Fairness } from "@/lib/fantasy/trade";
 import { PLAYERS, POS_HEX, type Player } from "@/lib/fantasy/players";
 import { gseRankPool, isLiveGse } from "@/lib/fantasy/gse-score";
@@ -102,16 +103,16 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">
             Player pool · ranked by GSE Score
           </p>
-          <span
-            className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-            style={
-              isLive
-                ? { background: "rgba(255,77,46,0.14)", color: "#FF4D2E" }
-                : { background: "rgba(196,191,182,0.12)", color: "#C4BFB6" }
-            }
-          >
-            {isLive ? "Live process grade" : "Sample ranking"}
-          </span>
+          {isLive ? (
+            <span
+              className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+              style={{ background: "rgba(255,77,46,0.14)", color: "#FF4D2E" }}
+            >
+              Live process grade
+            </span>
+          ) : (
+            <PracticeSlateTag />
+          )}
         </div>
         <div className="max-h-[40vh] space-y-0.5 overflow-y-auto">
           {sortedPool.map((p) => {
@@ -120,7 +121,7 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
             const r = ratings.get(p.id);
             return (
               <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1" style={{ opacity: used ? 0.4 : 1 }}>
-                <span className="w-6 shrink-0 text-right font-mono text-[10px] tabular-nums text-ion-3" title="GSE Index (overall rank)">
+                <span className="w-6 shrink-0 text-right font-mono text-[10px] tabular-nums text-ion-3" title="Rank (by GSE Score)">
                   {r?.index ?? "—"}
                 </span>
                 <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{p.pos}</span>

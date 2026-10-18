@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { SchemeIntel } from "@/components/fantasy/scheme-intel";
-import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 export const metadata: Metadata = {
   title: "Scheme Intelligence · Galaxy Fantasy",
@@ -18,7 +18,7 @@ export default function SchemePage() {
       accent="cyan"
       title={<>One change. The whole <span className="gse-editorial" style={{ fontSize: "1.08em" }}>ripple</span>.</>}
       intro="A new coordinator doesn't move one player; it re-prices an entire offense. Pick a coaching or scheme change and see the full cascade: who gains, who fades, by how much, and why, weighted by how reliable the source is, on the same tiering The Beat uses for breaking news."
-      note={`${ILLUSTRATIVE_NOTE} Scenarios are illustrative coaching changes; reliability tiers mirror The Beat.`}
+      note={<><PracticeSlateTag /> Sample coaching changes. Reliability tiers match The Beat.</>}
       wide
     >
       <SchemeIntel />

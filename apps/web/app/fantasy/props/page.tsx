@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Pick'em Edge · Our number vs their line",
   description:
-    "Where our model disagrees with the posted Underdog / DK Pick6 line. Every prop shows the side, the conviction, and the most valuable alt line. Build a Power-Play entry and see its true odds and EV before you stake a dollar.",
+    "Where our model disagrees with the posted Underdog / DK Pick6 line. Every prop shows the side, the conviction, and the most valuable alt line. Build a Power-Play entry and see the fair odds and the value.",
   alternates: { canonical: "/fantasy/props" },
   robots: { index: false, follow: true },
 };

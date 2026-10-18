@@ -13,6 +13,7 @@
 
 import { useMemo, useState } from "react";
 import { DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 type SortKey = "name" | "pos" | "salary" | "proj" | "value" | "own" | "lev" | "ceiling" | "form" | "matchup";
 
@@ -20,13 +21,13 @@ const COLUMNS: { key: SortKey; label: string; numeric: boolean; title: string }[
   { key: "name", label: "Player", numeric: false, title: "Name and matchup" },
   { key: "pos", label: "Pos", numeric: false, title: "Position" },
   { key: "salary", label: "Sal", numeric: true, title: "DraftKings salary" },
-  { key: "proj", label: "Proj", numeric: true, title: "Projected points" },
+  { key: "proj", label: "Proj", numeric: true, title: "Projection: projected points" },
   { key: "value", label: "Val", numeric: true, title: "Points per $1k salary" },
-  { key: "ceiling", label: "Ceil", numeric: true, title: "Ceiling points" },
+  { key: "ceiling", label: "Ceiling", numeric: true, title: "Ceiling points" },
   { key: "form", label: "L5", numeric: true, title: "Last 5 games, points per game" },
-  { key: "matchup", label: "M/U", numeric: true, title: "Matchup impact: opponent rank vs this position, 0-100" },
+  { key: "matchup", label: "Matchup", numeric: true, title: "Matchup: opponent rank vs this position, 0-100" },
   { key: "own", label: "pOwn%", numeric: true, title: "Projected field ownership" },
-  { key: "lev", label: "Lev", numeric: true, title: "Leverage: ceiling vs ownership" },
+  { key: "lev", label: "Leverage", numeric: true, title: "Leverage: ceiling vs ownership" },
 ];
 
 function valuePerK(p: DfsPlayer): number {
@@ -84,16 +85,16 @@ export function ProjectionsTable({
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">
           Projections · {players.length} players
         </p>
-        <span
-          className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-          style={
-            isLive
-              ? { background: "rgba(255,77,46,0.14)", color: "#FF4D2E" }
-              : { background: "rgba(196,191,182,0.12)", color: "#C4BFB6" }
-          }
-        >
-          {isLive ? "Live salaries" : "Sample slate"}
-        </span>
+        {isLive ? (
+          <span
+            className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+            style={{ background: "rgba(255,77,46,0.14)", color: "#FF4D2E" }}
+          >
+            Live salaries
+          </span>
+        ) : (
+          <PracticeSlateTag />
+        )}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -166,7 +167,7 @@ export function ProjectionsTable({
                               ? "#C4BFB6"
                               : "var(--ion-1)",
                     }}
-                    title="Matchup impact: opponent rank vs this position, 0-100. Higher = softer."
+                    title="Matchup: opponent rank vs this position, 0-100. Higher = softer."
                   >
                     {p.matchupImpact != null ? Math.round(p.matchupImpact) : <span className="text-ion-3">n/a</span>}
                   </td>
@@ -197,7 +198,7 @@ export function ProjectionsTable({
         </table>
       </div>
       <p className="border-t border-mineral px-4 py-2 text-[11px] text-ion-3">
-        Val = points per $1k. Lev = ceiling vs ownership (higher is more contrarian upside).
+        Proj = Projection. Val = points per $1k. Leverage = ceiling vs ownership (higher is more contrarian upside).
         Check to pin a player into every lineup. Exclude removes them.
       </p>
     </div>

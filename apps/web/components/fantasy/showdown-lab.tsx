@@ -20,6 +20,7 @@ import {
   type ShowdownLineup,
 } from "@/lib/fantasy/showdown";
 import { SHOWDOWN_GAME_LABEL, SHOWDOWN_SLATE } from "@/lib/fantasy/showdown-slate";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 const salaryText = (n: number): string => `$${n.toLocaleString("en-US")}`;
 
@@ -134,12 +135,7 @@ export function ShowdownLab() {
               {SHOWDOWN_RULES.captainMultiplier}× salary, five flex, both teams represented.
             </p>
           </div>
-          <span
-            data-testid="showdown-source"
-            className="ml-auto rounded-full bg-caution/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-caution"
-          >
-            Source: fictional (illustrative)
-          </span>
+          <PracticeSlateTag className="ml-auto" testId="showdown-source" />
         </div>
 
         <dl className="relative mt-5 grid gap-2 sm:grid-cols-4">
