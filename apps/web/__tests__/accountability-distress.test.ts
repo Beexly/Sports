@@ -4,7 +4,7 @@
  *   2. routeDistress: neverUpsell literal, resources canonical + non-empty
  *   3. Accountability page source pins (no banned phrases, link integrity)
  *   4. Sitemap entry added for /accountability
- *   5. Footer link added for /accountability
+ *   5. Footer no longer links /accountability (customer copy pass)
  */
 
 import { describe, expect, it, beforeAll } from "vitest";
@@ -247,15 +247,19 @@ describe("sitemap includes /accountability", () => {
 
 // ── 6. Footer link ────────────────────────────────────────────────────────────
 
-describe("footer includes /accountability link", () => {
-  it("footer.tsx has an Accountability link in COMPANY_LINKS", async () => {
+// Customer copy pass (owner directive, requirement change): /accountability is
+// a door into the calibration report and model changelog, which customers are
+// no longer walked through. The footer drops the link; the page itself and its
+// sitemap entry (section 4 above) stay, so the route is reachable by direct URL.
+describe("footer no longer links /accountability", () => {
+  it("footer.tsx carries no Accountability link", async () => {
     const fs = await import("fs/promises");
     const path = await import("path");
     const footerSource = await fs.readFile(
       path.resolve(__dirname, "../components/ui/footer.tsx"),
       "utf-8"
     );
-    expect(footerSource).toContain('href: "/accountability"');
-    expect(footerSource).toContain('"Accountability"');
+    expect(footerSource).not.toContain('href: "/accountability"');
+    expect(footerSource).not.toContain('label: "Accountability"');
   });
 });

@@ -9,6 +9,8 @@ type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<Na
 
 // Mirrors the desktop IA exactly (C-360). Labels match page H1s. The nine
 // sample-backed fantasy tools are parked (routes stay; nav drops them).
+// Customer copy pass: Record, Verify and Calibration are unlinked here, same
+// as the desktop bar; the routes stay reachable by direct URL.
 const SECTIONS: readonly Section[] = [
   {
     heading: "Primary",
@@ -16,15 +18,11 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "Board", href: "/board" },
       { label: "Picks", href: "/picks" },
-      { label: "Record", href: "/performance" },
-      { label: "Method", href: "/methodology" },
-      { label: "Verify", href: "/verify" },
       { label: "Plans", href: "/pricing" },
       { label: "Players", href: "/players" },
       { label: "DFS", href: "/fantasy/dfs" },
       { label: "Props", href: "/fantasy/props" },
       { label: "GSN", href: "/gsn" },
-      { label: "Calibration", href: "/calibration" },
     ],
   },
 ];

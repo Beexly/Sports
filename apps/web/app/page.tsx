@@ -8,7 +8,6 @@ import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { FieldCinematicIntro } from "@/components/landing/field-cinematic-intro";
 import { FieldHeroCanvas } from "@/components/landing/field-hero-canvas";
 import { FieldBoardTicker } from "@/components/landing/field-board-ticker";
-import { FieldRecordPanel } from "@/components/landing/field-record-panel";
 import { DoorCard } from "@/components/landing/door-card";
 import {
   NflverseLabDoor,
@@ -17,8 +16,6 @@ import {
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
-import { WorldSection } from "@/components/world/world-section";
-import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
 import { publishedTickerLine, heldTickerLine } from "@/lib/board/market-label";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
@@ -50,6 +47,20 @@ export default async function HomePage(): Promise<JSX.Element> {
   const gated = state.gatedTodayRows.length;
   const scoring = state.scoringNow.length;
   const settled = calibration.sampleSize;
+
+  // Public record = wins and losses only (owner directive). These counts come
+  // from the same server-gated report: when the performance gate is closed the
+  // loader returns an empty population, so the page never decides access on
+  // its own. Pushes and in-play exclusions are named beside the record because
+  // they change what it counts (law 10). No rate is shown.
+  // Read defensively: a partial payload renders the "building" state, never a
+  // crash and never an invented zero record (showRecord needs decided > 0).
+  const wins = calibration.population?.wins ?? 0;
+  const losses = calibration.population?.losses ?? 0;
+  const pushes = calibration.population?.pushes ?? 0;
+  const decided = calibration.population?.decided ?? 0;
+  const excludedInPlay = calibration.excludedInPlay ?? 0;
+  const showRecord = !calibrationResult.meta.gated && decided > 0;
 
   // Honest degraded states. The loaders zero their counts on infra failure, a
   // shape byte-identical to a genuinely quiet board. Read the loader meta so an
@@ -260,103 +271,62 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* NO-BET. Restraint is a first-class output. */}
-        <WorldSection
-          index="01"
-          id="gate"
-          className="neb-band"
-          eyebrow="The hold"
-          title={
-            <>
-              A pass is not a blank. It is{" "}
-              <span className="text-plasma">the finding</span>.
-            </>
-          }
-          lede="Knowing what not to trust is the product. Four checks keep weak games off the board, and every pass is logged in public, same as a published pick."
-          tone="deep"
-        >
-          <NoBetGateChapter />
-        </WorldSection>
-
-        {/* PROOF STRIP. One band, routes to the proof itself. */}
-        <section className="neb-band border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                The proof
-              </p>
-              <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                Trust is an architecture, not a tagline.
-              </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-                Picks publish with tamper-evident receipts, frozen before kickoff:
-                hashed, committed, impossible to edit after the game. No fabricated
-                picks, no invented stats, no silent edits. And you don&apos;t have to
-                take our word for it. Check a receipt yourself.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link href="/proof" className="btn-primary whitespace-nowrap">
-                See the sealed record
-              </Link>
-              <Link
-                href="/engine"
-                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
-              >
-                Open the sealed engine
-              </Link>
-              <Link
-                href="/verify"
-                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
-              >
-                Check a receipt →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* RECORD. Calm, live, sample-aware. */}
+        {/* RECORD. Wins and losses only, with the count (owner directive:
+            public proof is win/loss and units, nothing about method). Units
+            are not in the report this page reads, so none are shown. The
+            calibration curve, the receipts strip and the gate chapter that
+            used to sit here were removed; their routes stay reachable. */}
         <section
+          data-testid="homepage-record"
           className="border-b border-mineral px-4 py-14 sm:px-6 lg:px-8"
           style={{ background: "#0A0C10" }}
         >
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                Record
-              </p>
-              <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                Every number ships with its sample.
-              </h2>
+          <div className="mx-auto max-w-7xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
+              Record
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              Wins and losses, all of them.
+            </h2>
+            {showRecord ? (
+              <>
+                <dl className="mt-6 grid max-w-xl grid-cols-3 gap-px border border-mineral bg-mineral">
+                  {[
+                    { k: "Wins", v: wins },
+                    { k: "Losses", v: losses },
+                    { k: "Decided picks", v: decided },
+                  ].map((cell) => (
+                    <div key={cell.k} className="bg-eclipse px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-wider text-ion-2">
+                        {cell.k}
+                      </dt>
+                      <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-ion-white">
+                        {cell.v}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">
+                  Record: {wins}-{losses} across {decided} decided picks.
+                  {pushes > 0 ? (
+                    <> {pushes} {pushes === 1 ? "push is" : "pushes are"} not counted as a win or a loss.</>
+                  ) : null}
+                  {excludedInPlay > 0 ? (
+                    <> {excludedInPlay} {excludedInPlay === 1 ? "pick" : "picks"} made after kickoff {excludedInPlay === 1 ? "is" : "are"} left out.</>
+                  ) : null}
+                </p>
+              </>
+            ) : (
               <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">
-                Receipts freeze before kickoff. Every result shows its date range and
-                sample size. Thin samples stay dark with the gap named. Recompute any
-                seal yourself.
+                Results build as picks settle. Wins and losses show here once
+                there are graded picks to count.
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/calibration" className="btn-primary min-h-11 px-5 py-2.5">
-                  Full record
-                </Link>
-                <Link
-                  href="/verify"
-                  className="inline-flex min-h-11 items-center border border-mineral px-5 py-2.5 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
-                >
-                  Verify a receipt
-                </Link>
-              </div>
+            )}
+            <div className="mt-6">
+              <Link href="/picks" className="btn-primary min-h-11 px-5 py-2.5">
+                See today&apos;s picks
+              </Link>
             </div>
-            <FieldRecordPanel
-              sampleSize={calibration.sampleSize}
-              gated={calibrationResult.meta.gated}
-              publicMessage={calibration.publicMessage}
-              buckets={(calibration.buckets ?? []).map((b) => ({
-                label: b.label,
-                expectedWinRate: b.expectedWinRate,
-                observedWinRate: b.observedWinRate,
-                sampleSize: b.sampleSize,
-                sufficientSample: b.sampleSize >= 30,
-              }))}
-            />
           </div>
         </section>
 
@@ -365,9 +335,10 @@ export default async function HomePage(): Promise<JSX.Element> {
             withhold the whole band rather than caption unverifiable zeros as
             "Live counts". The player-rows metric moved to the Suspense-bounded
             NflverseLabDoor above (P16-01): nflverse errors surface there, not
-            here. The methodology cards below stay; they explain method, not
-            live numbers. */}
+            here. The ledger variant drops the methodology cards (customer copy
+            pass) and keeps the counts plus their freshness stamp. */}
         <MethodologySection
+          variant="ledger"
           metrics={
             boardUnavailable
               ? undefined

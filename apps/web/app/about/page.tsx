@@ -22,7 +22,7 @@ const PRINCIPLES = [
     eyebrow: "02 · Reasoning is published",
     title: "If the work can't be shown, it doesn't ship.",
     body:
-      "On Pro and Elite, each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the confidence score the model assigned. Free sees the daily two-pick teaser without the confidence score. On book-priced moneyline picks the only probability shown is the market-implied one fixed in the pick's proof receipt. " +
+      "On Pro and Elite, each pick shows its Analysis and its Confidence score. Free sees the daily two-pick teaser without the confidence score or the Analysis. On book-priced moneyline picks the only probability shown is the market-implied one fixed in the pick's proof receipt. " +
       MARKET_IMPLIED_CALIBRATION_CLAIM +
       " You see the inputs. You decide what to do with them.",
   },
@@ -36,7 +36,7 @@ const PRINCIPLES = [
     eyebrow: "04 · Trust is earned slowly",
     title: "Performance stats stay gated until they're honest.",
     body:
-      "The public win-rate readout doesn't appear until enough settled picks exist to make it statistically meaningful. Until then, the Performance page says \"Collecting.\" Patience over noise. That's the standard.",
+      "The public win-rate readout doesn't appear until enough settled picks exist to make it statistically meaningful. Until then, the public record says it is still collecting. Patience over noise. That's the standard.",
   },
 ];
 
@@ -63,10 +63,9 @@ export default function AboutPage() {
             </p>
             <p className="mt-5 max-w-2xl text-lg text-ion-1">
               {BRAND_NAME} ingests live odds across dozens of sportsbooks,
-              scores every matchup for edge, and publishes a fully-reasoned
-              signal alongside every factor that drove it. The
-              bar is simple: if it can&apos;t be explained, it doesn&apos;t
-              get published.
+              scores every matchup for edge, and publishes each pick with its
+              Analysis: the reason the pick exists. The bar is simple: if it
+              can&apos;t be explained, it doesn&apos;t get published.
             </p>
             <p className="mt-5 max-w-2xl font-mono text-sm uppercase tracking-[0.18em] text-ion-1">
               — The {BRAND_NAME} team

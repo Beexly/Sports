@@ -23,9 +23,9 @@ const COMMANDS: Command[] = [
   { label: "The Beat", href: "/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },
   { label: "GSN Transmission", href: "/gsn", group: "Intelligence", keywords: "daily news network" },
   { label: "Parlay MRI", href: "/parlay-mri", group: "Intelligence", keywords: "parlay risk genome" },
-  { label: "Trust Ledger", href: "/ledger", group: "Intelligence", keywords: "merkle proof record" },
+  // Customer copy pass: Trust Ledger (/ledger) and CLV Tracker (/track) are
+  // proof surfaces customers are no longer walked into; routes stay reachable.
   { label: "FABLE Evidence Lab", href: "/fable", group: "Intelligence", keywords: "proof evidence source rights claims aws gates fable" },
-  { label: "CLV Tracker", href: "/track", group: "Intelligence", keywords: "bets clv closing line value calibration roi" },
   { label: "The Cipher", href: "/cipher", group: "Intelligence", keywords: "puzzle hunt easter egg" },
   { label: "Methodology", href: "/methodology", group: "Intelligence", keywords: "how method" },
   { label: "Pricing", href: "/pricing", group: "Intelligence", keywords: "plans subscribe cost" },

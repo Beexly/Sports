@@ -25,7 +25,7 @@ const phase = getCurrentPricingPhase();
 export const metadata: Metadata = {
   title: { absolute: "FAQ: Common questions about Galaxy Sports Edge" },
   description:
-    "Plain answers about how the model scores signals, why the Calibration Report is gated, what Pro and Elite get, and how this is different from a tout service.",
+    "Plain answers about what Free, Pro and Elite get, what each pick shows, and how this is different from a tout service.",
   alternates: { canonical: "/faq" },
 };
 
@@ -40,11 +40,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes each signal with the work shown. Free gets a daily two-pick teaser — the matchup and pick type — plus the public Edge Index and the public, verifiable record. Pro and Elite unlock the full board with the confidence rating and the complete factor trail behind each pick.",
+        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes each pick with its Analysis. Free gets a daily two-pick teaser (the matchup and pick type) plus the free Edge and the public record of wins and losses. Pro and Elite unlock the full board with the Confidence score and the full Analysis behind each pick.",
       },
       {
         q: "How is this different from a tout service?",
-        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail (consensus, line movement, market depth, freshness, intelligence layers) and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
+        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge keeps every settled pick in the public record, wins and losses alike, shows the Analysis behind each pick, and holds back a public win-rate until enough settled picks exist to support one honestly. Patience over noise.",
       },
       {
         q: "Which sports are covered?",
@@ -60,20 +60,16 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     heading: "Trust & transparency",
     items: [
       {
-        q: "Why is the Performance page empty?",
-        a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to publish a number that's statistically defensible. Could be 100 settled signals, could be 500. Whatever it takes for the number to be honest. The page says \"Collecting\" until then. That's the whole point of the design.",
+        q: "What's the Edge?",
+        a: "A free 0-100 rating of how much better our number is than the market price on that pick. It is not a win probability and does not turn into one, and a high Edge still loses. The public record shows wins and losses as picks settle. Variance is described, not hidden.",
       },
       {
-        q: "What's the Edge Index?",
-        a: "A 0-100 rating of how much better our number is than the market price on that signal. It is not a win probability and does not turn into one: it rises when our fair value and the posted line disagree in our favor, and a high Edge Index still loses. The Calibration Report, once it is published, shows how often. Variance is described, not hidden.",
-      },
-      {
-        q: "Can I see the factor trail on every signal?",
-        a: "On Pro and Elite, yes. Every published signal carries its full factor breakdown: which books, what line movement, market depth, freshness, public lean, intelligence layers. You read what the model read. Free sees the daily two-pick teaser, the matchup and pick type, without the confidence rating or the factor trail.",
+        q: "Can I see the Analysis on every pick?",
+        a: "On Pro and Elite, yes. Every published pick carries its Analysis: the reason the pick exists. Free sees the daily two-pick teaser, the matchup and pick type, without the confidence score or the Analysis.",
       },
       {
         q: "Does the model ever stay quiet?",
-        a: "Often. The four readiness gates exist specifically to keep weak signals off the board. If a slate doesn't earn confidence, nothing publishes. The opposite of a tout service that always has a pick of the day.",
+        a: "Often. If a slate doesn't clear our bar, nothing publishes. The opposite of a tout service that always has a pick of the day.",
       },
     ],
   },
@@ -82,11 +78,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What does Free get?",
-        a: "A daily two-pick teaser — the matchup and pick type — plus the Edge Index, the public, verifiable record, and the full Academy. The full board, the confidence rating, and the factor trail are Pro and Elite.",
+        a: "A daily two-pick teaser (the matchup and pick type) plus the free Edge, the public record, and the full Academy. The full board, the Confidence score, and the Analysis are Pro and Elite.",
       },
       {
         q: "What does Pro get?",
-        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the confidence rating and full factor trail on each one. Plus line-movement intel on every pick.`,
+        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every pick, every day, with the Confidence score and full Analysis on each one. Plus line-movement intel on every pick.`,
       },
       {
         q: "What does Elite get?",
@@ -140,7 +136,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What does the model say when it loses?",
-        a: "The same thing it says when it wins: here are the factors that drove the read. Every settled signal, win or loss, gets logged with its full factor trail. The Vault is the receipt.",
+        a: "The same thing it says when it wins. Every settled pick, win or loss, stays in the public record with its Analysis.",
       },
     ],
   },

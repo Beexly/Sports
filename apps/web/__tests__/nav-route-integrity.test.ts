@@ -83,36 +83,53 @@ const footer = read("components/ui/footer.tsx");
 
 /**
  * C-360: the ONLY labels nav/footer/mobile carry.
- * Calibration is the one Board-menu child (not a top-bar label).
+ *
+ * Customer copy pass (owner directive, requirement change): Record
+ * (/performance), Verify (/verify) and the Board-menu Calibration child
+ * (/calibration) and Method (/methodology) left the public nav. Customers are no longer walked through
+ * the internal proof surfaces; the routes stay reachable by direct URL
+ * (asserted in UNLINKED_PROOF_ROUTES below).
  */
 const ALLOWED_LABELS = [
   "Board",
   "Picks",
-  "Record",
-  "Method",
-  "Verify",
   "Plans",
   "Players",
   "DFS",
   "Props",
   "GSN",
-  "Calibration",
 ] as const;
 
 /** Label → route. Every label equals its page H1. */
 const LABEL_ROUTE: Record<(typeof ALLOWED_LABELS)[number], string> = {
   Board: "/board",
   Picks: "/picks",
-  Record: "/performance",
-  Method: "/methodology",
-  Verify: "/verify",
   Plans: "/pricing",
   Players: "/players",
   DFS: "/fantasy/dfs",
   Props: "/fantasy/props",
   GSN: "/gsn",
-  Calibration: "/calibration",
 };
+
+/**
+ * Proof / methodology surfaces unlinked from nav, mobile nav and footer by the
+ * customer copy pass. Each route must still exist (direct URL keeps working).
+ */
+const UNLINKED_PROOF_ROUTES = [
+  "/methodology",
+  "/proof",
+  "/glass-ledger",
+  "/observatory",
+  "/accountability",
+  "/performance",
+  "/track",
+  "/deck",
+  "/integrations",
+  "/verify",
+  "/board/gate",
+  "/calibration",
+  "/changelog",
+];
 
 /** The nine parked fantasy tools (D3 / C-360). Routes stay; nav drops them. */
 const PARKED = [
@@ -187,7 +204,7 @@ describe("Nav route integrity", () => {
           expect(labels, `${name} missing label ${label}`).toContain(label);
         }
       } else {
-        for (const label of ["Board", "Picks", "Record", "Method", "Verify", "Plans", "Players", "DFS", "Props", "GSN"]) {
+        for (const label of ALLOWED_LABELS) {
           expect(labels, `footer missing label ${label}`).toContain(label);
         }
       }
@@ -232,23 +249,37 @@ describe("Nav route integrity", () => {
     expect(routeExists("/kill-ledger"), "/kill-ledger stays until C-385").toBe(true);
   });
 
-  it("the primary doors + Calibration are reachable on desktop and mobile", () => {
+  it("the primary doors are reachable on desktop and mobile", () => {
     const PRIMARY = [
       "/board",
       "/picks",
-      "/performance",
-      "/methodology",
-      "/verify",
       "/pricing",
       "/players",
       "/fantasy/dfs",
       "/fantasy/props",
       "/gsn",
-      "/calibration",
     ];
     for (const route of PRIMARY) {
       expect(desktop.includes(`"${route}"`), `desktop missing ${route}`).toBe(true);
       expect(mobile.includes(`"${route}"`), `mobile missing ${route}`).toBe(true);
+    }
+  });
+
+  it("customer copy pass: proof surfaces are unlinked from nav/mobile/footer but still resolve", () => {
+    const linked = (src: string, route: string): boolean =>
+      hrefsIn(src).some((href) => {
+        const r = routeOf(href);
+        return r === route || r.startsWith(`${route}/`);
+      }) || src.includes(`href: "${route}"`);
+    for (const route of UNLINKED_PROOF_ROUTES) {
+      expect(linked(desktop, route), `desktop still links ${route}`).toBe(false);
+      expect(linked(mobile, route), `mobile still links ${route}`).toBe(false);
+      expect(linked(footer, route), `footer still links ${route}`).toBe(false);
+      expect(routeExists(route), `unlinked route vanished: ${route}`).toBe(true);
+    }
+    // Calibration is no longer a nav item in any shape.
+    for (const src of [desktop, mobile, footer]) {
+      expect(src).not.toMatch(/label[:=]\s*"Calibration"/);
     }
   });
 

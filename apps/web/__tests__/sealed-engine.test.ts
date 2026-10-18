@@ -99,9 +99,13 @@ describe("sealed engine — the interlock (left hand, right hand)", () => {
     expect(page).toContain("RiskDisclosure");
   });
 
-  it("the homepage proof strip routes into the engine", () => {
+  // Customer copy pass (owner directive, requirement change): the homepage
+  // proof strip was removed, so the front door no longer walks customers into
+  // the sealed engine. /engine itself (and its own funnel, above) is unchanged.
+  it("the homepage no longer carries the proof strip into the engine", () => {
     const home = read("app/page.tsx");
-    expect(home).toContain('href="/engine"');
+    expect(home).not.toContain('href="/engine"');
+    expect(existsSync(join(__dirname, "..", "app", "engine", "page.tsx"))).toBe(true);
   });
 });
 

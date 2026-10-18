@@ -20,12 +20,15 @@ const read = (rel: string) =>
   readFileSync(join(__dirname, "..", rel), "utf8");
 
 describe("proof-funnel weave", () => {
-  it("homepage Proof Strip routes to the sealed record and the verifier", () => {
+  // Customer copy pass (owner directive, requirement change): customers are no
+  // longer walked through receipts and the sealed record from the front door.
+  // The homepage Proof Strip is gone; /proof and /verify keep their own funnels
+  // (asserted below) and stay reachable by direct URL.
+  it("homepage no longer carries the Proof Strip into /proof or /verify", () => {
     const home = read("app/page.tsx");
-    expect(home).toContain('href="/proof"');
-    expect(home).toContain('href="/verify"');
-    // The strip keeps its non-negotiable honesty line.
-    expect(home).toContain("Trust is an architecture, not a tagline.");
+    expect(home).not.toContain('href="/proof"');
+    expect(home).not.toContain('href="/verify"');
+    expect(home).not.toContain("Trust is an architecture, not a tagline.");
   });
 
   it("/proof closes with the pricing funnel — the record is the product demo", () => {

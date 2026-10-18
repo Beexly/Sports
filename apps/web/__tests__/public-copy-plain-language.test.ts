@@ -60,10 +60,14 @@ describe("FE-15: FAQ and About match the paywall", () => {
     expect(about).not.toMatch(/that's the whole product/i);
   });
 
-  it("states that the factor trail is Pro and Elite and Free gets the teaser without confidence", () => {
+  // Customer copy pass: public vocabulary renamed "factor trail" / "factor
+  // breakdown" to "Analysis" (same meaning: the reason a pick exists). The
+  // paywall statement pinned here is unchanged: Analysis and confidence are
+  // Pro/Elite, Free gets the teaser without either.
+  it("states that the Analysis is Pro and Elite and Free gets the teaser without confidence", () => {
     expect(faq).toContain("On Pro and Elite, yes.");
-    expect(faq).toMatch(/without the confidence rating or the factor trail/);
-    expect(about).toContain("On Pro and Elite, each pick exposes its factor breakdown");
+    expect(faq).toMatch(/without the confidence score or the Analysis/);
+    expect(about).toContain("On Pro and Elite, each pick shows its Analysis");
     expect(about).toMatch(/Free sees the daily two-pick teaser without the confidence score/);
   });
 

@@ -142,15 +142,39 @@ function LedgerStat({
   );
 }
 
-export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }) {
+/**
+ * `variant="ledger"` (customer copy pass, home page): only the live counts band
+ * and its freshness stamp. No "Methodology" heading and no methodology cards,
+ * because customers are no longer walked through how the engine works on the
+ * front door. When the counts are withheld (outage or suppression) the ledger
+ * variant renders nothing rather than a headed-but-empty band.
+ * The default `"full"` variant is unchanged (used by /methodology).
+ */
+export type MethodologySectionVariant = "full" | "ledger";
+
+export function MethodologySection({
+  metrics,
+  variant = "full",
+}: {
+  metrics?: TrustLedgerMetrics;
+  variant?: MethodologySectionVariant;
+}) {
+  const ledgerOnly = variant === "ledger";
+  if (ledgerOnly && !metrics) return null;
+
   // Resolve each item against the registry. We use getClaim() so both APPROVED
   // and GATED entries surface — the GATED ones (e.g. performance.public-stats-gated)
   // describe the *policy* about when public stats appear, which is itself an
   // approved methodology claim to make publicly.
-  const resolved = ITEMS.map((item) => ({
-    item,
-    claim: getClaim(item.claimId),
-  }));
+  const resolved: ReadonlyArray<{
+    item: MethodologyItem;
+    claim: ReturnType<typeof getClaim>;
+  }> = ledgerOnly
+    ? []
+    : ITEMS.map((item) => ({
+        item,
+        claim: getClaim(item.claimId),
+      }));
 
   return (
     <section
@@ -165,20 +189,32 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow text-ion-1">Methodology</p>
-          <h2
-            id="methodology-heading"
-            className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
-          >
-            The audit trail behind every{" "}
-            <span className="bg-signal-fade bg-clip-text text-transparent">signal</span>
-          </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
-            Every pick ties back to live prices, timestamped data, and the
-            checks that keep weak picks off the board.
-          </p>
-        </div>
+        {ledgerOnly ? (
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="eyebrow text-ion-1">Live counts</p>
+            <h2
+              id="methodology-heading"
+              className="mt-4 font-display text-3xl font-semibold leading-[1.05] text-ion-white sm:text-4xl"
+            >
+              The board, right now
+            </h2>
+          </div>
+        ) : (
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="eyebrow text-ion-1">Methodology</p>
+            <h2
+              id="methodology-heading"
+              className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
+            >
+              The audit trail behind every{" "}
+              <span className="bg-signal-fade bg-clip-text text-transparent">signal</span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
+              Every pick ties back to live prices, timestamped data, and the
+              checks that keep weak picks off the board.
+            </p>
+          </div>
+        )}
 
         {/* ── Live ledger band — real operational figures, counting up ──────── */}
         {metrics && (
@@ -218,7 +254,9 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
               </div>
             </div>
             <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
-              Live counts · the numbers below explain how each one is produced
+              {ledgerOnly
+                ? "Live counts from today's board"
+                : "Live counts · the numbers below explain how each one is produced"}
             </p>
             {metrics.lastRefresh && (
               <p
@@ -239,6 +277,7 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
           </div>
         )}
 
+        {!ledgerOnly && (
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {resolved.map(({ item, claim }) => (
             <article
@@ -264,6 +303,7 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
             </article>
           ))}
         </div>
+        )}
       </div>
     </section>
   );

@@ -6,9 +6,6 @@ import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/bran
 const FOOTER_LINKS = [
   { label: "Board", href: "/board" },
   { label: "Picks", href: "/picks" },
-  { label: "Record", href: "/performance" },
-  { label: "Method", href: "/methodology" },
-  { label: "Verify", href: "/verify" },
   { label: "Plans", href: "/pricing" },
   { label: "Players", href: "/players" },
   { label: "DFS", href: "/fantasy/dfs" },
@@ -24,13 +21,17 @@ const SOCIAL_LINKS = [
 /**
  * Disclosure links. These were carried by the previous footer's COMPANY_LINKS
  * and RESPONSIBLE_LINKS and must survive any visual redesign: the affiliate
- * pledge, the how-we-make-money disclosure, the accountability record, the
- * responsible-play help, and the terms/privacy pair are the public record of
- * how this product earns and what it promises. Dropping them from the footer
- * removes them from every page at once.
+ * pledge, the how-we-make-money disclosure, the responsible-play help, and the
+ * terms/privacy pair are the public record of how this product earns and what
+ * it promises. Dropping them from the footer removes them from every page at
+ * once.
+ *
+ * Customer copy pass (owner directive): the Accountability link was removed.
+ * /accountability is a door into the calibration report and model changelog,
+ * which customers are no longer walked through; the route stays reachable by
+ * direct URL. The money, pledge, responsible-play and legal links stay.
  */
 const DISCLOSURE_LINKS = [
-  { label: "Accountability", href: "/accountability" },
   { label: "How We Make Money", href: "/how-we-make-money" },
   { label: "Affiliate Pledge", href: "/pledge" },
   { label: "Responsible play", href: "/responsible-play" },

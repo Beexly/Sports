@@ -23,10 +23,6 @@ import {
 } from "@/lib/pricing/value-architecture";
 import { getFeature } from "@/lib/pricing/feature-gates";
 import { getReadinessGates } from "@sports/prediction-engine";
-import {
-  honestyContrastStrip,
-  WHY_PAY_FOR_HONESTY_LEAD,
-} from "@/lib/competitive/honesty-contrast";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytics";
@@ -74,7 +70,7 @@ const FREE_FEATURES = [
   // Honesty: public picks board is founder-gated until calibration is published.
   // Free still delivers tools and transparent process — not invented free picks.
   { label: "Free calculators & intelligence tools (no account wall)", included: true },
-  { label: "Public methodology + calibration status (building honestly)", included: true },
+  { label: "Public record of wins and losses, as picks settle", included: true },
   { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
   { label: "Founding waitlist for early operator updates", included: true },
   { label: "The full daily board, every signal (Pro)", included: false },
@@ -269,13 +265,12 @@ const FAQ = [
     q: "How is this different from a tout service?",
     a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge keeps every finished pick in the public record, wins and losses alike, and holds back a public win-rate until enough settled history exists to support one honestly. See the full comparison at /vs/tout-services.",
   },
-  {
-    q: "Why is the Performance page empty right now?",
-    a: "The Calibration Report stays gated until enough finished, graded picks have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
-  },
+  // Customer copy pass: the "Why is the Performance page empty" entry (a
+  // calibration-gating explanation) was removed, and the sports answer drops
+  // its internal freshness-gate parenthetical.
   {
     q: "Which sports are covered?",
-    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven with live odds refreshed regularly during games on a schedule the board gate enforces (candidate odds older than the freshness cap are refused the write).",
+    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven with live odds refreshed regularly during games.",
   },
 ] as const;
 
@@ -375,23 +370,9 @@ export default function PricingPage() {
             <PricingPlans plans={plans} grandfatherNote={grandfatherNote} />
           </div>
 
-          {/* Evidence strip: inspect before you pay. The proof surfaces ARE
-              the sales pitch; they belong next to the buy buttons. */}
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-300">
-            Inspect before you pay:{" "}
-            <Link href="/proof" className="font-semibold text-orbital-cyan hover:text-white">
-              the sealed record
-            </Link>
-            ,{" "}
-            <Link href="/performance" className="font-semibold text-orbital-cyan hover:text-white">
-              the calibration report
-            </Link>
-            , and{" "}
-            <Link href="/engine" className="font-semibold text-orbital-cyan hover:text-white">
-              the engine committing live
-            </Link>
-            . Every claim on this page stands on that record.
-          </p>
+          {/* Customer copy pass: the "Inspect before you pay" evidence strip
+              (sealed record, calibration report, engine) was removed. Those
+              routes stay reachable by direct URL. */}
 
           {/* Why each step up — the value ladder (live tiers only; hidden tiers
               like Operator are filtered out until they graduate to live). */}
@@ -499,7 +480,6 @@ export default function PricingPage() {
                 doors={[
                   { label: "Today's board", href: "/board" },
                   { label: "The Academy", href: "/academy" },
-                  { label: "Public record & calibration status", href: "/performance" },
                 ]}
               />
               <TierDoorColumn
@@ -508,16 +488,16 @@ export default function PricingPage() {
                 doors={[
                   { label: "Trend Lab: cohort workbench", href: "/trends" },
                   { label: "Parlay MRI: portfolio surgeon", href: "/parlay-mri" },
-                  { label: "Factor trail on every pick", href: "/picks" },
+                  { label: "Analysis on every pick", href: "/picks" },
                 ]}
               />
+              {/* Customer copy pass: the /performance, /track and /changelog
+                  doors were removed from these columns; routes stay reachable. */}
               <TierDoorColumn
                 tier="Elite"
                 hex={BRAND_COLORS.softUltraviolet}
                 doors={[
-                  { label: "Line-value tracker + staking toolkit", href: "/track" },
                   { label: "Graded-pick alerts", href: "/dashboard" },
-                  { label: "New surfaces, first", href: "/changelog" },
                 ]}
               />
             </div>
@@ -602,55 +582,10 @@ export default function PricingPage() {
             </div>
           </section>
 
-          {/*
-            Why pay for honesty.
-
-            Sits immediately after "Built to protect you from hype", where a
-            reader is closest to asking what the money is actually for. The lead
-            line deliberately does not promise results — see the module
-            docstring. Four of the seven structural failure modes, projected
-            from the same source list the /integrity page renders in full, so
-            the two surfaces cannot drift into different wording.
-          */}
-          <section className="mt-20" aria-labelledby="why-pay-honesty-heading">
-            <h2
-              id="why-pay-honesty-heading"
-              className="text-center text-2xl font-bold text-white"
-            >
-              Why pay for honesty
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
-              {WHY_PAY_FOR_HONESTY_LEAD}
-            </p>
-            <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
-              {honestyContrastStrip().map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl border border-titanium bg-carbon/40 p-6"
-                >
-                  <h3 className="text-sm font-semibold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-300">{item.weDo}</p>
-                  {/* /board/gate ships illustrative rows and is not a public
-                      destination; items pointing there render without a link. */}
-                  {item.verifyHref !== "/board/gate" && (
-                    <Link
-                      href={item.verifyHref}
-                      className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
-                    >
-                      Check it
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </div>
-            <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-300">
-              The full set of seven, with the mechanism behind each one, is on{" "}
-              <Link href="/integrity" className="underline hover:text-orbital-cyan">
-                our integrity page
-              </Link>
-              .
-            </p>
-          </section>
+          {/* Customer copy pass: the "Why pay for honesty" methodology strip
+              (hash-chained record, de-vigged price thresholds, not-judged
+              states) was removed from /pricing. The source list stays in
+              lib/competitive/honesty-contrast.ts for /integrity. */}
 
           {/* FAQ */}
           <section className="mt-20">

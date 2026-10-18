@@ -79,14 +79,23 @@ const LAUNCH_PAGES: readonly LaunchPage[] = [
     file: "apps/web/app/pricing/page.tsx",
     requiredCopy: [
       "public record as settled history accumulates",
-      "Public record & calibration status",
       "line-value tracker",
       // The pinned PROMISE is the withhold-until-honest commitment; the
       // phrasing was de-jargoned ("canonical" dropped) in the wording sweep.
       "holds back a public win-rate until enough settled history exists",
-      "The Calibration Report stays gated",
     ],
   },
+] as const;
+
+/**
+ * Customer copy pass (owner directive, requirement change): /pricing no longer
+ * walks a buyer through calibration. The "Public record & calibration status"
+ * door (to /performance) and the "The Calibration Report stays gated" FAQ
+ * answer were removed. The withhold-until-honest promise above stays pinned.
+ */
+const PRICING_REMOVED_CALIBRATION_COPY = [
+  "Public record & calibration status",
+  "The Calibration Report stays gated",
 ] as const;
 
 const LIVE_PROVIDER_MARKERS = [
@@ -138,6 +147,13 @@ describe("launch-facing commercial page QA", () => {
       for (const phrase of page.requiredCopy) {
         expect(src, `${page.route} required copy: ${phrase}`).toContain(phrase);
       }
+    }
+  });
+
+  it("keeps calibration walkthrough copy off /pricing (customer copy pass)", () => {
+    const src = readRepoFile("apps/web/app/pricing/page.tsx");
+    for (const phrase of PRICING_REMOVED_CALIBRATION_COPY) {
+      expect(src, `/pricing still carries: ${phrase}`).not.toContain(phrase);
     }
   });
 

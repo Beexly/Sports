@@ -39,9 +39,9 @@ describe("Board vs Picks differentiation", () => {
   });
 
   it("the nav names them as different jobs", () => {
-    // C-360: Board is a NavMenu (`label="Board" href="/board"`); Picks is a
-    // plain Link (`href="/picks"` + child text). Match the route, not one
-    // authoring shape.
+    // Board was a NavMenu (`label="Board" href="/board"`) until the customer
+    // copy pass removed its only child; both are now plain Links
+    // (`href=...` + child text). Match the route, not one authoring shape.
     expect(nav).toMatch(/href=["']\/board["']/);
     expect(nav).toMatch(/href=["']\/picks["']/);
     expect(nav).toMatch(/label="Board"|>\s*Board\s*</);

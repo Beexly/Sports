@@ -64,8 +64,9 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     expect(mocks.auth).not.toHaveBeenCalled();
 
     // The static nav links render from the static nav-left, not from auth.
-    // C-360 top-bar doors. Menu children (Calibration) are not in the static
-    // DOM; nav-route-integrity proves those routes are still reachable.
+    // C-360 top-bar doors. The customer copy pass removed the Board-menu
+    // Calibration child entirely; nav-route-integrity proves the proof routes
+    // still resolve by direct URL.
     expect(container.querySelector('a[href="/board"]')).not.toBeNull();
     expect(container.querySelector('a[href="/picks"]')).not.toBeNull();
     expect(container.querySelector('a[href="/players"]')).not.toBeNull();
@@ -86,13 +87,17 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
       .map((a) => a.getAttribute("href"))
       .filter(Boolean);
 
-    // C-360: Board · Picks · Record · Method · Verify · Plans · Players · DFS · Props · GSN
+    // C-360 after the customer copy pass:
+    // Board · Picks · Plans · Players · DFS · Props · GSN
     expect(hrefs).toContain("/board");
     expect(hrefs).toContain("/picks");
-    expect(hrefs).toContain("/performance");
-    expect(hrefs).toContain("/methodology");
-    expect(hrefs).toContain("/verify");
+    expect(hrefs).not.toContain("/methodology");
     expect(hrefs).toContain("/pricing");
+    // Method (/methodology), Record (/performance), Verify (/verify) and Calibration (/calibration)
+    // left the public bar (owner directive); the routes stay reachable.
+    expect(hrefs).not.toContain("/performance");
+    expect(hrefs).not.toContain("/verify");
+    expect(hrefs).not.toContain("/calibration");
     expect(hrefs).toContain("/players");
     expect(hrefs).toContain("/fantasy/dfs");
     expect(hrefs).toContain("/fantasy/props");

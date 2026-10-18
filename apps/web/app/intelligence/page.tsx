@@ -5,147 +5,46 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { ConsensusEngine3DLazy } from "@/components/hero/consensus-engine-3d-lazy";
 import { Ticker } from "@/components/ui/ticker";
-import { ReasoningShowcase } from "@/components/intelligence/reasoning-showcase";
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
-import { SignalCourtroom } from "@/components/courtroom/signal-courtroom";
-import { DecisionAutopsy } from "@/components/courtroom/decision-autopsy";
-import { AgentWarRoom } from "@/components/war-room/agent-war-room";
-import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
 import { CLOSING_LINE } from "@/lib/brand";
 
+// Customer copy pass: phrases that walked through internal method (referees,
+// grading against the close, the sealed record) were dropped.
 const TICKER_PHRASES = [
   "See the reasoning, not just the number",
-  "Independent referees, judged on their own",
-  "Edge lives in the disagreement",
-  "Graded against the close",
-  "It checks its own results",
-  "A record that can't be rewritten",
+  "Every pick carries its Analysis",
+  "Wins and losses, all of them",
   "Silence when there's nothing honest to say",
   "We detect. You decide.",
 ] as const;
 
 export const metadata: Metadata = {
-  title: "Inside the Signal: How the Intelligence Works",
+  title: "Inside the Signal",
   description:
-    "How Galaxy Sports Edge builds every pick, and how it checks itself.",
+    "Every Galaxy Sports Edge pick ships with its Analysis: the reason it exists.",
   alternates: { canonical: "/intelligence" },
 };
 
 /**
- * /intelligence — the glass-box showpiece. Dark, cinematic, kinetic, accessible.
+ * /intelligence — dark, cinematic, kinetic, accessible.
  *
- * DOCTRINE: explains METHODOLOGY only — never asserts a performance number (those
- * are gated behind the calibration readiness gate) and uses no banned-language.
+ * Customer copy pass (owner directive): customers are no longer walked through
+ * internal method here. The convergence motif, the six-step reasoning chain,
+ * the Signal Courtroom, the check room and the Decision Autopsy were removed;
+ * the page keeps the hero, the ticker and the closing band. It never asserts a
+ * performance number and uses no banned language.
  * The living hero is the brand's InteractiveGalaxy (reduced-motion-aware, aria-hidden);
  * a scrim guarantees text contrast; motion runs through <Reveal>; contrast is the
  * cyan/ultraviolet signal palette on obsidian (well above WCAG AA).
  */
 
-/**
- * Step accents — canonical token hexes (styles/design-tokens.css). Kept as
- * literals (not var() refs) because ReasoningShowcase derives hex+alpha
- * washes from them, and the SVG motif needs attribute-safe color values.
- */
+/** Hero accents — canonical token hexes (styles/design-tokens.css). */
 const ACCENT_CYAN = "#FF4D2E"; // --orbital-cyan
 const ACCENT_UV = "#C9D4CE"; // --ultraviolet
 const ACCENT_MAGENTA = "#FF4D2E"; // --plasma
-const ION_WHITE = "#EDE8E0"; // --ion-white
-
-const CHAIN: ReadonlyArray<{
-  readonly step: string;
-  readonly title: string;
-  readonly body: string;
-  readonly accent: string;
-}> = [
-  {
-    step: "01",
-    title: "Independent referees",
-    body: "Several estimates score each game without looking at the sportsbook's price: a sharp exchange, a structured model, the wider market. Different lenses, judged on their own.",
-    accent: ACCENT_CYAN,
-  },
-  {
-    step: "02",
-    title: "Consensus & divergence",
-    body: "We measure where the referees agree and where they pull apart. Agreement reads as confidence; a shared disagreement with the price is where an edge can live.",
-    accent: ACCENT_UV,
-  },
-  {
-    step: "03",
-    title: "Measured edge",
-    body: "A signal surfaces only when independent estimates diverge from the price and agree on the direction. With nothing independent to say, the honest default is silence.",
-    accent: ACCENT_CYAN,
-  },
-  {
-    step: "04",
-    title: "Graded against the close",
-    body: "Every signal carries an expected closing-line value and is graded against where the market actually settles, because beating the close is the claim worth making.",
-    accent: ACCENT_MAGENTA,
-  },
-  {
-    step: "05",
-    title: "It audits itself",
-    body: "Every pick is graded after the game, and the results stay public.",
-    accent: ACCENT_UV,
-  },
-  {
-    step: "06",
-    title: "A record that can't be rewritten",
-    body: "Each published signal is committed cryptographically before the event. The history is tamper-evident: nothing gets quietly edited after the fact.",
-    accent: ACCENT_CYAN,
-  },
-];
-
-function ConsensusField() {
-  // Decorative "referees converging on consensus" motif — the precise companion
-  // to the ambient galaxy. Purely visual.
-  const dots = [
-    { cx: 70, cy: 60, fill: ACCENT_CYAN },
-    { cx: 330, cy: 70, fill: ACCENT_UV },
-    { cx: 60, cy: 250, fill: ACCENT_MAGENTA },
-    { cx: 340, cy: 240, fill: ACCENT_CYAN },
-    { cx: 200, cy: 40, fill: ACCENT_UV },
-    { cx: 200, cy: 270, fill: ACCENT_CYAN },
-  ];
-  return (
-    <svg viewBox="0 0 400 320" aria-hidden="true" role="presentation" className="h-full w-full">
-      <defs>
-        <radialGradient id="core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={ACCENT_CYAN} stopOpacity="0.9" />
-          <stop offset="100%" stopColor={ACCENT_CYAN} stopOpacity="0" />
-        </radialGradient>
-        <filter id="cf-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3.2" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      {dots.map((d, i) => (
-        <line
-          key={`l${i}`}
-          x1={d.cx}
-          y1={d.cy}
-          x2={200}
-          y2={155}
-          stroke={d.fill}
-          strokeOpacity="0.4"
-          strokeWidth="1.25"
-        />
-      ))}
-      <circle cx="200" cy="155" r="78" fill="url(#core)" className="motion-safe:animate-pulse" />
-      <g filter="url(#cf-glow)">
-        {dots.map((d, i) => (
-          <circle key={`d${i}`} cx={d.cx} cy={d.cy} r="6.5" fill={d.fill} />
-        ))}
-        <circle cx="200" cy="155" r="11" fill={ION_WHITE} />
-      </g>
-    </svg>
-  );
-}
 
 export default function IntelligencePage() {
   return (
@@ -180,7 +79,7 @@ export default function IntelligencePage() {
                     boxShadow: "0 0 12px var(--orbital-cyan)",
                   }}
                 />
-                How it works
+                Inside the signal
               </p>
             </Reveal>
             <Reveal delay={90}>
@@ -203,170 +102,46 @@ export default function IntelligencePage() {
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-ion-1">
-                Most products hand you a pick and ask for trust. We show the work
-                behind every one: the confidence score, the factors that drove it,
-                and how the market has moved. Each signal is graded and recorded, so
-                you can check it instead of just taking it.
+                Most products hand you a pick and ask for trust. Every pick here
+                comes with its Analysis, the reason it exists, plus the line and
+                how the market has moved. Every pick is graded after the game,
+                win or loss, and stays in the public record.
               </p>
             </Reveal>
             <Reveal delay={260}>
               <div className="pointer-events-auto mt-9 flex flex-wrap gap-3">
-                <Link href="/methodology" className="btn btn-primary">
-                  The full methodology →
+                <Link href="/picks" className="btn btn-primary">
+                  Today&apos;s picks →
                 </Link>
-                <Link href="/picks" className="btn btn-ghost">
-                  Today&apos;s board
+                <Link href="/pricing" className="btn btn-ghost">
+                  See pricing
                 </Link>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* Kinetic ticker — doctrine in motion */}
+        {/* Kinetic ticker */}
         <Ticker items={TICKER_PHRASES} durationSec={42} />
-
-        {/* The convergence — the precise companion to the ambient hero */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="converge-heading">
-          <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
-            <div>
-              <Reveal>
-                <p className="eyebrow text-ultraviolet">
-                  Many reads, one signal
-                </p>
-              </Reveal>
-              <Reveal delay={90}>
-                <h2 id="converge-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
-                  Edge lives in the disagreement.
-                </h2>
-              </Reveal>
-              <Reveal delay={170}>
-                <p className="mt-5 text-ion-1">
-                  Independent referees each price the game on their own. When they
-                  converge, that&apos;s confidence. When they agree the market is
-                  wrong in the same direction, that&apos;s the signal worth
-                  surfacing, with the reasoning attached.
-                </p>
-              </Reveal>
-            </div>
-            <Reveal direction="scale" delay={140} className="mx-auto w-full max-w-md">
-              <div className="surface-card aspect-[5/4] p-6">
-                <ConsensusField />
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Reasoning chain — auto-advancing "watch it run" walkthrough */}
-        <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="chain-heading">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <h2 id="chain-heading" className="font-display text-3xl text-ion-white sm:text-4xl">
-                From many independent reads to one auditable signal.
-              </h2>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="mt-10">
-                <ReasoningShowcase steps={CHAIN} />
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* The Signal Courtroom — a signal is a case, not a badge */}
-        <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="courtroom-heading">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p className="eyebrow text-ion-2">
-                A signal is a case, not a badge
-              </p>
-            </Reveal>
-            <Reveal delay={90}>
-              <h2 id="courtroom-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
-                Every signal is prosecuted before it&apos;s published.
-              </h2>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ion-1">
-                No lonely confidence number. The engine argues the case against itself:
-                evidence, counter-evidence, and the falsifier that would break it. Then it
-                returns a verdict, including the honest verdict of <em>no-bet</em>.
-              </p>
-            </Reveal>
-            <Reveal delay={140} className="mt-10">
-              <SignalCourtroom brief={ILLUSTRATIVE_BRIEF} />
-            </Reveal>
-          </div>
-        </section>
-
-        {/* The Agent War Room — the living council behind the verdict */}
-        <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="warroom-heading">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p className="eyebrow text-orbital-cyan">
-                Not one check. Several
-              </p>
-            </Reveal>
-            <Reveal delay={90}>
-              <h2 id="warroom-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
-                Watch the verdict change, and see which check moved it.
-              </h2>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ion-1">
-                A set of independent checks reviews every pick, and you can see which check
-                flagged it.
-              </p>
-            </Reveal>
-            <Reveal delay={140} className="mt-10">
-              <AgentWarRoom />
-            </Reveal>
-          </div>
-        </section>
-
-        {/* The Decision Autopsy — grade the thinking, not the scoreboard */}
-        <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="autopsy-heading">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p className="eyebrow text-ultraviolet">
-                After the whistle
-              </p>
-            </Reveal>
-            <Reveal delay={90}>
-              <h2 id="autopsy-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
-                We grade the thinking, not the scoreboard.
-              </h2>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ion-1">
-                A win is not proof and a loss is not failure. Every settled signal is
-                graded on the square it actually lands in, so a lucky win gets flagged and
-                a correct read that lost gets respected.
-              </p>
-            </Reveal>
-            <Reveal delay={140} className="mt-10">
-              <DecisionAutopsy />
-            </Reveal>
-          </div>
-        </section>
 
         {/* Closing band */}
         <section className="px-4 pb-24 pt-12 sm:px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto max-w-5xl rounded-2xl border border-titanium bg-gradient-to-b from-titanium/40 to-transparent p-10 text-center">
               <p className="eyebrow text-orbital-cyan">
-                Every number shows its work
+                Every pick shows its reason
               </p>
               <p className="mx-auto mt-4 max-w-2xl font-display text-2xl text-ion-white sm:text-3xl">
                 {CLOSING_LINE}
               </p>
               <p className="mx-auto mt-4 max-w-xl text-sm text-ion-1">
                 Our results stay hidden until there&apos;s enough settled, graded
-                history to publish them honestly. Until then,
-                this is the part we can show you in full: the method.
+                history to publish them honestly. When they show, they show as
+                wins and losses, all of them.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/methodology" className="btn btn-primary">
-                  How it works
+                <Link href="/picks" className="btn btn-primary">
+                  See today&apos;s picks
                 </Link>
                 <Link href="/responsible-play" className="btn btn-ghost">
                   Play responsibly
