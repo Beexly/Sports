@@ -141,11 +141,11 @@ Carve-outs (Reject bar 3, freshness: injury rows older than 24 h) are 28 x-dms r
 ## 9. Routing
 | consumer | files |
 |---|---|
-| DIV-1 Lead (3115cea2) | x-search situational-intel.jsonl. x-dms ingested subtype=situational_intel (37) and profile-intel division=DIV-1 |
+| DIV-1 Lead (3115cea2) | x-search situational-intel.jsonl. x-dms ingested subtype=situational_intel (37) and profile-intel division=DIV-1 **and eligible==true** |
 | DIV-2 Lead (792ef63a), cc on all | x-search tools-data, bias-chatter, dfs and unclear-log. x-dms ingested subtype=tool_or_data_source (26), unclear-log (10), progress.json |
-| DIV-3 Lead (86e9edd6) | x-search training-quant. x-dms training-and-tools (51), profile-intel division=DIV-3 (214) |
+| DIV-3 Lead (86e9edd6) | x-search training-quant. x-dms training-and-tools (51), profile-intel division=DIV-3 **and eligible==true** (214) |
 | sherlock (1822115a) | tools and training rows from both ingests, profile kind=ai_quant. Evals in `blackboard/tools/x-dm-leads-eval-2026-10-18*.json` (latest `__lease3`) and `x-search-leads-eval-2026-10-18.json` (+`__pass1-rowid-remap`) |
-| overheard (2894dea0) | bias-chatter, market-tagged situational rows, profile kind=football. Bias outputs are in `blackboard/bias/week6/` (latest `2026-10-18_0210CT.json`) |
+| overheard (2894dea0) | bias-chatter, market-tagged situational rows, profile kind=football **and eligible==true**. Bias outputs are in `blackboard/bias/week6/` (latest `2026-10-18_0210CT.json`) |
 | DIV-4 | x-dms ingested subtype ai_content_generation_or_other_sport (16) |
 | DFS optimizer bot | dfs.jsonl (457). **Bot name UNKNOWN** |
 
@@ -180,3 +180,21 @@ Carve-outs (Reject bar 3, freshness: injury rows older than 24 h) are 28 x-dms r
 5. **Budget-aware pager:** follow next_token for high-yield queries and drop `from:` queries that return 0 two days running. Track reads from the "N of 1000 today" counter and stop at 30 reserve. Acceptance: it never exceeds 970/day, and qlog stores the literal query.
 6. **Daily 7 PM CT rerun** (after the reset), with cron `0 19 * * *` in TZ America/Chicago. It resumes the 65 partial authors from progress.json first, then new-authors and queue.json, writes a new dated folder, and posts a summary for DIV-3 QA. Acceptance: it resumes cleanly after being killed mid-run (resume from qlog/progress), and spends $0 on paid unless a flag is set.
 7. **Freshness field:** add `stale_injury=true` when an injury-tagged row is older than 24 h at write time. Acceptance: it reproduces the 28 and 648 carve-outs.
+
+## Consumer rule (RO-16) — 2026-10-18
+
+**Every consumer of x-dms `profile-intel.jsonl` (and related x-dms jsonl) MUST filter `eligible == true`.**
+
+Do **not** select on `division` or `kind` alone. Quarantined rows are stored as `division=DIV-3`, `routing="NONE"`, `eligible=false`, `layer2_relevance=NONE_PURE_LAYER1`. A bare `division=DIV-3` filter returns both genuine training/quant rows and all quarantined off-topic rows.
+
+| Consumer | Old selector (unsafe) | Required selector (RO-16) |
+|---|---|---|
+| DIV-3 Lead | `profile-intel division=DIV-3` | `division=DIV-3` **and** `eligible==true` (exclude `routing=="NONE"` / `eligible==false`) |
+| overheard | `kind=football` | `kind=football` **and** `eligible==true` |
+| sherlock | `kind=ai_quant` | `kind=ai_quant` **and** `eligible==true` |
+| account-book / DIV-1 merge | `division=DIV-1` | `division=DIV-1` **and** `eligible==true` |
+| DFS bot | `dfs.jsonl` | rows in `dfs.jsonl` with `eligible==true` |
+
+Genuine DIV-3 `ai_quant` rows carry `eligible=true`. Quarantined rows carry `eligible=false`. DIV-1 keeps and dfs rows also carry `eligible=true`. Rows missing the field must be treated as ineligible for promotion until an explicit value is set.
+
+Full DIV-1 row-level review for RO-16: blackboard path `ingest/x-dms/2026-10-18/div1-row-review-ro16.tsv` (661 data lines + header). Quarantines from that review: `4bb2fd658831510f` (self-help), `1db5f00f335dc3fd` (drone), `8554cc65d97b318a` (soccer DFS).
