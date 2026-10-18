@@ -58,7 +58,7 @@ export default async function TheBeatPage() {
   // injury claims under a disclosure saying segments are "compiled from
   // verified news signals". With no wire there is no rundown at all; the
   // surface shows its empty state instead of inventing a week of news.
-  const broadcast = liveWire && liveWire.length > 0 ? buildWireBroadcast(NOVA, liveWire) : buildWireBroadcast(NOVA, DEMO_WIRE);
+  const broadcast = liveWire && liveWire.length > 0 ? buildWireBroadcast(NOVA, liveWire) : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -157,8 +157,8 @@ export default async function TheBeatPage() {
                 </h2>
               </div>
               <p className="max-w-md text-sm leading-6 text-ion-2">
-                Live newsroom transmission. Every report weighted by source reliability,
-                mapped to lines and player projections before the market moves.
+                Nova from the field. Orion at the desk. Segment by segment.
+                the script on screen, never a robotic voice in your ear.
               </p>
             </div>
             {broadcast ? (

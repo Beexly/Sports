@@ -587,23 +587,30 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 <PickCard
                   key={pick.id}
                   pick={pick}
-                  canSeeConfidence={true}
-                  canSeeEdgeScore={true}
-                  canSeeFactorBreakdown={true}
+                  canSeeConfidence={entitlements.canSeeConfidence}
+                  canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
+                  canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
                 />
               ))}
             </div>
             </>
           )}
 
-          {/* Bottom upgrade CTA for free users */}
+          {/* Bottom upgrade CTA for free users — states the true model: the
+              free board is a daily teaser (Edge Index only, no confidence
+              scores), and Pro unlocks the full board. teaserSize comes from
+              entitlements.dailyPickLimit, not a hardcoded absolute. */}
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-6 text-center">
               <p className="text-sm font-semibold text-ultraviolet-glow">
-                Live board with full confidence scores, Edge Index, and factor breakdowns.
+                {hasAccount
+                  ? entitlements.tier !== "FREE"
+                    ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
+                    : `You're on Free: a daily teaser of up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
+                  : `Today's free teaser: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`}
               </p>
               <p className="mt-1 text-xs text-ultraviolet-glow">
-                Pro unlocks live line movement alerts, CLV tracking, and real-time steam updates.
+                Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
               </p>
               <Link
                 href="/pricing"

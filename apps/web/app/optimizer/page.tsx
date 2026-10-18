@@ -11,7 +11,7 @@ import { loadCurrentDfsSlate } from "@/lib/fantasy/dfs-current-slate";
 export const metadata: Metadata = {
   title: "The Optimizer: One Workspace for Every Lineup",
   description:
-    "One door for every lineup: DFS optimizer, season start/sit, and the draft board. Real active NFL player projections, measured ceiling bands, and current-slate DraftKings salaries.",
+    "One door for every lineup: DFS optimizer, season start/sit, and the draft board. Pick your contest type and build. Opens on sample players until a licensed projections feed is connected — never fake data as live advice.",
   alternates: { canonical: "/optimizer" },
 };
 
@@ -46,8 +46,9 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
             One workspace. Every lineup.
           </h1>
           <p className="max-w-3xl text-sm leading-6 text-ion-1">
-            Pick a contest type and build: DFS, season start/sit, or the draft board. Powered by
-            measured per-game production, real depth charts, and current-slate DraftKings salaries.{" "}
+            Pick a contest type and build: DFS, season start/sit, or the draft board. Salaries,
+            projections, and ownership open when a licensed feed is connected — until then the
+            tools run on clearly-labelled sample players, never faked as live advice.{" "}
             <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>.
           </p>
         </section>
@@ -56,7 +57,6 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
           pool={gatedPool}
           canUseFantasyFull={viewer.canUseFantasyFull}
           dfsSlate={dfsRows}
-          dfsSalaryIsReal={true}
           dfsSlateLabel={dfsSlateLabel}
         />
       </main>

@@ -88,7 +88,7 @@ export function DfsOptimizer({
           <p className="text-xs text-ion-1">
             {salaryIsReal ? (
               <>
-                <strong className="text-ion-white">DraftKings NFL Pricing</strong> · Standard $50,000 salary cap · measured projections,
+                <strong className="text-ion-white">Licensed DFS salary feed</strong> · Standard $50,000 salary cap · measured projections,
                 observed ceiling bands, and tournament leverage. To import your own DraftKings CSV: use the panel below ⤵
               </>
             ) : (
