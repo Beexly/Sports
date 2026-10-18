@@ -46,3 +46,29 @@ export function normalizeTeamAlias(input: string): string | null {
   const compact = input.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
   return COMPACT_ALIAS_LOOKUP[compact] ?? null;
 }
+
+/**
+ * Resolve any of the NFL team spellings we actually see in our own rows —
+ * "ARI", "Arizona", "Cardinals", and the full "Arizona Cardinals" that
+ * `games.homeTeamName` / `games.awayTeamName` carry — to the canonical
+ * abbreviation used by the ingestion tables (`depth_chart_entries.team`,
+ * `snap_counts.team`, nflverse `club_code`).
+ *
+ * The alias table is the single source of truth (never a second 32-team
+ * switch). Full names are matched on their two halves: the city ("Arizona")
+ * and the nickname ("Cardinals") are each independently a valid alias, so
+ * "Arizona Cardinals" resolves without a 32-entry full-name duplicate. The
+ * whole string is tried first so a genuine multi-word alias always wins.
+ *
+ * Ambiguous nicknames ("Cardinals" exists in both NFL and NCAAF) are only
+ * resolved by callers that already know the sport is NFL — this function
+ * itself has no sport context and must not be used to disambiguate leagues.
+ */
+export function resolveNflTeamAbbreviation(input: string | null | undefined): string | null {
+  if (!input) return null;
+  const direct = normalizeTeamAlias(input);
+  if (direct) return direct;
+  const words = input.trim().split(/\s+/).filter(Boolean);
+  if (words.length < 2) return null;
+  return normalizeTeamAlias(words[words.length - 1]!) ?? normalizeTeamAlias(words[0]!);
+}

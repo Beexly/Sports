@@ -40,6 +40,13 @@ import {
   loadPublishTimeConsensusByPickId,
 } from "@/lib/claims/load-publish-time-consensus";
 import { projectPublicConsensusReasoning } from "@/lib/claims/project-public-consensus-reasoning";
+import {
+  CONTINUITY_BASIS,
+  loadDepthChartContinuity,
+  nflSeasonForKickoff,
+  resolvePickTeamAbbreviation,
+  type TeamUnitContinuity,
+} from "@/lib/picks/depth-chart-continuity";
 
 export const dynamic = "force-dynamic";
 
@@ -259,6 +266,39 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const maxPicks = 100;
   const limitedPicks = rankedPicks.slice(0, maxPicks);
 
+  // ── Real OL/DL/DB continuity (lib/picks/depth-chart-continuity.ts) ────────
+  // One batched read for the whole slate: the newest TWO weekly snapshots in
+  // `depth_chart_entries` for the season, per unit, per team. The delta is the
+  // share of LAST week's starters still listed first this week, minus 1
+  // (0.0 = nobody lost his job), computed from rows only.
+  //
+  // NFL only. NCAAF has no depth-chart rows at all, so those picks are never
+  // looked up here and keep whatever `factorBreakdown` really carries — which
+  // is real engine output, not a fallback.
+  //
+  // An empty map (season holds fewer than two snapshots) means every NFL pick
+  // below gets null rather than a number: one snapshot cannot produce a delta.
+  const continuitySeason = nflSeasonForKickoff(now);
+  const pickTeamAbbr = new Map<string, string>();
+  for (const pick of limitedPicks) {
+    // Odds-API sport keys are `americanfootball_nfl`; seeded rows use `NFL`.
+    // NCAAF (`americanfootball_ncaaf`) must never enter this map.
+    const sportName = (pick.game?.sport?.name ?? "").toLowerCase();
+    const sportKey = (pick.game?.sport?.key ?? "").toLowerCase();
+    const isNfl = sportName === "nfl" || sportKey === "americanfootball_nfl" || sportKey === "nfl";
+    if (!isNfl) continue;
+    const abbr = resolvePickTeamAbbreviation({
+      selection: pick.selection,
+      pickType: pick.pickType,
+      homeTeamName: pick.game?.homeTeamName,
+      awayTeamName: pick.game?.awayTeamName,
+    });
+    if (abbr) pickTeamAbbr.set(pick.id, abbr);
+  }
+  const continuityByTeam = await loadDepthChartContinuity([...new Set(pickTeamAbbr.values())], {
+    season: continuitySeason,
+  });
+
   // Shared mint-time book-set loader (same path as preview/dashboard — #901 IMPROVE).
   const consensusResolvedByPick = await loadPublishTimeConsensusByPickId(
     limitedPicks.map((pick) => ({
@@ -380,21 +420,38 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const situational = (fbObj["situationalReading"] && typeof fbObj["situationalReading"] === "object" ? fbObj["situationalReading"] : {}) as Record<string, unknown>;
 
       // Extract continuityDeltas from source if present; do not fabricate missing values
-      const olDelta = typeof fbObj["olContinuityDelta"] === "number"
+      const fbOlDelta = typeof fbObj["olContinuityDelta"] === "number"
         ? (fbObj["olContinuityDelta"] as number)
         : typeof situational["olContinuityDelta"] === "number"
           ? (situational["olContinuityDelta"] as number)
           : null;
-      const dlDelta = typeof fbObj["dlContinuityDelta"] === "number"
+      const fbDlDelta = typeof fbObj["dlContinuityDelta"] === "number"
         ? (fbObj["dlContinuityDelta"] as number)
         : typeof situational["dlContinuityDelta"] === "number"
           ? (situational["dlContinuityDelta"] as number)
           : null;
-      const dbDelta = typeof fbObj["dbContinuityDelta"] === "number"
+      const fbDbDelta = typeof fbObj["dbContinuityDelta"] === "number"
         ? (fbObj["dbContinuityDelta"] as number)
         : typeof situational["dbContinuityDelta"] === "number"
           ? (situational["dbContinuityDelta"] as number)
           : null;
+
+      // Engine-computed values (factorBreakdown / situationalReading) are real
+      // and always win. Where they are absent on an NFL pick, use the measured
+      // depth-chart delta for THIS pick's team; where neither exists (NCAAF,
+      // totals, a season with one snapshot) the field stays null. Nothing here
+      // substitutes a constant.
+      const teamContinuity: TeamUnitContinuity | undefined = pickTeamAbbr.has(pick.id)
+        ? continuityByTeam.get(pickTeamAbbr.get(pick.id)!)
+        : undefined;
+      const olDelta = fbOlDelta ?? teamContinuity?.olContinuityDelta ?? null;
+      const dlDelta = fbDlDelta ?? teamContinuity?.dlContinuityDelta ?? null;
+      const dbDelta = fbDbDelta ?? teamContinuity?.dbContinuityDelta ?? null;
+
+      // Provenance is only claimed when ALL THREE numbers came from the depth
+      // chart read — a mixed object would mislabel the engine's own values.
+      const depthChartSourced =
+        fbOlDelta === null && fbDlDelta === null && fbDbDelta === null && teamContinuity;
 
       // Only include continuityDeltas if at least one field is non-null
       const continuityDeltas = (olDelta !== null || dlDelta !== null || dbDelta !== null)
@@ -402,6 +459,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             olContinuityDelta: olDelta,
             dlContinuityDelta: dlDelta,
             dbContinuityDelta: dbDelta,
+            ...(depthChartSourced
+              ? {
+                  basis: CONTINUITY_BASIS,
+                  currentWeek: depthChartSourced.week,
+                  priorWeek: depthChartSourced.priorWeek,
+                  olStarters: depthChartSourced.olStarters,
+                  dlStarters: depthChartSourced.dlStarters,
+                  dbStarters: depthChartSourced.dbStarters,
+                }
+              : {}),
           }
         : null;
 
