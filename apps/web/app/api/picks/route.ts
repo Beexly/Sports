@@ -239,13 +239,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const soundPicks = dropAdverseEdgePicks(coherentPicks);
 
   // Strict Market Integrity: Unpriced Elo model signals with line 0 and hasBookPrice: false
-  // must never be exposed on the public picks surface.
+  // must never be exposed on the public picks surface. A pick is valid only if it has a real
+  // book price (bookmakerCount > 0) OR a non-zero line. MONEYLINE picks without books must be filtered.
   const pricedPicks = soundPicks.filter(
-    (pick) =>
-      Boolean((pick as { hasBookPrice?: boolean }).hasBookPrice) ||
-      (pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount) > 0 ||
-      pick.line !== 0 ||
-      process.env.NODE_ENV === "test",
+    (pick) => {
+      const hasRealBookPrice = (pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount) > 0;
+      const hasNonZeroLine = pick.line !== 0;
+      return (hasRealBookPrice || hasNonZeroLine) || process.env.NODE_ENV === "test";
+    },
   );
 
   // Display order must match generation ranking law (rankingP, not confidence).
@@ -378,34 +379,34 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const fbObj = (factorBreakdown && typeof factorBreakdown === "object" ? factorBreakdown : {}) as Record<string, unknown>;
       const situational = (fbObj["situationalReading"] && typeof fbObj["situationalReading"] === "object" ? fbObj["situationalReading"] : {}) as Record<string, unknown>;
 
+      // Extract continuityDeltas from source if present; do not fabricate missing values
       const olDelta = typeof fbObj["olContinuityDelta"] === "number"
         ? (fbObj["olContinuityDelta"] as number)
         : typeof situational["olContinuityDelta"] === "number"
           ? (situational["olContinuityDelta"] as number)
-          : -0.08;
+          : null;
       const dlDelta = typeof fbObj["dlContinuityDelta"] === "number"
         ? (fbObj["dlContinuityDelta"] as number)
         : typeof situational["dlContinuityDelta"] === "number"
           ? (situational["dlContinuityDelta"] as number)
-          : 0.0;
+          : null;
       const dbDelta = typeof fbObj["dbContinuityDelta"] === "number"
         ? (fbObj["dbContinuityDelta"] as number)
         : typeof situational["dbContinuityDelta"] === "number"
           ? (situational["dbContinuityDelta"] as number)
-          : -0.05;
+          : null;
 
-      const continuityDeltas = {
-        olContinuityDelta: olDelta,
-        dlContinuityDelta: dlDelta,
-        dbContinuityDelta: dbDelta,
-      };
+      // Only include continuityDeltas if at least one field is non-null
+      const continuityDeltas = (olDelta !== null || dlDelta !== null || dbDelta !== null)
+        ? {
+            olContinuityDelta: olDelta,
+            dlContinuityDelta: dlDelta,
+            dbContinuityDelta: dbDelta,
+          }
+        : null;
 
-      const injuryEvidence = (fbObj["injuryEvidence"] ?? situational["injuryEvidence"] ?? {
-        sourceCategory: "PLAYER_AVAILABILITY",
-        status: "VERIFIED",
-        fetchedAt: pick.dataFreshnessAt?.toISOString() ?? now.toISOString(),
-        description: "Official 90-minute pregame report processed against depth charts",
-      }) as Record<string, unknown>;
+      // Extract injuryEvidence from source if present; do not fabricate missing values
+      const injuryEvidence = (fbObj["injuryEvidence"] ?? situational["injuryEvidence"] ?? null) as Record<string, unknown> | null;
 
       const reasoningTrace = (situational["reasoningTrace"] as string | undefined) ?? (pick.reasoning || projectedReasoning.text);
 
@@ -414,11 +415,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
       const enrichedFactorBreakdown = {
         ...fbObj,
-        continuityDeltas,
-        olContinuityDelta: olDelta,
-        dlContinuityDelta: dlDelta,
-        dbContinuityDelta: dbDelta,
-        injuryEvidence,
+        ...(continuityDeltas ? { continuityDeltas, olContinuityDelta: olDelta, dlContinuityDelta: dlDelta, dbContinuityDelta: dbDelta } : {}),
+        ...(injuryEvidence ? { injuryEvidence } : {}),
         reasoningTrace,
         rankingP: typeof fbObj["rankingP"] === "number" ? fbObj["rankingP"] : populatedConfidence / 100,
         edgeScore: typeof fbObj["edgeScore"] === "number" ? fbObj["edgeScore"] : populatedEdge,
@@ -459,8 +457,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         confidenceCalibrated: calibrator ? honestConfidence(populatedConfidence, calibrator, true) : { pct: populatedConfidence, label: "calibrated" },
         edgeScore: populatedEdge,
         factorBreakdown: enrichedFactorBreakdown as unknown as FactorBreakdown,
-        continuityDeltas,
-        injuryEvidence,
+        ...(continuityDeltas ? { continuityDeltas } : {}),
+        ...(injuryEvidence ? { injuryEvidence } : {}),
         reasoningTrace,
       // Always visible — trust transparency
       dataQualityScore,
@@ -597,7 +595,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           isBootstrap: false,
           ...excludeSeedInProd, // prod-only: keep the count consistent with the slate
           ...freshPickWhere(now),
-          game: { ...gameFilter, ...gameInSlateWindow(slate) },
+          game: {
+            ...gameFilter,
+            // Use the same time window filter as the initial fetch: either dateParam or 72-hour window
+            ...(!dateParam
+              ? { commenceTime: { gte: new Date(now.getTime() - 6 * 3600 * 1000), lte: new Date(now.getTime() + 72 * 3600 * 1000) } }
+              : gameInSlateWindow(slate)),
+          },
         },
       })
       .catch(() => publicPicks.length);
