@@ -1,4 +1,7 @@
 // allow: SIZE_OK - package-root export barrel kept stable for downstream imports.
+// Continuity deltas: starter retention across depth chart snapshots
+export { computeContinuityDeltas } from "./continuity-deltas.js";
+export type { ContinuityDeltasInput, ContinuityDeltas } from "./continuity-deltas.js";
 export {
   scoreGame,
   scoreGames,

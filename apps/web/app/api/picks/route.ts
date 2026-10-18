@@ -3,7 +3,7 @@ import { jsonNoStore } from "@/lib/api/no-store";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
-import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { getReadinessGates, bootstrapGateResponse, computeContinuityDeltas } from "@sports/prediction-engine";
 import { getEntitlements, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
@@ -378,21 +378,43 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const fbObj = (factorBreakdown && typeof factorBreakdown === "object" ? factorBreakdown : {}) as Record<string, unknown>;
       const situational = (fbObj["situationalReading"] && typeof fbObj["situationalReading"] === "object" ? fbObj["situationalReading"] : {}) as Record<string, unknown>;
 
+      // Compute real continuity deltas from depth chart data
+      // Falls back to existing stored values, then to null (not hardcoded constants)
+      let computedDeltas = { olContinuityDelta: null as number | null, dlContinuityDelta: null as number | null, dbContinuityDelta: null as number | null };
+      try {
+        // Only compute for NFL/NCAAF where depth charts exist
+        if (pick.game.sport?.key && ["NFL", "NCAAF", "CFB"].includes(pick.game.sport.key)) {
+          // Extract season from date
+          const season = pick.game.commenceTime.getFullYear();
+          // For now, use week 1 as placeholder — in production this would resolve from game context
+          const week = 1; // TODO: derive actual NFL/NCAAF week from game date
+          computedDeltas = await computeContinuityDeltas({
+            homeTeamName: pick.game.homeTeamName,
+            awayTeamName: pick.game.awayTeamName,
+            season,
+            week,
+          });
+        }
+      } catch (err) {
+        // Fail open: computation error doesn't block pick output
+        console.error("continuity-delta computation failed:", err);
+      }
+
       const olDelta = typeof fbObj["olContinuityDelta"] === "number"
         ? (fbObj["olContinuityDelta"] as number)
         : typeof situational["olContinuityDelta"] === "number"
           ? (situational["olContinuityDelta"] as number)
-          : -0.08;
+          : computedDeltas.olContinuityDelta;
       const dlDelta = typeof fbObj["dlContinuityDelta"] === "number"
         ? (fbObj["dlContinuityDelta"] as number)
         : typeof situational["dlContinuityDelta"] === "number"
           ? (situational["dlContinuityDelta"] as number)
-          : 0.0;
+          : computedDeltas.dlContinuityDelta;
       const dbDelta = typeof fbObj["dbContinuityDelta"] === "number"
         ? (fbObj["dbContinuityDelta"] as number)
         : typeof situational["dbContinuityDelta"] === "number"
           ? (situational["dbContinuityDelta"] as number)
-          : -0.05;
+          : computedDeltas.dbContinuityDelta;
 
       const continuityDeltas = {
         olContinuityDelta: olDelta,
