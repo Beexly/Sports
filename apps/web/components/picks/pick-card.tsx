@@ -11,6 +11,7 @@ import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
+import { PICK_TYPE, PickStat, PickStatRow } from "./pick-stat";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { CENTRAL_TZ } from "@/lib/time/central";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
@@ -27,6 +28,9 @@ interface PickCardProps {
   canSeeFactorBreakdown: boolean;
 }
 
+const CHIP =
+  "rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em]";
+
 const PICK_GRADE_STYLES: Record<PickGrade, string> = {
   ELITE_PLAY: "text-plasma bg-plasma/10",
   STRONG_PLAY: "text-verify bg-verify/10",
@@ -40,6 +44,12 @@ const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
   HIGH_VARIANCE: "text-ultraviolet-glow",
   INJURY_RISK: "text-alert",
   LINE_STEAM: "text-ultraviolet-glow",
+};
+
+const MARKET_LABEL: Record<PickType, string> = {
+  SPREAD: "Spread",
+  MONEYLINE: "Moneyline",
+  TOTAL: "Total",
 };
 
 export function PickCard({
@@ -85,115 +95,104 @@ export function PickCard({
       ? (pick.clvLockLine ?? (pick.line !== 0 ? pick.line : null))
       : null;
 
+  // Books: the count the API already sends on this pick. The market-implied
+  // snapshot carries it for priced moneylines; a signal-slate row has no book
+  // behind it by definition (hasBookPrice false = bookmakerCount 0). Anything
+  // else did not ship a count, so the slot shows a neutral dash, never a guess.
+  const bookCount: number | null =
+    pick.marketImplied?.bookmakerCount ??
+    pick.winProbability?.books ??
+    (pick.hasBookPrice === false ? 0 : null);
+
   return (
     <article
       className={[
-        "relative flex flex-col gap-4 rounded-2xl border p-5 transition-shadow hover:shadow-lg hover:shadow-black/40",
-        isFeatured
-          ? "border-plasma/50 bg-carbon shadow-plasma/20"
-          : "border-titanium bg-carbon",
+        "flex flex-col gap-5 rounded-2xl border bg-eclipse p-5 transition-colors lg:p-6",
+        isFeatured ? "border-plasma/50" : "border-mineral hover:border-mineral-hi",
       ].join(" ")}
     >
-      {/* Featured ribbon */}
-      {isFeatured && (
-        <div className="absolute right-4 top-0 -translate-y-1/2">
-          <span className="rounded-full bg-plasma px-2.5 py-0.5 text-xs font-bold text-plasma-ink">
-            Top Pick
-          </span>
-        </div>
-      )}
-
-      {/* Header: sport + badges */}
-      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <span className="rounded-full bg-titanium px-2.5 py-0.5 text-xs font-semibold text-ion-1">
-          {pick.game.sport}
-        </span>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <GradeBadge grade={pick.pickGrade} />
-          <TierBadge tier={pick.tier} />
-          <ResultBadge result={pick.result} />
-        </div>
-      </div>
-
-      {/* Matchup */}
-      <div>
-        <p className="text-xs text-ion-1">{gameTime}</p>
-        <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-white">{pick.game.awayTeam}</p>
-            <p className="text-[10px] text-ion-1">@</p>
-            <p className="text-sm font-semibold text-white">{pick.game.homeTeam}</p>
-          </div>
-          <PickTypeBadge type={pick.pickType} />
-        </div>
-      </div>
-
-      {/* Selection box */}
-      <div className="rounded-lg bg-titanium/60 px-4 py-3">
-        <p className="text-xs font-medium text-ion-1">Pick</p>
-        <p className="mt-0.5 text-lg font-bold text-white">{displaySelection(pick.selection)}</p>
-        {/* A signal-slate row has no book behind it: the line slot says so in
-            plain words instead of sitting empty (FE-05). */}
-        {pick.hasBookPrice === false ? (
-          <p
-            className="mt-1 inline-flex items-center rounded-full border border-titanium px-2 py-0.5 text-[11px] text-ion-2"
-            data-testid="no-book-price-pill"
-          >
-            {NO_BOOK_PRICE_LABEL}
+      {/* Header: league · start time, then the matchup */}
+      <header>
+        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className={PICK_TYPE.meta}>
+            {pick.game.sport} · {gameTime}
           </p>
-        ) : (
-          /* C-354: the card's price/line is the publish-time capture when
-             present — `clvLockPrice` for MONEYLINE, `clvLockLine` for TOTAL.
-             Never a number parsed out of `selection`: the selection string
-             can carry a different American price than the stored capture,
-             and the stored capture is the immutable record. Legacy rows
-             without that capture fall back to `line`; neither path invents
-             a number. SPREAD's chosen-side number already lives in
-             `selection` ("Away Favs -6.0"); `line` is HOME-team perspective
-             for settlement, so rendering it raw would contradict the
-             selection for away-favored picks — no price slot for SPREAD. */
-          cardPrice !== null ? (
-            <p className="mt-0.5 text-xs text-ion-1" data-testid="card-price">
-              Line: {cardPrice > 0 ? "+" : ""}{cardPrice}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {isFeatured && <span className={`${CHIP} bg-plasma text-plasma-ink`}>Top Pick</span>}
+            <GradeBadge grade={pick.pickGrade} />
+            <TierBadge tier={pick.tier} />
+            <ResultBadge result={pick.result} />
+          </div>
+        </div>
+        <p className="mt-2 text-base font-semibold text-ion-white">
+          {pick.game.awayTeam} <span className="font-normal text-ion-2">@</span> {pick.game.homeTeam}
+        </p>
+      </header>
+
+      {/* The pick and its line: the dominant line of the card */}
+      <div>
+        <p className={PICK_TYPE.label}>Pick · {MARKET_LABEL[pick.pickType]}</p>
+        <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <p className={`min-w-0 break-words text-ion-white ${PICK_TYPE.pick}`}>
+            {displaySelection(pick.selection)}
+          </p>
+          {/* A signal-slate row has no book behind it: the line slot says so in
+              plain words instead of sitting empty (FE-05). */}
+          {pick.hasBookPrice === false ? (
+            <p
+              className="inline-flex w-fit shrink-0 items-center rounded-full border border-mineral px-2.5 py-0.5 text-[11px] text-ion-2"
+              data-testid="no-book-price-pill"
+            >
+              {NO_BOOK_PRICE_LABEL}
             </p>
-          ) : cardLine !== null ? (
-            <p className="mt-0.5 text-xs text-ion-1" data-testid="card-line">
-              Line: {cardLine > 0 ? "+" : ""}{cardLine}
-            </p>
-          ) : null
-        )}
+          ) : (
+            /* C-354: the card's price/line is the publish-time capture when
+               present — `clvLockPrice` for MONEYLINE, `clvLockLine` for TOTAL.
+               Never a number parsed out of `selection`: the selection string
+               can carry a different American price than the stored capture,
+               and the stored capture is the immutable record. Legacy rows
+               without that capture fall back to `line`; neither path invents
+               a number. SPREAD's chosen-side number already lives in
+               `selection` ("Away Favs -6.0"); `line` is HOME-team perspective
+               for settlement, so rendering it raw would contradict the
+               selection for away-favored picks — no price slot for SPREAD.
+               The visible label is "Line" over the number; the colon is for
+               screen readers, which then hear "Line: -135". */
+            cardPrice !== null ? (
+              <p className="flex shrink-0 flex-col gap-1.5 sm:items-end" data-testid="card-price">
+                <span className={PICK_TYPE.label}>
+                  Line<span className="sr-only">:</span>
+                </span>{" "}
+                <span className={`${PICK_TYPE.value} text-ion-white`}>
+                  {cardPrice > 0 ? "+" : ""}
+                  {cardPrice}
+                </span>
+              </p>
+            ) : cardLine !== null ? (
+              <p className="flex shrink-0 flex-col gap-1.5 sm:items-end" data-testid="card-line">
+                <span className={PICK_TYPE.label}>
+                  Line<span className="sr-only">:</span>
+                </span>{" "}
+                <span className={`${PICK_TYPE.value} text-ion-white`}>
+                  {cardLine > 0 ? "+" : ""}
+                  {cardLine}
+                </span>
+              </p>
+            ) : null
+          )}
+        </div>
         {pick.lineMovement && (
           <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
         )}
       </div>
 
-      {/* Scores row: confidence + edge + risk */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        {/* Confidence */}
-        <div className="min-w-0">
-          <p
-            className="mb-1 text-[10px] font-medium text-ion-1"
-            title="How strong this pick is, 0-100. Unlocks with Pro."
-          >
-            Confidence
-          </p>
-          {!canSeeConfidence ? (
-            <LockedValue label="Conf." />
-          ) : pick.confidence !== null ? (
-            <ConfidenceBadge confidence={pick.confidence} calibrated={pick.confidenceCalibrated} />
-          ) : (
-            <MissingValue />
-          )}
-        </div>
-
-        {/* Edge */}
-        <div className="min-w-0">
-          <p
-            className="mb-1 text-[10px] font-medium text-ion-1"
-            title="How much better our number is than the market price, 0-100. Higher means more value. Free on every pick."
-          >
-            Edge
-          </p>
+      {/* Stat row: Edge · Confidence · Books, same order and style everywhere */}
+      <PickStatRow>
+        <PickStat
+          label="Edge"
+          tone="accent"
+          title="How much better our number is than the market price, 0-100. Higher means more value. Free on every pick."
+        >
           {!canSeeEdgeScore ? (
             <LockedValue label="Edge" />
           ) : pick.edgeScore !== null ? (
@@ -201,108 +200,122 @@ export function PickCard({
           ) : (
             <MissingValue />
           )}
-        </div>
+        </PickStat>
+        <PickStat label="Confidence" title="How strong this pick is, 0-100. Unlocks with Pro.">
+          {!canSeeConfidence ? (
+            <LockedValue label="Conf." />
+          ) : pick.confidence !== null ? (
+            <ConfidenceBadge confidence={pick.confidence} calibrated={pick.confidenceCalibrated} />
+          ) : (
+            <MissingValue />
+          )}
+        </PickStat>
+        <PickStat label="Books" title="Sportsbooks in the price snapshot behind this pick.">
+          {bookCount !== null ? bookCount : <MissingValue />}
+        </PickStat>
+      </PickStatRow>
 
-        {/* Risk */}
-        <div className="min-w-0">
-          <p className="mb-1 text-[10px] font-medium text-ion-1">Risk</p>
-          <span className={`text-xs font-semibold ${RISK_LEVEL_STYLES[pick.riskLevel]}`}>
-            {riskInfo.label}
-          </span>
+      {/* Secondary line: how far our number sits from the market price. Shown
+          on the SAME condition the factor breakdown it is derived from renders
+          on (the API nulls factorBreakdown for tiers that cannot see it), and
+          ValueGapBadge renders nothing unless both numbers are real. */}
+      {(canSeeFactorBreakdown && pick.factorBreakdown) || pick.marketImplied ? (
+        <div className="flex flex-col gap-1">
+          {canSeeFactorBreakdown && pick.factorBreakdown && (
+            <ValueGapBadge
+              rankingP={pick.factorBreakdown.rankingP}
+              marketFairProb={pick.factorBreakdown.marketFairProb}
+            />
+          )}
+          {/* Market-implied win probability (v5.2.8 Phase 2): the receipt's number
+              on book-priced two-way moneyline picks with at least two books, shown
+              to EVERY tier. Deliberately not gated on canSeeConfidence — this is a
+              de-vig of quoted prices a reader can recompute, and the calibration
+              claim we publish is about it, so the free tier must be able to see the
+              number that claim describes. Scope is enforced server-side: the API
+              omits the field for signal-slate, SPREAD and TOTAL picks, so nothing
+              renders there. Label text is the verified proposal wording. */}
+          {pick.marketImplied && (
+            <p
+              className="text-sm leading-6 text-ion-1"
+              data-testid="market-implied-win-probability"
+            >
+              {formatMarketImpliedLabel(pick.marketImplied)}
+            </p>
+          )}
         </div>
-      </div>
-
-      {/* Market-implied win probability (v5.2.8 Phase 2): the receipt's number
-          on book-priced two-way moneyline picks with at least two books, shown
-          to EVERY tier. Deliberately not gated on canSeeConfidence — this is a
-          de-vig of quoted prices a reader can recompute, and the calibration
-          claim we publish is about it, so the free tier must be able to see the
-          number that claim describes. Scope is enforced server-side: the API
-          omits the field for signal-slate, SPREAD and TOTAL picks, so nothing
-          renders there. Label text is the verified proposal wording. */}
-      {pick.marketImplied && (
-        <p
-          className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/5 px-3 py-2 text-xs leading-relaxed text-ion-1"
-          data-testid="market-implied-win-probability"
-        >
-          {formatMarketImpliedLabel(pick.marketImplied)}
-        </p>
-      )}
+      ) : null}
 
       {/* Reasoning teaser / full — gated on the SAME flag the API gates the
           full prose on (canSeeFactorBreakdown), so the display gate can never
           drift from the server gate if the two flags ever diverge. */}
-      <p className="text-xs leading-relaxed text-ion-1">
-        {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
-      </p>
-      {/* T-1 evidence caption (Devin Review, #819): when the text above is a
-          bound bookmaker-consensus claim, the API returns its source count +
-          freshness caption here — the same evidence /preview renders beside
-          a bound claim (bound.claimText + consensusEvidenceCaption(bound)).
-          Absent for an ordinary teaser and for a suppressed (unbound) claim,
-          since nothing renders there to caption. */}
-      {pick.consensusEvidenceCaption && (
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
-          {pick.consensusEvidenceCaption}
+      <div>
+        <p className="text-sm leading-6 text-ion-1">
+          {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
         </p>
-      )}
+        {/* T-1 evidence caption (Devin Review, #819): when the text above is a
+            bound bookmaker-consensus claim, the API returns its source count +
+            freshness caption here — the same evidence /preview renders beside
+            a bound claim (bound.claimText + consensusEvidenceCaption(bound)).
+            Absent for an ordinary teaser and for a suppressed (unbound) claim,
+            since nothing renders there to caption. */}
+        {pick.consensusEvidenceCaption && (
+          <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+            {pick.consensusEvidenceCaption}
+          </p>
+        )}
+      </div>
 
-      {/* Analysis (factor breakdown, PRO+ only) */}
+      {/* Analysis (factor breakdown, PRO+ only), collapsed until asked for */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (
         <FactorBreakdownPanel breakdown={pick.factorBreakdown} />
       )}
-      {!canSeeFactorBreakdown && (
-        <Link
-          href="/pricing"
-          className="block rounded-lg border border-dashed border-titanium/50 px-4 py-3 transition-colors hover:border-plasma/50"
-        >
-          <p className="text-xs text-ion-1">
-            Analysis unlocks on Pro &amp; Elite →
-          </p>
-        </Link>
-      )}
 
-      {/* Data quality + freshness footer */}
-      <div className="flex flex-col gap-2 border-t border-titanium/60 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      {/* Actions: Pick receipt (every tier, real picks), Verify, Analysis upsell */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-start gap-2">
+          {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
+          {pick.isAuditAvailable ? (
+            <EvidenceAuditDrawer pickId={pick.id} />
+          ) : (
+            <span className="inline-flex min-h-11 items-center text-xs text-ion-2">
+              Receipt opens on live picks
+            </span>
+          )}
+
+          {/* Tamper-evident receipt: frozen before kickoff, verifiable by anyone.
+              The button reveals the full hash, the committed timestamp, and a
+              link to /verify. */}
+          {pick.receiptHash && <VerifyPickButton receiptHash={pick.receiptHash} />}
+
+          {!canSeeFactorBreakdown && (
+            <Link
+              href="/pricing"
+              className="inline-flex min-h-11 items-center px-1 text-xs font-semibold text-ion-1 transition-colors hover:text-plasma"
+            >
+              Analysis unlocks on Pro &amp; Elite →
+            </Link>
+          )}
+        </div>
+
+        {/* "Why this pick?" explainer — PRO+ only, on real picks (server enforces the gate too). */}
+        {canSeeFactorBreakdown && pick.isAuditAvailable && <AskWhy pickId={pick.id} />}
+      </div>
+
+      {/* Quiet facts: risk, data quality, freshness */}
+      <footer className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+        <span
+          className={`font-mono text-[10px] font-semibold uppercase tracking-[0.14em] ${RISK_LEVEL_STYLES[pick.riskLevel]}`}
+        >
+          {riskInfo.label}
+        </span>
         <DataQualityMeter score={pick.dataQualityScore} />
         {freshnessAge !== null && (
-          <div className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1.5">
             <FreshnessIndicator ageMinutes={freshnessAge} />
-          </div>
-        )}
-      </div>
-
-      {/* Tamper-evident receipt: frozen before kickoff, verifiable by anyone. */}
-      {pick.receiptHash && (
-        <Link
-          href={`/verify?hash=${pick.receiptHash}`}
-          className="group flex min-h-11 items-center gap-1.5 py-2 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
-          title="This pick was frozen into a SHA-256 receipt before kickoff. Click to verify it was never edited."
-        >
-          <span aria-hidden>⛓</span>
-          Receipt {pick.receiptHash.slice(0, 10)}…
-          <span className="underline decoration-dotted underline-offset-2 group-hover:decoration-solid">
-            verify
-          </span>
-        </Link>
-      )}
-
-      {/* Verify button: reveals the full hash, committed timestamp, and a link to /verify */}
-      {pick.receiptHash && <VerifyPickButton receiptHash={pick.receiptHash} />}
-
-      {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
-      <div className="flex items-center justify-stretch sm:justify-end">
-        {pick.isAuditAvailable ? (
-          <EvidenceAuditDrawer pickId={pick.id} />
-        ) : (
-          <span className="rounded-full border border-titanium bg-carbon/50 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-1">
-            Receipt opens on live picks
           </span>
         )}
-      </div>
-
-      {/* Glass-box explainer — PRO+ only, on real picks (server enforces the gate too). */}
-      {canSeeFactorBreakdown && pick.isAuditAvailable && <AskWhy pickId={pick.id} />}
+      </footer>
     </article>
   );
 }
@@ -318,93 +331,91 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
     (breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore !== 0);
 
   return (
-    <div className="rounded-lg border border-titanium/60 bg-obsidian/40 p-3">
-      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-ion-1">
+    <details className="group">
+      <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ion-1 transition-colors hover:text-ion-white [&::-webkit-details-marker]:hidden">
         Analysis
-      </p>
+        <span aria-hidden="true" className="text-xs transition-transform group-open:rotate-90">
+          ›
+        </span>
+      </summary>
 
-      {/* Core market score bars */}
-      <div className="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
-        <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
-        <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
-        <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-verify" />
-        <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-plasma" />
-      </div>
-
-      {/* Intelligence layer signal chips (v4) */}
-      {hasIntelligenceLayer && (
-        <div className="mb-2 flex flex-wrap gap-1.5">
-          {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore > 0 && (
-            <IntelChip label="H2H +" positive />
-          )}
-          {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore < 0 && (
-            <IntelChip label="H2H -" positive={false} />
-          )}
-          {breakdown.venueFormScore !== undefined && breakdown.venueFormScore > 0 && (
-            <IntelChip label="Venue +" positive />
-          )}
-          {breakdown.venueFormScore !== undefined && breakdown.venueFormScore < 0 && (
-            <IntelChip label="Venue -" positive={false} />
-          )}
-          {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore > 0 && (
-            <IntelChip label="Markets align" positive />
-          )}
-          {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore < 0 && (
-            <IntelChip label="Markets split" positive={false} />
-          )}
+      <div className="mt-2 flex flex-col gap-3">
+        {/* Core market score bars */}
+        <div className="grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
+          <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
+          <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
+          <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-verify" />
+          <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-plasma" />
         </div>
-      )}
 
-      {/* Individual factors */}
-      {breakdown.factors.length > 0 && (
-        <div className="flex flex-col gap-1">
-          {breakdown.factors.map((factor, idx) => (
-            <div key={idx} className="flex items-start gap-2">
-              <span
-                className={[
-                  "mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full",
-                  factor.impact === "positive"
-                    ? "bg-verify"
-                    : factor.impact === "negative"
-                    ? "bg-alert"
-                    : "bg-ion-3",
-                ].join(" ")}
-                aria-hidden="true"
-              />
-              <span className="text-[10px] leading-relaxed text-ion-2">
-                {factor.description}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+        {/* Intelligence layer signal chips (v4) */}
+        {hasIntelligenceLayer && (
+          <div className="flex flex-wrap gap-1.5">
+            {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore > 0 && (
+              <IntelChip label="H2H +" positive />
+            )}
+            {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore < 0 && (
+              <IntelChip label="H2H -" positive={false} />
+            )}
+            {breakdown.venueFormScore !== undefined && breakdown.venueFormScore > 0 && (
+              <IntelChip label="Venue +" positive />
+            )}
+            {breakdown.venueFormScore !== undefined && breakdown.venueFormScore < 0 && (
+              <IntelChip label="Venue -" positive={false} />
+            )}
+            {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore > 0 && (
+              <IntelChip label="Markets align" positive />
+            )}
+            {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore < 0 && (
+              <IntelChip label="Markets split" positive={false} />
+            )}
+          </div>
+        )}
 
-      {/* Versus the market price. The ranking key, its source, the de-vig
-          inputs and the independent-estimator layer are model internals and
-          are not rendered on the public card; ValueGapBadge renders nothing
-          unless both numbers are real. */}
-      <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
+        {/* Individual factors */}
+        {breakdown.factors.length > 0 && (
+          <ul className="flex flex-col gap-1.5">
+            {breakdown.factors.map((factor, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span
+                  className={[
+                    "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full",
+                    factor.impact === "positive"
+                      ? "bg-verify"
+                      : factor.impact === "negative"
+                      ? "bg-alert"
+                      : "bg-ion-3",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
+                <span className="text-xs leading-5 text-ion-1">{factor.description}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      {/* Penalty summary row */}
-      {(breakdown.volatilityPenalty < 0 || (breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0)) && (
-        <div className="mt-1.5 flex flex-wrap gap-1.5">
-          {breakdown.volatilityPenalty < 0 && (
-            <div className="flex items-center gap-1 rounded bg-alert/10 px-2 py-0.5">
-              <span className="text-[10px] text-alert">
+        {/* The ranking key, its source, the de-vig inputs and the
+            independent-estimator layer are model internals and are not
+            rendered on the public card. The versus-the-market sentence lives
+            above, as the card's secondary line. */}
+
+        {/* Penalty summary row */}
+        {(breakdown.volatilityPenalty < 0 || (breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0)) && (
+          <div className="flex flex-wrap gap-1.5">
+            {breakdown.volatilityPenalty < 0 && (
+              <span className="rounded bg-alert/10 px-2 py-0.5 text-[10px] text-alert">
                 Market risk: {breakdown.volatilityPenalty} pts
               </span>
-            </div>
-          )}
-          {breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0 && (
-            <div className="flex items-center gap-1 rounded bg-ultraviolet/10 px-2 py-0.5">
-              <span className="text-[10px] text-ultraviolet-glow">
+            )}
+            {breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0 && (
+              <span className="rounded bg-ultraviolet/10 px-2 py-0.5 text-[10px] text-ultraviolet-glow">
                 Signal conflict: {breakdown.uncertaintyPenalty} pts
               </span>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+            )}
+          </div>
+        )}
+      </div>
+    </details>
   );
 }
 
@@ -412,7 +423,7 @@ function IntelChip({ label, positive }: { label: string; positive: boolean }) {
   return (
     <span
       className={[
-        "rounded-full px-2 py-0.5 text-[9px] font-semibold",
+        "rounded-full px-2 py-0.5 text-[10px] font-semibold",
         positive
           ? "bg-verify/10 text-verify"
           : "bg-alert/10 text-alert",
@@ -437,9 +448,9 @@ function ScoreBar({
   const pct = Math.round(Math.max(0, Math.min((value / max) * 100, 100)));
   return (
     <div>
-      <div className="mb-0.5 flex justify-between text-[10px]">
+      <div className="mb-1 flex justify-between text-[11px]">
         <span className="text-ion-1">{label}</span>
-        <span className="font-medium text-ion-2">{Math.round(value)}</span>
+        <span className="font-medium tabular-nums text-ion-white">{Math.round(value)}</span>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-titanium">
         <div
@@ -458,58 +469,14 @@ function ScoreBar({
 function GradeBadge({ grade }: { grade: PickGrade }) {
   const info = PICK_GRADE_LABELS[grade];
   if (grade === "LEAN") return null; // don't show lean badge — it's the default
-  return (
-    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${PICK_GRADE_STYLES[grade]}`}>
-      {info.label}
-    </span>
-  );
+  return <span className={`${CHIP} ${PICK_GRADE_STYLES[grade]}`}>{info.label}</span>;
 }
 
 function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
   if (tier === "FREE") {
-    return (
-      <span className="rounded-full bg-verify/10 px-2 py-0.5 text-xs font-semibold text-verify">
-        Free
-      </span>
-    );
+    return <span className={`${CHIP} bg-verify/10 text-verify`}>Free</span>;
   }
-  return (
-    <span className="flex items-center gap-1 rounded-full bg-plasma/10 px-2 py-0.5 text-xs font-semibold text-plasma">
-      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-        <path
-          fillRule="evenodd"
-          d="M10 1a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L10 13.187l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L2.818 7.125a.75.75 0 01.416-1.28l4.21-.61L9.327 1.42A.75.75 0 0110 1z"
-          clipRule="evenodd"
-        />
-      </svg>
-      Premium
-    </span>
-  );
-}
-
-function PickTypeBadge({ type }: { type: PickType }) {
-  const colors: Record<PickType, string> = {
-    SPREAD: "bg-ion-blue/10 text-ion-blue",
-    MONEYLINE: "bg-ultraviolet/10 text-ultraviolet-glow",
-    TOTAL: "bg-ultraviolet/10 text-ultraviolet-glow",
-  };
-  const labels: Record<PickType, string> = {
-    SPREAD: "Spread",
-    MONEYLINE: "ML",
-    TOTAL: "Total",
-  };
-  return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors[type]}`}>
-      {labels[type]}
-    </span>
-  );
-}
-
-function badgeColor(value: number): string {
-  if (value >= 80) return "text-verify bg-verify/10";
-  if (value >= 70) return "text-ion-blue bg-ion-blue/10";
-  if (value >= 60) return "text-plasma bg-plasma/10";
-  return "text-ion-2 bg-titanium";
+  return <span className={`${CHIP} bg-plasma/10 text-plasma`}>Premium</span>;
 }
 
 function ConfidenceBadge({
@@ -524,10 +491,13 @@ function ConfidenceBadge({
   if (calibrated) {
     return (
       <span
-        className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(calibrated.pct)}`}
+        className="inline-flex flex-wrap items-baseline gap-x-1.5"
         aria-label={`Confidence: ${calibrated.label}, about ${calibrated.pct} percent win probability`}
       >
-        {calibrated.label} · {calibrated.pct}%
+        {calibrated.pct}%
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-2">
+          {calibrated.label}
+        </span>
       </span>
     );
   }
@@ -535,10 +505,7 @@ function ConfidenceBadge({
   // a percent — "%" reads as a win probability, which this number is not
   // (audit fix; the aria-label already honestly said "out of 100").
   return (
-    <span
-      className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(confidence)}`}
-      aria-label={`Confidence: ${confidence} out of 100`}
-    >
+    <span aria-label={`Confidence: ${confidence} out of 100`}>
       {confidence}/100
     </span>
   );
@@ -582,10 +549,8 @@ function LineMovementChip({
   const { label, title, moved } = formatLineMovement(movement, pickType);
   return (
     <p
-      className={`mt-1 inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px] ${
-        moved
-          ? "border-plasma/40 bg-plasma/10 text-plasma"
-          : "border-titanium text-ion-2"
+      className={`mt-2 inline-flex items-center gap-1.5 font-mono text-[11px] ${
+        moved ? "text-plasma" : "text-ion-2"
       }`}
       title={title}
     >
@@ -596,17 +561,8 @@ function LineMovementChip({
 }
 
 function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
-  let color = "text-ion-2";
-  if (edgeScore >= 70) color = "text-verify";
-  else if (edgeScore >= 50) color = "text-ion-blue";
-  else if (edgeScore >= 30) color = "text-plasma";
-  else color = "text-ion-1";
-
   return (
-    <span
-      className={`text-xs font-bold ${color}`}
-      aria-label={`Edge: ${edgeScore} out of 100`}
-    >
+    <span aria-label={`Edge: ${edgeScore} out of 100`}>
       {edgeScore}
     </span>
   );
@@ -621,7 +577,7 @@ function ResultBadge({ result }: { result: PickResult }) {
     VOID: "bg-titanium text-ion-1",
   };
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[result as Exclude<PickResult, "PENDING">]}`}>
+    <span className={`${CHIP} ${styles[result as Exclude<PickResult, "PENDING">]}`}>
       {result}
     </span>
   );
@@ -631,14 +587,15 @@ function ResultBadge({ result }: { result: PickResult }) {
 // FREE users — so it links to /pricing instead of dead-ending. Purely navigational
 // (no entitlement logic; the server gate in /api/picks stays authoritative).
 function LockedValue({ label }: { label: string }) {
-  // Says WHAT unlocks it in plain words — a bare padlock + abbreviation reads
-  // as broken to a non-technical visitor; "Pro" turns it into an invitation.
+  // The stat label already names the metric above this slot, so the visible
+  // text is just the padlock and the tier that opens it; the metric name stays
+  // in the accessible name and tooltip.
   return (
     <Link
       href="/pricing"
       aria-label={`${label} unlocks with Pro. See pricing`}
-      title={`${label} unlocks with Pro — tap to see pricing`}
-      className="inline-flex min-h-11 items-center gap-1 py-2 text-xs text-ion-1 transition-colors hover:text-plasma"
+      title={`${label} unlocks with Pro. Tap to see pricing.`}
+      className="inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ion-1 transition-colors hover:text-plasma"
     >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
@@ -647,8 +604,7 @@ function LockedValue({ label }: { label: string }) {
           clipRule="evenodd"
         />
       </svg>
-      {label}
-      <span className="font-semibold text-plasma/90">· Pro</span>
+      Pro
     </Link>
   );
 }
@@ -656,16 +612,17 @@ function LockedValue({ label }: { label: string }) {
 /**
  * Entitled user, absent data. Distinct from LockedValue on purpose: showing a
  * "unlocks with Pro" upsell to someone already entitled (or for the always-free
- * Edge Index) over a value that simply wasn't captured reads as a bait, not a
- * gate. Neutral, labeled, no link.
+ * Edge) over a value that simply wasn't captured reads as a bait, not a
+ * gate. Neutral dash, labeled, no link.
  */
 function MissingValue() {
   return (
     <span
-      className="inline-flex min-h-11 items-center py-2 text-xs text-ion-3"
-      title="This value was not captured for this pick. Nothing is hidden; it does not exist."
+      className="text-ion-3"
+      aria-label="Not available"
+      title="Not available for this pick. This is missing data, not a hidden value."
     >
-      not captured
+      —
     </span>
   );
 }
@@ -686,17 +643,17 @@ function DataQualityMeter({ score }: { score: number }) {
   }
   return (
     <div
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]"
       aria-label={`Data quality: ${label}, ${clamped} out of 100`}
     >
-      <span className="text-[10px] text-ion-1">Data Quality</span>
-      <div className="h-1 w-16 overflow-hidden rounded-full bg-titanium" aria-hidden="true">
+      <span className="text-ion-2">Data quality</span>
+      <div className="h-1 w-10 overflow-hidden rounded-full bg-titanium" aria-hidden="true">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${clamped}%` }}
         />
       </div>
-      <span className={`text-[10px] font-semibold ${textColor}`}>{label}</span>
+      <span className={`font-semibold ${textColor}`}>{label}</span>
     </div>
   );
 }
@@ -723,7 +680,7 @@ function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
         }`}
         aria-hidden="true"
       />
-      <span className={`text-[10px] ${color}`}>
+      <span className={`font-mono text-[10px] uppercase tracking-[0.14em] ${color}`}>
         Data: {label}
       </span>
     </>

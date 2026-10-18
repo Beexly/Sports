@@ -48,7 +48,7 @@ describe("ValueGapBadge — component", () => {
   it("renders the gap when both p and q are present", () => {
     render(<ValueGapBadge rankingP={0.58} marketFairProb={0.5} />);
     const badge = screen.getByTestId("value-gap-badge");
-    expect(badge.textContent).toContain("Beats the market price by");
+    expect(badge.textContent).toContain("pts above the market price");
     expect(badge.textContent).toContain("8.0 pts");
   });
 
@@ -75,7 +75,7 @@ describe("ValueGapBadge — component", () => {
   it("states a negative gap in words, not a bare negative number", () => {
     render(<ValueGapBadge rankingP={0.42} marketFairProb={0.5} />);
     const badge = screen.getByTestId("value-gap-badge");
-    expect(badge.textContent).toContain("Below the market price by 8.0 pts");
+    expect(badge.textContent).toContain("8.0 pts below the market price");
     expect(badge.textContent).not.toContain("-8.0"); // no bare ASCII-hyphen negative
   });
 });

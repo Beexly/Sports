@@ -30,9 +30,12 @@ export function BoardHealthBadge({ meta }: { readonly meta: BoardStatePayload["m
   return (
     <div
       data-testid="board-health-badge"
-      className={`min-w-0 border px-3 py-2 ${TONE[meta.health.status]}`}
+      className={`inline-flex min-w-0 items-center rounded-full border px-2.5 py-1 ${TONE[meta.health.status]}`}
     >
-      <span className="text-sm font-semibold text-ion-white" data-testid="board-class-label">
+      <span
+        className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-ion-white"
+        data-testid="board-class-label"
+      >
         {boardStateLabel(meta.boardClass.state)}
       </span>
     </div>

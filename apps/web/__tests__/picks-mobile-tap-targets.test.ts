@@ -22,8 +22,18 @@ describe("picks mobile ergonomics", () => {
 
     expect(pickCardSrc).toContain("flex flex-col items-start gap-2 sm:flex-row");
     expect(pickCardSrc).toContain("mt-1.5 flex flex-col gap-3 sm:flex-row");
-    expect(pickCardSrc).toContain("grid grid-cols-1 gap-3 sm:grid-cols-3");
     expect(pickCardSrc).toContain("grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2");
+  });
+
+  it("keeps the Edge / Confidence / Books stat row three-up at every width", () => {
+    // Design pass: the stat row is short numerals under short labels, so it
+    // fits three-up at 375px and stays column-aligned across cards. It used to
+    // stack (grid-cols-1 sm:grid-cols-3); it is now the shared PickStatRow.
+    const pickCardSrc = readComponent("components/picks/pick-card.tsx");
+    const statSrc = readComponent("components/picks/pick-stat.tsx");
+
+    expect(pickCardSrc).toContain("<PickStatRow>");
+    expect(statSrc).toContain("grid grid-cols-3 gap-x-4");
   });
 
   it("keeps visible picks-page controls mobile tappable", () => {

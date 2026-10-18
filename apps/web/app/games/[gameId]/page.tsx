@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -8,6 +9,10 @@ import { Reveal } from "@/components/motion/reveal";
 import { loadBoardState } from "@/lib/board/state";
 import { loadGameDetail } from "@/lib/games/game-detail";
 import type { BestPrice } from "@/lib/market/best-line";
+import type { BoardStateRow } from "@/lib/board/state";
+import { boardMarketLabel } from "@/lib/board/market-label";
+import { CENTRAL_TZ } from "@/lib/time/central";
+import { PICK_TYPE, PickStat, PickStatRow } from "@/components/picks/pick-stat";
 
 export const dynamic = "force-dynamic";
 
@@ -20,20 +25,40 @@ function fmtPrice(p: number): string {
   return p > 0 ? `+${p}` : String(p);
 }
 
+const STATUS_LABEL: Record<BoardStateRow["status"], string> = {
+  GATED_TODAY: "Held",
+  SCORING_NOW: "Scoring",
+  PUBLISHED_TODAY: "Cleared",
+};
+
+/** One best captured price: side label, the price at stat size, the book. */
 function LineCell({ label, price }: { label: string; price: BestPrice | null }) {
   if (!price) return null;
   return (
-    <div className="border-t border-mineral-hi pt-3">
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</p>
-      <p className="mt-1 font-display text-3xl font-semibold tabular-nums text-ion-white">
+    <div className="min-w-0">
+      <dt className={PICK_TYPE.label}>{label}</dt>
+      <dd className={`mt-1.5 text-ion-white ${PICK_TYPE.value}`}>
         {fmtPrice(price.price)}
         {price.line !== undefined && (
-          <span className="ml-2 text-lg text-ion-1">({price.line > 0 ? `+${price.line}` : price.line})</span>
+          <span className="ml-1.5 text-base text-ion-1">({price.line > 0 ? `+${price.line}` : price.line})</span>
         )}
-      </p>
-      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ion-2">
-        {price.bookmaker}
-      </p>
+      </dd>
+      <dd className={`mt-1.5 truncate ${PICK_TYPE.meta}`}>{price.bookmaker}</dd>
+    </div>
+  );
+}
+
+function LineGroup({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-mineral bg-eclipse p-5">
+      <p className={`${PICK_TYPE.meta} text-ion-1`}>{title}</p>
+      <dl className="mt-4 grid grid-cols-2 gap-4">{children}</dl>
     </div>
   );
 }
@@ -98,106 +123,95 @@ export default async function GamePage({
                 {detail.matchup}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
-                Our readings below are the engine&apos;s, per market. Edge is a strength
-                score, not a win chance. Held readings show their reason.
+                Edge is a strength score, not a win chance. Held readings show their reason.
               </p>
             </Reveal>
 
             <Reveal delay={80}>
-              <h2 className="mt-14 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+              <h2 className={`mt-14 ${PICK_TYPE.meta}`}>
                 Best captured lines
                 {detail.best?.freshestFetchedAt
-                  ? ` · as of ${new Date(detail.best.freshestFetchedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}`
+                  ? ` · as of ${new Date(detail.best.freshestFetchedAt).toLocaleString("en-US", { timeZone: CENTRAL_TZ, month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" })}`
                   : ""}
               </h2>
               {detail.best ? (
-                <div className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-3">
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-plasma">Moneyline</p>
-                    <div className="mt-2 grid grid-cols-2 gap-6">
-                      <LineCell label="Home" price={detail.best.moneyline.home} />
-                      <LineCell label="Away" price={detail.best.moneyline.away} />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-plasma">Spread</p>
-                    <div className="mt-2 grid grid-cols-2 gap-6">
-                      <LineCell label="Home" price={detail.best.spread.home} />
-                      <LineCell label="Away" price={detail.best.spread.away} />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-plasma">Total</p>
-                    <div className="mt-2 grid grid-cols-2 gap-6">
-                      <LineCell label="Over" price={detail.best.total.over} />
-                      <LineCell label="Under" price={detail.best.total.under} />
-                    </div>
-                  </div>
+                <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                  <LineGroup title="Moneyline">
+                    <LineCell label="Home" price={detail.best.moneyline.home} />
+                    <LineCell label="Away" price={detail.best.moneyline.away} />
+                  </LineGroup>
+                  <LineGroup title="Spread">
+                    <LineCell label="Home" price={detail.best.spread.home} />
+                    <LineCell label="Away" price={detail.best.spread.away} />
+                  </LineGroup>
+                  <LineGroup title="Total">
+                    <LineCell label="Over" price={detail.best.total.over} />
+                    <LineCell label="Under" price={detail.best.total.under} />
+                  </LineGroup>
                 </div>
               ) : (
-                <p className="mt-6 border border-mineral bg-eclipse p-6 text-sm leading-6 text-ion-1">
-                  No multi-book line captured for this game. Lines appear once at least
-                  two books quote it; until then there is nothing to shop.
+                <p className="mt-4 text-sm leading-6 text-ion-2">
+                  Lines show here once at least two books quote this game.
                 </p>
               )}
             </Reveal>
 
             <Reveal delay={120}>
-              <h2 className="mt-14 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+              <h2 className={`mt-14 ${PICK_TYPE.meta}`}>
                 Our readings · {game?.readings.length ?? 0}
               </h2>
               {!game || game.readings.length === 0 ? (
-                <p className="mt-6 border border-mineral bg-eclipse p-6 text-sm leading-6 text-ion-1">
-                  No readings posted for this game. The engine evaluated nothing here,
-                  cleared or held.
+                <p className="mt-4 text-sm leading-6 text-ion-2">
+                  No readings posted for this game.
                 </p>
               ) : (
-                <div className="mt-6 overflow-hidden border border-mineral">
-                  {game.readings.map((r) => (
-                    <div
-                      key={r.id}
-                      className="grid gap-3 border-b border-mineral bg-eclipse p-5 last:border-b-0 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6"
-                    >
-                      <div>
-                        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">
-                          {r.market} · {r.status === "GATED_TODAY" ? "held" : r.status === "SCORING_NOW" ? "scoring" : "cleared"}
-                        </p>
-                        <p className="mt-2 text-sm leading-6 text-ion-1">
-                          {r.gateReason ? (
-                            <>
-                              <span className="font-semibold text-plasma">Held. </span>
-                              {r.gateReason}
-                            </>
-                          ) : (
-                            "Posted with its Analysis attached."
+                <ul className="mt-4 divide-y divide-mineral border-y border-mineral">
+                  {game.readings.map((r) => {
+                    const held = r.status === "GATED_TODAY";
+                    // Premium viewers get the selection here; everyone else gets the
+                    // loader's redaction sentinel, which boardMarketLabel turns into
+                    // "" so nothing is printed rather than a token or a guess.
+                    const market = boardMarketLabel(r.market);
+                    return (
+                      <li
+                        key={r.id}
+                        className="grid gap-5 py-6 sm:grid-cols-[1fr_minmax(0,18rem)] sm:items-start sm:gap-10"
+                      >
+                        <div className="min-w-0">
+                          <p className={PICK_TYPE.meta}>{STATUS_LABEL[r.status]}</p>
+                          {market && (
+                            <p className={`mt-1.5 break-words ${PICK_TYPE.pick} ${held ? "text-ion-3" : "text-ion-white"}`}>
+                              {market}
+                            </p>
                           )}
-                        </p>
-                      </div>
-                      <div className="flex gap-8 sm:text-right">
-                        <div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Edge</p>
-                          <p className="font-display text-2xl font-semibold tabular-nums text-ion-white">
-                            {r.edgeIndex ?? "n/a"}
+                          <p className="mt-2 text-sm leading-6 text-ion-1">
+                            {r.gateReason ? (
+                              <>
+                                <span className="font-semibold text-plasma">Held. </span>
+                                {r.gateReason}
+                              </>
+                            ) : (
+                              "Posted with its Analysis attached."
+                            )}
                           </p>
                         </div>
-                        <div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Confidence</p>
-                          <p className="font-display text-2xl font-semibold tabular-nums text-ion-white">
+                        <PickStatRow>
+                          <PickStat
+                            label="Edge"
+                            tone={held ? "muted" : r.status === "PUBLISHED_TODAY" ? "accent" : "default"}
+                          >
+                            {r.edgeIndex ?? "—"}
+                          </PickStat>
+                          <PickStat label="Confidence" tone={held ? "muted" : "default"}>
                             {typeof r.confidence === "number" ? `${r.confidence}/100` : "—"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                          </PickStat>
+                        </PickStatRow>
+                      </li>
+                    );
+                  })}
+                </ul>
               )}
               <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-                <Link href="/verify" className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white">
-                  Check a receipt
-                </Link>
-                <Link href="/calibration" className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white">
-                  Full record
-                </Link>
                 <Link href="/fantasy/props" className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white">
                   Player props desk
                 </Link>

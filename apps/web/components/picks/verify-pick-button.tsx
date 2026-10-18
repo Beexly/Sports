@@ -56,18 +56,18 @@ export function VerifyPickButton({ receiptHash }: VerifyPickButtonProps): JSX.El
   };
 
   return (
-    <div className="mt-2">
+    <div className="w-full sm:w-auto">
       <button
         type="button"
         onClick={handleClick}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-mineral px-3 py-1.5 text-xs font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-orbital-cyan"
+        aria-expanded={expanded}
+        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-mineral px-4 py-2 text-xs font-semibold text-ion-1 transition-colors hover:border-mineral-hi hover:text-ion-white sm:w-auto"
       >
-        <span aria-hidden>⛓</span>
         Verify this pick
       </button>
 
       {expanded && (
-        <div className="mt-2 rounded-lg border border-mineral bg-eclipse/40 p-3 text-xs text-ion-1">
+        <div className="mt-3 rounded-lg bg-carbon/60 p-3 text-xs text-ion-1">
           {state.status === "loading" && <p>Checking receipt integrity…</p>}
 
           {state.status === "ready" && (

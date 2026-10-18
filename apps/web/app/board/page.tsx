@@ -12,6 +12,7 @@ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge, boardStateLabel } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
+import { PICK_TYPE, PickStat, PickStatRow } from "@/components/picks/pick-stat";
 
 export const metadata: Metadata = {
   title: "Board",
@@ -229,12 +230,6 @@ export default async function BoardPage(): Promise<JSX.Element> {
                 See what Pro unlocks
               </Link>
               <Link
-                href="/calibration"
-                className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
-              >
-                Record
-              </Link>
-              <Link
                 href="/intelligence"
                 className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
               >
@@ -281,29 +276,31 @@ export default async function BoardPage(): Promise<JSX.Element> {
         </section>
 
         <div className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl pt-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-12 pt-8">
 
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <BoardSurfaceChip />
-          <BoardHealthBadge meta={stateResult.meta} />
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <BoardSurfaceChip />
+            <BoardHealthBadge meta={stateResult.meta} />
+          </div>
+
+          <dl aria-label="Board state" className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-mineral bg-mineral sm:grid-cols-5">
+            <StateTile label="Sports watched" value={String(state.sportsWatched)} />
+            <StateTile label="Books polled" value={String(state.booksPolled)} />
+            <StateTile label="Open picks" value={String(state.openPicks)} />
+            <StateTile label="Passed on" value={String(state.gatedToday)} />
+            <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" className="col-span-2 sm:col-span-1" />
+          </dl>
         </div>
 
-        <section aria-label="Board state" className="grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-5">
-          <StateTile label="Sports watched" value={String(state.sportsWatched)} />
-          <StateTile label="Books polled" value={String(state.booksPolled)} />
-          <StateTile label="Open picks" value={String(state.openPicks)} />
-          <StateTile label="Passed on" value={String(state.gatedToday)} />
-          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
-        </section>
-
-        <section className="grid gap-10 lg:grid-cols-3">
+        <section className="grid gap-12 lg:grid-cols-3 lg:gap-10">
           <BoardLane
             index="01"
             title="Scoring Now"
             rows={state.scoringNow}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "The board is closed until the data checks pass. An empty lane is not a claim about results."
+                ? "The board is closed until the data checks pass."
                 : "No games are currently scoring."
             }
           />
@@ -313,7 +310,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             rows={state.publishedToday}
             empty={
               stateResult.meta.boardClass.refusePublicFire
-                ? "Nothing published right now. The board is paused until data checks pass."
+                ? "Nothing published while the board is paused."
                 : "No picks published yet today."
             }
           />
@@ -323,37 +320,37 @@ export default async function BoardPage(): Promise<JSX.Element> {
             rows={state.gatedTodayRows}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "Nothing to pass on while the board is honestly empty."
+                ? "Nothing passed on while the board is closed."
                 : "Nothing passed on yet today."
             }
           />
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
-          <div className="border border-titanium bg-carbon/45 p-5">
-            <div className="flex items-center justify-between gap-4">
+          <div className="rounded-2xl border border-mineral bg-eclipse p-5 sm:p-6">
+            <div className="flex items-baseline justify-between gap-4">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">Pass List</p>
-                <h2 className="mt-2 text-2xl font-bold text-white">Evaluated without publishing</h2>
+                <p className={PICK_TYPE.label}>Pass List</p>
+                <h2 className={`mt-1.5 text-ion-white ${PICK_TYPE.pick}`}>Evaluated without publishing</h2>
               </div>
-              <span className="font-mono text-xs text-ion-3">{passesResult.data.date}</span>
+              <span className={PICK_TYPE.meta}>{passesResult.data.date}</span>
             </div>
-            <div className="mt-5 divide-y divide-titanium border border-titanium">
+            <div className="mt-4 divide-y divide-mineral">
               {passes.length > 0 ? (
                 passes.map((row) => <PassListItem key={row.id} row={row} />)
               ) : (
-                <p className="px-4 py-5 text-sm text-ion-3">No passes recorded for this slate yet.</p>
+                <p className="py-5 text-sm text-ion-2">No passes recorded for this slate yet.</p>
               )}
             </div>
           </div>
 
-          <div className="border border-titanium bg-carbon/45 p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">Results</p>
-            <h2 className="mt-2 text-2xl font-bold text-white">
+          <div className="rounded-2xl border border-mineral bg-eclipse p-5 sm:p-6">
+            <p className={PICK_TYPE.label}>Results</p>
+            <h2 className={`mt-1.5 text-ion-white ${PICK_TYPE.pick}`}>
               {calibration.isCollecting ? "Building history" : "Results tracked"}
             </h2>
-            <p className="mt-4 text-sm leading-6 text-ion-2">{calibration.publicMessage}</p>
-            <dl className="mt-6 grid grid-cols-2 gap-3">
+            <p className="mt-3 text-sm leading-6 text-ion-1">{calibration.publicMessage}</p>
+            <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3">
               <Metric label="Sample" value={String(calibration.sampleSize)} />
               {/* C-224: Brier score treats confidence as a forecast
                   probability, which the Edge Index is not. NOT replaced with
@@ -367,11 +364,6 @@ export default async function BoardPage(): Promise<JSX.Element> {
                   performance claim, so it carries no such gate. */}
               <Metric label="Decided" value={String(calibration.population.decided)} />
             </dl>
-            <p className="mt-5 text-xs text-ion-3">
-              <Link href="/calibration" className="font-semibold text-orbital-cyan hover:text-ion-white">
-                How to read this →
-              </Link>
-            </p>
           </div>
         </section>
 
@@ -384,11 +376,21 @@ export default async function BoardPage(): Promise<JSX.Element> {
   );
 }
 
-function StateTile({ label, value, dataTestid }: { label: string; value: string; dataTestid?: string }): JSX.Element {
+function StateTile({
+  label,
+  value,
+  dataTestid,
+  className = "",
+}: {
+  label: string;
+  value: string;
+  dataTestid?: string;
+  className?: string;
+}): JSX.Element {
   return (
-    <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2" {...(dataTestid ? { "data-testid": dataTestid } : {})}>
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
-      <p className="mt-1 break-words text-lg font-semibold text-white">{value}</p>
+    <div className={`bg-eclipse px-4 py-4 ${className}`} {...(dataTestid ? { "data-testid": dataTestid } : {})}>
+      <dt className={PICK_TYPE.label}>{label}</dt>
+      <dd className={`mt-1.5 break-words text-ion-white ${PICK_TYPE.value}`}>{value}</dd>
     </div>
   );
 }
@@ -398,49 +400,61 @@ function BoardLane({ title, rows, empty, index }: { title: string; rows: BoardSt
   return (
     <section>
       <div className="flex items-baseline gap-3 border-b border-mineral pb-3">
-        <span className={`font-display text-2xl font-semibold ${live ? "text-plasma" : "text-ion-3"}`}>{index}</span>
-        <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-1">{title}</h2>
-        <span className="ml-auto font-mono text-[10px] tabular-nums text-ion-3">{rows.length}</span>
+        <span className={`${PICK_TYPE.value} ${live ? "text-plasma" : "text-ion-3"}`}>{index}</span>
+        <h2 className={`${PICK_TYPE.label} text-ion-1`}>{title}</h2>
+        <span className={`ml-auto tabular-nums ${PICK_TYPE.label}`}>{rows.length}</span>
       </div>
-      <div className="divide-y divide-mineral">
-        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} live={live} />) : (
-          <p className="py-5 text-sm text-ion-3">{empty}</p>
-        )}
-      </div>
+      {rows.length > 0 ? (
+        <div className="divide-y divide-mineral">
+          {rows.map((row) => <BoardRowItem key={row.id} row={row} live={live} />)}
+        </div>
+      ) : (
+        <p className="py-6 text-sm leading-6 text-ion-2">{empty}</p>
+      )}
     </section>
   );
 }
 
+/**
+ * One board row, in the pick card's grammar: meta line, the matchup at the
+ * pick display size, then the same Edge / Confidence stat row. There is no
+ * per-row book count on the board payload, so the Books column is not drawn
+ * rather than filled with a placeholder.
+ */
 function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX.Element {
   const held = row.status !== "PUBLISHED_TODAY";
   return (
-    <article className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-4">
+    <article className="flex flex-col gap-4 py-6">
       <div className="min-w-0">
-        <h3 className={`font-display text-xl font-semibold tracking-tight ${held ? "text-ion-3" : "text-ion-white"}`}>{row.matchup}</h3>
         {/* The market slot is a tier-redaction sentinel for non-premium viewers
             and was rendering as the literal "ALL_MARKETS". A redacted row has
             nothing truthful to say about the market, so it shows the sport
             alone rather than a token or a guess. */}
-        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">
+        <p className={PICK_TYPE.meta}>
           {row.sport}
           {boardMarketLabel(row.market) ? ` · ${boardMarketLabel(row.market)}` : ""}
         </p>
-      </div>
-      <div className="text-right">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Edge</p>
-        <p className={`font-display text-2xl font-semibold tabular-nums ${held ? "text-ion-3" : live ? "text-plasma" : "text-ion-white"}`}>
-          {row.edgeIndex === null ? "—" : row.edgeIndex}
-        </p>
+        <h3 className={`mt-1.5 break-words ${PICK_TYPE.pick} ${held ? "text-ion-3" : "text-ion-white"}`}>{row.matchup}</h3>
       </div>
       {/* The ranking sort key and its source are model internals; the public
-          row does not render them (FE-10). Confidence stays on the pick view
-          behind the paywall (FE-15); C-224 forbids scoring it here. */}
+          row does not render them (FE-10). Confidence is redacted inside the
+          loader for viewers without canSeeConfidence (applyViewerRedaction in
+          lib/board/state.ts), so this renders what arrived: N/100 or a dash.
+          It is shown as a score, never scored as a probability (C-224). */}
+      <PickStatRow>
+        <PickStat label="Edge" tone={held ? "muted" : live ? "accent" : "default"}>
+          {row.edgeIndex === null ? "—" : row.edgeIndex}
+        </PickStat>
+        <PickStat label="Confidence" tone={held ? "muted" : "default"}>
+          {row.confidence === null ? "—" : `${row.confidence}/100`}
+        </PickStat>
+      </PickStatRow>
       {row.gateReason && (
-        <p className="col-span-2 mt-1 text-sm text-ion-2">
+        <p className="text-sm leading-6 text-ion-1">
           {held && <span className="font-semibold text-plasma">Passed. </span>}{row.gateReason}
         </p>
       )}
-      <Link href={`/room/${row.gameId}`} className="col-span-2 mt-2 inline-flex text-sm font-semibold text-ion-1 hover:text-ion-white">
+      <Link href={`/room/${row.gameId}`} className="-my-2 inline-flex min-h-11 w-fit items-center text-sm font-semibold text-ion-1 hover:text-ion-white">
         Open room →
       </Link>
     </article>
@@ -449,39 +463,34 @@ function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX
 
 function PassListItem({ row }: { row: PassListRow }): JSX.Element {
   return (
-    <div className="px-4 py-3">
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto_1.4fr]">
-        <span>
-          <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-ion-white">
-            {row.matchup}
-          </Link>
-        </span>
-        <span className="font-mono text-xs text-orbital-cyan">{row.edgeIndex === null ? "Edge —" : `Edge ${row.edgeIndex}`}</span>
+    <div className="grid gap-4 py-5 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-8">
+      <div className="min-w-0">
+        <Link href={`/room/${row.gameId}`} className="text-base font-semibold text-ion-white hover:text-plasma">
+          {row.matchup}
+        </Link>
         {/* The refusal and its plain-language reason are UNCONDITIONAL — no
             entitlement check wraps this. Declining to bet is the credibility
             claim; gating it would sell volume instead of judgement. */}
-        <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>
+        <p className="mt-1 text-sm leading-6 text-ion-1">{row.reason}</p>
       </div>
 
-      {/* Pro detail: the reason code, model version and evidence-ref count
-          are operator fields and are not rendered; confidence at the pass is. */}
-      {row.detail && row.detail.confidence !== null && (
-        <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 border-l-2 border-orbital-cyan/40 pl-3 font-mono text-[11px] text-ion-3">
-          <div className="flex gap-1.5">
-            <dt className="text-ion-2">Confidence</dt>
-            <dd className="text-ion-1">{row.detail.confidence}/100</dd>
-          </div>
-        </dl>
-      )}
+      <dl className="flex gap-8">
+        <PickStat label="Edge">{row.edgeIndex === null ? "—" : row.edgeIndex}</PickStat>
+        {/* Pro detail: the reason code, model version and evidence-ref count
+            are operator fields and are not rendered; confidence at the pass is. */}
+        {row.detail && row.detail.confidence !== null && (
+          <PickStat label="Confidence">{row.detail.confidence}/100</PickStat>
+        )}
+      </dl>
     </div>
   );
 }
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="border border-titanium bg-obsidian/55 p-3">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</dt>
-      <dd className="mt-1 text-lg font-semibold text-white">{value}</dd>
+    <div>
+      <dt className={PICK_TYPE.label}>{label}</dt>
+      <dd className={`mt-1.5 text-ion-white ${PICK_TYPE.value}`}>{value}</dd>
     </div>
   );
 }

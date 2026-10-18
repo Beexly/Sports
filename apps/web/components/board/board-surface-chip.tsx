@@ -23,7 +23,7 @@ export function BoardSurfaceChip({
     <span
       data-testid="board-surface-chip"
       title={posture.operatorHint}
-      className={`inline-flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${
         isSignal
           ? "border-caution/50 bg-caution/10 text-caution"
           : "border-orbital-cyan/50 bg-orbital-cyan/[0.08] text-orbital-cyan"

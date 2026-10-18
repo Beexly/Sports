@@ -67,13 +67,13 @@ export function ValueGapBadge({ rankingP, marketFairProb }: ValueGapInput) {
     result.sign === "flat"
       ? "In line with the market price"
       : result.sign === "positive"
-        ? `Beats the market price by ${pct} pts`
-        : `Below the market price by ${pct} pts`;
+        ? `${pct} pts above the market price`
+        : `${pct} pts below the market price`;
 
   return (
     <span
       data-testid="value-gap-badge"
-      className={`mt-2 block text-[10px] font-normal ${SIGN_CLASS[result.sign]}`}
+      className={`block text-sm leading-6 ${SIGN_CLASS[result.sign]}`}
       title="How far our number sits from the market price. It says nothing about whether the bet wins."
     >
       {label}

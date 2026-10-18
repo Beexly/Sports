@@ -24,6 +24,7 @@ import type {
   AuditPayloadSummary,
 } from "@sports/types";
 import Link from "next/link";
+import { PICK_TYPE, PickStat, PickStatRow } from "./pick-stat";
 
 interface EvidenceAuditDrawerProps {
   pickId: string;
@@ -144,10 +145,9 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
       <button
         type="button"
         onClick={handleOpen}
-        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-4 py-2 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow sm:w-auto"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-mineral-hi bg-titanium px-4 py-2 text-xs font-semibold text-ion-white transition-colors hover:border-ion-2 sm:w-auto"
         aria-label="Open the receipt for this pick"
       >
-        <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
         {label ?? "Pick receipt"}
       </button>
 
@@ -170,15 +170,12 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
           <aside
             className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-titanium bg-obsidian text-ion-white shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
           >
-            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-titanium bg-obsidian/95 px-6 py-5 backdrop-blur">
+            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-mineral bg-obsidian/95 px-6 py-5 backdrop-blur">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-ion-blue/80">
-                  Galaxy Sports Edge
-                </p>
-                <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">
+                <h2 className={`${PICK_TYPE.pick} text-ion-white`}>
                   Pick receipt
                 </h2>
-                <p className="mt-1 text-xs text-ion-2">
+                <p className="mt-2 text-sm leading-6 text-ion-1">
                   When this pick was scored, the books behind it, and how the line has moved.
                 </p>
               </div>
@@ -329,17 +326,16 @@ function DetailedAudit({
 
       <section>
         <SectionHeader title="The pick" />
-        <dl className="mt-3 space-y-2 text-xs">
+        <PickStatRow className="mt-4">
+          <PickStat label="Confidence">{`${audit.confidenceAtPrediction}/100`}</PickStat>
+          <PickStat label="Books">{audit.bookmakerCount}</PickStat>
+          <PickStat label="Data quality">{audit.dataQualityScore}</PickStat>
+        </PickStatRow>
+        <dl className="mt-5 space-y-2 text-xs">
           <Row
             k="Scored at"
             v={new Date(audit.generatedAt).toLocaleString()}
           />
-          <Row
-            k="Confidence"
-            v={`${audit.confidenceAtPrediction}/100`}
-          />
-          <Row k="Data quality" v={`${audit.dataQualityScore}`} />
-          <Row k="Books" v={`${audit.bookmakerCount}`} />
           {audit.lineMovementDelta !== null && (
             <Row
               k="Line movement"
@@ -418,7 +414,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ion-blue/80">
+    <h3 className={PICK_TYPE.label}>
       {title}
     </h3>
   );
