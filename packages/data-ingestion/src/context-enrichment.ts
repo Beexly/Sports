@@ -106,27 +106,50 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * Computes rest days and B2B flag for a team before a given game.
- * Looks back at the most recent TeamGameLog entry before gameDate.
+ * Looks back at the most recent TeamGameLog entry AND the most recent scheduled/completed
+ * Game record before gameDate (at least 18 hours prior to avoid same-day twin fixtures)
+ * so unsettled intermediate weeks never inflate rest days to 50+ days.
  */
 export async function computeRestDays(
   teamName: string,
   sport: string,
   gameDate: Date
 ): Promise<{ restDays: number | null; isBackToBack: boolean }> {
-  const lastGame = await prisma.teamGameLog.findFirst({
-    where: {
-      teamName,
-      sport,
-      gameDate: { lt: gameDate },
-    },
-    orderBy: { gameDate: "desc" },
-  });
+  const priorCutoff = new Date(gameDate.getTime() - 18 * 60 * 60 * 1000);
 
-  if (!lastGame) {
+  const [lastLog, lastScheduleGame] = await Promise.all([
+    prisma.teamGameLog.findFirst({
+      where: {
+        teamName,
+        sport,
+        gameDate: { lt: priorCutoff },
+      },
+      orderBy: { gameDate: "desc" },
+    }),
+    prisma.game.findFirst({
+      where: {
+        mergedIntoGameId: null,
+        sport: { key: sport },
+        commenceTime: { lt: priorCutoff },
+        OR: [
+          { homeTeamName: teamName },
+          { awayTeamName: teamName },
+        ],
+      },
+      orderBy: { commenceTime: "desc" },
+      select: { commenceTime: true },
+    }),
+  ]);
+
+  const logTime = lastLog?.gameDate?.getTime() ?? 0;
+  const schedTime = lastScheduleGame?.commenceTime?.getTime() ?? 0;
+  const latestPriorMs = Math.max(logTime, schedTime);
+
+  if (latestPriorMs <= 0) {
     return { restDays: null, isBackToBack: false };
   }
 
-  const diffMs = gameDate.getTime() - lastGame.gameDate.getTime();
+  const diffMs = gameDate.getTime() - latestPriorMs;
   const restDays = Math.floor(diffMs / MS_PER_DAY);
   const isBackToBack = restDays < 2;
 
