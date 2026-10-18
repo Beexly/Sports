@@ -41,16 +41,16 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
 
   return (
     <div className="surface-card p-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={() => setOpen((o) => !o)} className="text-sm font-semibold text-orbital-cyan">
-          {open ? "▾" : "▸"} Import a DraftKings slate (CSV)
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="text-sm font-semibold text-orbital-cyan">
+          {open ? "▾" : "▸"} Import a DraftKings slate
         </button>
         {imported && (
           <button type="button" onClick={() => { onReset(); setStatus(null); setText(""); }} className="text-xs text-ion-2 underline hover:text-ion-white">
-            reset to sample slate
+            Back to Practice slate
           </button>
         )}
-        <span className="ml-auto font-mono text-[10px] text-ion-2">DK draft page → Export to CSV</span>
+        <span className="w-full font-mono text-[10px] text-ion-2">DK draft page, then Export to CSV</span>
       </div>
 
       {open && (
@@ -80,10 +80,10 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
               )}
             </div>
           )}
-          <p className="text-[10px] leading-relaxed text-ion-2">
-            No login, no scraping. This reads only the CSV you provide. The export carries real players, positions,
-            salaries, teams, and DK&apos;s average points; projections, floor/ceiling, and ownership are modeled here and
-            replaced when a licensed projection source is wired behind the founder gate.
+          <p className="text-[11px] leading-relaxed text-ion-2">
+            No login, no scraping: we read only the CSV you provide. It carries real players, salaries, and
+            DK&apos;s average points. Projection, Ceiling, and ownership are estimated from those averages until a
+            licensed projections feed is connected.
           </p>
         </div>
       )}

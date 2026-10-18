@@ -9,6 +9,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { ProjectionsBadge, type ProjectionsPool } from "@/components/integrations/projections-badge";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 
 /**
  * Semantic accent names → design-token classes/vars (styles/design-tokens.css).
@@ -74,12 +75,19 @@ export function FantasyShell({
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ion-1">{intro}</p>
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ion-1">{intro}</p>
             </Reveal>
             {projectionsBadge && (
               <Reveal delay={230}>
                 <div className="mt-6">
-                  <ProjectionsBadge pool={projectionsPool} />
+                  {/* A sample pool is never live whatever the source status, so it
+                      carries the one Practice slate marker the suite uses. Real
+                      and player-free pages keep the server-checked source badge. */}
+                  {projectionsPool === "illustrative" ? (
+                    <PracticeSlateTag testId="fantasy-shell-practice-slate" />
+                  ) : (
+                    <ProjectionsBadge pool={projectionsPool} />
+                  )}
                 </div>
               </Reveal>
             )}

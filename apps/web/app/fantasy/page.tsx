@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 
@@ -32,62 +33,33 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fantasy" },
 };
 
-const LIVE_FIRST = [
-  {
-    title: "Read-only roster sync",
-    href: "/fantasy/connect",
-    status: "Live path",
-    body: "League connect uses public read-only data. No league writes, no OAuth handoff, no autonomous moves.",
-  },
-  {
-    title: "Player projections provider",
-    href: "/integrations",
-    status: "Required",
-    body: "Lineups, waivers, DFS, and trades stay gated until a real projections source is enabled.",
-  },
-  {
-    title: "Live usage layer",
-    href: "/trends",
-    status: "Live path",
-    body: "Snap share, player weeks, injuries, depth charts, and rosters become the free-first base layer.",
-  },
-] as const;
-
 /**
- * Honest status vocabulary (ASTRA A-7, owner item 7).
- *
- * "Gated" used to mean "you cannot open this" — but every tool below renders
- * in full for an anonymous visitor on an illustrative pool. The badge was
- * describing the DATA, and it was lying about the ACCESS. Now:
- *   live        — real public data, working today
- *   partly live — real data in some tabs, sample in others
- *   sample      — opens now on clearly-labelled sample players until a
- *                 licensed projections feed is connected
+ * Honest status vocabulary (ASTRA A-7, owner item 7), simplified for the
+ * customer: a tool is either Live (real public data, working today) or it opens
+ * on a Practice slate of clearly tagged sample players. "Partly live" tools
+ * (a DK CSV import, a real pool once projections are on) still open on the
+ * sample pool, so they carry the Practice slate tag too. Projection-driven
+ * advice stays gated behind a licensed feed, server-side; the tag is the
+ * visible half of that rule.
  */
 type ToolStatus = "live" | "partly live" | "sample";
-const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. LineStar-style projections table (salary, value, pOwn%, leverage), QB stack, max exposure, CSV export. Opens on a sample slate; import your DK CSV for the real one today.", "/optimizer", "partly live"],
-  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility. Ranked by GSE Score.", "/fantasy/bestball", "partly live"],
-  ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
-  ["Waiver & FAAB", "Opens now on sample players ranked by GSE Score. Needs roster sync and a projections feed to become advice.", "/fantasy/waivers", "sample"],
-  ["Trade Analyzer", "Both sides valued on GSE Score. Opens now on sample players; live the moment a projections feed is connected.", "/fantasy/trade", "sample"],
-  ["Pick'em Edge", "Our number vs their line, with the most valuable alt. Market and team filters. Opens on sample lines.", "/fantasy/props", "sample"],
-  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "sample"],
-  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events. Today the history is a disclosed demonstration.", "/fantasy/gm-ledger", "sample"],
-] as const;
-
-const STATUS_TONE: Record<ToolStatus, string> = {
-  live: "text-orbital-cyan",
-  "partly live": "text-ultraviolet",
-  sample: "text-ion-2",
+type Tool = {
+  readonly title: string;
+  readonly purpose: string;
+  readonly href: string;
+  readonly status: ToolStatus;
+  readonly featured?: boolean;
 };
-
-/** Customer-facing label per status; "sample" reads as the practice-slate tag. */
-const STATUS_LABEL: Record<ToolStatus, string> = {
-  live: "live",
-  "partly live": "partly live",
-  sample: "Practice slate",
-};
+const TOOL_DIRECTORY: readonly Tool[] = [
+  { title: "Optimizer", purpose: "DFS, start/sit, and draft in one workspace. Import your DraftKings CSV for today's real slate.", href: "/optimizer", status: "partly live", featured: true },
+  { title: "Pick'em Edge", purpose: "Our Projection against the posted line, with the best alt and its value per $1.", href: "/fantasy/props", status: "sample" },
+  { title: "Best Ball", purpose: "Draft for ceiling, stacks, and bye structure, ranked by GSE Score.", href: "/fantasy/bestball", status: "partly live" },
+  { title: "Waiver & FAAB", purpose: "Ranked adds with a FAAB bid that re-prices to your budget.", href: "/fantasy/waivers", status: "sample" },
+  { title: "Trade Analyzer", purpose: "Both sides valued on GSE Score, with the reasoning behind the verdict.", href: "/fantasy/trade", status: "sample" },
+  { title: "League Twin", purpose: "Your roster as a galaxy: projection, usage, risk, and byes at a glance.", href: "/fantasy/league-twin", status: "sample" },
+  { title: "GM Ledger", purpose: "Your decisions committed before kickoff, graded on process, not luck.", href: "/fantasy/gm-ledger", status: "sample" },
+  { title: "Human Performance", purpose: "Venue surface, weather, and official injury status from public sources.", href: "/human", status: "live" },
+];
 
 export default async function FantasyHubPage({
   searchParams,
@@ -114,52 +86,76 @@ export default async function FantasyHubPage({
       <GeneratedPlate assetId="fantasy-constellation" className="-z-10 opacity-25" />
       <Nav />
       <main id="main-content" className="flex-1">
-        <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
-            <div>
-              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
-                Real roster first. No fake projections.
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-                Galaxy Fantasy is being rebuilt around the same rule as the picks product:
-                if the data is not real, the advice stays locked. You can connect your real
-                league roster now; projection-driven recommendations open only after the
-                live data layer clears.
-              </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link href="/fantasy/connect" className="btn btn-primary">
-                  Connect your league
-                </Link>
-                <Link href="/launch" className="btn btn-ghost">
-                  Founding launch
-                </Link>
-                <Link href="/optimizer" className="btn btn-ghost">
-                  Open the Optimizer
-                </Link>
-                <Link href="/trends" className="btn btn-ghost">
-                  View Trend Lab
-                </Link>
-              </div>
-            </div>
-            <div className="border border-mineral bg-eclipse p-5">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">
-                Fantasy readiness
-              </p>
-              <dl className="mt-5 grid grid-cols-3 gap-3">
-                <ReadinessMetric label="Roster" value="sync" />
-                <ReadinessMetric label="Projections" value="sample" />
-                <ReadinessMetric label="Actions" value="no-write" />
-              </dl>
-              <p className="mt-4 text-sm leading-6 text-ion-1">
-                Real data comes first. A tool without a live feed opens on a Practice slate of
-                sample players, tagged so you always know.
-              </p>
+        {/* ── Hero ─────────────────────────────────────────────────── */}
+        <section className="px-4 pb-12 pt-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">Galaxy Fantasy</p>
+            <h1 className="mt-3 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+              Real roster first. No fake projections.
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              The same rule as our picks: if the data is not real, we say so. Connect your league for
+              your real roster. Projections stay on a Practice slate of sample players until a licensed
+              feed is connected, and every sample screen is tagged.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link href="/fantasy/connect" className="btn btn-primary">
+                Connect your league
+              </Link>
+              <Link href="/optimizer" className="btn btn-ghost">
+                Open the Optimizer
+              </Link>
+              <Link href="/launch" className="px-2 text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Founding launch →
+              </Link>
             </div>
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+        {/* ── Tools: the hub's main content ────────────────────────── */}
+        <section className="border-t border-mineral px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+              <h2 className="font-display text-3xl font-semibold text-ion-white">Tools</h2>
+              <Link href="/fantasy/baseline" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                LineStar / Elite baseline
+              </Link>
+            </div>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {TOOL_DIRECTORY.map((tool) => (
+                <li key={tool.title} className={tool.featured ? "sm:col-span-2" : undefined}>
+                  <Link
+                    href={tool.href}
+                    className="surface-card group flex h-full min-h-[10rem] flex-col p-5 transition-colors hover:border-orbital-cyan/40"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <h3
+                        className={`font-semibold text-ion-white group-hover:text-orbital-cyan ${
+                          tool.featured ? "font-display text-2xl" : "text-lg"
+                        }`}
+                      >
+                        {tool.title}
+                      </h3>
+                      {tool.status === "live" ? (
+                        <span className="rounded-full bg-orbital-cyan/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-orbital-cyan">
+                          Live
+                        </span>
+                      ) : (
+                        <PracticeSlateTag />
+                      )}
+                    </div>
+                    <p className="mt-2 flex-1 text-sm leading-6 text-ion-1">{tool.purpose}</p>
+                    <span className="mt-4 text-sm font-semibold text-orbital-cyan">Open →</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ── Evidence: the real data layer underneath the tools ────── */}
+        <section className="border-t border-mineral px-4 pb-20 pt-12 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Real NFL usage backbone
@@ -168,19 +164,22 @@ export default async function FantasyHubPage({
                 Fantasy starts with rows, then earns recommendations.
               </h2>
               <p className="mt-3 text-sm leading-6 text-ion-1">
-                The free-first layer is already reading live player-week usage, roster, and
-                schedule files. It can prove usage context and reject weak narrative angles today;
-                it still cannot unlock projection-driven lineup, waiver, trade, DFS, or pick'em
-                advice until those provider feeds are live.
+                We already read live player-week usage, roster, and schedule files. That proves usage
+                context and rejects weak narratives today. It does not unlock
+                projection-driven lineup, waiver, trade, DFS, or pick'em advice until those provider
+                feeds are live.
               </p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Link href="/nflverse" className="btn btn-ghost">
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+                <Link href="/nflverse" className="text-orbital-cyan hover:text-ion-white">
                   NFLverse Pulse
                 </Link>
-                <Link href="/api/sources/catalog" className="btn btn-ghost">
+                <Link href="/trends" className="text-orbital-cyan hover:text-ion-white">
+                  Trend Lab
+                </Link>
+                <Link href="/api/sources/catalog" className="text-orbital-cyan hover:text-ion-white">
                   Data sources
                 </Link>
-                <Link href="/fantasy/baseline" className="btn btn-ghost">
+                <Link href="/fantasy/baseline" className="text-orbital-cyan hover:text-ion-white">
                   Baseline map
                 </Link>
               </div>
@@ -188,67 +187,6 @@ export default async function FantasyHubPage({
             <Suspense fallback={<EvidenceGridPlaceholder />}>
               <LiveEvidenceGrid />
             </Suspense>
-          </div>
-        </section>
-
-        <section className="px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <h2 className="font-display text-3xl font-semibold text-ion-white">Live-first build order</h2>
-            <div className="mt-6 grid gap-4 lg:grid-cols-3">
-              {LIVE_FIRST.map((item) => (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="surface-card group flex min-h-56 flex-col p-5 transition-transform duration-200 hover:-translate-y-1"
-                >
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">
-                    {item.status}
-                  </p>
-                  <h3 className="mt-3 text-xl font-semibold text-ion-white">{item.title}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-6 text-ion-1">{item.body}</p>
-                  <span className="mt-5 text-sm font-semibold text-orbital-cyan">Open</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-              <div>
-                <h2 className="font-display text-3xl font-semibold text-ion-white">Every tool, with its honest status</h2>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-                  One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
-                  live, partly live, or running on sample players until a licensed feed is connected.
-                  Sample players are always tagged Practice slate, never shown as live advice.
-                </p>
-                <p className="mt-2 text-xs leading-5 text-ion-2">
-                  <span className="text-orbital-cyan">Live</span> = real public data today.{" "}
-                  <span className="text-ultraviolet">Partly live</span> = real in some tabs, sample in others.{" "}
-                  Practice slate = opens now on sample players, clearly labelled, not advice.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3 text-sm font-semibold">
-                <Link href="/fantasy/baseline" className="text-orbital-cyan hover:text-ion-white">
-                  LineStar / Elite baseline
-                </Link>
-                <Link href="/integrations" className="text-orbital-cyan hover:text-ion-white">
-                  Data requirements
-                </Link>
-              </div>
-            </div>
-            <div className="mt-6 overflow-hidden border border-mineral">
-              {TOOL_DIRECTORY.map(([tool, requirement, href, status]) => (
-                <Link key={tool} href={href} className="group grid gap-3 border-b border-mineral bg-eclipse px-4 py-3 transition-colors last:border-b-0 hover:bg-carbon sm:grid-cols-[0.42fr_1fr_auto] sm:items-center">
-                  <p className="font-semibold text-ion-white group-hover:text-orbital-cyan">{tool}</p>
-                  <p className="text-sm leading-6 text-ion-1">{requirement}</p>
-                  <span className={`font-mono text-[11px] uppercase tracking-[0.16em] ${STATUS_TONE[status]}`}>
-                    {STATUS_LABEL[status]}
-                  </span>
-                </Link>
-              ))}
-            </div>
           </div>
         </section>
       </main>
@@ -323,21 +261,13 @@ function EvidenceGridPlaceholder(): JSX.Element {
   );
 }
 
+/** Same stat pattern as the tools: small mono label above a tabular numeral. */
 function EvidenceMetric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
-    <div className="border border-mineral bg-eclipse p-4">
-      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{value}</p>
+    <div className="surface-card p-4">
+      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">{label}</p>
+      <p className={`mt-2 text-2xl font-semibold leading-none text-ion-white ${NUMERIC_TEXT_CLASS}`}>{value}</p>
       <p className="mt-2 text-xs leading-5 text-ion-2">{detail}</p>
-    </div>
-  );
-}
-
-function ReadinessMetric({ label, value }: { label: string; value: string }): JSX.Element {
-  return (
-    <div className="border border-mineral bg-carbon px-3 py-2">
-      <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
-      <dd className={`mt-1 text-lg font-semibold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{value}</dd>
     </div>
   );
 }

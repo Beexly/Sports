@@ -28,7 +28,7 @@ export function PickemRanker({
   return (
     <div className="surface-card overflow-hidden" data-testid="pickem-ranker">
       <div className="flex flex-wrap items-center gap-2 px-4 pt-4">
-        <span className="text-[10px] uppercase tracking-[0.18em] text-ion-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
           Pick&apos;em ranker
         </span>
         {isLive ? (
@@ -51,14 +51,14 @@ export function PickemRanker({
         <div className="overflow-x-auto px-4 pb-4 pt-2">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="text-[10px] uppercase tracking-[0.18em] text-ion-3">
-                <th scope="col" className="py-2 pr-3 font-semibold">#</th>
-                <th scope="col" className="py-2 pr-3 font-semibold">Player</th>
-                <th scope="col" className="py-2 pr-3 font-semibold">Market</th>
-                <th scope="col" className="py-2 pr-3 font-semibold">Side</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Edge</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Best alt value</th>
-                <th scope="col" className="py-2 font-semibold">Status</th>
+              <tr className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                <th scope="col" className="h-9 w-12 pr-3 text-right font-semibold">Rank</th>
+                <th scope="col" className="h-9 pr-3 font-semibold">Player</th>
+                <th scope="col" className="h-9 pr-3 font-semibold">Market</th>
+                <th scope="col" className="h-9 pr-3 font-semibold">Side</th>
+                <th scope="col" className="h-9 pr-3 text-right font-semibold" title="Our chance minus the market's no-vig chance, in percentage points">Edge</th>
+                <th scope="col" className="h-9 pr-3 text-right font-semibold" title="Value per $1 on the best alt line, with that line and its multiplier">Value per $1</th>
+                <th scope="col" className="h-9 font-semibold">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -69,11 +69,11 @@ export function PickemRanker({
                   className="border-t text-ion-1"
                   style={{ borderColor: "var(--line)" }}
                 >
-                  <td className="py-2 pr-3 font-mono tabular-nums text-ion-3">{rank}</td>
-                  <td className="py-2 pr-3 font-semibold">{read.prop.player}</td>
-                  <td className="py-2 pr-3 text-ion-2">{read.prop.market}</td>
+                  <td className="h-10 pr-3 text-right font-mono tabular-nums text-ion-2">{rank}</td>
+                  <td className="h-10 pr-3 font-semibold text-ion-white">{read.prop.player}</td>
+                  <td className="h-10 pr-3 text-ion-2">{read.prop.market}</td>
                   <td
-                    className="py-2 pr-3 font-semibold uppercase"
+                    className="h-10 pr-3 font-semibold uppercase"
                     style={{
                       color:
                         read.side === "over"
@@ -83,15 +83,20 @@ export function PickemRanker({
                   >
                     {read.side}
                   </td>
-                  <td className="py-2 pr-3 text-right font-mono tabular-nums">
-                    {read.priced ? `${(read.edge * 100).toFixed(1)} pts` : "—"}
+                  <td className="h-10 pr-3 text-right font-numerals font-semibold tabular-nums text-ion-white">
+                    {read.priced ? `${read.edge >= 0 ? "+" : ""}${(read.edge * 100).toFixed(1)} pts` : "—"}
                   </td>
-                  <td className="py-2 pr-3 text-right font-mono tabular-nums text-ion-2">
-                    {read.bestAlt
-                      ? `${read.bestAlt.ev >= 0 ? "+" : ""}${read.bestAlt.ev.toFixed(2)} @ ${read.bestAlt.line} (${read.bestAlt.mult}×)`
-                      : "—"}
+                  <td className="h-10 pr-3 text-right font-mono tabular-nums text-ion-2">
+                    {read.bestAlt ? (
+                      <>
+                        <span className="text-ion-1">{`${read.bestAlt.ev >= 0 ? "+" : ""}${read.bestAlt.ev.toFixed(2)}`}</span>
+                        {` @ ${read.bestAlt.line} (${read.bestAlt.mult}×)`}
+                      </>
+                    ) : (
+                      "—"
+                    )}
                   </td>
-                  <td className="py-2">
+                  <td className="h-10">
                     <span
                       className={`rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${
                         read.priced

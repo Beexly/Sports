@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { TournamentLab } from "@/components/fantasy/tournament-lab";
@@ -87,11 +86,7 @@ export default async function DfsSuitePage() {
         ) : (
           <p className="mt-2 text-sm text-ion-1">
             No licensed salary feed is connected right now, so no real salaries are shown. The
-            board lights up the moment one is.{" "}
-            <Link href="/integrations" className="text-orbital-cyan underline-offset-4 hover:underline">
-              Data status →
-            </Link>{" "}
-            The optimizer below runs fully on the sample pool in the meantime.
+            board lights up the moment one is. The optimizer below runs fully on the sample pool in the meantime.
           </p>
         )}
       </section>

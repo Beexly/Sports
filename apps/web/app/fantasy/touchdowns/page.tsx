@@ -67,15 +67,7 @@ export default function TouchdownsPage(): JSX.Element {
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
                 Past results do not predict future results, and nothing here promises an
-                outcome. See the public{" "}
-                <a href="/clv" className="font-semibold text-orbital-cyan hover:text-ion-white">
-                  CLV report
-                </a>{" "}
-                and the{" "}
-                <a href="/performance" className="font-semibold text-orbital-cyan hover:text-ion-white">
-                  calibration report
-                </a>
-                .
+                outcome.
               </p>
             </Reveal>
           </div>

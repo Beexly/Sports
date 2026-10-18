@@ -306,7 +306,7 @@ export function LeagueTwinGalaxy() {
       {/* accessible manifest + inspector (source of truth) */}
       <div className="space-y-4">
         <div className="grid grid-cols-4 gap-2 text-center">
-          <Stat label="Proj" value={twin.totalProj} />
+          <Stat label="Projection" value={twin.totalProj} />
           <Stat label="Stacks" value={twin.stackCount} hex={BRAND_COLORS.softUltraviolet} />
           <Stat label="Risk" value={twin.riskCount} hex="#FFB454" />
           <Stat label={`Bye W${twin.currentWeek}`} value={twin.byeExposure} hex={BRAND_COLORS.ionMagenta} />
@@ -364,8 +364,8 @@ export function LeagueTwinGalaxy() {
 function Stat({ label, value, hex }: { label: string; value: number; hex?: string }) {
   return (
     <div className="surface-card p-2">
-      <p className="font-display text-xl" style={{ color: hex ?? "#fff" }}>{value}</p>
-      <p className="text-[9px] uppercase tracking-wider text-ink-600">{label}</p>
+      <p className="truncate font-mono text-[9px] font-semibold uppercase tracking-wider text-ion-2">{label}</p>
+      <p className="mt-1 font-numerals text-xl font-semibold leading-none tabular-nums" style={{ color: hex ?? "var(--ion-white)" }}>{value}</p>
     </div>
   );
 }

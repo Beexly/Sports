@@ -10,7 +10,7 @@ import { poolForViewer } from "@/lib/fantasy/free-trial";
 export const metadata: Metadata = {
   title: "The Optimizer: One Workspace for Every Lineup",
   description:
-    "One door for every lineup: DFS optimizer, season start/sit, and the draft board. Pick your contest type and build. Opens on sample players until a licensed projections feed is connected — never fake data as live advice.",
+    "One door for every lineup: DFS optimizer, season start/sit, and the draft board. Pick your contest type and build. Opens on a Practice slate of sample players until a licensed projections feed is connected, never fake data as live advice.",
   alternates: { canonical: "/optimizer" },
 };
 
@@ -30,17 +30,18 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />
-      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="flex flex-col gap-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The Optimizer</p>
-          <h1 className="font-display text-3xl font-semibold leading-tight text-ion-white sm:text-4xl">
-            One workspace. Every lineup.
-          </h1>
-          <p className="max-w-3xl text-sm leading-6 text-ion-1">
-            Pick a contest type and build: DFS, season start/sit, or the draft board. Salaries,
-            projections, and ownership open when a licensed feed is connected — until then the
-            tools run on clearly-labelled sample players, never faked as live advice.{" "}
-            <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>.
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+        {/* Compact header: the lineup result below is the hero, not this copy. */}
+        <section className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The Optimizer</p>
+            <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ion-white">
+              One workspace. Every lineup.
+            </h1>
+          </div>
+          <p className="max-w-md text-xs leading-5 text-ion-2">
+            Runs on a Practice slate of sample players until a licensed feed is connected.{" "}
+            <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>
           </p>
         </section>
 

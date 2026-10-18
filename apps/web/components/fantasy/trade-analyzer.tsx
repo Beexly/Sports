@@ -13,6 +13,7 @@ import { evaluateTrade, tradeValue, type Fairness } from "@/lib/fantasy/trade";
 import { PLAYERS, POS_HEX, type Player } from "@/lib/fantasy/players";
 import { gseRankPool, isLiveGse } from "@/lib/fantasy/gse-score";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
+import { FantasyStat } from "@/components/fantasy/fantasy-stat";
 
 // Verdict tones (design tokens): win = verify, fair = neutral silver,
 // lose = alert. Never plasma for a negative verdict.
@@ -104,29 +105,34 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
             Player pool · ranked by GSE Score
           </p>
           {isLive ? (
-            <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-              style={{ background: "rgba(255,77,46,0.14)", color: "#FF4D2E" }}
-            >
-              Live process grade
+            <span className="rounded-full bg-orbital-cyan/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-orbital-cyan">
+              Source: live
             </span>
           ) : (
             <PracticeSlateTag />
           )}
         </div>
-        <div className="max-h-[40vh] space-y-0.5 overflow-y-auto">
+        <div className="flex items-center gap-2 border-b border-mineral/60 px-1.5 pb-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">
+          <span className="w-8 shrink-0 text-right">Rank</span>
+          <span className="flex-1">Player</span>
+          <span className="w-16 text-right" title="GSE Score, 0 to 100">GSE Score</span>
+          <span className="w-[4.75rem]"><span className="sr-only">Add to a side</span></span>
+        </div>
+        <div className="max-h-[40vh] overflow-y-auto">
           {sortedPool.map((p) => {
             const used = give.includes(p.id) || get.includes(p.id);
             const phex = POS_HEX[p.pos];
             const r = ratings.get(p.id);
             return (
-              <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1" style={{ opacity: used ? 0.4 : 1 }}>
-                <span className="w-6 shrink-0 text-right font-mono text-[10px] tabular-nums text-ion-3" title="Rank (by GSE Score)">
+              <div key={p.id} className="flex h-9 items-center gap-2 rounded px-1.5" style={{ opacity: used ? 0.4 : 1 }}>
+                <span className="w-8 shrink-0 text-right font-mono text-[11px] tabular-nums text-ion-2" title="Rank by GSE Score">
                   {r?.index ?? "—"}
                 </span>
-                <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{p.pos}</span>
-                <span className="flex-1 truncate text-xs text-ion-white">{p.name} <span className="text-ion-2">{p.team}</span></span>
-                <span className="w-8 text-right font-mono text-[11px] font-bold tabular-nums text-orbital-cyan" title="GSE Score (0–100)">
+                <span className="flex min-w-0 flex-1 items-center gap-2">
+                  <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{p.pos}</span>
+                  <span className="truncate text-sm text-ion-white">{p.name} <span className="font-mono text-[10px] text-ion-2">{p.team}</span></span>
+                </span>
+                <span className="w-16 text-right font-numerals text-base font-semibold tabular-nums text-orbital-cyan" title="GSE Score, 0 to 100">
                   {r?.score ?? "—"}
                 </span>
                 <button type="button" disabled={used} onClick={() => addTo("give", p.id)} className="rounded px-1.5 py-0.5 text-[10px] font-semibold text-plasma disabled:opacity-30">Give</button>
@@ -143,9 +149,9 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
 function Side({ title, tone, players, onRemove, value, pool }: { title: string; tone: string; players: Player[]; onRemove: (id: string) => void; value: number; pool: readonly Player[] }) {
   return (
     <div className="surface-card p-4" style={{ boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${tone} 20%, transparent)` }}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between gap-3">
         <p className="font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: tone }}>{title}</p>
-        <p className="font-mono text-sm tabular-nums text-ion-white">{value}</p>
+        <FantasyStat label="Trade value" value={value} size="md" align="right" />
       </div>
       {players.length === 0 ? (
         <p className="mt-3 text-xs text-ion-2">Nothing here yet.</p>

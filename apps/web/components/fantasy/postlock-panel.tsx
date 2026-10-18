@@ -38,16 +38,16 @@ export function PostLockPanel({
         </span>
       </div>
 
-      <dl className="grid grid-cols-3 gap-3">
+      <dl className="grid grid-cols-3 gap-x-6">
         {[
-          ["Proj Δ", delta(report.projDelta), `${report.preProj.toFixed(1)} → ${report.postProj.toFixed(1)}`],
-          ["Ceil Δ", delta(report.ceilDelta), `${report.preCeil.toFixed(1)} → ${report.postCeil.toFixed(1)}`],
-          ["Salary Δ", delta(report.salaryDelta, 0), `$${report.preSalary} → $${report.postSalary}`],
+          ["Projection change", delta(report.projDelta), `${report.preProj.toFixed(1)} → ${report.postProj.toFixed(1)}`],
+          ["Ceiling change", delta(report.ceilDelta), `${report.preCeil.toFixed(1)} → ${report.postCeil.toFixed(1)}`],
+          ["Salary change", delta(report.salaryDelta, 0), `$${report.preSalary} → $${report.postSalary}`],
         ].map(([label, value, sub]) => (
-          <div key={label} className="rounded-xl border border-mineral px-3 py-2">
-            <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">{label}</dt>
-            <dd className="font-display text-2xl font-semibold tabular-nums text-ion-white">{value}</dd>
-            <dd className="text-[11px] tabular-nums text-ion-1">{sub}</dd>
+          <div key={label}>
+            <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">{label}</dt>
+            <dd className="mt-1 font-numerals text-2xl font-semibold leading-none tabular-nums text-ion-white">{value}</dd>
+            <dd className="mt-1 font-mono text-[11px] tabular-nums text-ion-2">{sub}</dd>
           </div>
         ))}
       </dl>
@@ -58,7 +58,7 @@ export function PostLockPanel({
             Swapped out ({report.swappedOut.length})
           </h3>
           {report.swappedOut.length === 0 ? (
-            <p className="text-sm text-ion-1">None — lineup unchanged.</p>
+            <p className="text-sm text-ion-1">None. Lineup unchanged.</p>
           ) : (
             <ul className="mt-1 list-disc pl-5 text-sm text-ion-1">
               {report.swappedOut.map((n) => (
@@ -72,7 +72,7 @@ export function PostLockPanel({
             Swapped in ({report.swappedIn.length})
           </h3>
           {report.swappedIn.length === 0 ? (
-            <p className="text-sm text-ion-1">None — lineup unchanged.</p>
+            <p className="text-sm text-ion-1">None. Lineup unchanged.</p>
           ) : (
             <ul className="mt-1 list-disc pl-5 text-sm text-ion-1">
               {report.swappedIn.map((n) => (

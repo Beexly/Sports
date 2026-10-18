@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
-import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
@@ -33,7 +32,8 @@ export default async function LineupPage() {
       intro="The strongest start/sit call for the roster you already have, with the leverage of every call (how much you'd lose starting the next-best bench option) and a floor-to-ceiling band. Mark a player out and watch it re-rank."
       note={pool
         ? "Live player data: real players with model-derived projections. The roster shown is a sample drawn from that pool (no league connection yet); optimization, leverage, and the floor/ceiling band are computed from real grades."
-        : <PracticeSlateTag />}
+        // Sample pool: the hero already carries the Practice slate tag.
+        : undefined}
       wide
       projectionsPool={pool ? "real" : "illustrative"}
     >

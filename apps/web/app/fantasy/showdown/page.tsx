@@ -84,13 +84,6 @@ export default function ShowdownPage(): JSX.Element {
                 >
                   DFS tournament lab
                 </a>
-                , and for how we grade ourselves see the{" "}
-                <a
-                  href="/performance"
-                  className="font-semibold text-orbital-cyan hover:text-ion-white"
-                >
-                  calibration report
-                </a>
                 .
               </p>
             </Reveal>

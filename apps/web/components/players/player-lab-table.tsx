@@ -165,21 +165,21 @@ function signedCell(value: number, tok: Tok, digits = 1, invert = false): ReactN
 function productionLeaderColumns(tok: Tok): ReadonlyArray<Column<PlayerSeasonLine>> {
   return [
     { key: "playerName", label: "Player", sortable: true, render: (r) => playerCell(r.playerName, tok, r.position) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "Games played" },
     { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
-    { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.pprPerGame) },
+    { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, tooltip: "PPR fantasy points per game", render: (r) => fmtDecimal(r.pprPerGame) },
     { key: "last5PprPerGame", label: "5g", align: "right", numeric: true, tooltip: "last-5-game PPR/G", render: (r) => fmtDecimal(r.last5PprPerGame) },
     { key: "last5PprDelta", label: "Δ", align: "right", numeric: true, tooltip: "recent form minus season pace", render: (r) => signedCell(r.last5PprDelta, tok, 1) },
     { key: "boomRate", label: "Boom%", align: "right", numeric: true, tooltip: "share of games ≥ 20 PPR", render: (r) => fmtPercent(r.boomRate) },
     { key: "bustRate", label: "Bust%", align: "right", numeric: true, tooltip: "share of games ≤ 10 PPR", render: (r) => fmtPercent(r.bustRate) },
-    { key: "opportunitiesPerGame", label: "Oppty/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.opportunitiesPerGame) },
-    { key: "targetsPerGame", label: "Tgt/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.targetsPerGame) },
-    { key: "receptionsPerGame", label: "Rec/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receptionsPerGame) },
-    { key: "receivingYardsPerGame", label: "RecYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receivingYardsPerGame) },
-    { key: "rushingYardsPerGame", label: "RushYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.rushingYardsPerGame) },
-    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
-    { key: "wopr", label: "WOPR", align: "right", numeric: true, sortValue: (r) => r.wopr, render: (r) => fmtDecimal(r.wopr, 2) },
+    { key: "opportunitiesPerGame", label: "Oppty/G", align: "right", numeric: true, tooltip: "Opportunities (targets plus carries) per game", render: (r) => fmtDecimal(r.opportunitiesPerGame) },
+    { key: "targetsPerGame", label: "Tgt/G", align: "right", numeric: true, tooltip: "Targets per game", render: (r) => fmtDecimal(r.targetsPerGame) },
+    { key: "receptionsPerGame", label: "Rec/G", align: "right", numeric: true, tooltip: "Receptions per game", render: (r) => fmtDecimal(r.receptionsPerGame) },
+    { key: "receivingYardsPerGame", label: "RecYd/G", align: "right", numeric: true, tooltip: "Receiving yards per game", render: (r) => fmtDecimal(r.receivingYardsPerGame) },
+    { key: "rushingYardsPerGame", label: "RushYd/G", align: "right", numeric: true, tooltip: "Rushing yards per game", render: (r) => fmtDecimal(r.rushingYardsPerGame) },
+    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, tooltip: "Target share", sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
+    { key: "wopr", label: "WOPR", align: "right", numeric: true, tooltip: "Weighted opportunity rating: 1.5·target share + 0.7·air-yards share", sortValue: (r) => r.wopr, render: (r) => fmtDecimal(r.wopr, 2) },
   ];
 }
 
@@ -189,10 +189,10 @@ function defenseColumns(tok: Tok): ReadonlyArray<Column<DefenseVsPositionRank>> 
     { key: "position", label: "Vs", tooltip: "the position this rank is against", render: (r) => (
       <span className={`font-mono text-xs uppercase tracking-wide ${tok.playerPos}`}>{r.position}</span>
     ) },
-    { key: "team", label: "Def", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
-    { key: "pprAllowedPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.pprAllowedPerGame) },
-    { key: "opportunitiesAllowedPerGame", label: "Oppty/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.opportunitiesAllowedPerGame) },
+    { key: "team", label: "Def", tooltip: "Defense", render: (r) => teamCell(r.team, tok) },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "Games played" },
+    { key: "pprAllowedPerGame", label: "PPR/G", align: "right", numeric: true, tooltip: "PPR points allowed per game", render: (r) => fmtDecimal(r.pprAllowedPerGame) },
+    { key: "opportunitiesAllowedPerGame", label: "Oppty/G", align: "right", numeric: true, tooltip: "Opportunities allowed per game", render: (r) => fmtDecimal(r.opportunitiesAllowedPerGame) },
   ];
 }
 
@@ -201,11 +201,11 @@ function defenseColumns(tok: Tok): ReadonlyArray<Column<DefenseVsPositionRank>> 
 function snapColumns(tok: Tok): ReadonlyArray<Column<SnapShareRow>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok, r.position) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "Games played" },
     { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
     { key: "snapSharePct", label: "Snap %", align: "right", numeric: true, render: (r) => fmtPercent(r.snapSharePct) },
-    { key: "snapsPerGame", label: "Snaps/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.snapsPerGame) },
+    { key: "snapsPerGame", label: "Snaps/G", align: "right", numeric: true, tooltip: "Snaps per game", render: (r) => fmtDecimal(r.snapsPerGame) },
   ];
 }
 
@@ -223,9 +223,9 @@ function oppTone(s: ReceivingOpportunityRow["signal"]): SignalTone {
 function opportunityColumns(tok: Tok): ReadonlyArray<Column<ReceivingOpportunityRow>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
     { key: "position", label: "Pos" },
-    { key: "targets", label: "Tgt", align: "right", numeric: true },
+    { key: "targets", label: "Tgt", align: "right", numeric: true, tooltip: "Targets" },
     { key: "wopr", label: "WOPR", align: "right", numeric: true, tooltip: "1.5·target share + 0.7·air-yards share", render: (r) => r.wopr.toFixed(2) },
     { key: "targetShare", label: "Tgt%", align: "right", numeric: true, tooltip: "target share", render: (r) => fmtPctRounded(r.targetShare) },
     { key: "airYardsShare", label: "AY%", align: "right", numeric: true, tooltip: "air-yards share", render: (r) => fmtPctRounded(r.airYardsShare) },
@@ -254,7 +254,7 @@ function rushingColumns(tok: Tok): ReadonlyArray<Column<RushingEfficiencyRow>> {
   };
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "rush attempts (volume)" },
     { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, tok, 2) },
     { key: "pctStackedBox", label: "Box%", align: "right", numeric: true, tooltip: "% of carries vs an 8+ man box", render: (r) => fmtPercent(r.pctStackedBox) },
@@ -272,37 +272,37 @@ function rushingColumns(tok: Tok): ReadonlyArray<Column<RushingEfficiencyRow>> {
 function ngsReceivingColumns(tok: Tok): ReadonlyArray<Column<NgsReceivingLine>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok, r.position) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "targets", label: "Tgt", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "targets", label: "Tgt", align: "right", numeric: true, tooltip: "Targets" },
     { key: "avgSeparation", label: "Sep", align: "right", numeric: true, tooltip: "yards of space at the catch point", render: (r) => r.avgSeparation.toFixed(2) },
     { key: "avgCushion", label: "Cush", align: "right", numeric: true, tooltip: "pre-snap cushion", render: (r) => r.avgCushion.toFixed(2) },
     { key: "avgYacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, tooltip: "yards after catch over expected", render: (r) => signedCell(r.avgYacAboveExpectation, tok, 1) },
-    { key: "shareOfIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareOfIntendedAirYards) },
-    { key: "catchPct", label: "Catch%", align: "right", numeric: true, render: (r) => fmtPercent(r.catchPct) },
+    { key: "shareOfIntendedAirYards", label: "Air sh", align: "right", numeric: true, tooltip: "Share of the team's intended air yards", render: (r) => fmtPercent(r.shareOfIntendedAirYards) },
+    { key: "catchPct", label: "Catch%", align: "right", numeric: true, tooltip: "Catch rate", render: (r) => fmtPercent(r.catchPct) },
   ];
 }
 function ngsPassingColumns(tok: Tok): ReadonlyArray<Column<NgsPassingLine>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "attempts", label: "Att", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "Pass attempts" },
     { key: "cpoe", label: "CPOE", align: "right", numeric: true, tooltip: "completion % over expected", render: (r) => signedCell(r.cpoe, tok, 1) },
-    { key: "completionPct", label: "Comp%", align: "right", numeric: true, render: (r) => r.completionPct.toFixed(1) },
-    { key: "expectedCompletionPct", label: "xComp%", align: "right", numeric: true, render: (r) => r.expectedCompletionPct.toFixed(1) },
-    { key: "avgTimeToThrow", label: "TT throw", align: "right", numeric: true, render: (r) => r.avgTimeToThrow.toFixed(2) },
-    { key: "aggressiveness", label: "Aggr", align: "right", numeric: true, render: (r) => r.aggressiveness.toFixed(1) },
+    { key: "completionPct", label: "Comp%", align: "right", numeric: true, tooltip: "Completion percentage", render: (r) => r.completionPct.toFixed(1) },
+    { key: "expectedCompletionPct", label: "xComp%", align: "right", numeric: true, tooltip: "Expected completion percentage", render: (r) => r.expectedCompletionPct.toFixed(1) },
+    { key: "avgTimeToThrow", label: "TT throw", align: "right", numeric: true, tooltip: "Average time to throw, seconds", render: (r) => r.avgTimeToThrow.toFixed(2) },
+    { key: "aggressiveness", label: "Aggr", align: "right", numeric: true, tooltip: "Aggressiveness: share of throws into tight windows", render: (r) => r.aggressiveness.toFixed(1) },
     { key: "passerRating", label: "Rating", align: "right", numeric: true, render: (r) => r.passerRating.toFixed(1) },
   ];
 }
 function ngsRushingColumns(tok: Tok): ReadonlyArray<Column<NgsRushingLine>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "rushAttempts", label: "Att", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "rushAttempts", label: "Att", align: "right", numeric: true, tooltip: "Rush attempts" },
     { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, tok, 2) },
-    { key: "efficiency", label: "Eff", align: "right", numeric: true, render: (r) => r.efficiency.toFixed(2) },
+    { key: "efficiency", label: "Eff", align: "right", numeric: true, tooltip: "Rushing efficiency", render: (r) => r.efficiency.toFixed(2) },
     { key: "pctStackedBox", label: "Stacked%", align: "right", numeric: true, tooltip: "% carries vs 8+ defenders", render: (r) => fmtPercent(r.pctStackedBox) },
-    { key: "avgTimeToLos", label: "TT LOS", align: "right", numeric: true, render: (r) => r.avgTimeToLos.toFixed(2) },
+    { key: "avgTimeToLos", label: "TT LOS", align: "right", numeric: true, tooltip: "Average time to the line of scrimmage, seconds", render: (r) => r.avgTimeToLos.toFixed(2) },
   ];
 }
 
@@ -311,8 +311,8 @@ function ngsRushingColumns(tok: Tok): ReadonlyArray<Column<NgsRushingLine>> {
 function qbPressureColumns(tok: Tok): ReadonlyArray<Column<QbPressureRow>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "Games played" },
     { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className={`font-semibold ${tok.bad}`}>{fmtPercent(r.pressurePct)}</span> },
     { key: "badThrowPct", label: "Bad throw%", align: "right", numeric: true, render: (r) => fmtPercent(r.badThrowPct) },
     { key: "sacks", label: "Sacks", align: "right", numeric: true },
@@ -339,12 +339,12 @@ function qbPressureColumns(tok: Tok): ReadonlyArray<Column<QbPressureRow>> {
 function coverageColumns(tok: Tok): ReadonlyArray<Column<CoverageRow>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "targets", label: "Tgt", align: "right", numeric: true },
-    { key: "completionPct", label: "Cmp%", align: "right", numeric: true, render: (r) => fmtPercent(r.completionPct) },
-    { key: "yardsPerTarget", label: "Yd/Tgt", align: "right", numeric: true, render: (r) => r.yardsPerTarget.toFixed(1) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "targets", label: "Tgt", align: "right", numeric: true, tooltip: "Targets" },
+    { key: "completionPct", label: "Cmp%", align: "right", numeric: true, tooltip: "Completion percentage allowed", render: (r) => fmtPercent(r.completionPct) },
+    { key: "yardsPerTarget", label: "Yd/Tgt", align: "right", numeric: true, tooltip: "Yards allowed per target", render: (r) => r.yardsPerTarget.toFixed(1) },
     { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className={`font-semibold ${tok.good}`}>{r.passerRatingAllowed.toFixed(1)}</span> },
-    { key: "missedTacklePct", label: "Miss tkl%", align: "right", numeric: true, render: (r) => fmtPercent(r.missedTacklePct) },
+    { key: "missedTacklePct", label: "Miss tkl%", align: "right", numeric: true, tooltip: "Missed tackle rate", render: (r) => fmtPercent(r.missedTacklePct) },
   ];
 }
 
@@ -358,10 +358,10 @@ function combineColumns(tok: Tok, showYear: boolean): ReadonlyArray<Column<Combi
   ];
   if (showYear) cols.push({ key: "draftYear", label: "Yr", align: "right", numeric: true, render: (r) => (r.draftYear ? String(r.draftYear) : "—") });
   cols.push(
-    { key: "weight", label: "Wt", align: "right", numeric: true, sortValue: (r) => r.weight, render: (r) => fmtDecimal(r.weight, 0) },
-    { key: "forty", label: "40", align: "right", numeric: true, sortValue: (r) => r.forty, render: (r) => fmtDecimal(r.forty, 2) },
-    { key: "vertical", label: "Vert", align: "right", numeric: true, sortValue: (r) => r.vertical, render: (r) => fmtDecimal(r.vertical, 1) },
-    { key: "broadJump", label: "Broad", align: "right", numeric: true, sortValue: (r) => r.broadJump, render: (r) => fmtDecimal(r.broadJump, 0) },
+    { key: "weight", label: "Wt", align: "right", numeric: true, tooltip: "Weight, lbs", sortValue: (r) => r.weight, render: (r) => fmtDecimal(r.weight, 0) },
+    { key: "forty", label: "40", align: "right", numeric: true, tooltip: "40-yard dash, seconds", sortValue: (r) => r.forty, render: (r) => fmtDecimal(r.forty, 2) },
+    { key: "vertical", label: "Vert", align: "right", numeric: true, tooltip: "Vertical jump, inches", sortValue: (r) => r.vertical, render: (r) => fmtDecimal(r.vertical, 1) },
+    { key: "broadJump", label: "Broad", align: "right", numeric: true, tooltip: "Broad jump, inches", sortValue: (r) => r.broadJump, render: (r) => fmtDecimal(r.broadJump, 0) },
     { key: "cone", label: "3-cone", align: "right", numeric: true, sortValue: (r) => r.cone, render: (r) => fmtDecimal(r.cone, 2) },
     { key: "shuttle", label: "Shuttle", align: "right", numeric: true, sortValue: (r) => r.shuttle, render: (r) => fmtDecimal(r.shuttle, 2) },
   );
@@ -373,8 +373,8 @@ function combineColumns(tok: Tok, showYear: boolean): ReadonlyArray<Column<Combi
 function qbrColumns(tok: Tok): ReadonlyArray<Column<QbrRow>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "Games played" },
     { key: "qbr", label: "QBR", align: "right", numeric: true, tooltip: "play-weighted Total QBR (0-100)", render: (r) => r.qbr.toFixed(1) },
     { key: "epaTotal", label: "EPA", align: "right", numeric: true, tooltip: "total expected points added", render: (r) => signedCell(r.epaTotal, tok, 1) },
     { key: "ptsAdded", label: "Pts added", align: "right", numeric: true, render: (r) => signedCell(r.ptsAdded, tok, 1) },
@@ -394,7 +394,7 @@ function divergenceTone(d: Divergence): SignalTone {
 function consensusColumns(tok: Tok): ReadonlyArray<Column<QbConsensusRow>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
     { key: "qbrPct", label: "QBR %ile", align: "right", numeric: true, tooltip: "QBR percentile within the pool", sortValue: (r) => r.qbrPct, render: (r) => (r.qbrPct === null ? "—" : r.qbrPct.toFixed(0)) },
     { key: "cpoePct", label: "CPOE %ile", align: "right", numeric: true, tooltip: "CPOE (Next Gen accuracy) percentile", sortValue: (r) => r.cpoePct, render: (r) => (r.cpoePct === null ? "—" : r.cpoePct.toFixed(0)) },
     { key: "consensus", label: "Consensus", align: "right", numeric: true, tooltip: "mean of available percentiles", render: (r) => r.consensus.toFixed(0) },
@@ -417,8 +417,8 @@ function edgeColumns(tok: Tok, tone: "buy" | "sell"): ReadonlyArray<Column<EdgeS
   const gapCls = tone === "buy" ? tok.good : tok.bad;
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok, r.position) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "Games played" },
     { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
     { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => r.pprPerGame.toFixed(1) },
     { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
@@ -450,7 +450,7 @@ function injuryColumns(tok: Tok): ReadonlyArray<Column<InjuryRow>> {
   return [
     { key: "reportStatus", label: "Status", sortValue: (r) => r.reportStatus, render: (r) => injuryStatusBadge(r, tok) },
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
     { key: "position", label: "Pos" },
     { key: "primaryInjury", label: "Injury", render: (r) => r.primaryInjury || "—" },
     { key: "practiceStatus", label: "Practice", render: (r) => r.practiceStatus || "—" },
@@ -462,7 +462,7 @@ function injuryColumns(tok: Tok): ReadonlyArray<Column<InjuryRow>> {
 function marketColumns(tok: Tok): ReadonlyArray<Column<SleeperTrendingPlayer>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
     { key: "position", label: "Pos" },
     { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className={tok.warn}>{r.injuryStatus}</span> : "—") },
     { key: "count", label: "Moves", align: "right", numeric: true, render: (r) => fmtNumber(r.count) },
@@ -483,7 +483,7 @@ function dfsColumns(tok: Tok): ReadonlyArray<Column<DfsSalaryRow>> {
   };
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
+    { key: "team", label: "Tm", tooltip: "Team", render: (r) => teamCell(r.team, tok) },
     { key: "position", label: "Pos" },
     { key: "salary", label: "DK salary", align: "right", numeric: true, render: (r) => `$${fmtNumber(r.salary)}` },
     { key: "providerCount", label: "Feeds", align: "right", numeric: true },

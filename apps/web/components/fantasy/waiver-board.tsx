@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import { waiverTargets, bidDollars, dropCandidates, type FaabTier } from "@/lib/fantasy/waivers";
 import { POS_HEX, type Player } from "@/lib/fantasy/players";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
+import { FantasyStat } from "@/components/fantasy/fantasy-stat";
 
 // Conviction ladder mapped to the design-system confidence ladder:
 // elite → plasma, strong → cyan, solid → ultraviolet, lean → silver.
@@ -58,12 +59,16 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
             const tone = TIER_TONE[rec.tier];
             const phex = POS_HEX[rec.player.pos];
             return (
-              <div key={rec.player.id} className="surface-card flex items-center gap-3 p-3">
-                <div className="w-16 shrink-0 text-center">
-                  <p className="font-numerals text-xl font-semibold tabular-nums text-ion-white">${bidDollars(rec, budget)}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider" style={{ color: tone }}>{rec.tier}</p>
-                </div>
-                <div className="min-w-0 flex-1 border-l border-mineral pl-3">
+              <div key={rec.player.id} className="surface-card flex min-h-[4.5rem] items-center gap-4 p-3">
+                <FantasyStat
+                  label={<span style={{ color: tone }}>{rec.tier}</span>}
+                  value={`$${bidDollars(rec, budget)}`}
+                  size="md"
+                  align="center"
+                  className="w-16 shrink-0"
+                  title="Recommended FAAB bid"
+                />
+                <div className="min-w-0 flex-1 border-l border-mineral/60 pl-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-ion-white">
                     <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{rec.player.pos}</span>
                     {rec.player.name}
@@ -72,10 +77,7 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
                   </p>
                   <p className="mt-0.5 text-xs text-ion-1">{rec.reason}</p>
                 </div>
-                <div className="hidden shrink-0 text-right sm:block">
-                  <p className="font-mono text-xs tabular-nums text-ion-1">{rec.player.proj}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-ion-2">proj</p>
-                </div>
+                <FantasyStat label="Projection" value={rec.player.proj} size="sm" align="right" tone="var(--ion-1)" className="hidden w-20 shrink-0 sm:block" />
               </div>
             );
           })}
@@ -84,17 +86,20 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
         {/* drops */}
         <div className="lg:sticky lg:top-24 self-start">
           <div className="surface-card p-5">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">Drop candidates</p>
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">Drop candidates</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Projection</p>
+            </div>
             <p className="mt-1 text-xs text-ion-1">The weakest rostered value: the spot you&apos;d clear for a target.</p>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-1">
               {drops.map((p) => {
                 const phex = POS_HEX[p.pos];
                 return (
-                  <li key={p.id} className="flex items-center gap-2 text-sm">
+                  <li key={p.id} className="flex h-8 items-center gap-2 text-sm">
                     <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{p.pos}</span>
                     <span className="flex-1 truncate text-ion-white">{p.name}</span>
                     <span className={`text-[11px] ${TREND_TONE[p.trend]}`}>{TREND_MARK[p.trend]}</span>
-                    <span className="font-mono text-[11px] tabular-nums text-ion-2">{p.proj}</span>
+                    <span className="w-10 text-right font-mono text-[11px] tabular-nums text-ion-1">{p.proj}</span>
                   </li>
                 );
               })}

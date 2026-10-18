@@ -12,6 +12,7 @@
 import { useMemo, useState } from "react";
 import { PROPS, readProp, evalEntry, type Prop, type PropRead } from "@/lib/fantasy/props";
 import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
+import { FantasyStat } from "@/components/fantasy/fantasy-stat";
 
 // Side identity (not semantic outcome): over = cyan, under = plasma — the two
 // poles of a call, mirroring trade-analyzer's give/get. Signed EV reads use
@@ -149,7 +150,7 @@ export function PropsEdge({
       <div className="lg:sticky lg:top-24 self-start">
         <div className="surface-card p-5">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Power-Play entry</p>
-          <p className="mt-1 text-xs text-ion-1">Add 2-6 legs. Every leg must hit. We show the fair odds and the value.</p>
+          <p className="mt-1 text-xs text-ion-1">Add 2-6 legs. Every leg must hit. We show the chance every leg hits and the value per $1.</p>
 
           {entryReads.length === 0 && (
             <p className="mt-5 text-sm text-ion-2">Tap a prop's <span className="text-orbital-cyan">+</span> to build an entry.</p>
@@ -170,19 +171,16 @@ export function PropsEdge({
 
           {ev && (
             <div className="mt-5 border-t border-mineral pt-4">
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <Metric label="Fair odds" value={`${(ev.combinedP * 100).toFixed(1)}%`} />
-                <Metric label="Pays" value={`${ev.payout}×`} />
-                {/* Signed EV — verify when positive, alert when negative, neutral in between. */}
-                <Metric label="Value per $1" value={`${ev.ev >= 0 ? "+" : ""}${ev.ev.toFixed(2)}`} tone={ev.ev > 0.08 ? "var(--verify)" : ev.ev > -0.05 ? "var(--ion-white)" : "var(--alert)"} />
+              <div className="grid grid-cols-3 gap-3">
+                {/* Signed value: verify when positive, alert when negative, neutral in between. */}
+                <FantasyStat label="Value per $1" value={`${ev.ev >= 0 ? "+" : ""}${ev.ev.toFixed(2)}`} size="lg" tone={ev.ev > 0.08 ? "var(--verify)" : ev.ev > -0.05 ? "var(--ion-white)" : "var(--alert)"} />
+                <FantasyStat label="Hit chance" value={`${(ev.combinedP * 100).toFixed(1)}%`} size="md" align="right" title="Chance every leg hits" />
+                <FantasyStat label="Pays" value={`${ev.payout}×`} size="md" align="right" />
               </div>
-              <p className="mt-3 text-center text-xs">
+              <p className="mt-4 text-xs">
                 <span className="rounded-full px-3 py-1 font-semibold uppercase tracking-wider" style={{ background: ev.verdict === "+EV" ? "color-mix(in srgb, var(--verify) 12%, transparent)" : ev.verdict === "thin" ? "rgba(255,255,255,0.07)" : "color-mix(in srgb, var(--alert) 12%, transparent)", color: ev.verdict === "+EV" ? "var(--verify)" : ev.verdict === "thin" ? "var(--ion-white)" : "var(--alert)" }}>
                   {ev.verdict === "+EV" ? "Our lean (not a guarantee)" : ev.verdict === "thin" ? "Thin edge (near break-even)" : "Not our lean"}
                 </span>
-              </p>
-              <p className="mt-3 text-[10px] leading-relaxed text-ion-2">
-                Combined probability is the product of each leg on our recommended side, the reason big entries rarely pay. We surface the math the slip hides.
               </p>
             </div>
           )}
@@ -193,20 +191,16 @@ export function PropsEdge({
   );
 }
 
-function Metric({ label, value, tone }: { label: string; value: string; tone?: string }) {
-  return (
-    <div>
-      <p className="font-mono text-lg font-semibold tabular-nums" style={{ color: tone ?? "var(--ion-white)" }}>{value}</p>
-      <p className="font-mono text-[10px] uppercase tracking-wider text-ion-2">{label}</p>
-    </div>
-  );
-}
-
+/**
+ * One prop. Reading order, left to right: the player and the posted line, then
+ * our Projection against it (the dominant number), the side with its hit chance,
+ * the Edge, and the best alt line's Value per $1.
+ */
 function PropRow({ r, active, onToggle }: { r: PropRead; active: boolean; onToggle: () => void }) {
   const tone = sideTone(r.side);
   const alt = r.bestAlt;
   return (
-    <div className="surface-card flex items-center gap-3 p-3" style={{ borderColor: active ? tone : undefined, boxShadow: active ? `0 0 0 1px ${tone}` : undefined }}>
+    <div className="surface-card flex min-h-[4.5rem] items-center gap-4 px-3 py-2.5" style={{ borderColor: active ? tone : undefined, boxShadow: active ? `0 0 0 1px ${tone}` : undefined }}>
       <button
         type="button"
         onClick={onToggle}
@@ -219,37 +213,42 @@ function PropRow({ r, active, onToggle }: { r: PropRead; active: boolean; onTogg
 
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-ion-white">
-          {r.prop.player} <span className="font-normal text-ion-2">{r.prop.team} · {r.prop.market}</span>
+          {r.prop.player} <span className="font-mono text-[10px] font-normal text-ion-2">{r.prop.team}</span>
         </p>
-        <p className="text-[11px] text-ion-1">
-          Line <span className="font-mono tabular-nums text-ion-1">{r.prop.line}</span> · our number <span className="font-mono tabular-nums" style={{ color: tone }}>{r.prop.mean}</span> · {r.note}
+        <p className="truncate text-[11px] text-ion-2">
+          {r.prop.market} <span className="font-mono tabular-nums text-ion-1">{r.prop.line}</span> · {r.note}
         </p>
       </div>
 
-      {/* pick + conviction */}
-      <div className="hidden shrink-0 text-right sm:block">
-        <p className="font-mono text-sm font-bold uppercase tabular-nums" style={{ color: tone }}>
-          <span className="font-normal text-ion-2">Projection:</span> {r.side} {Math.round(r.pSide * 100)}%
-        </p>
-        <div className="mt-1 h-1 w-24 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
+      <FantasyStat label="Projection" value={r.prop.mean} size="md" align="right" tone={tone} className="w-20 shrink-0" />
+
+      {/* side + hit chance + edge */}
+      <div className="hidden w-28 shrink-0 text-right sm:block">
+        <FantasyStat
+          label={<>Hit chance · <span style={{ color: tone }}>{r.side}</span></>}
+          value={`${Math.round(r.pSide * 100)}%`}
+          sub={r.priced ? `Edge ${r.edge >= 0 ? "+" : ""}${(r.edge * 100).toFixed(1)} pts` : undefined}
+          size="sm"
+          align="right"
+          title="Our chance for the side we would take"
+        />
+        <div className="ml-auto mt-1.5 h-1 w-20 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
           <div className="h-full rounded-full" style={{ width: `${Math.round(r.edge * 100)}%`, background: tone }} />
         </div>
-        {r.priced && (
-          <p className="mt-1 font-mono text-[10px] tabular-nums text-ion-2">
-            Edge {r.edge >= 0 ? "+" : ""}{(r.edge * 100).toFixed(1)} pts
-          </p>
-        )}
       </div>
 
       {/* best alt */}
       {alt && (
-        <div className="hidden shrink-0 border-l border-mineral pl-3 text-right md:block" title="The alt line where edge × payout pays best">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-ion-2">Best alt</p>
-          <p className="text-xs text-ion-white">{r.side} <span className="font-mono tabular-nums">{alt.line}</span> @ <span className="font-mono tabular-nums text-ultraviolet">{alt.mult}×</span></p>
-          {/* signed EV: verify up, alert down — never plasma for a negative */}
-          <p className={`font-mono text-[10px] tabular-nums ${alt.ev >= 0 ? "text-verify" : "text-alert"}`}>
-            Value {alt.ev >= 0 ? "+" : ""}{alt.ev.toFixed(2)}
-          </p>
+        <div className="hidden w-32 shrink-0 border-l border-mineral/60 pl-4 md:block" title="The alt line where edge × payout pays best">
+          {/* signed value: verify up, alert down, never plasma for a negative */}
+          <FantasyStat
+            label="Best alt · Value per $1"
+            value={`${alt.ev >= 0 ? "+" : ""}${alt.ev.toFixed(2)}`}
+            sub={`${r.side} ${alt.line} @ ${alt.mult}×`}
+            size="sm"
+            align="right"
+            tone={alt.ev >= 0 ? "var(--verify)" : "var(--alert)"}
+          />
         </div>
       )}
     </div>

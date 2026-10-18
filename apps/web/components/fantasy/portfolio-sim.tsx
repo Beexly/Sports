@@ -30,7 +30,7 @@ export function PortfolioSim({
   fieldSd = 18,
   entryFee = 10,
   paidSpots = 20,
-  sampleLabel = "Sample projections — illustrative, not predictions.",
+  sampleLabel = "Sample projections, not predictions.",
 }: {
   lineups: readonly (readonly DfsPlayer[])[];
   fieldSize?: number;
@@ -73,22 +73,22 @@ export function PortfolioSim({
         </div>
       </div>
 
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-caution">{sampleLabel}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{sampleLabel}</p>
 
       {lineups.length === 0 ? (
-        <p className="text-sm text-ion-1">No lineups yet — generate kBest lineups first.</p>
+        <p className="text-sm text-ion-1">No lineups yet. Generate kBest lineups first.</p>
       ) : (
         <>
-          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
             {[
-              ["ROI (mean)", roi(result.roiDist.mean)],
-              ["ROI p50", roi(result.roiDist.p50)],
-              ["ROI p90", roi(result.roiDist.p90)],
-              ["ITM rate", pct(result.itmRate)],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-xl border border-mineral px-3 py-2">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">{label}</dt>
-                <dd className="font-display text-2xl font-semibold tabular-nums text-ion-white">{value}</dd>
+              ["ROI (mean)", roi(result.roiDist.mean), "Average return across simulated contests"],
+              ["ROI p50", roi(result.roiDist.p50), "Median return"],
+              ["ROI p90", roi(result.roiDist.p90), "90th percentile return"],
+              ["ITM rate", pct(result.itmRate), "In the money: share of entries that cash"],
+            ].map(([label, value, title]) => (
+              <div key={label} title={title}>
+                <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">{label}</dt>
+                <dd className="mt-1 font-numerals text-2xl font-semibold leading-none tabular-nums text-ion-white">{value}</dd>
               </div>
             ))}
           </dl>

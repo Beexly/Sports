@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { BestBallBoard } from "@/components/fantasy/bestball-board";
-import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
@@ -36,7 +35,8 @@ export default async function BestBallPage() {
       intro="Best ball is won at the draft: no waivers, no start/sit: the optimal lineup is banked for you every week. So the engine grades what actually matters (weekly ceiling, QB-to-catcher correlation, and bye structure) and tells you what your roster needs next, and why."
       note={pool
         ? `Live player data: real players with model-derived values. ${FANTASY_VALUE_BASIS_NOTE} Ceiling, stack, and structure are computed from real grades.`
-        : <PracticeSlateTag />}
+        // Sample pool: the hero already carries the Practice slate tag.
+        : undefined}
       // Dynamic attribution: the provider composes its line from the sources
       // ACTUALLY joined this load (a day with failed FFC/Sleeper joins must not
       // over-credit). The static constant is only the fallback.

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { FANTASY_VALUE_BASIS_NOTE } from "@/lib/fantasy/attribution";
 import { TradeAnalyzer } from "@/components/fantasy/trade-analyzer";
-import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
@@ -35,7 +34,8 @@ export default async function TradePage() {
       accent="ultraviolet"
       title={<>Know who <span className="gse-editorial" style={{ fontSize: "1.08em" }}>wins</span> the deal.</>}
       intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk, then tells you the part that matters: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
-      note={pool ? LIVE_NOTE : <PracticeSlateTag />}
+      // Sample pool: the hero already carries the Practice slate tag.
+      note={pool ? LIVE_NOTE : undefined}
       wide
       projectionsPool={pool ? "real" : "illustrative"}
     >

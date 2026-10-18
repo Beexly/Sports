@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
-import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
@@ -34,7 +33,8 @@ export default async function DraftPage() {
       intro="Mark players off the board and the engine recommends your next pick, and tells you exactly why: your biggest need, the tier about to break, the value over replacement, and the bye-week stack you're about to create."
       note={pool
         ? `Live player data: real players with model-derived values. ${FANTASY_VALUE_BASIS_NOTE} Value over replacement, tiers, and recommendations are computed from real grades.`
-        : <PracticeSlateTag />}
+        // Sample pool: the hero already carries the Practice slate tag.
+        : undefined}
       // Dynamic attribution: the provider composes its line from the sources
       // ACTUALLY joined this load (a day with failed FFC/Sleeper joins must not
       // over-credit). The static constant is only the fallback.

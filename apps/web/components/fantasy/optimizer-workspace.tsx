@@ -5,6 +5,10 @@
  * previously-separate DFS optimizer and season-long start/sit into a single
  * workspace, with the draft board reachable from the same door. Fixes the
  * "which optimizer do I open?" confusion.
+ *
+ * One toolbar carries the switch, the one-line purpose of the active contest,
+ * its data status, and the link to its full page; the tool itself follows with
+ * no repeated blurb.
  */
 
 import { useState } from "react";
@@ -17,10 +21,10 @@ import type { Player } from "@/lib/fantasy/players";
 
 type Tab = "dfs" | "startsit" | "draft";
 
-const TABS: { key: Tab; label: string; blurb: string }[] = [
-  { key: "dfs", label: "Classic DFS", blurb: "Build cash / GPP / leverage lineups against the slate: locks, fades, exposure, stacking." },
-  { key: "startsit", label: "Start / Sit", blurb: "Season-long lineup by floor, median, and ceiling: who to start and why." },
-  { key: "draft", label: "Draft", blurb: "Live draft board: tiers, value over replacement, positional scarcity, run alerts." },
+const TABS: { key: Tab; label: string; blurb: string; href: string }[] = [
+  { key: "dfs", label: "Classic DFS", blurb: "Cash, GPP, and leverage lineups: locks, fades, exposure, stacking.", href: "/fantasy/dfs" },
+  { key: "startsit", label: "Start / Sit", blurb: "Season-long lineup by floor, Projection, and Ceiling.", href: "/fantasy/lineup" },
+  { key: "draft", label: "Draft", blurb: "Tiers, value over replacement, positional scarcity, run alerts.", href: "/fantasy/draft" },
 ];
 
 /**
@@ -39,10 +43,9 @@ export function OptimizerWorkspace({
   const active = TABS.find((t) => t.key === tab)!;
 
   return (
-    <div className="space-y-5">
-      <div className="surface-card flex flex-wrap items-center gap-3 p-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">Contest</span>
-        <div className="flex flex-wrap rounded-full border border-mineral bg-carbon/60 p-0.5">
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-mineral pb-4">
+        <div className="flex flex-wrap rounded-full border border-mineral bg-carbon/60 p-0.5" role="group" aria-label="Contest">
           {TABS.map((t) => {
             const on = t.key === tab;
             return (
@@ -60,52 +63,27 @@ export function OptimizerWorkspace({
             );
           })}
         </div>
-        <p className="text-sm text-ion-1">{active.blurb}</p>
+        <p className="min-w-0 flex-1 text-sm text-ion-1">{active.blurb}</p>
+        {/* DFS shows its own Practice slate marker (it hides once a DK CSV is
+            imported); the season tools follow the server-resolved pool. */}
+        {tab !== "dfs" &&
+          (pool ? (
+            <span className="rounded-full bg-orbital-cyan/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-orbital-cyan">
+              Live players
+            </span>
+          ) : (
+            <PracticeSlateTag />
+          ))}
+        {/* Dual-door fix (ASTRA A-7): each tab is the same tool as its full
+            page. Link through instead of shipping two experiences. */}
+        <Link href={active.href} className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
+          Open full page →
+        </Link>
       </div>
 
-      {/* Dual-door fix (ASTRA A-7): the DFS tab is the same tool as /fantasy/dfs.
-          That page carries the salary board and the licensed-feed empty state
-          this tab never had. Link through instead of shipping two experiences. */}
-      {tab === "dfs" && (
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs leading-5 text-ion-1">
-              Build cash / GPP / leverage lineups against the slate: locks, fades, exposure, stacking.{" "}
-              The full page also carries the salary board and the licensed-feed status.
-            </p>
-            <Link href="/fantasy/dfs" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
-              Open full DFS page →
-            </Link>
-          </div>
-          <DfsOptimizer />
-        </div>
-      )}
-      {tab === "startsit" && (
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs leading-5 text-ion-1">
-              Season-long lineup by floor, median, and ceiling: who to start and why.{" "}
-              {pool ? "Live data: real players." : <PracticeSlateTag className="ml-1 align-middle" />}
-            </p>
-            <Link href="/fantasy/lineup" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">
-              Open full page →
-            </Link>
-          </div>
-          <LineupOptimizer pool={pool} />
-        </div>
-      )}
-      {tab === "draft" && (
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs leading-5 text-ion-1">
-              Live draft board: tiers, value over replacement, positional scarcity, run alerts, and your
-              own ADP overlay. {pool ? "Live data: real players." : <PracticeSlateTag className="ml-1 align-middle" />}
-            </p>
-            <Link href="/fantasy/draft" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">Open full page →</Link>
-          </div>
-          <DraftAssistant pool={pool} canUseFantasyFull={canUseFantasyFull} />
-        </div>
-      )}
+      {tab === "dfs" && <DfsOptimizer />}
+      {tab === "startsit" && <LineupOptimizer pool={pool} />}
+      {tab === "draft" && <DraftAssistant pool={pool} canUseFantasyFull={canUseFantasyFull} />}
     </div>
   );
 }

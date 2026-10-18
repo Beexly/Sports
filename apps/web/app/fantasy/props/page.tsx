@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { PropsEdge } from "@/components/fantasy/props-edge";
 import { PickemRanker } from "@/components/fantasy/pickem-ranker";
-import { PROPS_DISCLAIMER } from "@/lib/fantasy/props";
 import { activePickemLines, isLivePickem } from "@/lib/integrations/pickem";
 
 export const dynamic = "force-dynamic";
@@ -10,22 +9,30 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Pick'em Edge · Our number vs their line",
   description:
-    "Where our model disagrees with the posted Underdog / DK Pick6 line. Every prop shows the side, the conviction, and the most valuable alt line. Build a Power-Play entry and see the fair odds and the value.",
+    "Where our Projection disagrees with the posted Underdog / DK Pick6 line. Every prop shows the side, its hit chance, the Edge, and the most valuable alt line. Build a Power-Play entry and see the chance every leg hits and the value per $1.",
   alternates: { canonical: "/fantasy/props" },
   robots: { index: false, follow: true },
 };
 
+/**
+ * Page-local footer copy. Carries the same two facts as PROPS_DISCLAIMER in
+ * lib/fantasy/props.ts (advisory only; we operate no pick'em product; live
+ * lines not yet connected) in the suite's customer vocabulary. The sample
+ * state is marked by the Practice slate tag in the hero and on the board.
+ */
+const ADVISORY_NOTE = "We advise on third-party pick'em lines. We do not operate a pick'em product.";
+
 export default function PropsPage() {
   const lines = activePickemLines();
   const note = isLivePickem()
-    ? `${PROPS_DISCLAIMER} Lines: LIVE feed connected.`
-    : PROPS_DISCLAIMER;
+    ? `${ADVISORY_NOTE} Lines: live feed connected.`
+    : `Practice lines and sample projections, not live data. ${ADVISORY_NOTE} Live lines are coming soon.`;
   return (
     <FantasyShell
       eyebrow="Pick'em Edge"
       accent="ultraviolet"
       title="Props"
-      intro="Their line. Our number. Your edge. Filter by market or team. Every prop shows the side we'd take, how strongly, and the single alt line where edge times payout pays best. Build a 2-to-6 leg entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
+      intro="Their line. Our number. Your edge. Every prop shows our Projection, the side we would take with its hit chance, and the one alt line that pays best. Build a 2-to-6 leg entry and see its combined odds and value per $1 before you stake a dollar."
       note={note}
       wide
       // The illustrative badge was suppressed on the ONE page that most needs

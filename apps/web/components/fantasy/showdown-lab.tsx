@@ -21,6 +21,7 @@ import {
 } from "@/lib/fantasy/showdown";
 import { SHOWDOWN_GAME_LABEL, SHOWDOWN_SLATE } from "@/lib/fantasy/showdown-slate";
 import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
+import { FantasyStat } from "@/components/fantasy/fantasy-stat";
 
 const salaryText = (n: number): string => `$${n.toLocaleString("en-US")}`;
 
@@ -67,22 +68,30 @@ function LineupCard({ lineup, rank }: { lineup: ShowdownLineup; rank: number }) 
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-gradient-to-b from-plasma/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
-      <div className="relative flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-[0.2em] text-ion-3">
-          Lineup {rank}
-        </span>
-        <span className="ml-auto font-mono text-xs text-ion-2">
-          {salaryText(lineup.salary)} / {salaryText(SHOWDOWN_RULES.salaryCap)}
-        </span>
-      </div>
+      <p className="relative font-mono text-[11px] uppercase tracking-[0.16em] text-ion-1">
+        Lineup {rank}
+      </p>
 
-      <p className="relative mt-2 font-mono text-2xl text-ion-white">
-        {lineup.proj.toFixed(1)}
-        <span className="ml-1 text-xs text-ion-3">proj</span>
-      </p>
-      <p className="relative text-[11px] text-ion-3">
-        ceiling {lineup.ceiling.toFixed(1)}
-      </p>
+      <div className="relative mt-3 flex items-end justify-between gap-4">
+        <FantasyStat
+          label="Projection"
+          value={lineup.proj.toFixed(1)}
+          size={rank === 1 ? "lg" : "md"}
+          tone="var(--orbital-cyan)"
+          title="Total projected points"
+        />
+        <div className="flex gap-5">
+          <FantasyStat label="Ceiling" value={lineup.ceiling.toFixed(1)} size="sm" align="right" tone="var(--ultraviolet)" />
+          <FantasyStat
+            label="Salary"
+            value={`$${(lineup.salary / 1000).toFixed(1)}k`}
+            sub={`of ${salaryText(SHOWDOWN_RULES.salaryCap)}`}
+            title={`${salaryText(lineup.salary)} of ${salaryText(SHOWDOWN_RULES.salaryCap)}`}
+            size="sm"
+            align="right"
+          />
+        </div>
+      </div>
 
       <div className="relative mt-3 flex flex-wrap gap-1.5">
         <PlayerChip
@@ -96,8 +105,8 @@ function LineupCard({ lineup, rank }: { lineup: ShowdownLineup; rank: number }) 
         ))}
       </div>
 
-      <p className="relative mt-3 font-mono text-[10px] text-ion-3">
-        captain salary {salaryText(captainSalary)} ×{SHOWDOWN_RULES.captainMultiplier} applied
+      <p className="relative mt-3 font-mono text-[10px] tabular-nums text-ion-2">
+        Captain salary {salaryText(captainSalary)} ×{SHOWDOWN_RULES.captainMultiplier} applied
       </p>
     </article>
   );
@@ -142,7 +151,7 @@ export function ShowdownLab() {
           {(
             [
               ["Roster", `1 CPT + ${SHOWDOWN_RULES.flexSlots} FLEX`],
-              ["Capt. multiplier", `${SHOWDOWN_RULES.captainMultiplier}× points & salary`],
+              ["Captain multiplier", `${SHOWDOWN_RULES.captainMultiplier}× points & salary`],
               ["Salary cap", salaryText(SHOWDOWN_RULES.salaryCap)],
               ["Teams", "Both required"],
             ] as const

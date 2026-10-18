@@ -156,8 +156,10 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
           </div>
 
           <div className="surface-card overflow-hidden p-0">
-            <div className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-mineral px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
-              <span>Player</span><span className="text-right">VOR · Tier{activeAdp.size > 0 ? " · ADP" : ""}</span><span className="text-right">Action</span>
+            <div className="grid grid-cols-[1fr_6.5rem_auto] gap-3 border-b border-mineral px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">
+              <span>Player</span>
+              <span className="text-right" title={`GSE Score, 0 to 100. Below it: value over replacement, tier${activeAdp.size > 0 ? ", ADP" : ""}`}>GSE Score</span>
+              <span className="w-[6.75rem]"><span className="sr-only">Actions</span></span>
             </div>
             <div className="max-h-[60vh] overflow-y-auto">
               {boardCapped.length === 0 ? (
@@ -171,7 +173,7 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
                 // scoring input on live rows.
                 const injuryFlag = pl.injuryDisplay ?? pl.injury;
                 return (
-                  <div key={pl.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 border-b border-mineral px-4 py-2.5 last:border-b-0">
+                  <div key={pl.id} className="grid min-h-[3.5rem] grid-cols-[1fr_6.5rem_auto] items-center gap-3 border-b border-mineral/60 px-4 py-2 last:border-b-0">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{pl.pos}</span>
@@ -185,21 +187,21 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
                           <span className="rounded px-1 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_TONE[av.label], background: `color-mix(in srgb, ${ADP_TONE[av.label]} 11%, transparent)` }}>{av.label}</span>
                         )}
                         {mv && mv.label !== "none" && mv.label !== "on-time" && (
-                          <span title={`Our rank vs market ADP: ${mv.delta! >= 0 ? "+" : ""}${mv.delta}`} className="rounded px-1 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_TONE[mv.label], background: `color-mix(in srgb, ${ADP_TONE[mv.label]} 11%, transparent)` }}>mkt {mv.label}</span>
+                          <span title={`Our rank vs market ADP: ${mv.delta! >= 0 ? "+" : ""}${mv.delta}`} className="rounded px-1 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_TONE[mv.label], background: `color-mix(in srgb, ${ADP_TONE[mv.label]} 11%, transparent)` }}>market {mv.label}</span>
                         )}
                       </div>
                       {/* bye <= 0 = no bye joined (live rows without an FFC match): show nothing, there is no Week 0 */}
                       <p className="mt-0.5 font-mono text-[11px] text-ion-2">{pl.team}{pl.bye > 0 ? ` · Bye ${pl.bye}` : ""} · {pl.role}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-mono text-sm font-bold tabular-nums text-orbital-cyan" title="GSE Score 0-100">
+                      <p className="font-numerals text-xl font-semibold leading-none tabular-nums text-orbital-cyan" title="GSE Score, 0 to 100">
                         {gseScore(pl, universe).score}
                       </p>
-                      <p className="font-mono text-[11px] tabular-nums text-ion-2">
+                      <p className="mt-1 font-mono text-[10px] tabular-nums text-ion-2" title={`Value over replacement · tier${av?.adp != null ? " · ADP" : ""}`}>
                         {vor(pl, universe) >= 0 ? "+" : ""}{vor(pl, universe)} VOR · T{tier(pl, universe)}{av?.adp != null ? ` · ${av.adp}` : ""}
                       </p>
                     </div>
-                    <div className="flex shrink-0 gap-1.5">
+                    <div className="flex w-[6.75rem] shrink-0 justify-end gap-1.5">
                       <button type="button" onClick={() => draftMine(pl.id)} className="rounded-md bg-orbital-cyan px-2.5 py-1 text-[11px] font-semibold text-obsidian">Draft</button>
                       <button type="button" onClick={() => markGone(pl.id)} className="rounded-md border border-mineral px-2 py-1 text-[11px] text-ion-1 hover:text-ion-white">Gone</button>
                     </div>

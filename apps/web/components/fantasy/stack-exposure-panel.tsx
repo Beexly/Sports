@@ -55,9 +55,9 @@ export function StackExposurePanel({
             data-testid="stack-exposure-stat"
             className="rounded-lg border border-ion-1/20 bg-ion-1/5 px-3 py-2"
           >
-            <p className="text-[10px] uppercase tracking-[0.14em] text-ion-3">{label}</p>
-            <p className="mt-0.5 font-mono text-xl text-ion-white">{value}</p>
-            <p className="text-[10px] leading-tight text-ion-3">{sub}</p>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">{label}</p>
+            <p className="mt-1 font-numerals text-xl font-semibold leading-none tabular-nums text-ion-white">{value}</p>
+            <p className="mt-1 text-[10px] leading-tight text-ion-2">{sub}</p>
           </div>
         ))}
       </div>
@@ -68,7 +68,7 @@ export function StackExposurePanel({
           className="mx-4 mt-3 rounded-lg border border-caution/30 bg-caution/10 px-3 py-2 text-xs text-ion-2"
         >
           {most.name} appears in {(most.pct! * 100).toFixed(0)}% of these lineups across{" "}
-          {report.lineups} entries — this portfolio is largely one bet, repeated.
+          {report.lineups} entries: this portfolio is largely one bet, repeated.
         </p>
       )}
 
@@ -76,7 +76,7 @@ export function StackExposurePanel({
         <p className="text-[10px] uppercase tracking-[0.14em] text-ion-3">Player exposure</p>
         {top.length === 0 ? (
           <p className="py-4 text-sm text-ion-2">
-            No lineups to measure — exposure is undefined, not zero.
+            No lineups to measure. Exposure is undefined, not zero.
           </p>
         ) : (
           <ul className="mt-2 space-y-1.5 pb-4">

@@ -17,6 +17,7 @@ import { useMemo } from "react";
 import { gradeTdScorers, illustrativeTdInputs, rankByEdge, type TdComponentKey, type TdGrade } from "@/lib/fantasy/td-model";
 import { isLiveProjections } from "@/lib/integrations/projections";
 import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
+import { FantasyStat } from "@/components/fantasy/fantasy-stat";
 
 /** Customer labels for the inputs a row can be missing (tooltip only). */
 const INPUT_LABEL: Record<TdComponentKey, string> = {
@@ -97,7 +98,7 @@ export function TdBoard({ live }: { live?: boolean }) {
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-gradient-to-b from-plasma/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
-              <p className="relative text-[10px] uppercase tracking-[0.2em] text-ion-3">
+              <p className="relative font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
                 Rank {i + 1}
               </p>
               <p className="relative mt-1 truncate text-lg font-semibold text-ion-white">{g.name}</p>
@@ -105,10 +106,9 @@ export function TdBoard({ live }: { live?: boolean }) {
                 <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${posColor(g.pos)}`}>
                   {g.pos}
                 </span>
-                <span className="text-xs text-ion-3">{g.team}</span>
+                <span className="font-mono text-[11px] text-ion-2">{g.team}</span>
               </div>
-              <p className="relative mt-3 font-mono text-3xl text-ion-white">{probPct(g.prob)}</p>
-              <p className="relative text-[11px] text-ion-3">anytime TD projection</p>
+              <FantasyStat label="Projection" value={probPct(g.prob)} size="lg" className="relative mt-4" title="Anytime touchdown projection" />
             </article>
           ))}
         </div>
@@ -117,55 +117,69 @@ export function TdBoard({ live }: { live?: boolean }) {
       {/* Ranked board. */}
       <section className="surface-card overflow-hidden">
         <div className="flex flex-wrap items-center gap-2 px-4 pt-4">
-          <span className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Full board</span>
-          <span className="text-xs text-ion-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">Full board</span>
+          <span className="ml-auto font-mono text-[11px] tabular-nums text-ion-2">
             {grades.length} players · {priced.length} priced
           </span>
         </div>
 
         {grades.length === 0 ? (
           <p className="px-4 py-8 text-sm text-ion-2">
-            The goal line is empty on this frequency — no eligible players on the slate.
+            The goal line is empty on this frequency: no eligible players on the slate.
           </p>
         ) : (
-          <div className="mt-3 divide-y divide-ion-1/10">
-            {grades.map((g: TdGrade, i) => (
-              <div
-                key={g.playerId}
-                data-testid="td-board-row"
-                className="flex flex-wrap items-center gap-3 px-4 py-2.5 text-sm hover:bg-ion-1/5"
-              >
-                <span className="w-6 font-mono text-xs text-ion-3">{i + 1}</span>
-                <span className="min-w-[9rem] flex-1 truncate text-ion-white">{g.name}</span>
-                <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${posColor(g.pos)}`}>
-                  {g.pos}
-                </span>
-                <span className="w-10 text-xs text-ion-3">{g.team}</span>
-                <span className="w-16 text-right font-mono text-ion-white">{probPct(g.prob)}</span>
-                <span
-                  data-testid="td-board-edge"
-                  className={`w-20 text-right font-mono text-xs ${
-                    g.edge === null
-                      ? "text-ion-3"
-                      : g.edge > 0
-                        ? "text-verify"
-                        : "text-caution"
-                  }`}
+          <>
+            <div aria-hidden="true" className="mt-3 flex items-center gap-3 border-b border-ion-1/10 px-4 pb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2">
+              <span className="w-6 text-right">#</span>
+              <span className="flex-1">Player</span>
+              <span className="w-24">Pos / Team</span>
+              <span className="w-20 text-right">Projection</span>
+              <span className="w-20 text-right">Edge</span>
+              <span className="w-16" />
+            </div>
+            <div className="divide-y divide-ion-1/10">
+              {grades.map((g: TdGrade, i) => (
+                <div
+                  key={g.playerId}
+                  data-testid="td-board-row"
+                  className="flex h-10 items-center gap-3 px-4 text-sm hover:bg-ion-1/5"
                 >
-                  {g.edge === null ? "—" : `${g.edge > 0 ? "+" : ""}${(g.edge * 100).toFixed(1)}p`}
-                </span>
-                {g.partial && (
-                  <span
-                    data-testid="td-board-missing"
-                    title={`Missing: ${g.missing.map((k) => INPUT_LABEL[k]).join(", ")}. Built from the inputs we have.`}
-                    className="rounded border border-caution/40 px-1.5 py-0.5 text-[10px] text-caution"
-                  >
-                    {g.missing.length} missing
+                  <span className="w-6 text-right font-mono text-xs tabular-nums text-ion-2">{i + 1}</span>
+                  <span className="min-w-0 flex-1 truncate text-ion-white">{g.name}</span>
+                  <span className="flex w-24 items-center gap-2">
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${posColor(g.pos)}`}>
+                      {g.pos}
+                    </span>
+                    <span className="font-mono text-[11px] text-ion-2">{g.team}</span>
                   </span>
-                )}
-              </div>
-            ))}
-          </div>
+                  <span className="w-20 text-right font-numerals font-semibold tabular-nums text-ion-white">{probPct(g.prob)}</span>
+                  <span
+                    data-testid="td-board-edge"
+                    className={`w-20 text-right font-mono text-xs tabular-nums ${
+                      g.edge === null
+                        ? "text-ion-2"
+                        : g.edge > 0
+                          ? "text-verify"
+                          : "text-caution"
+                    }`}
+                  >
+                    {g.edge === null ? "—" : `${g.edge > 0 ? "+" : ""}${(g.edge * 100).toFixed(1)} pts`}
+                  </span>
+                  <span className="flex w-16 justify-end">
+                    {g.partial && (
+                      <span
+                        data-testid="td-board-missing"
+                        title={`Missing: ${g.missing.map((k) => INPUT_LABEL[k]).join(", ")}. Built from the inputs we have.`}
+                        className="rounded border border-caution/40 px-1.5 py-0.5 text-[10px] text-caution"
+                      >
+                        {g.missing.length} missing
+                      </span>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         <p className="px-4 py-3 text-[11px] text-ion-3">

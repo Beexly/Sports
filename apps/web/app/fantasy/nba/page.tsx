@@ -4,6 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { PracticeSlateTag } from "@/components/fantasy/practice-slate-tag";
+import { FantasyStat } from "@/components/fantasy/fantasy-stat";
 import {
   NBA_SLATE,
   NBA_SALARY_CAP,
@@ -96,7 +97,7 @@ export default function NbaFantasyPage() {
                       <th scope="col" className="px-4 py-3 font-medium">Team</th>
                       <th scope="col" className="px-4 py-3 font-medium">Pos</th>
                       <th scope="col" className="px-4 py-3 text-right font-medium">Salary</th>
-                      <th scope="col" className="px-4 py-3 text-right font-medium">Proj</th>
+                      <th scope="col" className="px-4 py-3 text-right font-medium">Projection</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -108,7 +109,7 @@ export default function NbaFantasyPage() {
                         <td className="px-4 py-2.5 text-right tabular-nums text-ion-1">
                           ${p.salary.toLocaleString()}
                         </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-ion-1">
+                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums text-ion-white">
                           {p.projection.toFixed(1)}
                         </td>
                       </tr>
@@ -146,18 +147,21 @@ export default function NbaFantasyPage() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 rounded-xl border border-titanium bg-void/60 px-4 py-3">
-                <p className="text-sm font-semibold text-ion-white">
-                  Verdict:{" "}
-                  <span className={verdict.valid ? "text-orbital-cyan" : "text-ion-magenta"}>
-                    {verdict.valid ? "VALID" : "INVALID"}
-                  </span>
-                </p>
-                <p className="mt-1 font-mono text-xs tabular-nums text-ion-2">
-                  salary ${verdict.totalSalary.toLocaleString()} / $
-                  {NBA_SALARY_CAP.toLocaleString()} · proj{" "}
-                  {verdict.totalProjection.toFixed(1)}
-                </p>
+              <div className="mt-4 rounded-xl border border-titanium bg-void/60 px-4 py-4">
+                <div className="flex flex-wrap items-end gap-x-8 gap-y-3">
+                  <FantasyStat label="Projection" value={verdict.totalProjection.toFixed(1)} size="lg" tone="var(--orbital-cyan)" />
+                  <FantasyStat
+                    label="Salary"
+                    value={`$${verdict.totalSalary.toLocaleString()}`}
+                    sub={`of $${NBA_SALARY_CAP.toLocaleString()}`}
+                    size="sm"
+                  />
+                  <FantasyStat
+                    label="Verdict"
+                    value={<span className={verdict.valid ? "text-orbital-cyan" : "text-ion-magenta"}>{verdict.valid ? "VALID" : "INVALID"}</span>}
+                    size="sm"
+                  />
+                </div>
                 {verdict.errors.length > 0 && (
                   <ul className="mt-2 list-disc pl-5 text-sm text-ion-magenta">
                     {verdict.errors.map((e) => (
