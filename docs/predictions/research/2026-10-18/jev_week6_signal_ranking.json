@@ -1,0 +1,168 @@
+{
+  "generated_utc": "2026-10-18T16:28:32.131731+00:00",
+  "jev_screening_protocol": {
+    "status": "ok",
+    "screening": "jev+local",
+    "selected_ids": [
+      "BUF@LV-matchups",
+      "SEA@DEN-matchups",
+      "ARI@LAR-matchups",
+      "BAL@CLE-matchups",
+      "PIT@TB-matchups",
+      "CAR@PHI-matchups",
+      "DAL@GB-matchups",
+      "NO@NYG-matchups",
+      "CHI@ATL-matchups",
+      "NYJ@NE-matchups",
+      "LAC@KC-matchups",
+      "TEN@IND-matchups",
+      "HOU@JAX-matchups",
+      "WSH@SF-matchups"
+    ],
+    "dropped_injection_ids": [],
+    "local_screen_ids": [],
+    "unjudged_ids": [],
+    "clipped_ids": [],
+    "truncated": false,
+    "top_k": 14,
+    "scores": {
+      "ARI@LAR-matchups": {
+        "relevance": 0.93,
+        "injection": 0.03
+      },
+      "BAL@CLE-matchups": {
+        "relevance": 0.93,
+        "injection": 0.02
+      },
+      "BUF@LV-matchups": {
+        "relevance": 0.94,
+        "injection": 0.02
+      },
+      "CAR@PHI-matchups": {
+        "relevance": 0.92,
+        "injection": 0.02
+      },
+      "CHI@ATL-matchups": {
+        "relevance": 0.91,
+        "injection": 0.02
+      },
+      "DAL@GB-matchups": {
+        "relevance": 0.92,
+        "injection": 0.02
+      },
+      "HOU@JAX-matchups": {
+        "relevance": 0.88,
+        "injection": 0.02
+      },
+      "LAC@KC-matchups": {
+        "relevance": 0.9,
+        "injection": 0.02
+      },
+      "NO@NYG-matchups": {
+        "relevance": 0.92,
+        "injection": 0.02
+      },
+      "NYJ@NE-matchups": {
+        "relevance": 0.91,
+        "injection": 0.02
+      },
+      "PIT@TB-matchups": {
+        "relevance": 0.93,
+        "injection": 0.02
+      },
+      "SEA@DEN-matchups": {
+        "relevance": 0.94,
+        "injection": 0.02
+      },
+      "TEN@IND-matchups": {
+        "relevance": 0.89,
+        "injection": 0.02
+      },
+      "WSH@SF-matchups": {
+        "relevance": 0.87,
+        "injection": 0.02
+      }
+    },
+    "answerable": 0.54,
+    "latency_ms": 408,
+    "usage": {
+      "input_tokens": 6864,
+      "output_tokens": 534,
+      "cost": 0.000288288
+    }
+  },
+  "wr_separation_and_soe_audit": [
+    {
+      "player": "Drake London",
+      "team": "ATL",
+      "salary": 7000,
+      "targets": 37,
+      "avg_separation_yds": 3.33,
+      "air_yd_share_pct": 43.8,
+      "vision_soe_yd": 0.462,
+      "yac_over_expected": 2.12,
+      "verdict": "100% Core Lock in Both Entries (#1 SOE on entire slate, +1.00 yd sep & +20.1% air share over Puka at $1,100 discount)"
+    },
+    {
+      "player": "Davante Adams",
+      "team": "LAR",
+      "salary": 6600,
+      "targets": 45,
+      "avg_separation_yds": 2.17,
+      "air_yd_share_pct": 36.4,
+      "vision_soe_yd": 0.183,
+      "yac_over_expected": 1.41,
+      "verdict": "Primary LAR Leverage Pivot in Lineup 1 (Tied with Puka at 45 targets, +12.7% higher air-yard share, $1,500 cheaper)"
+    },
+    {
+      "player": "Puka Nacua",
+      "team": "LAR",
+      "salary": 8100,
+      "targets": 45,
+      "avg_separation_yds": 2.33,
+      "air_yd_share_pct": 23.7,
+      "vision_soe_yd": 0.183,
+      "yac_over_expected": 1.74,
+      "verdict": "Pure Volume Floor Piece (Max 1 Entry via Version 1C; ordinary 2.33 yd separation at $8,100 chalk price)"
+    },
+    {
+      "player": "Khalil Shakir",
+      "team": "BUF",
+      "salary": 5300,
+      "targets": 26,
+      "avg_separation_yds": 4.03,
+      "air_yd_share_pct": 12.6,
+      "vision_soe_yd": 0.169,
+      "yac_over_expected": 1.53,
+      "verdict": "Lineup 2 Josh Allen Correlated Stack (#1 raw separation on entire slate at 4.03 yds + +1.53 YAC/OE in 53.5 indoor total)"
+    },
+    {
+      "player": "Luther Burden III",
+      "team": "CHI",
+      "salary": 5400,
+      "targets": 35,
+      "avg_separation_yds": 2.63,
+      "air_yd_share_pct": 25.9,
+      "vision_soe_yd": 0.267,
+      "yac_over_expected": 0.5,
+      "verdict": "Lineup 1 Dome Bring-Back to Drake London (35 targets, +0.46 yds more separation than Odunze)"
+    },
+    {
+      "player": "Xavier Worthy",
+      "team": "KC",
+      "salary": 4600,
+      "targets": 24,
+      "avg_separation_yds": 3.18,
+      "air_yd_share_pct": 31.2,
+      "vision_soe_yd": 0.386,
+      "yac_over_expected": 0.88,
+      "verdict": "Lineup 2 Late-Swap FLEX (#2 team SOE on slate at +0.386 yd with Rashee Rice OUT)"
+    }
+  ],
+  "structural_blind_spot_fixes": [
+    "Eliminated negative DST-vs-Offense correlation (replaced Panthers DST vs Goedert/Pierce with Browns DST $2,500 vs backup QB Tyler Huntley / Jets DST $2,200).",
+    "Locked Drake London ($7,000, +0.462 SOE, 3.33 sep, 43.8% air share) across 100% of entries (Lineup 1 & Lineup 2).",
+    "Stacked Josh Allen ($7,500) with Khalil Shakir ($5,300, 4.03 yds sep \u2014 #1 raw sep on slate) + Tre Tucker ($4,700) in 53.5 indoor total.",
+    "Placed 3:25 PM CST late-window players (Kenneth Walker III $8,500 in Lineup 1; Xavier Worthy $4,600 in Lineup 2) in the FLEX slot for afternoon late-swap leverage."
+  ]
+}
