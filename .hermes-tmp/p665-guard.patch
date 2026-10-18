@@ -1,0 +1,91 @@
+commit 350052e0f65d4ebe1a44ad30b60ebb0863f23354
+Author: Claude <noreply@anthropic.com>
+Date:   Tue Aug 25 21:01:55 2026 +0000
+
+    Fail closed when an upstream provider misbehaves
+    
+    Four adapter-layer defects, all in the same family: a provider that
+    degrades quietly produced a plausible-looking result instead of an error.
+    
+    1. No timeout on ESPN public odds, TheRundown, or MLB Stats API. Every
+       other upstream client in packages/data-ingestion caps its calls at
+       12-15s; these three did not. A hung socket held the ingest cron open
+       until the platform killed the function, and a killed cron writes
+       nothing, logs nothing and reports nothing. ESPN issues up to 29
+       serial calls per sport, so one hang stalls the whole fetch.
+    
+    2. MLB Stats API returned [] on any HTTP error, timeout or parse
+       failure, making an outage identical to a league with no standings.
+       The only consumer (tryMlbStandingsFairValue) caches whatever it gets
+       for 30 minutes BEFORE inspecting it, so a single 500 poisoned that
+       cache with an empty table and silently suppressed MLB independent
+       fair values for half an hour. Now throws MlbStatsApiError; [] is
+       reserved for a genuinely empty publication.
+    
+    3. TheRundown skips a day of its span on 4xx/5xx and abandons the rest
+       on 429, then returned the survivors with only a free-text
+       "partial: ..." note. process-sport uses that result to REPLACE the
+       whole slate when the primary is empty, so a truncated span was
+       written as the complete board: the run reported SUCCESS, the
+       freshness clock advanced, and the dropped games looked unscheduled.
+       The result now carries complete/failedDays, and the board-replacement
+       branch refuses an incomplete fetch. The thin-fill branch is
+       deliberately unchanged - it only adds books to games already held.
+    
+    4. The Odds API decoded every 2xx with a bare `as T` cast. A 200
+       carrying an object left events.length === undefined, and because
+       `undefined === 0` is false the "primary empty, use the free paths"
+       branch never fired: both fallbacks were skipped and the run died with
+       an opaque TypeError in the normalizer. A 200 carrying HTML threw a
+       raw SyntaxError that escaped every OddsApiError classification.
+       Array endpoints now assert an array and the JSON parse is wrapped.
+    
+    Every fix ships with a test watched failing against pre-fix code:
+    transports stubbing a 500 with an HTML body, a 429 with Retry-After, a
+    200 with {}, a 200 with a foreign shape, and a hang. Stubs are local and
+    throw on any unexpected host - no live provider is contacted.
+    
+    Verified on Node 20.20.2 (CI pin): typecheck clean across types,
+    data-ingestion, ingestion-pipeline, prediction-engine and apps/web;
+    data-ingestion 361 tests pass; ingestion-pipeline 223 pass; guardrails
+    green.
+    
+    Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01NsaVxNnq9bXhuxNAAEkPAY
+
+diff --git a/packages/ingestion-pipeline/src/process-sport.ts b/packages/ingestion-pipeline/src/process-sport.ts
+index 8de476d1f..7ce1c3522 100644
+--- a/packages/ingestion-pipeline/src/process-sport.ts
++++ b/packages/ingestion-pipeline/src/process-sport.ts
+@@ -367,12 +367,28 @@ export async function processSport(
+     if (events.length === 0) {
+       if (rundownKey) {
+         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+-        if (rd.events.length > 0) {
++        if (rd.events.length > 0 && !rd.complete) {
++          // FAIL CLOSED. This branch REPLACES the entire slate for the sport,
++          // so a truncated day-span here is not "some data is better than
++          // none" — it is a board that silently omits every game on the days
++          // Rundown failed to serve, written as though it were the whole
++          // slate. The run would then report SUCCESS, oddsInserted > 0 would
++          // advance the public freshness clock, and the missing games would be
++          // indistinguishable from games that simply are not scheduled.
++          // Refusing lets the ESPN tertiary path (and the next cycle) try
++          // again. The thin-fill branch below is deliberately NOT gated this
++          // way: it only ADDS bookmakers to games we already hold, so a short
++          // day-span there means fewer fills, never a missing game.
++          oddsProviderTag = "therundown-incomplete";
++          rundownAttemptNote =
++            `rundown incomplete — refusing partial board replacement ` +
++            `(unread days: ${rd.failedDays.join(", ") || "unknown"}): ${rd.error ?? ""}`;
++          console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
++        } else if (rd.events.length > 0) {
+           events = rd.events;
+           oddsProviderTag = "therundown";
+           console.log(
+-            `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
+-              (rd.error ? ` (note: ${rd.error})` : ""),
++            `${logPrefix} ${sport.key}: rundown free path ${events.length} events`,
+           );
+         } else {
+           oddsProviderTag = "therundown-empty";

@@ -1,0 +1,32 @@
+commit 68ba1c4105cc67aaeb0b3ef43c8f87f799c6fe04
+Author: Beexly <baxley.garrett@gmail.com>
+Date:   Tue Oct 6 20:45:52 2026 -0500
+
+    sheriff(pass2): rebased PR #610 (#1072)
+
+diff --git a/packages/ingestion-pipeline/src/settle-sport.ts b/packages/ingestion-pipeline/src/settle-sport.ts
+index 564795bb6..ccc0effab 100644
+--- a/packages/ingestion-pipeline/src/settle-sport.ts
++++ b/packages/ingestion-pipeline/src/settle-sport.ts
+@@ -864,7 +864,20 @@ export async function settleSport(
+         // Line-archive CLOSE tag. No-op unless LINE_ARCHIVE_ENABLED=true.
+         // Never fails settlement — grading a pick matters more than tagging a line.
+         try {
+-          await markClosingSnapshotsIfEnabled(db, game.id, game.commenceTime);
++          // markClosingSnapshotsIfEnabled has its own internal catch and cannot
++          // throw — the outer try alone was unreachable dead code that read as
++          // instrumentation. The real failure signal is the returned `error`.
++          const closeTag = await markClosingSnapshotsIfEnabled(
++            db,
++            game.id,
++            game.commenceTime,
++          );
++          if (closeTag.error) {
++            console.warn(
++              `${logPrefix} markClosingSnapshots failed for ${game.id}: ` +
++              `${closeTag.error}`,
++            );
++          }
+         } catch (archiveErr) {
+           console.warn(
+             `${logPrefix} markClosingSnapshots failed for ${game.id}: ` +

@@ -48,9 +48,9 @@ export type PublicConsensusPick = Omit<PublicPick, "reasoning" | "reasoningShort
   consensusCapturedAt?: string | null;
   consensusEvidence?: string | null;
   continuityDeltas?: {
-    olContinuityDelta: number;
-    dlContinuityDelta: number;
-    dbContinuityDelta: number;
+    olContinuityDelta: number | null;
+    dlContinuityDelta: number | null;
+    dbContinuityDelta: number | null;
   } | null;
   injuryEvidence?: Record<string, unknown> | null;
   reasoningTrace?: string | null;

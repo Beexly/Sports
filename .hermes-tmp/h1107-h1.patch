@@ -1,0 +1,17 @@
+commit 0a5533b596062169a3e7ea839164b571e2258000
+Author: Beexly <baxley.garrett@gmail.com>
+Date:   Tue Oct 6 22:09:11 2026 -0500
+
+@@ -63,6 +63,12 @@ import {
+   type PostSettlementWorkDelegate,
+ } from "./post-settlement-work.js";
+ import { markClosingSnapshotsIfEnabled } from "./line-archive.js";
++import {
++  americanToDecimalOrNull,
++  appendSettlementToChain,
++  isLedgerChainEnabled,
++  pairedClosingFields,
++} from "./ledger-chain-store.js";
+ 
+ /**
+  * Spend guard (GSE-SEC-039).

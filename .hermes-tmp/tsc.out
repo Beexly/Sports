@@ -1,0 +1,48 @@
+packages/data-ingestion/src/galaxy-kalshi-book.ts(362,9): error TS2322: Type '{ team: string; ticker: string; rawImpliedProb: number; fairProb: null; }[]' is not assignable to type 'readonly KalshiSideFairValue[]'.
+  Type '{ team: string; ticker: string; rawImpliedProb: number; fairProb: null; }' is missing the following properties from type 'KalshiSideFairValue': quoteSpread, quoteBid, quoteAsk, quoteSource
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(133,19): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(142,12): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(159,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(242,18): error TS18048: 'fb' is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(249,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(257,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(269,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(280,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(314,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(330,13): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(331,13): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(338,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(350,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(362,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(371,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(381,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(390,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(405,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(416,13): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(417,13): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(426,12): error TS18048: 'fb' is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(428,12): error TS18048: 'fb' is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(435,12): error TS18048: 'fb' is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(442,18): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(515,12): error TS18048: 'fb' is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(539,24): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(568,8): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(573,8): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(578,8): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob-orchestrator.test.ts(588,24): error TS2532: Object is possibly 'undefined'.
+packages/ingestion-pipeline/src/__tests__/line-archive.test.ts(408,11): error TS2322: Type '{ gameId: string; market?: { in: readonly string[]; } | undefined; capturedAt?: { lte: Date; } | undefined; }' is not assignable to type 'OddsLineSnapshotWhereInput'.
+  Types of property 'market' are incompatible.
+    Type '{ in: readonly string[]; } | undefined' is not assignable to type 'string | StringFilter<"OddsLineSnapshot"> | undefined'.
+      Type '{ in: readonly string[]; }' is not assignable to type 'string | StringFilter<"OddsLineSnapshot"> | undefined'.
+        Type '{ in: readonly string[]; }' is not assignable to type 'StringFilter<"OddsLineSnapshot">'.
+          Types of property 'in' are incompatible.
+            Type 'readonly string[]' is not assignable to type 'string[] | FieldRef<"OddsLineSnapshot", "String[]"> | undefined'.
+              The type 'readonly string[]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.
+packages/prediction-engine/src/edge-lab/props-hb-catch-cushion-bind.ts(124,7): error TS2739: Type '{ value: number; grain: "week_t_for_tplus1"; provenance: "weekly_ngs_mean"; }' is missing the following properties from type 'CovariateCell': layer, knownAtWeek
+packages/prediction-engine/src/edge-lab/props-hb-comp-air-yards-diff-bind.ts(126,7): error TS2739: Type '{ value: number; grain: "week_t_for_tplus1"; provenance: "weekly_ngs_mean"; }' is missing the following properties from type 'CovariateCell': layer, knownAtWeek
+packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts(158,9): error TS2739: Type '{ value: number; grain: "week_t_for_tplus1"; provenance: "weekly_ngs_mean"; }' is missing the following properties from type 'CovariateCell': layer, knownAtWeek
+packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts(159,9): error TS2739: Type '{ value: number; grain: "week_t_for_tplus1"; provenance: "expected_metric_v1"; }' is missing the following properties from type 'CovariateCell': layer, knownAtWeek
+packages/prediction-engine/src/edge-lab/props-hb-rec-td-cushion-bind.ts(126,7): error TS2739: Type '{ value: number; grain: "week_t_for_tplus1"; provenance: "weekly_ngs_mean"; }' is missing the following properties from type 'CovariateCell': layer, knownAtWeek
+packages/prediction-engine/src/edge-lab/props-hb-sack-ttt-bind.ts(123,7): error TS2739: Type '{ value: number; grain: "week_t_for_tplus1"; provenance: "weekly_ngs_mean"; }' is missing the following properties from type 'CovariateCell': layer, knownAtWeek
+packages/prediction-engine/src/index.ts(1523,3): error TS2300: Duplicate identifier 'LedgerEntry'.
+packages/prediction-engine/src/index.ts(2183,15): error TS2300: Duplicate identifier 'LedgerEntry'.

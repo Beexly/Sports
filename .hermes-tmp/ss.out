@@ -1,0 +1,72 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/Garrett/Sports-live/packages/ingestion-pipeline[39m
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mgrades SPREAD/TOTAL against the LOCKED line, not the drifted live line
+[22m[39m[credit-ledger] ledger client has no $transaction/$executeRaw: hourly slot reservations are read-then-write (non-atomic) in this process
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mnever overwrites a FINAL score with a conflicting cross-path value (PL2)
+[22m[39m[settlement] americanfootball_nfl: SCORE_MISMATCH_CROSS_PATH game=game-1 existing=24-20 incoming(paid)=23-20 — refusing to overwrite; game row untouched.
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mreturns status failed (never throws) when the scores API errors
+[22m[39m[settlement] americanfootball_nfl failed: rate limited
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mfailure isolation[2m > [22m[2ma closing-line fetch failure never blocks settlement
+[22m[39m[settlement] Closing-line fetch failed for game game-1: odds table locked
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mfailure isolation[2m > [22m[2ma CLV grading failure never blocks settlement
+[22m[39m[settlement] CLV grading failed for pick pick-1: clv kind mismatch
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mfailure isolation[2m > [22m[2ma game-log failure never blocks settlement
+[22m[39m[settlement] GameLog failed for game-1: ats write failed
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2msettlement evidence — completed-but-scoreless (Phase 1E)[2m > [22m[2mcrossing the threshold (3 GENUINELY DISTINCT per-game payloads) promotes exactly once: idempotent OwnerDecisionRequest + SYSTEM decision event (6.1/6.3)
+[22m[39m[settlement] americanfootball_nfl: game game-1 (ext-1) reported completed-but-scoreless across 3 corroborating runs while still SCHEDULED — anomaly promoted to OWNER_REVIEW with an idempotent OwnerDecisionRequest + SYSTEM decision event. Picks left PENDING; NOT auto-voided.
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2msettlement evidence — completed-but-scoreless (Phase 1E)[2m > [22m[2ma RESOLVED anomaly whose condition RECURS is REOPENED with an append-only SYSTEM event — never silent forever
+[22m[39m[settlement] americanfootball_nfl: game game-1 (ext-1) — previously resolved/dismissed SCORELESS_COMPLETED anomaly REOPENED: the condition recurred with new post-resolution evidence (SYSTEM REOPENED event appended).
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2msettlement evidence — completed-but-scoreless (Phase 1E)[2m > [22m[2ma DISMISSED anomaly re-promotes only from POST-dismissal corroboration, refreshing the SAME queue request
+[22m[39m[settlement] americanfootball_nfl: game game-1 (ext-1) — previously resolved/dismissed SCORELESS_COMPLETED anomaly REOPENED: the condition recurred with new post-resolution evidence (SYSTEM REOPENED event appended).
+[settlement] americanfootball_nfl: game game-1 (ext-1) reported completed-but-scoreless across 3 corroborating runs while still SCHEDULED — anomaly promoted to OWNER_REVIEW with an idempotent OwnerDecisionRequest + SYSTEM decision event. Picks left PENDING; NOT auto-voided.
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2msettlement evidence — completed-but-scoreless (Phase 1E)[2m > [22m[2man evidence write failure is isolated — settlement still succeeds
+[22m[39m[settlement] Settlement evidence write failed for game game-1: evidence table locked
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2manomaly resolution — real scores arrive later (Phase 1E)[2m > [22m[2ma resolution failure never blocks settlement
+[22m[39m[settlement] Anomaly resolution failed for game game-1: anomaly table locked
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mtransactional outbox (Phase 1E)[2m > [22m[2ma failed transaction (e.g. outbox append blows up) settles nothing for that pick and counts nothing
+[22m[39m[settlement] americanfootball_nfl failed: outbox insert failed
+
+[90mstderr[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mline-archive CLOSE tag (LINE_ARCHIVE_ENABLED)[2m > [22m[2mstill settles when markClosingSnapshots rejects
+[22m[39m[settlement] markClosingSnapshots failed for game-1: archive down
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mspend guard and credit governor (C-109)[2m > [22m[2ma justification for ANOTHER sport does not unlock this one
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, spend guard: free sources cover scores and the free pass reported no overdue NO_FINAL picks for this sport.
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mspend guard and credit governor (C-109)[2m > [22m[2mat most one paid scores call per sport per hour, whichever caller asks (durable marker)
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, credit governor: paid scores already fetched for this sport within the hour
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mspend guard and credit governor (C-109)[2m > [22m[2mholds when the latest credit observation reads zero remaining
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, credit governor: zero credits remaining
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mspend guard and credit governor (C-109)[2m > [22m[2ma stale zero reading (2h old) lets one probe call re-observe the count; a second within the hour is held
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, credit governor: paid scores already fetched for this sport within the hour
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mspend guard and credit governor (C-109)[2m > [22m[2mthe stale-zero probe is one per sport per hour ACROSS purposes: an odds probe ten minutes ago holds the scores probe
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, credit governor: zero credits remaining (stale reading) and this sport already probed this hour
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mspend guard and credit governor (C-109)[2m > [22m[2mthe hourly slot is a reservation: a marker a concurrent caller wrote between the decision and the reservation holds the call
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, credit governor: paid scores slot for this sport already reserved by a concurrent caller at 2026-10-11T15:48:23.105Z
+
+[90mstdout[2m | src/__tests__/settle-sport.test.ts[2m > [22m[2msettleSport[2m > [22m[2mNFL preseason window: each paid request is its own governed call (C-109)[2m > [22m[2ma regular-season marker inside the hour still skips the whole sport (the preseason half never runs alone)
+[22m[39m[t] americanfootball_nfl: paid scores fetch skipped, credit governor: paid scores already fetched for this sport within the hour
+
+ [32m✓[39m src/__tests__/settle-sport.test.ts [2m([22m[2m66 tests[22m[2m)[22m[90m 82[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m66 passed[39m[22m[90m (66)[39m
+[2m   Start at [22m 10:49:18
+[2m   Duration [22m 4.76s[2m (transform 1.11s, setup 0ms, collect 4.31s, tests 82ms, environment 0ms, prepare 128ms)[22m
+

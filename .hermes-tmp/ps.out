@@ -1,0 +1,699 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/Garrett/Sports-live/packages/ingestion-pipeline[39m
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mgenerates no pick for a game the day's ESPN scoreboard does not list, and skips it before scoring
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false) fixtureUnconfirmed=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mgenerates no pick and writes no correction when the board lists the fixture but its ESPN kickoff has already passed
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false) fixtureUnconfirmed=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mprobes the guard with the names the row stores, not the feed's city-only names (real confirmer, MLB)
+[22m[39m[ingestion] baseball_mlb: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] baseball_mlb: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mprobes the guard with the names the row stores, not the feed's city-only names (real confirmer, MLB)
+[22m[39m[ingestion] Independent fair-values failed for odds-api-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mskips pick generation for the whole sport this cycle when the scoreboard fetch fails (fail-closed)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 1 odds, 0 picks (bootstrap=false) fixtureUnconfirmed=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mkeeps the fixture-scoreboard failure as the note even when the cycle also inserted no odds
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false) fixtureUnconfirmed=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mleaves a listed fixture unaffected (happy path still creates the pick)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mleaves a listed fixture unaffected (happy path still creates the pick)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mapplies ESPN's kickoff to a confirmed old row when the batch carries a correction
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: commenceTime corrected from ESPN for game game-1 2026-10-12T16:00:00.000Z -> 2026-10-12T18:30:00.000Z
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mapplies ESPN's kickoff to a confirmed old row when the batch carries a correction
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfixture confirmation guard (C-111)[2m > [22m[2mkeeps the feed kickoff in the row and in every input when the correction write fails
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2munpaid path: a two-book Galaxy/ESPN board is used BEFORE Rundown and persists odds
+[22m[39m[ingestion] americanfootball_nfl: Galaxy/ESPN keyless path 1 events
+[ingestion] americanfootball_nfl: 1 events via espn_public
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2munpaid path: a two-book Galaxy/ESPN board is used BEFORE Rundown and persists odds
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2munpaid path, single-book ESPN board: Rundown is only a thin-fill bridge (C-103), the board stays espn_public
+[22m[39m[ingestion] americanfootball_nfl: Galaxy/ESPN keyless path 1 events
+[ingestion] americanfootball_nfl: 1 events via espn_public
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2munpaid path, single-book ESPN board: Rundown is only a thin-fill bridge (C-103), the board stays espn_public
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mhands the per-cycle second book (Kalshi via PredExon) to the keyless fetch, one catalog per sport per cycle
+[22m[39m[ingestion] americanfootball_nfl: Galaxy/ESPN keyless path 1 events
+[ingestion] americanfootball_nfl: 1 events via espn_public
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mhands the per-cycle second book (Kalshi via PredExon) to the keyless fetch, one catalog per sport per cycle
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mpaid circuit OPEN: skips the paid leg entirely and takes the keyless path (no phantom paid request)
+[22m[39m[ingestion] americanfootball_nfl: Galaxy/ESPN keyless path 1 events
+[ingestion] americanfootball_nfl: 1 events via espn_public
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mpaid circuit CLOSED with a key: the paid leg still runs first (no behaviour change when paid works)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mpaid circuit CLOSED with a key: the paid leg still runs first (no behaviour change when paid works)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mpaid empty AND keyless empty: Rundown is consulted only after the Galaxy/ESPN attempt
+[22m[39m[ingestion] americanfootball_nfl: 0 events via espn_public-empty, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mWP-27 keyless Galaxy/ESPN path (C-104)[2m > [22m[2mpaid empty AND keyless empty: Rundown is consulted only after the Galaxy/ESPN attempt
+[22m[39m[ingestion] americanfootball_nfl: espn odds empty — espn odds empty
+[ingestion] americanfootball_nfl: rundown empty — rundown empty: no bookmaker lines
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mdoes not call Rundown when every primary event already has two books
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mdoes not call Rundown when every primary event already has two books
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mcalls Rundown only to thin-fill when a primary event has one book
+[22m[39m[ingestion] americanfootball_nfl: rundown thin-fill 1 games
+[ingestion] americanfootball_nfl: 1 events via the-odds-api+therundown-thin, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mcalls Rundown only to thin-fill when a primary event has one book
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msupersede of an unpublished PENDING slot-holder (lane B)[2m > [22m[2mvoids the invisible row through the helper and mints a fresh published pick with a new CLV lock
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msupersede of an unpublished PENDING slot-holder (lane B)[2m > [22m[2mvoids the invisible row through the helper and mints a fresh published pick with a new CLV lock
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msupersede of an unpublished PENDING slot-holder (lane B)[2m > [22m[2mmints nothing when the supersede loses the race (row left PENDING+unpublished before the void)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msupersede of an unpublished PENDING slot-holder (lane B)[2m > [22m[2mnever supersedes a PUBLISHED PENDING pick — the side-flip freeze still protects it
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msupersede of an unpublished PENDING slot-holder (lane B)[2m > [22m[2mleaves the published PENDING refresh path untouched (same side → updateMany, no supersede)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msupersede of an unpublished PENDING slot-holder (lane B)[2m > [22m[2mleaves the published PENDING refresh path untouched (same side → updateMany, no supersede)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkickoff guard (C-299)[2m > [22m[2mcreates no pick for a game whose kickoff has already passed, and never reaches the scorer
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false) skippedInPlay=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkickoff guard (C-299)[2m > [22m[2mrefuses at the kickoff instant itself, not only after it
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false) skippedInPlay=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkickoff guard (C-299)[2m > [22m[2mnever overwrites an existing PENDING pick once the kickoff has passed
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false) skippedInPlay=1
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkickoff guard (C-299)[2m > [22m[2mstill prices a game five minutes from kickoff — no invented pre-game cushion
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkickoff guard (C-299)[2m > [22m[2mstill prices a game five minutes from kickoff — no invented pre-game cushion
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkickoff guard (C-299)[2m > [22m[2mcounts every in-play game and still prices the ones still ahead in the same cycle
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 3 games, 0 odds, 0 picks (bootstrap=false) skippedInPlay=2
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mone paid book plus a Rundown Kalshi quote reaches MIN_BOOKMAKERS and the merged board is priced
+[22m[39m[ingestion] americanfootball_nfl: rundown thin-fill 1 games
+[ingestion] americanfootball_nfl: 1 events via the-odds-api+therundown-thin, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mone paid book plus a Rundown Kalshi quote reaches MIN_BOOKMAKERS and the merged board is priced
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mmakes no Rundown call for a sport outside NFL and NCAAF, on a board thin enough that NFL would be filled
+[22m[39m[ingestion] baseball_mlb: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] baseball_mlb: 1 games, 0 odds, 1 picks (bootstrap=false)
+[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mmakes no Rundown call for a sport outside NFL and NCAAF, on a board thin enough that NFL would be filled
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2ma 429 opens a 30-minute cooldown, and the next cycle inside it makes no call
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mresumes calling once the 30-minute cooldown has passed
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mmakes one call per sport per cycle, never one per thin game
+[22m[39m[ingestion] americanfootball_nfl: 3 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mmakes one call per sport per cycle, never one per thin game
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mmakes no call when the sport's only thin fixtures sit outside the board window
+[22m[39m[ingestion] americanfootball_nfl: 2 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mRundown thin-fill rationing (C-278a)[2m > [22m[2mmakes no call when the sport's only thin fixtures sit outside the board window
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mhands the engine the sport KEY, not the display name, so the three-way guard can fire
+[22m[39m[ingestion] soccer_usa_mls: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] soccer_usa_mls: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mhands the engine the sport KEY, not the display name, so the three-way guard can fire
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mthree-way moneyline guard on the production path (C-118 verification)[2m > [22m[2mcontrol: the same heavy-favourite odds on a two-way sport write a MONEYLINE pick
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mthree-way moneyline guard on the production path (C-118 verification)[2m > [22m[2mcontrol: the same heavy-favourite odds on a two-way sport write a MONEYLINE pick
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] Proof receipt mint failed for pick pick-1: [vitest] No "isPlausibleEntryOdds" export is defined on the "@sports/prediction-engine" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mthree-way moneyline guard on the production path (C-118 verification)[2m > [22m[2msoccer_usa_mls (display name 'MLS') writes no MONEYLINE pick: the draw is unpriced by construction
+[22m[39m[ingestion] soccer_usa_mls: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] soccer_usa_mls: 1 games, 0 odds, 0 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mthree-way moneyline guard on the production path (C-118 verification)[2m > [22m[2msoccer_usa_mls (display name 'MLS') writes no MONEYLINE pick: the draw is unpriced by construction
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mruns the happy path and marks the IngestionRun SUCCESS with counts
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mruns the happy path and marks the IngestionRun SUCCESS with counts
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msoft-fails Odds API and succeeds empty when Rundown is also ABSENT (dual free-path)
+[22m[39m[ingestion] americanfootball_nfl: 0 events via the-odds-api
+[ingestion] americanfootball_nfl: 0 games, 0 odds, 0 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msoft-fails Odds API and succeeds empty when Rundown is also ABSENT (dual free-path)
+[22m[39m[ingestion] americanfootball_nfl: Odds API primary failed — quota exhausted
+[ingestion] americanfootball_nfl: espn odds empty — espn odds empty
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mrefuses to replace the whole board with a TRUNCATED Rundown slate
+[22m[39m[ingestion] americanfootball_nfl: 0 events via therundown-incomplete, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 0 games, 0 odds, 0 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mrefuses to replace the whole board with a TRUNCATED Rundown slate
+[22m[39m[ingestion] americanfootball_nfl: espn odds empty — espn odds empty
+[ingestion] americanfootball_nfl: rundown incomplete — refusing partial board replacement (unread days: 2026-08-24): partial (1/2 days unread): 2026-08-24:HTTP 500
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mstill uses a COMPLETE Rundown slate to replace an empty board
+[22m[39m[ingestion] americanfootball_nfl: rundown free path 1 events
+[ingestion] americanfootball_nfl: 1 events via therundown, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mstill uses a COMPLETE Rundown slate to replace an empty board
+[22m[39m[ingestion] americanfootball_nfl: espn odds empty — espn odds empty
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mrejects stale data — freshness failure fails the run (no-stale-data rule)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mrejects stale data — freshness failure fails the run (no-stale-data rule)
+[22m[39m[ingestion] americanfootball_nfl failed: Freshness validation failed
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mrejects a STALE UPSTREAM feed even when our fetch clock looks fresh (no-stale-data rule)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mrejects a STALE UPSTREAM feed even when our fetch clock looks fresh (no-stale-data rule)
+[22m[39m[ingestion] americanfootball_nfl failed: Upstream odds are stale: no game has a fresh bookmaker update (threshold=4h, rows=1, games=1, unparseableTimestamps=0, newestUpdateAgeMin=999)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mclassifies an all-stale board with every game beyond the horizon as QUIET — zero-work success, no alarm, no picks
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: quiet board — no game within 24h and no fresh bookmaker update (newestUpdateAgeMin=999); skipped without alarm
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mcaptures bookDisagreementAtLock (max-min book spread) write-once at pick creation
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mcaptures bookDisagreementAtLock (max-min book spread) write-once at pick creation
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mcaptures an AWAY moneyline pick's bookDisagreementAtLock from the AWAY side, not home (write-once)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mcaptures an AWAY moneyline pick's bookDisagreementAtLock from the AWAY side, not home (write-once)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mresolves an away ML pick to the AWAY dispersion even when the away team name is a SPACED PREFIX of the home team (#119 regression class)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mresolves an away ML pick to the AWAY dispersion even when the away team name is a SPACED PREFIX of the home team (#119 regression class)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mresolves a selection EXACTLY equal to the home team to the HOME dispersion (#119 regression class)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mresolves a selection EXACTLY equal to the home team to the HOME dispersion (#119 regression class)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mwrites null bookDisagreementAtLock when fewer than two books quote the kind
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mwrites null bookDisagreementAtLock when fewer than two books quote the kind
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mMIGRATION SAFETY: a pre-migration missing-column write failure fails the run gracefully, never throws
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mMIGRATION SAFETY: a pre-migration missing-column write failure fails the run gracefully, never throws
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] americanfootball_nfl failed: The column `picks.bookDisagreementAtLock` does not exist in the current database.
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mderives isBootstrap from the canonical-history gate and propagates it
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=true)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mderives isBootstrap from the canonical-history gate and propagates it
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mnever lets a refresh overwrite isBootstrap or the CLV lock (immutable creation fields)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mnever lets a refresh overwrite isBootstrap or the CLV lock (immutable creation fields)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfreezes a SETTLED pick — a refresh never rewrites a graded row
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfreezes a SETTLED pick — a refresh never rewrites a graded row
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfreezes a PENDING pick whose SIDE flipped — published picks are never silently reversed
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mfreezes a PENDING pick whose SIDE flipped — published picks are never silently reversed
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] SIDE FLIP frozen: americanfootball_nfl SPREAD kept "Raiders +3.5" (model now prefers "Chiefs -3.5"). Published picks are never silently reversed.
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2ma line move on the SAME side still refreshes (no false flip-freeze)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2ma line move on the SAME side still refreshes (no false flip-freeze)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mlocks the American price (not the line) for moneyline picks
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mlocks the American price (not the line) for moneyline picks
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkeeps PickSignalSnapshot immutable (upsert with empty update)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mkeeps PickSignalSnapshot immutable (upsert with empty update)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2ma snapshot failure never kills the pick or the run
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2ma snapshot failure never kills the pick or the run
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] Snapshot capture failed for pick pick-1: snapshot table locked
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msuppresses featured promotion when the gate is off
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2msuppresses featured promotion when the gate is off
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpromotes elite plays when the gate is on
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpromotes elite plays when the gate is on
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mnever fetches ATS/H2H history when the derived-history gate is off
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mnever fetches ATS/H2H history when the derived-history gate is off
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2man enrichment failure never blocks pick generation
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2man enrichment failure never blocks pick generation
+[22m[39m[ingestion] Enrichment failed for ext-1: signal write failed
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma run that fails after a paid response still surfaces the quota headers and the request count
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 250 odds-api remaining
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma run that fails after a paid response still surfaces the quota headers and the request count
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2man archive-enabled run counts the Pinnacle leg (paidRequestCount 2) and the latest headers win
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 399 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2man archive-enabled run counts the Pinnacle leg (paidRequestCount 2) and the latest headers win
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2mabsent quota headers surface as null, never 0
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2mabsent quota headers surface as null, never 0
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma later header-less response never erases an earlier reading, and a later reading replaces a null
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+[ingestion] americanfootball_nfl: 1 events via the-odds-api
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma later header-less response never erases an earlier reading, and a later reading replaces a null
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2mcarries no paid accounting when no paid request was made (free-path sentinel key)
+[22m[39m[ingestion] americanfootball_nfl: 0 events via espn_public-empty
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2mcarries no paid accounting when no paid request was made (free-path sentinel key)
+[22m[39m[ingestion] americanfootball_nfl: espn odds empty — espn odds empty
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma FAILED primary request still surfaces BOTH quota headers its error carried (the client parses them on a 402/429)
+[22m[39m[ingestion] americanfootball_nfl: 0 events via the-odds-api, 7 odds-api remaining
+[ingestion] americanfootball_nfl: 0 games, 0 odds, 0 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma FAILED preseason request records the headers its error carried on top of the primary's (latest wins, no stale used)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 399 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mpaid Odds API accounting on the result envelope (contract with the odds client, C-109)[2m > [22m[2ma failed request whose error carries no headers leaves an earlier reading in place and never reads as 0
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2mmakes exactly one Odds API request per sport when both flags are off (the default)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2mmakes exactly one Odds API request per sport when both flags are off (the default)
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2mmakes a second request (regions=eu, bookmakers=pinnacle) only when both flags are true
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2mmakes a second request (regions=eu, bookmakers=pinnacle) only when both flags are true
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2mdoes not make the second request when only one of the two flags is true
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2mdoes not make the second request when only one of the two flags is true
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mEU Pinnacle line archive leg — double gate[2m > [22m[2ma Pinnacle-leg fetch failure is swallowed with a warning and never blocks the main run
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mwrites this cycle's odds onto the existing ESPN-seeded row instead of creating a second one
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[game-identity] twin reused: sport=americanfootball_nfl canonical=espn:nfl:401872656 incoming=5f9f1b2c3d4e5a6b7c8d9e0f1a2b3c4d teams="Kansas City Chiefs" vs "Buffalo Bills" (existing "Kansas City Chiefs" vs "Buffalo Bills", exact=true, deltaMin=0)
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mwrites this cycle's odds onto the existing ESPN-seeded row instead of creating a second one
+[22m[39m[ingestion] Independent fair-values failed for 5f9f1b2c3d4e5a6b7c8d9e0f1a2b3c4d: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mnever downgrades stored full team names to a city-only feed name
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[game-identity] twin reused: sport=americanfootball_nfl canonical=espn:nfl:401872656 incoming=rundown-9f2 teams="Kansas City" vs "Buffalo" (existing "Kansas City Chiefs" vs "Buffalo Bills", exact=false, deltaMin=0)
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 0 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mnever downgrades stored full team names to a city-only feed name
+[22m[39m[ingestion] Independent fair-values failed for rundown-9f2: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mcreates the row as before when the twin match is ambiguous
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mcreates the row as before when the twin match is ambiguous
+[22m[39m[ingestion] Independent fair-values failed for odds-api-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mkill switch restores today's behaviour exactly (no twin scan, plain upsert)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mkill switch restores today's behaviour exactly (no twin scan, plain upsert)
+[22m[39m[ingestion] Independent fair-values failed for odds-api-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2ma twin is claimed by at most one feed row per cycle
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[game-identity] twin reused: sport=americanfootball_nfl canonical=espn:nfl:401872656 incoming=odds-api-1 teams="Kansas City Chiefs" vs "Buffalo Bills" (existing "Kansas City Chiefs" vs "Buffalo Bills", exact=true, deltaMin=0)
+[game-identity] twin reused: sport=americanfootball_nfl canonical=espn:nfl:401872656 incoming=odds-api-2 teams="Kansas City Chiefs" vs "Buffalo Bills" (existing "Kansas City Chiefs" vs "Buffalo Bills", exact=true, deltaMin=0)
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mfalls back to the plain upsert when the identity lookup throws
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mplain upsert update branch keeps the longer stored name in both directions when the identity lookup found the externalId row
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mplain upsert update branch keeps the longer stored name in both directions when the identity lookup found the externalId row
+[22m[39m[ingestion] Independent fair-values failed for odds-api-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mplain upsert update branch reads the stored names itself when the kill switch skipped the identity lookup
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mplain upsert update branch reads the stored names itself when the kill switch skipped the identity lookup
+[22m[39m[ingestion] Independent fair-values failed for odds-api-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mplain upsert writes the feed names unchanged for a genuinely new row (no stored name to prefer)
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mprocessSport[2m > [22m[2mgame identity (no duplicate rows)[2m > [22m[2mplain upsert writes the feed names unchanged for a genuinely new row (no stored name to prefer)
+[22m[39m[ingestion] Independent fair-values failed for odds-api-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2ma refresh never rewrites selection / line / reasoning on a PENDING pick
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2ma refresh never rewrites selection / line / reasoning on a PENDING pick
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2mmints display, lock and graded line as ONE value at creation
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2mmints display, lock and graded line as ONE value at creation
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2mEND-TO-END: after the consensus moves, the number on the card is still the number settlement grades
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2mEND-TO-END: after the consensus moves, the number on the card is still the number settlement grades
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+[90mstdout[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2mEND-TO-END (TOTAL): the printed total and the graded total stay one number
+[22m[39m[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+[ingestion] americanfootball_nfl: 1 events via the-odds-api, 400 odds-api remaining
+[ingestion] americanfootball_nfl: 1 games, 0 odds, 1 picks (bootstrap=false)
+
+[90mstderr[2m | src/__tests__/process-sport.test.ts[2m > [22m[2mpublished bet terms are write-once (Finding 2 — display must equal the graded line)[2m > [22m[2mEND-TO-END (TOTAL): the printed total and the graded total stay one number
+[22m[39m[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+[ingestion] Independent fair-values failed for ext-1: [vitest] No "isPolymarketIndependentEnabled" export is defined on the "@sports/data-ingestion" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+ [32m✓[39m src/__tests__/process-sport.test.ts [2m([22m[2m87 tests[22m[2m)[22m[90m 192[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m87 passed[39m[22m[90m (87)[39m
+[2m   Start at [22m 10:48:38
+[2m   Duration [22m 32.98s[2m (transform 7.49s, setup 0ms, collect 30.80s, tests 192ms, environment 0ms, prepare 1.55s)[22m
+
