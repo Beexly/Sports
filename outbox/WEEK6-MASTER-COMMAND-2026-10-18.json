@@ -1,0 +1,1297 @@
+{
+  "generated_utc": "2026-10-18T09:43:10.447737+00:00",
+  "season": 2026,
+  "active_week": 6,
+  "next_week_transition": 7,
+  "rea_harvest_summary": {
+    "total_targets": 25,
+    "passed_targets": 24,
+    "siriusxm_ch87_window": "04:00-23:00 CT",
+    "siriusxm_ch87_shows": 7,
+    "siriusxm_ch87_claims": 5
+  },
+  "week6_games_count": 14,
+  "week6_matchup_reports": [
+    {
+      "matchup": "HOU@JAX",
+      "path": "docs/predictions/research/2026-10-18/HOU@JAX-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 0,
+      "chains": [],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Jadeveon Clowney (DE)",
+          "Sabastian Harsh (DE)",
+          "Chris Braswell (DE)"
+        ],
+        "front_down": [],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "CHI@ATL",
+      "path": "docs/predictions/research/2026-10-18/CHI@ATL-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 2,
+      "chains": [
+        "AWAY-OFF vs HOME-DEF: Rome Odunze leads CHI pass-catchers (2025-baseline targets 90, separation 3.0 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: C.J. Henderson (LCB, slot-1, OUT), Avieon Terrell (LCB, slot-1, not-on-report), Malcolm DeWalt IV (LCB, slot-1, ACTIVE) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (C.J. Henderson (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it",
+        "HOME-OL vs AWAY-FRONT: the away front is missing Dayo Odeyingbo (DE, INJURED RESERVE) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge -> home QB time-to-throw extends and the deep shot window widens; breaking condition: starters announced active pre-kick"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Shemar Turner (DT)",
+          "Jayden Loving (DT)",
+          "Jamree Kromah (DE)"
+        ],
+        "front_down": [
+          "Dayo Odeyingbo (DE, INJURED RESERVE)"
+        ],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "BAL@CLE",
+      "path": "docs/predictions/research/2026-10-18/BAL@CLE-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 1,
+      "chains": [
+        "HOME-OL vs AWAY-FRONT: the away front is missing Broderick Washington Jr. (DT, OUT) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge -> home QB time-to-throw extends and the deep shot window widens; breaking condition: starters announced active pre-kick"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Aeneas Peebles (DT)"
+        ],
+        "front_down": [
+          "Broderick Washington Jr. (DT, OUT)"
+        ],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "TEN@IND",
+      "path": "docs/predictions/research/2026-10-18/TEN@IND-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 1,
+      "chains": [
+        "HOME-OL vs AWAY-FRONT: the away front is missing Jordan Elliott (DT, OUT) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge -> home QB time-to-throw extends and the deep shot window widens; breaking condition: starters announced active pre-kick"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Jackie Marshall (DT)",
+          "John Franklin-Myers (DE)",
+          "Jeffery Simmons (DT)"
+        ],
+        "front_down": [
+          "Jordan Elliott (DT, OUT)"
+        ],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "NYJ@NE",
+      "path": "docs/predictions/research/2026-10-18/NYJ@NE-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 2,
+      "chains": [
+        "AWAY-OFF vs HOME-DEF: Adonai Mitchell leads NYJ pass-catchers (2025-baseline targets 74, separation 2.8 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Carlton Davis III (LCB, slot-1, OUT), Channing Canada (LCB, slot-1, QUESTIONABLE), Elliott Davison (LCB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Carlton Davis III (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it",
+        "HOME-OL vs AWAY-FRONT: the away front is missing Joseph Ossai (DE, OUT); Braiden McGregor (DE, INJURED RESERVE) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge -> home QB time-to-throw extends and the deep shot window widens; breaking condition: starters announced active pre-kick"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Nate Lynn (DE)",
+          "Will McDonald IV (DE)"
+        ],
+        "front_down": [
+          "Joseph Ossai (DE, OUT)",
+          "Braiden McGregor (DE, INJURED RESERVE)"
+        ],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "NO@NYG",
+      "path": "docs/predictions/research/2026-10-18/NO@NYG-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 1,
+      "chains": [
+        "AWAY-OFF vs HOME-DEF: Chris Olave leads NO pass-catchers (2025-baseline targets 156, separation 2.9 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Deonte Banks (LCB, slot-1, not-on-report), Colton Hood (LCB, slot-1, OUT), Paulson Adebo (LCB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Colton Hood (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Vernon Broughton (DT)",
+          "Colby Wooden (DT)",
+          "Tyree Wilson (DE)",
+          "Christen Miller (DT)"
+        ],
+        "front_down": [],
+        "front_questionable": [
+          "Nathan Shepherd (DT, QUESTIONABLE)"
+        ],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "CAR@PHI",
+      "path": "docs/predictions/research/2026-10-18/CAR@PHI-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 1,
+      "chains": [
+        "HOME-OL vs AWAY-FRONT: the away front is missing Cam Jackson (DT, INJURED RESERVE) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge -> home QB time-to-throw extends and the deep shot window widens; breaking condition: starters announced active pre-kick"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Lee Hunter (DT)"
+        ],
+        "front_down": [
+          "Cam Jackson (DT, INJURED RESERVE)"
+        ],
+        "front_questionable": [
+          "Tershawn Wharton (DT, QUESTIONABLE)"
+        ],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "PIT@TB",
+      "path": "docs/predictions/research/2026-10-18/PIT@TB-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 0,
+      "chains": [],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Kevin Jobity Jr. (DT)",
+          "Yahya Black (DE)"
+        ],
+        "front_down": [],
+        "front_questionable": [
+          "Keeanu Benton (DT, QUESTIONABLE)"
+        ],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "ARI@LAR",
+      "path": "docs/predictions/research/2026-10-18/ARI@LAR-matchups.md",
+      "pairings_count": 1,
+      "chains_count": 0,
+      "chains": [],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Andrew Billings (DT)",
+          "Walter Nolen III (DT)"
+        ],
+        "front_down": [],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "LAC@KC",
+      "path": "docs/predictions/research/2026-10-18/LAC@KC-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 0,
+      "chains": [],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Justin Eboigbe (DT)"
+        ],
+        "front_down": [],
+        "front_questionable": [
+          "Dalvin Tomlinson (DT, QUESTIONABLE)",
+          "Jamaree Caldwell (DT, QUESTIONABLE)"
+        ],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "BUF@LV",
+      "path": "docs/predictions/research/2026-10-18/BUF@LV-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 0,
+      "chains": [],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Landon Jackson (DE)",
+          "Mike Danna (DE)"
+        ],
+        "front_down": [],
+        "front_questionable": [
+          "Ed Oliver (DT, QUESTIONABLE)",
+          "T.J. Sanders (DT, QUESTIONABLE)"
+        ],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "DAL@GB",
+      "path": "docs/predictions/research/2026-10-18/DAL@GB-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 2,
+      "chains": [
+        "HOME-OFF vs AWAY-DEF: Romeo Doubs leads GB pass-catchers (2025-baseline targets 85, separation 2.3 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Joey Porter Jr. (LCB, slot-1, QUESTIONABLE), Cobie Durant (LCB, slot-1, OUT), Caelen Carson (LCB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Cobie Durant (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it",
+        "AWAY-OFF vs HOME-DEF: George Pickens leads DAL pass-catchers (2025-baseline targets 137, separation 2.3 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Keisean Nixon (LCB, slot-1, ACTIVE), Benjamin St-Juste (LCB, slot-1, OUT) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Benjamin St-Juste (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [],
+        "front_down": [],
+        "front_questionable": [
+          "LT Overton (DT, QUESTIONABLE)"
+        ],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "SEA@DEN",
+      "path": "docs/predictions/research/2026-10-18/SEA@DEN-matchups.md",
+      "pairings_count": 2,
+      "chains_count": 3,
+      "chains": [
+        "HOME-OFF vs AWAY-DEF: Courtland Sutton leads DEN pass-catchers (2025-baseline targets 124, separation 2.3 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Devon Witherspoon (LCB, slot-1, not-on-report), Nehemiah Pritchett (LCB, slot-1, not-on-report), Trevon Diggs (LCB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Avery Smith (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it",
+        "AWAY-OFF vs HOME-DEF: Jaxon Smith-Njigba leads SEA pass-catchers (2025-baseline targets 163, separation 3.0 yds) [docs/data-sources/research/2026-10-13/nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json] -> draws the opposing slot-1 corner ladder: Pat Surtain II (LCB, slot-1, OUT), Jahdae Barron (LCB, slot-1, not-on-report), Sean Fresch (LCB, slot-1, not-on-report) [espn-depthcharts-2026.json] -> the starter(s) he meets are on the injury report (Pat Surtain II (LCB, slot-1, OUT)) - a specific receiver vs a weakened specific defender, the pairing the market prices as a team tendency -> breaking condition: pre-kick scratch/activation flips this pairing, and depth-chart slot changes void it",
+        "HOME-OL vs AWAY-FRONT: the away front is missing Brandon Pili (DT, OUT) [espn_nfl_injuries_week6.json] -> rotation depth thins on the interior/edge -> home QB time-to-throw extends and the deep shot window widens; breaking condition: starters announced active pre-kick"
+      ],
+      "ol_vs_rush": {
+        "side": "HOME-OL vs AWAY-FRONT",
+        "front_active_on_report": [
+          "Leonard Williams (DT)"
+        ],
+        "front_down": [
+          "Brandon Pili (DT, OUT)"
+        ],
+        "front_questionable": [],
+        "source": "espn_nfl_injuries_week6.json"
+      }
+    },
+    {
+      "matchup": "WSH@SF",
+      "path": "docs/predictions/research/2026-10-18/WSH@SF-matchups.md",
+      "pairings_count": 1,
+      "chains_count": 0,
+      "chains": [],
+      "ol_vs_rush": null
+    }
+  ],
+  "week6_top_player_props": [
+    {
+      "player": "Christian Watson",
+      "team": "GB",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~90.3 yds line)",
+      "target_share_4wk": 25.4,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 40 tgt, 474 yds, sep 2.47 yds, YAC/OE +2.00, air-yd share 32.5%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Christian Watson (GB WR) has logged 40 targets (26 rec, 474 yds) with 2.47 yds average separation, +2.00 YAC/OE, and 32.5% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "CeeDee Lamb",
+      "team": "DAL",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~96.9 yds line)",
+      "target_share_4wk": 29.2,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 51 tgt, 507 yds, sep 3.00 yds, YAC/OE +0.43, air-yd share 37.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "CeeDee Lamb (DAL WR) has logged 51 targets (39 rec, 507 yds) with 3.00 yds average separation, +0.43 YAC/OE, and 37.4% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Drake London",
+      "team": "ATL",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~93.1 yds line)",
+      "target_share_4wk": 34.2,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 37 tgt, 488 yds, sep 3.33 yds, YAC/OE +2.12, air-yd share 43.8%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Drake London (ATL WR) has logged 37 targets (27 rec, 488 yds) with 3.33 yds average separation, +2.12 YAC/OE, and 43.8% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Puka Nacua",
+      "team": "LAR",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~62.9 yds line)",
+      "target_share_4wk": 24.0,
+      "snap_share_4wk": 46.5,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 45 tgt, 337 yds, sep 2.33 yds, YAC/OE +1.74, air-yd share 23.7%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Puka Nacua (LAR WR) has logged 45 targets (31 rec, 337 yds) with 2.33 yds average separation, +1.74 YAC/OE, and 23.7% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Matthew Golden",
+      "team": "GB",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~74.9 yds line)",
+      "target_share_4wk": 30.7,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 44 tgt, 397 yds, sep 2.80 yds, YAC/OE +0.45, air-yd share 39.3%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Matthew Golden (GB WR) has logged 44 targets (24 rec, 397 yds) with 2.80 yds average separation, +0.45 YAC/OE, and 39.3% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Denzel Boston",
+      "team": "CLE",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~61.5 yds line)",
+      "target_share_4wk": 36.2,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 29 tgt, 330 yds, sep 2.20 yds, YAC/OE +3.27, air-yd share 46.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Denzel Boston (CLE WR) has logged 29 targets (16 rec, 330 yds) with 2.20 yds average separation, +3.27 YAC/OE, and 46.4% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Davante Adams",
+      "team": "LAR",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~83.7 yds line)",
+      "target_share_4wk": 14.7,
+      "snap_share_4wk": 79.9,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 45 tgt, 441 yds, sep 2.17 yds, YAC/OE +1.41, air-yd share 36.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Davante Adams (LAR WR) has logged 45 targets (27 rec, 441 yds) with 2.17 yds average separation, +1.41 YAC/OE, and 36.4% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Michael Wilson",
+      "team": "ARI",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~53.1 yds line)",
+      "target_share_4wk": 28.7,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 51 tgt, 288 yds, sep 2.72 yds, YAC/OE -0.58, air-yd share 36.8%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Michael Wilson (ARI WR) has logged 51 targets (29 rec, 288 yds) with 2.72 yds average separation, -0.58 YAC/OE, and 36.8% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Chris Olave",
+      "team": "NO",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~102.9 yds line)",
+      "target_share_4wk": 35.2,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 54 tgt, 537 yds, sep 2.94 yds, YAC/OE -0.40, air-yd share 45.1%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Chris Olave (NO WR) has logged 54 targets (39 rec, 537 yds) with 2.94 yds average separation, -0.40 YAC/OE, and 45.1% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Jaxon Smith-Njigba",
+      "team": "SEA",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~112.1 yds line)",
+      "target_share_4wk": 41.4,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 50 tgt, 583 yds, sep 2.72 yds, YAC/OE +0.76, air-yd share 53.0%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Jaxon Smith-Njigba (SEA WR) has logged 50 targets (37 rec, 583 yds) with 2.72 yds average separation, +0.76 YAC/OE, and 53.0% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Trey McBride",
+      "team": "ARI",
+      "position": "TE",
+      "market": "Receiving Yards OVER (~57.1 yds line)",
+      "target_share_4wk": 19.0,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 56 tgt, 308 yds, sep 2.49 yds, YAC/OE +0.01, air-yd share 24.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Trey McBride (ARI TE) has logged 56 targets (42 rec, 308 yds) with 2.49 yds average separation, +0.01 YAC/OE, and 24.4% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Garrett Wilson",
+      "team": "NYJ",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~70.3 yds line)",
+      "target_share_4wk": 32.2,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 42 tgt, 374 yds, sep 2.56 yds, YAC/OE +0.26, air-yd share 41.2%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 94.0,
+      "reasoning": "Garrett Wilson (NYJ WR) has logged 42 targets (31 rec, 374 yds) with 2.56 yds average separation, +0.26 YAC/OE, and 41.2% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Malik Nabers",
+      "team": "NYG",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~61.3 yds line)",
+      "target_share_4wk": 27.9,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 46 tgt, 329 yds, sep 2.98 yds, YAC/OE -0.95, air-yd share 35.8%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 93.4,
+      "reasoning": "Malik Nabers (NYG WR) has logged 46 targets (29 rec, 329 yds) with 2.98 yds average separation, -0.95 YAC/OE, and 35.8% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Kenneth Walker III",
+      "team": "KC",
+      "position": "RB",
+      "market": "Rushing Yards OVER (~101.9 yds line)",
+      "carry_share_4wk": 69.6,
+      "snap_share_4wk": 75.7,
+      "ngs_metric": "2026 NGS: 87 att, 537 yds, RYOE +211.8 (+2.52/att), 8+ box 26.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 93.0,
+      "reasoning": "Kenneth Walker III (KC RB) carries 87 attempts for 537 yds with RYOE +211.8 (+2.52/att) against 26.4% 8+ man boxes in 2026 [raw_statboard_rushing.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Bijan Robinson",
+      "team": "ATL",
+      "position": "RB",
+      "market": "Rushing Yards OVER (~110.5 yds line)",
+      "carry_share_4wk": 78.0,
+      "snap_share_4wk": 80.0,
+      "ngs_metric": "2026 NGS: 102 att, 580 yds, RYOE +161.2 (+1.68/att), 8+ box 19.6%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 93.0,
+      "reasoning": "Bijan Robinson (ATL RB) carries 102 attempts for 580 yds with RYOE +161.2 (+1.68/att) against 19.6% 8+ man boxes in 2026 [raw_statboard_rushing.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Jaylen Warren",
+      "team": "PIT",
+      "position": "RB",
+      "market": "Rushing Yards OVER (~76.5 yds line)",
+      "carry_share_4wk": 56.0,
+      "snap_share_4wk": 60.9,
+      "ngs_metric": "2026 NGS: 70 att, 410 yds, RYOE +126.9 (+1.87/att), 8+ box 22.9%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 93.0,
+      "reasoning": "Jaylen Warren (PIT RB) carries 70 attempts for 410 yds with RYOE +126.9 (+1.87/att) against 22.9% 8+ man boxes in 2026 [raw_statboard_rushing.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Carnell Tate",
+      "team": "TEN",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~50.3 yds line)",
+      "target_share_4wk": 37.0,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 37 tgt, 274 yds, sep 2.96 yds, YAC/OE -0.42, air-yd share 47.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 92.6,
+      "reasoning": "Carnell Tate (TEN WR) has logged 37 targets (23 rec, 274 yds) with 2.96 yds average separation, -0.42 YAC/OE, and 47.4% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Isaiah Likely",
+      "team": "NYG",
+      "position": "TE",
+      "market": "Receiving Yards OVER (~52.3 yds line)",
+      "target_share_4wk": 17.7,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 48 tgt, 284 yds, sep 2.64 yds, YAC/OE -0.07, air-yd share 22.7%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 92.4,
+      "reasoning": "Isaiah Likely (NYG TE) has logged 48 targets (33 rec, 284 yds) with 2.64 yds average separation, -0.07 YAC/OE, and 22.7% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Zay Flowers",
+      "team": "BAL",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~76.5 yds line)",
+      "target_share_4wk": 17.4,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 31 tgt, 405 yds, sep 2.94 yds, YAC/OE +2.81, air-yd share 22.3%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 91.1,
+      "reasoning": "Zay Flowers (BAL WR) has logged 31 targets (26 rec, 405 yds) with 2.94 yds average separation, +2.81 YAC/OE, and 22.3% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Tetairoa McMillan",
+      "team": "CAR",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~72.5 yds line)",
+      "target_share_4wk": 25.3,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 39 tgt, 385 yds, sep 2.91 yds, YAC/OE -0.05, air-yd share 32.4%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 90.7,
+      "reasoning": "Tetairoa McMillan (CAR WR) has logged 39 targets (26 rec, 385 yds) with 2.91 yds average separation, -0.05 YAC/OE, and 32.4% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "James Cook",
+      "team": "BUF",
+      "position": "RB",
+      "market": "Rushing Yards OVER (~100.9 yds line)",
+      "carry_share_4wk": 76.0,
+      "snap_share_4wk": 80.0,
+      "ngs_metric": "2026 NGS: 95 att, 532 yds, RYOE +88.5 (+0.96/att), 8+ box 26.3%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 90.4,
+      "reasoning": "James Cook (BUF RB) carries 95 attempts for 532 yds with RYOE +88.5 (+0.96/att) against 26.3% 8+ man boxes in 2026 [raw_statboard_rushing.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Harold Fannin Jr.",
+      "team": "CLE",
+      "position": "TE",
+      "market": "Receiving Yards OVER (~26.9 yds line)",
+      "target_share_4wk": 11.9,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 27 tgt, 157 yds, sep 5.31 yds, YAC/OE +0.93, air-yd share 15.3%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 90.0,
+      "reasoning": "Harold Fannin Jr. (CLE TE) has logged 27 targets (18 rec, 157 yds) with 5.31 yds average separation, +0.93 YAC/OE, and 15.3% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Josh Downs",
+      "team": "IND",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~45.3 yds line)",
+      "target_share_4wk": 13.6,
+      "snap_share_4wk": 78.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 34 tgt, 249 yds, sep 2.75 yds, YAC/OE +1.07, air-yd share 30.0%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 89.7,
+      "reasoning": "Josh Downs (IND WR) has logged 34 targets (20 rec, 249 yds) with 2.75 yds average separation, +1.07 YAC/OE, and 30.0% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Parker Washington",
+      "team": "JAX",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~65.9 yds line)",
+      "target_share_4wk": 28.9,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 35 tgt, 352 yds, sep 2.24 yds, YAC/OE +0.82, air-yd share 37.1%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 89.7,
+      "reasoning": "Parker Washington (JAX WR) has logged 35 targets (22 rec, 352 yds) with 2.24 yds average separation, +0.82 YAC/OE, and 37.1% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    },
+    {
+      "player": "Jaylen Waddle",
+      "team": "DEN",
+      "position": "WR",
+      "market": "Receiving Yards OVER (~36.3 yds line)",
+      "target_share_4wk": 26.2,
+      "snap_share_4wk": 82.0,
+      "rz_targets_4wk": 0,
+      "ngs_metric": "2026 NGS: 31 tgt, 204 yds, sep 3.85 yds, YAC/OE -0.13, air-yd share 33.5%",
+      "roster_gate": "PASS (ACTIVE)",
+      "conviction_score": 89.4,
+      "reasoning": "Jaylen Waddle (DEN WR) has logged 31 targets (18 rec, 204 yds) with 3.85 yds average separation, -0.13 YAC/OE, and 33.5% share of team air yards in 2026 [raw_statboard_receiving.json]. Cleared LiveRosterGate (ACTIVE)."
+    }
+  ],
+  "week6_empirical_copula_sgps": [
+    {
+      "game": "HOU @ JAX",
+      "title": "EverBank Aerial Shootout Stack (C.J. Stroud + Nico Collins + Over 42.5)",
+      "roster_gate": "PASS (C.J. Stroud (HOU): ACTIVE; Nico Collins (HOU): ACTIVE)",
+      "legs": [
+        "C.J. Stroud 250+ Passing Yards",
+        "Nico Collins 80+ Receiving Yards",
+        "HOU @ JAX Game Total OVER 42.5"
+      ],
+      "leg_probs": [
+        0.6224,
+        0.5974,
+        0.5521
+      ],
+      "independent_prob": 0.2053,
+      "true_copula_prob": 0.2448,
+      "correlation_lift_pct": 19.25,
+      "z_score": 20.55,
+      "fair_american_price": 308.5,
+      "book_american_price": 475.0,
+      "rationale": "JAX CB Montaric Brown is OUT [espn_nfl_injuries_week6.json] and JAX RB Travis Etienne carries -15.8 RYOE [raw_statboard_rushing.json], forcing high pass-volume and amplifying the measured r=+0.526 QB-to-WR1 yardage copula tail."
+    },
+    {
+      "game": "LAC @ KC",
+      "title": "Arrowhead Trench Control & Under Script (Patrick Mahomes + Under 41.5)",
+      "roster_gate": "PASS (Patrick Mahomes (KC): ACTIVE; Ladd McConkey (LAC): ACTIVE)",
+      "legs": [
+        "Patrick Mahomes Under 24.5 Completions",
+        "KC WR1 Under 68.5 Receiving Yards",
+        "LAC @ KC Game Total UNDER 41.5"
+      ],
+      "leg_probs": [
+        0.6584,
+        0.6253,
+        0.5755
+      ],
+      "independent_prob": 0.2369,
+      "true_copula_prob": 0.2904,
+      "correlation_lift_pct": 22.55,
+      "z_score": 26.32,
+      "fair_american_price": 244.4,
+      "book_american_price": 420.0,
+      "rationale": "Kalshi/ESPN consensus anchors LAC@KC at 41.5 with KC on 14 days rest vs LAC 7 days rest; slow-paced Arrowhead clock-bleed script leverages the joint Under tail."
+    },
+    {
+      "game": "CAR @ PHI",
+      "title": "Lincoln Financial Aerial Funnel (Tanner McKee + A.J. Brown + PHI Team Total)",
+      "roster_gate": "PASS (Tanner McKee (PHI): ACTIVE; A.J. Brown (PHI): ACTIVE; DeVonta Smith (PHI): ACTIVE)",
+      "legs": [
+        "Tanner McKee 215+ Passing Yards",
+        "A.J. Brown 75+ Receiving Yards",
+        "PHI Team Total Over 21.5 Points"
+      ],
+      "leg_probs": [
+        0.6247,
+        0.5936,
+        0.5843
+      ],
+      "independent_prob": 0.2167,
+      "true_copula_prob": 0.268,
+      "correlation_lift_pct": 23.69,
+      "z_score": 25.91,
+      "fair_american_price": 273.1,
+      "book_american_price": 510.0,
+      "rationale": "With Jalen Hurts (IR) and RB Saquon Barkley (OUT) sidelined on the Week 6 injury report [espn_nfl_injuries_week6.json], PHI offensive volume funnels into dropback pass attempts to A.J. Brown (r=+0.526 QB-WR1 yardage correlation)."
+    },
+    {
+      "game": "WSH @ SF",
+      "title": "Levi's Stadium MNF Efficiency Stack (Brock Purdy + George Kittle + Passing TDs)",
+      "roster_gate": "PASS (Brock Purdy (SF): ACTIVE; George Kittle (SF): ACTIVE; Brandon Aiyuk (SF): ACTIVE)",
+      "legs": [
+        "Brock Purdy 245+ Passing Yards",
+        "Brock Purdy 2+ Passing TDs",
+        "SF Team Total Over 26.5 Points"
+      ],
+      "leg_probs": [
+        0.6191,
+        0.5776,
+        0.5706
+      ],
+      "independent_prob": 0.204,
+      "true_copula_prob": 0.2807,
+      "correlation_lift_pct": 37.59,
+      "z_score": 38.17,
+      "fair_american_price": 256.2,
+      "book_american_price": 390.0,
+      "rationale": "Brock Purdy carries +10.5 CPOE on 2026 NGS passing surfaces and Deebo Samuel Sr. is OUT [espn_nfl_injuries_week6.json], concentrating red-zone and intermediate volume onto George Kittle and Brandon Aiyuk (QB passing TDs vs team total r=+0.665)."
+    },
+    {
+      "game": "DAL @ GB",
+      "title": "Lambeau Field Aerial Correlated Stack (Jordan Love + Jayden Reed + Over 46.5)",
+      "roster_gate": "PASS (Jordan Love (GB): ACTIVE; Dak Prescott (DAL): ACTIVE)",
+      "legs": [
+        "Jordan Love 250+ Passing Yards",
+        "GB WR1 70+ Receiving Yards",
+        "DAL @ GB Game Total OVER 46.5"
+      ],
+      "leg_probs": [
+        0.6073,
+        0.5974,
+        0.5684
+      ],
+      "independent_prob": 0.2062,
+      "true_copula_prob": 0.2467,
+      "correlation_lift_pct": 19.65,
+      "z_score": 21.02,
+      "fair_american_price": 305.3,
+      "book_american_price": 460.0,
+      "rationale": "Green Bay enters on 10 days rest vs Dallas on 7 days rest with both starting QBs (Jordan Love, Dak Prescott) confirmed ACTIVE; high-tempo neutral pass rates drive strong positive tail dependence in the Student-t copula."
+    }
+  ],
+  "week6_dfs_optimal_suite": {
+    "source": "docs/data-sources/research/2026-10-13/linestar/linestar_slate_grid_2026-10-13.json (Period 412 Week 6)",
+    "active_pool_size": 368,
+    "blocked_inactive_count": 15,
+    "sample_blocked_players": [
+      "Lamar Jackson (QB, $6700): ESPN Week 6 status=OUT ()",
+      "Saquon Barkley (RB, $6600): ESPN Week 6 status=OUT ()",
+      "Alec Ingold (RB, $4000): ESPN Week 6 status=INJURED RESERVE ()",
+      "Jalen Hurts (QB, $6100): ESPN Week 6 status=INJURED RESERVE ()",
+      "AJ Dillon (RB, $4100): ESPN Week 6 status=OUT ()",
+      "Ben Skowronek (WR, $3000): ESPN Week 6 status=OUT ()",
+      "Skyy Moore (WR, $3000): ESPN Week 6 status=INJURED RESERVE ()",
+      "Tyquan Thornton (WR, $3000): ESPN Week 6 status=INJURED RESERVE ()",
+      "Rashee Rice (WR, $6400): ESPN Week 6 status=OUT ()",
+      "Adonai Mitchell (WR, $4500): ESPN Week 6 status=OUT ()",
+      "Theo Johnson (TE, $2500): ESPN Week 6 status=OUT ()",
+      "Tre' Harris (WR, $4800): ESPN Week 6 status=OUT ()",
+      "Jacory Croskey-Merritt (RB, $5100): ESPN Week 6 status=OUT ()",
+      "Jeremiyah Love (RB, $5600): ESPN Week 6 status=OUT ()",
+      "Matt Hibner (TE, $2500): ESPN Week 6 status=OUT ()"
+    ],
+    "cash_lineup": {
+      "valid": true,
+      "total_salary": 50000,
+      "projected_points": 157.47,
+      "cumulative_ownership_pct": 94.8,
+      "players": [
+        {
+          "slot": "QB",
+          "name": "Josh Allen",
+          "pos": "QB",
+          "team": "NFL",
+          "salary": 7500,
+          "proj": 23.62,
+          "own_pct": 10.0
+        },
+        {
+          "slot": "RB1",
+          "name": "Jonathan Taylor",
+          "pos": "RB",
+          "team": "NFL",
+          "salary": 8000,
+          "proj": 30.49,
+          "own_pct": 13.3
+        },
+        {
+          "slot": "RB2",
+          "name": "Kyren Williams",
+          "pos": "RB",
+          "team": "NFL",
+          "salary": 6800,
+          "proj": 25.23,
+          "own_pct": 13.0
+        },
+        {
+          "slot": "WR1",
+          "name": "Puka Nacua",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 8100,
+          "proj": 25.44,
+          "own_pct": 11.0
+        },
+        {
+          "slot": "WR2",
+          "name": "Jaxon Smith-Njigba",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 8600,
+          "proj": 22.64,
+          "own_pct": 10.0
+        },
+        {
+          "slot": "WR3",
+          "name": "Deion Burks",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 3000,
+          "proj": 9.49,
+          "own_pct": 11.1
+        },
+        {
+          "slot": "TE",
+          "name": "Darnell Washington",
+          "pos": "TE",
+          "team": "NFL",
+          "salary": 2900,
+          "proj": 6.98,
+          "own_pct": 8.4
+        },
+        {
+          "slot": "FLEX",
+          "name": "Tutu Atwell",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 3100,
+          "proj": 9.36,
+          "own_pct": 10.6
+        },
+        {
+          "slot": "DST",
+          "name": "Cardinals",
+          "pos": "DST",
+          "team": "NFL",
+          "salary": 2000,
+          "proj": 4.22,
+          "own_pct": 7.4
+        }
+      ]
+    },
+    "gpp_greedy_leverage": {
+      "valid": true,
+      "total_salary": 50000,
+      "projected_points": 161.31,
+      "cumulative_ownership_pct": 97.0,
+      "players": [
+        {
+          "slot": "QB",
+          "name": "Josh Allen",
+          "pos": "QB",
+          "team": "NFL",
+          "salary": 7500,
+          "proj": 23.62,
+          "own_pct": 10.0
+        },
+        {
+          "slot": "RB1",
+          "name": "Jonathan Taylor",
+          "pos": "RB",
+          "team": "NFL",
+          "salary": 8000,
+          "proj": 30.49,
+          "own_pct": 13.3
+        },
+        {
+          "slot": "RB2",
+          "name": "Kyren Williams",
+          "pos": "RB",
+          "team": "NFL",
+          "salary": 6800,
+          "proj": 25.23,
+          "own_pct": 13.0
+        },
+        {
+          "slot": "WR1",
+          "name": "Puka Nacua",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 8100,
+          "proj": 25.44,
+          "own_pct": 11.0
+        },
+        {
+          "slot": "WR2",
+          "name": "Davante Adams",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 6600,
+          "proj": 20.05,
+          "own_pct": 10.6
+        },
+        {
+          "slot": "WR3",
+          "name": "Deion Burks",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 3000,
+          "proj": 9.49,
+          "own_pct": 11.1
+        },
+        {
+          "slot": "TE",
+          "name": "Tyler Higbee",
+          "pos": "TE",
+          "team": "NFL",
+          "salary": 3400,
+          "proj": 10.2,
+          "own_pct": 10.5
+        },
+        {
+          "slot": "FLEX",
+          "name": "Konata Mumpfield",
+          "pos": "WR",
+          "team": "NFL",
+          "salary": 3600,
+          "proj": 10.72,
+          "own_pct": 10.4
+        },
+        {
+          "slot": "DST",
+          "name": "Packers",
+          "pos": "DST",
+          "team": "NFL",
+          "salary": 3000,
+          "proj": 6.07,
+          "own_pct": 7.1
+        }
+      ]
+    },
+    "gpp_tabu_top3": [
+      {
+        "valid": true,
+        "total_salary": 50000,
+        "projected_points": 161.31,
+        "cumulative_ownership_pct": 97.0,
+        "players": [
+          {
+            "slot": "QB",
+            "name": "Josh Allen",
+            "pos": "QB",
+            "team": "NFL",
+            "salary": 7500,
+            "proj": 23.62,
+            "own_pct": 10.0
+          },
+          {
+            "slot": "RB1",
+            "name": "Jonathan Taylor",
+            "pos": "RB",
+            "team": "NFL",
+            "salary": 8000,
+            "proj": 30.49,
+            "own_pct": 13.3
+          },
+          {
+            "slot": "RB2",
+            "name": "Kyren Williams",
+            "pos": "RB",
+            "team": "NFL",
+            "salary": 6800,
+            "proj": 25.23,
+            "own_pct": 13.0
+          },
+          {
+            "slot": "WR1",
+            "name": "Puka Nacua",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 8100,
+            "proj": 25.44,
+            "own_pct": 11.0
+          },
+          {
+            "slot": "WR2",
+            "name": "Davante Adams",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 6600,
+            "proj": 20.05,
+            "own_pct": 10.6
+          },
+          {
+            "slot": "WR3",
+            "name": "Deion Burks",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 3000,
+            "proj": 9.49,
+            "own_pct": 11.1
+          },
+          {
+            "slot": "TE",
+            "name": "Tyler Higbee",
+            "pos": "TE",
+            "team": "NFL",
+            "salary": 3400,
+            "proj": 10.2,
+            "own_pct": 10.5
+          },
+          {
+            "slot": "FLEX",
+            "name": "Konata Mumpfield",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 3600,
+            "proj": 10.72,
+            "own_pct": 10.4
+          },
+          {
+            "slot": "DST",
+            "name": "Eagles",
+            "pos": "DST",
+            "team": "NFL",
+            "salary": 3000,
+            "proj": 6.07,
+            "own_pct": 7.1
+          }
+        ]
+      },
+      {
+        "valid": true,
+        "total_salary": 50000,
+        "projected_points": 161.31,
+        "cumulative_ownership_pct": 97.0,
+        "players": [
+          {
+            "slot": "QB",
+            "name": "Josh Allen",
+            "pos": "QB",
+            "team": "NFL",
+            "salary": 7500,
+            "proj": 23.62,
+            "own_pct": 10.0
+          },
+          {
+            "slot": "RB1",
+            "name": "Jonathan Taylor",
+            "pos": "RB",
+            "team": "NFL",
+            "salary": 8000,
+            "proj": 30.49,
+            "own_pct": 13.3
+          },
+          {
+            "slot": "RB2",
+            "name": "Kyren Williams",
+            "pos": "RB",
+            "team": "NFL",
+            "salary": 6800,
+            "proj": 25.23,
+            "own_pct": 13.0
+          },
+          {
+            "slot": "WR1",
+            "name": "Puka Nacua",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 8100,
+            "proj": 25.44,
+            "own_pct": 11.0
+          },
+          {
+            "slot": "WR2",
+            "name": "Davante Adams",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 6600,
+            "proj": 20.05,
+            "own_pct": 10.6
+          },
+          {
+            "slot": "WR3",
+            "name": "Deion Burks",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 3000,
+            "proj": 9.49,
+            "own_pct": 11.1
+          },
+          {
+            "slot": "TE",
+            "name": "Tyler Higbee",
+            "pos": "TE",
+            "team": "NFL",
+            "salary": 3400,
+            "proj": 10.2,
+            "own_pct": 10.5
+          },
+          {
+            "slot": "FLEX",
+            "name": "Konata Mumpfield",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 3600,
+            "proj": 10.72,
+            "own_pct": 10.4
+          },
+          {
+            "slot": "DST",
+            "name": "Packers",
+            "pos": "DST",
+            "team": "NFL",
+            "salary": 3000,
+            "proj": 6.07,
+            "own_pct": 7.1
+          }
+        ]
+      },
+      {
+        "valid": true,
+        "total_salary": 49800,
+        "projected_points": 161.15,
+        "cumulative_ownership_pct": 97.3,
+        "players": [
+          {
+            "slot": "QB",
+            "name": "Josh Allen",
+            "pos": "QB",
+            "team": "NFL",
+            "salary": 7500,
+            "proj": 23.62,
+            "own_pct": 10.0
+          },
+          {
+            "slot": "RB1",
+            "name": "Jonathan Taylor",
+            "pos": "RB",
+            "team": "NFL",
+            "salary": 8000,
+            "proj": 30.49,
+            "own_pct": 13.3
+          },
+          {
+            "slot": "RB2",
+            "name": "Kyren Williams",
+            "pos": "RB",
+            "team": "NFL",
+            "salary": 6800,
+            "proj": 25.23,
+            "own_pct": 13.0
+          },
+          {
+            "slot": "WR1",
+            "name": "Puka Nacua",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 8100,
+            "proj": 25.44,
+            "own_pct": 11.0
+          },
+          {
+            "slot": "WR2",
+            "name": "Davante Adams",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 6600,
+            "proj": 20.05,
+            "own_pct": 10.6
+          },
+          {
+            "slot": "WR3",
+            "name": "Deion Burks",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 3000,
+            "proj": 9.49,
+            "own_pct": 11.1
+          },
+          {
+            "slot": "TE",
+            "name": "Tyler Higbee",
+            "pos": "TE",
+            "team": "NFL",
+            "salary": 3400,
+            "proj": 10.2,
+            "own_pct": 10.5
+          },
+          {
+            "slot": "FLEX",
+            "name": "Konata Mumpfield",
+            "pos": "WR",
+            "team": "NFL",
+            "salary": 3600,
+            "proj": 10.72,
+            "own_pct": 10.4
+          },
+          {
+            "slot": "DST",
+            "name": "Broncos",
+            "pos": "DST",
+            "team": "NFL",
+            "salary": 2800,
+            "proj": 5.91,
+            "own_pct": 7.4
+          }
+        ]
+      }
+    ],
+    "gpp_fieldsim_99_5_pctile": 158.64,
+    "gpp_fieldsim_tail_hit_prob": 0.9042
+  },
+  "week7_early_transition_games": [
+    {
+      "matchup": "NE@CHI",
+      "thesis": "Trench Funnel",
+      "conviction": 83,
+      "facts": 99,
+      "card_path": "docs/predictions/research/2026-10-18/NE@CHI-card.md"
+    },
+    {
+      "matchup": "PIT@NO",
+      "thesis": "Trench Funnel",
+      "conviction": 81,
+      "facts": 76,
+      "card_path": "docs/predictions/research/2026-10-18/PIT@NO-card.md"
+    },
+    {
+      "matchup": "SF@ATL",
+      "thesis": "Trench Funnel",
+      "conviction": 81,
+      "facts": 83,
+      "card_path": "docs/predictions/research/2026-10-18/SF@ATL-card.md"
+    },
+    {
+      "matchup": "CLE@TEN",
+      "thesis": "Trench Funnel",
+      "conviction": 88,
+      "facts": 81,
+      "card_path": "docs/predictions/research/2026-10-18/CLE@TEN-card.md"
+    },
+    {
+      "matchup": "IND@MIN",
+      "thesis": "Trench Funnel",
+      "conviction": 82,
+      "facts": 83,
+      "card_path": "docs/predictions/research/2026-10-18/IND@MIN-card.md"
+    },
+    {
+      "matchup": "MIA@NYJ",
+      "thesis": "Trench Funnel",
+      "conviction": 82,
+      "facts": 75,
+      "card_path": "docs/predictions/research/2026-10-18/MIA@NYJ-card.md"
+    },
+    {
+      "matchup": "TB@CAR",
+      "thesis": "Trench Funnel",
+      "conviction": 81,
+      "facts": 74,
+      "card_path": "docs/predictions/research/2026-10-18/TB@CAR-card.md"
+    },
+    {
+      "matchup": "CIN@BAL",
+      "thesis": "Trench Funnel",
+      "conviction": 82,
+      "facts": 67,
+      "card_path": "docs/predictions/research/2026-10-18/CIN@BAL-card.md"
+    },
+    {
+      "matchup": "NYG@HOU",
+      "thesis": "Trench Funnel",
+      "conviction": 82,
+      "facts": 80,
+      "card_path": "docs/predictions/research/2026-10-18/NYG@HOU-card.md"
+    },
+    {
+      "matchup": "DEN@ARI",
+      "thesis": "Trench Funnel",
+      "conviction": 90,
+      "facts": 83,
+      "card_path": "docs/predictions/research/2026-10-18/DEN@ARI-card.md"
+    },
+    {
+      "matchup": "GB@DET",
+      "thesis": "Trench Funnel",
+      "conviction": 75,
+      "facts": 79,
+      "card_path": "docs/predictions/research/2026-10-18/GB@DET-card.md"
+    },
+    {
+      "matchup": "LAR@LV",
+      "thesis": "Ballistics Window",
+      "conviction": 81,
+      "facts": 75,
+      "card_path": "docs/predictions/research/2026-10-18/LAR@LV-card.md"
+    },
+    {
+      "matchup": "KC@SEA",
+      "thesis": "Trench Funnel",
+      "conviction": 84,
+      "facts": 85,
+      "card_path": "docs/predictions/research/2026-10-18/KC@SEA-card.md"
+    },
+    {
+      "matchup": "DAL@PHI",
+      "thesis": "Trench Funnel",
+      "conviction": 82,
+      "facts": 76,
+      "card_path": "docs/predictions/research/2026-10-18/DAL@PHI-card.md"
+    }
+  ]
+}

@@ -36,8 +36,10 @@ NGS_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_receiving#yards.
 # LineStar usage feed (keyless DNN API): target SHARE / carry SHARE / red zone.
 LINESTAR_USAGE = SOURCES / "2026-10-13" / "linestar" / "linestar_usage_2026-10-13.json"
 NGS_RUSH_FILE = SOURCES / "2026-10-13" / "nextgenstats.nfl.com_stats_rushing#yards.2026-07-03T13_53_05.758Z.json"
-INJ_FILE = SOURCES / "2026-10-13" / "injuries" / "espn_nfl_injuries_week6.json"
+_INJ_CANDS = sorted(SOURCES.glob("*/injuries/espn_nfl_injuries_week6.json"), reverse=True)
+INJ_FILE = _INJ_CANDS[0] if _INJ_CANDS else (SOURCES / "2026-10-18" / "injuries" / "espn_nfl_injuries_week6.json")
 DC_FILE = SOURCES / "2026-10-13" / "depthcharts" / "espn-depthcharts-2026.json"
+
 
 COVERAGE_POS = {"CB", "S", "SAF", "FS", "SS", "NB", "DB"}
 RUSH_POS = {"DE", "DT", "ED", "DL", "NT", "OLB", "EDGE"}
