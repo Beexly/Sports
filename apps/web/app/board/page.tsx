@@ -10,7 +10,7 @@ import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { boardMarketLabel } from "@/lib/board/market-label";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { BoardHealthBadge } from "@/components/board/board-health-badge";
+import { BoardHealthBadge, boardStateLabel } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 
 export const metadata: Metadata = {
@@ -93,7 +93,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               Data store unreachable
             </span>
             <span className="break-words sm:ml-3">
-              The local database did not respond, so this board is showing an empty nonblocking state.
+              The board couldn&apos;t load. Try again in a minute.
             </span>
           </div>
         )}
@@ -125,9 +125,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
                     Quiet board
                   </span>
                   <span className="break-words sm:ml-3">
-                    Model signals are quiet (no fresh published slate). This is
-                    restraint, not an outage — free tools and methodology stay
-                    open. Counts read zero until the next signal generation lands.
+                    No picks yet today. New picks post as lines come in.
                   </span>
                 </>
               )
@@ -177,7 +175,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               className="flex flex-col gap-2 border border-orbital-cyan/30 bg-orbital-cyan/[0.06] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
             >
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
-                {stateResult.meta.boardClass.state.replaceAll("_", " ")}
+                {boardStateLabel(stateResult.meta.boardClass.state)}
               </span>
               <span className="break-words sm:ml-3">
                 {stateResult.meta.boardClass.publicMessage}
@@ -290,13 +288,12 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <BoardHealthBadge meta={stateResult.meta} />
         </div>
 
-        <section aria-label="Board state" className="grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-6">
+        <section aria-label="Board state" className="grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-5">
           <StateTile label="Sports watched" value={String(state.sportsWatched)} />
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
           <StateTile label="Passed on" value={String(state.gatedToday)} />
           <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
-          <StateTile label="Model" value={state.modelVersion} />
         </section>
 
         <section className="grid gap-10 lg:grid-cols-3">
@@ -459,32 +456,20 @@ function PassListItem({ row }: { row: PassListRow }): JSX.Element {
             {row.matchup}
           </Link>
         </span>
-        <span className="font-mono text-xs text-orbital-cyan">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
+        <span className="font-mono text-xs text-orbital-cyan">{row.edgeIndex === null ? "Edge —" : `Edge ${row.edgeIndex}`}</span>
         {/* The refusal and its plain-language reason are UNCONDITIONAL — no
             entitlement check wraps this. Declining to bet is the credibility
             claim; gating it would sell volume instead of judgement. */}
         <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>
       </div>
 
-      {row.detail && (
+      {/* Pro detail: the reason code, model version and evidence-ref count
+          are operator fields and are not rendered; confidence at the pass is. */}
+      {row.detail && row.detail.confidence !== null && (
         <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 border-l-2 border-orbital-cyan/40 pl-3 font-mono text-[11px] text-ion-3">
           <div className="flex gap-1.5">
-            <dt className="text-ion-2">code</dt>
-            <dd className="text-ion-1">{row.detail.reasonCode}</dd>
-          </div>
-          {row.detail.confidence !== null && (
-            <div className="flex gap-1.5">
-              <dt className="text-ion-2">confidence at refusal</dt>
-              <dd className="text-ion-1">{row.detail.confidence}</dd>
-            </div>
-          )}
-          <div className="flex gap-1.5">
-            <dt className="text-ion-2">model</dt>
-            <dd className="text-ion-1">{row.detail.modelVersion}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt className="text-ion-2">evidence refs</dt>
-            <dd className="text-ion-1">{row.detail.evidenceRefCount}</dd>
+            <dt className="text-ion-2">Confidence</dt>
+            <dd className="text-ion-1">{row.detail.confidence}/100</dd>
           </div>
         </dl>
       )}

@@ -11,7 +11,6 @@ import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
-import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { CENTRAL_TZ } from "@/lib/time/central";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
@@ -174,7 +173,7 @@ export function PickCard({
         <div className="min-w-0">
           <p
             className="mb-1 text-[10px] font-medium text-ion-1"
-            title="How strongly the model likes this pick, 0-100. Unlocks with Pro."
+            title="How strong this pick is, 0-100. Unlocks with Pro."
           >
             Confidence
           </p>
@@ -187,13 +186,13 @@ export function PickCard({
           )}
         </div>
 
-        {/* Edge score */}
+        {/* Edge */}
         <div className="min-w-0">
           <p
             className="mb-1 text-[10px] font-medium text-ion-1"
-            title="How much better our number is than the market price, 0-100. Higher = more value. Free on every pick."
+            title="How much better our number is than the market price, 0-100. Higher means more value. Free on every pick."
           >
-            Edge Score
+            Edge
           </p>
           {!canSeeEdgeScore ? (
             <LockedValue label="Edge" />
@@ -248,7 +247,7 @@ export function PickCard({
         </p>
       )}
 
-      {/* Factor breakdown (PRO+ only) */}
+      {/* Analysis (factor breakdown, PRO+ only) */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (
         <FactorBreakdownPanel breakdown={pick.factorBreakdown} />
       )}
@@ -258,7 +257,7 @@ export function PickCard({
           className="block rounded-lg border border-dashed border-titanium/50 px-4 py-3 transition-colors hover:border-plasma/50"
         >
           <p className="text-xs text-ion-1">
-            Factor breakdown unlocks on Pro &amp; Elite →
+            Analysis unlocks on Pro &amp; Elite →
           </p>
         </Link>
       )}
@@ -297,7 +296,7 @@ export function PickCard({
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
           <span className="rounded-full border border-titanium bg-carbon/50 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-1">
-            Evidence opens on live picks
+            Receipt opens on live picks
           </span>
         )}
       </div>
@@ -321,7 +320,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
   return (
     <div className="rounded-lg border border-titanium/60 bg-obsidian/40 p-3">
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-ion-1">
-        Factor Breakdown
+        Analysis
       </p>
 
       {/* Core market score bars */}
@@ -380,68 +379,11 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Ranking path — sort key only; never dress as verified ROI while RED. */}
-      {typeof breakdown.rankingP === "number" && Number.isFinite(breakdown.rankingP) && (
-        <div className="mt-2 rounded-md border border-orbital-cyan/30 bg-orbital-cyan/5 p-2">
-          <div className="mb-0.5 flex items-center gap-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-orbital-cyan">
-              Ranking P
-            </span>
-            <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
-              {breakdown.rankingSource ?? "unspecified"} · sort key
-            </span>
-          </div>
-          <p className="font-mono text-xs text-ion-white">
-            {(breakdown.rankingP * 100).toFixed(1)}%
-            <span className="ml-2 text-[10px] font-normal text-ion-3">
-              model ranking key — not verified ROI
-            </span>
-          </p>
-          {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
-            <>
-              <p className="mt-1 text-[10px] text-ion-3">
-                Market fair:{" "}
-                {(breakdown.marketFairProb * 100).toFixed(1)}%
-                <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
-              </p>
-              <DevigMethodDisclosure
-                proportional={breakdown.marketFairProb}
-                shin={breakdown.marketFairShinProb}
-              />
-            </>
-          )}
-        </div>
-      )}
-
-      {/* Independent-edge layer — priced into ranking when rankingP/source present. */}
-      {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
-        <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
-          <div className="mb-0.5 flex items-center gap-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-ion-blue">
-              Independent edge
-            </span>
-            <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
-              {breakdown.independentEdge.sources.join(", ") || "—"}
-              {" · "}
-              {typeof breakdown.rankingP === "number" &&
-              Number.isFinite(breakdown.rankingP) &&
-              (breakdown.rankingSource?.includes("independent") ||
-                typeof breakdown.independentEdge.trueProb === "number")
-                ? "priced into ranking"
-                : "signal only"}
-            </span>
-          </div>
-          <p className="text-[10px] leading-relaxed text-ion-2">
-            {breakdown.independentEdge.rationale}
-          </p>
-          {typeof breakdown.independentEdge.trueProb === "number" &&
-            Number.isFinite(breakdown.independentEdge.trueProb) && (
-              <p className="mt-1 font-mono text-[10px] text-ion-2">
-                trueProb {(breakdown.independentEdge.trueProb * 100).toFixed(1)}%
-              </p>
-            )}
-        </div>
-      )}
+      {/* Versus the market price. The ranking key, its source, the de-vig
+          inputs and the independent-estimator layer are model internals and
+          are not rendered on the public card; ValueGapBadge renders nothing
+          unless both numbers are real. */}
+      <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
 
       {/* Penalty summary row */}
       {(breakdown.volatilityPenalty < 0 || (breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0)) && (
@@ -583,7 +525,7 @@ function ConfidenceBadge({
     return (
       <span
         className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(calibrated.pct)}`}
-        aria-label={`Calibrated confidence: ${calibrated.label}, about ${calibrated.pct} percent win probability`}
+        aria-label={`Confidence: ${calibrated.label}, about ${calibrated.pct} percent win probability`}
       >
         {calibrated.label} · {calibrated.pct}%
       </span>
@@ -595,7 +537,7 @@ function ConfidenceBadge({
   return (
     <span
       className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(confidence)}`}
-      aria-label={`Model confidence: ${confidence} out of 100`}
+      aria-label={`Confidence: ${confidence} out of 100`}
     >
       {confidence}/100
     </span>
@@ -663,7 +605,7 @@ function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
   return (
     <span
       className={`text-xs font-bold ${color}`}
-      aria-label={`Edge score: ${edgeScore} out of 100`}
+      aria-label={`Edge: ${edgeScore} out of 100`}
     >
       {edgeScore}
     </span>

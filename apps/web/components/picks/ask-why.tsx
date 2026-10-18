@@ -9,7 +9,7 @@ import {
 import { useReaderRegister } from "@/lib/reader-register/use-reader-register";
 
 /**
- * "Ask the model why" — a PRO+ glass-box control. POSTs to
+ * "Why this pick?" — a PRO+ explainer control. POSTs to
  * /api/picks/[id]/explain and renders the strictly-grounded, policy-validated
  * explanation of why the engine surfaced this pick.
  *
@@ -42,7 +42,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
       } else {
         setText(
           data.error ??
-            "The explainer is unavailable right now. The factor breakdown and evidence audit remain available.",
+            "The explainer is unavailable right now. The analysis and pick receipt are still available.",
         );
         setState("error");
       }
@@ -93,7 +93,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
             aria-busy={state === "loading"}
             className="w-fit rounded-full border border-ion-blue/40 bg-ion-blue/10 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-blue transition hover:bg-ion-blue/20 disabled:opacity-60"
           >
-            {state === "loading" ? "Reading the factors…" : "Ask the model why"}
+            {state === "loading" ? "Reading the factors…" : "Why this pick?"}
           </button>
         )}
       </div>

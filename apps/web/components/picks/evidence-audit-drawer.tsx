@@ -1,20 +1,20 @@
 "use client";
 
 /**
- * EvidenceAuditDrawer — the public, on-brand proof of provenance for a pick.
+ * EvidenceAuditDrawer — the public "Pick receipt" for a pick.
  *
  * Renders a right-anchored drawer that fetches /api/picks/[id]/audit on open
- * and displays the forensic chain: pick metadata, signal-category topology
- * (LIVE vs SHADOW vs ABSENT), and the SourceSnapshot list with payload
- * hash prefixes and byte counts.
+ * and displays the reader-facing receipt: when the pick was scored, the
+ * books, line movement, the data pulls behind it, and the pre-mortem /
+ * fragility notes. Operator internals the API also returns (signal-category
+ * topology, payload hash prefixes and byte counts, gate states, model
+ * version, the death-clock tape) are deliberately not rendered here.
  *
  * Tier-gated content is decided server-side. The client renders whatever
  * the API returns — never inspects entitlements directly. The trigger
  * button is visible to ALL tiers (drives upgrade); contents follow tier.
  *
- * No raw payload data is ever rendered. The audit shows that the data
- * exists, hashes match, and timestamps line up — but the bytes stay
- * server-side.
+ * No raw payload data is ever rendered; the bytes stay server-side.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -28,7 +28,7 @@ import Link from "next/link";
 interface EvidenceAuditDrawerProps {
   pickId: string;
   /**
-   * Optional label override. Defaults to "View evidence".
+   * Optional label override. Defaults to "Pick receipt".
    * Pick cards in different contexts may want different labels.
    */
   label?: string;
@@ -66,6 +66,18 @@ interface FragilityView {
   readonly weakness: string;
 }
 
+const RECEIPT_NOT_YET = "Receipt not available for this pick yet.";
+const RECEIPT_UNAVAILABLE = "Receipt unavailable right now.";
+
+function formatShortTime(value: string): string {
+  return new Date(value).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps) {
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState<LoadState>({ status: "idle" });
@@ -82,9 +94,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
       if (!res.ok) {
         setLoad({
           status: "error",
-          message: res.status === 503
-            ? "Audit unavailable in bootstrap mode."
-            : `Audit unavailable (HTTP ${res.status}).`,
+          message: res.status === 404 ? RECEIPT_NOT_YET : RECEIPT_UNAVAILABLE,
         });
         return;
       }
@@ -95,7 +105,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         fragility?: FragilityView | null;
       };
       if (!body.success || !body.audit) {
-        setLoad({ status: "error", message: "Audit response malformed." });
+        setLoad({ status: "error", message: RECEIPT_UNAVAILABLE });
         return;
       }
       setLoad({
@@ -104,11 +114,8 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         preMortem: body.preMortem ?? null,
         fragility: body.fragility ?? null,
       });
-    } catch (err) {
-      setLoad({
-        status: "error",
-        message: err instanceof Error ? err.message : "Network error.",
-      });
+    } catch {
+      setLoad({ status: "error", message: RECEIPT_UNAVAILABLE });
     }
   }, [pickId, load.status]);
 
@@ -138,24 +145,24 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         type="button"
         onClick={handleOpen}
         className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-4 py-2 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow sm:w-auto"
-        aria-label="Open evidence audit for this pick"
+        aria-label="Open the receipt for this pick"
       >
         <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
-        {label ?? "View evidence"}
+        {label ?? "Pick receipt"}
       </button>
 
       {open && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Evidence audit"
+          aria-label="Pick receipt"
           className="fixed inset-0 z-50 flex justify-end motion-safe:animate-[fadeIn_120ms_ease-out]"
         >
           {/* Backdrop */}
           <button
             type="button"
             onClick={handleClose}
-            aria-label="Close evidence audit"
+            aria-label="Close pick receipt"
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
@@ -169,10 +176,10 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                   Galaxy Sports Edge
                 </p>
                 <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">
-                  Evidence audit
+                  Pick receipt
                 </h2>
                 <p className="mt-1 text-xs text-ion-2">
-                  Every signal, every snapshot, every hash. No fabrications.
+                  When this pick was scored, the books behind it, and how the line has moved.
                 </p>
               </div>
               <button
@@ -219,12 +226,6 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 />
               )}
             </div>
-
-            <footer className="border-t border-titanium px-6 py-4 text-[11px] leading-relaxed text-ion-1">
-              Snapshots are SHA-256 hashed at ingestion. Hash prefixes are
-              shown for operator verification; raw payload bytes remain
-              server-side.
-            </footer>
           </aside>
         </div>
       )}
@@ -283,53 +284,22 @@ function SummaryAudit({
       <FragilityPanel fragility={fragility} />
 
       <section>
-        <SectionHeader title="Provenance topology" />
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          <Stat
-            label="Signals tracked"
-            value={String(audit.signalCategoryCount)}
+        <SectionHeader title="Receipt" />
+        <dl className="mt-3 space-y-2 text-xs">
+          <Row
+            k="Last data update"
+            v={audit.mostRecentSnapshotAt ? formatShortTime(audit.mostRecentSnapshotAt) : "—"}
           />
-          <Stat
-            label="Live at scoring"
-            value={String(audit.signalCategoryActiveCount)}
-            accent="cyan"
-          />
-          <Stat
-            label="Source snapshots"
-            value={String(audit.sourceSnapshotCount)}
-          />
-          <Stat
-            label="Latest snapshot"
-            value={
-              audit.mostRecentSnapshotAt
-                ? new Date(audit.mostRecentSnapshotAt).toLocaleString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })
-                : "—"
-            }
-          />
-        </div>
-        {audit.mostRecentSnapshotProvider && (
-          <p className="mt-3 text-[11px] uppercase tracking-wider text-ion-1">
-            Most recent provider:{" "}
-            <span className="text-ion-1">
-              {audit.mostRecentSnapshotProvider}
-            </span>
-          </p>
-        )}
+        </dl>
       </section>
 
       <section className="rounded-lg border border-plasma/40 bg-plasma/5 p-4">
         <p className="text-sm font-medium text-plasma-glow">
-          Upgrade to see the full chain
+          Upgrade to see the full receipt
         </p>
         <p className="mt-1 text-xs text-ion-2">
-          Pro and Elite tiers see every signal flag at prediction time, line
-          movement deltas, payload hashes, and the gates that were active
-          when this pick was scored.
+          Pro and Elite see confidence at scoring, the number of books, line
+          movement, and the data pulls behind this pick.
         </p>
         <Link
           href="/pricing"
@@ -357,34 +327,22 @@ function DetailedAudit({
       <PremortemPanel preMortem={preMortem} />
       <FragilityPanel fragility={fragility} />
 
-      {audit.isBootstrap && (
-        <div className="rounded-md border border-ultraviolet/40 bg-ultraviolet/5 px-3 py-2 text-[11px] text-ultraviolet-glow">
-          Bootstrap-mode pick: recorded for review, not part of canonical
-          performance history.
-        </div>
-      )}
-
       <section>
-        <SectionHeader title="Pick lineage" />
+        <SectionHeader title="The pick" />
         <dl className="mt-3 space-y-2 text-xs">
           <Row
-            k="Model version"
-            v={audit.modelVersion || "—"}
-            mono
-          />
-          <Row
-            k="Generated at"
+            k="Scored at"
             v={new Date(audit.generatedAt).toLocaleString()}
           />
           <Row
-            k="Confidence at scoring"
-            v={`${audit.confidenceAtPrediction}`}
+            k="Confidence"
+            v={`${audit.confidenceAtPrediction}/100`}
           />
           <Row k="Data quality" v={`${audit.dataQualityScore}`} />
-          <Row k="Bookmaker count" v={`${audit.bookmakerCount}`} />
+          <Row k="Books" v={`${audit.bookmakerCount}`} />
           {audit.lineMovementDelta !== null && (
             <Row
-              k="Line movement δ"
+              k="Line movement"
               v={`${audit.lineMovementDelta > 0 ? "+" : ""}${audit.lineMovementDelta.toFixed(2)}`}
             />
           )}
@@ -400,121 +358,30 @@ function DetailedAudit({
         </dl>
       </section>
 
-      {audit.deathClock && (
-        <section data-testid="death-clock">
-          <SectionHeader title="Death clock: market since publish" />
-          <dl className="mt-3 space-y-2 text-xs">
-            <Row
-              k="Published"
-              v={formatClockAge(audit.deathClock.minutesSincePublish)}
-            />
-            <Row
-              k={clockMetricLabel(audit.deathClock.metric)}
-              v={`${formatClockNumber(audit.deathClock.atPublish, audit.deathClock.metric)} → ${formatClockNumber(audit.deathClock.latest, audit.deathClock.metric)}`}
-              mono
-            />
-            <Row
-              k="Movement"
-              v={
-                audit.deathClock.direction === "flat"
-                  ? "flat, the market hasn't moved"
-                  : `${audit.deathClock.delta > 0 ? "+" : ""}${audit.deathClock.delta} ${audit.deathClock.direction === "toward_pick" ? "toward this pick" : "against this pick"} · ${audit.deathClock.ratePerHour}/h`
-              }
-            />
-            <Row
-              k="Basis"
-              v={`${audit.deathClock.booksUsed} books quoted both sides of publish · latest capture ${new Date(audit.deathClock.latestCaptureAt).toLocaleTimeString()}`}
-            />
-          </dl>
-          <p className="mt-2 text-[10px] leading-relaxed text-ion-2">
-            Price movement only: what the books charge now vs when this pick
-            was published. Median across books; describes the market, not the
-            outcome.
-          </p>
-        </section>
-      )}
-
-      <section>
-        <SectionHeader title="Signal topology" />
-        <ul className="mt-3 space-y-1.5">
-          {audit.signalCategories.map((row) => (
-            <li
-              key={row.category}
-              className="flex items-start justify-between gap-3 rounded-md border border-titanium bg-carbon/50 px-3 py-2"
-            >
-              <div>
-                <p className="text-[13px] font-medium text-ion-white">
-                  {row.category}
-                </p>
-                <p className="text-[11px] text-ion-1">{row.description}</p>
-              </div>
-              <SignalStatusBadge status={row.status} />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section>
-        <SectionHeader title="Source snapshots" />
-        {audit.sourceSnapshots.length === 0 ? (
-          <p className="mt-3 text-xs text-ion-1">
-            No SourceSnapshot rows recorded for this pick's game window.
-          </p>
-        ) : (
+      {audit.sourceSnapshots.length > 0 && (
+        <section>
+          <SectionHeader title="Data pulls" />
           <ul className="mt-3 space-y-1.5">
             {audit.sourceSnapshots.map((snap) => (
               <li
                 key={snap.id}
-                className="rounded-md border border-titanium bg-carbon/50 px-3 py-2 text-[11px] leading-relaxed"
+                className="flex items-center justify-between gap-2 rounded-md border border-titanium bg-carbon/50 px-3 py-2 text-[11px] leading-relaxed"
               >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-ion-1">
-                    {snap.provider}
-                  </span>
-                  <span className="text-[10px] uppercase tracking-wider text-ion-blue/70">
-                    {snap.sourceKind}
-                  </span>
-                </div>
-                <div className="mt-1 grid grid-cols-2 gap-x-3 text-ion-2">
-                  <span>
-                    {new Date(snap.fetchedAt).toLocaleString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      second: "2-digit",
-                    })}
-                  </span>
-                  <span className="text-right">
-                    {snap.payloadBytes.toLocaleString()} bytes
-                  </span>
-                </div>
-                <div className="mt-1 font-mono text-[10px] text-ion-1">
-                  sha256:{snap.payloadHashPrefix}…
-                </div>
+                <span className="font-medium text-ion-1">{snap.provider}</span>
+                <span className="text-right text-ion-2">
+                  {new Date(snap.fetchedAt).toLocaleString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </span>
               </li>
             ))}
           </ul>
-        )}
-      </section>
-
-      <section>
-        <SectionHeader title="Gates at prediction time" />
-        <dl className="mt-3 space-y-2 text-xs">
-          <Row
-            k="Canonical history"
-            v={audit.gatesAtPrediction.canonicalHistory ? "OPEN" : "CLOSED"}
-          />
-          <Row
-            k="Derived model history"
-            v={audit.gatesAtPrediction.derivedModelHistory ? "OPEN" : "CLOSED"}
-          />
-          <Row
-            k="Outcome learning"
-            v={audit.gatesAtPrediction.outcomeLearning ? "OPEN" : "CLOSED"}
-          />
-        </dl>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
@@ -542,7 +409,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
       )}
       {preMortem.status === "NEEDS_SNAPSHOT" && (
         <p className="mt-3 text-[11px] text-plasma-glow">
-          Signal snapshot is required before this note can publish.
+          This note fills in once the latest data is in.
         </p>
       )}
     </section>
@@ -554,31 +421,6 @@ function SectionHeader({ title }: { title: string }) {
     <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ion-blue/80">
       {title}
     </h3>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: string;
-  accent?: "cyan";
-}) {
-  return (
-    <div className="rounded-md border border-titanium bg-carbon/50 px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wider text-ion-1">
-        {label}
-      </p>
-      <p
-        className={`mt-1 text-lg font-semibold tracking-tight ${
-          accent === "cyan" ? "text-ion-blue-glow" : "text-white"
-        }`}
-      >
-        {value}
-      </p>
-    </div>
   );
 }
 
@@ -595,53 +437,6 @@ function Row({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
       </dd>
     </div>
   );
-}
-
-function SignalStatusBadge({
-  status,
-}: {
-  status: "LIVE" | "SHADOW" | "ABSENT";
-}) {
-  const styles =
-    status === "LIVE"
-      ? "border-verify/50 bg-verify/10 text-verify"
-      : status === "SHADOW"
-      ? "border-ultraviolet/50 bg-ultraviolet/10 text-ultraviolet-glow"
-      : "border-titanium bg-carbon text-ion-1";
-
-  const label =
-    status === "LIVE" ? "Live" : status === "SHADOW" ? "Shadow" : "Absent";
-
-  return (
-    <span
-      className={`inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${styles}`}
-    >
-      {label}
-    </span>
-  );
-}
-
-// ── Death clock formatting (price space only) ──
-
-function formatClockAge(minutes: number): string {
-  if (minutes < 60) return `${minutes}m ago`;
-  return `${Math.floor(minutes / 60)}h ${minutes % 60}m ago`;
-}
-
-function clockMetricLabel(
-  metric: "spread_points" | "total_points" | "moneyline_price"
-): string {
-  if (metric === "spread_points") return "Spread (home line)";
-  if (metric === "total_points") return "Total";
-  return "Side price (American)";
-}
-
-function formatClockNumber(
-  value: number,
-  metric: "spread_points" | "total_points" | "moneyline_price"
-): string {
-  if (metric === "total_points") return `${value}`;
-  return value > 0 ? `+${value}` : `${value}`;
 }
 
 // ── Fragility panel — structural risk, published weights ──

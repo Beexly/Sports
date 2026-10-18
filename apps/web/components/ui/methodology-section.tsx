@@ -68,7 +68,7 @@ const ITEMS: readonly MethodologyItem[] = [
   {
     title: "We don't fake confidence with decimal points",
     claimId: "methodology.confidence-presentation",
-    hint: "Until we have enough settled games to calibrate against, confidence is a label, not a number.",
+    hint: "Until enough games have settled, confidence is a label, not a number.",
     lane: "model",
   },
   {
@@ -77,17 +77,23 @@ const ITEMS: readonly MethodologyItem[] = [
     lane: "model",
   },
   {
-    title: "Subscribers see exactly which factors moved a pick",
+    title: "Subscribers see the analysis behind every pick",
     claimId: "methodology.factor-breakdown",
     lane: "model",
   },
   {
     title: "We don't advertise win rates we can't back up",
     claimId: "performance.public-stats-gated",
-    hint: "When you see win-loss numbers, you'll also see the period, sample size, model version, and the exact definition.",
+    hint: "When you see win-loss numbers, you'll also see the period, the sample size, and the exact definition.",
     lane: "gate",
   },
 ];
+
+const LANE_LABEL: Record<MethodologyItem["lane"], string> = {
+  data: "Data",
+  model: "Scoring",
+  gate: "Checks",
+};
 
 function laneAccent(lane: MethodologyItem["lane"]): string {
   switch (lane) {
@@ -160,7 +166,7 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow text-ion-1">Methodology / Trust Surface</p>
+          <p className="eyebrow text-ion-1">Methodology</p>
           <h2
             id="methodology-heading"
             className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
@@ -169,8 +175,8 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
             <span className="bg-signal-fade bg-clip-text text-transparent">signal</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
-            Every published pick ties back to live markets, timestamped data,
-            factor scoring, and the gates that keep weak picks off the board.
+            Every pick ties back to live prices, timestamped data, and the
+            checks that keep weak picks off the board.
           </p>
         </div>
 
@@ -183,21 +189,21 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
               <div className="grid grid-cols-2 gap-px bg-mineral lg:grid-cols-4">
                 <LedgerStat
                   value={metrics.settled}
-                  label={metrics.settled > 0 ? "Settled picks calibrated" : "Calibration sample"}
+                  label={metrics.settled > 0 ? "Settled picks" : "Picks graded so far"}
                   sub={metrics.settled > 0 ? "the only basis for any number" : "building honestly"}
                   tone="ion"
                   group
                 />
                 <LedgerStat
                   value={metrics.cleared}
-                  label="Cleared today"
-                  sub="passed every gate"
+                  label="Posted today"
+                  sub="passed every check"
                   tone="cyan"
                 />
                 <LedgerStat
                   value={metrics.gated}
-                  label="Gated today"
-                  sub="restraint, logged"
+                  label="Passed on today"
+                  sub="logged, not hidden"
                   tone="plasma"
                 />
                 {metrics.playerRows !== undefined && (
@@ -242,7 +248,7 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
             >
               <div className="flex items-center justify-between gap-3">
                 <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${laneAccent(item.lane)}`}>
-                  {item.lane}
+                  {LANE_LABEL[item.lane]}
                 </p>
                 <span className="h-px flex-1 bg-mineral" aria-hidden="true" />
               </div>

@@ -5,16 +5,13 @@
  * was removed in v5.2.8 Phase 2 / CAL-11 because no fitted map is applied to
  * it and measuring it against outcomes shows it over-confident through the
  * upper middle) and `q` (the market's
- * de-vig fair probability) already render separately on every pick card
- * (see pick-card.tsx's "Ranking P" / "Market fair (de-vig)" lines). Nobody
- * subtracts them for the reader. This is that subtraction, made a first-class
+ * de-vig fair probability) are carried on every pick's factor breakdown but
+ * are not rendered raw on the public card. This is their subtraction, made a first-class
  * derived value instead of mental arithmetic — the same fields, no new data
  * path, no Kalshi, no additional source.
  *
  * Deliberately does NOT imply profitability. A positive gap is a disagreement
- * with the market's fair price, not a guaranteed edge — see the ranking-P
- * badge's own "not verified ROI" language, which this component does not
- * relax.
+ * with the market's fair price, not a promised edge and not verified ROI.
  */
 
 export interface ValueGapInput {
@@ -58,8 +55,8 @@ const SIGN_CLASS: Record<ValueGap["sign"], string> = {
 
 /**
  * Renders `null` (nothing) when either input is missing — callers must not
- * fall back to a partial or estimated gap. Never implies profitability
- * beyond what `pick-card.tsx`'s existing ranking-P disclaimer already states.
+ * fall back to a partial or estimated gap. Never implies profitability: the
+ * label states a distance from the market price, not an outcome.
  */
 export function ValueGapBadge({ rankingP, marketFairProb }: ValueGapInput) {
   const result = computeValueGap({ rankingP, marketFairProb });
@@ -68,14 +65,16 @@ export function ValueGapBadge({ rankingP, marketFairProb }: ValueGapInput) {
   const pct = (Math.abs(result.gap) * 100).toFixed(1);
   const label =
     result.sign === "flat"
-      ? "GSE vs market: aligned"
-      : `GSE vs market: ${result.sign === "positive" ? "+" : "−"}${pct}pp`;
+      ? "In line with the market price"
+      : result.sign === "positive"
+        ? `Beats the market price by ${pct} pts`
+        : `Below the market price by ${pct} pts`;
 
   return (
     <span
       data-testid="value-gap-badge"
-      className={`ml-2 text-[10px] font-normal ${SIGN_CLASS[result.sign]}`}
-      title="Model ranking probability minus the market's fair probability. This is a disagreement with the market's price — it says nothing about whether the bet wins."
+      className={`mt-2 block text-[10px] font-normal ${SIGN_CLASS[result.sign]}`}
+      title="How far our number sits from the market price. It says nothing about whether the bet wins."
     >
       {label}
     </span>

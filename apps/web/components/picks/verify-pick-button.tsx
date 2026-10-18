@@ -83,13 +83,6 @@ export function VerifyPickButton({ receiptHash }: VerifyPickButtonProps): JSX.El
                 })}
               </p>
 
-              {state.modelVersion && (
-                <>
-                  <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-ion-2">Model version</p>
-                  <p className="mt-1 font-mono text-ion-1">{state.modelVersion}</p>
-                </>
-              )}
-
               <div className="mt-3 flex flex-wrap gap-2">
                 <Link
                   href={`/verify?hash=${encodeURIComponent(receiptHash)}`}

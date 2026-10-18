@@ -63,7 +63,7 @@ docs/ops/, docs/positioning.md — Runbooks, brand positioning (domain skills li
 5. **No stale data** — always validate timestamps and freshness
 6. **Tests required** — no feature is complete without passing tests
 7. **Types required** — TypeScript strict mode, no `any`
-8. **Brand positioning** — We're not AI. We're math you can read. Copy, docs, and code describe the engine as deterministic statistical modeling (factor model, deterministic scoring, factor breakdown). Never frame the engine as AI. The canonical banned-phrase list is `docs/positioning.md` § "What Not To Say"; the machine-readable copy is `apps/web/lib/positioning-vocab.json`, enforced at runtime by `apps/web/lib/compliance-scanner/rules.ts` and in CI by `scripts/guardrails/trust-gate.mjs` plus `npm run lint:brand`. A violation is a blocking lint failure, not a style note.
+8. **Brand positioning** — We're not AI. We're math you can read. Copy, docs, and code describe the engine as deterministic statistical modeling (factor model, deterministic scoring; public pages call the reasoning "Analysis"). Never frame the engine as AI. The canonical banned-phrase list is `docs/positioning.md` § "What Not To Say"; the machine-readable copy is `apps/web/lib/positioning-vocab.json`, enforced at runtime by `apps/web/lib/compliance-scanner/rules.ts` and in CI by `scripts/guardrails/trust-gate.mjs` plus `npm run lint:brand`. A violation is a blocking lint failure, not a style note.
 
 ## Subagents (`.claude/agents/`)
 

@@ -24,7 +24,7 @@ describe("board class UI honesty", () => {
     );
     expect(classifier).toMatch(/refuse-default/);
     // An empty board must never be dressed up as a measured zero-edge result.
-    expect(classifier).toMatch(/not a fabricated zero-edge win rate/);
+    expect(classifier).toMatch(/A pass is not a result/);
   });
 
   it("badge surfaces boardClass state", () => {

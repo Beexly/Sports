@@ -48,16 +48,18 @@ export interface ClassifiedBoardState {
   readonly honestEmpty: boolean;
 }
 
+// Customer-facing copy. Empty states are refuse-default: an empty board is
+// never dressed up as a measured zero-edge result.
 const MESSAGES: Record<BoardStateClass, string> = {
-  HAS_ROWS: "Board has active rows.",
+  HAS_ROWS: "Live picks on the board.",
   HONEST_EMPTY_LIVE_BOARD_OFF:
-    "Live board is held (founder gate). Empty slate is the honesty-correct default — not a claim that no edges exist.",
+    "Picks are paused right now. An empty board is not a claim that there's no value on the slate.",
   HONEST_EMPTY_NO_ELIGIBLE:
-    "No eligible rows after gate. Empty is refuse-default, not a fabricated zero-edge win rate.",
-  SUPPRESSED_DEMO: "Demo rows were suppressed from the public board.",
-  SUPPRESSED_STALE: "Stale public-board rows were suppressed before rendering.",
-  DB_UNREACHABLE: "Board data store did not answer; empty nonblocking state returned.",
-  BOOTSTRAP: "Bootstrap mode — board is not a live public claim surface.",
+    "Nothing cleared our bar today, so we're passing. A pass is not a result.",
+  SUPPRESSED_DEMO: "Example picks are hidden from the live board.",
+  SUPPRESSED_STALE: "Older picks came down because their lines went stale.",
+  DB_UNREACHABLE: "The board couldn't load. Try again in a minute.",
+  BOOTSTRAP: "The board is warming up. These aren't live picks yet.",
 };
 
 /**

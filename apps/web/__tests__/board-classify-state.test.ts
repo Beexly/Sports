@@ -34,7 +34,7 @@ describe("classifyBoardState", () => {
     expect(r.state).toBe("HONEST_EMPTY_LIVE_BOARD_OFF");
     expect(r.honestEmpty).toBe(true);
     expect(r.refusePublicFire).toBe(true);
-    expect(r.publicMessage).toMatch(/honesty-correct/i);
+    expect(r.publicMessage).toMatch(/not a claim that there's no value/i);
   });
 
   it("LIVE_BOARD on + rows → HAS_ROWS", () => {

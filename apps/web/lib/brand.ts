@@ -132,7 +132,7 @@ export const SURFACES = {
     label: "The Airwave Ledger",
     tagline: "Pundits, on the record.",
     blurb:
-      "On-air sports takes turned into a paraphrased, timestamped, graded record: the same glass-box standard the engine holds itself to.",
+      "On-air sports takes turned into a paraphrased, timestamped, graded record: the same standard the engine holds itself to.",
     route: "/airwave",
   },
   marketGravity: {
@@ -157,7 +157,7 @@ export const SURFACES = {
     route: "/eclipse-gate",
   },
   edgeIndex: {
-    label: "Edge Index",
+    label: "Edge",
     tagline: "Composite confidence score.",
     blurb:
       "Composite confidence score that quantifies signal strength, volatility, and expected-value context.",
@@ -171,7 +171,7 @@ export const SURFACES = {
     route: "/vault",
   },
   performance: {
-    label: "Calibration Report",
+    label: "Results",
     tagline: "Performance, model accuracy, methodology.",
     blurb:
       "The published record: wins, losses, pushes, ROI, and model calibration. Gated until the data can honestly support a number.",
@@ -265,6 +265,6 @@ export const BANNED_LANGUAGE = [
  */
 export const APPROVED_LANGUAGE = {
   highConfidence: "confidence-rated signal",
-  bestPick: "highest-Edge-Index signal",
-  modelEdge: "calibrated edge",
+  bestPick: "highest-Edge pick",
+  modelEdge: "measured edge",
 } as const;

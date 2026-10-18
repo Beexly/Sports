@@ -16,8 +16,9 @@ Use this as the consumer-facing wedge. Do not reposition the product as a genera
 
 - Deterministic scoring
 - Factor model
-- Factor breakdown
+- Analysis (the short reason a pick exists)
 - Math you can read
+- Public vocabulary, one name per concept: Edge, Pick, Line, Books, Projection, Confidence, Analysis. "Deterministic scoring" and "factor model" stay as engineering descriptions of the engine; public pages call the reasoning "Analysis".
 - We post when the model finds edge
 - Most days, fewer than five picks
 - Thin slate? We post less. Sometimes nothing.

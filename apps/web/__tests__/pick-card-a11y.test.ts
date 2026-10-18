@@ -15,8 +15,8 @@ const src = readFileSync(
 
 describe("PickCard accessibility labels", () => {
   it("gives the confidence, edge, and data-quality metrics screen-reader labels", () => {
-    expect(src).toMatch(/aria-label=\{`Model confidence:/);
-    expect(src).toMatch(/aria-label=\{`Edge score:/);
+    expect(src).toMatch(/aria-label=\{`Confidence:/);
+    expect(src).toMatch(/aria-label=\{`Edge:/);
     expect(src).toMatch(/aria-label=\{`Data quality:/);
   });
 

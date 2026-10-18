@@ -273,9 +273,11 @@ describe("/board — honest suppression banner replaces the dead sample-data ban
     // and reworded 'Live data did not clear the freshness check...' ->
     // 'Model signals are quiet... This is restraint, not an outage'. The
     // restraint-not-outage framing is the documented doctrine
-    // (page.tsx:58-64 comment block).
+    // (page.tsx:58-64 comment block). Customer copy pass (B1) reworded the
+    // body to "No picks yet today. New picks post as lines come in.", still
+    // a quiet day, never an outage.
     expect(text).toContain("Quiet board");
-    expect(text).toContain("restraint, not an outage");
+    expect(text).toContain("New picks post as lines come in.");
     // The dead banner and its "sample data" promise must be gone.
     expect(text).not.toContain(DEAD_COPY);
     expect(text).not.toContain("Preview mode");

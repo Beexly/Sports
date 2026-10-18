@@ -1,5 +1,4 @@
 import type { BoardStatePayload } from "@/lib/board/state";
-import { NUMERIC_TEXT_CLASS, formatCount } from "@/lib/format/stat";
 
 const TONE: Record<BoardStatePayload["meta"]["health"]["status"], string> = {
   DEGRADED: "border-caution/50 bg-caution/10 text-caution",
@@ -7,39 +6,35 @@ const TONE: Record<BoardStatePayload["meta"]["health"]["status"], string> = {
   UNAVAILABLE: "border-alert/50 bg-alert/10 text-alert",
 };
 
-function shortTrace(traceId: string): string {
-  const parts = traceId.split("-");
-  return parts.at(-1) ?? traceId;
+/**
+ * Plain-language status for each board class. The raw enum, trace id and row
+ * count are operator detail and stay off the public badge; the state is still
+ * read from meta.boardClass.state so the badge cannot drift from the
+ * classifier. Unknown future states read "Updating" rather than a raw token.
+ */
+const BOARD_STATE_LABEL: Readonly<Record<string, string>> = {
+  HAS_ROWS: "Live",
+  HONEST_EMPTY_LIVE_BOARD_OFF: "No picks on the board right now",
+  HONEST_EMPTY_NO_ELIGIBLE: "No picks on the board right now",
+  SUPPRESSED_DEMO: "No picks on the board right now",
+  SUPPRESSED_STALE: "Board updating",
+  DB_UNREACHABLE: "Board unavailable right now",
+  BOOTSTRAP: "Board warming up",
+};
+
+export function boardStateLabel(state: string): string {
+  return BOARD_STATE_LABEL[state] ?? "Updating";
 }
 
 export function BoardHealthBadge({ meta }: { readonly meta: BoardStatePayload["meta"] }) {
-  const primaryDegradation = meta.degradations[0] ?? null;
-
   return (
     <div
       data-testid="board-health-badge"
       className={`min-w-0 border px-3 py-2 ${TONE[meta.health.status]}`}
-      title={`Trace ${meta.traceId}`}
     >
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]">
-          Board health
-        </span>
-        <span className="text-sm font-semibold text-ion-white">{meta.health.label}</span>
-        <span className={`font-mono text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-          {formatCount(meta.health.rowCount)} rows
-        </span>
-      </div>
-      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ion-2">
-        <span className="font-mono uppercase tracking-[0.16em]">Trace {shortTrace(meta.traceId)}</span>
-        <span className="font-mono uppercase tracking-[0.12em]" data-testid="board-class-label">
-          {meta.boardClass.state}
-        </span>
-        {meta.boardClass.refusePublicFire && (
-          <span className="text-ion-3">publishing paused</span>
-        )}
-        {primaryDegradation && <span>{primaryDegradation.message}</span>}
-      </div>
+      <span className="text-sm font-semibold text-ion-white" data-testid="board-class-label">
+        {boardStateLabel(meta.boardClass.state)}
+      </span>
     </div>
   );
 }
