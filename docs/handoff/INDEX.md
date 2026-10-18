@@ -58,3 +58,7 @@ Do not select on `division` or `kind` alone. Quarantined rows use owning `divisi
 | DFS bot | `dfs.jsonl` rows with `eligible==true` |
 
 See [`X-INGEST.md`](../../docs/engine/research/2026-10-18/gse-fleet-status/X-INGEST.md) § Consumer rule (RO-16) for details. Full DIV-1 row review lives on the fleet box at `ingest/x-dms/2026-10-18/div1-row-review-ro16.tsv`.
+
+## Consumer rule (RO-17) — 2026-10-18
+
+Every x-dms row now has an explicit `eligible` field. Consumers filter `eligible==true` (see X-INGEST.md § Consumer rule (RO-17)). The RO-16 table still applies; the missing-field fallback is retired.
