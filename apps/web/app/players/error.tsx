@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { captureError, initObservability } from "@/lib/observability/sentry";
-import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
@@ -46,7 +45,15 @@ export default function PlayersError({
         <LogoMarkInline size={320} pulse glow className="opacity-[0.06]" />
       </div>
 
-      <Nav />
+            <header className="relative z-10 flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-white">
+          <LogoMarkInline size={24} />
+          Galaxy Sports Edge
+        </Link>
+        <Link href="/fantasy" className="text-sm text-ion-1 hover:text-white">
+          Galaxy Fantasy
+        </Link>
+      </header>
 
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-22 sm:px-6 lg:px-8">
         <div className="w-full max-w-xl rounded-2xl border border-alarm/30 bg-alarm/10 p-8 text-center">
