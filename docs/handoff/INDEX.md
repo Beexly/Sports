@@ -66,3 +66,7 @@ Every x-dms row now has an explicit `eligible` field. Consumers filter `eligible
 ## Consumer rule (RO-18) — 2026-10-18
 
 X-INGEST inventory numbers (profile-intel 1,117 / dfs 79 / duplicates 35 / hype_flag 22 / lease 9) are generated from live files by `/workspace/xdm/gen_inventory.py`. `write2.py` no longer uses `--stabilize-from`; plain rerun is byte-identical. Eligible consumer rule unchanged: filter `eligible==true`. No missing-field fallback.
+
+## Consumer rule (RO-19) — 2026-10-18
+
+Selective stamp: only content-changing rows get new lease/RO/timestamp (`write2.py --prior`, CLI `--repair-order/--lease/--timestamp-ct`). dfs/removed/siblings at lease-8 checksums; profile/retag differ from lease 8 only on the 5 classifier reason-text rows. Eligible rule unchanged: `eligible==true`. No missing-field fallback.
