@@ -95,6 +95,14 @@ export {
   type GraduationResult,
 } from "./validation.js";
 
+// Defensive Fantasy Points Allowed (SHADOW)
+export {
+  computeDefensiveFantasyPointsAllowed,
+  type FantasyPointsOptions,
+  type DefensiveFantasyPointsAllowedWindow,
+  type DefensiveFantasyPointsAllowedOutput,
+} from "./defensive-fantasy-points-allowed.js";
+
 // Expected points → GSE-EPA (glass-box, enters dark).
 export {
   fitExpectedPointsModel,

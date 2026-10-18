@@ -1,0 +1,14 @@
+feat: Implement Defensive Fantasy Points Allowed expected metric
+
+- Implemented `computeDefensiveFantasyPointsAllowed` module to compute
+  PPR points allowed per game by defense vs opponent position.
+- Added strict point-in-time calculation (rolling window for week W
+  contains only games strictly before week W).
+- PPR formula components added and appropriately awarded based on
+  player's verified position (e.g., passing points only to QBs).
+- Registered metric as SHADOW in metric birth certificate registry.
+- Documented SHADOW status and added corresponding tests.
+- Reverted out-of-scope files (`package-lock.json`) and removed
+  temporary files. Pre-existing CI guardrail failures (e.g., `trust-gate`
+  and `em-dash-scan` over external/pre-existing code) are left unresolved
+  as directed.

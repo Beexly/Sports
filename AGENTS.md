@@ -16607,3 +16607,6 @@ This section was rebuilt on 2026-10-18 from the verified Lane A manifest and the
 - Partial captures flagged, never completed: @sfdata9ers RB success-rate chart truncated at rank 8; WR/TE all-time list ranks 4-10 only; total-TDs-in-a-season list ranks 2-10 only; rushing-attempts-in-losses chart partially cut. @GridironInfo_ matchup-card Points rows not fully shown (one offensive Points row missing per card); first-drive TD table incomplete beyond PHI; Mayfield graphic, London list, and JAX EPA-by-quarter graphic not fully transcribed. @SumerSports "By The Numbers" Fields graphic values not transcribed.
 - @sfdata9ers QB ANY/A list contains Russell Wilson twice as rendered (rank 19 at 7.27 and rank 33 at 5.87) — recorded as rendered, not reconciled.
 - Videos not played. No external/bio-link sites visited; nflreadpy, NWS and Statyx are recorded as stated sources only. No new data endpoints were identified this run — the stated sources remain the chart footers (nflreadpy / NWS) and Statyx's own platform (statyx.io) as presented.
+
+## Expected Metrics
+- **Defensive Fantasy Points Allowed**: Added `defensive-fantasy-points-allowed.ts` to compute PPR fantasy points allowed by defense vs opponent position. It strictly enforces a point-in-time calculation (rolling window for week W only contains games strictly before week W). Registered as a SHADOW metric.

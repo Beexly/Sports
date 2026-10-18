@@ -58,6 +58,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // success rate
   "play_type", "yards_gained", "interception", "fumble_lost",
   "rusher_player_id", "receiver_player_id",
+  // defensive fantasy points allowed
+  "complete_pass", "passer_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
