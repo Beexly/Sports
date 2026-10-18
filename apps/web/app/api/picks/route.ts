@@ -21,6 +21,7 @@ import {
 } from "@/lib/data-reliability/public-freshness-gate";
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
+import { buildNflInjuryEvidence } from "@/lib/picks/nfl-injury-evidence";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { evaluateNoBet } from "@/lib/picks/no-bet-evaluation";
@@ -405,8 +406,33 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           }
         : null;
 
-      // Extract injuryEvidence from source if present; do not fabricate missing values
-      const injuryEvidence = (fbObj["injuryEvidence"] ?? situational["injuryEvidence"] ?? null) as Record<string, unknown> | null;
+      // NFL injuryEvidence is built from the real `injuries` table rows the
+      // bundle loader already resolved for BOTH clubs at this game's season and
+      // as-of week. It is null when the table has nothing for the current week,
+      // and non-NFL sports carry no evidence at all: no NCAAF feed is ingested,
+      // so the key stays absent instead of repeating a canned availability
+      // claim. A previously stored evidence object is only kept when the DB
+      // build is unavailable — and never for NCAAF.
+      const sportKey = pick.game.sport.key;
+      const surfaces = surfacesByPickId.get(pick.id) ?? null;
+      const dbInjuryEvidence = surfaces
+        ? buildNflInjuryEvidence({
+            sportKey,
+            homeTeamName: pick.game.homeTeamName,
+            awayTeamName: pick.game.awayTeamName,
+            season: surfaces.resolution.season,
+            week: surfaces.resolution.asOfWeek,
+            homeInjuries: surfaces.homeInjuries,
+            awayInjuries: surfaces.awayInjuries,
+            now,
+          })
+        : null;
+      const isNcaaf = (sportKey ?? "").toLowerCase() === "americanfootball_ncaaf";
+      const storedInjuryEvidence = isNcaaf
+        ? null
+        : ((fbObj["injuryEvidence"] ?? situational["injuryEvidence"] ?? null) as Record<string, unknown> | null);
+      const injuryEvidence: Record<string, unknown> | null =
+        (dbInjuryEvidence as unknown as Record<string, unknown> | null) ?? storedInjuryEvidence;
 
       const reasoningTrace = (situational["reasoningTrace"] as string | undefined) ?? (pick.reasoning || projectedReasoning.text);
 
