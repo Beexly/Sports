@@ -42,3 +42,19 @@ Rules for using it:
 - Paths under `/workspace/...`, `/home/box/...` and `/cursor/stores/...` are on the
   fleet's box. They are not in this repo, and `/workspace/gse` is not a git repo.
 - Everything ingested stays at weight 0 until QA promotes it.
+
+## Consumer rule (RO-16) — 2026-10-18
+
+**Every consumer of x-dms `profile-intel.jsonl` MUST filter `eligible == true`.**
+
+Do not select on `division` or `kind` alone. Quarantined rows use owning `division=DIV-3` with `routing="NONE"`, `eligible=false`, and `layer2_relevance=NONE_PURE_LAYER1`. A bare `division=DIV-3` or `kind=football` filter will pull quarantined off-topic rows into DIV-3 Lead and overheard intakes.
+
+| Consumer | Required filter |
+|---|---|
+| DIV-3 Lead | `division=DIV-3` AND `eligible==true` |
+| overheard | `kind=football` AND `eligible==true` |
+| sherlock | `kind=ai_quant` AND `eligible==true` |
+| account-book / DIV-1 | `division=DIV-1` AND `eligible==true` |
+| DFS bot | `dfs.jsonl` rows with `eligible==true` |
+
+See [`X-INGEST.md`](../../docs/engine/research/2026-10-18/gse-fleet-status/X-INGEST.md) § Consumer rule (RO-16) for details. Full DIV-1 row review lives on the fleet box at `ingest/x-dms/2026-10-18/div1-row-review-ro16.tsv`.
