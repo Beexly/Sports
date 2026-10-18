@@ -202,7 +202,7 @@ export function buildSlateWeather(nodes: readonly GameIntelligenceNode[]): Slate
  * which made the lens switcher look broken. Now:
  *
  *   FAN      plain English, no jargon, no numbers
- *   BETTOR   the Edge Index and what it means for the bet
+ *   BETTOR   the Edge and what it means for the bet
  *   CREATOR  the story angle: what changed and why it matters
  *   ANALYST  every number we have, in one line
  *
@@ -235,14 +235,14 @@ export function projectForLens(node: GameIntelligenceNode, lens: UserLens): Mone
     case "BETTOR":
       visibleSummary =
         ei != null
-          ? `${node.matchup}: Edge Index ${ei}. ${books} book${books === 1 ? "" : "s"} pricing this. ${
+          ? `${node.matchup}: Edge ${ei}. ${books} book${books === 1 ? "" : "s"} pricing this. ${
               ei >= 70
-                ? "The market and our number disagree — that is the gap."
+                ? "The market and our number disagree. That is the gap."
                 : ei >= 40
                   ? "Some disagreement, nothing screaming."
                   : "Market and our number are close. Thin edge."
             }`
-          : `${node.matchup}: no Edge Index yet — the market is not priced enough to compare.`;
+          : `${node.matchup}: no Edge yet. The market is not priced enough to compare.`;
       break;
     case "CREATOR":
       visibleSummary =
@@ -250,13 +250,13 @@ export function projectForLens(node: GameIntelligenceNode, lens: UserLens): Mone
         (lineMove
           ? `${lineMove} — that is the hook.`
           : ei != null && ei >= 60
-            ? "Edge Index is high enough to write about."
+            ? "Edge is high enough to write about."
             : "Quiet game. Angle is the matchup, not the number.");
       break;
     case "ANALYST":
     default:
       visibleSummary =
-        `${node.matchup}: Edge Index ${ei ?? "N/A"}, evidence ${ev.score}/100 (${ev.status}). ` +
+        `${node.matchup}: Edge ${ei ?? "N/A"}, evidence ${ev.score}/100 (${ev.status}). ` +
         `${books} book${books === 1 ? "" : "s"}, ${ev.staleCount} stale, ${ev.bootstrapCount} bootstrap.` +
         (lineMove ? ` ${lineMove}.` : "") +
         ` Published picks: ${node.marketPulse.publishedPickCount}.`;

@@ -21,9 +21,11 @@ describe("The Beat — Galaxy Broadcast", () => {
   const broadcast = read("components/news/galaxy-broadcast.tsx");
   const host = read("lib/fantasy/host.ts");
 
-  it("wires the cinematic broadcast and the graded feed", () => {
-    expect(page).toContain("GalaxyBroadcast");
-    expect(page).toContain("buildBroadcast");
+  it("wires the graded feed and does NOT render the broadcast on /the-beat", () => {
+    // Customer copy pass: the sample-script broadcast block no longer
+    // renders on The Beat. The component file stays (guards below).
+    expect(page).not.toContain("GalaxyBroadcast");
+    expect(page).not.toContain("buildBroadcast");
     expect(page).toContain("TheBeat");
     expect(page).toContain("The Signal Ledger");
   });

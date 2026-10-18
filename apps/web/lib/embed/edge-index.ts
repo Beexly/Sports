@@ -31,7 +31,7 @@ export function formatEdgeIndex(value: number | null): string {
 
 export function buildEmbedSnippet(gameId: string, origin = SITE): string {
   const src = `${origin.replace(/\/$/, "")}/embed/edge-index/${encodeURIComponent(gameId)}`;
-  return `<iframe src="${src}" title="Galaxy Edge Index" width="320" height="120" loading="lazy" style="border:0;border-radius:12px;overflow:hidden;background:#0a0a0b"></iframe>`;
+  return `<iframe src="${src}" title="GSE Edge" width="320" height="120" loading="lazy" style="border:0;border-radius:12px;overflow:hidden;background:#0a0a0b"></iframe>`;
 }
 
 /**

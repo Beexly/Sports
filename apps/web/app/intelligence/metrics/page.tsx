@@ -14,7 +14,7 @@ import { coverageMapUiData, type CoverageMapUiData } from "@/lib/metrics/coverag
 export const metadata: Metadata = {
   title: "How We Read the Numbers: Metric Methodology",
   description:
-    "The glass box on every signal the engine uses: what each metric is, how we read it, how it's commonly misread, and how that makes us different. Stable, predictive inputs vs. noisy outputs that regress.",
+    "Every signal behind the picks, explained in plain terms.",
   alternates: { canonical: "/intelligence/metrics" },
 };
 

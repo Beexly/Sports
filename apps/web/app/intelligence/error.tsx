@@ -55,11 +55,10 @@ export default function IntelligenceError({
           </div>
 
           <h1 className="text-xl font-bold text-white">
-            The glass box hit a snag.
+            Something went wrong loading this page.
           </h1>
           <p className="mt-2 text-sm text-ion-1">
-            This page threw a runtime error. Hit retry, or head back into
-            the glass box. The observatory has the trace either way.
+            Hit retry, or head back to Intelligence.
           </p>
           <pre className="mt-3 overflow-x-auto rounded-lg bg-carbon/70 p-3 text-[11px] text-ion-2">
             {visibleDetail}
@@ -75,7 +74,7 @@ export default function IntelligenceError({
               href="/intelligence"
               className="rounded-lg border border-alarm/30 px-4 py-2 text-sm text-ion-1 hover:bg-alarm/10"
             >
-              Back to the glass box
+              Back to Intelligence
             </Link>
           </div>
         </div>

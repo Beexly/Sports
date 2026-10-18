@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The Airwave Ledger: Pundits, On the Record",
   description:
-    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record — the same glass-box standard the engine holds itself to. Public demo uses illustrative personas only.",
+    "Sports takes, held to an outcome. What pundits say on air, paraphrased, timestamped, and graded. Practice examples, not real hosts.",
   alternates: { canonical: "/airwave" },
 };
 
@@ -100,9 +100,7 @@ export default async function AirwavePage() {
                 <div>
                   <h2 className="text-lg font-semibold text-ion-white">Ingestion status</h2>
                   <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ion-1">
-                    The board below is an illustrative ledger demo: real intake stays operator-reviewed before any public grade lands.
-                    transcript rows. Today this page exposes the gate state honestly instead of
-                    pretending the media engine is already running.
+                    Real shows are added after review.
                   </p>
                 </div>
                 <Link href="/api/airwave/readiness" className="btn btn-ghost text-xs">
@@ -176,12 +174,7 @@ export default async function AirwavePage() {
               <div className="surface-card p-5">
                 <p className="font-mono text-xs uppercase tracking-[0.16em] text-ion-2">How to read this</p>
                 <p className="mt-2 text-sm leading-relaxed text-ion-1">
-                  The board above is <strong className="text-ion">illustrative</strong>. The
-                  personas are fictional and the matchups are generic, so nothing here is a claim
-                  about a living person. The method is the real thing: a take is paraphrased,
-                  timestamped, and graded against what actually happened. Live capture of named
-                  shows, and any public scorecard tied to a real person, are held behind a founder
-                  gate and a legal review: never on by default, and never an audio archive.
+                  Practice examples. Not real hosts.
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-ion-2">
                   The accountability index rewards making checkable calls and landing them. Emphatic

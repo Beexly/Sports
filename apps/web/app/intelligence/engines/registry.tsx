@@ -51,7 +51,7 @@ export type EngineGroup =
   | "Running back"
   | "Receiver"
   | "Team & market"
-  | "Proof & calibration";
+  | "Results";
 
 export interface EngineEntry {
   readonly slug: string;
@@ -122,10 +122,9 @@ const PLAYER_MODEL_ENGINE = engine({
   title: "The process grade behind every player.",
   description: (
     <>
-      One canonical profile per player, built from public advanced stats: efficiency, opportunity, and
-      volume combined into a position-aware <em>process grade</em>. We compare it to actual production
-      and surface the gap: where the inputs say more is coming (<span className="text-verify-on-light font-semibold">buy-low</span>)
-      or running hot (<span className="text-alert-on-light font-semibold">sell-high</span>). The data layer that drives the tools. Not a pick.
+      A <em>process grade</em> per player from public stats, compared to actual production to flag{" "}
+      <span className="text-verify-on-light font-semibold">buy-low</span> and{" "}
+      <span className="text-alert-on-light font-semibold">sell-high</span> players. Not a pick.
     </>
   ),
   api: "/api/intelligence/player-model",
@@ -233,9 +232,7 @@ const QB_FORWARD_ENGINE = engine({
   title: "QB Forward: which throwers are about to improve",
   description: (
     <>
-      Two independent public reads of quarterback play — a composite efficiency grade and a classic
-      yards-per-attempt yardstick — compared side by side. When they agree, the signal is clean;
-      when they disagree, we say so instead of averaging it away.
+      Two independent reads of quarterback play, side by side. When they disagree, we say so.
     </>
   ),
   api: "/api/intelligence/qb-forward",
@@ -276,8 +273,7 @@ const RUSHING_CONTACT_ENGINE = engine({
   title: "Rushing Contact: who earns the yards himself",
   description: (
     <>
-      Splits every carry into yards <em>after</em> contact (the back&apos;s own elusiveness and power) and
-      yards <em>before</em> contact (the line and scheme). An independent second look at the back.
+      Splits every carry into yards <em>after</em> contact (the back) and <em>before</em> contact (the line).
     </>
   ),
   api: "/api/intelligence/rushing-contact",
@@ -322,8 +318,7 @@ const ROUTE_RATE_ENGINE = engine({
   title: "Route Rate: who earns targets when he runs routes",
   description: (
     <>
-      How often a receiver is targeted on the routes he runs. High rate on a small sample is the breakout
-      signal; plenty of routes with thin targets is the fade. Labelled a proxy (true routes are paid data).
+      How often a receiver is targeted per route run. An estimate, since true route data is paid.
     </>
   ),
   api: "/api/intelligence/route-rate",
@@ -363,8 +358,7 @@ const SCORING_ZONE_ENGINE = engine({
   title: "Scoring-Zone Equity: touchdown chances from opportunity",
   description: (
     <>
-      Share of red-zone and goal-line looks, with the touchdown rate pulled back toward the positional
-      average. Scores the looks a player owns, not the touchdowns that already bounced his way.
+      Scores the red-zone and goal-line looks a player owns, not the touchdowns he already scored.
     </>
   ),
   api: "/api/intelligence/scoring-zone",
@@ -405,8 +399,7 @@ const TEAM_ENVIRONMENT_ENGINE = engine({
   title: "Team Environment: how the offense actually plays",
   description: (
     <>
-      How efficient a team is, how often it passes versus the situation, and how fast it moves. Every
-      player share sits in front of this — buy the offense, not just the name.
+      How efficient an offense is, how often it passes, and how fast it plays.
     </>
   ),
   api: "/api/intelligence/team-environment",
@@ -442,8 +435,7 @@ const OPPORTUNITY_TRANSFER_ENGINE = engine({
   title: "Opportunity Transfer: who inherits the vacated role",
   description: (
     <>
-      When a player is OUT, we quantify the targets and carries his role leaves behind and rank the
-      most likely beneficiary: the waiver predictive core.
+      When a player is out, who most likely inherits the targets and carries he leaves behind.
     </>
   ),
   api: "/api/intelligence/opportunity-transfer",
@@ -484,9 +476,7 @@ const CLV_ENGINE = engine({
   title: "Beat the Close: does the number out-run the market?",
   description: (
     <>
-      An <strong>illustrative baseline model</strong> backtested against public closing lines: a demonstration of how
-      closing-line value is computed and graded, not our pick engine&apos;s record (that stays gated until it can be
-      honestly published). Self-grading, never a bet; forward odds stay gated.
+      Backtest example. A baseline model graded against public closing lines, not our pick record.
     </>
   ),
   api: "/api/intelligence/clv-calibration",
@@ -527,8 +517,8 @@ const WAIVER_TRENDS_ENGINE = engine({
   title: "Waiver Trends: what the market is doing",
   description: (
     <>
-      League-wide waiver MOMENTUM from the Sleeper API: how many fantasy leagues are adding and dropping each NFL player
-      over the lookback window. Ownership velocity: <span className="font-semibold text-ion-white">what the market is doing, not advice.</span>
+      How many Sleeper leagues are adding and dropping each NFL player.{" "}
+      <span className="font-semibold text-ion-white">What the market is doing, not advice.</span>
     </>
   ),
   api: "/api/intelligence/sleeper-trending",
@@ -567,14 +557,12 @@ const WAIVER_TRENDS_ENGINE = engine({
 
 const PROOF_ENGINE = engine({
   slug: "proof",
-  group: "Proof & calibration",
+  group: "Results",
   label: "Does It Predict?",
   title: "Does the grade actually predict?",
   description: (
     <>
-      Anyone can publish a rating. We backtest ours. Build the process grade on the first half of the season, then
-      measure how well it ranks <em>second-half</em> production, against the obvious baseline: past production predicting
-      future production. If the grade adds lift, it carries forward signal.
+      We test the first-half grade against <em>second-half</em> production, versus past production alone.
     </>
   ),
   api: "/api/intelligence/predictiveness",
@@ -633,7 +621,7 @@ export const ENGINE_GROUP_ORDER: readonly EngineGroup[] = [
   "Running back",
   "Receiver",
   "Team & market",
-  "Proof & calibration",
+  "Results",
 ];
 
 export const DEFAULT_ENGINE = "proof";

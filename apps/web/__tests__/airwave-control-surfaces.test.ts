@@ -30,7 +30,7 @@ describe("Airwave control surfaces", () => {
     expect(publicPage).toMatch(/readAirwaveIntakeReadiness/);
     expect(publicPage).toMatch(/Ingestion status/);
     expect(publicPage).toMatch(/Transcript intake proof/);
-    expect(publicPage).toMatch(/pretending the media engine is already running/);
+    expect(publicPage).toMatch(/Real shows are added after review\./);
     expect(publicPage).toMatch(/href="\/api\/airwave\/readiness"/);
     expect(publicPage).toMatch(/href="\/api\/airwave\/intake-readiness"/);
   });

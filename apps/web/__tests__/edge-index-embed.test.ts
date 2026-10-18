@@ -17,6 +17,6 @@ describe("buildEmbedSnippet", () => {
     const html = buildEmbedSnippet("game-abc");
     expect(html).toContain("/embed/edge-index/game-abc");
     expect(html).toContain("iframe");
-    expect(html).toContain("Galaxy Edge Index");
+    expect(html).toContain("GSE Edge");
   });
 });

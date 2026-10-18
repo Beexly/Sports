@@ -15,11 +15,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const data = await loadEdgeIndexEmbed(params.gameId);
   const title = data.honestEmpty
-    ? "Galaxy Edge Index"
-    : `Edge Index ${formatEdgeIndex(data.edgeIndex)} · ${data.matchup}`;
+    ? "GSE Edge"
+    : `GSE Edge ${formatEdgeIndex(data.edgeIndex)} · ${data.matchup}`;
   return {
     title,
-    description: "Free public Galaxy Sports Edge Index badge.",
+    description: "Free public GSE Edge badge.",
     robots: { index: true, follow: true },
   };
 }

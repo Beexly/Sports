@@ -75,12 +75,12 @@ describe("Intelligence Graph v0", () => {
     const all = [fan, bettor, creator, analyst];
     expect(new Set(all).size).toBe(4);
 
-    // FAN: no Edge Index number, no evidence score. Plain English.
-    expect(fan).not.toMatch(/Edge Index/);
+    // FAN: no Edge number, no evidence score. Plain English.
+    expect(fan).not.toMatch(/\bEdge\b/);
     expect(fan).not.toMatch(/\/100/);
 
-    // BETTOR: has Edge Index, no evidence score.
-    expect(bettor).toMatch(/Edge Index/);
+    // BETTOR: has Edge, no evidence score.
+    expect(bettor).toMatch(/\bEdge\b/);
     expect(bettor).not.toMatch(/\/100/);
 
     // CREATOR: has evidence score and a story angle.
@@ -88,7 +88,7 @@ describe("Intelligence Graph v0", () => {
     expect(creator).toMatch(/hook|Angle|Quiet/i);
 
     // ANALYST: has everything.
-    expect(analyst).toMatch(/Edge Index/);
+    expect(analyst).toMatch(/\bEdge\b/);
     expect(analyst).toMatch(/evidence/);
     expect(analyst).toMatch(/book/);
   });

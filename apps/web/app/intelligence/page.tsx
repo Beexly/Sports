@@ -21,7 +21,7 @@ const TICKER_PHRASES = [
   "Independent referees, judged on their own",
   "Edge lives in the disagreement",
   "Graded against the close",
-  "It audits its own calibration",
+  "It checks its own results",
   "A record that can't be rewritten",
   "Silence when there's nothing honest to say",
   "We detect. You decide.",
@@ -30,7 +30,7 @@ const TICKER_PHRASES = [
 export const metadata: Metadata = {
   title: "Inside the Signal: How the Intelligence Works",
   description:
-    "A look inside the glass box: independent referees, consensus and divergence, calibrated edge, and a tamper-evident record. Methodology, not promises.",
+    "How Galaxy Sports Edge builds every pick, and how it checks itself.",
   alternates: { canonical: "/intelligence" },
 };
 
@@ -74,7 +74,7 @@ const CHAIN: ReadonlyArray<{
   },
   {
     step: "03",
-    title: "Calibrated edge",
+    title: "Measured edge",
     body: "A signal surfaces only when independent estimates diverge from the price and agree on the direction. With nothing independent to say, the honest default is silence.",
     accent: ACCENT_CYAN,
   },
@@ -87,7 +87,7 @@ const CHAIN: ReadonlyArray<{
   {
     step: "05",
     title: "It audits itself",
-    body: "The model watches its own calibration over time and raises a flag when accuracy drifts, so the system notices it is slipping before you do.",
+    body: "Every pick is graded after the game, and the results stay public.",
     accent: ACCENT_UV,
   },
   {
@@ -180,7 +180,7 @@ export default function IntelligencePage() {
                     boxShadow: "0 0 12px var(--orbital-cyan)",
                   }}
                 />
-                Inside the glass box
+                How it works
               </p>
             </Reveal>
             <Reveal delay={90}>
@@ -303,19 +303,18 @@ export default function IntelligencePage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow text-orbital-cyan">
-                Not one engine. A council
+                Not one check. Several
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h2 id="warroom-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
-                Watch the verdict change, and see which agent moved it.
+                Watch the verdict change, and see which check moved it.
               </h2>
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-ion-1">
-                Behind every read is a council of specialist agents, each with one job and an
-                escalation threshold. When the recommendation changes, you can trace exactly
-                which agent escalated and why. No opaque black box.
+                A set of independent checks reviews every pick, and you can see which check
+                flagged it.
               </p>
             </Reveal>
             <Reveal delay={140} className="mt-10">
@@ -355,14 +354,14 @@ export default function IntelligencePage() {
           <Reveal>
             <div className="mx-auto max-w-5xl rounded-2xl border border-titanium bg-gradient-to-b from-titanium/40 to-transparent p-10 text-center">
               <p className="eyebrow text-orbital-cyan">
-                Transparency is the product
+                Every number shows its work
               </p>
               <p className="mx-auto mt-4 max-w-2xl font-display text-2xl text-ion-white sm:text-3xl">
                 {CLOSING_LINE}
               </p>
               <p className="mx-auto mt-4 max-w-xl text-sm text-ion-1">
-                Numbers about our track record stay hidden until there&apos;s enough
-                settled, calibrated history to publish them honestly. Until then,
+                Our results stay hidden until there&apos;s enough settled, graded
+                history to publish them honestly. Until then,
                 this is the part we can show you in full: the method.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">

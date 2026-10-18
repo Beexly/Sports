@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { TheBeat } from "@/components/news/the-beat";
-import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
-import { buildBroadcast, NOVA } from "@/lib/fantasy/host";
 import { WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
 import { loadWireFromStore } from "@/lib/news/wire-store";
 
@@ -29,11 +27,10 @@ export const metadata: Metadata = {
 
 export default async function TheBeatPage() {
   // Stored wire. Empty store is the honest empty state (rule 1). A failed
-  // store read is `unavailable` — never a sample fallback.
+  // store read is `unavailable`, never a sample fallback.
   const store = await loadWireFromStore();
   const liveWire = store.failed ? null : store.items;
   const wireUnavailable = store.failed;
-  const broadcast = buildBroadcast(NOVA, store.failed ? [] : store.items);
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -105,38 +102,7 @@ export default async function TheBeatPage() {
               <a href="#ledger" className="btn btn-primary">
                 Open the Signal Ledger
               </a>
-              <a href="#transmission" className="btn btn-ghost">
-                Watch the transmission
-              </a>
             </div>
-          </div>
-        </section>
-
-        {/* ── TRANSMISSION · the always-on broadcast ──────────────────────── */}
-        <section
-          id="transmission"
-          className="border-t border-mineral px-4 py-14 sm:px-6 lg:px-8"
-          aria-labelledby="transmission-title"
-        >
-          <div className="mx-auto max-w-5xl">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
-                  GSN Transmission
-                </p>
-                <h2
-                  id="transmission-title"
-                  className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl"
-                >
-                  The week, on air.
-                </h2>
-              </div>
-              <p className="max-w-md text-sm leading-6 text-ion-2">
-                Nova from the field. Orion at the desk. Segment by segment.
-                the script on screen, never a robotic voice in your ear.
-              </p>
-            </div>
-            <GalaxyBroadcast broadcast={broadcast} />
           </div>
         </section>
 

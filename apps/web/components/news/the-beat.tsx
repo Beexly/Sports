@@ -16,7 +16,6 @@ import { useMemo, useState } from "react";
 import {
   rankWireCorroborated,
   signalLabel,
-  TIER_WEIGHT,
   type NewsItem,
   type Tier,
 } from "@/lib/news/impact";
@@ -50,7 +49,7 @@ export function TheBeat({
    */
   unavailable?: boolean;
 }) {
-  // Stored wire (C-416). Empty store is honest empty — never a sample.
+  // Stored wire (C-416). Empty store is honest empty, never a sample.
   // EMPTY_WIRE is a stable module constant so useMemo deps stay stable when
   // nothing is loaded (liveWire === null).
   const isLive = liveWire !== null;
@@ -165,7 +164,7 @@ export function TheBeat({
               aria-pressed={active}
               className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors"
               style={{ background: active ? `${TIER_HEX[t]}22` : "transparent", color: TIER_HEX[t], boxShadow: active ? `inset 0 0 0 1px ${TIER_HEX[t]}` : "none" }}
-              title={`source tier ${t}: editorial weight ${TIER_WEIGHT[t].toFixed(2)}, not a measured hit rate`}>
+              title={`Source tier ${t}`}>
               {t}
             </button>
           );
@@ -231,10 +230,10 @@ export function TheBeat({
               )}
               {/* urgency: lead gets a meter, the wire gets the dial */}
               {lead ? (
-                <div className="mb-3" aria-label={`Urgency ${r.urgency} of 100`}>
+                <div className="mb-3" aria-label={`Urgency ${r.urgency}/100`}>
                   <div className="flex items-baseline justify-between">
                     <span className="font-display text-4xl leading-none text-ion-white">{r.urgency}</span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-3">urgency / 100</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-3">Urgency {r.urgency}/100</span>
                   </div>
                   <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/10">
                     <div className="h-full rounded-full" style={{ width: `${Math.min(100, Math.max(0, r.urgency))}%`, background: hex }} />
@@ -271,7 +270,7 @@ export function TheBeat({
 
                 <div
                   className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]"
-                  title="These are the impact engine's read of the report (source tier, signal magnitude, freshness), not measured line or projection movement."
+                  title="How much this story could move the line."
                 >
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
                   <span className="text-ion-2">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
@@ -288,7 +287,7 @@ export function TheBeat({
                     <p className="mt-2 text-[11px] text-ion-3">
                       Weighted by source tier {r.item.tier}
                       {r.corroboration.confirmed ? `, confirmed across ${r.corroboration.sources} sources` : ", single source"}.
-                      Urgency {r.urgency} of 100 after freshness decay.
+                      Urgency {r.urgency}/100.
                     </p>
                   </div>
                 ) : (
