@@ -17050,3 +17050,10 @@ This account was NOT one of the assigned market handles. The original Lane B lan
 - @NerdingonNFL / @NFLResearcher: replacement date-scoped searches also returned no results, while the original lane observed profile headers showing posts exist (1 and 4). Status stands: UNKNOWN.
 - "Aggressiveness" search: replacement lane scanned at least 75 posts (all colloquial, no metric values) and three Next Gen Stats-citation variants returned no results; the untraversed band of the plain list remains UNKNOWN. Consistent with Addendum 1.
 - Replacement-lane totals for the record: 24 metric, 27 news, 27 market items counted by that lane; the large majority duplicate Addendum 1 and the main section and are NOT re-filed here. New items filed in this addendum: 29 (4 metrics, 3 news, 22 market).
+
+
+### expected-metrics: Third Down Target Share
+
+- What it is: A shadow metric computing a receiver's target share on 3rd down versus other downs (1, 2, 4) to identify clutch usage patterns.
+- Where it lives: `packages/prediction-engine/src/expected-metrics/third-down-target-share.ts`
+- Status: SHADOW (computed and tested but wired into nothing).

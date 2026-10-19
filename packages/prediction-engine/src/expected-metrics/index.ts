@@ -149,6 +149,15 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Third-down target share (SHADOW).
+export {
+  computeThirdDownTargetShare,
+  THIRD_DOWN_TARGET_SHARE_MODEL_VERSION,
+  type ThirdDownTargetPlay,
+  type ThirdDownTargetShareResult,
+  type TargetShareWindow,
+} from "./third-down-target-share.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["down", "play_type", "receiver_player_id"],
+    failureModes: ["raw target share hides down-specific usage", "routes run is missing so rate is volume-biased"],
+    family: "receiving",
+    forbiddenInputs: ["ftn tracking", "private tracking"],
+    formulaClass: "composite_score",
+    formulaSummary: "Player target share on 3rd down versus other downs.",
+    historicalPrecedent: [{ name: "Clutch usage splits", reason: "Identifying true WR1 trust vs volume padding." }],
+    internalName: "third_down_target_share_shadow",
+    metricId: "third-down-target-share",
+    protectedComponents: ["shrinkage to mean", "differential calculation"],
+    publicExposure: "hidden",
+    publicName: "Third Down Target Share",
+    sourceRightsRequired: ["public play-by-play modeling allowed"],
+    status: "SHADOW",
+    targetQuestion: "Who does the QB trust on the money down?",
+    targetVariable: "target share differential",
+    validationMethods: ["bucket_lift"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
