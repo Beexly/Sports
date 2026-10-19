@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type PlaySizePlay } from "./play-size-distribution.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "week", "season_type",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -56,7 +57,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "score_differential", "posteam_timeouts_remaining", "defteam_timeouts_remaining",
   "spread_line", "result",
   // success rate
-  "play_type", "yards_gained", "interception", "fumble_lost",
+  "play_type", "yards_gained", "qb_kneel", "interception", "fumble_lost",
   "rusher_player_id", "receiver_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
@@ -105,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  /** Play size distribution plays. */
+  readonly playSizePlays: readonly PlaySizePlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const playSizePlays: PlaySizePlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -582,6 +586,18 @@ export function mapNflversePbpToExpectedMetrics(
             turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
           }
         : null;
+      playSizePlays.push({
+        playId,
+        gameId: row["game_id"] ?? "",
+        season: num(row["season"]),
+        week: num(row["week"]),
+        posteam: row["posteam"] ?? "",
+        defteam: row["defteam"] ?? "",
+        playType: row["play_type"] ?? "",
+        yardsGained: num(row["yards_gained"]),
+        qbKneel: bin(row["qb_kneel"]),
+      });
+
       drivePlays.push({
         playId,
         gameId: row["game_id"] ?? "",
@@ -611,6 +627,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    playSizePlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

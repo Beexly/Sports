@@ -733,4 +733,50 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    allowedInputs: [
+      "yards_gained",
+      "play_type",
+      "qb_kneel",
+      "season",
+      "week",
+      "posteam",
+      "defteam"
+    ],
+    failureModes: [
+      "yardage shares must never act as a primary standalone edge due to unmeasured context",
+      "rolling windows must not span an offseason",
+      "plays without finite yardage must be excluded"
+    ],
+    family: "engine_v1",
+    forbiddenInputs: [
+      "player tracking data",
+      "proprietary charting data (FTN, PFF)"
+    ],
+    formulaClass: "deterministic",
+    formulaSummary: "Partitions qualifying plays into 6 yards-gained buckets (NEGATIVE, ZERO, SHORT, MEDIUM, CHUNK, EXPLOSIVE). Aggregated for OFFENSE and DEFENSE_ALLOWED on multiple point-in-time disciplined windows.",
+    historicalPrecedent: [
+      {
+        name: "Play size distribution",
+        reason: "Subsumes PFF explosive pass % and generic runs boards. Explains team efficiency shape better than mean yardage."
+      }
+    ],
+    internalName: "play_size_distribution_shadow",
+    metricId: "play-size-distribution",
+    protectedComponents: [
+      "bucket boundaries",
+      "partition invariant",
+      "exclusion rules"
+    ],
+    publicExposure: "none",
+    publicName: "Play Size Distribution",
+    sourceRightsRequired: [
+      "public play-by-play only",
+      "no external derived distributions"
+    ],
+    status: "SHADOW",
+    targetQuestion: "What is the shape of a team's yardage generation/allowance across different play scales?",
+    targetVariable: "play size bucket shares",
+    validationMethods: ["unit_tests"],
+  },
 ] as const;

@@ -140,6 +140,19 @@ export {
   type SuccessRateSplit,
 } from "./success-rate.js";
 
+// Play-size distribution (SHADOW: deterministic buckets).
+export {
+  computePlaySizeDistributions,
+  bucketOf,
+  isQualifying,
+  PLAY_SIZE_MODEL_VERSION,
+  type PlaySizePlay,
+  type PlaySizeBucket,
+  type WindowType,
+  type GrainType,
+  type PlaySizeDistribution,
+} from "./play-size-distribution.js";
+
 // Drive aggregation (deterministic; glass-box, enters dark).
 export {
   buildDrives,
