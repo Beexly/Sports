@@ -319,7 +319,7 @@ const SAMPLE_CH87_SHOWS: readonly ShowBlock[] = [
   },
   {
     showId: "ch87-late-night-wrap",
-    showName: "Late Night Slate Lock Wrap (Sample)",
+    showName: "Late Night Slate Wrap (Sample)",
     startsAtCt: "22:00",
     endsAtCt: "23:00",
     startHour: 22,

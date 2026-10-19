@@ -149,7 +149,7 @@ export type Broadcast = {
 };
 
 // Honest and brand-safe. These scripts are composed deterministically from the
-// fictional DEMO_WIRE and the illustrative roster in lib/fantasy/studio.ts —
+// fictional DEMO_WIRE and the illustrative roster in lib/fantasy/studio.ts:
 // no language model, and no real report. The previous wording said the segments
 // were "compiled from verified news signals" and "human-reviewed", which read as
 // a claim about the content; this says what the content actually is.
