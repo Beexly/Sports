@@ -16986,3 +16986,67 @@ This addendum lands on 2026-10-18 after the main 16:20 section. The main section
 - Aggressiveness search: deepest morning segment unscrolled — remainder UNKNOWN.
 - Partials flagged in the CSVs (blank-rendered images at @PFF; a pre-window @Covers best-bet post opened and excluded, its graphic price not filed as in-window).
 - A @RapSheet pregame video post was excluded on post-ID evidence as pre-window and not opened (its text listed several status items already covered by the morning runs).
+
+## X intel sweep — 2026-10-18 16:20 CDT run — ADDENDUM 2 (replacement Lane B reconciliation)
+
+Source: replacement Lane B lane (date-scoped searches), final verified manifest delivered after the run closed. Every item below was opened and exact-timestamp-verified in-window (after 9:08 AM through 4:20 PM CDT, Sun 2026-10-18) by that lane, and was deduped by post ID against the main section and Addendum 1 — only items NOT already filed appear here. Definitions NOT given and data sources NOT stated for all finds unless noted. Read-only sweep as @GalaxySportsHQ; no likes, reposts, replies, follows, DMs, or bookmarks.
+
+### Metrics — @PFF (4 finds; these sit in the 10:05 AM–12:00 PM sub-segment Addendum 1 recorded as only partially verified)
+
+- 10:28 AM CDT — Caleb Williams season pace: 407 pass yards through 5 weeks; at that pace he would need 300 pass yards per game over the next 12 games to become the Bears' first 4,000-yard passer in a season. (status 2111841734405640442)
+- 10:32 AM CDT — C.J. Stroud stat line (London game): 15/20, 211 pass yards, 3 pass TD, 148.1 passer rating. (status 2111842760206815252)
+- 11:23 AM CDT — Trevor Lawrence games with 4+ pass TD: 1 in his first 73 starts; 3 in his last 10 starts. (status 2111855706122936755)
+- 11:34 AM CDT (last-edited time on an edited post) — Players with a receiving TD and an INT in the same game over the last 40 years: Travis Hunter (2026), Brian Dawkins (2002), Keyshawn Johnson (1999, postseason). Distinct from the 11:18 AM @PFF post filed in Addendum 1 (last-10-seasons framing). (status 2111858427068854362)
+- Sub-segment status after this addendum: narrowed, not closed — the replacement lane did not count image-only posts anywhere, so any image-only posts in the 10:05 AM–12:00 PM band remain UNKNOWN.
+
+### News / injury (2 new items + 1 added detail)
+
+- 1:49 PM CDT — @RapSheet: Colts CB Sauce Gardner (calf) questionable to return. Source NOT stated. (status 2111892445663556028)
+- 3:00 PM CDT — @JFowlerESPN: Browns WR Jerry Jeudy is viewed as a trade candidate, but the Browns are not actively shopping him. Classification note: the original Lane B lane saw this account's trade talk and recorded it as outside the news categories; the replacement lane counted this post as a news item. Recorded here as a roster/trade note. (status 2111910321115832540)
+- 10:32 AM CDT — @MikeGarafolo: Tyson Bagent is the Bears' backup QB today, with Case Keenum the emergency QB. Added detail on the Bagent depth-chart item filed in Addendum 1 via @RapSheet. (status 2111842954960928949)
+
+### Market — @ActionNetworkHQ (16 newly verified items; book NOT stated in any)
+
+Several of these posts were seen-but-not-opened in the original Lane B listing and were recorded there as NOT verified finds; the replacement lane opened and timestamp-verified them, so they are filed now.
+
+- 9:25 AM — Best bet (pick by @EvanHAbrams): Jets +7.5 vs Patriots. (2111825932755378237)
+- 9:42 AM — Best bet: Titans +6.5 vs Colts; quoted analysis mentions some books offering Titans +7 (no book named). (2111830389312328158)
+- 10:01 AM — Best bet (pick by @Stuckey2): Saints -1.5 vs Giants. (2111834984231088562)
+- 10:06 AM — Foster Moreau 2nd TD of the game +14000; Texans 1st-half ML +114 cashed (London game). (2111836204844892190)
+- 10:54 AM — Nate Boerkircher anytime TD +1550 (Texans, London game). (2111848337288593839)
+- 12:21 PM — Josh Cuevas first career TD: 1st TD +5000, anytime TD +1200, both cashed; Ravens -3 context. This is the post recorded as seen-not-verified in Addendum 1. (2111870179722326289)
+- 1:58 PM — Alvin Kamara anytime TD +195, scored (Saints vs Giants). Seen-not-verified in Addendum 1; now verified. (2111894779306868899)
+- 2:26 PM — Audric Estime TD +1200 (Browns, game-tying TD). (2111901829810299193)
+- 2:36 PM — Titans DST anytime TD +2000, cashed. (2111904202217623986)
+- 3:09 PM — Browns moneyline +145; Browns' 4th comeback win of the season. An unverified borderline Browns +145 listing item in Addendum 1 is superseded by this opened, timestamp-verified post. (2111912548979061208)
+- 3:16 PM — Titans moneyline +240 won (final TEN 26, IND 20); post restates the Colts (-6.5) as the most bet side of the day at 77% of bets (money share NOT restated in this post; the 82% money figure stands from the 10:58 AM post in Addendum 1). (2111914425183871459)
+- 3:28 PM — Betting-trend update: divisional underdogs now 19-7 ATS, 4-0 today (update to the 15-7 figure filed at 10:27 AM in Addendum 1). (2111917321229054390)
+- 3:45 PM — Steelers (-2.5) completed an OT comeback win after trailing 16-3 in the 4th quarter (final PIT 26, TB 19). Result post stating the pregame line; distinct from the live-move post filed in Addendum 1. (2111921753215889820)
+- 3:51 PM — Jets +7.5 covered against the Patriots (the 9:25 AM best bet cashed). (2111923265417740313)
+- 3:53 PM — Titans +6.5 best bet cashed. (2111923645270380885)
+- 3:54 PM — Saints -1.5 best bet cashed (Saints beat the Giants 34-27). (2111923975714656571)
+
+### Market — @Bet_Labs (1 new item; book NOT stated)
+
+- 3:51 PM — Results recap with lines: Texans +3 (won), Texans ML (won), Saints ML (won), Colts over 43.5 (won), Browns +9 / Bucs +8 teaser (won), Bucs under 39.5 (lost), Eagles ML (lost). (2111923240037720221)
+
+### Market — @Covers (1 newly counted item)
+
+- 2:01 PM — Cowboys vs Packers (SNF) player prop: Dak Prescott over 274.5 passing yards, with a 55% figure credited in the post to @KalshiSports (source as stated). Noted but not counted in Addendum 1; opened and verified by the replacement lane, filed now. The priced version (o274.5 at -120, BET99) stands as filed in Addendum 1. (2111895348830675219)
+
+### Market — @vsininsights (4 items; supplementary account)
+
+This account was NOT one of the assigned market handles. The original Lane B lane swept the dormant assigned handle @VSiN (0 posts) and the network account @VSiNLive in its place; the replacement lane swept @vsininsights. Items are recorded under the account exactly as rendered, as supplementary finds.
+
+- 12:01 PM — MLB ALCS Game 5 player prop: Parker Messick (Cleveland) over 1.5 walks allowed +105; post cites a 15.1% postseason walk rate vs 6.6% regular season. Book NOT stated. (2111865140815798607)
+- 12:31 PM — NFL betting splits system: when over 68% of the handle is on the road side ATS, that group is 73-52 ATS (58.4%) for +15.8 units and a 12.6% ROI over the past two seasons. Source as stated in the post: per NFL DK Betting Splits systems. (2111872690655281604)
+- 1:01 PM — NHL: Minnesota Wild -1.5 goals (+136) puck line vs Columbus Blue Jackets, flagged as a notable bet. Book NOT stated. (2111880240465387958)
+- 1:31 PM — MLB ALCS Game 5: Tampa Bay moneyline -132 at Cleveland; post cites under trends (Messick 5-0 to the under, 0.86 ERA vs TB; series under 19-5-1). Book NOT stated. (2111887789797298346)
+
+### Coverage corrections from the replacement lane
+
+- @DonAtkinsonNFL: Addendum 1 recorded 0 finds from two in-window posts seen on the profile but not opened. The replacement lane scanned at least 40 posts (all live game commentary/replies, no metric content) but its virtualized timeline stalled and the morning slice (including the 9:08 AM–1:00 PM in-window stretch) could not be rendered. Status corrected: qualifying count for the morning slice is UNKNOWN, not zero.
+- @FTNData: the replacement lane's date-scoped search returned no results; that is a search non-return, not proof of no posts. The protected-posts status from Addendum 1 stands: UNKNOWN.
+- @NerdingonNFL / @NFLResearcher: replacement date-scoped searches also returned no results, while the original lane observed profile headers showing posts exist (1 and 4). Status stands: UNKNOWN.
+- "Aggressiveness" search: replacement lane scanned at least 75 posts (all colloquial, no metric values) and three Next Gen Stats-citation variants returned no results; the untraversed band of the plain list remains UNKNOWN. Consistent with Addendum 1.
+- Replacement-lane totals for the record: 24 metric, 27 news, 27 market items counted by that lane; the large majority duplicate Addendum 1 and the main section and are NOT re-filed here. New items filed in this addendum: 29 (4 metrics, 3 news, 22 market).
