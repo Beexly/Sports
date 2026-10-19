@@ -17184,3 +17184,33 @@ Home feed (Following): ~23 skimmed / 0 qualifying (reached posts well before the
 - Partials flagged, never completed: @GridironInfo_ Drive Start chart footer/source line illegible; @hawkblogger scatters' non-Rams teams logos-only with no printed values.
 - X virtualised timelines occasionally jumped intervals while scrolling (e.g. the @jmthrivept 13-14h interval was separately back-checked and contained no qualifying analytics).
 - Videos not played. No external/bio-link sites visited; endpoints recorded as stated on X only.
+
+## X ANALYTICS SWEEP 2026-10-19 (09:08 RUN, MORNING — ADDENDUM, LANE 2 MANIFEST)
+
+Addendum to the 09:08 run section above, filed ONLY from lane 2's final verified manifest (delivered after the lane 1 section landed). Same window (after 9:08 PM CDT Sun 2026-10-18 through 9:08 AM CDT Mon 2026-10-19), same read-only standard; login CONFIRMED in lane 2's manifest (sidebar account menu showed "Galaxy Sports Edge" / @GalaxySportsHQ); every find below was opened on its detail page and its exact timestamp verified in-window. Where lane 2's scan counts differ from lane 1's for the same account, both are recorded as attributed per-lane counts; lane 1's detail-verified finds stand as filed.
+
+### NEW METRIC / ANGLE ENTRIES (lane 2)
+
+- **Highest missed tackle forced rate this season (min 50 touches), 5-player leaderboard** — @PFF, exact 9:23 PM CDT 2026-10-18 (https://x.com/PFF/status/2112006803244368155): Kenneth Walker 40.0%; Jahmyr Gibbs 29.5%; Jaylen Warren 28.6%; Bhayshul Tuten 27.1%; Braelon Allen 25.3%. No definition given (qualifier "min 50 touches" only). Data source: NOT stated. Full table was in the post text (no partial flag). -> pff-missed-tackle-forced-rate-leaders-2026.csv.
+- **Week 6 game recap image tables, DAL at GB [PARTIAL — all numeric values unreadable]** — @GridironInfo_, exact 8:20 AM CDT 2026-10-19 (https://x.com/GridironInfo_/status/2112171918417699273): post text as rendered: "Game Recap: Dallas Cowboys at Green Bay Packers Week 6 — DAL 13 - GB 23". The 4 attached image tables name these metrics/columns: Total EPA, EPA/Play, Success Rate, Yards/Play, aDOT, CPOE, Pass SR%, EPA/DB, Rush SR%, EPA/ATT, plus sections "Offense EPA Breakdown", "When Did They Move The Chains?", "Series Results", "How Did Drives End?", "Biggest Plays by EPA". No definition given. Data source: NOT stated in the post text; image footer unreadable. PARTIAL because: every numeric value inside the 4 image tables was unreadable at the rendered resolution — no table values transcribed, none guessed; only the text score DAL 13 - GB 23 is recorded. The metric/column inventory itself is recorded as rendered.
+- **Partial-flag addition to an already-filed find:** lane 2 verified the same @SumerSports 11:26 PM CDT Oct 18 Jordan Love vs-the-blitz post filed in the lane 1 section above (identical values) and adds: the post's attached video/GIF chart ("every blitzed dropback in order") was not transcribed — its per-play rows were unreadable in lane 2's pass. The text values filed above are complete as rendered.
+
+### VERIFIED EXCLUSION (lane 2)
+
+- @statyxio Luther Burden targets-per-route post (44.4% targets per route, 5.28 yards per route, as rendered) was opened and verified at exact 9:30 AM CDT 2026-10-19 — AFTER the 9:08 AM window end — and excluded.
+
+### OUT-OF-WINDOW ENDPOINT OBSERVATIONS (not filed as in-window endpoints)
+
+- @ScottBarrettDFB's pinned post (after the window, ~1h before lane 2's scan) announced 7 days of free access to @FantasyPtsData's Data Suite 2.0 at fantasypointsdata.com, as rendered. Recorded as an out-of-window observation only.
+- A @PFF promo post (exact time vs the 9:08 AM window end unverified) advertised PFF Pro with "180+ new metrics" and "32,000+ stat combinations", as rendered. Recorded as an observation only; no NEW endpoint is claimed for this window.
+
+### COVERAGE (lane 2 manifest; scanned / in-window qualifying)
+
+@SumerSports 6/1 (window fully crossed; next older post verified 9:02 PM Oct 18, pre-window), @PFF 12/1 (basic leaderboards — yards/reception, INT rate, catch % — scanned, not filed; two 12h posts image-only with no text values), @sfdata9ers 0/0 (timeline jumped from after-window to 18-19h pre-window), @GridironInfo_ at least 6/1 (six ~3h Week 6 game-recap image posts scanned; only the DAL/GB recap opened — filed PARTIAL above; 5 recap tables remain unopened), @statyxio 3/0 (in-window posts were video captions with no metrics), @FantasyPtsData 0/0 (newest post 16h before scan, pre-window), @EstablishTheRun 0/0 (timeline jumped 13m to 17h), @32BeatWriters 0/0 (newest post 16h before scan, pre-window), @DevyEusuf 2/0 [PARTIAL — top in-window posts only, window start not reached; one ~9h Jadan Baugh image-comparison post's table values not read], @hawkblogger 5/0 (lane 2's scan did not surface the 10:01 PM post lane 1 detail-verified and filed above; both counts stand as recorded), @cmain7 UNKNOWN/0 [PARTIAL — top 5 posts only, all after the window; lane 1's completed 5/0 scan above is the deeper pass], @RyanPaganetti 4/0, @jmthrivept 1/0 [PARTIAL — one in-window injury post, no metric; lane 1's ~32/1 scan above is the deeper pass], @MagicSportsGuy 0/0, @ScottBarrettDFB 1/0, @PattonAnalytics 0/0 (its "Literally what CP/CPOE account for" post is 21h before scan, pre-window, no values), @DonAtkinsonNFL 3/0, @DynatyzeFF 3/0 (pinned Week 6 Fantasy Leaders PPR image, waivers post, and a Mike Washington vs Jeanty comparison with comparative percentages only — no named advanced metric — scanned, not filed). Home feed (Following): lane 2 viewed only the current top on arrival — its window skim is UNCOVERED beyond that; lane 1's ~23-post skim above stands.
+
+### GAPS AFTER BOTH LANES (explicit)
+
+- Still UNCOVERED (never opened by either lane; UNKNOWN, not zero): @NerdingonNFL, @FTNData, @NFLResearcher and variant @NFL_Researcher.
+- Still UNCOVERED searches (never run by either lane; UNKNOWN, not zero): EPA, CPOE, TPRR, pass rush win rate, aggressiveness.
+- Partial remainders: @GridironInfo_ 5 unopened in-window game-recap image tables plus its older in-window posts unfinished (lane 1); @DevyEusuf in-window depth below its top posts (window start not reached by lane 2, not scanned by lane 1).
+- No profile opened by either lane failed to render or was protected.
