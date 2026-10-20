@@ -313,6 +313,8 @@ implies a per-dataset registry that does not exist.
 | Counterfactual (mechanical) | **none** | — | `intelligence/reasoning/schemas.py` `BreakingCondition` + `observed_values` | **cheapest win — no new estimator** |
 | Adversary-as-intervention | `adversary.py:190` `_check_breaking_conditions` (partly) | partial | extend to re-run under a counterfactual world | the trace-clone helper |
 | Residual mining | **none** | — | new job over `lit.residual` + `pick_signal_snapshots` | residual store exists only on the audit branch |
+| **DML + placebo + Rosenbaum sensitivity** | `research/dml-qb-out.ts:287` | **NO** | the honest "adversary challenges the estimate" tool | its only bridge (`research-causal-bridge.ts`) has zero importers — dead twice over |
+| **Counterfactual trace clone** | **none** | — | `intelligence/reasoning/counterfactual.py` | `BreakingCondition` is already machine-checkable against `observed_values` |
 | Settlement→belief | **none** | — | `apps/web/lib/settlement/free-path-snapshot.ts` (residual bridge, audit branch) | `corpusWeight` gate not run |
 | Adversary→number | **none** | — | `process-sport.ts` context assembly | needs an agreed numeric contribution |
 

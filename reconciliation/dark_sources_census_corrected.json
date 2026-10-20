@@ -1,0 +1,407 @@
+{
+ "artifact": "dark_sources_census_corrected",
+ "supersedes": "reconciliation/dark_sources_census.json (verdict field only -- the per-evaluator env keys and dependencies there are still valid)",
+ "measured": "2026-10-20",
+ "correction_note": "The first pass judged an evaluator by whether its DECLARED dataDependencies NAMED a table that exists. The declared names are SOURCE PRODUCT names ('nfl_pbp', 'nfl_charting'), not table names, and the play-level tables those products would populate do not exist in schema.prisma (no model Play, no model Drive, no penalty column, no Player.birthDate, no venue lat/lon). The corrected pass checks whether the SPECIFIC FIELDS the evaluator reads are obtainable today at the granularity it needs. The earlier claim '20 of 21 need only an adapter' was too generous; the correct count is 4.",
+ "totals": {
+  "dark_evaluators": 21,
+  "shadow_only_evaluators": 2,
+  "total": 23,
+  "by_verdict": {
+   "NEEDS-A-NEW-PRODUCER": 18,
+   "DATA-EXISTS-NEEDS-ADAPTER": 5
+  }
+ },
+ "evaluators": [
+  {
+   "signal_id": "nfl_turnover_luck",
+   "family": "LUCK",
+   "label": "NFL Turnover Luck (recovery variance vs skill)",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "DEFENSIVE_PLAYS",
+    "FUMBLES_FORCED",
+    "FUMBLES_RECOVERED_BY_TEAM",
+    "INTERCEPTIONS",
+    "OPPONENT_DROPBACKS"
+   ],
+   "declared_dependencies": [
+    "nfl_player_stats_weekly",
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs PLAY-level rows (def snaps, dropbacks, forced fumbles, recoveries, INTs). No play table exists."
+  },
+  {
+   "signal_id": "nfl_short_week_road_deficit",
+   "family": "SITUATIONAL",
+   "label": "NFL Short-Week Road Rest Deficit",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "IS_DIVISION_RIVALRY",
+    "IS_ROAD_TEAM",
+    "OPP_REST_DAYS",
+    "REST_DAYS",
+    "TRAVEL_DISTANCE_MILES"
+   ],
+   "declared_dependencies": [
+    "nfl_schedule"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "restDays EXISTS (games.restDaysHome/Away, populated 2130/2082 rows) but TRAVEL_DISTANCE_MILES has no source (no venue coordinates) and IS_DIVISION_RIVALRY has no column."
+  },
+  {
+   "signal_id": "nfl_age_conditioned_rest",
+   "family": "SITUATIONAL",
+   "label": "NFL Age-Conditioned Rest Recovery",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "OL_AVG_AGE",
+    "REST_DAYS",
+    "ROSTER_SNAP_WEIGHTED_AGE",
+    "STARTING_QB_AGE"
+   ],
+   "declared_dependencies": [
+    "nfl_schedule",
+    "nfl_rosters"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs Player.birthDate (absent) and a snap-weighted age construction."
+  },
+  {
+   "signal_id": "nfl_fourth_down_aggressiveness",
+   "family": "SITUATIONAL",
+   "label": "NFL Fourth-Down Coaching Aggressiveness",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "COACH_GO_FOR_IT_RATE",
+    "FOURTH_DOWN_LEVERAGE",
+    "LEAGUE_GO_FOR_IT_RATE"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp",
+    "nfl_coaching_history"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs 4th-down DECISIONS keyed to a COACH. data/gse-dataset/fourth-down.jsonl has WP-by-option, no decision, no coach."
+  },
+  {
+   "signal_id": "nfl_second_and_ten_tendency",
+   "family": "SITUATIONAL",
+   "label": "NFL 2nd-and-10 Play-Calling Tendency (Lopez)",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "LEAGUE_SECOND_AND_TEN_PASS_RATE",
+    "SECOND_AND_TEN_PASS_RATE"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs live in-game play-call state (prior play type, score, quarter, clock). No feed."
+  },
+  {
+   "signal_id": "nfl_primetime_target_concentration",
+   "family": "SITUATIONAL",
+   "label": "NFL Primetime Target Concentration",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "IS_PRIMETIME",
+    "LEAGUE_WR1_TARGET_SHARE",
+    "WR1_TARGET_SHARE"
+   ],
+   "declared_dependencies": [
+    "nfl_player_stats_weekly",
+    "nfl_schedule"
+   ],
+   "verdict": "DATA-EXISTS-NEEDS-ADAPTER",
+   "what_is_missing": "PlayerGameStat.targetShare EXISTS. Needs a WR1 aggregation and a primetime flag; both derivable from games.commenceTime + the stat column."
+  },
+  {
+   "signal_id": "nfl_early_down_proe_momentum",
+   "family": "SITUATIONAL",
+   "label": "NFL Early-Down PROE Momentum",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "EARLY_DOWN_PROE",
+    "EARLY_DOWN_PROE_MOMENTUM"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs early-down pass rate and pace. TeamGameEfficiency stores only offEpaPerPlay/offSuccess/defEpaPerPlay/defSuccess."
+  },
+  {
+   "signal_id": "nfl_two_minute_hurry_up",
+   "family": "SITUATIONAL",
+   "label": "NFL Two-Minute Hurry-Up Efficiency",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "LEAGUE_TWO_MINUTE_EPA",
+    "TWO_MINUTE_EPA_PER_PLAY"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs drive-level two-minute slices. No drive table."
+  },
+  {
+   "signal_id": "nfl_bye_week_defensive_install",
+   "family": "SITUATIONAL",
+   "label": "NFL Bye-Week Defensive Installation Edge",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "COMING_OFF_BYE",
+    "DEFENSIVE_EPA_TREND"
+   ],
+   "declared_dependencies": [
+    "nfl_schedule",
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "bye week + defEpaPerPlay are derivable, but COORDINATOR identity and PEDIGREE TIER have no source (EntityType lists 'coordinator' but the graph is 'not yet read by any surface')."
+  },
+  {
+   "signal_id": "nfl_qb_twp_regression",
+   "family": "EFFICIENCY",
+   "label": "NFL QB Turnover-Worthy-Play Regression",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "OPP_DEF_INT_RATE",
+    "QB_INTERCEPTIONS",
+    "QB_PASS_ATTEMPTS",
+    "QB_TURNOVER_WORTHY_PLAYS"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp",
+    "nfl_player_stats_weekly"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "attempts + INTs exist; turnoverWorthyPlays has no table (pbp_participation_2026.parquet is a documented 404)."
+  },
+  {
+   "signal_id": "nfl_qb_receiver_continuity",
+   "family": "EFFICIENCY",
+   "label": "NFL QB-Receiver Continuity",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "QB_WR_GAMES_TOGETHER",
+    "QB_WR_TARGET_SHARE"
+   ],
+   "declared_dependencies": [
+    "nfl_rosters",
+    "nfl_player_stats_weekly"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "2 of 3 derivable from PlayerGameStat + DepthChartEntry; COORDINATOR TENURE has no source."
+  },
+  {
+   "signal_id": "nfl_penalty_differential_momentum",
+   "family": "EFFICIENCY",
+   "label": "NFL Penalty Differential Momentum",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "PENALTY_MOMENTUM",
+    "PENALTY_YARDS_AGAINST",
+    "PENALTY_YARDS_FOR"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs PBP penalty rows. grep 'penalty' schema.prisma -> no matches."
+  },
+  {
+   "signal_id": "nfl_backup_qb_target_distribution",
+   "family": "EFFICIENCY",
+   "label": "NFL Backup-QB Target Distribution Shift",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "BACKUP_TARGET_SHARE",
+    "QB_IS_BACKUP",
+    "STARTER_TARGET_SHARE"
+   ],
+   "declared_dependencies": [
+    "nfl_injuries",
+    "nfl_player_stats_weekly"
+   ],
+   "verdict": "DATA-EXISTS-NEEDS-ADAPTER",
+   "what_is_missing": "DepthChartEntry.depthRank + Injury + PlayerGameStat ALL EXIST and are ingested by live crons. Only the IS_BACKUP derivation + homeSign are missing."
+  },
+  {
+   "signal_id": "nfl_man_zone_receiver_archetype",
+   "family": "EFFICIENCY",
+   "label": "NFL Man/Zone Receiver Archetype Matchup",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "DEF_MAN_RATE",
+    "WR_MAN_EPA",
+    "WR_ZONE_EPA"
+   ],
+   "declared_dependencies": [
+    "nfl_charting",
+    "nfl_player_stats_weekly"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs coverage charting (man/zone, two-high). NextGenStat has separation/CPOE, not shells."
+  },
+  {
+   "signal_id": "nfl_wr1_vacated_target_efficiency",
+   "family": "EFFICIENCY",
+   "label": "NFL WR1-Out Efficiency Decay",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "VACATED_TARGET_SHARE",
+    "WR1_OUT",
+    "WR2_TARGET_SHARE"
+   ],
+   "declared_dependencies": [
+    "nfl_injuries",
+    "nfl_player_stats_weekly"
+   ],
+   "verdict": "DATA-EXISTS-NEEDS-ADAPTER",
+   "what_is_missing": "Injury + DepthChartEntry + PlayerGameStat.targetShare all exist -- BUT the implementation is a hand-rolled local formula (extensions:606-619) whose comment falsely claims 'Same math' as a kernel it never imports. DUPLICATE of nfl_wr1_out_redistribution."
+  },
+  {
+   "signal_id": "nfl_redzone_opportunity_conversion",
+   "family": "EFFICIENCY",
+   "label": "NFL Red-Zone Opportunity Conversion",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "LEAGUE_REDZONE_TD_RATE",
+    "REDZONE_TDS",
+    "REDZONE_TRIPS"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "needs drive-level red-zone entry. No red-zone column, no drive table."
+  },
+  {
+   "signal_id": "nfl_negative_binomial_redzone_td",
+   "family": "EFFICIENCY",
+   "label": "NFL Negative-Binomial Red-Zone TD Rate",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "REDZONE_TD_DISPERSION",
+    "REDZONE_TD_MEAN",
+    "REDZONE_TD_OBSERVED"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "same drive-level need, plus a FITTED dispersion stored nowhere."
+  },
+  {
+   "signal_id": "nfl_redzone_personnel_grouping",
+   "family": "EFFICIENCY",
+   "label": "NFL Red-Zone Personnel Grouping Edge",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "LEAGUE_REDZONE_PERSONNEL_SUCCESS",
+    "REDZONE_PERSONNEL_GROUPING",
+    "REDZONE_PERSONNEL_SUCCESS_RATE"
+   ],
+   "declared_dependencies": [
+    "nfl_pbp",
+    "nfl_charting"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "participation-2018..2025.jsonl HAS offense_personnel, but there is no participation-2026 file and no grades source."
+  },
+  {
+   "signal_id": "nfl_rookie_breakout_cohort",
+   "family": "NARRATIVE",
+   "label": "NFL Rookie Breakout Cohort",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "PLAYER_DRAFT_CAPITAL",
+    "PLAYER_IS_ROOKIE",
+    "PLAYER_USAGE_TREND"
+   ],
+   "declared_dependencies": [
+    "nfl_rosters",
+    "nfl_player_stats_weekly"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "rosters-2026.jsonl has NO draft column; usage trend is a proxy (SnapCount.offensePct)."
+  },
+  {
+   "signal_id": "nfl_high_altitude_fatigue",
+   "family": "MICROCLIMATE",
+   "label": "NFL High-Altitude Fatigue Decay",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "IS_VISITING",
+    "STADIUM_ELEVATION_FT"
+   ],
+   "declared_dependencies": [
+    "nfl_stadium_weather_feed"
+   ],
+   "verdict": "DATA-EXISTS-NEEDS-ADAPTER",
+   "what_is_missing": "needs STADIUM_ELEVATION_FT -- a 32-row static venue table. No altitude column today; games/teams carry no elevation."
+  },
+  {
+   "signal_id": "nfl_turf_surface_fatigue",
+   "family": "MICROCLIMATE",
+   "label": "NFL Turf Surface Fatigue",
+   "status": "DARK",
+   "trust_weight": null,
+   "env_keys_read": [
+    "IS_ARTIFICIAL_TURF",
+    "TURF_SOFTNESS_INDEX"
+   ],
+   "declared_dependencies": [
+    "nfl_stadium_meta"
+   ],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "TURF_SOFTNESS_INDEX has ONE occurrence in the whole repo (the read). Invented. IS_ARTIFICIAL_TURF is derivable from a 32-row venue table."
+  },
+  {
+   "signal_id": "nfl_linear_wind_pass_impact",
+   "family": "MICROCLIMATE",
+   "label": "nfl_linear_wind_pass_impact",
+   "status": "SHADOW_ONLY",
+   "trust_weight": null,
+   "env_keys_read": [],
+   "declared_dependencies": [],
+   "verdict": "DATA-EXISTS-NEEDS-ADAPTER",
+   "what_is_missing": "WIND_MPH is PRODUCED (game-weather-capture cron -> gameSignal -> stored-signal-env-bridge maps wind_mph->WIND_MPH). IS_DOME is a 32-row static constant. The family is measured |slope| < se (engine-weights.ts:14) -- the HONEST move is to leave it SHADOW, not promote it."
+  },
+  {
+   "signal_id": "nfl_temperature_precipitation_decay",
+   "family": "MICROCLIMATE",
+   "label": "nfl_temperature_precipitation_decay",
+   "status": "SHADOW_ONLY",
+   "trust_weight": null,
+   "env_keys_read": [],
+   "declared_dependencies": [],
+   "verdict": "NEEDS-A-NEW-PRODUCER",
+   "what_is_missing": "TEMP_F is bridged and PRECIP_PCT is written, but the bridge wants a precipitationType ENUM (NONE|LIGHT_RAIN|HEAVY_RAIN|SNOW|FREEZING_RAIN) that nothing derives. IS_DOME unproduced."
+  }
+ ]
+}

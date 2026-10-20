@@ -23,6 +23,47 @@ chain reconstruction and re-evaluation, not only full-slate batch runs."*
 | **And there is no HTTP route for it** | `grep -rn 'intelligence' apps/web/app/api/` → no reasoning/chain/trace route. The web app has no entry point to the reasoning engine at all. |
 | **And the published numbers never consult it** | `packages/prediction-engine/src/scoring.ts` imports nothing from `intelligence/`. `packages/ingestion-pipeline/src/process-sport.ts` imports nothing from `intelligence/`. |
 
+**Two facts, verified 2026-10-20, that make this stronger than "unwired":**
+
+**(a) The Python mind cannot return a probability.** The output type has no
+slot for one. `intelligence/reasoning_engine/run_game.py:357-361`:
+
+```python
+"pick": None,
+"confidence": None,
+"probability_before_calibration": None,
+"probability_after_calibration": None,
+```
+
+The chain, the adversary verdict, the checklist, the depth — all produced,
+all serialized — and the published number is hardcoded `None`. The engine
+was never designed to emit one.
+
+**(b) The engine reasons about a fixture, not the game being emitted.**
+`run_game.py:343` calls `analyze(card_request(), reg, ...)` and
+`card_request()` (`intelligence/tests/helpers.py:24-31`) returns a **static**
+CLE/PIT week-4 four-leg pressure-funnel card. `home`/`away`/`week` only
+steer the L1 market priors (`run_game.py:338`).
+
+**So the causal chain the engine builds is not about the game it emits.**
+An ops route calling `reason_game` today would return the same week-4 card
+every time. **This is why "wire the engine to the publish path" is not a
+wiring task** — the engine has no per-game input path yet. The provider
+registry exists and the chain builder does read provider data
+(`pipeline.py:85` takes `providers`), but the REQUEST is the fixture.
+
+**(c) The one seam where a signal moves a probability is closed.**
+`packages/ingestion-pipeline/src/continuous-signal-tilt.ts:59-164` is the
+only place a signal affects `trueProb`. Measured: `ctx.env` is bridged with
+exactly **four** weather keys (`stored-signal-env-bridge.ts:24-37`); no
+ACTIVE registry signal carries the required `metadata.homeSign`
+(`grep -c homeSign signal-registry-definitions.ts` = 0); the tilt refuses
+any signal without a sign of exactly `1`/`-1`
+(`continuous-signal-tilt.ts:100-104`). Therefore `votes.length === 0` and
+the function returns `applied: false` (`:123-131`).
+
+**Ingestion is the easy part. The vote path is closed.**
+
 **So the situation is not "the continuous loop is wired to the batch path."
 The continuous loop is wired to nothing.** The published `trueProb` comes
 from `scoring.ts` + `edge-engine.ts` + `ranking-prob.ts`, and the entire

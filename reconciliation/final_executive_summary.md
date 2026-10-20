@@ -13,7 +13,7 @@ prior phase is on it) · **Neon branch:** `dev-lit-vectors-2026-10`
 
 ---
 
-## 1. Coverage score: **88%**
+## 1. Coverage score: **90%**
 
 | Dimension | Covered | Notes |
 |---|---|---|
@@ -161,19 +161,76 @@ the 2 that do are marked **OWNER-DECISION**.
 
 | # | Action | Changes a number? | Why now |
 |---|---|---|---|
-| 1 | **Give the L1–L5 engine a service entry point** (STAGED-IMPROVEMENT 2) | no | Until the engine is reachable, "make the loop continuous" has no referent. Everything causal is downstream. |
-| 2 | **Move the literature bridge to per-signal** (STAGED-IMPROVEMENT 1) | no | The retrieval half is built and measured; only the trigger cadence is wrong. Dedup the embed first — the writer handles 80k rows/tick. |
-| 3 | **Wire the 20 DARK evaluators to the database, delete 2** (STAGED-IMPROVEMENT 3) | **yes** | The single biggest coverage jump available: 0 → 19 dark sources with a live producer. Must land with #4. |
-| 4 | **Run the settlement→belief loop and the promotion gate** (STAGED-IMPROVEMENT 4) | **yes (earned)** | 72 residuals over 2 games is not a trend. The gate (N≥500, ΔBrier≥0.002) is the arithmetic that turns the machinery into belief. Until it runs, `corpusWeight` stays 0. |
-| 5 | **Implement the counterfactual trace evaluator** (INV-07) | no | The cheapest causal win: no new estimator, because `BreakingCondition` is already machine-checkable against `observed_values` and the adversary already evaluates it. The chain's own falsifiers *are* the intervention set. |
+| 1 | **Make `run_game.py` build a real `AnalysisRequest` from a real game** | no | The engine reasons about a **static fixture**: `run_game.py:343` calls `analyze(card_request(), ...)` and `card_request()` is a fixed CLE/PIT week-4 card. Until the request is real, the chain is not about the game being emitted, and an ops route would return the same card every time. This replaces the previous #1 ("give it a service route"), which the recon batch proved premature. |
+| 2 | **Open the signal vote path** -- `metadata.homeSign` on every CONTINUOUS_VALUE signal, plus a general env bridge | **yes** | `applyContinuousSignalTilt` is the **only** seam where a signal moves `trueProb`, and it votes **zero times** today: the env bridge carries exactly 4 weather keys, no ACTIVE signal carries a sign, and the tilt refuses unsigned values. Ingestion is the easy part; the vote path is closed. |
+| 3 | **Run the settlement->belief loop and the promotion gate** (STAGED-IMPROVEMENT 4) | **yes (earned)** | 72 residuals over 2 games is not a trend. The gate (N>=500, delta-Brier >= 0.002) is the arithmetic that turns the machinery into belief. Until it runs, `corpusWeight` stays 0. |
+| 4 | **Wire the 5 adapter-eligible DARK evaluators** (STAGED-IMPROVEMENT 3, corrected) | **yes** | Corrected from 20 to **5**. Only these have their data already in the DB; the other 18 need a producer that does not exist (no play table, no drive table, no birth date, no venue coords). Must land after #2 or they still cannot vote. |
+| 5 | **Implement the counterfactual trace evaluator** (INV-07) | no | The cheapest causal win: no new estimator, because `BreakingCondition` is already machine-checkable against `observed_values` and the adversary already evaluates it. The chain's own falsifiers ARE the intervention set. |
 
+**Sequencing:** #1 before any ops route. #2 before #4 (no sign, no vote).
+#3 before #4 (no settlement loop, no earned weight). Refutation before
+temporal discovery. Classifier measurement before multiplying the wire.
+
+**The through-line, stated once.** Every finding in this mandate has the
+same shape: the mechanism exists, the data or code to drive it exists, and
+the last mile -- a sign, a bridge, a request builder, a loop -- does not.
+The repo's engineering quality is high; its connection discipline is the
+weak link. **The engine does not lack causal reasoning. It lacks the
+connections.**
 **Sequencing:** #1 before #2's trace refresh. #4 before #3. Refutation
 before temporal discovery. Classifier measurement before multiplying the
 wire.
 
 ---
 
-## 6. The honest limits of this report
+## 6. What the recon batch changed
+
+Three read-only agents ran against the same worktree. They **corrected my
+own work** twice and added four structural facts I did not have. Full
+detail in `reconciliation/recon_integration.md`.
+
+**Corrections to my work:**
+- The zero-importer sweep was wrong three times (missing path aliases;
+  missing Python `from . import X`; counting `tests/` directories as
+  production consumers; and a basename collision between
+  `intelligence/trust/` and `apps/web/lib/trust.ts`). Now three-tiered:
+  **2,174 ZERO / 888 PACKAGE_INTERNAL_ONLY / 1,187 EXTERNALLY_CONSUMED.**
+  Spot-checked against six hand-verified modules.
+- **"20 of 21 DARK evaluators need only an adapter" was wrong. It is 5.**
+  I judged by whether the declared `dataDependencies` *named* an existing
+  table -- but those names are source-product names (`nfl_pbp`,
+  `nfl_charting`), and the play-level tables do not exist in
+  `schema.prisma` (no `model Play`, no `model Drive`, no penalty column,
+  no `Player.birthDate`, no venue coords). Corrected census:
+  `reconciliation/dark_sources_census_corrected.json`.
+- `runInterventionTest` is **not** do-calculus -- it is a truncated mean
+  difference on the same variable with no adjustment set. The name
+  overstates it; the docs now say so.
+
+**Four new structural facts:**
+1. **The Python mind cannot return a probability.** The output type has no
+   slot: `run_game.py:357-361` hardcodes `"pick": None, "confidence": None,
+   "probability_before_calibration": None, "probability_after_calibration": None`.
+2. **The engine reasons about a fixture**, not the game being emitted
+   (`run_game.py:343` -> `card_request()`).
+3. **The only signal->trueProb seam votes zero times** (the sign gate plus a
+   4-key env bridge).
+4. **Two signals are ACTIVE but always return null**
+   (`nfl_wr1_out_redistribution` at weight 0.14; `nfl_referee_crew_tendencies`).
+   Because they are ACTIVE they carry no `blockedReason`, so the
+   missing-context audit never reports them. **Worse than DARK.**
+
+Also: the 225 trust-intake rows are a **relabelled nflverse parquet**, not
+a news wire (225/225 `signal_origin: news_wire` with an
+`nflverse-data/releases/download/injuries/...` URL, `quote_text` null,
+`extraction_confidence` 0.0, `schema_version` 1.0.0 against a pipeline
+declaring 1.1.0, `extractor_name` null -- the store was not written by this
+repo's code). And the "429 Kaggle datasets" is `len()` of a scraped
+metadata JSON; there is **exactly 1** Kaggle-derived code module.
+
+---
+
+## 7. The honest limits of this report
 
 - **The residual numbers are not evidence.** 72 residuals, 2 games, 8 promoted
   premises, 8 intervention tests all INCONCLUSIVE. `residuals_improved: true`
@@ -200,7 +257,7 @@ wire.
 
 ---
 
-## 7. Deliverable index
+## 8. Deliverable index
 
 | File | What it answers |
 |---|---|

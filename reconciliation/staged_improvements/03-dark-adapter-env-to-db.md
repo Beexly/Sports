@@ -9,10 +9,21 @@ and 20 one-line edits in
 
 ---
 
-## Why — the measured finding
+## Why — the measured finding (CORRECTED 2026-10-20)
 
-The 21 `DARK_NO_PIT` evaluators are dark because they read their inputs
-from `process.env`. **The file says it itself** at
+**CORRECTION.** An earlier draft of this document claimed 20 of 21
+evaluators need only an adapter. **That was wrong** -- it judged by whether
+the declared `dataDependencies` *named* an existing table, and those names
+are source-product names (`nfl_pbp`, `nfl_charting`), not table names. The
+play-level tables do not exist in `schema.prisma` (no `model Play`, no
+`model Drive`, no penalty column, no `Player.birthDate`, no venue lat/lon).
+
+**The correct count is 5** (`reconciliation/dark_sources_census_corrected.json`).
+The other 18 need a producer that does not exist, and are OUT OF SCOPE for
+this stage.
+
+The evaluators are dark because they read their inputs from `process.env`.
+**The file says it itself** at
 `packages/ingestion-pipeline/src/signal-registry-extensions.ts:39`:
 
 ```ts
@@ -41,6 +52,36 @@ which takes a typed context and computes a real penalty.
 
 **`REST_DAYS` is a column in `games`.** Measured live: `restDaysHome` is
 populated on **2,130 of 4,832** games; `restDaysAway` on 2,082.
+
+## The five in scope
+
+| signal id | what the adapter resolves | source |
+|---|---|---|
+| `nfl_primetime_target_concentration` | WR1 target share + primetime flag | `PlayerGameStat.targetShare` (36,539 rows) + `games.commenceTime` |
+| `nfl_backup_qb_target_distribution` | IS_BACKUP + starter/backup target share | `DepthChartEntry.depthRank` (6,875) + `Injury` (7,857) + `PlayerGameStat` |
+| `nfl_high_altitude_fatigue` | stadium elevation | a 32-row static venue table (needs building) |
+| `nfl_linear_wind_pass_impact` | IS_DOME | a 32-row static venue table (needs building); WIND_MPH already produced |
+| `nfl_temperature_precipitation_decay` | precipitation TYPE enum | nothing derives NONE/LIGHT_RAIN/HEAVY_RAIN/SNOW/FREEZING_RAIN from `precip_pct` |
+
+`nfl_wr1_vacated_target_efficiency` also has its data, but it is a
+**duplicate** with a false "Same math" comment and is a deletion candidate
+instead.
+
+## The gates this stage does NOT clear
+
+**Wiring these 5 still does not make them vote.** Two more gates sit in
+front, and they are in STAGED-IMPROVEMENT 5:
+
+1. **The sign gate.** `continuous-signal-tilt.ts:100-104` refuses any
+   CONTINUOUS_VALUE signal whose result does not carry `metadata.homeSign`
+   of exactly `1`/`-1`. `grep -c homeSign signal-registry-definitions.ts`
+   = **0**.
+2. **The env bridge.** `stored-signal-env-bridge.ts:24-37` merges exactly
+   **four** weather keys. No non-weather key can be read from the DB by any
+   code path.
+
+**So the correct sequence is: sign + bridge (stage 5) -> adapter (this
+stage) -> measure -> settlement loop (stage 4) -> promote.**
 
 ## What changes
 

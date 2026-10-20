@@ -25,6 +25,13 @@ intelligence/trust/tests/test_trust.py:367:  from trust import calibration_chain
 
 **Six hits. All six are the test file.**
 
+**Tier note (corrected 2026-10-20):** by a three-tier measurement these
+modules are `PACKAGE_INTERNAL_ONLY` — imported by
+`intelligence/trust/__init__.py:40`, but with **nothing outside
+`intelligence/trust/` importing that**. The distinction matters because a
+naive "has an importer" test would call them wired. See
+`reconciliation/zero_importer_sweep.json` and `recon_integration.md` §1.1.
+
 ---
 
 ## What is in it
