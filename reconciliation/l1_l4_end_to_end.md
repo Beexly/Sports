@@ -550,6 +550,118 @@ variable, not to a position in an ordering.
 
 ---
 
+## 7c. The class filter had 22 read sites to check; it had 77
+
+The class-A coverage check looked for `FROM lit.premise` and
+`FROM lit.premise_score`. It reported **"22 read sites, 0 gaps"**,
+and that sentence was true and useless.
+
+The delta **magnitude** lives in `lit.activation` (`activation_score`),
+the graded outcome lives in `lit.residual`, and the edge lives in
+`lit.causal_edge`. A query written as
+
+```sql
+FROM lit.activation a JOIN lit.premise p ON p.id = a.premise_id
+```
+
+has `lit.activation` as its FROM — so the pattern never fired on the
+line, and the JOIN and the WHERE that follow it, where the filter has
+to be, were never examined.
+
+MEASURED, against the real database, with a checker that looks at
+every table that can carry a number into a reasoning path:
+
+| hop | rows pointing at a non-class-A premise |
+|---|---|
+| `lit.activation` | **781** (641 `HONESTLY_UNCITED_PRIOR`, 140 `DERIVED_MARKET_SYNTHESIS` — every one 'active') |
+| `lit.causal_edge` | 16 (all retired, unreachable) |
+| `lit.premise_score` | 69 |
+| `lit.residual` | 295 |
+| `lit.intervention_test` | 38 |
+
+781 activations pointing at premises with no document behind them,
+and `activation_score` **is** the magnitude of the delta. A number
+that looks like a measurement and is not one — the exact shape of the
+corruption this reconciliation exists to remove.
+
+### Six real leaks, fixed
+
+1. **`run-loop.cjs` — the activation read that grades premises.**
+   It pulled `activation_score` for every activation and wrote
+   scores for unverified premises.
+2. **`run-loop.cjs` — the promotion gate had `record_class` but not
+   `status`.** A `CITABLE_VERIFIED / LINK_VERIFIED_SEMANTIC_FAIL`
+   premise — class-A, but whose claim does *not* follow from its
+   quote — could be promoted to a causal edge. The TypeScript
+   promotion path has had both halves since the class filter landed.
+   This one *looked* complete because the class filter *looks*
+   complete.
+3. **`run-loop.cjs` — the scorecard recompute**, which writes the
+   `graded` / `mean_residual` / `residual_mse` the promotion gate
+   reads.
+4. **`run-loop.cjs` — the intervention-test loop**: the edge list, the
+   edge fetch, and the residual read.
+5. **`literature-retrieval.ts`** — the edge fetch *by key* (the key is
+   whatever the caller passed), the residual read, the scorecard
+   recompute, and the activation-score read.
+6. **`apps/web/lib/literature/literature-residual-bridge.ts` — a live
+   settlement path.** It reads the premises that fired for a settled
+   pick and grades them; grading writes a residual; the residual
+   becomes the `activation_score`. The web app's own read was
+   unfiltered.
+
+### A promoted edge whose premise loses class-A is now retired
+
+The promotion gate refuses to *create* such an edge, but an edge
+created while the premise was class-A stays promoted after a corpus
+rebuild re-classifies it. The 16 edges in the database were already
+retired — that was luck, not a rule.
+
+### And the stale rows are gone
+
+The code fix prevents the next row; it does not remove the ones
+already there, and a reader of the table cannot tell which is which.
+
+| deleted | what |
+|---|---|
+| 38 | `lit.intervention_test` — the shock evaluations of non-class-A edges |
+| 295 | `lit.residual` — the graded outcomes of non-class-A premises |
+| 781 | `lit.activation` — the activations of non-class-A premises |
+| 69 | `lit.premise_score` — the scorecards of non-class-A premises |
+
+The 16 retired edges are **kept** — deleting them would destroy the
+record of what was once promoted.
+
+MEASURED, AFTER:
+
+```
+CLEAN  lit.activation
+CLEAN  lit.causal_edge (promoted)
+CLEAN  lit.premise_score
+CLEAN  lit.residual
+CLEAN  lit.intervention_test
+
+the retrieval function returns 50 of 50 CITABLE_VERIFIED / ACTIVE
+
+class-A coverage check   77 read sites, 0 without the class filter
+```
+
+### The checker also learned three things
+
+- Its window was **12 lines** wide, so a 17-line explanatory comment
+  between the FROM and the filter pushed the filter out of range and
+  the check reported a gap that was not there. A false gap teaches the
+  reader to ignore the check. The window is now 30 lines.
+- It counted **test files** as read sites. A test's mock DB answers
+  whatever the test tells it to, and a test's SQL is not a production
+  query. Twenty-odd false gaps buried the real ones.
+- A site that only **updates a boolean flag** derived from the
+  (filtered) edge set is not a read of a reasoning number, so it is
+  exempt — explicitly, with the reason stated, so the exemption is
+  visible to the next reader rather than looking like a hole.
+
+---
+
 ## 8. Verified
 | check | result |
 |---|---|
@@ -561,7 +673,8 @@ variable, not to a position in an ordering.
 | three-stage pipeline, clean chain | directed 0→1, 0→2, 2→1; bidirected (none) |
 | three-stage pipeline, latent confounder | bidirected, residual z = 49.5 |
 | L_lit gradient vs central finite difference | max error **2e-11** |
-| class-A coverage check | 4 insert paths, **22 read sites**, 0 gaps |
+| class-A coverage check | 4 insert paths, **77 read sites**, 0 gaps |
+| the delta chain, against the real database | 5 hops, **0 leaks**; retrieval returns 50/50 class-A |
 | schema applied to Neon | clean; filter bites; default is honest |
 | every insert path against the real schema | 4/4 PASS |
 | the live database's class distribution | **1,099 CITABLE_VERIFIED / ACTIVE** (19.1%) |
