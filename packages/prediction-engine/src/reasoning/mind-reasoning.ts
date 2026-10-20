@@ -38,6 +38,30 @@ export interface MindRecord {
   readonly applicable_contexts: readonly string[];
   readonly how_it_influences_reasoning: string;
   readonly source_file?: string;
+  /**
+   * The repo-relative path of the document the offsets are relative to.
+   * `source_file` is only a basename, and 29 of the 69 basenames cited by
+   * the MIND corpus exist in more than one place in the repo.
+   */
+  readonly source_path?: string | null;
+  readonly mechanism_quote?: string | null;
+  readonly evidence_span?: CharacterSpan | null;
+  readonly mechanism_span?: CharacterSpan | null;
+  /**
+   * The epistemic class, assigned by the builder against the document on
+   * disk:
+   *   CITABLE_VERIFIED         the quote IS verbatim in the named document
+   *   HONESTLY_UNCITED_PRIOR    no source document exists
+   *   DERIVED_MARKET_SYNTHESIS  synthesised from a market/table row
+   *
+   * A record that predates the class system has none. It is treated as
+   * UNVERIFIED, because the honest default for an unknown provenance is
+   * "unknown", not "fine".
+   */
+  readonly record_class?: string | null;
+  readonly citable?: boolean;
+  readonly verification_tier?: string;
+  readonly status?: string;
 }
 
 export interface MindPrincipleMatch {
@@ -209,9 +233,29 @@ export type ClaimType = "causal" | "correlational" | "theoretical";
 export type InfluenceDirection = "positive" | "negative" | "conditional";
 
 export interface CharacterSpan {
-  readonly start_char: number;
-  readonly end_char: number;
-  readonly verification_tier: "MSVH_S1_EXACT" | "MSVH_S2_NORMALIZED" | "MSVH_S3_LEVENSHTEIN";
+  /**
+   * The offsets are NULLABLE on purpose.
+   *
+   * A record whose quote is not in the document it names has NO span.
+   * The old type forced `number`, and the consumer papered over that with
+   * `start_char: 0, end_char: quote.length, verification_tier:
+   * "MSVH_S1_EXACT"` -- which asserts "verified verbatim at offset 0" for
+   * a quote that is in no document. That is the same fabrication the
+   * corpus builder had, reproduced downstream: the builder's audit found
+   * 0 of 5,049 spans selecting their own quote while every record
+   * carried the EXACT tier.
+   *
+   * NULL says "unverified". So does the S0 tier. Only a span that was
+   * actually computed from the document's bytes may claim S1_EXACT.
+   */
+  readonly start_char: number | null;
+  readonly end_char: number | null;
+  readonly verification_tier:
+    | "MSVH_S0_UNCITED"
+    | "MSVH_S0_DERIVED_TABLE"
+    | "MSVH_S1_EXACT"
+    | "MSVH_S2_NORMALIZED"
+    | "MSVH_S3_LEVENSHTEIN";
 }
 
 export interface VerifiedSituationalPrinciple {
@@ -232,6 +276,12 @@ export interface VerifiedSituationalPrinciple {
   readonly parsed_threshold_operator: ">" | ">=" | "<" | "<=" | null;
   readonly claim_type: ClaimType;
   readonly influence_description: string;
+  /**
+   * The epistemic class the record was assigned by the builder, carried
+   * through so a consumer can see WHY a principle is or is not citable.
+   */
+  readonly record_class: string | null;
+  readonly citable: boolean;
 }
 
 export type GameContextVector = Partial<Record<ContextFieldEnum, number>> & {
@@ -407,15 +457,32 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
   const mechQuote = rec.mechanism_quote || evQuote;
 
   const evSpan: CharacterSpan = rec.evidence_span ?? {
-    start_char: 0,
-    end_char: evQuote.length,
-    verification_tier: "MSVH_S1_EXACT",
+    // THE FALLBACK WAS A FABRICATION.
+    //
+    // It used to read:
+    //     const evSpan: CharacterSpan = rec.evidence_span ?? {
+    //       start_char: 0, end_char: evQuote.length,
+    //       verification_tier: "MSVH_S1_EXACT",
+    //     };
+    //
+    // When a record has no span -- because the quote is not in the
+    // document it names -- that invented offset 0 and stamped the record
+    // as an EXACT verification. The corpus audit measured 0 of 5,049
+    // spans selecting their own quote while every record carried
+    // MSVH_S1_EXACT; this line reproduced the same lie at the consumer,
+    // on every record the builder had failed to verify.
+    //
+    // A record with no span HAS no span. The honest value is null with
+    // the S0 tier: "unverified", not "verified at offset 0".
+    start_char: null,
+    end_char: null,
+    verification_tier: "MSVH_S0_UNCITED",
   };
 
   const mechSpan: CharacterSpan = rec.mechanism_span ?? {
-    start_char: 0,
-    end_char: mechQuote.length,
-    verification_tier: "MSVH_S1_EXACT",
+    start_char: null,
+    end_char: null,
+    verification_tier: "MSVH_S0_UNCITED",
   };
 
   return {
@@ -436,6 +503,8 @@ export function toVerifiedSituationalPrinciple(rec: MindRecord): VerifiedSituati
     parsed_threshold_operator: parsedThreshOp,
     claim_type: rec.claim_type || "correlational",
     influence_description: rec.influence_description || rec.how_it_influences_reasoning,
+    record_class: rec.record_class ?? null,
+    citable: isClassACitable(rec),
   };
 }
 
@@ -456,6 +525,27 @@ function mapLegacyContextsToFields(contexts: readonly string[]): ContextFieldEnu
   if (/reverse_line|rlm|divergence/i.test(str)) set.add("reverse_line_movement_divergence_pct");
   if (set.size === 0) set.add("offensive_pace_sec_per_play");
   return Array.from(set);
+}
+
+/**
+ * The epistemic class a record must hold to contribute a LITERATURE DELTA.
+ *
+ * CLASS-A EXCLUSIVITY (the spec's §6 requirement).
+ *
+ * Only a CITABLE_VERIFIED record may inject a numeric delta. A
+ * HONESTLY_UNCITED_PRIOR is a hand-authored premise with no document
+ * behind it; a DERIVED_MARKET_SYNTHESIS is a number read out of a market
+ * row, not a quotation. Either may still be useful as a STRUCTURAL
+ * hypothesis -- an edge that might exist -- but neither may be reported
+ * as a literature finding, because there is no literature behind it.
+ *
+ * The class is checked HERE, at the point where a delta is minted, not
+ * only at build time. A record that reaches this function with an
+ * unknown class is treated as NOT citable: the honest default for an
+ * unverified provenance is "unverified", not "assume the best".
+ */
+export function isClassACitable(rec: MindRecord): boolean {
+  return rec.record_class === "CITABLE_VERIFIED" && rec.citable !== false;
 }
 
 /**
@@ -545,6 +635,15 @@ export function matchApplicablePrinciples(
   const vector = mapGameContextToVector(ctx);
 
   for (const rec of records) {
+    // CLASS-A EXCLUSIVITY. A record that is not CITABLE_VERIFIED may not
+    // inject a numeric delta. Before the class system existed, every
+    // record in the corpus could mint a delta -- including the 3,509
+    // whose quotes were in no document at all, and the 1,704 whose
+    // numbers were nowhere near the quote. The delta is a claim about the
+    // world, made in the name of literature, so the literature has to be
+    // there.
+    if (!isClassACitable(rec)) continue;
+
     const vp = toVerifiedSituationalPrinciple(rec);
     if (vp.parsed_float_magnitude <= 0) continue;
 
@@ -1162,7 +1261,15 @@ export function evaluateMindPrinciples(
     }
 
     // Filter matching principles
-    const matching = corpus.filter(p => p.applicable_context_fields.includes(field));
+    //
+    // CLASS-A EXCLUSIVITY, second site. `evaluateMindPrinciples` works
+    // on already-converted principles, so the class has to be checked on
+    // the principle itself. A principle that is not citable may not
+    // produce a delta here either -- this is the path that writes the
+    // final adjustment and the prose that reports it.
+    const matching = corpus.filter(
+      (p) => p.citable && p.applicable_context_fields.includes(field),
+    );
     if (matching.length === 0) continue;
 
     interface ActivePrincipleCalc {

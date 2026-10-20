@@ -84,12 +84,24 @@ export interface VerifiableRecord {
   readonly item_id: string;
   readonly title: string;
   readonly source_file: string | null;
+  /**
+   * The repo-relative path of the document the offsets are relative to.
+   *
+   * `source_file` is only a BASENAME, and a basename does not identify a
+   * document: 29 of the 69 basenames cited by the MIND corpus exist in
+   * more than one place in the repo, and the copies differ byte for byte.
+   * When the path is present it is authoritative, because the offsets
+   * were computed against that file and only that file.
+   */
+  readonly source_path?: string | null;
   readonly evidence_quote: string | null;
   readonly mechanism_quote: string | null;
   readonly evidence_span: { start_char?: number; end_char?: number; verification_tier?: string } | null;
   readonly numeric_claim: { value?: number; unit?: string; metric?: string } | string | null;
   readonly parsed_float_magnitude: number | null;
   readonly applicable_context_fields: readonly string[] | null;
+  /** The epistemic class, when the corpus carries one. */
+  readonly record_class?: string | null;
 }
 
 /** The source documents a record may cite, already loaded into memory. */
@@ -214,11 +226,166 @@ export function checkL3SpanAnchoring(
 /**
  * L4 -- MECHANISM ENTAILMENT.
  *
- * The controlled vocabulary must hold, and the mechanism quote must
- * itself be present in the source document. A mechanism quote that is
- * not in the document cannot entail a mechanism, because it is not a
- * quotation of one.
+ * The controlled vocabulary must hold, AND the mechanism quote must itself
+ * be present in the source document, AND the mechanism must be about
+ * SPORTS, AND the document must not be about a foreign domain.
+ *
+ * WHY THE DOMAIN CHECKS EXIST (measured 2026-10-20).
+ *
+ * A verbatim quote is not a sports quote. With only the "mechanism is in
+ * the source" check, the gate admitted 3,735 records -- and among them
+ * were:
+ *
+ *   "Using average vehicle speed data in 10-minute increments at the
+ *    Traffic Message Channel (TMC) location level"  (traffic engineering)
+ *   "Participants were imaged with 4.9mm ONH scans using spectral-domain
+ *    optical coherence tomography"                   (ophthalmology)
+ *   "Characteristics of high sensitivity MEMS pressure sensor chip for
+ *    10 kPa utilizing a novel electrical circuit"   (semiconductors)
+ *
+ * Each of those is a REAL quote from a REAL document, so L1, L2 and L3
+ * all pass. What is false is the claim that the document is sports
+ * literature, which is the entire justification for admitting it to a
+ * sports reasoning engine. The exclusion set below is the spec's
+ * ("thermodynamic", "radar synthetic aperture", "mri spin-lattice",
+ * "ufcoctagon", "underwater acoustic", "no free lunch"), extended with
+ * the domains the audit actually found.
+ *
+ * The mechanism must HIT a sports term. A mechanism that mentions no
+ * sport at all is not a sports mechanism, whatever document it came from.
  */
+export const CROSS_DOMAIN_EXCLUSION_TERMS: readonly string[] = [
+  // the spec's list
+  "thermodynamic",
+  "radar synthetic aperture",
+  "mri spin-lattice",
+  "ufcoctagon",
+  "underwater acoustic",
+  "no free lunch",
+  // measured: the domains the audit found filed under NFL records
+  "optical coherence tomography",
+  "mems pressure sensor",
+  "traffic message channel",
+  "optical neuron",
+  "semiconductor",
+  "reinforced concrete",
+  "photovoltaic",
+  "chemiluminescence",
+  "seismic retrofit",
+  "corrosion fatigue",
+  "protein folding",
+  "finite element analysis of the",
+  "molecular dynamics simulation",
+  "satellite imagery",
+  "power grid",
+  "epidemiological",
+  "dental implant",
+  "turbomachinery",
+];
+
+/**
+ * The sports vocabulary a mechanism quote must hit at least once.
+ *
+ * Deliberately broad: the point is to separate "about a sport" from
+ * "about engineering", not to be a domain classifier. It is applied to
+ * the MECHANISM quote, which is the sentence that asserts the causal
+ * story, so the sports term has to be in the reasoning, not merely in
+ * the document.
+ */
+export const SPORTS_VOCABULARY: readonly string[] = [
+  "nfl",
+  "football",
+  "quarterback",
+  "offense",
+  "defense",
+  "offensive",
+  "defensive",
+  "passing",
+  "rushing",
+  "receiver",
+  "wideout",
+  "tight end",
+  "running back",
+  "linebacker",
+  "defensive back",
+  "safety",
+  "cornerback",
+  "kicker",
+  "snap",
+  "down",
+  "playoff",
+  "super bowl",
+  "pre-season",
+  "preseason",
+  "coach",
+  "roster",
+  "team",
+  "player",
+  "game",
+  "matchup",
+  "scrimmage",
+  "drive",
+  "end zone",
+  "touchdown",
+  "field goal",
+  "yard line",
+  "spread",
+  "moneyline",
+  "over/under",
+  "odds",
+  "bookmaker",
+  "betting market",
+  "sharp",
+  "public bet",
+  "vegas",
+  "market efficiency",
+  "point spread",
+  "scoring",
+  "yards per",
+  "epa",
+  "success rate",
+  "win probability",
+  "home field",
+  "home advantage",
+  "travel",
+  "rest",
+  "injury",
+  "load",
+  "concussion",
+  "positional",
+  "scheme",
+  "play-call",
+  "play action",
+  "coverage",
+  "blitz",
+  "pocket",
+  "downfield",
+  "slot",
+  "motion",
+  "playoff probability",
+  "attendance",
+  "fan",
+  "stadium",
+  "surface",
+  "weather",
+  "wind",
+  "temperature",
+  "altitude",
+  "humidity",
+  "precipitation",
+  "turf",
+  "grass",
+];
+
+function hits(haystack: string, needles: readonly string[]): number {
+  const lower = haystack.toLowerCase();
+  let n = 0;
+  for (const needle of needles) {
+    if (lower.includes(needle.toLowerCase())) n++;
+  }
+  return n;
+}
+
 export function checkL4MechanismEntailment(
   record: VerifiableRecord,
   source: string | undefined,
@@ -229,7 +396,31 @@ export function checkL4MechanismEntailment(
   const mechanism = (record.mechanism_quote ?? "").trim();
   if (mechanism.length < 10) return false;
   if (source === undefined) return false;
-  return source.includes(mechanism);
+  if (!source.includes(mechanism)) return false;
+  // The mechanism must be about a sport.
+  if (hits(mechanism, SPORTS_VOCABULARY) < 1) return false;
+  // The document must not be about a foreign domain.
+  if (hits(source, CROSS_DOMAIN_EXCLUSION_TERMS) > 0) return false;
+  return true;
+}
+
+/**
+ * Resolve the document a record's offsets are relative to.
+ *
+ * The path is authoritative when present, because the offsets were
+ * computed against that specific file. The basename is a fallback, and
+ * it is a weaker one: 29 of the 69 basenames cited by the MIND corpus
+ * exist in more than one place in the repo, and the copies differ byte
+ * for byte, so a basename can resolve to the wrong document.
+ */
+export function resolveSource(
+  record: VerifiableRecord,
+  library: SourceLibrary,
+): string | undefined {
+  const byPath = record.source_path ? library.get(record.source_path) : undefined;
+  if (byPath !== undefined) return byPath;
+  const file = record.source_file;
+  return file ? library.get(file) : undefined;
 }
 
 /** Verify one record against the source library. */
@@ -238,7 +429,7 @@ export function verifyRecord(
   library: SourceLibrary,
 ): VerificationVerdict {
   const file = record.source_file;
-  const source = file ? library.get(file) : undefined;
+  const source = resolveSource(record, library);
   const sourceMissing = source === undefined;
 
   const l1 = checkL1Provenance(record, source);

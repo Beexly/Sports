@@ -27,6 +27,7 @@
 import { describe, it, expect } from "vitest";
 import {
   CONTROLLED_VOCABULARY_16_KEYS,
+  CROSS_DOMAIN_EXCLUSION_TERMS,
   checkL1Provenance,
   checkL2NumericContainment,
   checkL3SpanAnchoring,
@@ -177,6 +178,66 @@ describe("L4 mechanism entailment", () => {
 
   it("fails when there are no context fields at all", () => {
     expect(checkL4MechanismEntailment(rec({ applicable_context_fields: [] }), DOC)).toBe(false);
+  });
+
+  // ======================================================================
+  // THE DOMAIN CHECKS.
+  //
+  // A verbatim quote is not a sports quote. With only the "mechanism is
+  // in the source" check, the gate admitted 3,735 records -- and among
+  // them were ophthalmology, traffic-engineering and semiconductor
+  // papers, each a REAL quote from a REAL document, so L1, L2 and L3 all
+  // passed. What was false was the claim that the document is sports
+  // literature, which is the whole justification for admitting it to a
+  // sports reasoning engine.
+  //
+  // MEASURED: L4 fell from 3,735/3,735 to 1,769/3,735 when these
+  // checks were added.
+  // ======================================================================
+  it("fails when the mechanism mentions no sport at all", () => {
+    // Both quotes are in the document. Neither names a sport. The
+    // document is real. The mechanism is still not a SPORTS mechanism.
+    const trafficDoc =
+      "Using average vehicle speed data in 10-minute increments at the Traffic Message Channel (TMC) location level, travel time was estimated for each segment.";
+    const trafficRec = rec({
+      mechanism_quote: "Using average vehicle speed data in 10-minute increments",
+      evidence_quote: "travel time was estimated for each segment.",
+      evidence_span: { start_char: 0, end_char: 38, verification_tier: "MSVH_S1_EXACT" },
+    });
+    expect(checkL4MechanismEntailment(trafficRec, trafficDoc)).toBe(false);
+  });
+
+  it("fails when the source document is about a cross-domain subject", () => {
+    // The mechanism IS about a sport, and the mechanism IS in the
+    // document -- but the document itself is an ophthalmology paper.
+    const octDoc =
+      "Defensive coverage schemes in the National Football League represent complex tactical patterns. Participants were imaged with 4.9mm ONH scans using spectral-domain optical coherence tomography (OCT) to measure the retina.";
+    const octRec = rec({
+      mechanism_quote: "Defensive coverage schemes in the National Football League",
+      evidence_quote: "Participants were imaged with 4.9mm ONH scans",
+      evidence_span: { start_char: 0, end_char: 39, verification_tier: "MSVH_S1_EXACT" },
+    });
+    expect(checkL4MechanismEntailment(octRec, octDoc)).toBe(false);
+  });
+
+  it("passes a genuine sports document", () => {
+    // The positive control: a real football document, a real mechanism
+    // naming a sport, no cross-domain terms.
+    const footballDoc =
+      "The team ran 42 plays. Separation averaged 1.4 yards over expected in the National Football League.";
+    expect(checkL4MechanismEntailment(rec(), footballDoc)).toBe(true);
+  });
+
+  it("excludes the spec's named cross-domain terms", () => {
+    for (const term of [
+      "thermodynamic",
+      "radar synthetic aperture",
+      "mri spin-lattice",
+      "ufcoctagon",
+      "underwater acoustic",
+    ]) {
+      expect(CROSS_DOMAIN_EXCLUSION_TERMS).toContain(term);
+    }
   });
 
   it("holds a closed vocabulary of 16 keys", () => {
