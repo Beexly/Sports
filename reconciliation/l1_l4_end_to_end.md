@@ -1468,3 +1468,97 @@ while gating nothing, one level up.
 `formulaClass === "TIAN_C_FACTOR_RATIO"` if and only if the tree
 contains a ratio. The class and the tree must agree, and the bug was
 precisely a disagreement between them.
+
+## The L1–L4 harness was under-reporting by 238. A basename is not an
+## identifier.
+
+**The symptom.** The repo's independent four-layer gate
+(`reconciliation/run-l1-l4-verification.mjs`) reported **860 admitted
+(16.2%)** against the actual source documents, while the corpus file
+carries **1,098** `CITABLE_VERIFIED` records and the production
+database carries 1,099. Three numbers for one corpus, and the
+independent gate — the one whose entire job is to check the corpus
+against the documents on disk — was the outlier.
+
+**The cause.** The harness builds its source library by walking
+`docs/` and taking the **first file whose basename matches** a cited
+name. **29 of the 68 cited basenames exist more than once on disk**,
+in different directories. For those, the walk silently picked the
+wrong document, and 138 class-A records had their quote in the *other*
+file of the same name.
+
+So L1 failed on quotes that **are** in the document. L3 failed for the
+same reason — it slices the document the library happened to hold.
+L4 failed downstream of it. 860 admitted was an artifact of a lookup
+key, not a measurement of the corpus.
+
+**This is the audit's own defect class in a different hat.** A lookup
+key that does not uniquely identify the thing it claims to identify.
+The key here is a basename; two documents in different directories
+share it. Everywhere else in this audit the hunt has been for a
+*constant* that reads as a gate without gating; here it is a *key* that
+reads as an identifier without identifying.
+
+**The fix, and the property that makes it safe.** When a basename has
+several candidates, choose the one that actually **contains the quotes
+of the records that cite it** — decided from the data, not from
+directory order. Measured: **29 collisions resolved, 0 ties.** A tie
+would be reported rather than resolved arbitrarily, because a tie means
+the data does not say which document was meant.
+
+**MEASURED, after the fix:**
+
+    source library: 68 of 68 cited files located
+    basename collisions resolved: 29 cited names exist more than once; 0 were ties
+
+    total records              5303
+    L1 verbatim provenance     3772  (71.1%)   was 3574 (67.4%)
+    L2 numeric containment     1989  (37.5%)
+    L3 span anchoring          1098  (20.7%)   was  860 (16.2%)
+    L4 mechanism entailment    2107  (39.7%)   was 1824 (34.4%)
+    ADMITTED (all four)        1098  (20.7%)   was  860 (16.2%)
+
+**AND THE TWO INDEPENDENT GATES NOW AGREE EXACTLY:**
+
+    the class-A subset: 1098 of 1098 admitted by the independent gate
+    admitted records that are NOT class-A: 0
+
+The corpus builder and the four-layer gate, which share no code path
+for the L1–L4 decision, now agree to the record. That is the
+convergence the spec asked for, and it was **not** true before: the
+builder said 1,098 and the independent gate said 860, and the audit
+recorded that as an open discrepancy rather than guessing which was
+right.
+
+**What the 1098 is.** It is 1098 of 5,303 corpus records (20.7%)
+admitted — a real, low number, and *not* the 67.4% the retired
+shape-only gate reported. The four layers are computed independently
+against opened documents, so the figure is a measurement rather than a
+count of rows that look right.
+
+**The production count is 1099, and the extra row is not a corpus
+record.** `lit.premise` holds one row with
+`premise_key = 'test:class_a:citable'`, `source = 'test'`, left
+behind by `reconciliation/apply_and_verify_class_a_schema.mjs`, which
+inserts five `test:class_a:*` premises and never deletes them. It is
+inert — its `lit.premise_vector` embedding is 1,024 dimensions of
+**zero**, so cosine similarity is `NaN` and `retrieve_premises` can
+never return it. But it is stamped `CITABLE_VERIFIED` / `ACTIVE`, so
+any count taken with `count(*)` reads 1099.
+
+**The spec's `chk_citable_verified_honesty` invariant does not exist in
+production.** The goal spec requires a hard DB-level constraint
+forcing `CITABLE_VERIFIED` to carry `citable = TRUE`,
+`verification_tier = 'MSVH_S1_EXACT'` and non-null spans. Production
+`lit.premise` has **no span columns at all** and no such constraint.
+The *data* satisfies the invariant — measured over the corpus: **0 of
+1,098 class-A rows violate it, and 0 of the 4,205 non-class-A rows
+carry `citable = true`** — but the invariant is **checked by the
+builder, not enforced by the database**. A row inserted directly with
+`record_class = 'CITABLE_VERIFIED'` and no spans would be accepted.
+
+The spec's `db/migrations/20261020_literature_hnsw_prod.sql` and its
+`literature_premises` table **do not exist in this tree**, and no
+`literature_premises` table exists in Neon. Production is the `lit.*`
+schema. The spec describes a deployment that was never performed; the
+data is in a different, working shape.
