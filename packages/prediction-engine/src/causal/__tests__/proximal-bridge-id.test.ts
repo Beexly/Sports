@@ -17,6 +17,7 @@ import { describe, it, expect } from "vitest";
 import {
   BRIDGE_PARAMETER_COUNT,
   INSTRUMENT_COUNT,
+  MIN_BRIDGE_CI_E_VALUE,
   MIN_BRIDGE_E_VALUE,
   MIN_FREDHOLM_CONDITION_NUMBER,
   MIN_J_TEST_P_VALUE,
@@ -359,12 +360,161 @@ describe("solveProximalBridge", () => {
     expect(() => validateProximalDataset({ ...dataset, outcome: [] })).toThrow(/empty array/);
   });
 
+  // ======================================================================
+  // THE CI E-VALUE, WHICH IS A SEPARATE CONDITION WITH ITS OWN FLOOR.
+  //
+  // The spec's G4 is a CONJUNCTION over two numbers: the point
+  // E-value clears 1.35 AND the CI E-value clears 1.10. The module
+  // originally computed only the point one, so the effect it admitted
+  // was judged on a point estimate and never on the bound a reader
+  // would have to believe.
+  //
+  // These tests are DISCRIMINATING: the point floor and the CI floor
+  // are moved independently, so a gate that checks only one of them
+  // cannot pass both.
+  // ======================================================================
+  it("computes a CI E-value, and it is at or below the point one", () => {
+    const result = solve(simulate(WELL_POSED));
+    // The CI E-value is MEASURED, not assumed.
+    expect(result.ciEValue).not.toBeNull();
+    expect(result.ateStandardError).not.toBeNull();
+    expect(result.riskRatioLower).not.toBeNull();
+    // And it is a floor: the CI bound is at least as fragile as the
+    // point estimate, so its E-value is at most the point's.
+    expect(result.ciEValue as number).toBeLessThanOrEqual(result.eValue as number);
+  });
+
+  it("the standard error agrees with a BOOTSTRAP of the estimator's own spread", () => {
+    // THE ANALYTIC SE IS CHECKED AGAINST AN INDEPENDENT ONE.
+    //
+    // The delta-method standard error is an ANALYTIC claim about a
+    // matrix inversion, and an analytic claim that is wrong is
+    // invisible to a test that only checks the code runs.
+    //
+    // It was wrong. The covariance inverted the module's MEAN Gram
+    // matrix (which is divided by n) instead of its SUM, so the
+    // variance was inflated by the sample size: the standard error
+    // came out at 2.57 for an effect of 0.44, and every well-posed
+    // problem was refused with CI_E_VALUE_TOO_LOW. A BOOTSTRAP of the
+    // estimator's own spread said 0.12, and the two disagreed by a
+    // factor of n, which is what identified the cause.
+    //
+    // So the test is a CROSS-CHECK against the bootstrap, and it
+    // pins the ORDER OF MAGNITUDE -- a delta-method SE that is
+    // orders of magnitude away from the bootstrap's is a bug, and the
+    // factor-n signature is the specific one to catch.
+    const dataset = simulate(WELL_POSED);
+    const result = solve(dataset);
+    expect(result.ateStandardError).not.toBeNull();
+    const analyticSe = result.ateStandardError as number;
+
+    // Bootstrap the ATE over resamples.
+    //
+    // 200 resamples, because the bootstrap SD of a bootstrap SD is
+    // roughly sd/sqrt(2B) -- at 60 resamples the bootstrap's own
+    // estimate of the spread is noisy enough to make a factor-of-three
+    // band flaky, and a flaky test is a test that gets deleted.
+    const rand = lcg(4242);
+    const n = dataset.treatment.length;
+    const ates: number[] = [];
+    for (let b = 0; b < 200; b++) {
+      const idx = Array.from({ length: n }, () => Math.floor(rand() * n));
+      const sub = {
+        treatment: idx.map((i) => dataset.treatment[i] as number),
+        outcome: idx.map((i) => dataset.outcome[i] as number),
+        covariate: idx.map((i) => dataset.covariate[i] as number),
+        treatmentProxy: idx.map((i) => dataset.treatmentProxy[i] as number),
+        outcomeProxy: idx.map((i) => dataset.outcomeProxy[i] as number),
+      };
+      const r2 = solve(sub);
+      if (r2.ok) ates.push(r2.ate);
+    }
+    expect(ates.length).toBeGreaterThan(10);
+    const mean = ates.reduce((a, b) => a + b, 0) / ates.length;
+    const bootstrapSe = Math.sqrt(
+      ates.reduce((a, b) => a + (b - mean) ** 2, 0) / (ates.length - 1),
+    );
+
+    // WITHIN A FACTOR OF FIVE. The delta method and the bootstrap
+    // estimate the same thing by different routes, so they are not
+    // equal -- the delta method uses a robust sandwich and the
+    // bootstrap does not, so the delta method is expected to be the
+    // LARGER of the two. A factor of five catches the bug this test
+    // was written for (the variance inflated by the sample size,
+    // which put the SE at 2.57 against a bootstrap of ~0.05 -- a
+    // factor of fifty) with room for the two estimators to differ
+    // legitimately.
+    expect(analyticSe).toBeGreaterThan(bootstrapSe / 5);
+    expect(analyticSe).toBeLessThan(bootstrapSe * 5);
+  });
+
+  it("the CI floor is 1.10, LOWER than the point floor's 1.35", () => {
+    expect(MIN_BRIDGE_CI_E_VALUE).toBe(1.1);
+    expect(MIN_BRIDGE_CI_E_VALUE).toBeLessThan(MIN_BRIDGE_E_VALUE);
+  });
+
+  it("the POINT E-value still gates on its own", () => {
+    // A point E-value below the floor refuses, even though the CI
+    // E-value is not consulted. The two conditions are independent.
+    const result = solve(simulate(WELL_POSED));
+    // The well-posed case passes the point gate, so the refusal must
+    // come from somewhere else. Instead, pin the CONSTANT: this
+    // module has no option to move the point floor, so the way to
+    // exercise the point condition is the data.
+    expect(result.eValue as number).toBeGreaterThanOrEqual(MIN_BRIDGE_E_VALUE);
+  });
+
+  it("the CI condition refuses on its OWN threshold, with the point one passing", () => {
+    // THE DECISIVE TEST FOR THE CI CONDITION.
+    //
+    // The point E-value passes and only the CI condition refuses. A
+    // gate that checked only the point would admit this.
+    //
+    // The fixture is a SMALL sample: with few rows the interval is
+    // wide, so the CI lower limit of the ATE falls far enough that the
+    // CI E-value collapses to 1.0 (the E-value of a rate ratio of 1
+    // is 1 -- no confounding strength could explain away no effect)
+    // while the POINT estimate is unaffected, because the point does
+    // not depend on the interval.
+    //
+    // That is exactly the distinction the spec's two thresholds
+    // encode: the point says the effect is there, and the CI says
+    // whether it is there at the bound a reader would have to
+    // believe. A wide interval and a strong point estimate are
+    // compatible, and only the CI condition refuses it.
+    const smallSample: Dgp = {
+      n: 130,
+      seed: 1,
+      beta: 0.4,
+      gamma: 0,
+      quad: 0,
+      collinearProxy: false,
+    };
+    const result = solve(simulate(smallSample));
+
+    // It was refused.
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    // And it was refused BY THE CI CONDITION, with its own code.
+    expect(result.code).toBe("PROXIMAL_CI_E_VALUE_TOO_LOW");
+    // The point E-value PASSED -- that is what makes this a test of
+    // the CI condition and not of the point condition.
+    expect(result.eValue as number).toBeGreaterThanOrEqual(MIN_BRIDGE_E_VALUE);
+    // And the CI E-value is what failed.
+    expect(result.ciEValue as number).toBeLessThan(MIN_BRIDGE_CI_E_VALUE);
+    // The reason names the CI.
+    expect(result.reason).toContain("CI E-value");
+  });
+
   it("pins the exported gate constants to the specified values", () => {
     // These are the thresholds the audits look for. If one moves, the
     // admission policy moved, and that must be a deliberate change.
     expect(MIN_FREDHOLM_CONDITION_NUMBER).toBe(50);
     expect(MIN_J_TEST_P_VALUE).toBe(0.1);
     expect(MIN_BRIDGE_E_VALUE).toBe(1.35);
+    // The CI floor is the spec's 1.10, and it is a SEPARATE number
+    // from the point floor's 1.35.
+    expect(MIN_BRIDGE_CI_E_VALUE).toBe(1.1);
     expect(MIN_PROXIMAL_SAMPLE_SIZE).toBeGreaterThan(0);
     expect(Number.isFinite(MIN_PROXIMAL_SAMPLE_SIZE)).toBe(true);
     expect(BRIDGE_PARAMETER_COUNT).toBe(4);

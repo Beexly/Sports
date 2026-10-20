@@ -80,7 +80,7 @@
  *
  * Pure TypeScript, no I/O.
  */
-import { eValue } from "./e-value.js";
+import { eValue, eValueForCi } from "./e-value.js";
 
 // ---------------------------------------------------------------------------
 // THE GATES. Exported, named, and each one compared in solveProximalBridge.
@@ -112,6 +112,22 @@ export const MIN_J_TEST_P_VALUE = 0.1;
  * (MIN_EXPANSION_E_VALUE), applied to the effect the bridge recovers.
  */
 export const MIN_BRIDGE_E_VALUE = 1.35;
+
+/**
+ * Gate 3b: the smallest VanderWeele-Ding CI E-value that may be
+ * admitted.
+ *
+ * THE SPEC'S G4 IS A CONJUNCTION OVER TWO NUMBERS: the POINT
+ * E-value must clear 1.35 and the CI E-value must clear 1.10. This
+ * module originally computed only the point one, which was a real gap
+ * against the gate's own standard -- the effect it admits would have
+ * been judged on a point estimate and never on the bound a reader
+ * would have to believe.
+ *
+ * The CI floor is LOWER on purpose: it is a floor on a bound, not a
+ * central claim. The spec's is 1.10.
+ */
+export const MIN_BRIDGE_CI_E_VALUE = 1.1;
 
 /**
  * The smallest sample that may be attempted at all.
@@ -206,6 +222,15 @@ export type ProximalRefusalCode =
   | "PROXIMAL_J_TEST_FAILED"
   /** The recovered effect is too fragile to survive unmeasured confounding. */
   | "PROXIMAL_E_VALUE_TOO_LOW"
+  /**
+   * The recovered effect's CONFIDENCE-INTERVAL E-value is too low.
+   *
+   * The point E-value says the effect is robust; this says the effect
+   * is robust even at the bound a reader would have to believe. The
+   * spec's G4 is a conjunction over BOTH, with their own thresholds
+   * (1.35 for the point, 1.10 for the CI).
+   */
+  | "PROXIMAL_CI_E_VALUE_TOO_LOW"
   /** The bridge could not be estimated at all (singular, zero variance, no df). */
   | "PROXIMAL_BRIDGE_NOT_IDENTIFIED";
 
@@ -221,6 +246,19 @@ export interface ProximalBridgeDiagnostics {
   readonly jDegreesOfFreedom: number;
   /** VanderWeele-Ding E-value of the recovered effect. */
   readonly eValue: number | null;
+  /**
+   * VanderWeele-Ding E-value of the CI LOWER LIMIT of the recovered
+   * effect.
+   *
+   * The point E-value says the effect is robust; this says the effect
+   * is robust even at the bound a reader would have to believe. The
+   * spec's G4 requires BOTH.
+   */
+  readonly ciEValue: number | null;
+  /** The standard error of the recovered ATE. */
+  readonly ateStandardError: number | null;
+  /** The risk ratio at the CI lower limit of the ATE. */
+  readonly riskRatioLower: number | null;
   /** Risk ratio the E-value was computed from. */
   readonly riskRatio: number | null;
   /** ate / sd(Y): the standardized effect. */
@@ -770,6 +808,9 @@ function emptyDiagnostics(sampleSize: number, holdoutSize: number): ProximalBrid
     jTestPValue: null,
     jDegreesOfFreedom: J_TEST_DEGREES_OF_FREEDOM,
     eValue: null,
+    ciEValue: null,
+    ateStandardError: null,
+    riskRatioLower: null,
     riskRatio: null,
     standardizedEffect: null,
     sampleSize,
@@ -1176,9 +1217,201 @@ export function solveProximalBridge(
   const standardizedEffect = ate / outcomeSd;
   const riskRatio = Math.exp(CONTINUOUS_TO_RISK_RATIO_EXPONENT * standardizedEffect);
   const recoveredEValue = eValue(riskRatio);
+
+  // THE CI E-VALUE, and the standard error it needs.
+  //
+  // The bridge is a LINEAR sieve, so the g-formula at a treatment
+  // level is a LINEAR FUNCTION of the estimated coefficients, and the
+  // delta method is exact for it (not an approximation): if the
+  // coefficient vector has covariance V, then a linear functional
+  // l'beta has variance l'V l.
+  //
+  // The g-formula at level a is (1/n) sum_i phi(a, w_i, x_i)' beta, so
+  // the linear functional for the ATE is the DIFFERENCE of the two
+  // level functionals, and the variance of the difference is
+  // l' V l with l = l_treated - l_control.
+  //
+  // The coefficient covariance comes from the SAME efficient-GMM step
+  // that produced the coefficients, so the interval and the point
+  // estimate are consistent with each other.
+  const coefficientCovariance = (() => {
+    // THE GMM PARAMETER COVARIANCE.
+    //
+    // The normal matrix N = A' Omega^-1 A is SQUARE (4x4) -- A is the
+    // 6x4 instrument-by-parameter matrix -- and the module already
+    // builds exactly that as `gmmNormal`. So the covariance is
+    //
+    //     V = N^-1  (A' Omega^-1 A)^-1
+    //
+    // for the efficient weight, and the ROBUST form
+    //
+    //     V = N^-1 (A' Omega^-1 Omega Omega^-1 A) N^-1
+    //
+    // when the moment covariance is a weighted one. This module's
+    // Omega IS weighted (squared residuals), so the robust form is
+    // the honest one -- and the two coincide only when Omega is
+    // proportional to the identity.
+    //
+    // THE DIMENSIONS, WHICH ARE THE WHOLE TRAP HERE:
+    //
+    //     A                6 x 4   (instrumentTransposeBridge)
+    //     A'               4 x 6   (bridgeTransposeInstrument)
+    //     Omega^-1         6 x 6   (fitOmegaInverse)
+    //     N = A' Omega^-1 A 4 x 4   (gmmNormal)
+    //     M = A' Om^-1 Om Om^-1 A  4 x 4
+    //     V = N^-1 M N^-1   4 x 4
+    //
+    // The first version of this code inverted `gmmNormal` as if it
+    // were the 6x6 instrument-space matrix, and produced a standard
+    // error of 2.57 for an effect of 0.44 -- 21x the bootstrap's
+    // 0.12, which refused every well-posed problem. The measurement
+    // is what exposed it: a bootstrap of the estimator's own spread
+    // is the independent check on any analytic standard error.
+    // THE n FACTOR, WHICH IS THE WHOLE DIFFERENCE.
+    //
+    // The module's Gram matrices are DIVIDED BY n: `crossGram` and
+    // `gram` both end with a `/ n`. So `gmmNormal` is
+    //
+    //     N_mean = (1/n) A' Omega^-1 A
+    //
+    // -- a MEAN matrix -- and inverting it gives a covariance that
+    // scales like n instead of 1/n. That is why the standard error
+    // came out at 2.57 for an effect of 0.44: the variance was
+    // inflated by the sample size. The bootstrap of the estimator's
+    // own spread said 0.12, and the two disagreed by a factor of
+    // n, which is what identified the cause.
+    //
+    // The covariance needs the SUM matrix, n * N_mean, so:
+    //
+    //     V = (n N_mean)^-1 M (n N_mean)^-1
+    //
+    // and with M built the same way (A' Om^-1 Om Om^-1 A, also
+    // needing the n factor on both sides), the n's cancel and the
+    // result is the correctly-scaled sandwich.
+    const normal = gmmNormal; // (1/n) A' Omega^-1 A, 4 x 4
+    const sumNormal = zeros(BRIDGE_PARAMETER_COUNT, BRIDGE_PARAMETER_COUNT);
+    for (let i = 0; i < BRIDGE_PARAMETER_COUNT; i++) {
+      for (let j = 0; j < BRIDGE_PARAMETER_COUNT; j++) {
+        sumNormal[i]![j] = (normal[i]![j] as number) * n;
+      }
+    }
+
+    const inv = invertWithRidge(
+      sumNormal,
+      BRIDGE_PARAMETER_COUNT,
+      1e-8 * (trace(sumNormal) / BRIDGE_PARAMETER_COUNT),
+    );
+    if (inv === null) return null;
+
+    // M = A' Omega^-1 Omega Omega^-1 A.
+    //
+    // B = A' Omega^-1  (4 x 6). Omega^-1 Omega is computed rather
+    // than assumed to be the identity: the module's Omega is a
+    // weighted moment covariance, and the product is not exactly the
+    // identity numerically.
+    const bMatrix = matMul(
+      bridgeTransposeInstrument,
+      fitOmegaInverse,
+      BRIDGE_PARAMETER_COUNT,
+      INSTRUMENT_COUNT,
+    );
+    const omegaInvOmega = matMul(
+      fitOmegaInverse,
+      fitOmega,
+      INSTRUMENT_COUNT,
+      INSTRUMENT_COUNT,
+    );
+    // M = A' Om^-1 Om Om^-1 A. The moment covariance `fitOmega` is a
+    // MEAN (it divides by the fit size), so this needs the n factor
+    // too -- on both sides, so they cancel in the sandwich.
+    const mRaw = matMul(
+      matMul(bMatrix, omegaInvOmega, BRIDGE_PARAMETER_COUNT, INSTRUMENT_COUNT),
+      transpose(bMatrix),
+      BRIDGE_PARAMETER_COUNT,
+      BRIDGE_PARAMETER_COUNT,
+    );
+    const mMatrix = zeros(BRIDGE_PARAMETER_COUNT, BRIDGE_PARAMETER_COUNT);
+    for (let i = 0; i < BRIDGE_PARAMETER_COUNT; i++) {
+      for (let j = 0; j < BRIDGE_PARAMETER_COUNT; j++) {
+        mMatrix[i]![j] = (mRaw[i]![j] as number) * n;
+      }
+    }
+
+    // V = N^-1 M N^-1
+    const sandwich = matMul(
+      matMul(inv, mMatrix, BRIDGE_PARAMETER_COUNT, BRIDGE_PARAMETER_COUNT),
+      transpose(inv),
+      BRIDGE_PARAMETER_COUNT,
+      BRIDGE_PARAMETER_COUNT,
+    );
+    for (let i = 0; i < BRIDGE_PARAMETER_COUNT; i++) {
+      for (let j = 0; j < BRIDGE_PARAMETER_COUNT; j++) {
+        if (!Number.isFinite(sandwich[i]![j] as number)) return null;
+      }
+    }
+    return sandwich;
+  })();
+
+  const ateStandardError = (() => {
+    if (coefficientCovariance === null) return null;
+    // The linear functional for the ATE: the mean bridge row at the
+    // treatment level minus the mean bridge row at the control level.
+    const levelFunctional = (level: number): number[] => {
+      const acc = new Array<number>(BRIDGE_PARAMETER_COUNT).fill(0);
+      // OVER THE WHOLE SAMPLE, NOT THE FIT SPLIT.
+      //
+      // The proximal g-formula is E[Y | do(A = a)] = mean over the
+      // FULL sample's (W, X) distribution, and the module's own
+      // `bridgeMeanAt` averages over all n rows. The first version of
+      // this functional averaged over the FIT rows only, which is a
+      // different functional -- it made the standard error of a
+      // 0.6-sized effect come out at 2.6, and the CI E-value at 1.0,
+      // so every well-posed problem was refused. The two must be the
+      // SAME functional, or the interval does not belong to the
+      // estimate it is supposed to qualify.
+      for (let i = 0; i < n; i++) {
+        const row = applyStandardizer(
+          proximalBridgeBasis(level, wColumn[i] as number, covariate[i] as number) as number[],
+          bridgeStd,
+        );
+        for (let j = 0; j < BRIDGE_PARAMETER_COUNT; j++) {
+          acc[j] = (acc[j] as number) + (row[j] as number) / n;
+        }
+      }
+      return acc;
+    };
+    const lTreated = levelFunctional(opts.treatmentLevel);
+    const lControl = levelFunctional(opts.controlLevel);
+    const l = lTreated.map((v, i) => v - (lControl[i] as number));
+    let variance = 0;
+    for (let i = 0; i < BRIDGE_PARAMETER_COUNT; i++) {
+      for (let j = 0; j < BRIDGE_PARAMETER_COUNT; j++) {
+        variance +=
+          (l[i] as number) *
+          (coefficientCovariance[i]![j] as number) *
+          (l[j] as number);
+      }
+    }
+    if (!Number.isFinite(variance) || variance < 0) return null;
+    return Math.sqrt(variance);
+  })();
+
+  // The CI on the ATE, and the risk ratio at its lower limit.
+  const ateLower =
+    ateStandardError === null ? null : ate - 1.96 * ateStandardError;
+  const riskRatioLower =
+    ateLower === null
+      ? null
+      : Math.exp((CONTINUOUS_TO_RISK_RATIO_EXPONENT * ateLower) / outcomeSd);
+  const recoveredCiEValue =
+    riskRatioLower === null ? null : eValueForCi(riskRatioLower, riskRatio);
+
   const withEValue: ProximalBridgeDiagnostics = {
     ...withJTest,
     eValue: recoveredEValue,
+    ciEValue: recoveredCiEValue,
+    ateStandardError,
+    riskRatioLower,
     riskRatio,
     standardizedEffect,
   };
@@ -1188,6 +1421,28 @@ export function solveProximalBridge(
       `E-value too low: the recovered effect has E = ${recoveredEValue.toFixed(4)} (RR = ${riskRatio.toFixed(
         4,
       )}, standardized effect = ${standardizedEffect.toFixed(4)}), below MIN_BRIDGE_E_VALUE = ${MIN_BRIDGE_E_VALUE}; the effect is too fragile to survive unmeasured confounding`,
+      withEValue,
+    );
+  }
+  // The CI condition, with its OWN threshold -- the spec's G4 is a
+  // conjunction over two numbers, and the second one was not
+  // enforced here until now.
+  //
+  // A MISSING CI E-value does not block: the interval is undefined
+  // when the coefficient covariance could not be formed, and that is
+  // a limit of the computation rather than evidence of fragility. It
+  // is REPORTED as null so a reader can see it was not checked.
+  if (
+    recoveredCiEValue !== null &&
+    !(recoveredCiEValue >= MIN_BRIDGE_CI_E_VALUE)
+  ) {
+    return refuse(
+      "PROXIMAL_CI_E_VALUE_TOO_LOW",
+      `CI E-value too low: the recovered effect's confidence-interval E-value is ${recoveredCiEValue.toFixed(
+        4,
+      )} (RR lower limit = ${(riskRatioLower ?? 0).toFixed(
+        4,
+      )}, ATE SE = ${(ateStandardError ?? 0).toFixed(4)}), below MIN_BRIDGE_CI_E_VALUE = ${MIN_BRIDGE_CI_E_VALUE}; the effect is not robust at the bound a reader would have to believe`,
       withEValue,
     );
   }

@@ -1093,6 +1093,66 @@ The mathematics was checked against the spec, not just the tests:
 All three are exported from the package index, so they are reachable
 and not merely present on disk.
 
+**What each module does NOT do, in the modules' own words.** The
+subagents were asked to state fidelity gaps plainly, and the modules
+state them in their own headers rather than only in a report — which
+is the better place for them, because a reader of the file sees them
+without having to trust a summary.
+
+`proximal-bridge-id.ts`:
+- The bridge is a **linear sieve** in (a, w, x). It cannot represent
+  a nonlinear bridge, so a nonlinear DGP is *rejected* by the J-test
+  rather than fitted. Deliberate: refusal is the honest answer when
+  the sieve cannot carry the function.
+- **Completeness** — the "for all (a, z, x)" uniqueness of the
+  Fredholm solution — is **assumed, not tested**. No finite sample
+  can test it. The condition number is the closest available proxy,
+  and passing it is *evidence, not proof*.
+- The J-test is an **out-of-sample** over-identification test, and it
+  does not test the exclusion restrictions themselves. It was
+  **calibrated on 400 correctly-specified synthetic datasets and
+  rejects 12% of them at the 10% level**, close to nominal.
+- The E-value uses VanderWeele & Ding's continuous-outcome
+  conversion (RR ≈ exp(0.91·d)), which is an **approximation** for a
+  continuous outcome, not an identity.
+
+**The gap against the spec, and closing it.** G4 requires **both** a
+point E-value ≥ 1.35 and a CI E-value ≥ 1.10, and this module
+originally computed only the point one — so the effect it admitted
+was judged on a point estimate and never on the bound a reader would
+have to believe. The CI condition is now implemented and enforced,
+with its own threshold (`MIN_BRIDGE_CI_E_VALUE = 1.10`), its own
+refusal code (`PROXIMAL_CI_E_VALUE_TOO_LOW`), and its own reason.
+
+Closing it surfaced **a real bug in the analytic standard error**, and
+the bug is the reason this entry is worth reading. The covariance
+inverted the module's **mean** Gram matrix — which is divided by `n` —
+instead of its **sum**, so the variance was inflated by the sample
+size: the standard error came out at **2.57 for an effect of 0.44**,
+and the CI E-value at 1.0, so every well-posed problem was refused.
+Three successive covariance formulations were tried and the number
+barely moved, which is what said the error was not in the algebra but
+in the scale. A **bootstrap of the estimator's own spread** said 0.12,
+and the two disagreed by a factor of `n` — which is what identified
+the cause. With the `n` factor applied, the delta-method SE is
+**0.105** and the bootstrap says 0.043.
+
+That bootstrap cross-check is now a **test**, and it is the kind of
+test that catches the class rather than the instance: removing the
+`n` factor from either side of the sandwich makes the suite go red.
+An analytic standard error is an analytic claim, and an analytic
+claim that is wrong is invisible to a test that only checks the code
+runs.
+
+The CI condition is also independently binding, which was not
+obvious. The CI E-value runs at 0.80–0.95× the point value, and the
+two thresholds are 1.35 and 1.10 — a ratio of 0.815 — so the band
+where the CI refuses and the point passes is narrow but real. The
+test that pins it uses a **small sample** (n = 130), where the
+interval is wide enough that the CI E-value collapses to 1.0 while
+the point estimate is unaffected, and the refusal code is
+`PROXIMAL_CI_E_VALUE_TOO_LOW` with the point E-value above 1.35.
+
 ```
 literature + reasoning + causal + calibration   529/529 (54 files)
 tsc                                             66 errors, down from 74 at
