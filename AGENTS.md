@@ -17306,3 +17306,48 @@ Window: posts after 4:20 PM CDT Mon 2026-10-19 through 9:08 PM CDT Mon 2026-10-1
 - @EstablishTheRun: assigned to lane A but absent from the delivered manifest's account sequence and coverage counts — UNKNOWN, not zero.
 - @GridironInfo_ turnovers table is PARTIAL as printed (9 of 32 teams); no other rows were rendered to transcribe.
 - Depth: candidate counts are as reported by the lane; posts below the scanned candidate sets were not exhaustively scrolled — that remainder is PARTIAL, not zero.
+
+## X ANALYTICS SWEEP 2026-10-19 (21:08 RUN, EVENING — LANE B MANIFEST, ADDENDUM TO THE LANE A SECTION)
+
+Window: posts after 4:20 PM CDT Mon 2026-10-19 through 9:08 PM CDT Mon 2026-10-19. Read-only as @GalaxySportsHQ; login CONFIRMED in lane B's final manifest (X opened already signed in; the left rail showed "Galaxy Sports Edge / @GalaxySportsHQ" on every X page used); no likes/reposts/replies/follows/DMs/bookmarks/messages/posts. Findings filed ONLY from lane B's final verified manifest (delivered late — see run-log-2026-10-19-21.md). Finds were opened on their detail pages and exact timestamps verified in-window; lane B's browser session displayed Eastern Time and the manifest converted to Central — times below are CDT as converted in the manifest. Total: 1 verified qualifying metric post (found via Latest search, from a non-assigned account citing an assigned account's data) across lane B's 10 assigned accounts (0 filed), home feed (not visited — see Gaps), and 5 searches. Method note from the manifest: each profile was read in Posts view and, where available, the "Aggregated (All of XSearch, Across Yours and Theirs)" timeline view (date-grouped); searches were run with Latest selected.
+
+### NEW METRIC / ANGLE ENTRIES
+
+- **Caleb Williams NFL rankings across 8 metrics, per Statyx** — posted by @DaBearsTakeOver ("Bears Facts"), found via lane B's EPA Latest search and cross-surfaced by the CPOE Latest search; exact 7:19 PM CDT 2026-10-19 (https://x.com/DaBearsTakeOver/status/2112358849004933192): Completion % 72.5% (1st); CPOE +9.8% (1st); Clean Pocket Comp % 84.7% (1st); Comp % No Blitz 87.5% (1st); EPA/Dropback +0.332 (4th); Success Rate 51.4% (3rd); INT Rate 1.1% (7th); Sack Rate 9.0% (5th). Season/week scope: NOT stated in the post as rendered. No definitions given. Data source EXACTLY as stated in the post: per @statyx (Statyx). Attributed observation: a single-QB composite card stacking three distinct accuracy/pressure splits not previously inventoried together — completion % from a clean pocket and completion % against no blitz, alongside CPOE and EPA/dropback. -> bearsfacts-williams-rankings-per-statyx-2026.csv.
+
+### EXAMINED / ANGLE NOTES (lane B manifest)
+
+- **4th-down aggressiveness trend note (commentary, no metric or values)** — @RyanPaganetti, exact 7:53 PM CDT 2026-10-19 (https://x.com/RyanPaganetti/status/2112343647404659055): post states Kyle Shanahan "of two years ago would never have gone for this" 4th-down attempt, that many teams would have kicked the field goal, and that Shanahan and Andy Reid have recently "started turning up the heat on 4th downs after many years conservative." No definition, rate, or data printed. Data source: NOT stated. Recorded as an attributed game-management observation under the aggressiveness theme this sweep tracks; it is not a metric entry.
+- @hawkblogger aggregated timeline showed one in-window item: a 7:53 PM CDT repost of Dave Boling (Seahawks columnist, Spokane) — no metric content was reported for it and it was not detail-filed as a metric find.
+- @SumerSports post-window check: a Kenneth Walker III MNF stats post appeared in Later results with a 9:44 PM CDT timestamp (after the cutoff) and was excluded by lane B. (Lane A separately filed a @SumerSports Walker first-half line at 5:17 PM CDT in-window — see the lane A section; the two are recorded as rendered by each lane, not reconciled.)
+
+### SCANNED, NO QUALIFYING IN-WINDOW METRIC (lane B manifest; scanned / filed)
+
+- @cmain7 — 29 rows examined/0: latest post 12:58 PM CDT Oct 19 (pre-window); nothing in-window. Older visible item noted by the lane: Oct 16 "Introducing: Survivor Bias" (a product/statistical concept post, pre-window, not filed).
+- @RyanPaganetti — 19 rows/0 metric filed (the 7:53 PM commentary item above was opened and detail-verified; 3 further in-window items were replies: two to his own 7:53 PM post and one 8:39 PM reply to another user, none metric-bearing as rendered).
+- @jmthrivept — 10 rows/0: only in-window item a 7:36 PM repost about medical-staff proficiencies (no metric, not opened per the manifest); latest original post Oct 18.
+- @hawkblogger — 3 profile rows + 80 aggregated rows examined/0: newest original post Oct 17 (Seahawks Week 6 stats); the 7:53 PM Boling repost above is the only in-window item seen.
+- @MagicSportsGuy — 12 rows/0: all visible content NBA or product-related; no NFL analytics; latest Oct 18.
+- @PattonAnalytics — 3 profile rows + 80 aggregated rows/0: newest visible post Oct 7 (a link post); nothing in-window.
+- @DonAtkinsonNFL — 0/0: the profile states "hasn't posted yet" — the account has zero posts in total, per the manifest (not a window zero; an empty account).
+- @DynatyzeFF — 18 rows/0: newest visible Oct 19, 1:30 PM CDT (pre-window); rest Oct 18 or earlier.
+- @NerdingonNFL — 2 profile rows + 80 aggregated rows/0: the account has only 2 lifetime posts per the manifest (Jul 7 and Jul 9, both pre-window).
+- @FTNData — 10 rows/0: posts were VISIBLE to this lane (dated Oct 13–16; nothing in-window). This differs from prior runs, in which @FTNData rendered as protected/inaccessible to the reading lane; both states are recorded as rendered by their respective lanes, not reconciled.
+
+### SEARCHES (lane B manifest; Latest selected for all)
+
+- EPA — candidate rows scanned (several dozen, MNF-heavy): 1 filed (the @DaBearsTakeOver Williams/Statyx post above). Other in-window results were live-game commentary or already-window material.
+- CPOE — 1 result opened and verified: the same @DaBearsTakeOver Williams post (7:19 PM CDT); no additional CPOE-specific find.
+- TPRR — 0 in-window detail-verified finds. Top results were a 4:13 PM CDT @FantasyPtsData post (pre-window) and older items from Oct 18 and earlier.
+- "pass rush win rate" — 0 in-window detail-verified finds; visible results were dated Oct 17 or earlier, or after the 9:08 PM cutoff.
+- aggressiveness — 0 in-window detail-verified finds; visible results were dated Oct 18 or earlier, or after the cutoff.
+
+### ENDPOINTS
+
+- No NEW data endpoint/site/API page identified. Source as stated in the one filed find: Statyx (@statyx / statyxio), cited by the posting account — consistent with @statyxio's own-table sourcing in prior inventory.
+
+### GAPS (explicit, lane B)
+
+- Following home feed: NOT visited by lane B (the lane prioritized completing all 10 accounts and all 5 searches and stopped at the cutoff) — home-feed coverage for this window rests on lane A, whose manifest also reports no home-feed finds. Home feed is therefore effectively unscanned for 4:20–9:08 PM — UNKNOWN, not zero.
+- Depth: aggregated-timeline views were capped at ~80 rows per account in the manifest's method; profile Posts views were top-of-timeline scans. Anything below those caps is PARTIAL, not zero.
+- Cross-lane note: @SumerSports and @FantasyPtsData were assigned to lane A; lane B touched them only via search results and a post-window check, as recorded above.
