@@ -109,7 +109,11 @@ export function normalizeVector(raw: readonly number[]): number[] | null {
   }
   const norm = Math.sqrt(sumSq);
   if (!(norm > 1e-12)) return null;
-  for (let i = 0; i < LITERATURE_EMBEDDING_DIM; i += 1) out[i] = out[i] / norm;
+  for (let i = 0; i < LITERATURE_EMBEDDING_DIM; i += 1) {
+    const v = out[i];
+    if (v === undefined) return null;
+    out[i] = v / norm;
+  }
   return out;
 }
 
@@ -183,8 +187,10 @@ export function hashedEmbedder(dim: number = LITERATURE_EMBEDDING_DIM): Embedder
       const a = h % dim;
       const b = (h >>> 8) % dim;
       const sign = (h & 0x100) === 0 ? 1 : -1;
-      vec[a] += sign * 1;
-      vec[b] += sign * 0.5;
+      const curA = vec[a] ?? 0;
+      const curB = vec[b] ?? 0;
+      vec[a] = curA + sign * 1;
+      vec[b] = curB + sign * 0.5;
     }
     const normalized = normalizeVector(vec);
     if (!normalized) return { ok: false, error: "hashed embedder produced a degenerate vector" };

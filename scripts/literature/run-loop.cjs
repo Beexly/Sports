@@ -393,16 +393,34 @@ function eventText(e) {
   );
 
   // ---- 4. Promote premises to causal edges ----
+  // HONESTY (2026-10-20): this script's gate and estimate now MATCH
+  // literature-retrieval.ts exactly, so the two cannot disagree about
+  // what "promoted" means.
+  //
+  //  - effect_estimate is the OBSERVED mean signed residual (s.mean_residual),
+  //    NOT p.numeric_value. The previous version wrote the premise's own
+  //    claim into the estimate, which made every edge unfalsifiable.
+  //  - the gate is graded >= 3 AND activation_score > 0 AND a non-null
+  //    mean_residual, matching the module's minGraded=3/minScore=0 call.
+  //  - status is set explicitly rather than taking the schema default.
   const prom = await db.query(
-    `INSERT INTO lit.causal_edge (edge_key, premise_id, cause_signal, effect_signal, effect_estimate, effect_unit, support_n)
+    `INSERT INTO lit.causal_edge (edge_key, premise_id, cause_signal, effect_signal, effect_estimate, effect_unit, support_n, status)
      SELECT 'edge:'||p.premise_key, p.id,
             COALESCE(p.applicable_contexts[2], p.applicable_contexts[1], p.numeric_metric, p.domain, 'unknown'),
             COALESCE(p.domain,'outcome')||'.outcome',
-            p.numeric_value, p.numeric_unit, s.graded
+            s.mean_residual, p.numeric_unit, s.graded, 'promoted'
        FROM lit.premise_score s JOIN lit.premise p ON p.id = s.premise_id
       WHERE s.graded >= 3 AND s.activation_score > 0 AND p.numeric_value IS NOT NULL
+        AND s.mean_residual IS NOT NULL
       ON CONFLICT (edge_key) DO UPDATE SET effect_estimate=EXCLUDED.effect_estimate,
-        support_n=EXCLUDED.support_n, promoted_at=now()`
+        support_n=EXCLUDED.support_n, promoted_at=now(), status='promoted', retired_at=NULL`
+  );
+  // keep premise_score.promoted in step with the edge set
+  await db.query(
+    `UPDATE lit.premise_score s SET promoted = true, updated_at = now()
+      WHERE s.promoted = false
+        AND EXISTS (SELECT 1 FROM lit.causal_edge ce
+                     WHERE ce.premise_id = s.premise_id AND ce.status = 'promoted')`
   );
   const edgeCount = await db.query(`SELECT count(*)::int n FROM lit.causal_edge WHERE status='promoted'`);
   console.log(`CAUSAL EDGES: promoted=${edgeCount.rows[0].n}`);

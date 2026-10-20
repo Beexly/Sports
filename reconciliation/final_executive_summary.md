@@ -183,6 +183,36 @@ wire.
 
 ---
 
+## 5b. The literature path: mechanism yes, conclusions not yet
+
+The literature loop **is** built, wired into a live cron
+(`signal-ledger-write/route.ts:313` -> `bridgeSignalsToLiterature`), and
+measured: 5,509 premises + 1,268 raw corpus items under **HNSW**, 200
+real retrieval events from the `signals` table, 5,650 activations, 72
+residuals, 8 promoted causal edges, 75 raw items promoted to premises by
+the discovery sweep. p50 retrieval **78ms**, HNSW confirmed by
+`EXPLAIN ANALYZE`.
+
+**Two things I got wrong and fixed in this cycle:**
+
+1. **A tautology in the promoted-edge estimate.**
+   `literature-retrieval.ts:449` wrote the premise's *own claim* into
+   `effect_estimate`, so every edge asserted "premise P moves the outcome
+   by exactly what P said it would" -- unfalsifiable. Measured 8/8
+   tautological. Now the observed mean signed residual. **Measured 0/8
+   after.** Also fixed: `status` was inherited from the schema default
+   (every edge born promoted), and `premise_score.promoted` disagreed with
+   the edge table (8 vs 0) because nothing ever wrote it. 4 regression
+   tests added; 35/35 pass.
+2. **"TypeScript compile clean" was false.** 32 real errors in my own
+   files. Now 0.
+
+**What I will not stand behind:** `residuals_improved: true`. All 72
+residuals have `actual = 1`, so `residual = 1 - predicted` for every row
+and the improvement is noise with a favorable sign.
+
+---
+
 ## 6. What the recon batch changed
 
 Three read-only agents ran against the same worktree. They **corrected my
@@ -266,7 +296,10 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `literature_integration_map.md` | The claim corrections; measured corpus scale; what is real vs literal |
 | `event_driven_retrieval_spec.md` | The 4 retrieval laws; the event path hop by hop; the 1,268→8,077 expansion plan |
 | `causal_inference_methods.md` | Every causal method with its wiring status; the 4 missing methods with hook points; the `CausalLink`-has-no-numbers finding |
-| `dark_sources_census.json` + `fix_plan.md` | 21 DARK evaluators, per-evaluator; the env→DB adapter plan; 2 deletion candidates |
+| `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
+| `literature_coverage_report.md` | The literature loop measured end to end: 5,509 premises + 1,268 corpus items HNSW-indexed, 200 real retrieval events, 5,650 activations, 8 promoted edges; **the tautology I found and fixed**; the degenerate residual sample stated plainly |
+| `recon_integration.md` | What the three recon agents added and what they corrected in my work |
+| `zero_importer_sweep.json` | Three-tiered: 2,174 ZERO / 888 PACKAGE_INTERNAL_ONLY / 1,187 EXTERNALLY_CONSUMED. A triage list, not a reachability source |
 | `reasoning_engine_continuous_loop_spec.md` | The 20-hop chain; the 7 questions answered; the target architecture; 9 staged stages |
 | `invention_proposals.md` | 12 proposals, ranked, with gates and risk |
 | `staged_improvements/` | 4 reviewable PR descriptions with acceptance criteria |

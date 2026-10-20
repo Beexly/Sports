@@ -399,6 +399,24 @@ export async function promotePremisesToCausalEdges(
   const minAbsClaim = opts?.minAbsClaim ?? 0.01;
   const limit = opts?.limit ?? 500;
 
+  // HONESTY (2026-10-20). The effect estimate on a promoted edge must be
+  // an OBSERVED quantity, not the premise's own claim. The earlier
+  // implementation wrote `c.numeric_value` -- the number the premise
+  // asserted -- into `effect_estimate`, so the edge said "premise P moves
+  // the outcome by exactly what P said it would". That is a tautology: it
+  // can never be falsified, and it made every promoted edge look like
+  // evidence for itself.
+  //
+  // The honest estimator available here is the MEAN SIGNED RESIDUAL:
+  // residual = outcome - numeric_value, so a positive mean residual means
+  // the premise under-predicted, and the mean over its graded activations
+  // is the size of that miscalibration in outcome units.
+  //
+  // The promotion gate is ALSO the module's own, not a script's copy:
+  // graded >= minGraded AND activation_score >= minScore AND a non-null
+  // observed mean residual. run-loop.cjs used graded>=3 AND
+  // activation_score>0, which is why the 8 edges in the dev branch did
+  // not come from this function. One gate, one place.
   const cands = await db.query(
     `SELECT p.id, p.premise_key, p.title, p.domain, p.numeric_value, p.numeric_unit,
             p.numeric_metric, p.influence_direction, p.applicable_contexts,
@@ -409,6 +427,7 @@ export async function promotePremisesToCausalEdges(
         AND s.activation_score >= $2
         AND p.numeric_value IS NOT NULL
         AND abs(p.numeric_value) >= $3
+        AND s.mean_residual IS NOT NULL
         AND p.structure_state = 'structured'
       ORDER BY s.activation_score DESC, s.graded DESC
       LIMIT $4`,
@@ -425,28 +444,47 @@ export async function promotePremisesToCausalEdges(
     const effect = `${(c.domain as string) ?? "outcome"}.outcome`;
     const edgeKey = `edge:${c.premise_key as string}`;
 
+    // The effect estimate is the observed mean signed residual, in the
+    // premise's own unit. NOT the premise's claimed value.
+    const observedEffect = (c.mean_residual as number | null) ?? null;
+
     const ins = await db.query(
       `INSERT INTO lit.causal_edge (
           edge_key, premise_id, cause_signal, effect_signal,
-          effect_estimate, effect_unit, support_n
-       ) VALUES ($1,$2,$3,$4,$5,$6,$7)
+          effect_estimate, effect_unit, support_n, status
+       ) VALUES ($1,$2,$3,$4,$5,$6,$7,'promoted')
        ON CONFLICT (edge_key) DO UPDATE SET
           effect_estimate = EXCLUDED.effect_estimate,
           support_n = EXCLUDED.support_n,
-          promoted_at = now()
+          promoted_at = now(),
+          status = 'promoted',
+          retired_at = NULL
        RETURNING id`,
       [
         edgeKey, premiseId, cause, effect,
-        c.numeric_value as number | null,
+        observedEffect,
         (c.numeric_unit as string) ?? null,
         (c.graded as number) ?? 0,
       ],
     );
     promoted += 1;
+
+    // Keep the premise_score.promoted flag in step with the edge. Before
+    // this, the flag stayed false on every premise while 8 edges claimed
+    // status='promoted' -- the two tables disagreed about the same fact.
+    // The flag is what downstream readers use to ask "is this premise
+    // promoted?", so it must be written in the same statement.
+    await db.query(
+      `UPDATE lit.premise_score
+          SET promoted = true, updated_at = now()
+        WHERE premise_id = $1`,
+      [premiseId],
+    );
+
     edges.push({
       edge_key: edgeKey,
       premise_key: c.premise_key as string,
-      effect_estimate: (c.numeric_value as number | null) ?? null,
+      effect_estimate: observedEffect,
     });
   }
 

@@ -1,6 +1,6 @@
 {
  "branch": "dev-lit-vectors-2026-10",
- "measured_at": "2026-10-20T06:22:47.831Z",
+ "measured_at": "2026-10-20T07:17:03.309Z",
  "index": {
   "premises": 5509,
   "premise_vectors": 5509,
@@ -53,8 +53,8 @@
   "distinct_signals": 7,
   "distinct_games": 15,
   "events_with_hits": 198,
-  "avg_latency_ms": "77.99",
-  "max_latency_ms": "92",
+  "avg_latency_ms": "81.97",
+  "max_latency_ms": "323",
   "hnsw_backed": 200
  },
  "signal_family_coverage": [
@@ -62,7 +62,7 @@
    "family": "cognitive",
    "events": 128,
    "events_with_hits": 126,
-   "avg_hits": "12.95"
+   "avg_hits": "12.94"
   },
   {
    "family": "ftn",
@@ -103,7 +103,7 @@
  "premise_scores": {
   "scored_premises": 257,
   "scoring_premises": 17,
-  "promoted_flag": 0,
+  "promoted_flag": 8,
   "avg_activation_score": "0.004304",
   "max_activation_score": "0.227765"
  },
@@ -115,7 +115,7 @@
  "intervention_tests": [
   {
    "verdict": "INCONCLUSIVE",
-   "n": 8,
+   "n": 16,
    "avg_estimate": null,
    "avg_p_value": null
   }
@@ -127,8 +127,8 @@
  },
  "latency": {
   "p50_ms": "78.00",
-  "p95_ms": "79.00",
-  "p99_ms": "84.02"
+  "p95_ms": "84.45",
+  "p99_ms": "232.89"
  },
  "query_plan": [
   "Limit",

@@ -207,15 +207,17 @@ export async function runDiscoverySweep(
   const promotedKeys: string[] = [];
   let promoted = 0;
   for (let i = 0; i < candidates.length; i += 1) {
+    const candidate = candidates[i];
+    if (!candidate) continue;
     try {
-      const out = await promoteDiscoveryToPremise(db, candidates[i].corpus_key);
+      const out = await promoteDiscoveryToPremise(db, candidate.corpus_key);
       if (out) {
         promoted += 1;
         promotedKeys.push(out.premise_key);
       }
     } catch (err) {
       errors.push(
-        `${candidates[i].corpus_key}: ${err instanceof Error ? err.message : String(err)}`,
+        `${candidate.corpus_key}: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
     opts?.onProgress?.(i + 1, candidates.length);

@@ -325,6 +325,7 @@ export async function indexPremises(
     for (let j = 0; j < batch.length; j += 1) {
       const p = batch[j];
       const r = results[j];
+      if (!p || !r) continue;
       let embedding: number[] | null = null;
       if (r.ok) {
         embedding = r.embedding;
@@ -387,6 +388,7 @@ export async function indexCorpusItems(
     for (let j = 0; j < batch.length; j += 1) {
       const c = batch[j];
       const r = results[j];
+      if (!c || !r) continue;
       let emb: number[] | null = null;
       if (r.ok) {
         emb = r.embedding;

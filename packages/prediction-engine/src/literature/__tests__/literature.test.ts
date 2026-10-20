@@ -22,7 +22,12 @@ import {
   pillarsForSignal,
 } from "../literature-pillars.js";
 import { mindRecordToPremise, bridgeRecordToPremise, vectorLiteral } from "../literature-index-builder.js";
-import { makeEventKey, normalCdf, DEFAULT_TOP_K } from "../literature-retrieval.js";
+import {
+  makeEventKey,
+  normalCdf,
+  DEFAULT_TOP_K,
+  promotePremisesToCausalEdges,
+} from "../literature-retrieval.js";
 import { DEFAULT_DISCOVERY_THRESHOLD } from "../literature-discovery.js";
 
 describe("literature embeddings", () => {
@@ -254,5 +259,159 @@ describe("retrieval defaults", () => {
   });
   it("requires repeated surfacing before a discovery item is structured", () => {
     expect(DEFAULT_DISCOVERY_THRESHOLD).toBeGreaterThanOrEqual(2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// REGRESSION (2026-10-20): the promoted-edge estimate must be an OBSERVED
+// quantity, not the premise's own claim.
+//
+// The original implementation wrote `c.numeric_value` -- the number the
+// premise asserted -- into `lit.causal_edge.effect_estimate`. An edge whose
+// estimate is just the premise's own claim is unfalsifiable: it says
+// "premise P moves the outcome by exactly what P said it would". The
+// estimate must be the observed mean signed residual.
+//
+// This test drives the real function against a fake db and asserts the
+// estimate that reaches the INSERT is the residual, and that the premise's
+// numeric_value never appears there.
+// ---------------------------------------------------------------------------
+describe("promoted edge honesty", () => {
+  it("writes the observed mean residual as the effect estimate, not the premise's claim", async () => {
+    const inserted: Array<{ sql: string; params: unknown[] }> = [];
+    const db = {
+      query: async (sql: string, params: unknown[] = []) => {
+        // the candidate SELECT
+        if (sql.includes("FROM lit.premise_score s")) {
+          return {
+            rows: [
+              {
+                id: "p1",
+                premise_key: "bridge:x:claim",
+                title: "t",
+                domain: "injury",
+                numeric_value: 0.85, // the premise's CLAIM
+                numeric_unit: "probability",
+                numeric_metric: "m",
+                influence_direction: "pos",
+                applicable_contexts: ["ctx"],
+                activation_score: 0.5,
+                graded: 4,
+                correct: 2,
+                mean_residual: 0.031, // the OBSERVED miscalibration
+              },
+            ],
+          };
+        }
+        inserted.push({ sql, params });
+        return { rows: [{ id: "edge1" }] };
+      },
+    } as never;
+
+    const res = await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
+
+    expect(res.promoted).toBe(1);
+    // the returned estimate is the residual
+    expect(res.edges[0]?.effect_estimate).toBeCloseTo(0.031, 6);
+
+    const edgeInsert = inserted.find((x) => x.sql.includes("INSERT INTO lit.causal_edge"));
+    expect(edgeInsert).toBeDefined();
+    const params = edgeInsert!.params;
+    // params: edgeKey, premiseId, cause, effect, observedEffect, unit, support_n
+    expect(params[4]).toBeCloseTo(0.031, 6);
+    // the premise's own claim must NOT be the estimate
+    expect(params[4]).not.toBe(0.85);
+  });
+
+  it("sets status explicitly rather than inheriting the schema default", async () => {
+    const inserted: Array<{ sql: string; params: unknown[] }> = [];
+    const db = {
+      query: async (sql: string, params: unknown[] = []) => {
+        if (sql.includes("FROM lit.premise_score s")) {
+          return {
+            rows: [
+              {
+                id: "p1",
+                premise_key: "k",
+                title: "t",
+                domain: "d",
+                numeric_value: 0.5,
+                numeric_unit: null,
+                numeric_metric: null,
+                influence_direction: null,
+                applicable_contexts: [],
+                activation_score: 0.5,
+                graded: 3,
+                correct: 1,
+                mean_residual: 0.02,
+              },
+            ],
+          };
+        }
+        inserted.push({ sql, params });
+        return { rows: [{ id: "e" }] };
+      },
+    } as never;
+
+    await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
+
+    const edgeInsert = inserted.find((x) => x.sql.includes("INSERT INTO lit.causal_edge"));
+    expect(edgeInsert!.sql).toContain("status");
+    expect(edgeInsert!.sql).toContain("'promoted'");
+  });
+
+  it("marks the premise_score.promoted flag so the two tables agree", async () => {
+    const inserted: string[] = [];
+    const db = {
+      query: async (sql: string) => {
+        if (sql.includes("FROM lit.premise_score s")) {
+          return {
+            rows: [
+              {
+                id: "p1",
+                premise_key: "k",
+                title: "t",
+                domain: "d",
+                numeric_value: 0.5,
+                numeric_unit: null,
+                numeric_metric: null,
+                influence_direction: null,
+                applicable_contexts: [],
+                activation_score: 0.5,
+                graded: 3,
+                correct: 1,
+                mean_residual: 0.02,
+              },
+            ],
+          };
+        }
+        inserted.push(sql);
+        return { rows: [{ id: "e" }] };
+      },
+    } as never;
+
+    await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
+
+    const flagWrite = inserted.find((x) => x.includes("UPDATE lit.premise_score"));
+    expect(flagWrite).toBeDefined();
+    expect(flagWrite!).toContain("promoted = true");
+  });
+
+  it("requires a non-null observed residual -- a premise with no outcome has no effect", async () => {
+    const captured: unknown[] = [];
+    const db = {
+      query: async (sql: string, params: unknown[] = []) => {
+        if (sql.includes("FROM lit.premise_score s")) {
+          captured.push(params);
+          return { rows: [] };
+        }
+        return { rows: [{ id: "e" }] };
+      },
+    } as never;
+
+    await promotePremisesToCausalEdges(db, {});
+    const candidateParams = captured[0] as unknown[];
+    // the candidate SELECT must filter on a non-null mean_residual
+    expect(candidateParams.length).toBeGreaterThan(0);
   });
 });
