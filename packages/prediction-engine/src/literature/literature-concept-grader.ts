@@ -39,8 +39,11 @@
 import {
   conceptActivationScore,
   directionSign,
+  isDefinitionalPair,
+  MEASURE_OUTCOMES,
   resolveMeasure,
   withinGameAgreement,
+  type ConceptOutcome,
   type MeasureSpec,
 } from "./literature-measures.js";
 
@@ -97,7 +100,17 @@ export type ConceptRefusalReason =
   | "no_context_tags"
   | "no_observed_games"
   | "below_min_support"
-  | "no_agreements";
+  | "no_agreements"
+  /**
+   * Every outcome this measure may be tested against is DEFINITIONAL --
+   * the concept and the outcome are the same quantity measured twice,
+   * so a high agreement rate would be arithmetic, not sport.
+   *
+   * MEASURED 2026-10-20: receivingYards vs targets = 0.8987,
+   * receptions vs targets = 0.9379. Both are refused rather than
+   * reported as findings.
+   */
+  | "definitional_outcome";
 
 export interface ConceptRefusal {
   readonly premise_key: string;
@@ -121,6 +134,12 @@ export interface ConceptGrade {
    * evidence.
    */
   readonly measure_match: "concept" | "tag" | null;
+  /**
+   * The outcome the concept was tested against. Recorded so a reader can
+   * see WHICH quantity the agreement rate is about -- and so a circular
+   * pairing can never be silently reintroduced.
+   */
+  readonly outcome: ConceptOutcome;
   /** Distinct games the premise was observed on. */
   readonly support: number;
   /** Games where the premise's condition held and the outcome was judged. */
@@ -260,51 +279,58 @@ function conceptSql(measure: MeasureSpec): string {
  * agreement rates of exactly 0.000 and 1.000. That is a grader that
  * cannot say anything.
  */
-function outcomeSql(measure: MeasureSpec): string {
+function outcomeSql(measure: MeasureSpec, outcome: ConceptOutcome): string {
+  // The outcome EXPRESSION differs by outcome kind. The join shape does
+  // not -- every player-level outcome is read from player_game_stats
+  // through the same id bridge.
+  const outcomeExpr =
+    outcome === "yards_per_target"
+      ? `AVG(p."receivingYards"::numeric) / NULLIF(AVG(p."targets"::numeric), 0)`
+      : `AVG(p."targets"::numeric)`;
   switch (measure.table) {
     case "NextGenStat":
       return `
         SELECT s.season::text || '_' || s.week::text || '_' || s.team AS game_key,
                pl.id AS entity,
-               AVG(p."targets"::numeric)::double precision AS outcome
+               ${outcomeExpr}::double precision AS outcome
           FROM next_gen_stats s
           JOIN players pl ON pl."gsisId" = s."gsisId"
           JOIN player_game_stats p
             ON p."playerId" = pl.id AND p.season = s.season AND p.week = s.week
-         WHERE p."targets" IS NOT NULL
+         WHERE p."targets" IS NOT NULL ${outcome === "yards_per_target" ? 'AND p."receivingYards" IS NOT NULL AND p."targets" > 0' : ''}
          GROUP BY 1, 2`;
     case "SnapCount":
       return `
         SELECT sc.season::text || '_' || sc.week::text || '_' || sc.team AS game_key,
                pl.id AS entity,
-               AVG(p."targets"::numeric)::double precision AS outcome
+               ${outcomeExpr}::double precision AS outcome
           FROM snap_counts sc
           JOIN players pl ON lower(pl."fullName") = lower(sc."playerName")
           JOIN player_game_stats p
             ON p."playerId" = pl.id AND p.season = sc.season AND p.week = sc.week
-         WHERE p."targets" IS NOT NULL
+         WHERE p."targets" IS NOT NULL ${outcome === "yards_per_target" ? 'AND p."receivingYards" IS NOT NULL AND p."targets" > 0' : ''}
          GROUP BY 1, 2`;
     case "DepthChartEntry":
       return `
         SELECT d.season::text || '_' || d.week::text || '_' || d.team AS game_key,
                pl.id AS entity,
-               AVG(p."targets"::numeric)::double precision AS outcome
+               ${outcomeExpr}::double precision AS outcome
           FROM depth_chart_entries d
           JOIN players pl ON pl."gsisId" = d."gsisId"
           JOIN player_game_stats p
             ON p."playerId" = pl.id AND p.season = d.season AND p.week = d.week
-         WHERE p."targets" IS NOT NULL
+         WHERE p."targets" IS NOT NULL ${outcome === "yards_per_target" ? 'AND p."receivingYards" IS NOT NULL AND p."targets" > 0' : ''}
          GROUP BY 1, 2`;
     case "Injury":
       return `
         SELECT i.season::text || '_' || i.week::text || '_' || i.team AS game_key,
                pl.id AS entity,
-               AVG(p."targets"::numeric)::double precision AS outcome
+               ${outcomeExpr}::double precision AS outcome
           FROM injuries i
           JOIN players pl ON pl."gsisId" = i."gsisId"
           JOIN player_game_stats p
             ON p."playerId" = pl.id AND p.season = i.season AND p.week = i.week
-         WHERE p."targets" IS NOT NULL
+         WHERE p."targets" IS NOT NULL ${outcome === "yards_per_target" ? 'AND p."receivingYards" IS NOT NULL AND p."targets" > 0' : ''}
          GROUP BY 1, 2`;
     case "PlayerGameStat":
       // The outcome is targets, NOT yards. The concept measure for
@@ -316,9 +342,9 @@ function outcomeSql(measure: MeasureSpec): string {
       return `
         SELECT p.season::text || '_' || p.week::text || '_' || p.team AS game_key,
                p."playerId" AS entity,
-               AVG(p."targets"::numeric)::double precision AS outcome
+               ${outcomeExpr}::double precision AS outcome
           FROM player_game_stats p
-         WHERE p."targets" IS NOT NULL
+         WHERE p."targets" IS NOT NULL ${outcome === "yards_per_target" ? 'AND p."receivingYards" IS NOT NULL AND p."targets" > 0' : ''}
          GROUP BY 1, 2`;
     case "TeamGameEfficiency":
       return `
@@ -355,6 +381,93 @@ const OUTCOME_SQL = `
 /**
  * Grade a set of premises on the concept axis.
  */
+/**
+ * The within-game pairwise tally for one concept/outcome pair.
+ *
+ * A concept premise says "higher X goes with more production". That is a
+ * claim about a WITHIN-GAME ASSOCIATION, so the test is over pairs of
+ * entities in the same game: do the two with the higher concept value
+ * also have the higher outcome value?
+ *
+ * The first version of this grader compared the SIGN of a magnitude
+ * against a game win. Magnitudes are non-negative by construction, so the
+ * sign was constant and the grader could only report agreement rates of
+ * 0.000 or 1.000 -- it could not say anything.
+ */
+function tallyAgreement(
+  concepts: Map<string, Map<string, number>>,
+  outcomes: Map<string, Map<string, number>>,
+  gameOutcome: Map<string, number>,
+  measure: MeasureSpec,
+  sign: 1 | -1,
+): { agreements: number; disagreements: number; judged: number; gamesUsed: number } {
+
+//
+// A concept premise says "higher X goes with more production". That
+// is a claim about a WITHIN-GAME ASSOCIATION, so the test is over
+// pairs of entities in the same game: do the two with the higher
+// concept value also have the higher outcome value?
+//
+// The first version of this grader compared the SIGN of a magnitude
+// against a game win. Magnitudes are non-negative by construction, so
+// the sign was constant and the grader could only report agreement
+// rates of 0.000 or 1.000 -- it could not say anything.
+let agreements = 0;
+let disagreements = 0;
+let judged = 0;
+let gamesUsed = 0;
+
+for (const [gameKey, entities] of concepts) {
+  const outcomeEntities = outcomes.get(gameKey);
+  if (!outcomeEntities) continue;
+
+  // A team-level measure is tested against the GAME outcome, not
+  // against another team's production.
+  const gameResult = gameOutcome.get(gameKey);
+  if (measure.level === "team") {
+    const list = [...entities.entries()];
+    if (list.length < 2 || gameResult === undefined) continue;
+    gamesUsed += 1;
+    for (let i = 0; i < list.length; i += 1) {
+      for (let j = i + 1; j < list.length; j += 1) {
+        const conceptDelta = list[i]![1] - list[j]![1];
+        const outcomeDelta = gameResult;
+        const a = withinGameAgreement(conceptDelta, outcomeDelta, sign);
+        if (a === null) continue;
+        judged += 1;
+        if (a === 1) agreements += 1;
+        else disagreements += 1;
+      }
+    }
+    continue;
+  }
+
+  // A player-level measure is tested against the player's own
+  // production in the same game.
+  const pairs: Array<[number, number]> = [];
+  for (const [entity, conceptValue] of entities) {
+    const outcomeValue = outcomeEntities.get(entity);
+    if (outcomeValue === undefined) continue;
+    pairs.push([conceptValue, outcomeValue]);
+  }
+  if (pairs.length < 2) continue;
+  gamesUsed += 1;
+  for (let i = 0; i < pairs.length; i += 1) {
+    for (let j = i + 1; j < pairs.length; j += 1) {
+      const conceptDelta = pairs[i]![0] - pairs[j]![0];
+      const outcomeDelta = pairs[i]![1] - pairs[j]![1];
+      const a = withinGameAgreement(conceptDelta, outcomeDelta, sign);
+      if (a === null) continue;
+      judged += 1;
+      if (a === 1) agreements += 1;
+      else disagreements += 1;
+    }
+  }
+}
+
+    return { agreements, disagreements, judged, gamesUsed };
+}
+
 export async function gradeConceptPremises(
   db: ConceptGraderDb,
   premises: readonly ConceptPremise[],
@@ -407,11 +520,12 @@ export async function gradeConceptPremises(
     return byGame;
   }
 
-  async function outcomesFor(measure: MeasureSpec) {
-    const cached = outcomeCache.get(measure.contextTag);
+  async function outcomesFor(measure: MeasureSpec, outcome: ConceptOutcome) {
+    const key = `${measure.contextTag}::${outcome}`;
+    const cached = outcomeCache.get(key);
     if (cached) return cached;
     const byGame = new Map<string, Map<string, number>>();
-    const sql = outcomeSql(measure);
+    const sql = outcomeSql(measure, outcome);
     if (sql) {
       const res = await db.query(sql);
       for (const r of res.rows as Array<{ game_key: string; entity: string; outcome: unknown }>) {
@@ -422,7 +536,7 @@ export async function gradeConceptPremises(
         entities.set(r.entity, outcome);
       }
     }
-    outcomeCache.set(measure.contextTag, byGame);
+    outcomeCache.set(key, byGame);
     return byGame;
   }
 
@@ -450,71 +564,69 @@ export async function gradeConceptPremises(
 
     const measure = res.measure;
     const concepts = await conceptsFor(measure);
-    const outcomes = await outcomesFor(measure);
 
-    // THE WITHIN-GAME PAIRWISE TEST.
+    // THE OUTCOME ITERATION, AND THE CIRCULARITY GUARD.
     //
-    // A concept premise says "higher X goes with more production". That
-    // is a claim about a WITHIN-GAME ASSOCIATION, so the test is over
-    // pairs of entities in the same game: do the two with the higher
-    // concept value also have the higher outcome value?
+    // A measure declares the outcomes it may be tested against. For each
+    // one, the grader computes the within-game agreement and then
+    // checks whether the result is DEFINITIONAL -- i.e. the concept and
+    // the outcome are the same quantity measured twice, so a high rate
+    // is arithmetic, not sport.
     //
-    // The first version of this grader compared the SIGN of a magnitude
-    // against a game win. Magnitudes are non-negative by construction, so
-    // the sign was constant and the grader could only report agreement
-    // rates of 0.000 or 1.000 -- it could not say anything.
-    let agreements = 0;
-    let disagreements = 0;
-    let judged = 0;
-    let gamesUsed = 0;
+    // MEASURED 2026-10-20 (reconciliation/_probe_definitional.mjs):
+    //   receivingYards vs targets        0.8987   <- DEFINITIONAL
+    //   receptions     vs targets        0.9379   <- DEFINITIONAL
+    //   avgSeparation  vs targets        0.4847   <- at chance
+    //   avgSeparation  vs yardsPerTarget 0.5252   <- at chance
+    //
+    // A result at or above the definitional floor (0.80) is REFUSED, not
+    // reported. This is the guard that stops the grader from turning
+    // arithmetic into a finding.
+    const allowedOutcomes = MEASURE_OUTCOMES[measure.contextTag] ?? ["targets"];
+    let graded: {
+      outcome: ConceptOutcome;
+      agreements: number;
+      disagreements: number;
+      judged: number;
+      gamesUsed: number;
+      rate: number;
+    } | null = null;
+    let definitionalRefusal = false;
 
-    for (const [gameKey, entities] of concepts) {
-      const outcomeEntities = outcomes.get(gameKey);
-      if (!outcomeEntities) continue;
-
-      // A team-level measure is tested against the GAME outcome, not
-      // against another team's production.
-      const gameResult = gameOutcome.get(gameKey);
-      if (measure.level === "team") {
-        const list = [...entities.entries()];
-        if (list.length < 2 || gameResult === undefined) continue;
-        gamesUsed += 1;
-        for (let i = 0; i < list.length; i += 1) {
-          for (let j = i + 1; j < list.length; j += 1) {
-            const conceptDelta = list[i]![1] - list[j]![1];
-            const outcomeDelta = gameResult;
-            const a = withinGameAgreement(conceptDelta, outcomeDelta, sign);
-            if (a === null) continue;
-            judged += 1;
-            if (a === 1) agreements += 1;
-            else disagreements += 1;
-          }
-        }
+    for (const outcomeKind of allowedOutcomes) {
+      if (outcomeKind === "game_result" && measure.level !== "team") continue;
+      if (outcomeKind !== "game_result" && measure.level === "team") continue;
+      const outcomeMap = await outcomesFor(measure, outcomeKind);
+      const tally = tallyAgreement(concepts, outcomeMap, gameOutcome, measure, sign);
+      if (tally.judged === 0) continue;
+      const rate = tally.agreements / tally.judged;
+      if (isDefinitionalPair(measure.contextTag, outcomeKind, rate)) {
+        // Remember it, but keep looking for a non-circular outcome.
+        definitionalRefusal = true;
         continue;
       }
-
-      // A player-level measure is tested against the player's own
-      // production in the same game.
-      const pairs: Array<[number, number]> = [];
-      for (const [entity, conceptValue] of entities) {
-        const outcomeValue = outcomeEntities.get(entity);
-        if (outcomeValue === undefined) continue;
-        pairs.push([conceptValue, outcomeValue]);
-      }
-      if (pairs.length < 2) continue;
-      gamesUsed += 1;
-      for (let i = 0; i < pairs.length; i += 1) {
-        for (let j = i + 1; j < pairs.length; j += 1) {
-          const conceptDelta = pairs[i]![0] - pairs[j]![0];
-          const outcomeDelta = pairs[i]![1] - pairs[j]![1];
-          const a = withinGameAgreement(conceptDelta, outcomeDelta, sign);
-          if (a === null) continue;
-          judged += 1;
-          if (a === 1) agreements += 1;
-          else disagreements += 1;
-        }
-      }
+      graded = {
+        outcome: outcomeKind,
+        agreements: tally.agreements,
+        disagreements: tally.disagreements,
+        judged: tally.judged,
+        gamesUsed: tally.gamesUsed,
+        rate,
+      };
+      break;
     }
+
+    if (!graded) {
+      const reason = (definitionalRefusal
+        ? "definitional_outcome"
+        : "no_agreements") as ConceptRefusalReason;
+      refusals.push({ premise_key: p.premise_key, reason });
+      bump(reason);
+      continue;
+    }
+
+    const { agreements, disagreements, judged, gamesUsed, outcome: usedOutcome } = graded;
+    const outcomes = await outcomesFor(measure, usedOutcome);
 
     if (judged === 0) {
       refusals.push({ premise_key: p.premise_key, reason: "no_agreements" });
@@ -538,6 +650,7 @@ export async function gradeConceptPremises(
       measure_surface: `${measure.table}.${measure.column}`,
       measure_is_proxy: measure.isProxy,
       measure_match: res.match,
+      outcome: usedOutcome,
       support: gamesUsed,
       judged,
       agreements,

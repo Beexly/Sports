@@ -32,6 +32,9 @@ import {
   conceptActivationScore,
   CONCEPT_MIN_SUPPORT,
   measurableTags,
+  MEASURE_OUTCOMES,
+  DEFINITIONAL_RATE_FLOOR,
+  isDefinitionalPair,
 } from "../literature-measures.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -212,5 +215,60 @@ describe("concept activation score", () => {
 
   it("is clipped at zero for a premise that disagrees more than it agrees", () => {
     expect(conceptActivationScore(1, 10)).toBe(0);
+  });
+});
+
+describe("the definitional guard", () => {
+  /**
+   * THE MEASURED FACTS (reconciliation/_probe_definitional.mjs, 2026-10-20).
+   *
+   *   receivingYards vs targets         0.8987  <- same quantity twice
+   *   receptions     vs targets         0.9379  <- same quantity twice
+   *   avgSeparation  vs targets         0.4847  <- at chance
+   *   avgSeparation  vs yardsPerTarget  0.5252  <- at chance
+   *
+   * A concept measured against a quantity it mechanically PRODUCES scores
+   * near 1.0 for arithmetic reasons. Reporting that as a finding is the
+   * exact class of error this engagement has been fixing, so the guard
+   * refuses it rather than publishing it.
+   */
+  it("treats a rate at or above the floor as definitional", () => {
+    expect(isDefinitionalPair("route_running", "targets", 0.8987)).toBe(true);
+    expect(isDefinitionalPair("route_running", "targets", 0.9379)).toBe(true);
+  });
+
+  it("treats a rate at chance as a real measurement", () => {
+    expect(isDefinitionalPair("separation", "targets", 0.4847)).toBe(false);
+    expect(isDefinitionalPair("separation", "yards_per_target", 0.5252)).toBe(false);
+  });
+
+  it("does not treat a non-finite rate as definitional", () => {
+    expect(isDefinitionalPair("separation", "targets", Number.NaN)).toBe(false);
+  });
+
+  it("never lets a volume concept be measured against a volume it produces", () => {
+    // receivingYards is produced BY targets, so targets is not an
+    // admissible outcome for it.
+    expect(MEASURE_OUTCOMES["route_running"]).not.toContain("targets");
+    expect(MEASURE_OUTCOMES["route_running"]).toContain("yards_per_target");
+    expect(MEASURE_OUTCOMES["workload"]).not.toContain("targets");
+  });
+
+  it("lets a quality concept be measured against a volume it does not produce", () => {
+    // Separation is not a function of target volume, so targets is safe.
+    expect(MEASURE_OUTCOMES["separation"]).toContain("targets");
+    expect(MEASURE_OUTCOMES["coverage"]).toContain("targets");
+  });
+
+  it("gives every measure at least one admissible outcome", () => {
+    for (const m of MEASURE_REGISTRY) {
+      expect(MEASURE_OUTCOMES[m.contextTag]).toBeDefined();
+      expect((MEASURE_OUTCOMES[m.contextTag] ?? []).length).toBeGreaterThan(0);
+    }
+  });
+
+  it("keeps the floor above every real association measured in this data", () => {
+    // The strongest non-definitional association measured was 0.5252.
+    expect(DEFINITIONAL_RATE_FLOOR).toBeGreaterThan(0.5252);
   });
 });

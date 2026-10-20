@@ -417,24 +417,44 @@ the six defects fixed earlier. The 4 says "the corpus needs work"; the
 **And the finding is sharp. Grading the same data twice per premise —
 once with the corpus's asserted direction, once INVERTED:**
 
-| measure | asserted | inverted | verdict |
-|---|---:|---:|---|
-| `route_running` | 0.1109 | **0.8891** | the corpus's direction is **78 points WORSE** than the inverse |
-| `workload` | 0.2912 | **0.7088** | **42 points worse** |
-| `tracking` | 0.4982 | 0.5018 | indistinguishable |
-| `coverage` | 0.4970 | 0.5030 | indistinguishable |
+| measure | asserted | inverted | best possible | edge over chance |
+|---|---:|---:|---:|---:|
+| `workload` | 0.4352 | 0.5648 | **0.5648** | +0.0648 |
+| `separation` | 0.5153 | 0.4847 | **0.5153** | +0.0153 |
+| `coverage` | 0.4970 | 0.5030 | **0.5030** | +0.0030 |
+| `tracking` | 0.4982 | 0.5018 | **0.5018** | +0.0018 |
 
-**Per premise, the corpus's direction loses to its inverse for 87 of
-140.** The median agreement rate is **0.4911 — below chance.**
+**Per premise, the corpus's direction loses to its inverse for 85 of
+139.** The direction is arbitrary — and so is everything else.
 
-**But the concepts themselves carry a LOT of signal, and the corpus has
-the sign backwards:** `route_running` reaches 0.8891 (a 38.9-point edge)
-and `workload` 0.7088 (20.9 points) under the better direction. **The
-measurement apparatus works, the data works, and the corpus's sign field
-is wrong in a way a careful re-read of the source documents can fix.**
+> **RETRACTION (2026-10-20).** An earlier version of this summary
+> headlined that the concepts carry a "38.9-point edge" and that the
+> corpus's sign field has it "21–39 points backwards." **Both numbers
+> were artifacts and are retracted.** The grader was measuring
+> `receivingYards` against `targets` — and **`targets` produces
+> `receivingYards`**, so the test measured arithmetic, not sport.
+> `receptions` against `targets` scores **0.9609**, which is what a
+> definitional relationship looks like. **The real ceiling of the entire
+> corpus is 6.5 points over chance, not 38.9.** The original claim was
+> pushed to `origin`; the retraction is recorded in
+> `reconciliation/concept_axis_graded.md` and the original is kept at
+> `reconciliation/concept_axis_graded.RETRACTED-2026-10-20.md`.
 
-**That is far more actionable than "the corpus is noisy"** — and it
-converges exactly on the 96.5%-fallback finding.
+**The corrected advice is narrower and still real:** the direction field
+is arbitrary (54 better / 85 worse), so it must not be trusted; but **no
+sign is better than another**, so the fix is not to re-read papers for
+their sign — it is to find a *measurable* claim to grade. The corpus
+needs premises whose concept is a **quality** measure (separation,
+cushion, aggressiveness) tested against a **rate** rather than a count.
+
+**The fix was structural, because the defect was structural: a concept may
+not be measured against a quantity it mechanically produces.** Every
+measure now declares its admissible outcomes, and the grader **REFUSES**
+a circular pair (`DEFINITIONAL_RATE_FLOOR = 0.8`, asserted by a test to
+stay above the 0.5252 strongest real association measured) rather than
+reporting it. `route_running` drops from 1 grade to 0; `workload` moves
+`targets` → `yards_per_target` and its activation score correctly
+becomes 0.
 
 **Two grader bugs, both found by running it, neither by reading it:**
 - Postgres returns a bare `NUMERIC` as a **string**, so a
@@ -456,7 +476,16 @@ metric name and title, and every grade now carries its match strength:
 measurement of a shared bucket, not of the claim).**
 
 **The grader's arithmetic was verified against an independent query:**
-191,642 / 215,534 = 0.88912, against the grader's 0.8891.
+191,642 / 215,534 = 0.88912, against the grader's 0.8891 — the arithmetic
+was always right. **What was wrong was what it was measuring.**
+
+**A fourth defect, found by that same check:** the `targets` outcome was
+not a tautology-free substitute for the old one, because `targets`
+produces `receivingYards`. Measured directly
+(`reconciliation/_probe_definitional.mjs`): `receptions`/`targets` =
+0.9609, `receivingYards`/`targets` = 0.8987, `avgSeparation`/`targets` =
+0.4847. **The definitional guard in §5e is the real fix; the earlier
+"outcome swap" was insufficient.**
 
 **Nothing here touches a published number.** The concept axis produces
 evidence and promotion candidates, not picks.
@@ -550,8 +579,9 @@ integration, not invention.
 keyword-regex misfiling and demands L4 (cross-encoder NLI) entailment.
 The audit measured that misfiling (2,106 survivors), that 88.2% of
 directions are a regex fallback, and that the corpus's concepts carry a
-**21–39 point association with the sign backwards**. **The spec and the
-audit arrive at the same fix from opposite directions.**
+**concept-quality association that this data cannot currently
+resolve** (the honest ceiling is 6.5 points over chance). **The spec and
+the audit arrive at the same fix from opposite directions.**
 
 ---
 
@@ -642,7 +672,9 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
 | `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable: 5,149 records, 39 with a real metric, 22 game-level NFL quantities. The corpus has concepts, not numbers. |
 | `design_spec_reconciliation.md` | **Reconciliation of the supplied design spec against the measured repo**: 13 of 14 spec'd module paths do not exist, 0 of 8 build steps implemented, 0 of 9 honesty gates built — but **4 of 4 diagnosed pathologies confirmed present**, the spec's own cited hardcoded-constant example now a negative assertion, all 5 dark primitives real, and the spec's ID algorithm already written but unwired. |
-| `concept_axis_graded.md` | **The concept axis RUN on real data**: 139 premises graded, and the corpus's asserted directions measurably lose to their inverses (87 of 140) while the concepts themselves carry 21-39 point associations with the sign backwards. Two grader bugs and a concept-match defect, all found by running it. |
+| `concept_axis_graded.md` | **The concept axis RUN on real data, and CORRECTED**: 139 premises graded. **Retracts** an earlier "38.9-point edge" claim that was a definitional artifact (`targets` produces `receivingYards`; `receptions`/`targets` = 0.9609). The real ceiling is 6.5 points over chance. Carries the definitional guard that makes such a pair impossible to report again. |
+| `concept_axis_graded.RETRACTED-2026-10-20.md` | The retracted original, kept as an audit trail rather than quietly overwritten. |
+| `_probe_definitional.mjs` + `_probe_concept_outcome_matrix.mjs` | The probes that found the definitional artifact: every concept×outcome pair, same-sign rate, with the definitional verdict |
 | `direction_signal_measurement.json` | The direction-vs-inverted test, per measure: the decisive measurement of whether the corpus's sign field carries information |
 | `concept_axis_coverage.md` + `.json` | The resolver RUN over the corpus and the live index: 201 premises resolve to a measure, 74 are correlational/causal, 2 fully specified, 4,540 refused as `conditional`. **The biggest remaining lever: extract the condition for 878 measurable conditional premises and the population goes 201 → 1,079.** |
 | `staged_improvements/08-measure-resolver-concept-axis.md` | 14 context->measure mappings + a second grading axis. **BUILT and MEASURED** — 201 premises gradeable, giving the promotion gate a path that does not need probabilities. |

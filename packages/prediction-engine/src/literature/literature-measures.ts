@@ -586,6 +586,84 @@ export function withinGameAgreement(
  */
 export const CONCEPT_MIN_SUPPORT = 8;
 
+/**
+ * The outcome the concept axis measures against, per measure table.
+ *
+ * MEASURED 2026-10-20 (reconciliation/_probe_definitional.mjs): a
+ * CONCEPT must not be measured against a quantity it mechanically
+ * produces. `player_game_stats.receivingYards` against `targets` scores
+ * 0.8987 same-sign -- because TARGETS PRODUCE RECEIVING YARDS, so the
+ * test measures arithmetic, not sport. The same measure against
+ * `yards per target` still scores 0.8136, because the numerator and the
+ * denominator share a factor. `receptions` against `targets` scores
+ * 0.9379 for the same reason.
+ *
+ * So a measure declares the outcome it may be tested against, and a
+ * measure with no safe outcome is REFUSED rather than graded on a
+ * circular one.
+ */
+export type ConceptOutcome =
+  /** Player volume: how many passes were thrown to the player. */
+  | "targets"
+  /** Player efficiency: receiving yards per target. */
+  | "yards_per_target"
+  /** The game's own result, for a team-level measure. */
+  | "game_result";
+
+/**
+ * The outcomes a measure may be tested against, and WHY.
+ *
+ * A measure may list more than one. The grader tries them in order and
+ * takes the first that produces a non-circular result.
+ */
+export const MEASURE_OUTCOMES: Readonly<Record<string, readonly ConceptOutcome[]>> =
+  Object.freeze({
+    // Separation and cushion are QUALITY measures: they are not a
+    // function of target volume, so they may be tested against it.
+    separation: ["targets", "yards_per_target"],
+    coverage: ["targets", "yards_per_target"],
+    tracking: ["targets", "yards_per_target"],
+    interceptions: ["targets", "yards_per_target"],
+    // Receiving YARDS are produced BY targets. Testing them against
+    // targets is definitional; the only safe outcome is the rate.
+    route_running: ["yards_per_target"],
+    props_receiving: ["yards_per_target"],
+    // Snap counts are a volume measure. A player on the field more is
+    // targeted more, so the same trap applies.
+    workload: ["yards_per_target"],
+    acwr: ["yards_per_target"],
+    // These are team-level, so they are tested against the game result.
+    epa: ["game_result"],
+    injuries: ["game_result"],
+    rest: ["game_result"],
+    live_odds: ["game_result"],
+    game_state: ["game_result"],
+    depth_chart: ["yards_per_target"],
+  });
+
+/**
+ * The circularity of a measure against a given outcome, and the floor
+ * above which a result is DEFINITIONAL rather than discovered.
+ *
+ * MEASURED: receivingYards/targets = 0.8987, receptions/targets =
+ * 0.9379. Both are above 0.80. A genuine within-game association in
+ * this data is at most ~0.53 (avgSeparation vs yards_per_target).
+ */
+export const DEFINITIONAL_RATE_FLOOR = 0.8;
+
+/**
+ * True when a measure and an outcome are the same quantity twice, and
+ * so a result on that pair measures arithmetic rather than sport.
+ */
+export function isDefinitionalPair(
+  measureTag: string,
+  outcome: ConceptOutcome,
+  observedRate: number,
+): boolean {
+  if (!Number.isFinite(observedRate)) return false;
+  return observedRate >= DEFINITIONAL_RATE_FLOOR;
+}
+
 export function conceptActivationScore(
   agreements: number,
   support: number,

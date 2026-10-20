@@ -406,13 +406,30 @@ audit's measured numbers as the acceptance criteria.
 now the highest-value single fix in the whole programme:**
 
 > **Recover the `numeric_claim.metric` for the 5,110 placeholder records,
-> and the direction for the 21 that have a real metric.**
+> so that the corpus contains claims which can be falsified at all.**
 
-The audit measured that the corpus's concepts carry a **21–39 point
-association with the outcome** and that the corpus's sign field has it
-**backwards**. The spec's L4 (mechanism entailment via cross-encoder NLI)
-is precisely the mechanism that would fix it. **The spec and the audit
-converge on the same fix, from opposite directions.**
+**CORRECTION (2026-10-20).** An earlier version of this document said the
+audit had measured a **"21–39 point association"** with the sign
+"backwards," and recommended re-reading the 21 specific-metric premises
+to fix their signs. **That measurement was a definitional artifact and is
+retracted** — the grader was measuring `receivingYards` against
+`targets`, and `targets` *produces* `receivingYards`
+(`receptions`/`targets` = 0.9609, `receivingYards`/`targets` = 0.8987).
+
+**The corrected measurement is that the corpus's concepts carry NO
+association with the outcomes this data can measure: the honest ceiling
+is 6.5 points over chance.** So the recommendation changes shape but not
+direction: **the spec's L4 (mechanism entailment via cross-encoder NLI)
+is still the right mechanism, but its job is to reject the 2,106
+non-football records and to attach a *falsifiable* quantity to a premise
+— not to repair a sign.**
+
+**The spec and the audit still converge on the same fix, from opposite
+directions.** The spec says "verify the premise before you use it"; the
+audit measured what happens when you don't. That is the same finding,
+and it survived the retraction intact — arguably better for it, because
+the retraction removed the part that was an artifact and left the part
+that was a measurement.
 
 ---
 
