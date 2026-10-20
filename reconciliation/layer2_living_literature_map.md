@@ -214,3 +214,36 @@ cover.** That is a direct, measured argument for the canonical 9.
 | `trueProb` contribution | **0** | the seam is closed; the weight is 0; the gate has not been run |
 | Conclusive intervention tests | **0** | 8 ran, all INCONCLUSIVE — no premise has 8+ graded residuals |
 | Re-query on a mid-week signal | hourly, not per-signal | STAGED-IMPROVEMENT 1 |
+
+
+---
+
+## Correction (2026-10-20) — the evaluability ladder, measured
+
+The evaluability ladder in this document was a **design**. It is now a
+**measurement**, and the measurement is sharper and less flattering.
+
+`reconciliation/mind_corpus_gradeability.md`:
+
+| | |
+|---|---:|
+| MIND records | 5,149 |
+| with a specific metric on a sports unit | **39** |
+| with a game-level NFL quantity | **22** |
+| `claim_type` in {correlational, causal} | **704** |
+| …with a measurable context | **128** |
+| …with a specific named metric | **4** |
+
+**The corpus's `numeric_claim` recorded what the paper said, not what the
+number measured.** 1,724 `situational_game_unit`/`count`, 962
+`statistical_parameter`/`coefficient`, 601 `temporal_epoch`/`year`, 1,636
+with no number at all. 26.9% of the corpus is not about football.
+
+**But the concept name, the 87 context tags, and the influence direction
+are present on 100% of records.** So the corpus is gradeable on a
+**concept axis** — measure the concept's quantity, compare its
+**direction** against what happened — and 14 of the 87 tags have a
+measure surface that exists today.
+
+**The gradeable population is 128, not 5,224.** Staged as
+`staged_improvements/08-measure-resolver-concept-axis.md`.

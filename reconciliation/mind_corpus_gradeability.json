@@ -1,0 +1,346 @@
+{
+ "artifact": "mind_corpus_gradeability",
+ "measured_at": "2026-10-20",
+ "corpus": "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl",
+ "total_records": 5149,
+ "numeric_claim": {
+  "metric_distribution": {
+   "situational_game_unit": 1724,
+   "None": 1636,
+   "statistical_parameter": 962,
+   "temporal_epoch": 601,
+   "empirical_sample_size": 98,
+   "performance_ratio": 89,
+   "spread_or_scoring_margin": 11,
+   "empirical_rate": 2,
+   "public_darling_spread_shading": 1,
+   "blocker_survival_threshold": 1,
+   "trench_interaction_beta": 1,
+   "off_target_throw_increase": 1,
+   "two_high_disguise_rate": 1,
+   "separation_over_expected": 1,
+   "fourth_quarter_pass_rush_decay": 1,
+   "modern_home_field_advantage": 1,
+   "false_start_suppression_without_crowd": 1,
+   "coach_aversion_total_shift": 1,
+   "true_pathwise_trailing_equity": 1,
+   "next_score_drive_states": 1,
+   "qb_wr1_stacking_covariance": 1,
+   "dpi_hazard_rate_ratio": 1,
+   "post_turnover_box_run_rate_spike": 1,
+   "joint_tail_correlation_edge": 1,
+   "break_even_win_rate": 1,
+   "ol_continuity_threshold": 1,
+   "completion_percentage_over_expected": 1,
+   "second_and_long_run_tendency": 1,
+   "burst_predictive_power_ratio": 1,
+   "in_game_brier_improvement": 1,
+   "closing_line_value_alpha": 1,
+   "silent_count_get_off_delay": 1,
+   "positive_definite_eigenvalue_floor": 1,
+   "injury_fatigue_hazard_spike": 1
+  },
+  "unit_distribution": {
+   "count": 1724,
+   "None": 1636,
+   "coefficient": 963,
+   "year": 601,
+   "samples": 98,
+   "multiplier_or_threshold": 89,
+   "points": 14,
+   "percent": 12,
+   "multiplier": 3,
+   "seconds": 2,
+   "yards": 1,
+   "states": 1,
+   "correlation": 1,
+   "delta": 1,
+   "cpoe": 1,
+   "brier": 1,
+   "floor": 1
+  },
+  "placeholder_metric_records": 5110,
+  "specifically_named_metric_on_sports_unit": 39
+ },
+ "buckets": {
+  "GAME_LEVEL_QUANTITY_NFL": 22,
+  "SPECIFIC_METRIC_NON_NFL": 17,
+  "NO_NUMERIC_CLAIM": 1636,
+  "PLACEHOLDER_METRIC_NFL": 2089,
+  "PLACEHOLDER_METRIC_NON_NFL": 1385
+ },
+ "bucket_examples": {
+  "GAME_LEVEL_QUANTITY_NFL": [
+   {
+    "title": "Exploiting Oddsmaker Bias to Improve the Prediction of NFL Outcomes",
+    "claim": {
+     "value": 1.8,
+     "unit": "points",
+     "metric": "public_darling_spread_shading"
+    },
+    "quote": "removing oddsmaker bias from betting lines improves out-of-sample predictions of point spreads and generates statistical"
+   },
+   {
+    "title": "Who Blocks Whom? Probabilistic Pass-Blocking Assignments in American Football",
+    "claim": {
+     "value": 2.5,
+     "unit": "seconds",
+     "metric": "blocker_survival_threshold"
+    },
+    "quote": "probabilistic pass-blocking assignments evaluate individual blocker survival past 2.5 seconds under simulated blitz and "
+   },
+   {
+    "title": "Opponent-Adjusted Evaluation of NFL Pass Protection and Pass Rush",
+    "claim": {
+     "value": 0.12,
+     "unit": "coefficient",
+     "metric": "trench_interaction_beta"
+    },
+    "quote": "latent paired comparisons adjust pass rush win rates with beta coefficient 0.12 separating individual skill from scheme "
+   }
+  ],
+  "SPECIFIC_METRIC_NON_NFL": [
+   {
+    "title": "Here Comes the STRAIN: Continuous Spatio-Temporal Pocket Threat Surface",
+    "claim": {
+     "value": 34,
+     "unit": "percent",
+     "metric": "off_target_throw_increase"
+    },
+    "quote": "cumulative pocket strain crossing critical threshold prior to 2.2 seconds spikes QB off-target rate by 34 percent and tr"
+   },
+   {
+    "title": "Decoding Defensive Coverage via Factorized Attention Transformers",
+    "claim": {
+     "value": 65,
+     "unit": "percent",
+     "metric": "two_high_disguise_rate"
+    },
+    "quote": "defenses show two-high safety shells on 65 percent of downs rotating dynamically post-snap into single-high Cover 3 or C"
+   },
+   {
+    "title": "Learning Risk Preferences in Markov Decision Processes: 4th Down Decisions",
+    "claim": {
+     "value": 2.5,
+     "unit": "points",
+     "metric": "coach_aversion_total_shift"
+    },
+    "quote": "coach risk-utility parameters shift expected game totals by up to 2.5 points when conservative coaches avoid fourth-down"
+   }
+  ],
+  "NO_NUMERIC_CLAIM": [
+   {
+    "title": "Who Blocks Whom? Probabilistic Pass-Blocking Assignments for Evaluating Blockers and Pass Rushers in American Football",
+    "claim": {},
+    "quote": "Historically, statistical analysis of offensive lineman has been hindered by the lack of easily measurable quantities."
+   },
+   {
+    "title": "Decoding Defensive Coverage Responsibilities in American Football Using Factorized Attention Based Transformer Models",
+    "claim": {},
+    "quote": "Defensive coverage schemes in the National Football League (NFL) represent complex tactical patterns requiring coordinat"
+   },
+   {
+    "title": "NFL step-and-turn: A generative framework for evaluating player movement in American football",
+    "claim": {},
+    "quote": "In sports analytics, player tracking data have driven significant advancements in the task of player evaluation."
+   }
+  ],
+  "PLACEHOLDER_METRIC_NFL": [
+   {
+    "title": "The triumphs and tragedies of fandom: Emotional arcs in NFL tweets",
+    "claim": {
+     "value": 2011,
+     "unit": "year",
+     "metric": "temporal_epoch"
+    },
+    "quote": "Using a corpus of game-referencing tweets, we measure variation in sentiment toward National Football League (NFL) teams"
+   },
+   {
+    "title": "Opponent-Adjusted Evaluation of NFL Pass Protection and Pass Rush",
+    "claim": {
+     "value": 2021,
+     "unit": "year",
+     "metric": "temporal_epoch"
+    },
+    "quote": "Using Hudl player coordinates and blocking annotations from the 2021 NFL regular season, we estimate blocker and rusher"
+   },
+   {
+    "title": "Method and Validation for Optimal Lineup Creation for Daily Fantasy Football Using Machine Learning and Linear Programming",
+    "claim": {
+     "value": 1,
+     "unit": "count",
+     "metric": "situational_game_unit"
+    },
+    "quote": "This paper focuses on (1) the development of a method"
+   }
+  ],
+  "PLACEHOLDER_METRIC_NON_NFL": [
+   {
+    "title": "Emotional driving: Reference-dependent emotions and risky driving behavior after sporting events",
+    "claim": {
+     "value": 10,
+     "unit": "count",
+     "metric": "situational_game_unit"
+    },
+    "quote": "Using average vehicle speed data in 10-minute increments at the Traffic Message Channel (TMC) location level, along with"
+   },
+   {
+    "title": "Focal Loss Analysis of Peripapillary Nerve Fiber Layer Reflectance for Glaucoma Diagnosis",
+    "claim": {
+     "value": 4,
+     "unit": "count",
+     "metric": "situational_game_unit"
+    },
+    "quote": "Methods: Participants were imaged with 4.9mm ONH scans using spectral-domain optical coherence tomography (OCT)."
+   },
+   {
+    "title": "Pressure Sensor Chip with New Electrical Circuit for 10 kPa Range",
+    "claim": {
+     "value": 10,
+     "unit": "count",
+     "metric": "situational_game_unit"
+    },
+    "quote": "Characteristics of high sensitivity MEMS pressure sensor chip for 10 kPa utilizing a novel electrical circuit are presen"
+   }
+  ]
+ },
+ "field_presence": {
+  "principle_or_feature": 5149,
+  "applicable_contexts": 5149,
+  "influence_direction": 5149,
+  "evidence_quote": 5149,
+  "domain": 5149,
+  "claim_type": 5149,
+  "numeric_claim": 3513,
+  "item_id": 5149,
+  "title": 5149
+ },
+ "claim_type_distribution": {
+  "correlational": 517,
+  "theoretical": 4445,
+  "causal": 187
+ },
+ "context_tags": {
+  "distinct_tags": 87,
+  "total_tag_pairs": 17927,
+  "measurable_tags": [
+   "acwr",
+   "coverage",
+   "depth_chart",
+   "epa",
+   "game_state",
+   "injuries",
+   "interceptions",
+   "live_odds",
+   "props_receiving",
+   "rest",
+   "route_running",
+   "separation",
+   "tracking",
+   "workload"
+  ],
+  "measurable_tag_pairs": 3679,
+  "measurable_pct_of_all_pairs": 20.5,
+  "pseudo_context_pairs": 9822,
+  "pseudo_contexts": [
+   "metric_specification",
+   "player_evaluation",
+   "situational_game_unit"
+  ],
+  "measurable_pct_excluding_pseudo": 45.4,
+  "tag_distribution": {
+   "metric_specification": 3274,
+   "player_evaluation": 3274,
+   "situational_game_unit": 3274,
+   "workload": 409,
+   "acwr": 409,
+   "injuries": 408,
+   "depth_chart": 408,
+   "route_running": 352,
+   "separation": 352,
+   "props_receiving": 352,
+   "tracking": 351,
+   "fantasy": 330,
+   "dfs": 330,
+   "stacking": 330,
+   "gpp": 330,
+   "cash_game": 329,
+   "interceptions": 153,
+   "coverage": 152,
+   "two_high": 152,
+   "passing_efficiency": 152,
+   "dpi": 152,
+   "steam": 119,
+   "clv": 118,
+   "line_movement": 118,
+   "ticket_handle_split": 117,
+   "public_bias": 117,
+   "elo": 88,
+   "historical_spread": 88,
+   "point_differential": 88,
+   "team_ratings": 88,
+   "win_probability": 86,
+   "ol_continuity": 85,
+   "pass_rush": 85,
+   "sacks": 85,
+   "live_odds": 85,
+   "epa": 85,
+   "trench": 84,
+   "game_state": 84,
+   "fatigue": 80,
+   "coach_aggressiveness": 80,
+   "fourth_down": 80,
+   "market_total": 80,
+   "rest": 79,
+   "schedule": 79,
+   "time_zone": 78,
+   "circadian": 78,
+   "crowd_noise": 59,
+   "false_starts": 59,
+   "home_field": 58,
+   "altitude": 57,
+   "deep_passing": 19,
+   "weather": 18,
+   "wind": 18,
+   "temperature": 18,
+   "field_goals": 18,
+   "copula": 10,
+   "sgp": 9,
+   "correlation": 9,
+   "parlay": 9,
+   "tail_risk": 8,
+   "turnovers": 2,
+   "fourth_quarter": 2,
+   "venue": 2,
+   "coaching": 2,
+   "public_ticket_pct": 1,
+   "public_handle_pct": 1,
+   "market_spread": 1,
+   "travel": 1,
+   "in_game": 1,
+   "offensive_efficiency": 1,
+   "scoring_expectation": 1,
+   "penalties": 1,
+   "drive_momentum": 1,
+   "pass_discipline": 1,
+   "vig": 1,
+   "edge_threshold": 1,
+   "quarterback": 1,
+   "cpoe": 1,
+   "passing_accuracy": 1,
+   "play_calling": 1,
+   "down_and_distance": 1,
+   "combine": 1,
+   "receiver_burst": 1,
+   "leverage": 1,
+   "correlation_matrix": 1,
+   "psd_repair": 1,
+   "injury_hazard": 1
+  }
+ },
+ "gradeable_population": {
+  "correlational_or_causal": 704,
+  "and_measurable_context": 128,
+  "and_specifically_named_metric": 4
+ }
+}

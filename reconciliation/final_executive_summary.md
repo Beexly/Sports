@@ -308,6 +308,67 @@ control** the loop should learn to demote.
 
 ---
 
+## 5d. The MIND corpus: 5,149 records, 128 gradeable — and the reason why
+
+The previous cycle proved the promotion gate cannot be cleared. This
+cycle found out **why**, and what would fix it.
+
+**MEASURED (`reconciliation/mind_corpus_gradeability.md`):**
+
+| | |
+|---|---:|
+| MIND records | 5,149 |
+| with a specific metric on a sports unit | **39** (0.8%) |
+| with a game-level NFL quantity | **22** (0.4%) |
+| with a concept name + context tags + direction | **5,149 (100%)** |
+| `claim_type` in {correlational, causal} | **704** |
+| …**and** a measurable context | **128** |
+| …**and** a specific named metric | **4** |
+
+**On the live index: 285 of 5,509 premises (5.2%) are
+probability-gradeable.**
+
+**The corpus's numbers are mostly not game quantities.** The `numeric_claim`
+field recorded **what the paper said** rather than **what the number
+measured**: 1,724 `situational_game_unit`/`count`, 962
+`statistical_parameter`/`coefficient`, 601 `temporal_epoch`/`year`, 1,636
+with no number at all. Real examples of what "count 10" means:
+
+- *"Emotional driving: Reference-dependent emotions and risky driving
+  behavior after sporting events"* — **10-minute traffic intervals**
+- *"Focal Loss Analysis of Peripapillary Nerve Fiber Layer Reflectance
+  for Glaucoma Diagnosis"* — **4 retinal layers**
+
+**26.9% of the corpus is not even about football.** Grading those against
+an NFL game is a category error, and the loop is right to refuse them.
+
+**But the corpus's CONCEPT is complete on 100% of records**, with 87
+context tags, of which **14 have a measure surface that exists today**
+(every model and column verified against `schema.prisma`): workload,
+acwr, injuries, depth_chart, route_running, separation,
+props_receiving, tracking, interceptions, coverage, live_odds, epa,
+game_state, rest. Coverage is 20.5% of premise-tag pairs, **45.4%
+excluding the three placeholder-metric tags that measure nothing**.
+
+**So the honest number is 128 gradeable premises, not 5,224** — and the
+**4** with a fully-specified assertion is the measure of what a
+re-extraction pass would unlock.
+
+**The fix is a measure resolver, not a corpus rewrite**: grade a concept
+premise by measuring the concept's quantity in a real game and comparing
+its **direction** against what happened, scored as
+`(agreement_rate − 0.5) × 2 × min(support/MIN_SUPPORT, 1)`. The
+probability axis is the same idea with a different number. Staged as
+`staged_improvements/08-measure-resolver-concept-axis.md`.
+
+**And the 128 is enough to close the loop.** 14 mappings make 128
+premises gradeable, and the activation/residual/scorecard/promotion/
+demotion/intervention machinery **already exists and is now honest** after
+the six defects fixed earlier. The 4 says "the corpus needs work"; the
+128 says "the loop can close."
+
+---
+
 ## 6. What the recon batch changed
 
 Three read-only agents ran against the same worktree. They **corrected my
@@ -393,6 +454,8 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `causal_inference_methods.md` | Every causal method with its wiring status; the 4 missing methods with hook points; the `CausalLink`-has-no-numbers finding |
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
+| `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable, measured: 5,149 records, 39 with a real metric, 22 that are game-level NFL quantities, 128 gradeable on the concept axis, 4 fully specified. The corpus has concepts, not numbers. |
+| `staged_improvements/08-measure-resolver-concept-axis.md` | 14 context->measure mappings + a second grading axis, which is what makes 128 premises gradeable and gives the promotion gate a path that does not need probabilities |
 | `f2_duplicate_measurement.md` + `.json` | The decisive no-publish gate, MEASURED: permuting the seven non-strength features made the model slightly better (20/20), so the f2 = 1 duplicate claim holds and the gate stays. Includes the per-gate status table. |
 | `literature_coverage_report.md` | The literature loop measured end to end: 5,509 premises + 1,268 corpus items HNSW-indexed, 200 real retrieval events, 5,650 activations, 8 promoted edges; **the tautology I found and fixed**; the degenerate residual sample stated plainly |
 | `recon_integration.md` | What the three recon agents added and what they corrected in my work |
