@@ -295,7 +295,27 @@ export {
   promotePremisesToCausalEdges,
   runInterventionTest,
   makeEventKey,
-  normalCdf,
+  // ALIASED, NOT BARE. (Fixed 2026-10-20.)
+  //
+  // This module and ./performance-ci.js each export a function called
+  // `normalCdf`, and the barrel bound BOTH under the bare name. That is
+  // a duplicate export, and it is not a cosmetic one: it made
+  // `src/index.ts` fail to transform, which broke THREE test files
+  // that import the barrel --
+  //
+  //   src/__tests__/log-loss-isotonic-debug.test.ts
+  //   src/metrics/__tests__/metric-birth-certificate.test.ts
+  //   src/__tests__/honesty/honesty-surface.test.ts
+  //
+  // all with "Multiple exports with the same name \"normalCdf\"".
+  //
+  // The barrel's canonical `normalCdf` is the one from
+  // ./performance-ci.js -- it was bound first, and the other module's
+  // own comment says so ("This module's normalCdf is its own
+  // ~5e-10 Abramowitz-Stegun approximation; the barrel already binds
+  // `normalCdf` from ./performance-ci.js"). So the literature one is
+  // exported under a distinct name and nothing loses the binding.
+  normalCdf as literatureNormalCdf,
   DEFAULT_TOP_K,
   DEFAULT_MIN_SIMILARITY,
 } from "./literature/literature-retrieval.js";
