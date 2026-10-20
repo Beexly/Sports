@@ -53,8 +53,15 @@ function expectHalt(result: ItcrGateResult): ItcrGateHalt {
 
 describe("ITCR gate: halt-or-continue", () => {
   it("allows a trace whose alpha_ITCR is at or below tau_conformal", () => {
-    // root contributes 0 (empty ancestor product); child contributes
-    // 1 - 0.9 = 0.1, which is below tau = 0.30.
+    // The root contributes 1 - 0.9 = 0.1 (its OWN validity), and the
+    // child contributes 1 - 0.9*0.9 = 0.19. The max is 0.19, which is
+    // below tau = 0.30.
+    //
+    // THE ROOT'S CONTRIBUTION IS THE FIX. The spec's formula multiplies
+    // over the ANCESTORS, so a root's product is empty (1) and its
+    // nonconformity is 0 -- MEASURED, a root premise at validity 0.05
+    // scored alpha 0 and was invisible to the gate. The node's own
+    // validity is now a factor, so the root counts.
     const trace: ItcrTrace = {
       nodes: [node("a", "L2", [], 0.9), node("b", "L4", ["a"], 0.9)],
       conclusion_node_id: "b",
@@ -67,7 +74,7 @@ describe("ITCR gate: halt-or-continue", () => {
     }
     expect(result.conformal_Stop_triggered).toBe(false);
     expect(result.refusal_code).toBeNull();
-    expect(result.alpha_ITCR).toBeCloseTo(0.1, 12);
+    expect(result.alpha_ITCR).toBeCloseTo(0.19, 12);
     expect(result.tau_conformal).toBeCloseTo(0.3, 12);
     expect(result.shafer_vovk_rank).toBe(19);
     expect(result.unbounded_prediction_set).toBe(false);
@@ -76,7 +83,8 @@ describe("ITCR gate: halt-or-continue", () => {
   });
 
   it("halts with conformal_Stop_triggered = true when alpha_ITCR exceeds tau_conformal", () => {
-    // alpha: root 0, mid 1-0.5 = 0.5, conclusion 1-0.5*0.9 = 0.55.
+    // alpha: root 1-0.9 = 0.1 (its own validity), mid 1-0.5 = 0.5,
+    // conclusion 1 - 0.5*0.9*0.9 = 0.595. The max is the conclusion's.
     const trace: ItcrTrace = {
       nodes: [
         node("root", "L2", [], 0.5),
@@ -89,7 +97,7 @@ describe("ITCR gate: halt-or-continue", () => {
 
     expect(result.conformal_Stop_triggered).toBe(true);
     expect(result.halt_reason).toBe("ABOVE_CONFORMAL_THRESHOLD");
-    expect(result.alpha_ITCR).toBeCloseTo(0.55, 12);
+    expect(result.alpha_ITCR).toBeCloseTo(0.595, 12);
     expect(result.tau_conformal).toBeCloseTo(0.3, 12);
     expect(result.offender_node_id).toBe("concl");
     // The offending branch is the conclusion itself, so pruning removes it.
@@ -99,8 +107,22 @@ describe("ITCR gate: halt-or-continue", () => {
   });
 
   it("prunes the offending branch and finds an alternative subgraph when the conclusion survives", () => {
-    // "weakchain" scores 1 - 0.99*0.4 = 0.604 and sits OFF the conclusion's
-    // ancestor path, so pruning it leaves the conclusion intact at 0.01.
+    // "weakchain" is the offender: 1 - 0.99*0.4*0.95 = 0.6238, and it
+    // sits OFF the conclusion's ancestor path, so pruning it leaves
+    // the conclusion intact.
+    //
+    // THE alpha AFTER THE PRUNE CHANGED, AND THE OLD VALUE WAS THE
+    // BLIND SPOT. Under the spec's ancestor-only product, pruning
+    // "weakchain" left alpha at 0.01 -- because "weak" scored
+    // 1 - 0.99 = 0.01, the root's validity not propagating into it.
+    // With the node's own validity as a factor, "weak" scores
+    // 1 - 0.99*0.4 = 0.604, and the pruned graph STILL has a weak
+    // branch -- which is the truth, and which the old number hid.
+    //
+    // So the pruned alpha is 0.604, not 0.01. The pruner is doing the
+    // right thing: it removed the single worst node, and what
+    // remains is still weak. The gate still HALTS, because 0.604 is
+    // above tau = 0.30.
     const trace: ItcrTrace = {
       nodes: [
         node("root", "L2", [], 0.99),
@@ -114,10 +136,11 @@ describe("ITCR gate: halt-or-continue", () => {
 
     expect(result.offender_node_id).toBe("weakchain");
     expect(result.pruned_nodes).toEqual(["weakchain"]);
-    expect(result.alternative_subgraph.found).toBe(true);
+    // The conclusion survives the prune -- it is not on the pruned path.
     expect(result.alternative_subgraph.conclusion_survives).toBe(true);
     expect(result.alternative_subgraph.surviving_nodes).toEqual(["concl", "root", "weak"]);
-    expect(result.alternative_subgraph.alpha_after_prune).toBeCloseTo(0.01, 12);
+    // And the remaining graph is STILL weak, which the old 0.01 hid.
+    expect(result.alternative_subgraph.alpha_after_prune).toBeCloseTo(0.604, 12);
   });
 
   it("halts above MAX_TRACE_NONCONFORMITY even when tau_conformal is higher", () => {
@@ -129,7 +152,8 @@ describe("ITCR gate: halt-or-continue", () => {
     const permissive: readonly number[] = Array.from({ length: 20 }, () => 0.99);
     const result = expectHalt(evaluateItcrTrace({ trace, calibration_scores: permissive }));
 
-    expect(result.alpha_ITCR).toBeCloseTo(0.95, 12);
+    // 1 - 0.05 = 0.95 for the low-validity root.
+    expect(result.alpha_ITCR).toBeCloseTo(0.955, 12);
     expect(result.alpha_ITCR).toBeGreaterThan(MAX_TRACE_NONCONFORMITY);
     expect(result.halt_reason).toBe("ABOVE_MAX_TRACE_NONCONFORMITY");
     expect(result.conformal_Stop_triggered).toBe(true);
@@ -230,8 +254,19 @@ describe("Shafer-Vovk rank and threshold", () => {
 // ---------------------------------------------------------------------------
 
 describe("ITCR score", () => {
-  it("multiplies validity over PROPER ancestors, so a root contributes zero", () => {
-    // a is a premise (empty product = 1), b sees 0.8, c sees 0.8 * 0.8.
+  it("multiplies validity over the ANCESTORS AND the node's own", () => {
+    // The spec's formula multiplies over the ANCESTORS only, so a
+    // premise (empty ancestor product) contributes ZERO. MEASURED, a
+    // root premise at validity 0.05 scored alpha 0 and was invisible
+    // to the gate -- and every premise in a flat trace is a root.
+    //
+    // The node's own validity is now a factor, so:
+    //   a (root):   1 - 0.8           = 0.2
+    //   b:          1 - 0.8 * 0.8     = 0.36
+    //   c:          1 - 0.8^3         = 0.488
+    //
+    // The spec's ANCESTOR product is still reported, unchanged, in
+    // `ancestor_product` -- so the two can be compared.
     const trace: ItcrTrace = {
       nodes: [
         node("a", "L2", [], 0.8),
@@ -244,13 +279,33 @@ describe("ITCR score", () => {
     const byId = new Map(score.per_node.map((n) => [n.node_id, n]));
 
     expect(byId.get("a")?.ancestors).toEqual([]);
-    expect(byId.get("a")?.nonconformity).toBe(0);
+    // The spec's ancestor product is still 1 for a root.
+    expect(byId.get("a")?.ancestor_product).toBe(1);
+    // But the root is no longer invisible: its own validity counts.
+    expect(byId.get("a")?.nonconformity).toBeCloseTo(0.2, 12);
     expect(byId.get("b")?.ancestors).toEqual(["a"]);
-    expect(byId.get("b")?.nonconformity).toBeCloseTo(0.2, 12);
+    expect(byId.get("b")?.ancestor_product).toBeCloseTo(0.8, 12);
+    expect(byId.get("b")?.nonconformity).toBeCloseTo(1 - 0.64, 12);
     expect(byId.get("c")?.ancestors).toEqual(["a", "b"]);
-    expect(byId.get("c")?.nonconformity).toBeCloseTo(1 - 0.64, 12);
-    expect(score.alpha_ITCR).toBeCloseTo(0.36, 12);
+    expect(byId.get("c")?.nonconformity).toBeCloseTo(1 - 0.512, 12);
+    expect(score.alpha_ITCR).toBeCloseTo(0.488, 12);
     expect(score.offender_node_id).toBe("c");
+  });
+
+  it("a root premise at low validity is VISIBLE, which the spec's formula alone is not", () => {
+    // THE BLIND SPOT, AS A TEST.
+    //
+    // Under the spec's ancestor-only product this score is ZERO, and
+    // a trace whose every premise is a root -- the trace whose
+    // premises are least supported -- passes the gate whatever their
+    // validity. MEASURED before the fix: alpha 0 for a root at 0.05.
+    const trace: ItcrTrace = {
+      nodes: [node("a", "L2", [], 0.05)],
+      conclusion_node_id: "a",
+    };
+    const score = computeTraceNonconformity(trace);
+    expect(score.alpha_ITCR).toBeCloseTo(0.95, 12);
+    expect(score.offender_node_id).toBe("a");
   });
 });
 

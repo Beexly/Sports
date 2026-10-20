@@ -107,6 +107,29 @@ export const MIN_EFFICIENCY_VARIANCE = 1e-12;
 /** Below this many observations the one-step correction is not estimable; the solver refuses. */
 export const MIN_SEMIPARAMETRIC_SAMPLE_SIZE = 30;
 
+
+/**
+ * The spec's G4 point-E-value floor: 1.35.
+ *
+ * THE SPEC'S G4 IS A CONJUNCTION OVER TWO NUMBERS, AND NEITHER WAS
+ * ENFORCED HERE. The module computed `ePoint` and `eCi` and REPORTED
+ * them, but it had no threshold constant at all -- so an estimand with
+ * an E-value of 1.0 (no unmeasured confounding could explain away no
+ * effect) was as acceptable as one with an E-value of 10. A reported
+ * number that gates nothing is a label.
+ *
+ * These are the same floors the retrieval path and the proximal bridge
+ * use, and they are the spec's.
+ */
+export const MIN_ESTIMAND_E_VALUE = 1.35;
+
+/**
+ * The spec's G4 CI-E-value floor: 1.10.
+ *
+ * LOWER than the point floor on purpose: it is a floor on a bound, not
+ * a central claim.
+ */
+export const MIN_ESTIMAND_CI_E_VALUE = 1.1;
 /** Residual of the density projection (mass defect) above this is a failed projection. */
 export const EFFICIENCY_PROJECTION_TOLERANCE = 1e-9;
 
@@ -1190,6 +1213,124 @@ export interface RatioEstimandSensitivity {
   readonly ePoint: number;
   readonly eCi: number;
   readonly ciExcludesNull: boolean;
+}
+
+/**
+ * THE E-VALUE GATE ON AN ESTIMAND.
+ *
+ * The spec's G4 is a CONJUNCTION over two numbers:
+ *
+ *     E-value(RR*)  >= 1.35   the point estimate
+ *     E-value(LL)   >= 1.10   the confidence-interval lower limit
+ *
+ * The module computed both and reported them, but had NO threshold --
+ * so nothing gated. This function is the gate.
+ *
+ * WHY A SEPARATE FUNCTION RATHER THAN A CHECK INSIDE THE ESTIMATOR.
+ * The estimator is about the estimand; the E-value is about how much
+ * unmeasured confounding could explain it away. They are different
+ * questions, and the caller may want the estimand WITHOUT the
+ * robustness verdict (to report a sensitivity) as well as with it
+ * (to publish). So the gate is a separate call on a result the
+ * estimator already produced.
+ *
+ * The refusal is a discriminated result, not a boolean, and it names
+ * WHICH of the two conditions failed.
+ */
+export type EstimandEValueVerdict =
+  | {
+      readonly ok: true;
+      readonly status: "ROBUST";
+      readonly ePoint: number;
+      readonly eCi: number;
+      readonly minEValue: number;
+      readonly minCiEValue: number;
+      readonly reason: string;
+    }
+  | {
+      readonly ok: false;
+      readonly status: "FRAGILE";
+      readonly code: "ESTIMAND_E_VALUE_TOO_LOW" | "ESTIMAND_CI_E_VALUE_TOO_LOW";
+      readonly ePoint: number;
+      readonly eCi: number;
+      readonly minEValue: number;
+      readonly minCiEValue: number;
+      readonly reason: string;
+    };
+
+/**
+ * Judge an estimand's robustness to unmeasured confounding.
+ *
+ * `sensitivity` comes from `ratioEstimandSensitivity`, which is where
+ * the E-values are COMPUTED (it reuses the shared `e-value.ts`, so
+ * there is no second implementation of the formula).
+ */
+export function judgeEstimandEValue(
+  sensitivity: RatioEstimandSensitivity,
+  options?: { readonly minEValue?: number; readonly minCiEValue?: number },
+): EstimandEValueVerdict {
+  if (sensitivity === null || typeof sensitivity !== "object") {
+    throw new TypeError("semiparametric: judgeEstimandEValue needs a sensitivity report");
+  }
+  for (const [name, value] of [
+    ["ePoint", sensitivity.ePoint],
+    ["eCi", sensitivity.eCi],
+  ] as const) {
+    if (!Number.isFinite(value)) {
+      throw new TypeError(`semiparametric: sensitivity.${name} must be finite, got ${String(value)}`);
+    }
+  }
+  const minEValue = options?.minEValue ?? MIN_ESTIMAND_E_VALUE;
+  const minCiEValue = options?.minCiEValue ?? MIN_ESTIMAND_CI_E_VALUE;
+  if (!Number.isFinite(minEValue) || minEValue < 1) {
+    throw new RangeError(`semiparametric: minEValue must be a finite number >= 1, got ${String(minEValue)}`);
+  }
+  if (!Number.isFinite(minCiEValue) || minCiEValue < 1) {
+    throw new RangeError(`semiparametric: minCiEValue must be a finite number >= 1, got ${String(minCiEValue)}`);
+  }
+
+  // THE POINT CONDITION.
+  if (sensitivity.ePoint < minEValue) {
+    return {
+      ok: false,
+      status: "FRAGILE",
+      code: "ESTIMAND_E_VALUE_TOO_LOW",
+      ePoint: sensitivity.ePoint,
+      eCi: sensitivity.eCi,
+      minEValue,
+      minCiEValue,
+      reason:
+        `the estimand's E-value is ${sensitivity.ePoint.toFixed(4)}, below the required ` +
+        `${minEValue}; a confounder of that strength could explain the effect away`,
+    };
+  }
+  // THE CI CONDITION, with its OWN threshold.
+  if (sensitivity.eCi < minCiEValue) {
+    return {
+      ok: false,
+      status: "FRAGILE",
+      code: "ESTIMAND_CI_E_VALUE_TOO_LOW",
+      ePoint: sensitivity.ePoint,
+      eCi: sensitivity.eCi,
+      minEValue,
+      minCiEValue,
+      reason:
+        `the estimand's confidence-interval E-value is ${sensitivity.eCi.toFixed(4)}, below ` +
+        `the required ${minCiEValue}; the effect is not robust at the bound a reader would ` +
+        "have to believe",
+    };
+  }
+  return {
+    ok: true,
+    status: "ROBUST",
+    ePoint: sensitivity.ePoint,
+    eCi: sensitivity.eCi,
+    minEValue,
+    minCiEValue,
+    reason:
+      `the estimand's E-value is ${sensitivity.ePoint.toFixed(4)} (>= ${minEValue}) and its ` +
+      `confidence-interval E-value is ${sensitivity.eCi.toFixed(4)} (>= ${minCiEValue})`,
+  };
 }
 
 /**

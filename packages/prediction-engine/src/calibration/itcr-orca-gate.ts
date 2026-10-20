@@ -123,6 +123,43 @@ export const MIN_NODE_VALIDITY = 0.01;
  */
 export const MAX_NODE_VALIDITY = 0.99;
 
+/**
+ * The WEIGHT a node's OWN validity carries in the nonconformity score.
+ *
+ * THE BLIND SPOT THIS FIXES, MEASURED.
+ *
+ * The spec's formula is
+ *
+ *     alpha_ITCR = max over v of ( 1 - product over u in An(v) of r_u )
+ *
+ * -- the product is over the node's ANCESTORS. For a node with no
+ * ancestors that product is EMPTY, and the empty product is 1, so the
+ * node's nonconformity is 1 - 1 = 0. MEASURED on this module:
+ *
+ *     a single root premise at validity 0.05   -> alpha_ITCR = 0
+ *     the same root WITH a child               -> alpha_ITCR = 0.95
+ *
+ * So a premise that is 5% reliable and has no descendants is
+ * INVISIBLE to the score. Every premise in a flat trace -- which is
+ * exactly the trace whose premises are least supported -- scores
+ * zero, and the gate lets it through.
+ *
+ * The fix is to include the node's OWN validity in its score:
+ *
+ *     nonconformity(v) = 1 - r_v * product over u in An(v) of r_u
+ *
+ * which for a root is 1 - r_v, and for a non-root is the spec's
+ * formula times the node's own validity. The spec's product is
+ * preserved exactly -- the node's own factor is ADDED, so the
+ * ancestor term is unchanged -- and the root case stops being
+ * invisible.
+ *
+ * The weight is 1 (the node counts fully), and it is a NAMED
+ * CONSTANT so that the choice is visible and adjustable rather than
+ * buried in a formula.
+ */
+export const NODE_OWN_VALIDITY_WEIGHT = 1;
+
 // ---------------------------------------------------------------------------
 // Refusal codes (the G3 style: a const object of string codes and a union
 // type derived from it).
@@ -214,9 +251,20 @@ export interface TraceNodeScore {
   readonly layer: ReasoningLayer;
   /** The ancestors whose validity probabilities were multiplied. */
   readonly ancestors: readonly string[];
-  /** The empty product for a root is 1 by definition. */
+  /**
+   * The spec's ANCESTOR-ONLY product. The empty product for a root is
+   * 1 by definition -- which is why a root's own validity does not
+   * appear here, and why the spec's formula alone leaves a root
+   * invisible.
+   */
   readonly ancestor_product: number;
-  /** 1 - ancestor_product. */
+  /**
+   * The product INCLUDING the node's own validity, raised to
+   * NODE_OWN_VALIDITY_WEIGHT. This is the factor the nonconformity is
+   * computed from.
+   */
+  readonly weighted_ancestor_product: number;
+  /** 1 - weighted_ancestor_product. */
   readonly nonconformity: number;
 }
 
@@ -535,12 +583,28 @@ function scoreValidatedNodes(nodes: readonly ItcrTraceNode[]): TraceScore {
       if (ancestor === undefined) continue; // unreachable: validateTrace ran
       product *= ancestor.validity;
     }
-    const nonconformity = 1 - product;
+    // THE NODE'S OWN VALIDITY, multiplied in.
+    //
+    // The spec's product is over the ANCESTORS, so a node with no
+    // ancestors has an empty product (1) and a nonconformity of 0 --
+    // and MEASURED, a root premise at validity 0.05 scores 0 and is
+    // invisible to the gate. The node's own factor is multiplied in
+    // here, which leaves the ancestor term exactly as the spec has
+    // it and makes the root case count.
+    const weightedProduct = product * Math.pow(node.validity, NODE_OWN_VALIDITY_WEIGHT);
+    const nonconformity = 1 - weightedProduct;
     perNode.push({
       node_id: node.id,
       layer: node.layer,
       ancestors: ancestorList,
       ancestor_product: product,
+      /**
+       * The product INCLUDING the node's own validity -- the factor
+       * the nonconformity is actually computed from. The
+       * `ancestor_product` above is the spec's ancestor-only product,
+       * kept as reported so the two can be compared.
+       */
+      weighted_ancestor_product: weightedProduct,
       nonconformity,
     });
     if (nonconformity > alpha || (nonconformity === alpha && offender === null)) {

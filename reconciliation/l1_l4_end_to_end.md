@@ -1220,3 +1220,92 @@ tsc                                             66 errors, down from 74 at
     recall, and it costs the inlining the `sql` version got. If a
     caller relies on the function being inlinable, that is a
     regression to check.
+
+## The three frontier modules, audited
+
+Three modules were written by delegated workers: the proximal bridge
+(`proximal-bridge-id.ts`), the semiparametric estimand solver
+(`semiparametric-estimand-solver.ts`), and the ITCR/ORCA trace gate
+(`itcr-orca-gate.ts`). Each passed its own suite — 11, 16 and 19
+tests — and a test suite proves only that the code runs as written.
+
+**The constants check.** Every threshold-named constant in the three
+files is COMPARED against a value, not merely declared: 20 of 20 in
+the proximal and semiparametric modules, 6 of 6 in ITCR. That is the
+defect class this audit has been hunting, and these three files do not
+have it.
+
+**Two of the three had a gate that was not wired.** The semiparametric
+module computed `ePoint` and `eCi` and reported them, and had **no
+threshold constant at all** — so an estimand with an E-value of 1.0
+(no unmeasured confounding could explain away no effect) was as
+acceptable as one with an E-value of 10. A reported number that gates
+nothing is a label. It now has `MIN_ESTIMAND_E_VALUE = 1.35` and
+`MIN_ESTIMAND_CI_E_VALUE = 1.10` and a gate that judges the
+conjunction, with the CI condition refusing on its own threshold. Five
+mutations, all caught: removing either condition, raising the CI floor
+to the point's 1.35, lowering the CI floor to 1.0, and collapsing the
+two conditions into one.
+
+**The ITCR trace score had a blind spot, and it is in the spec's
+formula.** The spec's nonconformity is
+
+    alpha_ITCR = max over v of ( 1 - product over u in An(v) of r_u )
+
+— the product is over the node's **ancestors**. For a node with no
+ancestors that product is empty, and the empty product is 1, so the
+node's nonconformity is 0. MEASURED:
+
+    a single root premise at validity 0.05   -> alpha_ITCR = 0
+    the same root WITH a child               -> alpha_ITCR = 0.95
+
+So a premise that is 5% reliable and has no descendants is
+**invisible** to the score, and every premise in a flat trace — the
+trace whose premises are least supported — scores zero. The gate
+passes it.
+
+The fix multiplies the node's **own** validity into its score, with
+the weight as a named constant (`NODE_OWN_VALIDITY_WEIGHT`), so the
+spec's ancestor term is preserved exactly and the root case stops
+being invisible. The consequence is visible in the pruning test: with
+the old formula, pruning the worst node left a residual alpha of
+**0.01**, because the weak branch had scored only `1 - 0.99`. With
+the fix it leaves **0.604**, which is the truth — the remaining graph
+is still weak, and the old number hid it. The gate still halts,
+because 0.604 is above the threshold.
+
+An audit that only checked "does the constant get compared" would have
+passed this. The constant is compared; the *formula* was wrong.
+
+**What the workers got right, and it was not obvious.** The
+semiparametric worker implemented the spec's stated weighting density
+`p~ ∝ Var(Phi)^-1`, measured it, found it **increased** realized
+variance by ~60% against uniform weighting, and changed it to
+`p~*(z) ∝ f_Z(z)/Var(Phi(z))`, documenting the deviation. The reason
+is sound: the 1/Var rule is the Hirano–Imbens weight for a weighted
+average of *independent* per-z estimates, and this estimator is not
+that — it reaches the grid through the density ratio `p~(Z)/f_Z(Z|W)`,
+so inverse-variance without the marginal sampling density upweights
+z-regions that are rarely observed. The proximal worker found that a
+raw holdout J-statistic rejected **31.5% of 400 correctly specified
+datasets** at the 10% level, diagnosed it as estimation error landing
+in the identifying directions, and fixed it by projecting those
+directions out — 12% false rejection with 100% power against a
+misspecification. Both deviations are stated in the module headers.
+
+**The honest limits, as stated.** No cross-fitting, so the EIF
+standard error is optimistic under overfitting. The proximal bridge
+is a **linear sieve**, not RKHS: a nonlinear bridge is *rejected* by
+the J-test rather than fitted, and completeness is assumed rather
+than tested. The ITCR coverage is marginal and conditional on
+exchangeable calibration/gating traces and on the `r_v` being
+genuinely calibrated; both are recorded in every threshold result
+rather than claimed. The "alternative subgraph" is a retry target,
+never re-gated on its own calibration set, and the returned reason
+says so.
+
+**Still not wired.** All three modules are implemented, tested and
+audited, and **not called by a production path**. The proximal bridge
+is what would let an unbreakable bow-arc be *answered* rather than
+refused, and the refusal path still runs. A module that gates nothing
+is the same defect one level up.

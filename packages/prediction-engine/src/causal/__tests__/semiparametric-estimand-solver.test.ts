@@ -20,11 +20,14 @@ import { describe, expect, it } from "vitest";
 
 import {
   EFFICIENCY_PROJECTION_TOLERANCE,
+  MIN_ESTIMAND_CI_E_VALUE,
+  MIN_ESTIMAND_E_VALUE,
   MIN_SEMIPARAMETRIC_SAMPLE_SIZE,
   PROPENSITY_CLIP_HIGH,
   PROPENSITY_CLIP_LOW,
   VERMA_SPREAD_TOLERANCE,
   extractRatioFunctional,
+  judgeEstimandEValue,
   ratioEstimandSensitivity,
   solveSemiparametricRatioFunctional,
 } from "../semiparametric-estimand-solver";
@@ -555,5 +558,110 @@ describe("one-step estimation of the ratio functional", () => {
     expect(PROPENSITY_CLIP_LOW).toBeGreaterThan(0);
     expect(PROPENSITY_CLIP_HIGH).toBeLessThan(1);
     expect(PROPENSITY_CLIP_LOW).toBeLessThan(PROPENSITY_CLIP_HIGH);
+  });
+});
+
+// ======================================================================
+// THE E-VALUE GATE.
+//
+// The module COMPUTED `ePoint` and `eCi` and reported them, but it
+// had NO threshold constant at all -- so an estimand with an E-value
+// of 1.0 (no unmeasured confounding could explain away no effect) was
+// as acceptable as one with an E-value of 10. A reported number that
+// gates nothing is a label.
+//
+// The spec's G4 is a CONJUNCTION over two numbers with TWO
+// thresholds:
+//
+//     E-value(RR*)  >= 1.35   the point estimate
+//     E-value(LL)   >= 1.10   the confidence-interval lower limit
+//
+// These tests are DISCRIMINATING: the point floor and the CI floor
+// are moved independently, so a gate that checks only one of them
+// cannot pass both.
+// ======================================================================
+describe("the E-value gate on an estimand", () => {
+  const sensitivity = (ePoint: number, eCi: number) =>
+    judgeEstimandEValue({
+      riskRatio: 2,
+      ePoint,
+      eCi,
+      ciExcludesNull: true,
+    });
+
+  it("the thresholds are the spec's, and they are DIFFERENT numbers", () => {
+    expect(MIN_ESTIMAND_E_VALUE).toBe(1.35);
+    expect(MIN_ESTIMAND_CI_E_VALUE).toBe(1.1);
+    expect(MIN_ESTIMAND_CI_E_VALUE).toBeLessThan(MIN_ESTIMAND_E_VALUE);
+  });
+
+  it("accepts an estimand that clears BOTH", () => {
+    const verdict = sensitivity(4, 2);
+    expect(verdict.ok).toBe(true);
+    if (!verdict.ok) return;
+    expect(verdict.status).toBe("ROBUST");
+    expect(verdict.ePoint).toBe(4);
+    expect(verdict.eCi).toBe(2);
+  });
+
+  it("the POINT condition refuses on its own", () => {
+    // The point is below 1.35 and the CI is comfortably above 1.10.
+    const verdict = sensitivity(1.2, 1.5);
+    expect(verdict.ok).toBe(false);
+    if (verdict.ok) return;
+    expect(verdict.code).toBe("ESTIMAND_E_VALUE_TOO_LOW");
+    // And the reason names the point.
+    expect(verdict.reason).toContain("E-value is 1.2000");
+  });
+
+  it("the CI condition refuses on its OWN threshold, with the point one passing", () => {
+    // The point clears 1.35 and only the CI is below 1.10. A gate
+    // that checked only the point would admit this.
+    const verdict = sensitivity(2, 1.05);
+    expect(verdict.ok).toBe(false);
+    if (verdict.ok) return;
+    expect(verdict.code).toBe("ESTIMAND_CI_E_VALUE_TOO_LOW");
+    // The point passed, which is what makes this a test of the CI
+    // condition and not of the point condition.
+    expect(verdict.ePoint).toBeGreaterThanOrEqual(MIN_ESTIMAND_E_VALUE);
+    expect(verdict.eCi).toBeLessThan(MIN_ESTIMAND_CI_E_VALUE);
+    expect(verdict.reason).toContain("confidence-interval E-value");
+  });
+
+  it("the CI floor is 1.10, so a CI E-value between 1.10 and 1.35 PASSES", () => {
+    // The band where the two thresholds disagree. A gate that used the
+    // point's threshold for the CI would refuse this, and would be
+    // wrong.
+    const verdict = sensitivity(2, 1.2);
+    expect(verdict.ok).toBe(true);
+  });
+
+  it("throws on a malformed sensitivity report", () => {
+    expect(() =>
+      judgeEstimandEValue({
+        riskRatio: 2,
+        ePoint: Number.NaN,
+        eCi: 2,
+        ciExcludesNull: true,
+      }),
+    ).toThrow(/finite/);
+    expect(() =>
+      judgeEstimandEValue({
+        riskRatio: 2,
+        ePoint: 2,
+        eCi: Number.POSITIVE_INFINITY,
+        ciExcludesNull: true,
+      }),
+    ).toThrow(/finite/);
+  });
+
+  it("throws on a floor below 1, because an E-value cannot be", () => {
+    expect(() => sensitivity(2, 2)).not.toThrow();
+    expect(() =>
+      judgeEstimandEValue(
+        { riskRatio: 2, ePoint: 2, eCi: 2, ciExcludesNull: true },
+        { minEValue: 0.5 },
+      ),
+    ).toThrow(/minEValue/);
   });
 });
