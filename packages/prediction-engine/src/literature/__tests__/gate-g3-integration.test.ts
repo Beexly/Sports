@@ -52,7 +52,14 @@ function makeDb(opts?: { readonly residuals?: number[]; readonly cause?: string;
         return {
           rows: residuals.map((residual, i) => ({
             residual,
-            outcome_correct: i % 2 === 0,
+            // The treated arm (i < 20) is 90% correct and the control
+            // arm is 10% correct. The rates must DIFFER, because the
+            // E-value is computed from the OUTCOME RATE RATIO -- a
+            // mock with the same rate in both arms has a rate ratio
+            // of 1, an E-value of 1, and no effect to be robust
+            // about. The test would then be measuring the gate
+            // refusing everything, not the gate working.
+            outcome_correct: i < 20 ? i % 10 !== 0 : i % 10 === 0,
             // The treated rows must be STRICTLY above doValue and the
             // control rows STRICTLY below it. The split test is
             // `activation_score >= doValue`, so a control row exactly at
@@ -221,5 +228,62 @@ describe("GATE G3 through the real intervention path", () => {
     // carries a RATIO over Y, the unconditional does not.
     expect(cond.g3_formula).toContain("/");
     expect(uncond.g3_formula).not.toContain("/");
+  });
+});
+
+// ======================================================================
+// THE ADVERSARY REVIEW. Identifiability is not robustness: a graph can
+// identify an effect perfectly and the effect can still be explainable
+// by an unmeasured confounder. The two checks are independent, so both
+// must pass.
+// ======================================================================
+describe("the adversary review (E-value gate)", () => {
+  const graph = { nodes: ["Scheme", "PassEPA"], directed: [["Scheme", "PassEPA"]], bidirected: [] };
+
+  it("reports the E-value on a claim it lets through", async () => {
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, { graph });
+
+    expect(res.g3_conclusion).toBe("CAUSAL");
+    expect(res.verdict).toBe("PASS");
+    // The E-value is reported, not merely checked.
+    expect(res.e_value_point).not.toBeNull();
+    expect(res.e_value_ci).not.toBeNull();
+    expect(res.adversary_refusal_code).toBeNull();
+    // The mock has a 90% vs 10% outcome rate, so the rate ratio is 9
+    // and the E-value is well above 1.
+    expect(res.e_value_point!).toBeGreaterThan(1.35);
+  });
+
+  it("refuses a claim whose effect is too fragile to state as causal", async () => {
+    // Same graph, but the E-value is REQUIRED to be enormous. The
+    // effect is still identified and still statistically significant;
+    // it is only not robust enough to publish as causal.
+    const { db, inserted } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, { graph, minEValue: 1000 });
+
+    // The identification still happened -- the gate is not the
+    // identifiability check failing.
+    expect(res.g3_conclusion).toBe("CAUSAL");
+    expect(res.g3_refusal_code).toBeNull();
+    // But the adversary review blocked publication.
+    expect(res.adversary_refusal_code).toBe("REFUSED_ADVERSARY_E_VALUE_TOO_LOW");
+    expect(res.verdict).toBe("INCONCLUSIVE");
+    expect(res.reason).toContain("REFUSED_ADVERSARY_E_VALUE_TOO_LOW");
+    // The E-value is still reported, so a reader can see what it was.
+    expect(res.e_value_ci).not.toBeNull();
+  });
+
+  it("a claim that is NOT identified is refused before the E-value matters", async () => {
+    // The confounded bow-arc: the effect is not identified, so there
+    // is nothing to be robust about. The adversary review must not
+    // even be reached.
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph: { nodes: ["Scheme", "PassEPA"], directed: [["Scheme", "PassEPA"]], bidirected: [["Scheme", "PassEPA"]] },
+    });
+    expect(res.g3_refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
+    expect(res.adversary_refusal_code).toBeNull();
+    expect(res.e_value_point).toBeNull();
   });
 });

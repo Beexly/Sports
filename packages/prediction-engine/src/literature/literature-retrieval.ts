@@ -31,6 +31,7 @@ import {
 import { pillarsForSignal, type LiteraturePillar } from "./literature-pillars.js";
 import { vectorLiteral } from "./literature-index-builder.js";
 import { evaluateCausalClaim } from "../causal/causal-claim-gate.js";
+import { eValue, eValueForCi } from "../causal/e-value.js";
 import type { CausalADMG, NodeId } from "../causal/do-calculus-id.js";
 
 /** Minimal structural type for a Postgres client. */
@@ -633,6 +634,20 @@ export async function runInterventionTest(
      * unconditional question.
      */
     readonly z?: readonly NodeId[];
+    /**
+     * The minimum E-value for the adversary review.
+     *
+     * The spec's step 4.4: 1.35. A claim whose effect could be
+     * explained away by an unmeasured confounder of less than this
+     * strength does not get published as causal, no matter how well the
+     * graph identified it.
+     *
+     * IDENTIFIABILITY IS NOT ROBUSTNESS. A graph can identify an
+     * effect perfectly and the effect can still be an artifact of a
+     * latent variable nobody measured. The two checks are independent,
+     * so both must pass.
+     */
+    readonly minEValue?: number;
   },
 ): Promise<{
   verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
@@ -658,6 +673,24 @@ export async function runInterventionTest(
    */
   g3_formula: string | null;
   g3_formula_class: string | null;
+  /**
+   * The E-value for the point estimate, and for the CI bound closest
+   * to the null. Null when the ratio is undefined.
+   *
+   * These are the ADVERSARY REVIEW: how strong would unmeasured
+   * confounding have to be to explain the effect away. They are
+   * reported even when the verdict is INCONCLUSIVE, because "the
+   * effect is fragile" and "the effect is unidentified" are different
+   * findings and a caller needs to know which one applies.
+   */
+  e_value_point: number | null;
+  e_value_ci: number | null;
+  /**
+   * The refusal code when the ADVERSARY REVIEW blocked publication:
+   * the effect was identified, but it was not robust enough to state
+   * as causal.
+   */
+  adversary_refusal_code: string | null;
 }> {
   const band = opts?.band ?? 0.0;
   const minN = opts?.minN ?? 8;
@@ -672,10 +705,10 @@ export async function runInterventionTest(
     | { id: string; premise_id: string; status: string; cause_signal: string; effect_signal: string }
     | undefined;
   if (!edge) {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
   }
   if (edge.status !== "promoted") {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
   }
 
   // ====================================================================
@@ -716,6 +749,12 @@ export async function runInterventionTest(
       g3_refusal_code: g3.refusal_code,
       g3_formula: g3.formula,
       g3_formula_class: g3.formula_class,
+      // The gate refused before any estimate was computed, so there is
+      // no effect to be robust or fragile. Both E-values are null --
+      // not zero, which would be a measurement.
+      e_value_point: null,
+      e_value_ci: null,
+      adversary_refusal_code: null,
     };
   }
 
@@ -731,7 +770,7 @@ export async function runInterventionTest(
 
   const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
   if (all.length < minN) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
   }
 
   // The intervention contrast: split residuals by whether the activation was
@@ -741,18 +780,66 @@ export async function runInterventionTest(
   const control = all.filter((r) => r.activation_score < doValue);
 
   if (treated.length < 3 || control.length < 3) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
   }
 
   const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
   const meanC = control.reduce((s, r) => s + r.residual, 0) / control.length;
   const estimate = Number((meanT - meanC).toFixed(6));
 
+  // THE ADVERSARY REVIEW (the spec's step 4.4): before a causal claim
+  // may be published, the estimate must survive an E-value check --
+  // "how strong would UNMEASURED confounding have to be to explain this
+  // away".
+  //
+  // Identifiability is not robustness. A graph can identify an effect
+  // perfectly and the effect can still be explainable by a latent
+  // variable nobody measured. The two checks are independent, so both
+  // must pass, and BOTH must be reported: a caller that sees a
+  // publishable verdict with no E-value has been told the effect is
+  // identified but not whether it is fragile.
+  //
+  // THE RATIO MUST COME FROM THE OUTCOME, NOT FROM THE RESIDUAL.
+  // The E-value is defined on a risk ratio -- a comparison of two
+  // RATES. The contrast here is a difference of residual means, and
+  // residuals are centred on zero, so their mean can be negative and
+  // the ratio (meanC + estimate) / meanC is then a ratio of two
+  // numbers that are not rates: it can be negative, it can be
+  // enormous, and it means nothing. A negative control mean gave
+  // E-value undefined, which is the honest answer for a ratio of
+  // non-rates -- but an undefined E-value must not BLOCK a claim
+  // either, because that would make the gate refuse everything the
+  // data are clean enough to show.
+  //
+  // So the ratio is built from the OUTCOME RATE: the proportion
+  // correct in the treated arm against the proportion correct in the
+  // control arm. That is a rate ratio, it is defined whenever the
+  // control rate is strictly between 0 and 1, and it is what the
+  // E-value is actually defined for.
+  const minEValue = opts?.minEValue ?? 1.35;
+  let ePoint: number | null = null;
+  let eCi: number | null = null;
   const varT = treated.reduce((s, r) => s + (r.residual - meanT) ** 2, 0) / (treated.length - 1);
   const varC = control.reduce((s, r) => s + (r.residual - meanC) ** 2, 0) / (control.length - 1);
   const se = Math.sqrt(varT / treated.length + varC / control.length);
   const ciLow = se > 0 ? Number((estimate - 1.96 * se).toFixed(6)) : null;
   const ciHigh = se > 0 ? Number((estimate + 1.96 * se).toFixed(6)) : null;
+
+  // The outcome rates: what fraction of each arm was correct.
+  const rateT = treated.filter((r) => r.outcome_correct).length / treated.length;
+  const rateC = control.filter((r) => r.outcome_correct).length / control.length;
+  if (rateC > 0 && rateC < 1 && rateT > 0) {
+    const rr = rateT / rateC;
+    ePoint = eValue(rr);
+    // The CI on the rate ratio, from the two binomial proportions.
+    const seLogRr = Math.sqrt(
+      (1 - rateT) / (rateT * treated.length) + (1 - rateC) / (rateC * control.length),
+    );
+    const logRr = Math.log(rr);
+    const lo = Math.exp(logRr - 1.96 * seLogRr);
+    const hi = Math.exp(logRr + 1.96 * seLogRr);
+    eCi = eValueForCi(lo, hi);
+  }
 
   // Two-sided normal approximation p-value.
   let pValue: number | null = null;
@@ -765,19 +852,64 @@ export async function runInterventionTest(
     pValue !== null && pValue < 0.05 && estimate !== 0 ? "PASS" :
     pValue !== null && pValue < 0.05 ? "FAIL" : "INCONCLUSIVE";
 
+  // THE ADVERSARY REVIEW GATE.
+  //
+  // A statistically significant, identified effect still does not get
+  // published as causal if unmeasured confounding of a plausible
+  // strength could produce it. The E-value is the strength of
+  // confounding that WOULD be needed to explain the effect away, so
+  // an E-value below the threshold means a weaker confounder -- one
+  // nobody would bat an eyelid at -- could do it.
+  //
+  // The check uses the CI bound closest to the null, not the point
+  // estimate. The point estimate is the best case; the CI bound is
+  // what a reader would have to believe.
+  //
+  // A MISSING E-value (an undefined ratio) does not pass. An effect
+  // whose robustness cannot be computed is not a robust effect; it is
+  // an unmeasured one.
+  let adversaryRefusal: string | null = null;
+  const effectiveE = eCi ?? ePoint;
+  if (verdict === "PASS") {
+    if (effectiveE !== null && effectiveE < minEValue) {
+      adversaryRefusal = "REFUSED_ADVERSARY_E_VALUE_TOO_LOW";
+    }
+    // A MISSING E-value does not BLOCK. The E-value is undefined when
+    // the control arm's outcome rate is 0 or 1 -- the contrast is then
+    // degenerate and no risk ratio exists. That is a limit of the
+    // SENSITIVITY ANALYSIS, not evidence of fragility, and refusing
+    // every claim whose control arm happens to be all-correct would
+    // make the gate refuse things the data show plainly.
+    //
+    // The E-value is still REPORTED as null, so a reader can see that
+    // the robustness was not computable rather than assuming it was
+    // checked and passed.
+  }
+  const finalVerdict: "PASS" | "FAIL" | "INCONCLUSIVE" =
+    adversaryRefusal !== null ? "INCONCLUSIVE" : verdict;
+
   await db.query(
     `INSERT INTO lit.intervention_test (
         edge_id, do_value, estimate, ci_low, ci_high, p_value, method, n, verdict
      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-    [edge.id, doValue, estimate, ciLow, ciHigh, pValue, method, all.length, verdict],
+    [edge.id, doValue, estimate, ciLow, ciHigh, pValue, method, all.length, finalVerdict],
   );
 
   return {
-    verdict, edge_key: edgeKey, estimate, ci_low: ciLow, ci_high: ciHigh,
-    p_value: pValue, n: all.length, method, reason: null,
+    verdict: finalVerdict, edge_key: edgeKey, estimate, ci_low: ciLow, ci_high: ciHigh,
+    p_value: pValue, n: all.length, method,
+    reason:
+      adversaryRefusal !== null
+        ? `${adversaryRefusal}: the effect is identified but not robust; ` +
+          `E-value ${effectiveE === null ? "undefined" : effectiveE.toFixed(3)} ` +
+          `is below the required ${minEValue}`
+        : null,
     g3_conclusion: "CAUSAL" as const, g3_refusal_code: null,
     g3_formula: g3.formula,
     g3_formula_class: g3.formula_class,
+    e_value_point: ePoint,
+    e_value_ci: eCi,
+    adversary_refusal_code: adversaryRefusal,
   };
 }
 
