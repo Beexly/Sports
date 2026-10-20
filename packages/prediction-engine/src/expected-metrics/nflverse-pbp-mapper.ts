@@ -30,7 +30,7 @@ import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
 
 /**
- * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
+ * The ONLY pbp columns this wiring reads. 42 of ~372 (OOM defense — pass to
  * `parseCsv(text, { columns })` so the projecting parser never materializes
  * the full token matrix).
  *
@@ -62,6 +62,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
+  // additive for RZ carry share module
+  "week", "qb_kneel",
 ] as const;
 
 /** One projected pbp row record, exactly as `parseCsv` emits it. */

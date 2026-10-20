@@ -95,6 +95,15 @@ export {
   type GraduationResult,
 } from "./validation.js";
 
+// RZ Carry Share (deterministic; glass-box, enters dark).
+export {
+  computeRzCarryShare,
+  RED_ZONE_CARRY_SHARE_VERSION,
+  type RzCarryPlay,
+  type RzCarryShareWindowMetrics,
+  type PlayerRzCarryShare,
+} from "./red-zone-carry-share.js";
+
 // Expected points → GSE-EPA (glass-box, enters dark).
 export {
   fitExpectedPointsModel,
