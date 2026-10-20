@@ -1748,3 +1748,40 @@ class-A rows whose spans were NULL, which reads exactly like "the
 data is bad". It was the join. The migration now joins on
 `'mind:' || c.premise_key`, and the dev branch is where the mistake
 was made and caught.
+
+## APPLIED TO PRODUCTION, AND VERIFIED THROUGH A DIFFERENT PATH.
+
+The dev branch proved the migration. Then it was applied to production
+(`main`), and the verification was deliberately done **through a
+different path** — the `neon psql` CLI with the read-only `hermes_ro`
+role, not the script that applied it. A script that both writes and
+verifies is a script that can agree with itself.
+
+    total | citable | with_span | class_a_without_span
+    ------+---------+-----------+----------------------
+     1098 |     1098 |      1098 |                    0
+
+    conname                      | convalidated
+    -----------------------------+--------------
+    chk_citable_verified_honesty | t
+
+    test rows: 0
+
+    the live retrieval path, joined to the class:
+    returned | class_a | not_class_a
+    ---------+---------+------------
+          10 |      10 |           0
+
+    rows satisfying the invariant, recomputed by hand: 1098 of 1098
+
+**`convalidated = t`** is the part worth noting. It says Postgres
+checked every existing row when the constraint was added, so the
+constraint is a **measurement the data passed**, not a promise about
+future writes.
+
+**The production row count changed from 1,099 to 1,098**, and that is
+correct: the extra row was the `test:class_a:citable` fixture, and
+1,098 is the class-A count the corpus carries and the independent
+L1–L4 gate confirms. **The number that was quoted before this change
+was wrong**, and the reason it was wrong is now removed rather than
+documented.
