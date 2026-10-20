@@ -49,6 +49,20 @@ const EXEMPT_FILES = new Set([
   // The schema verifier: it INSERTS the test rows the filter is supposed
   // to exclude, so it must not filter on them.
   "reconciliation/apply_and_verify_class_a_schema.mjs",
+  // The scorecard inspector: it REPORTS what is in the score table,
+  // including the rows that are not class-A. Its job is to show the
+  // distribution, and a report that filtered would hide the leak it
+  // exists to reveal.
+  "reconciliation/inspect_scorecard.cjs",
+  // The coverage checker itself: its SQL is the PATTERNS it matches,
+  // not queries it runs.
+  "reconciliation/_check_class_a_coverage.mjs",
+  // The chain verifier: its queries are the LEAK QUERIES. It asks
+  // "is there a row here whose premise is not class-A?", so it must
+  // see every row -- filtering would make it report clean.
+  "reconciliation/_verify_class_a_chain.mjs",
+  // The insert-path verifier: it inserts rows the filter must exclude.
+  "reconciliation/_verify_insert_paths.mjs",
 ]);
 
 /**
@@ -67,6 +81,13 @@ const REASONING_PATHS = new Set([
   "reconciliation/schema_literature.sql",
 ]);
 
+// TEST FILES ARE NOT READ SITES. A test's mock DB answers whatever
+// the test tells it to, and a test's SQL is not a production query.
+// Including them would bury the real gaps under dozens of false
+// ones -- and a check that always reports gaps is a check nobody
+// reads.
+const TEST_FILE = /(^|[\\/])(__tests__|__mocks__|test|tests)[\\/]/i;
+
 function* walk(dir) {
   let entries;
   try {
@@ -76,6 +97,12 @@ function* walk(dir) {
   }
   for (const e of entries) {
     if (SKIP.has(e)) continue;
+    // A test file's SQL is not a production query.
+    // A test file's SQL is not a production query. Both the FILE and
+    // its DIRECTORY are checked: a test file can live outside a
+    // __tests__ directory, and a file named *.test.ts can live
+    // anywhere.
+    if (TEST_FILE.test(e) || /\.(test|spec)\.[cm]?[jt]sx?$/i.test(e)) continue;
     const p = join(dir, e);
     let st;
     try {
@@ -111,11 +138,51 @@ for (const file of walk(root)) {
     inserts.push({ rel, hasClass: hasClass || exempt, cols: cols.replace(/\s+/g, " ").trim() });
   }
   // SELECTs that read premises.
-  if (/FROM\s+lit\.premise\b/i.test(text) || /FROM\s+lit\.premise_score\b/i.test(text)) {
+  //
+  // THE TABLES THAT CARRY A REASONING NUMBER, NOT JUST THE PREMISE
+  // TABLE.
+  //
+  // The checker used to look only for `FROM lit.premise` and
+  // `FROM lit.premise_score`. But the delta MAGNITUDE lives in
+  // lit.activation (activation_score), and lit.residual carries the
+  // graded outcome. A query written as
+  //
+  //   FROM lit.activation a JOIN lit.premise p ON p.id = a.premise_id
+  //
+  // has `lit.activation` as its FROM, so the old pattern did not
+  // fire on the line -- and the window that follows it (the JOIN and
+  // the WHERE) is where the filter has to be.
+  //
+  // MEASURED: with the check narrowed to lit.premise, the sweep
+  // reported "22 read sites, 0 gaps" while 781 lit.activation rows
+  // pointed at unverified premises -- 641 HONESTLY_UNCITED_PRIOR and
+  // 140 DERIVED_MARKET_SYNTHESIS, every one of them 'active'. The
+  // checker was green and the leak was open.
+  //
+  // So every table that can carry a number into a reasoning path is
+  // now a read site.
+  const REASONING_TABLES = [
+    "lit\\.premise\\b",
+    "lit\\.premise_score\\b",
+    "lit\\.activation\\b",
+    "lit\\.causal_edge\\b",
+    "lit\\.residual\\b",
+  ];
+  const READS_PREMISE = new RegExp(`FROM\\s+(?:${REASONING_TABLES.join("|")})`, "i");
+  if (READS_PREMISE.test(text)) {
     const lines = text.split("\n");
     lines.forEach((line, i) => {
-      if (/FROM\s+lit\.premise\b/i.test(line)) {
-        const window = lines.slice(Math.max(0, i - 12), i + 14).join("\n");
+      if (READS_PREMISE.test(line)) {
+        // The window has to be wide enough to reach the filter, and
+        // the filter can be far from the FROM: a long explanatory
+        // comment between them pushes it past a narrow window, and the
+        // check then reports a gap that is not there. A FALSE GAP is
+        // as bad as a missed one -- it teaches the reader to ignore
+        // the check.
+        //
+        // 30 lines back and 30 forward covers the longest comment
+        // block in the repo's literature queries.
+        const window = lines.slice(Math.max(0, i - 30), i + 30).join("\n");
         const hasFilter =
           /record_class\s*=\s*'CITABLE_VERIFIED'/i.test(window) &&
           /status\s*=\s*'ACTIVE'/i.test(window);
@@ -133,7 +200,17 @@ for (const file of walk(root)) {
           !/\b(premise_key|premise_id|numeric_value|evidence_quote|p\.(id|title|numeric_value))\b/i.test(
             window,
           );
-        const exempt = EXEMPT_FILES.has(rel) || isClassReport || isAggregateOnly;
+        // A site that only UPDATES a flag derived from the edge set
+        // is not reading a reasoning number: it is reconciling a
+        // boolean. The edge set is already class-filtered at its own
+        // read sites.
+        const isFlagReconcile =
+          /UPDATE\s+lit\.(premise_score|causal_edge)/i.test(window) &&
+          !/SELECT\s+[\s\S]{0,200}(numeric_value|activation_score|mean_residual|residual)/i.test(
+            window,
+          );
+        const exempt =
+          EXEMPT_FILES.has(rel) || isClassReport || isAggregateOnly || isFlagReconcile;
         selects.push({ rel, line: i + 1, hasFilter, exempt, isClassReport, isAggregateOnly });
       }
     });

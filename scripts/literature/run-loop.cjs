@@ -327,7 +327,24 @@ function eventText(e) {
     `SELECT a.id AS activation_id, a.premise_id, a.game_id, a.activation_score,
             p.numeric_value, p.numeric_unit, p.influence_direction
        FROM lit.activation a JOIN lit.premise p ON p.id = a.premise_id
-      WHERE a.game_id IS NOT NULL`
+      WHERE a.game_id IS NOT NULL
+        -- CLASS-A EXCLUSIVITY. BOTH halves.
+        --
+        -- This read pulls activation_score -- the MAGNITUDE of the
+        -- delta -- and grades it. Grading an unverified premise
+        -- writes a score for it, and the score table is what the
+        -- promotion gate reads. The promotion gate does filter, so
+        -- the score could never become an edge -- but a score table
+        -- full of numbers for premises with no document behind them
+        -- is exactly the shape of the corruption this work is
+        -- removing, and it is a number that LOOKS like a measurement.
+        --
+        -- The 781 activation rows written before the class filter
+        -- existed are the evidence: 641 of them point at
+        -- HONESTLY_UNCITED_PRIOR and 140 at DERIVED_MARKET_SYNTHESIS,
+        -- and every single one is 'active'.
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'`
   );
   console.log(`activations with a game: ${actRes.rows.length}`);
 
@@ -436,10 +453,20 @@ function eventText(e) {
                   * least(count(*)::numeric/5, 1), 6),
             now()
        FROM (
-         SELECT DISTINCT ON (premise_id, game_id)
-                premise_id, game_id, residual, outcome_correct
-           FROM lit.residual
-          ORDER BY premise_id, game_id, graded_at DESC
+         SELECT DISTINCT ON (r.premise_id, r.game_id)
+                r.premise_id, r.game_id, r.residual, r.outcome_correct
+           FROM lit.residual r
+           JOIN lit.premise p ON p.id = r.premise_id
+          -- CLASS-A EXCLUSIVITY. BOTH halves.
+          --
+          -- This writes the scorecard: graded, correct, mean_residual,
+          -- residual_mse. The scorecard is what the promotion gate
+          -- reads, and the activation weight comes from it. A
+          -- scorecard computed from premises with no document behind
+          -- them is a set of numbers that look like measurements.
+          WHERE p.record_class = 'CITABLE_VERIFIED'
+            AND p.status = 'ACTIVE'
+          ORDER BY r.premise_id, r.game_id, r.graded_at DESC
        ) d GROUP BY d.premise_id
      ON CONFLICT (premise_id) DO UPDATE SET graded=EXCLUDED.graded, correct=EXCLUDED.correct,
        mean_residual=EXCLUDED.mean_residual, residual_mse=EXCLUDED.residual_mse,
@@ -478,7 +505,21 @@ function eventText(e) {
        FROM lit.premise_score s JOIN lit.premise p ON p.id = s.premise_id
       WHERE s.graded >= 3 AND s.activation_score > 0 AND p.numeric_value IS NOT NULL
         AND s.mean_residual IS NOT NULL
+        -- CLASS-A EXCLUSIVITY. BOTH halves.
+        --
+        -- The class says what kind of record it is; the status says
+        -- why it was or was not admitted. A CITABLE_VERIFIED premise
+        -- whose status is LINK_VERIFIED_SEMANTIC_FAIL is class-A --
+        -- its quote IS verbatim in its document -- but its CLAIM does
+        -- not follow from that quote. Promoting it to a causal edge
+        -- asserts that the claim holds, and it does not.
+        --
+        -- The TS promotion path (literature-causal.ts) has had both
+        -- halves since the class filter landed. This one had only the
+        -- first, which is a gap that only a query against the real
+        -- table can find: the class filter LOOKS complete.
         AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
       ON CONFLICT (edge_key) DO UPDATE SET effect_estimate=EXCLUDED.effect_estimate,
         support_n=EXCLUDED.support_n, promoted_at=now(), status='promoted', retired_at=NULL`
   );
@@ -556,15 +597,45 @@ function eventText(e) {
   );
 
   // ---- 5. Do-calculus intervention tests, PROMOTED EDGES ONLY ----
-  const edges = await db.query(`SELECT edge_key FROM lit.causal_edge WHERE status='promoted' LIMIT 40`);
+  const edges = await db.query(
+    `SELECT ce.edge_key
+       FROM lit.causal_edge ce
+       JOIN lit.premise p ON p.id = ce.premise_id
+      WHERE ce.status = 'promoted'
+        -- CLASS-A EXCLUSIVITY. BOTH halves.
+        --
+        -- The promotion gate refuses to create an edge for a
+        -- non-class-A premise, but a premise can be RE-CLASSIFIED by a
+        -- corpus rebuild after the edge was created. The edge has to
+        -- follow the premise, and the test has to be run only on
+        -- edges whose premise is still class-A.
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
+      LIMIT 40`,
+  );
   let pass = 0, fail = 0, incon = 0;
   for (const e of edges.rows) {
-    const edge = await db.query(`SELECT id, premise_id FROM lit.causal_edge WHERE edge_key=$1`, [e.edge_key]);
+    const edge = await db.query(
+      `SELECT e.id, e.premise_id
+         FROM lit.causal_edge e
+         JOIN lit.premise p ON p.id = e.premise_id
+        WHERE e.edge_key = $1
+          AND p.record_class = 'CITABLE_VERIFIED'
+          AND p.status = 'ACTIVE'`,
+      [e.edge_key],
+    );
     const edgeId = edge.rows[0].id, premiseId = edge.rows[0].premise_id;
     const res = await db.query(
       `SELECT r.residual, r.outcome_correct, a.activation_score, a.similarity
-         FROM lit.residual r JOIN lit.activation a ON a.id = r.activation_id
-        WHERE r.premise_id = $1 ORDER BY r.graded_at ASC`, [premiseId]);
+         FROM lit.residual r
+         JOIN lit.activation a ON a.id = r.activation_id
+         JOIN lit.premise p ON p.id = r.premise_id
+        WHERE r.premise_id = $1
+          AND p.record_class = 'CITABLE_VERIFIED'
+          AND p.status = 'ACTIVE'
+        ORDER BY r.graded_at ASC`,
+      [premiseId],
+    );
     const all = res.rows;
     // Every test that RUNS is PERSISTED, including the inconclusive ones.
     // The first version only inserted on the PASS/FAIL path, so an

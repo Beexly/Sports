@@ -219,7 +219,20 @@ export async function retrieveForEvent(
     // running performance score (0 if never graded). A premise that has been
     // graded and performed well contributes MORE than its raw similarity.
     const scoreRes = await db.query(
-      `SELECT activation_score FROM lit.premise_score WHERE premise_id = $1`,
+      `SELECT s.activation_score
+         FROM lit.premise_score s
+         JOIN lit.premise p ON p.id = s.premise_id
+        WHERE s.premise_id = $1
+          -- CLASS-A EXCLUSIVITY. BOTH halves.
+          --
+          -- This is the score the premise CARRIES -- the activation
+          -- weight, which is the magnitude of its contribution. The
+          -- rows above come from lit.retrieve_premises, which filters,
+          -- so this is upstream-filtered -- but the number is the
+          -- number, and it should not be readable for an unverified
+          -- premise.
+          AND p.record_class = 'CITABLE_VERIFIED'
+          AND p.status = 'ACTIVE'`,
       [row.premise_id],
     );
     const prior = scoreRes.rows[0] as { activation_score: number } | undefined;
@@ -370,11 +383,22 @@ export async function applyResidualFeedback(
               avg(residual * residual)::double precision AS mse,
               count(*) FILTER (WHERE outcome_correct)::int AS correct
          FROM (
-           SELECT DISTINCT ON (premise_id, game_id)
-                  premise_id, game_id, residual, outcome_correct
-             FROM lit.residual
-            WHERE premise_id = $1
-            ORDER BY premise_id, game_id, graded_at DESC
+           SELECT DISTINCT ON (r.premise_id, r.game_id)
+                  r.premise_id, r.game_id, r.residual, r.outcome_correct
+             FROM lit.residual r
+             JOIN lit.premise p ON p.id = r.premise_id
+            WHERE r.premise_id = $1
+              -- CLASS-A EXCLUSIVITY. BOTH halves.
+              --
+              -- These numbers become the premise's scorecard, and the
+              -- scorecard becomes the activation_score, and the
+              -- activation_score is the MAGNITUDE of the delta. A
+              -- score computed from a premise with no document behind
+              -- it is a number that looks like a measurement and is
+              -- not one.
+              AND p.record_class = 'CITABLE_VERIFIED'
+              AND p.status = 'ACTIVE'
+            ORDER BY r.premise_id, r.game_id, r.graded_at DESC
          ) d`,
       [r.premise_id],
     );
@@ -567,6 +591,37 @@ export async function promotePremisesToCausalEdges(
   );
   const retired = stale.rowCount ?? 0;
 
+  // CLASS-A EXCLUSIVITY: AN EDGE WHOSE PREMISE IS NO LONGER CLASS-A IS
+  // RETIRED.
+  //
+  // The promotion gate refuses to CREATE an edge for a non-class-A
+  // premise, but an edge created when the premise WAS class-A stays
+  // promoted after the premise is re-classified. The re-stamp that
+  // fixed the database's class column did exactly that: 16 edges
+  // pointed at premises that are now HONESTLY_UNCITED_PRIOR.
+  //
+  // Those 16 were already 'retired', so nothing leaked -- but that was
+  // luck, not a rule. A premise can be re-classified by a corpus
+  // rebuild at any time, and the edge set has to follow.
+  const nonClassA = await db.query(
+    `UPDATE lit.causal_edge ce
+        SET status = 'retired',
+            retired_at = now()
+      WHERE ce.status = 'promoted'
+        AND EXISTS (
+          SELECT 1
+            FROM lit.premise p
+           WHERE p.id = ce.premise_id
+             AND (p.record_class <> 'CITABLE_VERIFIED' OR p.status <> 'ACTIVE')
+        )`,
+  );
+  const retiredNonClassA = nonClassA.rowCount ?? 0;
+  if (retiredNonClassA > 0) {
+    console.log(
+      `  retired ${retiredNonClassA} promoted edge(s) whose premise is no longer class-A`,
+    );
+  }
+
   // The premise_score.promoted FLAG must agree with the edge set in BOTH
   // directions. Setting it on promotion but never clearing it on demotion
   // leaves the two tables disagreeing -- the measured case was
@@ -582,7 +637,6 @@ export async function promotePremisesToCausalEdges(
             ),
             updated_at = now()`
   );
-
   return { promoted, edges, retired };
 }
 
@@ -697,8 +751,25 @@ export async function runInterventionTest(
   const method = opts?.method ?? "truncated-mean-difference";
 
   const edgeRes = await db.query(
-    `SELECT id, premise_id, status, cause_signal, effect_signal
-       FROM lit.causal_edge WHERE edge_key = $1`,
+    `SELECT e.id, e.premise_id, e.status, e.cause_signal, e.effect_signal
+       FROM lit.causal_edge e
+       JOIN lit.premise p ON p.id = e.premise_id
+      WHERE e.edge_key = $1
+        -- CLASS-A EXCLUSIVITY. BOTH halves.
+        --
+        -- The edge is fetched BY KEY, so the key is whatever the
+        -- caller passed. The caller normally gets its keys from
+        -- listPromotedEdges, which filters -- but "the caller
+        -- filters" is a promise about every caller, and a caller
+        -- that holds an edge key from somewhere else would pull an
+        -- edge whose premise is not class-A, and the gate would then
+        -- check identifiability against a graph derived from an
+        -- unverified premise.
+        --
+        -- The check belongs HERE, where the edge is read, rather than
+        -- only at the call site.
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'`,
     [edgeKey],
   );
   const edge = edgeRes.rows[0] as
@@ -759,11 +830,21 @@ export async function runInterventionTest(
   }
 
   // Pull the residuals for this premise, joined to the activation's context.
+  //
+  // The premise_id comes from the edge fetch above, which filters on
+  // the class. The filter is repeated here anyway: the residuals are
+  // the NUMBERS the effect is computed from, so this is the last
+  // place an unverified premise could contribute one, and a reader
+  // checking this file should not have to trace the id back through
+  // three functions to be sure.
   const res = await db.query(
     `SELECT r.residual, r.outcome_correct, a.activation_score, a.similarity
        FROM lit.residual r
        JOIN lit.activation a ON a.id = r.activation_id
+       JOIN lit.premise p ON p.id = r.premise_id
       WHERE r.premise_id = $1
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
       ORDER BY r.graded_at ASC`,
     [edge.premise_id],
   );

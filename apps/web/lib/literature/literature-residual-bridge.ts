@@ -95,7 +95,26 @@ async function loadActivations(
             a.activation_score
        FROM lit.activation a
        JOIN lit.premise p ON p.id = a.premise_id
-      WHERE a.game_id = $1 AND a.status = 'active'`,
+      WHERE a.game_id = $1 AND a.status = 'active'
+        -- CLASS-A EXCLUSIVITY. BOTH halves.
+        --
+        -- This is a SETTLEMENT path: it grades the premises that fired
+        -- for a settled pick, and grading writes a residual, and the
+        -- residual becomes the activation_score, and the
+        -- activation_score is the MAGNITUDE of the delta.
+        --
+        -- The 781 activation rows written before the class filter
+        -- existed are the evidence: 641 of them point at
+        -- HONESTLY_UNCITED_PRIOR and 140 at DERIVED_MARKET_SYNTHESIS,
+        -- and every one of them is 'active'. Grading them writes
+        -- scores for premises with no document behind them, which is
+        -- exactly the corruption the L1-L4 work exists to remove.
+        --
+        -- The promotion gate filters, so those scores could never
+        -- become an edge -- but a score is still a number that LOOKS
+        -- like a measurement, and the number is what a reader sees.
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'`,
     gameId,
   );
   return rows ?? [];

@@ -613,8 +613,22 @@ describe("promotion reconciliation", () => {
 
     const agg = issued.find((x) => x.includes("FROM lit.residual"));
     expect(agg).toBeDefined();
-    // the support factor must count distinct (premise, game) pairs
-    expect(agg).toContain("DISTINCT ON (premise_id, game_id)");
+    // The support factor must count distinct (premise, game) pairs.
+    //
+    // The assertion is on the BEHAVIOUR, not on the exact spelling:
+    // the query aliases the columns (r.premise_id) because the
+    // class filter joins lit.premise, and an assertion on the literal
+    // text broke on the aliasing without any behaviour changing. A
+    // test that pins the exact string of a query is a test that fails
+    // on a harmless rename and passes on a harmful one.
+    //
+    // What is pinned: the DISTINCT is there, and it is over the
+    // (premise, game) pair.
+    expect(agg).toMatch(/DISTINCT ON\s*\(\s*r?\.?premise_id\s*,\s*r?\.?game_id\s*\)/i);
+    // And the class filter is on the same query, so a residual from an
+    // unverified premise cannot be counted as evidence.
+    expect(agg).toContain("record_class = 'CITABLE_VERIFIED'");
+    expect(agg).toContain("status = 'ACTIVE'");
   });
 
   it("retires edges whose premise no longer clears the gate", async () => {
