@@ -133,21 +133,33 @@ BEGIN
                                'DERIVED_MARKET_SYNTHESIS',
                                'REJECTED_CORRUPT'));
   END IF;
-  IF NOT EXISTS (
+  -- The constraint must be DROPPED and re-added, not merely added when
+  -- absent. The guard above only creates it the first time, so widening
+  -- the allowed set -- which the corpus needs (it stamps
+  -- MSVH_S0_CORRUPT_MARKDOWN_ROW on the 190 records whose "quote" was a
+  -- database row) -- would silently not happen on a table that already
+  -- has the old, narrower constraint.
+  --
+  -- The drop is safe: the constraint is re-added immediately with the
+  -- full set, and the whole block runs in one transaction, so there is
+  -- no window in which the column is unconstrained.
+  IF EXISTS (
     SELECT 1 FROM pg_constraint
      WHERE conrelid = 'lit.premise'::regclass
        AND contype = 'c'
        AND pg_get_constraintdef(oid) ILIKE '%verification_tier%'
   ) THEN
-    ALTER TABLE lit.premise
-      ADD CONSTRAINT premise_verification_tier_chk
-      CHECK (verification_tier IS NULL OR
-             verification_tier IN ('MSVH_S0_UNCITED',
-                                   'MSVH_S0_DERIVED_TABLE',
-                                   'MSVH_S1_EXACT',
-                                   'MSVH_S2_NORMALIZED',
-                                   'MSVH_S3_LEVENSHTEIN'));
+    ALTER TABLE lit.premise DROP CONSTRAINT premise_verification_tier_chk;
   END IF;
+  ALTER TABLE lit.premise
+    ADD CONSTRAINT premise_verification_tier_chk
+    CHECK (verification_tier IS NULL OR
+           verification_tier IN ('MSVH_S0_UNCITED',
+                                 'MSVH_S0_CORRUPT_MARKDOWN_ROW',
+                                 'MSVH_S0_DERIVED_TABLE',
+                                 'MSVH_S1_EXACT',
+                                 'MSVH_S2_NORMALIZED',
+                                 'MSVH_S3_LEVENSHTEIN'));
 END
 $$;
 
