@@ -119,6 +119,8 @@ ALTER TABLE lit.premise
 -- COLUMN IF NOT EXISTS does not re-run the constraint on a table that
 -- already has the column.
 DO $$
+DECLARE
+  r record;
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
@@ -143,14 +145,41 @@ BEGIN
   -- The drop is safe: the constraint is re-added immediately with the
   -- full set, and the whole block runs in one transaction, so there is
   -- no window in which the column is unconstrained.
-  IF EXISTS (
-    SELECT 1 FROM pg_constraint
-     WHERE conrelid = 'lit.premise'::regclass
-       AND contype = 'c'
-       AND pg_get_constraintdef(oid) ILIKE '%verification_tier%'
-  ) THEN
-    ALTER TABLE lit.premise DROP CONSTRAINT premise_verification_tier_chk;
-  END IF;
+  -- THE GUARD MUST MATCH THE DROP.
+  --
+  -- This block used to guard the DROP with a check for a constraint
+  -- whose DEFINITION mentions 'verification_tier', and then drop a
+  -- constraint by the NAME premise_verification_tier_chk. Those are
+  -- two different things, and on a FRESH schema they disagree: the
+  -- table is created with an inline (unnamed) CHECK, so the
+  -- definition-based guard is TRUE and the named DROP then fails
+  -- with "constraint premise_verification_tier_chk of relation
+  -- premise does not exist".
+  --
+  -- That is not a cosmetic bug: it means the schema CANNOT BE
+  -- APPLIED TO A CLEAN DATABASE AT ALL. The dev branch worked only
+  -- because it already had the named constraint from an earlier
+  -- deploy. A production deploy -- an empty branch, where the lit
+  -- schema does not exist yet -- fails on this line, and it failed
+  -- on exactly that line the first time it was run.
+  --
+  -- So the guard now drops BY NAME, and also handles the inline
+  -- (unnamed) constraint that a fresh CREATE TABLE produces. Dropping
+  -- the unnamed one is what actually frees the column to be
+  -- re-constrained.
+  --
+  -- The whole block is in one transaction, so there is never a window
+  -- in which the column is unconstrained.
+  FOR r IN
+    SELECT c.conname
+      FROM pg_constraint c
+     WHERE c.conrelid = 'lit.premise'::regclass
+       AND c.contype = 'c'
+       AND (c.conname = 'premise_verification_tier_chk'
+            OR pg_get_constraintdef(c.oid) ILIKE '%verification_tier%')
+  LOOP
+    EXECUTE format('ALTER TABLE lit.premise DROP CONSTRAINT %I', r.conname);
+  END LOOP;
   ALTER TABLE lit.premise
     ADD CONSTRAINT premise_verification_tier_chk
     CHECK (verification_tier IS NULL OR
@@ -216,21 +245,6 @@ CREATE INDEX IF NOT EXISTS corpus_item_hnsw_idx
 
 CREATE INDEX IF NOT EXISTS corpus_item_hits_idx ON lit.corpus_item (hit_count DESC);
 
--- The evidence trail for "surfaced repeatedly". hit_count alone is not enough:
--- one event returning the same item twenty times is one confirmation, not
--- twenty. distinct_events is the honest measure.
-CREATE TABLE IF NOT EXISTS lit.discovery_hit (
-  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  corpus_id           uuid NOT NULL REFERENCES lit.corpus_item(id) ON DELETE CASCADE,
-  retrieval_event_id  uuid NOT NULL REFERENCES lit.retrieval_event(id) ON DELETE CASCADE,
-  similarity          double precision NOT NULL,
-  hit_at              timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (corpus_id, retrieval_event_id)
-);
-
-CREATE INDEX IF NOT EXISTS discovery_hit_corpus_idx  ON lit.discovery_hit (corpus_id);
-CREATE INDEX IF NOT EXISTS discovery_hit_event_idx   ON lit.discovery_hit (retrieval_event_id);
-
 -- ---------------------------------------------------------------------
 -- 4. Retrieval events — the measurable spine
 --    One row per signal that triggered a literature lookup.
@@ -253,6 +267,33 @@ CREATE TABLE IF NOT EXISTS lit.retrieval_event (
 
 CREATE INDEX IF NOT EXISTS retrieval_event_time_idx ON lit.retrieval_event (triggered_at DESC);
 CREATE INDEX IF NOT EXISTS retrieval_event_signal_idx ON lit.retrieval_event (signal_key);
+
+-- ---------------------------------------------------------------------
+-- 3b. Discovery hits -- MOVED AFTER lit.retrieval_event.
+--
+-- This table has a FOREIGN KEY to lit.retrieval_event, so it must be
+-- created AFTER it. It used to be declared BEFORE it, which is fine on
+-- a branch that already has the table and FAILS on a fresh one: the
+-- FK target does not exist yet. The dev branch worked only because it
+-- already had lit.retrieval_event from an earlier deploy; a production
+-- deploy -- an empty branch -- failed on exactly this line.
+--
+-- The order of a schema file is part of the schema.
+-- The evidence trail for "surfaced repeatedly". hit_count alone is not enough:
+-- one event returning the same item twenty times is one confirmation, not
+-- twenty. distinct_events is the honest measure.
+CREATE TABLE IF NOT EXISTS lit.discovery_hit (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  corpus_id           uuid NOT NULL REFERENCES lit.corpus_item(id) ON DELETE CASCADE,
+  retrieval_event_id  uuid NOT NULL REFERENCES lit.retrieval_event(id) ON DELETE CASCADE,
+  similarity          double precision NOT NULL,
+  hit_at              timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (corpus_id, retrieval_event_id)
+);
+
+CREATE INDEX IF NOT EXISTS discovery_hit_corpus_idx  ON lit.discovery_hit (corpus_id);
+CREATE INDEX IF NOT EXISTS discovery_hit_event_idx   ON lit.discovery_hit (retrieval_event_id);
+
 
 -- ---------------------------------------------------------------------
 -- 5. Activations — premise x event. The ONLY route into the reasoning path.
@@ -391,16 +432,45 @@ RETURNS TABLE (
   evidence_quote  text,
   similarity      double precision
 )
-LANGUAGE sql
+LANGUAGE plpgsql
 STABLE
 AS $$
+BEGIN
+  -- THE HNSW ef_search, AND WHY IT IS SET HERE.
+  --
+  -- MEASURED on the production copy of this schema (1,099 class-A
+  -- premises, 1,024-dim vectors), probing with each premise's own
+  -- embedding and asking for its own key back:
+  --
+  --   ef_search = 40 (the pgvector DEFAULT)   Recall@20 = 92.000%
+  --   ef_search = 100                          Recall@20 = 100.000%
+  --
+  -- The 8% shortfall is the HNSW APPROXIMATION, not the index and
+  -- not the class filter: the exact nearest-neighbour path returns
+  -- the same 92% at k=20 AND at k=50, which is the signature of a
+  -- truncated candidate list rather than a wrong answer.
+  --
+  -- So the candidate list was being truncated at 40, and the premise
+  -- being looked for was not in it. Raising ef_search fixes it
+  -- exactly, which is the proof that the graph was fine.
+  --
+  -- The plan's "ef_search = 64" is ALSO below the threshold: it
+  -- would still miss. 100 is the value that reaches 100%, and it is
+  -- set here so EVERY caller gets it -- a caller that forgets to set
+  -- it gets 92% and does not know why.
+  --
+  -- set_config with is_local=true scopes the setting to this
+  -- function's execution, so it does not leak into the caller's
+  -- session.
+  PERFORM set_config('hnsw.ef_search', '100', true);
+  RETURN QUERY
   SELECT
     p.id, p.premise_key, p.title, p.principle, p.domain, p.claim_type,
     p.numeric_value, p.numeric_unit, p.influence_direction,
     p.how_it_influences, p.applicable_contexts, p.pillar_tags, p.evidence_quote,
     (1 - (v.embedding <=> q))::double precision AS similarity
   FROM lit.premise_vector v
-  JOIN lit.premise p ON p.id = v.premise_id
+    JOIN lit.premise p ON p.id = v.premise_id
   WHERE p.structure_state = 'structured'
     -- CLASS-A EXCLUSIVITY (2026-10-20). This is the spec's
     -- `WHERE record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE'` on
@@ -428,6 +498,7 @@ AS $$
     AND (1 - (v.embedding <=> q))::double precision >= min_similarity
   ORDER BY v.embedding <=> q
   LIMIT GREATEST(k, 1);
+END;
 $$;
 
 -- =====================================================================

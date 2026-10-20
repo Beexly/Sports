@@ -1,0 +1,257 @@
+=== STEP 1: THE 5f54ee254..f7ebbe833 DIFF ===
+
+$ git log 5f54ee254..f7ebbe833 --stat
+
+commit f7ebbe8338922640fa8cc74677fcabc1deba15a1
+Author: Garrett Baxley <garrett@beexly.com>
+Date:   Tue Oct 20 11:35:42 2026 -0500
+
+    reconciliation: the L1-L4 gate, end to end
+    
+    The record of what the d6af20a6c audit found, what was done about it,
+    and what is still open. Every number was measured by running something,
+    and the script that produces it is named.
+    
+    Also corrects the paper-corpus path: an earlier commit said repo-root
+    arxiv-deep/ (1,532 files), which came from a git ls-tree grep matching
+    a SUBSTRING. The real location is
+    docs/arxiv-program/research/2026-09-21/arxiv-deep (1,511 files); the
+    repo-root copy has 12 and docs/research/2026-09-21/arxiv-deep has 1.
+    The spec's COUNT was right and its PATH was off by a reorg.
+
+ reconciliation/l1_l4_end_to_end.md | 331 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 331 insertions(+)
+
+commit 0f9a00998d0c512074586ab605448c7517ac7add
+Author: Garrett Baxley <garrett@beexly.com>
+Date:   Tue Oct 20 11:34:35 2026 -0500
+
+    prove Gate G3 blocks the real intervention path, not just the gate module
+    
+    The gate module's own tests prove `evaluateCausalClaim` refuses. That
+    was not enough. The question is whether the refusal REACHES the engine's
+    causal path: a gate that is correct in isolation and never consulted is
+    the same defect as the L1-L4 admission gate that reported 67.4%
+    admission by checking shape.
+    
+    So the new test drives `runInterventionTest` -- the function the causal
+    promotion sweep actually calls -- with a mock DB whose residual rows are
+    strongly separated, so the test would reach a statistical PASS if the
+    gate did not stop it first. Each test asserts on the reason string as
+    well as the verdict, so a refusal for the WRONG reason cannot pass.
+    
+      4 tests:
+        refuses a causal PASS when the effect is not identified
+        allows a causal verdict when the effect IS identified
+        refuses when NO graph is supplied
+        still refuses a non-promoted edge before the gate is consulted
+    
+    The first test's first run FAILED, and the failure was in my fixture,
+    not the code: the control rows' activation_score was exactly equal to
+    doValue, and the split test is `activation_score >= doValue`, so the
+    control arm came back empty and the function stopped for the wrong
+    reason. A test that passes because the code bailed out early proves
+    nothing; the fixture now puts the control rows strictly below doValue.
+    
+    THE SWEEP'S DEFAULT
+    
+    `runCausalPromotionSweep` gained `graphForEdge` (the opt-in path: a
+    caller with a PAG passes it) and `useEdgeAssertedGraph` (the edge's own
+    asserted graph -- a directed cause->effect edge with no claimed latent
+    confounder). The latter is OFF by default, because it is a weaker claim
+    than a PAG, and leaving it on would report CAUSAL for every edge
+    without anybody having checked the confounding structure.
+    
+    `InterventionOutcome` now carries `g3_conclusion` and
+    `g3_refusal_code`, and the sweep reports `causally_identified` and
+    `association_only` counts -- so the report distinguishes the two rather
+    than counting everything that did not error as a success.
+    
+    VERIFIED
+    
+      literature + causal suites    196/196
+      tsc                           66 errors, down from 74 at baseline,
+                                     zero new error signatures
+
+ .../__tests__/gate-g3-integration.test.ts          | 136 +++++++++++++++++++++
+ .../src/literature/literature-causal.ts            |  25 +++-
+ 2 files changed, 159 insertions(+), 2 deletions(-)
+
+commit 349c244665096d4fdedb911c2b29e69a9b8cc75e
+Author: Garrett Baxley <garrett@beexly.com>
+Date:   Tue Oct 20 11:30:43 2026 -0500
+
+    Gate G3: an unidentified effect may not be reported as a causal one
+    
+    The engine's causal path ends in `runInterventionTest`, which compares
+    the mean residual of STRONGLY ACTIVATED games against the mean residual
+    of WEAKLY ACTIVATED ones. That is an ASSOCIATION between activation
+    strength and residual. It is not an intervention: nothing was
+    intervened on, and a game with a strong activation may differ from a
+    game with a weak one in every way that has nothing to do with the
+    premise.
+    
+    The spec requires that a shock evaluation pass
+    `runShpitserPearlIDC(ySet, xSet, zSet, gameADMG)` with ok === true
+    before a causal trace can be minted, and that the spec's own Case 1 --
+    a confounded bow-arc -- be REFUSED with
+    "REFUSED_G3_NON_IDENTIFIABLE_HEDGE" and the conclusion
+    "ASSOCIATION_ONLY".
+    
+    WHAT LANDED
+    
+      causal-claim-gate.ts: evaluateCausalClaim() runs the ID/IDC algorithm
+      on the graph the estimate was computed in and decides whether the
+      effect is publishable as causal. The graph is REQUIRED: a caller that
+      omits it gets a refusal, not an assumption. Identifiability is a
+      property of a graph, so checking it against a graph nobody estimated
+      in proves nothing, and defaulting to an acyclic graph would make
+      every claim identifiable and the gate worthless.
+    
+      runInterventionTest() now consults the gate before it can return a
+      causal verdict. An unidentified effect returns INCONCLUSIVE with the
+      refusal code and the hedge's enabling edges -- the measurements that
+      would make the question answerable.
+    
+      runCausalPromotionSweep() threads the conclusion through, and reports
+      causally_identified and association_only counts.
+    
+      13 tests, each naming the failure it prevents.
+    
+    THE do-calculus MODULE, INDEPENDENTLY VERIFIED
+    
+    The module was built by a subagent, so its claims were re-derived here
+    rather than accepted. Two verifiers, because either alone is weak:
+    
+      _verify_do_calculus_math.mjs -- STRUCTURAL
+        the module's estimand tree is compared node for node against the
+        equation the SPEC publishes by hand
+        every query on every 4-node DAG is identified (18,144 queries, 0
+          false hedges)
+        the verdict is invariant under vertex re-ordering (600 comparisons)
+        IDC keeps the CONDITIONAL_ class; the bow-arc refuses
+    
+      _verify_estimand_numerically.mjs -- NUMERIC
+        the module's factor tree is evaluated on a linear-Gaussian SCM
+        fitted from OBSERVATIONAL data only, and the recovered total effect
+        is compared with the truth (which is confirmed by intervention
+        simulation, not by theory):
+          front-door   5.9710  (truth 6.0)
+          4-node       4.9942  (truth 5.0)
+    
+    Both verifiers' first runs FAILED, and each failure was a defect in my
+    harness rather than in the module -- which is the point of running them
+    rather than reading them. Three harness bugs were found and fixed: a
+    Gauss-Jordan solver that skipped the pivot-row normalisation (so a 1x1
+    system returned 1 instead of the coefficient), an LCG whose divisor
+    could exceed 1 (so Math.log of a value > 1 poisoned every downstream
+    mean with NaN), and a Gauss-Jordan elimination that divided the wrong
+    row.
+    
+    The numeric check also settled a question about the SPEC itself. The
+    standard front-door formula is often written with P(x'|m) in the inner
+    sum; the spec writes P(x'). MEASURED on this SCM: the P(x'|m) variant
+    gives 8.27, the spec's P(x') variant gives 5.97, and the truth is 6.0.
+    So the spec's published equation is the correct one, and the module --
+    which matches it -- is right.
+    
+    reanchor-mind-corpus.mjs: 0 records re-anchored, 397 quarantined.
+    
+    The honest finding is that the builder's links were already correct:
+    all 3,735 records it called CITABLE_VERIFIED have their quote in the
+    document they name, verified by direct read of the file. The 397
+    quarantined are records whose quote is in NO document -- 26 of them the
+    FOUNDATIONAL_PAPERS citing the phantom
+    FOUNDATIONAL_NFL_MIND_COMPENDIUM, and 371 the ORIGINAL corruption: a
+    thermodynamic-economics abstract, an ophthalmology scan, a traffic
+    engineering paper, each filed under an NFL record. The remaining gap is
+    L2/L4 semantics, not mispointed links.
+    
+    THE PAPER CORPUS PATH, CORRECTED
+    
+    The previous commit said the corpus is at repo-root arxiv-deep/ (1,532
+    files). That was wrong: an earlier `git ls-tree | grep` matched a
+    SUBSTRING, and the real location is
+    
+      docs/arxiv-program/research/2026-09-21/arxiv-deep   1,511 .md files
+    
+    with repo-root arxiv-deep/ holding 12 and
+    docs/research/2026-09-21/arxiv-deep/ holding 1 (the spec's number, and
+    the spec's path, both off by a reorg). The re-anchoring pass indexed
+    the correct 1,511.
+    
+    VERIFIED
+    
+      literature + causal suites              192/192
+      do-calculus structural verifier         all checks pass
+      do-calculus numeric verifier            all checks pass
+      tsc                                     66 errors, down from 74 at
+                                              baseline, zero new signatures
+
+ .../data/MIND_CORPUS_3000.reanchored.jsonl         | 5303 ++++++++++++++++++++
+ .../src/causal/__tests__/causal-claim-gate.test.ts |  143 +
+ .../src/causal/causal-claim-gate.ts                |  274 +
+ .../src/literature/literature-causal.ts            |   45 +-
+ .../src/literature/literature-retrieval.ts         |   76 +-
+ reconciliation/_verify_do_calculus_math.mjs        |  211 +
+ reconciliation/_verify_estimand_numerically.mjs    |  336 ++
+ 7 files changed, 6380 insertions(+), 8 deletions(-)
+
+=== WHY THE PLAN'S 968 BASELINE IS STALE ===
+
+968 is the PRE-A087 count. The corpus was regenerated six minutes
+after the A087 fix landed, and the admitted count rose to 1,098.
+
+  5f54ee254  (pre-A087)   CITABLE_VERIFIED 968
+  3b80b5f27  (A087 lands)  CITABLE_VERIFIED 1019  + 269 REJECTED_CORRUPT
+  60bc3d5f8  (regenerated)  CITABLE_VERIFIED 1098  + 190 REJECTED_CORRUPT
+  now        (re-run)      status ACTIVE 1098
+
+The CURRENT corpus, re-measured:
+
+  total 5303
+     2674 LINK_VERIFIED_SEMANTIC_FAIL
+     1134 DERIVED_TABLE
+     1098 ACTIVE
+      397 UNCITED_NO_SOURCE
+
+  admitted (ACTIVE): 1098 / 5303 = 20.71%
+
+
+=== WHAT PRODUCTION ACTUALLY HAS (READ-ONLY PROBE) ===
+
+The plan's Step 6 says to deploy the literature schema to the Neon
+production 'main' branch. Before writing a migration to a production
+database, the state was MEASURED (reconciliation/_probe_production_state.mjs
+issues no DDL and no DML):
+
+  PRODUCTION (project summer-brook-99380762, branch main)
+    extensions        pg_cron, pg_session_jwt, plpgsql
+    pgvector          ABSENT
+    the 'lit' schema  ABSENT
+    lit tables        none
+    lit views         none
+
+  DEV BRANCH (dev-lit-vectors-2026-10) -- for contrast
+    extensions        pg_cron, pg_session_jwt, plpgsql, vector 0.8.0
+    the 'lit' schema  PRESENT, 10 tables
+    lit.premise       5,745 rows, 1,099 CITABLE_VERIFIED / ACTIVE (19.1%)
+    HNSW indexes      corpus_item_hnsw_idx, premise_vector_hnsw_idx
+                      (m=16, ef_construction=64)
+    lit views         none
+
+So the production gap is REAL and it is TWO things, not one:
+  1. pgvector is not installed on main -- and HNSW needs it.
+  2. the lit schema does not exist on main at all.
+
+And the plan's Step 6 asks for a DIFFERENT index shape than the one
+that is actually deployed: the plan says (m = 24, ef_construction =
+200) on a table 'literature_premises' with a 'status' column and a
+968-row partial index. The deployed one is (m = 16, ef_construction =
+64) on lit.premise_vector, joined to lit.premise. Those are two
+different schemas, and writing the plan's would mean MIGRATING the
+deployed one, not just deploying it.
+
+This is a deployment decision with live-data consequences, and it is
+NOT made here. What is done here is the measurement that the decision
+needs.
