@@ -700,3 +700,132 @@ describe("GATE G3: the proximal route on the refusal path", () => {
     expect(v.proximal_attempt).toBeNull();
   });
 });
+
+// ======================================================================
+// THE ITCR GATE ON THE PUBLISH PATH.
+//
+// The spec's ITCR applies split conformal prediction to the
+// intermediate deduction DAG, so a trace can be HALTED and rethought
+// before it reaches the publish gate. These tests are the LAST MILE
+// for that: the gate is implemented and tested in its own suite, and
+// this checks that the claim gate actually CALLS it.
+//
+// A gate that is implemented, tested, and never called is the same
+// defect one level up.
+// ======================================================================
+describe("GATE G3: the ITCR trace gate on the publish path", () => {
+  // A trace whose premises are strong. The nonconformity is low.
+  const STRONG_TRACE = {
+    nodes: [
+      { id: "p1", layer: "L2" as const, parents: [], validity: 0.95 },
+      { id: "p2", layer: "L3" as const, parents: ["p1"], validity: 0.95 },
+      { id: "c", layer: "L5" as const, parents: ["p2"], validity: 0.95 },
+    ],
+    conclusion_node_id: "c",
+  };
+
+  // A trace whose premise is 5% reliable. The nonconformity is high.
+  const WEAK_TRACE = {
+    nodes: [
+      { id: "p1", layer: "L2" as const, parents: [], validity: 0.05 },
+      { id: "p2", layer: "L3" as const, parents: ["p1"], validity: 0.05 },
+      { id: "c", layer: "L5" as const, parents: ["p2"], validity: 0.05 },
+    ],
+    conclusion_node_id: "c",
+  };
+
+  // 40 historical scores in [0, 1]. The conformal threshold is the
+  // rank-th smallest, so a trace below it continues.
+  const CAL = Array.from({ length: 40 }, (_, i) => i / 40);
+
+  it("publishes normally when NO trace is supplied (the guard is optional)", () => {
+    const v = evaluateCausalClaim({
+      y: ["Y"], x: ["X"], graph: FRONT_DOOR, positivity: POSITIVITY,
+    });
+    expect(v.publishable).toBe(true);
+    expect(v.conclusion).toBe("CAUSAL");
+    // No trace, so no score. A caller can tell "not attempted" from
+    // "attempted and allowed".
+    expect(v.itcr_trace_score).toBeNull();
+  });
+
+  it("publishes normally when the trace PASSES its conformal gate", () => {
+    const v = evaluateCausalClaim({
+      y: ["Y"], x: ["X"], graph: FRONT_DOOR, positivity: POSITIVITY,
+      itcrTrace: STRONG_TRACE,
+      itcrCalibrationScores: CAL,
+    });
+    expect(v.publishable).toBe(true);
+    // And the score is REPORTED, so a reader can tell the trace was
+    // checked rather than ignored.
+    expect(v.itcr_trace_score).not.toBeNull();
+    expect(v.itcr_trace_score!.status).toBe("ALLOW");
+  });
+
+  it("HALTS the claim when the trace FAILS its conformal gate", () => {
+    // The claim is perfectly identified -- the front-door graph. The
+    // ONLY thing that stops it is the trace, which is the point: the
+    // reasoning chain is weak, so the conclusion does not go out
+    // however well-identified the effect is.
+    const v = evaluateCausalClaim({
+      y: ["Y"], x: ["X"], graph: FRONT_DOOR, positivity: POSITIVITY,
+      itcrTrace: WEAK_TRACE,
+      itcrCalibrationScores: CAL,
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.refusal_code).toBe(G3_REFUSAL.itcrTraceHalted);
+    expect(v.conclusion).toBe("ASSOCIATION_ONLY");
+    // The score is reported with the numbers that caused the halt.
+    expect(v.itcr_trace_score).not.toBeNull();
+    expect(v.itcr_trace_score!.status).toBe("HALT");
+    // And the reason names the gate.
+    expect(v.reason).toContain("conformal gate");
+  });
+
+  it("refuses when a trace is supplied with NO calibration set", () => {
+    // A conformal threshold computed from nothing is not a threshold.
+    // The gate cannot say ALLOW (nothing was compared) and cannot
+    // say HALT (a HALT needs a comparison to have failed), so it
+    // refuses -- and the claim does not go out.
+    const v = evaluateCausalClaim({
+      y: ["Y"], x: ["X"], graph: FRONT_DOOR, positivity: POSITIVITY,
+      itcrTrace: STRONG_TRACE,
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.refusal_code).toBe(G3_REFUSAL.itcrTraceHalted);
+    expect(v.reason).toContain("could not be certified");
+  });
+
+  it("the score is reported on the HEDGE-REFUSAL path too, not only on the ITCR path", () => {
+    // The hedge-refusal path returns for a reason that is NOT the
+    // trace -- the effect is unidentified. But the trace WAS scored
+    // (it passed), and a reader needs to know that: "the trace was
+    // checked and it passed, but the effect is unidentified" is a
+    // different finding from "the trace was never checked".
+    const v = evaluateCausalClaim({
+      y: ["Y"], x: ["X"], graph: BOW_ARC, positivity: POSITIVITY,
+      itcrTrace: STRONG_TRACE,
+      itcrCalibrationScores: CAL,
+    });
+    // Refused for the hedge, not for the trace.
+    expect(v.publishable).toBe(false);
+    expect(v.refusal_code).toBe(G3_REFUSAL.nonIdentifiableHedge);
+    // But the trace score IS reported, and it says ALLOW.
+    expect(v.itcr_trace_score).not.toBeNull();
+    expect(v.itcr_trace_score!.status).toBe("ALLOW");
+  });
+
+  it("a MALFORMED trace is reported, not thrown out of the gate", () => {
+    // The gate must ALWAYS return a verdict.
+    const v = evaluateCausalClaim({
+      y: ["Y"], x: ["X"], graph: FRONT_DOOR, positivity: POSITIVITY,
+      itcrTrace: {
+        nodes: [{ id: "c", layer: "L5", parents: ["MISSING"], validity: 0.9 }],
+        conclusion_node_id: "c",
+      } as never,
+      itcrCalibrationScores: CAL,
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.reason).toContain("could not be certified");
+  });
+});

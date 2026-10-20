@@ -186,6 +186,17 @@ export const ITCR_REFUSAL = {
    * probabilities the calibrator does not produce.
    */
   nodeValidityOutsideBand: "REFUSED_ITCR_NODE_VALIDITY_OUTSIDE_BAND",
+  /**
+   * No calibration set was supplied at all.
+   *
+   * Distinct from "the calibration set is too SMALL": a small set is a
+   * set, and the floor is a policy about how many are needed. No set
+   * at all means there is no threshold to compare against, and a
+   * conformal guarantee cannot be claimed from nothing. The gate
+   * cannot say ALLOW (nothing was compared) and cannot say HALT (a
+   * HALT needs a comparison to have failed), so it refuses.
+   */
+  noCalibrationSet: "REFUSED_ITCR_NO_CALIBRATION_SET",
 } as const;
 
 export type ItcrRefusalCode = (typeof ITCR_REFUSAL)[keyof typeof ITCR_REFUSAL];

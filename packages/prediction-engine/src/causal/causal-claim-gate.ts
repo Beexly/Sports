@@ -43,6 +43,12 @@ import {
   type ProximalBridgeResult,
 } from "./proximal-bridge-id.js";
 import {
+  evaluateItcrTrace,
+  ITCR_REFUSAL,
+  type ItcrTrace,
+  type ItcrGateResult,
+} from "../calibration/itcr-orca-gate.js";
+import {
   planHedgeBreakage,
   MIN_EXPANSION_E_VALUE,
   type MediatorCandidate,
@@ -76,6 +82,15 @@ export const G3_REFUSAL = {
    * exists.
    */
   positivityViolation: "REFUSED_G3_POSITIVITY_VIOLATION",
+  /**
+   * The reasoning trace did not survive its conformal gate.
+   *
+   * The spec's ITCR applies split conformal prediction to the
+   * intermediate deduction DAG, so a weak trace is HALTED before
+   * publication. A causal claim built on a trace that fails its own
+   * calibration is not a claim the engine is entitled to make.
+   */
+  itcrTraceHalted: "REFUSED_G3_ITCR_TRACE_HALTED",
 } as const;
 
 export type G3RefusalCode = (typeof G3_REFUSAL)[keyof typeof G3_REFUSAL];
@@ -162,6 +177,34 @@ export interface CausalClaimQuery {
    */
   readonly proximalTreatmentLevel?: number;
   readonly proximalControlLevel?: number;
+
+  /**
+   * The ITCR trace: the reasoning chain the claim rests on.
+   *
+   * THIS IS THE SPEC'S L1-L5 TRACE, SCORED BEFORE PUBLICATION.
+   *
+   * The ITCR gate applies split conformal prediction to the
+   * intermediate deduction DAG rather than to the scalar output at
+   * the end of the pipeline, so the trace can be HALTED and rethought
+   * before it reaches the publish gate. A claim whose premises are
+   * jointly weak is exactly what that is for.
+   *
+   * It is OPTIONAL. When the caller supplies no trace, the claim is
+   * published exactly as before -- the trace is a guard, not a
+   * licence. When the caller DOES supply one, the trace is scored,
+   * and a trace that fails the conformal threshold HALTS the claim:
+   * the claim is refused with the ITCR refusal, because a causal
+   * claim built on a trace that does not survive its own calibration
+   * is not a claim the engine is entitled to make.
+   *
+   * The calibration scores are the historical nonconformity scores.
+   * They are REQUIRED alongside the trace: a conformal threshold
+   * computed from nothing is not a threshold.
+   */
+  readonly itcrTrace?: ItcrTrace | null;
+
+  /** The historical nonconformity scores the conformal threshold is computed from. */
+  readonly itcrCalibrationScores?: readonly number[] | null;
   /**
    * The POSITIVITY of the intervention.
    *
@@ -191,6 +234,25 @@ export interface CausalClaimQuery {
    */
   readonly minPositivity?: number;
 }
+
+/**
+ * What the ITCR trace gate produced.
+ */
+export type ItcrTraceReport =
+  | {
+      readonly status: "ALLOW";
+      readonly alpha_ITCR: number;
+      readonly tau_conformal: number;
+      readonly offender_node_id: string;
+      readonly reason: string;
+    }
+  | {
+      readonly status: "HALT";
+      readonly alpha_ITCR: number;
+      readonly tau_conformal: number;
+      readonly offender_node_id: string;
+      readonly reason: string;
+    };
 
 /**
  * What the PROXIMAL route produced on the not-identified path.
@@ -275,6 +337,18 @@ export interface CausalClaimVerdict {
    * refusal that omits it is hiding a measured result.
    */
   readonly proximal_attempt: ProximalAttemptReport | null;
+
+  /**
+   * The ITCR trace score, when a trace was supplied.
+   *
+   * Null when the caller supplied no trace, or when the trace HALTED
+   * and the claim was refused -- in which case the REFUSAL is the
+   * report, and it says why.
+   *
+   * When the trace was scored and ALLOWED, this says so, so a reader
+   * can tell that the trace was checked rather than ignored.
+   */
+  readonly itcr_trace_score: ItcrTraceReport | null;
   /**
    * The expansion ATTEMPTS, so a caller that learns the E-value
    * LATER can finish the activation decision.
@@ -298,6 +372,63 @@ export interface CausalClaimVerdict {
  * A claim is publishable when the effect it names is identified in the
  * graph it was estimated in. Everything else is ASSOCIATION_ONLY.
  */
+/**
+ * RUN THE ITCR GATE, if the caller supplied a trace to score.
+ *
+ * Returns null when there is no trace -- a caller with no reasoning
+ * trace gets the claim exactly as before.
+ *
+ * A THROWN exception is caught and turned into a refusal, for the same
+ * reason the proximal one is: the gate must always return a verdict.
+ * A malformed trace is the caller's problem, and a crash out of the
+ * gate is worse than a verdict that says the trace could not be
+ * scored.
+ */
+function runItcrGate(query: CausalClaimQuery): ItcrGateResult | null {
+  const trace = query.itcrTrace;
+  if (trace === null || trace === undefined) return null;
+  const calibration = query.itcrCalibrationScores;
+  if (calibration === null || calibration === undefined) {
+    // A trace with no calibration set has no threshold. There is no
+    // score to compare against, so the gate cannot say ALLOW -- and
+    // it cannot say HALT either, because a HALT needs a comparison.
+    // It refuses, which is the honest answer.
+    return {
+      status: "REFUSED",
+      conformal_Stop_triggered: false,
+      refusal_code: ITCR_REFUSAL.noCalibrationSet,
+      alpha_ITCR: null,
+      tau_conformal: null,
+      shafer_vovk_rank: null,
+      calibration_set_size: 0,
+      miscoverage: 0,
+      unbounded_prediction_set: false,
+      reason:
+        "a reasoning trace was supplied with no calibration scores, so no conformal " +
+        "threshold exists and the trace cannot be scored",
+    };
+  }
+
+  try {
+    return evaluateItcrTrace({ trace, calibration_scores: calibration });
+  } catch (error) {
+    return {
+      status: "REFUSED",
+      conformal_Stop_triggered: false,
+      refusal_code: ITCR_REFUSAL.nodeValidityOutsideBand,
+      alpha_ITCR: null,
+      tau_conformal: null,
+      shafer_vovk_rank: null,
+      calibration_set_size: calibration.length,
+      miscoverage: 0,
+      unbounded_prediction_set: false,
+      reason: `the ITCR gate threw on the supplied trace: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    };
+  }
+}
+
 /**
  * RUN THE PROXIMAL SOLVER, if the caller supplied the data for it.
  *
@@ -376,6 +507,68 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
         `the outcome ${n} is also intervened upon; P(${n} | do(${n})) is not a causal question`,
       );
     }
+  }
+
+  // THE ITCR GATE, BEFORE ANYTHING IS PUBLISHED.
+  //
+  // The spec's ITCR applies split conformal prediction to the
+  // intermediate deduction DAG, so a trace can be HALTED and rethought
+  // before it reaches the publish gate. A causal claim whose premises
+  // are jointly weak is exactly what that is for.
+  //
+  // It runs FIRST, before the graph is even consulted, because a trace
+  // that halts makes the identification question moot: there is no
+  // point deciding whether the effect is identified when the
+  // reasoning that got us there does not survive its own calibration.
+  //
+  // The trace is OPTIONAL. Absent a trace, the claim proceeds exactly
+  // as before. Present a trace, the trace is scored -- and a HALT
+  // refuses the claim, because a causal claim built on a trace that
+  // does not survive its own calibration is not a claim the engine is
+  // entitled to make.
+  const itcrResult = runItcrGate(query);
+  // The score, for the verdict. Computed ONCE here so every return
+  // site below can report the same numbers the gate decided on.
+  const itcrScore: ItcrTraceReport | null =
+    itcrResult === null
+      ? null
+      : itcrResult.status === "ALLOW"
+        ? {
+            status: "ALLOW",
+            alpha_ITCR: itcrResult.alpha_ITCR ?? 0,
+            tau_conformal: itcrResult.tau_conformal ?? 0,
+            offender_node_id: itcrResult.offender_node_id,
+            reason: itcrResult.reason,
+          }
+        : itcrResult.status === "HALT"
+          ? {
+              status: "HALT",
+              alpha_ITCR: itcrResult.alpha_ITCR ?? 0,
+              tau_conformal: itcrResult.tau_conformal ?? 0,
+              offender_node_id: itcrResult.offender_node_id,
+              reason: itcrResult.reason,
+            }
+          : null;
+  if (itcrResult !== null && itcrResult.status !== "ALLOW") {
+    // It HALTED, or it could not certify. Either way the claim does
+    // not go out, and the reason says which.
+    //
+    // The refusal carries the score, so a reader can see the numbers
+    // that caused it. The REFUSED case has no alpha (nothing was
+    // scored), which is why the report type distinguishes HALT from
+    // ALLOW.
+    return {
+      ...refuse(
+        G3_REFUSAL.itcrTraceHalted,
+        itcrResult.status === "HALT"
+          ? `the reasoning trace does not survive its conformal gate: its nonconformity ` +
+            `${(itcrResult.alpha_ITCR ?? 0).toFixed(4)} exceeds the threshold ` +
+            `${(itcrResult.tau_conformal ?? 0).toFixed(4)} (the weakest node is ` +
+            `${itcrResult.offender_node_id}), so the claim is halted before publication`
+          : `the reasoning trace could not be certified: ${itcrResult.refusal_code}`,
+      ),
+      itcr_trace_score: itcrScore,
+    };
   }
 
   const graph = query.graph;
@@ -459,6 +652,10 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       // never needed. The field is null rather than absent, so a
       // caller can tell "not attempted" from "attempted and refused".
       proximal_attempt: null,
+      // And the trace score, if a trace was scored. A trace that was
+      // scored and ALLOWED is reported, so a reader can tell the
+      // trace was checked rather than ignored.
+      itcr_trace_score: itcrScore,
       reason: `the effect is identified as ${result.formulaClass}`,
     };
   }
@@ -515,6 +712,7 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       activating_mediators: [],
       expansion_attempts: [],
       proximal_attempt: proximalAttempt,
+      itcr_trace_score: itcrScore,
       reason:
         `the effect is not identified by the ordinary path, but it IS identified by PROXIMAL ` +
         `CAUSAL INFERENCE: the treatment-inducing and outcome-inducing proxies satisfy the ` +
@@ -607,6 +805,8 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
     // The proximal attempt, when one was made. It refused, or it
     // would have returned above.
     proximal_attempt: proximalAttempt,
+    // And the trace score, when a trace was scored.
+    itcr_trace_score: itcrScore,
     reason,
   };
 }
@@ -659,6 +859,9 @@ function refuse(code: G3RefusalCode, reason: string): CausalClaimVerdict {
     // These refusals happen BEFORE the hedge path, so no proximal
     // attempt was made.
     proximal_attempt: null,
+    // No trace score either -- these refusals happen before the ITCR
+    // gate runs.
+    itcr_trace_score: null,
     reason,
   };
 }

@@ -1343,13 +1343,55 @@ Four mutations, all caught: the attempt never made (RED 3), the
 admission ignored — i.e. the wiring is dead (RED 1), the refusal not
 reported (RED 2), the solver's gates bypassed (RED 2).
 
-**The semiparametric solver and the ITCR gate remain unwired.** The
-semiparametric solver evaluates the ratio functionals that
-`do-calculus-id.ts` produces, and `do-calculus-id.ts` emits
-`TIAN_C_FACTOR_RATIO` and `FRONT_DOOR` forms — so the solver is
-computed on paper and never used to produce a published number. The
-ITCR gate is the deeper one: the reasoning trace is built by
-`src/reasoning/`, and the gate is not called on it, so a trace whose
-premises are 5% reliable is published without ever being scored. Both
-are the same defect one level up, and both are now the obvious next
-work.
+**The ITCR gate is now wired too, and it is the one that changes what
+the engine will publish.** The claim gate scores the reasoning trace
+*before* the graph is even consulted, and a trace that fails its
+conformal gate refuses the claim.
+
+The ordering is the point. A trace that halts makes the
+identification question moot: there is no point deciding whether the
+effect is identified when the reasoning that got us there does not
+survive its own calibration. So the ITCR gate runs FIRST, and the
+claim is refused with `REFUSED_G3_ITCR_TRACE_HALTED` and the numbers
+that caused it.
+
+MEASURED: a **perfectly identified** front-door claim, with a trace
+whose premises are 5% reliable, is **refused**. The effect was
+identified; the reasoning was not good enough to say so. That is the
+distinction the spec's ITCR exists to make, and it is the one a
+scalars-only conformal gate at the end of the pipeline cannot make.
+
+The trace is **optional**. Absent a trace, the claim proceeds exactly
+as before — the trace is a guard, not a licence. Present a trace with
+no calibration set, the gate refuses (a conformal threshold computed
+from nothing is not a threshold, and the gate can neither say ALLOW
+nor say HALT). A malformed trace is *reported*, not thrown: the gate
+must always return a verdict, and a crash out of a gate is the same
+defect as a crash on an admission path.
+
+The score is reported on **every** path, including the ones that
+refused for a different reason, because "the trace was checked and it
+passed, but the effect is unidentified" is a different finding from
+"the trace was never checked".
+
+Five mutations, all caught: the gate never run (RED 5), the HALT
+ignored — i.e. the wiring is dead (RED 3), the score not reported on
+the hedge-refusal path (RED 1), the score not reported on the ALLOW
+path (RED 1), and the no-calibration REFUSED case turned into an
+ALLOW (RED 1).
+
+**The semiparametric solver remains unwired.** It evaluates the ratio
+functionals that `do-calculus-id.ts` produces, and `do-calculus-id.ts`
+emits `TIAN_C_FACTOR_RATIO` and `FRONT_DOOR` forms — so the solver is
+computed on paper and never used to produce a published number. That
+is the same defect one level up, and it is now the obvious next work.
+
+**And the remaining unwired piece is the one the spec cares most
+about.** `verifyRecord` / `verifyCorpus` — the L1–L4 four-layer gate
+itself — have **no production caller**. They run in build-time
+scripts (`build-grounded-mind-corpus.mjs`, `reanchor-mind-corpus.mjs`,
+`run-l1-l4-verification.mjs`), and the runtime path trusts the
+`record_class` those scripts stamp. So the four layers are enforced
+when the corpus is BUILT and merely *read* when it is *used*. A
+record re-classified by a later build follows the class, but no
+runtime check re-verifies it against the document on disk.
