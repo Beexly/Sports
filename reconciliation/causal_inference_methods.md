@@ -338,7 +338,7 @@ its breaking conditions — all exist, all tested, all **unwired**.
    mechanical instead of prose. This is the cheapest of all the gaps and
    needs no new estimator — the trace already carries `observed_values` and
    the adversary already checks breaking conditions against them.
-3. **A producer for every dark signal.** 23 evaluators are `DARK_NO_PIT`;
+3. **A producer for every dark signal.** 21 evaluators are `DARK_NO_PIT`;
    without producers they fail closed and never vote, and no amount of
    causal machinery changes that.
 

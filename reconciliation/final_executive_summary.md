@@ -463,6 +463,98 @@ evidence and promotion candidates, not picks.
 
 ---
 
+## 5f. Design spec reconciliation: the diagnoses are right, the build is unbuilt
+
+**A design spec was supplied and reconciled against the measured repo**
+(`reconciliation/design_spec_reconciliation.md`).
+"Causal Sports Reasoning Engine Design" — the Shpitser-Pearl ID algorithm,
+spectral-embedding HNSW, hierarchical Archimedean copulas, nine honesty
+gates, L1–L4 verification.
+
+| | |
+|---|---|
+| Module paths the spec names | **14** |
+| …that exist in the repo | **1** (`bridge/bridge-model.ts`) |
+| Spec'd build steps | 8 |
+| …already implemented | **0** |
+| Pathologies the spec diagnoses | 4 |
+| …confirmed present in the repo | **4 of 4** |
+| Spec'd honesty gates (G1–G9) | 9 |
+| …implemented | **0** |
+
+**The spec's diagnoses are correct and its remedies are unbuilt. That
+changes the next phase from discovery to construction.**
+
+**The spec's four pathologies, each confirmed:**
+
+1. **Confounded regime shift (Simpson's paradox)** — `engine-weights.ts` is a
+   fixed prior × signal table with no game-state conditioning; its `by`
+   field cites a static marginal correlation (`r=+0.186, n=272`). There is
+   **no `do()` in the live path**.
+2. **Unsigned context + decorative citation** — the spec's claim that
+   `mind-reasoning.ts` used keyword regexes over the corpus to decorate
+   pre-authored heuristics is **CONFIRMED LIVE** at
+   `mind-reasoning.ts:318-352`. Replicating the repo's own logic over all
+   5,149 records: **4,173 (81.0%) land in the single default bucket
+   `offensive_pace_sec_per_play`**, and **2,106 of 2,145 non-football
+   records SURVIVE the cross-domain filter (98.2%)** — 1,898 of them
+   filed under an NFL primitive. The spec's named example papers are
+   present: **3 glaucoma/OCT records** ("Focal Loss Analysis of
+   Peripapillary Nerve Fiber Layer Reflectance for Glaucoma Diagnosis"),
+   plus driving-behavior and continual-learning papers.
+3. **Entity-to-relation deficit** — the audit's vision layer is solid
+   (22/22 tracks, purity 1496/1496) but the *relation* layer is where
+   evidence breaks.
+4. **Static uncertainty under non-exchangeable shift** — the repo has
+   `conformal/levene-welch.ts` and the `calibration-contract.ts` gate, but
+   **no `conformal-copula-kelly.ts`** and **no `settlement-loop.ts`**.
+
+**One part of the spec is OUTDATED, and it is the part that was already
+fixed.** The spec's "hardcoded constants (0.015, 0.024, 0.012)" and
+"static prose templates (+395/+485/18.5%)" are **gone** — the spec's own
+cited example is now a **negative assertion**:
+`mind-reasoning.mutation-v2.spec.ts:114` asserts
+`!/\+395|\+485|18\.5%/.test(...)`, and the empty corpus yields
+`total_delta = 0`, empty prose, empty audit trail.
+
+**And all 5 of the spec's dark primitives exist** (`ol_continuity_shared_snaps_pct`
+4 files, `acoustic_crowd_spl_db` 5, `officiating_crew_penalty_rate` 5,
+`surface_traction_coeff` 3, `air_density_kg_m3` 9) — and the spec's
+remediation dispositions are right. Its `officiating_crew_penalty_rate`
+excision is **the same defect the audit found independently**
+(`engine-weights.ts:18` — the `officials` family is DARK with
+`n=113, slope=-0.0101, se=0.0103`, "DARK even when the crew is named"), and its `surface_traction_coeff`
+"static constant" claim is confirmed at `mind-reasoning.ts:271` and `:513`.
+
+**The two schemas disagree, and one must win.** The spec's
+`literature_premises` uses `M=24, ef_construction=200`, a 1024-d
+embedding plus 512-d spectral low/high embeddings, `promotion_score`,
+`ewma_brier_attribution`, and
+`status ∈ {ACTIVE, SHADOW, DEMOTED, QUARANTINED}`. The audit's built
+`lit.*` schema uses **`M=16, ef_construction=64`**, a single 1024-d
+embedding, no spectral split, and no EWMA attribution. **The spec's is
+richer; the audit's is measured and running.**
+
+**The spec's latency SLO is not achievable as written.** It claims
+< 2.5 ms P99 for HNSW; the audit measured **77 ms p50 over the
+network**. The SLO presumes in-DB or same-region latency.
+
+**And the spec's §4.3 "7-line recursive ID algorithm" IS ALREADY
+WRITTEN** — `2602-23233v1-counterfactual-combine-a-causal.ts` has
+`identifyStrategy`, `adjustmentEstimand`, `frontdoorEstimand`, and
+`requireIdentified`, and `2603-22620v2-chainreaction-causal-discovery-via-blocking.ts` has `backdoorSet`
+and `refutationSuite`. **Both are unwired.** The gap there is
+integration, not invention.
+
+**The convergence is the finding.** The spec diagnoses the corpus's
+keyword-regex misfiling and demands L4 (cross-encoder NLI) entailment.
+The audit measured that misfiling (2,106 survivors), that 88.2% of
+directions are a regex fallback, and that the corpus's concepts carry a
+**21–39 point association with the sign backwards**. **The spec and the
+audit arrive at the same fix from opposite directions.**
+
+---
+
 ## 6. What the recon batch changed
 
 Three read-only agents ran against the same worktree. They **corrected my
@@ -549,6 +641,7 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
 | `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable: 5,149 records, 39 with a real metric, 22 game-level NFL quantities. The corpus has concepts, not numbers. |
+| `design_spec_reconciliation.md` | **Reconciliation of the supplied design spec against the measured repo**: 13 of 14 spec'd module paths do not exist, 0 of 8 build steps implemented, 0 of 9 honesty gates built — but **4 of 4 diagnosed pathologies confirmed present**, the spec's own cited hardcoded-constant example now a negative assertion, all 5 dark primitives real, and the spec's ID algorithm already written but unwired. |
 | `concept_axis_graded.md` | **The concept axis RUN on real data**: 139 premises graded, and the corpus's asserted directions measurably lose to their inverses (87 of 140) while the concepts themselves carry 21-39 point associations with the sign backwards. Two grader bugs and a concept-match defect, all found by running it. |
 | `direction_signal_measurement.json` | The direction-vs-inverted test, per measure: the decisive measurement of whether the corpus's sign field carries information |
 | `concept_axis_coverage.md` + `.json` | The resolver RUN over the corpus and the live index: 201 premises resolve to a measure, 74 are correlational/causal, 2 fully specified, 4,540 refused as `conditional`. **The biggest remaining lever: extract the condition for 878 measurable conditional premises and the population goes 201 → 1,079.** |
