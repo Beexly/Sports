@@ -63,6 +63,9 @@ const EXEMPT_FILES = new Set([
   "reconciliation/_verify_class_a_chain.mjs",
   // The insert-path verifier: it inserts rows the filter must exclude.
   "reconciliation/_verify_insert_paths.mjs",
+  // The quarantine script: it DELETES the rows the filter must exclude.
+  // It has to see them to remove them.
+  "reconciliation/_quarantine_stale_rows.mjs",
 ]);
 
 /**
