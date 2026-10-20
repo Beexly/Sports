@@ -17431,3 +17431,5 @@ After-window exclusion (ID-time 9:31 PM CDT): @NFL_Researcher most career games 
 ### ENDPOINTS / SOURCES (second lane A manifest)
 
 - NEW: SumerPass — @SumerSports bio/pinned (bit.ly/getsumerpass). establishtherun.com and subscribe.establishtherun.com — @EstablishTheRun bio/pinned. 32beatwriters.com — @32BeatWriters bio. Statyx MCP / statyx.io — @statyxio source line and bio (see Upgrades). fantasypointsdata.com Data Suite 2.0 incl. /weekly-reports — @sfdata9ers chart footers, @ScottBarrettDFB. nflverse (nflreadpy) — @GridironInfo_ footers (one chart also "nflverse + Wikipedia"). @PFF stated no data source in any opened post.
+
+- **2026-10-19**: Added deterministic SHADOW metric `red-zone-carry-share.ts` to expected metrics. (Jules)

@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["red-zone rushing attempts", "team total red-zone rushing attempts", "rolling window filter", "floor minimums"],
+    failureModes: ["quarterback scrambles and designed runs have different yardage profiles", "goal-line situations compress expected yardage", "knee downs skew volume calculations"],
+    family: "rushing",
+    forbiddenInputs: ["red-zone targets", "receiving volume", "shrinkage estimators", "imputation"],
+    formulaClass: "deterministic_rule",
+    formulaSummary: "Deterministic per-player red-zone carry share over point-in-time disciplined rolling windows.",
+    historicalPrecedent: [{ name: "Red-zone opportunity share", reason: "Goal-line role concentration is a direct input for touchdown-equity reasoning." }],
+    internalName: "red_zone_carry_share_shadow",
+    metricId: "red-zone-carry-share",
+    protectedComponents: ["point-in-time window discipline", "minimum volume floors"],
+    publicExposure: "none",
+    publicName: "Red-Zone Carry Share",
+    sourceRightsRequired: ["public play-by-play modeling allowed", "derived rushing share only"],
+    status: "SHADOW",
+    targetQuestion: "What share of the team's red-zone rushing attempts does this player command?",
+    targetVariable: "red-zone carry concentration",
+    validationMethods: ["walk_forward", "bucket_lift"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
