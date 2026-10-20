@@ -64,20 +64,20 @@ a file that does not exist anywhere in the repo.
 
 | class | count | meaning |
 |---|---|---|
-| `CITABLE_VERIFIED` | 1,019 | the quote is verbatim in the document it names, and all four layers pass |
+| `CITABLE_VERIFIED` | 1,098 | the quote is verbatim in the document it names, and all four layers pass |
 | `DERIVED_MARKET_SYNTHESIS` | 1,134 | synthesised from a market/table row; cites nothing |
 | `HONESTLY_UNCITED_PRIOR` | 2,881 | not admissible evidence (see the status below) |
-| `REJECTED_CORRUPT` | 269 | the "quote" is a machine identifier, not prose |
+| `REJECTED_CORRUPT` | 190 | the "quote" is a machine identifier, not prose |
 
 **The status says WHY**, which the class alone cannot:
 
 | status | count | meaning |
 |---|---|---|
-| `ACTIVE` | 1,019 | admitted; all four layers pass |
-| `LINK_VERIFIED_SEMANTIC_FAIL` | 2,484 | the quote IS verbatim in the document; the claim does not follow from it |
+| `ACTIVE` | 1,098 | admitted; all four layers pass |
+| `LINK_VERIFIED_SEMANTIC_FAIL` | 2,674 | the quote IS verbatim in the document; the claim does not follow from it |
 | `UNCITED_NO_SOURCE` | 397 | the quote is in no document at all |
 | `DERIVED_TABLE` | 1,134 | synthesised from a table row |
-| `CORRUPT_QUOTE` | 269 | a dataset slug or a database row where a quote should be |
+| `CORRUPT_QUOTE` | 190 | a dataset slug or a database row where a quote should be |
 
 **One definition of "citable."** The builder used to have its own copy
 of the admission logic while the gate module had another. It stamped
@@ -143,9 +143,9 @@ there but whose claim was unsupported wore the same label, and
 corpus records            5,303
 L1 verbatim provenance     3,772  (71.1%)
 L2 numeric containment     1,989  (37.5%)
-L3 span anchoring          1,019  (19.2%)
-L4 mechanism entailment    2,418  (45.6%)
-ADMITTED (all four)        1,019  (19.2%)
+L3 span anchoring          1,098  (20.7%)
+L4 mechanism entailment    2,107  (39.7%)
+ADMITTED (all four)        1,098  (20.7%)
 
 citable records whose span does NOT select their quote    0
 non-citable records claiming a span or the EXACT tier     0
@@ -155,10 +155,10 @@ all 26 FOUNDATIONAL papers -> HONESTLY_UNCITED_PRIOR     yes
 And per class, under the gate:
 
 ```
-CITABLE_VERIFIED      n=1,019  L1=1,019  L2=1,019  L3=1,019  L4=1,019  ADMITTED=1,019
-HONESTLY_UNCITED_PRIOR n=2,881  L1=2,484  L2=  828  L3=    0  L4=1,178  ADMITTED=    0
+CITABLE_VERIFIED      n=1,098  L1=1,098  L2=1,098  L3=1,098  L4=1,098  ADMITTED=1,098
+HONESTLY_UNCITED_PRIOR n=2,881  L1=2,484  L2=  828  L3=    0  L4=  867  ADMITTED=    0
 DERIVED_MARKET_SYNTH. n=1,134  L1=    0  L2=   43  L3=    0  L4=    0  ADMITTED=    0
-REJECTED_CORRUPT      n=  269  L1=  269  L2=   99  L3=    0  L4=  221  ADMITTED=    0
+REJECTED_CORRUPT      n=  190  L1=  190  L2=   20  L3=    0  L4=  142  ADMITTED=    0
 ```
 
 Every `CITABLE_VERIFIED` record passes all four layers, and no other
@@ -377,7 +377,7 @@ does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
 
 1. **§3 — FCI + Precision-Preconditioned DYNOTEARS** (`causal-graph-builder.ts`
    in the spec's naming; no such file exists in this repo). In progress.
-2. **The corpus is 18.3% admitted, not 100%.** 3,201 records are
+2. **The corpus is 20.7% admitted, not 100%.** 3,201 records are
    `HONESTLY_UNCITED_PRIOR`. That is the honest state, and it is
    materially smaller than the legacy 67.4%. A corpus of 968 falsifiable
    premises is a corpus of 968 falsifiable premises.
