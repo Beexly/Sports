@@ -332,10 +332,31 @@ of the corpus is `conditional` and 0 of those 4,540 carry a
 condition.**
 
 **And that is the lever: 878 conditional premises have a measurable
-context.** Extract their conditions and the gradeable population goes
-from 201 to 1,079 — a 5.4× increase, from a corpus fix rather than a
-code change. Full measurement in
+context.** Full measurement in
 `reconciliation/concept_axis_coverage.md`.
+
+**Then I tested whether the direction can be re-derived — and it cannot
+be derived accurately enough to grade on.** Validated against the 609
+records whose direction is known: the SIGN of `numeric_claim.value`
+predicts direction at **43.9%** (worse than a coin flip — a `count` of 10
+is not a signed quantity), and direction words reach **72.1%**. A 72%
+classifier is not usable on a score that is
+`(agreement_rate − 0.5) × 2`, because a premise labelled backwards is
+scored backwards, not noisily.
+
+**So the real gate is the METRIC, not the condition.** A premise with a
+specific metric and a value already carries its condition
+(`fourth_quarter_pass_rush_decay` = 28 percent IS the threshold). The
+population splits as:
+
+| | count | needs |
+|---|---:|---|
+| specific metric + usable direction | **18** | nothing — **6 gradeable today** |
+| specific metric + `conditional` | **21** | the direction only — **3 gradeable today** |
+| placeholder metric | 5,110 | the metric AND the direction |
+
+**Nine premises are gradeable on the concept axis right now**, with no
+corpus work. The 878 needs a corpus pass that recovers the metric.
 
 **On the live index: 285 of 5,509 premises (5.2%) are
 probability-gradeable.**

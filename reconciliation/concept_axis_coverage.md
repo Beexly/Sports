@@ -113,6 +113,84 @@ semantics do not determine the direction, the record stays
 
 Staged as `staged_improvements/09-extract-the-condition.md`.
 
+### 1b. The direction is NOT reliably recoverable — so the real gate is the METRIC
+
+**I tested whether the direction can be re-derived, and it cannot be
+derived accurately enough to grade on.** Validated against the **609
+records whose direction IS known** (the ground truth):
+
+| predictor | coverage on the 609 | **accuracy** | would resolve conditional |
+|---|---:|---:|---:|
+| the SIGN of `numeric_claim.value` | 253/609 (41.5%) | **43.9%** | 3,199 (70.5%) |
+| direction words in the evidence quote | 219/609 (36.0%) | **72.1%** | 371 (8.2%) |
+| numeric sign, then words | 379/609 (62.2%) | **53.3%** | 3,416 (75.2%) |
+
+**The numeric sign is WORSE THAN A COIN FLIP (43.9%)** — a `count` of 10
+or a `coefficient` of 0.42 is not a signed quantity.
+
+**And a 72.1%-accurate re-classifier is not usable.** The concept-axis
+score is `(agreement_rate - 0.5) * 2`, so a 28% label error rate injects
+roughly 28 points into every premise's score — **systematically**, because
+a premise whose true direction is positive but labelled negative is not
+merely noisy, it is scored exactly backwards.
+
+**So: a premise whose direction is not known stays `conditional` and
+stays refused. That is the honest state.**
+
+### 1c. A specific metric + value IS the condition — so the real gate is the metric
+
+**A premise with a specific metric and a value already carries its
+condition.** The metric names the quantity and the value is the
+threshold:
+
+> `metric = 'fourth_quarter_pass_rush_decay'`, `value = 28`, `unit = 'percent'`
+> → the condition is *"fourth-quarter pass-rush decay exceeds 28 percent"*
+
+**readable from the metric and the value alone. No text extraction is
+needed for the condition.** The only missing piece is the **direction** —
+and there are just **21** such records.
+
+**The placeholder-metric records cannot carry a condition at all:**
+`metric = 'statistical_parameter'`, `value = 0.42`, `unit = 'coefficient'`
+says nothing about *which* quantity is 0.42.
+
+| population | count | what it needs | of those, resolvable today |
+|---|---:|---|---:|
+| specific metric + usable direction | **18** | nothing | **6** (a measurable context) |
+| specific metric + `conditional` | **21** | the direction only | **3** (a measurable context) |
+| placeholder metric | 5,110 | the metric AND the direction | 0 |
+
+**So the lever is not "extract 4,540 conditions." It is "recover the
+metric for the 5,110 placeholder records, and the direction for 21."**
+The first is a corpus pass; the second is 21 records where the accuracy
+requirement is absolute.
+
+**And the immediate, cheap, safe win is the 6 + 3.** Those 9 premises can
+be graded on the concept axis today with no corpus work at all:
+
+| premise | metric | value | direction | measure |
+|---|---|---:|---|---|
+| *Decoding Defensive Coverage via Factorized Attention* | `two_high_disguise_rate` | 65 percent | positive | `coverage` |
+| *NFL Ghosts: Counterfactual Defender Positioning & Separation* | `separation_over_expected` | 1.4 yards | negative | `separation` |
+| *Bye-Bye, Bye Advantage: Impact of Rest Differential* | `fourth_quarter_pass_rush_decay` | 28 percent | negative | `rest` |
+| *The Blown Lead Paradox: A Pathwise Calibration Benchmark* | `true_pathwise_trailing_equity` | 11 percent | negative | `live_odds` |
+| *The Training—Injury Prevention Paradox* | `injury_fatigue_hazard_spike` | 2.2 multiplier | negative | `workload` |
+| *Physics Informed Human Posture Estimation* | `empirical_rate` | 10.2 percent | positive | `tracking` |
+| *Here Comes the STRAIN* | `off_target_throw_increase` | 34 percent | ? | *needs direction* |
+| *nflWAR* | `next_score_drive_states` | 7 states | ? | *needs direction* |
+| *NFL Sports Analysis [qb-full-pool]* | `spread_or_scoring_margin` | 50.5 points | ? | *needs direction* |
+
+**Nine premises, each with a named metric, a threshold, a concept the
+database can measure, and — for six of them — a direction.** That is a
+complete, honest, closed concept axis at small scale, and it is
+**ready to grade today.**
+
+**The honest ceiling, restated one final time: 201 premises are
+gradeable on the concept axis; 9 of them are fully specified and
+immediately gradeable; 878 more are blocked on a corpus pass; and the
+4,540 `conditional` records are blocked on a field the corpus does not
+contain.**
+
 ---
 
 ## 2. The direction distribution
@@ -173,7 +251,7 @@ marked as a stand-in.
 
 ---
 
-## 4. The two fully-specified premises
+## 4. The fully-specified premises
 
 Both are gradeable, both are real, and both are NFL:
 
@@ -182,9 +260,10 @@ Both are gradeable, both are real, and both are NFL:
 | *"Bye-Bye, Bye Advantage: Impact of Rest Differential in the NFL"* (`arXiv:2408.10867`) | `fourth_quarter_pass_rush_decay` | negative | `rest` | `Game.restDaysHome` |
 | *"The Training—Injury Prevention Paradox: Should Athletes Be Training Smarter and Harder?"* (`arXiv:2102.03453`) | `injury_fatigue_hazard_spike` | negative | `injuries` | `Injury.reportStatus` |
 
-**Two is not a programme.** It is a proof that the mechanism resolves,
-scores, and refuses honestly. The 201 is the programme; the 878 is the
-bigger prize.
+**Six is not a programme either.** It is a proof that the mechanism
+resolves, scores, and refuses honestly — and **six of them are ready to
+grade today, with three more needing only a direction.** The 201 is the
+programme; the 878 is the bigger prize.
 
 ---
 

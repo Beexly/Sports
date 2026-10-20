@@ -100,6 +100,76 @@ mechanism_quote, title, principle_or_feature):
 retained in the record, so 96.5% is a LOWER BOUND on the fallback
 share.)
 
+### 1a. BUT THE DIRECTION IS NOT RELIABLY RECOVERABLE — a cheaper fix is not safe
+
+**I tested whether the direction can be re-derived and it cannot be
+derived accurately enough to grade on.** Validated against the **609
+records whose direction IS known** (the ground truth), on the record's own
+text:
+
+| predictor | coverage on the 609 | **accuracy** | would resolve conditional |
+|---|---:|---:|---:|
+| the SIGN of `numeric_claim.value` | 253/609 (41.5%) | **43.9%** | 3,199 (70.5%) |
+| direction words in the evidence quote | 219/609 (36.0%) | **72.1%** | 371 (8.2%) |
+| numeric sign, then words | 379/609 (62.2%) | **53.3%** | 3,416 (75.2%) |
+
+**The numeric sign is WORSE THAN A COIN FLIP (43.9%).** That is
+expected and important: a `count` of 10 or a `coefficient` of 0.42 is not
+a signed quantity, so its sign carries no directional information.
+
+**And a 72.1%-accurate re-classifier is not usable for grading.** The
+concept-axis score is `(agreement_rate - 0.5) * 2` — so a 28% label
+error rate would inject roughly a 28-point error straight into every
+premise's score, in a direction that is *systematic* (a premise whose
+true direction is positive but labelled negative is not merely noisy, it
+is scored exactly backwards).
+
+**So: do NOT re-classify the direction by text. A premise whose
+direction is not known stays `conditional` and stays refused. That is
+the honest state, and the resolver's refusal is correct.**
+
+### 1b. The REAL gate is the SPECIFIC METRIC, and it is much smaller than I estimated
+
+**A premise with a specific metric and a value already carries its
+condition.** The metric name names the quantity and the value is the
+threshold:
+
+> `metric = 'fourth_quarter_pass_rush_decay'`, `value = 28`, `unit = 'percent'`
+> → the condition is *"fourth-quarter pass-rush decay exceeds 28 percent"*
+
+**which is readable from the metric and the value alone.** No text
+extraction is needed for the condition. **The only missing piece for
+these records is the DIRECTION** — and there are just **21** of them.
+
+**And the placeholder-metric records cannot carry a condition at all:**
+`metric = 'statistical_parameter'`, `value = 0.42`, `unit = 'coefficient'`
+says nothing about *which* quantity is 0.42.
+
+| population | count | what it needs |
+|---|---:|---|
+| specific metric + usable direction | **18** | nothing — fully specified today |
+| specific metric + `conditional` | **21** | **the direction only** (3 have a measurable context) |
+| placeholder metric | 5,110 | **the metric AND the direction** |
+| **total** | **5,149** | |
+
+**So the lever is not "extract 4,540 conditions." It is "recover the
+metric for the 5,110 placeholder records, and the direction for 21."**
+The first is a corpus pass; the second is 21 records, and the accuracy
+requirement on it is absolute — a wrong direction is a backwards score,
+not a noisy one.
+
+**The honest ranking changes accordingly:**
+
+| rank | work | yields | risk |
+|---|---|---|---|
+| 1 | **Recover the metric** for the 5,110 placeholder records, from the source document | up to 5,110 gradeable-shaped records | medium — a wrong metric name is a wrong measure |
+| 2 | **Grade the 18 fully-specified + 3 near-specified records NOW** | a working, honest concept axis at small scale | **low** |
+| 3 | Recover the direction for the remaining 21 specific-metric records | +21 | high — direction errors are backwards, not noisy |
+| 4 | Re-derive the direction for the 4,540 placeholder ones | +4,540 | **very high — measured at 43.9-72.1% accuracy, which is not usable** |
+
+**Step 2 is cheap and safe and should be done first. Step 4 should not
+be attempted at the measured accuracies.**
+
 **So the resolver refuses 4,540 premises — and it is right to.** A
 conditional claim with no condition cannot be evaluated: there is no
 rule for deciding when it applies. **And the refusal is pointing at a
@@ -182,23 +252,52 @@ metadata.
 
 ## 3. What changes
 
-### 3.0 Re-classify the direction first
+### 3.0 Grade the fully-specified records FIRST — they need nothing
 
-**Before extracting conditions, fix the classification that produced the
-4,540.** The direction must come from the claim's semantics, not from
-two regexes over the whole document.
+**18 records have a specific metric AND a usable direction.** They are
+gradeable today, with no corpus work at all. The acceptance measurement
+for this stage should be run over them: measure the concept, compare the
+direction, score the agreement, and report the support distribution.
 
-**The honest way to do it:** use the premise's own structured fields —
-`claim_type`, `domain`, `applicable_contexts`, the `mechanism_quote`, and
-the `evidence_quote` — to decide the direction, and record the
-reasoning in the record so it is auditable. A premise whose claim is
-`correlational` or `causal` on a measurable context and whose
-mechanism quote describes a gain has a `positive` direction **whether or
-not the word "gain" appears**.
+**This is the cheap, safe, honest first move**, and it is the one that
+proves the concept axis end to end before any corpus work is done.
 
-**The direction must never be guessed.** If the semantics do not
-determine it, the record stays `conditional` — which is the honest
-state, and the resolver's refusal is then correct.
+**The 18 (measured):**
+
+| metric | value | direction | title |
+|---|---|---|---|
+| `public_darling_spread_shading` | 1.8 points | positive | *Exploiting Oddsmaker Bias to Improve the Prediction of NFL Outcomes* |
+| `blocker_survival_threshold` | 2.5 seconds | negative | *Who Blocks Whom? Probabilistic Pass-Blocking Assignments* |
+| `two_high_disguise_rate` | 65 percent | positive | *Decoding Defensive Coverage via Factorized Attention* |
+| `separation_over_expected` | 1.4 yards | negative | *NFL Ghosts: Counterfactual Defender Positioning & Separation* |
+| `fourth_quarter_pass_rush_decay` | 28 percent | negative | *Bye-Bye, Bye Advantage: Impact of Rest Differential in the NFL* |
+| `ol_continuity_threshold` | — | — | *Continuous Pocket STRAIN Surface & Non-Linear Turnover Spike* |
+| `in_game_brier_improvement` | — | — | *The Blown Lead Paradox: A Pathwise Calibration Benchmark* |
+| …13 more | | | |
+
+**The direction for these must come from the source document, by a human
+reading the finding — not by a text classifier.** §1a measured that a
+classifier cannot do it accurately enough, and for THESE records the
+absolute cost of a wrong direction is a backwards score.
+
+### 3.0b Recover the METRIC for the placeholder records
+
+**This is the real lever, and it is a corpus-construction pass, not a
+classifier.** The 5,110 placeholder records have a generic metric name
+(`statistical_parameter`, `situational_game_unit`, `temporal_epoch`,
+`empirical_sample_size`, `performance_ratio`) and the evidence quote
+that would identify the real one.
+
+**The metric name is what a measure resolver needs.** A premise graded
+on `statistical_parameter` has no quantity to compare; a premise graded
+on `fourth_quarter_pass_rush_decay` has one. **So the metric recovery
+IS the gradeability work.**
+
+**It must be done by reading the source document, and it must be
+verifiable:** the recovered metric name must be a concept the corpus
+already uses elsewhere (39 specific names exist; the recovered names
+should be drawn from that vocabulary, extended as needed), and it must
+be stated in the evidence quote.
 
 ### 3.1 A threshold extractor, with a rejection rule
 
