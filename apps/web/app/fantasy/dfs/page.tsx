@@ -40,9 +40,15 @@ export default async function DfsSuitePage() {
   ]);
   const feedConnected = dfs !== null && dfs.status === "live" && dfs.rows.length > 0;
   const salaryIsReal = feedConnected && viewer.canUseFantasyFull;
+  const feedDown = dfs === null || dfs.status !== "live" || dfs.rows.length === 0;
 
   const engineRows = slate?.players ?? [];
-  const topRows = feedConnected && dfs
+  // PAYWALL: the licensed feed's rows are entitlement-gated, not merely
+  // availability-gated. feedConnected says the feed is live; only
+  // viewer.canUseFantasyFull says THIS viewer may read its prices. Gating the
+  // slice on feedConnected alone printed licensed salaries to anonymous and
+  // free viewers (caught by dfs-page-entitlement.test.tsx).
+  const topRows = salaryIsReal && dfs
     ? dfs.rows.slice(0, 24).map((r) => ({
         name: r.name,
         team: r.team,
@@ -56,13 +62,16 @@ export default async function DfsSuitePage() {
         salary: p.salary > 0 ? p.salary : null,
       }));
 
-  const boardCount = feedConnected && dfs ? dfs.rows.length : engineRows.length;
+  const boardCount = salaryIsReal && dfs ? dfs.rows.length : engineRows.length;
   const slateLabel = slate
     ? `NFL · ${slate.slateGames} game${slate.slateGames === 1 ? "" : "s"} in the window · measured through Week ${slate.measuredThroughWeek}`
     : "No NFL slate resolved";
-  const note = slate && engineRows.length > 0
+  const measuredCopy = slate && engineRows.length > 0
     ? `${slateLabel}. Projections are the measured ${slate.window}-game points-per-game window; floors and ceilings are the observed range in that same window. Projected ownership is a neutral placeholder, not a projection.`
     : "No NFL slate is resolved right now, so there is no board to price. Nothing is substituted in its place.";
+  const note = feedDown
+    ? `No licensed salary feed is connected. ${measuredCopy}`
+    : measuredCopy;
 
   return (
     <FantasyShell
@@ -90,6 +99,12 @@ export default async function DfsSuitePage() {
             ? "Salaries come from the connected licensed DFS feed, reconciled across providers. The optimizer prices this pool with the projections beside it."
             : "This board is built from measured production for the teams playing in the slate window. Salaries are blank because no licensed DFS salary feed is connected — the column stays empty rather than carrying an invented number. Import your own DraftKings CSV below to price the board."}
         </p>
+        {feedConnected && !viewer.canUseFantasyFull && (
+          <p className="mt-2 text-sm text-ion-1">
+            The licensed salary feed is live. Full pricing unlocks with a{" "}
+            <a href="/pricing" className="text-orbital-cyan underline">paid plan</a>.
+          </p>
+        )}
         {slate && (
           <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-ion-2">{slateLabel}</p>
         )}

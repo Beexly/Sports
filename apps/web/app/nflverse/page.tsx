@@ -67,13 +67,80 @@ function qbBucketLabel(row: NflverseQbAgeRow): string {
   return `${row.qbAge} / ${row.qbAgeBucket}`;
 }
 
+/**
+ * The public half of the page: hero copy that renders for every viewer. The
+ * pulse DATA behind it is PRO+ (nflverse-page-entitlement suite) and is only
+ * loaded once the viewer clears that gate.
+ */
+function NflverseHeroCopy(): JSX.Element {
+  return (
+    <div>
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">NFL · usage pulse</p>
+      <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+        Real NFL rows before real claims.
+      </h1>
+      <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+        This pulse reads nflverse player-week and roster releases directly. It shows
+        usage, target share, air-yard share, WOPR, and quarterback-age context from
+        real source rows. It does not publish picks, projections, or significant trends.
+      </p>
+      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+        <Link href="/api/nflverse/usage-pulse" className="btn-primary min-h-11 px-5 py-3">
+          JSON pulse
+        </Link>
+        <Link
+          href="/trends"
+          className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
+        >
+          Trend Lab
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default async function NflversePage(): Promise<JSX.Element> {
   // Public/private surface doctrine: live player-week rows (target share, WOPR,
   // opportunity counts) are raw data rows, which are internal.
   if (!isPagePublic("/nflverse")) notFound();
 
-  const [, pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
-    getViewerEntitlements(),
+  const viewer = await getViewerEntitlements();
+  // PAYWALL: the pulse is a PRO+ analytics surface (the same tier line as the
+  // Trend Lab it links to). Nothing paid is even LOADED for an unentitled
+  // viewer: the loaders sit behind this gate, so a fail-closed entitlements
+  // lookup, which resolves anonymous, never reaches the data either.
+  if (!viewer.canUseTrendLab) {
+    return (
+      <div className="relative isolate min-h-screen bg-carbon text-ion">
+        <GeneratedPlate assetId="nflverse-gridiron" className="-z-10 opacity-20" />
+        <Nav />
+        <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+          <section className="border-b border-mineral pb-8">
+            <NflverseHeroCopy />
+          </section>
+          <section
+            aria-label="The NFLverse usage pulse: for PRO members only"
+            className="border border-mineral bg-eclipse p-5"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">Usage pulse</p>
+            <h2 className="mt-2 text-2xl font-semibold text-ion-white">For PRO members</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+              The pulse reads real nflverse player-week rows: usage, target share, air-yard share, WOPR,
+              and quarterback-age context. It sits on the PRO analytics surface, beside the Trend Lab.
+            </p>
+            <div className="mt-5">
+              <Link href="/pricing" className="btn-primary inline-flex min-h-11 items-center px-5 py-3 text-sm font-semibold">
+                See plans
+              </Link>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const [pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
     loadNflverseUsagePulse(),
     loadQbAgeRbTrendReport(),
     loadBirthdayUsageTrendReport(),
@@ -87,28 +154,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
       <Nav />
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">NFL · usage pulse</p>
-            <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
-              Real NFL rows before real claims.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              This pulse reads nflverse player-week and roster releases directly. It shows
-              usage, target share, air-yard share, WOPR, and quarterback-age context from
-              real source rows. It does not publish picks, projections, or significant trends.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/api/nflverse/usage-pulse" className="btn-primary min-h-11 px-5 py-3">
-                JSON pulse
-              </Link>
-              <Link
-                href="/trends"
-                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
-              >
-                Trend Lab
-              </Link>
-            </div>
-          </div>
+          <NflverseHeroCopy />
 
           <div className="border border-mineral bg-eclipse p-5">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">

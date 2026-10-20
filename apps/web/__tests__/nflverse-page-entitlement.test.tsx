@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { getEntitlements, type Entitlements } from "@sports/types";
+import { authModuleMock } from "@/lib/testing/auth-mock";
 
 /**
  * Server-side paywall enforcement for the /nflverse usage-pulse page —
@@ -48,7 +49,7 @@ const mocks = vi.hoisted(() => ({
   loadBirthdayUsageTrendReport: vi.fn(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 
 vi.mock("@/lib/nflverse/usage-pulse", () => ({
@@ -225,6 +226,10 @@ function expectLoadersNeverCalled(): void {
 
 describe("/nflverse — server-side paywall (Pro usage pulse)", () => {
   beforeEach(() => {
+    // The page sits behind the internal-surface fence (NFLVERSE_PUBLIC is an
+    // opt-in flag) and is deployed with that flag on; this suite targets the
+    // paywall layer beneath it, so it runs under the deployed configuration.
+    process.env.NFLVERSE_PUBLIC = "true";
     mocks.auth.mockReset().mockResolvedValue(null);
     mocks.getUserEntitlements.mockReset();
     mocks.loadNflverseUsagePulse.mockReset().mockResolvedValue(pulseFixture());

@@ -2,6 +2,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { getEntitlements, type Entitlements } from "@sports/types";
+import { authModuleMock } from "@/lib/testing/auth-mock";
 
 /**
  * Server-side paywall enforcement for the /fantasy/dfs salary board —
@@ -52,7 +53,7 @@ const mocks = vi.hoisted(() => ({
   loadDfsSalaries: vi.fn(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 vi.mock("@/lib/dfs/salaries", () => ({ loadDfsSalaries: mocks.loadDfsSalaries }));
 
