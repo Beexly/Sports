@@ -38,6 +38,10 @@
  * effect.
  */
 import {
+  planHedgeBreakage,
+  type MediatorCandidate,
+} from "./hcid-mediator-expansion.js";
+import {
   runShpitserPearlID,
   runShpitserPearlIDC,
   formatSymbolicFactor,
@@ -78,6 +82,20 @@ export interface CausalClaimQuery {
    * identifiable and the gate worthless.
    */
   readonly graph: CausalADMG | null;
+  /**
+   * The point-in-time observable signals that could serve as mediators.
+   *
+   * The spec's V_reg. When the effect is not identified, the engine
+   * runs HCID and the ID-EnablingEdges algorithm against these, and
+   * the refusal says which of them would BREAK the hedge -- which is
+   * a measurement plan, not a dead end.
+   *
+   * The registry in this repository does not carry t_valid or a sample
+   * count, so a caller supplies them from wherever it knows them. A
+   * candidate with no t_valid is treated as unconstrained, and one
+   * with fewer than MIN_MEDIATOR_SAMPLES observations is ineligible.
+   */
+  readonly mediators?: readonly MediatorCandidate[];
 }
 
 export interface CausalClaimVerdict {
@@ -104,6 +122,24 @@ export interface CausalClaimVerdict {
   /** The hedge witness, when the effect was refused. */
   readonly hedge_forest_full: readonly NodeId[] | null;
   readonly hedge_forest_sub: readonly NodeId[] | null;
+  /**
+   * How many witnessing hedges there were.
+   *
+   * More than one means the candidate edges are the INTERSECTION
+   * across all of them -- an edge that breaks only one of several is
+   * not a measurement that makes the question answerable.
+   */
+  readonly hedge_count: number;
+  /**
+   * The mediators that DEMONSTRABLY break the hedge: the expanded
+   * graph was built and ID was re-run on it, and it identified the
+   * effect with zero hedges.
+   *
+   * Empty when no registered mediator works, and that is the honest
+   * answer -- a refusal that names a measurement which does not work
+   * is worse than a refusal that names none.
+   */
+  readonly activating_mediators: readonly string[];
   /** A human-readable explanation. */
   readonly reason: string;
 }
@@ -173,13 +209,70 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       enabling_edges: [],
       hedge_forest_full: null,
       hedge_forest_sub: null,
+      hedge_count: 0,
+      activating_mediators: [],
       reason: `the effect is identified as ${result.formulaClass}`,
     };
   }
 
   // The effect is not identified. The observed contrast is an
   // ASSOCIATION and may only be reported as one.
-  const enabling = result.enablingEdges;
+  //
+  // THE REPORT IS THE POINT. A refusal that says only "not
+  // identified" tells nobody what to do next. The spec's section 4.4
+  // says the engine should execute HCID and the ID-EnablingEdges
+  // algorithm, and the result of that -- the collection of EVERY
+  // witnessing hedge, the INTERSECTION of their candidate edges, and
+  // the mediators that demonstrably break the hedge -- is the
+  // measurement plan.
+  //
+  // So the verdict carries the plan, and the REASON names the
+  // specific signal that would change the answer.
+  const report = planHedgeBreakage(y, x, graph, query.mediators ?? []);
+  const enabling = report.commonEdges;
+  const activating = report.activating;
+
+  const reason = (() => {
+    if (activating.length > 0) {
+      return (
+        `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} ` +
+        `blocks it. Measuring ${activating.map((a) => a.signalId).join(", ")} ` +
+        `would break it: the expanded graph identifies the effect with zero hedges.`
+      );
+    }
+    if (enabling.length > 0) {
+      // EVERY attempt is reported, eligible or not. A rejected
+      // candidate is still information -- "this signal was
+      // considered and it has 12 observations" tells a reader the
+      // signal is not the answer, which is more useful than silence.
+      const tried = report.attempts;
+      const why = tried.length > 0
+        ? ` (the registered mediators were tried: ${tried
+            .map(
+              (a) =>
+                `${a.signalId} ${
+                  a.breaksHedge
+                    ? "would break it"
+                    : a.rejection === "TOO_FEW_SAMPLES"
+                      ? `ineligible: ${a.rejection} (N < 30)`
+                      : a.rejection ?? "did not break the hedge"
+                }`,
+            )
+            .join("; ")})`
+        : "";
+      return (
+        `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} ` +
+        `blocks it. Measuring a mediator on ${enabling
+          .map(([u, v]) => `${u} -> ${v}`)
+          .join(", ")} could break the hedge${why}.`
+      );
+    }
+    return (
+      `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} blocks it, ` +
+      "and no directed edge inside the forest could break it with a mediator."
+    );
+  })();
+
   return {
     publishable: false,
     refusal_code: G3_REFUSAL.nonIdentifiableHedge,
@@ -189,14 +282,9 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
     enabling_edges: enabling,
     hedge_forest_full: result.hedge.forestFull,
     hedge_forest_sub: result.hedge.forestSub,
-    reason:
-      enabling.length > 0
-        ? `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} ` +
-          `blocks it. Measuring a mediator on ${enabling
-            .map(([u, v]) => `${u} -> ${v}`)
-            .join(", ")} could break the hedge.`
-        : `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} blocks it, ` +
-          "and no directed edge inside the forest could break it with a mediator.",
+    hedge_count: report.hedges.length,
+    activating_mediators: activating.map((a) => a.signalId),
+    reason,
   };
 }
 
@@ -210,6 +298,8 @@ function refuse(code: G3RefusalCode, reason: string): CausalClaimVerdict {
     enabling_edges: [],
     hedge_forest_full: null,
     hedge_forest_sub: null,
+    hedge_count: 0,
+    activating_mediators: [],
     reason,
   };
 }

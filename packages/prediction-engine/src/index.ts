@@ -4728,3 +4728,23 @@ export {
   type CausalClaimVerdict,
   type G3RefusalCode,
 } from "./causal/causal-claim-gate.js";
+
+// The spec's section 4.4: the Hedge Collector and the ID-EnablingEdges
+// algorithm. Exported because a refusal that names the measurement
+// which would change the answer is only useful if the caller can see
+// the plan.
+export {
+  collectIDHedges,
+  intersectCandidateEdges,
+  tryMediatorExpansion,
+  expandWithMediator,
+  planHedgeBreakage,
+  setMediatorValidityPool,
+  MIN_MEDIATOR_SAMPLES,
+  MIN_EXPANSION_E_VALUE,
+  type MediatorCandidate,
+  type MediatorRejection,
+  type MediatorAttempt,
+  type CollectedHedge,
+  type HedgeBreakageReport,
+} from "./causal/hcid-mediator-expansion.js";
