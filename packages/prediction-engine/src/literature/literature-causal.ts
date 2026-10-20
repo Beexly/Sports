@@ -29,6 +29,7 @@ import {
   runInterventionTest,
   type SqlClient,
 } from "./literature-retrieval.js";
+import type { CausalADMG } from "../causal/do-calculus-id.js";
 
 export interface CausalEdgeRecord {
   readonly edge_key: string;
@@ -46,6 +47,19 @@ export interface CausalEdgeRecord {
 export interface InterventionOutcome {
   readonly edge_key: string;
   readonly verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
+  /**
+   * GATE G3 (2026-10-20): the conclusion the engine is permitted to
+   * state for this edge.
+   *
+   * "CAUSAL" only when the effect is IDENTIFIED in the graph it was
+   * estimated in. "ASSOCIATION_ONLY" otherwise -- and the difference
+   * matters, because the test's contrast is between strongly- and
+   * weakly-activated games, which is an association between activation
+   * strength and residual, not an intervention.
+   */
+  readonly g3_conclusion: "CAUSAL" | "ASSOCIATION_ONLY";
+  /** The refusal code, when the gate refused. */
+  readonly g3_refusal_code: string | null;
   readonly estimate: number | null;
   readonly ci_low: number | null;
   readonly ci_high: number | null;
@@ -59,6 +73,12 @@ export interface CausalPromotionReport {
   readonly promoted: number;
   readonly edges: readonly CausalEdgeRecord[];
   readonly tests: readonly InterventionOutcome[];
+  /**
+   * GATE G3: how many of the tested edges may be reported as CAUSAL.
+   * The rest are ASSOCIATION_ONLY.
+   */
+  readonly causally_identified: number;
+  readonly association_only: number;
   readonly tested: number;
   readonly passed: number;
   readonly failed: number;
@@ -146,6 +166,23 @@ export async function runCausalPromotionSweep(
     readonly maxEdges?: number;
     readonly doValue?: number;
     readonly testLimit?: number;
+    /**
+     * GATE G3 (2026-10-20): the graph each edge's effect is estimated in.
+     *
+     * The identifiability check is only meaningful against the graph the
+     * estimate came from. A caller that supplies one gets the real gate:
+     * an effect that is not identified in that graph is refused and the
+     * conclusion is ASSOCIATION_ONLY.
+     *
+     * A caller that supplies NO graph gets INCONCLUSIVE on every edge,
+     * with the reason recorded. That is the honest default: an effect
+     * whose identifiability was never checked is not a verified causal
+     * effect, and reporting it as one would be the same defect the
+     * L1-L4 gate had -- a label that reads like verification.
+     */
+    readonly graphForEdge?: (
+      edge: CausalEdgeRecord,
+    ) => CausalADMG | null;
   },
 ): Promise<CausalPromotionReport> {
   const errors: string[] = [];
@@ -165,10 +202,14 @@ export async function runCausalPromotionSweep(
 
   for (const e of edges) {
     try {
-      const out = await runInterventionTest(db, e.edge_key, opts?.doValue ?? 0.001);
+      const out = await runInterventionTest(db, e.edge_key, opts?.doValue ?? 0.001, {
+        graph: opts?.graphForEdge ? opts.graphForEdge(e) : null,
+      });
       tests.push({
         edge_key: out.edge_key,
         verdict: out.verdict,
+        g3_conclusion: out.g3_conclusion,
+        g3_refusal_code: out.g3_refusal_code,
         estimate: out.estimate,
         ci_low: out.ci_low,
         ci_high: out.ci_high,
@@ -193,6 +234,8 @@ export async function runCausalPromotionSweep(
     passed,
     failed,
     inconclusive,
+    causally_identified: tests.filter((t) => t.g3_conclusion === "CAUSAL").length,
+    association_only: tests.filter((t) => t.g3_conclusion === "ASSOCIATION_ONLY").length,
     errors,
   };
 }

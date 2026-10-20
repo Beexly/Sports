@@ -30,6 +30,8 @@ import {
 } from "./literature-embeddings.js";
 import { pillarsForSignal, type LiteraturePillar } from "./literature-pillars.js";
 import { vectorLiteral } from "./literature-index-builder.js";
+import { evaluateCausalClaim } from "../causal/causal-claim-gate.js";
+import type { CausalADMG } from "../causal/do-calculus-id.js";
 
 /** Minimal structural type for a Postgres client. */
 export interface SqlClient {
@@ -599,7 +601,22 @@ export async function runInterventionTest(
   db: SqlClient,
   edgeKey: string,
   doValue: number,
-  opts?: { readonly band?: number; readonly minN?: number; readonly method?: string },
+  opts?: {
+    readonly band?: number;
+    readonly minN?: number;
+    readonly method?: string;
+    /**
+     * The graph the estimate is computed in.
+     *
+     * GATE G3 (2026-10-20). The identifiability check is only
+     * meaningful against the graph the estimate came from. When a
+     * caller supplies one, the effect must be IDENTIFIED in it before
+     * the test can report a causal verdict. When no graph is supplied,
+     * the gate cannot be evaluated and the test reports INCONCLUSIVE
+     * rather than silently treating the contrast as causal.
+     */
+    readonly graph?: CausalADMG | null;
+  },
 ): Promise<{
   verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
   edge_key: string;
@@ -610,21 +627,65 @@ export async function runInterventionTest(
   n: number;
   method: string;
   reason: string | null;
+  /** GATE G3: the causal-claim verdict for this test. */
+  g3_conclusion: "CAUSAL" | "ASSOCIATION_ONLY";
+  g3_refusal_code: string | null;
 }> {
   const band = opts?.band ?? 0.0;
   const minN = opts?.minN ?? 8;
   const method = opts?.method ?? "truncated-mean-difference";
 
   const edgeRes = await db.query(
-    `SELECT id, premise_id, status FROM lit.causal_edge WHERE edge_key = $1`,
+    `SELECT id, premise_id, status, cause_signal, effect_signal
+       FROM lit.causal_edge WHERE edge_key = $1`,
     [edgeKey],
   );
-  const edge = edgeRes.rows[0] as { id: string; premise_id: string; status: string } | undefined;
+  const edge = edgeRes.rows[0] as
+    | { id: string; premise_id: string; status: string; cause_signal: string; effect_signal: string }
+    | undefined;
   if (!edge) {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found" };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null };
   }
   if (edge.status !== "promoted") {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted` };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null };
+  }
+
+  // ====================================================================
+  // GATE G3: IDENTIFIABILITY BEFORE A CAUSAL VERDICT.
+  //
+  // The test below compares the mean residual of strongly-activated
+  // games against weakly-activated ones. That is an ASSOCIATION: the
+  // activation strength is a property of the game, and a game with a
+  // strong activation may differ in every way unrelated to the premise.
+  //
+  // So the effect is only causal if it is IDENTIFIED in the graph. The
+  // spec's Case 1 -- a confounded bow-arc -- must be refused with
+  // "REFUSED_G3_NON_IDENTIFIABLE_HEDGE" and the conclusion
+  // "ASSOCIATION_ONLY".
+  //
+  // The graph is taken from the caller. If none is supplied, the gate
+  // cannot be evaluated, and the honest verdict is INCONCLUSIVE rather
+  // than a causal PASS: an unchecked effect is not a verified one.
+  // ====================================================================
+  const g3 = evaluateCausalClaim({
+    y: [edge.effect_signal],
+    x: [edge.cause_signal],
+    graph: opts?.graph ?? null,
+  });
+  if (!g3.publishable) {
+    return {
+      verdict: "INCONCLUSIVE",
+      edge_key: edgeKey,
+      estimate: null,
+      ci_low: null,
+      ci_high: null,
+      p_value: null,
+      n: 0,
+      method,
+      reason: `${g3.refusal_code}: ${g3.reason}`,
+      g3_conclusion: g3.conclusion,
+      g3_refusal_code: g3.refusal_code,
+    };
   }
 
   // Pull the residuals for this premise, joined to the activation's context.
@@ -639,7 +700,7 @@ export async function runInterventionTest(
 
   const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
   if (all.length < minN) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}` };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null };
   }
 
   // The intervention contrast: split residuals by whether the activation was
@@ -649,7 +710,7 @@ export async function runInterventionTest(
   const control = all.filter((r) => r.activation_score < doValue);
 
   if (treated.length < 3 || control.length < 3) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small` };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null };
   }
 
   const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
@@ -683,6 +744,7 @@ export async function runInterventionTest(
   return {
     verdict, edge_key: edgeKey, estimate, ci_low: ciLow, ci_high: ciHigh,
     p_value: pValue, n: all.length, method, reason: null,
+    g3_conclusion: "CAUSAL" as const, g3_refusal_code: null,
   };
 }
 
