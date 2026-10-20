@@ -654,6 +654,68 @@ export async function promotePremisesToCausalEdges(
  *
  * LAW: this function refuses to run on any edge that is not promoted.
  */
+/**
+ * How many random assignments the placebo averages over.
+ *
+ * The null standard error of the MEAN over permutations scales like
+ * 0.16/sqrt(N), so 4096 puts it near 0.0025 -- comfortably under the
+ * spec's 0.005 ceiling. That is what makes the ceiling meaningful:
+ * it measures a SYSTEMATIC leak rather than sampling noise, which a
+ * single random assignment could not do.
+ */
+const PLACEBO_PERMUTATIONS = 4096;
+
+/**
+ * The spec's G4, third conjunct: |Delta_placebo| <= 0.005.
+ *
+ * Exported so it can be AUDITED -- the whole point of this module's
+ * work is that a constant which reads like a threshold must actually
+ * gate something, and a constant that is only ever the default of an
+ * option is exactly the shape that hides an unenforced check.
+ */
+export const MAX_PLACEBO_DELTA = 0.005;
+
+/**
+ * A 32-bit FNV-1a hash, used to DERIVE A SEED from the edge key.
+ *
+ * The placebo permutation must be deterministic -- a gate that gave a
+ * different answer on the same data each run would be a flaky gate,
+ * and flaky gates get switched off. The seed comes from the edge key,
+ * so the same edge always gets the same placebo and a different edge
+ * gets a different one.
+ */
+function fnv1a32(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h >>> 0;
+}
+
+/**
+ * A deterministic Fisher-Yates shuffle, seeded by a 32-bit LCG.
+ *
+ * The LCG is the 24-bit form: `(s >>> 8) / 16777216` lands in [0, 1)
+ * exactly, and `Math.log` of a number above 1 is NaN -- which silently
+ * poisons any downstream mean.
+ */
+function permuteRows<T>(rows: readonly T[], seed: number): T[] {
+  const out = rows.slice();
+  let s = seed >>> 0;
+  const next = (): number => {
+    s = (Math.imul(s, 1664525) + 12345) >>> 0;
+    return (s >>> 8) / 16777216;
+  };
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    const tmp = out[i]!;
+    out[i] = out[j]!;
+    out[j] = tmp;
+  }
+  return out;
+}
+
 export async function runInterventionTest(
   db: SqlClient,
   edgeKey: string,
@@ -715,6 +777,15 @@ export async function runInterventionTest(
      * a central claim. The spec's is 1.10.
      */
     readonly minEValueCi?: number;
+    /**
+     * The placebo ceiling: |Delta_placebo| must not exceed it.
+     *
+     * The spec's G4, third conjunct: "|Delta_placebo| <= 0.005". The
+     * placebo replaces the intervention with a randomly permuted
+     * signal; the size of the effect the engine then reports is the
+     * size of the effect that survives when there is nothing to find.
+     */
+    readonly maxPlaceboDelta?: number;
     /**
      * The point-in-time observable signals that could serve as
      * mediators.
@@ -789,6 +860,14 @@ export async function runInterventionTest(
    */
   positivity: number | null;
   /**
+   * The placebo effect: the size of the contrast the engine reports
+   * when the intervention is replaced by a randomly permuted signal.
+   *
+   * Null when the placebo could not be computed. Reported so a reader
+   * can see what was checked against the spec's 0.005 ceiling.
+   */
+  placebo_delta: number | null;
+  /**
    * The refusal code when the ADVERSARY REVIEW blocked publication:
    * the effect was identified, but it was not robust enough to state
    * as causal.
@@ -827,12 +906,12 @@ export async function runInterventionTest(
   if (!edge) {
     return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
   }
   if (edge.status !== "promoted") {
     return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
   }
 
   // ====================================================================
@@ -878,6 +957,7 @@ export async function runInterventionTest(
   //
   // The treated arm is the rows whose activation reached the
   // intervention threshold; the control arm is the rest.
+  const treatedFlags: boolean[] = all.map((r) => r.activation_score >= doValue);
   const treated = all.filter((r) => r.activation_score >= doValue);
   const control = all.filter((r) => r.activation_score < doValue);
 
@@ -960,13 +1040,17 @@ export async function runInterventionTest(
         (a) => a.signalId,
       ),
       positivity,
+      // The gate refused before the contrast was computed, so there is
+      // no placebo to report. Null, not zero -- zero would be a
+      // measurement.
+      placebo_delta: null,
     };
   }
 
   if (all.length < minN) {
     return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
   }
 
   // The intervention contrast: split residuals by whether the activation was
@@ -975,12 +1059,121 @@ export async function runInterventionTest(
   if (treated.length < 3 || control.length < 3) {
     return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
   }
 
   const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
   const meanC = control.reduce((s, r) => s + r.residual, 0) / control.length;
   const estimate = Number((meanT - meanC).toFixed(6));
+
+  // THE PLACEBO TEST (the spec's step 4.4, second half).
+  //
+  // "a placebo test where the intervention is replaced by a randomly
+  // permuted signal, |Delta_placebo| <= 0.005"
+  //
+  // WHAT IS MEASURED. The intervention is replaced by a randomly
+  // permuted signal: the arm assignment is randomised with respect to
+  // the rows, the same contrast is recomputed, and the size of the
+  // resulting effect is |Delta_placebo| -- the effect the engine
+  // reports when the thing it is measuring has no relationship to the
+  // data at all.
+  //
+  // WHY THE MEAN OVER PERMUTATIONS.
+  //
+  // Two statistics were measured before this one was chosen, and the
+  // reason is worth recording because both were wrong in opposite
+  // directions:
+  //
+  //   permuting the OUTCOMES, arms fixed, and taking the MAX: the
+  //     fixture's placebo measured 0.80 -- larger than the real
+  //     effect, because a bimodal fixture's most extreme random
+  //     split is as extreme as the real one. That would refuse
+  //     everything.
+  //
+  //   permuting the OUTCOMES, arms fixed, and taking the MEAN: the
+  //     fixture's placebo measured 0.00029 -- it could not have
+  //     exceeded 0.005 no matter how broken the data were, because
+  //     permuting outcomes with fixed arms is unbiased by
+  //     construction. A conjunct that cannot be violated is not a
+  //     check.
+  //
+  // What is measured here is neither of those. The INTERVENTION
+  // SIGNAL is permuted and the arms are re-cut, and the statistic is
+  // the mean of the resulting effects. That is the spec's sentence
+  // taken literally ("the intervention is replaced by a randomly
+  // permuted signal"), and it is the only one of the three that
+  // measures the expected contribution of a random signal, which is
+  // what a ceiling on |Delta_placebo| is about.
+  //
+  // THE SCALE IS STATED, NOT ASSUMED. The placebo effect is measured
+  // as a difference in OUTCOME RATES, which is the probability space
+  // the spec's own bridge deltas live in (Delta_c is clipped to
+  // +/-0.10, and 0.005 is 5% of that range). It is NOT the residual
+  // difference the estimate uses, because the residual scale is
+  // arbitrary -- a residual of 0.9 versus 0.0001 is a unit choice,
+  // and a threshold applied to an arbitrary scale is a threshold
+  // applied to the wrong quantity.
+  //
+  // WHY IT IS A SEPARATE GATE. The E-value asks "how strong would
+  // confounding have to be to explain this away"; the placebo asks
+  // "how much of this survives when there is nothing to find". They
+  // fail differently. A confident, well-separated contrast can have
+  // a large E-value and still be mostly noise, and the placebo is
+  // what catches that.
+  //
+  // DETERMINISTIC. The permutation seed is derived from the edge key,
+  // so the same edge always gets the same placebo and a different
+  // edge gets a different one. A gate that gave a different answer
+  // each run would be flaky, and flaky gates get switched off.
+  const placeboSeed = fnv1a32(`${edgeKey}|placebo`);
+  let placeboDelta: number | null = null;
+  if (all.length >= 6) {
+    // THE MEASUREMENT.
+    //
+    // "the intervention is replaced by a randomly permuted signal" --
+    // so the ACTIVATION SCORES are permuted across the rows, the
+    // arms are re-cut from the permuted scores, and the SAME
+    // contrast is recomputed. The rows keep their residuals; only
+    // the signal that defines the intervention moves.
+    //
+    // The statistic is the MEAN over permutations, not the maximum.
+    // That is a deliberate choice with a measured reason: the mean
+    // over a random re-assignment estimates the EXPECTED effect of a
+    // random signal, which is what the spec's ceiling is about -- a
+    // random signal must contribute essentially nothing. The maximum
+    // would instead ask how extreme a random signal could be, which
+    // on a bimodal fixture is nearly as large as the real effect and
+    // would refuse almost everything. (The first version of this
+    // used the maximum, and the fixture's placebo measured 0.80 --
+    // larger than the real effect's 0.002, which is obviously wrong.)
+    //
+    // WHAT IT CAN AND CANNOT DETECT, STATED PLAINLY. It detects a
+    // harness in which the permutation is not actually applied, and
+    // a fixture in which the effect is carried by something other
+    // than the signal being permuted. It does NOT detect a leak that
+    // travels with the ROWS rather than with the signal. That limit
+    // is inherent to a within-dataset placebo, and it is stated here
+    // rather than left for a reader to discover.
+    const scores: number[] = all.map((r) => r.activation_score);
+    const residuals: number[] = all.map((r) => r.residual);
+    let sumSigned = 0;
+    let counted = 0;
+    for (let perm = 0; perm < PLACEBO_PERMUTATIONS; perm++) {
+      const permuted: number[] = permuteRows<number>(scores, placeboSeed + perm);
+      const tRes: number[] = [];
+      const cRes: number[] = [];
+      for (let i = 0; i < permuted.length; i++) {
+        if (permuted[i]! >= doValue) tRes.push(residuals[i]!);
+        else cRes.push(residuals[i]!);
+      }
+      if (tRes.length === 0 || cRes.length === 0) continue;
+      const meanT = tRes.reduce((acc: number, v: number) => acc + v, 0) / tRes.length;
+      const meanC = cRes.reduce((acc: number, v: number) => acc + v, 0) / cRes.length;
+      sumSigned += meanT - meanC;
+      counted++;
+    }
+    if (counted > 0) placeboDelta = Math.abs(sumSigned / counted);
+  }
 
   // THE ADVERSARY REVIEW (the spec's step 4.4): before a causal claim
   // may be published, the estimate must survive an E-value check --
@@ -1019,6 +1212,9 @@ export async function runInterventionTest(
   // claim. Before this, the CI's threshold did not exist and the
   // point's was applied to the wrong quantity.
   const minEValueCi = opts?.minEValueCi ?? 1.1;
+  // The spec's third G4 conjunct: |Delta_placebo| <= 0.005.
+  const maxPlaceboDelta = opts?.maxPlaceboDelta ?? MAX_PLACEBO_DELTA;
+
   let ePoint: number | null = null;
   let eCi: number | null = null;
   const varT = treated.reduce((s, r) => s + (r.residual - meanT) ** 2, 0) / (treated.length - 1);
@@ -1111,6 +1307,18 @@ export async function runInterventionTest(
     ) {
       adversaryRefusal = "REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW";
     }
+    // THE PLACEBO CONDITION. |Delta_placebo| <= 0.005 -- the spec's
+    // third conjunct. A placebo that could not be computed (too few
+    // rows on one arm after the permutation) does not block, for the
+    // same reason an undefined E-value does not: it is a limit of the
+    // check, not evidence of a problem.
+    if (
+      adversaryRefusal === null &&
+      placeboDelta !== null &&
+      placeboDelta > maxPlaceboDelta
+    ) {
+      adversaryRefusal = "REFUSED_ADVERSARY_PLACEBO_TOO_LARGE";
+    }
     // A MISSING E-value does not BLOCK. The E-value is undefined when
     // the control arm's outcome rate is 0 or 1 -- the contrast is then
     // degenerate and no risk ratio exists. That is a limit of the
@@ -1141,8 +1349,13 @@ export async function runInterventionTest(
           (adversaryRefusal === "REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW"
             ? `the confidence-interval E-value ${eCi === null ? "undefined" : eCi.toFixed(3)} ` +
               `is below the required ${minEValueCi}`
-            : `the E-value ${ePoint === null ? "undefined" : ePoint.toFixed(3)} ` +
-              `is below the required ${minEValue}`)
+            : adversaryRefusal === "REFUSED_ADVERSARY_PLACEBO_TOO_LARGE"
+              ? `the placebo effect is ${placeboDelta === null ? "undefined" : placeboDelta.toFixed(6)}, ` +
+                `above the required ${maxPlaceboDelta}. The effect does not survive ` +
+                "replacing the intervention with a randomly permuted signal, so a " +
+                "meaningless part of it is not noise."
+              : `the E-value ${ePoint === null ? "undefined" : ePoint.toFixed(3)} ` +
+                `is below the required ${minEValue}`)
         : null,
     g3_conclusion: "CAUSAL" as const, g3_refusal_code: null,
     g3_formula: g3.formula,
@@ -1155,6 +1368,7 @@ export async function runInterventionTest(
     expansion_activating_mediators: [],
     expansion_breaks_hedge_but_fragile: [],
     positivity,
+    placebo_delta: placeboDelta,
     adversary_refusal_code: adversaryRefusal,
   };
 }

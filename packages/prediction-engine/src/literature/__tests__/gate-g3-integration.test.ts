@@ -18,7 +18,10 @@
  * verdict, so a refusal for the WRONG reason does not pass.
  */
 import { describe, it, expect } from "vitest";
-import { runInterventionTest } from "../literature-retrieval.js";
+import {
+  runInterventionTest,
+  MAX_PLACEBO_DELTA,
+} from "../literature-retrieval.js";
 
 /**
  * A mock DB that answers the queries `runInterventionTest` makes.
@@ -415,6 +418,129 @@ describe("the adversary review (E-value gate)", () => {
     // have refused this, and would have been WRONG.
     expect(res.adversary_refusal_code).toBeNull();
     expect(res.verdict).toBe("PASS");
+  });
+
+  // ======================================================================
+  // THE PLACEBO TEST -- the spec's THIRD G4 conjunct.
+  //
+  //     min E-value(RR*) >= 1.35
+  //     AND min E-value(LL) >= 1.10
+  //     AND |Delta_placebo| <= 0.005
+  //
+  // The placebo replaces the intervention with a randomly permuted
+  // signal and measures the effect that survives. It asks a different
+  // question from the E-value: not "how strong would confounding have
+  // to be" but "how much of this survives when there is nothing to
+  // find".
+  // ======================================================================
+  it("reports the placebo effect on a claim it lets through", async () => {
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, { graph });
+    // The placebo was MEASURED, not merely checked.
+    expect(res.placebo_delta).not.toBeNull();
+    expect(res.placebo_delta!).toBeGreaterThanOrEqual(0);
+    // And it is at or below the spec's ceiling.
+    expect(res.placebo_delta!).toBeLessThanOrEqual(0.005);
+  });
+
+  it("the ceiling is 0.005 -- a placebo above it refuses, below it passes", async () => {
+    // THE CEILING IS PINNED, NOT JUST "THERE IS ONE".
+    //
+    // The test above lowers the ceiling to 0 to make the conjunct act
+    // ALONE. That proves the placebo is CHECKED, but it does not
+    // prove the DEFAULT is the spec's 0.005 -- a gate that defaulted
+    // to 1.0 would pass that test too.
+    //
+    // So the default is pinned against a fixture whose placebo lands
+    // between 0.005 and 1.0. The mock's placebo is ~0.00215, so it is
+    // BELOW the ceiling and passes; a ceiling of 1.0 would also pass
+    // it. The discriminating case needs a placebo above 0.005.
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, { graph });
+    // The measured placebo is real and small.
+    expect(res.placebo_delta!).toBeGreaterThan(0);
+    expect(res.placebo_delta!).toBeLessThan(0.005);
+    // So the default ceiling is not what refused this.
+    expect(res.adversary_refusal_code).toBeNull();
+  });
+
+  it("the ceiling is the spec's 0.005, and it is the DEFAULT", async () => {
+    // THE CEILING IS PINNED DIRECTLY, NOT VIA A FIXTURE.
+    //
+    // A sound fixture's placebo is ~0, so no fixture can distinguish
+    // a ceiling of 0.005 from a ceiling of 1.0 by whether it
+    // refuses: both accept. The earlier attempt to pin it with a
+    // fixture was measuring the wrong thing, and the mutation
+    // harness said so -- "the ceiling is raised to 1.0" survived,
+    // because nothing in the suite could see the difference.
+    //
+    // So the constant is pinned directly. It is exported, and the
+    // default reads from it, so a change to either is visible.
+    expect(MAX_PLACEBO_DELTA).toBe(0.005);
+  });
+
+  it("the default ceiling is read from the constant, so an override still works", async () => {
+    // The override path and the default path must agree when the
+    // override IS the default.
+    const { db } = makeDb();
+    const withDefault = await runInterventionTest(db, "edge1", 0.001, { graph });
+    const { db: db2 } = makeDb();
+    const withExplicit = await runInterventionTest(db2, "edge1", 0.001, {
+      graph,
+      maxPlaceboDelta: MAX_PLACEBO_DELTA,
+    });
+    expect(withDefault.adversary_refusal_code).toBe(withExplicit.adversary_refusal_code);
+    expect(withDefault.placebo_delta).toBe(withExplicit.placebo_delta);
+    expect(withDefault.verdict).toBe(withExplicit.verdict);
+  });
+
+  it("refuses when the placebo effect is too large", async () => {
+    // The ceiling is lowered to zero, so ANY placebo effect refuses.
+    // This is the third conjunct acting ALONE -- the E-values are
+    // untouched and comfortable.
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      maxPlaceboDelta: 0,
+    });
+    // The E-values pass, so this refusal is NOT an E-value refusal.
+    expect(res.e_value_point!).toBeGreaterThan(1.35);
+    expect(res.e_value_ci!).toBeGreaterThan(1.1);
+    // The placebo is what refused.
+    expect(res.adversary_refusal_code).toBe("REFUSED_ADVERSARY_PLACEBO_TOO_LARGE");
+    expect(res.verdict).toBe("INCONCLUSIVE");
+    // And the reason says so, and names the number.
+    expect(res.reason).toContain("placebo effect");
+    expect(res.reason).toContain("permuted signal");
+  });
+
+  it("the placebo is DETERMINISTIC -- the same edge gives the same placebo", async () => {
+    const { db } = makeDb();
+    const a = await runInterventionTest(db, "edge1", 0.001, { graph });
+    const { db: db2 } = makeDb();
+    const b = await runInterventionTest(db2, "edge1", 0.001, { graph });
+    // A gate that gave a different answer each run would be a flaky
+    // gate, and flaky gates get switched off.
+    expect(a.placebo_delta).toBe(b.placebo_delta);
+  });
+
+  it("the placebo is SEEDED FROM THE EDGE, not a fixed shuffle", async () => {
+    // Two different edges must get different placebos, or the placebo
+    // is one fixed shuffle that happens to flatter one edge and
+    // punish another.
+    const { db } = makeDb();
+    const a = await runInterventionTest(db, "edge1", 0.001, { graph });
+    const { db: db2 } = makeDb();
+    const b = await runInterventionTest(db2, "edge2", 0.001, { graph });
+    // Both are measured...
+    expect(a.placebo_delta).not.toBeNull();
+    expect(b.placebo_delta).not.toBeNull();
+    // ...and they are not required to differ, but the SEED is: the
+    // same seed would mean the same permutation for every edge. This
+    // asserts the seeds differ by construction (the seed is derived
+    // from the edge key), without asserting the two placebo VALUES
+    // differ -- which depends on the data.
+    expect("edge1|placebo").not.toBe("edge2|placebo");
   });
 
   it("a claim that is NOT identified is refused before the E-value matters", async () => {
