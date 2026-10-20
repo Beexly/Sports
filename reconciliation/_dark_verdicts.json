@@ -1,0 +1,382 @@
+[
+ {
+  "signal_id": "nfl_turnover_luck",
+  "family": "LUCK",
+  "label": "NFL Turnover Luck (recovery variance vs skill)",
+  "env_keys": [
+   "DEFENSIVE_PLAYS",
+   "FUMBLES_FORCED",
+   "FUMBLES_RECOVERED_BY_TEAM",
+   "INTERCEPTIONS",
+   "OPPONENT_DROPBACKS"
+  ],
+  "data_dependencies": [
+   "nfl_player_stats_weekly",
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)",
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_short_week_road_deficit",
+  "family": "SITUATIONAL",
+  "label": "NFL Short-Week Road Rest Deficit",
+  "env_keys": [
+   "IS_DIVISION_RIVALRY",
+   "IS_ROAD_TEAM",
+   "OPP_REST_DAYS",
+   "REST_DAYS",
+   "TRAVEL_DISTANCE_MILES"
+  ],
+  "data_dependencies": [
+   "nfl_schedule"
+  ],
+  "dependency_state": {
+   "nfl_schedule": "games (4,832 rows; restDaysHome 2,130 populated)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_age_conditioned_rest",
+  "family": "SITUATIONAL",
+  "label": "NFL Age-Conditioned Rest Recovery",
+  "env_keys": [
+   "OL_AVG_AGE",
+   "REST_DAYS",
+   "ROSTER_SNAP_WEIGHTED_AGE",
+   "STARTING_QB_AGE"
+  ],
+  "data_dependencies": [
+   "nfl_schedule",
+   "nfl_rosters"
+  ],
+  "dependency_state": {
+   "nfl_schedule": "games (4,832 rows; restDaysHome 2,130 populated)",
+   "nfl_rosters": "players (1,449) + depth_chart_entries (6,875)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_fourth_down_aggressiveness",
+  "family": "SITUATIONAL",
+  "label": "NFL Fourth-Down Coaching Aggressiveness",
+  "env_keys": [
+   "COACH_GO_FOR_IT_RATE",
+   "FOURTH_DOWN_LEVERAGE",
+   "LEAGUE_GO_FOR_IT_RATE"
+  ],
+  "data_dependencies": [
+   "nfl_pbp",
+   "nfl_coaching_history"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)",
+   "nfl_coaching_history": "MISSING as a table; only scripts/"
+  },
+  "verdict": "PARTIAL-DATA"
+ },
+ {
+  "signal_id": "nfl_second_and_ten_tendency",
+  "family": "SITUATIONAL",
+  "label": "NFL 2nd-and-10 Play-Calling Tendency (Lopez)",
+  "env_keys": [
+   "LEAGUE_SECOND_AND_TEN_PASS_RATE",
+   "SECOND_AND_TEN_PASS_RATE"
+  ],
+  "data_dependencies": [
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_primetime_target_concentration",
+  "family": "SITUATIONAL",
+  "label": "NFL Primetime Target Concentration",
+  "env_keys": [
+   "IS_PRIMETIME",
+   "LEAGUE_WR1_TARGET_SHARE",
+   "WR1_TARGET_SHARE"
+  ],
+  "data_dependencies": [
+   "nfl_player_stats_weekly",
+   "nfl_schedule"
+  ],
+  "dependency_state": {
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)",
+   "nfl_schedule": "games (4,832 rows; restDaysHome 2,130 populated)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_early_down_proe_momentum",
+  "family": "SITUATIONAL",
+  "label": "NFL Early-Down PROE Momentum",
+  "env_keys": [
+   "EARLY_DOWN_PROE",
+   "EARLY_DOWN_PROE_MOMENTUM"
+  ],
+  "data_dependencies": [
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_two_minute_hurry_up",
+  "family": "SITUATIONAL",
+  "label": "NFL Two-Minute Hurry-Up Efficiency",
+  "env_keys": [
+   "LEAGUE_TWO_MINUTE_EPA",
+   "TWO_MINUTE_EPA_PER_PLAY"
+  ],
+  "data_dependencies": [
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_bye_week_defensive_install",
+  "family": "SITUATIONAL",
+  "label": "NFL Bye-Week Defensive Installation Edge",
+  "env_keys": [
+   "COMING_OFF_BYE",
+   "DEFENSIVE_EPA_TREND"
+  ],
+  "data_dependencies": [
+   "nfl_schedule",
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_schedule": "games (4,832 rows; restDaysHome 2,130 populated)",
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_qb_twp_regression",
+  "family": "EFFICIENCY",
+  "label": "NFL QB Turnover-Worthy-Play Regression",
+  "env_keys": [
+   "OPP_DEF_INT_RATE",
+   "QB_INTERCEPTIONS",
+   "QB_PASS_ATTEMPTS",
+   "QB_TURNOVER_WORTHY_PLAYS"
+  ],
+  "data_dependencies": [
+   "nfl_pbp",
+   "nfl_player_stats_weekly"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)",
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_qb_receiver_continuity",
+  "family": "EFFICIENCY",
+  "label": "NFL QB-Receiver Continuity",
+  "env_keys": [
+   "QB_WR_GAMES_TOGETHER",
+   "QB_WR_TARGET_SHARE"
+  ],
+  "data_dependencies": [
+   "nfl_rosters",
+   "nfl_player_stats_weekly"
+  ],
+  "dependency_state": {
+   "nfl_rosters": "players (1,449) + depth_chart_entries (6,875)",
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_penalty_differential_momentum",
+  "family": "EFFICIENCY",
+  "label": "NFL Penalty Differential Momentum",
+  "env_keys": [
+   "PENALTY_MOMENTUM",
+   "PENALTY_YARDS_AGAINST",
+   "PENALTY_YARDS_FOR"
+  ],
+  "data_dependencies": [
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_backup_qb_target_distribution",
+  "family": "EFFICIENCY",
+  "label": "NFL Backup-QB Target Distribution Shift",
+  "env_keys": [
+   "BACKUP_TARGET_SHARE",
+   "QB_IS_BACKUP",
+   "STARTER_TARGET_SHARE"
+  ],
+  "data_dependencies": [
+   "nfl_injuries",
+   "nfl_player_stats_weekly"
+  ],
+  "dependency_state": {
+   "nfl_injuries": "injuries (7,857)",
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_man_zone_receiver_archetype",
+  "family": "EFFICIENCY",
+  "label": "NFL Man/Zone Receiver Archetype Matchup",
+  "env_keys": [
+   "DEF_MAN_RATE",
+   "WR_MAN_EPA",
+   "WR_ZONE_EPA"
+  ],
+  "data_dependencies": [
+   "nfl_charting",
+   "nfl_player_stats_weekly"
+  ],
+  "dependency_state": {
+   "nfl_charting": "nflverse pbp (formation/box data)",
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_wr1_vacated_target_efficiency",
+  "family": "EFFICIENCY",
+  "label": "NFL WR1-Out Efficiency Decay",
+  "env_keys": [
+   "VACATED_TARGET_SHARE",
+   "WR1_OUT",
+   "WR2_TARGET_SHARE"
+  ],
+  "data_dependencies": [
+   "nfl_injuries",
+   "nfl_player_stats_weekly"
+  ],
+  "dependency_state": {
+   "nfl_injuries": "injuries (7,857)",
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_redzone_opportunity_conversion",
+  "family": "EFFICIENCY",
+  "label": "NFL Red-Zone Opportunity Conversion",
+  "env_keys": [
+   "LEAGUE_REDZONE_TD_RATE",
+   "REDZONE_TDS",
+   "REDZONE_TRIPS"
+  ],
+  "data_dependencies": [
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_negative_binomial_redzone_td",
+  "family": "EFFICIENCY",
+  "label": "NFL Negative-Binomial Red-Zone TD Rate",
+  "env_keys": [
+   "REDZONE_TD_DISPERSION",
+   "REDZONE_TD_MEAN",
+   "REDZONE_TD_OBSERVED"
+  ],
+  "data_dependencies": [
+   "nfl_pbp"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_redzone_personnel_grouping",
+  "family": "EFFICIENCY",
+  "label": "NFL Red-Zone Personnel Grouping Edge",
+  "env_keys": [
+   "LEAGUE_REDZONE_PERSONNEL_SUCCESS",
+   "REDZONE_PERSONNEL_GROUPING",
+   "REDZONE_PERSONNEL_SUCCESS_RATE"
+  ],
+  "data_dependencies": [
+   "nfl_pbp",
+   "nfl_charting"
+  ],
+  "dependency_state": {
+   "nfl_pbp": "nflverse pbp asset (per apps/web/lib/nflverse/pbp.ts)",
+   "nfl_charting": "nflverse pbp (formation/box data)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_rookie_breakout_cohort",
+  "family": "NARRATIVE",
+  "label": "NFL Rookie Breakout Cohort",
+  "env_keys": [
+   "PLAYER_DRAFT_CAPITAL",
+   "PLAYER_IS_ROOKIE",
+   "PLAYER_USAGE_TREND"
+  ],
+  "data_dependencies": [
+   "nfl_rosters",
+   "nfl_player_stats_weekly"
+  ],
+  "dependency_state": {
+   "nfl_rosters": "players (1,449) + depth_chart_entries (6,875)",
+   "nfl_player_stats_weekly": "player_game_stats (36,539 rows)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_high_altitude_fatigue",
+  "family": "MICROCLIMATE",
+  "label": "NFL High-Altitude Fatigue Decay",
+  "env_keys": [
+   "IS_VISITING",
+   "STADIUM_ELEVATION_FT"
+  ],
+  "data_dependencies": [
+   "nfl_stadium_weather_feed"
+  ],
+  "dependency_state": {
+   "nfl_stadium_weather_feed": "game_signals (5,984) + game-weather-capture cron"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ },
+ {
+  "signal_id": "nfl_turf_surface_fatigue",
+  "family": "MICROCLIMATE",
+  "label": "NFL Turf Surface Fatigue",
+  "env_keys": [
+   "IS_ARTIFICIAL_TURF",
+   "TURF_SOFTNESS_INDEX"
+  ],
+  "data_dependencies": [
+   "nfl_stadium_meta"
+  ],
+  "dependency_state": {
+   "nfl_stadium_meta": "games (venue fields) + teams (EMPTY)"
+  },
+  "verdict": "DATA-EXISTS-NEEDS-ADAPTER"
+ }
+]

@@ -1,0 +1,316 @@
+{
+ "artifact": "layer2_living_literature_map",
+ "generated": "2026-10-20",
+ "audited_ref": "origin/main@4fa5330f4",
+ "claim_corrections": {
+  "brief_said_2379_papers_structured_as_premises": {
+   "measured": 13,
+   "premise_ids": [
+    "2609.06739",
+    "2609.12878",
+    "2606.21814",
+    "2610.16383",
+    "2609.10498",
+    "2607.24573",
+    "2610.15000",
+    "2608.01234",
+    "2607.09876",
+    "EQ-LINE-001",
+    "EQ-COACH-001",
+    "EQ-LUCK-001",
+    "EQ-SGP-001"
+   ],
+   "evidence": "packages/prediction-engine/src/reasoning/arxiv-reasoning-bridge.ts:70 ARXIV_REASONING_PREMISES",
+   "note": "2379 and 429 are hardcoded literals in evaluateArxivCorpus's return object, not measurements"
+  },
+  "brief_said_429_kaggle_datasets_structured": {
+   "measured_kaggle_source_records": 269,
+   "measured_kaggle_premises_in_bridge": 0,
+   "evidence": "no Kaggle identifier in arxiv-reasoning-bridge.ts; 'Kaggle' appears as a MIND source label"
+  },
+  "brief_said_raw_base_50k_plus": {
+   "measured_citable_records": 23909,
+   "measured_distinct_identifiers": 8077,
+   "evidence": "reconciliation/corpus_scale.json; grep for 50,000/50k finds only NFL-play references"
+  },
+  "brief_said_bridge_wired_into_layer2_situational_engine": {
+   "measured_importers_outside_own_test": 0,
+   "evidence": "grep -rn 'arxiv-reasoning-bridge' packages/ apps/ scripts/ intelligence/"
+  }
+ },
+ "corpus_scale_measured": {
+  "citable_records": 23909,
+  "distinct_identifiers": 8077,
+  "identifiers_by_class": {
+   "URL": 575,
+   "arXiv": 7160,
+   "other": 342
+  },
+  "arxiv_ledgers": 1513,
+  "corpus_index_jsonl_rows": 1251,
+  "records_with_evaluate_context_in_raw_data": 0
+ },
+ "evaluability_ladder": {
+  "L0_raw_citable_records": 23909,
+  "L1_distinct_resolvable_ids": 8077,
+  "L2_arxiv_ids_with_markdown_ledgers": 2121,
+  "L3_structured_premises_with_evaluateContext": 13,
+  "L4_mind_corpus_records": 5149,
+  "L5_premises_promoted_to_causal_edges_measured": 8,
+  "L6_premises_that_moved_trueprob_measured": 0,
+  "L7_premises_that_survived_a_conclusive_intervention_test": 0
+ },
+ "pillar_canonical_map": {
+  "market_microstructure": {
+   "bridge": [
+    "MARKET_GRAVITY_AND_BIAS"
+   ],
+   "corpus_evaluator": [
+    "shin_informed_devig",
+    "reverse_line_capital_flow",
+    "favorite_longshot_curvature"
+   ],
+   "mind": [
+    "market_microstructure"
+   ],
+   "signal_families": [
+    "market.",
+    "odds.",
+    "line_"
+   ],
+   "corpus_records_measured": 120
+  },
+  "physical_environment": {
+   "bridge": [
+    "ENVIRONMENT_AND_CONTEXT",
+    "FLUID_DYNAMICS_BALL_FLIGHT",
+    "ATMOSPHERE_AND_REFEREE_BIAS"
+   ],
+   "corpus_evaluator": [
+    "navier_stokes_aerodynamics",
+    "magnus_lift_ballistics",
+    "cold_thermal_friction",
+    "altitude_hypoxia_expansion"
+   ],
+   "mind": [
+    "weather_and_aerodynamics"
+   ],
+   "signal_families": [
+    "vision.",
+    "weather.",
+    "env."
+   ],
+   "corpus_records_measured": 18
+  },
+  "tactical_schematic": {
+   "bridge": [
+    "TACTICS_AND_GAME_THEORY",
+    "COACHING_FOURTH_DOWN_DRAG"
+   ],
+   "corpus_evaluator": [
+    "coverage_shell_factorization",
+    "qb_kinetic_chain_decay",
+    "fourth_down_game_theory"
+   ],
+   "mind": [
+    "secondary_coverage",
+    "trench_warfare"
+   ],
+   "signal_families": [
+    "ftn.",
+    "qbr."
+   ],
+   "corpus_records_measured": 239
+  },
+  "situational": {
+   "bridge": [
+    "DYNAMIC_MOMENTUM_TRANSITION",
+    "CIRCADIAN_TRAVEL_DYSRHYTHMIA",
+    "TURNOVER_LUCK_REGRESSION"
+   ],
+   "corpus_evaluator": [
+    "bye_rest_differential",
+    "circadian_travel_dysrhythmia",
+    "supermartingale_drift_audit"
+   ],
+   "mind": [
+    "rest_and_schedule",
+    "home_field_dynamics"
+   ],
+   "signal_families": [
+    "rest.",
+    "schedule."
+   ],
+   "corpus_records_measured": 139
+  },
+  "personnel_availability": {
+   "bridge": [
+    "TRENCH_OL_CONTINUITY"
+   ],
+   "corpus_evaluator": [
+    "trench_bipartite_matching",
+    "defensive_snap_endurance"
+   ],
+   "mind": [
+    "trench_warfare"
+   ],
+   "signal_families": [
+    "snaps.",
+    "depth_chart."
+   ],
+   "corpus_records_measured": 85
+  },
+  "efficiency_usage": {
+   "bridge": [
+    "NETWORK_AND_STYLE_MATCHUPS"
+   ],
+   "corpus_evaluator": [
+    "spatial_kinematics_imm",
+    "pathwise_win_probability"
+   ],
+   "mind": [
+    "sports_analytics_metrics",
+    "team_ratings"
+   ],
+   "signal_families": [
+    "ngs.",
+    "qbr.",
+    "snaps."
+   ],
+   "corpus_records_measured": 3362
+  },
+  "narrative_context": {
+   "bridge": [],
+   "corpus_evaluator": [
+    "fandom_sentiment_arcs"
+   ],
+   "mind": [
+    "secondary_coverage",
+    "narrative"
+   ],
+   "signal_families": [
+    "cognitive.",
+    "coach.",
+    "press."
+   ],
+   "corpus_records_measured": 154
+  },
+  "injury_availability": {
+   "bridge": [
+    "FATIGUE_INJURY_WORKLOAD"
+   ],
+   "corpus_evaluator": [
+    "acwr_workload_injury_hazard",
+    "snap_timing_acoustic_variance"
+   ],
+   "mind": [
+    "workload_and_injuries",
+    "workload_and_fatigue"
+   ],
+   "signal_families": [
+    "injury",
+    "injuries."
+   ],
+   "corpus_records_measured": 409
+  },
+  "cognition_decision": {
+   "bridge": [],
+   "corpus_evaluator": [
+    "unstructured_theory"
+   ],
+   "mind": [
+    "in_game_calibration",
+    "quarterback_evaluation"
+   ],
+   "signal_families": [
+    "cognitive.",
+    "market."
+   ],
+   "corpus_records_measured": 87
+  }
+ },
+ "pillar_taxonomies_in_repo": {
+  "bridge": {
+   "file_line": "packages/prediction-engine/src/reasoning/arxiv-reasoning-bridge.ts:14-28",
+   "count": 14
+  },
+  "corpus_evaluator": {
+   "file_line": "packages/prediction-engine/src/reasoning/corpus-evaluator.ts (export type LiteratureDomain)",
+   "count": 25
+  },
+  "mind_corpus": {
+   "file_line": "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl (domain field)",
+   "count": 17
+  },
+  "literature_index_new": {
+   "file_line": "packages/prediction-engine/src/literature/literature-pillars.ts",
+   "count": 9,
+   "note": "canonical candidate; derived by pure function of premise text so it cannot drift"
+  }
+ },
+ "retrieval_failure_inventory": [
+  {
+   "id": "RF-1",
+   "failure": "corpus evaluator is a hardcoded-path full scan",
+   "file_line": "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:835-850",
+   "production_effect": "findCorpusDirectories() returns [] on Vercel -> 0 items evaluated -> corpusSituationalShift 0"
+  },
+  {
+   "id": "RF-2",
+   "failure": "mind corpus path is hardcoded to one developer machine and loadMindCorpus THROWS when missing",
+   "file_line": "packages/prediction-engine/src/reasoning/mind-reasoning.ts:130-139, :150",
+   "production_effect": "evaluateMindReasoning throws; situational-engine.ts:161 calls it unguarded"
+  },
+  {
+   "id": "RF-3",
+   "failure": "corpus output never enters trueProb",
+   "file_line": "packages/prediction-engine/src/ranking-prob.ts:56-58",
+   "production_effect": "corpusWeight defaults to 0.0; no production caller until audit branch 2575402f6"
+  },
+  {
+   "id": "RF-4",
+   "failure": "no index over the raw corpus; every evaluation is a full scan",
+   "file_line": "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:855-895 (loadCorpusArtifacts)",
+   "production_effect": "cost grows linearly with corpus; no top-k"
+  },
+  {
+   "id": "RF-5",
+   "failure": "no event-driven trigger; evaluation happens only inside a slate read",
+   "file_line": "packages/prediction-engine/src/reasoning/situational-engine.ts:155-161",
+   "production_effect": "a mid-week signal cannot force re-reason"
+  }
+ ],
+ "trueprob_seam_state": {
+  "corpusAdjustment_declared": "packages/types/src/index.ts (audit branch 2575402f6)",
+  "passed_at": [
+   "packages/prediction-engine/src/scoring.ts:848",
+   "packages/prediction-engine/src/scoring.ts:1534"
+  ],
+  "populated_at": "packages/ingestion-pipeline/src/process-sport.ts (audit branch 2575402f6)",
+  "corpusWeight_value": 0,
+  "why_zero": "corpus-evaluator.ts:26-29 promotion gate requires N>=500 settled games and delta Brier >= 0.002 on a pre-registered holdout; NOT YET RUN"
+ },
+ "index_built_on_audit_branch": {
+  "neon_branch": "dev-lit-vectors-2026-10",
+  "schema": "lit",
+  "premises_indexed": 5509,
+  "premise_vectors": 5509,
+  "raw_corpus_vectorized": 1268,
+  "events": 200,
+  "activations": 5650,
+  "distinct_premises_activated": 257,
+  "latency_p50_ms": 78,
+  "latency_p95_ms": 79,
+  "latency_p99_ms": 84,
+  "hnsw_index_confirmed": true,
+  "residuals_from_real_outcomes": 72,
+  "residuals_correct": 43,
+  "premises_promoted_to_edges": 8,
+  "intervention_tests": 8,
+  "intervention_verdicts": {
+   "INCONCLUSIVE": 8
+  },
+  "raw_items_promoted_after_repeat_retrieval": 75,
+  "coverage_json": "reconciliation/literature-coverage.json"
+ }
+}
