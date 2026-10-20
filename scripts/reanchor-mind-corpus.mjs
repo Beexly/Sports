@@ -474,7 +474,8 @@ for (const record of records) {
   // ---- already admitted: nothing to repair ----
   if (before.admitted) {
     report.unchangedAdmitted++;
-    record.status = "ADMITTED_UNCHANGED";
+    record.status = "ACTIVE";
+    record.reanchor_detail = "ADMITTED_UNCHANGED";
     continue;
   }
 
@@ -482,7 +483,8 @@ for (const record of records) {
   const isDerivedClass = record.record_class === "DERIVED_MARKET_SYNTHESIS";
   if (isDerivedClass || DB_ROW_QUOTE.test(quote)) {
     report.unchangedDerived++;
-    record.status = "UNCHANGED_DERIVED_SYNTHESIS";
+    record.status = "DERIVED_TABLE";
+    record.reanchor_detail = "UNCHANGED_DERIVED_SYNTHESIS";
     continue;
   }
 
@@ -506,7 +508,8 @@ for (const record of records) {
     const verdict = verifyRecord(trial, library);
     if (verdict.admitted) {
       applyTrial(record, trial);
-      record.status = "REANCHORED_IN_PLACE";
+      record.status = "ACTIVE";
+      record.reanchor_detail = "REANCHORED_IN_PLACE";
       report.reanchoredInPlace++;
       continue;
     }
@@ -545,7 +548,8 @@ for (const record of records) {
   if (accepted) {
     const fromSource = record.source_path ?? record.source_file ?? null;
     applyTrial(record, accepted);
-    record.status = "REANCHORED_MOVED";
+    record.status = "ACTIVE";
+    record.reanchor_detail = "REANCHORED_MOVED";
     report.reanchoredMoved++;
     if (movedSamples.length < 10) {
       movedSamples.push({ item_id: record.item_id, from: fromSource, to: record.source_path });
@@ -632,7 +636,7 @@ function applyTrial(record, trial) {
  * value is preserved under `quarantine_claimed_source` so nothing is erased.
  */
 function quarantine(record, verdict, why) {
-  if (record.status !== "QUARANTINED") {
+  if (record.status !== "UNCITED_NO_SOURCE") {
     record.quarantine_claimed_source = record.source_file ?? null;
   }
   record.record_class = "HONESTLY_UNCITED_PRIOR";
@@ -643,7 +647,8 @@ function quarantine(record, verdict, why) {
   record.source_file = null;
   record.source_path = null;
   record.source_doc_hash = null;
-  record.status = "QUARANTINED";
+  record.status = "UNCITED_NO_SOURCE";
+  record.reanchor_detail = "QUARANTINED";
   const layers = verdict?.failed_layers?.length ? verdict.failed_layers.join("+") : "UNKNOWN";
   record.quarantine_reason = `${layers}: ${why}`;
 }
@@ -652,8 +657,15 @@ function quarantine(record, verdict, why) {
 
 // Re-verify only the records this pass actually changed. Every other record
 // is byte-identical to its input, so its verdict cannot have moved.
+//
+// The status of a re-anchored record is now ACTIVE (it is admitted), and
+// the detail of WHAT the pass did is in `reanchor_detail` -- because the
+// status vocabulary is shared with the builder, and the builder has no
+// notion of "re-anchored".
 for (const record of records) {
-  const changed = record.status === "REANCHORED_MOVED" || record.status === "REANCHORED_IN_PLACE";
+  const changed =
+    record.reanchor_detail === "REANCHORED_MOVED" ||
+    record.reanchor_detail === "REANCHORED_IN_PLACE";
   if (changed && verifyRecord(record, library).admitted) report.admittedAfter++;
 }
 report.admittedAfter += report.unchangedAdmitted;
@@ -683,7 +695,7 @@ out.push(`  examined                       ${report.examined}`);
 out.push(`  admitted before this pass      ${report.admittedBefore}`);
 out.push(`  RE-ANCHORED (link moved)       ${report.reanchoredMoved}`);
 out.push(`  RE-ANCHORED (span in place)    ${report.reanchoredInPlace}`);
-out.push(`  QUARANTINED                    ${report.quarantined}`);
+out.push(`  UNCITED_NO_SOURCE (quarantined)  ${report.quarantined}`);
 out.push(`  unchanged, already admitted    ${report.unchangedAdmitted}`);
 out.push(`  unchanged, link OK / semantic  ${report.linkVerifiedSemanticFail}`);
 out.push(`  unchanged, declared synthesis  ${report.unchangedDerived}`);
