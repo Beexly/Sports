@@ -21,6 +21,12 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { execSync } from "node:child_process";
 import { Client } from "pg";
 
+// Raw Node cannot resolve the "./x.js" specifier the TypeScript build
+// requires, so a resolve hook maps it to the sibling .ts file. This lets
+// the script import the repo's REAL modules with no build step.
+import { register } from "node:module";
+register(new URL("./ts-resolve-hook.mjs", import.meta.url));
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const { MEASURE_REGISTRY, MEASURE_RESOLUTION_ORDER, resolveMeasure } = await import(
   pathToFileURL(

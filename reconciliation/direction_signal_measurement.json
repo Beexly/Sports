@@ -1,0 +1,85 @@
+{
+ "artifact": "direction_signal_measurement",
+ "measured_at": "2026-10-20T08:23:30.236Z",
+ "question": "Does the corpus's influence_direction carry information, or is it keyword-fallback noise?",
+ "method": "Grade the same data twice per premise: once with the corpus's asserted direction and once with it INVERTED. The gap between the two says whether the direction choice is meaningful.",
+ "premises_graded": 140,
+ "per_measure": [
+  {
+   "measure": "route_running",
+   "premises": 1,
+   "support": 2816,
+   "asserted_rate": 0.1109,
+   "inverted_rate": 0.8891,
+   "gap_asserted_minus_inverted": -0.7783,
+   "best_achievable_rate": 0.8891,
+   "edge_over_chance": 0.3891,
+   "direction_carries_information": "NO: the corpus's direction is WORSE than the inverse -- the direction is noise"
+  },
+  {
+   "measure": "workload",
+   "premises": 1,
+   "support": 754,
+   "asserted_rate": 0.2912,
+   "inverted_rate": 0.7088,
+   "gap_asserted_minus_inverted": -0.4175,
+   "best_achievable_rate": 0.7088,
+   "edge_over_chance": 0.2088,
+   "direction_carries_information": "NO: the corpus's direction is WORSE than the inverse -- the direction is noise"
+  },
+  {
+   "measure": "tracking",
+   "premises": 68,
+   "support": 573,
+   "asserted_rate": 0.4982,
+   "inverted_rate": 0.5018,
+   "gap_asserted_minus_inverted": -0.0036,
+   "best_achievable_rate": 0.5018,
+   "edge_over_chance": 0.0018,
+   "direction_carries_information": "INDISTINGUISHABLE: the two are within 1 point of each other"
+  },
+  {
+   "measure": "coverage",
+   "premises": 70,
+   "support": 573,
+   "asserted_rate": 0.497,
+   "inverted_rate": 0.503,
+   "gap_asserted_minus_inverted": -0.0061,
+   "best_achievable_rate": 0.503,
+   "edge_over_chance": 0.003,
+   "direction_carries_information": "INDISTINGUISHABLE: the two are within 1 point of each other"
+  }
+ ],
+ "per_premise_direction_test": {
+  "corpus_direction_better_than_inverse": 53,
+  "corpus_direction_worse_than_inverse": 87,
+  "tied": 0,
+  "note": "A premise's rate and its inverse's rate sum to 1 over the same judgments, so 'tied' means the two are exactly complementary -- the direction choice makes no difference at all."
+ },
+ "ceiling": {
+  "note": "The best achievable rate per measure, i.e. the ceiling the concept axis can reach on this data with a PERFECT direction. If even the ceiling is near 0.5, the concept carries no association and no direction can rescue it.",
+  "best_rate_over_coin_flip": [
+   {
+    "measure": "route_running",
+    "best_rate": 0.8891,
+    "edge_over_chance": 0.3891
+   },
+   {
+    "measure": "workload",
+    "best_rate": 0.7088,
+    "edge_over_chance": 0.2088
+   },
+   {
+    "measure": "tracking",
+    "best_rate": 0.5018,
+    "edge_over_chance": 0.0018
+   },
+   {
+    "measure": "coverage",
+    "best_rate": 0.503,
+    "edge_over_chance": 0.003
+   }
+  ]
+ },
+ "reproduction": "node reconciliation/measure_direction_signal.mjs"
+}

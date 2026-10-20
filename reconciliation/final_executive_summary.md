@@ -402,6 +402,67 @@ the six defects fixed earlier. The 4 says "the corpus needs work"; the
 
 ---
 
+## 5e. The concept axis: it runs, and it found the corpus's directions are noise
+
+**Built and run end to end against the live database**
+(`reconciliation/concept_axis_graded.md`).
+
+| | count |
+|---|---:|
+| live premises with context tags | 5,434 |
+| resolved to a measure | 201 |
+| **graded on real data** | **139** |
+| refused: `conditional_direction` | 4,540 |
+
+**And the finding is sharp. Grading the same data twice per premise —
+once with the corpus's asserted direction, once INVERTED:**
+
+| measure | asserted | inverted | verdict |
+|---|---:|---:|---|
+| `route_running` | 0.1109 | **0.8891** | the corpus's direction is **78 points WORSE** than the inverse |
+| `workload` | 0.2912 | **0.7088** | **42 points worse** |
+| `tracking` | 0.4982 | 0.5018 | indistinguishable |
+| `coverage` | 0.4970 | 0.5030 | indistinguishable |
+
+**Per premise, the corpus's direction loses to its inverse for 87 of
+140.** The median agreement rate is **0.4911 — below chance.**
+
+**But the concepts themselves carry a LOT of signal, and the corpus has
+the sign backwards:** `route_running` reaches 0.8891 (a 38.9-point edge)
+and `workload` 0.7088 (20.9 points) under the better direction. **The
+measurement apparatus works, the data works, and the corpus's sign field
+is wrong in a way a careful re-read of the source documents can fix.**
+
+**That is far more actionable than "the corpus is noisy"** — and it
+converges exactly on the 96.5%-fallback finding.
+
+**Two grader bugs, both found by running it, neither by reading it:**
+- Postgres returns a bare `NUMERIC` as a **string**, so a
+  `typeof === "number"` check rejected every row and refused all 201
+  premises with a clean-looking `no_agreements`.
+- The first comparison used the **sign** of a magnitude (always
+  non-negative), so the grader could only report 0.000 or 1.000.
+  Replaced with a **within-game pairwise test** — do the entities with
+  the higher concept value also have the higher outcome value? That took
+  the graded count from **1 to 139**.
+
+**And a third, deeper defect:** the resolver took the premise's first
+*resolvable* context tag, so a premise about **defender separation** was
+measured on **receiving yards** — the context tags are the extractor's
+broad domain buckets, and 140 premises resolved to only **4 distinct
+measurements**. The fix is a **concept match** on the premise's own
+metric name and title, and every grade now carries its match strength:
+**11 `concept` matches (premise-level evidence) and 128 `tag` matches (a
+measurement of a shared bucket, not of the claim).**
+
+**The grader's arithmetic was verified against an independent query:**
+191,642 / 215,534 = 0.88912, against the grader's 0.8891.
+
+**Nothing here touches a published number.** The concept axis produces
+evidence and promotion candidates, not picks.
+
+---
+
 ## 6. What the recon batch changed
 
 Three read-only agents ran against the same worktree. They **corrected my
@@ -488,6 +549,8 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
 | `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable: 5,149 records, 39 with a real metric, 22 game-level NFL quantities. The corpus has concepts, not numbers. |
+| `concept_axis_graded.md` | **The concept axis RUN on real data**: 139 premises graded, and the corpus's asserted directions measurably lose to their inverses (87 of 140) while the concepts themselves carry 21-39 point associations with the sign backwards. Two grader bugs and a concept-match defect, all found by running it. |
+| `direction_signal_measurement.json` | The direction-vs-inverted test, per measure: the decisive measurement of whether the corpus's sign field carries information |
 | `concept_axis_coverage.md` + `.json` | The resolver RUN over the corpus and the live index: 201 premises resolve to a measure, 74 are correlational/causal, 2 fully specified, 4,540 refused as `conditional`. **The biggest remaining lever: extract the condition for 878 measurable conditional premises and the population goes 201 → 1,079.** |
 | `staged_improvements/08-measure-resolver-concept-axis.md` | 14 context->measure mappings + a second grading axis. **BUILT and MEASURED** — 201 premises gradeable, giving the promotion gate a path that does not need probabilities. |
 | `f2_duplicate_measurement.md` + `.json` | The decisive no-publish gate, MEASURED: permuting the seven non-strength features made the model slightly better (20/20), so the f2 = 1 duplicate claim holds and the gate stays. Includes the per-gate status table. |

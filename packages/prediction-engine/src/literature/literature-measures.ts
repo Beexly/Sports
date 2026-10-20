@@ -62,9 +62,21 @@ export interface MeasureSpec {
   /**
    * The Prisma MODEL the rows come from. PascalCase, because this is
    * what a test can look up in schema.prisma to prove the surface
-   * exists. The SQL table name is the snake_case form of the same.
+   * exists.
    */
   readonly table: string;
+  /**
+   * The SQL TABLE name. MEASURED against the live database on
+   * 2026-10-20: the Prisma model names are SINGULAR and the SQL table
+   * names are PLURAL -- `PlayerGameStat` -> `player_game_stats`,
+   * `NextGenStat` -> `next_gen_stats`, `SnapCount` -> `snap_counts`,
+   * `DepthChartEntry` -> `depth_chart_entries`, `Injury` -> `injuries`,
+   * `Game` -> `games`, `Signal` -> `signals`,
+   * `OddsLineSnapshot` -> `odds_line_snapshots`,
+   * `TeamGameEfficiency` -> `team_game_efficiency` (the one singular
+   * exception), `HistoricalGame` -> `historical_games`.
+   */
+  readonly sqlTable: string;
   /** The column the measure reads. */
   readonly column: string;
   /** Player-level or team-level: which granularity the association runs at. */
@@ -109,6 +121,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "separation",
     grain: "next_gen_stats.avgSeparation -- mean per player-game, then the within-team association between separation and receiving production",
     table: "NextGenStat",
+    sqlTable: "next_gen_stats",
     column: "avgSeparation",
     level: "player",
     higherIsMore: true,
@@ -121,6 +134,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "route_running",
     grain: "player_game_stats.receivingYards, restricted to receivers -- within-team association between route volume and production",
     table: "PlayerGameStat",
+    sqlTable: "player_game_stats",
     column: "receivingYards",
     level: "player",
     higherIsMore: true,
@@ -133,6 +147,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "props_receiving",
     grain: "player_game_stats.targetShare (targets / team attempts) -- within-team association between target share and receiving production",
     table: "PlayerGameStat",
+    sqlTable: "player_game_stats",
     column: "targetShare",
     level: "player",
     higherIsMore: true,
@@ -145,6 +160,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "depth_chart",
     grain: "depth_chart_entry.depthRank -- lower rank is a higher depth-chart slot, so higherIsMore is false",
     table: "DepthChartEntry",
+    sqlTable: "depth_chart_entries",
     column: "depthRank",
     level: "player",
     higherIsMore: false,
@@ -157,6 +173,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "workload",
     grain: "snap_count.offenseSnaps / defenseSnaps -- within-team association between snap share and production",
     table: "SnapCount",
+    sqlTable: "snap_counts",
     column: "offenseSnaps",
     level: "player",
     higherIsMore: true,
@@ -169,6 +186,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "acwr",
     grain: "snap_count.offenseSnaps over team_game_efficiency -- a workload proxy, NOT an ACWR column",
     table: "SnapCount",
+    sqlTable: "snap_counts",
     column: "offenseSnaps",
     level: "player",
     higherIsMore: true,
@@ -182,6 +200,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "tracking",
     grain: "next_gen_stats -- the tracking-derived rate for the concept; the resolver maps it to avgSeparation, the closest measured tracking quantity",
     table: "NextGenStat",
+    sqlTable: "next_gen_stats",
     column: "avgSeparation",
     level: "player",
     higherIsMore: true,
@@ -195,6 +214,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "interceptions",
     grain: "next_gen_stats.aggressiveness -- the defensive-pressure rate per player-game, the closest measured defensive-play surface",
     table: "NextGenStat",
+    sqlTable: "next_gen_stats",
     column: "aggressiveness",
     level: "player",
     higherIsMore: true,
@@ -208,6 +228,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "coverage",
     grain: "next_gen_stats.avgCushion -- the cushion between the receiver and the nearest defender; within-team association between cushion and the outcome",
     table: "NextGenStat",
+    sqlTable: "next_gen_stats",
     column: "avgCushion",
     level: "player",
     higherIsMore: true,
@@ -221,6 +242,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "epa",
     grain: "team_game_efficiency.offEpaPerPlay vs .defEpaPerPlay -- the team's offensive and defensive efficiency in one game",
     table: "TeamGameEfficiency",
+    sqlTable: "team_game_efficiency",
     column: "offEpaPerPlay",
     level: "team",
     higherIsMore: true,
@@ -233,6 +255,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "injuries",
     grain: "injury.reportStatus -- the count of a team's reported injuries in the game window; the direction is inverted because MORE injuries means LESS availability",
     table: "Injury",
+    sqlTable: "injuries",
     column: "reportStatus",
     level: "team",
     higherIsMore: false,
@@ -245,6 +268,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "rest",
     grain: "games.restDaysHome / restDaysAway -- the rest differential for the game",
     table: "Game",
+    sqlTable: "games",
     column: "restDaysHome",
     level: "team",
     higherIsMore: true,
@@ -257,6 +281,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "live_odds",
     grain: "odds_line_snapshot.price -- the captured price for the game, de-vigged by the caller",
     table: "OddsLineSnapshot",
+    sqlTable: "odds_line_snapshots",
     column: "price",
     level: "team",
     higherIsMore: true,
@@ -270,6 +295,7 @@ export const MEASURE_REGISTRY: readonly MeasureSpec[] = Object.freeze([
     contextTag: "game_state",
     grain: "signals -- the live game-state signal value for the game",
     table: "Signal",
+    sqlTable: "signals",
     column: "value",
     level: "team",
     higherIsMore: true,
@@ -334,6 +360,13 @@ export interface MeasureResolution {
   readonly refusal: MeasureRefusal | null;
   /** The tag that was used, when a measure was resolved. */
   readonly resolvedTag: string | null;
+  /**
+   * Whether the measure matches the premise's CONCEPT or merely one of
+   * its context tags. A 'tag' match means the score measures the tag,
+   * not the claim, and the caller must not read it as premise-level
+   * evidence.
+   */
+  readonly match: MeasureMatch | null;
 }
 
 /** The direction a premise claims. The corpus uses these three. */
@@ -350,38 +383,82 @@ export type PremiseDirection = "positive" | "negative" | "conditional";
  * A refusal is always a value, never a silent skip: the caller counts
  * refusals by reason.
  */
+/**
+ * How a measure was chosen, and how much the match can be trusted.
+ *
+ * "concept" -- the tag names the premise's own concept, matched from its
+ *              metric or its title. This is the strong case.
+ * "tag"    -- the tag is merely one of the premise's context tags. The
+ *              premise's concept may be a different one. This is a WEAK
+ *              match and the score it produces is a measurement of the
+ *              TAG, not of the premise.
+ */
+export type MeasureMatch = "concept" | "tag";
+
 export function resolveMeasure(
   contextTags: readonly string[] | null | undefined,
   direction: string | null | undefined,
+  conceptHint?: string | null,
 ): MeasureResolution {
   const tags = (contextTags ?? []).filter(
     (t): t is string => typeof t === "string" && t.length > 0,
   );
   if (tags.length === 0) {
-    return { measure: null, refusal: "no_context_tags", resolvedTag: null };
+    return { measure: null, refusal: "no_context_tags", resolvedTag: null, match: null };
   }
   if (!direction) {
-    return { measure: null, refusal: "no_direction", resolvedTag: null };
+    return { measure: null, refusal: "no_direction", resolvedTag: null, match: null };
   }
   // A conditional premise needs its condition evaluated first, and no
   // record in the corpus carries a threshold to evaluate against.
   if (direction === "conditional") {
-    return { measure: null, refusal: "conditional_direction", resolvedTag: null };
+    return { measure: null, refusal: "conditional_direction", resolvedTag: null, match: null };
+  }
+
+  // PASS 0 -- THE CONCEPT MATCH. This is the one that matters.
+  //
+  // The premise's CONCEPT lives in its numeric_metric and its title, not
+  // in the first resolvable context tag. The context tags are the
+  // extractor's broad domain buckets, and many premises share identical
+  // tag sets -- 140 premises resolved to only 4 distinct measurements.
+  //
+  // The first version of the resolver took the premise's first
+  // RESOLVABLE tag, so the premise "NFL Ghosts: Counterfactual Defender
+  // Positioning & Separation Over Expected" (metric
+  // separation_over_expected) was measured on RECEIVING YARDS, because
+  // 'route_running' came first in its tag list. The measurement was of
+  // the tag, not of the claim.
+  //
+  // So: a tag that appears in the premise's metric name or its title is
+  // a STRONG match and is preferred over the tag order.
+  if (conceptHint) {
+    const hint = conceptHint.toLowerCase();
+    const strong = MEASURE_RESOLUTION_ORDER.find((tag) => {
+      if (!tags.includes(tag)) return false;
+      // the tag must appear as a word in the concept text
+      return new RegExp(`(^|[^a-z])${tag.toLowerCase().replace(/[^a-z]/g, "")}([^a-z]|$)`).test(
+        hint,
+      );
+    });
+    if (strong) {
+      const m = BY_TAG.get(strong);
+      if (m) return { measure: m, refusal: null, resolvedTag: strong, match: "concept" };
+    }
   }
 
   // Pass 1: the premise's own tag order.
   for (const tag of tags) {
     const m = BY_TAG.get(tag);
-    if (m) return { measure: m, refusal: null, resolvedTag: tag };
+    if (m) return { measure: m, refusal: null, resolvedTag: tag, match: "tag" };
   }
   // Pass 2: the registry priority, for tags the premise carries that
   // pass 1 did not resolve.
   for (const tag of MEASURE_RESOLUTION_ORDER) {
     if (!tags.includes(tag)) continue;
     const m = BY_TAG.get(tag);
-    if (m) return { measure: m, refusal: null, resolvedTag: tag };
+    if (m) return { measure: m, refusal: null, resolvedTag: tag, match: "tag" };
   }
-  return { measure: null, refusal: "no_measurable_tag", resolvedTag: null };
+  return { measure: null, refusal: "no_measurable_tag", resolvedTag: null, match: null };
 }
 
 /**
@@ -437,6 +514,61 @@ export function agreementFor(
   if (observed === 0) return null;
   const observedSign = observed >= 0 ? 1 : -1;
   return observedSign === sign * (outcome >= 0 ? 1 : -1) ? 1 : -1;
+}
+
+/**
+ * The WITHIN-GAME association test, which is the correct one for a
+ * concept premise.
+ *
+ * WHY THE FIRST FORM WAS WRONG (found 2026-10-20 by running the
+ * grader). The first version compared the SIGN of the measured concept
+ * value against the sign of the game outcome. But a concept measure is a
+ * MAGNITUDE -- avgCushion, avgSeparation, receivingYards and
+ * offenseSnaps are all non-negative by construction. So the observed
+ * sign is always +1, the comparison degenerates to a constant, and the
+ * grader reported agreement rates of exactly 1.000 and 0.000. A grader
+ * that can only say 0 or 1 is not measuring anything.
+ *
+ * WHAT A CONCEPT PREMISE ACTUALLY ASSERTS. "Route separation predicts
+ * receiving production, positively" is a claim about a WITHIN-GAME
+ * ASSOCIATION: among the entities in a game, do those with a HIGHER
+ * measured concept value also have a HIGHER outcome value?
+ *
+ * So the test is:
+ *
+ *   for each game:
+ *     for each pair of entities (a, b) in that game:
+ *       conceptDelta = observed(a) - observed(b)
+ *       outcomeDelta = outcome(a) - outcome(b)
+ *       if conceptDelta and outcomeDelta have the same sign -> AGREE
+ *       if they have opposite signs                   -> DISAGREE
+ *       if either is zero                             -> not judged
+ *
+ * A game with n entities contributes n*(n-1)/2 pairwise comparisons,
+ * and a premise is judged on the AGREEMENT RATE over those. **A
+ * premise that is right about its concept has an agreement rate near
+ * 1.0; one that is wrong has one near 0.0; one that is noise has one
+ * near 0.5.**
+ *
+ * The direction decides which way is agreement: a `positive` premise
+ * agrees when conceptDelta and outcomeDelta share a sign; a `negative`
+ * premise agrees when they oppose.
+ *
+ * The outcome for an entity is the measure's own OUTCOME METRIC, which
+ * the measure registry names -- NOT a game win. A player-level concept
+ * cannot be tested against a team-level outcome.
+ */
+export function withinGameAgreement(
+  conceptDelta: number,
+  outcomeDelta: number,
+  sign: 1 | -1,
+): 1 | -1 | null {
+  if (!Number.isFinite(conceptDelta) || !Number.isFinite(outcomeDelta)) return null;
+  // A zero delta on either side means the pair carries no information.
+  if (conceptDelta === 0 || outcomeDelta === 0) return null;
+  const sameSign = conceptDelta > 0 === outcomeDelta > 0;
+  const agrees = sign > 0 ? sameSign : !sameSign;
+  return agrees ? 1 : -1;
 }
 
 /**
