@@ -17431,3 +17431,6 @@ After-window exclusion (ID-time 9:31 PM CDT): @NFL_Researcher most career games 
 ### ENDPOINTS / SOURCES (second lane A manifest)
 
 - NEW: SumerPass — @SumerSports bio/pinned (bit.ly/getsumerpass). establishtherun.com and subscribe.establishtherun.com — @EstablishTheRun bio/pinned. 32beatwriters.com — @32BeatWriters bio. Statyx MCP / statyx.io — @statyxio source line and bio (see Upgrades). fantasypointsdata.com Data Suite 2.0 incl. /weekly-reports — @sfdata9ers chart footers, @ScottBarrettDFB. nflverse (nflreadpy) — @GridironInfo_ footers (one chart also "nflverse + Wikipedia"). @PFF stated no data source in any opened post.
+
+### RECENT WORK (Jules)
+- **Q27 ANY/A (2026-10-19):** Implemented ANY/A as a point-in-time disciplined SHADOW expected metric in the prediction engine. Adhered to strict box-score formula rules and identical derivation parameters as the web layer.

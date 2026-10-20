@@ -709,6 +709,30 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     validationMethods: ["bucket_lift", "walk_forward", "drift_test", "clv"],
   },
   {
+    allowedInputs: ["passing yards", "passing touchdowns", "interceptions", "sacks", "sack yards", "pass attempts"],
+    failureModes: [
+      "using yards_gained directly double counts sack yardage",
+      "rushing touchdowns misattributed as passing touchdowns",
+      "spikes excluded from attempts",
+      "missing point-in-time discipline over rolling windows",
+    ],
+    family: "expected_metric",
+    forbiddenInputs: ["receiver separation", "defender proximity", "completion probability"],
+    formulaClass: "deterministic_rule",
+    formulaSummary: "Classic QB efficiency box-score yardstick: (passing_yards + 20*passing_tds - 45*interceptions - sack_yards) / (attempts + sacks).",
+    historicalPrecedent: [{ name: "ANY/A", reason: "Standard box-score passing efficiency metric used widely across football analytics." }],
+    internalName: "gse_anya_shadow",
+    metricId: "anya",
+    protectedComponents: [],
+    publicExposure: "none",
+    publicName: "Adjusted Net Yards per Attempt (SHADOW)",
+    sourceRightsRequired: ["nflverse pbp derived only"],
+    status: "SHADOW",
+    targetQuestion: "How efficiently is this quarterback producing passing yardage per dropback?",
+    targetVariable: "passer efficiency",
+    validationMethods: ["correlation_with_source"],
+  },
+  {
     // `allowedInputs` enumerates the eight always-present component inputs. gseSignalScore
     // (metrics/decision/gse-signal-score.ts) additionally consumes six inputs not listed here that
     // each materially move the score: a strongly-weighted calibration-debt penalty plus five

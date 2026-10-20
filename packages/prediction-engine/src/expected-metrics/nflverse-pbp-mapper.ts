@@ -28,9 +28,10 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type AnyaPlay } from "./any-a.js";
 
 /**
- * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
+ * The ONLY pbp columns this wiring reads. 44 of ~372 (OOM defense — pass to
  * `parseCsv(text, { columns })` so the projecting parser never materializes
  * the full token matrix).
  *
@@ -48,6 +49,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
   // EP situation
   "down", "ydstogo", "yardline_100", "goal_to_go",
+  // ANY/A specific columns added below
+  "week", "passer_player_id", "sack", "passing_yards",
   // next-score labelling
   "touchdown", "td_team", "field_goal_result", "safety",
   // ACTUAL point deltas (the not-`sp` rule)
@@ -105,6 +108,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly anyaPlays: readonly AnyaPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +384,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const anyaPlays: AnyaPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -597,6 +602,25 @@ export function mapNflversePbpToExpectedMetrics(
         epa: null, // fit-free mapper; attach post-fit via attachOwnEpa
         terminalOutcome: mapDriveResult(driveFdr.get(key) ?? "", driveHasPunt.get(key) === true),
       });
+
+      // (g) ANY/A series — mapped over all usable rows
+      const passerId = row["passer_player_id"] ?? "";
+      if (passerId !== "") {
+        anyaPlays.push({
+          playId,
+          week: num(row["week"]),
+          gameId: row["game_id"] ?? "",
+          passerId,
+          posteam: row["posteam"] ?? "",
+          playType: row["play_type"] ?? "",
+          isSack: row["sack"] === "1",
+          passingYards: numOrNull(row["passing_yards"]),
+          yardsGained: num(row["yards_gained"]),
+          touchdown: row["touchdown"] === "1",
+          tdTeam: row["td_team"] ?? "",
+          interception: row["interception"] === "1",
+        });
+      }
     }
   }
 
@@ -611,6 +635,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    anyaPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

@@ -95,6 +95,15 @@ export {
   type GraduationResult,
 } from "./validation.js";
 
+// ANY/A → GSE-ANY/A (SHADOW).
+export {
+  computeAnya,
+  ANY_A_MODEL_VERSION,
+  type AnyaPlay,
+  type AnyaRecord,
+  type AnyaMetricsResult,
+} from "./any-a.js";
+
 // Expected points → GSE-EPA (glass-box, enters dark).
 export {
   fitExpectedPointsModel,
