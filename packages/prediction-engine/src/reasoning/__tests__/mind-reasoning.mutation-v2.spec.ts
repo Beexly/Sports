@@ -556,4 +556,47 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
     assert.equal(vp.mechanism_span.start_char, null, "a missing mechanism span must not become offset 0");
     assert.equal(vp.citable, false, "a HONESTLY_UNCITED_PRIOR is not citable");
   });
+
+  // ======================================================================
+  // PROBE T10: THE LOADERS MUST NOT BE THE SAME FUNCTION.
+  //
+  // "loadVerifiedMindCorpus" loads the CORPUS -- every record, including
+  // the ones the builder stamped HONESTLY_UNCITED_PRIOR,
+  // DERIVED_MARKET_SYNTHESIS and REJECTED_CORRUPT. A consumer that
+  // wants LITERATURE must reach for loadCitableMindCorpus, which
+  // filters on the class.
+  //
+  // The two being the same function is the defect: then "Verified" in
+  // the name means nothing, and a caller that reaches for the loader
+  // with "Verified" in its name gets uncitable records with it.
+  // ======================================================================
+  it("Probe T10: The Citable Loader Excludes Every Non-Citable Record", () => {
+    const { loadVerifiedMindCorpus, loadCitableMindCorpus } = require("../mind-reasoning.js");
+
+    const corpus = loadVerifiedMindCorpus();
+    const citable = loadCitableMindCorpus();
+
+    // The corpus loader loads everything.
+    assert.ok(corpus.length >= 3000, `the corpus loader must load the corpus, got ${corpus.length}`);
+
+    // The citable loader loads strictly fewer, and every one of them is
+    // citable.
+    assert.ok(
+      citable.length < corpus.length,
+      `the citable loader must be a strict subset: ${citable.length} vs ${corpus.length}`,
+    );
+    assert.ok(citable.length > 0, "the citable loader must not be empty");
+    for (const p of citable as readonly { citable: boolean; record_class: string; item_id: string }[]) {
+      assert.equal(p.citable, true, `${p.item_id} is in the citable set but not citable`);
+      assert.equal(p.record_class, "CITABLE_VERIFIED", `${p.item_id} has the wrong class`);
+    }
+
+    // And the corpus really does contain uncitable records, or the
+    // filter is untested.
+    const corpusUncitable = (corpus as readonly { citable: boolean }[]).filter((p) => !p.citable);
+    assert.ok(
+      corpusUncitable.length > 0,
+      "the corpus must contain uncitable records, or the filter is untested",
+    );
+  });
 });

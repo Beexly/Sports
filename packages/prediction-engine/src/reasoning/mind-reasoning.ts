@@ -549,11 +549,46 @@ export function isClassACitable(rec: MindRecord): boolean {
 }
 
 /**
- * Loads the grounded mind corpus directly into VerifiedSituationalPrinciple[] records.
+ * Loads the grounded mind corpus as VerifiedSituationalPrinciple records.
+ *
+ * IT DOES NOT FILTER BY CLASS, AND THE NAME SAYS WHY.
+ *
+ * "loadVerifiedMindCorpus" is a misnomer: it loads the CORPUS, and
+ * every record in it, including the ones the builder stamped
+ * HONESTLY_UNCITED_PRIOR, DERIVED_MARKET_SYNTHESIS or
+ * REJECTED_CORRUPT. The filtering happens where it belongs -- at the
+ * point where a delta is minted (`matchApplicablePrinciples` and
+ * `evaluateMindPrinciples`, both of which require
+ * `isClassACitable`).
+ *
+ * The reason is that a filter HERE would be a filter on a NAME: a
+ * caller that wants to MEASURE the corpus -- how many principles are
+ * there, how they are distributed, what a bad record looks like -- must
+ * be able to load them all. A caller that wants to USE the corpus gets
+ * the class check at the use site, where it cannot be forgotten.
+ *
+ * So this function loads; it does not judge. The class is carried on
+ * every record (`record_class`, `citable`), so a consumer can filter
+ * itself, and the two functions that produce deltas do.
  */
 export function loadVerifiedMindCorpus(customPath?: string): readonly VerifiedSituationalPrinciple[] {
   const records = loadMindCorpus(customPath);
   return records.map(toVerifiedSituationalPrinciple);
+}
+
+/**
+ * Loads ONLY the class-A citable principles -- the ones that may
+ * contribute a literature delta.
+ *
+ * This is the function a consumer should reach for when it wants
+ * literature, as opposed to the corpus. The class is checked HERE as
+ * well as at the delta site, because a caller that loads the corpus and
+ * filters it itself is one refactor away from loading the corpus and
+ * not filtering it.
+ */
+export function loadCitableMindCorpus(customPath?: string): readonly VerifiedSituationalPrinciple[] {
+  const records = loadMindCorpus(customPath);
+  return records.filter(isClassACitable).map(toVerifiedSituationalPrinciple);
 }
 
 /**

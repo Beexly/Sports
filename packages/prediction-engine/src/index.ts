@@ -4595,6 +4595,7 @@ export {
   evaluateMindPrinciples,
   loadMindCorpus,
   loadVerifiedMindCorpus,
+  loadCitableMindCorpus,
   toVerifiedSituationalPrinciple,
   findMindCorpusPaths,
   matchApplicablePrinciples,
