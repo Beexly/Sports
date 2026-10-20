@@ -662,6 +662,61 @@ class-A coverage check   77 read sites, 0 without the class filter
 
 ---
 
+## 7d. A refusal that names the measurement
+
+The spec's section 4.4 was not implemented. The code listed one
+hedge's candidate edges and stopped. The spec says:
+
+> HCID collects **every** witnessing ID-hedge pair… taking the
+> **intersection** of the candidate edges across all collected hedges…
+> for any point-in-time observable mediator M with
+> `t_valid(U) <= t_valid(M) <= t_valid(V)` and `N_M >= 30`… If the
+> expanded graph `G_e` passes ID with **zero hedges** and passes
+> Adversary Review (E-value >= 1.35), the mediator expansion is
+> activated.
+
+Three things changed:
+
+| was | now |
+|---|---|
+| one hedge's candidate edges | the **intersection** across every collected hedge |
+| edges listed, never tested | the graph is **expanded** and **ID is re-run** on it |
+| observability constraints ignored | `t_valid` ordering and `N_M >= 30` checked, with the reason reported |
+
+MEASURED, on the spec's Case 1 confounded bow-arc:
+
+```
+the ORIGINAL graph                        fails ID
+the EXPANDED graph                         identifies the effect
+  PublicShare -> SharperMarketShare -> ATS_Cover   with zero hedges
+```
+
+The verdict now carries the plan — `hedge_count`, `enabling_edges`
+(the intersection), and `activating_mediators` — and the reason names
+the specific signal:
+
+> …Measuring SharperMarketShare would break it: the expanded graph
+> identifies the effect with zero hedges.
+
+> …Measuring a mediator on PublicShare -> ATS_Cover could break the
+> hedge (the registered mediators were tried: RareSignal ineligible:
+> TOO_FEW_SAMPLES (N < 30)).
+
+A refusal that names a measurement which does *not* work is worse
+than one that names none, so `activating_mediators` is populated only
+from candidates whose expansion was actually run and actually
+identified the effect. Everything else appears in the reason as an
+ineligible candidate — which is still information.
+
+**The registry gap is stated, not papered over.** The spec says the
+mediator comes from `signal-registry.ts`, but the registry's
+`SignalDefinition` carries no `t_valid` and no sample count. So the
+caller supplies them through the `mediators` option, and the module
+header says why. Inventing a validity order the registry does not
+have would have been a fabricated constraint.
+
+---
+
 ## 8. Verified
 | check | result |
 |---|---|
@@ -675,6 +730,7 @@ class-A coverage check   77 read sites, 0 without the class filter
 | L_lit gradient vs central finite difference | max error **2e-11** |
 | class-A coverage check | 4 insert paths, **77 read sites**, 0 gaps |
 | the delta chain, against the real database | 5 hops, **0 leaks**; retrieval returns 50/50 class-A |
+| HCID + the mediator expansion | 11/11; the expanded graph identifies where the original hedges |
 | schema applied to Neon | clean; filter bites; default is honest |
 | every insert path against the real schema | 4/4 PASS |
 | the live database's class distribution | **1,099 CITABLE_VERIFIED / ACTIVE** (19.1%) |
