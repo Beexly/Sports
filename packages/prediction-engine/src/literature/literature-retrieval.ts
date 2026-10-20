@@ -31,7 +31,7 @@ import {
 import { pillarsForSignal, type LiteraturePillar } from "./literature-pillars.js";
 import { vectorLiteral } from "./literature-index-builder.js";
 import { evaluateCausalClaim } from "../causal/causal-claim-gate.js";
-import type { CausalADMG } from "../causal/do-calculus-id.js";
+import type { CausalADMG, NodeId } from "../causal/do-calculus-id.js";
 
 /** Minimal structural type for a Postgres client. */
 export interface SqlClient {
@@ -617,6 +617,22 @@ export async function runInterventionTest(
      * rather than silently treating the contrast as causal.
      */
     readonly graph?: CausalADMG | null;
+    /**
+     * The observed-but-not-intervened conditioning set Z.
+     *
+     * The spec's section 4.1: almost every sports question is a
+     * CONDITIONAL intervention -- P(y | do(x), z) -- because the
+     * situational context (wind, quarter, score differential) is
+     * observed, not intervened upon. So this is the set that makes
+     * IDC the right algorithm rather than plain ID.
+     *
+     * It is a set of NODE IDs in the graph, not field names: the
+     * identifiability question is asked of a graph, and a field name
+     * that is not a node in the graph is not a conditioning variable.
+     * When empty, the gate uses plain ID, which is correct for the
+     * unconditional question.
+     */
+    readonly z?: readonly NodeId[];
   },
 ): Promise<{
   verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
@@ -631,6 +647,17 @@ export async function runInterventionTest(
   /** GATE G3: the causal-claim verdict for this test. */
   g3_conclusion: "CAUSAL" | "ASSOCIATION_ONLY";
   g3_refusal_code: string | null;
+  /**
+   * The identification formula the gate computed, and its class.
+   *
+   * These are the EVIDENCE that the gate ran a real identification
+   * algorithm on the real graph, rather than a boolean that says
+   * "identified". A caller that wants to know WHICH estimand was
+   * identified -- the unconditional one, or the conditional
+   * P(y | do(x), z) -- needs the formula, not a verdict.
+   */
+  g3_formula: string | null;
+  g3_formula_class: string | null;
 }> {
   const band = opts?.band ?? 0.0;
   const minN = opts?.minN ?? 8;
@@ -645,10 +672,10 @@ export async function runInterventionTest(
     | { id: string; premise_id: string; status: string; cause_signal: string; effect_signal: string }
     | undefined;
   if (!edge) {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null };
   }
   if (edge.status !== "promoted") {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null };
   }
 
   // ====================================================================
@@ -671,6 +698,7 @@ export async function runInterventionTest(
   const g3 = evaluateCausalClaim({
     y: [edge.effect_signal],
     x: [edge.cause_signal],
+    z: opts?.z ?? [],
     graph: opts?.graph ?? null,
   });
   if (!g3.publishable) {
@@ -686,6 +714,8 @@ export async function runInterventionTest(
       reason: `${g3.refusal_code}: ${g3.reason}`,
       g3_conclusion: g3.conclusion,
       g3_refusal_code: g3.refusal_code,
+      g3_formula: g3.formula,
+      g3_formula_class: g3.formula_class,
     };
   }
 
@@ -701,7 +731,7 @@ export async function runInterventionTest(
 
   const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
   if (all.length < minN) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class };
   }
 
   // The intervention contrast: split residuals by whether the activation was
@@ -711,7 +741,7 @@ export async function runInterventionTest(
   const control = all.filter((r) => r.activation_score < doValue);
 
   if (treated.length < 3 || control.length < 3) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class };
   }
 
   const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
@@ -746,6 +776,8 @@ export async function runInterventionTest(
     verdict, edge_key: edgeKey, estimate, ci_low: ciLow, ci_high: ciHigh,
     p_value: pValue, n: all.length, method, reason: null,
     g3_conclusion: "CAUSAL" as const, g3_refusal_code: null,
+    g3_formula: g3.formula,
+    g3_formula_class: g3.formula_class,
   };
 }
 

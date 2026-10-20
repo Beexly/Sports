@@ -27,7 +27,7 @@ import { runInterventionTest } from "../literature-retrieval.js";
  * would reach a statistical PASS if the gate did not stop it first.
  * That is the point: the gate must be what makes the difference.
  */
-function makeDb(opts?: { readonly residuals?: number[] }) {
+function makeDb(opts?: { readonly residuals?: number[]; readonly cause?: string; readonly effect?: string }) {
   const inserted: Array<{ sql: string; params: unknown[] }> = [];
   const residuals = opts?.residuals ?? [
     ...Array(20).fill(0.4),
@@ -42,8 +42,8 @@ function makeDb(opts?: { readonly residuals?: number[] }) {
               id: "edge1",
               premise_id: "p1",
               status: "promoted",
-              cause_signal: "Scheme",
-              effect_signal: "PassEPA",
+              cause_signal: opts?.cause ?? "Scheme",
+              effect_signal: opts?.effect ?? "PassEPA",
             },
           ],
         };
@@ -132,5 +132,94 @@ describe("GATE G3 through the real intervention path", () => {
     });
     expect(res.verdict).toBe("FAIL");
     expect(res.reason).toContain("not promoted");
+  });
+
+  // ======================================================================
+  // THE CONDITIONAL PATH. The spec's section 4.1: almost every sports
+  // question is P(y | do(x), z), not P(y | do(x)), because the
+  // situational context is OBSERVED, not intervened upon.
+  //
+  // If the shock path could not carry a conditioning set, then every
+  // real query would silently be answered as the UNCONDITIONAL one --
+  // and the conditional question is not a special case of it. Adding
+  // Z to the graph can REMOVE an identification: a set that is
+  // d-separated without conditioning can be connected once you
+  // condition on it, and then the effect stops being identified.
+  //
+  // The test below uses the spec's Case 3 graph, which is the point:
+  //   W -> Z -> X -> Y,  with W <-> X and Z <-> Y
+  // ======================================================================
+  it("carries the conditioning set Z, and Z changes the estimand", async () => {
+    // The confounded graph: Wind is a back-door confounder of Scheme
+    // and PassEPA.
+    //   Scheme -> PassEPA,  Wind -> PassEPA,  Scheme <-> Wind
+    //
+    // The node list is in topological order, which the ADMG type
+    // REQUIRES -- a graph whose node list is not a topological order is
+    // rejected outright, because every ancestor and every c-factor
+    // computation depends on the order.
+    const graph = {
+      nodes: ["Scheme", "Wind", "PassEPA"],
+      directed: [["Wind", "PassEPA"], ["Scheme", "PassEPA"]],
+      bidirected: [["Scheme", "Wind"]],
+    };
+
+    const { db } = makeDb();
+
+    // Unconditional: identified, but by FRONT-DOOR-style c-component
+    // factorization -- the hedge over {PassEPA} is broken by
+    // marginalizing, so the estimand is a weighted sum over the
+    // confounder, not a plain adjustment.
+    const uncond = await runInterventionTest(db, "edge1", 0.001, { graph });
+    expect(uncond.g3_conclusion).toBe("CAUSAL");
+    expect(uncond.g3_formula_class).toBe("FRONT_DOOR_OR_C_COMPONENT_FACTORIZATION");
+
+    // CONDITIONAL on Wind -- the very node in the middle of the chain.
+    // This is the question the spec's section 4.1 says is the real one:
+    // P(Y | do(X), Z), with the situational context OBSERVED.
+    //
+    // And the conditional is NOT a special case of the unconditional:
+    // conditioning on the confounder reduces the formula to the
+    // back-door adjustment P(PassEPA | Scheme, Wind). Different
+    // estimand, different formula class, different answer.
+    const cond = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      z: ["Wind"],
+    });
+    expect(cond.g3_conclusion).toBe("CAUSAL");
+    expect(cond.g3_formula_class).toBe("CONDITIONAL_BACK_DOOR_OR_DIRECT_C_FACTOR");
+    expect(cond.g3_formula).toBe("P(PassEPA|Scheme,Wind)");
+  });
+
+  it("the conditional path uses IDC, and the unconditional path does not", async () => {
+    // The spec's Case 3 graph: the 4-node napkin/bugle graph.
+    //   W -> Z -> X -> Y,  with W <-> X and Z <-> Y
+    const graph = {
+      nodes: ["W", "Z", "X", "Y"],
+      directed: [["W", "Z"], ["Z", "X"], ["X", "Y"]],
+      bidirected: [["W", "X"], ["Z", "Y"]],
+    };
+
+    const { db } = makeDb({ cause: "X", effect: "Y" });
+
+    // Unconditional: the spec's TIAN_C_FACTOR_RATIO.
+    const uncond = await runInterventionTest(db, "edge1", 0.001, { graph });
+    expect(uncond.g3_conclusion).toBe("CAUSAL");
+    expect(uncond.g3_formula_class).toBe("TIAN_C_FACTOR_RATIO");
+
+    // Conditional: IDC, and the class is the CONDITIONAL_ variant --
+    // which is how you can tell from the outside that the Z set
+    // actually reached the algorithm and was not silently dropped.
+    const cond = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      z: ["Z"],
+    });
+    expect(cond.g3_conclusion).toBe("CAUSAL");
+    expect(cond.g3_formula_class).toBe("CONDITIONAL_FRONT_DOOR_OR_C_COMPONENT_FACTORIZATION");
+
+    // And the two are not the same estimand: the conditional formula
+    // carries a RATIO over Y, the unconditional does not.
+    expect(cond.g3_formula).toContain("/");
+    expect(uncond.g3_formula).not.toContain("/");
   });
 });

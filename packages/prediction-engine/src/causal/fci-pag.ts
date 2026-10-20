@@ -1,0 +1,1450 @@
+/**
+ * FCI (Fast Causal Inference) partial-ancestral-graph discovery with latent confounders,
+ * a PAG -> ADMG projection that feeds do-calculus-id.ts, and a precision-preconditioned
+ * (scale-invariant) DYNOTEARS contemporaneous stage.
+ *
+ * ADDITIVE utility. Not wired into any live model path (wiring changes predictions and is a NEEDS HUMAN CALL).
+ *
+ * MECHANISM:
+ *  - FCI (Spirtes, Meek & Richardson 1995; Zhang 2008, "On the completeness of orientation
+ *    rules for constructing partial ancestral graphs", JMLR 9:2081-2108): PC skeleton with
+ *    Fisher-z conditional-independence tests, Possible-D-Sep re-testing, collider orientation
+ *    (R0), then Zhang's orientation rules to a fixpoint. The output is a PAG whose marks
+ *    (tail / arrowhead / circle) state exactly what the data can and cannot identify when
+ *    latent confounders may exist. A circle means "arrowhead or tail": unresolved.
+ *  - PAG -> ADMG projection: the maximally-confounded representative (mark rule below), so the
+ *    existing Shpitser-Pearl ID can consume it.
+ *  - DYNOTEARS contemporaneous W: scale-invariant non-equal-variance Gaussian likelihood
+ *    + L1 + augmented Lagrangian on h(W) = tr(exp(W o W)) - d, optionally restricted to the
+ *    FCI-admissible support.
+ *
+ * WHAT IS IMPLEMENTED vs APPROXIMATED (read before trusting an output):
+ *  1. Possible-D-Sep IS implemented, not approximated: pds(a,b) is the set of nodes reachable
+ *     from a on a path whose interior nodes are each a collider on that path or a member of a
+ *     triangle (Zhang 2008 sec. 3). Two documented deviations from "test every subset":
+ *     subset size is capped at maxConditioningSetSize, and the re-test batch uses the same
+ *     Benjamini-Hochberg rule as the skeleton instead of a per-test level.
+ *  2. Orientation rules: R1, R2, R3, R4 (discriminating path) and R8 are implemented. R5-R7
+ *     (uncovered potentially-directed-path rules) are NOT implemented, so this PAG can carry
+ *     more circles than a complete FCI would leave. R9/R10 are replaced by
+ *     `completeAncestral`, which only performs cycle-avoiding completions: it is sound but
+ *     weaker than R9/R10. Net effect: the output is a valid PAG that may be less oriented
+ *     than the true one. It never orients against a rule; it can fail to orient.
+ *  3. R3's notation in the source ("D o-* B, ... orient D *-> B") is ambiguous. The only mark
+ *     that can change is the circle at D, so we set the arrowhead at D (the reading used by
+ *     Tetrad's FciOrient). Reading it literally as "arrowhead at B" would make the rule a
+ *     no-op whenever B is already an arrowhead, which is the premise.
+ *  4. R4 needs a separating set for (D,C). When the pair is still adjacent no sepset exists and
+ *     the rule is skipped rather than guessed.
+ *  5. Assumptions: linearity, Gaussianity and faithfulness. Fisher-z cannot see non-linear or
+ *     non-Gaussian dependence; a failed test is not evidence of absence.
+ *  6. DYNOTEARS here is CONTEMPORANEOUS ONLY. Lagged terms (A) are out of scope.
+ *  6b. MEASURED LIMIT of this estimator, stated because it is easy to over-claim: the profile
+ *     likelihood saturates, so at the default lambda1 = 0.01 the L1 term is ~3% of the objective's
+ *     scale and cannot pay for sparsity. On a 4-node diamond (0->1, 0->2, 1->3, 2->3) at n = 4000
+ *     the unrestricted fit returns FIVE edges including a spurious 1-2 (|W| = 0.69), and no value
+ *     of lambda1 on the L1 path recovers the true four (the spurious coefficient is larger than
+ *     the true ones). Restricted with `allowedEdges` = the FCI skeleton it returns exactly the
+ *     true four edges, which is the intended pipeline: the PAG decides the support, DYNOTEARS
+ *     decides only the directions and weights inside it. The lambda1 continuation below is a
+ *     warm-start device that helps but does not remove this; it is not a substitute for tuning.
+ *     Directions inside a Markov equivalence class are still arbitrary (a chain comes back
+ *     reversed about half the time) because no Gaussian score can distinguish them.
+ *  7. matExp: the 1803.01422v2 `matExp` is a raw 30-term Taylor series with no scaling and
+ *     squaring. Measured against the closed form h(c) = 3*sum_m c^(6m)/(3m)! - 3 on a 3-cycle
+ *     it is exact to 1e-9 at c=3 but has 2.3e-4 relative error at c=4, 7.7e-1 at c=6 and 1.0 at
+ *     c=8 (exp(40) comes out 16x too small). The augmented Lagrangian walks through exactly
+ *     those weights, so this module uses `matExpScaleSquaring` (norm-scaled 24-term Taylor, then
+ *     repeated squaring): <= 3e-14 relative error on the same cases.
+ *
+ * MARK RULE for pagToAdmg (the one thing downstream consumes):
+ *  - tail/arrowhead        -> DIRECTED u -> v.
+ *  - arrowhead/arrowhead   -> BIDIRECTED u <-> v (a latent common cause).
+ *  - ANY circle at either end -> BIDIRECTED, never directed. A circle means "arrowhead or
+ *    tail"; keeping the arrowhead reading is the conservative choice for identifiability
+ *    because a bidirected edge can only make an effect harder to identify, never easier.
+ *    This includes the (tail, circle) case, where the tail is deliberately over-ridden to an
+ *    arrowhead: erring toward extra confounding is the safe direction.
+ *  - tail/tail (an undirected edge, only possible with selection variables) -> BIDIRECTED, so
+ *    the projection never claims a direction or an independence it did not establish.
+ *  - The projection is therefore the MAXIMALLY CONFOUNDED representative of the PAG's Markov
+ *    equivalence class. It is deliberately pessimistic: an `ok` identification verdict on it
+ *    is suggestive, not a proof, about the true MAG (a proof would require enumerating the
+ *    class). A `not identifiable` verdict is the safe one to act on.
+ *
+ * ACCEPTANCE GATE: ADOPT the FCI-pruned feature set only if (a) held-out Brier on 2024-2025
+ * is within 0.002 of the full-feature baseline while using <= 60% of features, (b) the
+ * skeleton Jaccard across season-blocked folds is >= 0.5, and (c) oriented edges agree with
+ * domain-known football directions on >= 80% of high-confidence edges. Gate status: NOT
+ * EVALUATED (requires historical walk-forward data absent from this environment).
+ *
+ * owner: Motif-lab | bucket: MODEL | lane: causal_discovery | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
+ */
+
+import type { CausalADMG, NodeId } from "./do-calculus-id.js";
+import { isAcyclic } from "./dag-nocurl.js";
+import { partialCorr, pcorPvalue } from "./2003-03685v2-pcmci-team-panel.js";
+
+export const ENABLED = false;
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+/** Endpoint mark of an edge at one of its two nodes. A circle is "arrowhead or tail". */
+export type EdgeMark = "tail" | "arrowhead" | "circle";
+
+/** One PAG edge. `markU` is the mark at `u`, `markV` the mark at `v`; `u < v` by construction. */
+export interface FciEdge {
+  readonly u: number;
+  readonly v: number;
+  readonly markU: EdgeMark;
+  readonly markV: EdgeMark;
+}
+
+/** Result of `fci`. `edges` is the learned PAG; `sepsets` explains every deletion. */
+export interface FciResult {
+  readonly nodes: readonly number[];
+  readonly edges: readonly FciEdge[];
+  readonly sepsets: ReadonlyMap<string, readonly number[]>;
+  readonly skeleton: readonly [number, number][];
+  readonly separated: readonly [number, number][];
+  readonly step: "skeleton" | "possible-dsep" | "orient" | "done";
+}
+
+/** Options for `fci`. */
+export interface FciOptions {
+  /** Per-family FDR level applied with Benjamini-Hochberg within each conditioning level. Default 0.05. */
+  readonly alpha?: number;
+  /** Largest conditioning set tested in the skeleton and pds phases. Default 3. */
+  readonly maxConditioningSetSize?: number;
+  /**
+   * Optional separating-set oracle. When supplied it REPLACES the Fisher-z test everywhere:
+   * return a set that separates (i,j) to delete the edge, or null to keep it. Used to drive the
+   * skeleton/orientation machinery deterministically from a known graph.
+   */
+  readonly conditioning?: (i: number, j: number) => number[] | null;
+}
+
+/** A projected ADMG over the numeric PAG nodes: what `pagToAdmg` returns. */
+export interface PagAdmg {
+  readonly nodes: number[];
+  readonly directed: [number, number][];
+  readonly bidirected: [number, number][];
+}
+
+/** Options for `dynotearsFit`. */
+export interface DynotearsOptions {
+  readonly lambda1?: number;
+  readonly rho?: number;
+  readonly alpha?: number;
+  readonly maxIter?: number;
+  readonly tol?: number;
+  readonly edgeThreshold?: number;
+  readonly allowedEdges?: readonly (readonly [number, number])[];
+}
+
+/** Result of `dynotearsFit`. `W` is in original data units; `edges` is thresholded on the standardized fit. */
+export interface DynotearsResult {
+  /** Contemporaneous coefficients in ORIGINAL data units: x_j = sum_k W[k][j] x_k + e_j. */
+  readonly W: number[][];
+  /** h(W) at the returned `W` (not at the standardized fit); zero iff the support is acyclic. */
+  readonly h: number;
+  /** Exact gradient of h at the returned `W`, same units. */
+  readonly grad: number[][];
+  /** Edges with |Wstandardized| > edgeThreshold, sorted by (from, to). */
+  readonly edges: readonly [number, number][];
+  /** The augmented-Lagrangian objective at the returned W, evaluated in standardized units. */
+  readonly loss: number;
+  /** Coefficients on the z-scored columns. `edges` is `|Wstandardized| > edgeThreshold` here. */
+  readonly Wstandardized: number[][];
+}
+
+// ---------------------------------------------------------------------------
+// Small linear algebra
+// ---------------------------------------------------------------------------
+
+function zeros(n: number, m: number): number[][] {
+  return Array.from({ length: n }, () => new Array<number>(m).fill(0));
+}
+
+function identity(n: number): number[][] {
+  const out = zeros(n, n);
+  for (let i = 0; i < n; i++) out[i]![i] = 1;
+  return out;
+}
+
+function matMul(A: number[][], B: number[][]): number[][] {
+  const n = A.length;
+  const p = B.length;
+  const m = B[0]!.length;
+  const out = zeros(n, m);
+  for (let i = 0; i < n; i++) {
+    for (let k = 0; k < p; k++) {
+      const a = A[i]![k]!;
+      if (a === 0) continue;
+      for (let j = 0; j < m; j++) out[i]![j]! += a * B[k]![j]!;
+    }
+  }
+  return out;
+}
+
+/**
+ * Matrix exponential by scaling and squaring: exp(A) = exp(A/2^s)^(2^s) with
+ * ||A/2^s||_F <= 0.5, so a 24-term Taylor series is at machine precision before squaring.
+ * Verified against the closed form on diagonal input and against a 300-term reference on
+ * 5x5 matrices up to ||A||_F = 40 (<= 3e-14 relative).
+ */
+export function matExpScaleSquaring(A: number[][]): number[][] {
+  const d = A.length;
+  if (d === 0) return [];
+  if (A.some((row) => row.length !== d)) throw new Error("matExpScaleSquaring: not square");
+  let norm = 0;
+  for (const row of A) for (const v of row) norm += v * v;
+  norm = Math.sqrt(norm);
+  if (!Number.isFinite(norm)) return A.map((row) => row.map(() => Number.POSITIVE_INFINITY));
+  let s = 0;
+  while (norm > 0.5 * Math.pow(2, s) && s < 1024) s++;
+  const scale = Math.pow(2, -s);
+  const B = A.map((row) => row.map((v) => v * scale));
+  let result = identity(d);
+  let term = identity(d);
+  for (let k = 1; k <= 24; k++) {
+    term = matMul(term, B).map((row) => row.map((v) => v / k));
+    for (let i = 0; i < d; i++) for (let j = 0; j < d; j++) result[i]![j]! += term[i]![j]!;
+  }
+  for (let r = 0; r < s; r++) result = matMul(result, result);
+  return result;
+}
+
+/**
+ * NOTEARS acyclicity h(W) = tr(exp(W o W)) - d with its exact gradient
+ * grad = (exp(W o W))^T o (2W). h(W) = 0 exactly when the support of W is acyclic.
+ * Uses `matExpScaleSquaring`, not the repo's unscaled Taylor series (see the header).
+ */
+export function acyclicityExact(W: number[][]): { h: number; grad: number[][] } {
+  const d = W.length;
+  if (d === 0) return { h: 0, grad: [] };
+  const S = W.map((row) => row.map((w) => w * w));
+  const E = matExpScaleSquaring(S);
+  let tr = 0;
+  for (let i = 0; i < d; i++) tr += E[i]![i]!;
+  const grad = W.map((row, i) => row.map((w, j) => E[j]![i]! * 2 * w));
+  return { h: tr - d, grad };
+}
+
+/** Gauss-Jordan inverse with partial pivoting, plus the determinant. Null when singular. */
+function inverseWithDet(M: number[][]): { inv: number[][]; det: number } | null {
+  const n = M.length;
+  const A = M.map((row, i) => [...row, ...identity(n)[i]!]);
+  let det = 1;
+  for (let col = 0; col < n; col++) {
+    let piv = col;
+    for (let r = col + 1; r < n; r++) {
+      if (Math.abs(A[r]![col]!) > Math.abs(A[piv]![col]!)) piv = r;
+    }
+    if (Math.abs(A[piv]![col]!) < 1e-12) return null;
+    if (piv !== col) {
+      const tmp = A[col]!;
+      A[col] = A[piv]!;
+      A[piv] = tmp;
+      det = -det;
+    }
+    const diag = A[col]![col]!;
+    det *= diag;
+    for (let k = 0; k < 2 * n; k++) A[col]![k]! /= diag;
+    for (let r = 0; r < n; r++) {
+      if (r === col) continue;
+      const f = A[r]![col]!;
+      if (f === 0) continue;
+      for (let k = 0; k < 2 * n; k++) A[r]![k]! -= f * A[col]![k]!;
+    }
+  }
+  const inv = A.map((row) => row.slice(n));
+  return { inv, det };
+}
+
+// ---------------------------------------------------------------------------
+// Conditional-independence test (shared with the PCMCI+ module)
+// ---------------------------------------------------------------------------
+
+/**
+ * Fisher-z test of conditional independence of columns i and j given `cond`.
+ *
+ * z = 0.5*sqrt(n - |S| - 3)*log((1+r)/(1-r)) and p = 2*(1 - Phi(|z|)); independent when
+ * p >= alpha, equivalently |z| <= Phi^-1(1 - alpha/2). The p-value form is used because the
+ * skeleton applies Benjamini-Hochberg to a batch of tests. `partialCorr` and `pcorPvalue` are
+ * the PCMCI+ module's implementations (ridge-residualized partial correlation, same Fisher-z).
+ *
+ * Returns null when the test is not defined (dof <= 0), which keeps the edge.
+ */
+function ciPvalue(
+  data: number[][],
+  i: number,
+  j: number,
+  cond: readonly number[],
+): number | null {
+  const n = data.length;
+  if (n - cond.length - 3 <= 0) return null;
+  const r = partialCorr(data, i, j, [...cond]);
+  if (!Number.isFinite(r)) return null;
+  const p = pcorPvalue(r, n, cond.length);
+  return Number.isFinite(p) ? Math.min(1, Math.max(0, p)) : null;
+}
+
+/**
+ * Benjamini-Hochberg rejection mask for one family of CI tests. A rejection means "still
+ * dependent": the null here is INDEPENDENCE, so the skeleton deletes an edge precisely when the
+ * test is NOT rejected. (Inverting that is the classic way to make PC delete every edge: strong
+ * dependence produces p = 0, which BH marks as rejected.)
+ *
+ * For a single test this reduces to the nominal rule p <= alpha, so a 2-variable skeleton behaves
+ * classically. Note the honest limitation: BH controls the rate of falsely declaring DEPENDENCE,
+ * not the rate of falsely declaring independence; the latter is not FDR-controlled by any
+ * p-value procedure.
+ */
+function bhReject(pvals: readonly number[], alpha: number): boolean[] {
+  const m = pvals.length;
+  const rejected = new Array<boolean>(m).fill(false);
+  if (m === 0) return rejected;
+  const order = pvals
+    .map((p, index) => ({ p, index }))
+    .sort((a, b) => a.p - b.p || a.index - b.index);
+  let k = -1;
+  for (let r = 0; r < m; r++) {
+    if (order[r]!.p <= (alpha * (r + 1)) / m) k = r;
+  }
+  for (let r = 0; r <= k; r++) rejected[order[r]!.index] = true;
+  return rejected;
+}
+
+/** All size-k subsets of `nodes`, ascending, deterministic. */
+function subsetsOfSize(nodes: readonly number[], k: number): number[][] {
+  const out: number[][] = [];
+  if (k < 0 || k > nodes.length) return out;
+  const acc: number[] = [];
+  const walk = (start: number): void => {
+    if (acc.length === k) {
+      out.push(acc.slice());
+      return;
+    }
+    for (let i = start; i < nodes.length; i++) {
+      acc.push(nodes[i]!);
+      walk(i + 1);
+      acc.pop();
+    }
+  };
+  walk(0);
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// Internal PAG representation
+// ---------------------------------------------------------------------------
+
+interface MutableEdge {
+  u: number;
+  v: number;
+  markU: EdgeMark;
+  markV: EdgeMark;
+}
+
+type EdgeMap = Map<string, MutableEdge>;
+
+function pairKey(i: number, j: number): string {
+  return i < j ? `${i},${j}` : `${j},${i}`;
+}
+
+function toEdgeMap(edges: readonly FciEdge[], d: number): EdgeMap {
+  const g: EdgeMap = new Map();
+  for (const e of edges) {
+    if (e.u === e.v) throw new Error("pag: self-loop");
+    if (e.u < 0 || e.v < 0 || e.u >= d || e.v >= d) throw new Error("pag: node out of range");
+    const u = Math.min(e.u, e.v);
+    const v = Math.max(e.u, e.v);
+    const key = pairKey(u, v);
+    if (g.has(key)) throw new Error(`pag: duplicate edge ${u}-${v}`);
+    g.set(key, {
+      u,
+      v,
+      markU: e.u === u ? e.markU : e.markV,
+      markV: e.u === u ? e.markV : e.markU,
+    });
+  }
+  return g;
+}
+
+function fromEdgeMap(g: EdgeMap): FciEdge[] {
+  const out: FciEdge[] = [];
+  for (const rec of g.values()) {
+    out.push({ u: rec.u, v: rec.v, markU: rec.markU, markV: rec.markV });
+  }
+  out.sort((a, b) => a.u - b.u || a.v - b.v);
+  return out;
+}
+
+/** Mark at `i` on edge {i,j}, or null when i and j are not adjacent. */
+function markAt(g: EdgeMap, i: number, j: number): EdgeMark | null {
+  const rec = g.get(pairKey(i, j));
+  if (rec === undefined) return null;
+  return rec.u === i ? rec.markU : rec.markV;
+}
+
+/** Set the mark at `i` on edge {i,j}. Returns true only when the mark actually changed. */
+function setMark(g: EdgeMap, i: number, j: number, mark: EdgeMark): boolean {
+  const rec = g.get(pairKey(i, j));
+  if (rec === undefined) return false;
+  const current = rec.u === i ? rec.markU : rec.markV;
+  if (current === mark) return false;
+  if (rec.u === i) rec.markU = mark;
+  else rec.markV = mark;
+  return true;
+}
+
+function isAdj(g: EdgeMap, i: number, j: number): boolean {
+  return g.has(pairKey(i, j));
+}
+
+function neighborsOf(g: EdgeMap, i: number): number[] {
+  const out: number[] = [];
+  for (const rec of g.values()) {
+    if (rec.u === i) out.push(rec.v);
+    else if (rec.v === i) out.push(rec.u);
+  }
+  out.sort((a, b) => a - b);
+  return out;
+}
+
+function adjacencyPairs(g: EdgeMap): [number, number][] {
+  const out: [number, number][] = [];
+  for (const rec of g.values()) out.push([rec.u, rec.v]);
+  out.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  return out;
+}
+
+function directedEdge(g: EdgeMap, from: number, to: number): boolean {
+  return markAt(g, from, to) === "tail" && markAt(g, to, from) === "arrowhead";
+}
+
+/** True when a directed path from -> ... -> to exists (length >= 1). */
+function hasDirectedPath(g: EdgeMap, from: number, to: number, d: number): boolean {
+  const seen = new Array<boolean>(d).fill(false);
+  const stack: number[] = [from];
+  seen[from] = true;
+  while (stack.length > 0) {
+    const cur = stack.pop()!;
+    for (const next of neighborsOf(g, cur)) {
+      if (!directedEdge(g, cur, next)) continue;
+      if (next === to) return true;
+      if (seen[next]) continue;
+      seen[next] = true;
+      stack.push(next);
+    }
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 1: skeleton (PC adjacency search with BH-FDR batches)
+// ---------------------------------------------------------------------------
+
+interface SkeletonOutcome {
+  readonly g: EdgeMap;
+  readonly sepsets: Map<string, readonly number[]>;
+  readonly separated: [number, number][];
+}
+
+function runSkeleton(
+  data: number[][],
+  d: number,
+  alpha: number,
+  maxCond: number,
+  conditioning: ((i: number, j: number) => number[] | null) | undefined,
+  tested: Set<string>,
+): SkeletonOutcome {
+  const g: EdgeMap = new Map();
+  const sepsets = new Map<string, readonly number[]>();
+  const separated: [number, number][] = [];
+  for (let i = 0; i < d; i++) {
+    for (let j = i + 1; j < d; j++) {
+      g.set(pairKey(i, j), { u: i, v: j, markU: "circle", markV: "circle" });
+    }
+  }
+
+  if (conditioning !== undefined) {
+    for (const [i, j] of adjacencyPairs(g)) {
+      const s = conditioning(i, j);
+      if (s === null) continue;
+      const set = [...s].filter((c) => c !== i && c !== j).sort((a, b) => a - b);
+      g.delete(pairKey(i, j));
+      sepsets.set(pairKey(i, j), set);
+      separated.push([i, j]);
+    }
+    return { g, sepsets, separated };
+  }
+
+  for (let l = 0; l <= maxCond; l++) {
+    // Snapshot the adjacency at the start of the level so the batch is order-independent.
+    const pairs = adjacencyPairs(g);
+    const batch: { i: number; j: number; S: number[]; p: number }[] = [];
+    for (const [i, j] of pairs) {
+      if (!isAdj(g, i, j)) continue;
+      const others = neighborsOf(g, i).filter((v) => v !== j);
+      if (others.length < l) continue;
+      for (const S of subsetsOfSize(others, l)) {
+        const key = `${pairKey(i, j)}|${S.join(",")}`;
+        if (tested.has(key)) continue;
+        tested.add(key);
+        const p = ciPvalue(data, i, j, S);
+        if (p === null) continue;
+        batch.push({ i, j, S, p });
+      }
+    }
+    if (batch.length === 0) continue;
+    const dependent = bhReject(
+      batch.map((t) => t.p),
+      alpha,
+    );
+    // An edge is deleted only by a NON-rejected test (independence). Per pair keep the single
+    // most independent separating set: the largest p among the non-rejected candidates.
+    const best = new Map<string, { i: number; j: number; S: number[]; p: number }>();
+    for (let t = 0; t < batch.length; t++) {
+      if (dependent[t]) continue;
+      const cur = batch[t]!;
+      const key = pairKey(cur.i, cur.j);
+      const prev = best.get(key);
+      if (prev === undefined || cur.p > prev.p) best.set(key, cur);
+    }
+    for (const [key, hit] of best) {
+      if (!g.has(key)) continue;
+      g.delete(key);
+      sepsets.set(key, hit.S);
+      separated.push([hit.i, hit.j]);
+    }
+  }
+  return { g, sepsets, separated };
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2: Possible-D-Sep
+// ---------------------------------------------------------------------------
+
+function inTriangle(g: EdgeMap, v: number): boolean {
+  const nb = neighborsOf(g, v);
+  for (let a = 0; a < nb.length; a++) {
+    for (let b = a + 1; b < nb.length; b++) {
+      if (isAdj(g, nb[a]!, nb[b]!)) return true;
+    }
+  }
+  return false;
+}
+
+function isColliderOn(g: EdgeMap, prev: number, v: number, next: number): boolean {
+  return markAt(g, v, prev) === "arrowhead" && markAt(g, v, next) === "arrowhead";
+}
+
+/**
+ * Possible-D-Sep(a,b) on the current graph: every node c != a,b for which there is a path from
+ * a to c whose interior nodes are each a collider on the path or a member of a triangle.
+ * `b` is blocked as an interior node (the pair's own edge is never a conduit).
+ *
+ * This is the full definition, not an approximation of it. State is (previous, current) so a
+ * node can be legitimately revisited from a different direction; the visited set bounds the walk.
+ */
+function possibleDSepInternal(g: EdgeMap, a: number, b: number): number[] {
+  const out = new Set<number>();
+  const seen = new Set<string>();
+  const stack: { prev: number; cur: number }[] = [];
+  for (const c of neighborsOf(g, a)) {
+    if (c === b) continue;
+    out.add(c);
+    stack.push({ prev: a, cur: c });
+  }
+  while (stack.length > 0) {
+    const { prev, cur } = stack.pop()!;
+    const state = `${prev}|${cur}`;
+    if (seen.has(state)) continue;
+    seen.add(state);
+    for (const next of neighborsOf(g, cur)) {
+      if (next === prev || next === b) continue;
+      // `cur` is an interior node here: it must be a collider on prev-cur-next, or a triangle member.
+      const allowed = isColliderOn(g, prev, cur, next) || inTriangle(g, cur);
+      if (!allowed) continue;
+      out.add(next);
+      stack.push({ prev: cur, cur: next });
+    }
+  }
+  out.delete(a);
+  out.delete(b);
+  return [...out].sort((x, y) => x - y);
+}
+
+/** Public wrapper: Possible-D-Sep of (a,b) for a supplied PAG. */
+export function possibleDSep(
+  d: number,
+  edges: readonly FciEdge[],
+  a: number,
+  b: number,
+): number[] {
+  const g = toEdgeMap(edges, d);
+  if (!Number.isInteger(a) || !Number.isInteger(b)) throw new Error("possibleDSep: bad nodes");
+  return possibleDSepInternal(g, a, b);
+}
+
+// ---------------------------------------------------------------------------
+// Phase 3: orientation
+// ---------------------------------------------------------------------------
+
+/** R0: unshielded triple i - k - j with k not in sepset(i,j) becomes i *-> k <-* j. */
+function orientColliders(
+  g: EdgeMap,
+  sepsets: ReadonlyMap<string, readonly number[]>,
+  d: number,
+): boolean {
+  let changed = false;
+  for (const [key, sep] of sepsets) {
+    const parts = key.split(",");
+    const i = Number(parts[0]);
+    const j = Number(parts[1]);
+    if (isAdj(g, i, j)) continue;
+    for (let k = 0; k < d; k++) {
+      if (k === i || k === j) continue;
+      if (!isAdj(g, k, i) || !isAdj(g, k, j)) continue;
+      if (sep.includes(k)) continue;
+      if (setMark(g, k, i, "arrowhead")) changed = true;
+      if (setMark(g, k, j, "arrowhead")) changed = true;
+    }
+  }
+  return changed;
+}
+
+/** R1: A *-> B o-* C with A,C non-adjacent forces B -> C. */
+function ruleR1(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const b of [rec.u, rec.v]) {
+      for (const a of neighborsOf(g, b)) {
+        if (markAt(g, b, a) !== "arrowhead") continue; // a *-> b
+        for (const c of neighborsOf(g, b)) {
+          if (c === a) continue;
+          if (markAt(g, b, c) !== "circle") continue; // b o-* c
+          if (isAdj(g, a, c)) continue;
+          if (setMark(g, b, c, "tail")) changed = true;
+          if (setMark(g, c, b, "arrowhead")) changed = true;
+        }
+      }
+    }
+  }
+  return changed;
+}
+
+/** R2: A -> B *-> C or A *-> B -> C, with A o-* C, forces an arrowhead at C. */
+function ruleR2(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const a of [rec.u, rec.v]) {
+      for (const c of [rec.u, rec.v]) {
+        if (a === c) continue;
+        if (markAt(g, a, c) !== "circle") continue; // a o-* c
+        for (const b of neighborsOf(g, a)) {
+          if (b === c || !isAdj(g, b, c)) continue;
+          const aToB = markAt(g, a, b) === "tail" && markAt(g, b, a) === "arrowhead";
+          const bToC = markAt(g, b, c) === "tail" && markAt(g, c, b) === "arrowhead";
+          const arrowAtB = markAt(g, b, a) === "arrowhead";
+          const arrowAtC = markAt(g, c, b) === "arrowhead";
+          if ((aToB && arrowAtC) || (arrowAtB && bToC)) {
+            if (setMark(g, c, a, "arrowhead")) changed = true;
+          }
+        }
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * R3: A *-> B <-* C and A *-> D <-* C with A,C non-adjacent and D o-* B forces an arrowhead at D.
+ * The circle at D is the only mark that can change (see header note 3).
+ */
+function ruleR3(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const b of [rec.u, rec.v]) {
+      for (const a of neighborsOf(g, b)) {
+        if (markAt(g, b, a) !== "arrowhead") continue; // a *-> b
+        for (const c of neighborsOf(g, b)) {
+          if (c === a || isAdj(g, a, c)) continue;
+          if (markAt(g, b, c) !== "arrowhead") continue; // c *-> b
+          for (const dd of neighborsOf(g, a)) {
+            if (dd === b || dd === c || !isAdj(g, dd, c) || !isAdj(g, dd, b)) continue;
+            if (markAt(g, dd, a) !== "arrowhead") continue; // a *-> d
+            if (markAt(g, dd, c) !== "arrowhead") continue; // c *-> d
+            if (markAt(g, dd, b) !== "circle") continue; // d o-* b
+            if (setMark(g, dd, b, "arrowhead")) changed = true;
+          }
+        }
+      }
+    }
+  }
+  return changed;
+}
+
+/** True when `v` is a parent of `c`: v -> c. */
+function isParentOf(g: EdgeMap, v: number, c: number): boolean {
+  return markAt(g, v, c) === "tail" && markAt(g, c, v) === "arrowhead";
+}
+
+/**
+ * Search for a discriminating path pi = <D, ..., A, B, C> for B, returning D or null.
+ *
+ * Zhang 2008 definition: A adjacent to B, B adjacent to C, A and C non-adjacent, and every
+ * vertex on pi between D and A is a collider on pi and a parent of C. The walk runs backwards
+ * from A, so the collider test at an interior node needs its predecessor on that side.
+ */
+function findDiscriminatingPaths(
+  g: EdgeMap,
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+): number[] {
+  const out: number[] = [];
+  const onPath = new Set<number>([a, b, c]);
+  const walk = (prev: number, cur: number, depth: number): void => {
+    // Every node reached from A is a legal far endpoint D: the interior nodes between D and A
+    // are exactly the ones the walk already validated when it moved past them.
+    out.push(cur);
+    if (depth > d) return;
+    for (const next of neighborsOf(g, cur)) {
+      if (next === prev || onPath.has(next)) continue;
+      // `cur` is interior once we extend: it must be a collider on prev-cur-next and a parent of C.
+      if (!isParentOf(g, cur, c)) continue;
+      if (!isColliderOn(g, prev, cur, next)) continue;
+      onPath.add(cur);
+      walk(cur, next, depth + 1);
+      onPath.delete(cur);
+    }
+  };
+  for (const first of neighborsOf(g, a)) {
+    if (first === b || first === c) continue;
+    walk(a, first, 1);
+  }
+  return out;
+}
+
+/**
+ * R4: if pi = <D,...,A,B,C> is a discriminating path for B and B o-* C, then B -> C when
+ * B is in sepset(D,C), otherwise A *-> B *-> C.
+ */
+function ruleR4(g: EdgeMap, sepsets: ReadonlyMap<string, readonly number[]>, d: number): boolean {
+  let changed = false;
+  for (const [b, c] of adjacencyPairs(g)) {
+    for (const [bb, cc] of [
+      [b, c],
+      [c, b],
+    ] as const) {
+      if (markAt(g, bb, cc) !== "circle") continue;
+      for (const a of neighborsOf(g, bb)) {
+        if (a === cc || isAdj(g, a, cc)) continue;
+        if (markAt(g, bb, a) === "tail") continue; // collider premise at bb fails
+        for (const dNode of findDiscriminatingPaths(g, a, bb, cc, d)) {
+          const sep = sepsets.get(pairKey(dNode, cc));
+          if (sep === undefined) continue; // no separating set: cannot decide, do not guess
+          if (sep.includes(bb)) {
+            if (setMark(g, bb, cc, "tail")) changed = true;
+            if (setMark(g, cc, bb, "arrowhead")) changed = true;
+          } else {
+            if (setMark(g, bb, a, "arrowhead")) changed = true;
+            if (setMark(g, cc, bb, "arrowhead")) changed = true;
+          }
+        }
+      }
+    }
+  }
+  return changed;
+}
+
+/** R8: A -> B -> C or A -> B o-* C, with A o-* C, forces an arrowhead at C. */
+function ruleR8(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const a of [rec.u, rec.v]) {
+      for (const c of [rec.u, rec.v]) {
+        if (a === c) continue;
+        if (markAt(g, a, c) !== "circle") continue;
+        for (const b of neighborsOf(g, a)) {
+          if (b === c || !isAdj(g, b, c)) continue;
+          const aToB = markAt(g, a, b) === "tail" && markAt(g, b, a) === "arrowhead";
+          if (!aToB) continue;
+          const bToC = markAt(g, b, c) === "tail" && markAt(g, c, b) === "arrowhead";
+          const bCircleC = markAt(g, b, c) === "circle";
+          if (bToC || bCircleC) {
+            if (setMark(g, c, a, "arrowhead")) changed = true;
+          }
+        }
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * Ancestral completion, standing in for R9/R10: a circle is resolved only when the alternative
+ * would create a directed or almost-directed cycle, so every completion here is forced.
+ *  - circle at v and u => v  -> the arrowhead at v (u -> v) would close a cycle: v -> u.
+ *  - circle at v and v => u  -> the tail at v (v -> u) would close a cycle: arrowhead at v.
+ */
+function completeAncestral(g: EdgeMap, d: number): boolean {
+  let changed = false;
+  for (const [u, v] of adjacencyPairs(g)) {
+    for (const [to, from] of [
+      [v, u],
+      [u, v],
+    ] as const) {
+      if (markAt(g, to, from) !== "circle") continue;
+      if (hasDirectedPath(g, from, to, d)) {
+        if (setMark(g, to, from, "arrowhead")) changed = true;
+      } else if (hasDirectedPath(g, to, from, d)) {
+        if (setMark(g, to, from, "tail")) changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
+function applyOrientationRules(
+  g: EdgeMap,
+  sepsets: ReadonlyMap<string, readonly number[]>,
+  d: number,
+): void {
+  let changed = true;
+  let guard = 0;
+  while (changed && guard < 500) {
+    guard++;
+    changed = false;
+    if (ruleR1(g)) changed = true;
+    if (ruleR2(g)) changed = true;
+    if (ruleR3(g)) changed = true;
+    if (ruleR4(g, sepsets, d)) changed = true;
+    if (ruleR8(g)) changed = true;
+    if (completeAncestral(g, d)) changed = true;
+  }
+  if (guard >= 500) throw new Error("fci: orientation rules did not reach a fixpoint");
+}
+
+/**
+ * Apply collider orientation (R0) and Zhang's rules to a supplied PAG and return the closed PAG.
+ * Exposed so each rule can be exercised directly on a hand-built graph; `fci` uses the same code.
+ */
+export function orientPag(
+  d: number,
+  edges: readonly FciEdge[],
+  sepsets: ReadonlyMap<string, readonly number[]> = new Map(),
+): FciEdge[] {
+  const g = toEdgeMap(edges, d);
+  orientColliders(g, sepsets, d);
+  applyOrientationRules(g, sepsets, d);
+  return fromEdgeMap(g);
+}
+
+// ---------------------------------------------------------------------------
+// FCI
+// ---------------------------------------------------------------------------
+
+function possibleDsepPrune(
+  data: number[][],
+  g: EdgeMap,
+  sepsets: Map<string, readonly number[]>,
+  separated: [number, number][],
+  alpha: number,
+  maxCond: number,
+  tested: Set<string>,
+  conditioning: ((i: number, j: number) => number[] | null) | undefined,
+): boolean {
+  if (conditioning !== undefined) {
+    // The caller supplied the oracle, so it replaces the statistical re-test here too; otherwise
+    // the two phases would disagree about which graph they are describing.
+    let removed = false;
+    for (const [i, j] of adjacencyPairs(g)) {
+      const s = conditioning(i, j);
+      if (s === null) continue;
+      const set = [...s].filter((c) => c !== i && c !== j).sort((a, b) => a - b);
+      g.delete(pairKey(i, j));
+      sepsets.set(pairKey(i, j), set);
+      separated.push([i, j]);
+      removed = true;
+    }
+    return removed;
+  }
+  const pairs = adjacencyPairs(g);
+  const batch: { i: number; j: number; S: number[]; p: number }[] = [];
+  for (const [i, j] of pairs) {
+    const pds = possibleDSepInternal(g, i, j).filter((v) => v !== i && v !== j);
+    if (pds.length === 0) continue;
+    const max = Math.min(maxCond, pds.length);
+    for (let l = 0; l <= max; l++) {
+      for (const S of subsetsOfSize(pds, l)) {
+        const key = `${pairKey(i, j)}|${S.join(",")}`;
+        if (tested.has(key)) continue;
+        tested.add(key);
+        const p = ciPvalue(data, i, j, S);
+        if (p === null) continue;
+        batch.push({ i, j, S, p });
+      }
+    }
+  }
+  if (batch.length === 0) return false;
+  const dependent = bhReject(
+    batch.map((t) => t.p),
+    alpha,
+  );
+  const best = new Map<string, { i: number; j: number; S: number[]; p: number }>();
+  for (let t = 0; t < batch.length; t++) {
+    if (dependent[t]) continue;
+    const cur = batch[t]!;
+    const key = pairKey(cur.i, cur.j);
+    const prev = best.get(key);
+    if (prev === undefined || cur.p > prev.p) best.set(key, cur);
+  }
+  let removed = false;
+  for (const [key, hit] of best) {
+    if (!g.has(key)) continue;
+    g.delete(key);
+    sepsets.set(key, hit.S);
+    separated.push([hit.i, hit.j]);
+    removed = true;
+  }
+  return removed;
+}
+
+/**
+ * Fast Causal Inference: learn a PAG over the columns of `data` in the presence of possible
+ * latent confounders and selection bias.
+ *
+ * Order of operations: PC skeleton with Fisher-z + BH-FDR per level, R0 collider orientation,
+ * Possible-D-Sep re-testing with re-orientation until no edge is deleted, then R1-R4/R8 plus
+ * ancestral completion to a fixpoint. See the module header for what is approximated.
+ *
+ * @param data rows = observations, columns = variables
+ * @param opts alpha (FDR level), maxConditioningSetSize, optional separating-set oracle
+ */
+export function fci(data: number[][], opts: FciOptions = {}): FciResult {
+  const n = data.length;
+  if (n === 0) throw new Error("fci: need at least one observation");
+  const d = data[0]!.length;
+  if (d < 2) throw new Error("fci: need at least two variables");
+  for (const row of data) {
+    if (row.length !== d) throw new Error("fci: ragged data matrix");
+  }
+  const alpha = opts.alpha ?? 0.05;
+  if (!(alpha > 0 && alpha < 1)) throw new Error("fci: alpha must lie in (0,1)");
+  const rawMax = opts.maxConditioningSetSize ?? 3;
+  if (!Number.isInteger(rawMax) || rawMax < 0) {
+    throw new Error("fci: maxConditioningSetSize must be a non-negative integer");
+  }
+  const maxCond = Math.min(rawMax, Math.max(0, d - 2));
+
+  const tested = new Set<string>();
+  const sk = runSkeleton(data, d, alpha, maxCond, opts.conditioning, tested);
+  const g = sk.g;
+  const sepsets = sk.sepsets;
+  const separated = sk.separated;
+
+  orientColliders(g, sepsets, d);
+  for (let round = 0; round < 4; round++) {
+    const removed = possibleDsepPrune(
+      data,
+      g,
+      sepsets,
+      separated,
+      alpha,
+      maxCond,
+      tested,
+      opts.conditioning,
+    );
+    orientColliders(g, sepsets, d);
+    if (!removed) break;
+  }
+
+  applyOrientationRules(g, sepsets, d);
+
+  const nodes: number[] = [];
+  for (let i = 0; i < d; i++) nodes.push(i);
+  return {
+    nodes,
+    edges: fromEdgeMap(g),
+    sepsets,
+    skeleton: adjacencyPairs(g),
+    separated: separated.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]),
+    step: "done",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// PAG -> ADMG
+// ---------------------------------------------------------------------------
+
+/**
+ * Project a PAG onto an ADMG. Mark rule (see the header for the reasoning):
+ * tail/arrowhead -> directed; arrowhead/arrowhead -> bidirected; any circle at either end ->
+ * bidirected; tail/tail -> bidirected. Nothing is ever promoted to a direction.
+ */
+export function pagToAdmg(pag: FciResult): PagAdmg {
+  const directed: [number, number][] = [];
+  const bidirected: [number, number][] = [];
+  for (const e of pag.edges) {
+    const forward = e.markU === "tail" && e.markV === "arrowhead";
+    const backward = e.markU === "arrowhead" && e.markV === "tail";
+    if (forward) directed.push([e.u, e.v]);
+    else if (backward) directed.push([e.v, e.u]);
+    else bidirected.push([e.u, e.v]);
+  }
+  directed.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  bidirected.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  return { nodes: [...pag.nodes].sort((a, b) => a - b), directed, bidirected };
+}
+
+/**
+ * Convert a numeric ADMG into the do-calculus `CausalADMG`: string ids, and `nodes` emitted in a
+ * topological order of `directed` (Kahn, smallest index first, so the output is deterministic).
+ * Throws on a directed cycle rather than handing a cyclic "DAG" to Shpitser-Pearl.
+ */
+export function admgToCausalADMG(
+  admg: PagAdmg,
+  name: (node: number) => NodeId = (node) => `v${node}`,
+): CausalADMG {
+  const nodes = [...admg.nodes].sort((a, b) => a - b);
+  const index = new Map<number, number>();
+  for (let i = 0; i < nodes.length; i++) index.set(nodes[i]!, i);
+  const out: number[][] = nodes.map(() => []);
+  const indeg = new Array<number>(nodes.length).fill(0);
+  for (const [u, v] of admg.directed) {
+    const iu = index.get(u);
+    const iv = index.get(v);
+    if (iu === undefined || iv === undefined) {
+      throw new Error(`admgToCausalADMG: directed edge ${u} -> ${v} uses an unknown node`);
+    }
+    if (iu === iv) throw new Error(`admgToCausalADMG: self loop at ${u}`);
+    out[iu]!.push(iv);
+    indeg[iv]! += 1;
+  }
+  const ready: number[] = [];
+  for (let i = 0; i < nodes.length; i++) if (indeg[i] === 0) ready.push(i);
+  const order: number[] = [];
+  while (ready.length > 0) {
+    ready.sort((a, b) => a - b);
+    const cur = ready.shift()!;
+    order.push(cur);
+    for (const next of out[cur]!) {
+      indeg[next]! -= 1;
+      if (indeg[next] === 0) ready.push(next);
+    }
+  }
+  if (order.length !== nodes.length) {
+    throw new Error(
+      "admgToCausalADMG: the projected directed edges contain a cycle; refusing to hand a cyclic graph to do-calculus",
+    );
+  }
+  const label = nodes.map((node) => name(node));
+  return {
+    nodes: order.map((i) => label[i]!),
+    directed: admg.directed.map(([u, v]) => [name(u), name(v)] as const),
+    bidirected: admg.bidirected.map(([u, v]) => [name(u), name(v)] as const),
+  };
+}
+
+/** PAG -> ADMG -> CausalADMG in one step, ready for runShpitserPearlID. */
+export function pagToCausalADMG(
+  pag: FciResult,
+  name?: (node: number) => NodeId,
+): CausalADMG {
+  return admgToCausalADMG(pagToAdmg(pag), name);
+}
+
+// ---------------------------------------------------------------------------
+// Precision-preconditioned, scale-invariant DYNOTEARS
+// ---------------------------------------------------------------------------
+
+/**
+ * Precision preconditioning: z-score every column and return the sample CORRELATION matrix
+ * gram = (1/n) Z^T Z (unit diagonal). Everything the estimator needs about the data lives in
+ * gram, so the inner loop is O(d^3) and independent of n, and rescaling an input column is a
+ * no-op by construction. A constant column keeps sd = 1, so its deviations are exactly 0.
+ */
+function standardizeGram(X: number[][]): { gram: number[][]; sd: number[] } {
+  const n = X.length;
+  const d = X[0]!.length;
+  const mean = new Array<number>(d).fill(0);
+  for (const row of X) for (let j = 0; j < d; j++) mean[j]! += row[j]!;
+  for (let j = 0; j < d; j++) mean[j]! /= n;
+  const sd = new Array<number>(d).fill(0);
+  for (const row of X) {
+    for (let j = 0; j < d; j++) {
+      const dev = row[j]! - mean[j]!;
+      sd[j]! += dev * dev;
+    }
+  }
+  for (let j = 0; j < d; j++) {
+    sd[j] = Math.sqrt(Math.max(0, sd[j]! / n));
+    if (!(sd[j]! > 1e-12)) sd[j] = 1;
+  }
+  const gram = zeros(d, d);
+  for (const row of X) {
+    const z = row.map((v, j) => (v - mean[j]!) / sd[j]!);
+    for (let a = 0; a < d; a++) {
+      if (z[a] === 0) continue;
+      for (let b = a; b < d; b++) gram[a]![b]! += z[a]! * z[b]!;
+    }
+  }
+  for (let a = 0; a < d; a++) {
+    for (let b = a; b < d; b++) {
+      gram[a]![b]! /= n;
+      gram[b]![a] = gram[a]![b]!;
+    }
+  }
+  return { gram, sd };
+}
+
+interface ColumnStats {
+  readonly mse: number[];
+  /** cross[k][j] = (1/n)(Z^T R)[k][j] */
+  readonly cross: number[][];
+}
+
+/**
+ * Per-column mean squared residual and the cross-moment matrix, computed from the Gram matrix:
+ * mse_j = gram[j][j] - 2 w^T gram[:,j] + w^T gram w, cross = gram - gram W. O(d^3), never n.
+ */
+function columnStats(gram: number[][], W: number[][]): ColumnStats {
+  const d = W.length;
+  const mse = new Array<number>(d).fill(1);
+  const cross = zeros(d, d);
+  for (let j = 0; j < d; j++) {
+    const gw = new Array<number>(d).fill(0); // gw[k] = sum_l gram[k][l] W[l][j]
+    for (let k = 0; k < d; k++) {
+      let s = 0;
+      for (let l = 0; l < d; l++) s += gram[k]![l]! * W[l]![j]!;
+      gw[k] = s;
+    }
+    let quad = 0;
+    for (let k = 0; k < d; k++) quad += W[k]![j]! * gw[k]!;
+    mse[j] = Math.max(gram[j]![j]! - 2 * gw[j]! + quad, 1e-12);
+    for (let k = 0; k < d; k++) cross[k]![j] = gram[k]![j]! - gw[k]!;
+  }
+  return { mse, cross };
+}
+
+/**
+ * Smooth part of the objective:
+ *   sum_j 0.5*log(mse_j) - d*log|det(I-W)| + (rho/2)*h^2 + alpha*h
+ * (the L1 term is handled by the proximal step, not here). Infinity when I-W is singular.
+ */
+function smoothObjective(gram: number[][], W: number[][], alphaAL: number, rho: number): number {
+  const d = W.length;
+  const { mse } = columnStats(gram, W);
+  let loss = 0;
+  for (let j = 0; j < d; j++) loss += 0.5 * Math.log(mse[j]!);
+  const eyeMinusW = identity(d).map((row, i) => row.map((v, j) => v - W[i]![j]!));
+  const inv = inverseWithDet(eyeMinusW);
+  if (inv === null) return Number.POSITIVE_INFINITY;
+  const absDet = Math.abs(inv.det);
+  if (!(absDet > 1e-12)) return Number.POSITIVE_INFINITY;
+  loss -= d * Math.log(absDet);
+  const { h } = acyclicityExact(W);
+  if (!Number.isFinite(h)) return Number.POSITIVE_INFINITY;
+  loss += (rho / 2) * h * h + alphaAL * h;
+  return Number.isFinite(loss) ? loss : Number.POSITIVE_INFINITY;
+}
+
+/**
+ * Analytic gradient of the smooth part, with the exact h gradient:
+ *   d/dW[k][j] of sum_j 0.5 log(mse_j) = -(1/n)(Z^T R)[k][j] / mse_j
+ *   d/dW of -d log|det(I-W)|           = d * (I-W)^{-T}
+ *   d/dW of (rho/2)h^2 + alpha*h       = (rho*h + alpha) * (exp(W o W))^T o 2W
+ */
+function smoothGradient(
+  W: number[][],
+  alphaAL: number,
+  rho: number,
+  stats: ColumnStats,
+): number[][] | null {
+  const d = W.length;
+  const eyeMinusW = identity(d).map((row, i) => row.map((v, j) => v - W[i]![j]!));
+  const inv = inverseWithDet(eyeMinusW);
+  if (inv === null) return null;
+  const absDet = Math.abs(inv.det);
+  if (!(absDet > 1e-12)) return null;
+  const out = zeros(d, d);
+  for (let k = 0; k < d; k++) {
+    for (let j = 0; j < d; j++) {
+      if (k === j) continue;
+      out[k]![j] = -stats.cross[k]![j]! / stats.mse[j]!;
+      out[k]![j]! += d * inv.inv[j]![k]!;
+    }
+  }
+  const { h, grad } = acyclicityExact(W);
+  const coef = rho * h + alphaAL;
+  for (let k = 0; k < d; k++) {
+    for (let j = 0; j < d; j++) out[k]![j]! += coef * grad[k]![j]!;
+  }
+  return out;
+}
+
+/** Soft-threshold step restricted to the allowed support; diagonal and disallowed entries are exactly 0. */
+function proxStep(
+  W: number[][],
+  G: number[][],
+  step: number,
+  lambda1: number,
+  allowed: boolean[][],
+): number[][] {
+  const d = W.length;
+  const out = zeros(d, d);
+  const t = step * lambda1;
+  for (let k = 0; k < d; k++) {
+    for (let j = 0; j < d; j++) {
+      if (k === j || !allowed[k]![j]) continue;
+      const v = W[k]![j]! - step * G[k]![j]!;
+      out[k]![j] = Math.sign(v) * Math.max(0, Math.abs(v) - t);
+    }
+  }
+  return out;
+}
+
+/**
+ * Largest absolute off-diagonal entry of the correlation matrix. At W = 0 the objective's gradient
+ * is exactly -(that correlation) on every off-diagonal entry, so this is the smallest lambda for
+ * which W = 0 is a stationary point: the natural start of the continuation path.
+ */
+function maxAbsCorrelation(gram: number[][]): number {
+  const d = gram.length;
+  let mx = 0;
+  for (let a = 0; a < d; a++) {
+    for (let b = a + 1; b < d; b++) mx = Math.max(mx, Math.abs(gram[a]![b]!));
+  }
+  return mx;
+}
+
+/** Geometric continuation path from "W = 0 is optimal" down to the requested lambda1. */
+function lambdaSchedule(lambda1: number, corrMax: number): number[] {
+  if (!(lambda1 > 0)) return [0];
+  const out: number[] = [];
+  let lam = Math.max(corrMax, lambda1);
+  for (let k = 0; k < 12 && lam > lambda1 * 1.0001; k++) {
+    out.push(lam);
+    lam /= 4;
+  }
+  out.push(lambda1);
+  return out;
+}
+
+function frob2(M: number[][]): number {
+  let s = 0;
+  for (const row of M) for (const v of row) s += v * v;
+  return s;
+}
+
+/**
+ * Inner proximal-gradient solve for one augmented-Lagrangian multiplier pair. Backtracking on the
+ * smooth objective only (correct for the composite objective), with the support mask re-applied
+ * by `proxStep` on every iteration.
+ */
+function innerSolve(
+  gram: number[][],
+  W0: number[][],
+  lambda1: number,
+  alphaAL: number,
+  rho: number,
+  allowed: boolean[][],
+  iters: number,
+): number[][] {
+  let W = W0.map((row) => row.slice());
+  let f = smoothObjective(gram, W, alphaAL, rho);
+  if (!Number.isFinite(f)) {
+    W = zeros(W.length, W.length);
+    f = smoothObjective(gram, W, alphaAL, rho);
+  }
+  let step = 0.25;
+  for (let it = 0; it < iters; it++) {
+    const stats = columnStats(gram, W);
+    const G = smoothGradient(W, alphaAL, rho, stats);
+    if (G === null) break;
+    const g2 = frob2(G);
+    let accepted = false;
+    for (let ls = 0; ls < 45; ls++) {
+      const Wc = proxStep(W, G, step, lambda1, allowed);
+      const fc = smoothObjective(gram, Wc, alphaAL, rho);
+      if (Number.isFinite(fc) && fc <= f - 1e-4 * step * g2) {
+        const prev = f;
+        W = Wc;
+        f = fc;
+        step *= 1.3;
+        accepted = true;
+        if (prev - fc < 1e-12 * Math.max(1, Math.abs(fc))) it = iters;
+        break;
+      }
+      step *= 0.5;
+    }
+    if (!accepted) break;
+  }
+  return W;
+}
+
+/**
+ * DYNOTEARS, contemporaneous block only: minimize
+ *   sum_j [0.5*log((1/n)||r_j||^2) - log|det(I-W)|] + lambda1*||W||_1 + (rho/2)*h^2 + alpha*h
+ * (equivalently the expression implemented in `smoothObjective`, which folds the sum over j into
+ * `-d*log|det(I-W)|`). Lagged terms are out of scope.
+ *
+ * SCALE INVARIANCE: the fit runs on z-scored columns, so rescaling an input column cannot change
+ * the standardized solution or the discovered edge set; `W` is mapped back to original units
+ * afterwards (W_orig[k][j] = W_std[k][j] * sd_j / sd_k). `edges` is thresholded on the
+ * standardized coefficients, which is the only scale-free choice.
+ *
+ * SUPPORT RESTRICTION: when `allowedEdges` is given, every other off-diagonal entry is held at
+ * exactly 0 for the entire optimization (proxStep never writes it), so NOTEARS cannot orient an
+ * edge the PAG forbids.
+ *
+ * @param X rows = observations, columns = variables
+ * @param opts lambda1, rho, alpha, maxIter (outer AL iterations), tol, edgeThreshold, allowedEdges
+ */
+export function dynotearsFit(X: number[][], opts: DynotearsOptions = {}): DynotearsResult {
+  const n = X.length;
+  if (n === 0) throw new Error("dynotearsFit: need at least one observation");
+  const d = X[0]!.length;
+  if (d === 0) throw new Error("dynotearsFit: need at least one variable");
+  for (const row of X) {
+    if (row.length !== d) throw new Error("dynotearsFit: ragged data matrix");
+    for (const v of row) if (!Number.isFinite(v)) throw new Error("dynotearsFit: non-finite value");
+  }
+  const lambda1 = opts.lambda1 ?? 0.01;
+  const rho0 = opts.rho ?? 1.0;
+  const alpha0 = opts.alpha ?? 1.0;
+  const maxIter = opts.maxIter ?? 50;
+  const tol = opts.tol ?? 1e-7;
+  const edgeThreshold = opts.edgeThreshold ?? 0.05;
+  for (const [name, v] of [
+    ["lambda1", lambda1],
+    ["rho", rho0],
+    ["alpha", alpha0],
+    ["tol", tol],
+    ["edgeThreshold", edgeThreshold],
+  ] as const) {
+    if (!(v >= 0) || !Number.isFinite(v)) throw new Error(`dynotearsFit: ${name} must be >= 0`);
+  }
+  if (!Number.isInteger(maxIter) || maxIter < 1) {
+    throw new Error("dynotearsFit: maxIter must be a positive integer");
+  }
+
+  const allowed: boolean[][] = Array.from({ length: d }, () => new Array<boolean>(d).fill(false));
+  if (opts.allowedEdges === undefined) {
+    for (let k = 0; k < d; k++) for (let j = 0; j < d; j++) allowed[k]![j] = k !== j;
+  } else {
+    for (const [k, j] of opts.allowedEdges) {
+      if (!Number.isInteger(k) || !Number.isInteger(j) || k < 0 || j < 0 || k >= d || j >= d) {
+        throw new Error(`dynotearsFit: allowedEdges entry ${k}->${j} out of range`);
+      }
+      if (k !== j) allowed[k]![j] = true;
+    }
+  }
+
+  const { gram, sd } = standardizeGram(X);
+  const innerIters = 160;
+
+  // Continuation (homotopy) on lambda1. This is a WARM-START device, not a change of objective:
+  // the last stage minimizes exactly the requested lambda1. Without it the proximal path from
+  // W = 0 walks straight into the dense basin (the profile likelihood is flat across the Markov
+  // equivalence class, so every correlation-shaped W is an equally good stationary point and a
+  // small lambda1 cannot pull the fit back out). Starting at the lambda where W = 0 is optimal and
+  // shrinking by 4 follows the L1 path towards sparser stationary points.
+  // Measured caveat (header note 6b): at lambda1 = 0.01 the path still ends sparse ONLY on data
+  // whose coefficient scale makes 0.01 meaningful, so the unrestricted diamond still over-fits.
+  // The continuation makes the fit deterministic and better conditioned; it is not a fix.
+  const schedule = lambdaSchedule(lambda1, maxAbsCorrelation(gram));
+  let W = zeros(d, d);
+  let alphaAL = alpha0;
+  let rho = Math.max(rho0, 1);
+  let best: { W: number[][]; loss: number } | null = null;
+
+  for (let stage = 0; stage < schedule.length; stage++) {
+    const lambda = schedule[stage]!;
+    const isFinal = stage === schedule.length - 1;
+    alphaAL = alpha0;
+    rho = Math.max(rho0, 1);
+    const outers = isFinal ? maxIter : 4;
+    for (let outer = 0; outer < outers; outer++) {
+      W = innerSolve(gram, W, lambda, alphaAL, rho, allowed, innerIters);
+      const { h } = acyclicityExact(W);
+      if (isFinal) {
+        const loss = smoothObjective(gram, W, alphaAL, rho) + lambda1 * frob1(W);
+        if (Number.isFinite(loss) && isAcyclic(W) && (best === null || loss < best.loss)) {
+          best = { W: W.map((row) => row.slice()), loss };
+        }
+      }
+      if (h < tol) break;
+      alphaAL += rho * h;
+      rho = Math.min(rho * 4, 1e8);
+    }
+  }
+
+  const chosen = best !== null && !isAcyclic(W) ? best.W : W;
+  const Wstandardized = chosen.map((row) => row.slice());
+  const Wout = chosen.map((row, k) => row.map((v, j) => (v * sd[j]!) / sd[k]!));
+  // h and grad are reported AT THE RETURNED W, in original units: a caller who finite-differences
+  // the returned matrix must get the returned gradient (scale changes h's magnitude even though it
+  // cannot change whether h is zero, so this is not cosmetic).
+  const { h, grad } = acyclicityExact(Wout);
+  const edges: [number, number][] = [];
+  for (let k = 0; k < d; k++) {
+    for (let j = 0; j < d; j++) {
+      if (k === j || !allowed[k]![j]) continue;
+      if (Math.abs(Wstandardized[k]![j]!) > edgeThreshold) edges.push([k, j]);
+    }
+  }
+  edges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const lossOut = smoothObjective(gram, Wstandardized, alphaAL, rho) + lambda1 * frob1(Wstandardized);
+  return {
+    W: Wout,
+    h,
+    grad,
+    edges,
+    loss: Number.isFinite(lossOut) ? lossOut : Number.POSITIVE_INFINITY,
+    Wstandardized,
+  };
+}
+
+function frob1(W: number[][]): number {
+  let s = 0;
+  for (const row of W) for (const v of row) s += Math.abs(v);
+  return s;
+}
+
+// ---------------------------------------------------------------------------
+// Integration: FCI -> PAG -> ADMG
+// ---------------------------------------------------------------------------
+
+/**
+ * Run FCI and project the PAG onto an ADMG in one call.
+ *
+ * `edgeThreshold` is accepted for call-site symmetry with `dynotearsFit`; a PAG carries no edge
+ * weights, so it has no effect here (documented rather than silently reinterpreted).
+ */
+export function discoverCausalStructure(
+  data: number[][],
+  opts: {
+    readonly alpha?: number;
+    readonly maxConditioningSetSize?: number;
+    readonly edgeThreshold?: number;
+  } = {},
+): { readonly pag: FciResult; readonly admg: PagAdmg } {
+  if (opts.edgeThreshold !== undefined && !(opts.edgeThreshold >= 0)) {
+    throw new Error("discoverCausalStructure: edgeThreshold must be >= 0");
+  }
+  const pag = fci(data, {
+    ...(opts.alpha === undefined ? {} : { alpha: opts.alpha }),
+    ...(opts.maxConditioningSetSize === undefined
+      ? {}
+      : { maxConditioningSetSize: opts.maxConditioningSetSize }),
+  });
+  return { pag, admg: pagToAdmg(pag) };
+}
