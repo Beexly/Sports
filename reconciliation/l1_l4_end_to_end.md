@@ -1986,3 +1986,66 @@ is now correct: it returns the spec's exact ratio tree, and A082
 never contained it. The FOUR graph (`W <-> X`, `Z <-> Y`) — the one
 A082 *does* contain — returns a conditional where the spec's quoted
 equation is a ratio, and that is now stated rather than glossed.
+
+## T12 became a real gate, and it found two constants that gate nothing.
+
+The spec's T12 requires the threshold auditor to **fail CI** when an
+exported threshold constant has no active comparison site. The auditor
+was a **review list that exited 0** — findings on the report, failure
+only when its own self-test broke. A report nobody blocks on is a list,
+not a gate.
+
+**It now fails on a dead threshold export.** And the first run of it
+found two.
+
+**`NON_CONFIDENCE_TIERS`** — `apps/web/lib/human-performance/types.ts`
+— was declared and **never read**. The file's own header says the
+posture is *"enforced here, not just intended"*, and names the
+posture: *"Tiers that may never raise confidence on their own."* The
+two neighbouring constants in the same file, `MAX_BAND_WIDEN` and
+`WATCHLIST_THRESHOLD`, ARE compared at their call sites. This one was
+not — so a signal carrying the `"inferred"` or `"illustrative"` tier
+could publish a confidence of **0.95**, which is exactly what the
+constant exists to prevent.
+
+**`SIM_PRIOR_WEIGHT_CAP`** — the same file — was declared and never
+read either. It is *"the absolute ceiling a simulation prior may ever
+contribute"*, and nothing enforced it.
+
+**Both now gate.** `buildOutputBehavior` — the mandatory disclosure
+contract — caps the confidence of a non-confidence tier at
+`SIM_PRIOR_WEIGHT_CAP`. The gate CAPS rather than flattens, so a prior
+that honestly says "I am 2% sure" keeps its 2%.
+
+MEASURED, by mutation: with the tier gate removed, the two new tests
+fail with
+
+    expected 0.95 to be less than or equal to 0.05
+    expected 0.99 to be less than or equal to 0.05
+
+and the auditor's count of gated constants went from **154 to 156**.
+
+**And a second, subtler bug in the auditor itself.** The DEAD/SUSPECT
+split is about REACHABILITY, not about gating: DEAD means "mentioned in
+more than one file" and SUSPECT means "wholly local". The first
+version of the gate failed only on DEAD, so a constant that is
+exported but mentioned nowhere else landed in SUSPECT and the gate
+passed. But every constant the auditor finds matches `export const` —
+so every never-compared constant is an **exported** threshold, and
+whether anyone mentions it decides only how *misleading* it is, not
+whether it gates. The gate now covers both.
+
+**A third bug, found by writing the test that proves the gate fails.**
+The auditor resolves its scan roots as `join(root, r)`, which
+**CONCATENATES** an absolute path onto the root and scans nothing —
+so a caller pointing the auditor at a temporary directory to prove the
+gate fails would get a clean report. Absolute scan roots are now
+honoured.
+
+**The property test.** The T12 gate file asserts not that "the auditor
+exits 0" — which passes whenever the auditor is merely happy, and the
+auditor is happy about a report that lists findings — but that **the
+gate FAILS** when a dead export exists. It copies the auditor into a
+temporary directory, drops a dead threshold export in, and requires
+the output to name it and the verdict to be `T12 GATE FAIL`. The real
+auditor and the real constants are untouched.

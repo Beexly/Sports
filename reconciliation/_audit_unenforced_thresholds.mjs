@@ -28,7 +28,7 @@
  * Reproduce: node reconciliation/_audit_unenforced_thresholds.mjs
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, resolve, dirname, relative } from "node:path";
+import { join, resolve, dirname, relative, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -77,7 +77,13 @@ function* walk(dir) {
 
 const files = [];
 for (const r of SCAN_ROOTS) {
-  for (const f of walk(join(root, r))) files.push(f);
+  // An ABSOLUTE scan root is used as-is; a relative one is resolved
+  // against the repo root. `join(root, r)` would CONCATENATE an
+  // absolute path onto the root and scan nothing -- which is how a
+  // caller pointing the auditor at a temporary directory (to prove the
+  // gate FAILS on a dead export) would silently get a clean report.
+  const dir = isAbsolute(r) ? r : join(root, r);
+  for (const f of walk(dir)) files.push(f);
 }
 
 console.log(`=== SCANNING ${files.length} FILES FOR CONSTANTS THAT GATE NOTHING ===\n`);
@@ -235,6 +241,40 @@ for (const d of declarations) {
       `\\(\\s*[^;]{0,120}?,\\s*${d.name}\\s*\\)`,
     );
     if (argRe.test(src)) usedAsArgument = true;
+
+    // DEFAULT -> LOCAL -> BOUND. (Added 2026-10-20.)
+    //
+    //   const minDistinctEvents = opts?.minDistinctEvents ?? DEFAULT_DISCOVERY_THRESHOLD;
+    //   ...
+    //   HAVING COUNT(DISTINCT e.retrieval_event_id) >= $1
+    //   ... [minDistinctEvents, minHits, limit]
+    //
+    // The constant is not COMPARED in TypeScript and is not passed as a
+    // call argument, so the two categories above both miss it -- but it
+    // DOES gate: the local it is assigned to becomes a SQL bound, and
+    // the comparison happens in Postgres.
+    //
+    // Without this, `DEFAULT_DISCOVERY_THRESHOLD` is reported as a
+    // DEAD EXPORT -- a threshold that gates nothing -- when in fact it
+    // is the default for a comparison that gates everything. A gate
+    // that cries wolf on a correct pattern is a gate that gets
+    // disabled.
+    //
+    // The pattern: the constant is the default of a `??` assignment to
+    // a local, and that local is passed into a query's parameter list.
+    const defaultAlias = new RegExp(
+      `(?:const|let)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*[^;]{0,120}?\\?\\?\\s*${d.name}\\b`,
+    );
+    const aliasMatch = defaultAlias.exec(src);
+    if (aliasMatch !== null) {
+      const local = aliasMatch[1];
+      // Is that local passed into a query's parameter array?
+      const paramRe = new RegExp(`\\[\\s*${local}\\b[^\\]]*\\]`, "s");
+      if (paramRe.test(src)) {
+        // A SQL BOUND: the comparison happens in the database.
+        aliasCompared.push({ file, alias: "SQL query parameter" });
+      }
+    }
     // DEFAULT PARAMETER: `function f(threshold = SOME_THRESHOLD)`.
     // The constant supplies the default; the PARAMETER is what gets
     // compared. This is a legitimate gate, and a very common one, so
@@ -402,6 +442,111 @@ const selfTestOk =
       (a) => a.file !== f.file,
     );
   })();
+
+// ---------------------------------------------------------------------------
+// THE T12 GATE. (Added 2026-10-20.)
+//
+// The goal spec's section 6 requires this script to be a PR-BLOCKING
+// gate, not a report:
+//
+//   "T12 [NEW] _audit_unenforced_thresholds.mjs -- Zero Unenforced
+//    Constants Gate: Scans the AST of packages/prediction-engine/src/
+//    with alias and default-parameter tracking; FAILS CI if any exported
+//    or module-scope threshold constant (MIN_*, MAX_*, *_THRESHOLD,
+//    *_CLAMP) has 0 active comparison sites (<, <=, >, >=)."
+//
+// So far the script EXITED 0 with findings on the report, and exited 1
+// only when its own self-test failed. A report that nobody blocks on is
+// a list, not a gate -- and this script's whole reason for existing is
+// that a constant which reads as a gate while gating nothing is the
+// defect class this audit was written for.
+//
+// THE RULE, and the care taken with it.
+//
+//   - A constant that is DECLARED and NEVER COMPARED anywhere, and that
+//     is exported or imported somewhere else, is a DEAD EXPORT: it is
+//     offered to the codebase as a threshold and gates nothing. THAT
+//     FAILS.
+//
+//   - A constant that is only PASSED AS A BOUND (not compared at the
+//     call site; a validator compares it internally) does NOT fail. It
+//     is listed for review, and a validator-internal comparison is a
+//     legitimate use. Failing those would be a false positive on a
+//     correct pattern, and a gate that cries wolf is a gate that gets
+//     disabled.
+//
+// The finding names the file and the constant, so the fix is obvious.
+// ---------------------------------------------------------------------------
+// A constant GATES NOTHING if it is never compared AND never reaches
+// a comparison -- not even as a bound passed into a validator that
+// compares it internally.
+//
+// IMPORTANT, and the reason this gate needed a second look: the
+// DEAD/SUSPECT split is about REACHABILITY, not about gating. DEAD
+// means "mentioned in more than one file" -- it is exported or
+// imported somewhere, so the codebase is INVITED to use it as a
+// threshold. SUSPECT means "wholly local" -- nobody else can use it.
+//
+// But a wholly-local constant that is exported is STILL a threshold
+// offered to the codebase: `export const MIN_X = 1.35` in a module
+// that other modules import is a threshold the codebase can reach.
+// `mentions` counts mentions in OTHER files, and a constant that is
+// exported from a barrel is mentioned in the barrel -- but a constant
+// exported from a leaf module that nothing imports is mentioned
+// NOWHERE else, and lands in SUSPECT.
+//
+// So the gate must consider: a constant that is (a) never compared,
+// (b) never used as a bound, and (c) EXPORTED -- is a dead threshold
+// export, whether or not anyone currently mentions it. The
+// declaration regex only matches `export const`, so every constant the
+// auditor finds is exported by construction; what distinguishes a
+// SUSPECT from a DEAD is only whether anyone mentions it elsewhere.
+//
+// So: the gate fails on DEAD (mentioned elsewhere -- actively
+// misleading) and on SUSPECT constants that are EXPORTED (reachable
+// but unused -- a label with no gate). Both are "a constant that
+// reads as a threshold and gates nothing".
+//
+// `DEFAULT_DISCOVERY_THRESHOLD` is `opts?.minDistinctEvents ??
+// DEFAULT_DISCOVERY_THRESHOLD`, and that local becomes the SQL bound
+// `HAVING COUNT(DISTINCT e.retrieval_event_id) >= $1`. So the
+// constant DOES gate -- it is the default for a comparison that
+// happens in Postgres, not in TypeScript.
+//
+// The distinction the auditor already draws is the right one:
+// `ARGUMENT` (passed as a bound) is not the same as DEAD (a threshold
+// offered to the codebase that gates nothing). A constant that is
+// passed as a bound AND is exported is a legitimate pattern.
+//
+// So the T12 gate fails on DEAD minus ARGUMENT: a threshold that is
+// exported, and is neither compared nor bound anywhere.
+// Every constant the auditor finds is `export const` (that is the
+// declaration regex), so EVERY never-compared, never-bound constant
+// is an exported threshold. Whether it is mentioned elsewhere decides
+// only how MISLEADING it is, not whether it gates.
+//
+// The distinction is kept in the report, and the gate covers both.
+const DEAD_EXPORTS = NEVER_COMPARED.filter((f) => !ARGUMENT.includes(f));
+if (DEAD_EXPORTS.length > 0) {
+  console.log("");
+  console.log("=== T12 GATE FAIL: DEAD THRESHOLD EXPORTS ===");
+  console.log(
+    "  These constants read as thresholds and gate NOTHING. They are exported",
+  );
+  console.log("  or imported somewhere, and never compared against a value.");
+  console.log("");
+  for (const f of DEAD_EXPORTS) {
+    console.log(`  ${f.name}  (${f.file})`);
+  }
+  console.log("");
+  console.log("  Either compare them, or stop exporting them as thresholds.");
+  console.log("  This is the defect class the whole audit exists to remove, so");
+  console.log("  the gate FAILS rather than reporting it.");
+  process.exitCode = 1;
+} else {
+  console.log("");
+  console.log("=== T12 GATE PASS: no dead threshold exports ===");
+}
 
 console.log("");
 if (selfTestOk) {
