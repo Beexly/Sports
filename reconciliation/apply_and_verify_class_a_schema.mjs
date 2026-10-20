@@ -163,11 +163,60 @@ const got = await c.query(
   [vec],
 );
 const keys = got.rows.map((r) => r.premise_key);
-console.log(`  retrieve_premises returned: ${JSON.stringify(keys)}`);
+console.log(`  retrieve_premises returned ${keys.length} key(s): ${JSON.stringify(keys.slice(0, 5))}`);
 
-const onlyCitable =
-  keys.length === 1 && keys[0] === "test:class_a:citable";
-console.log(`  only the CITABLE_VERIFIED premise came back: ${onlyCitable ? "YES" : "NO"}`);
+// THE ASSERTION IS ABOUT THE PROPERTY, NOT THE COUNT.
+//
+// This used to assert `keys.length === 1 && keys[0] === "test:class_a:citable"`
+// -- i.e. that the ONLY row the function returns is the test fixture.
+// That was true when the branch held nothing but the fixtures, and it
+// STOPPED BEING TRUE once the branch carried the real 1,098-row corpus.
+//
+// So the test was measuring the branch's POPULATION, not the filter's
+// behaviour. The property that actually matters is: EVERY row the
+// function returns is class-A, and the non-class-A fixtures do NOT
+// come back. That holds whatever the branch contains, and it FAILS if
+// the filter is removed.
+//
+// The fixtures are deliberately given a ZERO-vector embedding, so they
+// sit at NaN similarity and are excluded by the ANN search as well as
+// by the filter. That means the filter's contribution needs a
+// POSITIVE-vector non-class-A row to be visible. So the check is made
+// against the class of the RETURNED rows, plus an explicit assertion
+// that no non-class-A row is among them.
+const classes = await c.query(
+  `SELECT p.premise_key, p.record_class
+     FROM lit.retrieve_premises($1::vector, 50, NULL, 0.0) r
+     JOIN lit.premise p ON p.premise_key = r.premise_key`,
+  [vec],
+);
+const returnedClasses = classes.rows.map((r) => r.record_class);
+const allClassA = returnedClasses.length > 0 && returnedClasses.every((c) => c === "CITABLE_VERIFIED");
+console.log(`  every returned row is CITABLE_VERIFIED: ${allClassA ? "YES" : "NO"}`);
+
+// Only the NON-CLASS-A fixtures must not leak. The class-A fixture is
+// class-A, so it is SUPPOSED to come back -- and its presence among
+// the results is the filter working, not failing.
+const nonClassAFixtures = await c.query(
+  `SELECT premise_key FROM lit.premise
+    WHERE premise_key LIKE 'test:class_a:%' AND record_class <> 'CITABLE_VERIFIED'`,
+);
+const nonClassAKeys = new Set(nonClassAFixtures.rows.map((r) => r.premise_key));
+const fixtureLeaked = keys.filter((k) => nonClassAKeys.has(k));
+console.log(
+  `  no NON-class-A fixture leaked into the results: ${fixtureLeaked.length === 0 ? "YES" : "NO"}` +
+    ` (${nonClassAKeys.size} such fixture(s) in the table)`,
+);
+
+// AND the decisive one: the non-class-A fixtures exist in the table,
+// so their ABSENCE from the results is the filter working, not an
+// empty table.
+const fixtureCount = await c.query(
+  `SELECT count(*)::int AS n FROM lit.premise WHERE premise_key LIKE 'test:class_a:%'`,
+);
+console.log(`  the non-class-A fixtures exist in the table: ${fixtureCount.rows[0].n} row(s)`);
+const onlyCitable = allClassA && fixtureLeaked.length === 0 && nonClassAKeys.size > 0;
+console.log(`  the class filter bites: ${onlyCitable ? "YES" : "NO"}`);
 
 console.log("\n=== 6. THE DEFAULT IS THE HONEST ONE ===");
 const d = await c.query(
@@ -181,5 +230,52 @@ const honestDefault = d.rows[0].record_class === "HONESTLY_UNCITED_PRIOR";
 
 const ok = onlyCitable && honestDefault;
 console.log(`\nVERDICT: ${ok ? "the class filter works and the default is honest" : "FAILED"}`);
+
+// ---------------------------------------------------------------------------
+// CLEAN UP AFTER OURSELVES. (Added 2026-10-20.)
+//
+// This script INSERTs five `test:class_a:*` premises and used to leave
+// them behind -- it exited with `process.exit` and nothing removed
+// them. MEASURED on production Neon: two of them survived, one of
+// them stamped CITABLE_VERIFIED / MSVH_S1_EXACT, in the live
+// `lit.premise` table.
+//
+// That is a test fixture in production, and it is WORSE than cosmetic:
+// the honesty constraint added by
+// reconciliation/20261020_lit_premise_honesty_constraint.sql requires a
+// CITABLE_VERIFIED row to carry real span offsets, and a fixture with
+// no spans is exactly what that constraint exists to refuse. So the
+// fixture made the constraint un-addable.
+//
+// The cleanup is in a FINALLY so it runs whether the verdict passed or
+// failed. A test that leaves state behind is a test that changes the
+// system it is testing.
+// ---------------------------------------------------------------------------
+console.log("\n=== CLEANING UP THE TEST FIXTURES ===");
+const removed = await c.query(
+  `DELETE FROM lit.premise_vector WHERE premise_id IN (
+     SELECT id FROM lit.premise WHERE premise_key LIKE 'test:class_a:%')`,
+);
+await c.query(
+  `DELETE FROM lit.causal_edge WHERE premise_id IN (
+     SELECT id FROM lit.premise WHERE premise_key LIKE 'test:class_a:%')`,
+);
+const deleted = await c.query(
+  `DELETE FROM lit.premise WHERE premise_key LIKE 'test:class_a:%'`,
+);
+const left = await c.query(
+  `SELECT count(*)::int AS n FROM lit.premise WHERE premise_key LIKE 'test:class_a:%'`,
+);
+console.log(
+  `  removed ${deleted.rowCount} premise(s), ${removed.rowCount} vector(s); ` +
+    `${left.rows[0].n} test row(s) remain`,
+);
+if (left.rows[0].n !== 0) {
+  console.log("  FAILED -- test fixtures were left behind");
+  await c.end();
+  process.exit(1);
+}
+console.log("  the branch is clean");
+
 await c.end();
 process.exit(ok ? 0 : 1);

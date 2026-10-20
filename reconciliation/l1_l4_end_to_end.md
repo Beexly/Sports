@@ -1664,3 +1664,87 @@ topological-order guard rather than by the recursion.
 
 I would rather have a test that documents a real exception than one
 that asserts a tidy invariant the code does not have.
+
+## The honesty invariant, now enforced by the database.
+
+**The gap.** The goal spec requires a hard DB-level constraint:
+
+    chk_citable_verified_honesty CHECK (
+      (record_class = 'CITABLE_VERIFIED' AND citable = TRUE
+         AND verification_tier = 'MSVH_S1_EXACT'
+         AND evidence_start_char IS NOT NULL AND evidence_end_char > evidence_start_char
+         AND mechanism_start_char IS NOT NULL AND mechanism_end_char > mechanism_start_char)
+      OR
+      (record_class <> 'CITABLE_VERIFIED' AND citable = FALSE
+         AND verification_tier <> 'MSVH_S1_EXACT'
+         AND evidence_start_char IS NULL AND evidence_end_char IS NULL)
+    )
+
+Production `lit.premise` had **none of it**: no `citable` column, **no
+span columns at all**, and no such constraint. So the L3 anchor
+*evidence* was not stored. A record could be stamped
+`CITABLE_VERIFIED` / `MSVH_S1_EXACT` with no offsets behind it, and
+the database would have accepted it. The class was a **label**.
+
+**It is now enforced.** `reconciliation/20261020_lit_premise_honesty_constraint.sql`
+adds the four span columns and the `citable` flag, backfills them
+from the corpus, and adds the constraint — **validated**, so Postgres
+checks every existing row and a bad row is a hard failure at
+migration time rather than a surprise later.
+
+**The backfill is safe, and that was measured, not assumed.** Over the
+corpus file, **all 5,303 rows satisfy the invariant as written**:
+1,098 on the class-A branch, 4,205 on the other branch, **0 satisfying
+neither**. The loader reports the rejection count *before* applying
+anything.
+
+**The constraint genuinely refuses.** Applied and verified on the dev
+branch `dev-lit-vectors-2026-10`:
+
+    PASS  test rows remaining: 0
+    PASS  class-A rows missing an evidence span: 0
+    PASS  class-A rows missing a mechanism span: 0
+    PASS  non-class-A rows with a non-null evidence span: 0
+    PASS  rows the constraint is actually attached to: 1
+    PASS  a CITABLE_VERIFIED row with NO spans was refused
+          new row for relation "premise" violates check constraint
+          "chk_citable_verified_honesty"
+
+**The test fixtures had to go first, and that is the interesting part.**
+The first application FAILED with "check constraint ... is violated by
+some row". The diagnosis: with the backfill in place, exactly **two**
+rows violate — and both are `test:class_a:*` fixtures left in the
+branch by `apply_and_verify_class_a_schema.mjs`, which inserted five
+test premises and never deleted them.
+
+That is a test fixture in a live table, and it is worse than
+cosmetic: a `CITABLE_VERIFIED` fixture with no spans is **exactly what
+the constraint exists to refuse**, so the fixture made the constraint
+un-addable. The migration now deletes the fixtures *before* adding
+the constraint, and the script that creates them now cleans up after
+itself — verified to run on **both** the pass and the fail path
+(forced-failure mutation: exit 1, and 0 fixtures remain).
+
+**And a test that measured the branch's POPULATION was fixed.** The
+fixture script asserted `keys.length === 1 && keys[0] ===
+"test:class_a:citable"` — that the *only* row the retrieval function
+returns is the fixture. That was true when the branch held nothing
+but the fixtures, and it stopped being true once the branch carried
+the real 1,098-row corpus. The test was measuring the branch's
+contents, not the filter's behaviour.
+
+It now asserts the **property**: every returned row is
+`CITABLE_VERIFIED`; no **non-class-A** fixture appears among the
+results; and the non-class-A fixtures **do exist in the table** — so
+their absence is the filter working, not an empty table. (The
+class-A fixture is class-A, so it is *supposed* to come back; only
+the non-class-A ones must not.)
+
+**One mistake worth recording, because it looked like a data problem
+and was not.** The first backfill joined on the bare corpus `item_id`
+and matched **zero rows** — the database's `premise_key` is `mind:` +
+that id. The symptom was the constraint refusing on hundreds of
+class-A rows whose spans were NULL, which reads exactly like "the
+data is bad". It was the join. The migration now joins on
+`'mind:' || c.premise_key`, and the dev branch is where the mistake
+was made and caught.
