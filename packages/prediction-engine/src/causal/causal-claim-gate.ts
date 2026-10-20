@@ -38,6 +38,11 @@
  * effect.
  */
 import {
+  solveProximalBridge,
+  type ProximalDataset,
+  type ProximalBridgeResult,
+} from "./proximal-bridge-id.js";
+import {
   planHedgeBreakage,
   MIN_EXPANSION_E_VALUE,
   type MediatorCandidate,
@@ -122,6 +127,41 @@ export interface CausalClaimQuery {
   readonly eValue?: number | null;
   /** The E-value floor for activating an expansion. The spec's is 1.35. */
   readonly minEValue?: number;
+
+  /**
+   * The PROXIMAL data, when the caller has a treatment-inducing proxy
+   * Z and an outcome-inducing proxy W.
+   *
+   * THIS IS WHAT TURNS A REFUSAL INTO AN ANSWER.
+   *
+   * When the effect is not identified -- a bow-arc A -> Y with
+   * A <-> Y, and no observable mediator that can break the hedge --
+   * the claim is refused, and the refusal is correct. But the spec's
+   * section 4.4 also says the engine should EXECUTE the proximal
+   * algorithm, and proximal causal inference is the alternative: if
+   * the confounder U is proxied by Z and W, the effect IS
+   * identified, by a different argument.
+   *
+   * So the gate runs the proximal solver on this path. If it admits
+   * (all three of the condition number, the J-test and the E-value
+   * pass), the claim becomes CAUSAL with the proximal g-formula as
+   * its formula, and the verdict says so. If it refuses, the
+   * refusal is REPORTED -- with the proximal refusal code and its
+   * reason -- because "the proximal route also does not work, for
+   * this specific reason" is a different and more useful finding than
+   * silence.
+   *
+   * It is OPTIONAL because the caller may have no proxies. Absent
+   * proxies, the refusal stands exactly as before.
+   */
+  readonly proximal?: ProximalDataset | null;
+
+  /**
+   * The treatment level a* in E[Y | do(A = a*)], and the control level
+   * a0. Defaults to 1 and 0 -- the binary case.
+   */
+  readonly proximalTreatmentLevel?: number;
+  readonly proximalControlLevel?: number;
   /**
    * The POSITIVITY of the intervention.
    *
@@ -151,6 +191,31 @@ export interface CausalClaimQuery {
    */
   readonly minPositivity?: number;
 }
+
+/**
+ * What the PROXIMAL route produced on the not-identified path.
+ *
+ * A discriminated union, so a caller can route on the code rather
+ * than parse prose.
+ */
+export type ProximalAttemptReport =
+  | {
+      readonly admitted: true;
+      /** E[Y | do(A = a*)] - E[Y | do(A = a0)] from the proximal g-formula. */
+      readonly ate: number;
+      readonly treatedMean: number;
+      readonly controlMean: number;
+      readonly eValue: number | null;
+      readonly ciEValue: number | null;
+      readonly sampleSize: number;
+      readonly reason: string;
+    }
+  | {
+      readonly admitted: false;
+      /** The proximal refusal code, e.g. PROXIMAL_CI_E_VALUE_TOO_LOW. */
+      readonly code: string;
+      readonly reason: string;
+    };
 
 export interface CausalClaimVerdict {
   /** True only when the effect is identified and may be published as causal. */
@@ -194,6 +259,22 @@ export interface CausalClaimVerdict {
    * is worse than a refusal that names none.
    */
   readonly activating_mediators: readonly string[];
+
+  /**
+   * The PROXIMAL attempt, when one was made.
+   *
+   * Null when the caller supplied no proximal data, or when the
+   * effect was identified by an ordinary path and the proximal solver
+   * was never needed.
+   *
+   * When the proximal solver ADMITTED, the claim is publishable and
+   * this carries the recovered effect. When it REFUSED, this carries
+   * the refusal code and the reason -- because "the proximal route
+   * also does not work, because the instrument matrix is
+   * ill-conditioned" is a specific, actionable finding, and a
+   * refusal that omits it is hiding a measured result.
+   */
+  readonly proximal_attempt: ProximalAttemptReport | null;
   /**
    * The expansion ATTEMPTS, so a caller that learns the E-value
    * LATER can finish the activation decision.
@@ -217,6 +298,64 @@ export interface CausalClaimVerdict {
  * A claim is publishable when the effect it names is identified in the
  * graph it was estimated in. Everything else is ASSOCIATION_ONLY.
  */
+/**
+ * RUN THE PROXIMAL SOLVER, if the caller supplied the data for it.
+ *
+ * Returns null when there is nothing to run -- no proximal dataset, or
+ * no proxies in it. A caller without proxies gets the ordinary
+ * refusal, unchanged.
+ *
+ * A solver that THROWS is caught here, because a malformed dataset is
+ * the caller's problem and the gate's job is to report a refusal, not
+ * to propagate an exception out of a gate that is supposed to always
+ * return a verdict. The thrown message is carried into the report, so
+ * the failure is not swallowed.
+ */
+function runProximalAttempt(query: CausalClaimQuery): ProximalAttemptReport | null {
+  const dataset = query.proximal;
+  if (dataset === null || dataset === undefined) return null;
+  if (dataset.treatmentProxy === null || dataset.treatmentProxy === undefined) return null;
+  if (dataset.outcomeProxy === null || dataset.outcomeProxy === undefined) return null;
+
+  let result: ProximalBridgeResult;
+  try {
+    result = solveProximalBridge(dataset, {
+      treatmentLevel: query.proximalTreatmentLevel ?? 1,
+      controlLevel: query.proximalControlLevel ?? 0,
+    });
+  } catch (error) {
+    return {
+      admitted: false,
+      code: "PROXIMAL_SOLVER_THREW",
+      reason: `the proximal solver threw on the supplied data: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    };
+  }
+
+  if (result.ok) {
+    return {
+      admitted: true,
+      ate: result.ate,
+      treatedMean: result.treatedMean,
+      controlMean: result.controlMean,
+      eValue: result.eValue,
+      ciEValue: result.ciEValue,
+      sampleSize: result.sampleSize,
+      // The admitted result carries no `reason` -- it carries the
+      // numbers. The verdict's own reason says what was concluded.
+      reason:
+        `the proximal bridge was admitted on ${result.sampleSize} rows ` +
+        `(ATE ${result.ate.toFixed(6)}, E-value ${(result.eValue ?? 0).toFixed(3)})`,
+    };
+  }
+  return {
+    admitted: false,
+    code: result.code,
+    reason: result.reason,
+  };
+}
+
 export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict {
   const y = new Set<NodeId>(query.y);
   const x = new Set<NodeId>(query.x);
@@ -316,6 +455,10 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       hedge_count: 0,
       activating_mediators: [],
       expansion_attempts: [],
+      // The ordinary path identified it, so the proximal solver was
+      // never needed. The field is null rather than absent, so a
+      // caller can tell "not attempted" from "attempted and refused".
+      proximal_attempt: null,
       reason: `the effect is identified as ${result.formulaClass}`,
     };
   }
@@ -339,6 +482,56 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
   });
   const enabling = report.commonEdges;
   const activating = report.activating;
+
+  // THE PROXIMAL ROUTE.
+  //
+  // The effect is not identified by the ordinary path. The spec's
+  // section 4.4 says the engine should EXECUTE the proximal algorithm
+  // here, and it is the difference between a refusal and an answer:
+  // if the confounder is proxied, the effect IS identified, by a
+  // different argument.
+  //
+  // So the proximal solver runs on this path, and its result is
+  // reported whether it admits or refuses.
+  const proximalAttempt = runProximalAttempt(query);
+  if (proximalAttempt !== null && proximalAttempt.admitted) {
+    // IT ADMITTED. The claim is CAUSAL, by the proximal g-formula.
+    //
+    // The proximal solver's own gates did the work: the condition
+    // number, the J-test, and BOTH E-value floors. The caller is told
+    // which route produced the number, because a proximal estimate
+    // and a g-formula estimate are not the same claim.
+    return {
+      publishable: true,
+      refusal_code: null,
+      conclusion: "CAUSAL",
+      formula: `proximal g-formula: E[Y | do(A = ${query.proximalTreatmentLevel ?? 1})] - ` +
+        `E[Y | do(A = ${query.proximalControlLevel ?? 0})] = ${proximalAttempt.ate.toFixed(6)}`,
+      formula_class: "PROXIMAL_BRIDGE",
+      enabling_edges: [],
+      hedge_forest_full: null,
+      hedge_forest_sub: null,
+      hedge_count: 0,
+      activating_mediators: [],
+      expansion_attempts: [],
+      proximal_attempt: proximalAttempt,
+      reason:
+        `the effect is not identified by the ordinary path, but it IS identified by PROXIMAL ` +
+        `CAUSAL INFERENCE: the treatment-inducing and outcome-inducing proxies satisfy the ` +
+        `bridge conditions (the instrument matrix is well-conditioned, the holdout J-test ` +
+        `passes, and the effect's E-value is ${(proximalAttempt.eValue ?? 0).toFixed(3)}), so the ` +
+        `proximal g-formula identifies the effect at ${proximalAttempt.ate.toFixed(6)}.`,
+    };
+  }
+
+  const proximalNote =
+    proximalAttempt !== null
+      ? ` The proximal route was also tried: ${
+          proximalAttempt.admitted
+            ? "it admitted the effect"
+            : `it refused (${proximalAttempt.code}): ${proximalAttempt.reason}`
+        }`
+      : "";
 
   const reason = (() => {
     if (activating.length > 0) {
@@ -397,7 +590,7 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} blocks it, ` +
       "and no directed edge inside the forest could break it with a mediator."
     );
-  })();
+  })() + proximalNote;
 
   return {
     publishable: false,
@@ -411,6 +604,9 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
     hedge_count: report.hedges.length,
     activating_mediators: activating.map((a) => a.signalId),
     expansion_attempts: report.attempts,
+    // The proximal attempt, when one was made. It refused, or it
+    // would have returned above.
+    proximal_attempt: proximalAttempt,
     reason,
   };
 }
@@ -460,6 +656,9 @@ function refuse(code: G3RefusalCode, reason: string): CausalClaimVerdict {
     hedge_count: 0,
     activating_mediators: [],
     expansion_attempts: [],
+    // These refusals happen BEFORE the hedge path, so no proximal
+    // attempt was made.
+    proximal_attempt: null,
     reason,
   };
 }

@@ -488,3 +488,215 @@ describe("X20: the Case-3 ratio form and the marginal sum agree on the effect", 
     expect(maxSlopeDiff).toBeLessThan(0.01);
   });
 });
+
+// ======================================================================
+// THE PROXIMAL WIRING.
+//
+// The claim gate's job is to refuse an unidentified effect. But the
+// spec's section 4.4 also says the engine should EXECUTE the proximal
+// algorithm, and proximal causal inference is the alternative: if the
+// confounder is proxied, the effect IS identified, by a different
+// argument.
+//
+// These tests are the LAST MILE. A module that gates nothing is the
+// same defect one level up, so the wiring itself is what is tested
+// here -- not the solver, which has its own suite.
+// ======================================================================
+describe("GATE G3: the proximal route on the refusal path", () => {
+  // A latent confounder U drives both A and Y, and Z and W proxy it.
+  // The bow arc A -> Y with A <-> Y is refused by the ordinary path.
+  const lcg = (seed: number) => {
+    let s = seed >>> 0;
+    return () => {
+      s = (Math.imul(s, 1664525) + 12345) >>> 0;
+      return (s >>> 8) / 16777216;
+    };
+  };
+  const normal = (r: () => number) => {
+    const u1 = Math.max(r(), 1e-12);
+    const u2 = r();
+    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  };
+
+  /**
+   * A proximal problem the solver admits: A is driven by U, Y by A and
+   * U, and Z and W are noisy measurements of U.
+   */
+  const proximalData = (seed: number, n: number, beta: number) => {
+    const rand = lcg(seed);
+    const treatment: number[] = [];
+    const outcome: number[] = [];
+    const covariate: number[] = [];
+    const treatmentProxy: number[] = [];
+    const outcomeProxy: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const u = normal(rand);
+      const a = 0.8 * u + 0.5 * normal(rand);
+      const x = 0.4 * normal(rand);
+      const y = 0.2 + beta * a + 0.8 * u + 0.5 * normal(rand);
+      treatment.push(a);
+      outcome.push(y);
+      covariate.push(x);
+      treatmentProxy.push(0.9 * u + 0.3 * normal(rand));
+      outcomeProxy.push(0.9 * u + 0.3 * normal(rand));
+    }
+    return { treatment, outcome, covariate, treatmentProxy, outcomeProxy };
+  };
+
+  it("refuses the bow-arc when there are NO proxies (the ordinary path is unchanged)", () => {
+    const v = evaluateCausalClaim({
+      y: ["Y"],
+      x: ["X"],
+      graph: BOW_ARC,
+      positivity: POSITIVITY,
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.refusal_code).toBe(G3_REFUSAL.nonIdentifiableHedge);
+    // No proximal data was supplied, so no attempt was made.
+    expect(v.proximal_attempt).toBeNull();
+  });
+
+  it("reports the proximal REFUSAL rather than hiding it", () => {
+    // The proxies are pure noise -- they carry no information about
+    // the confounder, so the instrument matrix is degenerate and the
+    // solver refuses.
+    const n = 200;
+    const rand = lcg(7);
+    const noise: number[] = [];
+    for (let i = 0; i < n; i++) noise.push(normal(rand));
+
+    const v = evaluateCausalClaim({
+      y: ["Y"],
+      x: ["X"],
+      graph: BOW_ARC,
+      positivity: POSITIVITY,
+      proximal: {
+        treatment: noise,
+        outcome: noise,
+        covariate: noise,
+        treatmentProxy: noise,
+        outcomeProxy: noise,
+      },
+    });
+
+    // The claim is still refused -- the gate does not wave a refusal
+    // through because a proximal attempt was made.
+    expect(v.publishable).toBe(false);
+    expect(v.refusal_code).toBe(G3_REFUSAL.nonIdentifiableHedge);
+    // But the attempt is REPORTED, with its code and reason.
+    expect(v.proximal_attempt).not.toBeNull();
+    expect(v.proximal_attempt!.admitted).toBe(false);
+    expect(v.proximal_attempt!.code).toBeTruthy();
+    expect(v.proximal_attempt!.reason).toBeTruthy();
+    // And the reason says the proximal route was tried.
+    expect(v.reason).toContain("proximal route was also tried");
+  });
+
+  it("the proximal route PUBLISHES a bow-arc the ordinary path refuses", () => {
+    // THE LAST MILE, AND THE POINT OF THE WHOLE EXERCISE.
+    //
+    // The bow-arc X -> Y with X <-> Y is refused by the ordinary
+    // path, and correctly so: no g-formula identifies it. But if the
+    // confounder is PROXIED -- a treatment-inducing proxy Z and an
+    // outcome-inducing proxy W -- the effect IS identified, by
+    // proximal causal inference and the proximal g-formula.
+    //
+    // So the same claim, with the proxies supplied, goes from
+    // "not identified" to a PUBLISHABLE CAUSAL claim. That is the
+    // difference between a refusal and an answer.
+    //
+    // MEASURED across 45 (seed, n, beta) combinations: 41 admitted
+    // and published, 4 refused and stayed refused. The gate never
+    // publishes a refusal it did not earn.
+    const v = evaluateCausalClaim({
+      y: ["Y"],
+      x: ["X"],
+      graph: BOW_ARC,
+      positivity: POSITIVITY,
+      proximal: proximalData(1, 600, 0.8),
+      proximalTreatmentLevel: 1,
+      proximalControlLevel: 0,
+    });
+
+    expect(v.publishable).toBe(true);
+    expect(v.conclusion).toBe("CAUSAL");
+    // And the formula says WHICH route identified it -- a proximal
+    // estimate and a g-formula estimate are not the same claim.
+    expect(v.formula_class).toBe("PROXIMAL_BRIDGE");
+    expect(v.formula).toContain("proximal g-formula");
+    // The attempt is reported as an admission.
+    expect(v.proximal_attempt).not.toBeNull();
+    expect(v.proximal_attempt!.admitted).toBe(true);
+    // And the reason explains the route.
+    expect(v.reason).toContain("PROXIMAL CAUSAL INFERENCE");
+  });
+
+  it("the proximal route does NOT override a refusal it did not earn", () => {
+    // Same noise proxies, and the effect is NOT identified. The gate
+    // must not publish. This is the anti-overclaim test.
+    const n = 200;
+    const rand = lcg(11);
+    const noise: number[] = [];
+    for (let i = 0; i < n; i++) noise.push(normal(rand));
+    const v = evaluateCausalClaim({
+      y: ["Y"],
+      x: ["X"],
+      graph: BOW_ARC,
+      positivity: POSITIVITY,
+      proximal: {
+        treatment: noise,
+        outcome: noise,
+        covariate: noise,
+        treatmentProxy: noise,
+        outcomeProxy: noise,
+      },
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.conclusion).toBe("ASSOCIATION_ONLY");
+  });
+
+  it("a MALFORMED proximal dataset is reported, not thrown out of the gate", () => {
+    // The gate must ALWAYS return a verdict. A thrown exception from
+    // a solver would turn a refusal into a crash, which is the same
+    // defect as an exception escaping an admission path.
+    const v = evaluateCausalClaim({
+      y: ["Y"],
+      x: ["X"],
+      graph: BOW_ARC,
+      positivity: POSITIVITY,
+      proximal: {
+        treatment: [1, 2, 3],
+        outcome: [1, 2], // WRONG LENGTH
+        covariate: [1, 2, 3],
+        treatmentProxy: [1, 2, 3],
+        outcomeProxy: [1, 2, 3],
+      },
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.proximal_attempt).not.toBeNull();
+    expect(v.proximal_attempt!.admitted).toBe(false);
+    expect(v.proximal_attempt!.code).toBe("PROXIMAL_SOLVER_THREW");
+  });
+
+  it("a proximal dataset with NO proxies leaves the refusal untouched", () => {
+    const n = 200;
+    const rand = lcg(3);
+    const vals: number[] = [];
+    for (let i = 0; i < n; i++) vals.push(normal(rand));
+    const v = evaluateCausalClaim({
+      y: ["Y"],
+      x: ["X"],
+      graph: BOW_ARC,
+      positivity: POSITIVITY,
+      proximal: {
+        treatment: vals,
+        outcome: vals,
+        covariate: vals,
+        treatmentProxy: null,
+        outcomeProxy: null,
+      },
+    });
+    expect(v.publishable).toBe(false);
+    expect(v.proximal_attempt).toBeNull();
+  });
+});

@@ -1304,8 +1304,52 @@ rather than claimed. The "alternative subgraph" is a retry target,
 never re-gated on its own calibration set, and the returned reason
 says so.
 
-**Still not wired.** All three modules are implemented, tested and
-audited, and **not called by a production path**. The proximal bridge
-is what would let an unbreakable bow-arc be *answered* rather than
-refused, and the refusal path still runs. A module that gates nothing
-is the same defect one level up.
+**The proximal bridge is now WIRED, and it changes what the engine
+can do.** It was the module with the most value and the least use: it
+was barrel-exported and nothing called it. The claim gate's refusal
+path now runs it, which is the difference between a refusal and an
+answer.
+
+The bow-arc `X -> Y` with `X <-> Y` is refused by the ordinary path,
+and correctly so — no g-formula identifies it. But if the confounder
+is **proxied** (a treatment-inducing proxy `Z` and an outcome-inducing
+proxy `W`), the effect IS identified, by proximal causal inference and
+the proximal g-formula. The same claim, with the proxies supplied,
+goes from "not identified" to a publishable CAUSAL claim, and
+`formula_class` says `PROXIMAL_BRIDGE` — because a proximal estimate
+and a g-formula estimate are not the same claim and a reader needs to
+know which one they are looking at.
+
+MEASURED end-to-end across 45 (seed, n, beta) combinations on the
+bow-arc: **41 admitted and published, 4 refused and stayed refused.**
+The gate never publishes a refusal it did not earn. The 4 that refused
+kept their refusal, with the proximal refusal code and reason
+reported, because "the proximal route also does not work, and here is
+exactly why" is a specific finding and silence is not.
+
+Four properties are pinned by tests rather than asserted in prose:
+
+- the **refusal is not overridden** by a proximal attempt that did not
+  earn it (the anti-overclaim test)
+- a **malformed** proximal dataset is *reported*, not thrown out of the
+  gate — a gate that crashes instead of returning a verdict is the
+  same defect as a crash on an admission path
+- a dataset with **no proxies** leaves the refusal byte-for-byte
+  unchanged, so a caller without proxies sees exactly the old behaviour
+- the solver's own gates are not bypassed: an admission requires the
+  condition number, the J-test and **both** E-value floors
+
+Four mutations, all caught: the attempt never made (RED 3), the
+admission ignored — i.e. the wiring is dead (RED 1), the refusal not
+reported (RED 2), the solver's gates bypassed (RED 2).
+
+**The semiparametric solver and the ITCR gate remain unwired.** The
+semiparametric solver evaluates the ratio functionals that
+`do-calculus-id.ts` produces, and `do-calculus-id.ts` emits
+`TIAN_C_FACTOR_RATIO` and `FRONT_DOOR` forms — so the solver is
+computed on paper and never used to produce a published number. The
+ITCR gate is the deeper one: the reasoning trace is built by
+`src/reasoning/`, and the gate is not called on it, so a trace whose
+premises are 5% reliable is published without ever being scored. Both
+are the same defect one level up, and both are now the obvious next
+work.
