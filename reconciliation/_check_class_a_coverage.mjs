@@ -66,6 +66,9 @@ const EXEMPT_FILES = new Set([
   // The quarantine script: it DELETES the rows the filter must exclude.
   // It has to see them to remove them.
   "reconciliation/_quarantine_stale_rows.mjs",
+  // The retrieval-repopulation verifier: it asks what class the rows
+  // the retrieval WROTE are, so it must see every activated row.
+  "reconciliation/_verify_retrieval_repopulates.mjs",
 ]);
 
 /**
