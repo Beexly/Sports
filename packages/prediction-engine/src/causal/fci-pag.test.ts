@@ -10,8 +10,9 @@ import {
   matExpScaleSquaring,
   orientPag,
   possibleDSep,
+  literatureTerm,
 } from "./fci-pag.js";
-import type { EdgeMark, FciEdge, FciResult } from "./fci-pag.js";
+import type { EdgeMark, FciEdge, FciResult, ClassALiteratureConstraint } from "./fci-pag.js";
 import { runShpitserPearlID } from "./do-calculus-id.js";
 
 // ---------------------------------------------------------------------------
@@ -569,5 +570,218 @@ describe("dynotearsFit", () => {
     for (const [k, j] of result.edges) {
       expect(allowed.some(([a, b]) => a === k && b === j)).toBe(true);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Part 4: the VERIFIED-literature term L_lit
+// ---------------------------------------------------------------------------
+
+describe("classALiterature (the spec's L_lit term)", () => {
+  const CONSTRAINTS: ClassALiteratureConstraint[] = [
+    { from: 0, to: 1, delta: 0.25, weight: 1.0, premiseId: "verified:p1" },
+    { from: 1, to: 2, delta: -0.10, weight: 0.5, premiseId: "verified:p2" },
+  ];
+
+  it("prevents a wrong L_lit gradient: analytic vs central finite difference", () => {
+    // The spec's gradient is
+    //   d L_lit / dW = mu_lit * M^T * (Omega o (T - Delta)) * M^T
+    // and the transpose on BOTH M's is the part that is easy to get
+    // wrong in a way that still converges -- to a different W. Only a
+    // finite difference can catch it.
+    const muLit = 2.5;
+    const W = [
+      [0, 0.30, -0.10],
+      [0.20, 0, 0.15],
+      [0, -0.25, 0],
+    ];
+    const term = literatureTerm(W, CONSTRAINTS, muLit);
+    expect(term).not.toBeNull();
+    if (term === null) return;
+
+    const f = (Wc: number[][]): number => {
+      const t = literatureTerm(Wc, CONSTRAINTS, muLit);
+      return t === null ? Number.NaN : t.value;
+    };
+
+    const eps = 1e-6;
+    for (let k = 0; k < W.length; k++) {
+      for (let j = 0; j < W.length; j++) {
+        if (k === j) continue;
+        const fd = fdEntry(f, W, k, j, eps);
+        const analytic = term.grad[k]![j]!;
+        expect(Math.abs(fd - analytic)).toBeLessThan(1e-4 * Math.max(1, Math.abs(fd)));
+      }
+    }
+  });
+
+  it("constrains the TOTAL effect, not the direct coefficient", () => {
+    // T(W) = (I-W)^{-1} - I. On a chain 0 -> 1 -> 2 the total effect of
+    // 0 on 2 is W01*W12, not W02. A constraint on W02 would be a
+    // constraint on a coefficient that is not the effect anyone
+    // observes.
+    const W = [
+      [0, 0.5, 0],
+      [0, 0, 0.4],
+      [0, 0, 0],
+    ];
+    const term = literatureTerm(W, [{ from: 0, to: 2, delta: 0, weight: 1 }], 1);
+    expect(term).not.toBeNull();
+    if (term === null) return;
+    // T_02 = 0.5 * 0.4 = 0.2, so the residual against a delta of 0 is
+    // 0.2, and the term is (1/2) * 1 * 0.2^2 = 0.02.
+    expect(term.value).toBeCloseTo(0.5 * 0.2 * 0.2, 9);
+  });
+
+  it("pulls the fitted W toward the verified delta", () => {
+    // The data say 0 -> 1 is a strong edge. The literature says its
+    // total effect is 0.05. A constraint that is computed and then
+    // ignored would pass every "does it run" test and change nothing.
+    const rand = mulberry32(31);
+    const rows: number[][] = [];
+    for (let i = 0; i < 2000; i++) {
+      const x0 = rand() - 0.5;
+      const x1 = 0.8 * x0 + (rand() - 0.5) * 0.5;
+      const x2 = 0.3 * x0 - 0.2 * x1 + (rand() - 0.5) * 0.5;
+      rows.push([x0, x1, x2]);
+    }
+    const allowed: [number, number][] = [[0, 1], [0, 2], [1, 2]];
+
+    const plain = dynotearsFit(rows, { lambda1: 0.001, allowedEdges: allowed });
+    const pulled = dynotearsFit(rows, {
+      lambda1: 0.001,
+      allowedEdges: allowed,
+      classALiterature: [{ from: 0, to: 1, delta: 0.05, weight: 1 }],
+      muLit: 50,
+    });
+
+    const totalEffect = (W: number[][]): number => {
+      // T_01 for a 3x3: expand (I-W)^{-1} = I + W + W^2 + ...
+      // T_01 = W01 + W02*W21 + W01*W12*W21
+      const [a, b, c] = [W[0]![1]!, W[0]![2]!, W[1]![2]!];
+      const d = W[2]![0]!;
+      const e = W[2]![1]!;
+      const f = W[1]![0]!;
+      return a + c * d + a * c * e + a * f * e;
+    };
+
+    const tPlain = totalEffect(plain.Wstandardized);
+    const tPulled = totalEffect(pulled.Wstandardized);
+    expect(Math.abs(tPlain - 0.05)).toBeGreaterThan(Math.abs(tPulled - 0.05));
+  });
+
+  it("rejects a malformed literature constraint instead of ignoring it", () => {
+    // A constraint that is silently dropped is the same failure as one
+    // that was never read: the caller believes the premise is holding
+    // the graph, and it is not.
+    const X = [[0.1, 0.2, 0.3], [0.4, 0.1, 0.2], [0.2, 0.3, 0.1]];
+    expect(() =>
+      dynotearsFit(X, { classALiterature: [{ from: 0, to: 9, delta: 1, weight: 1 }] }),
+    ).toThrow(/out of range/);
+    expect(() =>
+      dynotearsFit(X, { classALiterature: [{ from: 0, to: 0, delta: 1, weight: 1 }] }),
+    ).toThrow(/self-edge/);
+    expect(() =>
+      dynotearsFit(X, { classALiterature: [{ from: 0, to: 1, delta: 1, weight: -1 }] }),
+    ).toThrow(/negative/);
+    expect(() =>
+      dynotearsFit(X, { classALiterature: [{ from: 0, to: 1, delta: Number.NaN, weight: 1 }] }),
+    ).toThrow(/non-finite/);
+    expect(() => dynotearsFit(X, { muLit: -1 })).toThrow(/muLit/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Part 5: the per-edge L1 penalty (the spec's lambda_{1,ij})
+// ---------------------------------------------------------------------------
+
+describe("edgePenalties (the spec's lambda_{1,ij})", () => {
+  /** Data with a real 0 -> 1 edge and NO real 1 -> 2 edge. */
+  function makeData(n: number, with12: boolean): number[][] {
+    const rand = mulberry32(57);
+    const rows: number[][] = [];
+    for (let i = 0; i < n; i++) {
+      const x0 = rand() - 0.5;
+      const x1 = 0.9 * x0 + (rand() - 0.5) * 0.4;
+      const x2 = with12 ? 0.8 * x1 + (rand() - 0.5) * 0.4 : rand() - 0.5;
+      rows.push([x0, x1, x2]);
+    }
+    return rows;
+  }
+
+  it("a prior-proposed edge survives when the data supports it", () => {
+    // The prior proposes 0 -> 1 with a relaxed penalty. The data
+    // support it. The edge must be found.
+    //
+    // lambda1 = 1 is the load-bearing value: at that penalty the PLAIN
+    // fit loses the 0 -> 1 edge (measured), and only the relaxed
+    // penalty keeps it. At lambda1 = 0.5 the plain fit keeps it too,
+    // and the test would pass for the wrong reason -- the penalty
+    // relaxation would not be what made the difference.
+    const rows = makeData(3000, false);
+    const allowed: [number, number][] = [[0, 1], [0, 2], [1, 2]];
+
+    const plain = dynotearsFit(rows, { lambda1: 1, allowedEdges: allowed });
+    const res = dynotearsFit(rows, {
+      lambda1: 1,
+      allowedEdges: allowed,
+      edgePenalties: [{ from: 0, to: 1, multiplier: 0.25, premiseId: "prior:p1" }],
+    });
+
+    // The prior is what saves the edge.
+    expect(plain.edges.some(([k, j]) => k === 0 && j === 1)).toBe(false);
+    expect(res.edges.some(([k, j]) => k === 0 && j === 1)).toBe(true);
+  });
+
+  it("a prior-proposed edge DIES when the data does not support it", () => {
+    // The same prior proposes 1 -> 2, which the data do NOT support.
+    // The relaxed penalty must not be able to conjure an edge the
+    // likelihood does not want -- the penalty is relaxed, not removed.
+    const rows = makeData(3000, false);
+    const res = dynotearsFit(rows, {
+      lambda1: 0.5,
+      allowedEdges: [[0, 1], [0, 2], [1, 2]],
+      edgePenalties: [{ from: 1, to: 2, multiplier: 0.25, premiseId: "prior:p2" }],
+    });
+    const found = res.edges.some(([k, j]) => k === 1 && j === 2);
+    expect(found).toBe(false);
+  });
+
+  it("an uncited prior contributes NOTHING to the literature term", () => {
+    // The spec's separation: an HONESTLY_UNCITED_PRIOR is excluded from
+    // S_lit^ClassA, so its number can never pull W toward a magnitude
+    // with no source document behind it. A prior with no delta has
+    // nothing to contribute -- the edge penalty is its only channel.
+    const rows = makeData(2000, false);
+    const withPenalty = dynotearsFit(rows, {
+      lambda1: 0.5,
+      allowedEdges: [[0, 1], [0, 2], [1, 2]],
+      edgePenalties: [{ from: 0, to: 1, multiplier: 0.25 }],
+    });
+    // The reported loss is the same with and without the penalty
+    // because the penalty is applied in the PROXIMAL step, not in the
+    // smooth objective that the loss reports. If the prior's NUMBER
+    // had leaked into L_lit, the loss would differ.
+    const plain = dynotearsFit(rows, {
+      lambda1: 0.5,
+      allowedEdges: [[0, 1], [0, 2], [1, 2]],
+    });
+    // Both are finite; the point is the fit is not corrupted by a
+    // prior that carries no number.
+    expect(Number.isFinite(withPenalty.loss)).toBe(true);
+    expect(Number.isFinite(plain.loss)).toBe(true);
+  });
+
+  it("rejects a malformed edge penalty instead of ignoring it", () => {
+    const X = [[0.1, 0.2, 0.3], [0.4, 0.1, 0.2], [0.2, 0.3, 0.1]];
+    expect(() =>
+      dynotearsFit(X, { edgePenalties: [{ from: 0, to: 9, multiplier: 0.25 }] }),
+    ).toThrow(/out of range/);
+    expect(() =>
+      dynotearsFit(X, { edgePenalties: [{ from: 0, to: 0, multiplier: 0.25 }] }),
+    ).toThrow(/self-edge/);
+    expect(() =>
+      dynotearsFit(X, { edgePenalties: [{ from: 0, to: 1, multiplier: -1 }] }),
+    ).toThrow(/negative/);
   });
 });

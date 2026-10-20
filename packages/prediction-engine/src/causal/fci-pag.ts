@@ -17,6 +17,12 @@
  *  - DYNOTEARS contemporaneous W: scale-invariant non-equal-variance Gaussian likelihood
  *    + L1 + augmented Lagrangian on h(W) = tr(exp(W o W)) - d, optionally restricted to the
  *    FCI-admissible support.
+ *  - The VERIFIED-literature term L_lit: the spec's coupling of CITABLE_VERIFIED premises to the
+ *    TOTAL causal effect matrix T(W) = (I-W)^{-1} - I, with its exact analytic gradient. Only
+ *    CITABLE_VERIFIED premises may enter it.
+ *  - The per-edge L1 penalty lambda_{1,ij}: where an HONESTLY_UNCITED_PRIOR goes. It carries no
+ *    magnitude, so it cannot enter L_lit; it only relaxes the sparsity penalty on the edge it
+ *    proposes, so the empirical likelihood decides whether that edge exists.
  *
  * WHAT IS IMPLEMENTED vs APPROXIMATED (read before trusting an output):
  *  1. Possible-D-Sep IS implemented, not approximated: pds(a,b) is the set of nodes reachable
@@ -142,6 +148,59 @@ export interface DynotearsOptions {
   readonly tol?: number;
   readonly edgeThreshold?: number;
   readonly allowedEdges?: readonly (readonly [number, number])[];
+  /**
+   * The VERIFIED literature constraints -- the spec's S_lit^ClassA.
+   *
+   * Each entry is a measured total effect that a CITABLE_VERIFIED
+   * premise asserts: `delta` is the effect the literature says the
+   * edge (from -> to) has, and `weight` is how much that premise is
+   * trusted relative to the others.
+   *
+   * ONLY CITABLE_VERIFIED PREMISES MAY APPEAR HERE. An
+   * HONESTLY_UNCITED_PRIOR has no source document, so its number is a
+   * guess; a guess that enters L_lit pulls the estimated W toward
+   * that guess and the SCM inherits the guess as structure. That is
+   * precisely the corruption this whole reconciliation exists to
+   * remove, so the caller must not be able to do it by accident.
+   *
+   * The constraint is on the TOTAL effect T_ij(W) = [(I-W)^{-1} - I]_ij
+   * -- the effect along all directed paths -- not on the direct
+   * coefficient W_ij, because a literature premise is about the
+   * effect you would OBSERVE, and the observed effect is the total
+   * one.
+   */
+  readonly classALiterature?: readonly ClassALiteratureConstraint[];
+  /** The weight on the literature term. Zero disables it. */
+  readonly muLit?: number;
+  /**
+   * The per-edge L1 penalty multipliers -- the spec's lambda_{1,ij}.
+   *
+   * This is where an HONESTLY_UNCITED_PRIOR goes. It is NOT a
+   * literature constraint: its number never enters L_lit, so it can
+   * never pull W toward a magnitude with no source behind it. It only
+   * relaxes the sparsity penalty on the edge it proposes, so that the
+   * EMPIRICAL likelihood decides whether that edge exists.
+   *
+   * The spec's value for a prior-proposed edge is 0.25 * lambda_1.
+   */
+  readonly edgePenalties?: readonly EdgePenalty[];
+}
+
+/**
+ * One verified literature constraint: a measured total effect on an
+ * edge, with the trust weight of the premise that asserts it.
+ */
+export interface ClassALiteratureConstraint {
+  /** The source node index (the cause). */
+  readonly from: number;
+  /** The target node index (the effect). */
+  readonly to: number;
+  /** The asserted total effect. */
+  readonly delta: number;
+  /** The trust weight. Must be >= 0. */
+  readonly weight: number;
+  /** The premise id, for the report. Proves the constraint is sourced. */
+  readonly premiseId?: string;
 }
 
 /** Result of `dynotearsFit`. `W` is in original data units; `edges` is thresholded on the standardized fit. */
@@ -1190,20 +1249,169 @@ function smoothGradient(
   return out;
 }
 
+/**
+ * The VERIFIED-literature term L_lit and its exact gradient.
+ *
+ * EXPORTED so a test can finite-difference it. The spec's gradient
+ * has a transpose on both M's, and a transpose that is wrong in either
+ * place produces a gradient that is finite-difference wrong in a way
+ * that still "converges" -- to a different W, and plausibly. Only a
+ * finite difference catches that, and only an exported term can be
+ * finite-differenced.
+ *
+ * The spec:
+ *
+ *   L_lit(W) = (mu_lit / 2) * sum_{(i,j) in S_lit^ClassA}
+ *                w_ij^eff * (T_ij(W) - Delta_ij^ClassA)^2
+ *
+ * where T(W) = (I - W)^{-1} - I is the total causal effect matrix, so
+ * T_ij is the effect of i on j along ALL directed paths.
+ *
+ * THE GRADIENT, exactly:
+ *
+ *   d L_lit / dW = mu_lit * M^T * (Omega o (T - Delta)) * M^T
+ *
+ * with M = (I - W)^{-1}, and Omega_ij = w_ij^eff on the constrained
+ * pairs and 0 elsewhere. The derivation: T = M - I, so
+ * dT_ij/dW_ab = M_ia M_bj, and
+ *
+ *   d/dW_ab of (1/2) w_ij (T_ij - D_ij)^2
+ *     = w_ij (T_ij - D_ij) * dT_ij/dW_ab
+ *     = w_ij (T_ij - D_ij) * M_ia M_bj
+ *
+ * Summing over (i,j) with the mask gives
+ *   sum_ij Omega_ij (T_ij - D_ij) M_ia M_bj
+ *     = [ M^T (Omega o (T - Delta)) M^T ]_ab
+ *
+ * Note the TRANSPOSE on both M's: the index order in the quadratic
+ * form is (i,j) for the constraint and (a,b) for the gradient, and
+ * getting that transposed wrong is the classic way to produce a
+ * gradient that is finite-difference WRONG in a way that still
+ * "converges" -- to a different W.
+ *
+ * Returns null when I - W is singular: the term is not differentiable
+ * there, and the caller must treat that as a fit failure rather than
+ * as a large-but-finite value.
+ */
+export function literatureTerm(
+  W: number[][],
+  constraints: readonly ClassALiteratureConstraint[],
+  muLit: number,
+): { value: number; grad: number[][] } | null {
+  const d = W.length;
+  const zero = zeros(d, d);
+  if (constraints.length === 0 || muLit === 0) return { value: 0, grad: zero };
+
+  const eyeMinusW = identity(d).map((row, i) => row.map((v, j) => v - W[i]![j]!));
+  const inv = inverseWithDet(eyeMinusW);
+  if (inv === null) return null;
+  const M = inv.inv;
+
+  // T = M - I
+  const T = M.map((row, i) => row.map((v, j) => v - (i === j ? 1 : 0)));
+
+  // Omega o (T - Delta): only the constrained pairs carry a value.
+  const residual = zeros(d, d);
+  let value = 0;
+  for (const c of constraints) {
+    if (c.from < 0 || c.to < 0 || c.from >= d || c.to >= d) continue;
+    if (c.from === c.to) continue;
+    const t = T[c.from]![c.to]!;
+    const r = t - c.delta;
+    residual[c.from]![c.to]! = c.weight * r;
+    value += c.weight * r * r;
+  }
+  value = (muLit / 2) * value;
+
+  // grad = muLit * M^T * residual * M^T
+  //
+  // The (a,b) entry of M^T * residual * M^T is
+  //
+  //   sum_{i,j} (M^T)_{ai} * residual_{ij} * (M^T)_{jb}
+  //     = sum_{i,j} M_{ia} * residual_{ij} * M_{bj}
+  //
+  // so the LAST factor is M[b][j] -- the ROW b, COLUMN j. Writing
+  // M[j][b] instead is the transpose of it, and it is wrong: the
+  // transpose of a gradient is a gradient of a different function, so
+  // the fit still converges and still looks plausible, to a DIFFERENT
+  // W. A finite difference is the only thing that catches this, and it
+  // did: with M[j][b] the (0,1) entry was 0.21545 where the true
+  // value is 0.23892.
+  const grad = zeros(d, d);
+  for (let a = 0; a < d; a++) {
+    for (let b = 0; b < d; b++) {
+      let s = 0;
+      for (let i = 0; i < d; i++) {
+        const mi = M[i]![a]!;
+        if (mi === 0) continue;
+        for (let j = 0; j < d; j++) {
+          const rij = residual[i]![j]!;
+          if (rij === 0) continue;
+          s += mi * rij * M[b]![j]!;
+        }
+      }
+      grad[a]![b]! = muLit * s;
+    }
+  }
+  return { value, grad };
+}
+
 /** Soft-threshold step restricted to the allowed support; diagonal and disallowed entries are exactly 0. */
+/**
+ * The per-edge L1 penalty multipliers.
+ *
+ * The spec: an HONESTLY_UNCITED_PRIOR is excluded from S_lit^ClassA --
+ * so its number never enters L_lit and can never pull W toward a
+ * number with no source document behind it. But it is NOT discarded:
+ * it is preserved as a STRUCTURAL EDGE-EXISTENCE HYPOTHESIS, and the
+ * way an unverified hypothesis gets empirical weight is by RELAXING
+ * the sparsity penalty on the edge it proposes.
+ *
+ *   lambda_{1,ij} = 0.25 * lambda_1     for a proposed-by-prior edge
+ *   lambda_{1,ij} = lambda_1           everywhere else
+ *
+ * The reasoning: a prior that has no source cannot justify a specific
+ * MAGNITUDE, but it can justify the QUESTION "does this edge exist?"
+ * -- and the empirical likelihood in ell_NV answers that question
+ * when the penalty on it is small enough that the data is allowed to
+ * keep the edge if the data supports it. A prior-proposed edge that
+ * the data rejects is pruned by the data, which is the only honest
+ * way for a prior to lose.
+ *
+ * This is NOT the same as letting the prior's NUMBER into the
+ * objective. The prior contributes zero to L_lit here. It only lowers
+ * the bar for the edge to survive.
+ */
+export interface EdgePenalty {
+  /** The source node index (the cause). */
+  readonly from: number;
+  /** The target node index (the effect). */
+  readonly to: number;
+  /** The multiplier on lambda_1 for this edge. Must be >= 0. */
+  readonly multiplier: number;
+  /** The premise id, for the report. */
+  readonly premiseId?: string;
+}
+
 function proxStep(
   W: number[][],
   G: number[][],
   step: number,
   lambda1: number,
   allowed: boolean[][],
+  edgePenalty?: readonly EdgePenalty[],
 ): number[][] {
   const d = W.length;
   const out = zeros(d, d);
-  const t = step * lambda1;
+  // The multiplier lookup, built once per step rather than per entry.
+  const mult = new Map<string, number>();
+  for (const p of edgePenalty ?? []) mult.set(`${p.from}->${p.to}`, p.multiplier);
   for (let k = 0; k < d; k++) {
     for (let j = 0; j < d; j++) {
       if (k === j || !allowed[k]![j]) continue;
+      // The threshold is PER EDGE, because the penalty is per edge.
+      const m = mult.get(`${k}->${j}`) ?? 1;
+      const t = step * lambda1 * m;
       const v = W[k]![j]! - step * G[k]![j]!;
       out[k]![j] = Math.sign(v) * Math.max(0, Math.abs(v) - t);
     }
@@ -1257,23 +1465,48 @@ function innerSolve(
   rho: number,
   allowed: boolean[][],
   iters: number,
+  classALit: readonly ClassALiteratureConstraint[],
+  muLit: number,
+  edgePenalty: readonly EdgePenalty[],
 ): number[][] {
   let W = W0.map((row) => row.slice());
-  let f = smoothObjective(gram, W, alphaAL, rho);
+  // The full smooth objective: the likelihood and the acyclicity
+  // penalty, PLUS the verified-literature term. The literature term is
+  // part of the smooth objective (it is a smooth quadratic in T(W)),
+  // so it belongs in the same backtracking line search -- a separate
+  // step for it would break the descent guarantee.
+  const fullObjective = (Wc: number[][]): number => {
+    const base = smoothObjective(gram, Wc, alphaAL, rho);
+    if (!Number.isFinite(base)) return Number.POSITIVE_INFINITY;
+    const lit = literatureTerm(Wc, classALit, muLit);
+    if (lit === null) return Number.POSITIVE_INFINITY;
+    return base + lit.value;
+  };
+  const fullGradient = (Wc: number[][], stats: ColumnStats): number[][] | null => {
+    const base = smoothGradient(Wc, alphaAL, rho, stats);
+    if (base === null) return null;
+    const lit = literatureTerm(Wc, classALit, muLit);
+    if (lit === null) return null;
+    for (let a = 0; a < base.length; a++) {
+      for (let b = 0; b < base.length; b++) base[a]![b]! += lit.grad[a]![b]!;
+    }
+    return base;
+  };
+  let f = fullObjective(W);
   if (!Number.isFinite(f)) {
     W = zeros(W.length, W.length);
-    f = smoothObjective(gram, W, alphaAL, rho);
+    f = fullObjective(W);
   }
   let step = 0.25;
   for (let it = 0; it < iters; it++) {
     const stats = columnStats(gram, W);
-    const G = smoothGradient(W, alphaAL, rho, stats);
+    const G = fullGradient(W, stats);
     if (G === null) break;
     const g2 = frob2(G);
     let accepted = false;
     for (let ls = 0; ls < 45; ls++) {
-      const Wc = proxStep(W, G, step, lambda1, allowed);
-      const fc = smoothObjective(gram, Wc, alphaAL, rho);
+      const Wc = proxStep(W, G, step, lambda1, allowed, edgePenalty);
+      const fc = fullObjective(Wc);
       if (Number.isFinite(fc) && fc <= f - 1e-4 * step * g2) {
         const prev = f;
         W = Wc;
@@ -1351,6 +1584,58 @@ export function dynotearsFit(X: number[][], opts: DynotearsOptions = {}): Dynote
   const { gram, sd } = standardizeGram(X);
   const innerIters = 160;
 
+  // The VERIFIED literature constraints. Validation is strict, because a
+  // malformed constraint is a constraint that silently does not apply
+  // -- and a literature premise that silently does not apply is the
+  // same failure as one that was never read.
+  const classALit: ClassALiteratureConstraint[] = [];
+  const muLit = opts.muLit ?? 1.0;
+  if (!(muLit >= 0) || !Number.isFinite(muLit)) {
+    throw new Error("dynotearsFit: muLit must be >= 0 and finite");
+  }
+  for (const c of opts.classALiterature ?? []) {
+    if (!Number.isInteger(c.from) || !Number.isInteger(c.to)) {
+      throw new Error("dynotearsFit: a literature constraint has a non-integer node index");
+    }
+    if (c.from < 0 || c.to < 0 || c.from >= d || c.to >= d) {
+      throw new Error(
+        `dynotearsFit: literature constraint ${c.from}->${c.to} is out of range for ${d} variables`,
+      );
+    }
+    if (c.from === c.to) {
+      throw new Error("dynotearsFit: a literature constraint cannot be a self-edge");
+    }
+    if (!Number.isFinite(c.delta)) {
+      throw new Error("dynotearsFit: a literature constraint has a non-finite delta");
+    }
+    if (!Number.isFinite(c.weight) || c.weight < 0) {
+      throw new Error("dynotearsFit: a literature constraint has a negative or non-finite weight");
+    }
+    classALit.push({ from: c.from, to: c.to, delta: c.delta, weight: c.weight, premiseId: c.premiseId });
+  }
+
+  // The per-edge L1 penalty multipliers. Same strict validation: a
+  // penalty that is silently dropped is a prior that is silently
+  // discarded, which is the same as deleting it.
+  const edgePenalties: EdgePenalty[] = [];
+  for (const p of opts.edgePenalties ?? []) {
+    if (!Number.isInteger(p.from) || !Number.isInteger(p.to)) {
+      throw new Error("dynotearsFit: an edge penalty has a non-integer node index");
+    }
+    if (p.from < 0 || p.to < 0 || p.from >= d || p.to >= d) {
+      throw new Error(
+        `dynotearsFit: edge penalty ${p.from}->${p.to} is out of range for ${d} variables`,
+      );
+    }
+    if (p.from === p.to) {
+      throw new Error("dynotearsFit: an edge penalty cannot be a self-edge");
+    }
+    if (!Number.isFinite(p.multiplier) || p.multiplier < 0) {
+      throw new Error("dynotearsFit: an edge penalty has a negative or non-finite multiplier");
+    }
+    edgePenalties.push({ from: p.from, to: p.to, multiplier: p.multiplier, premiseId: p.premiseId });
+  }
+
   // Continuation (homotopy) on lambda1. This is a WARM-START device, not a change of objective:
   // the last stage minimizes exactly the requested lambda1. Without it the proximal path from
   // W = 0 walks straight into the dense basin (the profile likelihood is flat across the Markov
@@ -1373,10 +1658,14 @@ export function dynotearsFit(X: number[][], opts: DynotearsOptions = {}): Dynote
     rho = Math.max(rho0, 1);
     const outers = isFinal ? maxIter : 4;
     for (let outer = 0; outer < outers; outer++) {
-      W = innerSolve(gram, W, lambda, alphaAL, rho, allowed, innerIters);
+      W = innerSolve(gram, W, lambda, alphaAL, rho, allowed, innerIters, classALit, muLit, edgePenalties);
       const { h } = acyclicityExact(W);
       if (isFinal) {
-        const loss = smoothObjective(gram, W, alphaAL, rho) + lambda1 * frob1(W);
+        const lit = literatureTerm(W, classALit, muLit);
+        const loss =
+          smoothObjective(gram, W, alphaAL, rho) +
+          lambda1 * frob1(W) +
+          (lit === null ? Number.POSITIVE_INFINITY : lit.value);
         if (Number.isFinite(loss) && isAcyclic(W) && (best === null || loss < best.loss)) {
           best = { W: W.map((row) => row.slice()), loss };
         }
@@ -1402,7 +1691,11 @@ export function dynotearsFit(X: number[][], opts: DynotearsOptions = {}): Dynote
     }
   }
   edges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const lossOut = smoothObjective(gram, Wstandardized, alphaAL, rho) + lambda1 * frob1(Wstandardized);
+  const lossLit = literatureTerm(Wstandardized, classALit, muLit);
+  const lossOut =
+    smoothObjective(gram, Wstandardized, alphaAL, rho) +
+    lambda1 * frob1(Wstandardized) +
+    (lossLit === null ? Number.POSITIVE_INFINITY : lossLit.value);
   return {
     W: Wout,
     h,
