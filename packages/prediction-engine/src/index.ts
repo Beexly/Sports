@@ -247,6 +247,23 @@ export {
 } from "./literature/literature-pillars.js";
 export type { LiteraturePillar } from "./literature/literature-pillars.js";
 export {
+  MEASURE_REGISTRY,
+  MEASURE_RESOLUTION_ORDER,
+  CONCEPT_MIN_SUPPORT,
+  resolveMeasure,
+  directionSign,
+  agreementFor,
+  conceptActivationScore,
+  measurableTags,
+} from "./literature/literature-measures.js";
+export type {
+  MeasureSpec,
+  MeasureLevel,
+  MeasureResolution,
+  MeasureRefusal,
+  PremiseDirection,
+} from "./literature/literature-measures.js";
+export {
   isGameKey,
   resolveOwnGameOutcome,
   groundingFor,
