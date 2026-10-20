@@ -64,9 +64,20 @@ a file that does not exist anywhere in the repo.
 
 | class | count | meaning |
 |---|---|---|
-| `CITABLE_VERIFIED` | 968 | the quote is verbatim in the document it names, and all four layers pass |
+| `CITABLE_VERIFIED` | 1,019 | the quote is verbatim in the document it names, and all four layers pass |
 | `DERIVED_MARKET_SYNTHESIS` | 1,134 | synthesised from a market/table row; cites nothing |
-| `HONESTLY_UNCITED_PRIOR` | 3,201 | no source document on disk |
+| `HONESTLY_UNCITED_PRIOR` | 2,881 | not admissible evidence (see the status below) |
+| `REJECTED_CORRUPT` | 269 | the "quote" is a machine identifier, not prose |
+
+**The status says WHY**, which the class alone cannot:
+
+| status | count | meaning |
+|---|---|---|
+| `ACTIVE` | 1,019 | admitted; all four layers pass |
+| `LINK_VERIFIED_SEMANTIC_FAIL` | 2,484 | the quote IS verbatim in the document; the claim does not follow from it |
+| `UNCITED_NO_SOURCE` | 397 | the quote is in no document at all |
+| `DERIVED_TABLE` | 1,134 | synthesised from a table row |
+| `CORRUPT_QUOTE` | 269 | a dataset slug or a database row where a quote should be |
 
 **One definition of "citable."** The builder used to have its own copy
 of the admission logic while the gate module had another. It stamped
@@ -87,20 +98,71 @@ alone, 318 did not.
 document, each with its own offsets. The mechanism was previously never
 checked against the document at all.
 
+### Three further defects, found by reading the labels
+
+The `status` field did not exist at first, and adding it exposed three
+more defects in the builder. Each was found by asking whether the label
+was TRUE, not by reading the code.
+
+**The mechanism was searched in the record's REGION, not the document.**
+The record's region is its own field -- an abstract, which these corpora
+TRUNCATE to 300 characters. The mechanism sentence is a different
+sentence of the same document and routinely falls just past the
+truncation: the mechanism for record `2609.33664` sits at file offset
+1241, past the end of its 300-char region. **2,804 records** were
+stamped `UNCITED_NO_SOURCE` for this reason, with both of their quotes
+in the document all the time. The mechanism is now located in the
+document, and the offsets are document offsets -- the same space the
+gate checks them in.
+
+**JSON syntax reads like prose to a sentence splitter.** Searching the
+whole document made the extractor pick
+`Sutherland",
+ ],
+ "date": "Submitted 28 September, 2026;` as a
+"mechanism". A mechanism must now read like a sentence: no quote marks,
+braces or brackets, a sentence terminator, and not a `field: value`
+pair.
+
+**A dataset slug is not a quotation.** The Kaggle registry's records
+have `nickcantalupa/nfl-team-data-2003-2023` where a quote should be
+-- a database KEY that asserts nothing. **79 records** were stamped
+`CITABLE_VERIFIED` on one. They are now `REJECTED_CORRUPT`, the same
+verdict the `ASSOCIATION_ONLY - 1 - 0.8507...` row dumps get: a machine
+identifier wearing a quotation's clothes.
+
+And the status itself: the gate's refusal branch returned
+`UNCITED_NO_SOURCE` for a record whose quote was demonstrably in its
+document. A record with no document and a record whose document was
+there but whose claim was unsupported wore the same label, and
+**2,484 records** were the second kind wearing the first kind's name.
+
 ### Measured under the independent gate
 
 ```
 corpus records            5,303
 L1 verbatim provenance     3,772  (71.1%)
 L2 numeric containment     1,989  (37.5%)
-L3 span anchoring          3,735  (70.4%)
-L4 mechanism entailment    1,778  (33.5%)
-ADMITTED (all four)          968  (18.3%)
+L3 span anchoring          1,019  (19.2%)
+L4 mechanism entailment    2,418  (45.6%)
+ADMITTED (all four)        1,019  (19.2%)
 
 citable records whose span does NOT select their quote    0
 non-citable records claiming a span or the EXACT tier     0
 all 26 FOUNDATIONAL papers -> HONESTLY_UNCITED_PRIOR     yes
 ```
+
+And per class, under the gate:
+
+```
+CITABLE_VERIFIED      n=1,019  L1=1,019  L2=1,019  L3=1,019  L4=1,019  ADMITTED=1,019
+HONESTLY_UNCITED_PRIOR n=2,881  L1=2,484  L2=  828  L3=    0  L4=1,178  ADMITTED=    0
+DERIVED_MARKET_SYNTH. n=1,134  L1=    0  L2=   43  L3=    0  L4=    0  ADMITTED=    0
+REJECTED_CORRUPT      n=  269  L1=  269  L2=   99  L3=    0  L4=  221  ADMITTED=    0
+```
+
+Every `CITABLE_VERIFIED` record passes all four layers, and no other
+record is admitted. The builder and the independent gate agree exactly.
 
 L2's remaining failures are legitimate: 1,453 records carry no numeric
 claim at all, and 719 carry a claim that is not token-bounded in the

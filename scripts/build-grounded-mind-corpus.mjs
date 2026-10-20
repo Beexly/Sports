@@ -141,17 +141,82 @@ export function determineInfluenceDirection(text) {
 }
 
 /**
- * Extracts a mechanism quote (substring) and its exact character span from sourceText.
+ * Extracts a mechanism quote (substring) and its exact character span.
+ *
+ * @param {string} sourceText the DOCUMENT's own bytes -- the file the
+ *   record names. The offsets returned index into it.
+ * @param {string} evidenceQuote the record's evidence quote
+ * @param {string} [regionText] the record's own field, when it is
+ *   available. The mechanism is preferred from the region (it is the
+ *   sentence the record's own field carries) and taken from the
+ *   document when the region does not have one.
+ *
+ * WHY THE DOCUMENT (2026-10-20).
+ *
+ * The extractor used to be given the record's REGION -- its own field,
+ * an abstract that these corpora TRUNCATE to 300 characters -- and it
+ * split that into sentences. A mechanism sentence is usually a
+ * DIFFERENT sentence of the same document, and it routinely falls just
+ * past the truncation. MEASURED: the mechanism for record 2609.33664
+ * sits at file offset 1241, past the end of its 300-char region, and
+ * 2,804 records were stamped UNCITED_NO_SOURCE for this reason, with
+ * BOTH of their quotes in the document all the time.
+ *
+ * The offsets are now DOCUMENT offsets, so `document.slice(start, end)
+ * === quote` holds by construction -- the same space the gate checks
+ * them in.
  */
-export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote) {
-  const clean = decodeHtml(sourceText);
+export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote, regionText = null) {
+  // The mechanism must be a real substring of the DOCUMENT's bytes, so
+  // the sentence is cut from the document, not from a decoded copy of
+  // it. Decoding first and then searching for the decoded sentence can
+  // produce a string that is not byte-exact in the file.
+  const clean = sourceText;
   const sentences = clean.split(/(?<=[.!?])\s+/);
 
   const mechRegex = /(?:because|due to|via|through|depriving|allowing|forces|isolat|friction|drag|latency|delay|compress|reduces|elevates|spikes|suppresses|induces|correlat|predict|biomechanic|fatigue|exhaustion|asymmetr)/i;
 
-  for (const s of sentences) {
+  // The region is preferred: it is the field the record came from, and
+  // a mechanism drawn from it is the one the record actually asserts.
+  //
+  // A region sentence is only usable if it is ALSO a substring of the
+  // document, because the offsets index the document. The region is the
+  // document's own bytes (the builder resolves the record's field to the
+  // token's raw bytes), so a region sentence is normally a document
+  // substring -- but the check is made explicitly, because an offset
+  // that does not select the quote is the exact defect this whole work
+  // is about.
+  const regionSentences =
+    typeof regionText === "string" ? regionText.split(/(?<=[.!?])\s+/) : [];
+  const searchOrder = [...regionSentences, ...sentences];
+
+  // A SENTENCE, not a fragment of a data structure.
+  //
+  // The document is a JSON file, and JSON syntax reads like prose to a
+  // sentence splitter: "Sutherland\",\n ],\n "date": "Submitted 28
+  // September, 2026;" ends with a semicolon and contains "predict"-shaped
+  // substrings, so it was selected as a "mechanism" -- and it is not
+  // prose, it is a record's author list followed by a field name.
+  //
+  // A mechanism is a sentence of the DOCUMENT'S TEXT, so it must read
+  // like one: it must not contain a JSON key, a quote mark, a brace, or
+  // a bracket, and it must end in a sentence terminator.
+  const looksLikeProse = (s) => {
+    if (/["{}[\]]/.test(s)) return false;
+    if (!/[.!?]$/.test(s.trim())) return false;
+    // A field name followed by a colon is structure, not prose.
+    if (/^\s*[A-Za-z_][A-Za-z0-9_ ]*:\s/.test(s)) return false;
+    return true;
+  };
+
+  for (const s of searchOrder) {
     const trimmed = s.trim();
-    if (trimmed.length >= 25 && trimmed !== evidenceQuote && mechRegex.test(trimmed)) {
+    if (
+      trimmed.length >= 25 &&
+      trimmed !== evidenceQuote &&
+      mechRegex.test(trimmed) &&
+      looksLikeProse(trimmed)
+    ) {
       let quote = trimmed;
       if (quote.length > 290) {
         quote = quote.slice(0, 280);
@@ -172,9 +237,9 @@ export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote) {
     }
   }
 
-  for (const s of sentences) {
+  for (const s of searchOrder) {
     const trimmed = s.trim();
-    if (trimmed.length >= 20 && trimmed !== evidenceQuote) {
+    if (trimmed.length >= 20 && trimmed !== evidenceQuote && looksLikeProse(trimmed)) {
       let quote = trimmed;
       if (quote.length > 290) quote = quote.slice(0, 280);
       const idx = clean.indexOf(quote);
@@ -406,6 +471,58 @@ export const RECORD_CLASSES = Object.freeze({
 });
 
 /**
+ * WHY A RECORD IS NOT CITABLE.
+ *
+ * The class says WHAT KIND of record it is. The status says WHY it was
+ * not admitted, and the two are not the same question.
+ *
+ * MEASURED: 3,201 records are HONESTLY_UNCITED_PRIOR, but 2,804 of them
+ * have their quote VERBATIM in the document they name -- they fail only
+ * L2 (the number is not literally in the quote) or L4 (the document is
+ * not about a sport). Calling those "uncited" is the same defect as
+ * the tier that said MSVH_S1_EXACT on a record whose offsets selected
+ * nothing: a label that does not describe the state.
+ *
+ * So the status names the reason, and a consumer can tell a record
+ * with no document at all from one whose document is there and whose
+ * claim is not supported by it.
+ */
+export const RECORD_STATUS = Object.freeze({
+  /** Admitted: all four layers pass. */
+  ACTIVE: "ACTIVE",
+  /** No source document on disk -- the quote is in no document. */
+  UNCITED_NO_SOURCE: "UNCITED_NO_SOURCE",
+  /** The quote IS in the document, but the claim does not follow from it. */
+  LINK_VERIFIED_SEMANTIC_FAIL: "LINK_VERIFIED_SEMANTIC_FAIL",
+  /** Synthesised from a market/table row; cites nothing by construction. */
+  DERIVED_TABLE: "DERIVED_TABLE",
+  /** A database row dumped into a quote field; never prose, never a citation. */
+  CORRUPT_QUOTE: "CORRUPT_QUOTE",
+});
+
+/**
+ * A machine identifier where a quotation should be.
+ *
+ * A dataset slug -- "nickcantalupa/nfl-team-data-2003-2023" -- is a
+ * database KEY. It names a dataset, asserts nothing, and carries no
+ * claim that could be supported or refuted. A record whose evidence is
+ * a slug cites nothing.
+ *
+ * The test: no whitespace at all, and it looks like a path or an
+ * identifier rather than a sentence. A real quotation always has
+ * whitespace in it -- even a single word has none, but a single word
+ * cannot be a 15+ character claim about a sports effect.
+ */
+export function isSlugNotProse(quote) {
+  if (typeof quote !== "string") return false;
+  const t = quote.trim();
+  if (t.length < 15) return false;
+  if (/\s/.test(t)) return false;
+  // No whitespace, 15+ chars, and it carries a path/identifier shape.
+  return /[a-z]/i.test(t) && /[-_./]/.test(t);
+}
+
+/**
  * A quote that is a database row dumped into a "quote" field -- e.g.
  * "ASSOCIATION_ONLY - 1 - 0.8507281977552686". These are not prose and
  * were never a citation; they are values from a table.
@@ -447,7 +564,7 @@ export function scanJsonStringTokens(text) {
           j += 6;
           continue;
         }
-        const map = { n: "\n", t: "\t", r: "\r", b: "\b", f: "\f", '"': '"', "\\": "\\", "/": "/" };
+      const map = { n: String.fromCharCode(10), t: String.fromCharCode(9), r: String.fromCharCode(13), b: String.fromCharCode(8), f: String.fromCharCode(12), '"': '"', "\\": "\\", "/": "/" };
         decoded += map[e] ?? e;
         j += 2;
         continue;
@@ -463,22 +580,166 @@ export function scanJsonStringTokens(text) {
 }
 
 /**
+ * Find the JSON string token that CONTAINS a value, and return its byte
+ * range.
+ *
+ * The counterpart to `locateDocumentRegion`'s exact match: a record's
+ * text is usually a PART of a longer field, so the exact match fails and
+ * the containing token is what the record's bytes live in.
+ *
+ * The returned `raw` is the WHOLE token's bytes, so an offset into it is
+ * an offset into the file. The quote is then cut from those bytes, which
+ * makes it byte-exact by construction.
+ */
+export function findTokenContaining(fileText, value) {
+  if (typeof fileText !== "string" || typeof value !== "string" || !value) {
+    return null;
+  }
+  for (const t of scanJsonStringTokens(fileText)) {
+    if (t.decoded.includes(value)) {
+      return { start: t.start, end: t.end, raw: t.raw, decoded: t.decoded };
+    }
+  }
+  return null;
+}
+
+/**
  * Find the byte range of a record's own text inside its source file.
  *
  * @param {string} fileText the whole file
  * @param {string} fieldValue the field value as JSON.parse returned it
+ * @param {string} [needle] a SUBSTRING of the field value to locate
  * @returns {{start:number,end:number,raw:string}|null}
+ *
+ * THE SUBSTRING CASE (2026-10-20).
+ *
+ * The builder's `evidence_quote` is usually a SENTENCE OR TWO taken from
+ * a much longer field -- an abstract is thousands of characters, and the
+ * quote is the part the record actually asserts. So the quote is a
+ * SUBSTRING of the field value, not the field value itself.
+ *
+ * This function used to require an EXACT whole-field match:
+ *
+ *     if (t.decoded === fieldValue) return {start, end, raw}
+ *
+ * and returned null for every substring. The caller then concluded the
+ * record had NO SOURCE, and stamped it HONESTLY_UNCITED_PRIOR with
+ * UNCITED_NO_SOURCE -- while the quote was sitting in the file the
+ * whole time, in plain sight. MEASURED: 2,804 records were mislabelled
+ * that way, and their quotes WERE byte-exact in their documents.
+ *
+ * So the token is located by SUBSTRING, and the offsets are mapped from
+ * the DECODED position back to the RAW position -- because the raw
+ * bytes of a JSON string carry escapes ("\n", "\u00e8", "\\") that the
+ * decoded value does not, so a decoded offset is not a raw offset.
  */
-export function locateDocumentRegion(fileText, fieldValue) {
+export function locateDocumentRegion(fileText, fieldValue, needle = null) {
   if (typeof fileText !== "string" || typeof fieldValue !== "string" || !fieldValue) {
     return null;
   }
+  const target = needle ?? fieldValue;
   for (const t of scanJsonStringTokens(fileText)) {
-    if (t.decoded === fieldValue) {
-      return { start: t.start, end: t.end, raw: t.raw };
+    if (needle === null) {
+      if (t.decoded === fieldValue) {
+        return { start: t.start, end: t.end, raw: t.raw };
+      }
+      continue;
     }
+    // The needle must be inside this token's decoded value.
+    const decodedAt = t.decoded.indexOf(target);
+    if (decodedAt < 0) continue;
+    // Map the decoded offset back to a raw offset. The scanner knows
+    // where every escape began, so walk the token once and count.
+    const rawAt = mapDecodedOffsetToRaw(t, decodedAt);
+    if (rawAt === null) continue;
+    const rawEnd = rawAt + rawLengthOfDecoded(t, target.length);
+    if (rawEnd > t.raw.length) continue;
+    const rawSlice = t.raw.slice(rawAt, rawEnd);
+    // The raw slice must DECODE to the needle, or the offsets are wrong.
+    if (decodeJsonStringSlice(rawSlice) !== target) continue;
+    return {
+      start: t.start + rawAt,
+      end: t.start + rawEnd,
+      raw: rawSlice,
+    };
   }
   return null;
+}
+
+/**
+ * Map a DECODED offset inside a scanned token to the corresponding RAW
+ * offset, by walking the token's escapes.
+ */
+function mapDecodedOffsetToRaw(token, decodedOffset) {
+  const raw = token.raw;
+  let decodedSeen = 0;
+  let rawAt = 0;
+  while (rawAt < raw.length) {
+    if (decodedSeen === decodedOffset) return rawAt;
+    const c = raw[rawAt];
+    if (c === "\\") {
+      const e = raw[rawAt + 1];
+      if (e === "u") {
+        rawAt += 6;
+        decodedSeen += 1;
+        continue;
+      }
+      rawAt += 2;
+      decodedSeen += 1;
+      continue;
+    }
+    rawAt += 1;
+    decodedSeen += 1;
+  }
+  return decodedSeen === decodedOffset ? rawAt : null;
+}
+
+/**
+ * The RAW length of a run of `decodedLength` decoded characters, which
+ * may span escapes.
+ */
+function rawLengthOfDecoded(token, decodedLength) {
+  const raw = token.raw;
+  let decodedSeen = 0;
+  let rawAt = 0;
+  while (rawAt < raw.length && decodedSeen < decodedLength) {
+    const c = raw[rawAt];
+    if (c === "\\") {
+      rawAt += raw[rawAt + 1] === "u" ? 6 : 2;
+      decodedSeen += 1;
+      continue;
+    }
+    rawAt += 1;
+    decodedSeen += 1;
+  }
+  return rawAt;
+}
+
+/**
+ * Decode a raw JSON string slice (without the surrounding quotes) the
+ * way JSON.parse would decode the corresponding string.
+ */
+function decodeJsonStringSlice(raw) {
+  let out = "";
+  let j = 0;
+  while (j < raw.length) {
+    const c = raw[j];
+    if (c === "\\") {
+      const e = raw[j + 1];
+      if (e === "u") {
+        out += String.fromCharCode(parseInt(raw.substr(j + 2, 4), 16));
+        j += 6;
+        continue;
+      }
+      const map = { n: String.fromCharCode(10), t: String.fromCharCode(9), r: String.fromCharCode(13), b: String.fromCharCode(8), f: String.fromCharCode(12), '"': '"', "\\": "\\", "/": "/" };
+      out += map[e] ?? e;
+      j += 2;
+      continue;
+    }
+    out += c;
+    j++;
+  }
+  return out;
 }
 
 /**
@@ -511,6 +772,7 @@ export function classifyRecord({
   if (isDerived) {
     return {
       record_class: RECORD_CLASSES.DERIVED_MARKET_SYNTHESIS,
+      status: RECORD_STATUS.DERIVED_TABLE,
       citable: false,
       verification_tier: "MSVH_S0_DERIVED_TABLE",
       evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_DERIVED_TABLE" },
@@ -521,6 +783,7 @@ export function classifyRecord({
   if (typeof quote !== "string" || quote.length < 15) {
     return {
       record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
       citable: false,
       verification_tier: "MSVH_S0_UNCITED",
       evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
@@ -531,6 +794,30 @@ export function classifyRecord({
   if (CORRUPT_ROW_PATTERN.test(quote.trim())) {
     return {
       record_class: RECORD_CLASSES.REJECTED_CORRUPT,
+      status: RECORD_STATUS.CORRUPT_QUOTE,
+      citable: false,
+      verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
+    };
+  }
+
+  // A SLUG IS NOT A QUOTE.
+  //
+  // The Kaggle registry's records have a dataset slug where a quote
+  // should be: "nickcantalupa/nfl-team-data-2003-2023",
+  // "maxhorowitz/nflplaybyplay2009to2016". Those are database KEYS --
+  // they name a dataset, they do not assert anything, and a claim with
+  // one as its evidence quotes nothing.
+  //
+  // This is the same defect as the "ASSOCIATION_ONLY - 1 - 0.8507..." row
+  // dumps, in a different costume: a machine identifier wearing a
+  // quotation's clothes. MEASURED: 79 records were stamped
+  // CITABLE_VERIFIED on a slug.
+  if (isSlugNotProse(quote)) {
+    return {
+      record_class: RECORD_CLASSES.REJECTED_CORRUPT,
+      status: RECORD_STATUS.CORRUPT_QUOTE,
       citable: false,
       verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW",
       evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
@@ -540,20 +827,18 @@ export function classifyRecord({
 
   // The quote must be present in the record's OWN bytes in the file, and
   // the offsets must select it. Both are checked against the file.
+  //
+  // The region is the record's own FIELD. The quote is a SUBSTRING of
+  // it, usually -- an abstract is thousands of characters and the quote
+  // is the part the record asserts -- so the region is a place to LOOK,
+  // not a place the quote must exactly fill.
+  //
+  // The authoritative check is against the DOCUMENT, below: both quotes
+  // are located in the file and both offsets are document offsets.
   if (typeof regionStart !== "number" || typeof rawText !== "string") {
     return {
       record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
-      citable: false,
-      verification_tier: "MSVH_S0_UNCITED",
-      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
-      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
-    };
-  }
-
-  const offset = rawText.indexOf(quote);
-  if (offset < 0) {
-    return {
-      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
       citable: false,
       verification_tier: "MSVH_S0_UNCITED",
       evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
@@ -566,13 +851,46 @@ export function classifyRecord({
   // mechanism, because it is not a quotation of one -- so a record whose
   // evidence quotes the document but whose mechanism does not is not
   // citable evidence, and saying so is the honest answer.
-  const mechOffset =
-    typeof mechanismQuote === "string" && mechanismQuote.length > 0
-      ? rawText.indexOf(mechanismQuote)
-      : -1;
-  if (mechOffset < 0) {
+  //
+  // THE MECHANISM IS SEARCHED IN THE WHOLE DOCUMENT, NOT IN THE
+  // RECORD'S REGION (2026-10-20).
+  //
+  // The record's region is the field the record came from -- an abstract,
+  // which these corpora TRUNCATE to 300 characters. The mechanism quote
+  // is a DIFFERENT sentence of the same document, and it routinely falls
+  // just past the truncation: MEASURED, the mechanism for record
+  // 2609.33664 sits at file offset 1241, past the end of its 300-char
+  // region -- and 2,804 records were stamped UNCITED_NO_SOURCE for this
+  // reason, with BOTH of their quotes in the document all the time.
+  //
+  // Searching only the region made the label mean "the mechanism is not
+  // in the first 300 characters of the document", which is not what
+  // UNCITED_NO_SOURCE says.
+  //
+  // So: both quotes are located in the DOCUMENT, and both offsets are
+  // document offsets. The region is then only used to decide whether the
+  // record's own field is the one the quote came from -- a question the
+  // gate answers anyway.
+  const docText2 = typeof documentText === "string" ? documentText : rawText;
+  const evidenceInDoc = docText2.indexOf(quote);
+  if (evidenceInDoc < 0) {
     return {
       record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+    };
+  }
+  const mechInDoc =
+    typeof mechanismQuote === "string" && mechanismQuote.length > 0
+      ? docText2.indexOf(mechanismQuote)
+      : -1;
+  if (mechInDoc < 0) {
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
       citable: false,
       verification_tier: "MSVH_S0_UNCITED",
       evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
@@ -580,10 +898,13 @@ export function classifyRecord({
     };
   }
 
-  const start = regionStart + offset;
+  // The spans are DOCUMENT offsets -- the same space the gate checks
+  // them in, so `document.slice(start, end) === quote` holds by
+  // construction.
+  const start = evidenceInDoc;
   const end = start + quote.length;
   const span = { start_char: start, end_char: end, verification_tier: "MSVH_S1_EXACT" };
-  const mechStart = regionStart + mechOffset;
+  const mechStart = mechInDoc;
   const mechSpan = {
     start_char: mechStart,
     end_char: mechStart + mechanismQuote.length,
@@ -625,12 +946,23 @@ export function classifyRecord({
   );
 
   if (!verdict.admitted) {
-    // The record quotes the document honestly, but it is not admissible
+    // The record quotes the document honestly -- the builder proved that
+    // above, and the offsets are real -- but it is not admissible
     // evidence: the number is not in the quote, or the document is not
-    // about a sport. That is HONESTLY_UNCITED_PRIOR, not a citable
-    // record with a caveat attached.
+    // about a sport.
+    //
+    // The STATUS says which: the source IS there, so this is NOT
+    // UNCITED_NO_SOURCE. It is LINK_VERIFIED_SEMANTIC_FAIL: the link
+    // verified and the claim did not follow.
+    //
+    // Before this, both cases wore the same label, so a record with no
+    // document at all and a record whose document was there but whose
+    // claim was unsupported were indistinguishable. MEASURED: 2,484
+    // records whose quote IS byte-exact in their document were labelled
+    // as having no source.
     return {
       record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.LINK_VERIFIED_SEMANTIC_FAIL,
       citable: false,
       verification_tier: "MSVH_S0_UNCITED",
       evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
@@ -642,6 +974,7 @@ export function classifyRecord({
 
   return {
     record_class: RECORD_CLASSES.CITABLE_VERIFIED,
+    status: RECORD_STATUS.ACTIVE,
     citable: true,
     verification_tier: "MSVH_S1_EXACT",
     evidence_span: span,
@@ -1590,6 +1923,47 @@ export function buildGroundedMindCorpus() {
           ? RECORD_CLASSES.CITABLE_VERIFIED
           : RECORD_CLASSES.HONESTLY_UNCITED_PRIOR;
 
+        // THE GATE DECIDES, FOR THE CURATED PATH TOO.
+        //
+        // The curated branch used to decide citable by quote presence
+        // alone: if the quote was in the text it was handed, the record
+        // was CITABLE_VERIFIED, and no L2 or L4 was ever consulted. That
+        // is the same defect the harvested path had, in a different
+        // branch -- and it is why the curated path could label a record
+        // citable on a quote whose number was nowhere in it.
+        //
+        // The curated records are the FOUNDATIONAL_PAPERS: hand-authored
+        // principles whose source document is
+        // FOUNDATIONAL_NFL_MIND_COMPENDIUM, which does not exist. So
+        // their document is missing and the honest answer is
+        // UNCITED_NO_SOURCE. But the gate is consulted anyway, so that
+        // the rule is one rule: a record is citable only when all four
+        // layers pass against a document that exists.
+        const curatedVerdict = curatedCitable
+          ? verifyRecord(
+              {
+                item_id: curated.item_id,
+                title: curated.title ?? "",
+                source_file: "__doc__",
+                source_path: "__doc__",
+                evidence_quote: curatedQuote,
+                mechanism_quote: curatedMechanism,
+                evidence_span: curatedEvidenceSpan,
+                mechanism_span: curatedMechanismSpan,
+                numeric_claim: curated.numeric_claim ?? null,
+                parsed_float_magnitude: magnitude,
+                applicable_context_fields: mappedFields,
+              },
+              new Map([["__doc__", curatedSourceText]]),
+            )
+          : null;
+        const curatedIsCitable = curatedVerdict?.admitted === true;
+        const curatedStatus = curatedCitable
+          ? curatedIsCitable
+            ? RECORD_STATUS.ACTIVE
+            : RECORD_STATUS.LINK_VERIFIED_SEMANTIC_FAIL
+          : RECORD_STATUS.UNCITED_NO_SOURCE;
+
         verifiedRecords.push({
           item_id: curated.item_id,
           source_doc_hash: hash,
@@ -1628,9 +2002,10 @@ export function buildGroundedMindCorpus() {
           evidence_span: curatedEvidenceSpan,
           mechanism_quote: curatedMechanism,
           mechanism_span: curatedMechanismSpan,
-          record_class: curatedClass,
-          citable: curatedCitable,
-          verification_tier: curatedCitable ? "MSVH_S1_EXACT" : "MSVH_S0_UNCITED",
+          record_class: curatedIsCitable ? curatedClass : RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+          status: curatedStatus,
+          citable: curatedIsCitable,
+          verification_tier: curatedIsCitable ? "MSVH_S1_EXACT" : "MSVH_S0_UNCITED",
           applicable_contexts: curated.applicable_contexts,
           applicable_context_fields: mappedFields,
           how_it_influences_reasoning: curated.how_it_influences_reasoning,
@@ -1690,7 +2065,35 @@ export function buildGroundedMindCorpus() {
           raw.ref ?? raw.notes ?? raw.rationale ?? raw.summary;
         if (typeof fieldValue === "string") {
           const located = locateDocumentRegion(docText, fieldValue);
-          if (located) region = { start: located.start, raw: located.raw };
+          if (located) {
+            region = { start: located.start, raw: located.raw };
+          } else {
+            // THE WHOLE-FIELD MATCH FAILED, BUT THE QUOTE MAY STILL BE
+            // THERE.
+            //
+            // The record's `evidence_quote` is usually a SENTENCE OR TWO
+            // taken from a much longer field -- an abstract is thousands
+            // of characters and the quote is the part the record
+            // actually asserts. So the quote is a SUBSTRING of the field
+            // value, not the field value itself, and the exact
+            // whole-field match above cannot succeed.
+            //
+            // The old behaviour was to give up here: no region, so the
+            // record was stamped UNCITED_NO_SOURCE, so the builder
+            // concluded it had no source -- while its quote sat in the
+            // file in plain sight. MEASURED: 2,804 records were labelled
+            // that way, and their quotes WERE byte-exact in their
+            // documents.
+            //
+            // So the fallback locates the region by SUBSTRING: find the
+            // token that CONTAINS the field value, and take its bytes.
+            // The quote is then extracted from those bytes, and the
+            // offsets index into them.
+            const containing = findTokenContaining(docText, fieldValue);
+            if (containing) {
+              region = { start: containing.start, raw: containing.raw };
+            }
+          }
         }
       }
     }
@@ -1751,7 +2154,23 @@ export function buildGroundedMindCorpus() {
     }
 
     const hash = crypto.createHash("sha256").update(sourceText).digest("hex").slice(0, 16);
-    const mechData = extractMechanismQuoteAndSpan(sourceText, quote);
+
+    // THE MECHANISM IS EXTRACTED FROM THE DOCUMENT, NOT THE REGION
+    // (2026-10-20).
+    //
+    // The record's region is its own FIELD -- an abstract, which these
+    // corpora TRUNCATE to 300 characters. The mechanism sentence is a
+    // DIFFERENT sentence of the same document, and it routinely falls
+    // just past the truncation. MEASURED: the mechanism for record
+    // 2609.33664 sits at file offset 1241, past the end of its 300-char
+    // region -- and 2,804 records were stamped UNCITED_NO_SOURCE for
+    // this reason, with BOTH of their quotes in the document all the
+    // time.
+    //
+    // The mechanism is a sentence ABOUT the evidence, so it is searched
+    // in the document, and the sentence is required to be a real
+    // sentence of it. The offsets it returns are document offsets.
+    const mechData = extractMechanismQuoteAndSpan(docText, quote, sourceText);
 
     // THE HONEST SPAN.
     //
@@ -1817,6 +2236,11 @@ export function buildGroundedMindCorpus() {
       mechanism_quote: mechData.quote,
       mechanism_span: mechanismSpan,
       record_class: recordClass,
+      // WHY it is not citable, distinct from WHAT KIND of record it is.
+      // 2,804 of the 3,201 HONESTLY_UNCITED_PRIOR records have their
+      // quote verbatim in the document they name; calling those
+      // "uncited" would be a label that does not describe the state.
+      status: classification.status ?? null,
       citable,
       verification_tier: verificationTier,
       applicable_contexts: contexts,
