@@ -1,16 +1,14 @@
-"""Score-driven rating update as printed in Holý and Černý, arXiv:2604.09143 eq (6).
-
-r_{t+1}^{(i)} = r_t^{(i)} + K * ∇_i(r_t; y_t).
-Missing inputs or math failure -> null.
-Does not score, mint, or write mind.jsonl.
-"""
-from __future__ import annotations
-
-
-def score_driven_rating_update(r: float | None, score: float | None, k: float | None) -> float | None:
-    if r is None or score is None or k is None:
-        return None
+def score_driven_rating_update(rating, score, K=16.0):
+    """Guarded score-driven rating update from Holý & Černý arXiv:2604.09143.
+    Printed eq (6): r_{t+1}^{(i)} = r_t^{(i)} + K \nabla_i(r_t; y_t)
+    Fail-closed: returns None on invalid input.
+    """
     try:
-        return float(r) + float(k) * float(score)
-    except (ValueError, OverflowError, TypeError):
+        r = float(rating)
+        s = float(score)
+        k = float(K)
+        if k <= 0.0 or not all(abs(x) < 1e9 for x in (r, s, k)):
+            return None
+        return r + k * s
+    except (TypeError, ValueError):
         return None
