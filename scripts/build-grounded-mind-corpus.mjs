@@ -29,6 +29,7 @@ import * as path from "node:path";
 import * as crypto from "node:crypto";
 import { register } from "node:module";
 import { pathToFileURL, fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 // ONE DEFINITION OF "CITABLE".
 //
@@ -2278,6 +2279,59 @@ export function buildGroundedMindCorpus() {
   fs.writeFileSync(PKG_OUTPUT, jsonlLines, "utf8");
   console.log(`Grounded mind artifact written to: ${TARGET_OUTPUT}`);
   console.log(`Grounded mind artifact written to: ${PKG_OUTPUT}`);
+
+  // ====================================================================
+  // THE RE-ANCHORING PASS RUNS AS PART OF THE BUILD.
+  //
+  // The builder alone produces 1,019 CITABLE_VERIFIED records. The
+  // re-anchoring pass finds 79 more whose quotes are in the paper
+  // corpus after all, in a document that carries them as prose, and
+  // repairs their spans there -- 1,098 in total.
+  //
+  // This used to be a SEPARATE step, with the re-anchored corpus
+  // written to a DIFFERENT file that had to be copied into place by
+  // hand. That is a trap: running the builder -- the obvious thing to
+  // do to "regenerate the corpus" -- silently REGRESSES the corpus
+  // from 1,098 to 1,019 and the regression is invisible, because the
+  // file still has 5,303 records and the class labels still look
+  // right. It was caught only by running the builder as part of a
+  // verification sweep.
+  //
+  // So the build now ENDS with the re-anchoring pass, and the
+  // re-anchored corpus is what lands in both output paths. A builder
+  // run can no longer produce a worse corpus than the one it
+  // replaced.
+  //
+  // The pass is invoked as a child process rather than imported: it
+  // is a standalone script with its own reporting, and running it
+  // that way keeps its output in the build log verbatim, which is
+  // where a reader will look for it.
+  // ====================================================================
+  console.log("\n========================================================================");
+  console.log("            RE-ANCHORING PASS (over docs/research/2026-09-21)          ");
+  console.log("========================================================================");
+  try {
+    execFileSync(
+      process.execPath,
+      [path.join("scripts", "reanchor-mind-corpus.mjs")],
+      { stdio: "inherit" },
+    );
+  } catch (e) {
+    throw new Error(
+      `The re-anchoring pass failed (${e.message}). The corpus was NOT promoted: ` +
+        `the un-re-anchored file would be worse than the one it replaces.`,
+    );
+  }
+  // The re-anchoring pass writes to its own path. Promote it, so the
+  // two output paths always hold the RE-ANCHORED corpus.
+  const reanchoredPath = "packages/prediction-engine/data/MIND_CORPUS_3000.reanchored.jsonl";
+  if (fs.existsSync(reanchoredPath)) {
+    const promoted = fs.readFileSync(reanchoredPath, "utf8");
+    fs.writeFileSync(TARGET_OUTPUT, promoted, "utf8");
+    fs.writeFileSync(PKG_OUTPUT, promoted, "utf8");
+    const n = promoted.split("\n").filter((l) => l.trim()).length;
+    console.log(`\nRe-anchored corpus promoted to both output paths (${n} records).`);
+  }
 
   // 50-Row Deterministic Quality Sample Verification Audit
   console.log("\n========================================================================");
