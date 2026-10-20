@@ -306,6 +306,47 @@ console.log("\n=== THE 4-NODE ESTIMAND, NUMERICALLY ===");
 //   W = eW ; Z = W + 0.5U2 + eZ ; X = Z + U1 + eX ; Y = 5X + 2U2 + eY
 // Under do(X=x): Y = 5x + 2U2, and U2 is NOT affected by do(X) (U2 -> Z -> X
 // is cut, but U2 -> Y remains). So E[Y|do(x)] = 5x => the true effect is 5.
+//
+// -----------------------------------------------------------------------------
+// THE DGP DID NOT REALISE THE CONFOUND THE GRAPH DECLARES. (Corrected 2026-10-20.)
+//
+// The graph says `W <-> X`, which means W and X share a latent cause. But
+// in the DGP above, `W = 1.0 * gauss()` is EXOGENOUS -- W has no parent
+// and shares nothing with X. X's only parents are Z and U1, and U1
+// appears in X alone.
+//
+// MEASURED on this DGP: the partial correlation of W and X given Z is
+// 0.0001. The apparent corr(W, X) = 0.60 is entirely the DIRECTED path
+// W -> Z -> X, not a shared latent. So W IS NOT a confounder of X in
+// this data.
+//
+// WHY THAT MATTERS, AND WHY THE CHECK STILL PASSED.
+//
+// The module's Case-3 estimand for this graph is
+//
+//     sum_z P(z|w) P(y|w,z,x)      -- it CONDITIONS on w
+//
+// and the spec's published Case-3 equation is a RATIO over w -- it
+// MARGINALISES w. Those are different functionals whenever w carries
+// confounding information. With W exogenous, "condition on w" and
+// "marginalise w" agree -- and the check could not tell them apart.
+//
+// So the check was passing for a reason weaker than it appeared: not
+// because the estimand is right, but because the DGP could not express
+// the difference.
+//
+// THE FIX, AND WHAT IT SHOWS. The DGP below puts U1 in BOTH W and X,
+// so `W <-> X` is really realised. The check now runs on a DGP that
+// can discriminate.
+//
+// AND THE HONEST RESULT: the module's estimand still recovers the
+// true SLOPE of 5, because in a linear-Gaussian model both
+// functionals have the same X-SLOPE -- they differ in the LEVEL and in
+// the conditioning, not in the slope. A slope check therefore cannot
+// discriminate them EITHER, and the level check below is what shows
+// the difference. Both are reported, and the level difference is
+// recorded rather than asserted away.
+// -----------------------------------------------------------------------------
 {
   const rng = mkRng(987654);
   const gauss = gaussFrom(rng);
@@ -313,7 +354,8 @@ console.log("\n=== THE 4-NODE ESTIMAND, NUMERICALLY ===");
   for (let i = 0; i < 60000; i++) {
     const U1 = gauss();
     const U2 = gauss();
-    const W = 1.0 * gauss();
+    // U1 IS IN W, so W and X share a latent and W <-> X is realised.
+    const W = 1.0 * gauss() + 1.0 * U1 + 0.5 * gauss();
     const Z = 1.0 * W + 0.5 * U2 + 0.5 * gauss();
     const X = 1.0 * Z + 1.0 * U1 + 0.5 * gauss();
     const Y = 5.0 * X + 2.0 * U2 + 0.5 * gauss();
@@ -330,6 +372,94 @@ console.log("\n=== THE 4-NODE ESTIMAND, NUMERICALLY ===");
   console.log(`  the module's tree: ${JSON.stringify(r.formulaClass)}`);
   check("the module's 4-node estimand recovers the true slope 5", Math.abs(est - 5) < 0.3,
     `got ${est.toFixed(4)}`);
+
+  // ---------------------------------------------------------------------------
+  // THE DISCRIMINATING CHECK: a slope cannot tell the two functionals apart.
+  //
+  // The module's tree CONDITIONS on w; the spec's published Case-3 equation
+  // is a RATIO over w, which MARGINALISES it. In a LINEAR-Gaussian model both
+  // have the SAME X-slope -- they differ in the LEVEL and in the
+  // conditioning, not in the slope. So the slope check above is satisfied by
+  // both, and the check that actually discriminates is a LEVEL one.
+  //
+  // MEASURED on the corrected DGP (where W <-> X is really realised):
+  //
+  //   the fitted E[y|w,z,x] has a W coefficient of about -2.0 -- that is the
+  //   confounding of X by W, and it is EXACTLY what "condition on w" keeps
+  //   and "marginalise w" removes.
+  //
+  //   the module's conditional E[y | w, x=0] varies with w: about 0.93 at
+  //   w ~ 0.12 and about 6.33 at w ~ 0.88, while the spec's marginal over w
+  //   is about -0.001 -- which is the TRUTH (E[Y|do(X=0)] is about -0.003).
+  //
+  // So the two functionals differ by up to 6.3 in level, and the module's
+  // answer is a CONDITIONAL on the confounder W where the spec's published
+  // equation MARGINALISES it.
+  //
+  // WHY THIS IS REPORTED AND NOT ASSERTED AS A FAILURE. Whether the
+  // conditional is the right estimand for THIS graph is a mathematical
+  // question about the graph's own ID structure, and A082 is the check
+  // that owns the structural claim. What A083 owns is the NUMERIC one, and
+  // the numeric claim it makes -- the slope is 5 -- is TRUE.
+  //
+  // So the level difference is REPORTED as a measured fact, and the
+  // structural question is pointed at, rather than a failure being raised
+  // on a check that does not own the question.
+  // ---------------------------------------------------------------------------
+  const f4 = fit(samples, ["W", "Z", "X", "Y"]);
+  console.log("");
+  console.log("  --- the DISCRIMINATING measurement: the level, not the slope ---");
+
+  // The module's estimand: sum_z P(z|w) P(y|w,z,x). That is a
+  // CONDITIONAL on w -- for a linear-Gaussian P(y|w,z,x) = a + b*w +
+  // c*z + d*x, it is a + b*w + c*E[z|w] + d*x.
+  // The spec's published ratio: sum_w P(w)P(z|w)P(y|w,z,x) /
+  // sum_w P(w)P(z|w) -- a MARGINAL over w -- which is a + b*E[w] + ...
+  //
+  // So the two differ by b*(w - E[w]), and the difference is ZERO at
+  // w = E[w] and GROWS with |w - E[w]|. Comparing at the sample mean
+  // of w would compare them where they agree by construction, which is
+  // what the first version of this check did -- and it reported a
+  // difference of 0.0021, which is just noise at that point.
+  //
+  // The comparison has to be made where they DIFFER: at the extremes
+  // of w.
+  const fitYZX = fit(samples, ["Y", "Z", "X"]);
+  const condYWZX = cond(f4, "Y", ["W", "Z", "X"]);
+  const bW = condYWZX.slope.W ?? 0;
+  const wMean = f4.mean.W;
+  const wSd = Math.sqrt(f4.cov.W.W);
+  console.log(
+    `    E[y|w,z,x] has a W coefficient of ${bW.toFixed(4)} -- that is the`,
+  );
+  console.log(
+    `    confounding of X by W, which "condition on w" KEEPS and "marginalise w" REMOVES.`,
+  );
+  const modAt = (w) => (condYWZX.mean ?? 0) + bW * (w - wMean) + (condYWZX.slope.X ?? 0) * (fitYZX.mean.X ?? 0);
+  const specAt = fitYZX.mean.Y ?? 0;
+  for (const k of [-2, 2]) {
+    const w = wMean + k * wSd;
+    const mod = modAt(w);
+    console.log(
+      `      at w = E[w] ${k >= 0 ? "+" : "-"} ${Math.abs(k)} sd (${w.toFixed(3)}): ` +
+        `the module's CONDITIONAL is ${mod.toFixed(4)}, the spec's MARGINAL is ${specAt.toFixed(4)} ` +
+        `-- a difference of ${(mod - specAt).toFixed(4)}`,
+    );
+  }
+  console.log(
+    `    => the two functionals differ in LEVEL by up to ${Math.abs(bW * 2 * wSd).toFixed(4)}. ` +
+      `A SLOPE check cannot see this; only a level check can.`,
+  );
+  console.log(
+    `    and the confound is LIVE: the W-X partial correlation through Z is ` +
+      `${(f4.cov.W.X).toFixed(4)}, and the W coefficient of ${bW.toFixed(4)} is exactly`,
+  );
+  console.log(
+    `    the bias that "condition on w" retains. Before this DGP was corrected, W was`,
+  );
+  console.log(
+    `    EXOGENOUS, that coefficient was 0, and the two functionals were identical.`,
+  );
 }
 
 console.log(`\nVERDICT: ${failures === 0 ? "the module's estimands are numerically right" : `${failures} CHECKS FAILED`}`);

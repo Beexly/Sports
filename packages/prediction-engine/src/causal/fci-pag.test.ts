@@ -273,13 +273,41 @@ describe("fci orientation rules", () => {
     expect(markOf(unknown, 2, 1)).toBe("circle");
   });
 
-  it("prevents R8 from missing the arrowhead after a directed step (A -> B o-* C)", () => {
+  it("prevents R8 from missing the arrowhead after a directed step (A -> B o-> C)", () => {
+    // The b-c edge is `b o-> c`: circle at b, ARROWHEAD at c. Then c is
+    // a sink of the b-c relation, so c is a descendant of a and the
+    // arrowhead at c is forced.
     const out = orientPag(3, [
       E(0, 1, "tail", "arrowhead"),
-      E(1, 2, "circle", "circle"),
+      E(1, 2, "circle", "arrowhead"),
       E(0, 2, "circle", "circle"),
     ]);
     expect(markOf(out, 2, 0)).toBe("arrowhead");
+  });
+
+  it("prevents R8 from ORIENTING AGAINST A RULE (A -> B o-- C)", () => {
+    // THE UNSOUNDNESS, PINNED.
+    //
+    // The b-c edge is `b o-- c`: circle at b, TAIL at c. That is
+    // consistent with `c -> b`, and under `c -> b` the point c is NOT a
+    // descendant of a -- so no arrowhead at c is forced.
+    //
+    // The MAG 2 -> 0, 0 -> 1, 2 -> 1 is consistent with this input: it
+    // puts a TAIL at 2 on the 0-2 edge, not an arrowhead. So writing an
+    // arrowhead at 2 orients against a rule.
+    //
+    // The rule as it stood checked only the circle at b and wrote the
+    // arrowhead anyway. MEASURED before the fix: the arrowhead WAS
+    // written. With the guard (the mark at c must be an arrowhead) it
+    // is not, and the circle stays.
+    const out = orientPag(3, [
+      E(0, 1, "tail", "arrowhead"),
+      E(1, 2, "circle", "tail"),
+      E(0, 2, "circle", "circle"),
+    ]);
+    expect(markOf(out, 2, 0)).toBe("circle");
+    // And the 0-1 edge is untouched.
+    expect(markOf(out, 1, 0)).toBe("arrowhead");
   });
 
   it("prevents an ancestral completion that would create a directed cycle", () => {

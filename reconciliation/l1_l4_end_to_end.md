@@ -1785,3 +1785,161 @@ correct: the extra row was the `test:class_a:citable` fixture, and
 L1–L4 gate confirms. **The number that was quoted before this change
 was wrong**, and the reason it was wrong is now removed rather than
 documented.
+
+## The FCI module had a soundness bug, and A083's DGP could not see
+## the Case-3 question it was checking.
+
+Three delegated workers audited the frontier modules. Two findings
+were real bugs; the rest was documented capability gaps.
+
+### Bug 1 — R8 oriented AGAINST a rule.
+
+`fci-pag.ts`'s `ruleR8` had a `bCircleC` branch that fired on
+`markAt(g, b, c) === "circle"` alone — a circle at **b** — and wrote
+an arrowhead at **c** on the a-c edge.
+
+That is not enough. `b o-* c` is consistent with `c -> b` as well as
+`b -> c`, and under `c -> b` the point c is **not** a descendant of a,
+so no arrowhead at c is forced.
+
+MEASURED, on the input `0 -> 1`, `1 o-- 2`, `0 o-o 2`:
+
+    before:  0 circle--ARROWHEAD 2     <- oriented against a rule
+    after:   0 circle--circle 2        <- no orientation
+
+The MAG `2 -> 0, 0 -> 1, 2 -> 1` is consistent with that input — it
+puts a **tail** at 2 on the 0-2 edge, not an arrowhead — so the
+orientation was not forced. And the module's own header claims *"It
+never orients against a rule"*. That claim was **false**, and it was
+false in exactly the way the audit hunts: a rule that reads as
+guaranteed soundness while breaking soundness.
+
+**The fix:** the branch now requires the mark at **c** on the b-c edge
+to be an **arrowhead** — i.e. `b o-> c`. Then c is a sink of the b-c
+relation (whether `b -> c` or `b <-> c`), so c **is** a descendant of
+a, and the arrowhead at c is forced. That is Zhang's R2 second
+disjunct, not a new rule. With a circle at c the branch leaves the
+mark alone — it fails to orient, which is the safe direction.
+
+**And the test that pinned the unsound behaviour was corrected, not
+weakened.** The old test asserted the arrowhead appeared on
+`E(1, 2, "circle", "circle")`. It now asserts the sound case
+(`"circle","arrowhead"`) orients, and a **new** test pins the
+unsound case (`"circle","tail"`) NOT orienting.
+
+### Bug 2 — A083's DGP did not realise the confound it was checking.
+
+A083 verifies that the 4-node estimand recovers the true slope 5, on
+the FOUR graph `W -> Z -> X -> Y` with `W <-> X` and `Z <-> Y`.
+
+**Its DGP made W exogenous:** `W = 1.0 * gauss()`. A bidirected arc
+`W <-> X` means W and X share a latent cause — but W had no parent
+and shared nothing with X. X's only parents were Z and U1, and U1
+appeared in X alone.
+
+MEASURED on A083's own DGP:
+
+    corr(W, X)              = 0.6004
+    partial corr(W, X | Z)  = 0.0001     <- no shared latent
+
+The apparent correlation was entirely the **directed** path
+`W -> Z -> X`. So the confound the graph declares was **not live** in
+the data the check ran on.
+
+**Why that mattered.** The module's Case-3 estimand for this graph is
+
+    sum_z P(z|w) P(y|w,z,x)      -- CONDITIONS on w
+
+and the spec's published Case-3 equation is a **ratio over w** — it
+**marginalises** w. Those are different functionals whenever w
+carries confounding information. With W exogenous they are *identical*,
+so the check could not tell them apart. It was passing for a weaker
+reason than it appeared.
+
+**The DGP is fixed** (U1 is now in both W and X) and the confound is
+live: the W coefficient of `E[y|w,z,x]` is **−1.99**, and the
+W-X partial correlation is 3.21. The slope check still passes
+(**5.0029**) — because in a linear-Gaussian model both functionals
+have the same X-slope.
+
+**So a slope check cannot discriminate them either.** The
+discriminating measurement is a **level** one, and it is now in
+A083:
+
+    at w = E[w] - 2 sd:  the module's CONDITIONAL is  5.9576, the spec's MARGINAL is 0.0248  (difference 5.93)
+    at w = E[w] + 2 sd:  the module's CONDITIONAL is -5.9107, the spec's MARGINAL is 0.0248  (difference -5.94)
+
+The two functionals differ in level by **up to 5.93**. This is
+**reported, not asserted as a failure**, because whether the
+conditional is the right estimand for this graph is a *structural*
+question that A082 owns — and A082's own comment quotes the spec's
+ratio, then asserts only that the tree "marginalises Z with P(Z|W)",
+**never checking for the ratio**. The gap between the comment and
+its assertion is the same defect class as everything else in this
+audit: a passage that reads like a check without being one.
+
+### Two documentation defects, fixed.
+
+**The 1803 module's scope claim.** `1803-01422v2-notears-dag.ts`
+quotes the research ledger verbatim, and the quoted text claims
+"DYNOTEARS dynamic extension learning contemporaneous W plus lagged A
+jointly ... plus NOTEARS-MLP for nonlinear edges". The module
+exports `notearsFit` — a single contemporaneous W, no lags, no MLP.
+The ledger text was **marked** as a quotation but nothing said which
+part of it was implemented, so a reader would take it for a
+description of the file. It now says plainly: contemporaneous NOTEARS
+only, the lagged matrices and the MLP **do not exist anywhere in the
+repository**, and the four tests in its test file exercise only the
+contemporaneous primitives — which is why the gap survived.
+
+**A citation that pointed at the wrong paper.** `fci-pag.ts` cited
+Zhang 2008 as *"JMLR 9:2081-2108"*, "On the completeness of
+orientation rules for constructing partial ancestral graphs". The
+paper is:
+
+    Zhang, J. (2008). "On the completeness of orientation rules for
+    causal discovery in the presence of latent confounders and
+    selection bias." Artificial Intelligence 172(16-17):1873-1896.
+    doi:10.1016/j.artint.2008.08.001
+
+(Verified against the publisher's page.) JMLR 9:1437-1474 is Zhang's
+**other** 2008 paper, "Causal Reasoning with Ancestral Graphs" — a
+different paper, in a different venue. The rules themselves were
+implemented from the right source, so the code was unaffected. A
+citation that points at the wrong paper is the literature-side
+version of the defect this audit hunts: a reference that reads as
+provenance without being checkable.
+
+### The capability gaps, restated with the subagent's R0–R10 table.
+
+    R0 unshielded collider ............. IMPLEMENTED
+    R1 avoid new colliders ............. IMPLEMENTED
+    R2 orient chain colliders .......... PARTIAL -- the circle is required
+                                         at the NEAR end; Zhang wants it
+                                         at the far end
+    R3 discriminating path ............. IMPLEMENTED (with a documented
+                                         notation caveat)
+    R4 discriminating path ............. IMPLEMENTED
+    R5 uncovered circle path ........... NOT IMPLEMENTED
+    R6 single-tail propagation ......... NOT IMPLEMENTED
+    R7 uncovered non-collider tail ..... NOT IMPLEMENTED
+    R8 transitive tail completion ...... PARTIAL -- the first disjunct
+                                         only; Zhang's second is absent
+    R9 uncovered p.d. path ............. NOT IMPLEMENTED (replaced by a
+                                         strictly weaker `completeAncestral`)
+    R10 two-path collider tail ........ NOT IMPLEMENTED
+
+**R5, R6, R7, R9, R10 have NO test at all.** The only R8 test pinned
+the non-Zhang branch — which is the branch I have just corrected, so
+that test was pinning the unsound behaviour and is now corrected too.
+
+**The incompleteness is CUMULATIVE, not additive.** R6 is the only
+rule that turns an `o-*` edge into a `—*` edge, so with R5–R7 absent
+nothing produces the `—` edges that R7 and R8's second disjunct
+consume. The fixpoint therefore converges to a correct but
+**under-oriented** PAG.
+
+**And the header was honest about all of this** — it says R5–R7 are
+not implemented and that the output "may be less oriented than the
+true one". The one claim it did NOT earn was "It never orients
+against a rule", and that is the one that was false.

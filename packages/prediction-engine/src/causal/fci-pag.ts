@@ -7,13 +7,24 @@
  *
  * MECHANISM:
  *  - FCI (Spirtes, Meek & Richardson 1995; Zhang 2008, "On the completeness of orientation
- *    rules for constructing partial ancestral graphs", JMLR 9:2081-2108): PC skeleton with
+ *    rules for causal discovery in the presence of latent confounders and selection bias",
+ *    Artificial Intelligence 172(16-17):1873-1896, doi:10.1016/j.artint.2008.08.001):
+ *    PC skeleton with
  *    Fisher-z conditional-independence tests, Possible-D-Sep re-testing, collider orientation
  *    (R0), then Zhang's orientation rules to a fixpoint. The output is a PAG whose marks
  *    (tail / arrowhead / circle) state exactly what the data can and cannot identify when
  *    latent confounders may exist. A circle means "arrowhead or tail": unresolved.
  *  - PAG -> ADMG projection: the maximally-confounded representative (mark rule below), so the
  *    existing Shpitser-Pearl ID can consume it.
+ *    (CITATION CORRECTED 2026-10-20. The header previously read "JMLR 9:2081-2108" and
+ *    truncated the title to "...for constructing partial ancestral graphs". The paper is
+ *    in ARTIFICIAL INTELLIGENCE 172(16-17):1873-1896, and its title is "...for causal
+ *    discovery in the presence of latent confounders and selection bias". JMLR 9:1437-1474
+ *    is Zhang's OTHER 2008 paper, "Causal Reasoning with Ancestral Graphs" -- a different
+ *    paper, in a different venue, with different content. A citation that points at the
+ *    wrong paper is the literature-side version of the defect this audit hunts: a
+ *    reference that reads as provenance without being checkable. The rules themselves
+ *    were implemented from the right source, so the code is unaffected.)
  *  - DYNOTEARS contemporaneous W: scale-invariant non-equal-variance Gaussian likelihood
  *    + L1 + augmented Lagrangian on h(W) = tr(exp(W o W)) - d, optionally restricted to the
  *    FCI-admissible support.
@@ -836,7 +847,37 @@ function ruleR8(g: EdgeMap): boolean {
           const aToB = markAt(g, a, b) === "tail" && markAt(g, b, a) === "arrowhead";
           if (!aToB) continue;
           const bToC = markAt(g, b, c) === "tail" && markAt(g, c, b) === "arrowhead";
-          const bCircleC = markAt(g, b, c) === "circle";
+          // THE `b o-> c` DISJUNCT, AND THE GUARD THAT MAKES IT SOUND.
+          //
+          // `markAt(g, b, c) === "circle"` says the b-c edge is `b o-* c` --
+          // circle at b. That ALONE is not enough to conclude anything
+          // about the a-c edge, because `b o-* c` is consistent with
+          // `c -> b` as well as `b -> c`, and under `c -> b` the point c
+          // is NOT a descendant of a, so no arrowhead at c is forced.
+          //
+          // MEASURED 2026-10-20. The branch as it stood checked only the
+          // circle at b, and on the input
+          //
+          //     0 -> 1,  1 o-- 2,  0 o-o 2
+          //
+          // it wrote an arrowhead at 2 on the 0-2 edge. But the MAG
+          //
+          //     2 -> 0,  0 -> 1,  2 -> 1
+          //
+          // is CONSISTENT with that input -- 2->0 puts a tail at 2 on the
+          // 0-2 edge, not an arrowhead -- so the arrowhead was NOT forced.
+          // The module's own header says "It never orients against a
+          // rule", and this branch was orienting against one.
+          //
+          // THE FIX: require the mark at C on the b-c edge to be an
+          // ARROWHEAD, i.e. `b o-> c`. Then c is a sink of the b-c
+          // relation -- whether b -> c or b <-> c -- so c IS a descendant
+          // of a, and the arrowhead at c is forced. That is Zhang's R2
+          // second disjunct (`A *-> B -> C`), not a new rule.
+          //
+          // With a CIRCLE at c the branch is left alone: it fails to
+          // orient, which is the safe direction.
+          const bCircleC = markAt(g, b, c) === "circle" && markAt(g, c, b) === "arrowhead";
           if (bToC || bCircleC) {
             if (setMark(g, c, a, "arrowhead")) changed = true;
           }
