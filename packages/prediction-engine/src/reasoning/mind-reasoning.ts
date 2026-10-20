@@ -20,8 +20,14 @@ export interface MindRecord {
   readonly source: string;
   readonly title: string;
   readonly principle_or_feature: string;
+  /** Corpus schema (MIND_CORPUS_3000.jsonl): canonical principle name. Legacy rows omit it. */
+  readonly principle_name?: string;
   readonly domain?: string;
-  readonly numeric_claim?: {
+  /** Corpus schema: truncated sha256 of the source document. Legacy rows omit it. */
+  readonly source_doc_hash?: string;
+  readonly claim_type?: ClaimType;
+  /** Corpus rows carry the object form; some producers (scripts, battery scenarios) pass a serialized string. */
+  readonly numeric_claim?: string | {
     readonly value: number;
     readonly unit: string;
     readonly metric: string;
@@ -34,8 +40,23 @@ export interface MindRecord {
     readonly beta?: number;
     readonly [key: string]: unknown;
   } | null;
+  /** Corpus schema: absolute parsed magnitude of the numeric claim (already unit-scaled by the producer). */
+  readonly parsed_float_magnitude?: number;
+  /** Corpus schema: denominator used to scale parsed_float_magnitude into probability space. */
+  readonly unit_scale_denominator?: number;
   readonly evidence_quote: string;
+  readonly evidence_span?: CharacterSpan;
+  readonly mechanism_quote?: string;
+  readonly mechanism_span?: CharacterSpan;
   readonly applicable_contexts: readonly string[];
+  /** Corpus schema: 16-primitive context fields. Legacy rows carry only applicable_contexts. */
+  readonly applicable_context_fields?: readonly ContextFieldEnum[];
+  readonly influence_direction?: InfluenceDirection;
+  readonly conditional_threshold?: string | null;
+  readonly parsed_threshold_value?: number | null;
+  readonly parsed_threshold_operator?: ">" | ">=" | "<" | "<=" | null;
+  /** Corpus schema: prose description of the influence; legacy rows carry only how_it_influences_reasoning. */
+  readonly influence_description?: string;
   readonly how_it_influences_reasoning: string;
   readonly source_file?: string;
 }
@@ -49,7 +70,8 @@ export interface MindPrincipleMatch {
   readonly numeric_claim?: {
     readonly value: number;
     readonly unit: string;
-    readonly metric: string;
+    /** Present when the underlying record carries a structured metric label; the string-serialized form does not. */
+    readonly metric?: string;
   } | null;
   readonly evidence_quote: string;
   readonly matchedContext: string;
@@ -477,13 +499,13 @@ export function mapGameContextToVector(ctx: GameContext): GameContextVector {
   let wind = isDome ? 0 : (ctx.windSpeedMph ?? 0);
   if (!isDome && ctx.windSpeedMph == null) {
     const wm = ctx.weather.match(/(\d+)\s*mph/i);
-    if (wm) wind = parseFloat(wm[1]);
+    if (wm && wm[1] != null) wind = parseFloat(wm[1]);
   }
 
   let temp = ctx.temperatureF ?? 70;
   if (ctx.temperatureF == null) {
     const tm = ctx.weather.match(/(\d+)\s*(?:°|deg)?\s*F/i);
-    if (tm) temp = parseFloat(tm[1]);
+    if (tm && tm[1] != null) temp = parseFloat(tm[1]);
   }
 
   const isLoud = /(dome|bowl|stadium|superdome|arrowhead|lumen|seattle|kansas city)/i.test(ctx.venue);
@@ -703,8 +725,8 @@ export function generateSituationalPick(
 
   let rationale = "";
   if (isConflictDeadband && topCitations.length >= 2) {
-    const p1 = topCitations[0];
-    const p2 = topCitations[1];
+    const p1 = topCitations[0]!;
+    const p2 = topCitations[1]!;
     rationale = [
       `The engine's mind evaluated ${matches.length} applicable literature principles.`,
       `Active scientific conflict deadband occurred on ${p1.matchedContext} (consensus ratio eta_c < 0.20):`,
@@ -768,12 +790,12 @@ export function generateSameGameParlay(
   let wind = isDome ? 0 : (ctx.windSpeedMph ?? 0);
   if (!isDome && ctx.windSpeedMph == null) {
     const wm = ctx.weather.match(/(\d+)\s*mph/i);
-    if (wm) wind = parseFloat(wm[1]);
+    if (wm && wm[1] != null) wind = parseFloat(wm[1]);
   }
   let temp = ctx.temperatureF ?? 70;
   if (ctx.temperatureF == null) {
     const tm = ctx.weather.match(/(\d+)\s*(?:°|deg)?\s*F/i);
-    if (tm) temp = parseFloat(tm[1]);
+    if (tm && tm[1] != null) temp = parseFloat(tm[1]);
   }
   const olDelta = ctx.olContinuityDelta ?? 0;
   const coachDelta = ctx.coachAggressivenessDelta ?? 0;
@@ -1322,8 +1344,8 @@ export function evaluateMindPrinciples(
         });
       }
 
-      const pos = activeList.find(a => a.rawDelta > 0)?.principle ?? activeList[0].principle;
-      const neg = activeList.find(a => a.rawDelta < 0)?.principle ?? activeList[1].principle;
+      const pos = activeList.find(a => a.rawDelta > 0)?.principle ?? activeList[0]!.principle;
+      const neg = activeList.find(a => a.rawDelta < 0)?.principle ?? activeList[1]!.principle;
 
       proseBlocks.push(
         `Conflicting literature evidence neutralized adjustments to ${field} (consensus ratio $\\eta_c = ${consensusRatio.toFixed(2)} < 0.20$): ` +

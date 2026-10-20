@@ -148,7 +148,7 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
 
     // Verify L3 character span invariants on audit records
     for (let i = 0; i < Math.min(20, res.audit_trail.length); i++) {
-      const rec = res.audit_trail[i];
+      const rec = res.audit_trail[i]!;
       assert.ok(rec.evidence_span.start_char >= 0, "evidence_span.start_char must be non-negative");
       assert.ok(rec.evidence_span.end_char >= rec.evidence_span.start_char, "evidence_span.end_char must be >= start_char");
       assert.equal(rec.evidence_span.verification_tier, "MSVH_S1_EXACT");
@@ -202,8 +202,8 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
     const disputedRes = evaluateMindPrinciples({ officiating_crew_penalty_rate: 15.0 }, disputedPrinciples);
     const neutralized = disputedRes.adjustments.filter(a => a.resolution_status === "CONFLICT_NEUTRALIZED");
     assert.ok(neutralized.length > 0, "Must trigger deadband conflict neutralization on disputed features");
-    assert.equal(neutralized[0].final_delta, 0.0, "Neutralized adjustment must yield exactly zero delta");
-    assert.ok(neutralized[0].consensus_ratio < 0.20, "Consensus ratio must fall below 0.20 deadband");
+    assert.equal(neutralized[0]!.final_delta, 0.0, "Neutralized adjustment must yield exactly zero delta");
+    assert.ok(neutralized[0]!.consensus_ratio < 0.20, "Consensus ratio must fall below 0.20 deadband");
     assert.ok(disputedRes.rendered_prose.includes("Conflicting literature evidence neutralized adjustments"), "Prose must include conflict frame");
   });
 
@@ -241,13 +241,13 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
     // 3. Elevated hazard (>= 1.40) yields strictly negative delta and theoretical weight when unconditioned
     const unconditionedRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.52 }, [gabbettAcwrPrinciple]);
     assert.ok(unconditionedRes.total_delta < 0, "Elevated ACWR (1.52) must yield negative hazard delta");
-    assert.equal(unconditionedRes.adjustments[0].final_delta, -0.10, "Delta must be clamped to -0.10 probability scale");
-    assert.equal(unconditionedRes.audit_trail[0].confidence_weight, 0.3, "Unconditioned ACWR must have weight reduced to theoretical 0.3");
+    assert.equal(unconditionedRes.adjustments[0]!.final_delta, -0.10, "Delta must be clamped to -0.10 probability scale");
+    assert.equal(unconditionedRes.audit_trail[0]!.confidence_weight, 0.3, "Unconditioned ACWR must have weight reduced to theoretical 0.3");
     assert.ok(unconditionedRes.rendered_prose.includes("Schedule confound not conditioned"), "Prose must log schedule confound caveat");
 
     // 4. Conditioned on current session load restores causal weight (1.0)
     const conditionedRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.52, current_session_load: 650 }, [gabbettAcwrPrinciple]);
-    assert.equal(conditionedRes.audit_trail[0].confidence_weight, 1.0, "Conditioned ACWR must use causal weight 1.0");
+    assert.equal(conditionedRes.audit_trail[0]!.confidence_weight, 1.0, "Conditioned ACWR must use causal weight 1.0");
 
     // 5. In-quote perturbation scales raw delta proportionally
     const mutatedGabbett: VerifiedSituationalPrinciple = {
@@ -256,9 +256,9 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
       parsed_float_magnitude: 0.44,
       evidence_quote: "American football contact and repetitive workload spikes above 1.40 acute-to-chronic workload ratio increase relative injury hazard by 4.4 times and accelerate fourth-quarter neuromuscular fatigue",
     };
-    const baseRaw = unconditionedRes.audit_trail[0].parsed_delta_applied;
+    const baseRaw = unconditionedRes.audit_trail[0]!.parsed_delta_applied;
     const mutatedRes = evaluateMindPrinciples({ acute_chronic_workload_ratio: 1.52 }, [mutatedGabbett]);
-    const mutatedRaw = mutatedRes.audit_trail[0].parsed_delta_applied;
+    const mutatedRaw = mutatedRes.audit_trail[0]!.parsed_delta_applied;
     const ratio = mutatedRaw / baseRaw;
     assert.ok(Math.abs(ratio - 2.0) < 1e-6, `Expected ACWR raw delta ratio 2.0x, got ${ratio}`);
   });

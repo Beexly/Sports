@@ -32,7 +32,11 @@ describe("yacoe-edge-candidate converter", () => {
     }));
     const rows = convertYacoeToBacktestRows(synthetic);
     const result = falsifyBind(rows, { minN: 50, seed: 7 });
-    expect(["PASS", "KILLED", "STARVED"]).toContain(result.overall.verdict);
+    // Overall verdict union per falsify.ts: SURVIVOR | KILLED | STARVED | PARKED.
+    // The old allowlist ("PASS", "KILLED", "STARVED") pinned a stale shape:
+    // PASS is not an overall verdict, and SURVIVOR (the all-pass outcome,
+    // falsify.ts:131) was missing — the guard finally points at the right thing.
+    expect(["SURVIVOR", "KILLED", "STARVED", "PARKED"]).toContain(result.overall.verdict);
     expect(typeof result.overall.reason).toBe("string");
   });
 

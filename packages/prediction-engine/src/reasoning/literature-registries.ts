@@ -173,10 +173,11 @@ export function ensembleOutOfFold(
   // Compute individual model MSEs to penalize higher error models
   const mses: number[] = [];
   for (let j = 0; j < m; j++) {
+    const model = models[j]!;
     let se = 0;
-    const preds = models[j].outOfFoldPredictions;
+    const preds = model.outOfFoldPredictions;
     for (let i = 0; i < n; i++) {
-      se += Math.pow(preds[i] - actuals[i], 2);
+      se += Math.pow(preds[i]! - actuals[i]!, 2);
     }
     mses.push(se / n);
   }
@@ -187,7 +188,8 @@ export function ensembleOutOfFold(
   const normalizedWeights: Record<string, number> = {};
 
   for (let j = 0; j < m; j++) {
-    normalizedWeights[models[j].modelName] = invMses[j] / sumInv;
+    const model = models[j]!;
+    normalizedWeights[model.modelName] = invMses[j]! / sumInv;
   }
 
   // Blend predictions
@@ -196,10 +198,11 @@ export function ensembleOutOfFold(
   for (let i = 0; i < n; i++) {
     let predSum = 0;
     for (let j = 0; j < m; j++) {
-      predSum += normalizedWeights[models[j].modelName] * models[j].outOfFoldPredictions[i];
+      const model = models[j]!;
+      predSum += (normalizedWeights[model.modelName] ?? 0) * model.outOfFoldPredictions[i]!;
     }
     blended.push(predSum);
-    totalBrier += Math.pow(predSum - actuals[i], 2);
+    totalBrier += Math.pow(predSum - actuals[i]!, 2);
   }
 
   return {

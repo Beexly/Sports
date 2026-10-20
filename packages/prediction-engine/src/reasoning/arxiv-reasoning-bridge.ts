@@ -45,6 +45,9 @@ export interface ArxivContextQuery {
   readonly timeZoneDifferenceHours?: number;
   readonly marketSpread?: number;
   readonly publicTicketPct?: number;
+  /** Moneyline prices for the favorite-longshot dampening signal (positive = underdog price, negative = favorite price). */
+  readonly moneylinePriceAway?: number;
+  readonly moneylinePriceHome?: number;
   readonly styleMatchup?: "PRESSURE_VS_PASS_HEAVY" | "ZONE_VS_SCRAMBLE" | "GROUND_HEAVY_VS_LIGHT_BOX" | "NEUTRAL";
   readonly injuryDifferentialKeyPersonnel?: number;
   // Deep grey-area variables
