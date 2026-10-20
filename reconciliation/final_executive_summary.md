@@ -585,6 +585,69 @@ the audit arrive at the same fix from opposite directions.**
 
 ---
 
+## 5g. The L1–L4 admission gates: a gate that cannot fail
+
+**The repo already had an L1–L4 admission gate. It reports 67.4% of the
+MIND corpus is admitted. Checked against the actual source documents, the
+truthful answer is 0%.**
+(`reconciliation/l1_l4_admission_gate.md`,
+`l1_l4_admission_gate_truthful.json`)
+
+| layer | existing gate | truthful gate |
+|---|---:|---:|
+| L1 verbatim provenance | 5,149 / 5,149 | **1,537 (29.9%)** |
+| L2 numeric containment | 3,470 / 5,149 | **1,766 (34.3%)** |
+| L3 character-span anchoring | 3,470 / 5,149 | **0 (0.0%)** |
+| L4 mechanism entailment | 3,470 / 5,149 | **1,589 (30.9%)** |
+| **ADMITTED** | **3,470 (67.4%)** | **0 (0.0%)** |
+
+**Why the existing gate passes everything:** it checks SHAPE, not TRUTH,
+and never opens the source document. L1 checks the quote is ≥10 chars.
+L2 accepts a quote containing only a **unit word**. L3 checks
+`end_char > start_char` — which every record satisfies by construction.
+L4 checks the mechanism quote is non-empty.
+
+**Three measured consequences:**
+
+1. **3,509 quotes are absent from the documents they cite** — and
+   whitespace normalisation recovers **0** of them. They are text from a
+   *different* paper: a thermodynamic-economics abstract, an MMA
+   analytics abstract, a radar-imaging abstract, an acoustics abstract,
+   all filed under NFL records.
+2. **The failure is structural, and the source type predicts it.** Every
+   JSON source that holds a document's text verifies (461/492, 369/407,
+   269/269). Every markdown source fails at ~0% (8/369, 0/286, 0/266,
+   0/202). The markdown records' quotes are database rows, not documents:
+   *"ASSOCIATION_ONLY - 1 - 0.8507281977552686"*.
+3. **Not one record's offsets select its own quote** — 0 exact, while all
+   5,149 carry `verification_tier: "MSVH_S1_EXACT"`. **The tier is a
+   label the builder wrote; it was never a check.**
+
+**And 1,704 records pass the existing L2 purely on a unit word** — e.g.
+number 0.25 with a quote containing only "seconds".
+
+**Built:** `packages/prediction-engine/src/literature/literature-verification.ts`
+— each layer computed **independently** (so a report says how deep a
+failure goes, not just the first failure), L2 with **no unit-word
+escape**, L3 checking `source.slice(start, end) === quote`, L4 requiring
+the mechanism quote to be **in the source** because a quote that is not
+in the document cannot entail a mechanism. **23 regression tests**, each
+naming the failure it prevents. Suite **95/95**; `tsc` **0 errors**.
+
+**The honest reading: zero admitted does not mean the corpus is
+worthless. It means it was never verified, and verification was never
+performed.** The **1,537 records whose quotes genuinely are in their
+source documents are the real corpus.** The other 3,509 are not, and no
+amount of scoring or promotion will make them so.
+
+**This is the spec's L1–L4 remedy, and the spec was right to demand it.**
+The audit's independent finding was that 2,106 non-football records
+survive the corpus's own cross-domain filter; **the gate catches a
+strictly larger set (3,509) on a mechanical, per-record test that needs
+no model and no judgment call.**
+
+---
+
 ## 6. What the recon batch changed
 
 Three read-only agents ran against the same worktree. They **corrected my
@@ -671,6 +734,8 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
 | `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable: 5,149 records, 39 with a real metric, 22 game-level NFL quantities. The corpus has concepts, not numbers. |
+| `l1_l4_admission_gate.md` + `l1_l4_admission_gate_truthful.json` | **The L1–L4 admission gate, made falsifiable**: the existing gate reports 67.4% admitted; checked against the actual source documents the truthful gate admits **0 of 5,149**. 3,509 quotes are absent from the documents they cite (0 recoverable by normalisation), 0 of 5,049 spans select their own quote despite a `MSVH_S1_EXACT` label, and 1,704 records pass L2 on a unit word alone. 23 regression tests; suite 95/95. |
+| `_probe_l3_anchoring.mjs` | The probe that found the fabrication: every quote searched in the source file it names, at its claimed offsets. |
 | `design_spec_reconciliation.md` | **Reconciliation of the supplied design spec against the measured repo**: 13 of 14 spec'd module paths do not exist, 0 of 8 build steps implemented, 0 of 9 honesty gates built — but **4 of 4 diagnosed pathologies confirmed present**, the spec's own cited hardcoded-constant example now a negative assertion, all 5 dark primitives real, and the spec's ID algorithm already written but unwired. |
 | `concept_axis_graded.md` | **The concept axis RUN on real data, and CORRECTED**: 139 premises graded. **Retracts** an earlier "38.9-point edge" claim that was a definitional artifact (`targets` produces `receivingYards`; `receptions`/`targets` = 0.9609). The real ceiling is 6.5 points over chance. Carries the definitional guard that makes such a pair impossible to report again. |
 | `concept_axis_graded.RETRACTED-2026-10-20.md` | The retracted original, kept as an audit trail rather than quietly overwritten. |

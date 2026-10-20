@@ -381,7 +381,7 @@ with `df2` and the `W(df1,df2)` statistic) plus `mondrian.ts` and
 `sports-taxonomy.ts`, but no Kelly or copula layer |
 | `settlement-loop.ts` (Murphy, Kalman, MP spectral) | **NOT BUILT** — this is the audit's `staged_improvements/04` |
 | `pick-pipeline.ts` + the `ValidatedCausalTrace` brand | **NOT BUILT** — the repo has `publishablePick: false` as a type-level assertion, which is a *weaker* barrier (it bars publishing, not bad traces) |
-| L1–L4 verification gates | **NOT BUILT** — and the audit measured the damage they prevent |
+| L1–L4 verification gates | **BUILT AND MEASURED** — `packages/prediction-engine/src/literature/literature-verification.ts`, 23 tests. The truthful gate admits **0 of 5,149** records (the existing one reports 67.4% because it never opens the source document). **NOT YET WIRED** into the corpus builder. |
 | the 8-probe mutation-v3 suite | **NOT BUILT** — `mutation-v2.spec.ts` has 7 probes (T1–T7) and passes |
 | the 600-test conformal suite | **NOT BUILT** |
 
@@ -396,7 +396,7 @@ audit's measured numbers as the acceptance criteria.
 
 | # | build step | why now |
 |---|---|---|
-| 1 | **L1–L4 verification gates at ingestion** | the audit measured **2,106 non-football papers surviving** and **88.2% of directions being a keyword fallback**. This is the one defect that corrupts the corpus for every downstream consumer, and it is the spec's L2/L4. |
+| 1 | **L1–L4 verification gates at ingestion** | the audit measured **2,106 non-football papers surviving** and **88.2% of directions being a keyword fallback**. **NOW BUILT AND MEASURED** (`reconciliation/l1_l4_admission_gate.md`): the repo's existing L1–L4 gate reports 67.4% admitted because it checks SHAPE, not TRUTH; against the actual source documents the truthful gate admits **0 of 5,149** — 3,509 quotes are absent from the documents they cite, and 0 of 5,049 spans select their own quote. The remaining work is to WIRE it into the builder. |
 | 2 | **Wire `2602-23233v1-the-counterfactual-combine-a-causal.ts` into the live path as `do-calculus-id.ts`** | the spec's §4.3 "7-line recursive ID algorithm" **is already written** with `frontdoorEstimand` and `requireIdentified`. The gap is integration. |
 | 3 | **A `homeSign` requirement in the publish gate** (the spec's G1) | the audit measured that the live path has **no** directional gate, and that a wrong direction is a *backwards* score, not a noisy one. |
 | 4 | **Reconcile the two HNSW schemas** — the spec's `literature_premises` vs the audit's `lit.*` | they are different designs and both claim the corpus. One must win, and the spec's is richer (spectral split, promotion score, EWMA attribution, SHADOW/DEMOTED statuses). |
