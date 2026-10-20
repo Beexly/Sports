@@ -74,6 +74,22 @@ CREATE TABLE IF NOT EXISTS lit.premise (
                                                  'MSVH_S1_EXACT',
                                                  'MSVH_S2_NORMALIZED',
                                                  'MSVH_S3_LEVENSHTEIN')),
+  -- The STATUS: why the record is or is not admitted. The spec's
+  -- filter is `record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE'`,
+  -- and both halves are needed:
+  --   record_class says WHAT KIND of record it is
+  --   status says WHY it was or was not admitted
+  --
+  -- A record whose quote IS verbatim in its document but whose claim
+  -- does not follow from it is CITABLE_VERIFIED-classed but NOT active,
+  -- and the difference is the difference between "we read it" and "it
+  -- supports the claim".
+  status          text NOT NULL DEFAULT 'UNCITED_NO_SOURCE'
+                    CHECK (status IN ('ACTIVE',
+                                      'LINK_VERIFIED_SEMANTIC_FAIL',
+                                      'UNCITED_NO_SOURCE',
+                                      'DERIVED_TABLE',
+                                      'CORRUPT_QUOTE')),
   structure_state text NOT NULL DEFAULT 'structured'
                     CHECK (structure_state IN ('structured','raw')),
   content_hash    text NOT NULL,
@@ -96,6 +112,8 @@ ALTER TABLE lit.premise
   ADD COLUMN IF NOT EXISTS record_class text NOT NULL DEFAULT 'HONESTLY_UNCITED_PRIOR';
 ALTER TABLE lit.premise
   ADD COLUMN IF NOT EXISTS verification_tier text;
+ALTER TABLE lit.premise
+  ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'UNCITED_NO_SOURCE';
 
 -- The CHECK constraints are added separately because ALTER TABLE ADD
 -- COLUMN IF NOT EXISTS does not re-run the constraint on a table that
@@ -373,19 +391,27 @@ AS $$
   JOIN lit.premise p ON p.id = v.premise_id
   WHERE p.structure_state = 'structured'
     -- CLASS-A EXCLUSIVITY (2026-10-20). This is the spec's
-    -- `WHERE record_class = 'CITABLE_VERIFIED'` on the HNSW premise
-    -- index. It is HERE, at the retrieval function, because this is
-    -- where an unverified premise becomes a live activation that can
-    -- carry a numeric delta into a reasoning claim.
+    -- `WHERE record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE'` on
+    -- the HNSW premise index. It is HERE, at the retrieval function,
+    -- because this is where an unverified premise becomes a live
+    -- activation that can carry a numeric delta into a reasoning claim.
+    --
+    -- Both halves are needed. The CLASS says what kind of record it
+    -- is; the STATUS says why it was or was not admitted. A record whose
+    -- quote is verbatim in its document but whose claim does not follow
+    -- from it is CITABLE_VERIFIED-classed and NOT active, and the
+    -- difference is the difference between "we read it" and "it
+    -- supports the claim".
     --
     -- Before it, the index returned every structured premise, including
     -- the 3,509 whose quotes were in no document and the 1,704 whose
     -- numbers were nowhere near the quote.
     --
-    -- The column's DEFAULT is 'HONESTLY_UNCITED_PRIOR', so a premise
-    -- inserted without a class is excluded here rather than admitted
+    -- The columns' DEFAULTs are the honest ones, so a premise inserted
+    -- without a class or a status is excluded here rather than admitted
     -- by omission.
     AND p.record_class = 'CITABLE_VERIFIED'
+    AND p.status = 'ACTIVE'
     AND (pillar IS NULL OR p.pillar_tags && pillar)
     AND (1 - (v.embedding <=> q))::double precision >= min_similarity
   ORDER BY v.embedding <=> q

@@ -352,7 +352,8 @@ function eventText(e) {
        FROM lit.premise p
        JOIN historical_games h ON h."gameKey" = p.source_ref
       WHERE p.source_ref IS NOT NULL
-        AND p.record_class = 'CITABLE_VERIFIED'`
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'`
   );
   const ownGameOutcome = new Map();
   for (const o of ownGames.rows) {
@@ -530,6 +531,7 @@ function eventText(e) {
           SELECT 1 FROM lit.premise p
            WHERE p.id = ce.premise_id
              AND p.record_class = 'CITABLE_VERIFIED'
+             AND p.status = 'ACTIVE'
         )`
   );
   // Retiring an edge must also retire its intervention tests. LAW 4 is

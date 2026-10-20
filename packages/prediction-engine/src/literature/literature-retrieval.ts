@@ -473,6 +473,7 @@ export async function promotePremisesToCausalEdges(
         AND s.mean_residual IS NOT NULL
         AND p.structure_state = 'structured'
         AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
       ORDER BY s.activation_score DESC, s.graded DESC
       LIMIT $4`,
     [minGraded, minScore, minAbsClaim, limit],

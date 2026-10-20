@@ -141,6 +141,7 @@ export async function listPromotedEdges(
        LEFT JOIN lit.premise_score s ON s.premise_id = p.id
       WHERE e.status = 'promoted'
         AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
       ORDER BY s.activation_score DESC NULLS LAST
       LIMIT $1`,
     [limit],

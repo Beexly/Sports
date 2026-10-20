@@ -46,6 +46,9 @@ const EXEMPT_FILES = new Set([
   "reconciliation/measure_direction_signal.mjs",
   "reconciliation/run_concept_grader.mjs",
   "scripts/literature/measure-coverage.cjs",
+  // The schema verifier: it INSERTS the test rows the filter is supposed
+  // to exclude, so it must not filter on them.
+  "reconciliation/apply_and_verify_class_a_schema.mjs",
 ]);
 
 /**
@@ -101,16 +104,21 @@ for (const file of walk(root)) {
   while ((m = insertRe.exec(text)) !== null) {
     const cols = m[1];
     const hasClass = /record_class/i.test(cols);
-    inserts.push({ rel, hasClass, cols: cols.replace(/\s+/g, " ").trim() });
+    // The schema verifier INSERTS one premise with no class on purpose --
+    // to prove the column's DEFAULT is the honest one -- so it is
+    // exempt from the "every insert sets the class" rule.
+    const exempt = EXEMPT_FILES.has(rel);
+    inserts.push({ rel, hasClass: hasClass || exempt, cols: cols.replace(/\s+/g, " ").trim() });
   }
-
   // SELECTs that read premises.
   if (/FROM\s+lit\.premise\b/i.test(text) || /FROM\s+lit\.premise_score\b/i.test(text)) {
     const lines = text.split("\n");
     lines.forEach((line, i) => {
       if (/FROM\s+lit\.premise\b/i.test(line)) {
         const window = lines.slice(Math.max(0, i - 12), i + 14).join("\n");
-        const hasFilter = /record_class\s*=\s*'CITABLE_VERIFIED'/i.test(window);
+        const hasFilter =
+          /record_class\s*=\s*'CITABLE_VERIFIED'/i.test(window) &&
+          /status\s*=\s*'ACTIVE'/i.test(window);
         // A query that GROUPS BY record_class, or SELECTs it, is a
         // REPORT of the class distribution, not a reasoning read. It
         // sees every premise on purpose, to show how many are citable.

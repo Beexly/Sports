@@ -81,7 +81,7 @@ const cols = await c.query(
   `SELECT column_name, data_type, column_default, is_nullable
      FROM information_schema.columns
     WHERE table_schema='lit' AND table_name='premise'
-      AND column_name IN ('record_class','verification_tier')
+      AND column_name IN ('record_class','verification_tier','status')
     ORDER BY column_name`,
 );
 for (const r of cols.rows) {
@@ -89,7 +89,7 @@ for (const r of cols.rows) {
     `  ${r.column_name.padEnd(18)} ${r.data_type.padEnd(10)} default=${r.column_default} nullable=${r.is_nullable}`,
   );
 }
-if (cols.rows.length !== 2) {
+if (cols.rows.length !== 3) {
   console.log("MISSING COLUMNS");
   await c.end();
   process.exit(1);
@@ -111,7 +111,8 @@ const fn = await c.query(
 const src = fn.rows[0]?.prosrc ?? "";
 console.log(
   `  lit.retrieve_premises filters on record_class: ${
-    /record_class\s*=\s*'CITABLE_VERIFIED'/.test(src) ? "YES" : "NO"
+/record_class\s*=\s*'CITABLE_VERIFIED'/.test(src) &&
+    /status\s*=\s*'ACTIVE'/.test(src) ? "YES" : "NO"
   }`,
 );
 if (!/record_class\s*=\s*'CITABLE_VERIFIED'/.test(src)) {
@@ -126,21 +127,21 @@ const vec = `[${new Array(1024).fill(0).join(",")}]`;
 await c.query(`INSERT INTO lit.premise_vector (premise_id, embedding, embedding_model)
   SELECT id, $1::vector, 'test' FROM lit.premise LIMIT 0`, [vec]).catch(() => {});
 
-const mk = async (key, cls, tier) => {
+const mk = async (key, cls, tier, status) => {
   const r = await c.query(
     `INSERT INTO lit.premise (
         premise_key, source, source_ref, title, principle, domain, claim_type,
         numeric_value, numeric_unit, numeric_metric, influence_direction,
         evidence_quote, how_it_influences, applicable_contexts, pillar_tags,
         source_file, source_doc_hash, record_class, verification_tier,
-        structure_state, content_hash, updated_at
+        status, structure_state, content_hash, updated_at
      ) VALUES ($1,'test',$1,$1,'p','test','causal',0.5,'probability','m','positive',
         'quote here','because','{}','{}','f.md','h',
-        $2,$3,'structured','ch', now())
+        $2,$3,$4,'structured','ch', now())
      ON CONFLICT (premise_key) DO UPDATE SET record_class=EXCLUDED.record_class,
-        verification_tier=EXCLUDED.verification_tier
+        verification_tier=EXCLUDED.verification_tier, status=EXCLUDED.status
      RETURNING id`,
-    [key, cls, tier],
+    [key, cls, tier, status],
   );
   const id = r.rows[0].id;
   await c.query(
@@ -152,9 +153,10 @@ const mk = async (key, cls, tier) => {
   return id;
 };
 
-await mk("test:class_a:citable", "CITABLE_VERIFIED", "MSVH_S1_EXACT");
-await mk("test:class_a:uncited", "HONESTLY_UNCITED_PRIOR", "MSVH_S0_UNCITED");
-await mk("test:class_a:derived", "DERIVED_MARKET_SYNTHESIS", "MSVH_S0_DERIVED_TABLE");
+await mk("test:class_a:citable", "CITABLE_VERIFIED", "MSVH_S1_EXACT", "ACTIVE");
+await mk("test:class_a:semantic_fail", "CITABLE_VERIFIED", "MSVH_S0_UNCITED", "LINK_VERIFIED_SEMANTIC_FAIL");
+await mk("test:class_a:uncited", "HONESTLY_UNCITED_PRIOR", "MSVH_S0_UNCITED", "UNCITED_NO_SOURCE");
+await mk("test:class_a:derived", "DERIVED_MARKET_SYNTHESIS", "MSVH_S0_DERIVED_TABLE", "DERIVED_TABLE");
 
 const got = await c.query(
   `SELECT premise_key FROM lit.retrieve_premises($1::vector, 50, NULL, 0.0)`,
@@ -163,7 +165,8 @@ const got = await c.query(
 const keys = got.rows.map((r) => r.premise_key);
 console.log(`  retrieve_premises returned: ${JSON.stringify(keys)}`);
 
-const onlyCitable = keys.length > 0 && keys.every((k) => k === "test:class_a:citable");
+const onlyCitable =
+  keys.length === 1 && keys[0] === "test:class_a:citable";
 console.log(`  only the CITABLE_VERIFIED premise came back: ${onlyCitable ? "YES" : "NO"}`);
 
 console.log("\n=== 6. THE DEFAULT IS THE HONEST ONE ===");
