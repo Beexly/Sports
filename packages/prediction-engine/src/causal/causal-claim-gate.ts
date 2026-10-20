@@ -62,6 +62,15 @@ export const G3_REFUSAL = {
   queryNotInGraph: "REFUSED_G3_QUERY_NOT_IN_GRAPH",
   /** The query is malformed: the outcome is also intervened on. */
   invalidQuery: "REFUSED_G3_INVALID_QUERY",
+  /**
+   * The intervention violates the positivity condition.
+   *
+   * The spec's G3 requires P(x | Pa(X) \ X) >= 0.01 alongside the
+   * zero-hedge condition. Without it the identified functional is an
+   * extrapolation into a region of the covariate space where no data
+   * exists.
+   */
+  positivityViolation: "REFUSED_G3_POSITIVITY_VIOLATION",
 } as const;
 
 export type G3RefusalCode = (typeof G3_REFUSAL)[keyof typeof G3_REFUSAL];
@@ -113,6 +122,34 @@ export interface CausalClaimQuery {
   readonly eValue?: number | null;
   /** The E-value floor for activating an expansion. The spec's is 1.35. */
   readonly minEValue?: number;
+  /**
+   * The POSITIVITY of the intervention.
+   *
+   * The spec's G3 is a CONJUNCTION of TWO conditions:
+   *
+   *     the number of witnessing hedges is 0, AND
+   *     P(x | Pa(X)_G \ X) >= 0.01
+   *
+   * Positivity says the intervened-upon value must be one that COULD
+   * have occurred given its parents. Without it, the back-door
+   * adjustment is an extrapolation to a point of the covariate space
+   * where no data exists, and the "identified" functional is a formal
+   * result about a region the engine has never observed.
+   *
+   * The gate has no data, so it cannot compute this -- the caller has
+   * it, from the same fit the effect was estimated in. It is supplied
+   * here.
+   *
+   * When it is null or absent, the claim is REFUSED. A positivity that
+   * could not be checked is not a positivity that held, and the spec
+   * makes it a conjunct of the gate rather than an optional
+   * refinement.
+   */
+  readonly positivity?: number | null;
+  /**
+   * The positivity floor. The spec's is 0.01.
+   */
+  readonly minPositivity?: number;
 }
 
 export interface CausalClaimVerdict {
@@ -230,6 +267,43 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
     : runShpitserPearlID(y, x, graph);
 
   if (result.ok) {
+    // THE POSITIVITY CONDITION.
+    //
+    // The spec's G3 is a CONJUNCTION: zero hedges AND
+    // P(x | Pa(X) \ X) >= 0.01. The effect being IDENTIFIED is only
+    // half of it.
+    //
+    // Positivity says the intervened-upon value must be one that
+    // could have occurred given its parents. Without it, the
+    // back-door adjustment is an extrapolation to a point of the
+    // covariate space where no data exists -- the functional is
+    // formally correct and empirically meaningless.
+    //
+    // The gate has no data, so the caller supplies it. A MISSING
+    // positivity REFUSES: a positivity that could not be checked is
+    // not a positivity that held, and the spec makes it a conjunct of
+    // the gate rather than an optional refinement. Refusing here is
+    // the conservative direction -- it can only withhold a claim, and
+    // the alternative is publishing an extrapolation.
+    const minPositivity = query.minPositivity ?? 0.01;
+    const positivity = query.positivity ?? null;
+    if (positivity === null) {
+      return refuse(
+        G3_REFUSAL.positivityViolation,
+        "the effect is identified, but the positivity condition could not be " +
+          `checked: P(${[...x].join(",")} | Pa(X) \\ X) was not supplied. A ` +
+          "positivity that cannot be checked is not a positivity that held.",
+      );
+    }
+    if (positivity < minPositivity) {
+      return refuse(
+        G3_REFUSAL.positivityViolation,
+        `the effect is identified, but the intervention violates positivity: ` +
+          `P(${[...x].join(",")} | Pa(X) \\ X) = ${positivity.toFixed(6)} < ` +
+          `${minPositivity}. The identified functional would be an ` +
+          "extrapolation into a region of the covariate space with no data.",
+      );
+    }
     return {
       publishable: true,
       refusal_code: null,

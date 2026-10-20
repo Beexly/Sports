@@ -223,8 +223,7 @@ describe("the gate's refusal names the measurement", () => {
         { signalId: "SharperMarketShare", node: "SharperMarketShare", tValid: 1, sampleCount: 500 },
       ],
       // Both of the spec's activation conditions.
-      eValue: 4.2,
-    });
+      eValue: 4.2, positivity: 1 });
     expect(verdict.publishable).toBe(false);
     expect(verdict.refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
     // The hedge was found.
@@ -245,8 +244,7 @@ describe("the gate's refusal names the measurement", () => {
       mediators: [
         // Too few samples to be a real measurement.
         { signalId: "RareSignal", node: "RareSignal", tValid: 1, sampleCount: 12 },
-      ],
-    });
+      ], positivity: 1 });
     expect(verdict.publishable).toBe(false);
     // A refusal that names a measurement which does not work is
     // WORSE than one that names none.
@@ -268,8 +266,7 @@ describe("the gate's refusal names the measurement", () => {
       } as never,
       mediators: [
         { signalId: "Whatever", node: "Whatever", tValid: 1, sampleCount: 500 },
-      ],
-    });
+      ], positivity: 1 });
     expect(verdict.publishable).toBe(true);
     expect(verdict.conclusion).toBe("CAUSAL");
     expect(verdict.hedge_count).toBe(0);
@@ -382,8 +379,7 @@ describe("the adversary review gates the activation", () => {
       x: ["PublicShare"],
       graph: bowArc as never,
       mediators: [mediator],
-      eValue: 1.1,
-    });
+      eValue: 1.1, positivity: 1 });
     expect(verdict.activating_mediators).toHaveLength(0);
     // And the reason says BOTH things: the measurement works, and the
     // effect is too fragile to state.

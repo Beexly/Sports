@@ -779,6 +779,16 @@ export async function runInterventionTest(
    */
   expansion_breaks_hedge_but_fragile: readonly string[];
   /**
+   * The measured positivity of the intervention: the fraction of the
+   * premise's graded rows in which the activation reached the
+   * intervened-upon level.
+   *
+   * Reported so a reader can see WHAT was checked against the spec's
+   * 0.01 floor -- not zero, which would be a measurement, and not
+   * null, which would hide that the check did not run.
+   */
+  positivity: number | null;
+  /**
    * The refusal code when the ADVERSARY REVIEW blocked publication:
    * the effect was identified, but it was not robust enough to state
    * as causal.
@@ -817,12 +827,12 @@ export async function runInterventionTest(
   if (!edge) {
     return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
   }
   if (edge.status !== "promoted") {
     return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
   }
 
   // ====================================================================
@@ -842,12 +852,70 @@ export async function runInterventionTest(
   // cannot be evaluated, and the honest verdict is INCONCLUSIVE rather
   // than a causal PASS: an unchecked effect is not a verified one.
   // ====================================================================
+  // Pull the residuals for this premise, joined to the activation's context.
+  //
+  // The premise_id comes from the edge fetch above, which filters on
+  // the class. The filter is repeated here anyway: the residuals are
+  // the NUMBERS the effect is computed from, so this is the last
+  // place an unverified premise could contribute one, and a reader
+  // checking this file should not have to trace the id back through
+  // three functions to be sure.
+  const res = await db.query(
+    `SELECT r.residual, r.outcome_correct, a.activation_score, a.similarity
+       FROM lit.residual r
+       JOIN lit.activation a ON a.id = r.activation_id
+       JOIN lit.premise p ON p.id = r.premise_id
+      WHERE r.premise_id = $1
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
+      ORDER BY r.graded_at ASC`,
+    [edge.premise_id],
+  );
+
+  const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
+
+  // THE INTERVENTION CONTRAST, SPLIT.
+  //
+  // The treated arm is the rows whose activation reached the
+  // intervention threshold; the control arm is the rest.
+  const treated = all.filter((r) => r.activation_score >= doValue);
+  const control = all.filter((r) => r.activation_score < doValue);
+
+  // THE POSITIVITY MEASUREMENT.
+  //
+  // The spec's G3 is a CONJUNCTION: zero witnessing hedges AND
+  // P(x | Pa(X) \ X) >= 0.01. The second conjunct is a statement
+  // about the DATA, and the gate has no data, so it is measured here
+  // and passed in.
+  //
+  // WHAT IS MEASURED. The quantity available from the residual rows
+  // is the MARGINAL frequency of the intervention state: the fraction
+  // of the premise's graded rows in which the activation actually
+  // reached the intervened-upon level. That is P(X = x), not the
+  // spec's P(x | Pa(X) \ X), and the difference is stated rather
+  // than hidden: the conditional would require a fitted model of X
+  // on its parents, which this function does not have.
+  //
+  // WHY IT IS THE RIGHT CHECK HERE. The intervention is "the
+  // activation reached the threshold". If that state is rarer than
+  // one row in a hundred, the contrast is estimated from a handful of
+  // points, the back-door adjustment is an extrapolation, and the
+  // "identified" functional is a formal result about a region the
+  // engine has essentially never observed. The margin is the same
+  // order as the spec's floor, and it is a check on the same
+  // failure: claiming a causal effect in a region with no data.
+  //
+  // An EMPTY residual set has no positivity to speak of, so it is
+  // reported as 0 -- and the n < minN check below refuses anyway.
+  const positivity = all.length > 0 ? treated.length / all.length : 0;
+
   const g3 = evaluateCausalClaim({
     y: [edge.effect_signal],
     x: [edge.cause_signal],
     z: opts?.z ?? [],
     graph: opts?.graph ?? null,
     mediators: opts?.mediators ?? [],
+    positivity,
   });
   if (!g3.publishable) {
     // THE EXPANSION PLAN, FINALIZED.
@@ -891,46 +959,23 @@ export async function runInterventionTest(
       expansion_breaks_hedge_but_fragile: expansion.breaksHedgeButFragile.map(
         (a) => a.signalId,
       ),
+      positivity,
     };
   }
 
-  // Pull the residuals for this premise, joined to the activation's context.
-  //
-  // The premise_id comes from the edge fetch above, which filters on
-  // the class. The filter is repeated here anyway: the residuals are
-  // the NUMBERS the effect is computed from, so this is the last
-  // place an unverified premise could contribute one, and a reader
-  // checking this file should not have to trace the id back through
-  // three functions to be sure.
-  const res = await db.query(
-    `SELECT r.residual, r.outcome_correct, a.activation_score, a.similarity
-       FROM lit.residual r
-       JOIN lit.activation a ON a.id = r.activation_id
-       JOIN lit.premise p ON p.id = r.premise_id
-      WHERE r.premise_id = $1
-        AND p.record_class = 'CITABLE_VERIFIED'
-        AND p.status = 'ACTIVE'
-      ORDER BY r.graded_at ASC`,
-    [edge.premise_id],
-  );
-
-  const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
   if (all.length < minN) {
     return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
   }
 
   // The intervention contrast: split residuals by whether the activation was
   // strong (treated) or weak (control). A premise that genuinely moves the
   // outcome should show different residual behavior under strong activation.
-  const treated = all.filter((r) => r.activation_score >= doValue);
-  const control = all.filter((r) => r.activation_score < doValue);
-
   if (treated.length < 3 || control.length < 3) {
     return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
       expansion_activating_mediators: [],
-      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
+      expansion_breaks_hedge_but_fragile: [], positivity: null, adversary_refusal_code: null };
   }
 
   const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
@@ -1109,6 +1154,7 @@ export async function runInterventionTest(
     // state rather than a missing one.
     expansion_activating_mediators: [],
     expansion_breaks_hedge_but_fragile: [],
+    positivity,
     adversary_refusal_code: adversaryRefusal,
   };
 }

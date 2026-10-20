@@ -213,8 +213,7 @@ describe("the pipeline wired into the gate", () => {
     const verdict = evaluateCausalClaim({
       y: ["PassEPA"],
       x: ["Scheme"],
-      graph,
-    });
+      graph, positivity: 1 });
     // The verdict is a REAL one -- identified or refused -- and the
     // refusal carries a witness. Neither outcome is "the gate threw".
     if (verdict.publishable) {
@@ -242,8 +241,7 @@ describe("the pipeline wired into the gate", () => {
     const verdict = evaluateCausalClaim({
       y: ["PassEPA"],
       x: ["NotInTheGraph"],
-      graph,
-    });
+      graph, positivity: 1 });
     expect(verdict.publishable).toBe(false);
     expect(verdict.refusal_code).toBe("REFUSED_G3_NO_GRAPH");
   });
