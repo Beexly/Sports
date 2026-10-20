@@ -1562,3 +1562,105 @@ The spec's `db/migrations/20261020_literature_hnsw_prod.sql` and its
 `literature_premises` table exists in Neon. Production is the `lit.*`
 schema. The spec describes a deployment that was never performed; the
 data is in a different, working shape.
+
+## Two of the spec's "existing" modules do not exist. Verified, not assumed.
+
+The goal document's six-stage architecture diagram names these files
+as existing components of the system:
+
+    src/causal/causal-graph-builder.ts   -- Full FCI (R0-R10) + Lagged DYNOTEARS
+    src/causal/periodic-timeseries-id.ts  -- Periodic ADMG + Jahn-Karnik-Schulman
+
+**Neither file exists.** Verified directly:
+
+    $ ls packages/prediction-engine/src/causal/causal-graph-builder.ts
+    ls: cannot access '...': No such file or directory
+    $ git log --all --oneline -- '*causal-graph-builder*'      # EMPTY
+    $ git log --all --oneline -- '*periodic*'                   # EMPTY
+
+Not "renamed", not "in another branch" — **never in this repository's
+history.** The `git log --all` sweep covers every branch, so the
+spec describes a deployment that was never performed.
+
+**The FCI implementation that DOES exist is in `fci-pag.ts`, and it
+documents its own gap honestly.** Its header says:
+
+    "Orientation rules: R1, R2, R3, R4 (discriminating path) and R8
+     are implemented. R5-R7 (uncovered potentially-directed-path
+     rules) are NOT implemented, so this PAG can carry edges that are
+     weaker than R9/R10. Net effect: the output is a valid PAG that
+     may be less oriented than the true one. It never orients against
+     a rule; it can fail to orient."
+
+That is the honesty the audit has been demanding: the module says
+what it cannot do, in the place a reader will look. It also means
+the spec's claim of "R0-R10 including R5-R7 Selection Bias &
+Possible-D-Sep" is **false for R5-R7** — and the code says so
+itself.
+
+**What `fci-pag.ts` does have** is `dynotearsFit`, with the
+contemporaneous `W_0` fit, the exact acyclicity constraint
+`h(W) = tr(exp(W∘W)) - d` and its exact gradient, the
+`ClassALiteratureConstraint` term over **CITABLE_VERIFIED premises
+only** (with the reason spelled out: an `HONESTLY_UNCITED_PRIOR` has
+no source document, so its number is a guess, and a guess that enters
+L_lit pulls the estimated `W` toward it), and the
+`edgePenalties` mechanism for priors — which relaxes sparsity on a
+proposed edge without ever letting a prior's *magnitude* into the
+literature term. The distinction is the whole point of the Class-A
+partition, and it is implemented.
+
+**What is missing against the spec:**
+- the **lagged** matrices `A_1..A_p` (the spec's `Y_lag,t`), and
+- the **non-equal-variance** Gaussian likelihood
+  `l_NV` (the Kaiser & Sipos 2021 variance-sorting pathology the
+  spec asks to remediate), and
+- the **periodic** dynamic-ADMG identification with the bounded
+  window `C_bound = 2^|V_slice|`, and
+- the Jahn-Karnik-Schulman (2025) Proposition 1 result.
+
+`grep -riE 'dnotears'` over the whole tree returns hits ONLY inside
+`fci-pag.ts` — there is no second implementation, and no lagged
+variant anywhere.
+
+**A note on `export const ENABLED = false`** in `fci-pag.ts`: this is
+a repo-wide convention, not a defect. The same line appears in
+dozens of modules across `packages/data-ingestion/src/`, and it is
+never read by any caller. It marks "this module is not yet promoted
+into a live path" — which, for the FCI module, is the honest state.
+
+## The X20 test file, and one honest exception it documents
+
+A delegated worker wrote
+`packages/prediction-engine/src/causal/__tests__/do-calculus-x20-ratio.test.ts`
+— 12 tests, 12 passing, no source modified.
+
+It pins the Napkin tree character-for-character:
+
+    "Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))] / Sum_{Y}[Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))]]"
+
+and checks the ratio **structurally**, not just textually: the
+denominator must be a `MARGINAL_SUM` over `["Y"]` whose body `toEqual`
+the numerator. That is the right way to pin it — a textual match
+would still pass if the tree were rearranged into something
+equivalent-looking but wrong.
+
+**And it found an exception it refused to paper over.** I had written
+the invariant "`TIAN_C_FACTOR_RATIO` implies a ratio tree". The
+worker measured that this is **false**: the Line-7 wrapper labels ALL
+of its answers `TIAN_C_FACTOR_RATIO`, and A082's 4-node graph
+reaches Line 1 *inside* the Line-7 sub-model and returns a plain
+`MARGINAL_SUM` with no RATIO node at all. So the class name does not
+imply a ratio on every graph that carries it.
+
+That is a **weaker invariant than the one I asserted, and it is the
+true one.** The rule the test actually pins is the one that matters:
+on the graph where the bug lived, the tree IS a ratio. The worker
+documented the exception rather than weakening the test to match a
+false claim, and it also documented that the Napkin graph has exactly
+one valid vertex order (its directed edges are the total chain
+W -> Z -> X -> Y), so order-invariance there is enforced by the
+topological-order guard rather than by the recursion.
+
+I would rather have a test that documents a real exception than one
+that asserts a tidy invariant the code does not have.
