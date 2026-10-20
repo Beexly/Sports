@@ -193,7 +193,7 @@ residuals, 8 promoted causal edges, 75 raw items promoted to premises by
 the discovery sweep. p50 retrieval **78ms**, HNSW confirmed by
 `EXPLAIN ANALYZE`.
 
-**Two things I got wrong and fixed in this cycle:**
+**Six things I got wrong and fixed across two cycles:**
 
 1. **A tautology in the promoted-edge estimate.**
    `literature-retrieval.ts:449` wrote the premise's *own claim* into
@@ -202,14 +202,52 @@ the discovery sweep. p50 retrieval **78ms**, HNSW confirmed by
    tautological. Now the observed mean signed residual. **Measured 0/8
    after.** Also fixed: `status` was inherited from the schema default
    (every edge born promoted), and `premise_score.promoted` disagreed with
-   the edge table (8 vs 0) because nothing ever wrote it. 4 regression
-   tests added; 35/35 pass.
-2. **"TypeScript compile clean" was false.** 32 real errors in my own
-   files. Now 0.
+   the edge table (8 vs 0) because nothing ever wrote it.
+2. **A category error in residual grading -- the big one.** A bridge
+   premise asserts a probability for a *specific named game*
+   (`bridge:2025_02_CLE_BAL` = P(home wins) for 2025 CLE vs BAL). The
+   loop graded it against whatever game the activation happened to be
+   for. Measured damage: all 72 residuals had `actual = 1`, so
+   `mean_signed_residual == mean_abs_residual` **exactly** -- a signature
+   no residual can take unless every residual is non-negative. Now graded
+   against its own game via `historical_games` (285/285 match). **After:**
+   38 distinct claims, 218/77 outcome mix, signed 0.186 != abs 0.440, and
+   Brier 0.2209 against the 0.25 baseline with a monotone calibration
+   curve. The signal was there; the grounding was wrong.
+3. **The support factor counted residual rows, not distinct games** -- 21
+   rows described ONE game, so one piece of evidence looked like 21 and
+   saturated the support factor.
+4. **Promotion was add-only.** 16 edges stayed `promoted` with zero
+   qualifying premises behind them. An edge table that can only grow is
+   an edge table that cannot be wrong. Promotion now retires
+   non-qualifying edges.
+5. **`premise_score.promoted` was never cleared on demotion** -- it read
+   16 while the edge table had 0 promoted. Now reconciled from the edge
+   set in both directions.
+6. **Retiring an edge left its intervention tests live**, breaking schema
+   LAW 4. New `superseded` flag; the test rows are kept (the test IS the
+   evidence). The law check reads 0.
 
-**What I will not stand behind:** `residuals_improved: true`. All 72
-residuals have `actual = 1`, so `residual = 1 - predicted` for every row
-and the improvement is noise with a favorable sign.
+Plus **32 real TypeScript errors** in my own files (my earlier "compile
+clean" was false). Tests 31 -> **45, all passing**; `tsc` **0** in
+`src/literature/`.
+
+**THE STRUCTURAL FINDING, measured not assumed.** The promotion gate
+needs 3 distinct games. The 285 bridge premises are probability-typed but
+game-scoped, so their graded count can never exceed 1. The 5,224
+context-scoped MIND/research premises have **no probability-typed claims
+at all** (units: count 1724, NULL 1711, coefficient 963, year 601,
+samples 98), so they are not gradeable on a win/loss axis. Measured
+consequence: **0 premises qualify, 0 edges promoted, 16 correctly
+retired.** Closing this needs a corpus change, not a code change --
+`staged_improvements/06-reusable-feature-premises.md` derives reusable
+premises from the bridge model's coefficient signs.
+
+**What I will not stand behind:** the residual *trend*. It is now
+measured over 38 distinct claims (n=19 vs 19), split by `graded_at`
+within one backfill -- reported with its basis and its n, and
+`residual_trend_supportable` is emitted so it cannot be read as a
+learning result.
 
 ---
 
@@ -297,6 +335,7 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `event_driven_retrieval_spec.md` | The 4 retrieval laws; the event path hop by hop; the 1,268→8,077 expansion plan |
 | `causal_inference_methods.md` | Every causal method with its wiring status; the 4 missing methods with hook points; the `CausalLink`-has-no-numbers finding |
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
+| `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
 | `literature_coverage_report.md` | The literature loop measured end to end: 5,509 premises + 1,268 corpus items HNSW-indexed, 200 real retrieval events, 5,650 activations, 8 promoted edges; **the tautology I found and fixed**; the degenerate residual sample stated plainly |
 | `recon_integration.md` | What the three recon agents added and what they corrected in my work |
 | `zero_importer_sweep.json` | Three-tiered: 2,174 ZERO / 888 PACKAGE_INTERNAL_ONLY / 1,187 EXTERNALLY_CONSUMED. A triage list, not a reachability source |
