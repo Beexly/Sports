@@ -41,6 +41,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
 import { projectSignalCandidates, writeSignalCandidates, type SignalWriteCandidate } from "@/lib/ops/signal-ledger-writer";
+import { bridgeSignalsToLiterature } from "@/lib/literature/literature-event-bridge";
 import { captureError } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
@@ -287,6 +288,58 @@ export async function GET(req: Request): Promise<NextResponse> {
       `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length}\n`,
   );
 
+  // LITERATURE BRIDGE. Every signal that just landed becomes a retrieval
+  // event: the signal is embedded, the HNSW index returns the top-k
+  // literature premises it bears on, and each activation is recorded so that
+  // settlement can later score the premise (residual feedback).
+  //
+  // This is deliberately AFTER the write and deliberately NON-BLOCKING: a
+  // literature failure must never fail a signal write. The report below
+  // states what the literature bridge did so a silent zero is visible.
+  //
+  // Gated on GSE_LITERATURE_BRIDGE=1 so it cannot change production behaviour
+  // until the index is populated and the owner turns it on.
+  const literatureEnabled = process.env.GSE_LITERATURE_BRIDGE === "1";
+  let literature: {
+    signals_seen: number;
+    events_attempted: number;
+    events_succeeded: number;
+    events_refused: number;
+    activations_written: number;
+    errors: readonly string[];
+  } | null = null;
+  if (literatureEnabled && scoped.length > 0) {
+    try {
+      literature = await bridgeSignalsToLiterature(
+        { db: db as never, deadline: new Date(startedAtMs + (maxDuration - TAIL_RESERVE_MS) * 1000) },
+        scoped.map((c) => ({
+          key: c.key,
+          entityId: c.entityId,
+          entityType: c.entityType,
+          value: c.value,
+          category: c.category,
+          season: c.season,
+          week: c.week,
+          capturedAt: c.capturedAt,
+        })),
+      );
+      process.stderr.write(
+        `[cron:signal-ledger-write] literature events=${literature.events_succeeded}/${literature.events_attempted} ` +
+          `activations=${literature.activations_written} refused=${literature.events_refused}\n`,
+      );
+    } catch (error) {
+      captureError(error, { tags: { surface: "signal-ledger-write:literature" } });
+      literature = {
+        signals_seen: scoped.length,
+        events_attempted: 0,
+        events_succeeded: 0,
+        events_refused: 0,
+        activations_written: 0,
+        errors: [error instanceof Error ? error.message : String(error)],
+      };
+    }
+  }
+
   // LOUD, not green. MEASURED 2026-09-28 (dpl_8hKqsyXxb1KDLm4kgBw6ffEBEq9e): a
   // duplicated write made the second call see an already-past deadline and
   // write 0 rows, and the route returned 200 with `success: true` because
@@ -310,6 +363,8 @@ export async function GET(req: Request): Promise<NextResponse> {
       // three snap.* keys: all 31,100 snap_counts rows carry a NULL playerId,
       // so they have no entity and nothing to project. Visible on purpose.
       dropped,
+      // Literature bridge outcome. null when GSE_LITERATURE_BRIDGE is off.
+      literature,
       // Restated in the response so nobody can read this endpoint as a claim
       // that the signals are predictive.
       value: "NORMALIZED per key onto a shared -1..1 scale from a measured anchor/spread (valueRaw keeps the source column verbatim)",

@@ -841,6 +841,12 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
     rankOnAnyTrueProb: true,
+    // LIT-2 CORPUS ADJUSTMENT. The Layer-2 literature corpus shift for this
+    // game, carried on the context. The weight defaults to 0 (unpromoted),
+    // so until the corpus promotion gate has actually been run this is
+    // byte-identical to the pre-LIT-2 ranking. See GameContextInput.
+    corpusAdjustment: input.context?.corpusAdjustment ?? undefined,
+    corpusWeight: input.context?.corpusWeight ?? undefined,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
     ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
@@ -1521,6 +1527,12 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
     rankOnAnyTrueProb: true,
+    // LIT-2 CORPUS ADJUSTMENT. The Layer-2 literature corpus shift for this
+    // game, carried on the context. The weight defaults to 0 (unpromoted),
+    // so until the corpus promotion gate has actually been run this is
+    // byte-identical to the pre-LIT-2 ranking. See GameContextInput.
+    corpusAdjustment: input.context?.corpusAdjustment ?? undefined,
+    corpusWeight: input.context?.corpusWeight ?? undefined,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
     ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }

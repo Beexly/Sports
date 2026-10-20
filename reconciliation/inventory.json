@@ -1,0 +1,5696 @@
+{
+ "audit": "GSE research-to-code reconciliation",
+ "generated_at_utc": "The system cannot accept the date entered.\nEnter the new date: (mm-dd-yy)",
+ "repo": {
+  "remote": "https://github.com/Beexly/Sports.git",
+  "audited_ref": "origin/main",
+  "audited_sha": "4fa5330f4",
+  "audited_commit_subject": "analytics sweep: 2026-10-19 21:08 evening run (lane A addendum 3)",
+  "worktree": "C:\\Users\\Garrett\\Sports-wt-audit-20261020",
+  "audit_branch": "audit/reconciliation-2026-10-20",
+  "note": "Main working tree C:/Users/Garrett/Sports carried uncommitted changes (packages/prediction-engine/src/game-context.ts, src/index.ts, scripts/sync_week6_db.py, intelligence/*). Audit ran in an isolated git worktree so that work was untouched. Findings describe origin/main @ 4fa5330f4."
+ },
+ "branch_inventory": {
+  "total_remote_non_dependabot": 789,
+  "since_2026_10_01": 248,
+  "date_range": [
+   "2026-04-22",
+   "2026-10-20"
+  ],
+  "by_family": {
+   "other": 197,
+   "claude": 190,
+   "hermes": 108,
+   "motif": 85,
+   "grok": 70,
+   "feature": 39,
+   "copilot": 25,
+   "fix": 24,
+   "jules": 20,
+   "research": 7,
+   "docs": 7,
+   "ops": 4,
+   "agent": 4,
+   "expected-metric": 3,
+   "props": 2,
+   "engine-plan": 1,
+   "play": 1,
+   "dfs": 1,
+   "wire": 1
+  },
+  "branches": [
+   {
+    "date": "2026-10-20",
+    "branch": "q27-any-a-shadow-metric-69881346232991329",
+    "sha": "dcfad7a31",
+    "subject": "fix(prediction-engine): update ANY/A registry entry with allowed types",
+    "family": "expected-metric"
+   },
+   {
+    "date": "2026-10-20",
+    "branch": "q25-rz-carry-share-3824999774593055166",
+    "sha": "e5e8fcd64",
+    "subject": "feat(prediction-engine): add red-zone carry share shadow metric",
+    "family": "expected-metric"
+   },
+   {
+    "date": "2026-10-19",
+    "branch": "origin",
+    "sha": "4fa5330f4",
+    "subject": "analytics sweep: 2026-10-19 21:08 evening run (lane A addendum 3)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-19",
+    "branch": "main",
+    "sha": "4fa5330f4",
+    "subject": "analytics sweep: 2026-10-19 21:08 evening run (lane A addendum 3)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-19",
+    "branch": "research/engine-plan-2026-10-03",
+    "sha": "325073260",
+    "subject": "queue: Lin 1991 IEEE TIT 37:145-151 citeseerx PDF failed open night growth 2026-10-19",
+    "family": "research"
+   },
+   {
+    "date": "2026-10-19",
+    "branch": "engine-plan-2026-10-03",
+    "sha": "025677cb8",
+    "subject": "wire conformal set-size loss from Zhang Bates 2610.08785 eq (5)",
+    "family": "engine-plan"
+   },
+   {
+    "date": "2026-10-19",
+    "branch": "play-size-distribution-2787336922123982156",
+    "sha": "ed26c693b",
+    "subject": "feat(engine): implement shadow play-size-distribution module",
+    "family": "play"
+   },
+   {
+    "date": "2026-10-19",
+    "branch": "third-down-target-share-shadow-15343968667793775320",
+    "sha": "100d1c4ad",
+    "subject": "fix: resolve banned phrase and typography issues to pass guardrails",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-18",
+    "branch": "q22-third-down-sacks-1485337038336199452",
+    "sha": "1ed5059c9",
+    "subject": "feat: add third-down sacks expected metric (SHADOW)",
+    "family": "expected-metric"
+   },
+   {
+    "date": "2026-10-18",
+    "branch": "docs/gse-handoff-2026-10-18",
+    "sha": "869ac1d3e",
+    "subject": "docs(handoff): RO-19 selective-stamp consumer note",
+    "family": "docs"
+   },
+   {
+    "date": "2026-10-18",
+    "branch": "jules-defensive-fantasy-points-allowed-2016837674616181487",
+    "sha": "dd5033a73",
+    "subject": "feat: Implement Defensive Fantasy Points Allowed expected metric",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "claude/customer-copy-pass",
+    "sha": "eb009842b",
+    "subject": "copy(public): remove the glass; add \"How a pick gets made\"; defer /methodology",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "hermes/continuity-real-2026-10-17b",
+    "sha": "e9336449e",
+    "subject": "Merge commit '8f6fe5b0930923286ee83b003bfd0f89c60be593' into hermes/continuity-real-2026-10-17b",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "hermes/injury-evidence-2026-10-17b",
+    "sha": "35de57568",
+    "subject": "feat(picks): emit real NFL injury evidence from the injuries table",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "hermes/live-picks-2026-10-17",
+    "sha": "36e127bbe",
+    "subject": "Fix public picks API: remove synthetic continuityDeltas/injuryEvidence, fix priced picks filter, sync meta count",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "copilot/wire-dynamic-context-enrichment",
+    "sha": "4be0b9dac",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "wire-ncaa-reasoning-and-rename",
+    "sha": "916d15c18",
+    "subject": "fix(ops): enforce model-signal coherence, adverse edge suppression, and sanitize edgeScore in ranked-picks route",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "hermes/emission-gate-2026-10-16",
+    "sha": "506fc7cb7",
+    "subject": "[hermes-H-U4] ledger: C-58 merge-artifact duplicate row removed (byte-same content, differed only in a SHA-provenance note; the union-resolve the row itself predicted); C-85 owner cursor-cloud -> clau",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "research/layer2-weeks1-5-reasoning-ingestion-2026-10-16",
+    "sha": "2b693b7e8",
+    "subject": "docs(ops): set owner to claude on MIND-001",
+    "family": "research"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "jules/q20-sequencing-volatility-9736179778997706824",
+    "sha": "b47d6af3a",
+    "subject": "feat(prediction-engine): add play-caller sequencing volatility SHADOW metric",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "jules/q21-yoy-epa-persistence-13858057666844180468",
+    "sha": "b66845180",
+    "subject": "feat: add deterministic YoY EPA Persistence expected metric",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-16",
+    "branch": "grok/walk-forward-2026-10-14",
+    "sha": "25feca32f",
+    "subject": "feat(crps): stage qa slow run and ts gate verification artifacts for walk-forward",
+    "family": "grok"
+   },
+   {
+    "date": "2026-10-17",
+    "branch": "jules-q18-scramble-epa-4607930202658910638",
+    "sha": "0a9f01e21",
+    "subject": "feat: Add qb-scramble-epa module with deterministic logic and unit tests",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-16",
+    "branch": "hermes/g06-fail-closed-2026-10-16",
+    "sha": "7a60a3a79",
+    "subject": "fix(g06): fail closed on non-finite per-market-gate inputs",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-16",
+    "branch": "motif/introspection-s0s1-2026-10-15",
+    "sha": "fa484a28c",
+    "subject": "introspection: WAS@SF T0 forecast v2 (2026_06_WAS_SF, primary-source ESPN open/close revision, stamped 2026-10-16T20:20:27Z, before T0)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-16",
+    "branch": "feat/q19-shotgun-split-17416743485152094887",
+    "sha": "702563b80",
+    "subject": "feat(expected-metrics): add shotgun vs under-center efficiency split shadow metric",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/spec-final-freeze-2026-10-15",
+    "sha": "daaa38662",
+    "subject": "FINAL freeze (SPEC-A): bind game-ID lists + FINAL-FREEZE certificate",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/adjustment-layer-v1-2026-10-15",
+    "sha": "b3badd256",
+    "subject": "Adjustment Layer v1 (census C-075): add intelligence/adjustment-layer/apply_seam.py",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/x-intel-ingestion-2026-10-15",
+    "sha": "656029b9c",
+    "subject": "x-intel tranche 2: new shadow ledgers C-315..C-317/C-319/C-322..C-324",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "hermes/live-wip-2026-09-24",
+    "sha": "68fb46000",
+    "subject": "[hermes-H-R3] ledger: H-R3 DONE (861780ae3) \u2014 fast-track branch for the Oct 3-6 settlement cohort: cherry-picked H-R1 onto pristine main, ESPN finals verified live for Motif's repro target, grace cloc",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "hermes/fast-track/espn-dated-settlement-400",
+    "sha": "861780ae3",
+    "subject": "[hermes-settlement] ESPN dated settlement: one day per request \u2014 ESPN 400s every multi-day dates value",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/wiring-surge-b-dfs-2026-10-15",
+    "sha": "5261b20f2",
+    "subject": "Wiring surge tranche B: intelligence/signals/player_week_pbp.jsonl",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/reasoning-dossier-2026-10-15",
+    "sha": "74f30edd3",
+    "subject": "reasoning-dossier: tests and README",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/wiring-surge-a-2026-10-15",
+    "sha": "a8ff9bba7",
+    "subject": "Wiring surge tranche A correction: fix code-search evidence counts (C-096/C-074/C-009) [homes/README.md]",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/bridge-injury-rule-2026-10-15",
+    "sha": "396b65620",
+    "subject": "bridge v1.1: injury_burden_differential rule \u2014 fires on stamped injury_burden edges (both teams), banded RIL differential; SEA@DEN premise set now 6 (injury premise minted, NEUTRAL at fixture burdens ",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/injury-feed-stamps-2026-10-15",
+    "sha": "ea533bdda",
+    "subject": "injury feed stamps: per-record reported_at/pulled_at/source stamped at the source in the G-02 pull caller (injury_stamps.py discipline); situational graph loader takes pulled_at as the injury_burden s",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/prj1-perf-2026-10-15",
+    "sha": "1910e8e37",
+    "subject": "prj1: batched-construction fast path (prj1_fast) + equivalence suite + profile",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/gate-wiring-batch2-2026-10-15",
+    "sha": "534e47b3b",
+    "subject": "gate-wiring batch 2: shadow-register G-04 Signal Spine, G-10 Proper Scoring Gate, G-06 Per-Market Calibration Gate, G-08 Model Promotion Gate, G-05 Contest-Shape Guard (weight 0, ZERO_OBJECT); 59 char",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/bend-repeatability-2026-10-15",
+    "sha": "f712bc754",
+    "subject": "Bend Score repeatability measurement (WO-3 D1): estimator validated, verdict UNDERPOWERED - data dependency unmet",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/archiver-pathshape-2026-10-15",
+    "sha": "58c204800",
+    "subject": "archiver path-shape extractor v1.0.0 (WO-8 Build 1): stabilization/drift/late-drift/roughness features + frozen test card + 2026-10-15 descriptive rows",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/program-review-page-2026-10-15",
+    "sha": "67c803c08",
+    "subject": "ops: program review page \u2014 internal owner surface rendering the committed fleet record (frozen book, FREEZE-1 forward program, tonight SEA@DEN, ingestion + Layer-2 depth, gates); ZERO_OBJECT banner, a",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/premise-grading-2026-10-15",
+    "sha": "c9d19afb8",
+    "subject": "premise-grading: premise-grading ledger + introspection scorer v1 (WO-8 Build 2) \u2014 schema, seeded SEA@DEN ledger (8 premises PENDING), scorer, tests",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/prj1-freeze-2026-10-15",
+    "sha": "0ca813f8e",
+    "subject": "prj1: freeze pre-registered candidate #1 per RULING-C1 (code + config + tests + freeze record; no scoring; emission ZERO_OBJECT)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/bridge-model-2026-10-15",
+    "sha": "330b75808",
+    "subject": "reasoning bridge v1 (census C-224): stamped context scalars -> directional premises over situational graph v1; PIT enforced, emission fence both directions, ZERO_OBJECT; SEA@DEN worked example (5 prem",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/spec-freeze1-2026-10-15",
+    "sha": "bc9aa2209",
+    "subject": "FREEZE-1: ratified future-filter contract (SPEC-A/SPEC-B), RULING-C1 (PRJ-1) with WO-7 amendments, hypothesis ledger, freeze certificate",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/product-breakeven-2026-10-15",
+    "sha": "92b7f9e4b",
+    "subject": "research: product break-even mapping for RULING-C1 5.5(B) \u2014 script + results (real DK ladders 2026-10-15)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "defensive-fpts-allowed-7923758185729734035",
+    "sha": "25b4cb6d2",
+    "subject": "feat(prediction-engine): SHADOW expected metric def FPTS allowed per position",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/pit-joint-freeze-2026-10-15",
+    "sha": "df9cd2783",
+    "subject": "pit-joint freeze STOPPED: composition unspecified \u2014 ambiguity report (no code, no scoring)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/line-archiver-oddsapi-2026-10-15",
+    "sha": "0621d4117",
+    "subject": "line-archiver oddsapi: keyed product-price leg \u2014 The Odds API alternate_spreads/alternate_totals into ALT_SPREAD/ALT_TOTAL OddsLineSnapshot rows (source oddsapi), hard credit budget (48h window, 3-cap",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/line-archiver-products-2026-10-15",
+    "sha": "0b9d360c0",
+    "subject": "line-archiver products: SPEC-B product-price extension \u2014 keyless ALT_SPREAD/ALT_TOTAL probe leg (additive markets, strict ladder extraction, gap accounting), wiring CLI, tests, README gap table",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/sai-diagnostics-2026-10-15",
+    "sha": "d1b378e2f",
+    "subject": "sai: P1 situational metrics (BQP/SWCC/RIL-P1/QPTSR/OLCAI/SPESE/CAOFI) + frozen-filter kill-only screens; SPESE survives (pre-registration slot only), OLCAI killed-as-redundant, RIL-P1/CAOFI/QPTSR kill",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "jules-q11-drive-outcome-distribution-11120183514591501470",
+    "sha": "6386c71fa",
+    "subject": "fix(expected-metrics): fix registry type constraints for SHADOW metric",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/ingestion-ledger-2026-10-15",
+    "sha": "4b687e1e0",
+    "subject": "Ingestion ledger 2026-10-15: all 279 census rows mapped to ingestion homes (reasoning-engine doctrine)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/gate-wiring-batch1-2026-10-15",
+    "sha": "f9d04d633",
+    "subject": "gate-wiring batch 1: shadow registry + characterization tests for G-21, G-22, G-25, PE-125, PE-048 (weight 0, no production changes)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/champion-holdout-2026-10-15",
+    "sha": "9eb1cae4d",
+    "subject": "audit(walk-forward): champion v3 holdout verification -- controls reproduced, champion config not reachable",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/combine-reliability-lane-2026-10-15",
+    "sha": "ade0fd4cd",
+    "subject": "feat(intelligence): combine-feature reliability lane \u2014 gate, same-yardstick, Bend/KTD shadow (weight 0)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/line-archiver-2026-10-15",
+    "sha": "02a20b15d",
+    "subject": "line-archiver: ESPN/DK forward line archive \u2014 hourly OPEN/INTERIM OddsLineSnapshot producer (flag-gated, branch-only)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/calibration-defect-fixes-2026-10-15",
+    "sha": "f31bfd29f",
+    "subject": "fix(calibration): reject non-finite IVAP scores (D1) and non-integer CVAP folds (D2) fail-closed",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/conformal-nobet-wiring-2026-10-15",
+    "sha": "2e8841e83",
+    "subject": "conformal: wire NO_BET pass discipline into the engine read path",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/situational-graph-v1-2026-10-15",
+    "sha": "db0ef370f",
+    "subject": "situational graph v1: stamped PIT-safe graph (schema, edge registry, builder, week-6 SEA@DEN instance, tests) \u2014 data structure, no emission",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/calibration-five-tests-2026-10-15",
+    "sha": "80faedf53",
+    "subject": "test(calibration): characterization freeze for the 5 wired calibration modules (52 tests)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "motif/g02-injury-pull-caller-2026-10-15",
+    "sha": "49111f6ce",
+    "subject": "gates: wire G-02 Injury Pull Gate production caller (pull_nfl_injuries) + caller test battery + wiring note",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-15",
+    "branch": "feat/qb-conditioned-receiver-efficiency-16593971800138574069",
+    "sha": "31e63d772",
+    "subject": "feat(metrics): add qb-conditioned receiver efficiency",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-14",
+    "branch": "jules/q11-drive-outcome-recovery-2026-10-14",
+    "sha": "04dc2e8e0",
+    "subject": "jules/q11 recovery: drive-outcome-distribution SHADOW metric recovered from stranded Jules session 14534512074648249867 (2026-10-13)",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-14",
+    "branch": "fix/galaxy-odds-first-2026-10-08",
+    "sha": "a70213beb",
+    "subject": "fix(slate): close emission while the walk-forward gate is not passed",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-14",
+    "branch": "motif/checkout-guard-wiring-2026-10-14",
+    "sha": "e66ccc4cd",
+    "subject": "Issue #822: wire Stripe price check into daily smoke (smoke-prod.sh sec.7), document PRICING_PHASE ordering law (OPERATOR.md sec.2a), phase-neutral /pricing title",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-14",
+    "branch": "jules-12245019682532049952-00e6d2a8",
+    "sha": "b4fb3d0e4",
+    "subject": "feat(prediction-engine): add QB pressure-behavior change detection (SHADOW)",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-14",
+    "branch": "feat/play-caller-fingerprint-3913975639817058150",
+    "sha": "323c4ff84",
+    "subject": "fix(metrics): add missing types to metric registry and fix flaky test",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-13",
+    "branch": "motif/main-ci-repair-2026-10-12",
+    "sha": "1b78fa9a9",
+    "subject": "Merge remote-tracking branch 'origin/main' into HEAD",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-13",
+    "branch": "feat/down-conversion-metric-7059305218013240295",
+    "sha": "f598b80e8",
+    "subject": "feat: Add Q10 down-conversion SHADOW expected metric",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/clv-drain-fix-2026-10-12",
+    "sha": "1e23cc379",
+    "subject": "test: fix CLV drain retry fake fidelity \u2014 fake pick rows omitted the non-nullable Pick.result field the drain partitions on; adds result: \"WIN\" mirroring the snapshot fake. Production code (free-path-",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/props-model-side-2026-10-12",
+    "sha": "962890b87",
+    "subject": "Props model side: measured nflverse distributions + board integration (3-4/4, completing the sequence)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/gate-census-2026-10-12",
+    "sha": "3c2d2b041",
+    "subject": "Gate census 2026-10-12: canonical manifest of all 30 gates + 179 PE modules + local quarantine annex (code-verified)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "feat/sgp-chain-real-data-2026-10-12",
+    "sha": "f7a22600b",
+    "subject": "merge main (2eda2075b) into feat/sgp-chain-real-data-2026-10-12: resolve #1160/#1158 duplicate odds-first restorations",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "fix/ci-main-2026-10-12",
+    "sha": "ac413fbdc",
+    "subject": "fix(ci): ai-transport mutation harness re-anchors sibling imports (min-scan-floor) to the real guard dir",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/gauntlet-mnf-2026-10-12",
+    "sha": "47c0f7b8b",
+    "subject": "MNF gauntlet: frozen input artifacts (ESPN capture, Pinnacle T-5, props board)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/web-dfs-real-2026-10-12",
+    "sha": "e65234a04",
+    "subject": "dfs: tests pin the real-or-empty honesty contract",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/gates-wiring-2026-10-12",
+    "sha": "86c8f249e",
+    "subject": "gates: PE 21-24 harness, recorded stamps, gauntlet docs, and tonight's MNF run artifacts",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/deploy-pack-2026-10-12",
+    "sha": "afbead600",
+    "subject": "Deploy pack + site surface census 2026-10-12: migration runbook checklist, flag flips, merge order, build verification",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/web-board-picks-real-2026-10-12",
+    "sha": "89c6936ad",
+    "subject": "board: strip artifact stamps from the empty snapshot envelope (doctrine: no value in a shipped file may read as engine output; the envelope now carries zero values, only its provenance note)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/pr1156-hygiene-fixes-2026-10-12",
+    "sha": "fbee421ba",
+    "subject": "PR #1156 merge-blocker fixes (2/2): remove the 20.7MB blob + generated junk",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/reasoning-layer-2026-10-12",
+    "sha": "bb723b3d5",
+    "subject": "Reasoning layer: conjunction-gate both-layers test, EPA context module (X-sweep Wk5), Layer-2 input status labels",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "feat/sgp-projections-page-2026-10-12",
+    "sha": "954983ffa",
+    "subject": "fix(web): harden SGP projections loader per PR #1157 review (3a/3b/3c)",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/props-board-live-2026-10-12",
+    "sha": "b7df9c9f4",
+    "subject": "props: live board \u2014 Pinnacle prices joined to the engine, model side honest-null where no in-repo distribution exists",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/pr1156-review-fixes-2026-10-12",
+    "sha": "eababa18e",
+    "subject": "test(sgp): pin common random numbers \u2014 control reproducible with the scaled run's seed",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/prop-price-feed-2026-10-12",
+    "sha": "5c24f4c6d",
+    "subject": "prop price feed: keyless Pinnacle guest API two-way player-prop prices + Shin devig (DIAGNOSTIC)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/sgp-projections-surface-2026-10-12",
+    "sha": "35e4cf915",
+    "subject": "sgp: public stack-projections surface (projections only, honest-empty, fail-closed loader)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "motif/sgp-real-prices-2026-10-12",
+    "sha": "adfb9fb92",
+    "subject": "sgp: wire measured-correlation engine to real keyless ESPN prices (DIAGNOSTIC)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "jules-cushion-separation-matchup-3297424309322245571",
+    "sha": "935ed9190",
+    "subject": "fix(ci): fix upstream type/lint breakages on main branch to pass CI",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "jules-te-target-rate-1062652565299687163",
+    "sha": "fe64de23a",
+    "subject": "Implement TE target rate shadow metric (v2)",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "opponent-kick-miss-luck-12813801086033587166",
+    "sha": "badb1e430",
+    "subject": "feat: add opponent kick miss EPA shadow metric",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-11",
+    "branch": "motif/cylindrical-solver-2026-10-11",
+    "sha": "75b6c4bcd",
+    "subject": "feat(physics): boundary-fitted cylindrical spectral solver testbed (Chebyshev-Fourier, Kelvin circulation)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-11",
+    "branch": "research/rating-atlas-2026-10-09-packet",
+    "sha": "71a50d8cd",
+    "subject": "feat(dfs): wire unified slate and elite 150-max gate into optimizer workspace and add server-side lineup API",
+    "family": "research"
+   },
+   {
+    "date": "2026-10-12",
+    "branch": "dfs-correlation-sims-update-5195000199208396829",
+    "sha": "d5f7f5ace",
+    "subject": "feat(fantasy): integrate 10000 sims in DFS optimizer",
+    "family": "dfs"
+   },
+   {
+    "date": "2026-10-11",
+    "branch": "jules-rb-aging-curve-17368943279504269673",
+    "sha": "8dcdcf0e5",
+    "subject": "feat: implement shadow-only RB cohort aging curve module",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-10",
+    "branch": "jules-remove-methodology-5139576478554101242",
+    "sha": "00413f347",
+    "subject": "Fix duplicate NFLVERSE_PUBLIC in test; resolve AGENTS.md and picks/page.tsx merge conflicts",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-10",
+    "branch": "jules-kats-var-v4-693977951429029135",
+    "sha": "258323f00",
+    "subject": "Resolve AGENTS.md merge conflict: keep both Kats VAR and X Analytics sections",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-10",
+    "branch": "jules/drive-failure-rate-shadow-20261007-7817249937090190923",
+    "sha": "4e83946aa",
+    "subject": "Fix literal \\n in AGENTS.md",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-10",
+    "branch": "jules-6664343012938793130-1873f070",
+    "sha": "40b29b8c8",
+    "subject": "fix(pr-1146): revert AGENTS.md sabotage, remove dead code, hoist roster read",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-10",
+    "branch": "grok/engine-math-2026-10-10",
+    "sha": "088ec48f4",
+    "subject": "intelligence/ratings: land engine_math.py (stdlib probability kernels) + unittest self-check",
+    "family": "grok"
+   },
+   {
+    "date": "2026-10-10",
+    "branch": "feat/receiver-usage-dominance-13027671600938142770",
+    "sha": "205828962",
+    "subject": "feat(prediction-engine): add receiver usage target dominance module",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-09",
+    "branch": "research/rating-atlas-2026-10-09",
+    "sha": "cd4bb265a",
+    "subject": "Record 2026-10-09 audit re-run: conformal 0.908, Kelly middle leg 0, ESPN Brier path. Not a main merge.",
+    "family": "research"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "docs/agent-entry-2026-10-08",
+    "sha": "2ea103ee4",
+    "subject": "docs: point agents at READ-FIRST.md before any claim",
+    "family": "docs"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "opencode/grok-espn-odds-first-20261008",
+    "sha": "2b140a810",
+    "subject": "feat(ingestion): ESPN-first odds order, paid only on ODDS_PROVIDER=odds-api with closed circuit",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-09",
+    "branch": "docs/nested-process-2026-10-08",
+    "sha": "34474b7fb",
+    "subject": "docs: ingest nested stochastic process paper as a library source. Not wired. Not a play.",
+    "family": "docs"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "ops/prisma-diff-2026-10-08",
+    "sha": "70bc036d3",
+    "subject": "docs: prisma migrate diff ledger, not applied",
+    "family": "ops"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "ops/lane-stop-2026-10-08",
+    "sha": "3bf7cf699",
+    "subject": "Record writer check and prisma diff stop",
+    "family": "ops"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "ops/ledger-diff-runner",
+    "sha": "6cce701ff",
+    "subject": "x-intel: 2026-10-08 PM sweep \u2014 22 new metric items + 15 full tables",
+    "family": "ops"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "ops/situational-notes-2026-10-08",
+    "sha": "6cce701ff",
+    "subject": "x-intel: 2026-10-08 PM sweep \u2014 22 new metric items + 15 full tables",
+    "family": "ops"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "fix/cron-writers-2026-10-08",
+    "sha": "6b4861890",
+    "subject": "Slow watch crons so odds and calibration writers are not starved",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-08",
+    "branch": "jules/game-script-splits-shadow-20261007-2829890701410284052",
+    "sha": "717f2e077",
+    "subject": "feat: game script splits differential",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-07",
+    "branch": "jules-150764698760310228-be21f75a",
+    "sha": "54f253ff0",
+    "subject": "Add game script half-split features module",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-07",
+    "branch": "feat/gse-kats-backtest-harness-910113367812410285",
+    "sha": "6ca7c2d85",
+    "subject": "feat(gse): add walk-forward backtesting harness using Kats",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-643-rebase",
+    "sha": "6a40d9d29",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): Harden the CVE gate: three silent-pass paths in dependency-audit (waivers verified, none removed) (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-601-rebase",
+    "sha": "7d8798fde",
+    "subject": "sheriff(pass2): #601 Glass Ledger hash chain rebased onto current main (Garrett: OPEN THE SEAL)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-440-rebase",
+    "sha": "c8525c7b3",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): Overnight autonomous loop: durable queue, stall detector, research contract (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-644-central-time",
+    "sha": "76a791c82",
+    "subject": "sheriff(pass2): #644 day boundary US Central (America/Chicago) per Garrett ruling",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-438-rebase",
+    "sha": "d81ba05da",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): Freeze prospective MLB-totals pre-registration (James-Stein) before the MVE result exists (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-672-rebase",
+    "sha": "f477355cb",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): Integrate hermes edge-lab + verify the no-edge answer + falsifier fixes + modelProb/ShadowSignal substrate (C-19, C-64..73) (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-671-rebase",
+    "sha": "c52a484eb",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): docs: Claude Academy playbook on main lineage + Sonnet max-leverage operating prompt (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-595-rebase",
+    "sha": "bd0731b68",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): feat(edge-lab): H1 Edges #1-4 - QB pressures, TFL, PD, def snap share (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-670-rebase",
+    "sha": "60c3530eb",
+    "subject": "sheriff(pass2): Edge Index on its full honest range (option B), and the grade ladder (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-627-rebase",
+    "sha": "7c042e707",
+    "subject": "sheriff(pass2): fix(deploy): fail loudly on missing production env; guard duplicate CSP (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-624-rebase",
+    "sha": "9cf1a4843",
+    "subject": "sheriff(pass2): fix(picks): render kickoff times on viewer clock, not server UTC (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-599-rebase",
+    "sha": "2e9c7ffc4",
+    "subject": "sheriff(pass2): Guardrail: tie ingestion code to the source-rights registry (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-662-rebase",
+    "sha": "324b08478",
+    "subject": "sheriff(pass2): fix(mobile): raise conversion-path touch targets to 44px floor (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-659-rebase",
+    "sha": "d2f2288b5",
+    "subject": "sheriff(pass2): build(runtime): pin Node 20 repo-wide, enforce on container images (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-557-rebase",
+    "sha": "1a64e32f9",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): feat(edge-lab): H0.2 kneel + garbage-time attempt volume (C2.1) (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-648-rebase",
+    "sha": "301b77661",
+    "subject": "sheriff(pass2): fix(journey): honest states on the new-customer path (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-556-rebase",
+    "sha": "18621871e",
+    "subject": "sheriff(pass2) rebase: sheriff(pass2): feat(edge-lab): est-routes TPRR proxy (H0.4 E-C1) (rebased)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-645-rebase",
+    "sha": "7d7d35aeb",
+    "subject": "sheriff(pass2): rebase #1054 onto current main (squashed)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-07",
+    "branch": "feat/equalized-coverage-intervals-12978299149047651891",
+    "sha": "755c0b7a7",
+    "subject": "feat: Implement Equalized Coverage conformal intervals and wire into engine",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-07",
+    "branch": "prophet-kats-integration-6664991429016496442",
+    "sha": "300a83ff2",
+    "subject": "feat: integrate facebookresearch/Kats ProphetModel with presets",
+    "family": "props"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-667-rebase",
+    "sha": "4a1f43b61",
+    "subject": "sheriff(pass2): rebased PR #667",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-625-rebase",
+    "sha": "adecfc784",
+    "subject": "sheriff(pass2): rebased PR #625",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-555-rebase",
+    "sha": "8d8a2ae5c",
+    "subject": "sheriff(pass2): rebased PR #555",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-546-rebase",
+    "sha": "ed068f726",
+    "subject": "sheriff(pass2): rebased PR #546",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-444-rebase",
+    "sha": "0d55f8f2f",
+    "subject": "sheriff(pass2): rebased PR #444",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-443-rebase",
+    "sha": "375c53afa",
+    "subject": "sheriff(pass2): rebased PR #443",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-427-rebase",
+    "sha": "9ac473757",
+    "subject": "sheriff(pass2): rebased PR #427",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-426-rebase",
+    "sha": "033410d78",
+    "subject": "sheriff(pass2): rebased PR #426",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-425-rebase",
+    "sha": "670b9255e",
+    "subject": "sheriff(pass2): rebased PR #425",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-642-rebase",
+    "sha": "223246f33",
+    "subject": "sheriff(pass2): rebased PR #642",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-637-rebase",
+    "sha": "c971d60c3",
+    "subject": "sheriff(pass2): rebased PR #637",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-630-rebase",
+    "sha": "52a65481e",
+    "subject": "sheriff(pass2): rebased PR #630",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-629-rebase",
+    "sha": "e958a6954",
+    "subject": "sheriff(pass2): rebased PR #629",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-623-rebase",
+    "sha": "a327bcc80",
+    "subject": "sheriff(pass2): rebased PR #623",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-622-rebase",
+    "sha": "bd3915050",
+    "subject": "sheriff(pass2): rebased PR #622",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-621-rebase",
+    "sha": "ecbfbcf7f",
+    "subject": "sheriff(pass2): rebased PR #621",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-620-rebase",
+    "sha": "333d7dc35",
+    "subject": "sheriff(pass2): rebased PR #620",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-619-rebase",
+    "sha": "96f07fbbc",
+    "subject": "sheriff(pass2): rebased PR #619",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-618-rebase",
+    "sha": "25ca3b3b6",
+    "subject": "sheriff(pass2): rebased PR #618",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-616-rebase",
+    "sha": "2b2277524",
+    "subject": "sheriff(pass2): rebased PR #616",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-615-rebase",
+    "sha": "564c559f1",
+    "subject": "sheriff(pass2): rebased PR #615",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-614-rebase",
+    "sha": "cef64a35b",
+    "subject": "sheriff(pass2): rebased PR #614",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-612-rebase",
+    "sha": "768477f21",
+    "subject": "sheriff(pass2): rebased PR #612",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-610-rebase",
+    "sha": "2e1b3038e",
+    "subject": "sheriff(pass2): rebased PR #610",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-606-rebase",
+    "sha": "72a2855ef",
+    "subject": "sheriff(pass2): rebased PR #606",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-602-rebase",
+    "sha": "5deea414e",
+    "subject": "sheriff(pass2): rebased PR #602",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-600-rebase",
+    "sha": "92a74475f",
+    "subject": "sheriff(pass2): rebased PR #600",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-665-rebase",
+    "sha": "c16d9e354",
+    "subject": "sheriff(pass2): rebased PR #665",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-658-rebase",
+    "sha": "e7fdb298f",
+    "subject": "sheriff(pass2): rebased PR #658",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-656-rebase",
+    "sha": "ceb84b613",
+    "subject": "sheriff(pass2): rebased PR #656",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-655-rebase",
+    "sha": "d537dde95",
+    "subject": "sheriff(pass2): rebased PR #655",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-654-rebase",
+    "sha": "9469596c9",
+    "subject": "sheriff(pass2): rebased PR #654",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-653-rebase",
+    "sha": "37fe51bb4",
+    "subject": "sheriff(pass2): rebased PR #653",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-652-rebase",
+    "sha": "4dc0e980b",
+    "subject": "sheriff(pass2): rebased PR #652",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-650-rebase",
+    "sha": "a5c09fd0f",
+    "subject": "sheriff(pass2): rebased PR #650",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-649-rebase",
+    "sha": "be0163551",
+    "subject": "sheriff(pass2): rebased PR #649",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-646-rebase",
+    "sha": "5cdfbd0f6",
+    "subject": "sheriff(pass2): rebased PR #646",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-641-rebase",
+    "sha": "7dc2a7c42",
+    "subject": "sheriff(pass2): rebased PR #641",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-640-rebase",
+    "sha": "1cc7b270b",
+    "subject": "sheriff(pass2): rebased PR #640",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-638-rebase",
+    "sha": "0e2dc18b8",
+    "subject": "sheriff(pass2): rebased PR #638",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-634-rebase",
+    "sha": "9b8d255dd",
+    "subject": "sheriff(pass2): rebased PR #634",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-632-rebase",
+    "sha": "06cd848dc",
+    "subject": "sheriff(pass2): rebased PR #632",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "sheriff2/pr-631-rebase",
+    "sha": "59e008c76",
+    "subject": "sheriff(pass2): rebased PR #631",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "claude/health-disclosure-and-sleeper-limit",
+    "sha": "618e7035d",
+    "subject": "fix(security): stop /api/health leaking money-path misconfig; bound /api/sleeper/league",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "cv-synth-generator-9671756677691540515",
+    "sha": "7ac09ad44",
+    "subject": "chore: acknowledged PR closure",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "mimo/wire-nfl-mlb-2026-09-23",
+    "sha": "c10ec8f8c",
+    "subject": "test(ingestion-pipeline): add missing isResearchPowerRatingsEnabled mock export (fixes 9 red tests in #884) (#911)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "jules/deploy-webhook-log-12746768609929093709",
+    "sha": "b1d539a08",
+    "subject": "feat: source CCM deploys from deploy webhook log",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "claude/deployed-map-holdout",
+    "sha": "2e0c52c7f",
+    "subject": "Merge branch 'main' into claude/deployed-map-holdout",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "feat/public-metric-guard",
+    "sha": "ba9187eb6",
+    "subject": "Merge branch 'main' into feat/public-metric-guard",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "feat/dark-starved-evaluators",
+    "sha": "b07bbd0cd",
+    "subject": "Merge branch 'main' into feat/dark-starved-evaluators",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "motif/stranded-local-2026-10-03",
+    "sha": "f0f2d7287",
+    "subject": "Merge branch 'main' into motif/stranded-local-2026-10-03",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/port-verifier-harness",
+    "sha": "52d65923a",
+    "subject": "Merge branch 'main' into hermes/port-verifier-harness",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/covariate-bus-pfeatures-frame-forecast",
+    "sha": "dd643dabc",
+    "subject": "fix: add missing CovariateRow fields to rx() test helper",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "jules-remove-ngs-9414411280456332479",
+    "sha": "043ee0b22",
+    "subject": "Merge branch 'main' into jules-remove-ngs-9414411280456332479",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "feat/kats-simulator-harness-9849581930472161665",
+    "sha": "c61d0ad6f",
+    "subject": "Merge branch 'main' into feat/kats-simulator-harness-9849581930472161665",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "defensive-pass-rush-win-rate-17480210039704940924",
+    "sha": "54ffdca4d",
+    "subject": "Merge branch 'main' into defensive-pass-rush-win-rate-17480210039704940924",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "claude/launch-settlement-evidence",
+    "sha": "655c0f21a",
+    "subject": "fix: expand C-143 evidence SHAs to full 40-char refs",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "gse/wp24-c86-totals-drop-reasons",
+    "sha": "70d9fd49b",
+    "subject": "fix: retype TotalDropSignalDb.sourceCategory to SignalCategory (OTHER not in Prisma enum); align MarketCoverageInput.totalDropReasons readonly",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "feat/receiver-metrics-gse-13986519027080562553",
+    "sha": "5a0c06395",
+    "subject": "fix(1032): remove source-map-js; restore @sports/types to dependencies",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "research/total-signal-inventory-2026-09-30",
+    "sha": "b8cd8dedf",
+    "subject": "Merge branch 'main' into research/total-signal-inventory-2026-09-30",
+    "family": "research"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "jules/kats-harmonic-v3-6014192495758848516",
+    "sha": "c5277b5eb",
+    "subject": "fix(1039): revert AGENTS.md + competitive-baseline drive-by hunks",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "claude/kind-gauss-kb2qsd",
+    "sha": "0717867f3",
+    "subject": "Merge branch 'main' into claude/kind-gauss-kb2qsd",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/fix-884-mock-isresearchpower",
+    "sha": "46aeb86fd",
+    "subject": "fix: syntax error - assign mock on mocks object instead of labeled statement",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "feat/changepoint-detector-17654827637054255339",
+    "sha": "2d81c6c16",
+    "subject": "fix(1042): revert trust-gate weakening hunks + competitive-baseline drive-by",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/opp-adj-epa-20260919",
+    "sha": "68b37faba",
+    "subject": "sheriff: reset docs/ops/AGENT_LEDGER.md to main (resolve append conflict; log entries preserved in PR diff)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "feat/drive-failure-rate-2108134241170113457",
+    "sha": "6d6a7d9a2",
+    "subject": "feat(metrics): add drive-failure-rate module and fix CI guardrails",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/last-plan-2026-09-15",
+    "sha": "d9042a470",
+    "subject": "[hermes-C-418] ci: remove settle-picks from GitHub Actions (frozen-path) (#828)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/port-xfp-research",
+    "sha": "8a9f717c5",
+    "subject": "sheriff: resolve ci.yml conflict \u2014 keep both L11 and mimo-xfp verify steps",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "remove-intelligence-methodology-page-12476631573941188038",
+    "sha": "c550bbd04",
+    "subject": "docs(research): GSE brain ingestion v1 + transfer operators + founder corrections (#1025)",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/port-tcv-failclosed",
+    "sha": "059138098",
+    "subject": "Merge branch 'main' into hermes/port-tcv-failclosed",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "hermes/port-docscleanup-rest",
+    "sha": "49cafc558",
+    "subject": "Merge branch 'main' into hermes/port-docscleanup-rest",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "test/keel-score-hit-11396810358770670005",
+    "sha": "1d6fac959",
+    "subject": "test(keel): add unit tests for scoreHit function and resolve trust-gate finding in AGENTS.md",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "jules-10207733215402427283-06071e28",
+    "sha": "ec158aef6",
+    "subject": "fix: resolve trust-gate banned phrase false positive in AGENTS.md",
+    "family": "jules"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "test-keel-field-arithmetic-1759869603413206441",
+    "sha": "1b0f02a8c",
+    "subject": "fix(ci): update AGENTS.md to resolve trust-gate positioning banned phrase check",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "motif/diversification-2026-10-06",
+    "sha": "6d8d5565b",
+    "subject": "docs(research): infrastructure diversification plan \u2014 DB/hosting free tiers + phased migration",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "motif/codeql-restore-2026-10-06",
+    "sha": "b99d32b2f",
+    "subject": "ci(security): restore CodeQL workflow on main (was deleted, ghost entry in Actions)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "motif/wiring-backlog-2026-10-06",
+    "sha": "6b1a86a6a",
+    "subject": "docs(research): GSE engine wiring backlog 2026-10-06 \u2014 38 items, X + arXiv + brain audit",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "motif/cross-domain-transfer-2026-10-06",
+    "sha": "44f08abb5",
+    "subject": "docs(research): cross-domain transfer map 2026-10-06 \u2014 every technique asked where else it fits",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "motif/kats-evaluation-2026-10-05",
+    "sha": "864a1c43c",
+    "subject": "docs: Kats multi-sport deep-dive (per-sport mapping, repo-verified technical answers, revised ADOPT list)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-05",
+    "branch": "fix/remove-dead-rankings-links-1053547701693588691",
+    "sha": "3687d281d",
+    "subject": "revert unrelated tsconfig.json tweak \u2014 rankings PR stays scoped to copy changes",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-05",
+    "branch": "motif/reasoning-doctrine-2026-10-05",
+    "sha": "40bd40ba9",
+    "subject": "docs: add REASONING DOCTRINE + THE STACK + THE LEARNING LOOP to AGENTS.md standing doctrines (Garrett 2026-10-05)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-06",
+    "branch": "fix/remove-dead-rankings-links-10535477016935886912",
+    "sha": "c12231998",
+    "subject": "chore: remove dead rankings references across site",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-05",
+    "branch": "motif/brain-ingestion-2026-10-05",
+    "sha": "e59295430",
+    "subject": "docs(research): GSE brain ingestion v1 + transfer operators + founder corrections (2026-10-05)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-05",
+    "branch": "claude/launch-readiness-c11-pass-1863647017063254495",
+    "sha": "0198d8b55",
+    "subject": "PR #703: launch readiness audit doc + ledger row on current main (conflict resolved; pre-existing ledger conflict markers removed)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-04",
+    "branch": "docs/surf-21-round",
+    "sha": "b711f4c81",
+    "subject": "feat(frontier): mirror frontier/sports engines and harden test harnesses against audit",
+    "family": "docs"
+   },
+   {
+    "date": "2026-10-04",
+    "branch": "keel-intake-2026-10-04",
+    "sha": "5fff9b741",
+    "subject": "Add Keel, the fourth-down intake, outside the web app.",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-04",
+    "branch": "Autonomous-Revenue-Engine",
+    "sha": "166aa3eb8",
+    "subject": "fix(gate): anchor EQ_SPAN on [ ( * -- flash suite 47/50 -> 48/50",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-03",
+    "branch": "feat/ol-deadline-gsis",
+    "sha": "663ef59ce",
+    "subject": "fix(intelligence): deadline-gate the OL chart and require GSIS ids",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "feat/trueprob-calibration-boundary",
+    "sha": "93113cd03",
+    "subject": "docs(research): land the 2026-10-02 research-coverage ledger",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "hermes/lane-bc-20260920",
+    "sha": "063a18bc0",
+    "subject": "Lane BC/C: guardrails, pick-tier, feature-store denylist, waitUntil + 27-change WIP line (recovered from 2026-09-24 recovery manifest)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "hermes/fe-c93",
+    "sha": "58dc55a8c",
+    "subject": "C93 page titles: no-double-brand test + repair script (found uncommitted)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "claude/g2-effective-perf-gate",
+    "sha": "bf1727e8c",
+    "subject": "G2 effective performance gate: route + page + min-sample floor (WIP found uncommitted in recovery manifest)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "hermes/sources-rapidapi-registration",
+    "sha": "150d8e5df",
+    "subject": "RapidAPI sportsbook2 client: registration + implementation + tests (untracked since 2026-09-23)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "hermes/2026-09-18-flash",
+    "sha": "521aa9e1b",
+    "subject": "Land the Venn-Abers stratified width harness (staged 2026-09-18, never committed)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "hermes/book-pick-verdict-gate",
+    "sha": "9466fb629",
+    "subject": "[hermes-gate] Add the registry shape gate the doctrine assumed",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-10-02",
+    "branch": "motif/gse-intelligence-build-2026-10-02",
+    "sha": "1758cfa0d",
+    "subject": "[hermes-papers] Load the rating equation for any week, and score week 5 only from finished games",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/madden-stage7-2026-10-01",
+    "sha": "89b4cea40",
+    "subject": "fix(cv): explicit Obs typing in tests \u2014 literal union inference",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/film-manifest-2026-10-01",
+    "sha": "5323bd1b1",
+    "subject": "docs(film): repeatable clip manifest with measured baselines",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/space-v2-tracking-2026-10-01",
+    "sha": "e0fa8422f",
+    "subject": "feat(space): v2 pipeline \u2014 ORB stabilization + BoT-SORT persistent tracking (Pilot 2 wired in)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/ledger-shadow-2026-10-01",
+    "sha": "a7a7cffb9",
+    "subject": "fix(tests): stat-stability player-lab-table Stab count 3->2 (NGS hardening)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/watcher-space-auth-2026-10-01",
+    "sha": "764479369",
+    "subject": "feat(watcher): Bearer token auth for HF space /process-frame (fail-closed, 401/200 proven)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/film-pilot-2-2026-10-01",
+    "sha": "867af0968",
+    "subject": "Film Pilot 2: ORB/RANSAC stabilizer (0.48px residual), motion-aware evaluator, measured report",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/audit-fix-props-2026-10-01",
+    "sha": "ff9b98de3",
+    "subject": "fix: sync apps/web/vercel.json crons with root copy",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "feat/brier-scoring",
+    "sha": "7f306c79c",
+    "subject": "feat(calibration): score the first 100 settled picks for real",
+    "family": "feature"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/watch-space-auth-2026-10-01",
+    "sha": "a7ab04bf2",
+    "subject": "Secure the watch pipeline: Bearer auth on the Space /process-frame + watcher token wiring",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/film-calibration-spec-2026-10-01",
+    "sha": "10d8ca435",
+    "subject": "docs(research): film calibration + weight-fitting spec (UNCALIBRATED, no code)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/audit-fix-ledger-2026-10-01",
+    "sha": "535b487b0",
+    "subject": "fix(ops): add watch crons to the schedule manifest (drift guard was red)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/audit-fix-calib-2026-10-01",
+    "sha": "3e717b24c",
+    "subject": "audit(calibration): honest status labels \u2014 stale v5.3.0 proposal + rankings queue (NOT BUILT)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/audit-fix-signals-2026-10-01",
+    "sha": "7042f5f44",
+    "subject": "fix(signals): shadow-scoring guard + NGS metadata doctrine scrub",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/cv-corpus-2026-10-01",
+    "sha": "b06cf3070",
+    "subject": "CV corpus REDO: 16 full-read deep dives with implementation specs, corrected matrix + top-kernels (every kernel cites its read)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "motif/ig-sweep-2026-10-01",
+    "sha": "aa68e3178",
+    "subject": "IG sweep 2026-10-01: master intelligence matrix, top-10 kernels, follow list, verified repos/APIs/licenses",
+    "family": "motif"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "fix/signal-weight-upsert-clause",
+    "sha": "d402c8809",
+    "subject": "docs(signals): correct \"seven of thirteen\" to eight, at all five sites",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "rebase/988-onto-main",
+    "sha": "0bc07805e",
+    "subject": "fix(odds-backfill): run-level pacing mutex + governor-before-reserve ordering",
+    "family": "other"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "fix/brace-expansion-patch",
+    "sha": "4be09e221",
+    "subject": "fix(deps): bump brace-expansion 5.0.6/5.0.9 -> 5.0.12, clearing the last unwaived CVE",
+    "family": "fix"
+   },
+   {
+    "date": "2026-10-01",
+    "branch": "fix/trust-gate-bare-surname",
+    "sha": "2786de78f",
+    "subject": "fix(guardrails): exempt the QB bare surname \"Lock\" \u2014 a false positive reddening every PR",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "motif/ledger-pick-path-2026-10-01",
+    "sha": "a8009d3a5",
+    "subject": "fix(engine-pick): close the shadow lane, with arbitration that cannot publish",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/tune-signal-weights-caller",
+    "sha": "77bb11190",
+    "subject": "feat(signals): give tuneSignalWeights a real caller; weight by measured power",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/arbiter-0930",
+    "sha": "7ac8d5d1a",
+    "subject": "fix(arbiter): declare the cron in the LIVE apps/web config too",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "feat/picks-db-surfaces",
+    "sha": "88dd619fb",
+    "subject": "feat(picks): feed the live picks endpoint its game situation surface",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "tmp/rev990",
+    "sha": "88dd619fb",
+    "subject": "feat(picks): feed the live picks endpoint its game situation surface",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/ledger-live-pick-path-0930",
+    "sha": "5f0af48bb",
+    "subject": "test(picks): pin the surfaces wiring the engine already depends on",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/calibration-state-disclosure",
+    "sha": "c7670bbbf",
+    "subject": "fix(brand): drop the last em dash from the calibration page",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/reasoning-spine-measure",
+    "sha": "2621d5cdc",
+    "subject": "test(engine): measure the reasoning spine instead of asserting it",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "tmp/review987",
+    "sha": "2621d5cdc",
+    "subject": "test(engine): measure the reasoning spine instead of asserting it",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "feat/isotonic-calibration-map-0930",
+    "sha": "0155759d4",
+    "subject": "fix(types): guard the ECE bin index under noUncheckedIndexedAccess",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/calibration-audit-2026-09-30",
+    "sha": "034bfd735",
+    "subject": "docs(calibration): audit engine calibration claims against measured evidence",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "fix/ngs-adot-percent-units-0930",
+    "sha": "bb67d2d34",
+    "subject": "fix(intelligence): pctShareIntendedAirYards is percentage points, not a fraction",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "fix/model-proof-receipt-modelprob",
+    "sha": "21810b754",
+    "subject": "feat(receipt): commit a real modelProb so the engine can learn from outcomes",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "tmp/merge983",
+    "sha": "21810b754",
+    "subject": "feat(receipt): commit a real modelProb so the engine can learn from outcomes",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/bundle-surfaces-0930",
+    "sha": "9d0f9d33b",
+    "subject": "test(governance): declare the schedule-team-index games query",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "fix/signal-scale-ts-0930",
+    "sha": "b8ff5c27f",
+    "subject": "fix(types): re-export SignalWriteCandidate from the signal writer",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "chore/purge-premium-scrapes-0930",
+    "sha": "6acdaf316",
+    "subject": "chore: purge scraped premium-provider data from this public repository",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/signal-scale-norm",
+    "sha": "ee073bf29",
+    "subject": "feat(signals): normalize the ten key scales and fit real per-key weights",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/calibration-measurement-harness",
+    "sha": "a36f0a028",
+    "subject": "feat(calibration): per-signal-family reliability measurement over settled picks",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/brier-modelprob-path-0930",
+    "sha": "03612967a",
+    "subject": "feat(proof): real modelProb bridge so PickProofReceipt can carry a Brier score",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "hermes/shadow-salvage-b25013b",
+    "sha": "b25013b4e",
+    "subject": "fix(test): alias ingestion-pipeline and prediction-engine to local packages",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "feat/bundle-0930",
+    "sha": "e0a8b19fe",
+    "subject": "feat(intelligence): wire real DB rows into the GSE observation bundle",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "chore/license-and-pin-0930",
+    "sha": "688c47cf7",
+    "subject": "chore: pin next-auth to the version the lockfile already resolves",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "chore/polyform-licensing-0930",
+    "sha": "bcba9ec63",
+    "subject": "chore: adopt PolyForm Noncommercial 1.0.0 for code and CC BY-NC 4.0 for data",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-30",
+    "branch": "test/devig-asymmetric-inputs-2026-09-30",
+    "sha": "f3615d7fb",
+    "subject": "test(engine): pin the #965 devig fix with asymmetric-input tests",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "chore/provenance-truth-02",
+    "sha": "5817f7953",
+    "subject": "fix(engine): stop adapters claiming modules they never import",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "fix/signal-ledger-shard-v3",
+    "sha": "3031946f6",
+    "subject": "rebase signal-ledger shard fix onto current main",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "docs/neon-note-4b3e",
+    "sha": "a706ac7c9",
+    "subject": "[hermes-surf-20] close the outage at both ends, and record the two wrong diagnoses",
+    "family": "docs"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "fix/health-alert-unmeasurable-not-green",
+    "sha": "b37d399fa",
+    "subject": "fix(health-alert): a failed read is unreadable even if a reading came back",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "fix/ingestion-outage-v2",
+    "sha": "62458dfee",
+    "subject": "fix(ingestion): stop a DB outage from failing ingestion SILENTLY",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "chore/neon-branch-churn",
+    "sha": "cc3da61ae",
+    "subject": "fix(ci): stop creating a paid Neon branch on every push to an open PR",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "chore/remove-contests-surface",
+    "sha": "f23265739",
+    "subject": "fix(web): drop the now-unused isContestsPublic imports the lint gate caught",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "fix/ingestion-db-outage-guard",
+    "sha": "527019162",
+    "subject": "docs(ops): measured Vercel cost audit - 59% fewer invocations, and a scale-to-zero finding",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "fix/ingestion-run-open-outage-guard",
+    "sha": "de51ddabf",
+    "subject": "docs(audit): 6 silent failures of the outage's exact class, 2 on the alerting path",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "hermes-surf-16b",
+    "sha": "95c36c151",
+    "subject": "docs(ops): bridge-file review - 66 of the 75 rescued files are already in the repo",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "preserve/at-risk-venn-2026-09-29",
+    "sha": "5b5e45e9f",
+    "subject": "preserve: second at-risk site \u2014 VENN width measurement work in Sports-flash-0918",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "preserve/at-risk-bridges-2026-09-29",
+    "sha": "45e4e2bdd",
+    "subject": "preserve: rescue 2.3 MB of uncommitted source that existed nowhere on origin",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "hermes-surf-16-provenance-fix",
+    "sha": "47fe369cc",
+    "subject": "docs(ops): four worker reports (airwave readiness, odds blackout, PR triage, dupes)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "hermes-surf-14-inventory",
+    "sha": "ed4b99d23",
+    "subject": "[hermes-surf-16] ledger: resolve the evidence SHA to 2b546ec5b",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-29",
+    "branch": "motif/orchestration-v4-2026-09-28",
+    "sha": "84d4250b4",
+    "subject": "[hermes-surf-12/13] record the PR #946 merge (ccda82c5b) in both rows",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "fix/signal-ledger-shard-v2",
+    "sha": "1a2d01b92",
+    "subject": "docs(calibration): record that the \u00a72 backtest does not resolve",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "hermes/shard-rotation",
+    "sha": "1a2d01b92",
+    "subject": "docs(calibration): record that the \u00a72 backtest does not resolve",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "motif/orchestration-v3-2026-09-28",
+    "sha": "5864125e0",
+    "subject": "orchestration v3: evidence-only briefs, public benchmarks replace head-to-head scoreboard, single coding-agent handoff",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "motif/orchestration-v2-2026-09-28",
+    "sha": "2da983f43",
+    "subject": "Orchestration v2: rankings program, NGS internal-only doctrine, GPL explainer, Odds API backfills",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "motif/orchestration-2026-09-28",
+    "sha": "cccefab30",
+    "subject": "Orchestration 2026-09-28: salary imports, CLV hunt, NGS feed plan, GPL verdicts, full orchestration + coding-agent briefs",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "motif/github-nfl-sweep-deep-dive-2026-09-28",
+    "sha": "6cd715525",
+    "subject": "NFL GitHub sweep deep dive 2026-09-28: completeness audit + 4 teardowns + keeper deep passes + orchestration index",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "motif/github-nfl-sweep-2026-09-28",
+    "sha": "7617c9d4e",
+    "subject": "NFL GitHub sweep 2026-09-28: 1000 repos, 5 wiki pages, 29 code-grounded keepers",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "hermes/ledger-0928",
+    "sha": "d1a6edcba",
+    "subject": "test(ci): cover the cron ROUTE contracts, not just the functions behind them",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-28",
+    "branch": "hermes/prop-signals-and-rule-backtests",
+    "sha": "acfe75e9c",
+    "subject": "fix(signal-ledger): shard the write so the next run actually resumes",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "motif/github-secrets-audit-2026-09-27",
+    "sha": "5dc1473bc",
+    "subject": "docs: GitHub-secrets-lab audit note from IG reel DdweG3txUWI (2026-09-27)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "hermes/schedule-signal-ledger-write",
+    "sha": "a46174c49",
+    "subject": "fix(vercel): mirror the cron into apps/web/vercel.json and the manifest",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "motif/ig-research-2026-09-27",
+    "sha": "edf8be03a",
+    "subject": "research: IG method batch 2026-09-27 (relateanything, startup programs, pose analysis, football CV)",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "hermes/fix-ingestion-oom-and-tracing",
+    "sha": "5be986c6b",
+    "subject": "ledger: FIX-3 and FIX-4 verified live on dpl_CJYjQ13QPRtrBNGWrJnP4sEUTWKa; DOC-1 now measured",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "hermes/fix-lint-unused-args",
+    "sha": "5185a5ba2",
+    "subject": "fix(data-ingestion): filter the season DURING the parse so refresh-player-stats stops OOMing",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "fix/player-stats-oom",
+    "sha": "5bee6cdb2",
+    "subject": "fix(data-ingestion): stream the nflverse decode so the primary stops OOMing",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "fix/slate-data-path-and-player-stats-oom",
+    "sha": "de99fa50c",
+    "subject": "fix(ingestion-pipeline): the board was down over a PATH, not missing data",
+    "family": "fix"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "motif/arxiv-second-pass-2026-09-27",
+    "sha": "2e58e5486",
+    "subject": "arxiv second pass 2026-09-27: seven-paper synthesis, corrected cross-paper architecture, what-we-missed, replacement read 2606.09409 (replaces REJECTed 2609.23158); tracker 585->586/750",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "agent/total-signal-wiring",
+    "sha": "df60c7c56",
+    "subject": "[agent-TSW] nightly status note 2026-09-27: wired, blocked, next",
+    "family": "agent"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "hermes/v3-350-signal-ledger-sources",
+    "sha": "7447d6870",
+    "subject": "[hermes-CLV-1] ledger: record the resolvable work SHA",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "hermes/founder-picks-form",
+    "sha": "93cb695f0",
+    "subject": "[hermes-UI-1] ledger: record the resolvable work SHA on the UI-1 row",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "hermes/wire-signal-ledger",
+    "sha": "e24bb5367",
+    "subject": "feat(prediction-engine): signal ledger populator + outcome-tuned weight tuner",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "feat/situation-snapshot-free-quote-precedence",
+    "sha": "6670d1e1f",
+    "subject": "[hermes-calib-history-wire] ledger: CAL-1 DONE row + fix malformed V3-347/V3-348 rows",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "founder/week3-narrative-live-2026-09-27",
+    "sha": "b972dca36",
+    "subject": "[founder-week3] MODEL_VERSION v5.2.7 -> v5.3.0 with IMPLEMENTED calibration evidence",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "mimo/port-unique-results-2026-09-27",
+    "sha": "dae1df3d5",
+    "subject": "merge: reconcile two lanes that reached narrative_contract independently",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "grok/reasoning-layer-2026-09-26",
+    "sha": "693ba1786",
+    "subject": "dashboard: narrative cleared honesty, and the edge will move down not up",
+    "family": "grok"
+   },
+   {
+    "date": "2026-09-27",
+    "branch": "grok/x-sweep-2026-09-26",
+    "sha": "5b73b82b2",
+    "subject": "intake: competitive intel learned, not pasted into the edge",
+    "family": "grok"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "feat/ios-swiftui",
+    "sha": "6030e623b",
+    "subject": "docs(ios): the green lane runs 125 tests, not 118",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "agent/visibility-index-2026-09-26",
+    "sha": "2f992ccb9",
+    "subject": "docs(agent-index): make the corpus and the stranded work findable",
+    "family": "agent"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "wt/cycle3-2026-09-26",
+    "sha": "63ddc0d18",
+    "subject": "[hermes-cycle3] gate specs, paper index, holdout env, GLMF unblock guards",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "wt/integrator-2026-09-26",
+    "sha": "c9f99abc5",
+    "subject": "[wire-cycle1] fail-closed: refuse unsound ooEpc / bucketRoi / gaussCopulaJoint results",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/wire-papers-2026-09-26",
+    "sha": "b4cc17295",
+    "subject": "docs(wiring): restate census on this checkout, write the normalizer down",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/wip-kb-inventory-2026-09-26",
+    "sha": "570dd0279",
+    "subject": "docs(research): add the 13.7k-line analytics KB master and point the README at it",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/wip-beexly-sports-local-2026-09-26",
+    "sha": "db4b18993",
+    "subject": "chore(scripts): 400-site sports data sweep \u2014 batch runner, shared lib, site list",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/wip-ethandojo-benchmark-film-2026-09-26",
+    "sha": "2c6af8d24",
+    "subject": "feat(prediction-engine): ethandojo weekly benchmark gate + film module",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/wip-e1-movement-2026-09-26",
+    "sha": "4f5006503",
+    "subject": "feat(e1-movement): player-movement trajectory model + /predict/movement endpoint",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/fix-trust-gate-surname",
+    "sha": "a3cc77e4f",
+    "subject": "fix(trust-gate): clear the 4 remaining hits the job log named",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-26",
+    "branch": "hermes/verifier-integrity-metrics",
+    "sha": "187e1a717",
+    "subject": "feat(verifier): wire four research papers into the holdout scorecard",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-25",
+    "branch": "hermes/ethandojo-typecheck-2026-09-25",
+    "sha": "573441660",
+    "subject": "[hermes-ETH-V1] record verification and the 18-error remediation in the ledger",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-25",
+    "branch": "motif/wiring-plans-2026-09-22",
+    "sha": "4dc8c0a25",
+    "subject": "week3: multi-episode transcript intake (full docx read) + pool notes",
+    "family": "motif"
+   },
+   {
+    "date": "2026-09-25",
+    "branch": "agent/ethandojo-handoff-v2-2026-09-25",
+    "sha": "1abd4ea73",
+    "subject": "feat: complete ethandojo handoff composition",
+    "family": "agent"
+   },
+   {
+    "date": "2026-09-25",
+    "branch": "cursor/wire-port-contract-79e9",
+    "sha": "c7cb0baf9",
+    "subject": "[cursor-port-contract] Fail-closed host allowlist for nflverse fetch (Codacy SSRF)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-24",
+    "branch": "hermes/gse-signal-wiring-20260924",
+    "sha": "eb737da9a",
+    "subject": "feat(data-ingestion): add direct ESPN source adapters",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/glass-ledger-phase14-prepare",
+    "sha": "2e0d585c6",
+    "subject": "Merge remote-tracking branch 'origin/main' into gse/glass-ledger-phase14-prepare",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/nobet-regret-utilities",
+    "sha": "50f12be15",
+    "subject": "Merge remote-tracking branch 'origin/main' into gse/nobet-regret-utilities",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/mlb-independent-model",
+    "sha": "a4a1d62f5",
+    "subject": "Merge remote-tracking branch 'origin/main' into gse/mlb-independent-model",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/improves-cite-eligible-snapshot-like",
+    "sha": "780a582db",
+    "subject": "Merge remote-tracking branch 'origin/main' into gse/improves-cite-eligible-snapshot-like",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/eprocess-calib-shadow",
+    "sha": "2d9f696ec",
+    "subject": "Merge remote-tracking branch 'origin/main' into gse/eprocess-calib-shadow",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/consensus-binder-enforce",
+    "sha": "6e34a4a46",
+    "subject": "[hermes-gse/consensus-binder-enforce] bind public consensus to exact mint-time book set",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "ci/shared-trust-gate-web-calib-lint",
+    "sha": "3d58681e0",
+    "subject": "ci(prediction-engine): exclude *.test.ts from package typecheck",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "docs/free-model-lanes",
+    "sha": "4ecd2ca34",
+    "subject": "docs(ops): align FREE_MODEL_LANES with live bunny default",
+    "family": "docs"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/hermes-live-wip",
+    "sha": "592e086c6",
+    "subject": "[hermes-P1d-2] Verify GSE-SEC-015 durable limiter on main (tsc=0, lint=0, vitest 6/6)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "hermes/p1d2-durable-limiter-verify",
+    "sha": "592e086c6",
+    "subject": "[hermes-P1d-2] Verify GSE-SEC-015 durable limiter on main (tsc=0, lint=0, vitest 6/6)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "feat/situation-join-nflverse-espn",
+    "sha": "4b064b586",
+    "subject": "fix(quote-plane): withinHours fail-closed \u2014 both commenceTimes required",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "ci/c96-agent-ledger-hygiene",
+    "sha": "ae252dbb7",
+    "subject": "ci(ledger): C-96 Owner \u2014/OPEN; H-M CANCELLED unreachable SHA",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "copilot/fix-274342140-1204334907-716e83a6-eeda-4f2c-96d2-6e8262bbca83",
+    "sha": "0ad256edd",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "backup/pre-push-20260924/feat-situation-snapshot",
+    "sha": "771d0367e",
+    "subject": "fix(quote-plane): #893 HOLD \u2014 hard wall, cite vs liveGate split, demote parlay",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "backup/pre-push-20260924/gse-signal-wiring",
+    "sha": "771d0367e",
+    "subject": "fix(quote-plane): #893 HOLD \u2014 hard wall, cite vs liveGate split, demote parlay",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "gse/opencode-nfl-mlb-cal-20260923b",
+    "sha": "a48a47815",
+    "subject": "docs: OpenCode Zen NFL/MLB calibration+CLV wiring checklist and free-lane prompts",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/c-96-odds-api-remaining-1228",
+    "sha": "552a7ced6",
+    "subject": "[hermes-C-96] mark C-96 DONE 43d82cefb",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/markets-steam-surprise-1301-0594-8d88",
+    "sha": "bb2af0518",
+    "subject": "[invent-1301.0594] reword AGENTS.md for trust-gate (law 9)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "mimo/calib-clv-2026-09-23",
+    "sha": "0eee329fe",
+    "subject": "ci: fix prediction-engine test typecheck errors (indexed access + arity)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "claude/fable-5-ultracode-plan-ptru4e",
+    "sha": "eeb91c177",
+    "subject": "[hermes-H1] Add pre-implementation change proposal template",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "agent-safe-822-monitor-docs",
+    "sha": "b6bf33adf",
+    "subject": "docs(ops): add CI/PR board greening handoff for multi-agent fleet",
+    "family": "agent"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "ci/web-calibration-lint",
+    "sha": "90ab83cf4",
+    "subject": "fix(web): exclude arxiv-year calibration ports from tsc roots",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "ci/trust-gate-agents-md",
+    "sha": "eff80975f",
+    "subject": "fix(web): exclude arxiv-year calibration ports from tsc roots",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/setup-cloud-agent-environment-a268",
+    "sha": "7a93dff55",
+    "subject": "chore(env): add Cloud Agent dev environment (stub-DB Next.js dev server)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/text-event-align-1210-4854-8d88",
+    "sha": "a57915fbc",
+    "subject": "[wiring-1210.4854] text-to-event semantic alignment invent module",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/c-86-mlb-mls-totals-gate-1228",
+    "sha": "6890464b0",
+    "subject": "[hermes-C-86] claim WP-7/WP-24 MLB MLS totals gate labeling",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "hermes/wip-wire-port-contract-2026-09-26",
+    "sha": "f0b2c36e1",
+    "subject": "[wire-port-contract] adopt frontier signal catalog, verifier loader, and engine doctrine from hermes last-plan",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/c-85-espn-externalid-1228",
+    "sha": "1184da6e1",
+    "subject": "[hermes-C-85] Mark C-85 DONE with product SHA and #882",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "wire/port-contract",
+    "sha": "2f7e00443",
+    "subject": "[wire-port-contract] adopt feature-store contract, frontier signal catalog, nflverse loaders",
+    "family": "wire"
+   },
+   {
+    "date": "2026-09-23",
+    "branch": "cursor/cloud-agent-environment-a2af",
+    "sha": "696e66a52",
+    "subject": "chore(env): make start.sh adaptive (real Postgres when present, stub-DB fallback)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-21",
+    "branch": "mimo/salvage-tiera-2026-09-21",
+    "sha": "b8dfe5d06",
+    "subject": "fix(engine): export pick-clv and oos-split from prediction-engine index",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-21",
+    "branch": "mimo/docs-cleanup-calib-2026-09-21",
+    "sha": "9e4efd38d",
+    "subject": "docs(ops): stale branch triage 2026-09-21 \u2014 delete-safe list + Tier A salvage map",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-20",
+    "branch": "claude/friendly-hawking-x5of32",
+    "sha": "f57fcb53d",
+    "subject": "[signals] one bidirectional spine, wired into every surface",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-20",
+    "branch": "claude/modest-dirac-7skck3",
+    "sha": "8d58199ff",
+    "subject": "test(data-ingestion): reset the crawl delay between the two fetches in one test",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-20",
+    "branch": "hermes/clv-decided-disclosure-20260920",
+    "sha": "2b2b7804a",
+    "subject": "Merge branch 'main' into hermes/clv-decided-disclosure-20260920",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-20",
+    "branch": "claude/signal-architecture-rebuild-bq7l8i",
+    "sha": "640bf9587",
+    "subject": "merge main into signal-architecture-rebuild (AGENTS.md append union)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-20",
+    "branch": "handoff/gse-complete-2026-09-20",
+    "sha": "ecc39d16c",
+    "subject": "handoff: GSE complete work package",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-19",
+    "branch": "hermes/cal-oom-fix-20260919",
+    "sha": "38d7577b6",
+    "subject": "fix(calibration): pass the Prisma client through the loose OddsTableDb boundary at the three recompute call sites (repo convention)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-19",
+    "branch": "stats/books-ordering-2026-09-18",
+    "sha": "3d8d9bd8e",
+    "subject": "[stats-books-ordering] loop 08:00Z: L11 draft scorecard mfp brier 0.225 bits +0.075 beats conf 0.267",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-19",
+    "branch": "mimo/typecheck-signal-value-fix",
+    "sha": "2e6d70265",
+    "subject": "[mimo/typecheck-signal-value-fix] fail-closed ACI + conformal-margin-set (+Inf k>n); 15/15 tests",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "mimo/mimo-xfp-2026-09-18",
+    "sha": "d9f37cc34",
+    "subject": "[mimo-unit3] BLOCKED: no free closing prop-line export; AGENTS record",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "hermes/2026-09-18-queues",
+    "sha": "1b13ba9ad",
+    "subject": "fix(types): static dispatch for ranking orderings (Codacy critical)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "claude/nflverse-schedules-data",
+    "sha": "c4a890413",
+    "subject": "data(nflverse): NFL schedules plus derived columns, 2015-2025, with the fabricated columns left behind",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "gse-enhancements-2026-09-18",
+    "sha": "073cddbf5",
+    "subject": "gse: comprehensive session review - 48 APIs mapped, 62 columns flagged UNVERIFIED",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "claude/pensive-babbage-c7xfdy",
+    "sha": "4bad1c557",
+    "subject": "docs(architecture): train on our signals not the market, and make a million tests safe",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "hermes/c104-clock-rot",
+    "sha": "f33b09bf6",
+    "subject": "[hermes-c104] clock-rot: relative kickoff + toKalshiDateFragment (test-only)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-18",
+    "branch": "hermes/nfl-adv-metrics-2026-09-17",
+    "sha": "f04127861",
+    "subject": "Add files via upload",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-17",
+    "branch": "hermes/research-audit-2026-09-17",
+    "sha": "72001792a",
+    "subject": "audit(research): verify evidence and expose remaining correctness gaps",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-fde4bff6-695e-48df-96e9-885fc628df34",
+    "sha": "851dc2ac7",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "gse/research-by-category-workflow",
+    "sha": "966cce186",
+    "subject": "docs(ops): note U1/U2 helpers landed on gse/cat-c5-c1-offline-helpers (CI pending)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "gse/cat-c5-c1-offline-helpers",
+    "sha": "e267ce9fe",
+    "subject": "docs(ops): unit status for C5/C1 PR 860 awaiting CI",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-b2dd82d5-fd42-4ac6-9de6-6a9617b11fb1",
+    "sha": "ba1a103f9",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-41e0e1d9-a4c2-4315-a36b-854361285e13",
+    "sha": "28558a532",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-65d0d9f9-d8e5-406c-9a95-7652a3434def",
+    "sha": "5ce852bf2",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-e459a8f0-2491-46c6-b284-64057b10c09a",
+    "sha": "3f283aee9",
+    "subject": "docs(ops): root-adjacent category+SoT stub for agents until AGENTS.md large replace",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-423dbaf7-73bf-4bc8-bc35-ecd50b945a19",
+    "sha": "fce63da48",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-9afcf1c5-0988-4835-9eff-1405834ad8f7",
+    "sha": "dcf199822",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "gse/research-sot-next-wave-2026-09-16",
+    "sha": "2858ba4b5",
+    "subject": "docs(ops): add HONEST_STATUS research depth admission",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-43b29ec1-b320-4129-8d2d-1a543f2000c9",
+    "sha": "5b65d11ae",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-48d476a9-eab7-4ea2-bb88-f11a67184e9a",
+    "sha": "c2c85362b",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-c4e82313-89be-4b6c-94dd-5786bb2ce622",
+    "sha": "713ad1b04",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-3babae5c-86ed-4fb3-b6e5-da9f9ab3d0fc",
+    "sha": "239f15b27",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-d411fbd0-0e97-4025-86be-011c21d523a3",
+    "sha": "b0a427210",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-637989d6-5fb5-46fa-9513-900efb22be65",
+    "sha": "56d913cb0",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-565e10a1-d271-4089-affd-d7550c956ed0",
+    "sha": "5e62c57ee",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-274342140-1204334907-734cc0e4-f1e9-461b-8490-057e3e0190d0",
+    "sha": "4855995f5",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-confidence-colour-mapping",
+    "sha": "238f7d6c0",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/823-honest-display-framing-fix",
+    "sha": "3804f235b",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-pricing-title-and-logs",
+    "sha": "270215902",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-issue-804-duplicate-fixtures",
+    "sha": "dc03fc345",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/fix-open-issue-821",
+    "sha": "dc03fc345",
+    "subject": "Initial plan",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "hermes/frontier-transfer-2026-09-15",
+    "sha": "44b8ee692",
+    "subject": "[hermes-self-audit] Withdraw unisolated causal claim (thread-sprawl); L3 shelved on wrong half (snap_counts + practice_status unused); E2/F4 unblockable via the join I solved; L1 estimand mis-specifie",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "feat/ios-native-client",
+    "sha": "ef875d6e1",
+    "subject": "feat(scripts): audio brief layer, with the brand voice enforced on speech",
+    "family": "feature"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/implement-link-to-repo-master",
+    "sha": "86d6f511c",
+    "subject": "[hermes-ponytail] encode minimality and safety policy",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/document-findings-gse-design-benchmarks",
+    "sha": "1b9aa7de8",
+    "subject": "[hermes-C-96] expose odds-header truth fields and skip out-of-season paid supplement",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-16",
+    "branch": "copilot/continue-benchmark-review",
+    "sha": "b110859ff",
+    "subject": "docs(agents): add 2026-09-16 benchmark review and triage guidance",
+    "family": "copilot"
+   },
+   {
+    "date": "2026-09-15",
+    "branch": "hermes/frozen-path-guardrails",
+    "sha": "66b27f2e4",
+    "subject": "[hermes-C-363] ci: verify:holdout in run-all; L11 scorecard precondition (C-363)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-15",
+    "branch": "hermes/frozen-path-settle-scheduler",
+    "sha": "b261b356d",
+    "subject": "[hermes-C-418] ci: remove settle-picks from GitHub Actions (frozen-path)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-15",
+    "branch": "claude/nfl-kickoff-live-check-0qwxfm",
+    "sha": "7f4f29e82",
+    "subject": "Merge remote-tracking branch 'origin/main' into claude/nfl-kickoff-live-check-0qwxfm",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-15",
+    "branch": "claude/framework-integration-2026-09-15",
+    "sha": "c755dacfd",
+    "subject": "fix(broadcast): build the TTS request URL via URL object, not string interpolation",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-15",
+    "branch": "hermes/props-lab-2026-09-15",
+    "sha": "f856dd54b",
+    "subject": "[hermes-props-lab] Props lab 2026-09-15: L1 KILLED (K1/K2/K3), L5 KILLED (pooled c3 CI covers 0, game-level branch closed), L2 KILLED as revenge edge, L3 shelved w/ 6 checked sources; A5 crosscheck r=",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-15",
+    "branch": "docs/move37-research-corpus",
+    "sha": "3a373f65c",
+    "subject": "[audit-followup] land 2026-09-14/15 corrections ledger + AGENTS.md follow-up (E.4/E.6)",
+    "family": "docs"
+   },
+   {
+    "date": "2026-09-13",
+    "branch": "salvage/hardening-run",
+    "sha": "5d5d01d5d",
+    "subject": "fix(ops): bound survey odds read in line-integrity-lane to prevent OOM (Issue #821)",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-12",
+    "branch": "hermes/hero-r3f-stack",
+    "sha": "9eeb37434",
+    "subject": "fix: finalize rebase onto main \u2014 engine set to main's exact DP (0 Math.random), probe+test adapted to 3-arg signature, oracle reports regenerated against final engine, fix pre-existing tsc null-assert",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-10",
+    "branch": "hermes/v528-market-gate-preserved-2026-09-11",
+    "sha": "e2ec2262f",
+    "subject": "[hermes-preserve] v5.2.8 market-anchored gate WIP rescued from an uncommitted working tree (does not compile)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-10",
+    "branch": "props/production-path-2026-09-11",
+    "sha": "133df520f",
+    "subject": "[hermes-props] feat(scripts): props-slate \u2014 wire the edge-lab prop math to real player-week data (Phase A of PROPS_PRODUCTION_PIPELINE_PROMPT_2026-09-10)",
+    "family": "props"
+   },
+   {
+    "date": "2026-09-10",
+    "branch": "hermes/plain-proof-2026-09-10",
+    "sha": "541e494b0",
+    "subject": "[hermes-ledger] H-R DONE: NEBULA v7 reskin merged via 94706a839 (#754)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/proven-surfaces",
+    "sha": "36004be76",
+    "subject": "Gate reading: a RED evaluation closes the figures (publish-policy parity)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/proven-live-ledger",
+    "sha": "8e1d37c9b",
+    "subject": "Merge branch 'claude/c299-test-clock' into claude/proven-live-ledger",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/c299-test-clock",
+    "sha": "12ab9a6d8",
+    "subject": "process-sport test: pin the relative clock to 16:00 UTC so kickoff sits on one date in UTC and Eastern",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/launch-proof",
+    "sha": "536a26463",
+    "subject": "Launch kit: name the scored probability (publish-time market price)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/c301-ledger-done",
+    "sha": "0e3803cf0",
+    "subject": "Ledger: C-301 DONE (merged 52711719c, #747)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/no-inplay-picks",
+    "sha": "374ebf995",
+    "subject": "[C-299] ledger: close C-299 as DONE (merged as 722a4b969 via #745)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/c301-loader-candidates",
+    "sha": "44647253c",
+    "subject": "Calibration loader: receipted picks are odds-table candidates too (C-301)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/proven-ece-estimator",
+    "sha": "e8c31d4d1",
+    "subject": "[C-290] Debias ECE gate estimator (seeded null, analytic cross-check)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/gradio-quickstart-qq3ji3",
+    "sha": "268261ea7",
+    "subject": "docs(ledger): C-277 \u2014 Codacy's critical is not the parity harness (I guessed wrong)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "backup/pre-gg-rewrite-4fc09e9e3",
+    "sha": "4fc09e9e3",
+    "subject": "fix(calibration-lab): remove authentication-tuple pattern from test fixtures",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/sports-launch-round2-fixes-hk7kv9",
+    "sha": "a26532b13",
+    "subject": "fix(dfs): refuse a lock naming a player who is not on the slate",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-08",
+    "branch": "master",
+    "sha": "46bd9ef1b",
+    "subject": "Update AGENTS.md and LEVERAGE_STATUS.md",
+    "family": "other"
+   },
+   {
+    "date": "2026-09-08",
+    "branch": "hermes/v528-week1",
+    "sha": "2d313557a",
+    "subject": "HP-14: add market-anchored v5.2.8 gate (C-255) \u2014 publish only when model has positive edge over de-vigged market fair",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/launch-gate-matrix",
+    "sha": "22b31c532",
+    "subject": "docs(ops): correct gate matrix for the commercial-display gate now built",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/launch-pr-steward",
+    "sha": "318ae9bde",
+    "subject": "docs(ops): final PR steward status \u2014 three green, #723 blocked on a guard false positive",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/agent-ncaa",
+    "sha": "5f47a270f",
+    "subject": "ledger: C-176 DONE, C-178 DONE (NCAA specialist evidence + moneyline trace)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/agent-marketing",
+    "sha": "ec3769298",
+    "subject": "docs(ledger): record C-176 \u2014 Agent 8 marketing drafts, PR #730",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/agent-fantasy",
+    "sha": "171d0202f",
+    "subject": "fix(fantasy): FAN-06/08/14 honesty fixes (C-94 partial)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-08",
+    "branch": "hermes/p0-3-ablation",
+    "sha": "ed631a8e4",
+    "subject": "docs(ablation): P0-3 confidence-inversion ablation \u2014 mechanism found, measurement only",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-09",
+    "branch": "claude/agent-testing",
+    "sha": "8f26c2c05",
+    "subject": "docs(ledger): record C-176, vacuous test fix in env-flags-founding.test.ts",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-08",
+    "branch": "hermes/p0-launch-fixes",
+    "sha": "3a07fffa2",
+    "subject": "fix(proof): P0-1 canonical redirect origins, P0-2 entryOdds write-guard, P2-6 copy sweep, P3-7 pickType in receipts",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-08",
+    "branch": "hermes/night-shift-1",
+    "sha": "e6dd02840",
+    "subject": "fix(proof): P0-1 canonical redirect origins, P0-2 entryOdds write-guard, P2-6 copy sweep, P3-7 pickType in receipts",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-08",
+    "branch": "claude/gse-gsn-architecture-research-3iidd4",
+    "sha": "75001d0e0",
+    "subject": "docs: record the re-verification pass, the settle-picks wire-up, and the outlier-detector fix",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-06",
+    "branch": "hermes/finish-line-2026-09-05",
+    "sha": "56994f66b",
+    "subject": "Merge remote-tracking branch 'origin/main' into hermes/finish-line-2026-09-05",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-06",
+    "branch": "claude/wip-review-round2b",
+    "sha": "143a621bf",
+    "subject": "wip(review): round-two snapshot 3, settlement and fixture items 10 to 14 complete and verified by their fixer, governor items partial",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-06",
+    "branch": "claude/wip-review-round2",
+    "sha": "0b7deaef3",
+    "subject": "wip(review): partial round-two review fixes for #711, unverified snapshot at sign-off",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-05",
+    "branch": "hermes/settlement-token-fix",
+    "sha": "593319e77",
+    "subject": "leverage monitoring: 2026-09-05 cron refresh re-verify canonical tree on hermes/settlement-token-fix",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-04",
+    "branch": "hermes/ledger-sha-fix-2026-09-05",
+    "sha": "0136130ef",
+    "subject": "Ledger H-N7/H-N8: repoint Evidence to squash commit c92964d23",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-04",
+    "branch": "hermes/night-2026-09-05",
+    "sha": "e323def85",
+    "subject": "merge: origin/main (C12 #704) into hermes/night-2026-09-05 \u2014 union ledger rows (C12 + H-N7/H-N8), LEVERAGE_STATUS reconciled to post-attic truth (12 archived/5 kept/2 misattributed, footprint re-measu",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-04",
+    "branch": "hermes/c12-close-the-pass",
+    "sha": "87000c334",
+    "subject": "C12 recovery completion: commit 9 worktree-only files the crash left behind (age-verify page+route+lib, paid-checkout switch, board-surface-chip, stripe-price-check lib, deploy-readiness price test, C",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-03",
+    "branch": "hermes/ncaaf-calibration-2026-09-04",
+    "sha": "c9e5ecddd",
+    "subject": "docs(scripts): correct falsified header in run-historical-calibration.mjs (dispatch sec5 T3)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-03",
+    "branch": "claude/fix-go-live-runbook",
+    "sha": "64cc14b70",
+    "subject": "chore(ci): re-trigger full CI \u2014 prior run at 76b38a3bf succeeded (32895626882); rollup shows stale CANCELLED duplicates from the superseded run",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-03",
+    "branch": "hermes/land-audit-wave",
+    "sha": "cecd88858",
+    "subject": "land #664 (B3 money): swallowed failures on money/kill-switch/alert paths made audible fail-closed outcomes [LF git apply clean; RED->GREEN: 18/24 apps + 3/4 pkg tests failed against old code, 177+4 p",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-09-02",
+    "branch": "claude/dep-audit-browserslist-fast-uri",
+    "sha": "e4b60ec36",
+    "subject": "chore(deps): lockfile-only bumps to clear browserslist + fast-uri high advisories",
+    "family": "claude"
+   },
+   {
+    "date": "2026-09-02",
+    "branch": "claude/upbeat-wozniak-jqjqqi",
+    "sha": "52f7ef878",
+    "subject": "perf(db): add Pick composite index for Week 1 board hot path",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-30",
+    "branch": "claude/fable-5-registry-sync-ejp6pf",
+    "sha": "cfb1e72eb",
+    "subject": "docs(research): land repo-analysis extract 2026-08-30 (18 repos + GenAI benchmarks)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-30",
+    "branch": "backup/pre-push-20260924/master",
+    "sha": "8171c9e6c",
+    "subject": "leverage-monitor: update LEVERAGE_STATUS.md with fresh verification",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-29",
+    "branch": "hermes/res-night-1-cleanup",
+    "sha": "f38fa438f",
+    "subject": "chore: clean hermes/res-night-1 for merge",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-28",
+    "branch": "hermes/res-night-1",
+    "sha": "4fecdc737",
+    "subject": "Initial leverage implementation: algorithm usage guide, configuration reference, enhanced research lab with algorithm mappings, and EV Calculator component",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-29",
+    "branch": "hermes/green-board-1",
+    "sha": "a3560fa56",
+    "subject": "fix(guardrails): GB-6 review \u2014 mask-then-scan replaces line-level exemption (bypass hole closed)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-28",
+    "branch": "hermes/w2-audit-settlement",
+    "sha": "c2d7ad133",
+    "subject": "docs: add development status summary and next steps for cloud coding agents visibility",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-28",
+    "branch": "hermes/galaxy-keyless-fixes",
+    "sha": "727f3eb69",
+    "subject": "fix(galaxy): resolve 6 pre-existing tsc errors + add cron-matrix CI gate",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-28",
+    "branch": "hermes/galaxy-keyless-odds",
+    "sha": "d880a84c0",
+    "subject": "feat(galaxy): clearance-gated keyless path + Kalshi second-book capability + timeouts",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-27",
+    "branch": "hermes/grok46-full-audit-2026-08-27",
+    "sha": "d6fc2c2f5",
+    "subject": "[hermes-C-64] ledger: mark C-64 DONE with 4ad1af456 #679",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-27",
+    "branch": "hermes/sports-intel-orientation",
+    "sha": "2761dcf51",
+    "subject": "[hermes-backfill] Historical odds backfill complete + tests run",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-26",
+    "branch": "hermes/overnight-2026-08-27",
+    "sha": "54ae96107",
+    "subject": "[hermes-overnight-2026-08-27] \u00a74 research batch 13: xT-MDP/CxT, NHL special-teams xG, NFL DEPA, MLB framing-runs, soccer MC/HMM (70 methods)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-27",
+    "branch": "claude/claude-code-install-fix-9gva1i",
+    "sha": "333446404",
+    "subject": "Address second wave of CodeRabbit findings: real bugs + doc corrections",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-26",
+    "branch": "claude/gse-week1-launch-bh0nqo",
+    "sha": "dccdfcb09",
+    "subject": "docs(research): triage 10 uploaded discovery artifacts \u2014 1 useful, 3 verification failures [skip ci]",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-26",
+    "branch": "claude/gse-business-prompts-zexw2w",
+    "sha": "7b1e7d47d",
+    "subject": "docs(business): NORTHSTAR and STATE.md aren't absent \u2014 they land on #672",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-26",
+    "branch": "claude/sonnet-max-leverage-prompt-433yia",
+    "sha": "c1434dc21",
+    "subject": "docs(ledger): C-79 \u2014 queue item #2 revised on C-75 evidence, execution-orders queue closed [skip ci]",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-26",
+    "branch": "claude/academy-optimization-prompt-flmu9p",
+    "sha": "9c47cd22a",
+    "subject": "docs: Sonnet max-leverage operating prompt + Actions-minutes recovery runbook [skip ci]",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-26",
+    "branch": "claude/integration-train",
+    "sha": "03e7c0d21",
+    "subject": "fix(integration): re-apply the content-generator test fix lost in the rebuild",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "codex/galaxy-dynasty-v2-autonomous",
+    "sha": "b58041fe2",
+    "subject": "[docs] Add Claude Academy playbook to docs/ + point Knowledge Bases at it",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/decide-edge-index-scale",
+    "sha": "d3e853574",
+    "subject": "fix(engine): publish the Edge Index on its full honest range; revive the dead grade ladder",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/decide-ledger-schema",
+    "sha": "0241a068e",
+    "subject": "Ledger chain: audit stored rows, not just the parsed export",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/close-test-blind-spots",
+    "sha": "5b09e166d",
+    "subject": "Close four proven test blind spots (guard coverage floors, filter pins, grace-window pin)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/critical-path-coverage-gaps",
+    "sha": "aecfa7aee",
+    "subject": "test: cover untested money and access-control paths",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/mobile-responsive-gaps",
+    "sha": "c81433868",
+    "subject": "fix(mobile): raise conversion-path touch targets to the 44px floor",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/adapter-failure-modes",
+    "sha": "350052e0f",
+    "subject": "Fail closed when an upstream provider misbehaves",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/operator-assistant-truth",
+    "sha": "a25c29b86",
+    "subject": "fix(cockpit): correct false assertions the operator assistant states at runtime",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/grade-ladder-consistency",
+    "sha": "0117d62d4",
+    "subject": "fix(grades): one grade ladder, one source of truth, no dead Featured gate",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/rollback-readiness-audit",
+    "sha": "0dfeb604f",
+    "subject": "docs(ops): add ROLLBACK.md + guard the migration-additivity invariant",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/decide-node-runtime",
+    "sha": "08dc9414a",
+    "subject": "build(runtime): pin Node 20 repo-wide and enforce it on containers",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/workers-subsystem-decision",
+    "sha": "85eba57dd",
+    "subject": "docs(workers): document that workers/ is not deployed + pin the import boundary",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/accessibility-conversion-path",
+    "sha": "200fc183f",
+    "subject": "a11y: share the modal focus contract, apply it to the global page guide",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/type-safety-holes",
+    "sha": "e316b46c0",
+    "subject": "Validate revenue metadata at the fence boundary instead of double-casting",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/market-quote-quality",
+    "sha": "f8ea1e51b",
+    "subject": "Close the NaN skew guard and stop discarding quote quality at ingestion",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/transaction-boundaries",
+    "sha": "2bad9c839",
+    "subject": "Make multi-step DB writes atomic on the money and ingestion paths",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/auth-session-hardening",
+    "sha": "5795fe28f",
+    "subject": "fix(auth): close control-character open-redirect in the callbackUrl guard",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/guardrail-runner-restructure",
+    "sha": "4b52945c2",
+    "subject": "guardrails: run the suite through the manifest runner instead of a 23-long && chain",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/architecture-claims-audit",
+    "sha": "9bea572e8",
+    "subject": "docs: correct false capability, schedule, and command claims across live docs",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/node-version-parity",
+    "sha": "eeadd9d8e",
+    "subject": "Run the guard's own test in CI via the guardrails chain",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/new-user-journey-gaps",
+    "sha": "2a5c7cf74",
+    "subject": "fix(journey): honest states on the new-customer path \u2014 no false \"Subscription active\", no NaN%, no dead-end empty states",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/disclosure-surface-audit",
+    "sha": "600713688",
+    "subject": "Close the reachable-disclosure gaps and pin them with a route sweep",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/stripe-webhook-integrity",
+    "sha": "1b9919c17",
+    "subject": "fix(billing): converge invoice.payment_failed on Stripe's current state; require STRIPE_WEBHOOK_SECRET",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/clearance-enforcement-audit",
+    "sha": "5f933950d",
+    "subject": "Gate the Player Production Lab through the clearance engine",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/day-boundary-consistency",
+    "sha": "66993ffcd",
+    "subject": "Define the platform day boundary once and make every consumer read it",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/entity-resolution-integrity",
+    "sha": "4a4760c25",
+    "subject": "fix(settle): bind picks to the right game \u2014 exact team tokens, consistent orientation, own-date window",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/tier-claim-substantiation",
+    "sha": "3754bb870",
+    "subject": "trust(pricing): stop selling capabilities the gates do not deliver",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/settlement-push-and-line-drift",
+    "sha": "3ec6a18b4",
+    "subject": "fix(picks): make PUSH reachable and stop the published line drifting off the graded one",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/dependency-waiver-audit",
+    "sha": "ee5c2b1e7",
+    "subject": "fix(guardrails): make dependency-audit fail closed instead of reporting OK",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/frontend-launch-blockers",
+    "sha": "1d49b0581",
+    "subject": "fix(web): launch-day frontend blockers \u2014 blank-page hang, vanishing nav, AA contrast on the conversion path",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/resolve-597-598-overlap",
+    "sha": "eee077c12",
+    "subject": "fix(edge-lab): repair the semantic merge break in the INT prop family",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/calibration-math-verification",
+    "sha": "fc79d6b01",
+    "subject": "Verify calibration math end-to-end; pin it; fix one floor denominator",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/content-grounding-audit",
+    "sha": "b6fb8dc14",
+    "subject": "Ground content generation surfaces on data, not on prompt instructions",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/timezone-and-copy-leaks",
+    "sha": "efc3fb734",
+    "subject": "fix(web): finish the UTC-timestamp sweep and close two copy leaks",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/numeric-guard-semantics",
+    "sha": "2754c6299",
+    "subject": "fix(guard): tag grounded numbers with their KIND, sanitize Model Court input, stop the upstream error leak",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/scheduled-job-integrity",
+    "sha": "04bfe1683",
+    "subject": "Guard scheduled-job integrity: cron route existence + auth coverage",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/stale-pricing-docs-sweep",
+    "sha": "553ba6836",
+    "subject": "docs: retire the stale price + free-allowance figures outside the runbook",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/fix-alert-suppression",
+    "sha": "16cc0eba5",
+    "subject": "fix(alerts): kill switch defers instead of silently deleting; email opt-out; player-alert copy; push deep link",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/client-ip-and-enumeration",
+    "sha": "9abafaf7a",
+    "subject": "fix(security): route five rate limiters through clientIp(), close the waitlist enumeration oracle",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/freshness-tautology-and-espn-rights",
+    "sha": "948c33259",
+    "subject": "fix(data-ingestion): stop free-path adapters stamping the local clock as the bookmaker timestamp",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/fix-stampede-and-cost-amplifiers",
+    "sha": "bc86361d1",
+    "subject": "fix(perf,sec): kill the /api/picks cache stampede and bound three unauthenticated cost amplifiers",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/deploy-csp-and-env-guards",
+    "sha": "d76ef70d2",
+    "subject": "fix(deploy): fail loudly on missing production env; guard duplicate CSP",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/fairpredicts-research",
+    "sha": "70ae1fff7",
+    "subject": "docs(ops): watchdog exposure + claim hardening \u2014 FairPredicts, FTC substantiation, Kalshi dependency",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/fix-utc-kickoff-times",
+    "sha": "79c1bb200",
+    "subject": "fix(picks): render kickoff times on the viewer's clock, not the server's UTC",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/correct-bullmq-claims",
+    "sha": "9a6010d2f",
+    "subject": "docs: correct the BullMQ claim where it had propagated out of CLAUDE.md",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/push-handling-in-rates",
+    "sha": "dd3810f57",
+    "subject": "fix(calibration): reword a doc comment that tripped the win-rate guardrail",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/edge-index-copy-and-invariant",
+    "sha": "40abacb3d",
+    "subject": "fix(scoring): port the probability-space averaging fix from #616 to get CI green",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/gate-fantasy-live-pool",
+    "sha": "8af382703",
+    "subject": "test(fantasy): correct a test that encoded the paywall leak it now blocks",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/correct-claude-md",
+    "sha": "63f63deee",
+    "subject": "docs(CLAUDE.md): correct 7 false claims in the root agent spec",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/gate-nflverse-and-dfs-pages",
+    "sha": "e14547021",
+    "subject": "Gate /nflverse and /fantasy/dfs server-side; add repo-wide paywall guard",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/health-probe-and-outbox-retry",
+    "sha": "0758a9dc1",
+    "subject": "fix(health,settlement): page on real odds staleness; stop abandoning FAILED post-settlement work",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/surface-silent-write-failures",
+    "sha": "2b189a59a",
+    "subject": "chore: drop accidentally-committed node_modules symlink",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/fix-handoff-gitignore-claims",
+    "sha": "2bc7f385e",
+    "subject": "docs(hermes): handoff/ is tracked, not gitignored \u2014 fix 6 false claims",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/fix-american-odds-averaging",
+    "sha": "aaa509c8a",
+    "subject": "fix(prediction-engine): average American odds in probability space; fail-closed NaN publish gates",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/sanitize-american-price-tests",
+    "sha": "f0ac55f95",
+    "subject": "test(data-ingestion): pin the odds-format boundary guard",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/devig-before-averaging",
+    "sha": "f89101e26",
+    "subject": "fix(prediction-engine): de-vig before averaging prices + bound the result",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/stripe-price-and-dunning-guards",
+    "sha": "8dd8223ec",
+    "subject": "fix(billing): validate env checkout price IDs; unpaid no longer grants grace",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/gitignore-node-modules-symlink",
+    "sha": "4295a440e",
+    "subject": "chore: ignore a bare node_modules symlink, not just the directory",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/seo-canonical-sitemap-fixes",
+    "sha": "cafc93271",
+    "subject": "chore: drop accidentally-committed node_modules symlink",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/close-entitlement-gaps",
+    "sha": "b46e0c12b",
+    "subject": "chore: drop accidentally-committed node_modules symlink",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/ground-autopsy-and-court",
+    "sha": "ad78eadf0",
+    "subject": "Ground the loss autopsy and stop the Model Court grounding on the question",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/team-efficiency-atomic",
+    "sha": "7cd32c0c9",
+    "subject": "fix(ingestion): make team-efficiency season replace atomic",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/outbox-health-batch",
+    "sha": "cc4c24f7d",
+    "subject": "perf(outbox): batch settlement health counts into one grouped query per table",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/kernel-wave-k-slots",
+    "sha": "7e96c85af",
+    "subject": "fix(paywall): gate all 11 Player Lab views, not just DFS",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/prisma-query-shape-fixes",
+    "sha": "7c187b9c8",
+    "subject": "fix(watchlist): batch the per-follower contact lookup; pin the query shapes to Prisma",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/test-quality-sweep",
+    "sha": "3166803f6",
+    "subject": "test: replace vacuous assertions with ones that can fail",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/ledger-claim-corrections",
+    "sha": "83b8b3aa9",
+    "subject": "docs(ledger): correct four false claims in the agent ledgers (C-63..C-66)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/hermes-w2-consolidation",
+    "sha": "0ffe9ca01",
+    "subject": "test(edge-lab): remove two flaky Math.random tests, and pin a fail-open in the shuffle gate",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/f9-ledger-chain",
+    "sha": "3b1e0e474",
+    "subject": "Merge remote-tracking branch 'origin/main' into claude/f9-ledger-chain",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/line-archive-prisma-filter",
+    "sha": "632841169",
+    "subject": "fix(line-archive): the market filter was a bare array Prisma rejects",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "claude/ingestion-clearance-guardrail",
+    "sha": "49ddb3a4c",
+    "subject": "feat(guardrails): tie ingestion code to the source-rights registry",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-25",
+    "branch": "hermes/h1-qb-pressures-edge",
+    "sha": "69336556f",
+    "subject": "fix(edge-lab): unblock H1 CI \u2014 typecheck, leak wall, and a permanently-red test",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "hermes/h2-remaining-binds",
+    "sha": "4a515672d",
+    "subject": "[op100] register: G-4 partial-fix row (routes proxy, 2024 join built)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "hermes/h0-docs-completion-marker",
+    "sha": "99f8c2623",
+    "subject": "docs(ops): annotate H0 completion status in EDGE-HUNT-LAUNCH.md",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "hermes/h0-next",
+    "sha": "e837ece74",
+    "subject": "chore: stage overnight grunt work (close-truth test, research files from agents)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq12-commercial-copy-scan-coverage",
+    "sha": "20f9ae81a",
+    "subject": "fix(guardrails): deep-scan components/pricing + faq/about/trends, sweep bot templates (LQ12)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq15-model-court-grounding",
+    "sha": "0c55baa39",
+    "subject": "fix(claims): ground Model Court answer numerics (LQ15)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq14-pick-explainer-grounding",
+    "sha": "e6ff06c0f",
+    "subject": "fix(claims): ground pick-explainer numerics against the engine context (LQ14)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq13-calibration-insight-grounding",
+    "sha": "2c736827d",
+    "subject": "fix(claims): ground calibration weekly insight numerics (LQ13)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq17-smoke-www-canonical",
+    "sha": "7d9fd0bd8",
+    "subject": "fix(ops): smoke-test the canonical www host, not the apex (LQ17)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq16-deploy-ready-hardening",
+    "sha": "485a078d3",
+    "subject": "fix(ops): close two false-green holes in deploy:ready (LQ16)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq10-elite-alert-copy",
+    "sha": "8c911190c",
+    "subject": "fix(copy): remove unbacked real-time alert claims (LQ10)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq9-evidence-vocab-copy",
+    "sha": "92a6e9e9a",
+    "subject": "fix(copy): stop claiming unconditional calibration pre-PROVEN (LQ9)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq11-numeric-guard-hardening",
+    "sha": "074bba8f4",
+    "subject": "fix(guardrails): close the numeric-claims SAFE_CONTEXT bypass (LQ11)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq8-humans-txt-honest-standards",
+    "sha": "1b4391420",
+    "subject": "fix(humans.txt): describe the standard, not an unearned outcome (LQ8)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq7-stripe-webhook-idempotency-research",
+    "sha": "ee9b0252a",
+    "subject": "docs(ops): Stripe webhook idempotency decision record (LQ7)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq6-board-passes-rate-limit",
+    "sha": "8a9b421a0",
+    "subject": "fix(board): rate-limit the public /api/board/passes route (LQ6)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq5-picks-page-free-literal",
+    "sha": "1abf03eea",
+    "subject": "fix(picks): stop hand-rolling the FREE entitlements literal (LQ5)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq4-board-confidence-redaction",
+    "sha": "e2c12f50e",
+    "subject": "fix(board): centralize confidence redaction inside loadBoardState (LQ4)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq2-lq3-fantasy-rate-limited-gate",
+    "sha": "c2160e1dd",
+    "subject": "fix(fantasy): stop 403ing paying FANTASY subscribers off the lineup tool (LQ2+LQ3)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/lq1-dfs-salaries-gate",
+    "sha": "14aeea608",
+    "subject": "fix(fantasy): gate /api/dfs/salaries behind the fantasy entitlement floor (LQ1)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/pl8-elite-clv-ledger",
+    "sha": "63919bac6",
+    "subject": "feat(clv): surface the platform's own graded CLV to Elite (PL8)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/pl7-calibration-freshness",
+    "sha": "ff1f63ba9",
+    "subject": "feat(performance): show the calibration report's freshness stamp (PL7)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/pl4-per-sport-settled",
+    "sha": "2a83b9aa9",
+    "subject": "feat(ops): per-sport canonical-settled breakdown + read-only snapshot (PL4-PL6)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/pl3-canonical-settled-cumulative",
+    "sha": "690a4a220",
+    "subject": "fix(autonomy): wire the cumulative canonical-settled count into free-path autonomy (PL3)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/pl2-cross-path-score-guard",
+    "sha": "db296a6eb",
+    "subject": "fix(settle): refuse to grade or overwrite on a cross-path score conflict (PL2)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-23",
+    "branch": "claude/pl1-doubleheader-hold",
+    "sha": "4f46e1609",
+    "subject": "fix(settle): hold ambiguous same-day rematch instead of grading candidates[0]",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/h0-incentive-cal-covariates",
+    "sha": "ef6770688",
+    "subject": "feat(edge-lab): incentive + rule-change calendar as covariates (H0 slice #4)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/nfl-change-point-detect",
+    "sha": "92f5f3d10",
+    "subject": "feat(edge-lab): NFL change-point / regime detector (H0 slice #1)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/h0-est-routes",
+    "sha": "8c9b1a09f",
+    "subject": "fix(edge-lab): reject negative/non-finite targets in estRoutesTprr (H0.4 review)",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/h0-kneel-garbage",
+    "sha": "f19ae2160",
+    "subject": "fix(edge-lab): spreadLine is optional + inert (H0.2 review)",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/h0-validation-harness",
+    "sha": "17379776a",
+    "subject": "fix(edge-lab): nextGameCovariate looks up layer/provenance from registry (H0.1 review)",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "claude/grok-stats-analysis-i8muyp",
+    "sha": "391b3ba42",
+    "subject": "docs(edge-lab): CARDS_PROOF_LADDER deck \u2014 confirmed live grading bug, wire into dispatch",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/ox-alpha-rush-attempts-volume",
+    "sha": "f55a2e103",
+    "subject": "docs: log H0 merge #555/#556/#557 into ox-alpha",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/covariate-cpoe-comp",
+    "sha": "d92a64d10",
+    "subject": "docs: mark #553 merged, update serving SHA to 0285b992",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/h0-validation-harness",
+    "sha": "04410c054",
+    "subject": "feat(edge-lab): est-routes TPRR proxy from snaps x dropbacks (H0.4 E-C1)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/ngs-sep-adot-catch",
+    "sha": "40ada7b36",
+    "subject": "fix(sep-bind): remove stray leftover comment in test file",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/settle-free-path",
+    "sha": "6652f80bb",
+    "subject": "test(settle): match path=free query parser in contract tripwire",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/covariate-bus",
+    "sha": "5a1790dc2",
+    "subject": "fix(edge-lab): add avgYac covariate to bus + tests",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/prop-covariate-gap",
+    "sha": "c4beb2ce1",
+    "subject": "docs: Ox Alpha deep-stats launch + internal-use plan",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/ox-alpha-pass-yards-given-attempts",
+    "sha": "690e96d64",
+    "subject": "feat(props): pass yards given attempts \u2014 Gamma-Poisson exposure on attempts, not games",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/ox-alpha-q-integrity",
+    "sha": "7d917706b",
+    "subject": "fix(ledger): T-Q3a DONE row needs resolvable SHA evidence",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-air-yac",
+    "sha": "4be84befa",
+    "subject": "merge origin/grok/props-hb-air-yac: keep main Kaunitz/rush/ATD/X4/aDOT + air-yac exports",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-adot",
+    "sha": "88d687684",
+    "subject": "merge origin/main: keep X4 + aDOT catch exports",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/kalshi-book-div",
+    "sha": "255178680",
+    "subject": "merge origin/main: keep ATD + Kalshi-vs-book exports",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-atd",
+    "sha": "2e47b07d7",
+    "subject": "merge origin/main: keep rush + ATD exports",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/neon-http-url-fallback",
+    "sha": "ec46f4495",
+    "subject": "fix(deploy): try POSTGRES_URL before Prisma DATABASE_URL on Neon HTTP parity",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-rush",
+    "sha": "2ab44b4fa",
+    "subject": "Merge branch 'grok/props-hb-rush' of https://github.com/BeeXly/Sports into grok/props-hb-rush",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/neon-http-resolve",
+    "sha": "8bea51624",
+    "subject": "fix(deploy): resolve @neondatabase/serverless from packages/db for HTTP parity",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/migrate-http-resolve",
+    "sha": "9168c0490",
+    "subject": "fix(deploy): resolve Neon serverless driver from packages/db in HTTP parity",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/kaunitz-outlier",
+    "sha": "2c08608a3",
+    "subject": "Merge branch 'main' into grok/kaunitz-outlier",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/migrate-http-parity",
+    "sha": "644ed9ac3",
+    "subject": "Merge branch 'main' into grok/migrate-http-parity",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-shin-q",
+    "sha": "3770af7fe",
+    "subject": "fix(props): narrow Shin two-way q so tsc sees defined probabilities",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/kalshi-taker-friction",
+    "sha": "33ec5e834",
+    "subject": "feat(quotes): Kalshi taker fee is friction on q, not edge",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/t12-import-boundary",
+    "sha": "b56d6b124",
+    "subject": "overnight cheap 2026-08-22: stop + morning report + session handoff",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/hermes-ox-alpha-model-choice",
+    "sha": "6fc99c664",
+    "subject": "docs(hermes): add Ox Alpha (OpenRouter stealth model) as the new primary launch option",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/pass-volume-targets",
+    "sha": "dd755ab64",
+    "subject": "pass-volume: use team_targets (sum of player targets) for rbTargetShare, not QB attempts",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "hermes/t11-settlement-backfill",
+    "sha": "8d85687b3",
+    "subject": "ledger: H-T11 T12 verified green (e742a1af, PR #447)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/prop-line-archive",
+    "sha": "3113a28d9",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/520",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-catch",
+    "sha": "608663486",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/519",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/fair-skill-brier",
+    "sha": "7eea36a2f",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/517",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/kalshi-listing-quote",
+    "sha": "dba41466f",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/516",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/grouped-climatology",
+    "sha": "2c0706b7e",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/515",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/bt-consensus-q",
+    "sha": "ae0ecc059",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/514",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/event-odds-receptions",
+    "sha": "043ab56d9",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/518",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-obs",
+    "sha": "bb60a647a",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/510",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "verify/510",
+    "sha": "bb60a647a",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/510",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-hb-nested",
+    "sha": "41190874f",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/509",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/props-priced-edge",
+    "sha": "3288fdca3",
+    "subject": "fix(fantasy): use the @sports/prediction-engine package alias, not a 4-level relative path into another package's src",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/pm-quote-gate",
+    "sha": "955cd297d",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/512",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/contest-bay-dark",
+    "sha": "72a0cdc68",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/506",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/durable-picks-rate-limit",
+    "sha": "6ca1c69d7",
+    "subject": "fix(picks): durable rate limiting on public pick routes and the wallet guard",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/daily-slate-gate",
+    "sha": "a32d27652",
+    "subject": "fix(picks): daily-slate never checked the public-picks gate",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/picks-gate-no-store",
+    "sha": "a3ba95751",
+    "subject": "fix(picks): make the public gate responses uncacheable",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/stale-gate-comment-fix",
+    "sha": "7e6c69b21",
+    "subject": "fix(docs): FORCE_NO_BET_IF_STALE does not auto-arm with PUBLIC_PICKS",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/predexon-series-ticker",
+    "sha": "38a0d0c13",
+    "subject": "fix(predexon): select markets by series_ticker, not title search",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/devig-method-honesty",
+    "sha": "d39b32224",
+    "subject": "fix(trust-gate): drop \"guaranteed\" from the value-gap tooltip",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/a5-e2e-auth-checkout",
+    "sha": "795ac9d43",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/502",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/a5-playwright-timeout",
+    "sha": "04b3ce1d2",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/500",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/odds-api-us-dfs",
+    "sha": "7c7f01a82",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/499",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/skellam-spread-rank",
+    "sha": "5bf81e71e",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/501",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/rundown-thin-merge",
+    "sha": "f34d05311",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/498",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/rundown-v2-parse",
+    "sha": "e64814427",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/497",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/vendor-dump-registry",
+    "sha": "159c07499",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/496",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/predexon-kalshi-vendor",
+    "sha": "986f9968d",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/494",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/skellam-conformal-power",
+    "sha": "6143c5002",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/493",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/c7-paid-odds-clients",
+    "sha": "5c496e68f",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/492",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/event-odds-cap",
+    "sha": "cd6959eca",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/486",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/devig-honesty-compare",
+    "sha": "fc6a7cf35",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/485",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/commit-reveal",
+    "sha": "f73bd2ab2",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/488",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/nfl-margin-mixture",
+    "sha": "c976dbfeb",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/474",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/gse-score-contract-tests",
+    "sha": "d7438a9b4",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/476",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/tweedie-aci-logloss-tests",
+    "sha": "a88301dc0",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/477",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/live-calibration-metrics-tests",
+    "sha": "86de292b0",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/475",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/no-bet-gate-tests",
+    "sha": "1b91b2c9a",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/473",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/glass-receipts-tests",
+    "sha": "dd22bcf79",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/479",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/council-ledgers-arg-match",
+    "sha": "25fd29399",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/478",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/ai-citation-polish",
+    "sha": "a4a24a6b6",
+    "subject": "feat(proof): llms.txt \"## Optional\" section + cookieless AI-referral bucketing (S8)",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/clubelo-rights",
+    "sha": "125cd2c84",
+    "subject": "Merge remote-tracking branch 'origin/main' into verify/487",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/value-gap-column",
+    "sha": "0d4b28e28",
+    "subject": "feat(picks): value-gap (\"GSE vs market\") badge on the pick card (S7)",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/ask-the-brain-gate",
+    "sha": "3129909e2",
+    "subject": "feat(launch): Ask-the-Brain launch gate \u2014 blocked by default, ships nothing (S5)",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/tier-ttl-matrix",
+    "sha": "e0f03bfbe",
+    "subject": "feat(picks): per-tier TTL matrix + staleness copy fence (S4)",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/payload-rights-tests",
+    "sha": "c38b98765",
+    "subject": "test(metrics): align source-rights fixtures with Kalshi registry row",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/metric-graduation-rights-tests",
+    "sha": "a5d9f21d4",
+    "subject": "test(metrics): align source-rights fixtures with Kalshi registry row",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/compliance-payments-warn",
+    "sha": "adc7e7731",
+    "subject": "test(metrics): align source-rights fixtures with Kalshi registry row",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/eprocess-kelly-citations",
+    "sha": "8ace86b20",
+    "subject": "test(metrics): align source-rights fixtures with Kalshi registry row",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/trend-render-contract",
+    "sha": "1d9ff5e9b",
+    "subject": "feat(trends): render contract \u2014 no streak without base rate + caveat + forward probability (S3)",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/clv-headline",
+    "sha": "eb4fcf98a",
+    "subject": "Merge remote-tracking branch 'origin/main' into sonnet/clv-headline",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "sonnet/honest-ceiling",
+    "sha": "c094520d6",
+    "subject": "Merge remote-tracking branch 'origin/main' into sonnet/honest-ceiling",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-22",
+    "branch": "grok/dashboard-void-mock",
+    "sha": "cb88c746e",
+    "subject": "test(dashboard): exercise the real Clopper-Pearson path (drop the local-env mock)",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/display-substantiated-tests",
+    "sha": "1dc00e959",
+    "subject": "test(guards): cover display-substantiated fail-closed branches and Wilson LCB",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/placebo-leak-tests",
+    "sha": "28b969608",
+    "subject": "test(honesty): cover placebo-leak fail-closed and scramble properties",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/odds-event-odds",
+    "sha": "ab10a5a36",
+    "subject": "feat(odds-api): licensed event-odds, markets, historical, participants",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/hermes-ledger",
+    "sha": "f0a25629c",
+    "subject": "fix(ops): point Hermes overnight runner at the live AGENT_LEDGER",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/kalshi-rights",
+    "sha": "f93633a81",
+    "subject": "fix(rights): register Kalshi as permission_required and fail-close live paths",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/pick-explain-error-disclosure",
+    "sha": "d869c9720",
+    "subject": "Merge remote-tracking branch 'origin/main' into claude/pick-explain-error-disclosure",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/workflow-contract-tests",
+    "sha": "673f69ad1",
+    "subject": "test(ops): contract-test the sealed control plane \u2014 two verified dead alarms",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/per-sport-dispersion-estimator",
+    "sha": "8d2459b11",
+    "subject": "feat(prediction-engine): per-sport NB2 dispersion estimator (offline evidence, not live)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/clearance-gap-finding",
+    "sha": "e875e1b64",
+    "subject": "docs(ops): document the clearance gap on live pick inputs as founder-gated, not agent-fixable",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/nb2-dispersion-property-test",
+    "sha": "f7f9af83f",
+    "subject": "test(prediction-engine): NB2 dispersion property test \u2014 the check that would have caught phi=12",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/rate-limit-key-forgery",
+    "sha": "809a65aa9",
+    "subject": "fix(security): close a rate-limit bypass \u2014 clientIp trusted a client-controlled header",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/b2b-tier-scoping",
+    "sha": "8cb4f449b",
+    "subject": "fix(b2b): close the v1 API tier leak \u2014 bare keys are FREE-only, premium is opt-in",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/coordination-update-2",
+    "sha": "49db390bc",
+    "subject": "docs(ops): coordination update \u2014 critical path complete, next queue published",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/fix-calibration-regressions",
+    "sha": "38cb7aef3",
+    "subject": "fix(calibration): repair two regressions the Clopper-Pearson merge introduced on main",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/calibration-ci-followup",
+    "sha": "bb2fba98f",
+    "subject": "fix(calibration): VOID count mock order + drop hardcoded 95% on dashboard",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/calibration-ci",
+    "sha": "2b0c70333",
+    "subject": "fix(calibration): VOID count mock order + drop hardcoded 95% on dashboard",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/moneypuck-rights",
+    "sha": "fe99efecd",
+    "subject": "Merge remote-tracking branch 'origin/main' into grok/moneypuck-rights",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/age-gate-21",
+    "sha": "60bc84ccb",
+    "subject": "Merge remote-tracking branch 'origin/main' into grok/age-gate-21",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/t11-settlement-backfill",
+    "sha": "8b12f80b1",
+    "subject": "Merge remote-tracking branch 'origin/main' into grok/t11-settlement-backfill",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/agent-coordination",
+    "sha": "eae1491aa",
+    "subject": "docs(ops): agent coordination channel \u2014 anti-stall protocol for Grok/Claude handoff",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/handoff-state-refresh",
+    "sha": "c13a769e1",
+    "subject": "docs(ops): handoff state refresh \u2014 all merge blockers cleared, start at item 1",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "grok/devig-parlay-mri",
+    "sha": "1a7f26593",
+    "subject": "Merge remote-tracking branch 'origin/main' into grok/devig-parlay-mri",
+    "family": "grok"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/master-research-charter",
+    "sha": "9260886e5",
+    "subject": "Merge remote-tracking branch 'origin/main' into claude/master-research-charter",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/fix-build-worker-segv",
+    "sha": "f703276a2",
+    "subject": "Merge remote-tracking branch 'origin/main' into claude/fix-build-worker-segv",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/espn-scoreboard-limit",
+    "sha": "ff03f661b",
+    "subject": "Merge remote-tracking branch 'origin/main' into claude/espn-scoreboard-limit",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/t12-import-boundary",
+    "sha": "2baad2e3b",
+    "subject": "fix(claude-api): close the AI transport import boundary (T12) \u2014 8 violations to 0",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/research-consolidated-status",
+    "sha": "6a5052567",
+    "subject": "fix(edge): correct SBR archive rights classification -- excluded, not adopt",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/register-mlb-statsapi-rights",
+    "sha": "063fa0901",
+    "subject": "docs(rights): register statsapi.mlb.com as permission_required",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/fix-main-ledger-stale-shas",
+    "sha": "7a31edfa9",
+    "subject": "fix(ledger-guard): resolve real SHAs from CI's shallow clone (80 -> 0 false positives)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/overnight-2026-08-21",
+    "sha": "5f6af75c0",
+    "subject": "overnight: cycle 11-12 bookkeeping \u2014 T10 DONE (634d9246), report updated, T11/T12/T13 remain TODO",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-21",
+    "branch": "claude/mlb-totals-prereg-eprocess-0j5rfd",
+    "sha": "db17570b3",
+    "subject": "Ledger C-65: Amendment v2.2 spec reconciliation",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-20",
+    "branch": "overnight/2026-08-20-mlb-nfl",
+    "sha": "3fa4d9dc8",
+    "subject": "[hermes-C-65] ledger DONE for spec-mismatch audit",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-20",
+    "branch": "overnight/2026-08-20-laguna",
+    "sha": "df16db097",
+    "subject": "C-59 DONE: MVE cycle executed; C-63 model fix; C-64 runner fix",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-19",
+    "branch": "hermes/hf5-mve",
+    "sha": "0035e3b46",
+    "subject": "[hermes-H-F5] freeze MVE e-process; cycle BLOCKED on DB auth",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-19",
+    "branch": "hermes/f9-ledger-chain-schema",
+    "sha": "96feca81b",
+    "subject": "[founder-F-9] ledger DONE a28e1d67",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-19",
+    "branch": "hermes/b6a-chain-append",
+    "sha": "7f3822c47",
+    "subject": "B-6a: ledger-store.ts added; process-sport.ts wiring BLOCKED",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-19",
+    "branch": "hermes/l7-clv-forensics",
+    "sha": "f87146bbb",
+    "subject": "L-8: Commit CLV forensics artifacts (raw.json, ml-and-books.json, per-book.json, README.md)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-19",
+    "branch": "hermes/l6-clv-analysis",
+    "sha": "830ff6dfd",
+    "subject": "L-6: CLV analysis of 2026-08-18 census (UNPUSHED)",
+    "family": "hermes"
+   },
+   {
+    "date": "2026-08-18",
+    "branch": "claude/handoff-stale-claims-2026-08-18",
+    "sha": "3c54e031b",
+    "subject": "docs(handoff): add Fable calibration-gate handoff + live verification appendix",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-10",
+    "branch": "claude/gse-engine-infrastructure-du1mxy",
+    "sha": "94acd5d5a",
+    "subject": "fix(gse-ml-service): patch torch critical CVE, run Docker image as non-root",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/soccer-dc-not-double-poisson",
+    "sha": "39e98dce7",
+    "subject": "fix(ranking): soccer rate independent is Dixon\u2013Coles only (no Poisson double-count)",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/dixon-coles-independent",
+    "sha": "6e918e45f",
+    "subject": "feat(kalshi): parse event tail (ET start + Gn) for series disambiguation",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/ranking-signal-quality-pass",
+    "sha": "9cb2be445",
+    "subject": "fix(ranking): v5.2.1 quality pass \u2014 honest load, Kalshi maps, trueProb always",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/ranking-signal-polarity-independents",
+    "sha": "08ebd71f6",
+    "subject": "fix(ranking): ban edge-as-p; polarity bestScore; ESPN FPI + Kalshi independents",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/holdout-spearman-platt-explore",
+    "sha": "16a414625",
+    "subject": "feat(cal): holdout significance + Spearman separation + Platt methods matrix",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/res-conformal-isotonic-closeout",
+    "sha": "c15c518d5",
+    "subject": "feat(ops): RES definition + conformal inventory on public-surface-truth",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/beta-bakeoff-isotonic-alts",
+    "sha": "ae4254505",
+    "subject": "feat(cal): wire beta into map bake-off; fix projection score kinds",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/model-version-independent-ranking",
+    "sha": "4457ae162",
+    "subject": "feat(engine): MODEL_VERSION v5.2.0 \u2014 price independents into ranking",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/isotonic-kelly-platt-brier",
+    "sha": "a06fb0d83",
+    "subject": "feat(cal): isotonic/Platt bakeoff with Murphy decomp + Kelly integrity",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/proven-selective-b2b-platt",
+    "sha": "6cdd65acc",
+    "subject": "feat(proven): selective publish sweep, holdout ranking, B2B API, Platt",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/cqr-numeric-stack",
+    "sha": "a41113d83",
+    "subject": "feat(cal): CQR for numeric lines + isotonic vs Platt selection",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/stationary-bootstrap-murphy-eb",
+    "sha": "22cc91225",
+    "subject": "feat(cal): stationary bootstrap CI, full Murphy bake-off, conformal notes",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/true-pava-calibrator-matrix",
+    "sha": "313b9f49a",
+    "subject": "feat(cal): true pointwise PAVA + calibrator selection matrix",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-09",
+    "branch": "gse/publish-matrix-isotonic-tests",
+    "sha": "ac4e44621",
+    "subject": "feat(ops): publishedEffective matrix + isotonic PAVA R&D + EB \u03c4 moment",
+    "family": "other"
+   },
+   {
+    "date": "2026-08-07",
+    "branch": "feat/money-path-lookup-auth-leads",
+    "sha": "6ac09edc3",
+    "subject": "fix: lookup_key entitlements, honest free copy, free schedule",
+    "family": "feature"
+   },
+   {
+    "date": "2026-08-06",
+    "branch": "fix/wide-honesty-jynx-cost-stack",
+    "sha": "ec7bd628d",
+    "subject": "fix(honesty): feature-gate vs bootstrap response + Jarvis settle actions",
+    "family": "fix"
+   },
+   {
+    "date": "2026-08-02",
+    "branch": "claude/grok-work-review-6aiwa3",
+    "sha": "0342c04ee",
+    "subject": "fix(ops): smoke-prod.sh checked canonical URLs against the wrong host",
+    "family": "claude"
+   },
+   {
+    "date": "2026-08-02",
+    "branch": "fix/main-lint-model-router-envmodel",
+    "sha": "7d8ff5a2d",
+    "subject": "fix(prediction-engine): port the CI-hang root-cause fix to unblock main",
+    "family": "fix"
+   },
+   {
+    "date": "2026-07-31",
+    "branch": "orbit/wave7-max-leverage",
+    "sha": "17a4a4afb",
+    "subject": "feat(orbit): wave7 max leverage \u2014 crons, path-select law, unlock smoke, embed CSP",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-31",
+    "branch": "orbit/wave6-full-session-embed-integrity",
+    "sha": "399d6c04f",
+    "subject": "feat(orbit): wave6 free Edge Index embed + full-session integrity",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-31",
+    "branch": "orbit/wave5-session2-extract-integrate",
+    "sha": "5029492bf",
+    "subject": "feat(orbit): Session 2 extract \u2014 gse_metric, CIR\u2192Kelly bridge, portfolio export",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-31",
+    "branch": "orbit/wave4-holdout-paradox-offline",
+    "sha": "6b1f51142",
+    "subject": "feat(orbit): wave4 time hold-out, selected-slice ECE, offline pipeline",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-31",
+    "branch": "orbit/wave3-cir-dspy-map",
+    "sha": "7c8b8d22a",
+    "subject": "feat(orbit): wave3 CIR calibrator, DSPy skill harness, orbit map",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-31",
+    "branch": "explore/mondrian-eig-deepen-2026-07-31",
+    "sha": "4239a142e",
+    "subject": "feat(uq): convert residual risks into leverage multipliers",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-30",
+    "branch": "gse/phase2-binary-conformal-adapter",
+    "sha": "1e9912497",
+    "subject": "docs(gse): GSE_GROK_APEX_AUTONOMOUS_PROMPT \u2014 maximum-ambition agent OS",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-30",
+    "branch": "feat/frontier-a-plus-audit-fix",
+    "sha": "6f11a3a8f",
+    "subject": "fix(quote-plane): methodTag density + archive continuous CLV honesty",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-30",
+    "branch": "fix/agent-ci-pg-health-hash-equal",
+    "sha": "83b14e933",
+    "subject": "fix(ci): AI Council vitest root + drop unused vi in dual-secret test",
+    "family": "fix"
+   },
+   {
+    "date": "2026-07-30",
+    "branch": "feat/agent-serial-1-7-dual-auth-board-own-prefire",
+    "sha": "9bd8a52d2",
+    "subject": "docs(ops): ledger re-sync for CI synchronize event",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-29",
+    "branch": "feat/frontier-hydrate-fire-authority",
+    "sha": "3c5206663",
+    "subject": "feat(frontier): cold-plane cron, fire-authority, derived formulas, feast-arch",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-29",
+    "branch": "feat/elevation-structural-open-kernel",
+    "sha": "eb209e501",
+    "subject": "fix(prediction-engine): namespace product No-Bet types",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-28",
+    "branch": "feat/ws5-walkforward-wiring",
+    "sha": "cb7b12b62",
+    "subject": "ci: retrigger checks (empty diff)",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-28",
+    "branch": "feat/ws2-ws3-calibration-fuzz-certificate-wire",
+    "sha": "531189158",
+    "subject": "feat(board): certifyBoardGateEvaluation \u2014 the first production consumer of the certificate bridge + aligned work plan",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-28",
+    "branch": "feat/certificate-golden-hash-schema-lock",
+    "sha": "0ad956846",
+    "subject": "fix(certificate): golden-hash test passed a readonly tuple where a mutable array is required",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-28",
+    "branch": "fix/cascade-audit-remediation",
+    "sha": "8d07b691a",
+    "subject": "fix(cascade): close the five verified holes from the honesty-cascade audit",
+    "family": "fix"
+   },
+   {
+    "date": "2026-07-28",
+    "branch": "feat/refusal-native-certificates",
+    "sha": "58d04aa2b",
+    "subject": "fix(certificate): three real defects found reviewing the stack against the live gate",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-27",
+    "branch": "feat/uq-honesty-stack-hardening",
+    "sha": "ac3907f82",
+    "subject": "docs(ops): index mondrian-dual-signal + vision transfer docs",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-25",
+    "branch": "feat/gate-phase-c-counts",
+    "sha": "8c2995741",
+    "subject": "fix(edge-lab): POSTPONED/CANCELED are not placeable; stop the script overclaiming",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-24",
+    "branch": "feat/board-gate-consumer",
+    "sha": "a4f526b48",
+    "subject": "fix(board): attribute width vetoes per row; never report an unplayed outcome",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-24",
+    "branch": "uq/section2-complete",
+    "sha": "a574fce27",
+    "subject": "docs(cascade): record the ledger-multiprob blocker \u2014 a missing writer, not commitment risk",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-24",
+    "branch": "feat/airwave-hit-rate-floor",
+    "sha": "34339933f",
+    "subject": "fix(uq-test): pavIsotonic weight test used an already-monotone input",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-24",
+    "branch": "feat/honesty-ivap-display-guard-wire",
+    "sha": "08bf5dcf8",
+    "subject": "feat(honesty): verify+test IVAP and display-substantiated guard, export both, add pundit hit-rate floor",
+    "family": "feature"
+   },
+   {
+    "date": "2026-07-24",
+    "branch": "uq/section2-remaining-2026-07-24",
+    "sha": "7bf942c8b",
+    "subject": "feat(uq): remaining UQ_HANDOFF section 2 modules",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-23",
+    "branch": "claude/website-redesign-world-class-xoz5sz",
+    "sha": "ebd8d173b",
+    "subject": "fix(design): token-migrate 3 admin pages added on main since branch",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-21",
+    "branch": "codex/nova-ai-opportunity-engine-2026-07-21",
+    "sha": "fbc3cfe0c",
+    "subject": "docs(nova): add concise copy-paste coding-agent start prompt",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-19",
+    "branch": "claude/galaxy-sports-edge-pdcswh",
+    "sha": "9ceef68d3",
+    "subject": "docs(frontier): DEC-065 \u2014 task #77 dedicated reviews for keen-ptolemy + safety-wip (2/6 remaining)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-18",
+    "branch": "research/galaxy-genesis-metacortex-2026-07-17",
+    "sha": "14c743245",
+    "subject": "test(genesis): make launch package validation structural and non-brittle",
+    "family": "research"
+   },
+   {
+    "date": "2026-07-17",
+    "branch": "claude/glass-ledger-edge-engine",
+    "sha": "c637634b6",
+    "subject": "perf(claude): enable prompt caching on every generator \u2014 all 7 now pass cache:{system:true}",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-17",
+    "branch": "claude/fantasy-engine-foundation-rebased",
+    "sha": "af5e73ad5",
+    "subject": "feat(cockpit): port founder-gated model-accuracy leaderboard onto fantasy-engine-foundation-rebased",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-17",
+    "branch": "claude/frontier-superset-rebased",
+    "sha": "a7b38043b",
+    "subject": "fix(gates): close four bypasses in agent-foundry scanner, assurance findings, and radar date validation",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-16",
+    "branch": "codex/gse-frontier-recovery-2026-07-13",
+    "sha": "9b6da1aea",
+    "subject": "Merge origin/main (#114 preview paywall + #115 nflverse PBP) into gse-frontier-recovery",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-12",
+    "branch": "claude/model-accuracy-leaderboard",
+    "sha": "f109b5e79",
+    "subject": "fix(cockpit): model-accuracy board scores the FROZEN forecast, moneyline-only, with endpoints",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-12",
+    "branch": "claude/hotfix-clv-settlement-billing-integrity",
+    "sha": "237f03335",
+    "subject": "docs(handoff): scope the accuracy-leaderboard wiring; adversarial queue verified green",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-11",
+    "branch": "claude/fantasy-engine-foundation",
+    "sha": "7ca998b95",
+    "subject": "fix(cockpit): fantasy-engine page adopts the G-1 per-page ADMIN check",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-11",
+    "branch": "claude/stress-property-suite",
+    "sha": "645c02c5d",
+    "subject": "Close the Codex finding on PR #83: awayTeam is now MANDATORY for side derivation",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-07",
+    "branch": "codex/sunday-frontier-maxforce-2026-07-05",
+    "sha": "9ffebc560",
+    "subject": "feat: add conformal uncertainty historical adapter",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-disposable-rehearsal-packet",
+    "sha": "6f193b5dc",
+    "subject": "feat(web): add api v1 disposable rehearsal packet",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-promotion-readiness-matrix",
+    "sha": "a1616bd6a",
+    "subject": "feat(web): add api v1 promotion readiness matrix",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-autonomous-polish-hardening",
+    "sha": "6d7601e62",
+    "subject": "docs(api): record api v1 polish verification",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-rd-polish-guards",
+    "sha": "9789a0405",
+    "subject": "feat(web): add api v1 R&D polish guards",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-disposable-db-rehearsal-plan",
+    "sha": "fcee17168",
+    "subject": "docs(web): add api v1 disposable database rehearsal plan",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-durable-fixture-report-archive",
+    "sha": "f286054d3",
+    "subject": "feat(web): archive api v1 durable fixture report",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-durable-fixture-simulator",
+    "sha": "63c950f43",
+    "subject": "feat(web): add api v1 durable fixture simulator",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-dormant-durable-adapter-interface",
+    "sha": "6edddd265",
+    "subject": "feat(web): add api v1 dormant durable adapter interface",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-durable-adapter-harness",
+    "sha": "01dfe0c09",
+    "subject": "feat(web): add api v1 durable adapter harness",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-v1-db-schema-proposal",
+    "sha": "481f83abb",
+    "subject": "feat(web): add api v1 schema proposal",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-persistence-shadow-adapter",
+    "sha": "73d59271f",
+    "subject": "feat(web): add api persistence shadow adapter",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/api-consumer-registry-shadow",
+    "sha": "bda2ce762",
+    "subject": "feat(web): add api consumer registry shadow",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/evidence-api-v1-shadow-seam",
+    "sha": "77ecbaa2c",
+    "subject": "feat(web): add api v1 shadow seam",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/commercial-revenue-core",
+    "sha": "d5e2a2d28",
+    "subject": "feat(web): add commercial revenue core",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/media-revenue-metric-api-closeout",
+    "sha": "1950da53e",
+    "subject": "docs: record closeout audit commit",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/media-revenue-studio",
+    "sha": "21eaad4ca",
+    "subject": "feat(web): add media revenue studio foundation",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-04",
+    "branch": "codex/fable-nfl-evidence-integration",
+    "sha": "393271069",
+    "subject": "feat(prediction-engine): add metric source payload rights",
+    "family": "other"
+   },
+   {
+    "date": "2026-07-03",
+    "branch": "claude/night-shift",
+    "sha": "03c0daa06",
+    "subject": "docs(handoff): Codex handoff \u2014 NGS intelligence program (goal, legal footing, 3 approved builds)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-01",
+    "branch": "claude/humanize-polish",
+    "sha": "b214f30f1",
+    "subject": "test: re-pin copy assertions to the humanized strings (greens PR #64)",
+    "family": "claude"
+   },
+   {
+    "date": "2026-07-01",
+    "branch": "claude/launch-review-fixes",
+    "sha": "b7bfc8629",
+    "subject": "test: confidenceLabel asserts the design tokens, not the retired casino palette",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-28",
+    "branch": "rescue/intelligence-core-2026-06-28",
+    "sha": "33251c814",
+    "subject": "fix(engine): conformal correction, backtest driver, and VERIFY gate",
+    "family": "other"
+   },
+   {
+    "date": "2026-06-26",
+    "branch": "research/proven-edge",
+    "sha": "8abd92970",
+    "subject": "docs(master): \u00a719 \u2014 the Frontier Institution (Meaning Compiler \u00b7 Public Observer Ledger \u00b7 Data Genesis Engine)",
+    "family": "research"
+   },
+   {
+    "date": "2026-06-26",
+    "branch": "claude/keen-ptolemy-t38f1g",
+    "sha": "917f81719",
+    "subject": "refine(data-genesis): Da Vinci quality pass \u2014 exact stats, hardened canonical, conservation theorem",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-24",
+    "branch": "codex/galaxy-dynasty-studio-rescue-v2",
+    "sha": "60d49049b",
+    "subject": "docs: add session-wide worktree audit",
+    "family": "other"
+   },
+   {
+    "date": "2026-06-22",
+    "branch": "claude/laughing-wozniak-gyryjx",
+    "sha": "09213d110",
+    "subject": "Document OOS split harness and champion/challenger promoter architecture.",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-22",
+    "branch": "claude/happy-goodall-8lkxrb",
+    "sha": "550a6564a",
+    "subject": "Revenue Activation Plan: decisions made + honest path to first dollar",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-19",
+    "branch": "claude/compassionate-ramanujan-qqt5nb",
+    "sha": "b5e34e271",
+    "subject": "docs(go-live): launch accounting \u2014 whole-repo verification + owner-remaining",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-18",
+    "branch": "claude/pensive-brown-yql6ld",
+    "sha": "9c28a0f0d",
+    "subject": "docs(strategy): hyper-detailed session handoff for the next Claude Code session",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-14",
+    "branch": "claude/nifty-hopper-au7wib",
+    "sha": "f40f49e49",
+    "subject": "a11y(intelligence): fix invisible engine section headers on dark pages",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-14",
+    "branch": "claude/serene-hopper-rtjsfq",
+    "sha": "00295bb5d",
+    "subject": "feat(v9): Pillars B + C + E + G \u2014 fuse legal & analytical provenance spines",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-13",
+    "branch": "claude/funny-lovelace-cjaj4b",
+    "sha": "aa7819bf6",
+    "subject": "docs(changelog): add 3 entries for today's resilience + nav/UX work",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-13",
+    "branch": "jarvis/os-foundation-fable5-v1",
+    "sha": "52ef71f3f",
+    "subject": "fix(jarvis): resolve type compatibility between v2 layers and v1 scribe/intelligence types",
+    "family": "other"
+   },
+   {
+    "date": "2026-06-13",
+    "branch": "claude/review-pending-requests-k46ywu",
+    "sha": "40f9680e4",
+    "subject": "chore(ai): TS gateway smoke variant + ai:smoke script + tsx/dotenv devdeps",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-12",
+    "branch": "claude/adoring-babbage-gq7v77",
+    "sha": "b2c82c48d",
+    "subject": "Add Scoring Zone tab to Player Lab",
+    "family": "claude"
+   },
+   {
+    "date": "2026-06-10",
+    "branch": "safety/sports-wip-2026-06-04",
+    "sha": "344c51882",
+    "subject": "fix(tests): assemble fake secret fixtures at runtime \u2014 GitHub push protection flagged the literal test dummies",
+    "family": "other"
+   },
+   {
+    "date": "2026-06-09",
+    "branch": "claude/edge-map-rebuild-2026-06-04",
+    "sha": "0a5f7a736",
+    "subject": "chore: remove /data link from Attribution + fix trends meta",
+    "family": "claude"
+   },
+   {
+    "date": "2026-05-30",
+    "branch": "claude/magical-volta-wXkx2",
+    "sha": "d7b910fcf",
+    "subject": "test(jarvis-history): cover recent() boundary branches and float capacity",
+    "family": "claude"
+   },
+   {
+    "date": "2026-05-29",
+    "branch": "claude/determined-keller-dUcdG",
+    "sha": "7959d7fe0",
+    "subject": "C98: Plan Lock \u2014 Galaxy 2026 governing plan + alignment artifacts",
+    "family": "claude"
+   },
+   {
+    "date": "2026-05-29",
+    "branch": "codex/autonomy-release-command-center-2026-05-28",
+    "sha": "322ec1929",
+    "subject": "Lock Galaxy 2026 operating plan and autonomous finish system",
+    "family": "other"
+   },
+   {
+    "date": "2026-05-24",
+    "branch": "claude/magical-volta-yiUwL",
+    "sha": "318015659",
+    "subject": "fix(tests): align test fixtures with current @sports/types definitions",
+    "family": "claude"
+   },
+   {
+    "date": "2026-05-24",
+    "branch": "fix/overnight-codex-feature-gates-260524",
+    "sha": "44d823ca5",
+    "subject": "fix(web): add explicit public trust gate helpers with tests",
+    "family": "fix"
+   },
+   {
+    "date": "2026-05-24",
+    "branch": "claude/keen-ptolemy-d0pbK-audit",
+    "sha": "2ccdb82b2",
+    "subject": "docs(audit): overnight session night report 2026-05-24",
+    "family": "claude"
+   },
+   {
+    "date": "2026-05-23",
+    "branch": "claude/keen-ptolemy-d0pbK-codex",
+    "sha": "1e70b105d",
+    "subject": "feat(cockpit): add pick provenance endpoint",
+    "family": "claude"
+   },
+   {
+    "date": "2026-05-24",
+    "branch": "claude/keen-ptolemy-d0pbK",
+    "sha": "d52faf630",
+    "subject": "feat(cockpit): GET /api/cockpit/pick-narrator/[id] + Narrate links in history",
+    "family": "claude"
+   },
+   {
+    "date": "2026-04-22",
+    "branch": "claude/sports-prediction-platform-6F7Wa",
+    "sha": "d43e24a96",
+    "subject": "feat: add Privacy Policy and Terms of Service pages",
+    "family": "claude"
+   }
+  ]
+ },
+ "package_tree": {
+  "packages/prediction-engine/src": {
+   "ts_files": 1981,
+   "ts_non_test": 1014,
+   "py_files": 2
+  },
+  "packages/ingestion-pipeline/src": {
+   "ts_files": 209,
+   "ts_non_test": 106,
+   "py_files": 0
+  },
+  "packages/feature-store/src": {
+   "ts_files": 98,
+   "ts_non_test": 52,
+   "py_files": 0
+  },
+  "packages/verifier/src": {
+   "ts_files": 22,
+   "ts_non_test": 14,
+   "py_files": 0
+  },
+  "packages/db/src": {
+   "ts_files": 7,
+   "ts_non_test": 5,
+   "py_files": 0
+  },
+  "apps/web/app": {
+   "ts_files": 225,
+   "ts_non_test": 224,
+   "py_files": 0
+  },
+  "apps/web/lib": {
+   "ts_files": 1494,
+   "ts_non_test": 1152,
+   "py_files": 0
+  },
+  "intelligence": {
+   "ts_files": 12,
+   "ts_non_test": 12,
+   "py_files": 314
+  },
+  "scripts": {
+   "ts_files": 127,
+   "ts_non_test": 122,
+   "py_files": 66
+  }
+ },
+ "research_doc_census": {
+  "counts_by_dir": {
+   "docs/research": 337,
+   "docs/ops": 519,
+   "docs/engine": 234,
+   "docs/intelligence": 10,
+   "docs/reasoning": 51,
+   "docs/gse": 45,
+   "docs/predictions": 295,
+   "docs/edge": 2,
+   "docs/gates": 1,
+   "docs/formal": 4,
+   "docs/frontier": 5,
+   "docs/arxiv-program": 1608,
+   "research": 4,
+   "intelligence": 75,
+   "docs/audit": 6,
+   "docs/math": 5,
+   "docs/models": 9,
+   "docs/architecture": 6,
+   "docs/brain": 17,
+   "docs/factors": 1
+  },
+  "total_md_json_in_research_dirs": 3234,
+  "corpus_data_files": [
+   {
+    "path": "docs/arxiv-program/research/2026-09-21/arxiv-program/index/corpus-index.jsonl",
+    "bytes": 1495834
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/ARXIV_OMNIBUS_SPORTS_AND_BETTING_CORPUS.json",
+    "bytes": 578576
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/ALL_FOOTBALL_PAPERS_CATEGORIZED.json",
+    "bytes": 230414
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/ALL_FOOTBALL_PAPERS_310_AUDIT.json",
+    "bytes": 175277
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/ARXIV_NFL_CORPUS_EXTRACTION_2026-10-17.json",
+    "bytes": 156265
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/OPENALEX_ACADEMIC_SPORTS_CORPUS.json",
+    "bytes": 139394
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/MASTER_NFL_SPORTS_PAPERS_DATABASE.json",
+    "bytes": 129553
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/OPENALEX_NFL_MASTER_CORPUS.json",
+    "bytes": 123101
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/TRUE_NFL_FOOTBALL_PAPERS_COMPLETE.json",
+    "bytes": 120958
+   },
+   {
+    "path": "docs/arxiv-program/research/2026-10-17/STRICT_CURATED_NFL_SPORTS_PAPERS.json",
+    "bytes": 76615
+   },
+   {
+    "path": "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl",
+    "bytes": 7999749,
+    "records": 5148
+   },
+   {
+    "path": "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl",
+    "bytes": 7999749,
+    "records": 5148
+   },
+   {
+    "path": "data/gse-dataset/bridge-premises.jsonl",
+    "bytes": 85924,
+    "records": 285
+   }
+  ]
+ }
+}

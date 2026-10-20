@@ -13,6 +13,7 @@ import {
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { gradePremisesForSettledPick } from "@/lib/literature/literature-residual-bridge";
 
 export type FreePathSnapshotPick = {
   readonly id: string;
@@ -64,6 +65,41 @@ export async function recordFreePathSnapshot(
       gameDataQualityScore,
     });
     await markPostSettlementWorkDone(work, pick.id, "SNAPSHOT_OUTCOME", settledAt);
+
+    // LITERATURE RESIDUAL FEEDBACK. The premises that were activated for this
+    // game are now gradeable: their claim is compared against the settled
+    // result, and the residual updates their activation score. This is what
+    // makes the literature loop self-correcting rather than a one-way feed.
+    //
+    // Gated on GSE_LITERATURE_BRIDGE=1 and strictly non-blocking: a residual
+    // failure must never block settlement.
+    if (process.env.GSE_LITERATURE_BRIDGE === "1") {
+      try {
+        const residual = await gradePremisesForSettledPick(
+          db as never,
+          {
+            id: pick.id,
+            gameId: pick.gameId,
+            selection: "",
+            pickType: null,
+            factorBreakdown: pick.factorBreakdown,
+          },
+          result,
+        );
+        if (residual.graded > 0) {
+          console.warn(
+            `[free-path-snapshot] literature residuals pick=${pick.id} ` +
+              `graded=${residual.graded}/${residual.activations_found}`,
+          );
+        }
+      } catch (err) {
+        console.warn(
+          `[free-path-snapshot] literature residual failed pick=${pick.id}: ` +
+            `${err instanceof Error ? err.message : err}`,
+        );
+      }
+    }
+
     return { pickId: pick.id, status };
   } catch (err) {
     console.warn(

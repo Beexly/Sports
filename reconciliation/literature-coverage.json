@@ -1,0 +1,146 @@
+{
+ "branch": "dev-lit-vectors-2026-10",
+ "measured_at": "2026-10-20T06:22:47.831Z",
+ "index": {
+  "premises": 5509,
+  "premise_vectors": 5509,
+  "corpus_items": 1268,
+  "corpus_vectors": 1268,
+  "structured": 5509,
+  "raw_premises": 0
+ },
+ "pillar_coverage": [
+  {
+   "pillar": "injury_availability",
+   "premises": 1665
+  },
+  {
+   "pillar": "market_microstructure",
+   "premises": 1626
+  },
+  {
+   "pillar": "tactical_schematic",
+   "premises": 1317
+  },
+  {
+   "pillar": "personnel_availability",
+   "premises": 1161
+  },
+  {
+   "pillar": "efficiency_usage",
+   "premises": 988
+  },
+  {
+   "pillar": "physical_environment",
+   "premises": 720
+  },
+  {
+   "pillar": "narrative_context",
+   "premises": 634
+  },
+  {
+   "pillar": "cognition_decision",
+   "premises": 596
+  },
+  {
+   "pillar": "situational",
+   "premises": 118
+  }
+ ],
+ "premises_without_pillar": 1465,
+ "retrieval_events": {
+  "retrieval_events": 200,
+  "distinct_signals": 7,
+  "distinct_games": 15,
+  "events_with_hits": 198,
+  "avg_latency_ms": "77.99",
+  "max_latency_ms": "92",
+  "hnsw_backed": 200
+ },
+ "signal_family_coverage": [
+  {
+   "family": "cognitive",
+   "events": 128,
+   "events_with_hits": 126,
+   "avg_hits": "12.95"
+  },
+  {
+   "family": "ftn",
+   "events": 72,
+   "events_with_hits": 72,
+   "avg_hits": "12.94"
+  }
+ ],
+ "activations": {
+  "activations": 5650,
+  "distinct_premises_activated": 257,
+  "events_with_activations": 200,
+  "avg_activation_score": "0.12601"
+ },
+ "residuals": {
+  "residuals": 72,
+  "premises_graded": 28,
+  "games_graded": 2,
+  "mean_abs_residual": "0.447673",
+  "mean_signed_residual": "0.447673",
+  "correct": 43
+ },
+ "residual_trend": [
+  {
+   "half": "first_half",
+   "n": 36,
+   "mean_abs_residual": "0.452200",
+   "mse": "0.231812"
+  },
+  {
+   "half": "second_half",
+   "n": 36,
+   "mean_abs_residual": "0.443146",
+   "mse": "0.227578"
+  }
+ ],
+ "residuals_improved": true,
+ "premise_scores": {
+  "scored_premises": 257,
+  "scoring_premises": 17,
+  "promoted_flag": 0,
+  "avg_activation_score": "0.004304",
+  "max_activation_score": "0.227765"
+ },
+ "causal_edges": {
+  "causal_edges": 8,
+  "promoted_edges": 8,
+  "retired_edges": 0
+ },
+ "intervention_tests": [
+  {
+   "verdict": "INCONCLUSIVE",
+   "n": 8,
+   "avg_estimate": null,
+   "avg_p_value": null
+  }
+ ],
+ "discovery": {
+  "corpus_hits": 2003,
+  "distinct_corpus_surfaced": 90,
+  "structured_from_corpus": 75
+ },
+ "latency": {
+  "p50_ms": "78.00",
+  "p95_ms": "79.00",
+  "p99_ms": "84.02"
+ },
+ "query_plan": [
+  "Limit",
+  "  InitPlan 1",
+  "    ->  Limit",
+  "          ->  Seq Scan on premise_vector",
+  "  ->  Nested Loop",
+  "        ->  Index Scan using premise_vector_hnsw_idx on premise_vector v",
+  "              Order By: (embedding <=> (InitPlan 1).col1)",
+  "        ->  Index Scan using premise_pkey on premise p",
+  "              Index Cond: (id = v.premise_id)",
+  "              Filter: (structure_state = 'structured'::text)"
+ ],
+ "uses_hnsw_index": true
+}

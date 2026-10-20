@@ -617,6 +617,40 @@ export interface GameContextInput {
     /** Map a stated probability in [0,1] to its calibrated equivalent. */
     readonly predict: (p: number) => number;
   };
+  /**
+   * LIT-2 CORPUS ADJUSTMENT. The situational shift produced by the Layer-2
+   * literature corpus for this game (packages/prediction-engine/src/reasoning/
+   * corpus-evaluator.ts `evaluateFullCorpus` -> `corpusSituationalShift`).
+   *
+   * THE GAP THIS CLOSES. The corpus evaluator has been in the repo since
+   * 2026-10-17 and its output reaches `process-sport.ts:1454` as
+   * `factorBreakdown.situationalReading.corpusSituationalShift`. It never
+   * reached a probability: `ranking-prob.ts` declares `corpusAdjustment` and
+   * `corpusWeight` (defaulting corpusWeight to 0.0, "unpromoted") and NO
+   * production caller ever passed either. The Reasoning Engine computed a
+   * belief and threw it away.
+   *
+   * This field carries the shift to the ranking path so the seam can be
+   * closed. The WEIGHT stays 0 until the promotion gate is actually run.
+   *
+   * LAWS:
+   * - ABSENT = UNCHANGED. No adjustment means byte-identical output.
+   * - The weight is a SEPARATE field and defaults to 0. A shift with no
+   *   weight does nothing, which is the current honest state.
+   * - The shift is a RANKING adjustment, not a probability claim. It cannot
+   *   move `trueProb`, `rawEdge`, or `shrunkEdge`.
+   */
+  corpusAdjustment?: number | null;
+  /**
+   * Weight applied to `corpusAdjustment` in the ranking path.
+   *
+   * DEFAULT 0.0 — UNPROMOTED. The corpus evaluator's own promotion gate
+   * (corpus-evaluator.ts:26-29) requires "N >= 500 settled games and delta
+   * Brier >= 0.002" on a pre-registered holdout. Until that pre-registration
+   * has actually been run and passed, this weight stays 0 and the corpus
+   * changes nothing.
+   */
+  corpusWeight?: number | null;
   // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
   // "strict": only books whose over/under prices DISCRIMINATE
   // (overPrice !== underPrice) count as consensus votes; equal-juice books

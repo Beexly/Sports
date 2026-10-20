@@ -224,6 +224,84 @@ export * from "./trend-discovery.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
 export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
+
+// =====================================================================
+// Literature index — pgvector retrieval over the structured premises
+// and the MIND corpus. See packages/prediction-engine/src/literature/.
+// =====================================================================
+export {
+  LITERATURE_EMBEDDING_MODEL,
+  LITERATURE_EMBEDDING_DIM,
+  premiseEmbeddingText,
+  eventEmbeddingText,
+  normalizeVector,
+  openRouterEmbedder,
+  hashedEmbedder,
+} from "./literature/literature-embeddings.js";
+export type { Embedder, EmbeddingResult } from "./literature/literature-embeddings.js";
+
+export {
+  LITERATURE_PILLARS,
+  derivePillars,
+  pillarsForSignal,
+} from "./literature/literature-pillars.js";
+export type { LiteraturePillar } from "./literature/literature-pillars.js";
+
+export {
+  mindRecordToPremise,
+  bridgeRecordToPremise,
+  premiseContentHash,
+  vectorLiteral,
+  indexPremises,
+  indexCorpusItems,
+} from "./literature/literature-index-builder.js";
+export type {
+  SqlClient,
+  PremiseInput,
+  CorpusItemInput,
+  IndexedPremise,
+  BuildReport,
+} from "./literature/literature-index-builder.js";
+
+export {
+  retrieveForEvent,
+  applyResidualFeedback,
+  promotePremisesToCausalEdges,
+  runInterventionTest,
+  makeEventKey,
+  normalCdf,
+  DEFAULT_TOP_K,
+  DEFAULT_MIN_SIMILARITY,
+} from "./literature/literature-retrieval.js";
+export type {
+  LiteratureEvent,
+  RetrievedPremise,
+  RetrievalOutcome,
+} from "./literature/literature-retrieval.js";
+
+// Literature discovery — the broader raw corpus, surfaced only on repeated
+// retrieval, structured only then.
+export {
+  findDiscoveryCandidates,
+  recordDiscoveryHit,
+  promoteDiscoveryToPremise,
+  runDiscoverySweep,
+  DEFAULT_DISCOVERY_THRESHOLD,
+} from "./literature/literature-discovery.js";
+export type { DiscoveryCandidate } from "./literature/literature-discovery.js";
+
+// Causal promotion — premises to edges, then do-calculus on promoted edges only.
+export {
+  runCausalPromotionSweep,
+  listPromotedEdges,
+  retireFailedEdges,
+  PROMOTION_CRITERIA,
+} from "./literature/literature-causal.js";
+export type {
+  CausalEdgeRecord,
+  CausalPromotionReport,
+  InterventionOutcome,
+} from "./literature/literature-causal.js";
 export type { ReadinessGates } from "./readiness.js";
 // Proof-of-record ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â tamper-evident Merkle commitment over published picks.
 export {
