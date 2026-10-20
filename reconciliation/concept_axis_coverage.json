@@ -1,0 +1,154 @@
+{
+ "artifact": "concept_axis_coverage",
+ "measured_at": "2026-10-20T08:09:06.899Z",
+ "resolver": "packages/prediction-engine/src/literature/literature-measures.ts",
+ "registry_size": 14,
+ "registry_tags": [
+  "epa",
+  "rest",
+  "injuries",
+  "separation",
+  "props_receiving",
+  "route_running",
+  "interceptions",
+  "coverage",
+  "depth_chart",
+  "workload",
+  "acwr",
+  "tracking",
+  "live_odds",
+  "game_state"
+ ],
+ "mind_corpus": {
+  "records": 5149,
+  "resolved_to_a_measure": 201,
+  "refusals": {
+   "no_measurable_tag": 408,
+   "conditional_direction": 4540,
+   "RESOLVED": 201
+  },
+  "resolved_tag_distribution": {
+   "coverage": 70,
+   "tracking": 68,
+   "rest": 32,
+   "epa": 23,
+   "injuries": 5,
+   "route_running": 1,
+   "live_odds": 1,
+   "workload": 1
+  },
+  "resolved_claim_type_distribution": {
+   "theoretical": 127,
+   "causal": 39,
+   "correlational": 35
+  },
+  "gradeable_correlational_or_causal": 74,
+  "fully_specified_also_named_metric": 2,
+  "fully_specified_examples": [
+   {
+    "key": "arXiv:2408.10867",
+    "title": "Bye-Bye, Bye Advantage: Impact of Rest Differential in the NFL",
+    "metric": "fourth_quarter_pass_rush_decay",
+    "direction": "negative",
+    "contexts": [
+     "rest",
+     "schedule",
+     "fatigue",
+     "fourth_quarter"
+    ],
+    "measure": "rest",
+    "measure_surface": "Game.restDaysHome",
+    "is_proxy": false
+   },
+   {
+    "key": "arXiv:2102.03453",
+    "title": "The Training—Injury Prevention Paradox: Should Athletes Be Training Smarter and Harder?",
+    "metric": "injury_fatigue_hazard_spike",
+    "direction": "negative",
+    "contexts": [
+     "workload",
+     "acwr",
+     "fatigue",
+     "injury_hazard"
+    ],
+    "measure": "workload",
+    "measure_surface": "SnapCount.offenseSnaps",
+    "is_proxy": false
+   }
+  ]
+ },
+ "live_index": {
+  "total_premises": 5509,
+  "by_source": [
+   {
+    "source": "ResearchSynthesis",
+    "n": 2314,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "Pinnacle",
+    "n": 911,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "arXiv",
+    "n": 905,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "Statrankings",
+    "n": 407,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "AcademicLiterature",
+    "n": 343,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "bridge_premise",
+    "n": 285,
+    "prob_gradeable": 285
+   },
+   {
+    "source": "Kaggle",
+    "n": 269,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "discovered_arXiv",
+    "n": 51,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "discovered_OpenAlex",
+    "n": 14,
+    "prob_gradeable": 0
+   },
+   {
+    "source": "discovered_master",
+    "n": 10,
+    "prob_gradeable": 0
+   }
+  ],
+  "resolved_to_a_measure": 201,
+  "resolved_and_correlational_or_causal": 74,
+  "refusals": {
+   "no_measurable_tag": 693,
+   "conditional_direction": 4540,
+   "RESOLVED": 201,
+   "no_context_tags": 75
+  },
+  "resolved_tag_distribution": {
+   "coverage": 70,
+   "tracking": 68,
+   "rest": 32,
+   "epa": 23,
+   "injuries": 5,
+   "route_running": 1,
+   "live_odds": 1,
+   "workload": 1
+  }
+ },
+ "reproduction": "node reconciliation/measure_concept_axis_coverage.mjs"
+}

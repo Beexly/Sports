@@ -39,8 +39,6 @@
  *   4. Support is counted in DISTINCT GAMES, never in rows.
  */
 
-import { LITERATURE_PILLARS } from "./literature-pillars.js";
-
 /** The granularity an association is measured at. */
 export type MeasureLevel = "player" | "team";
 
@@ -471,9 +469,4 @@ export function conceptActivationScore(
 /** Every measure tag, for verification and for the coverage report. */
 export function measurableTags(): string[] {
   return MEASURE_REGISTRY.map((m) => m.contextTag).sort();
-}
-
-/** The pillars a measure can inform, for cross-checking. */
-export function measurePillars(): string[] {
-  return [...LITERATURE_PILLARS].sort();
 }

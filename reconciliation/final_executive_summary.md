@@ -308,7 +308,7 @@ control** the loop should learn to demote.
 
 ---
 
-## 5d. The MIND corpus: 5,149 records, 128 gradeable — and the reason why
+## 5d. The MIND corpus: 5,149 records, 201 gradeable — and the reason why
 
 The previous cycle proved the promotion gate cannot be cleared. This
 cycle found out **why**, and what would fix it.
@@ -322,8 +322,20 @@ cycle found out **why**, and what would fix it.
 | with a game-level NFL quantity | **22** (0.4%) |
 | with a concept name + context tags + direction | **5,149 (100%)** |
 | `claim_type` in {correlational, causal} | **704** |
-| …**and** a measurable context | **128** |
-| …**and** a specific named metric | **4** |
+| …**and** a measurable context | **128** *(estimate)* |
+| …**and** a specific named metric | **4** *(estimate)* |
+
+**CORRECTED by building the resolver and running it:** the real numbers
+are **201 resolved to a measure** and **74 correlational/causal**, with
+**2** fully specified. The estimate missed the direction filter — **88.2%
+of the corpus is `conditional` and 0 of those 4,540 carry a
+condition.**
+
+**And that is the lever: 878 conditional premises have a measurable
+context.** Extract their conditions and the gradeable population goes
+from 201 to 1,079 — a 5.4× increase, from a corpus fix rather than a
+code change. Full measurement in
+`reconciliation/concept_axis_coverage.md`.
 
 **On the live index: 285 of 5,509 premises (5.2%) are
 probability-gradeable.**
@@ -350,7 +362,7 @@ props_receiving, tracking, interceptions, coverage, live_odds, epa,
 game_state, rest. Coverage is 20.5% of premise-tag pairs, **45.4%
 excluding the three placeholder-metric tags that measure nothing**.
 
-**So the honest number is 128 gradeable premises, not 5,224** — and the
+**So the honest number is 201 gradeable premises, not 5,224** — and the
 **4** with a fully-specified assertion is the measure of what a
 re-extraction pass would unlock.
 
@@ -361,11 +373,11 @@ its **direction** against what happened, scored as
 probability axis is the same idea with a different number. Staged as
 `staged_improvements/08-measure-resolver-concept-axis.md`.
 
-**And the 128 is enough to close the loop.** 14 mappings make 128
+**And the 201 is enough to close the loop.** 14 mappings make 201
 premises gradeable, and the activation/residual/scorecard/promotion/
 demotion/intervention machinery **already exists and is now honest** after
 the six defects fixed earlier. The 4 says "the corpus needs work"; the
-128 says "the loop can close."
+201 says "the loop can close."
 
 ---
 
@@ -454,8 +466,9 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `causal_inference_methods.md` | Every causal method with its wiring status; the 4 missing methods with hook points; the `CausalLink`-has-no-numbers finding |
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
-| `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable, measured: 5,149 records, 39 with a real metric, 22 that are game-level NFL quantities, 128 gradeable on the concept axis, 4 fully specified. The corpus has concepts, not numbers. |
-| `staged_improvements/08-measure-resolver-concept-axis.md` | 14 context->measure mappings + a second grading axis, which is what makes 128 premises gradeable and gives the promotion gate a path that does not need probabilities |
+| `mind_corpus_gradeability.md` + `.json` | What in the MIND corpus is actually gradeable: 5,149 records, 39 with a real metric, 22 game-level NFL quantities. The corpus has concepts, not numbers. |
+| `concept_axis_coverage.md` + `.json` | The resolver RUN over the corpus and the live index: 201 premises resolve to a measure, 74 are correlational/causal, 2 fully specified, 4,540 refused as `conditional`. **The biggest remaining lever: extract the condition for 878 measurable conditional premises and the population goes 201 → 1,079.** |
+| `staged_improvements/08-measure-resolver-concept-axis.md` | 14 context->measure mappings + a second grading axis. **BUILT and MEASURED** — 201 premises gradeable, giving the promotion gate a path that does not need probabilities. |
 | `f2_duplicate_measurement.md` + `.json` | The decisive no-publish gate, MEASURED: permuting the seven non-strength features made the model slightly better (20/20), so the f2 = 1 duplicate claim holds and the gate stays. Includes the per-gate status table. |
 | `literature_coverage_report.md` | The literature loop measured end to end: 5,509 premises + 1,268 corpus items HNSW-indexed, 200 real retrieval events, 5,650 activations, 8 promoted edges; **the tautology I found and fixed**; the degenerate residual sample stated plainly |
 | `recon_integration.md` | What the three recon agents added and what they corrected in my work |
