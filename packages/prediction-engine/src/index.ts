@@ -246,6 +246,15 @@ export {
   pillarsForSignal,
 } from "./literature/literature-pillars.js";
 export type { LiteraturePillar } from "./literature/literature-pillars.js";
+export {
+  isGameKey,
+  resolveOwnGameOutcome,
+  groundingFor,
+} from "./literature/literature-residual-grounding.js";
+export type {
+  GroundingDb,
+  OwnGameOutcome,
+} from "./literature/literature-residual-grounding.js";
 
 export {
   mindRecordToPremise,

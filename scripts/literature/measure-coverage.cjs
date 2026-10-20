@@ -103,11 +103,28 @@ function conn() {
 
   // residual trend: mean |residual| in the first half vs the second half of
   // the graded history. If the loop works, the later residuals are smaller.
+  //
+  // HONESTY (2026-10-20). The trend is measured over DISTINCT
+  // (premise, game) pairs, not residual rows. A game-scoped premise is
+  // activated once per retrieval event touching its game, so the row
+  // count is an artefact of how often it fired: in the measured run 295
+  // rows describe only 38 distinct claims. Splitting 295 rows into two
+  // halves of ~147 therefore splits a handful of games many times over,
+  // and the resulting "improvement" is an ordering artefact, not
+  // learning.
+  //
+  // With distinct pairs the split is over real evidence, and the number
+  // is reported with its sample size so it can be judged.
   const trend = await db.query(
-    `WITH ordered AS (
+    `WITH pairs AS (
+        SELECT DISTINCT ON (premise_id, game_id)
+               premise_id, game_id, residual, graded_at
+          FROM lit.residual
+         ORDER BY premise_id, game_id, graded_at DESC
+     ), ordered AS (
         SELECT residual, row_number() OVER (ORDER BY graded_at) AS rn,
                count(*) OVER () AS total
-          FROM lit.residual
+          FROM pairs
      )
      SELECT CASE WHEN rn <= total / 2 THEN 'first_half' ELSE 'second_half' END AS half,
             count(*)::int AS n,
@@ -116,6 +133,13 @@ function conn() {
        FROM ordered GROUP BY 1 ORDER BY 1`
   );
   out.residual_trend = trend.rows;
+  out.residual_trend_basis = "distinct (premise_id, game_id) pairs";
+
+  // A trend over a handful of pairs is not a trend. Report whether the
+  // sample can support ANY claim, so the number is never read alone.
+  const trendN = trend.rows.reduce((s2, r) => s2 + (r.n ?? 0), 0);
+  out.residual_trend_supportable = trendN >= 30;
+  out.residual_trend_n = trendN;
   const halves = Object.fromEntries(trend.rows.map((r) => [r.half, r]));
   out.residuals_improved =
     halves.first_half && halves.second_half

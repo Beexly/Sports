@@ -237,8 +237,17 @@ CREATE TABLE IF NOT EXISTS lit.intervention_test (
   verdict           text NOT NULL
                       CHECK (verdict IN ('PASS','FAIL','INCONCLUSIVE')),
   reason            text,
+  -- The `superseded` flag marks a test whose edge was retired after the
+  -- test ran. The row is kept (the test IS the evidence) but it no longer
+  -- counts against LAW 4 ("tests run on PROMOTED EDGES ONLY").
+  superseded        boolean NOT NULL DEFAULT false,
   computed_at       timestamptz NOT NULL DEFAULT now()
 );
+
+-- Idempotent migration for a database created before the `superseded`
+-- column existed.
+ALTER TABLE lit.intervention_test
+  ADD COLUMN IF NOT EXISTS superseded boolean NOT NULL DEFAULT false;
 
 CREATE INDEX IF NOT EXISTS intervention_edge_idx ON lit.intervention_test (edge_id);
 

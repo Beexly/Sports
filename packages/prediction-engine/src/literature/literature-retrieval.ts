@@ -343,12 +343,36 @@ export async function applyResidualFeedback(
     // know" gets mse = 0.25 and skill = 0 — it carries no information and
     // earns no weight, which is the correct answer. A premise worse than
     // chance gets a negative skill, clipped to 0: it is not a signal.
+    //
+    // `n` is the number of DISTINCT GAMES the premise has been graded
+    // against, not the number of residual rows. A game-scoped premise is
+    // activated once per retrieval event touching its game, so the row
+    // count is an artefact of how often it fired, not how much evidence
+    // exists. In the measured run, 294 rows collapsed to 38 distinct
+    // (premise, game) pairs -- 21 rows for a single game. Counting rows
+    // would have let one game earn full support.
+    // HONESTY (2026-10-20). The support factor must count DISTINCT GAMES,
+    // not residual rows. A game-scoped premise (one that asserts a
+    // probability for a specific named game) is activated once per
+    // retrieval event that touches that game -- 21 rows for ONE game in
+    // the measured run. Counting rows made one piece of evidence look
+    // like 21, which saturated the support factor and let a premise earn
+    // full weight from a single game.
+    //
+    // The distinct pair (premise, game) is the unit of evidence: one
+    // claim, one game, one outcome.
     const agg = await db.query(
       `SELECT count(*)::int AS n,
               avg(residual)::double precision AS mean_res,
               avg(residual * residual)::double precision AS mse,
               count(*) FILTER (WHERE outcome_correct)::int AS correct
-         FROM lit.residual WHERE premise_id = $1`,
+         FROM (
+           SELECT DISTINCT ON (premise_id, game_id)
+                  premise_id, game_id, residual, outcome_correct
+             FROM lit.residual
+            WHERE premise_id = $1
+            ORDER BY premise_id, game_id, graded_at DESC
+         ) d`,
       [r.premise_id],
     );
     const row = agg.rows[0] as { n: number; mean_res: number | null; mse: number | null; correct: number };
@@ -393,7 +417,12 @@ export async function promotePremisesToCausalEdges(
     readonly minAbsClaim?: number;
     readonly limit?: number;
   },
-): Promise<{ promoted: number; edges: { edge_key: string; premise_key: string; effect_estimate: number | null }[] }> {
+): Promise<{
+  promoted: number;
+  edges: { edge_key: string; premise_key: string; effect_estimate: number | null }[];
+  /** Edges retired this run because their premise no longer clears the gate. */
+  retired: number;
+}> {
   const minGraded = opts?.minGraded ?? 10;
   const minScore = opts?.minScore ?? 0.05;
   const minAbsClaim = opts?.minAbsClaim ?? 0.01;
@@ -488,7 +517,56 @@ export async function promotePremisesToCausalEdges(
     });
   }
 
-  return { promoted, edges };
+  // DEMOTION (2026-10-20). Promotion must be RECONCILIABLE, not just
+  // additive.
+  //
+  // A promoted edge whose premise no longer clears the gate -- because
+  // its score fell, or because the evidence behind it was re-grounded and
+  // no longer supports it -- must be RETIRED, not left standing.
+  //
+  // The measured case: with the support factor counting distinct games
+  // instead of residual rows, zero premises qualified (every game-scoped
+  // premise has exactly ONE game, so graded = 1 < 3). Sixteen edges
+  // promoted under the old row-counting rule were still marked
+  // 'promoted' with no qualifying premise behind them. An edge table that
+  // can only grow is an edge table that cannot be wrong.
+  //
+  // The contract: after this function runs, the set of edges with
+  // status = 'promoted' is EXACTLY the set of premises that clear the
+  // gate. Anything else is retired.
+  const stale = await db.query(
+    `UPDATE lit.causal_edge ce
+        SET status = 'retired',
+            retired_at = now()
+      WHERE ce.status = 'promoted'
+        AND NOT EXISTS (
+          SELECT 1
+            FROM lit.premise_score s
+           WHERE s.premise_id = ce.premise_id
+             AND s.graded >= $1
+             AND s.activation_score >= $2
+        )`,
+    [minGraded, minScore],
+  );
+  const retired = stale.rowCount ?? 0;
+
+  // The premise_score.promoted FLAG must agree with the edge set in BOTH
+  // directions. Setting it on promotion but never clearing it on demotion
+  // leaves the two tables disagreeing -- the measured case was
+  // premise_score.promoted = 16 while causal_edge had 0 promoted and 16
+  // retired. The flag is what downstream readers ask ("is this premise
+  // promoted?"), so it is reconciled from the edge set, not tracked
+  // separately.
+  await db.query(
+    `UPDATE lit.premise_score s
+        SET promoted = EXISTS (
+              SELECT 1 FROM lit.causal_edge ce
+               WHERE ce.premise_id = s.premise_id AND ce.status = 'promoted'
+            ),
+            updated_at = now()`
+  );
+
+  return { promoted, edges, retired };
 }
 
 /**

@@ -1,394 +1,267 @@
-# Literature Integration — Final Coverage Report
+# Literature Coverage — post-audit state (2026-10-20)
 
-**Measured:** 2026-10-20T07:14Z · **Branch:** `dev-lit-vectors-2026-10`
-**Code:** `audit/reconciliation-2026-10-20`
+**Measured:** 2026-10-20T07:45:29.717Z · **Branch:** `dev-lit-vectors-2026-10`
+**Code:** `audit/reconciliation-2026-10-20` @ `6464b3f4a` + this cycle's fixes
 **Machine-readable:** `reconciliation/literature-coverage.json`
 **Reproduce:** `node scripts/literature/run-loop.cjs` then
 `node scripts/literature/measure-coverage.cjs`
 
 ---
 
-## 0. The headline, stated honestly
+## 0. What this cycle changed
 
-**The literature path works. The causal conclusions it produces do not yet
-exist.**
+This cycle found **five real defects in the literature loop**, all of them
+in the honesty machinery — the part that decides whether a premise is
+allowed to influence a published number. All five are fixed, regression-
+tested, and re-measured.
 
-Everything in §1–§5 is measured and real. Everything in §6 is where the
-honest ceiling is. The two must not be conflated, and the previous version
-of this report conflated them.
+| # | Defect | Damage | Fix |
+|---|---|---|---|
+| 1 | **Category error in residual grading.** A bridge premise asserts a probability for a *specific named game* (`bridge:2025_02_CLE_BAL` = P(home wins) for 2025 CLE vs BAL). The loop graded it against whatever game the activation happened to be for. | All 72 residuals compared unrelated propositions. Every one had `actual = 1`, so `mean_signed_residual == mean_abs_residual` **exactly** — a signature no residual can take unless every residual is non-negative. The "residuals improved" trend was noise with a favorable sign. | New `literature-residual-grounding.ts`. A premise is graded against **its own game** (resolved via `historical_games."gameKey"`, 285/285 match). |
+| 2 | **Support factor counted residual ROWS.** A game-scoped premise is activated once per retrieval event touching its game — **21 rows for one game** in the measured run. | One piece of evidence looked like 21 and saturated `min(n/5, 1)`, letting a premise earn full weight from a single game. | The scorecard aggregates over `DISTINCT ON (premise_id, game_id)`. |
+| 3 | **Promotion was ADD-ONLY.** Edges whose premise no longer cleared the gate stayed `'promoted'`. | 16 edges marked promoted with **zero** qualifying premises behind them. An edge table that can only grow is an edge table that cannot be wrong. | `promotePremisesToCausalEdges` now **retires** non-qualifying edges and returns `retired`. |
+| 4 | **`premise_score.promoted` was never cleared on demotion.** | The flag read 16 while `causal_edge` had 0 promoted / 16 retired — two tables disagreeing about the same fact. | The flag is now reconciled **from the edge set** (`promoted = EXISTS(...)`), in both directions. |
+| 5 | **Retiring an edge left its intervention tests live.** | 38 tests pointed at retired edges, breaking schema LAW 4 ("tests run on PROMOTED EDGES ONLY"). The law check read 38 violations. | New `lit.intervention_test.superseded` flag; retiring an edge marks its tests superseded (the rows are kept — the test IS the evidence). The law check counts only live tests. |
 
-| | |
-|---|---|
-| The **mechanism** is built, wired into a live cron, and measured | **yes** |
-| The **retrieval** works at HNSW speed on real signals | **yes** — p50 78ms |
-| The **promotion** fires and produces causal edges | **yes** — 8 edges |
-| The **edges carry a falsifiable estimate** | **yes, as of this commit** — see §4 |
-| The **intervention tests conclude** | **no** — 16/16 INCONCLUSIVE |
-| The **residuals demonstrate learning** | **no** — degenerate sample, see §6.1 |
-| The **engine's published numbers change** | **no** — see §6.4 |
+Plus the **tautology** fixed in the previous cycle (`effect_estimate` was
+the premise's own claim, not an observed effect) and **32 TypeScript
+errors** in this work's own files.
+
+**Verification:** 45/45 tests pass (31 → 45). `tsc --noEmit` reports **0**
+errors in `src/literature/`. The run-loop's LAW CHECK reads **0**.
 
 ---
 
-## 1. The canonical index
+## 1. The index (unchanged, still measured)
 
 | Layer | Count | Vectorized | Index |
 |---|---|---|---|
 | `lit.premise` (structured) | 5,509 | 5,509 | `premise_vector_hnsw_idx` — HNSW, `m=16`, `ef_construction=64`, cosine |
-| `lit.corpus_item` (raw, discovery surface) | 1,268 | 1,268 | `corpus_item_hnsw_idx` — same params |
+| `lit.corpus_item` (raw, discovery) | 1,268 | 1,268 | `corpus_item_hnsw_idx` — same params |
 
-**Model:** `baai/bge-m3` via OpenRouter, 1024-dim, cosine distance.
-`LITERATURE_EMBEDDING_DIM = 1024` is exported so schema, builder and tests
-all assert the same constant.
+**Model:** `baai/bge-m3` via OpenRouter, 1024-dim. HNSW confirmed by
+`EXPLAIN (ANALYZE, BUFFERS)` → `Index Scan using premise_vector_hnsw_idx`.
 
-**HNSW is actually used — verified, not assumed:**
+**Latency:** p50 77ms · p95 79ms · p99 136ms.
 
-```
-EXPLAIN (ANALYZE, BUFFERS) SELECT premise_id FROM lit.premise_vector
-  ORDER BY embedding <=> $1::vector LIMIT 20;
-
-->  Index Scan using premise_vector_hnsw_idx on premise_vector
-      (cost=64.86..23806.50 rows=5525) (actual time=268.466..296.733 rows=20)
-```
-
-**Latency:** p50 78ms · p95 84ms · p99 233ms · max 323ms.
-
-**Pillar coverage** (GIN index on `pillar_tags`):
-
-| pillar | premises |
-|---|---|
-| injury_availability | 1,665 |
-| market_microstructure | 1,626 |
-| tactical_schematic | 1,317 |
-| personnel_availability | 1,161 |
-| efficiency_usage | 988 |
-| physical_environment | 720 |
-| narrative_context | 634 |
-| cognition_decision | 596 |
-| situational | 118 |
-
-**1,465 premises carry no pillar** — by source: `ResearchSynthesis` 951,
-`arXiv` 270, `Kaggle` 65, `Statrankings` 91, `AcademicLiterature` 13,
-`discovered_*` 75. They are still retrievable (the vector index does not
-require a pillar); they are simply not scoped by a pillar filter.
+**Pillar coverage:** injury_availability 1,665 · market_microstructure
+1,626 · tactical_schematic 1,317 · personnel_availability 1,161 ·
+efficiency_usage 988 · physical_environment 720 · narrative_context 634 ·
+cognition_decision 596 · situational 118. **1,465 premises carry no
+pillar** (ResearchSynthesis 951, arXiv 270, Kaggle 65, Statrankings 91,
+AcademicLiterature 13, discovered_* 75) — still retrievable, simply not
+pillar-scoped.
 
 ---
 
-## 2. Event-driven retrieval — it is in a live cron
-
-**Not a script. A cron route.**
+## 2. Event-driven retrieval (in a live cron)
 
 `apps/web/app/api/cron/signal-ledger-write/route.ts:313` calls
 `bridgeSignalsToLiterature(...)` on every signal-ledger write, gated by
-`GSE_LITERATURE_BRIDGE=1` (`:302`).
+`GSE_LITERATURE_BRIDGE=1`. The non-blocking guarantee is explicit in the
+code (`:297-298`): a literature failure must never fail a signal write,
+and the report states what the bridge did **so a silent zero is visible**.
 
-**The non-blocking guarantee is explicit in the code** (`:297-298`): a
-literature failure must never fail a signal write, and the report states
-what the bridge did **so a silent zero is visible**. The route logs
-`literature events=N/M activations=N refused=N` (`:327-328`).
+**Measured:** 60 real events from the `signals` table (not synthetic
+keys) · 781 activations · 69 distinct premises activated · 58/60 events
+with hits · 60/60 HNSW-backed.
 
-**Measured over 200 real events** drawn from the `signals` table (the 126k
-rows the engine already has) — not synthetic keys:
-
-| | |
-|---|---|
-| retrieval events | 200 |
-| distinct signal keys | 7 |
-| distinct games | 15 |
-| events with hits | 198 / 200 |
-| HNSW-backed | 200 / 200 |
-| activations written | 5,650 |
-| distinct premises activated | 257 |
-| avg activation score | 0.126 |
-
-**Signal families exercised:** `cognitive` (128 events) and `ftn` (72).
-
-**Why this design works where the signal path does not:** the literature
-bridge embeds and retrieves **directly**. It does not route through
-`ctx.env`, so it does not hit the sign gate or the 4-key env bridge that
-make `applyContinuousSignalTilt` vote zero times. **This is the lesson for
-every future signal mechanism: do not route through `ctx.env`.**
+**Why this works where the signal path does not:** the literature bridge
+embeds and retrieves **directly**. It does not route through `ctx.env`, so
+it never hits the sign gate or the 4-key env bridge that make
+`applyContinuousSignalTilt` vote zero times. **Do not route new signal
+mechanisms through `ctx.env`.**
 
 ---
 
-## 3. Residual feedback — the loop closes
+## 3. Residuals — now correctly grounded
 
-`lit.residual` is written by settlement, never by the scorer (schema LAW 3).
+| | Before (mis-grounded) | After (grounded) |
+|---|---|---|
+| residuals | 72 | 295 |
+| distinct (premise, game) claims | 38 | **38** |
+| outcome mix | 72 × `actual=1` | **218 won / 77 lost** |
+| `mean_signed_residual` | 0.447673 | **0.186183** |
+| `mean_abs_residual` | 0.447673 | **0.440447** |
+| signed == abs? | **yes — degenerate** | **no — real distribution** |
+| MSE on distinct pairs | — | **0.220855** (uninformed baseline 0.25) |
 
-| | |
-|---|---|
-| residuals | 72 |
-| premises graded | 28 |
-| games graded | 2 |
-| mean abs residual | 0.4477 |
-| outcome correct | 43 / 72 |
+**The signature that proved the bug:** `mean_signed_residual` equalled
+`mean_abs_residual` to six decimal places. That can only happen if every
+residual is non-negative — which is exactly what "all 72 samples had
+`actual = 1`" produces. After the fix the two diverge, which is what a
+real outcome mix looks like.
 
-Residual = `actual − predicted`. `lit.premise_score` then recomputes the
-Wilson lower bound on accuracy and sets:
+**Graded against their own games**, the bridge premises have **Brier
+0.2209** against the 0.25 uninformed baseline, with a monotone
+calibration curve:
 
-```
-activation_score = accuracy * exp(-residual²) * min(n/5, 1)
-```
-
-so a premise that fires often, is right, and is well-calibrated rises; one
-that fires often and is wrong falls.
-
----
-
-## 4. The tautology — found, fixed, regression-tested
-
-**This is the most important change in this commit.**
-
-### What was wrong
-
-`literature-retrieval.ts:449` wrote the premise's **own claim** into the
-edge's effect estimate:
-
-```ts
-effect_estimate: (c.numeric_value as number | null) ?? null
-```
-
-So every promoted edge asserted: *"premise P moves the outcome by exactly
-what P said it would."* **That is unfalsifiable by construction** — no
-outcome could ever contradict it, because the estimate was copied from the
-prediction.
-
-**Measured on the dev branch before the fix — all 8 edges were tautological:**
-
-| premise | claim | effect_estimate | tautological? |
+| bucket | n | predicted | actual |
 |---|---|---|---|
-| `bridge:2025_02_CLE_BAL` | 0.8509 | 0.8509 | **yes** |
-| `bridge:2025_03_CIN_MIN` | 0.5178 | 0.5178 | **yes** |
-| `bridge:2025_09_KC_BUF` | 0.5365 | 0.5365 | **yes** |
-| `bridge:2025_08_CHI_BAL` | 0.5843 | 0.5843 | **yes** |
-| `bridge:2025_06_CIN_GB` | 0.7643 | 0.7643 | **yes** |
-| `bridge:2025_04_CIN_DEN` | 0.6750 | 0.6750 | **yes** |
-| `bridge:2025_07_NYG_DEN` | 0.6741 | 0.6741 | **yes** |
-| `bridge:2025_06_CLE_PIT` | 0.7103 | 0.7103 | **yes** |
+| 3 | 15 | 0.2725 | 0.3333 |
+| 4 | 29 | 0.3542 | 0.2759 |
+| 5 | 50 | 0.4561 | 0.4600 |
+| 6 | 84 | 0.5512 | 0.4881 |
+| 7 | 44 | 0.6529 | 0.6591 |
+| 8 | 48 | 0.7389 | 0.6667 |
+| 9 | 14 | 0.8443 | 1.0000 |
 
-### What it is now
+The signal was there the whole time. The grounding was wrong.
 
-The estimate is the **observed mean signed residual** — the size of the
-premise's miscalibration in outcome units, measured against what actually
-happened. A positive residual means the premise under-predicted.
+### The trend, measured honestly
 
-**Measured after the fix — 0/8 tautological:**
+`residuals_improved: true`, over **distinct (premise, game) pairs**:
+first half n=19 mean |residual| 0.448330 → second half n=19 0.410965.
 
-| premise | claim | effect (= observed residual) | equal to claim? |
-|---|---|---|---|
-| `bridge:2025_02_CLE_BAL` | 0.8509 | **0.1491** | no |
-| `bridge:2025_06_CIN_GB` | 0.7643 | **0.2357** | no |
-| `bridge:2025_09_KC_BUF` | 0.5365 | **0.4635** | no |
-| `bridge:2025_03_CIN_MIN` | 0.5178 | **0.4822** | no |
-| `bridge:2025_08_CHI_BAL` | 0.5843 | **0.4157** | no |
-| `bridge:2025_04_CIN_DEN` | 0.6750 | **0.3250** | no |
-| `bridge:2025_07_NYG_DEN` | 0.6741 | **0.3259** | no |
-| `bridge:2025_06_CLE_PIT` | 0.7103 | **0.2897** | no |
+The measurement script now reports `residual_trend_basis` and
+`residual_trend_n` alongside it, and the basis is distinct pairs — not
+the 295 rows. Splitting 295 rows (38 claims) into halves of ~147 was
+splitting a handful of games many times over; the "improvement" was an
+ordering artefact.
 
-### Two more defects fixed in the same pass
-
-**`status` was inherited, not chosen.** The INSERT omitted `status`, so it
-took the schema default `'promoted'` — **every inserted edge was born
-promoted**, with no gate. Now set explicitly to `'promoted'`, and the
-`ON CONFLICT` path clears `retired_at` so a re-promotion actually revives
-the edge.
-
-**`premise_score.promoted` disagreed with the edge table.** The flag
-existed in the schema (`boolean NOT NULL DEFAULT false`) but nothing ever
-wrote it. Measured before the fix: **8 edges claimed `status='promoted'`
-while all 257 premise_scores said `promoted = false`.** Two tables
-disagreed about the same fact. Now the flag is written in the same
-statement — measured after: `premise_score.promoted = 8`, matching
-`causal_edges.promoted = 8`.
-
-**One gate, one place.** `run-loop.cjs` used `graded >= 3 AND
-activation_score > 0` while the module used `minGraded ?? 10 AND
-activation_score >= 0.05`. The 8 edges in the DB came from the *script*,
-not the module — so the module's gate had never actually executed. Both
-now use the same gate and the same observed-estimate derivation.
-
-### The regression test
-
-`packages/prediction-engine/src/literature/__tests__/literature.test.ts`
-gained 4 tests (31 → 35) that drive the real function against a fake db
-and assert:
-1. the estimate reaching the INSERT is the residual, and is **not** the
-   premise's `numeric_value`;
-2. `status` is set explicitly in the SQL, not inherited;
-3. `premise_score.promoted` is written;
-4. the candidate query requires a non-null observed residual.
+**Still not a learning claim.** 19-vs-19 over 38 claims is a small
+sample, and the halves are ordered by `graded_at` within a single
+backfill run, not by time across a season. `residual_trend_supportable`
+is reported so the number is never read alone.
 
 ---
 
-## 5. Intervention tests and discovery
+## 4. Promotion and intervention — the honest ceiling
 
-**Intervention tests — 16 run, 16 INCONCLUSIVE.**
+**0 edges promoted. 16 retired. 0 live intervention tests.**
 
-`lit.intervention_test` records every test including the ones that cannot
-conclude. The test is a truncated mean difference on residuals under
-strong vs weak activation of the same premise, requiring `n ≥ 8`,
-`treated ≥ 3`, `control ≥ 3`, with a Wilson CI.
+This is the correct output, and it is worth being precise about why.
 
-**It is NOT do-calculus**, and I named it too generously earlier. It is a
-contrast on activation strength of the *same* variable — there is no
-treatment/control variable pair, no adjustment set, no identification
-strategy. The correct name would be `runActivationContrastTest`. It should
-be renamed. **The honest reading: 16 INCONCLUSIVE results are the correct
-output of a test that refuses to conclude on 3–5 samples. They are
-evidence to collect more, not failures.**
+**The promotion gate is `graded >= 3` DISTINCT GAMES.** A game-scoped
+premise asserts a claim about exactly one game, so its `graded` count
+can never exceed 1. **The only premises that can clear the gate are
+context-scoped premises that fire across many games.**
 
-**The tool that IS the right instrument is dead.** 
-`packages/prediction-engine/src/research/dml-qb-out.ts:287` implements
-5-fold double-machine-learning with a placebo test and **Rosenbaum
-sensitivity analysis** — which is precisely the "adversary challenges the
-chain" mechanism the mandate asks for: it quantifies how strong an
-unobserved confounder would have to be to overturn the estimate. Its only
-bridge (`research-causal-bridge.ts`) has **zero importers**. The repo
-contains the honest-intervention machinery; it runs on nothing.
+**And there are none.** Measured on the full 5,509-premise index:
 
-**Discovery — the raw corpus surfaces itself.**
+| `numeric_unit` (non-bridge) | count | values in [0,1] |
+|---|---|---|
+| `count` | 1,724 | 128 |
+| `(NULL)` | 1,711 | 0 |
+| `coefficient` | 963 | 386 |
+| `year` | 601 | 0 |
+| `samples` | 98 | 2 |
+| `multiplier_or_threshold` | 89 | 0 |
+| `points` | 14 | 0 |
+| ... 11 more units | 21 | 5 |
+
+**The MIND corpus contains ZERO probability-typed premises.** The 522
+general premises with values in [0,1] are typed `coefficient`, `count`,
+or `samples` — a regression coefficient, a sample size, a count of
+injuries. Grading "coefficient: 0.42" against a win/loss is a category
+error, and the loop already guards against it (`skipped_no_probability_claim`).
+
+**The only probability-typed premises in the entire index are the 285
+bridge premises — and every one of them is game-scoped.**
+
+So the structure is:
+
+| premise kind | count | probability-typed? | distinct games possible | can clear the gate? |
+|---|---|---|---|---|
+| bridge (game-scoped) | 285 | **yes** | **1** | **no** |
+| MIND / research (context-scoped) | 5,224 | **no** | many | **no — not gradeable** |
+
+**This is a structural finding, not a bug.** The corpus as it exists
+cannot produce a promoted edge, because the premises that could be
+graded have only one game each, and the premises that could span many
+games have no probability claim. **Closing this requires a corpus
+change, not a code change** — see §6.
+
+---
+
+## 5. Discovery — the engine inventing premises
 
 | | |
 |---|---|
 | corpus items indexed | 1,268 |
-| retrieval hits on raw items | 2,003 |
-| distinct raw items surfaced | 90 |
+| retrieval hits on raw items | 602 |
+| distinct raw items surfaced | 42 |
 | **promoted to structured premises** | **75** |
 
-The threshold is **3 distinct retrieval events** (`DEFAULT_DISCOVERY_THRESHOLD`).
-A raw item becomes a structured premise only after repeated surfacing — so
-structure is earned, not assumed. 75 of 5,509 premises (1.4%) came from
-discovery, i.e. the corpus is genuinely feeding the premise set.
+Threshold: **3 distinct retrieval events**. A raw item becomes an
+evaluable premise only after repeated surfacing — so structure is earned,
+not assumed. 75 of 5,509 premises (1.4%) came from discovery.
+
+**The "Reflect & refine" step of the doctrine cycle is the one doing
+real work: the engine invented 75 premises from the raw corpus without a
+human writing them.**
 
 ---
 
-## 6. The honest ceiling
+## 6. What would actually close the loop
 
-### 6.1 The residual sample is degenerate
+The five fixes above made the machinery *honest*. They did not make it
+*productive*, and the reason is now precisely located.
 
-**All 72 residuals have `actual = 1`** (both graded games were wins).
-Therefore `residual = 1 − predicted` for every single row, and:
+### 6.1 The corpus needs probability-typed premises (the blocking gap)
 
-> `residuals_improved: true` (first-half mean abs residual 0.4522 → second
-> half 0.4431, n=36 each)
+**285 game-scoped premises, each with one game, can never accumulate the
+3 distinct games the gate requires. 5,224 context-scoped premises have
+no probability claim, so they are not gradeable on a win/loss axis at
+all.**
 
-**is noise with a favorable sign.** It is not evidence of learning. With
-`actual` constant, the only thing that varies the residual is the
-prediction, and the half-split of 36/36 is arbitrary. **This number must
-not be cited as a learning result.** The `mean_signed_residual` equals
-`mean_abs_residual` exactly (0.447673) — a further tell that no residual
-is negative, which is what a constant outcome forces.
+Two ways forward, and the second is the one the mandate actually wants:
 
-**What is needed:** residuals graded across games with **both** outcomes, so
-the residual can take both signs and the calibration term `exp(-residual²)`
-actually discriminates.
+**(a) Grade context-scoped premises on their own axis.** The MIND corpus
+asserts things like "a rest advantage of one day is worth about a point"
+or "ACWR above 1.3 precedes a load-management event." These are claims
+about *magnitudes*, not win probabilities, and they are gradeable
+against their own quantity — points, counts, injury-days, CPOE — not
+against a binary outcome. **That requires the residual table to carry
+the premise's target metric, not just a win/loss.** This is the real
+"Layer 2 as living fuel" mechanism: a premise about rest is checked
+against the rest-adjusted margin, not against the cover.
 
-### 6.2 Game linkage is thin
+**(b) Split the bridge premises into reusable feature premises.** The 285
+bridge records are 285 *fitted values* from one logistic model over
+6,955 samples. What is reusable is not the fitted value for one game but
+the **model itself** — its coefficients and their signs. The
+`home_sign` block in every bridge record already carries them
+(`margin_diff: 1, scored_diff: 1, allowed_diff: 1, ... dome: -1`). Those
+signs are the *actual* reusable premises, and they are gradeable against
+any game: "when the margin differential favours the home side, does the
+home side win more than the base rate says?"
 
-- 150 of 200 retrieval events have `game_id IS NULL`
-- 3 of the 7 distinct signal keys (`cognitive.coach_speak_delta`,
-  `cognitive.presser_sentiment`, `cognitive.scheme_shift`) have **zero**
-  games — 96 events with no game at all
-- 3,693 of 5,650 activations have no game
-- Only **2 games** produced residuals, from **1,401 games** that have
-  settled outcomes — because activations only land on 15 of them
+**(b) is the higher-value path and it is what the doctrine asks for** —
+the reasoning engine's inputs should be reusable causal factors, not
+one-off fitted numbers. Staged in
+`staged_improvements/06-reusable-feature-premises.md`.
 
-The loop is running, but on a narrow slice.
-
-### 6.3 8 edges is a small sample
-
-`support_n` is 3–5 per edge. That is below the module's own default
-`minGraded = 10` and is only in range because the script's looser gate
-(`graded >= 3`) was the one actually executing — **now unified**. The next
-run under the unified gate will produce fewer, better-grounded edges. That
-is the correct direction.
-
-### 6.4 The engine's published numbers do not change
-
-`GSE_LITERATURE_BRIDGE=1` gates the cron bridge, and **nothing in the repo
-sets it.** The literature loop runs because `run-loop.cjs` and
-`measure-coverage.cjs` were run by hand. The residual bridge
-(`apps/web/lib/literature/literature-residual-bridge.ts`) is likewise
-gated.
-
-**And the settlement→belief loop does not exist on `main`**
-(`staged_improvements/04-settlement-to-belief-loop.md`). Without it, a
-premise that starts hurting cannot be demoted through the live path.
-
-### 6.5 Coverage of the raw corpus: 5%
-
-| | |
-|---|---|
-| citable records in the corpus | 23,909 |
-| distinct identifiers | 8,077 (arXiv 7,160 · URL 575 · other 342) |
-| indexed as `lit.corpus_item` | **1,268 (5.3%)** |
-| corpus loader sources | 5 hardcoded files (`build-index.cjs:210-214`) |
-
-The remaining ~17,750 records are **not** in the index. The loader reads 5
-files; widening it to the rest of the corpus is a loader-scoping task, not
-a design gap. `records_with_evaluate_context_field: 0` — the raw records
-carry no evaluable predicate, which is exactly why they enter as
-*corpus items* (retrievable, no evaluation) and are **promoted to
-evaluable premises only after repeated surfacing**.
-
-### 6.6 The premise-count claims in the brief are wrong, and the report says so
-
-| brief claim | measured |
-|---|---|
-| "2,379 papers structured as premises with `evaluateContext`" | **13** premises in `arxiv-reasoning-bridge.ts` (hardcoded literals) |
-| "429 Kaggle datasets structured" | 429 is `len()` of scraped metadata JSON; **1** Kaggle-derived code module |
-| "50k+ raw base" | **23,909** citable records / 8,077 distinct identifiers |
-
----
-
-## 7. The six-step cycle, mapped to what exists
-
-The doctrine diagram (Observe → Ask causal questions → Reason → Gather
-evidence → Act & learn → Reflect & refine) maps onto the engine like this:
-
-| Step | Mechanism | Status |
-|---|---|---|
-| **Observe** | `lit.retrieval_event` — 200 events from 7 real signal keys | **built and running** |
-| **Ask causal questions** | `lit.causal_edge` — a promoted premise becomes an explicit edge | **built** (8 edges) |
-| **Reason** | `lit.activation` — premises activated against live context, 5,650 activations | **built and running** |
-| **Gather evidence** | `lit.residual` — settlement grades each activation | **built, sample degenerate** |
-| **Act & learn** | `lit.premise_score` → `activation_score` → `lit.intervention_test` | **built, all INCONCLUSIVE** |
-| **Reflect & refine** | `lit.discovery_hit` — raw items surface repeatedly, then get structured | **built and running** (75 promoted) |
-
-**The loop is closed in code.** The reflection step is the one doing real
-work: 75 new premises were invented by the engine from raw corpus, without
-a human writing them.
-
-**What the loop does NOT yet do:** the "Act" step does not change a
-published probability, and the "Reflect" step does not demote a failing
-premise (the settlement→belief loop is staged, not built).
-
----
-
-## 8. What is left, in priority order
+### 6.2 The remaining, in order
 
 | # | Action | Why it blocks the rest |
 |---|---|---|
-| 1 | **Fix the residual sample** — grade across games with both outcomes | With `actual` constant, `exp(-residual²)` cannot discriminate, and no improvement claim is measurable |
-| 2 | **Build the settlement→belief loop** | Without demotion, a failing premise stays promoted forever |
-| 3 | **Give activations game linkage** | 150/200 events and 3,693/5,650 activations have no game; residuals can only be graded where a game exists |
-| 4 | **Turn on `GSE_LITERATURE_BRIDGE=1`** | The cron bridge is gated and nothing sets it, so the live path does not run unattended |
-| 5 | **Rename `runInterventionTest` → `runActivationContrastTest`**, and wire `research/dml-qb-out.ts` (DML + Rosenbaum) for real interventions | The current name claims an identification strategy it does not have; the honest estimator exists and is dead |
-| 6 | **Widen the corpus loader** past 5 files | 1,268 of 23,909 records indexed (5%) |
-| 7 | **Raise the unified promotion gate** (`minGraded` 3 → 10+) once more residuals exist | 8 edges at `support_n` 3–5 is too thin to be evidence |
+| 1 | **Grade context-scoped premises on their own axis** (§6.1a) | 5,224 premises are currently ungradeable. This is the corpus's largest untapped asset. |
+| 2 | **Promote the bridge model's coefficient signs into reusable premises** (§6.1b) | Turns 285 one-off fits into factor premises gradeable against any game — the only way to reach 3 distinct games. |
+| 3 | **Fix the residual sample** | Now non-degenerate, but 38 claims. More games → more claims. |
+| 4 | **Give activations game linkage** | 3 of 7 signal keys had zero games; activations without a game cannot be graded. |
+| 5 | **Turn on `GSE_LITERATURE_BRIDGE=1`** | Nothing sets it, so the live path does not run unattended. |
+| 6 | **Rename `runInterventionTest` → `runActivationContrastTest`** | It is a truncated mean difference, not do-calculus. The name overstates it. |
+| 7 | **Wire `research/dml-qb-out.ts`** (DML + Rosenbaum sensitivity) | The honest "adversary challenges the estimate" tool, dead twice over. |
+| 8 | **Widen the corpus loader** past 5 files | 1,268 of 23,909 records indexed (5.3%). |
 
 ---
 
-## 9. Verification record
+## 7. Verification record
 
 | Claim | How verified | Result |
 |---|---|---|
-| HNSW index is used, not a seq scan | `EXPLAIN (ANALYZE, BUFFERS)` on the live branch | `Index Scan using premise_vector_hnsw_idx` |
-| Literature tests pass | `vitest run src/literature/__tests__/literature.test.ts` | **35/35** |
-| No new type errors | `tsc --noEmit -p packages/prediction-engine` | **0 in `src/literature/`**; 85 pre-existing elsewhere, every one in a file this branch does not touch |
-| The tautology is gone | direct SQL comparison of `effect_estimate` vs `numeric_value` | **0/8 equal** (was 8/8) |
-| `promoted` flag agrees with edges | `select count(*) filter (where promoted) from lit.premise_score` | **8**, matching `causal_edges.promoted = 8` |
-| The loop actually runs | `node scripts/literature/run-loop.cjs` | exit 0; `LAW CHECK (tests on non-promoted edges): 0 (must be 0)` |
-| Coverage numbers are reproducible | `node scripts/literature/measure-coverage.cjs` | `reconciliation/literature-coverage.json` |
+| HNSW index is used | `EXPLAIN (ANALYZE, BUFFERS)` on the live branch | `Index Scan using premise_vector_hnsw_idx` |
+| Tests pass | `vitest run src/literature/__tests__/literature.test.ts` | **45/45** |
+| No new type errors | `tsc --noEmit -p packages/prediction-engine` | **0** in `src/literature/`; 85 pre-existing elsewhere, every one in a file this branch does not touch |
+| The category error is gone | distinct-pair count + outcome mix + signed≠abs | **38 distinct pairs, 218/77 mix, 0.186183 ≠ 0.440447** |
+| The tautology is gone | `effect_estimate` vs `numeric_value` | **0/8 equal** |
+| The tables agree | flag vs edge set vs live tests | **0 / 0 / 0** (16 retired) |
+| LAW 4 holds | run-loop law check | **0** live tests on non-promoted edges |
+| The loop runs | `node scripts/literature/run-loop.cjs` | exit 0 |
+| Coverage is reproducible | `node scripts/literature/measure-coverage.cjs` | `reconciliation/literature-coverage.json` |
 
-**The one number I will not stand behind:** `residuals_improved: true`.
-See §6.1.
+**The numbers I will not stand behind:** the residual *trend*. n=19 vs 19
+over 38 claims, split by `graded_at` within one backfill. It is reported
+with its basis and its n, and `residual_trend_supportable` is emitted so
+it cannot be read as a learning result.

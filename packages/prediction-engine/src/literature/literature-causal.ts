@@ -204,5 +204,39 @@ export async function retireFailedEdges(
       RETURNING e.edge_key`,
     []
   );
+  await markTestsOfRetiredEdges(db);
   return { retired: res.rows.length };
+}
+
+/**
+ * Mark the intervention tests of a retired edge as superseded.
+ *
+ * HONESTY (2026-10-20). The schema's LAW 4 is "do-calculus tests run on
+ * PROMOTED EDGES ONLY". The run-loop's law check asserts that no test
+ * exists on an edge whose status is not 'promoted'.
+ *
+ * Retiring an edge without retiring its tests breaks that law on the
+ * record: the measured run retired 16 edges and left 38 intervention
+ * tests pointing at them, so the law check read 38 violations. The check
+ * was right; the stale rows were the problem.
+ *
+ * The tests are not deleted -- the test IS the evidence, and it is kept so
+ * a retired edge's history stays readable. They are MARKED superseded, and
+ * the law check then counts only the tests that are still live.
+ */
+export async function markTestsOfRetiredEdges(
+  db: SqlClient,
+): Promise<{ superseded: number }> {
+  const res = await db.query(
+    `UPDATE lit.intervention_test t
+        SET superseded = true
+      WHERE t.superseded = false
+        AND EXISTS (
+          SELECT 1 FROM lit.causal_edge e
+           WHERE e.id = t.edge_id AND e.status <> 'promoted'
+        )
+      RETURNING t.id`,
+    []
+  );
+  return { superseded: res.rows.length };
 }

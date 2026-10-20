@@ -22,7 +22,12 @@
  *   - A failure never blocks settlement.
  */
 
-import { applyResidualFeedback, type SqlClient } from "@sports/prediction-engine";
+import {
+  applyResidualFeedback,
+  isGameKey,
+  resolveOwnGameOutcome,
+  type SqlClient,
+} from "@sports/prediction-engine";
 
 /** The subset of the settlement DB this module needs. */
 export interface ResidualBridgeDb {
@@ -70,6 +75,7 @@ async function loadActivations(
   numeric_value: number | null;
   influence_direction: string | null;
   activation_score: number;
+  source_ref: string | null;
 }>> {
   const rows = await db.$queryRawUnsafe<
     Array<{
@@ -78,12 +84,14 @@ async function loadActivations(
       numeric_value: number | null;
       influence_direction: string | null;
       activation_score: number;
+      source_ref: string | null;
     }>
   >(
     `SELECT a.id            AS activation_id,
             a.premise_id    AS premise_id,
             p.numeric_value AS numeric_value,
             p.influence_direction,
+            p.source_ref    AS source_ref,
             a.activation_score
        FROM lit.activation a
        JOIN lit.premise p ON p.id = a.premise_id
@@ -160,6 +168,22 @@ export async function gradePremisesForSettledPick(
 
   const grades: ResidualGrade[] = [];
   for (const a of activations) {
+    // A game-scoped premise is graded against ITS OWN game. See
+    // resolveOwnGameOutcome for why this is not optional.
+    const own = await resolveOwnGameOutcome(
+      { query: async (sql, values) => {
+          const r = await db.$queryRawUnsafe<unknown[]>(sql, ...(values ?? []));
+          return { rows: r as unknown[], rowCount: r.length };
+        } },
+      a.source_ref ?? null,
+    );
+    // A premise that IS game-scoped but whose own game has no recorded
+    // result is NOT gradeable. Grading it against a different game would
+    // be a category error, so it is skipped rather than mis-graded.
+    if (isGameKey(a.source_ref) && !own) continue;
+    const effectiveActual = own ? own.actual : actual;
+    const effectiveGameId = own ? own.game_key : pick.gameId;
+
     let predicted: number | null = null;
 
     if (a.numeric_value != null && Number.isFinite(a.numeric_value)) {
@@ -184,10 +208,10 @@ export async function gradePremisesForSettledPick(
     grades.push({
       activation_id: a.activation_id,
       premise_id: a.premise_id,
-      game_id: pick.gameId,
+      game_id: effectiveGameId,
       predicted,
-      actual,
-      outcome_correct: Math.abs(predicted - actual) < 0.5,
+      actual: effectiveActual,
+      outcome_correct: Math.abs(predicted - effectiveActual) < 0.5,
     });
   }
 

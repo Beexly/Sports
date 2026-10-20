@@ -26,8 +26,14 @@ import {
   makeEventKey,
   normalCdf,
   DEFAULT_TOP_K,
+  applyResidualFeedback,
   promotePremisesToCausalEdges,
 } from "../literature-retrieval.js";
+import {
+  isGameKey,
+  resolveOwnGameOutcome,
+  groundingFor,
+} from "../literature-residual-grounding.js";
 import { DEFAULT_DISCOVERY_THRESHOLD } from "../literature-discovery.js";
 
 describe("literature embeddings", () => {
@@ -311,6 +317,8 @@ describe("promoted edge honesty", () => {
     const res = await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
 
     expect(res.promoted).toBe(1);
+    // the reconciling demotion statement must be issued
+    expect(res.retired).toBe(0);
     // the returned estimate is the residual
     expect(res.edges[0]?.effect_estimate).toBeCloseTo(0.031, 6);
 
@@ -413,5 +421,223 @@ describe("promoted edge honesty", () => {
     const candidateParams = captured[0] as unknown[];
     // the candidate SELECT must filter on a non-null mean_residual
     expect(candidateParams.length).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// REGRESSION (2026-10-20): a game-scoped premise must be graded against the
+// game it ASSERTS ABOUT.
+//
+// A bridge premise's key names the game it predicts:
+// "bridge:2025_02_CLE_BAL:pregame_context_logit" asserts P(home wins) for
+// 2025_02_CLE_BAL. `source_ref` carries that game key, and
+// historical_games holds that game's real result under the same format.
+//
+// The bug: the residual loop graded such a premise against whatever game
+// the activation happened to be for. That compares two unrelated
+// propositions. It produced a degenerate population in which every sample
+// had actual = 1 (both graded games were wins), which is why
+// mean_signed_residual == mean_abs_residual exactly and the
+// "residuals improved" trend was noise.
+//
+// The rule: a premise with a known own-game result is graded against THAT
+// result; a premise without one (a general MIND-corpus claim) is graded
+// against the game it was activated for.
+// ---------------------------------------------------------------------------
+describe("residual grounding", () => {
+  const GAME_KEY = "2025_02_CLE_BAL";
+
+  it("resolves a game-scoped premise to its OWN game outcome", async () => {
+    const queried: string[] = [];
+    const db = {
+      query: async (q: string, vals?: readonly unknown[]) => {
+        queried.push(q);
+        expect(vals?.[0]).toBe(GAME_KEY);
+        return { rows: [{ actual: 0, game_key: GAME_KEY }], rowCount: 1 };
+      },
+    };
+
+    const own = await resolveOwnGameOutcome(db, GAME_KEY);
+
+    expect(own).not.toBeNull();
+    // away win -> actual 0, NOT the pick's outcome
+    expect(own!.actual).toBe(0);
+    expect(own!.game_key).toBe(GAME_KEY);
+    expect(queried[0]).toContain("historical_games");
+  });
+
+  it("returns null for a source_ref that is not a game key (no mis-query)", async () => {
+    let called = false;
+    const db = {
+      query: async () => {
+        called = true;
+        return { rows: [], rowCount: 0 };
+      },
+    };
+
+    const own = await resolveOwnGameOutcome(db, "https://arxiv.org/abs/1710.06551");
+    expect(own).toBeNull();
+    expect(called).toBe(false);
+  });
+
+  it("returns null when the own game has no recorded result (not mis-graded)", async () => {
+    const db = { query: async () => ({ rows: [], rowCount: 0 }) };
+    const own = await resolveOwnGameOutcome(db, GAME_KEY);
+    expect(own).toBeNull();
+  });
+
+  it("survives a deployment with no historical_games table", async () => {
+    const db = {
+      query: async () => {
+        throw new Error('relation "historical_games" does not exist');
+      },
+    };
+    const own = await resolveOwnGameOutcome(db, GAME_KEY);
+    expect(own).toBeNull();
+  });
+
+  it("recognises a game key and rejects a doc hash", () => {
+    expect(isGameKey("2025_02_CLE_BAL")).toBe(true);
+    expect(isGameKey("2025_02_CLE")).toBe(false);
+    expect(isGameKey("mind:arXiv:1710.06551")).toBe(false);
+    expect(isGameKey(null)).toBe(false);
+  });
+
+  it("grounds a game-scoped premise on its own game and a general one on the activation game", () => {
+    const own = { actual: 1, game_key: "2025_02_CLE_BAL" };
+    expect(groundingFor(own, "2026-game-x")).toEqual({ actual: 1, game_id: "2025_02_CLE_BAL" });
+    // no own game -> fall back to the activation's game, actual unresolved
+    expect(groundingFor(null, "2026-game-x")).toEqual({ actual: undefined, game_id: "2026-game-x" });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// REGRESSION (2026-10-20): the promotion path must be RECONCILABLE, and the
+// support factor must count DISTINCT GAMES.
+//
+// Three separate defects were found in the same area:
+//
+// 1. The support factor counted residual ROWS. A game-scoped premise is
+//    activated once per retrieval event touching its game -- 21 rows for
+//    ONE game in the measured run. Counting rows let one piece of
+//    evidence look like 21 and saturated the support factor, so a
+//    premise earned full weight from a single game.
+//
+// 2. Promotion was ADD-ONLY. Sixteen edges promoted under the old
+//    row-counting rule stayed marked 'promoted' with zero qualifying
+//    premises behind them. An edge table that can only grow is an edge
+//    table that cannot be wrong.
+//
+// 3. premise_score.promoted was set on promotion but never CLEARED on
+//    demotion, so it read 16 while causal_edge had 0 promoted.
+//
+// The contract these tests pin: after the promotion function runs, the
+// promoted-edge set is EXACTLY the set of premises clearing the gate, and
+// the flag agrees with it in both directions.
+// ---------------------------------------------------------------------------
+describe("promotion reconciliation", () => {
+  function fakeDb(opts?: { graded?: number; score?: number; rows?: unknown[] }) {
+    const issued: string[] = [];
+    const graded = opts?.graded ?? 5;
+    const score = opts?.score ?? 0.5;
+    return {
+      issued,
+      db: {
+        query: async (sql: string) => {
+          issued.push(sql);
+          if (sql.includes("FROM lit.premise_score s")) {
+            return {
+              rows:
+                opts?.rows ??
+                [
+                  {
+                    id: "p1",
+                    premise_key: "k",
+                    title: "t",
+                    domain: "d",
+                    numeric_value: 0.5,
+                    numeric_unit: "probability",
+                    numeric_metric: null,
+                    influence_direction: null,
+                    applicable_contexts: [],
+                    activation_score: score,
+                    graded,
+                    correct: 2,
+                    mean_residual: 0.05,
+                  },
+                ],
+            };
+          }
+          if (sql.includes("UPDATE lit.causal_edge")) {
+            return { rows: [], rowCount: 0 };
+          }
+          return { rows: [{ id: "e" }], rowCount: 1 };
+        },
+      },
+    };
+  }
+
+  it("counts DISTINCT GAMES for support, not residual rows", async () => {
+    // The de-duplication lives in applyResidualFeedback's scorecard
+    // aggregation -- that is where the support factor is computed.
+    const issued: string[] = [];
+    const db = {
+      query: async (sql: string) => {
+        issued.push(sql);
+        if (sql.includes("FROM lit.residual")) {
+          return {
+            rows: [
+              {
+                n: 1,
+                mean_res: 0.05,
+                mse: 0.0025,
+                correct: 1,
+              },
+            ],
+          };
+        }
+        return { rows: [{ id: "r" }], rowCount: 1 };
+      },
+    } as never;
+
+    await applyResidualFeedback(db, [
+      {
+        activation_id: "a1",
+        premise_id: "p1",
+        game_id: "g1",
+        predicted: 0.5,
+        actual: 1,
+        outcome_correct: true,
+      },
+    ]);
+
+    const agg = issued.find((x) => x.includes("FROM lit.residual"));
+    expect(agg).toBeDefined();
+    // the support factor must count distinct (premise, game) pairs
+    expect(agg).toContain("DISTINCT ON (premise_id, game_id)");
+  });
+
+  it("retires edges whose premise no longer clears the gate", async () => {
+    const { db, issued } = fakeDb();
+    await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
+    const retire = issued.find((x) => x.includes("SET status = 'retired'"));
+    expect(retire).toBeDefined();
+  });
+
+  it("reconciles premise_score.promoted with the edge set in both directions", async () => {
+    const { db, issued } = fakeDb();
+    await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
+    // the flag must be SET FROM the edge set (EXISTS), not set to true
+    const flag = issued.find(
+      (x) => x.includes("UPDATE lit.premise_score") && x.includes("promoted = EXISTS"),
+    );
+    expect(flag).toBeDefined();
+    expect(flag).not.toContain("SET promoted = true");
+  });
+
+  it("reports how many edges it retired", async () => {
+    const { db } = fakeDb();
+    const res = await promotePremisesToCausalEdges(db, { minGraded: 3, minScore: 0.01 });
+    expect(typeof res.retired).toBe("number");
   });
 });

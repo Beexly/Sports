@@ -331,11 +331,41 @@ function eventText(e) {
   );
   console.log(`activations with a game: ${actRes.rows.length}`);
 
+  // ---- OWN-GAME OUTCOMES for game-scoped premises ----
+  //
+  // A bridge premise's key names the game it predicts. historical_games
+  // holds that game's real result ("gameKey" is the SAME format:
+  // 2025_01_DAL_PHI). Joining on it gives the premise its OWN truth.
+  const ownGames = await db.query(
+    `SELECT p.id AS premise_id,
+            p.source_ref AS game_key,
+            CASE WHEN h."homeScore" > h."awayScore" THEN 1.0::double precision ELSE 0.0::double precision END AS actual
+       FROM lit.premise p
+       JOIN historical_games h ON h."gameKey" = p.source_ref
+      WHERE p.source_ref IS NOT NULL`
+  );
+  const ownGameOutcome = new Map();
+  for (const o of ownGames.rows) {
+    if (o.premise_id && o.game_key && typeof o.actual === "number") {
+      ownGameOutcome.set(o.premise_id, { actual: o.actual, game_key: o.game_key });
+    }
+  }
+  console.log(
+    `own-game outcomes resolved: ${ownGameOutcome.size} premises (game-scoped)`
+  );
+
   let graded = 0;
   let skippedNoOutcome = 0;
   let skippedNoClaim = 0;
+  let gradedOwnGame = 0;
+  let gradedContext = 0;
   for (const a of actRes.rows) {
-    const actual = gameOutcome.get(a.game_id);
+    // A game-scoped premise is graded against ITS OWN game. A
+    // context-scoped premise (a general claim from the MIND corpus) is
+    // graded against the game it was activated for.
+    const own = ownGameOutcome.get(a.premise_id);
+    const actual = own ? own.actual : gameOutcome.get(a.game_id);
+    const residualGameId = own ? own.game_key : a.game_id;
     if (actual === undefined) { skippedNoOutcome += 1; continue; }
 
     // A premise's numeric claim is only gradeable if it is a PROBABILITY.
@@ -365,11 +395,15 @@ function eventText(e) {
        VALUES ($1,$2,$3,$4,$5,$6,$7)
        ON CONFLICT (activation_id) DO UPDATE SET predicted=EXCLUDED.predicted, actual=EXCLUDED.actual,
          residual=EXCLUDED.residual, outcome_correct=EXCLUDED.outcome_correct, graded_at=now()`,
-      [a.activation_id, a.premise_id, a.game_id, predicted, actual, residual, Math.abs(predicted - actual) < 0.5]
+      [a.activation_id, a.premise_id, residualGameId, predicted, actual, residual, Math.abs(predicted - actual) < 0.5]
     );
     graded += 1;
+    if (own) gradedOwnGame += 1; else gradedContext += 1;
   }
-  console.log(`RESIDUALS: graded=${graded} skipped_no_settled_outcome=${skippedNoOutcome} skipped_no_probability_claim=${skippedNoClaim}`);
+  console.log(
+    `RESIDUALS: graded=${graded} (own_game=${gradedOwnGame} context=${gradedContext}) ` +
+    `skipped_no_settled_outcome=${skippedNoOutcome} skipped_no_probability_claim=${skippedNoClaim}`
+  );
 
   // Recompute premise scorecards from the residuals.
   //
@@ -379,14 +413,23 @@ function eventText(e) {
   // 0.5 is scored INCORRECT every time under a binary rule, so no premise
   // could ever earn weight. The first real run measured exactly that:
   // 48 graded, 0 correct, MAE 0.50000, max activation_score 0.
+  // The support factor counts DISTINCT (premise, game) pairs, not rows.
+  // A game-scoped premise fires once per retrieval event touching its
+  // game, so 21 rows can describe ONE game. Rows are retrieval frequency;
+  // distinct games are evidence.
   await db.query(
     `INSERT INTO lit.premise_score (premise_id, graded, correct, mean_residual, residual_mse, activation_score, updated_at)
-     SELECT r.premise_id, count(*)::int, count(*) FILTER (WHERE r.outcome_correct)::int,
-            avg(r.residual), avg(r.residual*r.residual),
-            round(greatest(0, 0.25::numeric - avg(r.residual*r.residual)::numeric)
+     SELECT d.premise_id, count(*)::int, count(*) FILTER (WHERE d.outcome_correct)::int,
+            avg(d.residual), avg(d.residual*d.residual),
+            round(greatest(0, 0.25::numeric - avg(d.residual*d.residual)::numeric)
                   * least(count(*)::numeric/5, 1), 6),
             now()
-       FROM lit.residual r GROUP BY r.premise_id
+       FROM (
+         SELECT DISTINCT ON (premise_id, game_id)
+                premise_id, game_id, residual, outcome_correct
+           FROM lit.residual
+          ORDER BY premise_id, game_id, graded_at DESC
+       ) d GROUP BY d.premise_id
      ON CONFLICT (premise_id) DO UPDATE SET graded=EXCLUDED.graded, correct=EXCLUDED.correct,
        mean_residual=EXCLUDED.mean_residual, residual_mse=EXCLUDED.residual_mse,
        activation_score=EXCLUDED.activation_score, updated_at=now()`
@@ -415,15 +458,60 @@ function eventText(e) {
       ON CONFLICT (edge_key) DO UPDATE SET effect_estimate=EXCLUDED.effect_estimate,
         support_n=EXCLUDED.support_n, promoted_at=now(), status='promoted', retired_at=NULL`
   );
-  // keep premise_score.promoted in step with the edge set
+  // Keep premise_score.promoted in step with the edge set IN BOTH
+  // DIRECTIONS. Setting it on promotion but never clearing it on demotion
+  // leaves the two tables disagreeing: the measured case was
+  // premise_score.promoted = 16 while causal_edge had 0 promoted and 16
+  // retired. The flag is reconciled FROM the edge set, not tracked
+  // separately.
   await db.query(
-    `UPDATE lit.premise_score s SET promoted = true, updated_at = now()
-      WHERE s.promoted = false
-        AND EXISTS (SELECT 1 FROM lit.causal_edge ce
-                     WHERE ce.premise_id = s.premise_id AND ce.status = 'promoted')`
+    `UPDATE lit.premise_score s
+        SET promoted = EXISTS (
+              SELECT 1 FROM lit.causal_edge ce
+               WHERE ce.premise_id = s.premise_id AND ce.status = 'promoted'
+            ),
+            updated_at = now()`
+  );
+  // DEMOTION. Promotion must be reconcilable: after this block, the set
+  // of edges with status='promoted' is EXACTLY the set of premises that
+  // clear the gate. An edge whose premise no longer qualifies (its score
+  // fell, or the evidence behind it was re-grounded) is retired.
+  //
+  // Measured case: with the support factor counting distinct games
+  // instead of residual rows, zero premises qualified -- every
+  // game-scoped premise has exactly ONE game -- while sixteen edges
+  // promoted under the old row-counting rule were still marked
+  // 'promoted' with nothing qualifying behind them.
+  const retired = await db.query(
+    `UPDATE lit.causal_edge ce
+        SET status = 'retired', retired_at = now()
+      WHERE ce.status = 'promoted'
+        AND NOT EXISTS (
+          SELECT 1 FROM lit.premise_score s
+           WHERE s.premise_id = ce.premise_id
+             AND s.graded >= 3 AND s.activation_score > 0
+        )`
+  );
+  // Retiring an edge must also retire its intervention tests. LAW 4 is
+  // "tests run on PROMOTED EDGES ONLY", and leaving a test pointing at a
+  // retired edge breaks that law on the record. The test row is KEPT (it
+  // is the evidence) and marked superseded, so the law check counts only
+  // live tests.
+  const superseded = await db.query(
+    `UPDATE lit.intervention_test t
+        SET superseded = true
+      WHERE t.superseded = false
+        AND EXISTS (
+          SELECT 1 FROM lit.causal_edge e
+           WHERE e.id = t.edge_id AND e.status <> 'promoted'
+        )`
   );
   const edgeCount = await db.query(`SELECT count(*)::int n FROM lit.causal_edge WHERE status='promoted'`);
-  console.log(`CAUSAL EDGES: promoted=${edgeCount.rows[0].n}`);
+  const retiredCount = await db.query(`SELECT count(*)::int n FROM lit.causal_edge WHERE status='retired'`);
+  console.log(
+    `CAUSAL EDGES: promoted=${edgeCount.rows[0].n} retired=${retiredCount.rows[0].n} ` +
+    `(retired this run: ${retired.rowCount}, tests superseded: ${superseded.rowCount})`
+  );
 
   // ---- 5. Do-calculus intervention tests, PROMOTED EDGES ONLY ----
   const edges = await db.query(`SELECT edge_key FROM lit.causal_edge WHERE status='promoted' LIMIT 40`);
@@ -470,17 +558,21 @@ function eventText(e) {
     const p = se > 0 ? 2*(1-0.5*(1+Math.erf(Math.abs(estimate/se)/Math.sqrt(2)))) : null;
     const verdict = p !== null && p < 0.05 ? (estimate !== 0 ? "PASS" : "FAIL") : "INCONCLUSIVE";
     await db.query(
-      `INSERT INTO lit.intervention_test (edge_id, do_value, estimate, ci_low, ci_high, p_value, method, n, verdict)
-       VALUES ($1,$2,$3,$4,$5,$6,'truncated-mean-difference',$7,$8)`,
+      `INSERT INTO lit.intervention_test (edge_id, do_value, estimate, ci_low, ci_high, p_value, method, n, verdict, superseded)
+       VALUES ($1,$2,$3,$4,$5,$6,'truncated-mean-difference',$7,$8,false)`,
       [edgeId, doValue, estimate, se>0?estimate-1.96*se:null, se>0?estimate+1.96*se:null, p, all.length, verdict]);
     if (verdict === "PASS") pass++; else if (verdict === "FAIL") fail++; else incon++;
   }
   console.log(`INTERVENTION TESTS: pass=${pass} fail=${fail} inconclusive=${incon}`);
 
   // ---- 6. Verify the law: no test on an unpromoted edge ----
+  // The law check counts LIVE tests on non-promoted edges. A test whose
+  // edge was retired is marked superseded (the row is kept -- the test IS
+  // the evidence) and does not count against the law.
   const lawCheck = await db.query(
     `SELECT count(*)::int AS bad FROM lit.intervention_test t
-       JOIN lit.causal_edge e ON e.id = t.edge_id WHERE e.status <> 'promoted'`);
+       JOIN lit.causal_edge e ON e.id = t.edge_id
+      WHERE e.status <> 'promoted' AND t.superseded = false`);
   console.log(`LAW CHECK (tests on non-promoted edges): ${lawCheck.rows[0].bad} (must be 0)`);
 
   await db.end();
