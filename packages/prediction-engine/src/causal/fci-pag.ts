@@ -1064,6 +1064,132 @@ export function pagToAdmg(pag: FciResult): PagAdmg {
 }
 
 /**
+ * The ADMG the discovery pipeline produced, as the do-calculus graph.
+ *
+ * THE MISSING LINK. The pipeline (FCI -> DYNOTEARS -> ADMG) and the
+ * gate (Shpitser-Pearl ID/IDC over an ADMG) were both complete and
+ * neither knew about the other. A caller who had a game matrix and
+ * wanted a causal verdict had to know that `discoverCausalStructure`
+ * exists, that its `admg` is a `PagAdmg` over NUMERIC node indices,
+ * that `admgToCausalADMG` converts it, and that the result's node ids
+ * are `v0`, `v1`, ... rather than the signal names the literature
+ * edges use. That is four pieces of knowledge to assemble, and a
+ * caller who got it wrong would be checking identifiability against
+ * a graph with the wrong node names -- which the gate rejects, but
+ * with a refusal that looks like "not identified" rather than "you
+ * wired it wrong".
+ *
+ * This is the adapter, and it takes the SIGNAL NAMES so the graph
+ * comes out named the way the literature edges name their endpoints.
+ *
+ * The result's `nodeNames` is the mapping back, so a caller can find
+ * which node is which signal.
+ */
+export interface NamedCausalGraph {
+  /** The graph, with node ids equal to the signal names. */
+  readonly graph: CausalADMG;
+  /** The signal name of each node, in the graph's node order. */
+  readonly nodeNames: readonly NodeId[];
+}
+
+/**
+ * Convert the pipeline's ADMG into a do-calculus graph whose nodes are
+ * the SIGNAL NAMES.
+ *
+ * @param admg   the pipeline's `PagAdmg` (numeric node indices)
+ * @param names  the signal name for each numeric node, in index order
+ */
+export function pipelineGraphToCausalADMG(
+  admg: { readonly nodes: readonly number[]; readonly directed: readonly (readonly [number, number])[]; readonly bidirected: readonly (readonly [number, number])[] },
+  names: readonly NodeId[],
+): NamedCausalGraph {
+  const nameOf = (n: number): NodeId => names[n] ?? `v${n}`;
+  // The TOPOLOGICAL ORDER comes from `admgToCausalADMG`, which does it
+  // with Kahn's algorithm and throws on a directed cycle. This
+  // function must not re-implement that: two implementations of a
+  // topological sort is two chances to disagree, and the disagreement
+  // would show up as a graph the gate accepts in one place and
+  // rejects in another.
+  //
+  // `admgToCausalADMG` is given a NAME FUNCTION, so it is given one
+  // that carries the original numeric id. Its node order is then the
+  // topological order of the original ids, and the signal names are
+  // applied to the ids -- not to the positions, because a signal name
+  // belongs to a VARIABLE and not to a position in an ordering.
+  const withIds = admgToCausalADMG(
+    {
+      nodes: [...admg.nodes],
+      directed: admg.directed.map(([u, v]) => [u, v] as [number, number]),
+      bidirected: admg.bidirected.map(([u, v]) => [u, v] as [number, number]),
+    },
+    (n) => `n${n}`,
+  );
+  const order: number[] = withIds.nodes.map((id) => Number(id.slice(1)));
+  // Any node the numbered graph did not emit (should not happen) goes
+  // at the end, so nothing is silently dropped.
+  for (const n of admg.nodes) if (!order.includes(n)) order.push(n);
+
+  const nodes = order.map(nameOf);
+  const pos = new Map<number, number>();
+  order.forEach((n, i) => pos.set(n, i));
+
+  // The edges are sorted by their SOURCE's position, so the directed
+  // list comes out in the same order the nodes do.
+  const directed = admg.directed
+    .map(([u, v]) => ({ from: u, to: v }))
+    .sort((a, b) => pos.get(a.from)! - pos.get(b.from)! || pos.get(a.to)! - pos.get(b.to)!)
+    .map((e) => [nameOf(e.from), nameOf(e.to)] as const);
+  const bidirected = admg.bidirected.map(([u, v]) => [nameOf(u), nameOf(v)] as const);
+
+  // The order is topological BY CONSTRUCTION now, but the CausalADMG
+  // type's requirement is load-bearing, so it is checked rather than
+  // assumed.
+  const namePos = new Map<NodeId, number>();
+  nodes.forEach((n, i) => namePos.set(n, i));
+  for (const [u, v] of directed) {
+    if (namePos.get(u)! >= namePos.get(v)!) {
+      throw new Error(
+        `pipelineGraphToCausalADMG: the edge ${u}->${v} is not in topological order`,
+      );
+    }
+  }
+  return { graph: { nodes, directed, bidirected }, nodeNames: nodes };
+}
+
+/**
+ * Build the `graphForEdge` the causal edge sweep needs, from a
+ * discovered structure and the signal names.
+ *
+ * This is the one-call wiring:
+ *
+ *   const { structure } = discoverCausalStructure(matrix, { ... });
+ *   const graphForEdge = graphForEdgeFromDiscovery(structure, signalNames);
+ *   await runCausalEdgeSuite(db, { graphForEdge });
+ *
+ * The sweep then asks the gate whether each edge's effect is
+ * identified IN THE GRAPH THE PIPELINE DISCOVERED, rather than in a
+ * graph the edge asserts about itself.
+ */
+export function graphForEdgeFromDiscovery(
+  admg: { readonly nodes: readonly number[]; readonly directed: readonly (readonly [number, number])[]; readonly bidirected: readonly (readonly [number, number])[] },
+  names: readonly NodeId[],
+): (edge: { readonly cause_signal: string; readonly effect_signal: string }) => CausalADMG | null {
+  const named = pipelineGraphToCausalADMG(admg, names);
+  const index = new Map<string, number>();
+  named.nodeNames.forEach((n, i) => index.set(n, i));
+  return (edge) => {
+    const u = index.get(edge.cause_signal);
+    const v = index.get(edge.effect_signal);
+    // An edge whose endpoints are not in the discovered graph gets NO
+    // graph, not a partial one. The gate then refuses it with
+    // NO_GRAPH, which is the honest answer: the effect was not
+    // estimated in any graph we have.
+    if (u === undefined || v === undefined) return null;
+    return named.graph;
+  };
+}
+
+/**
  * Convert a numeric ADMG into the do-calculus `CausalADMG`: string ids, and `nodes` emitted in a
  * topological order of `directed` (Kahn, smallest index first, so the output is deterministic).
  * Throws on a directed cycle rather than handing a cyclic "DAG" to Shpitser-Pearl.

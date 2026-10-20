@@ -18,6 +18,11 @@ import {
 import { admgToCausalADMG } from "../fci-pag.js";
 import { runShpitserPearlID } from "../do-calculus-id.js";
 import { mulberry32 } from "./test-prng.js";
+import {
+  pipelineGraphToCausalADMG,
+  graphForEdgeFromDiscovery,
+} from "../fci-pag.js";
+import { evaluateCausalClaim } from "../causal-claim-gate.js";
 
 /** A chain 0 -> 1 -> 2, with 0 and 2 also directly linked. */
 function makeChain(n: number, seed = 91): number[][] {
@@ -154,5 +159,121 @@ describe("the three-stage causal discovery pipeline", () => {
     expect(() => discoverCausalStructure(data, { residualCovarianceZ: 0 })).toThrow(
       /residualCovarianceZ/,
     );
+  });
+});
+
+// ======================================================================
+// THE WIRING. The pipeline and the gate were both complete and
+// neither knew about the other. These tests close that gap: data ->
+// discovery -> a graph the gate can use -> a verdict.
+// ======================================================================
+describe("the pipeline wired into the gate", () => {
+  it("turns the pipeline's ADMG into a graph the gate accepts, named by signal", () => {
+    const data = makeChain(6000);
+    const { admg } = discoverCausalStructure(data, { maxConditioningSetSize: 2 });
+    const names = ["Scheme", "Phase1_CB_Sep", "PassEPA"];
+    const { graph, nodeNames } = pipelineGraphToCausalADMG(admg, names);
+
+    // The node ids are the SIGNAL names, not v0/v1/v2 -- so a
+    // literature edge naming "Scheme" and "PassEPA" finds its
+    // endpoints in the graph.
+    //
+    // The ORDER is the TOPOLOGICAL order, not the original index
+    // order -- that is the whole point of the conversion, and the
+    // CausalADMG type requires it. So the names come out as a
+    // PERMUTATION of the input, and the test must not assume they
+    // come back in the order they went in.
+    expect([...nodeNames].sort()).toEqual([...names].sort());
+    expect(graph.nodes).toContain("Scheme");
+    expect(graph.nodes).toContain("PassEPA");
+    for (const [u, v] of graph.directed) {
+      expect(names).toContain(u);
+      expect(names).toContain(v);
+    }
+    // And the order really is topological: every directed edge goes
+    // forward.
+    const pos = new Map(graph.nodes.map((n, i) => [n, i]));
+    for (const [u, v] of graph.directed) {
+      expect(pos.get(u)!).toBeLessThan(pos.get(v)!);
+    }
+  });
+
+  it("the gate accepts the discovered graph and issues a verdict on it", () => {
+    // THE LOOP. A game matrix goes in; a causal verdict comes out,
+    // and the verdict is computed against the graph the pipeline
+    // DISCOVERED, not against a graph the edge asserts about itself.
+    const data = makeChain(6000);
+    const { admg } = discoverCausalStructure(data, { maxConditioningSetSize: 2 });
+    const names = ["Scheme", "Phase1_CB_Sep", "PassEPA"];
+    const graphForEdge = graphForEdgeFromDiscovery(admg, names);
+
+    const graph = graphForEdge({ cause_signal: "Scheme", effect_signal: "PassEPA" });
+    expect(graph).not.toBeNull();
+
+    const verdict = evaluateCausalClaim({
+      y: ["PassEPA"],
+      x: ["Scheme"],
+      graph,
+    });
+    // The verdict is a REAL one -- identified or refused -- and the
+    // refusal carries a witness. Neither outcome is "the gate threw".
+    if (verdict.publishable) {
+      expect(verdict.conclusion).toBe("CAUSAL");
+      expect(verdict.formula).not.toBeNull();
+    } else {
+      expect(verdict.refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
+      expect(verdict.hedge_forest_full).not.toBeNull();
+    }
+  });
+
+  it("an edge whose endpoints are NOT in the discovered graph gets NO graph", () => {
+    // A partial graph would be a lie: the gate would check
+    // identifiability against a graph that does not contain the
+    // effect, and either refuse it for the wrong reason or, worse,
+    // accept it because the effect's own nodes happen to be absent.
+    const data = makeChain(6000);
+    const { admg } = discoverCausalStructure(data, { maxConditioningSetSize: 2 });
+    const graphForEdge = graphForEdgeFromDiscovery(admg, ["Scheme", "Phase1_CB_Sep", "PassEPA"]);
+
+    const graph = graphForEdge({ cause_signal: "NotInTheGraph", effect_signal: "PassEPA" });
+    expect(graph).toBeNull();
+
+    // And the gate then refuses it for the honest reason.
+    const verdict = evaluateCausalClaim({
+      y: ["PassEPA"],
+      x: ["NotInTheGraph"],
+      graph,
+    });
+    expect(verdict.publishable).toBe(false);
+    expect(verdict.refusal_code).toBe("REFUSED_G3_NO_GRAPH");
+  });
+
+  it("a graph whose edges are not in topological order is REORDERED, and a cycle is rejected", () => {
+    // The CausalADMG type REQUIRES a topological node order, because
+    // every ancestor and c-factor computation depends on it. An ADMG
+    // whose node list is not in topological order is not an error --
+    // it is a list that needs sorting -- so the conversion sorts it.
+    //
+    // What it must NOT do is hand a CYCLIC graph to Shpitser-Pearl.
+    const backwards = {
+      nodes: [0, 1],
+      directed: [[1, 0]] as const,
+      bidirected: [] as const,
+    };
+    const { graph } = pipelineGraphToCausalADMG(backwards, ["A", "B"]);
+    // The edge 1->0 is preserved, and the nodes are ordered so it
+    // comes out topological: B before A.
+    expect(graph.directed).toHaveLength(1);
+    expect(graph.directed[0]).toEqual(["B", "A"]);
+    expect(graph.nodes.indexOf("B")).toBeLessThan(graph.nodes.indexOf("A"));
+
+    // A CYCLE has no topological order, and that is a wiring bug
+    // worth refusing loudly rather than passing on.
+    const cyclic = {
+      nodes: [0, 1],
+      directed: [[0, 1], [1, 0]] as const,
+      bidirected: [] as const,
+    };
+    expect(() => pipelineGraphToCausalADMG(cyclic, ["A", "B"])).toThrow(/cycle/i);
   });
 });

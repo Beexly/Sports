@@ -4654,3 +4654,77 @@ export {
   fetchUpcomingWindows,
   type GameWindow,
 } from "./watch/watch-scheduler.js";
+
+// ---------------------------------------------------------------------------
+// The causal stack: discovery -> identification -> the gate.
+//
+// The three stages and the do-calculus engine were each complete and
+// none of them was exported, so a caller outside this package could
+// not use them at all. They are exported here, together, because the
+// point of the stack is that they run TOGETHER: a game matrix goes
+// in, a causal verdict comes out, and the verdict is computed against
+// the graph the pipeline discovered rather than against a graph an
+// edge asserts about itself.
+// ---------------------------------------------------------------------------
+export {
+  fci,
+  pagToAdmg,
+  pagToCausalADMG,
+  admgToCausalADMG,
+  dynotearsFit,
+  acyclicityExact,
+  matExpScaleSquaring,
+  orientPag,
+  possibleDSep,
+  literatureTerm,
+  pipelineGraphToCausalADMG,
+  graphForEdgeFromDiscovery,
+  type EdgeMark,
+  type FciEdge,
+  type FciResult,
+  type FciOptions,
+  type PagAdmg,
+  type DynotearsOptions,
+  type DynotearsResult,
+  type ClassALiteratureConstraint,
+  type EdgePenalty,
+  type NamedCausalGraph,
+} from "./causal/fci-pag.js";
+
+export {
+  discoverCausalStructure,
+  discoverCausalStructurePessimistic,
+  RESIDUAL_COVARIANCE_Z,
+  type DiscoverOptions,
+  type DiscoveredStructure,
+  type ProjectionDecision,
+} from "./causal/causal-discovery-pipeline.js";
+
+export {
+  runShpitserPearlID,
+  runShpitserPearlIDC,
+  isIdentifiable,
+  getAncestors,
+  getMaximalCComponents,
+  isDSeparated,
+  induceSubgraph,
+  mutilateADMG,
+  cFactorForComponent,
+  findIDEnablingEdgesForHedge,
+  formatSymbolicFactor,
+  FormulaClass,
+  type NodeId,
+  type CausalADMG,
+  type HedgeWitness,
+  type SymbolicFactor,
+  type IDResult,
+} from "./causal/do-calculus-id.js";
+
+export {
+  evaluateCausalClaim,
+  graphFromCausalEdge,
+  G3_REFUSAL,
+  type CausalClaimQuery,
+  type CausalClaimVerdict,
+  type G3RefusalCode,
+} from "./causal/causal-claim-gate.js";
