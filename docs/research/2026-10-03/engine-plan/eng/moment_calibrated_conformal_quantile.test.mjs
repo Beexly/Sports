@@ -15,13 +15,12 @@ check("uniform weights match inflated quantile", () => {
   assert.equal(r.threshold, 0.4);
 });
 
-check("custom weights select correct order statistic", () => {
+check("weighted mass shortfall fails closed", () => {
   const scores = [1, 2, 3];
   const weights = [0.1, 0.2, 0.7];
-  const r = momentCalibratedConformalQuantile(scores, 0.1, weights);
-  assert.equal(r.ok, true);
-  // target = 4*0.9 / 3 = 1.2, but mass 1, so should fail or hit last
-  // actually target ~1.2 >1, fails
+  const r = momentCalibratedConformalQuantile(scores, 0.05, weights);
+  assert.equal(r.ok, false);
+  assert.equal(r.reason, "weighted_quantile_exceeds_mass");
 });
 
 check("empty fails closed", () => {
