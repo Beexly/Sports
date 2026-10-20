@@ -17683,3 +17683,36 @@ Metrics: @cmain7 5/0; @RyanPaganetti 8/0; @jmthrivept 4/0 (newest ~11 PM Oct 19,
 - @DynatyzeFF pinned Week 7 stats post is PARTIAL (11 of 12 stats illegible) and excluded as pinned.
 - Hard gaps carried: @FTNData protected; @NerdingonNFL unrenderable.
 - Run status: Lane A COMPLETE (with correction), Lane B COMPLETE except the four unrun searches and the EPA-search depth above.
+
+## X ANALYTICS SWEEP 2026-10-20 (09:08 AM RUN, MORNING — LANE A COMPLETE, ZERO IN-WINDOW; LANE B MANIFEST PENDING)
+
+Window: posts after 12:20 AM CDT Tue 2026-10-20 (the 00:20 run's verified end) through 9:08 AM CDT Tue 2026-10-20. Read-only as @GalaxySportsHQ; no likes/reposts/replies/follows/DMs/bookmarks/messages/posts. Lane A (browser-task:2e09d56b, metrics/scheme priority accounts) DELIVERED a complete manifest: zero in-window posts across all 10 assigned accounts. Lane A's stated times disagreed with status-ID times on every newest-post anchor checked (e.g., @PFF newest status 2112402918269207027 stated 9:37 PM CDT, ID-time 11:37:56 PM CDT; @FantasyPtsData newest status 2112402473335484793 stated 10:32 PM CDT, ID-time 11:36:10 PM CDT; @GridironInfo_ newest status 2112355301761229030 stated 6:21 PM CDT, ID-time 8:28:44 PM CDT); ID times govern, and on ID times every Lane A account's newest post is BEFORE the window start (window-start snowflake ≈ 2112413500830646272), so Lane A's zero conclusion holds on ID math. Lane B (browser-task:56cda792, remaining metrics accounts + Following home feed + 5 term searches) had NOT delivered its manifest at filing — its coverage is UNKNOWN, not zero, and any late delivery lands as an addendum to this section. Items observed only in Lane B's live window titles during liveness checks are recorded under OBSERVED ONLY below; nothing is filed as a verified find from observation alone.
+
+### NEW METRIC / ANGLE ENTRIES
+
+- None filed in this section. Lane A: zero in-window posts (ID-verified, see COVERAGE). Lane B: manifest pending at filing.
+
+### EXAMINED / EXCLUDED
+
+- **QB breathing pattern / inhale timing — Justin Fields [PRE-WINDOW, PARTIAL]** — @SumerSports, ID-time 4:20:33 PM CDT 2026-10-19 (https://x.com/SumerSports/status/2112292845629673613): Lane A reported a chart of Fields' breathing pattern / inhale timing, season-average inhale stated as 1.24s in Weeks 1–3 moving to 0.98s across Weeks 4–6 (values as reported by the lane; the chart itself was not transcribed and no definition or methodology was in the lane's report — PARTIAL). Data source: NOT stated in the lane's report. Recorded here as a pre-window observation because the item does not appear in the 2026-10-19 afternoon/evening sections' inventories; it is NOT counted as an in-window find of this run. Attributed observation: a QB timing metric measured in seconds of inhale, split by week blocks — a measurement type (respiratory timing) not previously in this inventory.
+
+### OBSERVED ONLY (Lane B live-window titles during liveness checks; manifest pending — NOT verified finds)
+
+- @DynatyzeFF, ID-time 7:57:18 AM CDT 2026-10-20 (https://x.com/DynatyzeFF/status/2112528584560533665): window title as rendered: "Here are the 12 stats you need to know before you set your lineup for week 7" with a photo. No values transcribed; content UNKNOWN until the manifest lands.
+- @kyle_borg (Kyle Borgognoni), ID-time 7:05:38 AM CDT 2026-10-20 (https://x.com/kyle_borg/status/2112515582243258383): window title as rendered: "Rookie WRs: 6 Weeks Into the Season Comparing top-50 NFL Draft picks since 2021* per @FantasyPtsData" with a photo (table). Data source EXACTLY as stated in the title: @FantasyPtsData. No rows transcribed; content UNKNOWN until the manifest lands.
+- @KevinCole___ (Kevin Cole), ID-time 8:42:19 AM CDT 2026-10-20 (https://x.com/KevinCole___/status/2112539916727161229): window title as rendered: "Mike Evans up to third in total receiving EPA. We'll see about the injury". No values transcribed; content UNKNOWN until the manifest lands.
+
+### ENDPOINTS
+
+- No NEW data endpoint/site/API page identified in the delivered material. Lane A's manifest included no endpoint research (all accounts zero in-window). Lane B endpoint findings, if any, are pending its manifest.
+
+### COVERAGE (delivered manifests; scanned / filed)
+
+Lane A (complete): @GridironInfo_ 0 in-window (newest ID-time 8:28:44 PM CDT Oct 19); @PFF 0 (newest 11:37:56 PM CDT Oct 19); @SumerSports 0 in-window (1 pre-window item examined, above); @FantasyPtsData 0 (newest 11:36:10 PM CDT Oct 19); @sfdata9ers 0 (newest pre-window per lane); @statyxio 0 (newest pre-window per lane); @NFL_Researcher 0 (newest pre-window per lane; @NFLResearcher non-underscore variant does not resolve, per lane); @ScottBarrettDFB 0 (newest pre-window per lane); @EstablishTheRun 0 (newest pre-window per lane); @32BeatWriters 0 (newest pre-window per lane). Per-account scanned counts were not reported in Lane A's summary manifest — coverage depth is PARTIAL on counts, complete on in-window zero (each account's newest post is ID-verified pre-window, which bounds in-window posts at zero for original posts on those timelines).
+Lane B (PENDING): @cmain7, @RyanPaganetti, @jmthrivept, @hawkblogger, @MagicSportsGuy, @PattonAnalytics, @DonAtkinsonNFL, @DevyEusuf, @DynatyzeFF, @NerdingonNFL, @FTNData; Following home feed; Latest searches EPA/CPOE/TPRR/"pass rush win rate"/aggressiveness — all UNKNOWN, not zero. Lane B was liveness-verified progressing through all of Part 1, the home feed, and the EPA search (bounds since_time 1792473600 / until_time 1792505280 = exactly 12:20 AM–9:08 AM CDT) before a wrap-up instruction was sent; its window closed without a delivered manifest at filing.
+
+### GAPS (explicit)
+
+- Lane B manifest NOT delivered at filing: all Lane B coverage above is UNKNOWN. What closes it: late delivery of the manifest (the established pattern in this series), filed as an addendum to this section, the x-intel file, and the run log.
+- Lane A scanned counts not reported; Lane A's stated times were wrong on every anchor checked (ID times govern, discrepancies on record in the run log).
+- @SumerSports Fields breathing item is PARTIAL (no chart transcription, no definition/source) and pre-window; a full transcription would require re-opening the post.
