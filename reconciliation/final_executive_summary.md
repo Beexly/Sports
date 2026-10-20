@@ -251,6 +251,63 @@ learning result.
 
 ---
 
+## 5c. The f2 duplicate claim: MEASURED, and it holds
+
+The mandate asked to remove the old no-publish language. That had to be
+applied **per gate**, not wholesale — and the decisive gate was measured.
+
+**The claim** (`docs/reasoning/bridge-premises-audit-2026-09-27.md:56-63`):
+`pregame_context_logit` duplicates the already-LIVE `historical_strength`
+family, so `f2 = 1` and the family is DARK "no matter how much skill it
+has." The repo's own research called this *"the real blocker"*
+(`docs/engine/research/2026-10-02/corpus-deep/deep/c03/challenges.md:69`).
+
+**The test:** a permutation test using the repo's own
+`fitBridge`/`predictBridge`. ARM A = real training rows. ARM B = the same
+rows with the **seven non-strength features permuted** (margin_diff, the
+strength-class proxy, never permuted), scored on the same unpermuted
+2025 holdout. 20 permutations; bootstrap resamples games, paired.
+
+| | ARM A (real) | ARM B (shuffled) |
+|---|---:|---:|
+| Brier | 0.223743 | **0.221850** |
+| permutations beating the full arm | — | **20 of 20** |
+
+| | |
+|---|---:|
+| incremental value of the seven features | **−0.001893** (negative) |
+| 95% CI | **[−0.008075, +0.004245]** |
+| P(permuting degrades the model) | **0.266** |
+
+**Destroying those seven features made the model slightly BETTER.** The
+bridge's entire skill comes from `margin_diff` — the strength class.
+**The f2 = 1 claim holds on the measurement and the gate stays.**
+
+Reproduction is exact: measured Brier, raw binned ECE (0.051868),
+`home_sign` and all eight coefficients match
+`docs/reasoning/bridge-fit.json`.
+
+**The repo's own C-290 worry was half right.** The debiased ECE does read
+lower (0.049822 vs 0.051868) — the bias is real — but **both pass the 0.06
+gate**, so the ECE gate was never the blocker. The duplicate was.
+
+**The real loss is elsewhere and it is fixable.** The bridge's measured
+skill is collapsed to a single constant by
+`packages/ingestion-pipeline/src/slate-association.ts:85-115`
+(`probability: association.mean` = 0.560244) and labelled *"not a
+published probability and not an edge."* The per-game probabilities —
+where the skill lives — are discarded. The honest fix is to fold the
+bridge INTO the existing LIVE `historical_strength` family, not to
+publish it beside it.
+
+**This also re-scopes STAGED-IMPROVEMENT 6.** The bridge's coefficient
+signs would build premises with **no measurable skill** (measured above),
+so the reusable-premise work should draw on the 5,224 context-scoped MIND
+premises instead — with the bridge's signs serving as a good **negative
+control** the loop should learn to demote.
+
+---
+
 ## 6. What the recon batch changed
 
 Three read-only agents ran against the same worktree. They **corrected my
@@ -336,6 +393,7 @@ metadata JSON; there is **exactly 1** Kaggle-derived code module.
 | `causal_inference_methods.md` | Every causal method with its wiring status; the 4 missing methods with hook points; the `CausalLink`-has-no-numbers finding |
 | `dark_sources_census_corrected.json` + `fix_plan.md` | **CORRECTED**: 23 evaluators (21 DARK + 2 SHADOW_ONLY); only **5** need an adapter, 18 need a producer that does not exist; 4 deletion candidates |
 | `staged_improvements/06-reusable-feature-premises.md` | Why 0 edges can be promoted, and how to derive reusable premises from the bridge model's coefficient signs |
+| `f2_duplicate_measurement.md` + `.json` | The decisive no-publish gate, MEASURED: permuting the seven non-strength features made the model slightly better (20/20), so the f2 = 1 duplicate claim holds and the gate stays. Includes the per-gate status table. |
 | `literature_coverage_report.md` | The literature loop measured end to end: 5,509 premises + 1,268 corpus items HNSW-indexed, 200 real retrieval events, 5,650 activations, 8 promoted edges; **the tautology I found and fixed**; the degenerate residual sample stated plainly |
 | `recon_integration.md` | What the three recon agents added and what they corrected in my work |
 | `zero_importer_sweep.json` | Three-tiered: 2,174 ZERO / 888 PACKAGE_INTERNAL_ONLY / 1,187 EXTERNALLY_CONSUMED. A triage list, not a reachability source |

@@ -100,6 +100,29 @@ rather than over "every available signal". A coefficient-sign premise
 with a measured effect is a **causal factor with evidence**, not a
 weight.
 
+> **MEASURED CAVEAT (2026-10-20).** This stage was scoped BEFORE the f2
+> duplicate claim was measured. It still holds, but with a sharp
+> limitation: `reconciliation/f2_duplicate_measurement.md` shows the seven
+> non-strength features contribute **nothing measurable** beyond
+> `margin_diff` — permuting them in training made the model slightly
+> *better* (20 of 20 permutations beat the full arm, incremental value
+> −0.001893, 95% CI [−0.008075, +0.004245]).
+>
+> **So a premise built from `scored_diff` / `allowed_diff` / `rest_diff` /
+> `dome` / `neutral` signs would be a premise with no predictive value.**
+> It would earn activation_score 0 against the market and never promote.
+> That is the honest outcome and the loop should be allowed to reach it —
+> but it means the eight signs are not eight new premises. At most they
+> are **one** (`margin_diff`, the strength class) plus seven that carry no
+> skill.
+>
+> **The stage is therefore re-scoped:** build the reusable premises from
+> the corpus's *other* information — rest, injury, scheme, coaching,
+> weather — i.e. the 5,224 context-scoped MIND premises, graded on their
+> own axis (§6.1a above). The bridge's coefficient signs are a good
+> **negative control**: a premise family the loop should learn to
+> demote.
+
 ---
 
 ## What changes

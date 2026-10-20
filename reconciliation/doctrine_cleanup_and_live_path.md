@@ -188,6 +188,64 @@ correct "no auto-publish" CI guardrail and a live public board.
 
 ---
 
+## 5b. One no-publish gate was MEASURED and it holds — do not remove it
+
+The mandate asked to *"locate and stage removal"* of the old no-publish
+language. That request has to be applied **per gate, not wholesale**, and
+one gate was tested.
+
+**The pregame bridge's f2 duplicate block.** The claim
+(`docs/reasoning/bridge-premises-audit-2026-09-27.md:56-63`) is that
+`pregame_context_logit` duplicates the already-LIVE `historical_strength`
+family, so `f2 = 1` and the family is DARK "no matter how much skill it
+has". The repo's own research called this *"the real blocker"*
+(`docs/engine/research/2026-10-02/corpus-deep/deep/c03/challenges.md:69`).
+
+**MEASURED (`reconciliation/f2_duplicate_measurement.md`, reproduced by
+`node reconciliation/measure_f2_duplicate.mjs`):**
+
+| | ARM A (real) | ARM B (the 7 non-strength features permuted) |
+|---|---:|---:|
+| Brier | 0.223743 | **0.221850** |
+| permutations beating the full arm | — | **20 of 20** |
+
+| | |
+|---|---:|
+| incremental value of the seven features | **−0.001893** (negative) |
+| 95% CI | **[−0.008075, +0.004245]** |
+| P(permuting degrades the model) | **0.266** |
+
+**Destroying those seven features made the model slightly BETTER.** The
+bridge's entire skill comes from `margin_diff` — the strength class.
+**The f2 = 1 claim holds on the measurement, and the gate stays.**
+
+The reproduction check is exact: the measured Brier, raw binned ECE
+(0.051868), `home_sign` and all eight coefficients match
+`docs/reasoning/bridge-fit.json`.
+
+**So the per-gate status after measurement:**
+
+| gate | status |
+|---|---|
+| brand / AI-framing bans (§2.1) | stale prose — **staged for removal** |
+| `CALIBRATION_PUBLISHED` / `CALIBRATION_AUTO_PUBLISH` defaults | policy — **founder decision** |
+| the calibration contract's numeric gates | data-driven — **keep** |
+| **the pregame bridge's f2 duplicate block** | **MEASURED TRUE — keep** |
+
+A gate a measurement confirms is not "old language." Removing this one
+would publish a model whose skill comes entirely from a family already
+live at weight 0.08.
+
+**The real loss is elsewhere, and it is fixable.** The bridge's measured
+skill is collapsed to a single constant by
+`packages/ingestion-pipeline/src/slate-association.ts:85-115`
+(`probability: association.mean` = 0.560244) and labelled *"not a
+published probability and not an edge."* The per-game probabilities —
+where the skill actually lives — are discarded. The honest move is to
+fold the bridge into the existing LIVE `historical_strength` family
+rather than to publish it beside it. See
+`reconciliation/f2_duplicate_measurement.md` §4.
+
 ## 6. The doctrine conflict that is NOT a cleanup item
 
 `packages/ingestion-pipeline/src/gse-score-bridge.ts:37`:
