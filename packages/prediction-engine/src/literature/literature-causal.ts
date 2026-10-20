@@ -30,6 +30,7 @@ import {
   type SqlClient,
 } from "./literature-retrieval.js";
 import type { CausalADMG } from "../causal/do-calculus-id.js";
+import { graphFromCausalEdge } from "../causal/causal-claim-gate.js";
 
 export interface CausalEdgeRecord {
   readonly edge_key: string;
@@ -167,7 +168,7 @@ export async function runCausalPromotionSweep(
     readonly doValue?: number;
     readonly testLimit?: number;
     /**
-     * GATE G3 (2026-10-20): the graph each edge's effect is estimated in.
+     * The graph each edge's effect is estimated in.
      *
      * The identifiability check is only meaningful against the graph the
      * estimate came from. A caller that supplies one gets the real gate:
@@ -179,10 +180,26 @@ export async function runCausalPromotionSweep(
      * whose identifiability was never checked is not a verified causal
      * effect, and reporting it as one would be the same defect the
      * L1-L4 gate had -- a label that reads like verification.
+     *
+     * `graphForEdge` is the OPT-IN path. `defaultGraphForEdge` is the
+     * graph the EDGE ITSELF asserts -- a directed edge from the cause
+     * signal to the effect signal, with no claimed latent confounding.
+     * It is offered as a convenience, not as a default: it is the graph
+     * that says "no latent confounder is known for this edge", and a
+     * caller that has a PAG should pass that instead, because a PAG
+     * that names a confounder is the stronger statement.
      */
     readonly graphForEdge?: (
       edge: CausalEdgeRecord,
     ) => CausalADMG | null;
+    /**
+     * Use the edge's own asserted graph when no `graphForEdge` is given.
+     *
+     * Off by default, because it is a weaker claim than a PAG and the
+     * sweep would otherwise report CAUSAL for every edge without
+     * anybody having checked the confounding structure.
+     */
+    readonly useEdgeAssertedGraph?: boolean;
   },
 ): Promise<CausalPromotionReport> {
   const errors: string[] = [];
@@ -203,7 +220,11 @@ export async function runCausalPromotionSweep(
   for (const e of edges) {
     try {
       const out = await runInterventionTest(db, e.edge_key, opts?.doValue ?? 0.001, {
-        graph: opts?.graphForEdge ? opts.graphForEdge(e) : null,
+        graph: opts?.graphForEdge
+          ? opts.graphForEdge(e)
+          : opts?.useEdgeAssertedGraph
+            ? graphFromCausalEdge(e.cause_signal, e.effect_signal)
+            : null,
       });
       tests.push({
         edge_key: out.edge_key,
