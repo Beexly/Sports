@@ -137,7 +137,8 @@ export interface PaperQuantitativePremise {
   readonly uid: string;
   readonly title: string;
   readonly sourceFile: string;
-  readonly domain: LiteratureDomain;
+  /** Never "unstructured_theory": unparseable papers take the skipped branch and never produce a premise. */
+  readonly domain: Exclude<LiteratureDomain, "unstructured_theory">;
   readonly modelType: string;
   readonly sampleSize: number;
   readonly effectSize: number; // e.g. 0.048 for 4.8%
@@ -183,12 +184,12 @@ export function parsePaperPremise(item: CorpusRawItem): ParsePaperResult {
 
   // 2. Extract Sample Size N
   const nMatch = text.match(/\b(?:n\s*=\s*|sample\s+(?:size\s+)?(?:of\s+)?|dataset\s+of\s+)(\d[\d,]*)/i);
-  const sampleSize = nMatch ? parseInt(nMatch[1].replace(/,/g, ""), 10) : 1000;
+  const sampleSize = nMatch ? parseInt(nMatch[1]!.replace(/,/g, ""), 10) : 1000;
 
   // 3. Extract Explicit Effect Size / Percentage
   const pctMatch = text.match(/(\d+(?:\.\d+)?)\s*%/);
   const hasExplicitParams = !!pctMatch || !!nMatch;
-  const explicitPct = pctMatch ? parseFloat(pctMatch[1]) : null;
+  const explicitPct = pctMatch ? parseFloat(pctMatch[1]!) : null;
 
   // 4. Extract Publication Year & Recency Weight
   let year = 2024;
@@ -523,7 +524,7 @@ export function parsePaperPremise(item: CorpusRawItem): ParsePaperResult {
           let wind = isDome ? 0 : (ctx.windSpeedMph ?? 0);
           if (!isDome && ctx.windSpeedMph == null) {
             const wm = ctx.weather.match(/(\d+)\s*mph/i);
-            if (wm) wind = parseFloat(wm[1]);
+            if (wm && wm[1] != null) wind = parseFloat(wm[1]);
           }
           const windOver = Math.max(0, wind - 12);
           return -beta * Math.min(0.05, 0.003 * windOver * (1 + windOver / 15));
@@ -555,7 +556,7 @@ export function parsePaperPremise(item: CorpusRawItem): ParsePaperResult {
           let wind = isDome ? 0 : (ctx.windSpeedMph ?? 0);
           if (!isDome && ctx.windSpeedMph == null) {
             const wm = ctx.weather.match(/(\d+)\s*mph/i);
-            if (wm) wind = parseFloat(wm[1]);
+            if (wm && wm[1] != null) wind = parseFloat(wm[1]);
           }
           const windOver = Math.max(0, wind - 12);
           return beta * (isDenver ? 0.3 : -0.1 * (windOver / 10));
@@ -585,7 +586,7 @@ export function parsePaperPremise(item: CorpusRawItem): ParsePaperResult {
           let temp = ctx.temperatureF ?? 70;
           if (ctx.temperatureF == null) {
             const tm = ctx.weather.match(/(\d+)\s*(?:°|deg)?\s*F/i);
-            if (tm) temp = parseFloat(tm[1]);
+            if (tm && tm[1] != null) temp = parseFloat(tm[1]);
           }
           const coldDelta = Math.max(0, (32 - temp) / 10);
           return -0.3 * beta * coldDelta;
