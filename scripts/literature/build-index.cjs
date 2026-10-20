@@ -165,6 +165,7 @@ function mindToPremise(rec) {
     // the honest default for an unknown provenance is "unverified", and
     // the column's DEFAULT enforces the same thing at the database.
     record_class: typeof rec.record_class === "string" ? rec.record_class : null,
+    status: typeof rec.status === "string" ? rec.status : null,
     verification_tier: typeof rec.verification_tier === "string" ? rec.verification_tier : null,
   };
 }
@@ -392,8 +393,8 @@ function isoDate(v) {
               numeric_value, numeric_unit, numeric_metric, influence_direction,
               evidence_quote, how_it_influences, applicable_contexts, pillar_tags,
               source_file, source_doc_hash, record_class, verification_tier,
-              structure_state, content_hash, updated_at
-           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'structured',$20, now())
+              status, structure_state, content_hash, updated_at
+           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,'structured',$21, now())
            ON CONFLICT (premise_key) DO UPDATE SET
               title=EXCLUDED.title, principle=EXCLUDED.principle, domain=EXCLUDED.domain,
               claim_type=EXCLUDED.claim_type, numeric_value=EXCLUDED.numeric_value,
@@ -403,6 +404,7 @@ function isoDate(v) {
               applicable_contexts=EXCLUDED.applicable_contexts, pillar_tags=EXCLUDED.pillar_tags,
               source_file=EXCLUDED.source_file, source_doc_hash=EXCLUDED.source_doc_hash,
               record_class=EXCLUDED.record_class, verification_tier=EXCLUDED.verification_tier,
+              status=EXCLUDED.status,
               content_hash=EXCLUDED.content_hash, updated_at=now()
            RETURNING id`,
           [p.premise_key, p.source, p.source_ref, p.title, p.principle, p.domain, p.claim_type,
@@ -412,6 +414,7 @@ function isoDate(v) {
            // CLASS-A EXCLUSIVITY. A premise with no class is NOT citable.
            p.record_class || "HONESTLY_UNCITED_PRIOR",
            p.verification_tier || "MSVH_S0_UNCITED",
+           p.status || "UNCITED_NO_SOURCE",
            JSON.stringify(p)]
         );
         const id = r.rows[0].id;

@@ -43,9 +43,9 @@ function conn() {
         `INSERT INTO lit.premise (
             premise_key, source, source_ref, title, principle, domain, claim_type,
             evidence_quote, how_it_influences, applicable_contexts, pillar_tags,
-            source_file, record_class, verification_tier,
+            source_file, record_class, verification_tier, status,
             structure_state, content_hash, updated_at
-         ) VALUES ($1,$2,$3,$4,$5,'discovered',$6,$7,$8,'{}','{}',$9,'HONESTLY_UNCITED_PRIOR','MSVH_S0_UNCITED','structured',$10, now())
+         ) VALUES ($1,$2,$3,$4,$5,'discovered',$6,$7,$8,'{}','{}',$9,'HONESTLY_UNCITED_PRIOR','MSVH_S0_UNCITED','UNCITED_NO_SOURCE','structured',$10, now())
          ON CONFLICT (premise_key) DO UPDATE SET updated_at = now()
          RETURNING id`,
         [

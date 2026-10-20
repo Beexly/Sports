@@ -61,6 +61,13 @@ export interface PremiseInput {
    */
   readonly record_class?: string | null;
   readonly verification_tier?: string | null;
+  /**
+   * Why the record is or is not admitted. The spec's filter is
+   * `record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE'`, and both
+   * halves are needed: the class says what kind of record it is, the
+   * status says why it was or was not admitted.
+   */
+  readonly status?: string | null;
 }
 
 /** A raw corpus item for the discovery surface. */
@@ -159,6 +166,7 @@ export function mindRecordToPremise(rec: Record<string, unknown>): PremiseInput 
     // default for an unknown provenance is "unverified".
     record_class: typeof rec.record_class === "string" ? rec.record_class : null,
     verification_tier: typeof rec.verification_tier === "string" ? rec.verification_tier : null,
+    status: typeof rec.status === "string" ? rec.status : null,
   };
 }
 
@@ -243,8 +251,8 @@ async function upsertPremise(
         numeric_value, numeric_unit, numeric_metric, influence_direction,
         evidence_quote, how_it_influences, applicable_contexts, pillar_tags,
         source_file, source_doc_hash, record_class, verification_tier,
-        structure_state, content_hash, updated_at
-     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'structured',$20, now())
+        status, structure_state, content_hash, updated_at
+     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,'structured',$21, now())
      ON CONFLICT (premise_key) DO UPDATE SET
         title=EXCLUDED.title, principle=EXCLUDED.principle, domain=EXCLUDED.domain,
         claim_type=EXCLUDED.claim_type, numeric_value=EXCLUDED.numeric_value,
@@ -257,6 +265,7 @@ async function upsertPremise(
         source_doc_hash=EXCLUDED.source_doc_hash,
         record_class=EXCLUDED.record_class,
         verification_tier=EXCLUDED.verification_tier,
+        status=EXCLUDED.status,
         content_hash=EXCLUDED.content_hash,
         updated_at=now()
      RETURNING id`,
@@ -270,6 +279,7 @@ async function upsertPremise(
       // CLASS-A EXCLUSIVITY. A premise with no class is NOT citable.
       p.record_class ?? "HONESTLY_UNCITED_PRIOR",
       p.verification_tier ?? "MSVH_S0_UNCITED",
+      p.status ?? "UNCITED_NO_SOURCE",
       premiseContentHash(p),
     ],
   );
