@@ -1943,3 +1943,46 @@ consume. The fixpoint therefore converges to a correct but
 not implemented and that the output "may be less oriented than the
 true one". The one claim it did NOT earn was "It never orients
 against a rule", and that is the one that was false.
+
+## A082 quoted the spec's equation and then checked something else.
+
+A082's Case-3 block opens with the spec's published equation:
+
+    P(y | do(x)) = [SUM_w P(w) P(z | w) P(y | w, z, x)]
+                   / [SUM_w P(w) P(z | w) P(y' | w, z, x)]
+
+— a **ratio over w**, which **marginalises** w. Its assertion then
+checked only that the tree "marginalises Z with P(Z|W)", printed a
+note that the module's estimand "CONDITIONS on W", and **passed
+anyway**.
+
+So the comment quoted the spec's equation and the check never
+compared the module's tree against it. That is the audit's own defect
+class: a passage that reads like a check without being one.
+
+**It now says so, on every run.** A082 compares the tree against the
+published equation and, when they differ, prints the spec's form, the
+module's form, and the statement that they are different functionals
+whenever W carries confounding information — with the numeric size of
+the difference pointed at in A083 (up to 5.93 in level).
+
+**And it stays a REPORT, not a failure**, because the question it
+raises is *structural*: on the FOUR graph, is the ID recursion
+supposed to marginalise W over a ratio, or is conditioning on W the
+correct answer for that graph? A082 does not settle it. A verifier
+that raised a failure on an open question would be making the
+verdict, not measuring it — and the whole point of the audit is that
+the verdict must be measured.
+
+What the audit *can* say, and now does say, is the shape of the
+disagreement: the module's Case-3 answer is a **conditional on the
+confounder W**, the spec's published equation is a **marginal over
+W**, and on a DGP where the `W <-> X` confound is genuinely realised
+the two differ in level by up to **5.93**.
+
+**The honest summary of where the Case-3 question stands.** The
+Napkin graph (`W <-> X`, `W <-> Y`) — the one the X20 report names —
+is now correct: it returns the spec's exact ratio tree, and A082
+never contained it. The FOUR graph (`W <-> X`, `Z <-> Y`) — the one
+A082 *does* contain — returns a conditional where the spec's quoted
+equation is a ratio, and that is now stated rather than glossed.

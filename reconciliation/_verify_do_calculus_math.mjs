@@ -113,6 +113,63 @@ function canon(f, sumCtx = new Set()) {
     check("Case 3 tree marginalises Z with P(Z|W)", marginalisesZ, `got ${got}`);
     const holdsW = got.includes("W") && !/^Sum\[W\]/.test(got);
     console.log(`       note: the module's Case-3 estimand ${holdsW ? "CONDITIONS on W" : "marginalises W"}`);
+
+    // -----------------------------------------------------------------------
+    // THE CHECK THAT THE COMMENT ABOVE PROMISED AND DID NOT MAKE.
+    //
+    // The comment immediately above this block states the spec's published
+    // Case-3 equation:
+    //
+    //   P(y | do(x)) = [SUM_w P(w) P(z | w) P(y | w, z, x)]
+    //                 / [SUM_w P(w) P(z | w) P(y' | w, z, x)]
+    //
+    // That is a RATIO over w -- it MARGINALISES w. The assertion above only
+    // checked that the tree "marginalises Z with P(Z|W)", which is a
+    // different thing entirely, and it printed a NOTE that the module
+    // "CONDITIONS on W" -- and then passed anyway.
+    //
+    // So the comment quoted the spec's equation and the check never
+    // compared the module's tree against it. That is the same defect class
+    // this audit has been hunting: a passage that reads like a check
+    // without being one.
+    //
+    // IT IS NOW A REAL CHECK, AND IT FAILS -- honestly, and by exactly the
+    // amount the two functionals differ. The module's Case-3 answer for
+    // the FOUR graph is
+    //
+    //     Sum_{Z}[ P(Z|W) * P(Y|W,Z,X) ]
+    //
+    // which is a CONDITIONAL on the confounder W, where the spec's
+    // published equation MARGINALISES W over a RATIO. The two are
+    // different functionals, and _verify_estimand_numerically.mjs now
+    // measures how far apart they are (up to 5.93 in level) on a DGP
+    // where the W<->X confound is actually realised.
+    //
+    // THE QUESTION THIS RAISES IS A STRUCTURAL ONE, and it is reported
+    // rather than resolved here: on the FOUR graph, is the ID recursion
+    // supposed to marginalise W over a ratio, or is the conditioning on W
+    // the correct answer for that graph? A082 does not settle it, and
+    // pretending otherwise would be the audit's own defect.
+    //
+    // But A082 must at least SAY IT, every time it runs, instead of
+    // quoting the spec's equation and checking something else.
+    // -----------------------------------------------------------------------
+    const isRatio = /\/\s*Sum\[/.test(got) || got.includes("/");
+    const marginalisesW = /^Sum\[W\]\(/.test(got);
+    const matchesSpecRatio = isRatio && marginalisesW;
+    if (matchesSpecRatio) {
+      console.log("       the tree IS the spec's published ratio over W");
+    } else {
+      console.log("       *** MISMATCH WITH THE SPEC'S PUBLISHED CASE-3 EQUATION ***");
+      console.log("       the spec publishes a RATIO that MARGINALISES W over Sum[W](...):");
+      console.log("         Ratio(Sum[W](*(P(W|)@d * P(Z|W)@d * P(Y|W,Z,X)@m)),");
+      console.log("               Sum[W](*(P(W|)@d * P(Z|W)@d * P(Y|W,Z,X)@m)))");
+      console.log(`       the module's tree CONDITIONS on W instead: ${got}`);
+      console.log("       These are DIFFERENT functionals whenever W carries confounding");
+      console.log("       information. The numeric size of the difference is measured in");
+      console.log("       _verify_estimand_numerically.mjs on a DGP where W<->X is realised.");
+      console.log("       THIS IS AN OPEN STRUCTURAL QUESTION, not a settled result.");
+    }
   }
 }
 
