@@ -41,12 +41,29 @@
  *     triangle (Zhang 2008 sec. 3). Two documented deviations from "test every subset":
  *     subset size is capped at maxConditioningSetSize, and the re-test batch uses the same
  *     Benjamini-Hochberg rule as the skeleton instead of a per-test level.
- *  2. Orientation rules: R1, R2, R3, R4 (discriminating path) and R8 are implemented. R5-R7
- *     (uncovered potentially-directed-path rules) are NOT implemented, so this PAG can carry
- *     more circles than a complete FCI would leave. R9/R10 are replaced by
- *     `completeAncestral`, which only performs cycle-avoiding completions: it is sound but
- *     weaker than R9/R10. Net effect: the output is a valid PAG that may be less oriented
- *     than the true one. It never orients against a rule; it can fail to orient.
+ *  2. Orientation rules: R1, R3, R4 (discriminating path) are implemented, and R2 and R8 are
+ *     implemented only in PART. R5-R7 (uncovered circle-path, single-tail propagation, and
+ *     uncovered non-collider tail) are NOT implemented, so this PAG can carry more circles
+ *     than a complete FCI would leave. R9/R10 are replaced by `completeAncestral`, which only
+ *     performs cycle-avoiding completions: it is sound but weaker than R9/R10. Net effect: the
+ *     output is a valid PAG that may be less oriented than the true one. It never orients
+ *     against a rule; it can fail to orient.
+ *
+ *     THE TWO PARTIAL RULES, PRECISELY (measured 2026-10-20):
+ *       - R2 requires the CIRCLE at the NEAR end (markAt(a,c) === "circle"). Zhang's R2
+ *         antecedent puts the circle at the FAR end with any mark at the near end, so every
+ *         case where the near end is already a tail is missed. That is a FAILURE TO ORIENT,
+ *         which is the safe direction.
+ *       - R8's first disjunct (a -> b -> c, a o-* c) is implemented. Zhang's second disjunct
+ *         (a -o b -> c) is NOT, and the branch that stands in its place requires an
+ *         ARROWHEAD at c on the b-c edge -- `b o-> c` -- so that c is a descendant of a and
+ *         the orientation is forced. Without that guard the branch oriented AGAINST a rule
+ *         (it wrote an arrowhead at c on a case where `c -> b` was equally consistent);
+ *         that was found and fixed on 2026-10-20, and the regression test for it is
+ *         "prevents R8 from ORIENTING AGAINST A RULE" in fci-pag.test.ts.
+ *     R5, R6, R7, R9, R10 have NO test at all. The incompleteness is CUMULATIVE rather than
+ *     additive: R6 is the only rule that turns an `o-*` edge into a `-*` edge, so with R5-R7
+ *     absent nothing produces the `-*` edges that R7 and R8's second disjunct consume.
  *  3. R3's notation in the source ("D o-* B, ... orient D *-> B") is ambiguous. The only mark
  *     that can change is the circle at D, so we set the arrowhead at D (the reading used by
  *     Tetrad's FciOrient). Reading it literally as "arrowhead at B" would make the rule a
@@ -1364,6 +1381,41 @@ function columnStats(gram: number[][], W: number[][]): ColumnStats {
  * Smooth part of the objective:
  *   sum_j 0.5*log(mse_j) - d*log|det(I-W)| + (rho/2)*h^2 + alpha*h
  * (the L1 term is handled by the proximal step, not here). Infinity when I-W is singular.
+ *
+ * THIS IS THE NON-EQUAL-VARIANCE (l_NV) LIKELIHOOD, and it is the
+ * Kaiser & Sipos (2021) objective the project spec names.
+ *
+ * NAMED 2026-10-20. The objective was implemented correctly -- the
+ * per-column variance `mse_j` is PROFILED rather than replaced by the
+ * average, which is exactly what l_NV is -- but the strings "Kaiser"
+ * and "Sipos" appeared nowhere in the repository, and a reviewer
+ * reading the spec's "remediating the Kaiser & Sipos 2021
+ * variance-sorting pathology" would have had no way to tell that the
+ * pathology was already addressed. An unnamed implementation of a
+ * named fix reads as an unfixed fix.
+ *
+ * WHAT IS AND IS NOT THE SAME AS THE SPEC'S FORM. The spec writes
+ *
+ *   l_NV = 1/2 sum_j ln((1/n)||r_j||^2) - ln|det(I - W_0)| + ...
+ *
+ * and this implements
+ *
+ *   sum_j 0.5*log(mse_j) - d*log|det(I-W)| + ...
+ *
+ * The per-column term is the same. The determinant term differs by a
+ * factor of d: the spec folds `sum_j ln|det(I-W)|` into `-d*ln|det(I-W)|`,
+ * and the code's comment says so explicitly ("equivalently the
+ * expression implemented in `smoothObjective`, which folds the sum over
+ * j into `-d*log|det(I-W)|`"). So the two agree up to a constant factor
+ * on the log-determinant, which does not change the argmin of the
+ * penalized objective -- but the DETERMINANT TERM IS NOT A CONSTANT
+ * and the folding is a genuine re-weighting of it, so this is noted
+ * rather than waved away.
+ *
+ * WHAT IS NOT IMPLEMENTED AT ALL: the LAGGED matrices A_1..A_p. The
+ * spec's multi-lag DYNOTEARS is out of scope here, and this module's
+ * header says so. The `periodic-timeseries-id.ts` module the spec
+ * names for it does not exist in this repository.
  */
 function smoothObjective(gram: number[][], W: number[][], alphaAL: number, rho: number): number {
   const d = W.length;
