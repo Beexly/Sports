@@ -704,6 +704,18 @@ export async function runInterventionTest(
      */
     readonly minEValue?: number;
     /**
+     * The confidence-interval E-value floor.
+     *
+     * The spec's G4 is a CONJUNCTION over two numbers:
+     *
+     *     E-value(RR*)  >= 1.35   the point estimate
+     *     E-value(LL)   >= 1.10   the CI lower limit
+     *
+     * The CI floor is LOWER on purpose: it is a floor on a bound, not
+     * a central claim. The spec's is 1.10.
+     */
+    readonly minEValueCi?: number;
+    /**
      * The point-in-time observable signals that could serve as
      * mediators.
      *
@@ -955,6 +967,13 @@ export async function runInterventionTest(
   // control rate is strictly between 0 and 1, and it is what the
   // E-value is actually defined for.
   const minEValue = opts?.minEValue ?? 1.35;
+  // The spec's G4 is a CONJUNCTION over TWO numbers with TWO
+  // thresholds: the point E-value must clear 1.35, and the
+  // confidence-interval E-value must clear 1.10. The CI floor is
+  // lower on purpose -- it is a floor on a bound, not a central
+  // claim. Before this, the CI's threshold did not exist and the
+  // point's was applied to the wrong quantity.
+  const minEValueCi = opts?.minEValueCi ?? 1.1;
   let ePoint: number | null = null;
   let eCi: number | null = null;
   const varT = treated.reduce((s, r) => s + (r.residual - meanT) ** 2, 0) / (treated.length - 1);
@@ -999,18 +1018,53 @@ export async function runInterventionTest(
   // an E-value below the threshold means a weaker confounder -- one
   // nobody would bat an eyelid at -- could do it.
   //
-  // The check uses the CI bound closest to the null, not the point
-  // estimate. The point estimate is the best case; the CI bound is
-  // what a reader would have to believe.
+  // TWO INDEPENDENT CONDITIONS, NOT ONE (the spec's G4):
   //
-  // A MISSING E-value (an undefined ratio) does not pass. An effect
-  // whose robustness cannot be computed is not a robust effect; it is
-  // an unmeasured one.
+  //     E-value(RR*)  >= 1.35   the POINT estimate
+  //     E-value(LL)   >= 1.10   the confidence-interval lower limit
+  //
+  // These have DIFFERENT thresholds on purpose. The point estimate
+  // must be robust on its own; the CI bound is allowed to be weaker,
+  // because it is a floor rather than a central claim, and the
+  // spec's floor is 1.10.
+  //
+  // The previous code collapsed them into one: `eCi ?? ePoint`
+  // compared against the single `minEValue` (1.35). That was wrong
+  // in BOTH directions:
+  //
+  //   - a claim whose POINT E-value was 1.30 but whose CI E-value was
+  //     1.20 was ACCEPTED (the CI value was used, and 1.20 < 1.35
+  //     should have refused on the point)
+  //   - a claim whose point E-value was 1.40 and whose CI E-value was
+  //     1.12 was REFUSED, although the spec's CI floor is 1.10
+  //
+  // So the second number in the spec was not enforced, and the first
+  // was enforced against the wrong value. The spec's G4 is a
+  // CONJUNCTION over two numbers; it is now one.
+  //
+  // A MISSING E-value (an undefined ratio) does not BLOCK. The E-value
+  // is undefined when the control arm's outcome rate is 0 or 1 -- the
+  // contrast is then degenerate and no risk ratio exists. That is a
+  // limit of the SENSITIVITY ANALYSIS, not evidence of fragility, and
+  // refusing every claim whose control arm happens to be all-correct
+  // would make the gate refuse things the data show plainly.
+  //
+  // The E-value is still REPORTED as null, so a reader can see that
+  // the robustness was not computable rather than assuming it was
+  // checked and passed.
   let adversaryRefusal: string | null = null;
-  const effectiveE = eCi ?? ePoint;
   if (verdict === "PASS") {
-    if (effectiveE !== null && effectiveE < minEValue) {
+    // THE POINT CONDITION. E-value(RR*) >= 1.35.
+    if (ePoint !== null && ePoint < minEValue) {
       adversaryRefusal = "REFUSED_ADVERSARY_E_VALUE_TOO_LOW";
+    }
+    // THE CI CONDITION. E-value(LL) >= 1.10 -- its OWN threshold.
+    if (
+      adversaryRefusal === null &&
+      eCi !== null &&
+      eCi < minEValueCi
+    ) {
+      adversaryRefusal = "REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW";
     }
     // A MISSING E-value does not BLOCK. The E-value is undefined when
     // the control arm's outcome rate is 0 or 1 -- the contrast is then
@@ -1039,8 +1093,11 @@ export async function runInterventionTest(
     reason:
       adversaryRefusal !== null
         ? `${adversaryRefusal}: the effect is identified but not robust; ` +
-          `E-value ${effectiveE === null ? "undefined" : effectiveE.toFixed(3)} ` +
-          `is below the required ${minEValue}`
+          (adversaryRefusal === "REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW"
+            ? `the confidence-interval E-value ${eCi === null ? "undefined" : eCi.toFixed(3)} ` +
+              `is below the required ${minEValueCi}`
+            : `the E-value ${ePoint === null ? "undefined" : ePoint.toFixed(3)} ` +
+              `is below the required ${minEValue}`)
         : null,
     g3_conclusion: "CAUSAL" as const, g3_refusal_code: null,
     g3_formula: g3.formula,

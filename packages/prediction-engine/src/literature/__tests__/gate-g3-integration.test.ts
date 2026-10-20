@@ -274,6 +274,149 @@ describe("the adversary review (E-value gate)", () => {
     expect(res.e_value_ci).not.toBeNull();
   });
 
+  // ======================================================================
+  // G4 IS A CONJUNCTION OVER TWO NUMBERS WITH TWO THRESHOLDS.
+  //
+  // The spec (section 6.2, G4):
+  //
+  //     min E-value(RR*)  >= 1.35   AND   min E-value(LL)  >= 1.10
+  //
+  // The old code collapsed them into one: `eCi ?? ePoint` compared
+  // against the single 1.35. So the point's threshold was applied to
+  // the wrong quantity, and the CI's own threshold (1.10) did not
+  // exist at all.
+  //
+  // These tests are DISCRIMINATING: each moves exactly one of the two
+  // numbers across its own threshold, so a gate that checks only one
+  // of them cannot pass all of them.
+  // ======================================================================
+  it("the POINT E-value is checked against 1.35, on its own", async () => {
+    const { db } = makeDb();
+    // A point floor ABOVE the actual point E-value. The point must
+    // refuse.
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      minEValue: 1000,
+    });
+    expect(res.adversary_refusal_code).toBe("REFUSED_ADVERSARY_E_VALUE_TOO_LOW");
+    // And the reason names the POINT, not the CI.
+    expect(res.reason).toContain("the E-value");
+    expect(res.reason).not.toContain("confidence-interval E-value");
+  });
+
+  it("the CI E-value is checked against 1.10, on its own", async () => {
+    const { db } = makeDb();
+    // The POINT floor is left at its default (1.35, which the mock's
+    // 90%/10% arms clear easily). Only the CI floor is raised, above
+    // the actual CI E-value. The CI must refuse -- with its OWN code,
+    // because it is a different condition.
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      minEValueCi: 1000,
+    });
+    expect(res.adversary_refusal_code).toBe("REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW");
+    expect(res.verdict).toBe("INCONCLUSIVE");
+    // The reason names the CI, and the CI's own threshold.
+    expect(res.reason).toContain("confidence-interval E-value");
+    expect(res.reason).toContain("1000");
+  });
+
+  it("the two thresholds are independent: a low CI refuses even when the point is high", async () => {
+    const { db } = makeDb();
+    // The point E-value is comfortably above 1.35, but the CI floor is
+    // raised above the CI E-value. A gate that checked only the point
+    // would let this through. It must not.
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      minEValueCi: 1000,
+    });
+    expect(res.e_value_point!).toBeGreaterThan(1.35);
+    expect(res.adversary_refusal_code).toBe("REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW");
+  });
+
+  it("the two thresholds are independent: a low point refuses even when the CI is high", async () => {
+    const { db } = makeDb();
+    // The mirror image: the CI E-value is comfortable, but the point
+    // floor is raised above the point E-value. A gate that checked
+    // only the CI would let this through. It must not.
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph,
+      minEValue: 1000,
+    });
+    expect(res.e_value_ci!).toBeGreaterThan(1.1);
+    expect(res.adversary_refusal_code).toBe("REFUSED_ADVERSARY_E_VALUE_TOO_LOW");
+  });
+
+  it("the CI floor is 1.10 and not 1.35 -- a CI E-value between them passes", async () => {
+    // THE THRESHOLD IS PINNED, NOT JUST "SEPARATE".
+    //
+    // The independence tests above prove the CI condition is CHECKED.
+    // They do not prove it is checked against 1.10 rather than 1.35:
+    // the mock's E-values are far above both, so a gate that used the
+    // point's threshold for the CI would pass them too.
+    //
+    // So the mock is made to produce a CI E-value BETWEEN 1.10 and
+    // 1.35. That is the only band where the two thresholds disagree,
+    // and it is the band the spec's distinction lives in.
+    //
+    // The CI E-value is E-value(LL), and LL is the lower limit of the
+    // rate ratio's CI. A wide CI pushes LL toward 1, and E-value(1) is
+    // 1. So a WIDE CI gives a LOW CI E-value while the point estimate
+    // stays high.
+    //
+    // The arm sizes are chosen by SOLVING for the band, not by
+    // guessing: 40 treated rows with 27 correct against 17 control
+    // rows with 5 correct gives a rate ratio of 2.29 (E-value 4.02)
+    // with a log-RR standard error wide enough to pull LL down to
+    // an E-value of ~1.33 -- between the two thresholds, and the
+    // only band where they disagree.
+    const N_T = 40;
+    const N_C = 17;
+    const K_T = 27;
+    const K_C = 5;
+    const rows = [];
+    // The treated rows come first, then the control rows, and within
+    // each arm the correct ones come first -- so the outcome rates are
+    // exactly K_T/N_T and K_C/N_C, which is what the E-value is
+    // computed from.
+    for (let i = 0; i < N_T; i++) {
+      rows.push({
+        residual: 0.9,
+        outcome_correct: i < K_T,
+        activation_score: 0.9,
+        similarity: 0.5,
+      });
+    }
+    for (let i = 0; i < N_C; i++) {
+      rows.push({
+        residual: 0.0001,
+        outcome_correct: i < K_C,
+        activation_score: 0.0001,
+        similarity: 0.5,
+      });
+    }
+    const base = makeDb();
+    const db = {
+      query: async (sql: string, params: unknown[] = []) => {
+        if (sql.includes("FROM lit.residual")) return { rows };
+        return base.db.query(sql, params);
+      },
+    } as never;
+
+    const res = await runInterventionTest(db, "edge1", 0.001, { graph });
+
+    // The point E-value is high (a rate ratio of 19).
+    expect(res.e_value_point!).toBeGreaterThan(1.35);
+    // The CI E-value is in the band where the two thresholds differ.
+    expect(res.e_value_ci!).toBeGreaterThan(1.1);
+    expect(res.e_value_ci!).toBeLessThan(1.35);
+    // And so it PASSES -- because the spec's CI floor is 1.10, not
+    // 1.35. A gate that used the point's threshold for the CI would
+    // have refused this, and would have been WRONG.
+    expect(res.adversary_refusal_code).toBeNull();
+    expect(res.verdict).toBe("PASS");
+  });
+
   it("a claim that is NOT identified is refused before the E-value matters", async () => {
     // The confounded bow-arc: the effect is not identified, so there
     // is nothing to be robust about. The adversary review must not
