@@ -79,6 +79,90 @@ a file that does not exist anywhere in the repo.
 | `DERIVED_TABLE` | 1,134 | synthesised from a table row |
 | `CORRUPT_QUOTE` | 190 | a dataset slug or a database row where a quote should be |
 
+### The re-run after A087, and the 2,804 vs 2,674 question
+
+The builder was re-run after A087 (`locateDocumentRegion` now locates
+a record's quote by SUBSTRING rather than requiring a whole-field
+match) and the corpus it wrote is **byte-identical** to the committed
+one. That is the correct outcome and it is not a null result — it
+means the corpus already incorporated A087, and here is the proof
+from the git history rather than an assertion:
+
+```
+3b80b5f27  11:55  the A087 fix lands
+60bc3d5f8  12:01  the corpus is regenerated -- SIX MINUTES LATER
+```
+
+The distribution before and after, read out of the corpus files
+themselves:
+
+| | `5f54ee254` (pre-A087) | `3b80b5f27` (A087 landed) | `60bc3d5f8` (regenerated) | now |
+|---|---|---|---|---|
+| `ACTIVE` | 968 (`CITABLE_VERIFIED`) | 1,019 | 1,098 | **1,098** |
+| `LINK_VERIFIED_SEMANTIC_FAIL` | — | 2,484 | 2,674 | **2,674** |
+| `UNCITED_NO_SOURCE` | 3,201 (`HONESTLY_UNCITED_PRIOR`) | 397 | 397 | **397** |
+| `CORRUPT_QUOTE` | — | 269 | 0 | **0** (190 `REJECTED_CORRUPT`) |
+
+**Why 2,804 and 2,674 are both true, and not in conflict.** The 2,804
+is the number of records the *mechanism-extraction* fix recovered from
+the `UNCITED_NO_SOURCE` mislabelling. The 2,674 is where those records
+ended up *after* the whole gate ran on them: their quotes are verbatim
+in their documents, so they are no longer "uncited", but they then fail
+a LATER layer, so they are not admitted either. The 190 that moved out
+of `CORRUPT_QUOTE` are a class of their own, and
+
+```
+2,484 (semantic fail) + 190 (rejected corrupt) = 2,674
+```
+
+**The re-derived per-layer tallies, under the gate's OWN predicates**
+(`node reconciliation/_verify_layer_tallies.mjs` — not a re-implementation
+of the rules, the gate's exported `checkL1..L4` called directly):
+
+```
+corpus records            5,303
+L1 verbatim provenance     3,772  (71.1%)
+L2 numeric containment     1,989  (37.5%)
+L3 span anchoring          1,098  (20.7%)
+L4 mechanism entailment    2,107  (39.7%)
+ADMITTED (all four)        1,098  (20.7%)
+
+per class:
+CITABLE_VERIFIED      n=1,098  L1=1,098  L2=1,098  L3=1,098  L4=1,098  ADMITTED=1,098
+HONESTLY_UNCITED_PRIOR n=2,881  L1=2,484  L2=  828  L3=    0  L4=  867  ADMITTED=    0
+DERIVED_MARKET_SYNTH. n=1,134  L1=    0  L2=   43  L3=    0  L4=    0  ADMITTED=    0
+REJECTED_CORRUPT      n=  190  L1=  190  L2=   20  L3=    0  L4=  142  ADMITTED=    0
+```
+
+**The two views of the corpus agree**: the gate admits 1,098 records
+and exactly 1,098 records carry `status: ACTIVE`. Those are computed
+by different code paths — one calls the gate's predicates, the other
+reads the builder's own field — so their agreement is a check on both.
+
+**The 2,674 are not a provenance failure, and the corpus now says so.**
+Every one of them fails L2 and/or L4, and NONE fails for some other
+reason (`node reconciliation/_why_semantic_fail.mjs`):
+
+```
+L2 only  (the number is not in the quote)     1,009
+L4 only  (the mechanism is not entailed)        502
+L2 AND L4                                     1,163
+neither (some other layer)                        0
+```
+
+So the honest answer to "how many remain uncited for real reasons" is
+**397 (7.49%)** — the quote is in no document at all. The other 2,674
+(50.42%) have their quote byte-exact in the document they name; what
+they lack is support for the claim, which is a different and better
+problem than a broken citation.
+
+**One gap this exposed, and did not fix:** the builder computes
+`_failed_layers` for every record whose verdict was not admitted, and
+then **does not persist it**. So the corpus records THAT a record
+failed without recording WHAT failed. The numbers above are re-derived
+by `reconciliation/_why_semantic_fail.mjs` for exactly that reason.
+Persisting the field is the fix; it is not done here.
+
 **One definition of "citable."** The builder used to have its own copy
 of the admission logic while the gate module had another. It stamped
 `CITABLE_VERIFIED` on 3,735 records while only 968 passed all four
@@ -717,12 +801,142 @@ have would have been a fabricated constraint.
 
 ---
 
+## 7e. The do-calculus verifiers, audited by reading them
+
+A082 (`reconciliation/_verify_do_calculus_math.mjs`) and A083
+(`reconciliation/_verify_estimand_numerically.mjs`) are one-off scripts,
+not part of the test suite. Their numbers are provisional until they
+run under CI. The audit read the code, not just the output.
+
+**A082 — structural.** It builds a canonical string for the module's
+factor tree and compares it, node for node, against a hand-written
+form of the published equation. The density/mean distinction is
+explicit and is the whole content of the comparison: inside a
+`MARGINAL_SUM`, a conditional whose TARGET is the summed node is a
+density (`@d`) and every other conditional is a mean (`@m`). For the
+front door it asserts exact equality:
+
+```
+Sum[M](*(P(M|X)@d * Sum[X](*(P(X|)@d * P(Y|X,M)@m))))
+```
+
+which is the published form, using the marginal `P(x')`. The
+no-false-hedge sweep (18,144 queries over every 4-node DAG) and the
+order-invariance check (600 comparisons) are present and are real
+sweeps, not spot checks.
+
+**A083 — numeric.** It builds linear-Gaussian SCMs, fits them from
+observational samples only, and evaluates the module's tree by central
+difference. The three prior harness defects are fixed **in the code**,
+not just claimed:
+
+- *Gauss-Jordan*: the pivot row is normalised before elimination
+  (`M[c][k] /= p`), and the elimination loop skips only the pivot row
+  itself (`if (r === c) continue`) — the wrong-row division is gone.
+- *LCG NaN*: the RNG takes the top 24 bits (`(s >>> 8) / 16777216`),
+  so it lands in `[0, 1)`; `Math.log` of a number above 1 was the NaN
+  source.
+- *density treated as mean*: the evaluator distinguishes them
+  explicitly, in both scripts.
+
+**A083 distinguishes the two front-door forms rather than just
+checking one.** This matters, because the two differ numerically:
+
+```
+the module's tree gives:   5.9710     <- the spec's marginal P(x') form
+the spec's equation gives: 5.9710     <- identical
+variant A (P(x'|m)) gives:  8.2716     <- rejected, and rejected BY THE CHECK
+the truth is:               6.0000
+```
+
+The variant that conditions on the mediator is *actively asserted to
+be wrong*, so the check is discriminating rather than merely
+confirming whatever the module happens to do. Two consecutive runs
+produce byte-identical output.
+
+**X20 IS STILL OPEN, and the audit confirms it by reading.** The spec
+publishes Case 3 as a RATIO over `w`:
+
+```
+P(y | do(x)) = [SUM_w P(w) P(z|w) P(y|w,z,x)] / [SUM_w P(w) P(z|w) P(y'|w,z,x)]
+```
+
+The module returns a MARGINAL SUM over `Z`:
+
+```
+Sum[Z](*(P(Z|W)@d * P(Y|W,Z,X)@m))
+```
+
+A082 does not assert full tree equality for Case 3 — it checks only
+partial properties (that `Z` is marginalised with `P(Z|W)`, and that
+`W` is held), and it *prints* a note that the module's estimand
+conditions on `W`. A083's 4-node check evaluates the module's tree and
+recovers the true slope 5 (4.9942), but it never evaluates the spec's
+published ratio for comparison. So the numeric evidence validates the
+module's form; it does not settle whether the module's form is the
+spec's form. **The two are not the same expression, and nothing in
+either verifier asserts that they are.** That is X20, unchanged.
+
+**The control arm of the G3 integration test, verified by mutation**
+(`node reconciliation/_verify_control_arm.mjs`). The first run of that
+suite passed for the wrong reason — the control arm was empty — and
+the fixture was fixed. A claim that a fixture is fixed is a claim, so
+the fixture is MUTATED and the suite is required to go red:
+
+| mutation | result |
+|---|---|
+| control rows moved AT `doValue` (the original bug) | RED, 3 failed |
+| both arms given identical outcome rates (rate ratio 1) | RED, 2 failed |
+| restored | GREEN |
+
+Both mutations break the suite, so the control arm is load-bearing and
+the "the fix works" claim is a measurement rather than a restatement.
+
+**The E-value gate, verified by mutation** (`node
+reconciliation/_verify_e_value_gate.mjs`). Same method, because a
+passing test named "a WEAK E-value does NOT activate it" is not
+evidence the gate is enforced:
+
+| mutation | result |
+|---|---|
+| the E-value dropped from the activation condition | RED, 4 failed |
+| the threshold lowered to 0 | RED, 3 failed |
+| an UNKNOWN E-value treated as a pass | RED, 1 failed |
+| restored | GREEN |
+
+All three break the suite, so the gate is load-bearing.
+
+**The four tests that moved the suite from 192/192 to 196/196** are in
+`packages/prediction-engine/src/literature/__tests__/gate-g3-integration.test.ts`,
+added in `0f9a00998`:
+
+1. `refuses a causal PASS when the effect is not identified in the graph`
+2. `allows a causal verdict when the effect IS identified in the graph`
+3. `refuses when NO graph is supplied (prevents an unchecked effect posing as a verified one)`
+4. `still refuses an edge that is not promoted, before the gate is consulted`
+
+Test 2 is the control arm: it drives the same fixture with a graph in
+which the effect IS identified, and asserts the statistical test ran
+and returned `PASS`. So test 1's refusal is attributable to the gate
+and not to the fixture failing to produce a result.
+
+---
+
 ## 8. Verified
 | check | result |
 |---|---|
 | `node scripts/build-grounded-mind-corpus.mjs` | exit 0, referee 50/50, 5,303 records |
+| the builder RE-RUN after A087 | exit 0, referee 50/50, output **byte-identical** to the committed corpus |
+| the status distribution, re-measured | ACTIVE **1,098** / LINK_VERIFIED_SEMANTIC_FAIL **2,674** / UNCITED_NO_SOURCE **397** / DERIVED_TABLE **1,134**; **20.71%** admitted |
+| the per-layer tallies, under the gate's own predicates | L1 3,772 / L2 1,989 / L3 1,098 / L4 2,107 / **ADMITTED 1,098**; gate-admitted == ACTIVE count |
+| why the 2,674 fail | L2 only 1,009, L4 only 502, L2+L4 1,163, **neither 0** |
+| `node reconciliation/_verify_control_arm.mjs` | 2/2 mutations RED, restored GREEN — the control arm is load-bearing |
+| `node reconciliation/_verify_e_value_gate.mjs` | 3/3 mutations RED, restored GREEN — the E-value gate is load-bearing |
+| `node reconciliation/_verify_do_calculus_math.mjs` (A082) | all checks PASS; 0 false hedges on 18,144 queries; 0 mismatches on 600 reorderings |
+| `node reconciliation/_verify_estimand_numerically.mjs` (A083) | front door 5.9710 vs 6.0 (and the rejected variant 8.2716); 4-node 4.9942 vs 5.0; **byte-identical across runs** |
 | `node scripts/reanchor-mind-corpus.mjs` | 79 re-anchored, 397 quarantined, 1,098 admitted |
-| literature + reasoning + causal suites | **291/291** |
+| literature + reasoning + causal suites | **310/310** (32 files) |
+| the FULL prediction-engine suite | 7,376 passed, 1 failed, 4 skipped; **4 files fail, all pre-existing** (verified identical at the pre-A087 base `5f54ee254`: `honesty-surface`, `log-loss-isotonic-debug`, `metric-birth-certificate`, `yacoe-edge-candidate` — none touched by this work) |
 | mutation suite (honesty probes) | 11/11, **4/4 mutants caught** |
 | FCI, on 20,000 rows per scenario | skeleton tp=9/9, colliders tp=3/3, precision and recall 1.000 |
 | three-stage pipeline, clean chain | directed 0→1, 0→2, 2→1; bidirected (none) |
@@ -770,3 +984,19 @@ does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
    edge-existence hypotheses and are excluded from the literature path
    entirely. Whether to source them or retire them is a decision, not a
    bug.
+7. **X20 — the Case-3 ratio-form mismatch.** The spec publishes Case 3
+   as a ratio over `w`; the module returns a marginal sum over `Z`. A082
+   asserts only partial properties for that case and A083 never
+   evaluates the spec's ratio, so the numeric evidence validates the
+   module's form without settling whether it is the spec's form. See
+   section 7e.
+8. **The builder does not persist `_failed_layers`.** The corpus says
+   THAT a record failed and not WHAT failed. The per-layer breakdown
+   in section 2 is re-derived by a script for that reason; persisting
+   the field is the fix and it is not done.
+9. **A082 and A083 are one-off scripts, not tests.** Their numbers
+   reproduce, but they do not run under CI, so nothing prevents them
+   from silently drifting from the module they check. Moving them into
+   the suite is what turns provisional evidence into standing evidence.
+10. **66 pre-existing tsc errors**, untriaged. Zero new ones from this
+    work, but they are still there.
