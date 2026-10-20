@@ -354,17 +354,218 @@ The spec's number (1,511) was right and its path was off by a reorg.
 
 ---
 
-## 8. Verified
+## 7a. The live database was serving an empty corpus
 
+This was found by asking the retrieval function what it actually
+returns, rather than by reading the SQL.
+
+The class filter is on `lit.premise`, JOINED to `lit.premise_vector`
+(where the HNSW index lives), so the ANN search returns its top-k and
+the filter is applied afterwards. That is a post-filter, and a
+post-filter can under-return.
+
+MEASURED, BEFORE ANYTHING WAS CHANGED:
+
+```
+asked for k=  5  got   1  SHORT by 4
+asked for k= 20  got   1  SHORT by 19
+asked for k= 50  got   1  SHORT by 49
+the same search with NO class filter returns 5,513
+```
+
+The shortfall was real, and it was **not** a post-filter artifact: the
+planner had chosen a filter-first plan (Bitmap Index Scan on
+`premise_record_class_idx`), and there was genuinely only one premise
+in the table with the right class.
+
+**Why there was only one.** The premise rows were written *before* the
+`record_class` and `status` columns existed, so they all carried the
+columns' DEFAULTs:
+
+```
+5,511  HONESTLY_UNCITED_PRIOR / UNCITED_NO_SOURCE
+    1  CITABLE_VERIFIED / ACTIVE
+```
+
+The corpus file on disk has the truth (1,098 ACTIVE) and the loader
+carries `record_class` and `status` through — but the database had
+never been told. Every premise was honestly stamped
+`UNCITED_NO_SOURCE` by default, and the filter correctly excluded
+every one of them.
+
+**The gate was not lying. The data behind it was empty.** This is the
+same shape as the original defect: a label that reads like
+verification, over nothing.
+
+Three things were needed:
+
+1. A re-stamp touching **only** the two columns, keyed on the loader's
+   own `premise_key` construction (read from the loader's source,
+   because importing `build-index.cjs` *runs* the whole build). The
+   embeddings, the ids and every other column are untouched.
+2. The 231 corpus records that had no premise row at all — the corpus
+   grew from 5,149 to 5,303 during re-anchoring — embedded with the
+   loader's own `--only-missing` path. 231 embedded, 0 failed.
+3. A **schema gap the re-stamp found**: the corpus stamps
+   `MSVH_S0_CORRUPT_MARKDOWN_ROW` on the 190 records whose "quote" was
+   a database row, and the CHECK constraint did not allow that tier.
+   The constraint also had to be **dropped and re-added** rather than
+   added when absent — the `IF NOT EXISTS` guard meant widening the
+   allowed set would silently not happen on a table that already had
+   the narrower constraint. A guard that prevents a change from taking
+   effect is the same shape of defect as a default that admits
+   everything.
+
+MEASURED, AFTER:
+
+```
+2,484  HONESTLY_UNCITED_PRIOR / LINK_VERIFIED_SEMANTIC_FAIL
+1,135  DERIVED_MARKET_SYNTHESIS / DERIVED_TABLE
+1,099  CITABLE_VERIFIED / ACTIVE
+  836  HONESTLY_UNCITED_PRIOR / UNCITED_NO_SOURCE
+  190  REJECTED_CORRUPT / LINK_VERIFIED_SEMANTIC_FAIL
+5,745  TOTAL
+
+asked for k=  5  got   5  complete
+asked for k= 20  got  20  complete
+asked for k= 50  got  50  complete
+```
+
+The plan is still filter-first, so the completeness is not an artifact
+of a different plan. The 19.1% admitted rate is the real number, and
+it is the number the corpus file says it should be.
+
+**All of this is on the dev branch `dev-lit-vectors-2026-10`.**
+Production `main` has no `lit` schema and no pgvector extension, so
+the stack has never been deployed there at all.
+
+---
+
+## 7b. The three stages, joined
+
+The spec describes a three-stage hybrid. The code had two separate
+functions and nothing between them: `discoverCausalStructure` did FCI
+→ PAG → ADMG and **stopped**. It never ran Stage 2, so the circle
+marks were carried into the ADMG unresolved, and the projection used
+the *maximally-confounded* representative — any edge that is not a
+definite tail→arrowhead becomes bidirected.
+
+That representative is sound in one direction (it never over-claims),
+but it is not the spec's Stage 3, and it is not harmless.
+
+MEASURED on a clean chain 0 → 1 → 2 with **no latent confounder**
+(n=6000):
+
+| projection | directed | bidirected |
+|---|---|---|
+| spec's Stage 3 | `0->1, 0->2, 2->1` | (none) |
+| maximally-confounded | (none) | `0<->1, 0<->2, 1<->2` |
+
+**Three false hedges.** A hedge is not a conservative annotation: it
+makes the Shpitser-Pearl ID algorithm *fail*, so each one refuses an
+effect the data identify. The pessimistic rule never over-claims; it
+also claims nothing at all on clean data.
+
+### The order of the rules is the whole thing, and I got it wrong first
+
+I tested `|W| > tau_edge` before the residual covariance, reasoning
+that a large coefficient means a real edge. Measured on a
+two-variable **latent-confounder** SCM, the residual z was **49.5** —
+the confounding is overwhelming — and `|W|` was 0.39, and the edge
+came out **directed** `0->1`: a direction the data cannot identify,
+on a graph that would then let do-calculus mint a causal claim about
+it.
+
+**A large coefficient is the signature of confounding, not evidence of
+direction.** A common cause induces a direct-looking coefficient
+between its effects, and the larger the confounding, the larger the
+induced coefficient. So the residual correlation is tested *first*: if
+the residuals stay correlated, the direction is not identified
+whatever the coefficient says. That is the spec's circle-arrow rule
+generalised — the spec's version is the special case "DYNOTEARS set
+`W_0,ij = 0`", and the general form is "the confounding is real,
+whether or not the coefficient happened to be estimated at zero".
+
+MEASURED, AFTER THE REORDER:
+
+```
+clean chain, no confounder
+  0-1  directed   |W|=0.4346  |z|= 0.439
+  0-2  directed   |W|=0.8673  |z|= 0.158
+  1-2  directed   |W|=0.5261  |z|=-0.603
+  -> directed 0->1, 0->2, 2->1, bidirected (none)
+
+latent confounder (shared u drives x0 and x1)
+  0-1  bidirected |W|=0.3915  |z|=49.498
+  -> the confounding is real, the direction is not identified
+```
+
+**Every projection decision carries its reason.** A projection with no
+audit trail is a projection nobody can check, so the pipeline returns
+one decision per PAG edge with the numbers that produced it.
+
+### The stack was unreachable
+
+A repo-wide sweep for non-test callers:
+
+| function | non-test callers |
+|---|---|
+| `discoverCausalStructure` | **0** |
+| `dynotearsFit` | **0** |
+| `pagToAdmg` | **0** |
+| `runShpitserPearlIDC` | 1 (the gate) |
+| `evaluateCausalClaim` | 1 (the retrieval path) |
+
+And **none** of the causal modules were exported from `src/index.ts`
+— 456 export blocks in that file, not one of them from `causal/`.
+
+Even once reachable, wiring them together needed four pieces of
+knowledge a caller should not have to assemble: that
+`discoverCausalStructure` exists, that its `admg` is a `PagAdmg` over
+*numeric* indices, that `admgToCausalADMG` converts it, and that the
+result's node ids are `v0`/`v1` rather than the **signal names** the
+literature edges use. A caller who got that wrong would check
+identifiability against a graph with the wrong node names — and the
+gate would refuse it with "not identified", which looks like a finding
+rather than a wiring bug.
+
+So the wiring is now one call:
+
+```ts
+const { admg } = discoverCausalStructure(matrix, { ... });
+const graphForEdge = graphForEdgeFromDiscovery(admg, signalNames);
+await runCausalEdgeSuite(db, { graphForEdge });
+```
+
+and the sweep asks the gate whether each edge's effect is identified
+**in the graph the pipeline discovered**, rather than in a graph the
+edge asserts about itself.
+
+The topological order comes from `admgToCausalADMG`'s Kahn sort rather
+than a second implementation — two topological sorts is two chances to
+disagree, and the disagreement would show up as a graph the gate
+accepts in one place and rejects in another. And the signal names are
+applied to the **node ids**, not to the positions: a name belongs to a
+variable, not to a position in an ordering.
+
+---
+
+## 8. Verified
 | check | result |
 |---|---|
 | `node scripts/build-grounded-mind-corpus.mjs` | exit 0, referee 50/50, 5,303 records |
-| literature + causal suites | **196/196** |
-| mutation suite (honesty probes) | 10/10, **4/4 mutants caught** |
-| do-calculus structural verifier | all checks pass |
-| do-calculus numeric verifier | all checks pass |
-| class-A coverage check | 4 insert paths, 21 read sites, 0 gaps |
+| `node scripts/reanchor-mind-corpus.mjs` | 79 re-anchored, 397 quarantined, 1,098 admitted |
+| literature + reasoning + causal suites | **291/291** |
+| mutation suite (honesty probes) | 11/11, **4/4 mutants caught** |
+| FCI, on 20,000 rows per scenario | skeleton tp=9/9, colliders tp=3/3, precision and recall 1.000 |
+| three-stage pipeline, clean chain | directed 0→1, 0→2, 2→1; bidirected (none) |
+| three-stage pipeline, latent confounder | bidirected, residual z = 49.5 |
+| L_lit gradient vs central finite difference | max error **2e-11** |
+| class-A coverage check | 4 insert paths, **22 read sites**, 0 gaps |
 | schema applied to Neon | clean; filter bites; default is honest |
+| every insert path against the real schema | 4/4 PASS |
+| the live database's class distribution | **1,099 CITABLE_VERIFIED / ACTIVE** (19.1%) |
+| retrieval completeness | k=5→5, k=20→20, k=50→50, all complete |
 | `tsc` | 66 errors, down from **74 at baseline**, **zero new** signatures |
 
 The 66 remaining tsc errors are pre-existing and live in files this work
@@ -375,18 +576,27 @@ does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
 
 ## 9. Still open
 
-1. **§3 — FCI + Precision-Preconditioned DYNOTEARS** (`causal-graph-builder.ts`
-   in the spec's naming; no such file exists in this repo). In progress.
-2. **The corpus is 20.7% admitted, not 100%.** 3,201 records are
+1. **The literature schema is on the dev branch only.** Production `main`
+   has no `lit` schema and no pgvector extension — the stack has never
+   been deployed. Every measurement above was taken on
+   `dev-lit-vectors-2026-10`. Applying the schema to `main` is a
+   deployment decision with live-data consequences, and it has not been
+   made.
+2. **The corpus is 20.7% admitted, not 100%.** 2,881 records are
    `HONESTLY_UNCITED_PRIOR`. That is the honest state, and it is
-   materially smaller than the legacy 67.4%. A corpus of 968 falsifiable
-   premises is a corpus of 968 falsifiable premises.
-3. **`runCausalPromotionSweep` has no production caller** with a graph.
-   `useEdgeAssertedGraph` is off by default, so the sweep currently
-   reports `ASSOCIATION_ONLY` for every edge — which is the correct
-   answer when nobody has checked the confounding structure, and a
-   prompt for whoever wires it to supply a real PAG.
-4. **The 26 `FOUNDATIONAL_PAPERS`** are hand-authored principles with no
+   materially smaller than the legacy 67.4%. A corpus of 1,098
+   falsifiable premises is a corpus of 1,098 falsifiable premises.
+3. **The causal stack is reachable but not yet driven by a live model.**
+   `discoverCausalStructure` and `graphForEdgeFromDiscovery` now exist
+   and are exported, and the wiring is one call — but no production path
+   invokes them yet, because doing so changes predictions. That is a
+   human call.
+4. **DYNOTEARS is contemporaneous only.** The lagged terms `A_τ` are
+   out of scope, and the module header says so.
+5. **FCI's R5–R7 are not implemented** and R9/R10 are replaced by a
+   sound-but-weaker completion, so the PAG can carry more circles than
+   a complete FCI would leave.
+6. **The 26 `FOUNDATIONAL_PAPERS`** are hand-authored principles with no
    document behind them. They are preserved as structural
    edge-existence hypotheses and are excluded from the literature path
    entirely. Whether to source them or retire them is a decision, not a
