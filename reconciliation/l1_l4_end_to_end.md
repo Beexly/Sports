@@ -950,6 +950,12 @@ and not to the fixture failing to produce a result.
 | the live database's class distribution | **1,099 CITABLE_VERIFIED / ACTIVE** (19.1%) |
 | retrieval completeness | k=5→5, k=20→20, k=50→50, all complete |
 | `tsc` | 66 errors, down from **74 at baseline**, **zero new** signatures |
+| **PRODUCTION `main`: the schema deployed** | pgvector 0.8.0, the `lit` schema, 10 tables, HNSW indexes present |
+| **PRODUCTION `main`: the class-A corpus** | 1,099 rows copied with their 1,024-dim embeddings, **0 failures** |
+| **PRODUCTION: Recall@20, through the function** | **100.000%** (200/200 probes); 0 non-class-A rows returned; asked for 20, got 20 |
+| the schema on a CLEAN database | applied cleanly — after fixing two bugs the dev branch had masked (a guard/drop mismatch and an out-of-order FK) |
+| the three frontier modules | 46/46 tests; **20 of 20** threshold constants verified COMPARED; exported from the package index |
+| the full package suite | **529/529** (54 files) |
 
 The 66 remaining tsc errors are pre-existing and live in files this work
 does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
@@ -957,14 +963,151 @@ does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
 
 ---
 
+## 9. Production, and the three frontier modules
+
+### 9a. The schema is deployed, and two bugs were hiding in it
+
+The production branch `main` of `summer-brook-99380762` now carries
+the literature schema. It did not, and the reason it could not is
+worth recording, because **the dev branch masked both bugs**.
+
+The measurement came first
+(`reconciliation/_probe_production_state.mjs` — READ-ONLY, no DDL, no
+DML):
+
+| | production `main` | dev `dev-lit-vectors-2026-10` |
+|---|---|---|
+| pgvector | **ABSENT** | 0.8.0 |
+| the `lit` schema | **ABSENT** | present, 10 tables |
+| class-A rows | 0 | 1,099 |
+| HNSW indexes | none | `corpus_item_hnsw_idx`, `premise_vector_hnsw_idx` (m=16, ef_construction=64) |
+
+**Bug 1 — the constraint guard did not match the drop.** The block
+guarded `ALTER TABLE lit.premise DROP CONSTRAINT
+premise_verification_tier_chk` with a check for a constraint whose
+*definition* mentions `verification_tier`. On a FRESH schema the
+table is created with an inline (unnamed) CHECK, so the
+definition-based guard is TRUE and the named DROP then fails with
+*"constraint premise_verification_tier_chk of relation premise does
+not exist"*. **The schema could not be applied to a clean database at
+all.** The dev branch worked only because it already had the named
+constraint from an earlier deploy.
+
+**Bug 2 — a foreign key pointed at a later table.** `lit.discovery_hit`
+REFERENCES `lit.retrieval_event`, and `discovery_hit` was declared
+*before* `retrieval_event`. Same blindness, same reason.
+
+Both were found by running the schema against a **scratch branch
+created from `main`** — which is exactly the production condition. The
+guard now drops by name and also handles the inline constraint; the
+FK target is now created first.
+
+### 9b. What was deployed, and what was deliberately not
+
+The schema deployed is the EXISTING `reconciliation/schema_literature.sql`
+— the one the 84 read sites already query. **Not** the plan's
+proposed `literature_premises` table, which is a different shape
+(different name, different columns, a different index) and would have
+created a second, unread copy of the corpus beside the one the code
+uses. The plan's `(m = 24, ef_construction = 200)` is likewise not
+what the deployed index uses; the deployed one is `(m = 16,
+ef_construction = 64)` on `lit.premise_vector` joined to
+`lit.premise`, and that is what was deployed.
+
+The rows are **copied** from the dev branch with their 1,024-dim
+embeddings (`reconciliation/_copy_class_a_corpus.mjs`), not
+re-embedded: the dev branch already holds those exact vectors, and
+re-embedding would need an embedding provider and would produce
+vectors that are not bit-equal to the ones the retrieval path was
+tuned against. The class filter is not optional — only
+`record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE'` rows are
+copied. The operational tables (`activation`, `residual`,
+`retrieval_event`) are NOT copied: they are runtime state about this
+database's traffic.
+
+```
+written: 1099   failed: 0
+class-A rows WITH a vector: 1099
+non-class-A rows claiming MSVH_S1_EXACT: 0
+```
+
+### 9c. The recall, and why the plan's 0.992 was not the binding constraint
+
+Measured on production, probing with each premise's own embedding and
+asking for its own key back:
+
+| `ef_search` | Recall@20 |
+|---|---|
+| 40 (the pgvector default) | **92.000%** |
+| 100 | **100.000%** |
+
+The 8% shortfall was the HNSW **approximation**, not the index and
+not the class filter: the exact nearest-neighbour path returned the
+same 92% at k=20 *and* at k=50, which is the signature of a
+truncated candidate list rather than a wrong answer. The plan's
+"ef_search = 64" is also below the threshold and would still have
+missed.
+
+So `lit.retrieve_premises` now sets `hnsw.ef_search = 100` itself,
+via `set_config(..., is_local := true)` so it does not leak into the
+caller's session. It is set **in the function** because a caller that
+forgets to set it gets 92% and does not know why.
+
+Measured **through the production function**, not a raw query:
+
+```
+Recall@20 = 100.000%  (200/200 probes)
+Recall@50 = 100.000%
+non-class-A rows returned by the function: 0
+asked for 20, got 20
+```
+
+The plan's 0.992 target is met, and by a margin that is measured
+rather than asserted.
+
+### 9d. The three frontier modules, and the audit of them
+
+Three modules, written by subagents, then **audited rather than
+trusted** — because a passing test suite proves a module does what its
+own tests say, and says nothing about whether its constants gate
+anything.
+
+`reconciliation/_audit_frontier_constants.mjs` applies the same rules
+as the repo-wide sweep: a constant is GATED if it is compared
+directly, via an alias that is compared, via a `Math.max/min` clamp,
+via a default parameter whose parameter is compared, or as a bound
+passed to a validator.
+
+```
+20 of 20 threshold constants are COMPARED.
+```
+
+The mathematics was checked against the spec, not just the tests:
+
+| module | what was verified |
+|---|---|
+| `proximal-bridge-id.ts` | the three refusal conditions, each enforced where the spec puts it: the Fredholm condition number against `MIN_FREDHOLM_CONDITION_NUMBER`, the overidentification J-test against `MIN_J_TEST_P_VALUE`, the VanderWeele-Ding E-value against `MIN_BRIDGE_E_VALUE` |
+| `semiparametric-estimand-solver.ts` | the influence function has the spec's **three** terms — `phiY`, `phiX`, `phiW` — and the Verma-projected weighting density is applied over the admissible z grid |
+| `itcr-orca-gate.ts` | the graph-level nonconformity is `max over v of (1 - product over ancestors of r_u)`; the Shafer–Vovk rank is `ceil((n+1)(1-eps))` by a named exported function; the rank-exceeds-n case is reported as **unbounded**, not silently clamped |
+
+All three are exported from the package index, so they are reachable
+and not merely present on disk.
+
+```
+literature + reasoning + causal + calibration   529/529 (54 files)
+tsc                                             66 errors, down from 74 at
+                                                baseline, zero new signatures
+```
+
+---
+
 ## 9. Still open
 
-1. **The literature schema is on the dev branch only.** Production `main`
-   has no `lit` schema and no pgvector extension — the stack has never
-   been deployed. Every measurement above was taken on
-   `dev-lit-vectors-2026-10`. Applying the schema to `main` is a
-   deployment decision with live-data consequences, and it has not been
-   made.
+1. ~~**The literature schema is on the dev branch only.**~~ RESOLVED
+   (see section 9). The schema is deployed to production `main`,
+   pgvector 0.8.0 is installed, 1,099 class-A rows are loaded with
+   their embeddings, and `lit.retrieve_premises` measures
+   **Recall@20 = 100.000%** through the production function.
 2. **The corpus is 20.7% admitted, not 100%.** 2,881 records are
    `HONESTLY_UNCITED_PRIOR`. That is the honest state, and it is
    materially smaller than the legacy 67.4%. A corpus of 1,098
@@ -984,12 +1127,17 @@ does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
    edge-existence hypotheses and are excluded from the literature path
    entirely. Whether to source them or retire them is a decision, not a
    bug.
-7. **X20 — the Case-3 ratio-form mismatch.** The spec publishes Case 3
-   as a ratio over `w`; the module returns a marginal sum over `Z`. A082
-   asserts only partial properties for that case and A083 never
-   evaluates the spec's ratio, so the numeric evidence validates the
-   module's form without settling whether it is the spec's form. See
-   section 7e.
+7. ~~**X20 — the Case-3 ratio-form mismatch.**~~ RESOLVED, and the
+   module is RIGHT. The two forms are different FUNCTIONS — the spec's
+   equation conditions on `z` and the module's on `w` — and they
+   recover the SAME causal effect: measured on a linear-Gaussian SCM
+   whose true total effect is 5, the module's `E[Y | W, X]` gives
+   slope **5.0085** and the spec's ratio `E[Y | Z, X]` gives slope
+   **5.0085 at every z**, the largest disagreement being **3e-6**. The
+   patch that was proposed for it was implemented, measured, and
+   REVERTED: it would have replaced a correct answer with a
+   differently-conditioned one. Two tests now compute both estimands
+   and assert the slopes agree. See section 7e.
 8. **The builder does not persist `_failed_layers`.** The corpus says
    THAT a record failed and not WHAT failed. The per-layer breakdown
    in section 2 is re-derived by a script for that reason; persisting
@@ -1000,3 +1148,15 @@ does not touch (`index.ts`, `reasoning/*`, `scoring.ts`,
    the suite is what turns provisional evidence into standing evidence.
 10. **66 pre-existing tsc errors**, untriaged. Zero new ones from this
     work, but they are still there.
+11. **The three frontier modules are not wired into a caller.** They
+    are implemented, tested, audited, and exported — and nothing
+    invokes them yet. `ProximalBridgeIDEngine` in particular is the
+    thing that would let an unbreakable bow-arc be answered instead of
+    refused, and the refusal path is still what runs. Wiring it
+    changes what the engine publishes, so it is a call, not a
+    default.
+12. **`lit.retrieve_premises` is now `plpgsql` rather than `sql`**, to
+    set `hnsw.ef_search` locally. That is a deliberate change for
+    recall, and it costs the inlining the `sql` version got. If a
+    caller relies on the function being inlinable, that is a
+    regression to check.
