@@ -26,6 +26,7 @@ import {
   PROPENSITY_CLIP_HIGH,
   PROPENSITY_CLIP_LOW,
   VERMA_SPREAD_TOLERANCE,
+  evaluateRatioFunctionalSemiparametric,
   extractRatioFunctional,
   judgeEstimandEValue,
   ratioEstimandSensitivity,
@@ -38,7 +39,7 @@ import type {
   SemiparametricRatioResult,
   SemiparametricRatioSample,
 } from "../semiparametric-estimand-solver";
-import { formatSymbolicFactor } from "../do-calculus-id";
+import { formatSymbolicFactor, runShpitserPearlID } from "../do-calculus-id";
 import type { SymbolicFactor } from "../do-calculus-id";
 
 // ---------------------------------------------------------------------------------------
@@ -663,5 +664,133 @@ describe("the E-value gate on an estimand", () => {
         { minEValue: 0.5 },
       ),
     ).toThrow(/minEValue/);
+  });
+});
+
+// ======================================================================
+// THE BRIDGE: AN ID-EMITTED RATIO AST, EVALUATED.
+//
+// Before this, the identification result and the estimand estimate
+// were two halves of a claim with nothing joining them: the engine
+// could say "this effect is identified as a ratio of two g-formulas"
+// and never say what the ratio was.
+//
+// These tests close that. The AST comes from the REAL ID recursion
+// (not a hand-written one), and the number comes out of the
+// semiparametric one-step estimator.
+// ======================================================================
+describe("the bridge: an ID-emitted ratio AST, evaluated", () => {
+  // The Napkin / Case-3 graph: W -> Z -> X -> Y with W <-> X and
+  // W <-> Y. Its ID result is the Tian c-factor RATIO.
+  const NAPKIN = {
+    nodes: ["W", "Z", "X", "Y"],
+    directed: [
+      ["W", "Z"],
+      ["Z", "X"],
+      ["X", "Y"],
+    ],
+    bidirected: [
+      ["W", "X"],
+      ["W", "Y"],
+    ],
+  };
+
+  it("the REAL ID recursion emits a ratio, and the bridge evaluates it", () => {
+    const id = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), NAPKIN);
+    // The ID result is a RATIO -- that is the X20 fix.
+    expect(id.ok).toBe(true);
+    if (!id.ok) return;
+    // The formatter renders a RATIO as "numerator / denominator", so
+    // the tree is a genuine ratio, not a product.
+    const tree = formatSymbolicFactor(id.formula);
+    expect(tree).toContain(" / ");
+    // And the numerator carries the Napkin factors: the W marginal,
+    // the X|W,Z conditional and the Y|W,Z,X conditional.
+    expect(tree).toContain("P(W)");
+    expect(tree).toContain("P(X|W,Z)");
+    expect(tree).toContain("P(Y|W,Z,X)");
+    expect(id.formulaClass).toBe("TIAN_C_FACTOR_RATIO");
+
+    // And the bridge turns it into a NUMBER.
+    const synthetic = makeVermaSample(5, 3000);
+    const bridged = evaluateRatioFunctionalSemiparametric(
+      id.formula,
+      id.formulaClass,
+      synthetic.sample,
+    );
+    expect(bridged.ok).toBe(true);
+    if (!bridged.ok) return;
+    // A finite number, and both the plug-in and the corrected value
+    // are present so a reader can see how far the correction moved.
+    expect(Number.isFinite(bridged.estimand)).toBe(true);
+    expect(Number.isFinite(bridged.plugIn)).toBe(true);
+    // And the correction is the difference between them.
+    expect(bridged.estimand).toBeCloseTo(bridged.plugIn + bridged.oneStepCorrection, 10);
+  });
+
+  it("the bridge REFUSES a product-shaped estimand rather than mis-evaluating it", () => {
+    // A back-door formula is a PRODUCT, not a RATIO. Evaluating it
+    // as a ratio would estimate a DIFFERENT functional than
+    // identification returned -- the exact defect this bridge
+    // exists to prevent.
+    const BACKDOOR = {
+      nodes: ["X", "Y"],
+      directed: [["X", "Y"]],
+      bidirected: [],
+    };
+    const id = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), BACKDOOR);
+    expect(id.ok).toBe(true);
+    if (!id.ok) return;
+    // It is NOT a ratio.
+    expect(formatSymbolicFactor(id.formula)).not.toContain(" / ");
+
+    const synthetic = makeVermaSample(5, 3000);
+    const bridged = evaluateRatioFunctionalSemiparametric(
+      id.formula,
+      id.formulaClass,
+      synthetic.sample,
+    );
+    expect(bridged.ok).toBe(false);
+    if (bridged.ok) return;
+    expect(bridged.reason).toBe("FORM_NOT_A_RATIO");
+    // And the reason says why, not just that.
+    expect(bridged.detail).toContain("kappa");
+  });
+
+  it("the bridge reports a SOLVER refusal rather than a number", () => {
+    // A sample too small for the one-step correction. The bridge must
+    // not paper over it.
+    const synthetic = makeVermaSample(5, 10);
+    const id = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), NAPKIN);
+    expect(id.ok).toBe(true);
+    if (!id.ok) return;
+    const bridged = evaluateRatioFunctionalSemiparametric(
+      id.formula,
+      id.formulaClass,
+      synthetic.sample,
+    );
+    expect(bridged.ok).toBe(false);
+    if (bridged.ok) return;
+    expect(bridged.reason).toBe("SOLVER_REFUSED");
+    expect(bridged.detail).toBeTruthy();
+  });
+
+  it("the one-step correction is REAL, not a no-op on a real problem", () => {
+    // If the correction were always zero, the whole point of the
+    // semiparametric estimator would be gone -- and the test would
+    // still pass. So it must move the plug-in by a non-trivial
+    // amount on a problem where the plug-in is biased.
+    const synthetic = makeVermaSample(5, 3000);
+    const id = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), NAPKIN);
+    expect(id.ok).toBe(true);
+    if (!id.ok) return;
+    const bridged = evaluateRatioFunctionalSemiparametric(
+      id.formula,
+      id.formulaClass,
+      synthetic.sample,
+    );
+    expect(bridged.ok).toBe(true);
+    if (!bridged.ok) return;
+    expect(Math.abs(bridged.oneStepCorrection)).toBeGreaterThan(1e-6);
   });
 });

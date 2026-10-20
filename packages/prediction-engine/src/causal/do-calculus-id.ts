@@ -433,6 +433,43 @@ function idRec(
   g: CausalADMG,
   dist: SymbolicFactor,
   depth: number,
+  /**
+   * Is `dist` a MARGINALIZED distribution rather than the original
+   * observational one?
+   *
+   * THIS FLAG IS THE X20 FIX, AND IT IS THE WHOLE OF IT.
+   *
+   * `dist` starts as the observational P(V) and becomes a derived
+   * distribution in exactly one place: Line 2 marginalises the pruned
+   * non-ancestors out of it, and Line 7 replaces it with a
+   * c-factor kernel Q[S']. After either, `dist` is no longer the
+   * observational P, and Line 6 MUST NOT build the answer out of
+   * `observationalCond(...)` against the original graph -- that
+   * silently returns the UNADJUSTED functional.
+   *
+   * On the Napkin graph (W -> Z -> X -> Y, W <-> X, W <-> Y) that is
+   * exactly what happened: Line 7 restricted to S' = {W, X, Y}, Line
+   * 2 then marginalised W out, and Line 6 answered with
+   *
+   *     P(Y | X)
+   *
+   * -- an UNADJUSTED conditional on a graph where W confounds both X
+   * and Y. The formula class said TIAN_C_FACTOR_RATIO while the tree
+   * was not a ratio at all. A082 asserted zero Ratio trees, so
+   * nothing caught it.
+   *
+   * The correct answer, by Tian & Pearl's Lemma 2 on the derived
+   * joint Q(A) = sum_{S' \ A} Q[S'], is the RATIO of the derived
+   * joint to its marginal over the target:
+   *
+   *     P'(y | x) = Q'(x, y) / sum_{y'} Q'(x, y')
+   *
+   * which for the Napkin graph is exactly
+   *
+   *     Ratio( Sum[W]( P(W) P(X|W,Z) P(Y|W,Z,X) ),
+   *            Sum[W]( P(W) P(X|W,Z) ) )
+   */
+  isMarginalizedCFactor: boolean = false,
 ): IDResult {
   if (depth > MAX_RECURSION_DEPTH) {
     throw new Error("runShpitserPearlID: recursion depth exceeded — check that nodes is a topological order");
@@ -460,6 +497,21 @@ function idRec(
       induceSubgraph(g, ancestorsOfY),
       marginalSum(pruned, dist),
       depth + 1,
+      // The distribution is now DERIVED: it is `dist` with the pruned
+      // nodes summed out.
+      //
+      // AND THAT MAKES IT A MARGINALIZED C-FACTOR -- but only if it
+      // was ALREADY one. Line 7 replaces `dist` with a c-factor
+      // kernel Q[S']; Line 2 then sums the pruned nodes out of that
+      // kernel, and the result is the derived joint Q(A) of Tian &
+      // Pearl's Lemma 2, which Line 6 must turn into a RATIO.
+      //
+      // A plain prune of the OBSERVATIONAL P is a different thing:
+      // the observational P restricted to the ancestors of Y is
+      // still an observational distribution, and Line 6's product of
+      // observational conditionals is the right answer for it. That
+      // is the front-door path, and it must NOT become a ratio.
+      isMarginalizedCFactor,
     );
   }
 
@@ -518,6 +570,53 @@ function idRec(
 
   // Line 6: S itself is a C-component of G -> the c-factor is directly observational.
   if (graphComponents.some((c) => setEquals(c, sComponent))) {
+    // THE X20 FIX.
+    //
+    // If `dist` is a MARGINALIZED distribution -- derived by summing
+    // the pruned nodes out of an earlier c-factor, or by restricting
+    // to a c-component S' -- then the answer is NOT the product of
+    // observational conditionals against the original graph. That
+    // product is the UNADJUSTED functional, and on a graph with a
+    // bidirected arc it is simply wrong.
+    //
+    // By Tian & Pearl's Lemma 2 on the derived joint
+    // Q(A) = sum_{S' \ A} Q[S'], the answer is the RATIO of that
+    // derived joint to its marginal over the target:
+    //
+    //     P'(y | x) = Q'(x, y) / sum_{y'} Q'(x, y')
+    //
+    // For the Napkin graph that is exactly
+    //
+    //     Ratio( Sum[W]( P(W) P(X|W,Z) P(Y|W,Z,X) ),
+    //            Sum[W]( P(W) P(X|W,Z) ) )
+    //
+    // and it is a RATIO, as the formula class promises.
+    if (isMarginalizedCFactor) {
+      // THE NUMERATOR: the derived joint, with the TARGETS held.
+      //
+      // `dist` is the derived joint over the C-component, already
+      // carrying the marginalization the recursion performed. On the
+      // Napkin graph that is Sum_W[P(W) P(X|W,Z) P(Y|W,Z,X)] -- the
+      // W-marginalization is INSIDE `dist`, so the numerator is `dist`
+      // itself, with no further sum.
+      //
+      // THE DENOMINATOR: the SAME derived joint, with the TARGETS
+      // SUMMED OUT -- that is the marginal over Y, which is what makes
+      // the ratio a CONDITIONAL on X.
+      //
+      // The denominator sums over the TARGET nodes (Y), NOT over the
+      // whole component. Summing over the whole component would
+      // divide by a marginal that already includes the target, and
+      // the ratio would be P(x,y)/P(x,y) = 1.
+      const numerator = dist;
+      const denominator = marginalSum([...ySet], dist);
+      return {
+        ok: true,
+        formula: { kind: "RATIO", numerator, denominator },
+        formulaClass: FormulaClass.TianCFactorRatio,
+      };
+    }
+
     const factors = g.nodes
       .filter((n) => sComponent.has(n))
       .map((n) => observationalCond(n, g.nodes.slice(0, g.nodes.indexOf(n))));
@@ -545,8 +644,16 @@ function idRec(
     ySet,
     xSuper,
     induceSubgraph(g, superComponent),
-    cFactorForComponent(g, superComponent),
+    // The c-factor kernel Q[S'] over the FULL graph order, so each
+    // factor references its PREDECESSORS -- including the ones outside
+    // S' that were intervened on (Z on the Napkin graph). That is
+    // what preserves the Z in the numerator.
+    cFactorForComponent(g, superComponent, g.nodes),
     depth + 1,
+    // The kernel Q[S'] IS a c-factor. If the nested recursion then
+    // marginalizes it (Line 2), the result is a DERIVED joint and
+    // Line 6 must answer with a ratio. So the flag is SET here.
+    true,
   );
   if (!nested.ok) return nested;
   return { ok: true, formula: nested.formula, formulaClass: FormulaClass.TianCFactorRatio };

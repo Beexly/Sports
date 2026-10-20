@@ -1395,3 +1395,76 @@ scripts (`build-grounded-mind-corpus.mjs`, `reanchor-mind-corpus.mjs`,
 when the corpus is BUILT and merely *read* when it is *used*. A
 record re-classified by a later build follows the class, but no
 runtime check re-verifies it against the document on disk.
+
+## X20 was NOT fixed. The spec said it was. The code disagreed.
+
+**The spec's claim.** The goal document states that open item X20
+"closes both symbolically in A082 and numerically in A083", and gives
+the exact patch: a `isMarginalizedCFactor` flag threaded through
+`runShpitserPearlID`, with Line 6 dividing `activeQFactor` by its
+Y-marginal when the factor was a post-Line-7 marginalized one.
+
+**The code.** `do-calculus-id.ts` had **no `isMarginalizedCFactor`
+flag and no RATIO emission at Line 6**. Line 6 built the answer out
+of `observationalCond(...)` against the original graph, so it returned
+the *unadjusted* functional regardless of what the distribution
+actually was.
+
+**The measurement that exposed it.** On the Napkin graph
+(`W -> Z -> X -> Y`, `W <-> X`, `W <-> Y`):
+
+    before:  class TIAN_C_FACTOR_RATIO   tree  P(Y|X)
+    after:   class TIAN_C_FACTOR_RATIO   tree
+             Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))]
+               / Sum_{Y}[Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))]]
+
+`P(Y|X)` on a graph where `W` confounds both `X` and `Y` is
+**unadjusted**, and it is wrong. The formula class said RATIO while
+the tree was not a ratio at all.
+
+**Why nothing caught it.** A082 asserted **zero** `Ratio` trees --
+`grep -c 'Ratio' _verify_do_calculus_math.mjs` returns **0**. The
+verifier checked that Case 3 produced the class name
+`TIAN_C_FACTOR_RATIO` and that its tree was
+`Sum_{Z}[(P(Z|W) * P(Y|W,Z,X))]`, which is A082's *other* 4-node
+graph (`W <-> X, Z <-> Y`), not the Napkin graph
+(`W <-> X, W <-> Y`). **The Napkin graph was never in the verifier.**
+The class-name check passed, and a class name is exactly the kind of
+thing that reads like a gate while gating nothing.
+
+**The fix, and the subtlety that took two attempts.** The flag
+`isMarginalizedCFactor` distinguishes two things that look identical
+at the call site:
+
+- a **marginalized C-factor** (Line 7's kernel `Q[S']`, then Line 2
+  summing the pruned nodes out of it) -- the derived joint of Tian &
+  Pearl's Lemma 2, whose conditional is a **RATIO**;
+- a plain **prune of the observational `P`** -- still an observational
+  distribution, whose conditional is a **product of conditionals**.
+
+Setting the flag at Line 2 alone broke the front-door graph, because
+the front-door path reaches Line 6 through a Line-2 prune. The flag
+has to be set at **Line 7** (where the c-factor kernel is
+substituted) and merely *propagated* through Line 2. The two cases
+are distinguished by where the derivation happens, not by whether a
+marginalization happened.
+
+**And the denominator is the numerator's Y-marginal.** Summing over
+the whole C-component instead of over the targets would divide by a
+marginal that already contains the target, and the ratio would be
+`P(x,y)/P(x,y) = 1`.
+
+**What this cost.** The A082/A083 numbers in the spec are still true
+and still reproduce -- front-door 5.9710 vs 6.0000, 4-node 4.9942 vs
+5.0000, 0 false hedges across 18,144 queries, 0 mismatches across 600
+reorderings, A082 exit 0 and A083 exit 0. But those numbers were
+never evidence about the Napkin graph, because the Napkin graph was
+never tested. A verifier that covers a graph is not evidence about a
+graph it does not cover, and the class-name check was the same
+defect this audit has been hunting: a constant that reads as a gate
+while gating nothing, one level up.
+
+**The invariant that would have caught it** -- and is now a test:
+`formulaClass === "TIAN_C_FACTOR_RATIO"` if and only if the tree
+contains a ratio. The class and the tree must agree, and the bug was
+precisely a disagreement between them.

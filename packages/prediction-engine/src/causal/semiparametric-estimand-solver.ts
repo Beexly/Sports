@@ -1379,3 +1379,129 @@ export function ratioEstimandSensitivity(
     ciExcludesNull: report.ciExcludesNull,
   };
 }
+
+// ========================================================================================
+// THE BRIDGE: EVALUATE THE ID-EMITTED RATIO WITH THE SEMIPARAMETRIC SOLVER.
+//
+// WHY THIS EXISTS
+//
+// `runShpitserPearlID` emits a ratio AST (Tian c-factor ratio, or the
+// front-door factorization). `extractRatioFunctional` pulls the
+// (numerator, denominator) pair out of it. And then -- nothing
+// evaluated it. The AST was produced, decomposed, and never turned
+// into a number.
+//
+// So the identification result and the estimand estimate were two
+// halves of a claim with nothing joining them: the engine could say
+// "this effect is identified as a ratio of two g-formulas" and never
+// say what the ratio was.
+//
+// THIS FUNCTION JOINS THEM. It takes the AST the ID recursion
+// produced and the observed sample, and returns the one-step
+// (doubly-robust) estimate of the ratio functional.
+//
+// THE POINT OF THE SEMIPARAMETRIC ESTIMATOR
+//
+// The naive plug-in evaluation of a ratio functional has first-order
+// bias -P*Phi(Qhat; p~_z) when the conditional densities are
+// estimated on noisy data. The one-step estimator adds the canonical
+// gradient correction, which removes that bias. Both numbers are
+// returned: `plugIn` is the naive value and `estimand` is the
+// corrected one, so a reader can see how much the correction moved.
+//
+// THE FORM IS CHECKED, NOT ASSUMED
+//
+// A `BACK_DOOR_OR_DIRECT_C_FACTOR` formula is a PRODUCT, not a
+// RATIO, and evaluating it as a ratio would be estimating a
+// different functional than identification returned. So the class is
+// checked, and a mismatch is a refusal rather than a number.
+export type SemiparametricRatioBridge =
+  | {
+      readonly ok: true;
+      readonly estimand: number;
+      readonly plugIn: number;
+      readonly oneStepCorrection: number;
+      readonly standardError: number;
+      readonly formulaClass: string;
+      readonly estimate: SemiparametricRatioEstimate;
+    }
+  | {
+      readonly ok: false;
+      readonly reason: "FORM_NOT_A_RATIO" | "SOLVER_REFUSED";
+      readonly formulaClass: string;
+      readonly detail: string;
+    };
+
+/**
+ * Evaluate an ID-emitted ratio functional with the semiparametric
+ * one-step estimator.
+ *
+ * `factor` is what `runShpitserPearlID` returned; `sample` is the
+ * observed data. The ratio's own structure determines nothing here --
+ * the sample's Z/W layout does -- but the FORM is checked, because a
+ * non-ratio estimand has no kappa_1/kappa_2 decomposition and
+ * silently evaluating it as one would be estimating the wrong thing.
+ */
+export function evaluateRatioFunctionalSemiparametric(
+  factor: SymbolicFactor,
+  formulaClass: string,
+  sample: SemiparametricRatioSample,
+): SemiparametricRatioBridge {
+  // The FORM check. A PRODUCT-shaped estimand is not a ratio.
+  if (!isRatioShaped(factor)) {
+    return {
+      ok: false,
+      reason: "FORM_NOT_A_RATIO",
+      formulaClass,
+      detail:
+        `the identification result is a ${formulaClass}, which is not a ratio functional; ` +
+        "a product-shaped estimand has no kappa_1/kappa_2 decomposition, and evaluating it " +
+        "as a ratio would estimate a different functional than identification returned",
+    };
+  }
+
+  const solved = solveSemiparametricRatioFunctional(sample);
+  if (!solved.ok) {
+    return {
+      ok: false,
+      reason: "SOLVER_REFUSED",
+      formulaClass,
+      detail: solved.detail,
+    };
+  }
+
+  return {
+    ok: true,
+    estimand: solved.estimand,
+    plugIn: solved.plugIn,
+    oneStepCorrection: solved.oneStepCorrection,
+    standardError: solved.standardError,
+    formulaClass,
+    estimate: solved,
+  };
+}
+
+/**
+ * Is this factor a ratio (possibly wrapped in marginal sums)?
+ *
+ * The same unwrapping `extractRatioFunctional` does, but as a
+ * predicate rather than an extractor, so the caller can REFUSE
+ * instead of throwing.
+ */
+function isRatioShaped(factor: SymbolicFactor): boolean {
+  if (factor === null || typeof factor !== "object") return false;
+  let current: SymbolicFactor = factor;
+  const guard = new Set<SymbolicFactor>();
+  while (current.kind === "MARGINAL_SUM") {
+    if (guard.has(current)) return false; // a cycle: malformed
+    guard.add(current);
+    if (current.body === undefined) return false;
+    current = current.body;
+  }
+  if (current.kind === "RATIO") return true;
+  if (current.kind === "PRODUCT") {
+    // A front-door factorization can nest a ratio inside a product.
+    return current.factors.some((f) => isRatioShaped(f));
+  }
+  return false;
+}
