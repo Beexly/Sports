@@ -158,6 +158,14 @@ function mindToPremise(rec) {
     applicable_contexts: contexts,
     source_file: typeof rec.source_file === "string" ? rec.source_file : null,
     source_doc_hash: typeof rec.source_doc_hash === "string" ? rec.source_doc_hash : null,
+    // CLASS-A EXCLUSIVITY (2026-10-20). The class travels with the
+    // record from the corpus, so a premise that was verified against a
+    // document on disk stays class-A citable in the index and one that
+    // was not stays uncitable. A record with no class is uncitable --
+    // the honest default for an unknown provenance is "unverified", and
+    // the column's DEFAULT enforces the same thing at the database.
+    record_class: typeof rec.record_class === "string" ? rec.record_class : null,
+    verification_tier: typeof rec.verification_tier === "string" ? rec.verification_tier : null,
   };
 }
 
@@ -383,8 +391,9 @@ function isoDate(v) {
               premise_key, source, source_ref, title, principle, domain, claim_type,
               numeric_value, numeric_unit, numeric_metric, influence_direction,
               evidence_quote, how_it_influences, applicable_contexts, pillar_tags,
-              source_file, source_doc_hash, structure_state, content_hash, updated_at
-           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,'structured',$18, now())
+              source_file, source_doc_hash, record_class, verification_tier,
+              structure_state, content_hash, updated_at
+           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'structured',$20, now())
            ON CONFLICT (premise_key) DO UPDATE SET
               title=EXCLUDED.title, principle=EXCLUDED.principle, domain=EXCLUDED.domain,
               claim_type=EXCLUDED.claim_type, numeric_value=EXCLUDED.numeric_value,
@@ -392,12 +401,18 @@ function isoDate(v) {
               influence_direction=EXCLUDED.influence_direction,
               evidence_quote=EXCLUDED.evidence_quote, how_it_influences=EXCLUDED.how_it_influences,
               applicable_contexts=EXCLUDED.applicable_contexts, pillar_tags=EXCLUDED.pillar_tags,
+              source_file=EXCLUDED.source_file, source_doc_hash=EXCLUDED.source_doc_hash,
+              record_class=EXCLUDED.record_class, verification_tier=EXCLUDED.verification_tier,
               content_hash=EXCLUDED.content_hash, updated_at=now()
            RETURNING id`,
           [p.premise_key, p.source, p.source_ref, p.title, p.principle, p.domain, p.claim_type,
            p.numeric_value, p.numeric_unit, p.numeric_metric, p.influence_direction,
            p.evidence_quote, p.how_it_influences, p.applicable_contexts, pillars,
-           p.source_file, p.source_doc_hash, JSON.stringify(p)]
+           p.source_file, p.source_doc_hash,
+           // CLASS-A EXCLUSIVITY. A premise with no class is NOT citable.
+           p.record_class || "HONESTLY_UNCITED_PRIOR",
+           p.verification_tier || "MSVH_S0_UNCITED",
+           JSON.stringify(p)]
         );
         const id = r.rows[0].id;
         written++;
@@ -472,6 +487,17 @@ function isoDate(v) {
             (SELECT count(*) FROM lit.corpus_item WHERE embedding IS NOT NULL)::int corpus_vec`
   );
   console.log("FINAL:", JSON.stringify(cnt.rows[0]));
+
+  // CLASS-A EXCLUSIVITY (2026-10-20). Report the class breakdown, so
+  // the index's own summary says how many premises are citable and how
+  // many are not. A count that only reported the total would hide the
+  // number that decides whether the index can produce a causal claim
+  // at all.
+  const cls = await db.query(
+    `SELECT record_class, count(*)::int n
+       FROM lit.premise GROUP BY 1 ORDER BY n DESC`
+  );
+  console.log("BY CLASS:", JSON.stringify(cls.rows));
 
   await db.end();
 })().catch((e) => { console.error("ERR", e); process.exit(1); });

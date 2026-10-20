@@ -90,6 +90,20 @@ export async function listPromotedEdges(
   db: SqlClient,
   limit = 500,
 ): Promise<CausalEdgeRecord[]> {
+  // CLASS-A EXCLUSIVITY (2026-10-20).
+  //
+  // The promotion gate now refuses to promote a premise that is not
+  // CITABLE_VERIFIED. But a gate on PROMOTION is not enough on its own:
+  // edges promoted BEFORE the gate existed are still 'promoted', and
+  // `runInterventionTest` would run a do-calculus test on them. So the
+  // class is checked HERE too, on the read path.
+  //
+  // Two gates, both required. The promotion gate stops new bad edges;
+  // this one stops an old bad edge from being tested. Without it, the
+  // fix would only apply to edges created after the fix, and the
+  // existing 'promoted' rows -- which were created under the old,
+  // permissive gate -- would still carry unverified numbers into an
+  // intervention test.
   const res = await db.query(
     `SELECT e.edge_key,
             p.premise_key,
@@ -105,6 +119,7 @@ export async function listPromotedEdges(
        JOIN lit.premise p ON p.id = e.premise_id
        LEFT JOIN lit.premise_score s ON s.premise_id = p.id
       WHERE e.status = 'promoted'
+        AND p.record_class = 'CITABLE_VERIFIED'
       ORDER BY s.activation_score DESC NULLS LAST
       LIMIT $1`,
     [limit],

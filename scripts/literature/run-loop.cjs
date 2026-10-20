@@ -336,13 +336,23 @@ function eventText(e) {
   // A bridge premise's key names the game it predicts. historical_games
   // holds that game's real result ("gameKey" is the SAME format:
   // 2025_01_DAL_PHI). Joining on it gives the premise its OWN truth.
+  //
+  // CLASS-A EXCLUSIVITY (2026-10-20). Only class-A citable premises are
+  // graded. A premise that is not CITABLE_VERIFIED can never be promoted
+  // to a causal edge (the promotion gate refuses it), so grading it
+  // cannot change any outcome -- it can only spend time and write
+  // activation_score rows that the gate will never read. Worse, it
+  // would leave the score table full of numbers for premises with no
+  // document behind them, which is exactly the shape of the corruption
+  // this work is removing.
   const ownGames = await db.query(
     `SELECT p.id AS premise_id,
             p.source_ref AS game_key,
             CASE WHEN h."homeScore" > h."awayScore" THEN 1.0::double precision ELSE 0.0::double precision END AS actual
        FROM lit.premise p
        JOIN historical_games h ON h."gameKey" = p.source_ref
-      WHERE p.source_ref IS NOT NULL`
+      WHERE p.source_ref IS NOT NULL
+        AND p.record_class = 'CITABLE_VERIFIED'`
   );
   const ownGameOutcome = new Map();
   for (const o of ownGames.rows) {
@@ -446,6 +456,18 @@ function eventText(e) {
   //  - the gate is graded >= 3 AND activation_score > 0 AND a non-null
   //    mean_residual, matching the module's minGraded=3/minScore=0 call.
   //  - status is set explicitly rather than taking the schema default.
+  // CLASS-A EXCLUSIVITY (2026-10-20). Promotion is the only path to a
+  // do-calculus test, so a premise that reaches an intervention test
+  // must have a document behind it.
+  //
+  // This script had its own promotion gate, weaker than the module's
+  // own `promotePremisesToCausalEdges` (graded>=3 AND
+  // activation_score>0, versus graded>=minGraded AND
+  // activation_score>=minScore AND a non-null mean residual). The
+  // module's comment already noted that "one gate, one place" is the
+  // rule; this script was the second gate. The class filter is added
+  // here so that whichever path promotes an edge, the edge's premise is
+  // class-A citable.
   const prom = await db.query(
     `INSERT INTO lit.causal_edge (edge_key, premise_id, cause_signal, effect_signal, effect_estimate, effect_unit, support_n, status)
      SELECT 'edge:'||p.premise_key, p.id,
@@ -455,6 +477,7 @@ function eventText(e) {
        FROM lit.premise_score s JOIN lit.premise p ON p.id = s.premise_id
       WHERE s.graded >= 3 AND s.activation_score > 0 AND p.numeric_value IS NOT NULL
         AND s.mean_residual IS NOT NULL
+        AND p.record_class = 'CITABLE_VERIFIED'
       ON CONFLICT (edge_key) DO UPDATE SET effect_estimate=EXCLUDED.effect_estimate,
         support_n=EXCLUDED.support_n, promoted_at=now(), status='promoted', retired_at=NULL`
   );
@@ -490,6 +513,23 @@ function eventText(e) {
           SELECT 1 FROM lit.premise_score s
            WHERE s.premise_id = ce.premise_id
              AND s.graded >= 3 AND s.activation_score > 0
+        )`
+  );
+  // CLASS-A EXCLUSIVITY (2026-10-20). An edge whose premise is no
+  // longer class-A citable must be retired, not left 'promoted'. The
+  // promotion gate refuses to CREATE such an edge, but edges created
+  // before the gate existed are still here, and a premise's class can
+  // change when the corpus is rebuilt and re-indexed. Without this, an
+  // edge could stay promoted on a premise that has since lost its
+  // citation.
+  const retiredUncitable = await db.query(
+    `UPDATE lit.causal_edge ce
+        SET status = 'retired', retired_at = now()
+      WHERE ce.status = 'promoted'
+        AND NOT EXISTS (
+          SELECT 1 FROM lit.premise p
+           WHERE p.id = ce.premise_id
+             AND p.record_class = 'CITABLE_VERIFIED'
         )`
   );
   // Retiring an edge must also retire its intervention tests. LAW 4 is

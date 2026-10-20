@@ -27,6 +27,38 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as crypto from "node:crypto";
+import { register } from "node:module";
+import { pathToFileURL, fileURLToPath } from "node:url";
+
+// ONE DEFINITION OF "CITABLE".
+//
+// The builder used to have its own copy of the admission logic, and the
+// gate module had another. Two definitions of the same word is the same
+// defect as two definitions of the same number: they drift, and the
+// drift is invisible until something downstream reads the label.
+//
+// MEASURED: the builder stamped CITABLE_VERIFIED on 3,735 records while
+// only 968 of them passed all four layers under the shared gate. The
+// spec defines CITABLE_VERIFIED as "genuine literature records where
+// L1-L4 pass against an existing source document on disk", so the
+// builder's label was overstating by 3,859 records.
+//
+// So the builder now CALLS the gate. The class is whatever the gate
+// says, and the builder's own checks are only the part it needs before
+// the gate can run (the honest offsets, and the derived/corrupt
+// short-circuits the gate does not model).
+//
+// The gate is TypeScript. Node 22.6+ strips types natively, so the only
+// thing needed is the specifier mapping, which ts-resolve-hook.mjs does.
+register(new URL("../reconciliation/ts-resolve-hook.mjs", import.meta.url));
+const { verifyRecord } = await import(
+  pathToFileURL(
+    path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../packages/prediction-engine/src/literature/literature-verification.ts",
+    ),
+  ).href
+);
 
 const TARGET_OUTPUT = "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl";
 const PKG_OUTPUT = "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl";
@@ -462,7 +494,18 @@ export function locateDocumentRegion(fileText, fieldValue) {
  * @param {boolean} args.isDerived the builder synthesised the text
  * @param {boolean} args.isCurated hand-authored foundational prior
  */
-export function classifyRecord({ regionStart, rawText, quote, mechanismQuote, isDerived, isCurated }) {
+export function classifyRecord({
+  regionStart,
+  rawText,
+  quote,
+  mechanismQuote,
+  isDerived,
+  isCurated,
+  documentText = null,
+  numericClaim = null,
+  parsedFloatMagnitude = null,
+  contextFields = [],
+}) {
   const nullSpan = { start_char: null, end_char: null };
 
   if (isDerived) {
@@ -541,16 +584,68 @@ export function classifyRecord({ regionStart, rawText, quote, mechanismQuote, is
   const end = start + quote.length;
   const span = { start_char: start, end_char: end, verification_tier: "MSVH_S1_EXACT" };
   const mechStart = regionStart + mechOffset;
+  const mechSpan = {
+    start_char: mechStart,
+    end_char: mechStart + mechanismQuote.length,
+    verification_tier: "MSVH_S1_EXACT",
+  };
+
+  // THE GATE DECIDES. The builder's own checks above establish that the
+  // offsets are honest -- the quote is in the document and the offsets
+  // select it. Whether the record is ADMISSIBLE is a different question,
+  // and it is the shared gate's question: L2 (the number is literally in
+  // the quote), L4 (the mechanism holds and the document is about a
+  // sport), and the L1/L3 restatement.
+  //
+  // The builder's copy of the answer was overstating by 3,859 records.
+  // One definition of "citable" means one answer.
+  //
+  // The document handed to the gate is the record's OWN FILE, because
+  // the offsets are file offsets. L4's exclusion check reads the whole
+  // document, which is the point: a football sentence in an
+  // ophthalmology paper is still an ophthalmology paper.
+  const verdict = verifyRecord(
+    {
+      item_id: "",
+      title: "",
+      // The gate resolves the document by path, then by basename. Both
+      // are set to the same key so the document it reads IS the file
+      // the offsets index.
+      source_file: "__doc__",
+      source_path: "__doc__",
+      evidence_quote: quote,
+      mechanism_quote: mechanismQuote,
+      evidence_span: span,
+      mechanism_span: mechSpan,
+      numeric_claim: numericClaim,
+      parsed_float_magnitude: parsedFloatMagnitude,
+      applicable_context_fields: contextFields,
+    },
+    new Map([["__doc__", documentText ?? rawText]]),
+  );
+
+  if (!verdict.admitted) {
+    // The record quotes the document honestly, but it is not admissible
+    // evidence: the number is not in the quote, or the document is not
+    // about a sport. That is HONESTLY_UNCITED_PRIOR, not a citable
+    // record with a caveat attached.
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      _failed_layers: verdict.failed_layers,
+      _isCurated: isCurated,
+    };
+  }
+
   return {
     record_class: RECORD_CLASSES.CITABLE_VERIFIED,
     citable: true,
     verification_tier: "MSVH_S1_EXACT",
     evidence_span: span,
-    mechanism_span: {
-      start_char: mechStart,
-      end_char: mechStart + mechanismQuote.length,
-      verification_tier: "MSVH_S1_EXACT",
-    },
+    mechanism_span: mechSpan,
     _isCurated: isCurated,
   };
 }
@@ -1670,6 +1765,15 @@ export function buildGroundedMindCorpus() {
     // Now the class is computed from the document's own bytes: the quote
     // must be present in the record's region of the file it names, and
     // the offsets are the file's offsets.
+    // The gate needs the record's numeric claim and context fields, so
+    // they are computed BEFORE the classification, and passed in.
+    const mappedFields = mapContextStringsToEnum(domain, contexts);
+    const claimType = determineClaimType(sourceText);
+    const direction = determineInfluenceDirection(sourceText);
+    const magnitude = computeEffectMagnitude(claim);
+    const primaryField = mappedFields[0];
+    const unitScale = CONTEXT_PRIMITIVE_DEFAULTS[primaryField]?.unitScale ?? 1.0;
+
     const classification = classifyRecord({
       regionStart: region ? region.start : null,
       rawText: region ? region.raw : null,
@@ -1677,6 +1781,12 @@ export function buildGroundedMindCorpus() {
       mechanismQuote: mechData.quote,
       isDerived: isDerivedRow,
       isCurated: false,
+      // The document the offsets are relative to, and the claim the
+      // gate's L2 and L4 layers read.
+      documentText: docText,
+      numericClaim: claim,
+      parsedFloatMagnitude: magnitude,
+      contextFields: mappedFields,
     });
     const evidenceSpan = classification.evidence_span;
     const mechanismSpan = classification.mechanism_span;
@@ -1684,12 +1794,7 @@ export function buildGroundedMindCorpus() {
     const citable = classification.citable;
     const verificationTier = classification.verification_tier;
 
-    const mappedFields = mapContextStringsToEnum(domain, contexts);
-    const claimType = determineClaimType(sourceText);
-    const direction = determineInfluenceDirection(sourceText);
-    const magnitude = computeEffectMagnitude(claim);
-    const primaryField = mappedFields[0];
-    const unitScale = CONTEXT_PRIMITIVE_DEFAULTS[primaryField]?.unitScale ?? 1.0;
+    const failedLayers = classification._failed_layers ?? null;
 
     verifiedRecords.push({
       item_id: uid,

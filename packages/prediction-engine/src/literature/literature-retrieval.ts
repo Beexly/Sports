@@ -446,6 +446,18 @@ export async function promotePremisesToCausalEdges(
   // observed mean residual. run-loop.cjs used graded>=3 AND
   // activation_score>0, which is why the 8 edges in the dev branch did
   // not come from this function. One gate, one place.
+  //
+  // CLASS-A EXCLUSIVITY (2026-10-20). `record_class = 'CITABLE_VERIFIED'`
+  // is REQUIRED here, not optional. Promotion is the only path to a
+  // do-calculus test, so a premise that reaches an intervention test
+  // without a document behind it puts an unverified number into a
+  // causal claim. Before this filter, 3,470 of 5,149 records -- 67.4%
+  // -- could take that path, including the 3,509 whose quotes were in
+  // no document at all.
+  //
+  // The premise table's DEFAULT for record_class is
+  // 'HONESTLY_UNCITED_PRIOR', so a row that was inserted without a
+  // class cannot slip through this filter by omission.
   const cands = await db.query(
     `SELECT p.id, p.premise_key, p.title, p.domain, p.numeric_value, p.numeric_unit,
             p.numeric_metric, p.influence_direction, p.applicable_contexts,
@@ -458,6 +470,7 @@ export async function promotePremisesToCausalEdges(
         AND abs(p.numeric_value) >= $3
         AND s.mean_residual IS NOT NULL
         AND p.structure_state = 'structured'
+        AND p.record_class = 'CITABLE_VERIFIED'
       ORDER BY s.activation_score DESC, s.graded DESC
       LIMIT $4`,
     [minGraded, minScore, minAbsClaim, limit],

@@ -49,6 +49,18 @@ export interface PremiseInput {
   readonly applicable_contexts?: readonly string[];
   readonly source_file?: string | null;
   readonly source_doc_hash?: string | null;
+  /**
+   * The epistemic class of the record, as assigned by the corpus builder
+   * against the document on disk.
+   *
+   * CLASS-A EXCLUSIVITY (2026-10-20). This is REQUIRED for a premise to
+   * be promoted to a causal edge, and the database column defaults to
+   * 'HONESTLY_UNCITED_PRIOR' -- so a premise that arrives without a
+   * class is NOT citable. The honest default for an unknown provenance
+   * is "unverified", not "assume the best".
+   */
+  readonly record_class?: string | null;
+  readonly verification_tier?: string | null;
 }
 
 /** A raw corpus item for the discovery surface. */
@@ -140,6 +152,13 @@ export function mindRecordToPremise(rec: Record<string, unknown>): PremiseInput 
     applicable_contexts: contexts,
     source_file: typeof rec.source_file === "string" ? rec.source_file : null,
     source_doc_hash: typeof rec.source_doc_hash === "string" ? rec.source_doc_hash : null,
+    // CLASS-A EXCLUSIVITY. The class travels with the record from the
+    // corpus, so a premise that was verified against a document on disk
+    // stays class-A citable in the index, and one that was not stays
+    // uncitable. A record with no class is uncitable: the honest
+    // default for an unknown provenance is "unverified".
+    record_class: typeof rec.record_class === "string" ? rec.record_class : null,
+    verification_tier: typeof rec.verification_tier === "string" ? rec.verification_tier : null,
   };
 }
 
@@ -223,8 +242,9 @@ async function upsertPremise(
         premise_key, source, source_ref, title, principle, domain, claim_type,
         numeric_value, numeric_unit, numeric_metric, influence_direction,
         evidence_quote, how_it_influences, applicable_contexts, pillar_tags,
-        source_file, source_doc_hash, structure_state, content_hash, updated_at
-     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,'structured',$18, now())
+        source_file, source_doc_hash, record_class, verification_tier,
+        structure_state, content_hash, updated_at
+     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'structured',$20, now())
      ON CONFLICT (premise_key) DO UPDATE SET
         title=EXCLUDED.title, principle=EXCLUDED.principle, domain=EXCLUDED.domain,
         claim_type=EXCLUDED.claim_type, numeric_value=EXCLUDED.numeric_value,
@@ -234,7 +254,10 @@ async function upsertPremise(
         how_it_influences=EXCLUDED.how_it_influences,
         applicable_contexts=EXCLUDED.applicable_contexts,
         pillar_tags=EXCLUDED.pillar_tags, source_file=EXCLUDED.source_file,
-        source_doc_hash=EXCLUDED.source_doc_hash, content_hash=EXCLUDED.content_hash,
+        source_doc_hash=EXCLUDED.source_doc_hash,
+        record_class=EXCLUDED.record_class,
+        verification_tier=EXCLUDED.verification_tier,
+        content_hash=EXCLUDED.content_hash,
         updated_at=now()
      RETURNING id`,
     [
@@ -243,7 +266,11 @@ async function upsertPremise(
       p.numeric_unit ?? null, p.numeric_metric ?? null, p.influence_direction ?? null,
       p.evidence_quote ?? null, p.how_it_influences ?? null,
       p.applicable_contexts ?? [], pillars, p.source_file ?? null,
-      p.source_doc_hash ?? null, premiseContentHash(p),
+      p.source_doc_hash ?? null,
+      // CLASS-A EXCLUSIVITY. A premise with no class is NOT citable.
+      p.record_class ?? "HONESTLY_UNCITED_PRIOR",
+      p.verification_tier ?? "MSVH_S0_UNCITED",
+      premiseContentHash(p),
     ],
   );
 

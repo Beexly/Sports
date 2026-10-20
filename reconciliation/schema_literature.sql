@@ -46,12 +46,96 @@ CREATE TABLE IF NOT EXISTS lit.premise (
   pillar_tags     text[] NOT NULL DEFAULT '{}',  -- pillars derived from domain+contexts
   source_file     text,
   source_doc_hash text,
+  -- CLASS-A EXCLUSIVITY (2026-10-20).
+  --
+  -- The epistemic class the builder assigned to the record, verified
+  -- against the document on disk:
+  --   CITABLE_VERIFIED         the quote IS verbatim in the named document
+  --   HONESTLY_UNCITED_PRIOR    no source document exists
+  --   DERIVED_MARKET_SYNTHESIS  synthesised from a market/table row
+  --
+  -- The default is 'HONESTLY_UNCITED_PRIOR', NOT 'CITABLE_VERIFIED'.
+  -- A premise that arrives without a class is a premise whose
+  -- provenance is unknown, and the honest default for an unknown
+  -- provenance is "unverified". A permissive default here would make
+  -- every pre-existing row citable and silently re-open the hole the
+  -- L1-L4 gate closed.
+  record_class    text NOT NULL DEFAULT 'HONESTLY_UNCITED_PRIOR'
+                    CHECK (record_class IN ('CITABLE_VERIFIED',
+                                            'HONESTLY_UNCITED_PRIOR',
+                                            'DERIVED_MARKET_SYNTHESIS',
+                                            'REJECTED_CORRUPT')),
+  -- The verification tier the builder stamped. S1_EXACT means the
+  -- offsets were computed from the document's own bytes.
+  verification_tier text
+                    CHECK (verification_tier IS NULL OR
+                           verification_tier IN ('MSVH_S0_UNCITED',
+                                                 'MSVH_S0_DERIVED_TABLE',
+                                                 'MSVH_S1_EXACT',
+                                                 'MSVH_S2_NORMALIZED',
+                                                 'MSVH_S3_LEVENSHTEIN')),
   structure_state text NOT NULL DEFAULT 'structured'
                     CHECK (structure_state IN ('structured','raw')),
   content_hash    text NOT NULL,
   created_at      timestamptz NOT NULL DEFAULT now(),
   updated_at      timestamptz NOT NULL DEFAULT now()
 );
+
+-- The columns above are part of CREATE TABLE IF NOT EXISTS, so a
+-- deployment that ALREADY has lit.premise keeps its old shape. This
+-- section is the migration for those deployments, and it is idempotent
+-- so it is safe to run on a fresh database too.
+--
+-- The DEFAULT matters more than the column: a premise row that exists
+-- today -- written before the class system -- has no class, and the
+-- honest value for "we do not know whether this has a document behind
+-- it" is 'HONESTLY_UNCITED_PRIOR'. Defaulting to 'CITABLE_VERIFIED'
+-- would make every pre-existing row citable and silently re-open the
+-- hole the L1-L4 gate closed.
+ALTER TABLE lit.premise
+  ADD COLUMN IF NOT EXISTS record_class text NOT NULL DEFAULT 'HONESTLY_UNCITED_PRIOR';
+ALTER TABLE lit.premise
+  ADD COLUMN IF NOT EXISTS verification_tier text;
+
+-- The CHECK constraints are added separately because ALTER TABLE ADD
+-- COLUMN IF NOT EXISTS does not re-run the constraint on a table that
+-- already has the column.
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conrelid = 'lit.premise'::regclass
+       AND contype = 'c'
+       AND pg_get_constraintdef(oid) ILIKE '%record_class%'
+  ) THEN
+    ALTER TABLE lit.premise
+      ADD CONSTRAINT premise_record_class_chk
+      CHECK (record_class IN ('CITABLE_VERIFIED',
+                               'HONESTLY_UNCITED_PRIOR',
+                               'DERIVED_MARKET_SYNTHESIS',
+                               'REJECTED_CORRUPT'));
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conrelid = 'lit.premise'::regclass
+       AND contype = 'c'
+       AND pg_get_constraintdef(oid) ILIKE '%verification_tier%'
+  ) THEN
+    ALTER TABLE lit.premise
+      ADD CONSTRAINT premise_verification_tier_chk
+      CHECK (verification_tier IS NULL OR
+             verification_tier IN ('MSVH_S0_UNCITED',
+                                   'MSVH_S0_DERIVED_TABLE',
+                                   'MSVH_S1_EXACT',
+                                   'MSVH_S2_NORMALIZED',
+                                   'MSVH_S3_LEVENSHTEIN'));
+  END IF;
+END
+$$;
+
+-- The index comes AFTER the ALTER, because on a deployment that already
+-- has lit.premise the column does not exist until the ALTER runs.
+CREATE INDEX IF NOT EXISTS premise_record_class_idx ON lit.premise (record_class);
 
 CREATE INDEX IF NOT EXISTS premise_pillar_idx    ON lit.premise USING gin (pillar_tags);
 CREATE INDEX IF NOT EXISTS premise_contexts_idx  ON lit.premise USING gin (applicable_contexts);
@@ -288,6 +372,20 @@ AS $$
   FROM lit.premise_vector v
   JOIN lit.premise p ON p.id = v.premise_id
   WHERE p.structure_state = 'structured'
+    -- CLASS-A EXCLUSIVITY (2026-10-20). This is the spec's
+    -- `WHERE record_class = 'CITABLE_VERIFIED'` on the HNSW premise
+    -- index. It is HERE, at the retrieval function, because this is
+    -- where an unverified premise becomes a live activation that can
+    -- carry a numeric delta into a reasoning claim.
+    --
+    -- Before it, the index returned every structured premise, including
+    -- the 3,509 whose quotes were in no document and the 1,704 whose
+    -- numbers were nowhere near the quote.
+    --
+    -- The column's DEFAULT is 'HONESTLY_UNCITED_PRIOR', so a premise
+    -- inserted without a class is excluded here rather than admitted
+    -- by omission.
+    AND p.record_class = 'CITABLE_VERIFIED'
     AND (pillar IS NULL OR p.pillar_tags && pillar)
     AND (1 - (v.embedding <=> q))::double precision >= min_similarity
   ORDER BY v.embedding <=> q
