@@ -4722,6 +4722,7 @@ export {
 
 export {
   evaluateCausalClaim,
+  finalizeExpansion,
   graphFromCausalEdge,
   G3_REFUSAL,
   type CausalClaimQuery,

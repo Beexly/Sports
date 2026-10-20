@@ -39,7 +39,9 @@
  */
 import {
   planHedgeBreakage,
+  MIN_EXPANSION_E_VALUE,
   type MediatorCandidate,
+  type MediatorAttempt,
 } from "./hcid-mediator-expansion.js";
 import {
   runShpitserPearlID,
@@ -96,6 +98,21 @@ export interface CausalClaimQuery {
    * with fewer than MIN_MEDIATOR_SAMPLES observations is ineligible.
    */
   readonly mediators?: readonly MediatorCandidate[];
+  /**
+   * The E-value of the effect being claimed.
+   *
+   * The spec's second activation condition. The gate runs BEFORE the
+   * effect is estimated, so it cannot compute the E-value itself --
+   * the caller has it (or will have it) from the contrast.
+   *
+   * When it is null or absent, no mediator expansion is ACTIVATED.
+   * A robustness that could not be measured is not a robustness that
+   * passed, and treating "unknown" as "fine" is the same defect as a
+   * threshold that is exported and never checked.
+   */
+  readonly eValue?: number | null;
+  /** The E-value floor for activating an expansion. The spec's is 1.35. */
+  readonly minEValue?: number;
 }
 
 export interface CausalClaimVerdict {
@@ -140,6 +157,19 @@ export interface CausalClaimVerdict {
    * is worse than a refusal that names none.
    */
   readonly activating_mediators: readonly string[];
+  /**
+   * The expansion ATTEMPTS, so a caller that learns the E-value
+   * LATER can finish the activation decision.
+   *
+   * The gate runs BEFORE the effect is estimated, so the E-value --
+   * the spec's second activation condition -- is not known at gate
+   * time. The gate therefore reports the attempts (each of which was
+   * MEASURED: the expanded graph was built and ID re-run on it) and
+   * leaves the activation decision to whoever has the E-value.
+   *
+   * `finalizeExpansion` is that function.
+   */
+  readonly expansion_attempts: readonly MediatorAttempt[];
   /** A human-readable explanation. */
   readonly reason: string;
 }
@@ -211,6 +241,7 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       hedge_forest_sub: null,
       hedge_count: 0,
       activating_mediators: [],
+      expansion_attempts: [],
       reason: `the effect is identified as ${result.formulaClass}`,
     };
   }
@@ -228,7 +259,10 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
   //
   // So the verdict carries the plan, and the REASON names the
   // specific signal that would change the answer.
-  const report = planHedgeBreakage(y, x, graph, query.mediators ?? []);
+  const report = planHedgeBreakage(y, x, graph, query.mediators ?? [], {
+    eValue: query.eValue ?? null,
+    ...(query.minEValue === undefined ? {} : { minEValue: query.minEValue }),
+  });
   const enabling = report.commonEdges;
   const activating = report.activating;
 
@@ -237,7 +271,25 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
       return (
         `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} ` +
         `blocks it. Measuring ${activating.map((a) => a.signalId).join(", ")} ` +
-        `would break it: the expanded graph identifies the effect with zero hedges.`
+        `would break it: the expanded graph identifies the effect with zero hedges, ` +
+        `and the effect passes the adversary review (E-value ${report.eValue!.toFixed(3)} ` +
+        `>= ${report.minEValue}).`
+      );
+    }
+    if (report.breaksHedgeButFragile.length > 0) {
+      // The expansion WORKS but the effect is too fragile to state as
+      // causal. That is a different, and more actionable, finding than
+      // "no measurement helps".
+      return (
+        `the effect is not identified: a hedge over {${result.hedge.forestSub.join(", ")}} ` +
+        `blocks it. Measuring ${report.breaksHedgeButFragile
+          .map((a) => a.signalId)
+          .join(", ")} would break the hedge, but the effect does not pass the ` +
+        `adversary review` +
+        (report.eValue === null
+          ? " (its E-value could not be measured, and an unmeasured robustness is not a passed one)"
+          : ` (E-value ${report.eValue.toFixed(3)} < ${report.minEValue})`) +
+        ", so the expansion is not activated."
       );
     }
     if (enabling.length > 0) {
@@ -284,7 +336,40 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
     hedge_forest_sub: result.hedge.forestSub,
     hedge_count: report.hedges.length,
     activating_mediators: activating.map((a) => a.signalId),
+    expansion_attempts: report.attempts,
     reason,
+  };
+}
+
+/**
+ * FINISH THE ACTIVATION DECISION, once the E-value is known.
+ *
+ * The gate runs BEFORE the effect is estimated, so the spec's second
+ * activation condition -- "passes Adversary Review (E-value >= 1.35)"
+ * -- is not available at gate time. The gate reports the ATTEMPTS
+ * (each measured: the expanded graph was built and ID re-run on it),
+ * and this function applies the E-value to them.
+ *
+ * The result is the same shape the gate would have produced had the
+ * E-value been known up front, so the two paths cannot disagree.
+ */
+export function finalizeExpansion(
+  attempts: readonly MediatorAttempt[],
+  eValue: number | null,
+  minEValue = MIN_EXPANSION_E_VALUE,
+): {
+  readonly activating: readonly MediatorAttempt[];
+  readonly breaksHedgeButFragile: readonly MediatorAttempt[];
+  readonly eValuePasses: boolean;
+} {
+  const breaks = attempts.filter((a) => a.eligible && a.breaksHedge);
+  // A robustness that could not be measured is not a robustness that
+  // passed.
+  const eValuePasses = eValue !== null && eValue >= minEValue;
+  return {
+    activating: eValuePasses ? breaks : [],
+    breaksHedgeButFragile: eValuePasses ? [] : breaks,
+    eValuePasses,
   };
 }
 
@@ -300,6 +385,7 @@ function refuse(code: G3RefusalCode, reason: string): CausalClaimVerdict {
     hedge_forest_sub: null,
     hedge_count: 0,
     activating_mediators: [],
+    expansion_attempts: [],
     reason,
   };
 }

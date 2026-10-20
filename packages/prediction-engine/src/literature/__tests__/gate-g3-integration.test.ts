@@ -287,3 +287,61 @@ describe("the adversary review (E-value gate)", () => {
     expect(res.e_value_point).toBeNull();
   });
 });
+
+// ======================================================================
+// THE WHOLE CHAIN, END TO END: a refused shock test carries the
+// measurement plan.
+//
+// The spec's section 4.4 says the engine should say WHICH MEASUREMENT
+// would make the question answerable. That has to survive the whole
+// path -- the gate, the refusal, and the retrieval function's own
+// return -- or it is a comment.
+// ======================================================================
+describe("the shock path carries the measurement plan", () => {
+  it("a refused shock test names the mediator that would break the hedge", async () => {
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      // The confounded bow-arc: the effect is not identified.
+      graph: {
+        nodes: ["Scheme", "PassEPA"],
+        directed: [["Scheme", "PassEPA"]],
+        bidirected: [["Scheme", "PassEPA"]],
+      },
+      mediators: [
+        { signalId: "SharperMarketShare", node: "SharperMarketShare", tValid: 1, sampleCount: 500 },
+      ],
+    });
+
+    expect(res.verdict).toBe("INCONCLUSIVE");
+    expect(res.g3_refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
+    // The plan survived the whole path.
+    expect(res.expansion_activating_mediators.length + res.expansion_breaks_hedge_but_fragile.length)
+      .toBeGreaterThan(0);
+    // And the reason names it.
+    expect(res.reason).toContain("SharperMarketShare");
+  });
+
+  it("a refused shock test with NO mediators still refuses cleanly", async () => {
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph: {
+        nodes: ["Scheme", "PassEPA"],
+        directed: [["Scheme", "PassEPA"]],
+        bidirected: [["Scheme", "PassEPA"]],
+      },
+    });
+    expect(res.verdict).toBe("INCONCLUSIVE");
+    expect(res.expansion_activating_mediators).toHaveLength(0);
+    expect(res.expansion_breaks_hedge_but_fragile).toHaveLength(0);
+  });
+
+  it("an IDENTIFIED shock test has no plan, and says so", async () => {
+    const { db } = makeDb();
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph: { nodes: ["Scheme", "PassEPA"], directed: [["Scheme", "PassEPA"]], bidirected: [] },
+    });
+    expect(res.g3_conclusion).toBe("CAUSAL");
+    expect(res.expansion_activating_mediators).toHaveLength(0);
+    expect(res.expansion_breaks_hedge_but_fragile).toHaveLength(0);
+  });
+});

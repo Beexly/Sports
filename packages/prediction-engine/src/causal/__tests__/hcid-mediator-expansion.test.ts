@@ -18,6 +18,7 @@ import {
   planHedgeBreakage,
   setMediatorValidityPool,
   MIN_MEDIATOR_SAMPLES,
+  MIN_EXPANSION_E_VALUE,
   type MediatorCandidate,
 } from "../hcid-mediator-expansion.js";
 import { runShpitserPearlID } from "../do-calculus-id.js";
@@ -170,6 +171,9 @@ describe("HCID and the ID-EnablingEdges algorithm", () => {
       new Set(["PublicShare"]),
       bowArc as never,
       [{ signalId: "SharperMarketShare", node: "SharperMarketShare", tValid: 1, sampleCount: 500 }],
+      // The E-value is the spec's SECOND activation condition, so the
+      // expansion only activates when it is supplied and it passes.
+      { eValue: 4.2 },
     );
     expect(report.hedges.length).toBeGreaterThan(0);
     expect(report.commonEdges.length).toBeGreaterThan(0);
@@ -218,6 +222,8 @@ describe("the gate's refusal names the measurement", () => {
       mediators: [
         { signalId: "SharperMarketShare", node: "SharperMarketShare", tValid: 1, sampleCount: 500 },
       ],
+      // Both of the spec's activation conditions.
+      eValue: 4.2,
     });
     expect(verdict.publishable).toBe(false);
     expect(verdict.refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
@@ -268,5 +274,122 @@ describe("the gate's refusal names the measurement", () => {
     expect(verdict.conclusion).toBe("CAUSAL");
     expect(verdict.hedge_count).toBe(0);
     expect(verdict.activating_mediators).toHaveLength(0);
+  });
+});
+
+// ======================================================================
+// THE E-VALUE IS A GATE, NOT A COMMENT.
+//
+// The spec: "If the expanded graph G_e passes ID(Y, X, P, G_e) with
+// zero hedges AND passes Adversary Review (E-value >= 1.35), the
+// mediator expansion is activated."
+//
+// Two conditions. The first version I wrote enforced only the first
+// -- the expansion ACTIVATED on "breaks the hedge" alone, and
+// MIN_EXPANSION_E_VALUE was exported and never checked. That is the
+// same defect class as the threshold that was exported and never
+// enforced anywhere else in this reconciliation: a constant that
+// reads like a check.
+// ======================================================================
+describe("the adversary review gates the activation", () => {
+  const bowArc = {
+    nodes: ["PublicShare", "ATS_Cover"],
+    directed: [["PublicShare", "ATS_Cover"]] as ReadonlyArray<readonly [string, string]>,
+    bidirected: [["PublicShare", "ATS_Cover"]] as ReadonlyArray<readonly [string, string]>,
+  };
+  const mediator = {
+    signalId: "SharperMarketShare",
+    node: "SharperMarketShare",
+    tValid: 1,
+    sampleCount: 500,
+  };
+
+  it("a strong E-value activates the expansion", () => {
+    const report = planHedgeBreakage(
+      new Set(["ATS_Cover"]),
+      new Set(["PublicShare"]),
+      bowArc as never,
+      [mediator],
+      { eValue: 4.2 },
+    );
+    expect(report.eValuePasses).toBe(true);
+    expect(report.activating).toHaveLength(1);
+    expect(report.breaksHedgeButFragile).toHaveLength(0);
+  });
+
+  it("a WEAK E-value does NOT activate it, even though the hedge breaks", () => {
+    const report = planHedgeBreakage(
+      new Set(["ATS_Cover"]),
+      new Set(["PublicShare"]),
+      bowArc as never,
+      [mediator],
+      { eValue: 1.1 },
+    );
+    // The expansion DOES break the hedge -- it is measured, not
+    // asserted.
+    expect(report.breaksHedgeButFragile).toHaveLength(1);
+    // But it does not activate, because the effect is too fragile.
+    expect(report.activating).toHaveLength(0);
+    expect(report.eValuePasses).toBe(false);
+  });
+
+  it("an UNKNOWN E-value does not activate it either", () => {
+    // A robustness that could not be measured is not a robustness
+    // that passed. Treating "unknown" as "fine" would be the same
+    // defect as the un-enforced threshold.
+    for (const eValue of [null, undefined]) {
+      const report = planHedgeBreakage(
+        new Set(["ATS_Cover"]),
+        new Set(["PublicShare"]),
+        bowArc as never,
+        [mediator],
+        eValue === undefined ? {} : { eValue },
+      );
+      expect(report.activating).toHaveLength(0);
+      expect(report.eValuePasses).toBe(false);
+      expect(report.eValue).toBeNull();
+      // But the hedge-breaking attempt is still reported, so the
+      // reader knows the measurement exists.
+      expect(report.breaksHedgeButFragile).toHaveLength(1);
+    }
+  });
+
+  it("the threshold is the spec's 1.35", () => {
+    expect(MIN_EXPANSION_E_VALUE).toBe(1.35);
+    // And it is the boundary: exactly 1.35 passes, just under fails.
+    const at = planHedgeBreakage(
+      new Set(["ATS_Cover"]),
+      new Set(["PublicShare"]),
+      bowArc as never,
+      [mediator],
+      { eValue: 1.35 },
+    );
+    expect(at.activating).toHaveLength(1);
+    const below = planHedgeBreakage(
+      new Set(["ATS_Cover"]),
+      new Set(["PublicShare"]),
+      bowArc as never,
+      [mediator],
+      { eValue: 1.3499 },
+    );
+    expect(below.activating).toHaveLength(0);
+  });
+
+  it("the gate's reason says the expansion works but is too fragile", async () => {
+    const { evaluateCausalClaim } = await import("../causal-claim-gate.js");
+    const verdict = evaluateCausalClaim({
+      y: ["ATS_Cover"],
+      x: ["PublicShare"],
+      graph: bowArc as never,
+      mediators: [mediator],
+      eValue: 1.1,
+    });
+    expect(verdict.activating_mediators).toHaveLength(0);
+    // And the reason says BOTH things: the measurement works, and the
+    // effect is too fragile to state.
+    expect(verdict.reason).toContain("SharperMarketShare");
+    expect(verdict.reason).toContain("would break the hedge");
+    expect(verdict.reason).toContain("adversary review");
+    expect(verdict.reason).toContain("not activated");
   });
 });

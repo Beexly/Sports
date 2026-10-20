@@ -30,7 +30,8 @@ import {
 } from "./literature-embeddings.js";
 import { pillarsForSignal, type LiteraturePillar } from "./literature-pillars.js";
 import { vectorLiteral } from "./literature-index-builder.js";
-import { evaluateCausalClaim } from "../causal/causal-claim-gate.js";
+import { evaluateCausalClaim, finalizeExpansion } from "../causal/causal-claim-gate.js";
+import type { MediatorCandidate } from "../causal/hcid-mediator-expansion.js";
 import { eValue, eValueForCi } from "../causal/e-value.js";
 import type { CausalADMG, NodeId } from "../causal/do-calculus-id.js";
 
@@ -702,6 +703,15 @@ export async function runInterventionTest(
      * so both must pass.
      */
     readonly minEValue?: number;
+    /**
+     * The point-in-time observable signals that could serve as
+     * mediators.
+     *
+     * The spec's V_reg. When the effect is not identified, the engine
+     * reports WHICH MEASUREMENT would make it answerable -- and the
+     * plan survives into this function's return.
+     */
+    readonly mediators?: readonly MediatorCandidate[];
   },
 ): Promise<{
   verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
@@ -740,6 +750,23 @@ export async function runInterventionTest(
   e_value_point: number | null;
   e_value_ci: number | null;
   /**
+   * The mediators that DEMONSTRABLY break the hedge AND pass the
+   * adversary review -- the spec's two activation conditions, both
+   * measured.
+   *
+   * On the refusal path the E-value is null (the gate refused before
+   * any estimate existed), so this is empty there and the
+   * breaks-but-fragile list is populated instead. The distinction
+   * matters: "no measurement helps" and "this measurement helps but
+   * the effect is too fragile" are different findings.
+   */
+  expansion_activating_mediators: readonly string[];
+  /**
+   * The mediators that break the hedge but do NOT activate, because
+   * the effect fails (or has no) adversary review.
+   */
+  expansion_breaks_hedge_but_fragile: readonly string[];
+  /**
    * The refusal code when the ADVERSARY REVIEW blocked publication:
    * the effect was identified, but it was not robust enough to state
    * as causal.
@@ -776,10 +803,14 @@ export async function runInterventionTest(
     | { id: string; premise_id: string; status: string; cause_signal: string; effect_signal: string }
     | undefined;
   if (!edge) {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
   }
   if (edge.status !== "promoted") {
-    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
   }
 
   // ====================================================================
@@ -804,8 +835,26 @@ export async function runInterventionTest(
     x: [edge.cause_signal],
     z: opts?.z ?? [],
     graph: opts?.graph ?? null,
+    mediators: opts?.mediators ?? [],
   });
   if (!g3.publishable) {
+    // THE EXPANSION PLAN, FINALIZED.
+    //
+    // The gate refused, so the effect is not identified -- but the
+    // spec's section 4.4 says the engine should say WHICH MEASUREMENT
+    // would make it answerable. The gate produced the ATTEMPTS (each
+    // measured: the expanded graph was built and ID re-run on it), and
+    // the activation decision -- which needs the E-value -- is
+    // finished here.
+    //
+    // The E-value is NULL on this path: the gate refused before any
+    // estimate was computed, so there is no effect to be robust or
+    // fragile. And an unmeasured robustness is not a passed one, so
+    // NO expansion activates on this path. The attempts are still
+    // reported, because "this measurement would break the hedge" is
+    // the actionable fact, and the fact that it is not ACTIVATED
+    // without an E-value is equally actionable.
+    const expansion = finalizeExpansion(g3.expansion_attempts, null, opts?.minEValue);
     return {
       verdict: "INCONCLUSIVE",
       edge_key: edgeKey,
@@ -826,6 +875,10 @@ export async function runInterventionTest(
       e_value_point: null,
       e_value_ci: null,
       adversary_refusal_code: null,
+      expansion_activating_mediators: expansion.activating.map((a) => a.signalId),
+      expansion_breaks_hedge_but_fragile: expansion.breaksHedgeButFragile.map(
+        (a) => a.signalId,
+      ),
     };
   }
 
@@ -851,7 +904,9 @@ export async function runInterventionTest(
 
   const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
   if (all.length < minN) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
   }
 
   // The intervention contrast: split residuals by whether the activation was
@@ -861,7 +916,9 @@ export async function runInterventionTest(
   const control = all.filter((r) => r.activation_score < doValue);
 
   if (treated.length < 3 || control.length < 3) {
-    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null, adversary_refusal_code: null };
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], adversary_refusal_code: null };
   }
 
   const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
@@ -990,6 +1047,11 @@ export async function runInterventionTest(
     g3_formula_class: g3.formula_class,
     e_value_point: ePoint,
     e_value_ci: eCi,
+    // The effect IS identified, so there is no hedge to break and no
+    // expansion to plan. Both lists are empty, and that is the honest
+    // state rather than a missing one.
+    expansion_activating_mediators: [],
+    expansion_breaks_hedge_but_fragile: [],
     adversary_refusal_code: adversaryRefusal,
   };
 }

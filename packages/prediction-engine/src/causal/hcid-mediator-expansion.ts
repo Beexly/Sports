@@ -137,6 +137,22 @@ export interface HedgeBreakageReport {
   readonly attempts: readonly MediatorAttempt[];
   /** The attempts that demonstrably break every hedge. */
   readonly activating: readonly MediatorAttempt[];
+  /**
+   * The attempts that break the hedge but do NOT activate, because
+   * the effect fails the adversary review.
+   *
+   * "This measurement would make the question answerable, but the
+   * answer would be fragile" is a materially different statement from
+   * "this measurement would make the question answerable", and the
+   * reader needs both.
+   */
+  readonly breaksHedgeButFragile: readonly MediatorAttempt[];
+  /** The E-value the activation was judged against. Null when unknown. */
+  readonly eValue: number | null;
+  /** The floor the E-value was judged against. The spec's is 1.35. */
+  readonly minEValue: number;
+  /** Whether the E-value passed the floor. */
+  readonly eValuePasses: boolean;
 }
 
 /**
@@ -265,6 +281,30 @@ export function planHedgeBreakage(
   xSet: ReadonlySet<NodeId>,
   g: CausalADMG,
   candidates: readonly MediatorCandidate[],
+  opts?: {
+    /**
+     * The E-value of the effect the expansion would estimate.
+     *
+     * THE SPEC'S SECOND CONDITION. "If the expanded graph G_e passes
+     * ID(Y, X, P, G_e) with zero hedges AND passes Adversary Review
+     * (E-value >= 1.35), the mediator expansion is activated."
+     *
+     * Breaking the hedge makes the effect IDENTIFIABLE. It does not
+     * make it ROBUST: an identified effect can still be explained away
+     * by an unmeasured confounder. The two conditions are independent
+     * and BOTH are required.
+     *
+     * When the E-value is null -- not computed, or undefined because
+     * the contrast had no usable rate ratio -- the expansion is NOT
+     * activating. A robustness that could not be measured is not a
+     * robustness that passed, and treating "unknown" as "fine" is
+     * the same defect as a threshold that is exported and never
+     * checked.
+     */
+    readonly eValue?: number | null;
+    /** The E-value floor. The spec's is 1.35. */
+    readonly minEValue?: number;
+  },
 ): HedgeBreakageReport {
   setMediatorValidityPool(candidates);
   const hedges = collectIDHedges(ySet, xSet, g);
@@ -277,12 +317,40 @@ export function planHedgeBreakage(
     }
   }
 
-  // An expansion ACTIVATES only when it breaks the hedge. The attempt's
-  // `breaksHedge` is measured by RE-RUNNING ID on the expanded graph,
-  // so it is a measurement, not a claim.
-  const activating = attempts.filter((a) => a.eligible && a.breaksHedge);
+  // THE ACTIVATION GATE. Both conditions, and both measured.
+  //
+  //   1. the expanded graph identifies the effect with ZERO HEDGES
+  //      (re-run ID on the expanded graph -- a measurement)
+  //   2. the effect passes the ADVERSARY REVIEW, i.e. its E-value is
+  //      at least the spec's 1.35
+  //
+  // The E-value is the SAME for every candidate, because it is a
+  // property of the effect being estimated and not of which mediator
+  // made it identifiable. So it is checked once, here, rather than
+  // per attempt.
+  const minE = opts?.minEValue ?? MIN_EXPANSION_E_VALUE;
+  const eValue = opts?.eValue ?? null;
+  const eValuePasses = eValue !== null && eValue >= minE;
 
-  return { hedges, commonEdges, attempts, activating };
+  // An expansion that breaks the hedge but cannot pass the adversary
+  // review is still REPORTED -- as an attempt that breaks the hedge
+  // but is not activating -- because "this measurement would make the
+  // question answerable but the answer would be fragile" is a
+  // materially different statement from "this measurement would make
+  // the question answerable".
+  const breaksHedge = attempts.filter((a) => a.eligible && a.breaksHedge);
+  const activating = eValuePasses ? breaksHedge : [];
+
+  return {
+    hedges,
+    commonEdges,
+    attempts,
+    activating,
+    breaksHedgeButFragile: eValuePasses ? [] : breaksHedge,
+    eValue,
+    minEValue: minE,
+    eValuePasses,
+  };
 }
 
 export function intersectCandidateEdges(
