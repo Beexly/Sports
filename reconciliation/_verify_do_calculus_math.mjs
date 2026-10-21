@@ -37,7 +37,7 @@ register(new URL("./ts-resolve-hook.mjs", import.meta.url));
 const M = await import(
   pathToFileURL(resolve(root, "packages/prediction-engine/src/causal/do-calculus-id.ts")).href
 );
-const { runShpitserPearlID, runShpitserPearlIDC, formatSymbolicFactor } = M;
+const { runShpitserPearlID, runShpitserPearlIDC, formatSymbolicFactor, formatCanonicalFactor } = M;
 
 let failures = 0;
 function check(name, cond, detail = "") {
@@ -86,32 +86,17 @@ console.log("=== A. THE MODULE'S ESTIMAND MATCHES THE SPEC'S PUBLISHED EQUATION 
  * `sumCtx` is the set of nodes the enclosing MARGINAL_SUM is summing
  * over: a conditional whose target is in that set is a DENSITY, and it
  * is rendered differently so the two cannot be confused.
+ *
+ * THE IMPLEMENTATION NOW LIVES IN THE LIBRARY. This function used to be
+ * a private copy here, which meant the spec's published AST strings
+ * could be asserted only from inside a script -- the library could not
+ * produce them, so no unit test could check them, and a second copy
+ * would have been free to drift. It is now `formatCanonicalFactor` in
+ * packages/prediction-engine/src/causal/do-calculus-id.ts, and this is
+ * a thin alias. There is ONE canonicaliser.
  */
 function canon(f, sumCtx = new Set()) {
-  switch (f.kind) {
-    case "OBSERVATIONAL_COND": {
-      const isDensity = sumCtx.has(f.target);
-      return `P(${f.target}|${f.given.join(",")})${isDensity ? "@d" : "@m"}`;
-    }
-    case "ASSIGNED_DENSITY": {
-      // The density at the ASSIGNED value of the target. It is a
-      // density unconditionally -- that is what the node MEANS -- so
-      // it is not derived from the sum context the way
-      // OBSERVATIONAL_COND's role is.
-      return `P(${f.target}|${f.given.join(",")})@d`;
-    }
-    case "MARGINAL_SUM": {
-      const inner = new Set(sumCtx);
-      for (const v of f.sumOut) inner.add(v);
-      return `Sum[${f.sumOut.join(",")}](${canon(f.body, inner)})`;
-    }
-    case "PRODUCT":
-      return `*(${f.factors.map((x) => canon(x, sumCtx)).join(" * ")})`;
-    case "RATIO":
-      return `(${canon(f.numerator, sumCtx)} / ${canon(f.denominator, sumCtx)})`;
-    default:
-      throw new Error(`unknown factor ${f.kind}`);
-  }
+  return formatCanonicalFactor(f, sumCtx);
 }
 
 // The spec publishes, for Case 2 (front door):

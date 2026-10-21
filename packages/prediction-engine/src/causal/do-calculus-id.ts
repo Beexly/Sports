@@ -882,9 +882,77 @@ export function isIdentifiable(
 }
 
 /**
+ * The SPEC'S CANONICAL FORM of a symbolic factor.
+ *
+ * WHY THIS EXISTS, AND WHY IT IS NOT `formatSymbolicFactor`.
+ *
+ * `formatSymbolicFactor` renders a factor for a human reader:
+ *
+ *   Sum_{M}[(P(M|X) * Sum_{X}[(P(X) * P(Y|X,M))])]
+ *
+ * It is lossy in a way that matters. It DROPS the @d / @m markers, and
+ * those markers are the whole distinction the X20 audit turned on: a
+ * treatment factor that is a DENSITY at its assigned value recovers
+ * 5.0141, and the same factor read as a conditional MEAN recovers
+ * 3.8621, against a true do-effect of 5. The A082 / A083 fix put that
+ * distinction in the TYPE, so an evaluator cannot misread it. But the
+ * RENDERED string -- the one that is published in the gate's verdict,
+ * carried through literature-retrieval into the receipt, and read by
+ * people -- could not express it at all. A reader of that string could
+ * not tell a density from a mean.
+ *
+ * So the canonical form is rendered here, in the library, where the
+ * spec's own published AST strings can be asserted against it:
+ *
+ *   Sum[M](*(P(M|X)@d * Sum[X](*(P(X|)@d * P(Y|X,M)@m))))
+ *
+ * WHICH FACTORS ARE DENSITIES. A factor is a density when the quantity
+ * it names is being INTEGRATED OUT -- that is, when its target appears
+ * in the sum index of an enclosing marginalisation, or when it is the
+ * ASSIGNED target (whose kind is ASSIGNED_DENSITY, and which is a
+ * density unconditionally: that is what the node MEANS). Every other
+ * factor is a conditional mean.
+ *
+ * This mirrors the derivation the recursion itself performs, which is
+ * why the sum context has to be threaded: a factor's density-ness is
+ * not a property of the factor alone but of the factor AND the
+ * marginalisation it sits inside.
+ */
+export function formatCanonicalFactor(factor: SymbolicFactor, sumCtx: ReadonlySet<NodeId> = new Set()): string {
+  switch (factor.kind) {
+    case "OBSERVATIONAL_COND": {
+      const isDensity = sumCtx.has(factor.target);
+      return `P(${factor.target}|${factor.given.join(",")})${isDensity ? "@d" : "@m"}`;
+    }
+    case "ASSIGNED_DENSITY": {
+      // A density at the ASSIGNED value of the target. It is a density
+      // unconditionally -- that is what the node MEANS -- so it is not
+      // derived from the sum context the way OBSERVATIONAL_COND's role is.
+      return `P(${factor.target}|${factor.given.join(",")})@d`;
+    }
+    case "MARGINAL_SUM": {
+      const inner = new Set(sumCtx);
+      for (const v of factor.sumOut) inner.add(v);
+      return `Sum[${factor.sumOut.join(",")}](${formatCanonicalFactor(factor.body, inner)})`;
+    }
+    case "PRODUCT":
+      return `*(${factor.factors.map((f) => formatCanonicalFactor(f, sumCtx)).join(" * ")})`;
+    case "RATIO":
+      return `(${formatCanonicalFactor(factor.numerator, sumCtx)} / ${formatCanonicalFactor(factor.denominator, sumCtx)})`;
+    default:
+      return assertNever(factor);
+  }
+}
+
+/**
  * Render a symbolic factor as a compact string, e.g.
  *   Sum_{z}[(P(z|w) * P(y|w,z,x))]
  * Intended for logs, receipts and test failure messages — not a parser target.
+ *
+ * NOTE THE LOSSINESS. This form does NOT distinguish a density from a
+ * conditional mean. When the distinction matters -- which it does
+ * whenever a factor is a DENSITY at an assigned value -- use
+ * `formatCanonicalFactor`, which renders the @d / @m markers.
  */
 export function formatSymbolicFactor(factor: SymbolicFactor): string {
   switch (factor.kind) {
