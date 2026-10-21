@@ -2156,3 +2156,88 @@ and a contrast with no spread is a division by zero.
                                               MIN_EXPANSION_CI_E_VALUE and
                                               MIN_E_VALUE_ARM_SAMPLES all seen
                                               as GATED
+
+## X20 was closed, but it was closed on the WRONG GRAPH, and the treatment was read as a mean.
+
+**THE DEFECT.** The spec's published Napkin tree is
+
+    Ratio( Sum[W](*(P(W|)@d * P(X|W,Z)@d * P(Y|W,Z,X)@m)),
+            Sum[W](*(P(W|)@d * P(X|W,Z)@d)) )
+
+and the module emitted
+
+    Ratio( Sum[W](*(P(W|)@d * P(X|W,Z)@m * P(Y|W,Z,X)@m)),
+            Sum[Y](Sum[W](*(P(W|)@d * P(X|W,Z)@m * P(Y|W,Z,X)@d))) )
+
+Two differences, and BOTH of them matter.
+
+**1. THE TREATMENT WAS A MEAN, NOT A DENSITY.** The intervention
+variable X is HELD at its assigned value, so its factor in the
+derived joint is the density p(x|w,z) AT that value -- not the
+conditional mean E[X|W,Z].
+
+The probe measures the consequence. On the spec's own DGP
+
+    W = U1 + 0.5 U2 + 0.5 e1 ; Z = W + 0.5 e2
+    X = Z + U1 + 0.5 e3 ; Y = 5 X + 2 U2 + 0.5 e4
+
+with the true interventional slope 5 (by do(X) simulation):
+
+    the goal-spec ratio, treatment as a DENSITY : 5.0141
+    the module's tree,   treatment as a MEAN    : 3.8621
+
+**2. THE DENOMINATOR KEPT THE TARGET.** Marginalising a conditional
+density over its OWN target gives 1, so the target is DROPPED -- from
+the product and from the sum index. The old form integrated the Y
+factor instead, which is only the same operation when that factor is
+a density, and in the numerator it is a conditional MEAN.
+
+**WHY IT WAS NEVER CAUGHT.** The same gap that hid the first X20 bug
+hid this one: **the verifier was checking a DIFFERENT GRAPH.** A082's
+`FOUR` constant is `(W -> Z -> X -> Y, W <-> X, Z <-> Y)`. The
+Napkin graph is `(W -> Z -> X -> Y, W <-> X, W <-> Y)`. The numbers
+the spec quotes -- front-door 5.9710, 4-node 4.9942 -- were measured
+on graphs that are not the graph the bug was about. A verifier that
+covers a graph is not evidence about a graph it does not cover.
+
+And the CI base HOLDS on this DGP (Z _||_ Y | W,X and X _||_ Y | W,Z
+both pass, measured as t-statistics), so the DGP really is a
+distribution the Napkin graph describes. The discrepancy was the
+module's, not the DGP's.
+
+**THE FIX, AND WHY IT IS IN THE TYPE.** A single `OBSERVATIONAL_COND`
+node meant two different things: a density when its target was being
+summed out, and a conditional mean when it was not. Every consumer
+had to DERIVE which, from the enclosing sum context -- and the
+derivation was wrong exactly where it mattered.
+
+The front-door case recovered correctly only by ACCIDENT: its
+treatment X appears in the GIVEN list of other factors and inside a
+nested `Sum[X]`, so the sum-context derivation happened to produce
+the right answer there. A correct answer by accident is not a
+convention.
+
+So the distinction is now IN THE AST: a new `ASSIGNED_DENSITY` node
+means "the conditional density of this target at its assigned value",
+and an evaluator cannot misread it because there is nothing to
+misread. Line 6 marks the intervention factors and drops the target's.
+
+**MEASURED AFTER THE FIX.** A083 recovers **4.9601** against a true
+5.0, on a graph it now actually checks. A082 asserts the tree
+character for character against the spec's string. And a new probe,
+`reconciliation/_probe_napkin_estimands.mjs`, is the INDEPENDENT
+witness: it computes the candidate estimands directly from the DGP,
+with no reference to the module's tree, and FAILS if the density and
+mean forms ever converge. It is wired into the permanent CI suite as
+T10g, so the distinction cannot be quietly collapsed later.
+
+**MUTATIONS, both caught:**
+
+    the treatment factor stays a conditional mean -> A083 recovers
+        3.8783 and EXITS 1
+    the denominator keeps the Y factor          -> A082's exact-tree
+        assertion FAILS and it EXITS 1
+
+**THE FRONT-DOOR AND 4-NODE CASES ARE UNCHANGED**, as they must be --
+the fix is on the path where the treatment is a factor TARGET, and
+the front-door tree puts it in the GIVEN list.

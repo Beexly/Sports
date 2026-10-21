@@ -62,6 +62,46 @@ export interface HedgeWitness {
 
 export type SymbolicFactor =
   | { readonly kind: "OBSERVATIONAL_COND"; readonly target: NodeId; readonly given: readonly NodeId[] }
+  | {
+      /**
+       * The conditional DENSITY of `target` at the ASSIGNED value of
+       * `target`, given `given`.
+       *
+       * WHY THIS NODE EXISTS, AND WHY IT IS NOT OPTIONAL.
+       *
+       * A single `OBSERVATIONAL_COND` node meant two different things:
+       * a DENSITY when its target was being summed out, and a
+       * conditional MEAN when it was not. Every consumer had to
+       * DERIVE which one it was, from the enclosing sum context --
+       * and the derivation was wrong exactly where it mattered.
+       *
+       * On the Napkin graph the derived joint carries the treatment as
+       * a FACTOR TARGET, P(X | W, Z). X is not being summed out; X is
+       * being HELD at its assigned value. So the factor is a density
+       * evaluated at that value -- p(x | w, z) -- and NOT the
+       * conditional mean E[X | W, Z].
+       *
+       * Reading it as a mean gives the wrong estimand. The measured
+       * consequence, on the spec's own DGP
+       * (W = U1 + 0.5 U2 + 0.5 e1, Z = W + 0.5 e2,
+       *  X = Z + U1 + 0.5 e3, Y = 5 X + 2 U2 + 0.5 e4, true do-effect 5):
+       *
+       *   the treatment factor as a DENSITY : recovers 5.0141
+       *   the treatment factor as a MEAN    : recovers 3.8621
+       *
+       * The front-door case recovered correctly only by ACCIDENT: its
+       * treatment X appears in the GIVEN list of other factors and
+       * inside a nested Sum[X], so the sum-context derivation happened
+       * to produce the right answer there. A correct answer by
+       * accident is not a convention.
+       *
+       * So the distinction is now IN THE TYPE. An evaluator cannot
+       * misread it, because there is nothing to misread.
+       */
+      readonly kind: "ASSIGNED_DENSITY";
+      readonly target: NodeId;
+      readonly given: readonly NodeId[];
+    }
   | { readonly kind: "MARGINAL_SUM"; readonly sumOut: readonly NodeId[]; readonly body: SymbolicFactor }
   | { readonly kind: "PRODUCT"; readonly factors: readonly SymbolicFactor[] }
   | { readonly kind: "RATIO"; readonly numerator: SymbolicFactor; readonly denominator: SymbolicFactor };
@@ -592,7 +632,8 @@ function idRec(
     //
     // and it is a RATIO, as the formula class promises.
     if (isMarginalizedCFactor) {
-      // THE NUMERATOR: the derived joint, with the TARGETS held.
+      // THE NUMERATOR: the derived joint, with the INTERVENTION held
+      // at its assigned value and the TARGETS as conditional means.
       //
       // `dist` is the derived joint over the C-component, already
       // carrying the marginalization the recursion performed. On the
@@ -600,16 +641,30 @@ function idRec(
       // W-marginalization is INSIDE `dist`, so the numerator is `dist`
       // itself, with no further sum.
       //
-      // THE DENOMINATOR: the SAME derived joint, with the TARGETS
-      // SUMMED OUT -- that is the marginal over Y, which is what makes
-      // the ratio a CONDITIONAL on X.
+      // THE INTERVENTION FACTOR IS A DENSITY. X is held at its
+      // assigned value, so its factor in the derived joint is
+      // p(x|w,z) -- the density at that value -- and NOT the
+      // conditional mean E[X|W,Z]. Reading it as a mean yields the
+      // wrong estimand: on the spec's DGP the density form recovers
+      // 5.0141 against a true do-effect of 5, and the mean form
+      // recovers 3.8621. The distinction is now in the AST type
+      // (ASSIGNED_DENSITY), so no consumer can misread it.
       //
-      // The denominator sums over the TARGET nodes (Y), NOT over the
-      // whole component. Summing over the whole component would
-      // divide by a marginal that already includes the target, and
-      // the ratio would be P(x,y)/P(x,y) = 1.
-      const numerator = dist;
-      const denominator = marginalSum([...ySet], dist);
+      // THE DENOMINATOR: the SAME derived joint with the TARGET
+      // marginalised out -- that is the marginal over Y, which is what
+      // makes the ratio a CONDITIONAL on X. Marginalising a
+      // conditional density over its own target gives 1, so the
+      // target's factor is DROPPED and the sum index with it.
+      //
+      // The denominator marginalises over the TARGET nodes (Y), NOT
+      // over the whole component. Summing over the whole component
+      // would divide by a marginal that already includes the target,
+      // and the ratio would be P(x,y)/P(x,y) = 1.
+      const numerator = markAssignedDensities(dist, xSet, new Set<NodeId>()) ?? dist;
+      const denominator =
+        markAssignedDensities(dist, xSet, ySet) ??
+        markAssignedDensities(dist, xSet, new Set<NodeId>()) ??
+        dist;
       return {
         ok: true,
         formula: { kind: "RATIO", numerator, denominator },
@@ -657,6 +712,70 @@ function idRec(
   );
   if (!nested.ok) return nested;
   return { ok: true, formula: nested.formula, formulaClass: FormulaClass.TianCFactorRatio };
+}
+
+/**
+ * Mark the INTERVENTION factors as densities at the assigned value, and
+ * optionally drop the target factors.
+ *
+ * Two jobs, one walk:
+ *
+ * 1. An `OBSERVATIONAL_COND` whose target is INTERVENED on becomes an
+ *    `ASSIGNED_DENSITY`. The intervention variable is held at its
+ *    assigned value, so its factor in a derived joint is a density
+ *    evaluated at that value.
+ *
+ * 2. When `dropTargets` contains a node, its factor is REMOVED and it
+ *    is removed from any enclosing sum. This is the marginalisation of
+ *    a target: integrating a conditional density over its own target
+ *    gives 1, so dropping the factor and dropping the sum index are
+ *    the same operation, and the result is the marginal of the joint
+ *    over that target.
+ *
+ * Returns null when the transform would consume the whole tree (every
+ * factor dropped), so the caller can fall back rather than emit an
+ * empty product.
+ */
+function markAssignedDensities(
+  f: SymbolicFactor,
+  xSet: ReadonlySet<NodeId>,
+  dropTargets: ReadonlySet<NodeId>,
+): SymbolicFactor | null {
+  switch (f.kind) {
+    case "OBSERVATIONAL_COND": {
+      if (dropTargets.has(f.target)) return null;
+      if (xSet.has(f.target)) {
+        return { kind: "ASSIGNED_DENSITY", target: f.target, given: [...f.given] };
+      }
+      return f;
+    }
+    case "ASSIGNED_DENSITY":
+      return f;
+    case "MARGINAL_SUM": {
+      const body = markAssignedDensities(f.body, xSet, dropTargets);
+      if (body === null) return null;
+      const sumOut = f.sumOut.filter((v) => !dropTargets.has(v));
+      if (sumOut.length === 0) return body;
+      return { kind: "MARGINAL_SUM", sumOut, body };
+    }
+    case "PRODUCT": {
+      const kept: SymbolicFactor[] = [];
+      for (const sub of f.factors) {
+        const r = markAssignedDensities(sub, xSet, dropTargets);
+        if (r !== null) kept.push(r);
+      }
+      if (kept.length === 0) return null;
+      return kept.length === 1 ? kept[0]! : { kind: "PRODUCT", factors: kept };
+    }
+    case "RATIO": {
+      const num = markAssignedDensities(f.numerator, xSet, dropTargets);
+      const den = markAssignedDensities(f.denominator, xSet, dropTargets);
+      if (num === null || den === null) return null;
+      return { kind: "RATIO", numerator: num, denominator: den };
+    }
+    default:
+      return assertNever(f);
+  }
 }
 
 /**
@@ -773,6 +892,13 @@ export function formatSymbolicFactor(factor: SymbolicFactor): string {
       return factor.given.length === 0
         ? `P(${factor.target})`
         : `P(${factor.target}|${factor.given.join(",")})`;
+    case "ASSIGNED_DENSITY":
+      // The @d marks it a DENSITY at the assigned value, which is what
+      // it is -- and the distinction from a conditional mean is the
+      // whole point of the node.
+      return factor.given.length === 0
+        ? `P(${factor.target})@d`
+        : `P(${factor.target}|${factor.given.join(",")})@d`;
     case "MARGINAL_SUM":
       return `Sum_{${factor.sumOut.join(",")}}[${formatSymbolicFactor(factor.body)}]`;
     case "PRODUCT":

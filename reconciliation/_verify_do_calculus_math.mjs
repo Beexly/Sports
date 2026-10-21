@@ -54,6 +54,28 @@ const FOUR = {
   bidirected: [["W", "X"], ["Z", "Y"]],
 };
 
+// THE NAPKIN GRAPH: W -> Z -> X -> Y, with W <-> X and W <-> Y.
+//
+// THIS IS THE GRAPH THE X20 REPORT NAMES, AND UNTIL THIS COMMIT IT
+// WAS NOT IN THE VERIFIER AT ALL.
+//
+// `FOUR` above is a DIFFERENT graph: its bidirected arcs are
+// W <-> X and Z <-> Y. On `FOUR` the module returns
+// Sum[Z](*(P(Z|W)@d * P(Y|W,Z,X)@m)) -- a tree that CONDITIONS on W.
+//
+// The X20 bug lived on the Napkin graph, where the answer must be a
+// RATIO that MARGINALISES W. So every A082/A083 number was measured
+// on a graph that is not the graph the bug was about.
+//
+// A verifier that covers a graph is not evidence about a graph it does
+// not cover. The Napkin graph is now IN the verifier, with the exact
+// tree asserted.
+const NAPKIN = {
+  nodes: ["W", "Z", "X", "Y"],
+  directed: [["W", "Z"], ["Z", "X"], ["X", "Y"]],
+  bidirected: [["W", "X"], ["W", "Y"]],
+};
+
 // ================================================================ A. STRUCTURAL
 console.log("=== A. THE MODULE'S ESTIMAND MATCHES THE SPEC'S PUBLISHED EQUATION ===");
 
@@ -70,6 +92,13 @@ function canon(f, sumCtx = new Set()) {
     case "OBSERVATIONAL_COND": {
       const isDensity = sumCtx.has(f.target);
       return `P(${f.target}|${f.given.join(",")})${isDensity ? "@d" : "@m"}`;
+    }
+    case "ASSIGNED_DENSITY": {
+      // The density at the ASSIGNED value of the target. It is a
+      // density unconditionally -- that is what the node MEANS -- so
+      // it is not derived from the sum context the way
+      // OBSERVATIONAL_COND's role is.
+      return `P(${f.target}|${f.given.join(",")})@d`;
     }
     case "MARGINAL_SUM": {
       const inner = new Set(sumCtx);
@@ -170,6 +199,64 @@ function canon(f, sumCtx = new Set()) {
       console.log("       _verify_estimand_numerically.mjs on a DGP where W<->X is realised.");
       console.log("       THIS IS AN OPEN STRUCTURAL QUESTION, not a settled result.");
     }
+  }
+}
+
+// -----------------------------------------------------------------------
+// THE NAPKIN GRAPH: THE EXACT RATIO TREE, ASSERTED.
+//
+// This is the graph the X20 report is about, and this check was
+// MISSING. The verifier asserted a class NAME on a DIFFERENT graph,
+// which is the same defect this audit has been hunting one level up:
+// a thing that reads like a gate while gating nothing.
+//
+// The tree is asserted CHARACTER FOR CHARACTER. Not "contains a
+// ratio" -- the ratio, exactly, because a tree that is a ratio in
+// shape but wrong in its numerator or denominator is still wrong, and
+// a shape check would pass it.
+//
+// THE DENOMINATOR IS THE NUMERATOR'S Y-MARGINAL. That is the point
+// of the whole fix: the ratio is a CONDITIONAL on X, so the
+// denominator integrates the target out. Summing over the whole
+// C-component instead would divide by a marginal that still contains
+// the target, and the ratio would be P(x,y)/P(x,y) = 1.
+// -----------------------------------------------------------------------
+{
+  const r = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), NAPKIN);
+  check("Napkin graph is identified", r.ok === true, r.ok ? r.formulaClass : r.code);
+  if (r.ok) {
+    const got = canon(r.formula);
+    console.log(`       rendered: ${formatSymbolicFactor(r.formula)}`);
+    // The spec's published Napkin tree, in A082's canonical notation.
+    //
+    // The numerator is the DERIVED JOINT with W marginalised out and
+    // the targets HELD. The denominator is that same derived joint
+    // with the TARGET summed out, which is what makes the ratio a
+    // conditional on X.
+    // THE SPEC'S PUBLISHED NAPKIN TREE, CHARACTER FOR CHARACTER.
+    //
+    //   Ratio( Sum[W](*(P(W|)@d * P(X|W,Z)@d * P(Y|W,Z,X)@m)),
+    //           Sum[W](*(P(W|)@d * P(X|W,Z)@d)) )
+    //
+    // The treatment factor P(X|W,Z) is a DENSITY at the assigned
+    // value (@d), not a conditional mean (@m) -- it is the difference
+    // between recovering 5.0141 and recovering 3.8621 against a true
+    // do-effect of 5.
+    //
+    // And the denominator has NO Y factor: marginalising a
+    // conditional density over its own target gives 1, so the target
+    // is dropped from the product and from the sum index.
+    const want =
+      "(Sum[W](*(P(W|)@d * P(X|W,Z)@d * P(Y|W,Z,X)@m)) " +
+      "/ Sum[W](*(P(W|)@d * P(X|W,Z)@d)))";
+    check("Napkin tree == the spec's published ratio over W", got === want, `got ${got}`);
+    // AND THE RATIO IS REAL, not merely a class name. This is the
+    // invariant the original bug violated: the class said
+    // TIAN_C_FACTOR_RATIO while the tree was a bare P(Y|X).
+    check("the Napkin tree is a RATIO node", got.includes("/"), `got ${got}`);
+    // AND IT MARGINALISES W over a ratio, rather than conditioning on
+    // it. A tree that CONDITIONS on W is a different functional.
+    check("the Napkin ratio marginalises W", /^\(Sum\[W\]\(/.test(got), `got ${got}`);
   }
 }
 

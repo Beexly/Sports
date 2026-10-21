@@ -91,8 +91,20 @@ const PLAIN = graph(["X", "Y"], [["X", "Y"]]);
  * against the module output before being pinned (90 chars); the formatter renders a
  * RATIO as "numerator / denominator" and a MARGINAL_SUM as "Sum_{X}[...]".
  */
+// THE SPEC'S PUBLISHED NAPKIN TREE.
+//
+//   Ratio( Sum[W](*(P(W|)@d * P(X|W,Z)@d * P(Y|W,Z,X)@m)),
+//           Sum[W](*(P(W|)@d * P(X|W,Z)@d)) )
+//
+// The treatment factor P(X|W,Z) is a DENSITY at the assigned value
+// (@d), NOT a conditional mean (@m) -- and the denominator has no Y
+// factor, because marginalising a conditional density over its own
+// target gives 1.
+//
+// The difference is not cosmetic. On the spec's DGP (true do-effect
+// 5), the density form recovers 5.0141 and the mean form 3.8621.
 const NAPKIN_TREE =
-  "Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))] / Sum_{Y}[Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))]]";
+  "Sum_{W}[(P(W) * P(X|W,Z)@d * P(Y|W,Z,X))] / Sum_{W}[(P(W) * P(X|W,Z)@d)]";
 
 /** A082's answer, unchanged by the X20 fix. */
 const FOUR_TREE = "Sum_{Z}[(P(Z|W) * P(Y|W,Z,X))]";
@@ -130,6 +142,8 @@ function asRatio(factor: SymbolicFactor): Extract<SymbolicFactor, { kind: "RATIO
 function collectFactors(factor: SymbolicFactor): SymbolicFactor[] {
   switch (factor.kind) {
     case "OBSERVATIONAL_COND":
+      return [factor];
+    case "ASSIGNED_DENSITY":
       return [factor];
     case "MARGINAL_SUM":
       return [factor, ...collectFactors(factor.body)];
@@ -186,23 +200,77 @@ describe("X20 — the Napkin ratio", () => {
     expect(formatSymbolicFactor(formula)).toBe(NAPKIN_TREE);
   });
 
-  it("the ratio's denominator is the numerator's Y-marginal", () => {
+  it("the ratio's denominator is the numerator with the TARGET marginalised out", () => {
     const { formula } = expectIdentified(runShpitserPearlID(set("Y"), set("X"), NAPKIN));
     const ratio = asRatio(formula);
 
-    // Structurally: denominator = MARGINAL_SUM over the target, body = numerator.
+    // The denominator MARGINALISES THE TARGET out of the derived joint.
+    //
+    // It is NOT the numerator wrapped in a Sum_{Y}[...]. Marginalising
+    // a conditional density over its OWN target gives 1, so the target
+    // is DROPPED -- from the product and from the sum index -- and
+    // what is left is the derived joint's marginal over Y.
+    //
+    // The old form (Sum_{Y}[numerator]) was the same operation done
+    // the other way round: it kept the Y factor and integrated it.
+    // That is only equal when the Y factor is a DENSITY, and in the
+    // numerator the Y factor is a conditional MEAN -- so the two
+    // forms are NOT the same tree, and the old one divided by a
+    // marginal that did not match the numerator.
     if (ratio.denominator.kind !== "MARGINAL_SUM") {
       throw new Error(
         `expected the denominator to be a MARGINAL_SUM, got ${ratio.denominator.kind}`,
       );
     }
-    expect(ratio.denominator.sumOut).toEqual(["Y"]);
-    expect(ratio.denominator.body).toEqual(ratio.numerator);
+    // The sum index is W (the confounder still being integrated out),
+    // NOT Y: Y was dropped, not summed.
+    expect(ratio.denominator.sumOut).toEqual(["W"]);
 
-    // And textually: the denominator section is exactly the numerator wrapped in Sum_{Y}[...].
+    // And the numerator's Y factor is GONE from the denominator.
+    const denominatorText = formatSymbolicFactor(ratio.denominator);
+    expect(denominatorText).not.toContain("P(Y|");
+    expect(denominatorText).toContain("P(X|W,Z)@d");
+    // While the numerator KEEPS the Y factor, as a conditional mean.
     const numeratorText = formatSymbolicFactor(ratio.numerator);
-    expect(formatSymbolicFactor(ratio.denominator)).toBe(`Sum_{Y}[${numeratorText}]`);
-    expect(formatSymbolicFactor(ratio)).toBe(`${numeratorText} / Sum_{Y}[${numeratorText}]`);
+    expect(numeratorText).toContain("P(Y|W,Z,X)");
+    // And the treatment factor is a DENSITY in both.
+    expect(numeratorText).toContain("P(X|W,Z)@d");
+    expect(denominatorText).toContain("P(X|W,Z)@d");
+  });
+
+  it("the treatment factor is a DENSITY at the assigned value, not a conditional mean", () => {
+    // THE DEFECT THIS FILE NOW GUARDS AGAINST.
+    //
+    // The treatment X is HELD at its assigned value, so its factor in
+    // the derived joint is the density p(x|w,z) at that value -- not
+    // the conditional mean E[X|W,Z]. Reading it as a mean gives the
+    // wrong estimand, and the difference is measurable: on the spec's
+    // DGP the density form recovers 5.0141 and the mean form 3.8621,
+    // against a true do-effect of 5.
+    //
+    // This is asserted STRUCTURALLY, not by matching a string, so a
+    // formatter change cannot make the distinction invisible.
+    const { formula } = expectIdentified(runShpitserPearlID(set("Y"), set("X"), NAPKIN));
+    const ratio = asRatio(formula);
+
+    const factors = collectFactors(formula);
+    const densities = factors.filter((f) => f.kind === "ASSIGNED_DENSITY");
+    // TWO: one in the numerator and one in the denominator. The
+    // treatment is a density in BOTH branches -- the denominator is
+    // the same derived joint with the target marginalised out, so it
+    // carries the same treatment factor.
+    expect(densities.length).toBe(2);
+    for (const d of densities) {
+      expect(d.kind).toBe("ASSIGNED_DENSITY");
+      if (d.kind !== "ASSIGNED_DENSITY") return;
+      expect(d.target).toBe("X");
+    }
+    // And it is NOT a plain OBSERVATIONAL_COND any more -- a plain one
+    // is read as a mean, which is the bug.
+    const plainXConds = factors.filter(
+      (f) => f.kind === "OBSERVATIONAL_COND" && f.target === "X",
+    );
+    expect(plainXConds.length).toBe(0);
   });
 
   it("a bidirected arc means the answer must NOT be a bare P(Y|X)", () => {

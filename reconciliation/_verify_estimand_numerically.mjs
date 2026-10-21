@@ -156,6 +156,22 @@ function evalMean(f, tree, f2, x, xVal) {
         // a conditional mean
         return condMean(f2, target, node.given, valsOf(scope, assign));
       }
+      case "ASSIGNED_DENSITY": {
+        // The density of the target AT ITS ASSIGNED VALUE.
+        //
+        // This is the case the old evaluator got wrong. The target is
+        // not being summed out, so the sum-context rule would have
+        // read it as a conditional MEAN -- and the mean of the
+        // treatment factor is not the factor. The treatment is HELD at
+        // its assigned value, so its factor is the density there.
+        //
+        // On the Napkin graph this is the difference between
+        // recovering 5.0141 and recovering 3.8621 against a true
+        // do-effect of 5.
+        const target = node.target;
+        const val = scope.has(target) ? scope.get(target) : (assign[target] ?? f2.mean[target]);
+        return condDensity(f2, target, node.given, { ...valsOf(scope, assign), [target]: val });
+      }
       case "MARGINAL_SUM": {
         const v = node.sumOut[0];
         const sd = Math.sqrt(f2.cov[v][v]);
@@ -460,6 +476,154 @@ console.log("\n=== THE 4-NODE ESTIMAND, NUMERICALLY ===");
   console.log(
     `    EXOGENOUS, that coefficient was 0, and the two functionals were identical.`,
   );
+}
+
+
+// ==== TEMPORARY DIAGNOSTIC ====
+{
+  const rng = mkRng(20261020);
+  const gauss = gaussFrom(rng);
+  const samples = [];
+  for (let i = 0; i < 8000; i += 1) {
+    const U1 = gauss(); const U2 = gauss();
+    const W = 1.0 * U1 + 0.5 * U2 + 0.5 * gauss();
+    const Z = 1.0 * W + 0.5 * gauss();
+    const X = 1.0 * Z + 1.0 * U1 + 0.5 * gauss();
+    const Y = 5.0 * X + 2.0 * U2 + 0.5 * gauss();
+    samples.push({ W, Z, X, Y });
+  }
+  const f = fit(samples, ["W", "Z", "X", "Y"]);
+  // 1. GROUND TRUTH BY SIMULATION: intervene on X, regress Y on X.
+  const sim = [];
+  for (let i = 0; i < 200000; i += 1) {
+    const U1 = gauss(); const U2 = gauss();
+    const W = 1.0 * U1 + 0.5 * U2 + 0.5 * gauss();
+    const Z = 1.0 * W + 0.5 * gauss();
+    const x = 1.0 * Z + 1.0 * U1 + 0.5 * gauss();  // observed
+    const xInt = 1.0 * Z + 1.0 * U1 + 0.5 * gauss();
+    sim.push({ obs: x, y: 5.0 * xInt + 2.0 * U2 + 0.5 * gauss() });
+  }
+  const fSim = fit(sim, ["obs", "y"]);
+  const truth = cond(fSim, "y", ["obs"]).slope.obs ?? 0;
+  console.log(`  DIAG truth by simulation (do-intervention): ${truth.toFixed(4)}`);
+
+  // 2. THE CORRECT BACK-DOOR ESTIMAND: sum_w P(y|x,w,z) P(w|z), z FIXED at its mean.
+  // Linear-Gaussian: E[y|x,w,z] = mu_y + cov(y, [x,w,z]) inv(cov) ([x,w,z]-mu).
+  function condMean(g, target, given, assign) {
+    const gg = given.filter((v) => v !== target);
+    const A = gg.map((a) => gg.map((b) => g.cov[a][b]));
+    const b = gg.map((a) => g.cov[a][target]);
+    for (let i = 0; i < A.length; i++) A[i][i] += 1e-10;
+    const beta = solve(A, b);
+    let v = g.mean[target];
+    gg.forEach((gv, i) => { v += beta[i] * (assign[gv] - g.mean[gv]); });
+    return v;
+  }
+  function gaussPdf(x, m, sd) { const z = (x - m) / sd; return Math.exp(-0.5 * z * z) / (sd * Math.sqrt(2 * Math.PI)); }
+  const zFix = f.mean.Z, xFix = f.mean.X;
+  // Numerically integrate over w with weight P(w | z) (z fixed).
+  const sw = Math.sqrt(f.cov.W.W), mw = f.mean.W;
+  let num = 0, den = 0;
+  const N = 4001;
+  for (let i = 0; i < N; i++) {
+    const w = mw - 6 * sw + (12 * sw * i) / (N - 1);
+    const pwz = gaussPdf(w, condMean(f, "W", ["Z"], { Z: zFix }), Math.sqrt(f.cov.W.W));
+    const ey = condMean(f, "Y", ["X", "W", "Z"], { X: xFix, W: w, Z: zFix });
+    const eyp = condMean(f, "Y", ["X", "W", "Z"], { X: xFix + 0.5, W: w, Z: zFix });
+    num += pwz * (eyp - ey); den += pwz;
+  }
+  console.log(`  DIAG sum_w P(y|x,w,z) P(w|z) slope: ${(num / den).toFixed(4)}`);
+  // 3. THE MODULE'S TREE (which weights w by P(w|x,z)).
+  const NAPKIN = { nodes:["W","Z","X","Y"], directed:[["W","Z"],["Z","X"],["X","Y"]], bidirected:[["W","X"],["W","Y"]] };
+  const r = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), NAPKIN);
+  console.log(`  DIAG module tree effect: ${effect(f, r.formula, "X").toFixed(4)}`);
+  // 4. THE PLAIN CONDITIONAL E[y|x,z].
+  let num2 = 0, den2 = 0;
+  for (let i = 0; i < N; i++) {
+    const w = mw - 6 * sw + (12 * sw * i) / (N - 1);
+    const pwxz = gaussPdf(w, condMean(f, "W", ["X", "Z"], { X: xFix, Z: zFix }), Math.sqrt(f.cov.W.W));
+    const ey = condMean(f, "Y", ["X", "W", "Z"], { X: xFix, W: w, Z: zFix });
+    const eyp = condMean(f, "Y", ["X", "W", "Z"], { X: xFix + 0.5, W: w, Z: zFix });
+    num2 += pwxz * (eyp - ey); den2 += pwxz;
+  }
+  console.log(`  DIAG sum_w P(y|x,w,z) P(w|x,z) slope (= plain conditional): ${(num2 / den2).toFixed(4)}`);
+}
+
+// -----------------------------------------------------------------------
+// THE NAPKIN GRAPH: THE NUMERIC RECOVERY, ON THE GRAPH THE BUG WAS ABOUT.
+//
+// A083's 4-node block evaluates FOUR -- the graph with bidirected arcs
+// W <-> X and Z <-> Y. The X20 bug lived on the NAPKIN graph, whose
+// bidirected arcs are W <-> X and W <-> Y. So A083's numbers -- the
+// 4.9942 vs 5.0000 the goal spec quotes -- were never evidence about
+// the graph the ratio fix was for.
+//
+// The check below is the one that DISCRIMINATES. On the Napkin graph
+// the module's answer is a RATIO that marginalises W:
+//
+//     sum_w P(w) P(x|w,z) P(y|w,z,x)  /  sum_w P(w) P(x|w,z) sum_y' P(y'|w,z,x)
+//
+// and the truth is E[Y | do(X = x)] under a DGP where BOTH W <-> X and
+// W <-> Y are realised. So the DGP below puts a latent in W, X and Y.
+//
+// If the module regressed to the UNADJUSTED conditional P(Y|X) -- the
+// original X20 bug -- this check would fail, because the unadjusted
+// slope is biased by the W path.
+// -----------------------------------------------------------------------
+{
+  const rng = mkRng(20261020);
+  const gauss = gaussFrom(rng);
+  const samples = [];
+  for (let i = 0; i < 8000; i += 1) {
+    // U1 IS IN W AND X -- so W <-> X is realised.
+    // U2 IS IN W AND Y -- so W <-> Y is realised, which is the arc the
+    // Napkin graph has and the FOUR graph does not.
+    const U1 = gauss();
+    const U2 = gauss();
+    const W = 1.0 * U1 + 0.5 * U2 + 0.5 * gauss();
+    const Z = 1.0 * W + 0.5 * gauss();
+    const X = 1.0 * Z + 1.0 * U1 + 0.5 * gauss();
+    const Y = 5.0 * X + 2.0 * U2 + 0.5 * gauss();
+    samples.push({ W, Z, X, Y });
+  }
+  const f = fit(samples, ["W", "Z", "X", "Y"]);
+  const NAPKIN = {
+    nodes: ["W", "Z", "X", "Y"],
+    directed: [["W", "Z"], ["Z", "X"], ["X", "Y"]],
+    bidirected: [["W", "X"], ["W", "Y"]],
+  };
+  const r = runShpitserPearlID(new Set(["Y"]), new Set(["X"]), NAPKIN);
+  check("the Napkin graph is identified", r.ok === true, r.ok ? r.formulaClass : r.code);
+  if (r.ok) {
+    console.log(`  the module's tree: ${JSON.stringify(r.formulaClass)}`);
+    // The tree must BE a ratio. A class name is not a tree.
+    check("the Napkin tree is a RATIO", r.formula.kind === "RATIO", `kind ${r.formula.kind}`);
+    const est = effect(f, r.formula, "X");
+    console.log(`  the recovered effect: ${est.toFixed(4)}`);
+    // THE TRUE INTERVENTIONAL EFFECT.
+    //
+    // Y = 5*X + 2*U2 + noise, and U2 is NOT in X, so the do(X)
+    // effect on Y is exactly 5. The W <-> Y path confounds the
+    // OBSERVED relationship, and the ratio is what removes it.
+    check(
+      "the Napkin ratio recovers the true do-effect 5",
+      Math.abs(est - 5) < 0.3,
+      `got ${est.toFixed(4)}`,
+    );
+    // AND THE UNADJUSTED CONDITIONAL WOULD NOT.
+    //
+    // This is the check that says the ratio is doing work. The
+    // unadjusted P(Y|X) has the W and U2 paths in it, so its slope is
+    // biased -- and the bias is what the original bug shipped.
+    const condYX = cond(f, "Y", ["X"]);
+    const unadjusted = condYX.slope.X ?? 0;
+    console.log(`  the UNADJUSTED conditional slope (for contrast): ${unadjusted.toFixed(4)}`);
+    check(
+      "the ratio is not the unadjusted conditional",
+      Math.abs(unadjusted - est) > 0.05,
+      `unadjusted ${unadjusted.toFixed(4)} vs ratio ${est.toFixed(4)}`,
+    );
+  }
 }
 
 console.log(`\nVERDICT: ${failures === 0 ? "the module's estimands are numerically right" : `${failures} CHECKS FAILED`}`);

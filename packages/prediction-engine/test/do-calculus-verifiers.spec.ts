@@ -87,7 +87,7 @@ const FRONT: CausalADMG = {
  * claim about a string. So the string is the assertion.
  */
 const NAPKIN_RATIO_TREE =
-  "Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))] / Sum_{Y}[Sum_{W}[(P(W) * P(X|W,Z) * P(Y|W,Z,X))]]";
+  "Sum_{W}[(P(W) * P(X|W,Z)@d * P(Y|W,Z,X))] / Sum_{W}[(P(W) * P(X|W,Z)@d)]";
 
 /** Walk the tree and report whether it contains a RATIO node. */
 function hasRatioNode(factor: SymbolicFactor, seen = new Set<SymbolicFactor>()): boolean {
@@ -101,6 +101,8 @@ function hasRatioNode(factor: SymbolicFactor, seen = new Set<SymbolicFactor>()):
     case "MARGINAL_SUM":
       return hasRatioNode(factor.body, seen);
     case "OBSERVATIONAL_COND":
+      return false;
+    case "ASSIGNED_DENSITY":
       return false;
   }
 }
@@ -157,6 +159,40 @@ describe("T10 -- the A082 / A083 verifiers, as a CI gate", () => {
     const { code, output } = runVerifier("_verify_estimand_numerically.mjs");
     expect(code, `A083 failed:\n${output}`).toBe(0);
     expect(output).toContain("the module's estimands are numerically right");
+  });
+
+  it("T10g: the independent estimand probe -- the DENSITY form recovers ~5, the MEAN form does not", () => {
+    // THE INDEPENDENT EVIDENCE.
+    //
+    // A082 asserts the tree and A083 asserts the number, but both
+    // evaluate the module's OWN tree. This probe is a third,
+    // independent witness: it computes the candidate estimands
+    // DIRECTLY from the spec's DGP, with no reference to the
+    // module's tree at all.
+    //
+    // It is what establishes that the DENSITY convention is the right
+    // one -- not merely that the module is self-consistent. On the
+    // spec's DGP (true do-effect 5):
+    //
+    //   the goal-spec ratio, treatment as a DENSITY : 5.0141
+    //   the module's tree,   treatment as a MEAN    : 3.8621
+    //
+    // So the probe fails if the density/mean distinction is ever
+    // collapsed, because then the two numbers converge and the
+    // difference that makes the convention necessary disappears.
+    const { code, output } = runVerifier("_probe_napkin_estimands.mjs");
+    expect(code, `the estimand probe failed:\n${output}`).toBe(0);
+    // The truth, from the intervention simulation.
+    expect(output).toContain("TRUE do(X)   by intervention simulation : 5.0000");
+    // The density form recovers it.
+    expect(output).toMatch(/GOAL RATIO\s+p\(x\|w,z\) as a DENSITY\s+: 5\.0\d+/);
+    // The mean form does NOT.
+    expect(output).toMatch(/MODULE TREE\s+E\[x\|w,z\] as a MEAN\s+: 3\.8\d+/);
+    // And the CI base HOLDS, so the DGP really is a distribution the
+    // Napkin graph describes -- the discrepancy is the module's, not
+    // the DGP's.
+    expect(output).toContain("Z _||_ Y | W,X");
+    expect(output).not.toMatch(/Z _\|\|_ Y \| W,X[\s\S]{0,200}VIOLATED/);
   });
 
   it("T10f: the class and the tree agree -- the invariant X20 violated", () => {
