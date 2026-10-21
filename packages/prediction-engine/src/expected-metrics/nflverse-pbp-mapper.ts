@@ -27,6 +27,7 @@
 import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected-points.js";
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
+import type { PressureProxyDropbackPlay } from "./pressure-elusiveness-collision.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
 
 /**
@@ -58,6 +59,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // success rate
   "play_type", "yards_gained", "interception", "fumble_lost",
   "rusher_player_id", "receiver_player_id",
+  "week", "passer_player_id", "sack", "qb_hit",
   // drives
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
@@ -105,7 +107,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
-
+  readonly pressureCollisionPlays: readonly PressureProxyDropbackPlay[];
   readonly counts: {
     readonly sourceRows: number;
     /**
@@ -380,6 +382,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const pressureCollisionPlays: PressureProxyDropbackPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -570,6 +573,17 @@ export function mapNflversePbpToExpectedMetrics(
       const key = driveKeyOf(row);
       const playType = row["play_type"];
       const isScrimmage = (playType === "pass" || playType === "run") && (row["posteam"] ?? "") !== "";
+      if (playType === "pass") {
+        pressureCollisionPlays.push({
+          gameId: row["game_id"] ?? "",
+          week: Number(row["week"]),
+          posteam: row["posteam"] ?? "",
+          defteam: row["defteam"] ?? "",
+          passerPlayerId: row["passer_player_id"] ?? "",
+          sack: row["sack"] === "1" ? 1 : 0,
+          qbHit: row["qb_hit"] === "1" ? 1 : 0,
+        });
+      }
       const successPlay: SuccessPlay | null = isScrimmage
         ? {
             playId,
@@ -611,6 +625,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    pressureCollisionPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

@@ -159,3 +159,17 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Pressure vs. Elusiveness Collision (SHADOW).
+export {
+  buildPressureElusivenessCollision,
+  buildQbElusivenessProxyRow,
+  buildDefensePressureProxyRow,
+  buildPressureCollisionProvenance,
+  PRESSURE_ELUSIVENESS_MODEL_VERSION,
+  type PressureCollisionResult,
+  type PressureProxyDropbackPlay,
+  type QbElusivenessProxyRow,
+  type DefensePressureProxyRow,
+  type PressureWindowMode,
+} from "./pressure-elusiveness-collision.js";

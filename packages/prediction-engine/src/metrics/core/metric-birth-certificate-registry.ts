@@ -733,4 +733,14 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    domain: "game state",
+    id: "gse_pressure_elusiveness_collision",
+    publicName: "GSE Pressure-Elusiveness Collision",
+    sourceRightsRequired: ["public play-by-play modeling allowed", "derived rushing proxies only", "no raw tracking exposure"],
+    status: "SHADOW",
+    targetQuestion: "Who wins when pressure meets elusiveness?",
+    targetVariable: "expected sack rate per dropback",
+    validationMethods: ["bucket_lift", "walk_forward", "drift_test"],
+  },
 ] as const;
