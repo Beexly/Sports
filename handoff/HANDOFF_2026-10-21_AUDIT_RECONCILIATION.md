@@ -6,8 +6,8 @@
 **Repo:** `C:/Users/Garrett/Sports-wt-audit-20261020` (a git worktree of `C:/Users/Garrett/Sports`)
 **Branch:** `audit/reconciliation-2026-10-20`
 **Remote:** `https://github.com/Beexly/Sports.git`
-**HEAD at handoff:** `405de4ed2` — **identical on `origin`** (local and remote verified equal)
-**Scale:** 91 commits ahead of `origin/main`; 259 files changed, +190,749 / −10,465
+**HEAD at handoff:** `ce38d8280` — **identical on `origin`** (local and remote verified equal)
+**Scale:** 93 commits ahead of `origin/main`; 259 files changed, +190,749 / −10,465
 **Last updated:** 2026-10-21, after the GAP-27 and GAP-21 work (see §14 and §15)
 
 ---
@@ -51,12 +51,14 @@ A test that shares its implementation with the code it tests does not count. Ass
 | `handoff/GAP21_PUBLIC_PICKS_ENABLED_READERS.md` | **the 8-reader divergence + the one owner decision** (see §14) |
 | `handoff/GAP27_DRAFT_ONLY_X_TRANSPORT.md` | **the X-transport regex gap** (see §15) |
 | `handoff/G7_WIRED_TO_THE_LIVE_PUBLISH_PATH.md` | **G7 wired to the live publish path** (see §17) |
+| `handoff/GAP_CLOSURE_LEDGER.md` | **the gap closure ledger** (see §18) |
 | `handoff/APPS_WEB_SURFACE_FAILURES_CENSUS.md` | **the surface-suite census** (see §5) |
 | `handoff/WIRING_FEASIBILITY_THE_FINDING.md` | **why 7 of 9 gates have no live producer** (see §6) |
 | `handoff/SPEC_CORPUS_FINDINGS.md` | what the design spec revealed that the repo alone did not |
 | `handoff/SPEC_FORMULA_ERRORS_AND_WORKER_CORRECTIONS.md` | where the spec itself is wrong |
 | `handoff/TRUST_GATE_HOLE_AND_20_UNRUN_SUITES.md` | the trust-gate hole + the 20 unrun suites |
 | `reconciliation/gaps.json` | **28 gaps, 15 blocking the business model** (see §7) |
+| `reconciliation/gap_closures.json` | **the closure ledger** — every status re-derived by a probe (see §18) |
 | `reconciliation/final-report.md`, `final_executive_summary.md` | the audit's own report |
 
 ### The gap ledger has NO closure field
@@ -64,8 +66,9 @@ A test that shares its implementation with the code it tests does not count. Ass
 `reconciliation/gaps.json` records `id`, `severity`, `title`, `category`, `claim_tested`,
 `evidence`, `impact`, `recommended_action`, `blocks_current_business_model` — and **nothing
 that says whether a gap is closed**. 28 gaps, 15 blocking, and no way to ask which are
-fixed. **Adding a `status` field to each gap is an obvious, cheap, high-value next step**
-and is not done.
+fixed. **A `status` field is NOT the right shape** — `gaps.json` is GENERATED, so a hand-added
+field would be wiped on the next regeneration. The closure ledger in §18 is a SEPARATE file
+whose statuses are re-derived by a probe and re-checked by CI.
 
 ---
 
@@ -92,6 +95,7 @@ node scripts/guardrails/trust-gate.mjs
 
 **The 85 commits, in order, newest first** (`git log --oneline origin/main..audit/reconciliation-2026-10-20`):
 
+- `ce38d8280` **the gap closure ledger** — 28 gaps, every status re-derived by a probe, CI re-checks it
 - `405de4ed2` **G7 IS WIRED** — the circuit breaker now stops a drifting family on the live board
 - `9686cdef0` the founder already decided GAP-21 — the default diverges from the recorded law
 - `73effa158` GAP-21: eight readers of `PUBLIC_PICKS_ENABLED`, two defaults — and the one decision
@@ -814,3 +818,94 @@ why the test passed while `tsc` complained. This is the same trap as
   failures are `neon pool exhausted` errors). **The first production run is the real test**
   of whether the rule's thresholds behave on real families, and the plan's `g7Note` is the
   thing to read when it does.
+
+---
+
+## 18. THE GAP CLOSURE LEDGER — the hole is filled, and CI keeps it filled
+
+`handoff/GAP_CLOSURE_LEDGER.md` - `reconciliation/gap_closures.json` -
+`reconciliation/_verify_gap_closures.mjs`
+
+**THE LEDGER, AS IT STANDS:**
+
+```
+{"open": 18, "partial": 9, "closed": 1}
+```
+
+**One gap is closed.** That is the honest number, and it is much lower than the work feels
+like it accomplished -- **which is exactly why the ledger is worth having.**
+
+Four statuses, and the distinction matters: `closed` = the claim no longer holds **and a
+probe proves it**; `partial` = part is addressed and the probe measures how much; `open` =
+the claim still holds **and a probe proves it**; `not_attempted` = **nobody has measured
+it**. Conflating "open" with "not_attempted" would let a gap look audited when it was never
+checked.
+
+**A SEPARATE FILE, ON PURPOSE.** `gaps.json` is **generated** by `_build_gaps.py`, so a
+hand-added `status` field there would be **wiped on the next regeneration** and the ledger
+would silently rot back to "no status known" -- a failure that looks like a green build.
+
+**EVERY STATUS IS A PROBE RESULT.** Each gap carries a mechanical probe -- a grep, a file
+check, an artifact's own count -- and the script **runs them**. The probe is named in the
+ledger so a reader can check the probe rather than trust the answer. What they now measure,
+that a reader would not have guessed:
+
+- **GAP-11** -- **560 of 1014** non-test prediction-engine modules are unreachable from a
+  production entry; 255 arxiv-derived ones are unreachable. The gap's title said *"395 of
+  1014"* -- **the measured number is worse than the gap claimed.**
+- **GAP-20** -- **2,174 source files have ZERO importers** of 4,269 scanned; 888 more are
+  imported only inside their own package.
+- **GAP-15** -- the `walk_forward.json` artifact is **not on this branch**; the probe reads
+  it from `origin/grok/walk-forward-2026-10-14:...`. It still reports `gate_cleared=false`.
+
+### THE PROBES LIED TWICE, AND THAT IS THE POINT
+
+**First run: GAP-20 reported `closed` ("0 modules have zero importers").** It is **2,174**.
+The probe read `z.zeroImporters`; the artifact's key is `zero_importer_files`. The probe saw
+nothing and concluded there was nothing to fix. **A probe that measures the wrong thing
+reports a confident wrong answer** -- and a wrong answer in a closure ledger is worse than no
+ledger, because it looks authoritative.
+
+**Second: GAP-23 reported every named gate as wired.** The probe used a **prefix** match, so
+`evaluatePromotionForPublish` -- a *different* symbol -- counted as a caller of
+`evaluatePromotion`. The probe now matches exactly **and distinguishes a CALL from an
+import, a definition, and a docstring**. Corrected: **2 of the 5 named gates still have no
+live call site.**
+
+Also fixed: GAP-19 read `literature_coverage.json` (the file is `literature-coverage.json`);
+GAP-15 said "not on disk" when it lives on another branch; GAP-11 read a `barrelOnly` key
+that does not exist.
+
+**Each was caught by reading the probe against the artifact it claims to measure** -- the
+same discipline applied to the guards: *would this fail if the behaviour it pins broke?*
+
+### THE REGRESSION CHECK -- a closure is a claim CI re-checks
+
+The statuses are re-derived on every run, so a closure that stops holding flips itself. But
+a silent flip is not enough: the script reads the **previous** ledger first, and a gap that
+was `closed` and is no longer closed is a **regression** -- **exit 1, with the gap named**.
+
+**Proved, not asserted:** a false `closed` was planted on GAP-01 (genuinely open) and the
+script was re-run -> `exit = 1`, `!! GAP-01 was closed, is now open`. The ledger was restored
+and the script re-ran to exit 0. **And it is a CI step**, not a note.
+
+### What the ledger is NOT
+
+**It is not a claim that 1 of 28 is all the audit did.** The audit landed 93 commits: 17
+probe modules with mutation sweeps, 21 CI guardrail suites (322+ assertions that never gated
+a commit), 2 pre-existing `apps/web` failures fixed by asserting the *stronger* property, the
+G7 noise floor, GAP-27 closed, and G7 wired to the live publish path. **Most of that was
+never expressed as a `GAP-nn` item**, because the gaps were catalogued from the spec and the
+repo while the work was driven by what the probes found. **The ledger measures the gaps; it
+does not measure the audit.**
+
+### The four next things, ranked by what the ledger now says
+
+1. **GAP-20 (2,174 zero-importer files) and GAP-11 (560 unreachable modules)** -- the two
+   biggest measured numbers in the audit, and the same problem seen twice.
+2. **GAP-01 / 02 / 03** -- the Python publish path: the clamp, the missing gate, and the
+   bypass are one story.
+3. **GAP-21** -- the founder's law is recorded, the default diverges from it. One line, one
+   mint-time read. See `GAP21_PUBLIC_PICKS_ENABLED_READERS.md` section 6b.
+4. **GAP-24** -- still no gate registry. **This ledger is the closest thing that exists, and
+   it covers GAPS, not GATES.**
