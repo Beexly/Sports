@@ -6,8 +6,9 @@
 **Repo:** `C:/Users/Garrett/Sports-wt-audit-20261020` (a git worktree of `C:/Users/Garrett/Sports`)
 **Branch:** `audit/reconciliation-2026-10-20`
 **Remote:** `https://github.com/Beexly/Sports.git`
-**HEAD at handoff:** `1b34940f8` — **identical on `origin`** (local and remote verified equal)
-**Scale:** 85 commits ahead of `origin/main`; 259 files changed, +190,749 / −10,465
+**HEAD at handoff:** `73effa158` — **identical on `origin`** (local and remote verified equal)
+**Scale:** 88 commits ahead of `origin/main`; 259 files changed, +190,749 / −10,465
+**Last updated:** 2026-10-21, after the GAP-27 and GAP-21 work (see §14 and §15)
 
 ---
 
@@ -47,6 +48,8 @@ A test that shares its implementation with the code it tests does not count. Ass
 | `handoff/00-READ-CANONICAL.md` | the canonical entry point for this body of work |
 | `handoff/AUDIT_COVERAGE.md` | what is covered, what is not, and the honest boundary |
 | `handoff/G7_CIRCUIT_BREAKER_NOISE_FLOOR.md` | **the G7 finding** (see §4) |
+| `handoff/GAP21_PUBLIC_PICKS_ENABLED_READERS.md` | **the 8-reader divergence + the one owner decision** (see §14) |
+| `handoff/GAP27_DRAFT_ONLY_X_TRANSPORT.md` | **the X-transport regex gap** (see §15) |
 | `handoff/APPS_WEB_SURFACE_FAILURES_CENSUS.md` | **the surface-suite census** (see §5) |
 | `handoff/WIRING_FEASIBILITY_THE_FINDING.md` | **why 7 of 9 gates have no live producer** (see §6) |
 | `handoff/SPEC_CORPUS_FINDINGS.md` | what the design spec revealed that the repo alone did not |
@@ -80,7 +83,7 @@ node scripts/guardrails/trust-gate.mjs
 | check | expected | note |
 |---|---|---|
 | `tsc` errors in `packages/prediction-engine` | **exactly 64** | the baseline; the audit adds zero |
-| `packages/prediction-engine` suite | **8,571 passed / 0 failed** (+4 skipped) | ~4–5 min |
+| `packages/prediction-engine` suite | **8,575 passed / 0 failed** (+4 skipped) | 995 files, ~5 min |
 | `reconciliation/_audit_unenforced_thresholds.mjs` | exit **0** | the T12 dead-threshold auditor |
 | `reconciliation/_check_class_a_coverage.mjs` | exit **0** | the class-A coverage guard |
 | `scripts/guardrails/trust-gate.mjs` | exit **0** over 3,740 files | fixed this session |
@@ -88,6 +91,8 @@ node scripts/guardrails/trust-gate.mjs
 
 **The 85 commits, in order, newest first** (`git log --oneline origin/main..audit/reconciliation-2026-10-20`):
 
+- `73effa158` GAP-21: eight readers of `PUBLIC_PICKS_ENABLED`, two defaults — and the one decision
+- `a6fc8e714` GAP-27: the draft-only guardrail's X pattern missed the ACTUAL transport
 - `1b34940f8` ci: put 20 node:test guardrail suites in CI — 322 assertions that never gated a commit
 - `ef99c3700` apps/web: fix two "deleted file" surface-guard failures by asserting the STRONGER property
 - `2bb16c3e3` G7: the spec's circuit breaker halts 98.5% of HEALTHY families — and now it does not
@@ -514,18 +519,26 @@ reallocation amount 0.020825396829596037; share `{0.25996825396300494, 0.4710317
 
 ## 11. WHAT IS IN FLIGHT RIGHT NOW
 
-- **A delegated wiring task is running** (`delegation id deleg_15b51503`, subagent
-  `sa-0-6f642442`, transcript at
-  `C:\Users\Garrett\AppData\Local\hermes\cache\delegation\live\deleg_15b51503\task-0.log`).
-  Goal: wire the G7 breaker and the T16 settlement loop into the live publish path, with a
-  test that **fails without the wiring**, and commit + push to this branch. **Check whether
-  it has landed before starting overlapping work** — it will commit to
-  `audit/reconciliation-2026-10-20`.
-- **A previous wiring attempt was interrupted** after ~2.5 h of investigation and wrote
-  **zero** files. Its investigation was NOT preserved; the key lead that survived is
-  `selective-publish-runtime.ts:320`.
+**One delegated wiring task was running when this handoff was written:**
+`delegation id deleg_15b51503`, subagent `sa-0-6f642442`, transcript at
+`C:\Users\Garrett\AppData\Local\hermes\cache\delegation\live\deleg_15b51503\task-0.log`.
 
----
+**Goal:** wire the G7 breaker and the T16 settlement loop into the live publish path, with a
+test that **fails without the wiring**, and commit + push to this branch.
+
+**Status at handoff:** the call chain was confirmed but **no files had been written**. It
+was steered to land the G7 producer first, prove the test goes red without the wiring, and
+commit — with an explicit instruction that an honest *"here is the call chain and here is
+why the producer cannot be added safely"* is a better result than more investigation with no
+artifact.
+
+**CHECK FIRST:** `git log --oneline origin/audit/reconciliation-2026-10-20` — it may have
+landed after this document was written. **If it did not**, the lead survives in the
+transcript: `packages/prediction-engine/src/selective-publish-runtime.ts:320` computes
+exactly the `marketFamilyKey` format the G7 breaker emits. That is the join point.
+
+**A previous attempt at this same task was interrupted** after ~2.5 h of investigation and
+wrote **zero** files. Its investigation was not preserved, so the lead above is what remains.
 
 ## 12. THINGS THAT ARE TRUE AND EASY TO GET WRONG
 
@@ -554,19 +567,26 @@ reallocation amount 0.020825396829596037; share `{0.25996825396300494, 0.4710317
 
 ## 13. THE RECOMMENDED NEXT FOUR THINGS
 
-1. **Write `handoff/NODE_TEST_SUITES_IN_CI.md`** — CI points at it and it does not exist.
-   5 minutes. (And decide what to do about the 7 red `apps/mobile` suites.)
+1. **~~Write `handoff/NODE_TEST_SUITES_IN_CI.md`~~ — DONE.** CI pointed at it and it did
+   not exist. It now also carries the correction that the `apps/mobile` suites are
+   *unbuilt*, not red (145/150 after a build; 5 real pre-existing failures).
 2. **Add a `status` field to all 28 entries in `reconciliation/gaps.json`**, and close the
-   ones this audit actually closed. The audit has no closure record at all, which is the
+   ones this audit actually closed. The audit has **no closure record at all**, which is the
    single biggest bookkeeping hole in the work.
 3. **Build the GAP-24 gate registry** — one queryable table of gate id, file:line, what it
    checks, default state, and whether it blocks at mint, at read, or only in audit. The
    inventory already exists. This is the cheapest unbuilt thing in the audit and it makes
    every other gap checkable.
-4. **Bring the owner one decision, not many.** The `/api/picks` gate (§5) and the NGS prose
-   on the public board (§9) are **one** decision: should the public picks board be dark
-   when `PUBLIC_PICKS_ENABLED` is off, and what may it say? Everything else in that area
-   follows from the answer.
+4. **Bring the owner ONE decision, not many.** The `/api/picks` gate (§5), the NGS prose on
+   the public board (§9), and the `PUBLIC_PICKS_ENABLED` default (§14) are all the *same*
+   question: **should the public picks board be dark when its gate is not explicitly
+   opened, and what may it say?** The blast radius is now measured and narrow (unset
+   environments only — production explicitly sets the variable). The answer is **one line**
+   in `platform-config.ts:166` plus the mint-time read in `process-sport.ts`.
+
+**Two newly-verified things a next agent should not re-derive:** the T15 NGS leak is
+**not currently live** in production (zero markers in the live body), and the
+`apps/mobile` suites are **not failing** — they are never built.
 
 **And one thing to be careful about:** the honest temptation in this audit is to wire a gate
 so that it *looks* done. Seven of nine gates have no live evidence producer, and feeding
@@ -574,3 +594,110 @@ them rubber-stamped verdicts would be **worse than no gate** — the gate would 
 "passed" on evidence nobody produced. The G7 wiring is safe because the consumer (the
 durable-pause mechanism) is already live and the producer's verdict is computed from real
 settled bets. Do not extend that pattern past where the evidence is real.
+
+---
+
+## 14. GAP-21 — EIGHT readers of one env var, TWO defaults, and the one decision
+
+`handoff/GAP21_PUBLIC_PICKS_ENABLED_READERS.md`
+
+`PUBLIC_PICKS_ENABLED` is read in **eight** places. **Seven** treat an unset variable as
+OFF. **One** treats it as ON — and that one is the one that gates the live board:
+
+```
+packages/prediction-engine/src/platform-config.ts:166
+  publicPicksEnabled: parseBool(process.env["PUBLIC_PICKS_ENABLED"], true)   <-- ON
+```
+
+**The two subsystems that matter most disagree inside one process.** The route that serves
+the board asks `platform-config` (ON when unset); the honesty module that decides whether a
+public commitment exists asks its own parser (OFF when unset).
+
+**Everything else in the repo already says the outlier is wrong** — its own header
+(*"Every gate defaults to the SAFEST option"*), `.env.example` (`"false"`), a doc that
+cites the very file and says *"default `false`"*, and **the repo's own test**
+(`public-picks-gate-parity.test.ts` deletes the variable and asserts 503 — **it is RED**).
+
+**Live production, measured, with the caveat stated.** `/api/picks` 200, `daily-slate` 200,
+`public-surface-truth` 200, `canExposePublicPicks` true. The "PUBLIC_PICKS ON" hint comes
+from a **strict** parser, so **production explicitly sets the variable** — meaning flipping
+the default would not change the live deployment, only unset-variable environments.
+**The live SHA is not an ancestor of this branch, so live semantics are not attributed to
+local code.**
+
+**A CORRECTION to an earlier record:** the live `/api/picks` body has **zero** NGS markers
+(`CPOE`, `avgSeparation`, `avgYacAboveExpectation`, `nextGenStat`, `RYOE`, `aDOT` — all
+0). The ten initial "NGS" hits were the substring inside `"STANDINGS"`. **The T15 NGS leak
+is conditional, not currently live.** The earlier record of it as a live exposure was
+overstated.
+
+**Not changed, deliberately** — flipping the default and consulting the gate at mint time
+both change *what gets published*, which is a product posture decision, not an audit
+finding. The blast radius is now measured and narrow.
+
+**What was added:** `test/public-picks-enabled-readers.t21.spec.ts` (4 tests) that pin the
+table, require exactly one ON reader, and **fail if a ninth reader is added**. The mutation
+check caught a weakness in the test itself — the first scan missed a ninth reader written in
+the direct-read form. That is the **fourth** time in this audit a test passed while the code
+it should catch was wrong.
+
+**The decision, in one line:** *should an environment where the variable is UNSET serve the
+public picks board?* If no (the doctrine, the test, `.env.example` and 7 of 8 readers all
+say no) it is **one line** in `platform-config.ts:166` and the red test goes green.
+
+---
+
+## 15. GAP-27 — the guardrail's X pattern missed the ACTUAL transport
+
+`handoff/GAP27_DRAFT_ONLY_X_TRANSPORT.md`
+
+`workers/twitter-bot/x-client.js:19` hard-codes `https://api.x.com`. The guardrail's
+pattern was `api\.twitter\.com` — and **`api.twitter.com` appears nowhere in the tracked
+tree**, because X renamed the host. The old pattern **did not match** `api.x.com` (measured
+false), so a file hard-coding the live host passed clean. **The guardrail was green for the
+wrong reason.**
+
+**The gap's recommended action was incomplete.** It said *"add `api\.x\.com`; this is a
+one-line fix."* Applied literally, that **turns CI red** — 9 hits, 8 in the transport's own
+`*.test.js`. The regex was a symptom; the missing half is a **named boundary**.
+
+**What was done:** the pattern now matches the live host **and** still the legacy one; the
+transport became a **named, documented** allow-list entry (zero engine importers, triple-
+gated at send time, draft-only outbox); and the test-file rule — which covered `.ts` but
+**not `.js`** — was completed.
+
+**A new 5-test suite** asserts the pattern matches the real transport, that the fix did not
+narrow it, that the exception covers **exactly** three files, and — the one that matters —
+that the exception is **revoked automatically** if the transport ever becomes reachable from
+the engine. Both mutations (revert the regex; widen the whitelist) are caught, and the
+source was verified byte-identical after restore.
+
+---
+
+## 16. WHAT CHANGED SINCE THIS HANDOFF WAS FIRST WRITTEN
+
+| | |
+|---|---|
+| HEAD | `1b34940f8` → **`73effa158`** (88 commits ahead of `origin/main`) |
+| suite | 8,571 → **8,575** passed, 0 failed |
+| CI matrix | 20 → **21** guardrail suites |
+| new docs | `GAP21_PUBLIC_PICKS_ENABLED_READERS.md`, `GAP27_DRAFT_ONLY_X_TRANSPORT.md` |
+| new tests | `test/public-picks-enabled-readers.t21.spec.ts` (4), `scripts/guardrails/draft-only.test.mjs` (5) |
+| git safety | **437** local-only commits were on no remote → now **0**; all 15 carrier branches pushed to `origin/backup/local/*` |
+
+**Two corrections the next agent should know about:**
+
+1. **The `apps/mobile` suites are not red — they are unbuilt.** They import a compiled
+   build from `/tmp/gsebuild` and the app's own `verify.sh` SKIPS them when it is absent.
+   After building: **150 tests, 145 pass, 5 real pre-existing failures** (4 in
+   `client.test.js` — cache/ETag handling, three of them an uninitialised cache handle;
+   1 a repo-wide source-scan guard).
+2. **The T15 NGS leak is not currently live in production** (zero markers in the live
+   body). It is reachable in code and is recorded as a *conditional* exposure.
+
+**The wiring task was in flight at handoff time** (`deleg_15b51503`, transcript at
+`C:\Users\Garrett\AppData\Local\hermes\cache\delegation\live\deleg_15b51503\task-0.log`),
+steered to land the G7 producer with a test that fails without the wiring. **Check
+`git log --oneline origin/audit/reconciliation-2026-10-20` before starting that work** — it
+may have landed after this document was written. The lead, if it did not:
+`selective-publish-runtime.ts:320` computes the same `marketFamilyKey` the G7 breaker emits.
