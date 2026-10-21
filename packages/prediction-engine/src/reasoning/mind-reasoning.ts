@@ -154,8 +154,9 @@ export function findMindCorpusPaths(): string[] {
     path.resolve(process.cwd(), "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl"),
     path.resolve(process.cwd(), "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
     path.resolve(process.cwd(), "../prediction-engine/data/MIND_CORPUS_3000.jsonl"),
-    "C:/Users/Garrett/Sports/packages/prediction-engine/data/MIND_CORPUS_3000.jsonl",
-    "C:/Users/Garrett/Sports/docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl",
+    path.resolve(process.cwd(), "../../docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
+    path.resolve(__dirname, "../../data/MIND_CORPUS_3000.jsonl"),
+    path.resolve(__dirname, "../../../../docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
   ];
   return candidates.filter(p => fs.existsSync(p));
 }

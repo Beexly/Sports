@@ -837,7 +837,8 @@ export function findCorpusDirectories(): string[] {
     process.cwd(),
     path.resolve(process.cwd(), "../.."),
     path.resolve(process.cwd(), ".."),
-    "C:/Users/Garrett/Sports",
+    path.resolve(__dirname, "../../.."),
+    path.resolve(__dirname, "../../../.."),
   ];
   for (const base of candidates) {
     const d1 = path.join(base, "docs/arxiv-program/research/2026-10-17");

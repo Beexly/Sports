@@ -8,9 +8,9 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "open": 17,
+    "open": 16,
     "partial": 8,
-    "closed": 3
+    "closed": 4
   },
   "gaps": [
     {
@@ -61,7 +61,7 @@
       "evidence": [
         "packages/prediction-engine/src/game-context.ts:1009:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
         "packages/prediction-engine/src/game-context.ts:1085:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
-        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
+        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
       ],
@@ -104,12 +104,12 @@
       "detail": "the evaluator has live references",
       "probe": "the Reasoning Engine output is computed, stored, displayed -- and never used",
       "evidence": [
-        "packages/prediction-engine/src/index.ts:4614:  evaluateMindReasoning,",
+        "packages/prediction-engine/src/index.ts:4614:  evaluateMindReasoning,\r",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:4:  evaluateMindReasoning,",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:60:    const res = evaluateMindReasoning(seaAtDenCtx);",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:146:    const resultFull = evaluateMindReasoning(seaAtDenCtx, fullCorpus);",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:166:    const resultMutated = evaluateMindReasoning(seaAtDenCtx, mutatedCorpus);",
-        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:1193:export function evaluateMindReasoning(",
+        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:1194:export function evaluateMindReasoning(",
         "packages/prediction-engine/src/reasoning/situational-engine.ts:21:  evaluateMindReasoning,",
         "packages/prediction-engine/src/reasoning/situational-engine.ts:161:  const mindEvaluation = evaluateMindReasoning(context);"
       ],
@@ -119,14 +119,10 @@
       "id": "GAP-07",
       "severity": "HIGH",
       "title": "Corpus and mind-corpus file discovery is hardcoded to a developer machine, so production evaluates zero items",
-      "status": "open",
-      "detail": "a machine-specific path is still in the discovery code",
+      "status": "closed",
+      "detail": "no machine-specific path remains",
       "probe": "corpus and mind-corpus file discovery is hardcoded to a developer machine",
-      "evidence": [
-        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:152:export function findMindCorpusPaths(): string[] {",
-        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:171:  const p = customPath ?? findMindCorpusPaths()[0];",
-        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:173:    throw new Error(`Mind corpus file not found. Checked candidate paths: ${findMindCorpusPaths().join(\", \")}`);"
-      ],
+      "evidence": [],
       "blocks_current_business_model": true
     },
     {
@@ -201,8 +197,8 @@
         "packages/prediction-engine/src/ensemble/2202-11834-beta-linear-pool.ts:52:/** Apply the Beta Linear Pool recalibration B_{alpha,beta}(p). */",
         "packages/prediction-engine/src/ensemble/2406-15760-icm-drift-monitor.ts:13: * ADAPT if the offline replay fires an alarm within 3 weeks of the 2024 kickoff-rule change on the TOTALS stream with ≤1 false alarm per season on 2024–2026 data — then deploy the monitor as a weekly cron job feeding the recalibration queue. Reject if alarms are dominated by noise (≥3 false alarms/season) or if detection latency exceeds 6 weeks.",
         "packages/prediction-engine/src/ensemble/calibration-tree.ts:2: * Probability calibration trees: localized recalibration by game regime.",
-        "packages/prediction-engine/src/index.ts:2546:} from \"./online-beta-recalibration.js\";",
-        "packages/prediction-engine/src/index.ts:2554:} from \"./online-beta-recalibration.js\";",
+        "packages/prediction-engine/src/index.ts:2546:} from \"./online-beta-recalibration.js\";\r",
+        "packages/prediction-engine/src/index.ts:2554:} from \"./online-beta-recalibration.js\";\r",
         "packages/prediction-engine/src/inplay/safe-lead.ts:9: * (lead-safety, expected lead changes remaining). D recalibrated per season.",
         "packages/prediction-engine/src/invention/textgrad-pipeline.ts:80:        `recalibrate the probability mapping before sizing`,",
         "packages/prediction-engine/src/metalearning/1807-08912v2-alpaca-online-regression.ts:10: * Add ALPaCA (meta-learned priors for efficient online Bayesian regression) as GSE's weekly team-strength update mechanic: offline meta-training over historical seasons sliced as function families (theta = team-season latent parameters, x = game features, y = margin); basis network phi = 2x128 tanh MLP with 16-32 basis functions, meta-loss = NLL of the analytic posterior over random horizons t (weeks 1-16). Online: after each game, closed-form recursive Lambda^{-1}/Q updates (Eqs. 13-14) -- microseconds per team, no refit, no step-count tuning; predictive mean/variance feed the pick engine and Kelly sizing; known-Sigma_epsilon estimated empirically (paper's validation-MSE approach); exponential forgetting (Appendix A.3) with tuned decay for new-regime teams (rookie QB/HC) vs veterans. This is new to the corpus: GSE recalibrates weekly but not via closed-form posterior updates, and nothing does analytic Bayesian online adaptation. Improvement: heteroscedastic ALPaCA -- combine with ledger 1902's flow-conditioned GP, replacing the fixed Gaussian predictive variance with a normalizing-flow density over the last-layer outputs while keeping the analytic recursive mean update (ALPaCA = the online mechanics, 1902 = the noise shape); test NLL on heavy-tail weeks (weather/division games).",
@@ -259,7 +255,7 @@
       "evidence": [
         "packages/prediction-engine/src/game-context.ts:1009:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
         "packages/prediction-engine/src/game-context.ts:1085:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
-        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
+        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
       ],
@@ -434,7 +430,7 @@
       "severity": "MEDIUM",
       "title": "No gate registry exists, so gate state is not a queryable fact",
       "status": "closed",
-      "detail": "a registry with 37 gates exists",
+      "detail": "a registry with 38 gates exists",
       "probe": "no gate registry exists, so gate state is not a queryable fact",
       "evidence": [
         "reconciliation/gate_registry.json"

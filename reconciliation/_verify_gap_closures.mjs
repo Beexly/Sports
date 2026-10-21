@@ -162,7 +162,7 @@ const PROBES = {
   "GAP-07": {
     describe: "corpus and mind-corpus file discovery is hardcoded to a developer machine",
     run() {
-      const hits = grep("findMindCorpusPaths|C:\\\\\\\\Users|/Users/[a-z]", [
+      const hits = grep("C:\\\\\\\\Users|/Users/[a-z]|C:/Users", [
         "packages/prediction-engine/src/reasoning",
       ]);
       return hits.length > 0
