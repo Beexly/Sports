@@ -188,16 +188,72 @@ scale-invariance comparison across two different datasets passes for the wrong r
 
 ---
 
-## 7. What is NOT done
+## 7. The delegate modules, audited rather than accepted
+
+Both delegate modules were **already committed in `ef04b70c9`** before their reports arrived,
+so the reports were used as a *check* on committed work, not as the source of it. Each report
+was verified independently; two of its claims did not survive, and one gap in my own earlier
+verification was found.
+
+**What the reports got right, and I confirmed by re-measuring:**
+
+- The Jahn bound. Re-fetched the paper (arXiv:2504.20172) and confirmed Proposition 1
+  verbatim: `C = L·2^(Lw)·(Lw+1)^(2Lw+2)`, window `G[max(t_min(X)−C, 0), t_max(Y)]`. The
+  figure `2|V_slice|` **appears nowhere in the paper** — grep returns nothing — and at w=2 it
+  would be 4 where the paper says 2,916. The module's asserted values (32, 2916, 524288,
+  5832) recompute exactly from the formula. The spec's figure is not even a conservative
+  substitute: it is *too small*, and a too-small window turns an unidentifiable effect into an
+  "identifiable" verdict.
+- The lagged module's gradient is verified, and the verification **has teeth**. I mutated the
+  implementation three ways and checked the finite-difference test caught each:
+  - drop the `(I−W₀)^{-T}` determinant term → **3 tests fail**
+  - drop the transpose on that term → **3 tests fail** (the subtle one)
+  - scale `grad_A` by 2 → **2 tests fail**
+  The scale-invariance gate also has teeth: thresholding the **original-unit** coefficients
+  instead of the standardised ones → **2 tests fail**, which is exactly the failure the
+  module's design claims to prevent.
+
+**Two report claims that did NOT survive:**
+
+1. *"Unrelated pre-existing failure: `src/tracking/cv-camera-compensation.test.ts` fails in the
+   full suite."* It does not. Run in isolation: 5/5 pass, exit 0. And the full suite here
+   reports **0 failed** across 7,602 tests. The delegate's run predates my commits, and the
+   tree was in a different state; the claim does not hold against the committed tree.
+2. *"tsc reports 75 errors, all pre-existing."* The committed tree reports **64**. The
+   difference is the tree state, not a discrepancy in the analysis: the package's tsconfig
+   `include`s `src/**/*.ts` and `exclude`s `**/*.test.ts`, so the count moves with which
+   non-test files are present. Neither number is wrong for its own tree; 64 is the number for
+   the committed one, and the audited files contribute **0** to it.
+
+**A gap in MY OWN earlier verification, now closed.** I reported "0 errors in touched files" —
+but the package tsconfig **excludes `**/*.test.ts`**, so `tsc --noEmit -p tsconfig.json` never
+looked at three of the five files I touched (`fci-pag-r5-r10.test.ts`,
+`causal-graph-builder.test.ts`, `periodic-timeseries-id.test.ts`). The check was true and
+irrelevant. Re-run standalone with the repo's exact strict flags
+(`--strict --noUncheckedIndexedAccess --noImplicitReturns --noFallthroughCasesInSwitch`,
+`target ES2022`, `moduleResolution bundler`): **exit 0, no errors** in any of the four test
+files. The files were not broken — they had simply never been typechecked. A verifier that
+does not cover the case is not evidence about the case, and that applies to my own check as
+much as to the delegate's.
+
+**One addition to the delegate's work:** `periodic-timeseries-id.ts` lacked the
+`export const ENABLED = false` flag that every other unwired module in `src/causal/` carries.
+An unwired module without the flag is indistinguishable from one unwired by accident, and the
+repo's zero-importer sweep is the measurement that has to find the second kind. Added, with
+the reason in the source.
+
+---
+
+## 8. What is NOT done
 
 - **No R, so no differential run against pcalg.** Its rules were read as a second reading, not
   executed. A differential test against pcalg remains possible and would be the strongest
   available check on the rule semantics.
 - **The lagged module is `ENABLED = false`** and is not wired into any live path. Wiring changes
-  predictions and is a human call.
-- **The periodic-ID module** (`periodic-timeseries-id.ts`) implements Jahn's bound and the
-  witnessing/hedge identification, and passes its own 24 tests — but it is **not** covered by the
-  mutation sweep above, which is scoped to the FCI rules. It should get the same treatment
-  before it is relied on.
+  predictions and is a human call. Same for the periodic-ID module.
+- **The periodic-ID module is not covered by the mutation sweep**, which is scoped to the FCI
+  rules. Its own tests pass (24) and the bound was re-verified against the paper above, but a
+  mutation sweep over its window computation, budget guard and latency check would be the
+  same standard the FCI rules were held to.
 - **The Neon production deploy, the ITCROrcaGate wiring, the full settlement loop and the
   dashboard regeneration** are untouched, exactly as reported previously.
