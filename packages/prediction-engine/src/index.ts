@@ -5087,6 +5087,57 @@ export {
   GSEVerifyCartridge,
   WorldModelCartridgeRegistry,
 } from "./enterprise/universal-world-model-sdk.js";
+
+// Conformal Copula Kelly & TA-CQR Sizing (Component 7 / Invariant Matrix)
+export {
+  conformalRank,
+  taCqrScore,
+  taCqrLevels,
+  optimalLowerTailLevel,
+  frechetHoeffdingBounds,
+  isWithinFrechetHoeffding,
+  checkJointProbability,
+  assertJointProbability,
+  conformalHalfWidth,
+  slowConformalHalfWidth,
+  downsideThrottle,
+  conformalKellyStake as invariantConformalKellyStake,
+  slowConformalKellyStake,
+  SLOW_CONFORMAL_WINDOW_GAMES,
+  SLOW_CONFORMAL_COVERAGE,
+} from "./calibration/conformal-copula-kelly.js";
+export type {
+  FrechetHoeffdingBounds,
+  JointProbabilityCheck,
+  ConformalKellySizing,
+  ConformalKellySizingResult,
+  SlowConformalKellySizing,
+} from "./calibration/conformal-copula-kelly.js";
+
+// Automated Parlay Market Maker (APMM arXiv:2607.18299)
+export {
+  sgpFairPrice,
+  correlationDiscount,
+  hubThrottle,
+} from "./2607-18299-apmm-automated-parlay-market-maker.js";
+export type {
+  SgpLeg,
+} from "./2607-18299-apmm-automated-parlay-market-maker.js";
+
+// Decision-Time Price Archive
+export {
+  recordDecisionTimePrice,
+  validateDecisionTimePriceRow,
+  DECISION_TIME_PRICE_DIRNAME,
+  DEFAULT_DECISION_TIME_PRICE_DIR,
+} from "./edge-lab/decision-time-price-archive.js";
+export type {
+  DecisionTimePriceRow,
+  DecisionTimePriceRecordResult,
+  DecisionTimePriceRecordOptions,
+  PricedPropArchiveContext,
+} from "./edge-lab/decision-time-price-archive.js";
+
 export type {
   EnterpriseVerticalId,
   BitemporalWatermark,
@@ -5105,7 +5156,4 @@ export type {
   BenchmarkContext,
   BenchmarkOutcome,
 } from "./enterprise/universal-world-model-sdk.js";
-
-
-
 
