@@ -18036,3 +18036,9 @@ After-cutoff (not filed; next window): @PFF highest adjusted completion % (Willi
 - PARTIAL as marked: CAY and Prayer Yards player-name alignments; PGWE per-team parentheticals; @sfdata9ers target-depth middle rows; @GridironInfo_ completed-air-yards two name alignments; Bad Throws small-print dropback counts; @ChrisPennell16 full-32 chart; @Rob__Paul text tail and image; @FantasyPtsData two chart images not row-transcribed; @PFF rookie-safeties image not opened (may contain grades, unverified).
 - Unopened/relative-time items: @RyanPaganetti non-metric quote post (ID not recorded; bounded 5:45–7:32 PM by timeline order); @MagicSportsGuy "Shout out Matthew Golden" (time/ID not recorded); @EstablishTheRun two promos (relative times only); @PFF ~8:4x PM Collinsworth video and other non-metric items not individually opened; @SumerSports "Pressures Better Than Sacks" YouTube post exact time unverified (likely pre-window); @DonAtkinsonNFL two posts' exact times unverified (non-metric regardless).
 - Home feed is a sample, not a census.
+
+## 2026-10-20: Pressure-Elusiveness Collision Module (Q29)
+Jules implemented the SHADOW metric for pressure-elusiveness collision per queue item Q29. The `nflverse-pbp-mapper.ts` allowlist was extended with `week`, `passer_player_id`, `sack`, and `qb_hit`. A new pure module `pressure-elusiveness-collision.ts` calculates the expected sack rate per dropback using the pbp sack and qb_hit proxy. Tests verify proxy counting, population, floors, PIT discipline, and arithmetic. No configuration files were touched.
+
+## 2026-10-20 Code Review Revision
+Jules revised the `pressure-elusiveness-collision` module based on feedback. The module now correctly separates intermediate `buildQbElusivenessProxyRow` and `buildDefensePressureProxyRow` logic, rigorously applies team-game PIT logic, strictly applies proxy-based naming (`sackConversionOnProxy`, `avoidanceOnProxy`), and correctly documents spike behavior.
