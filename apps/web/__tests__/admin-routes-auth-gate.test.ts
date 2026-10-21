@@ -64,6 +64,9 @@ vi.mock("@sports/db", () => {
     update: vi.fn(async () => ({})),
   });
   return {
+    // The traced call path reads isStubMode off @sports/db (module-factory
+    // export-drift detector); this stub stands in for a REAL client, so false.
+    isStubMode: () => false,
     db: {
       game: model(),
       gameSignal: model(),

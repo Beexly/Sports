@@ -154,7 +154,9 @@ describe("Channel 87 Schedule", () => {
     it("returns error when show starts outside the capture window", () => {
       const invalid = { ...SAMPLE_BLOCK, startHour: 3 };
       const errors = validateShowBlock(invalid);
-      expect(errors.some((e) => e.includes("outside the 05:00"))).toBe(true);
+      // c5da5eb83 widened the window from the 05:00-23:00 legacy to
+      // 04:00-23:00 CT and the message names the current window.
+      expect(errors.some((e) => e.includes("outside the 04:00"))).toBe(true);
     });
   });
 

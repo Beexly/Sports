@@ -224,7 +224,13 @@ const REPLACERS: ReadonlyArray<{
   {
     name: "depth-charts",
     model: "depthChartEntry",
-    deleteWhere: { season: SEASON },
+    // The 2025+ nflverse schema has no week column (rows land at week 0 as the
+    // "current" chart), so ingestDepthCharts deletes ONLY the week buckets the
+    // run writes; a season-wide delete erased the backfilled week N-1/N pair
+    // and silently nulled the picks route's week-over-week continuity
+    // (depth-charts.ts "Replace only the week buckets THIS run writes"). The
+    // fixture's single record carries week 3.
+    deleteWhere: { season: SEASON, week: { in: [3] } },
     run: () =>
       ingestDepthCharts(SEASON, {
         now: NOW,

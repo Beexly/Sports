@@ -620,12 +620,19 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
 
-    // 1. The written status is terminal + non-access, and specifically NOT the
-    //    grace-granting PAST_DUE.
+    // 1. The written status is non-access, and specifically NOT the
+    //    grace-granting PAST_DUE. The surviving contract is the RECOVERABLE
+    //    non-granting INCOMPLETE (mapStripeStatus), not terminal CANCELED:
+    //    the out-of-order resurrection guard refuses any later non-CANCELED
+    //    sync for a subscription once CANCELED is written, so a member who
+    //    then paid the outstanding invoice could never get access back
+    //    (C-91/D2a). reconcile-entitlements classifies `unpaid` the same way,
+    //    so both writers agree on one status instead of racing to opposite
+    //    terminal states. `canceled`/`incomplete_expired` remain terminal.
     const upsertArg = mocks.subscriptionUpsert.mock.calls[0]?.[0] as {
       update: { status: string; tier: string; pastDueSince?: Date | null };
     };
-    expect(upsertArg.update.status).toBe("CANCELED");
+    expect(upsertArg.update.status).toBe("INCOMPLETE");
     expect(upsertArg.update.status).not.toBe("PAST_DUE");
 
     // 2. The END STATE. Replay the exact row the webhook just wrote through the

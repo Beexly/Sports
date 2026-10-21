@@ -106,6 +106,12 @@ const REGISTRY: Readonly<Record<string, readonly Site[]>> = {
   "apps/web/app/api/ops/props-slate/route.ts": [
     { kind: "capped-by-design", why: "Props slate builds for the next MAX_GAMES scheduled NFL games; cap bounds the slate, earliest kickoffs first, deliberate." },
   ],
+  "apps/web/lib/fantasy/dfs-current-slate.ts": [
+    { kind: "unbounded", why: "Read-only slate lookup: every unmerged fixture in the DFS slate window (now to SLATE_WINDOW_DAYS out) so each team's next opponent resolves; the time window bounds the set, not a take cap. Read-only: this file issues no writes." },
+  ],
+  "apps/web/lib/ops/microstructure-report.ts": [
+    { kind: "unbounded", why: "Cron reads every game in the 21-day horizon to build the microstructure report; window-bounded, no cap to truncate, read-only." },
+  ],
   "packages/ingestion-pipeline/src/freeze-slate-commitments.ts": [
     { kind: "unbounded", why: "Commits the whole slate; no cap to truncate." },
   ],

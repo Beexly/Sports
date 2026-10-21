@@ -25,9 +25,11 @@ vi.mock("@/lib/calibration/report", () => ({
 
 // /clv page module-level imports (db, Nav, Footer, …) are not under test.
 // Stub them so importing ClvScoreboard stays a pure presentational render.
+// isStubMode is included because the traced import path reads it; false = the
+// stub stands in for a real client, not the no-database stub mode.
 // prediction-engine is partially mocked: the page needs getReadinessGates,
 // but wilson/clopper-pearson helpers re-export real math from it.
-vi.mock("@sports/db", () => ({ db: {} }));
+vi.mock("@sports/db", () => ({ db: {}, isStubMode: () => false }));
 vi.mock("@sports/prediction-engine", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
   return {

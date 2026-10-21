@@ -243,9 +243,10 @@ function ReliabilityCurve({
               </span>
               {/* Devin Review (PR #737): the marker line at expectedWinRate
                   (confidence/100) visually implied "this is where the bar
-                  should land if calibrated": the Edge Index is a ranking
-                  signal, not a forecast probability, so there is no such
-                  target. Only the real, gated observed rate is shown. */}
+                  should land if the score were a forecast probability": the
+                  Edge Index is a ranking signal, not a forecast probability,
+                  so there is no such target. Only the real, gated observed
+                  rate is shown. */}
               <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
                 {publishable && (
                   <div
