@@ -367,14 +367,24 @@ describe("T12 -- the zero-unenforced-constants gate", () => {
       //
       // So the copy's root is REPOINTED at the repo, and the scratch
       // dir is added as an ABSOLUTE scan root.
+      // The copy scans ONLY the scratch directory.
+      //
+      // The whole repo is 4,875 files and takes ~13s to scan; the
+      // property being tested -- "the gate FAILS on a dead export" --
+      // needs exactly one dead export and nothing else. So the copy's
+      // SCAN_ROOTS is REPLACED, not appended to, and the copy's `root`
+      // is the scratch dir.
+      //
+      // The auditor's own `root` is the repo root, and the scratch dir
+      // is absolute, so the two together would scan the whole repo.
       const patched = auditorSrc
         .replace(
           'const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");',
-          `const root = ${JSON.stringify(ROOT)};`,
+          `const root = ${JSON.stringify(scratch)};`,
         )
         .replace(
-          'const SCAN_ROOTS = [',
-          `const SCAN_ROOTS = [\n  ${JSON.stringify(scratch)},`,
+          /const SCAN_ROOTS = \[[\s\S]*?\];/,
+          `const SCAN_ROOTS = [${JSON.stringify(scratch)}];`,
         );
       const patchedPath = join(scratch, "auditor.mjs");
       writeFileSync(patchedPath, patched, "utf8");
