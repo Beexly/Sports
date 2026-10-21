@@ -15,3 +15,6 @@ E-08 | Saints offensive inefficiency vs Lions | W1 DET 31 NO 30 (Sep 13) | NO sc
 Durability scale: DURABLE (recurs across multiple games/weeks) / SITUATIONAL (one opponent, one game context) / UNKNOWN (unevaluated).
 Status scale: PENDING VISUAL / SHIP (film-confirmed + logged) / ITERATE (needs re-examination) / KILL (film contradicts).
 All 8 edges: status PENDING VISUAL, durability UNKNOWN.
+
+## Video access blocker (Cycle 1)
+nfl-video.com Watch buttons are ad redirects only (no working player). YouTube full game found at https://www.youtube.com/watch?v=IsSMb8yjTGg (KC vs LAC W6) but headless browser cannot play (readyState 0). NFL.com game pages fail JS load. Video playback must be restored (e.g., local video file, working browser with video codecs, or authenticated NFL+) before any edge can be SHIP status.

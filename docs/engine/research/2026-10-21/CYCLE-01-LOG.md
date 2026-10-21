@@ -2,7 +2,13 @@
 Date: 2026-10-21 (Wed). Cycle: 1 of continuous. Status: RUNNING.
 
 ## Constraint (honest, stated up front)
-No video playback tool exists in this environment. I cannot watch film, count players on screen, read coverage shells, or visually confirm formations/motions/mismatches. Every entry below sourced from text (nfl.com, ESPN, Pro-Football-Reference, nfl-video.com replay index) is marked PENDING VISUAL CONFIRMATION. No claim is presented as film-verified.
+Video playback is blocked in this environment. Attempted sources:
+- nfl-video.com — page loads but all three "Server" Watch buttons and Condensed Game OK/FM buttons are ad redirects (nhlgamestoday.com, nbaontv.com); no working video player or embed on the page.
+- YouTube (youtube.com/watch?v=IsSMb8yjTGg — KC vs LAC W6 full game) — video element and movie_player exist but readyState stays 0, duration NaN, currentTime 0 after 8+ seconds; yt.player.getPlayerState() returns None. Headless browser blocked from video playback.
+- YouTube embed (youtube.com/embed/IsSMb8yjTGg) — no video element, no iframe player.
+- nfl.com game page — JavaScript errors on load (scrollWidth null).
+
+No film can be watched, no players counted, no coverage shells read, no formations/motions/mismatches visually confirmed. Every entry below sourced from text (nfl.com, ESPN, Pro-Football-Reference, nfl-video.com replay index) is marked PENDING VISUAL CONFIRMATION. No claim is presented as film-verified.
 
 ## What was examined (Cycle 1)
 Weeks 1–6 2026 NFL game map (all 16 games per week, 96 total). Sources: nfl.com weekly schedules, ESPN scoreboard, Pro-Football-Reference, nfl-video.com full-game-replay index.
