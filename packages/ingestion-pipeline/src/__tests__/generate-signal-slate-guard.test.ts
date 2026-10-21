@@ -98,8 +98,27 @@ const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 function boardResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 }
+/**
+ * The emission gate override these tests run under.
+ *
+ * The gate is now a CONSTITUTION, not a boolean: an override is evaluated by
+ * the same conjunction the on-disk artifact is (n >= 150 AND
+ * delta_vs_gaussian >= 0.01 AND crps <= 7.099). These tests exercise the
+ * MINTING path, not the gate, so the override supplies the evidence a real
+ * cleared walk-forward artifact would carry. The numbers are deliberately
+ * comfortable, not borderline: this constant is a precondition for minting,
+ * and the gate's own boundary behaviour is pinned in
+ * walk-forward-emission-gate.t15.test.ts.
+ */
+const MINTING_GATE_OVERRIDE = {
+  passed: true,
+  crps: 7.0,
+  n: 570,
+  deltaVsGaussian: 0.02,
+} as const;
+
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: { passed: true } });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: MINTING_GATE_OVERRIDE });
 }
 
 it("emits the 0-object and writes no Pick rows while the walk-forward gate is closed", async () => {

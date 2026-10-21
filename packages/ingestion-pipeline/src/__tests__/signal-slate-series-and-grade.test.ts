@@ -89,8 +89,25 @@ const BOARD = {
 
 const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 
+/**
+ * The emission gate override these tests run under.
+ *
+ * The gate is a CONSTITUTION, not a boolean: the override is evaluated by the
+ * same conjunction the on-disk artifact is (n >= 150 AND delta_vs_gaussian
+ * >= 0.01 AND crps <= 7.099). These tests exercise the SERIES/GRADE path,
+ * not the gate, so the override supplies the evidence a real cleared
+ * walk-forward artifact would carry. The gate's own boundary behaviour is
+ * pinned in walk-forward-emission-gate.t15.test.ts.
+ */
+const MINTING_GATE_OVERRIDE = {
+  passed: true,
+  crps: 7.0,
+  n: 570,
+  deltaVsGaussian: 0.02,
+} as const;
+
 const runSlate = () =>
-  generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: { passed: true } });
+  generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace(), emissionGate: MINTING_GATE_OVERRIDE });
 
 const createdData = (): Array<Record<string, unknown>> =>
   mocks.pickCreate.mock.calls.map((c) => (c[0] as { data: Record<string, unknown> }).data);

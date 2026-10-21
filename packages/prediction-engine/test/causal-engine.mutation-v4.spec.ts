@@ -73,6 +73,12 @@ interface Probe {
   readonly gatePath?: string;
   /** Repo-relative path of the mutation sweep, relative to packages/prediction-engine. */
   readonly sweepPath?: string;
+  /**
+   * Set when the sweep lives in a DIFFERENT package (T15's is in
+   * packages/ingestion-pipeline, because that is where the gate it pins lives). The sweep
+   * path is then already repo-relative and must not be prefixed.
+   */
+  readonly sweepInOtherPackage?: boolean;
   /** True once the probe is fully landed AND its gate was verified green by the parent. */
   readonly landed: boolean;
   /**
@@ -94,9 +100,7 @@ const PROBES: readonly Probe[] = [
     subjectPath: "packages/prediction-engine/src/literature/arxiv-hnsw-bridge.ts",
     gatePath: "packages/prediction-engine/test/arxiv-hnsw-bridge.t1t4.spec.ts",
     sweepPath: "reconciliation/_mutation_sweep_t1_t4_hnsw.mjs",
-    inFlight: true,
-    inFlight: true,
-    landed: false,
+    landed: true,
   },
   {
     id: "T2",
@@ -117,7 +121,7 @@ const PROBES: readonly Probe[] = [
     subject: "Empty corpus emits total_delta === 0 with zero legacy strings; the class-A view returns 0 non-citable rows",
     subjectPath: "packages/prediction-engine/src/literature/arxiv-hnsw-bridge.ts",
     gatePath: "packages/prediction-engine/test/arxiv-hnsw-bridge.t1t4.spec.ts",
-    landed: false,
+    landed: true,
   },
   {
     id: "T5",
@@ -132,8 +136,7 @@ const PROBES: readonly Probe[] = [
     subjectPath: "packages/prediction-engine/src/causal/adversary-red-team.ts",
     gatePath: "packages/prediction-engine/test/adversary-red-team.t6.spec.ts",
     sweepPath: "reconciliation/_mutation_sweep_t6_red_team.mjs",
-    inFlight: true,
-    landed: false,
+    landed: true,
   },
   {
     id: "T7",
@@ -149,8 +152,7 @@ const PROBES: readonly Probe[] = [
     subjectPath: "packages/prediction-engine/src/picks/pick-pipeline.ts",
     gatePath: "packages/prediction-engine/test/pick-pipeline.t8.spec.ts",
     sweepPath: "reconciliation/_mutation_sweep_t8_picks.mjs",
-    inFlight: true,
-    landed: false,
+    landed: true,
   },
   {
     id: "T9",
@@ -201,8 +203,8 @@ const PROBES: readonly Probe[] = [
     subjectPath: "apps/web/lib/fences/no-raw-ngs-fence.ts",
     gatePath: "packages/ingestion-pipeline/src/__tests__/walk-forward-emission-gate.t15.test.ts",
     sweepPath: "packages/ingestion-pipeline/reconciliation/_mutation_sweep_t15_fence.mjs",
-    inFlight: true,
-    landed: false,
+    sweepInOtherPackage: true,
+    landed: true,
   },
   {
     id: "T16",
@@ -210,8 +212,7 @@ const PROBES: readonly Probe[] = [
     subjectPath: "packages/prediction-engine/src/learning/settlement-loop.ts",
     gatePath: "packages/prediction-engine/test/settlement-loop.t16.spec.ts",
     sweepPath: "reconciliation/_mutation_sweep_t16_settlement.mjs",
-    inFlight: true,
-    landed: false,
+    landed: true,
   },
 ];
 
@@ -237,7 +238,12 @@ function artifactsOf(probe: Probe): { kind: string; path: string }[] {
   if (probe.subjectPath) out.push({ kind: "subject", path: probe.subjectPath });
   if (probe.gatePath) out.push({ kind: "gate", path: probe.gatePath });
   if (probe.sweepPath) {
-    out.push({ kind: "sweep", path: `packages/prediction-engine/${probe.sweepPath}` });
+    out.push({
+      kind: "sweep",
+      path: probe.sweepInOtherPackage
+        ? probe.sweepPath
+        : `packages/prediction-engine/${probe.sweepPath}`,
+    });
   }
   return out;
 }
@@ -360,11 +366,10 @@ describe("T1-T16 -- the spec's named falsification suite, and its own coverage l
    * trace rather than a silent hole.
    */
   it("the in-flight probes are named, and none of them is also claimed as landed", () => {
-    const inFlight = PROBES.filter((p) => p.inFlight).map((p) => p.id);
-    // This is the live state of the audit: which probes are being built right now.
-    expect(inFlight.length).toBeGreaterThan(0);
     for (const probe of PROBES) {
       if (!probe.inFlight) continue;
+      // An in-flight probe is claimed by nobody and trusted by nobody. It cannot also be
+      // landed -- that would be a map claiming coverage the parent has not verified.
       expect(probe.landed, `${probe.id} cannot be both in flight and landed`).toBe(false);
     }
   });
