@@ -450,10 +450,10 @@
       "detail": "the mechanisms are still four separate ones",
       "probe": "the no-publish doctrine is enforced by four separate mechanisms",
       "evidence": [
-        ".github/workflows/ci.yml:166:              - scripts/guardrails/draft-only.test.mjs",
-        ".github/workflows/ci.yml:314:  draft-only:",
-        ".github/workflows/ci.yml:328:      - name: Run draft-only guardrail",
-        ".github/workflows/ci.yml:329:        run: node scripts/guardrails/draft-only.mjs",
+        ".github/workflows/ci.yml:181:              - scripts/guardrails/draft-only.test.mjs",
+        ".github/workflows/ci.yml:329:  draft-only:",
+        ".github/workflows/ci.yml:343:      - name: Run draft-only guardrail",
+        ".github/workflows/ci.yml:344:        run: node scripts/guardrails/draft-only.mjs",
         "packages/prediction-engine/src/honesty/commit-reveal.ts:55:    throw new Error(\"commitPick: salt required (do not invent one).\");"
       ],
       "blocks_current_business_model": true
@@ -466,9 +466,9 @@
       "detail": "the ban is still enforced in CI and at runtime",
       "probe": "the 'math you can read' AI-framing ban is still enforced in CI and at runtime",
       "evidence": [
-        ".github/workflows/ci.yml:173:              - scripts/guardrails/trust-gate.test.mjs",
-        ".github/workflows/ci.yml:235:  trust-gate:",
-        ".github/workflows/ci.yml:260:        run: node scripts/guardrails/trust-gate.mjs",
+        ".github/workflows/ci.yml:188:              - scripts/guardrails/trust-gate.test.mjs",
+        ".github/workflows/ci.yml:250:  trust-gate:",
+        ".github/workflows/ci.yml:275:        run: node scripts/guardrails/trust-gate.mjs",
         "apps/web/lib/trust-claims.ts:13: *   2. Provide a banned-phrase list (the kind of language a sports picks",
         "apps/web/lib/trust-claims.ts:71:  /** The approved copy, or canonical phrasing for banned entries. */",
         "apps/web/lib/trust-claims.ts:79:  /** Short note explaining why the claim is approved / gated / banned. */",
