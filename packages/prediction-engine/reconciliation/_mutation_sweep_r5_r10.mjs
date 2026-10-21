@@ -106,13 +106,31 @@ const BREAK_ANTECEDENT = [
 ];
 
 /**
- * Run the suite against the current source and return the set of FAILED test titles.
+ * Run the suite against the current source and return the set of PASSED test titles.
  *
- * The JSON reporter is the source of truth here. `assertionResults[].status` is
- * "passed" | "failed" | "pending", and `title` is the `it(...)` text, which is exactly
- * what the expectations below are written against.
+ * THE PASS SET, NOT THE FAILED SET. A mutation is DETECTED when the named test did not PASS.
+ * That covers all three ways a mutation can be caught: an assertion failure, a crash, and a
+ * test that never ran.
+ *
+ * WHY THIS MATTERS, AND WHY IT WAS CHANGED. This sweep originally looked for
+ * `status === "failed"` and required the named test to be there. That is the fragile kind of
+ * detection: a mutation that makes the module CRASH the vitest worker produces no "failed"
+ * entry at all -- the test never reports, so its title is in neither the failed nor the passed
+ * set -- and requiring a "failed" entry then reports "STILL PASSED" for a mutation that did
+ * break the suite. That is exactly backwards, and it is the bug the periodic-ID sweep's first
+ * run exposed (there, the budget-guard mutation allocated 1,572,870 nodes and killed the
+ * worker).
+ *
+ * This sweep's own mutations are all rule-level -- they change marks in a small hand-built
+ * graph -- so none of them can OOM a worker, and its 14/14 result stands as measured. But the
+ * logic is the fragile kind, so it is fixed the same way.
+ *
+ * The JSON reporter is the source of truth. The verbose reporter prints a failed test as
+ * `  x file.ts > describe > it`, and matching on the whole line finds nothing -- which is how
+ * this sweep's first version reported "NOT PINNED" for every rule while every test was in fact
+ * pinned.
  */
-function failedTitles() {
+function passedTitles() {
   rmSync(REPORT, { force: true });
   try {
     execFileSync("node", [VITEST, "run", "--reporter=json", `--outputFile=${REPORT}`, ...TESTS], {
@@ -123,19 +141,44 @@ function failedTitles() {
     // A non-zero exit is EXPECTED for a mutation that breaks a test; the report still lands.
   }
   const report = JSON.parse(readFileSync(REPORT, "utf8"));
-  const failed = new Set();
+  const passed = new Set();
   for (const file of report.testResults) {
     for (const a of file.assertionResults) {
-      if (a.status === "failed") failed.add(a.title);
+      if (a.status === "passed") passed.add(a.title);
     }
   }
-  return failed;
+  return passed;
 }
+
+/**
+ * EVERY test title in the rule test file, verbatim.
+ *
+ * The baseline round requires ALL of them to pass AND the count to match, so the detection
+ * logic cannot be merely inverted: a run where the worker crashed after the first few tests
+ * would not satisfy it.
+ */
+const EXPECTED_BASELINE_PASS = [
+  "turns an uncovered circle cycle into undirected edges",
+  "does NOT fire when the cycle is shielded",
+  "does NOT fire when a consecutive triple on the path is shielded",
+  "does NOT fire when alpha and theta are adjacent",
+  "turns the circle at beta into a tail when beta has an undirected edge",
+  "does NOT fire when beta has no circle",
+  "does NOT fire when the circle is at the far end of the edge",
+  "turns the circle at beta into a tail when alpha and gamma are non-adjacent",
+  "does NOT fire when alpha and gamma are adjacent",
+  "turns alpha o-> gamma into alpha -> gamma given a directed path",
+  "does NOT fire without a directed path from alpha",
+  "turns alpha o-> gamma into alpha -> gamma given an uncovered p.d. path",
+  "does NOT fire when the second vertex is adjacent to gamma",
+  "turns alpha o-> gamma into alpha -> gamma given two non-adjacent p.d. paths",
+  "does NOT fire when the two paths start at adjacent vertices",
+];
 
 let broken = 0;
 
 try {
-  console.log("=== PHASE 1: disable the rule; the pinning test MUST fail ===");
+  console.log("=== PHASE 1: disable the rule; the pinning test MUST NOT PASS ===");
   for (const rule of DISABLE) {
     const needle = `if (${rule.call}) changed = true;`;
     if (!original.includes(needle)) {
@@ -144,17 +187,17 @@ try {
       continue;
     }
     writeFileSync(SRC, original.replace(needle, `/* MUTANT: ${rule.name} disabled */`));
-    const failed = failedTitles();
-    const ok = failed.has(rule.expect);
-    if (!ok) broken++;
+    const passed = passedTitles();
+    const detected = !passed.has(rule.expect);
+    if (!detected) broken++;
     console.log(
-      `${ok ? "OK  " : "FAIL"} ${rule.name}: "${rule.expect}" -> ${
-        ok ? "failed as required" : "STILL PASSED -- the test does not pin this rule"
+      `${detected ? "OK  " : "FAIL"} ${rule.name}: "${rule.expect}" -> ${
+        detected ? "did not pass, as required" : "STILL PASSED -- the test does not pin this rule"
       }`,
     );
   }
 
-  console.log("\n=== PHASE 2: break the antecedent; the named test MUST fail ===");
+  console.log("\n=== PHASE 2: break the antecedent; the named test MUST NOT PASS ===");
   for (const mut of BREAK_ANTECEDENT) {
     const occurrences = original.split(mut.from).length - 1;
     if (occurrences !== 1) {
@@ -163,24 +206,33 @@ try {
       continue;
     }
     writeFileSync(SRC, original.replace(mut.from, mut.to));
-    const failed = failedTitles();
-    const ok = failed.has(mut.expect);
-    if (!ok) broken++;
+    const passed = passedTitles();
+    const detected = !passed.has(mut.expect);
+    if (!detected) broken++;
     console.log(
-      `${ok ? "OK  " : "FAIL"} ${mut.name}: "${mut.expect}" -> ${
-        ok ? "failed as required" : "STILL PASSED -- the test does not pin the antecedent"
+      `${detected ? "OK  " : "FAIL"} ${mut.name}: "${mut.expect}" -> ${
+        detected ? "did not pass, as required" : "STILL PASSED -- the test does not pin the antecedent"
       }`,
     );
   }
 
-  console.log("\n=== BASELINE (no mutation): NO test may fail ===");
+  console.log("\n=== BASELINE (no mutation): EVERY test MUST pass ===");
   writeFileSync(SRC, original);
-  const baselineFailed = failedTitles();
-  if (baselineFailed.size > 0) {
+  const baselinePassed = passedTitles();
+  // Every test in the file must pass, and the count must be the whole file. A baseline that
+  // passes only SOME of the tests would let a broken detection logic look correct.
+  const notPassed = [...EXPECTED_BASELINE_PASS].filter((t) => !baselinePassed.has(t));
+  if (notPassed.length > 0) {
     broken++;
-    console.log(`FAIL baseline: ${[...baselineFailed].join(" | ")}`);
+    console.log(`FAIL baseline: these did not pass: ${notPassed.join(" | ")}`);
+  } else if (baselinePassed.size !== EXPECTED_BASELINE_PASS.length) {
+    broken++;
+    console.log(
+      `FAIL baseline: ${baselinePassed.size} passed but ${EXPECTED_BASELINE_PASS.length} were expected -- ` +
+        "the report and the expectation disagree, so the detection logic cannot be trusted",
+    );
   } else {
-    console.log("OK   baseline: all tests pass with the unmutated source");
+    console.log(`OK   baseline: all ${baselinePassed.size} tests pass with the unmutated source`);
   }
 } finally {
   writeFileSync(SRC, original);

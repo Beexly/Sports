@@ -526,6 +526,34 @@ describe("T11b -- the Zhang (2008) R5-R10 rules are IMPLEMENTED AND PINNED", () 
     expect(code, `the R5-R10 mutation sweep failed:\n${output}`).toBe(0);
   });
 
+  it("the PERIODIC-ID sweep exits 0 -- the Jahn bound and every refusal are pinned", () => {
+    // The periodic-ID module was written by a delegate, and a delegate's passing test suite
+    // is evidence about the delegate's tests, not about the requirement. This sweep holds
+    // the module to the same standard the FCI rules were held to: the Proposition 1 bound
+    // is broken arithmetically, and each refusal (the node budget, the latency mismatch, the
+    // out-of-scope query, the inexactly-representable bound) is deleted, and the named test
+    // must fail each time.
+    //
+    // The sweep's FAILURE MODE is not a wrong answer, it is a SILENTLY SMALLER ANSWER: a
+    // window that is too small reports a confident "identifiable" for an effect that is not,
+    // because the hedge that proves unidentifiability lives outside the truncated window and
+    // is never seen. So the refusals are the half that matters most, and the sweep weights
+    // them accordingly.
+    const { code, output } = runPackageScript("reconciliation/_mutation_sweep_periodic_id.mjs");
+    expect(code, `the periodic-ID mutation sweep failed:\n${output}`).toBe(0);
+  });
+
+  it("the periodic-ID sweep actually RAN its rounds -- an exit code alone proves nothing", () => {
+    // A sweep that found no call site, or that matched no test title, would exit 0 having
+    // checked nothing. The round names are asserted instead, because they are the evidence
+    // that the sweep reached every property and every refusal.
+    const { output } = runPackageScript("reconciliation/_mutation_sweep_periodic_id.mjs");
+    expect(output).toContain("PHASE 1: break the computed values");
+    expect(output).toContain("PHASE 2: remove a refusal");
+    expect(output).toContain("OK   baseline: all 24 tests pass");
+    expect(output).not.toContain("STILL PASSED");
+  });
+
   it("the sweep actually RAN its rounds -- an exit code alone proves nothing", () => {
     // A sweep that found no call site, or that matched no test title, would exit 0 having
     // checked nothing. The round names are asserted instead, because they are the evidence
@@ -537,7 +565,7 @@ describe("T11b -- the Zhang (2008) R5-R10 rules are IMPLEMENTED AND PINNED", () 
       expect(output).toContain(`${rule}:`);
     }
     // And the baseline round must be clean, or a sweep that fails everything proves nothing.
-    expect(output).toContain("OK   baseline: all tests pass with the unmutated source");
+    expect(output).toContain("OK   baseline: all 15 tests pass with the unmutated source");
     expect(output).not.toContain("STILL PASSED");
   });
 

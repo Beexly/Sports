@@ -188,7 +188,78 @@ scale-invariance comparison across two different datasets passes for the wrong r
 
 ---
 
-## 7. The delegate modules, audited rather than accepted
+## 7. The periodic-ID module, held to the same standard
+
+The audit's own rule is: *"when subagents write code, AUDIT it with the repo's own measurement
+tools before committing it. A subagent's passing test suite is evidence about the subagent's
+tests, not about the requirement."* The periodic-ID module was written by a delegate and its
+24 tests passed — so it was swept the same way the FCI rules were.
+
+`packages/prediction-engine/reconciliation/_mutation_sweep_periodic_id.mjs`:
+
+- **Phase 1 — the computed values.** Break the arithmetic: the bound's exponent, the window's
+  lower-edge clamp, the node count, the verdict. Each named test must fail.
+- **Phase 2 — the refusals.** Remove a guard, or replace a refusal with a silent truncation.
+  Each named test must fail.
+
+**This module's failure mode is not a wrong answer, it is a silently smaller answer.** The
+bound C is exponential in the width, so a window that is too small does not produce a wrong
+number — it produces a confident "identifiable" verdict for an effect that is *not* identifiable,
+because the hedge that proves unidentifiability lives outside the truncated window and is never
+seen. So the refusals are the half that matters most, and the sweep weights them accordingly.
+
+**Result: 10/10 mutations detected, baseline clean (all 24 tests pass), exit 0, 16.7 s.**
+
+| Mutation | Detected by |
+|---|---|
+| bound exponent `2Lw+2` → `2Lw` | the exact-bound test (`expected 8 to be 32`) |
+| window lower edge not clamped at 0 | the clamping test |
+| node count drops the width | the `k*w` test |
+| verdict hardcoded to identifiable | the bow-arc UNIDENTIFIABLE test |
+| node budget inflated by 1M | the budget-refusal test |
+| window silently capped instead of refused | the never-truncates test |
+| latency-match guard deleted | the latency-mismatch test |
+| out-of-scope refusal deleted | the uncovered-query test |
+| inexactly-representable bound rounded | the too-large-bound test |
+| empty outcome set accepted | the malformed-input test |
+
+### Two bugs in the sweep itself — found by the sweep's own first run
+
+The sweep's first version reported two mutations as undetected. **Both were bugs in the sweep,
+not in the module**, and both are the same class of error the FCI sweep's first version made:
+
+1. **A misspelled test title.** The expectation read `(L*w+1)^(2*L*w+2)`; the actual title is
+   `(L*w + 1)^(2*L*w + 2)`. A title that does not match the report matches nothing.
+2. **Looking for `status === "failed"` instead of "did not pass".** Deleting the budget guard
+   outright lets the w=3 blow-up test allocate 1,572,870 nodes, which kills the vitest worker
+   with an out-of-memory crash — the test never reports, so its title appears in *neither* the
+   failed nor the passed set. Requiring a "failed" entry then reports "STILL PASSED" for a
+   mutation that did break the suite, which is exactly backwards. Detection is now "the named
+   test did not PASS", which covers an assertion failure, a crash, and a test that never ran.
+
+The second bug is the more dangerous one, and it is worth stating plainly: **a sweep that
+detects crashes as "not a failure" will report a clean bill of health for a mutation that
+destroyed the run.** The baseline round now requires all 24 titles to pass *and* the count to
+match, so the detection logic cannot be merely inverted. The baseline is what proves the
+detector works.
+
+One mutation was changed for safety rather than detection: the budget-guard round inflates the
+budget by a million instead of deleting the guard, because deletion triggers the OOM above. A
+sweep that can take the machine out is a sweep that does not belong in CI. The inflation
+detects the same defect — the budget not being consulted — without the blast radius.
+
+### And the same class of bug in the FCI sweep
+
+The FCI sweep has the identical detection logic, and the identical hazard: it looked for
+`status === "failed"`. Its mutations are all rule-level (they change marks in a small
+hand-built graph), so none of them can OOM a worker, and its 14/14 result stands as measured.
+But the logic is the fragile kind, and the fix is the same: the FCI sweep now detects "did not
+pass" as well, and its baseline requires every named test to pass. **Re-measured after the
+change: 14/14, exit 0.**
+
+---
+
+## 8. The delegate modules, audited rather than accepted
 
 Both delegate modules were **already committed in `ef04b70c9`** before their reports arrived,
 so the reports were used as a *check* on committed work, not as the source of it. Each report
