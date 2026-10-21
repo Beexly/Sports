@@ -6,8 +6,8 @@
 **Repo:** `C:/Users/Garrett/Sports-wt-audit-20261020` (a git worktree of `C:/Users/Garrett/Sports`)
 **Branch:** `audit/reconciliation-2026-10-20`
 **Remote:** `https://github.com/Beexly/Sports.git`
-**HEAD at handoff:** `73effa158` — **identical on `origin`** (local and remote verified equal)
-**Scale:** 88 commits ahead of `origin/main`; 259 files changed, +190,749 / −10,465
+**HEAD at handoff:** `405de4ed2` — **identical on `origin`** (local and remote verified equal)
+**Scale:** 91 commits ahead of `origin/main`; 259 files changed, +190,749 / −10,465
 **Last updated:** 2026-10-21, after the GAP-27 and GAP-21 work (see §14 and §15)
 
 ---
@@ -50,6 +50,7 @@ A test that shares its implementation with the code it tests does not count. Ass
 | `handoff/G7_CIRCUIT_BREAKER_NOISE_FLOOR.md` | **the G7 finding** (see §4) |
 | `handoff/GAP21_PUBLIC_PICKS_ENABLED_READERS.md` | **the 8-reader divergence + the one owner decision** (see §14) |
 | `handoff/GAP27_DRAFT_ONLY_X_TRANSPORT.md` | **the X-transport regex gap** (see §15) |
+| `handoff/G7_WIRED_TO_THE_LIVE_PUBLISH_PATH.md` | **G7 wired to the live publish path** (see §17) |
 | `handoff/APPS_WEB_SURFACE_FAILURES_CENSUS.md` | **the surface-suite census** (see §5) |
 | `handoff/WIRING_FEASIBILITY_THE_FINDING.md` | **why 7 of 9 gates have no live producer** (see §6) |
 | `handoff/SPEC_CORPUS_FINDINGS.md` | what the design spec revealed that the repo alone did not |
@@ -83,7 +84,7 @@ node scripts/guardrails/trust-gate.mjs
 | check | expected | note |
 |---|---|---|
 | `tsc` errors in `packages/prediction-engine` | **exactly 64** | the baseline; the audit adds zero |
-| `packages/prediction-engine` suite | **8,575 passed / 0 failed** (+4 skipped) | 995 files, ~5 min |
+| `packages/prediction-engine` suite | **8,576 passed / 0 failed** (+4 skipped) | 997 files, ~5 min |
 | `reconciliation/_audit_unenforced_thresholds.mjs` | exit **0** | the T12 dead-threshold auditor |
 | `reconciliation/_check_class_a_coverage.mjs` | exit **0** | the class-A coverage guard |
 | `scripts/guardrails/trust-gate.mjs` | exit **0** over 3,740 files | fixed this session |
@@ -91,6 +92,8 @@ node scripts/guardrails/trust-gate.mjs
 
 **The 85 commits, in order, newest first** (`git log --oneline origin/main..audit/reconciliation-2026-10-20`):
 
+- `405de4ed2` **G7 IS WIRED** — the circuit breaker now stops a drifting family on the live board
+- `9686cdef0` the founder already decided GAP-21 — the default diverges from the recorded law
 - `73effa158` GAP-21: eight readers of `PUBLIC_PICKS_ENABLED`, two defaults — and the one decision
 - `a6fc8e714` GAP-27: the draft-only guardrail's X pattern missed the ACTUAL transport
 - `1b34940f8` ci: put 20 node:test guardrail suites in CI — 322 assertions that never gated a commit
@@ -732,3 +735,82 @@ steered to land the G7 producer with a test that fails without the wiring. **Che
 `git log --oneline origin/audit/reconciliation-2026-10-20` before starting that work** — it
 may have landed after this document was written. The lead, if it did not:
 `selective-publish-runtime.ts:320` computes the same `marketFamilyKey` the G7 breaker emits.
+
+---
+
+## 17. G7 IS WIRED TO THE LIVE PUBLISH PATH
+
+`handoff/G7_WIRED_TO_THE_LIVE_PUBLISH_PATH.md`
+
+**G7 had ZERO live importers.** It computed a per-market-family calibration-drift verdict
+correctly (15 tests, a 10-mutation sweep) and **nothing consumed it** — the spec's rule
+had no path to a family's picks. This was one of the **seven of nine** gates the audit found
+with no live evidence producer.
+
+**Why G7 was safe to wire and the other six were not.** The audit's finding was that
+feeding a gate a rubber-stamped verdict is **worse than no gate** — it reports "passed" on
+evidence nobody produced. G7's verdict comes from **real settled bets**, with real outcomes
+and real settlement times, and it was measured at **0 false halts in 400 perfectly
+calibrated families**. The evidence is real, so the wiring is real.
+
+**The repo already had the other half:** a durable per-group pause list, a `sport|market`
+key, and a **live reader** — `/api/picks` calls `passesPublicSelectiveFilterAsync` per
+pick. **The gate was live; the producer was missing.**
+
+**Three hops:** (1) the producer — `buildProvenPathPlan` runs the breaker over the settled,
+time-stamped rows it is already given and puts `g7HaltedGroups` on the plan; (2) transport
+— the plan is persisted and read back whole; (3) the consumer —
+`passesPublicSelectiveFilter`, the function `/api/picks` calls per pick, now drops a pick
+whose family is halted.
+
+**Two lists, two owners.** `pauseGroups` is the **founder's** and stays advisory until the
+founder opts in. The G7 list is **machine-owned** and always applied — a machine-computed
+calibration halt must not need a human to approve it, and must not overwrite the founder's
+list. Both directions are pinned by tests.
+
+**The plumbing:** G7 requires a settlement timestamp and the row type had none.
+`ProvenPathPickRow` and `SettledPickForProvenPath` now carry `settledAt`; the
+`calibration-metrics` cron passes it (**the query already selected it**);
+`proven-path-seed.ts` needed **no change** (its query already selects `settledAt` and orders
+by it). `toEpochMs` returns `null`, not `0`, for an unknown time — a row settled "at the
+epoch" and a row with no known time are different facts, and G7 rejects a non-finite
+timestamp.
+
+**The test** (`apps/web/__tests__/g7-drift-halt-wiring.test.ts`, 7 tests) asserts the
+**consumer's return value**, not that the plan carries the list — and every drop assertion
+has a **control** (the same pick in a family that did not drift still publishes), because a
+pick can be dropped by the selective thresholds instead. Without the control, the wiring
+could be deleted with no test going red.
+
+**Mutation check:** removing the consumer check → 2 failures; disabling the producer → 3
+failures. Both caught; sources byte-identical after restore.
+
+**Verified:** the new test 7/7; the 16 related `apps/web` files give **4 failed files / 9
+failed tests IDENTICALLY before and after** the change (measured both ways) — those 4 are
+pre-existing `neon pool exhausted` DB errors, **not** caused by this; `tsc` on the touched
+files **0 errors**; `packages/prediction-engine` **8,576 passed / 0 failed** (997 files);
+`tsc` **64** (exact baseline); both auditors exit 0.
+
+### A `tsc` trap in this worktree that WILL bite the next agent
+
+`node_modules/@sports/prediction-engine` is a **symlink to the MAIN checkout**
+(`C:/Users/Garrett/Sports/packages/prediction-engine`), not to this worktree. So
+`apps/web`'s `tsc` resolves `@sports/prediction-engine` to the **other** tree's source and
+**cannot see any change made here** — it reported four false `TS2305` errors for the new
+G7 export. Re-running with a temporary tsconfig whose `paths` point at
+`../../packages/prediction-engine/src` gave **0 errors in the touched files**. **The stale
+symlink is a local-environment artifact; CI installs the workspace fresh.** (vitest is
+unaffected — `apps/web`'s vitest config aliases `@sports/*` to the local sources, which is
+why the test passed while `tsc` complained. This is the same trap as
+`@sports root symlinks stale — alias in vitest.config` in the memory notes.)
+
+### What is NOT done
+
+- **T16 (`settlement-loop.ts`) is still not wired.** The delegated task that would have done
+  it was stopped with nothing written; the scope was deliberately kept to G7 so that
+  *something real* would land rather than two half-wirings.
+- **The other six gates with no producer remain unwired** — their evidence is not real yet.
+- **No live-production verification.** There is no Neon connection here (the 4 pre-existing
+  failures are `neon pool exhausted` errors). **The first production run is the real test**
+  of whether the rule's thresholds behave on real families, and the plan's `g7Note` is the
+  thing to read when it does.
