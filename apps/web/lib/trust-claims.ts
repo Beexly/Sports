@@ -587,6 +587,25 @@ function slugForPositioningPhrase(phrase: string): string {
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
   /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
 
+// SURNAME DATA IN TABLE ROWS, added 2026-10-21 (docs-public-copy-scan red on
+// the C-375 test wall): three more Drew Lock shapes in AGENTS.md digests that
+// the game-prose patterns above do not cover, because the surname sits inside
+// TABLE data rather than a sentence:
+//   1) a leaderboard row separator: "Purdy 0.57 (...); Lock 0.52 (0.45, ...)"
+//   2) a slash-separated QB list: "T7. Cousins/Lock/Prescott/Watson 50%"
+//   3) a comparative sample caveat: "Penix 47, Lock 50 vs Prescott 157"
+// CASE-SENSITIVE by design (no `i` flag): the digests render the surname with
+// a capital L; slang claim forms are lowercase and keep hitting ("a lock",
+// "my lock 0.5u", "bills/lock/chiefs"). The pinned tests still hold: bare
+// "Lock 2.77" on a digest line with no table context still hits (the
+// lockDigestExempt gating test), and every claim form above is untouched.
+// An AGENTS.md edit would have been the other remedy (backticks around the
+// surname), but AGENTS.md is a protected agent-instruction file in an
+// unattended session, so the shared scanner is the sanctioned place — the same
+// place the "Lock started W2" shape above was fixed.
+const LOCK_SURNAME_TABLE_DATA =
+  /\);\s*Lock\s+\d+(?:\.\d+)?\s*\(|\b[A-Z][a-z]+\/Lock\/[A-Z][a-z]+\b|\b[A-Z][a-z]+\s+\d+,\s*Lock\s+\d+\s+vs\b/g;
+
 /** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
 export function isVerbatimSocialDigestLine(line: string): boolean {
   return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
@@ -636,6 +655,7 @@ export function scanForBannedPhrases(
       let subject = normalizeForScan(line);
       if (claim.id === "banned.lock") {
         subject = subject.replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
+        subject = subject.replace(LOCK_SURNAME_TABLE_DATA, " ");
       }
       if (pattern.test(subject)) {
         hits.push({
