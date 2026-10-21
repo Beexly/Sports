@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type ScrimmagePlayRow } from "./snap-differential.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "week", "season_type",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -105,6 +106,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly scrimmagePlays: readonly ScrimmagePlayRow[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +382,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const scrimmagePlays: ScrimmagePlayRow[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -499,6 +502,20 @@ export function mapNflversePbpToExpectedMetrics(
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
       }
+
+      // Snap Differential series
+      const posteam = row["posteam"] ?? "";
+      const defteam = row["defteam"] ?? "";
+      if ((playType === "pass" || playType === "run") && posteam !== "" && defteam !== "") {
+        scrimmagePlays.push({
+          gameId: row["game_id"] ?? "",
+          season: num(row["season"]),
+          week: num(row["week"]),
+          posteam,
+          defteam,
+          playType: playType ?? "",
+        });
+      }
     }
 
     // (d) EPA/WPA transition pairs — after = row j's own emitted play.
@@ -611,6 +628,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    scrimmagePlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
