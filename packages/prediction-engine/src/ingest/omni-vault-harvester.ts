@@ -16,6 +16,7 @@ import {
   verifyRecord,
   SourceLibrary,
 } from "../literature/literature-verification.js";
+import { bridgeLatexToMind, ParsedMathExpression } from "./latex-ocr-bridge.js";
 
 export type VaultSourceType =
   | "GOOGLE_DRIVE_API_V3"
@@ -230,6 +231,13 @@ export function compileLatexToSymbolicAST(latex: string): SymbolicExprNode {
 }
 
 export class OmniVaultHarvester {
+  /**
+   * Bridges visual OCR LaTeX math expressions into parsed symbolic representation.
+   */
+  public bridgeOcrLatex(rawLatex: string): ParsedMathExpression {
+    return bridgeLatexToMind(rawLatex);
+  }
+
   /**
    * Mock / stub for Google Drive API v3 Delta Poller maintaining startPageToken watermark.
    */

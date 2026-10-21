@@ -5267,3 +5267,84 @@ export type {
   BeamTransferResult,
 } from "./causal/causal-beam-transfer.js";
 
+// Open-Source Intelligence & Deep Infer / Harness2 Integration
+export {
+  evaluateFourthDownDecision,
+  computeConversionProbability,
+  computeFieldGoalProbability,
+  computeExpectedNetPuntYards,
+  getBaselineExpectedPoints,
+  estimateWinProbability,
+} from "./tactical/nfl-fourth-down-engine.js";
+export type {
+  FourthDownGameState,
+  FourthDownChoice,
+  FourthDownDecisionEvaluation,
+} from "./tactical/nfl-fourth-down-engine.js";
+
+export {
+  evaluateSgpCombination,
+  getPairwiseCorrelation,
+  normalCdf as copulaNormalCdf,
+  normalInv,
+} from "./parlay/correlated-sgp-combinator.js";
+export type {
+  PropType,
+  SgpLeg as CorrelatedSgpLeg,
+  SgpEvaluationResult,
+} from "./parlay/correlated-sgp-combinator.js";
+
+export {
+  cleanLatexString,
+  extractLatexSymbols,
+  classifyMathDomain,
+  parseLatexToAst,
+  calculateComplexityScore,
+  bridgeLatexToMind,
+} from "./ingest/latex-ocr-bridge.js";
+export type {
+  MathExpressionDomain,
+  MathASTNode,
+  ParsedMathExpression,
+} from "./ingest/latex-ocr-bridge.js";
+
+export {
+  evaluateKineticChainSequencing,
+  calculateAcwrAndFatigue,
+  evaluateQuarterbackBiomechanics,
+} from "./biomechanics/kinetic-chain-evaluator.js";
+export type {
+  KineticChainKeypoints,
+  QuarterbackWorkloadHistory,
+  BiomechanicalEvaluation,
+} from "./biomechanics/kinetic-chain-evaluator.js";
+
+export {
+  computeFlashMlaCompression,
+  evaluateEplbRouting,
+  calculateDynamicDraftLength,
+  evaluateDSparkSpeculation,
+} from "./inference/deepinfer-dspark-speculator.js";
+export type {
+  FlashMlaConfig,
+  FlashMlaCompressionSummary,
+  EplbRoutingSummary,
+  SpeculativeDraftEvaluation,
+} from "./inference/deepinfer-dspark-speculator.js";
+
+export {
+  proposeHarnessMutations,
+  applyMutationsToHarness,
+  probeHarnessBehavior,
+  executeContrastivePpcLoop,
+} from "./continual/harness2-propose-probe-compose.js";
+export type {
+  AgentHarness,
+  MutationType,
+  HarnessMutation,
+  BehavioralProbeScenario,
+  ProbeEvaluationScore,
+  ContrastivePpcResult,
+} from "./continual/harness2-propose-probe-compose.js";
+
+
