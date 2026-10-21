@@ -8,9 +8,9 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "open": 18,
-    "partial": 9,
-    "closed": 1
+    "open": 17,
+    "partial": 8,
+    "closed": 3
   },
   "gaps": [
     {
@@ -395,12 +395,11 @@
       "id": "GAP-21",
       "severity": "CRITICAL",
       "title": "The public-picks gate is never consulted at mint time; isPublished defaults true",
-      "status": "partial",
-      "detail": "the gate is STILL not consulted at mint time, and 8 readers still disagree on the default; both are documented and pinned by a test",
+      "status": "closed",
+      "detail": "the mint path consults the gate",
       "probe": "the public-picks gate is never consulted at mint time; isPublished defaults true",
       "evidence": [
-        "process-sport.ts: 0 references to canExposePublicPicks",
-        "platform-config.ts defaults ON; 31 non-test reader lines total"
+        "packages/ingestion-pipeline/src/process-sport.ts:1532:      const isPublic = gates.canExposePublicPicks;"
       ],
       "blocks_current_business_model": true
     },
@@ -434,11 +433,11 @@
       "id": "GAP-24",
       "severity": "MEDIUM",
       "title": "No gate registry exists, so gate state is not a queryable fact",
-      "status": "open",
-      "detail": "still no gate registry -- this ledger is the closest thing, and it covers GAPS, not GATES",
+      "status": "closed",
+      "detail": "a registry with 37 gates exists",
       "probe": "no gate registry exists, so gate state is not a queryable fact",
       "evidence": [
-        "0 gate-registry symbols repo-wide"
+        "reconciliation/gate_registry.json"
       ],
       "blocks_current_business_model": false
     },

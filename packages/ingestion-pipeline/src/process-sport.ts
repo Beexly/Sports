@@ -1529,6 +1529,8 @@ export async function processSport(
         select: { id: true, result: true, selection: true, isPublished: true, line: true },
       });
 
+      const isPublic = gates.canExposePublicPicks;
+
       // The CREATE payload — shared by both fresh-mint paths below: the normal
       // empty-slot create, and the supersede create (an unpublished PENDING
       // slot-holder was voided through the settlement outbox and the slot is
@@ -1540,6 +1542,7 @@ export async function processSport(
         ingestionRunId: run.id,
         isBootstrap,
         isFeatured,
+        isPublished: isPublic,
         // CLV lock snapshot — the line/price we ACTUALLY published at, captured
         // once at creation. Absent from the updateMany above, so the refresh
         // cycle can never overwrite it. `Pick.line` is now frozen alongside it

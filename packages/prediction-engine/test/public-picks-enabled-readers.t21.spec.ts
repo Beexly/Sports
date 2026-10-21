@@ -65,8 +65,8 @@ const READERS = [
   {
     file: "packages/prediction-engine/src/platform-config.ts",
     line: 166,
-    defaultWhenUnset: "on",
-    expression: 'parseBool(process.env["PUBLIC_PICKS_ENABLED"], true)',
+    defaultWhenUnset: "off",
+    expression: 'parseBool(process.env["PUBLIC_PICKS_ENABLED"], false)',
     gates: "the live /api/picks route, via readiness.ts canExposePublicPicks",
   },
   {
@@ -122,7 +122,7 @@ const READERS = [
 
 /** How each default is expressed, so the table above is checkable, not decorative. */
 const ON_WHEN_UNSET = /parseBool\(\s*process\.env\[["']PUBLIC_PICKS_ENABLED["']\]\s*,\s*true\s*\)/;
-const OFF_WHEN_UNSET = /process\.env\[["']PUBLIC_PICKS_ENABLED["']\][^;\n]*?===\s*["']true["']|env\[["']PUBLIC_PICKS_ENABLED["']\]\s*===\s*["']true["']|envTrue\(\s*["']PUBLIC_PICKS_ENABLED["']\s*\)|envFlag\(\s*["']PUBLIC_PICKS_ENABLED["']\s*\)|truthy\(env\[["']PUBLIC_PICKS["']\]\)/;
+const OFF_WHEN_UNSET = /parseBool\(\s*process\.env\[["']PUBLIC_PICKS_ENABLED["']\]\s*,\s*false\s*\)|process\.env\[["']PUBLIC_PICKS_ENABLED["']\][^;\n]*?===\s*["']true["']|env\[["']PUBLIC_PICKS_ENABLED["']\]\s*===\s*["']true["']|envTrue\(\s*["']PUBLIC_PICKS_ENABLED["']\s*\)|envFlag\(\s*["']PUBLIC_PICKS_ENABLED["']\s*\)|truthy\(env\[["']PUBLIC_PICKS["']\]\)/;
 
 function sourceOf(relPath: string): string {
   const abs = join(ROOT, relPath.replace(/\//g, "\\"));
@@ -153,13 +153,12 @@ describe("GAP-21: the PUBLIC_PICKS_ENABLED reader table", () => {
     }
   });
 
-  it("EXACTLY ONE reader defaults to ON, and it is the one that gates /api/picks", () => {
+  it("ALL EIGHT readers default to OFF (GAP-21 reconciled)", () => {
     const on = READERS.filter((r) => r.defaultWhenUnset === "on");
     expect(
       on.length,
-      `expected exactly one ON reader, found ${on.length}: ${on.map((r) => r.file).join(", ")}`,
-    ).toBe(1);
-    expect(on[0]!.file).toBe("packages/prediction-engine/src/platform-config.ts");
+      `expected zero ON readers after GAP-21 closure, found ${on.length}: ${on.map((r) => r.file).join(", ")}`,
+    ).toBe(0);
   });
 
   it("no reader outside the table has been added -- a NINTH reader must fail here", () => {
