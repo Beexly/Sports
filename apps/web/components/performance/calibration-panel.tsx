@@ -225,6 +225,25 @@ export async function CalibrationPanel() {
         </span>
       </div>
 
+      {/* C-350 — the in-play exclusion the reliability sample carries, when the
+          report measured one (report.ts partitions via partitionInPlay). The
+          COUNT is a visible line beside the rates the exclusion moved, with the
+          shared disclosure sentence under it. Nothing rendered when nothing was
+          excluded — no phantom 0-count noise. */}
+      {data.excludedInPlay > 0 && data.inPlayNote && (
+        <div
+          data-testid="calibration-in-play-exclusion"
+          className="border-b border-titanium px-6 py-3"
+        >
+          <p className={`text-xs font-semibold text-caution ${NUMERIC_TEXT_CLASS}`}>
+            {data.excludedInPlay} in-play rows excluded
+          </p>
+          <p className="mt-1 text-[11px] leading-relaxed text-ion-2">
+            {data.inPlayNote}
+          </p>
+        </div>
+      )}
+
       {/* Discrimination verdict — the honest headline. */}
       <div className="px-6 pt-6">
         <div className={`rounded-xl border ${meta.ring} p-5`}>

@@ -36,6 +36,19 @@ export interface PublicClvPolicyInput {
   readonly beatCloseCount: number;
   readonly lostToCloseCount: number;
   readonly matchedCloseCount: number;
+  /**
+   * In-play exclusion reporting (C-350). Purely additive: when a caller measured
+   * the exclusion, the count and the shared disclosure sentence ride the policy
+   * so the render side can show them beside the rate. Nothing here reads or
+   * writes them into the gate math — a gate, blocker, or threshold is untouched.
+   *
+   * The loadPublicClvPolicy loader does NOT measure an in-play exclusion today
+   * (it counts graded rows via `count()` and has no per-row clocks), so the real
+   * policy never carries these — absence renders no note, and a surface cannot
+   * claim an exclusion it does not compute.
+   */
+  readonly inPlayExcluded?: number;
+  readonly inPlayNote?: string | null;
 }
 
 export interface PublicClvPolicy {
@@ -46,6 +59,10 @@ export interface PublicClvPolicy {
   readonly beatCloseCount: number;
   readonly lostToCloseCount: number;
   readonly matchedCloseCount: number;
+  /** In-play exclusion count as supplied by the caller (0 when not measured). */
+  readonly inPlayExcluded: number;
+  /** The shared inPlayExclusionNote sentence; null when not measured. */
+  readonly inPlayNote: string | null;
   /** Share (0–100, one decimal) of graded picks that beat the close. Null when gated. */
   readonly beatCloseRatePct: number | null;
   /** 95% Wilson lower/upper bound on the beat-close rate (0–100, one decimal). Null when gated. */
@@ -139,6 +156,9 @@ export function evaluatePublicClvPolicy(
     beatCloseCount: input.beatCloseCount,
     lostToCloseCount: input.lostToCloseCount,
     matchedCloseCount: input.matchedCloseCount,
+    // C-350 pass-through: ride the caller's exclusion reporting untouched.
+    inPlayExcluded: input.inPlayExcluded ?? 0,
+    inPlayNote: input.inPlayNote ?? null,
     beatCloseRatePct: allowed ? beatCloseRatePct : null,
     beatCloseCiLowPct: allowed ? beatCloseCiLowPct : null,
     beatCloseCiHighPct: allowed ? beatCloseCiHighPct : null,

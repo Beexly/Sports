@@ -218,7 +218,9 @@ function ClvGatedState({
   );
 }
 
-function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage: ClvCoverage | null }) {
+// Named export so the surface test can render the scoreboard in isolation
+// (the page's module-level db/Nav/Footer imports are stubbed there).
+export function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage: ClvCoverage | null }) {
   return (
     <section data-testid="clv-scoreboard">
       <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
@@ -250,6 +252,23 @@ function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage
                   ? "Lower bound clears the 52.4% break-even line"
                   : "Range still includes 52.4% break-even. No settled-edge claim yet"}
               </span>
+            </div>
+          )}
+          {/* C-350 — the in-play exclusion the beat-close sample carries, when
+              the caller measured one. The COUNT is a visible line, not buried
+              in a tooltip, and the shared disclosure sentence rides beside it
+              so the denominator the rate was taken over is stated on-page. */}
+          {policy.inPlayExcluded > 0 && policy.inPlayNote && (
+            <div
+              data-testid="clv-in-play-exclusion"
+              className="mt-4 border-t border-mineral/40 pt-3"
+            >
+              <p className={`text-xs font-semibold text-caution ${NUMERIC_TEXT_CLASS}`}>
+                {policy.inPlayExcluded} in-play rows excluded
+              </p>
+              <p className="mt-1 text-[10px] leading-snug text-ion-2">
+                {policy.inPlayNote}
+              </p>
             </div>
           )}
           {/* Coverage integrity note — surface the denominator behind the rate. */}
