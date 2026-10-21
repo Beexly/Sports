@@ -13,7 +13,7 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 const EXECUTION_NOTE =
   "The Autopilot proposes and records; executing on a real ESPN/Yahoo/Sleeper account is gated behind your explicit consent, OAuth, and compliance review; there are no autonomous account actions or payments.";
 const LIVE_NOTE =
-  `Live graded pool: proposals are computed from real players and model-derived projections (the roster shown is a labelled sample drawn from that pool — no league connection yet). ${EXECUTION_NOTE}`;
+  `Live graded pool: proposals are computed from real players and model-derived projections (the roster shown is a labelled sample drawn from that pool, no league connection yet). ${EXECUTION_NOTE}`;
 
 export const metadata: Metadata = {
   title: "GM Autopilot · Galaxy Fantasy",

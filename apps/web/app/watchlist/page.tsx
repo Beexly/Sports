@@ -233,7 +233,7 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
       ) : (
         <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
           Elite members get email &amp; push alerts when a followed team&apos;s pick
-          grades — never before it&apos;s settled.{" "}
+          grades, never before it&apos;s settled.{" "}
           <Link href="/pricing" className="text-ultraviolet-glow underline-offset-4 hover:underline">
             See Elite →
           </Link>
@@ -275,7 +275,7 @@ function EmptyState({ hasSuggestions }: { hasSuggestions: boolean }) {
           className="mx-auto mt-1.5 max-w-md text-xs leading-relaxed text-ion-2"
         >
           No teams have loaded yet, so there is nothing to suggest right now.
-          Teams appear here as soon as the roster data lands — nothing is broken
+          Teams appear here as soon as the roster data lands. Nothing is broken
           and nothing is lost.
         </p>
       )}

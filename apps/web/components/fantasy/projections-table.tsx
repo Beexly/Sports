@@ -151,11 +151,11 @@ export function ProjectionsTable({
                     </span>
                   </td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">
-                    {salaryIsReal || isLive ? `$${(p.salary / 1000).toFixed(1)}k` : <span className="text-ion-3">—</span>}
+                    {salaryIsReal || isLive ? `$${(p.salary / 1000).toFixed(1)}k` : <span className="text-ion-3">n/a</span>}
                   </td>
                   <td className="px-2 py-1.5 font-mono font-semibold tabular-nums text-ion-white">{p.proj.toFixed(1)}</td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">
-                    {salaryIsReal || isLive ? value.toFixed(2) : <span className="text-ion-3">—</span>}
+                    {salaryIsReal || isLive ? value.toFixed(2) : <span className="text-ion-3">n/a</span>}
                   </td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-2">{p.ceiling.toFixed(1)}</td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1" title="Last 5 games, points per game">
@@ -185,7 +185,7 @@ export function ProjectionsTable({
                     style={{ color: lev >= 0.35 ? "#FF4D2E" : lev <= 0.15 ? "#C4BFB6" : "#EDE8E0" }}
                     title="Leverage: ceiling vs ownership. Higher = more contrarian upside."
                   >
-                    {salaryIsReal || isLive ? lev.toFixed(2) : <span className="text-ion-3">—</span>}
+                    {salaryIsReal || isLive ? lev.toFixed(2) : <span className="text-ion-3">n/a</span>}
                   </td>
                   <td className="px-2 py-1.5 text-right">
                     <button

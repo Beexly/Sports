@@ -37,7 +37,7 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
           data-testid="stats-players-empty"
           className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1"
         >
-          The player snapshot is empty — no players have loaded yet. Nothing is
+          The player snapshot is empty: no players have loaded yet. Nothing is
           broken; this page fills in on the next sync cycle.
         </p>
       )}

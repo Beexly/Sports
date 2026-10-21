@@ -29,7 +29,7 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
           className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1"
         >
           Comparison needs two players and the current snapshot does not have
-          them yet. Nothing is broken — this page opens as soon as the player
+          them yet. Nothing is broken: this page opens as soon as the player
           snapshot lands.
         </p>
         <Link href="/stats/players" className="text-sm text-orbital-cyan underline hover:text-ion-white">
@@ -53,7 +53,7 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
         <InsightCard
           tone="warn"
           eyebrow="Not the comparison you asked for"
-          headline={`${unresolvedLabel(c)} — showing a stand-in instead`}
+          headline={`${unresolvedLabel(c)} (showing a stand-in instead)`}
           body="The comparison below is real, but it is not the one you requested. Rather than quietly swapping in a different player and presenting that as your request, we are telling you."
         >
           <Link

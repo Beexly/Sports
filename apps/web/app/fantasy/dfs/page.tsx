@@ -57,7 +57,7 @@ export default async function DfsSuitePage() {
       }))
     : engineRows.slice(0, 24).map((p) => ({
         name: p.name,
-        team: p.team || "—",
+        team: p.team || "n/a",
         position: p.pos,
         salary: p.salary > 0 ? p.salary : null,
       }));
@@ -97,7 +97,7 @@ export default async function DfsSuitePage() {
         <p className="mt-1 text-sm text-ion-1">
           {salaryIsReal
             ? "Salaries come from the connected licensed DFS feed, reconciled across providers. The optimizer prices this pool with the projections beside it."
-            : "This board is built from measured production for the teams playing in the slate window. Salaries are blank because no licensed DFS salary feed is connected — the column stays empty rather than carrying an invented number. Import your own DraftKings CSV below to price the board."}
+            : "This board is built from measured production for the teams playing in the slate window. Salaries are blank because no licensed DFS salary feed is connected: the column stays empty rather than carrying an invented number. Import your own DraftKings CSV below to price the board."}
         </p>
         {feedConnected && !viewer.canUseFantasyFull && (
           <p className="mt-2 text-sm text-ion-1">
@@ -124,7 +124,7 @@ export default async function DfsSuitePage() {
                   <td className="py-1.5 pr-4 text-ion-white">{r.name}</td>
                   <td className="py-1.5 pr-4">{r.team}</td>
                   <td className="py-1.5 pr-4 font-mono text-xs">{r.position}</td>
-                  <td className="py-1.5 font-mono">{r.salary !== null ? `$${r.salary.toLocaleString()}` : "—"}</td>
+                  <td className="py-1.5 font-mono">{r.salary !== null ? `$${r.salary.toLocaleString()}` : "n/a"}</td>
                 </tr>
               ))}
               {topRows.length === 0 && (
