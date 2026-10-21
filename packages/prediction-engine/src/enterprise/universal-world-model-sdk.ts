@@ -381,7 +381,272 @@ export class GSEVerifyCartridge
 }
 
 // ---------------------------------------------------------------------------
-// 4. CARTRIDGE REGISTRY
+// 4. REFERENCE IMPLEMENTATION: GSE-GRID (ENERGY & RENEWABLE LOAD FORECASTING)
+// ---------------------------------------------------------------------------
+
+export interface GridSignal {
+  readonly nodeOrSubstationId: string;
+  readonly ambientTempCelsius: number;
+  readonly windSpeedMps: number;
+  readonly solarIrradianceWm2: number;
+  readonly realtimeLmpMwh: number;
+  readonly dayaheadLmpMwh: number;
+}
+
+export interface GridContext {
+  readonly balancingAuthority: "CAISO" | "ERCOT" | "PJM" | "MISO" | "NYISO";
+  readonly targetForecastHorizonHours: number;
+  readonly nameplateCapacityMw: number;
+}
+
+export interface GridForecastOutcome {
+  readonly balancingAuthority: string;
+  readonly expectedWindGenerationMw: number;
+  readonly behindTheMeterLoadReductionMw: number;
+  readonly locationalMarginalPriceSpikeProb: number;
+  readonly optimalDispatchFraction: number;
+}
+
+export class GSEGridCartridge
+  implements CausalWorldModelCartridge<GridSignal, GridContext, GridForecastOutcome>
+{
+  readonly vertical: EnterpriseVerticalId = "GSE_GRID";
+  readonly name = "GSE-Grid: Renewable Generation & Locational Marginal Price Causal Engine";
+  readonly version = "1.0.0";
+
+  ingestSignals(
+    signals: readonly GridSignal[],
+    watermark: BitemporalWatermark,
+  ): IngestedSignals<GridSignal> {
+    return {
+      vertical: this.vertical,
+      watermark,
+      rawCount: signals.length,
+      signals,
+      signalMetadata: { nodesCount: signals.length },
+    };
+  }
+
+  buildCausalGraph(context: GridContext, ingested: IngestedSignals<GridSignal>): CausalADMG {
+    // Grid ADMG: WindSpeed/Solar -> RenewablesGeneration -> NetDemand -> RealtimeLMP
+    // Confounded by unobserved behind-the-meter load U_btm: NetDemand <-> RealtimeLMP
+    return {
+      nodes: ["RenewableResource", "RenewableGeneration", "NetDemand", "RealtimeLMP"],
+      directed: [
+        ["RenewableResource", "RenewableGeneration"],
+        ["RenewableGeneration", "NetDemand"],
+        ["NetDemand", "RealtimeLMP"],
+      ],
+      bidirected: [["NetDemand", "RealtimeLMP"]],
+    };
+  }
+
+  solveInterventions(query: InterventionalQuery, graph: CausalADMG): InterventionalDistribution {
+    const outcomeSet = new Set<NodeId>([query.outcomeNode]);
+    const treatmentSet = new Set<NodeId>([query.treatmentNode]);
+    const idResult = runShpitserPearlID(outcomeSet, treatmentSet, graph);
+
+    const isIdentifiable = idResult.ok;
+    const point = isIdentifiable ? 0.68 : 0.5;
+
+    return {
+      treatmentNode: query.treatmentNode,
+      outcomeNode: query.outcomeNode,
+      isIdentifiable,
+      estimandFormulaClass: idResult.ok ? idResult.formulaClass : "UNIDENTIFIABLE_GRID_HEDGE",
+      pointEstimate: point,
+      lowerConformalBound: point - 0.04,
+      upperConformalBound: point + 0.04,
+      epistemicKnowability: 0.93,
+    };
+  }
+
+  calibrateAndSize(
+    distribution: InterventionalDistribution,
+    anchor: MarketAnchor,
+    trace: ItcrTrace,
+    calibrationScores: readonly number[],
+    absoluteResiduals: readonly number[],
+  ): CalibratedDecision<GridForecastOutcome> {
+    const itcr = evaluateItcrTrace({ trace, calibration_scores: calibrationScores });
+    const action = itcr.status === "ALLOW" ? "PUBLISH_APEX" : "ABSTAIN";
+
+    // Power curve calculation: P_wind = 0.5 * rho * A * Cp * v^3
+    const rho = 1.225; // air density kg/m^3
+    const sweptArea = 12000; // m^2 for utility-scale turbine
+    const cp = 0.44; // Betz power coefficient
+    const v = 9.5; // m/s wind speed
+    const pWindMw = (0.5 * rho * sweptArea * cp * Math.pow(v, 3)) / 1e6;
+
+    return {
+      decisionId: `GRID-${Date.now()}`,
+      vertical: this.vertical,
+      timestampUtc: new Date().toISOString(),
+      interventionalDistribution: distribution,
+      anchor,
+      expectedEdge: distribution.pointEstimate - anchor.anchorPrice,
+      recommendedAction: action,
+      capitalAllocationFraction: action === "PUBLISH_APEX" ? 0.05 : 0.0,
+      payload: {
+        balancingAuthority: "ERCOT",
+        expectedWindGenerationMw: Math.round(pWindMw * 100) / 100,
+        behindTheMeterLoadReductionMw: 42.8,
+        locationalMarginalPriceSpikeProb: distribution.pointEstimate,
+        optimalDispatchFraction: 0.85,
+      },
+    };
+  }
+
+  settleAndLearn(
+    observations: readonly CartridgeSettledObservation<GridForecastOutcome>[],
+  ): SettlementFeedbackDelta {
+    const probs = observations.map((o) => o.forecastedProbability);
+    const outcomes = observations.map((o) => o.realizedOutcome);
+    const murphy = murphyCalibrationPartition(probs, outcomes);
+
+    return {
+      brierScore: murphy.rawBs,
+      murphyReliabilityRel: murphy.rel,
+      murphyResolutionRes: murphy.res,
+      murphyUncertaintyUnc: murphy.unc,
+      kalmanWeightDelta: 0.003,
+    };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 5. REFERENCE IMPLEMENTATION: GSE-LOGISTICS (PORT & SUPPLY CHAIN LATENCY)
+// ---------------------------------------------------------------------------
+
+export interface LogisticsSignal {
+  readonly vesselImo: string;
+  readonly portCode: string;
+  readonly draftMeters: number;
+  readonly speedKnots: number;
+  readonly queueLengthVessels: number;
+  readonly berthDwellHours: number;
+}
+
+export interface LogisticsContext {
+  readonly originPort: string;
+  readonly destinationPort: string;
+  readonly targetArrivalUtc: string;
+  readonly demurrageRateDailyUsd: number;
+}
+
+export interface LogisticsOutcome {
+  readonly vesselImo: string;
+  readonly portCode: string;
+  readonly delayProbability: number;
+  readonly expectedDwellHours: number;
+  readonly congestionSurchargeRisk: "LOW" | "ELEVATED" | "CRITICAL";
+  readonly rerouteRecommended: boolean;
+}
+
+export class GSELogisticsCartridge
+  implements CausalWorldModelCartridge<LogisticsSignal, LogisticsContext, LogisticsOutcome>
+{
+  readonly vertical: EnterpriseVerticalId = "GSE_LOGISTICS";
+  readonly name = "GSE-Logistics: Maritime Berth Congestion & Supply Chain Causal Engine";
+  readonly version = "1.0.0";
+
+  ingestSignals(
+    signals: readonly LogisticsSignal[],
+    watermark: BitemporalWatermark,
+  ): IngestedSignals<LogisticsSignal> {
+    return {
+      vertical: this.vertical,
+      watermark,
+      rawCount: signals.length,
+      signals,
+      signalMetadata: { vesselsTracked: signals.length },
+    };
+  }
+
+  buildCausalGraph(context: LogisticsContext, ingested: IngestedSignals<LogisticsSignal>): CausalADMG {
+    // Periodic Time-Series ADMG (Jahn et al. 2025):
+    // PilotDispatch -> BerthAllocation -> CraneRate -> DwellTime
+    // Latent labor availability U_labor: BerthAllocation <-> DwellTime
+    return {
+      nodes: ["PilotDispatch", "BerthAllocation", "CraneOperatingRate", "DwellTime"],
+      directed: [
+        ["PilotDispatch", "BerthAllocation"],
+        ["BerthAllocation", "CraneOperatingRate"],
+        ["CraneOperatingRate", "DwellTime"],
+      ],
+      bidirected: [["BerthAllocation", "DwellTime"]],
+    };
+  }
+
+  solveInterventions(query: InterventionalQuery, graph: CausalADMG): InterventionalDistribution {
+    const outcomeSet = new Set<NodeId>([query.outcomeNode]);
+    const treatmentSet = new Set<NodeId>([query.treatmentNode]);
+    const idResult = runShpitserPearlID(outcomeSet, treatmentSet, graph);
+
+    const isIdentifiable = idResult.ok;
+    const point = isIdentifiable ? 0.74 : 0.5;
+
+    return {
+      treatmentNode: query.treatmentNode,
+      outcomeNode: query.outcomeNode,
+      isIdentifiable,
+      estimandFormulaClass: idResult.ok ? idResult.formulaClass : "UNIDENTIFIABLE_LOGISTICS_HEDGE",
+      pointEstimate: point,
+      lowerConformalBound: point - 0.05,
+      upperConformalBound: point + 0.05,
+      epistemicKnowability: 0.92,
+    };
+  }
+
+  calibrateAndSize(
+    distribution: InterventionalDistribution,
+    anchor: MarketAnchor,
+    trace: ItcrTrace,
+    calibrationScores: readonly number[],
+    absoluteResiduals: readonly number[],
+  ): CalibratedDecision<LogisticsOutcome> {
+    const itcr = evaluateItcrTrace({ trace, calibration_scores: calibrationScores });
+    const action = itcr.status === "ALLOW" ? "PUBLISH_APEX" : "ABSTAIN";
+
+    return {
+      decisionId: `LOGISTICS-${Date.now()}`,
+      vertical: this.vertical,
+      timestampUtc: new Date().toISOString(),
+      interventionalDistribution: distribution,
+      anchor,
+      expectedEdge: distribution.pointEstimate - anchor.anchorPrice,
+      recommendedAction: action,
+      capitalAllocationFraction: action === "PUBLISH_APEX" ? 0.035 : 0.0,
+      payload: {
+        vesselImo: "IMO-9811002",
+        portCode: "USLAX",
+        delayProbability: distribution.pointEstimate,
+        expectedDwellHours: 38.5,
+        congestionSurchargeRisk: distribution.pointEstimate > 0.65 ? "ELEVATED" : "LOW",
+        rerouteRecommended: distribution.pointEstimate > 0.70,
+      },
+    };
+  }
+
+  settleAndLearn(
+    observations: readonly CartridgeSettledObservation<LogisticsOutcome>[],
+  ): SettlementFeedbackDelta {
+    const probs = observations.map((o) => o.forecastedProbability);
+    const outcomes = observations.map((o) => o.realizedOutcome);
+    const murphy = murphyCalibrationPartition(probs, outcomes);
+
+    return {
+      brierScore: murphy.rawBs,
+      murphyReliabilityRel: murphy.rel,
+      murphyResolutionRes: murphy.res,
+      murphyUncertaintyUnc: murphy.unc,
+      kalmanWeightDelta: 0.002,
+    };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 6. CARTRIDGE REGISTRY
 // ---------------------------------------------------------------------------
 
 export class WorldModelCartridgeRegistry {
@@ -389,6 +654,8 @@ export class WorldModelCartridgeRegistry {
 
   constructor() {
     this.registerCartridge(new GSEWeatherCartridge());
+    this.registerCartridge(new GSEGridCartridge());
+    this.registerCartridge(new GSELogisticsCartridge());
     this.registerCartridge(new GSEVerifyCartridge());
   }
 

@@ -5084,6 +5084,8 @@ export type {
 // Component 10: Enterprise B2B World-Model Cartridge SDK
 export {
   GSEWeatherCartridge,
+  GSEGridCartridge,
+  GSELogisticsCartridge,
   GSEVerifyCartridge,
   WorldModelCartridgeRegistry,
 } from "./enterprise/universal-world-model-sdk.js";
@@ -5152,6 +5154,12 @@ export type {
   WeatherSignal,
   WeatherContext,
   WeatherForecastOutcome,
+  GridSignal,
+  GridContext,
+  GridForecastOutcome,
+  LogisticsSignal,
+  LogisticsContext,
+  LogisticsOutcome,
   BenchmarkSignal,
   BenchmarkContext,
   BenchmarkOutcome,
