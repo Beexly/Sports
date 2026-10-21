@@ -211,8 +211,14 @@ describe("/picks — the server paywall is NOT weakened by the copy fix", () => 
     // selective-publish filter ran after the take, so a FREE viewer could get
     // 0-1 picks instead of their 2. The paywall invariant is response-level:
     // a bounded over-fetch pool, then slice(0, dailyPickLimit) AFTER
-    // filter + rank. Both halves are pinned here.
-    expect(routeSrc).toMatch(/take:\s*entitlements\.dailyPickLimit\s*!=\s*null\s*\?\s*48\s*:\s*200/);
+    // filter + rank. Both halves are pinned here. The over-fetch itself is
+    // ONE size for every viewer (6ad7f44ea): a smaller pre-fetch for capped
+    // viewers ranked them over a subset of the slate — the viewer with the
+    // least to spend got the worst-informed choice. So the 48:200 ternary
+    // form of the take is pinned AGAINST, not for; the entitlement cap
+    // exists only at the post-rank slice below.
+    expect(routeSrc).toMatch(/take:\s*200/);
+    expect(routeSrc).not.toMatch(/take:[^\n]*\?/);
     expect(routeSrc).toMatch(/rankedPicks\.slice\(0,\s*entitlements\.dailyPickLimit\)/);
     expect(routeSrc).toMatch(/limitedPicks\.map/);
   });

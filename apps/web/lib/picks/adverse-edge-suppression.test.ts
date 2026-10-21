@@ -152,7 +152,11 @@ describe("both read surfaces apply it before their row cap", () => {
       "utf8",
     );
     expect(src).toMatch(/const soundPicks = dropAdverseEdgePicks\(coherentPicks\)/);
-    expect(src).toMatch(/\[\.\.\.soundPicks\]\.sort\(comparePicksByRanking\)/);
+    // The Strict Market Integrity filter (unpriced Elo signals must never reach
+    // the public surface) sits between suppression and ranking; the ranked pool
+    // is that filter's output, so the sort anchor is pricedPicks, not soundPicks.
+    expect(src).toMatch(/const pricedPicks = soundPicks\.filter\(/);
+    expect(src).toMatch(/\[\.\.\.pricedPicks\]\.sort\(comparePicksByRanking\)/);
     // A capped viewer must spend their allowance on rows that survive.
     expect(src.indexOf("dropAdverseEdgePicks")).toBeLessThan(src.indexOf("dailyPickLimit != null\n      ? rankedPicks"));
   });

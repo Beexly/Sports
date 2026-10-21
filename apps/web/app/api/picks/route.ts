@@ -157,8 +157,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         // generatedAt hid every book-priced pick created before today
         // (lib/picks/slate-window.ts).
         ...freshPickWhere(now),
-        // Server-side tier gate: allow all published priced picks on the public surface
-        // so that spreads and totals are emitted across tiers.
+        // Server-side tier gate (Thread 1 reversed, docs/strategy/
+        // ENTITLEMENT_REMAP_SPEC.md): premium picks are never returned to FREE
+        // viewers — the FREE teaser is capped at the entitled size below, and
+        // the free trust signal is the Edge Index, not the confidence number.
+        // The tree restore f251d230c resurrected an open-board variant of this
+        // route beside paid-era types/page/tests; the paywall is restored from
+        // the 4198a0f4 lineage (067b4e366) verbatim in shape.
+        ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+        // Optional grade filter (only useful for PRO+ who can see premium)
         ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
         game: {
           ...gameFilter,
@@ -190,6 +197,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         { isFeatured: "desc" },
         { generatedAt: "desc" },
       ],
+      // Over-fetch a bounded pool: the selective-publish filter below can only
+      // REMOVE rows, so taking exactly the limit meant a FREE user (limit 2)
+      // could receive 0-1 picks whenever fetched rows failed the filter. The
+      // pool stays ONE size for every viewer (6ad7f44ea): a smaller pre-fetch
+      // for capped viewers ranked them over a subset of the slate — the viewer
+      // with the least to spend got the worst-informed choice. The daily cap
+      // is applied AFTER filter + ranking (see limitedPicks), never as a
+      // pre-selection. One day's slate is bounded by gameInSlateWindow, so 200
+      // is expected to cover it whole and make the truncation a no-op.
       take: 200,
     })
     .catch(() => null);
@@ -264,9 +280,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   // Tier cap applied AFTER filter + rank so a limited viewer always gets their
   // full allowance (best-ranked survivors), never fewer because the filter ate
-  // the pre-capped fetch.
-  const maxPicks = 100;
-  const limitedPicks = rankedPicks.slice(0, maxPicks);
+  // the pre-capped fetch. FREE/FANTASY are capped at the entitled teaser size
+  // (entitlements.dailyPickLimit); PRO/ELITE see the day's ranked board.
+  const limitedPicks =
+    entitlements.dailyPickLimit != null
+      ? rankedPicks.slice(0, entitlements.dailyPickLimit)
+      : rankedPicks;
 
   // ── Real OL/DL/DB continuity (lib/picks/depth-chart-continuity.ts) ────────
   // One batched read for the whole slate: the newest TWO weekly snapshots in
@@ -388,8 +407,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
     const dataQualityScore = storedDqScore ?? Math.round(pick.game.dataQualityScore);
 
-    // Confidence: always populate from pick when available
-    const shownConfidence = pick.confidence ?? null;
+    // Confidence is a PAID metric (Thread 1 reversed): gated solely on the
+    // viewer's entitlement — a teaser pick's tier no longer frees it. The free
+    // trust signal on the teaser is the Edge Index, not the confidence number.
+    const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
 
     // One book count for both the "No book price attached" pill and the
     // market-implied percentage: the immutable mint-time snapshot when the pick
@@ -404,15 +425,22 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       dataFreshnessAt: pick.dataFreshnessAt,
     });
     const consensusProvider = consensusSlice.consensusProvider;
-    // Full reasoning and reasoningShort
+    // Full reasoning and reasoningShort are gated independently via the shared
+    // fail-closed projector (same path as preview/dashboard). The first
+    // consensus claim in a full explanation is enough to withhold that whole
+    // field, even if the rest contains no other market phrase. The full "why"
+    // stays a paid feature (Pro+); a viewer who cannot see confidence must not
+    // read it back as a percentage inside the teaser (lib/picks/teaser-text.ts).
     const projectReasoning = (text: string) =>
       projectPublicConsensusReasoning(text, consensusSlice, {
-        scrubConfidence: false,
-        canSeeConfidence: true,
+        scrubConfidence: true,
+        canSeeConfidence: entitlements.canSeeConfidence,
         now,
       });
-    const shortReasoning = projectReasoning(pick.reasoningShort || pick.reasoning);
-    const reasoningSource = pick.reasoning || pick.reasoningShort;
+    const shortReasoning = projectReasoning(pick.reasoningShort);
+    const reasoningSource = entitlements.canSeeFactorBreakdown
+      ? pick.reasoning
+      : pick.reasoningShort || pick.reasoning.split(".")[0] + ".";
     const projectedReasoning = projectReasoning(reasoningSource);
     const consensusBound = projectedReasoning.bound ?? shortReasoning.bound;
 
@@ -620,10 +648,25 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                 return { opening, current: opening + (delta ?? 0) };
               })()
             : null,
-        confidence: populatedConfidence,
-        confidenceCalibrated: calibrator ? honestConfidence(populatedConfidence, calibrator, true) : { pct: populatedConfidence, label: "calibrated" },
-        edgeScore: populatedEdge,
-        factorBreakdown: enrichedFactorBreakdown as unknown as FactorBreakdown,
+        // Gated fields: premium picks are never returned to FREE viewers (tier
+        // filter above); confidence is entitlement-gated for every viewer, and
+        // the calibrated display reads the SAME gated value — a hidden
+        // confidence can never render back as a percentage (lib/picks/teaser-text.ts).
+        confidence: entitlements.canSeeConfidence ? populatedConfidence : null,
+        confidenceCalibrated: calibrator
+          ? honestConfidence(entitlements.canSeeConfidence ? populatedConfidence : null, calibrator, true)
+          : entitlements.canSeeConfidence
+            ? { pct: populatedConfidence, label: "calibrated" }
+            : null,
+        // MP-02 (2026-09-05): the Edge Index is the free trust signal, but on a
+        // book-less row it is WITHHELD for viewers who cannot see confidence —
+        // null, never a fallback number. A fabricated default here read as a
+        // real read (edge 18 + confidence 68 recovered the paid number with one
+        // subtraction; a constant 54 fabricates one). The entitlement-aware
+        // call is the response value directly; the breakdown copy below keeps
+        // its own fallback for entitled factorBreakdown viewers.
+        edgeScore: publicEdgeScore(pick, entitlements),
+        factorBreakdown: (entitlements.canSeeFactorBreakdown ? enrichedFactorBreakdown : null) as unknown as FactorBreakdown,
         ...(continuityDeltas ? { continuityDeltas } : {}),
         ...(injuryEvidence ? { injuryEvidence } : {}),
         reasoningTrace,
@@ -633,12 +676,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       pickGrade: (pick.pickGrade ?? "LEAN") as PickGrade,
       riskLevel: (pick.riskLevel ?? "MODERATE") as RiskLevel,
       // Full reasoning / "the why" stays a paid feature (Pro+). Decoupled from
-      // canSeeConfidence (now true for FREE) so freeing confidence does not also
-      // free the premium reasoning trail. FREE gets the short teaser.
+      // canSeeConfidence so restoring the confidence paywall does not by itself
+      // hide the reasoning trail for Pro — the two gates are independent. FREE
+      // gets the short teaser through the fail-closed projector above.
       // A viewer who cannot see confidence must not read it back as a percentage
       // inside the teaser (lib/picks/teaser-text.ts).
-      reasoning: pick.reasoning || projectedReasoning.text,
-      reasoningShort: shortReasoning.text || pick.reasoningShort,
+      reasoning: projectedReasoning.text,
+      reasoningShort: shortReasoning.text,
       // Unbound mint-time book set → withhold consensusPct (#901 IMPROVE).
       consensusPct: consensusBound ? pick.consensusPct : null,
       bookmakerCount,
@@ -713,9 +757,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           );
           // FREE: numeric spine only — no percent-formatted model prose /
           // "(model signal)" leak in intelligence.summary or sixQuestions.
+          // The projector flag is the confidence entitlement, not a hardcoded
+          // true — calibrated P(WIN) is ours, and a hidden confidence can
+          // never re-enter through the spine's prose.
           const projected = projectPickIntelligenceForViewer(
             raw,
-            true,
+            entitlements.canSeeConfidence,
           );
           // NO-BET GATE (honesty/no-bet-gate.ts — wired 2026-10-14): the
           // publish surface now carries the gate's verdict. Fires on
@@ -784,7 +831,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       totalAvailableToday,
       hitDailyLimit,
       date: slate.dayKey,
-      canSeeConfidence: true,
+      canSeeConfidence: entitlements.canSeeConfidence,
       canSeeFactorBreakdown: true,
       containsSeedData,
     },

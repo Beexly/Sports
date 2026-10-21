@@ -154,11 +154,20 @@ describe("B2B v1 PRO-gated field shaping", () => {
     expect(rows.map((r) => r.id)).toEqual(["pick-high", "pick-low"]);
   });
 
-  it("probabilities: a PREMIUM-scope key still gets pModel, in the same order", async () => {
+  it("probabilities: a PREMIUM-scope key gets confidenceScore (pModel retired), in the same order", async () => {
     const { status, rows } = await call("probabilities", PREMIUM_KEY);
 
     expect(status).toBe(200);
-    expect(rows.map((r) => r.pModel)).toEqual([0.8, 0.55]);
+    // pModel is RETIRED (v5.2.8 Phase 2, CAL-06): it used to carry confidence/100
+    // and call it a model probability — measured anti-predictive at its top end
+    // (80+ claims 0.8663, realizes 0.5191, z = -10.7). The key stays PRESENT and
+    // null for every scope; the score ships as confidenceScore on its own 0-100
+    // scale, never divided. This is the guard holding, not a regression.
+    for (const row of rows) {
+      expect(row.pModel).toBeNull();
+      expect(Object.prototype.hasOwnProperty.call(row, "pModel")).toBe(true);
+    }
+    expect(rows.map((r) => r.confidenceScore)).toEqual([80, 55]);
     expect(rows.map((r) => r.id)).toEqual(["pick-high", "pick-low"]);
   });
 });
