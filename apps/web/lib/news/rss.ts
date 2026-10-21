@@ -246,9 +246,14 @@ export async function fetchLiveWireRead(
   now: Date = new Date(),
 ): Promise<LiveWireRead> {
   let feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
+  // Strictly opt-in (the module header promises dark-by-default, and
+  // news-rss-wire pins it): the curated catalog only substitutes when the
+  // operator asks for it by name. A default-on fallback here would make every
+  // unconfigured render fire six live network fetches and would erase the
+  // unconfigured state, which is the ONLY state allowed to show the sample.
   if (
     feeds.length === 0 &&
-    process.env["NEWS_RSS_USE_CURATED_DEFAULTS"]?.trim() !== "false"
+    process.env["NEWS_RSS_USE_CURATED_DEFAULTS"]?.trim() === "true"
   ) {
     feeds = [...CURATED_SPORTS_NEWS_RSS];
   }

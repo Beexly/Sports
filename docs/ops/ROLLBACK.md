@@ -322,8 +322,9 @@ What *does* exist, and is genuinely useful:
   `SignalLedger` and (#601) `LedgerChainEntry` are append-only by doctrine. Where
   these cover a surface, the history survives an app-level bug.
 - **Stripe is the system of record for billing.** Entitlements are reconciled from
-  it by the `reconcile-entitlements` cron (`0 8 * * *`), so local entitlement
-  corruption is self-healing within a day, or immediately by re-running that cron.
+  it by the hourly `reconcile-entitlements` cron (cadence: `docs/ops/CRON_MATRIX.generated.md`),
+  so local entitlement corruption is self-healing within an hour, or immediately by
+  re-running that cron.
 - **`npm run export:settled-picks`** produces a read-only JSONL export of settled
   picks — the closest thing to a manual snapshot of the product's core asset.
 

@@ -166,6 +166,7 @@ describe("drainPendingClvGrades — FAILED rows are retryable, not abandoned", (
           pickIdsQueried.push(args.where.id.in);
           return args.where.id.in.map((id) => ({
             id,
+            result: "WIN",
             pickType: "SPREAD",
             selection: "BUF",
             clvLockLine: -3,

@@ -68,21 +68,30 @@ const expectProviderFieldsIntact = (result: JynxCompleteResult, text: string) =>
 };
 
 describe("jynxComplete — the stamped lane describes the lane actually taken", () => {
-  it("routes to the free lane and stamps content_free when free lane is eligible and enabled", async () => {
+  it("routes to the free lane and stamps the plan's free_lane token when it is eligible and enabled", async () => {
+    // VOCABULARY PIN. JynxLane's free-lane token is "free_lane" (jynx.ts:40);
+    // "content_free" is credit-pool.ts's POOL token, a different axis. The
+    // mixed restore (f251d230c) wrote two literals here in the pool vocabulary
+    // while jynx.test.ts, jynx-examples.test.ts and credit-stack-posture.test.ts
+    // all pin the lane vocabulary, and this file's own verbatim test below
+    // asserts stamp === plan.primaryLane. The literals are re-pointed to the
+    // surviving contract; the stamp still describes the lane actually taken
+    // because planJynx derives primaryLane from the same shouldUseFreeLane
+    // predicate the dispatch uses (jynx.ts:161 vs jynx-complete.ts:32).
     const fetchImpl = vi.fn(async () => cerebrasResponse());
     const result = await jynxComplete({ ...base, surface: "brief", fetchImpl }, { ...FREE_ON });
 
     expect(requestedUrls(fetchImpl)[0]).toBe(CEREBRAS_URL);
-    expect(result.jynxPrimaryLane).toBe("content_free");
+    expect(result.jynxPrimaryLane).toBe("free_lane");
     expectProviderFieldsIntact(result, "Cerebras text");
   });
 
-  it("does not touch the free lane and does not stamp content_free when it is disabled", async () => {
+  it("does not touch the free lane and does not stamp free_lane when it is disabled", async () => {
     const fetchImpl = vi.fn(async () => anthropicResponse());
     const result = await jynxComplete({ ...base, surface: "brief", fetchImpl }, {});
 
     expect(requestedUrls(fetchImpl)[0]).toBe(ANTHROPIC_URL);
-    expect(result.jynxPrimaryLane).not.toBe("content_free");
+    expect(result.jynxPrimaryLane).not.toBe("free_lane");
     expect(result.jynxPrimaryLane).toBe("anthropic_direct");
   });
 
@@ -107,7 +116,7 @@ describe("jynxComplete — the stamped lane describes the lane actually taken", 
     const result = await jynxComplete({ ...base, surface: "studio", fetchImpl }, { ...FREE_ON });
 
     expect(requestedUrls(fetchImpl)[0]).toBe(ANTHROPIC_URL);
-    expect(result.jynxPrimaryLane).not.toBe("content_free");
+    expect(result.jynxPrimaryLane).not.toBe("free_lane");
   });
 
   it("reports the plan's own lane and reason verbatim for the same inputs", async () => {
@@ -119,8 +128,12 @@ describe("jynxComplete — the stamped lane describes the lane actually taken", 
       ["studio", { ...FREE_ON }],
     ] as const) {
       const plan = planJynx({ surface, maxTokens: base.maxTokens }, env);
+      // Derive the mock's provider from the DISPATCH predicate, not from a
+      // lane-token literal: plan.freeLaneWillTry is exactly what jynxComplete's
+      // dispatch branch evaluates, so each loop case hits the provider its
+      // dispatch actually chooses regardless of token vocabulary.
       const fetchImpl = vi.fn(async () =>
-        (plan.primaryLane === "content_free" ? cerebrasResponse : anthropicResponse)(),
+        (plan.freeLaneWillTry ? cerebrasResponse : anthropicResponse)(),
       );
       const result = await jynxComplete({ ...base, surface, fetchImpl }, env);
 
@@ -221,7 +234,7 @@ describe("jynxComplete — env threading", () => {
 
     expect(requestedUrls(freeRun)[0]).toBe(CEREBRAS_URL);
     expect(requestedUrls(cashRun)[0]).toBe(ANTHROPIC_URL);
-    expect(freeResult.jynxPrimaryLane).toBe("content_free");
+    expect(freeResult.jynxPrimaryLane).toBe("free_lane");
     expect(cashResult.jynxPrimaryLane).toBe("anthropic_direct");
   });
 

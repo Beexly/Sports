@@ -59,7 +59,15 @@ describe("every Prisma migration is additive (the rollback invariant)", () => {
   it("finds the migrations directory and it is not empty", () => {
     // Without this, a moved directory would turn every assertion below into a
     // vacuous pass over an empty array.
-    expect(MIGRATIONS.length).toBeGreaterThan(40);
+    //
+    // The history was SQUASHED to a baseline (f251d230c, 2026-10): the whole
+    // schema now lives in 20260101000000_baseline plus the post-baseline
+    // migrations. The old lower bound (40) described the pre-squash file count
+    // and can never be true again, so the anti-vacuity pin is the inventory
+    // itself: the squashed baseline present, and the post-baseline migrations
+    // that followed it.
+    expect(MIGRATIONS.length).toBeGreaterThanOrEqual(4);
+    expect(MIGRATIONS.map((m) => m.name)).toContain("20260101000000_baseline");
   });
 
   it("contains no destructive statement in any migration", () => {
@@ -194,22 +202,22 @@ describe("index builds that would lock an existing table", () => {
   it("records which migrations build a non-CONCURRENT index on a pre-existing table", () => {
     // Not a failure — a scheduling fact. A plain CREATE INDEX holds a SHARE
     // lock on the target table for the duration of the build: reads continue,
-    // WRITES block. All five below are already applied in production, and the
-    // one that matters is the 2026-07-08 hot-path pass over `odds` (the
-    // largest table in this schema — a 2026-08-19 census counted 1,368,288
-    // rows, docs/ops/hermes/l14-label-census/RESULTS.md). This assertion pins
-    // the set so a NEW entry has to be added here deliberately, with the write
-    // window thought through, rather than discovered during a deploy.
+    // WRITES block. This assertion pins the set so a NEW entry has to be added
+    // here deliberately, with the write window thought through, rather than
+    // discovered during a deploy.
+    //
+    // The seven pre-squash entries (add_pick_clv, add_slate_commitment, the
+    // 2026-07-08 hot-path pass over odds and picks, formal_incident_review_
+    // outcome, jarvis_memory_scope_type_created_idx) were folded into
+    // 20260101000000_baseline by the f251d230c squash. The baseline's own
+    // indexes sit on tables that same migration creates, which is exactly the
+    // idiom `lockRiskNotes` exempts (pinned below), so what remains live is
+    // the post-baseline set:
     const notes = MIGRATIONS.flatMap((m) => lockRiskNotes(m.name, m.sql));
     const byMigration = [...new Set(notes.map((n) => `${n.migration}:${n.table}`))].sort();
     expect(byMigration).toEqual([
-      "20260603120000_add_pick_clv:picks",
-      "20260622180000_add_slate_commitment:pick_proof_receipts",
-      "20260708000000_add_hot_path_indexes:ingestion_runs",
-      "20260708000000_add_hot_path_indexes:odds",
-      "20260708000000_add_hot_path_indexes:picks",
-      "20260723140000_add_formal_incident_review_outcome:formal_incident",
-      "20260807120000_jarvis_memory_scope_type_created_idx:jarvis_memory_events",
+      "20260902230000_game_merge_alias:games",
+      "20260902231000_week1_hot_path_indexes:picks",
     ]);
   });
 

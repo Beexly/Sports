@@ -91,6 +91,19 @@ const EXEMPT_TREES: ReadonlyArray<readonly [string, string]> = [
   ["reports/", "dated analysis reports; findings are anchored to the date they were produced"],
   ["_logs/", "append-only decision/journal logs; entries record what was decided when"],
   ["node_modules/", "third-party code, not our documentation"],
+  // The dated research buckets (docs/INDEX.md "DOCS BUCKETS" doctrine: every
+  // entry lives under research/<YYYY-MM-DD>/). Their dollar figures are
+  // third-party vendor prices, competitor prices, or infrastructure costs
+  // recorded on their date, never GSE tier pricing. Rewriting them would be
+  // falsifying the record, not fixing a doc.
+  ["docs/research/", "retired research dumping ground, preserved as dated research records"],
+  ["docs/dfs/research/", "dated DFS research inbox; figures are market/vendor observations of their date"],
+  ["docs/predictions/research/", "dated predictions research inbox; dollar figures are vendor/infra costs of their date"],
+  ["docs/props/research/", "dated props research inbox; figures are market/vendor observations of their date"],
+  ["docs/fantasy/research/", "dated fantasy research inbox"],
+  ["docs/engine/research/", "dated engine research inbox; dollar figures are third-party or infra costs of their date"],
+  ["docs/data-sources/research/", "dated data-source research inbox plus misc/ scrape captures; dollar figures are third-party vendor prices, not GSE tiers"],
+  ["docs/arxiv-program/research/", "dated arxiv-corpus research inbox; paper pricing notes are third-party"],
 ];
 
 /**
@@ -125,6 +138,14 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
   [
     "docs/operator-playbook.md",
     "database host plan pricing (infrastructure vendor) — not our subscription tiers",
+  ],
+  [
+    "docs/reasoning/infrastructure-2026-09-28.md",
+    "dated 2026-09-28 infrastructure cost math; the amounts are compute vendor costs (Neon CU-hours), not subscription tiers",
+  ],
+  [
+    "docs/ops/LAUNCH_FINISH_LINE_2026-09-05.md",
+    "dated 2026-09-05 launch plan; the flagged amount is a Signal Origin payment link recorded as it was then (since deactivated), not a GSE tier price",
   ],
 ];
 

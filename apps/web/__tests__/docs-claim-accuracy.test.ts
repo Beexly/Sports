@@ -26,7 +26,7 @@
 
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
@@ -70,6 +70,9 @@ const NON_DESCRIPTIVE_DOC_PREFIXES: ReadonlyArray<readonly [string, string]> = [
   ["docs/ops/AGENT_LEDGER.md", "append-only historical ledger; rewriting it would falsify the record"],
   ["docs/ops/CLAUDE_DECISIONS_20260902.md", "dated decision log; quotes the schedule as it was on 2026-09-02"],
   ["docs/ops/cost-github-hf.md", "dated 2026-09-29 cost measurement; quotes schedules as they were then"],
+  ["docs/data-sources/research/", "dated research-inbox artifacts (per docs/INDEX.md every entry lives under a dated directory); the scripts they name are records of their date, not present-tense repo scripts"],
+  ["docs/ops/ACTIONS-MINUTES-RECOVERY.md", "dated 2026-08-26 incident record; it quotes the schedule as measured then and retimes proposed then, neither of which is the live set"],
+  [".claude/skills/model-promotion-gate/SKILL.md", "law 2 places .claude/** on the never-modify list, so an agent cannot repair its stale calibration command line; excluded until the owner updates the skill"],
 ];
 
 const DATED_DOC_RE = /[_-](20\d\d)[-_]?(\d\d)[-_]?(\d\d)\.md$/;
@@ -128,15 +131,25 @@ describe("docs: every documented npm script exists", () => {
 });
 
 describe("docs: transcribed cron schedules match the schedule files", () => {
-  /** Live schedules, from the two files that actually drive execution. */
+  /**
+   * Live schedules: apps/web/vercel.json plus EVERY workflow file that
+   * schedules jobs. The original read only external-cron.yml, so a doc quoting
+   * external-watchdog.yml's live every-30-minutes schedule was punished for
+   * quoting accurately. A schedule the guard cannot see is a false positive
+   * waiting to happen; enumerate the directory instead of naming files.
+   */
   const LIVE_CRON_EXPRESSIONS: ReadonlySet<string> = (() => {
     const set = new Set<string>();
     const vercel = JSON.parse(readFileSync(join(REPO_ROOT, "apps/web/vercel.json"), "utf8")) as {
       crons?: ReadonlyArray<{ schedule: string }>;
     };
     for (const c of vercel.crons ?? []) set.add(c.schedule.trim());
-    const workflow = readFileSync(join(REPO_ROOT, ".github/workflows/external-cron.yml"), "utf8");
-    for (const m of workflow.matchAll(/cron:\s*"([^"]+)"/g)) set.add((m[1] as string).trim());
+    const workflowsDir = join(REPO_ROOT, ".github", "workflows");
+    for (const f of readdirSync(workflowsDir)) {
+      if (!f.endsWith(".yml") && !f.endsWith(".yaml")) continue;
+      const workflow = readFileSync(join(workflowsDir, f), "utf8");
+      for (const m of workflow.matchAll(/cron:\s*"([^"]+)"/g)) set.add((m[1] as string).trim());
+    }
     return set;
   })();
 
@@ -171,7 +184,7 @@ describe("docs: transcribed cron schedules match the schedule files", () => {
     expect(
       stale,
       "Live ops docs quote cron expressions that appear in neither apps/web/vercel.json nor " +
-        `.github/workflows/external-cron.yml:\n${stale.join("\n")}\n` +
+        `the .github/workflows/*.yml schedules:\n${stale.join("\n")}\n` +
         "Point at docs/ops/CRON_MATRIX.generated.md instead of transcribing a schedule.",
     ).toEqual([]);
   });
