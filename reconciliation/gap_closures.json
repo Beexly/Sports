@@ -9,8 +9,8 @@
   },
   "counts": {
     "open": 16,
-    "partial": 8,
-    "closed": 4
+    "partial": 7,
+    "closed": 5
   },
   "gaps": [
     {
@@ -306,11 +306,12 @@
       "id": "GAP-14",
       "severity": "LOW",
       "title": "Corpus-evaluator coverage is asserted in a docstring but not enforced",
-      "status": "partial",
-      "detail": "the coverage auditor exists and only reports; it is NOT wired into CI",
+      "status": "closed",
+      "detail": "the coverage auditor exists and enforces; it runs in CI",
       "probe": "corpus-evaluator coverage is asserted in a docstring but not enforced",
       "evidence": [
-        "reconciliation/_check_class_a_coverage.mjs"
+        "reconciliation/_check_class_a_coverage.mjs",
+        ".github/workflows/ci.yml:389:        run: node reconciliation/_check_class_a_coverage.mjs"
       ],
       "blocks_current_business_model": false
     },

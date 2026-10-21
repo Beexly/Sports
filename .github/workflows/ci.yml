@@ -367,6 +367,28 @@ jobs:
         run: node scripts/guardrails/secret-scan.mjs --all
 
   # --------------------------------------------------------------
+  # 5c. Class-A Literature Coverage Guard (GAP-14 closure)
+  #     Enforces that all 114 read sites and 12 insert paths honor
+  #     the verified Class-A literature constraint without bypass.
+  # --------------------------------------------------------------
+  class-a-coverage:
+    name: Class-A Literature Coverage Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run Class-A literature coverage check
+        run: node reconciliation/_check_class_a_coverage.mjs
+
+  # --------------------------------------------------------------
   # 6. Composite guardrails job — convenience target for local + branch
   #    protection rules.
   # --------------------------------------------------------------

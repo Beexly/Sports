@@ -432,4 +432,7 @@ console.log(`  -> ${selects.length} read sites, ${badSelects} without the class 
 
 const ok = badInserts === 0 && badSelects === 0;
 console.log(`\nVERDICT: ${ok ? "every path sets and honours the class" : "GAPS FOUND"}`);
-process.exit(ok ? 0 : 1);
+if (!ok) {
+  process.exit(1);
+}
+process.exit(0);
