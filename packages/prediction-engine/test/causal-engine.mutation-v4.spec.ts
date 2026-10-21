@@ -505,6 +505,44 @@ describe("T1-T16 -- the spec's named falsification suite, and its own coverage l
   });
 
   /**
+   * THE REPO-LEVEL GUARDS ARE GREEN.
+   *
+   * The T12 ledger proves the PROBES exist; these two prove the repo-level invariants the
+   * probes depend on are still holding. The threshold auditor is the T12 gate itself -- it
+   * FAILS the build on an exported-but-never-compared constant, which is the "decorative
+   * threshold" class the goal spec names. The class-A guard is the T4/§4.2 invariant: every
+   * read of the literature corpus honours the record class.
+   *
+   * Both are run from the REPO ROOT (not the package), because both live in the root's
+   * reconciliation/ directory. This check is what catches a new module that exports a
+   * threshold nobody compares -- which is exactly how T14's first cut was caught, by the
+   * auditor itself, before this check existed.
+   */
+  it("the repo-level guards are green: the threshold auditor and the class-A guard", () => {
+    const failures: string[] = [];
+    for (const script of ["_audit_unenforced_thresholds.mjs", "_check_class_a_coverage.mjs"]) {
+      try {
+        const output = execFileSync(process.execPath, [resolve(ROOT, "reconciliation", script)], {
+          encoding: "utf8",
+          cwd: ROOT,
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+        // The auditors print their own verdict; assert the verdict, not just the exit code.
+        if (/GATE FAIL|VERDICT: every path sets and honours the class/.test(output) === false && script === "_check_class_a_coverage.mjs") {
+          failures.push(`${script}: ran but printed no recognisable verdict`);
+        }
+        if (/_audit_unenforced_thresholds/.test(script) && !/GATE PASS/.test(output)) {
+          failures.push(`${script}: did not report GATE PASS:\n${output.slice(-900)}`);
+        }
+      } catch (error) {
+        const e = error as { stdout?: string; stderr?: string };
+        failures.push(`${script} FAILED:\n${(e.stdout ?? "").slice(-1400)}${(e.stderr ?? "").slice(-400)}`);
+      }
+    }
+    expect(failures, failures.join("\n\n")).toEqual([]);
+  });
+
+  /**
    * THIS FILE IS THE SPEC'S NAMED DELIVERABLE, and it says so where an operator will find it.
    *
    * A reader who greps for "mutation-v4" should land here and find the coverage map. This
