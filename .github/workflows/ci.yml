@@ -152,6 +152,21 @@ jobs:
       # that fails on its first appearance should be added here on purpose, after it
       # has been seen green, rather than silently becoming a gate the day it is
       # written.
+      # THE GAP CLOSURE LEDGER. Every status in reconciliation/gap_closures.json is
+      # RE-DERIVED from a mechanical probe on every run -- a grep, a file check, an
+      # artifact's own count -- so a closure that stops holding flips itself.
+      #
+      # And a flip is not silent: the script reads the PREVIOUS ledger first, and a gap
+      # that was `closed` and is no longer closed is a REGRESSION that exits 1 with the
+      # gap named. A closure is therefore a claim CI re-checks, not a note somebody
+      # wrote once.
+      #
+      # The ledger is a SEPARATE file on purpose: reconciliation/gaps.json is GENERATED
+      # by reconciliation/_build_gaps.py, so a hand-added `status` field there would be
+      # wiped on the next regeneration.
+      - name: Verify the gap closure ledger (re-derives every status; fails on a regression)
+        run: node reconciliation/_verify_gap_closures.mjs
+
       - name: Run the node:test guardrail ${{ matrix.suite }}
         run: node --test ${{ matrix.suite }}
         strategy:
