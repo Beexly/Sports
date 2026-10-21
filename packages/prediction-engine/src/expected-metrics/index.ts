@@ -149,6 +149,15 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Snap differential (deterministic; enters dark).
+export {
+  computeSnapDifferential,
+  SNAP_DIFFERENTIAL_MODEL_VERSION,
+  type ScrimmagePlayRow,
+  type SnapDifferentialWindowResult,
+  type TeamSnapDifferential,
+} from "./snap-differential.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {
