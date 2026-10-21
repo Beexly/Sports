@@ -54,16 +54,30 @@
  *         antecedent puts the circle at the FAR end with any mark at the near end, so every
  *         case where the near end is already a tail is missed. That is a FAILURE TO ORIENT,
  *         which is the safe direction.
- *       - R8's first disjunct (a -> b -> c, a o-* c) is implemented. Zhang's second disjunct
- *         (a -o b -> c) is NOT, and the branch that stands in its place requires an
- *         ARROWHEAD at c on the b-c edge -- `b o-> c` -- so that c is a descendant of a and
- *         the orientation is forced. Without that guard the branch oriented AGAINST a rule
- *         (it wrote an arrowhead at c on a case where `c -> b` was equally consistent);
- *         that was found and fixed on 2026-10-20, and the regression test for it is
- *         "prevents R8 from ORIENTING AGAINST A RULE" in fci-pag.test.ts.
- *     R5, R6, R7, R9, R10 have NO test at all. The incompleteness is CUMULATIVE rather than
- *     additive: R6 is the only rule that turns an `o-*` edge into a `-*` edge, so with R5-R7
- *     absent nothing produces the `-*` edges that R7 and R8's second disjunct consume.
+ *       - The rule this module previously called "R8" is NOT Zhang's R8. Zhang's R8 turns a
+ *         partially directed edge `A o-> C` into a DIRECTED one by writing a TAIL at the
+ *         near end (Zhang 2008, p. 1881). That rule is now `ruleR8`, transcribed verbatim
+ *         from the publisher PDF, and it is wired into the fixpoint. The module's own
+ *         arrowhead-at-the-far-end rule is now named `ruleArrowheadAtDescendant`, and the
+ *         branch that stands in for its second disjunct requires an ARROWHEAD at c on the
+ *         b-c edge -- `b o-> c` -- so that c is a descendant of a and the orientation is
+ *         forced. Without that guard the branch oriented AGAINST a rule (it wrote an
+ *         arrowhead at c on a case where `c -> b` was equally consistent); that was found
+ *         and fixed on 2026-10-20, and the regression test for it is
+ *         "prevents the descendant-arrowhead rule from ORIENTING AGAINST A RULE" in
+ *         fci-pag.test.ts.
+ *     R5, R6, R7, R8, R9 and R10 are implemented (the R5-R7 block on journal p. 1880, the
+ *         R8-R10 block on p. 1881), transcribed VERBATIM from the publisher PDF -- the
+ *         extracted rule text is quoted in the source above the implementations. R5-R7 are
+ *         the selection-bias rules and are the ONLY source of the undirected edges that R6
+ *         consumes, so without them the tail half of AFCI was unreachable rather than merely
+ *         incomplete. Each rule has a positive case and a negative case in
+ *         fci-pag.test.ts, so a rule that fires on everything is caught as surely as one
+ *         that never fires.
+ *     The path searches R5/R9/R10 need are exponential in the worst case and are bounded by
+ *         PATH_SEARCH_BUDGET; hitting the bound means "no path", i.e. the rule fails to
+ *         fire. That is the safe direction: a rule that fails to fire is incomplete, a rule
+ *         that fires wrongly is unsound.
  *  3. R3's notation in the source ("D o-* B, ... orient D *-> B") is ambiguous. The only mark
  *     that can change is the circle at D, so we set the arrowhead at D (the reading used by
  *     Tetrad's FciOrient). Reading it literally as "arrowhead at B" would make the rule a
@@ -851,8 +865,26 @@ function ruleR4(g: EdgeMap, sepsets: ReadonlyMap<string, readonly number[]>, d: 
   return changed;
 }
 
-/** R8: A -> B -> C or A -> B o-* C, with A o-* C, forces an arrowhead at C. */
-function ruleR8(g: EdgeMap): boolean {
+/**
+ * The descendant-arrowhead rule: A -> B -> C or A -> B o-> C, with A o-* C, forces an
+ * arrowhead at C.
+ *
+ * THIS IS NOT ZHANG'S R8. It was previously mislabelled as such in this module. Zhang's R8
+ * turns a partially directed edge `A o-> C` into a DIRECTED one by writing a TAIL at the
+ * NEAR end (Zhang 2008, p. 1881: "R8 If alpha -> beta -> gamma or alpha -o beta -> gamma,
+ * and alpha o-> gamma, orient alpha o-> gamma as alpha -> gamma"). That rule is now
+ * `ruleR8` below, transcribed from the paper.
+ *
+ * This rule instead writes an ARROWHEAD at the FAR end of an edge whose near end is a
+ * circle. It is sound by the descendant argument: the arrowhead at C on the B-C edge is
+ * definite, so C is a child of B, and A -> B makes C a descendant of A, so the A-C edge
+ * cannot be C -> A. That is why the branch requires `b o-> c` (arrowhead at C) and not
+ * merely a circle at B: with a circle at C the point C need not be a descendant of A, and
+ * the branch would orient AGAINST a rule. That was found and fixed on 2026-10-20; the
+ * regression test is "prevents the descendant-arrowhead rule from ORIENTING AGAINST A
+ * RULE" in fci-pag.test.ts.
+ */
+function ruleArrowheadAtDescendant(g: EdgeMap): boolean {
   let changed = false;
   for (const rec of g.values()) {
     for (const a of [rec.u, rec.v]) {
@@ -905,6 +937,359 @@ function ruleR8(g: EdgeMap): boolean {
   return changed;
 }
 
+// ---------------------------------------------------------------------------
+// Zhang (2008) R5-R10 -- transcribed from the publisher PDF.
+//
+// SOURCE: Zhang, J. (2008). "On the completeness of orientation rules for causal discovery in
+// the presence of latent confounders and selection bias." Artificial Intelligence
+// 172(16-17):1873-1896. doi:10.1016/j.artint.2008.08.001. Journal pages 1880-1881
+// (PDF pp. 8-9), Section 4 "Extra orientation rules and tail completeness".
+//
+// VERBATIM, journal p. 1880 (Definitions 9-10 and R5-R7):
+//
+//   Definition 9 (uncovered path). In a PMG, a path p = <V0,...,Vn> is said to be uncovered if
+//   for every 1 <= i <= n-1, V(i-1) and V(i+1) are not adjacent, i.e., if every consecutive
+//   triple on the path is unshielded.
+//
+//   Definition 10 (potentially directed path). In a PMG, a path p = <V0,...,Vn> is said to be
+//   potentially directed (abbreviated as p.d.) from V0 to Vn if for every 0 <= i <= n-1, the
+//   edge between Vi and V(i+1) is not into Vi or out of V(i+1). ... A special case of a p.d.
+//   path is where every edge on the path is of the form o-o; we call such a path a circle path.
+//
+//   R5 For every (remaining) alpha o-o beta, if there is an uncovered circle path
+//      p = <alpha, gamma, ..., theta, beta> between alpha and beta s.t. alpha, theta are not
+//      adjacent and beta, gamma are not adjacent, then orient alpha o-o beta and every edge on
+//      p as undirected edges (-).
+//
+//   R6 If alpha - beta o-* gamma (alpha and gamma may or may not be adjacent), then orient
+//      beta o-* gamma as beta -* gamma.
+//
+//   R7 If alpha -o beta o-* gamma, and alpha, gamma are not adjacent, then orient beta o-* gamma
+//      as beta -* gamma.
+//
+// VERBATIM, journal p. 1881 (R8-R10):
+//
+//   R8 If alpha -> beta -> gamma or alpha -o beta -> gamma, and alpha o-> gamma, orient alpha
+//      o-> gamma as alpha -> gamma.
+//
+//   R9 If alpha o-> gamma, and p = <alpha, beta, theta, ..., gamma> is an uncovered p.d. path
+//      from alpha to gamma such that gamma and beta are not adjacent, then orient alpha o-> gamma
+//      as alpha -> gamma.
+//
+//   R10 Suppose alpha o-> gamma, beta -> gamma <- theta, p1 is an uncovered p.d. path from
+//      alpha to beta, and p2 is an uncovered p.d. path from alpha to theta. Let mu be the vertex
+//      adjacent to alpha on p1 (mu could be beta), and omega be the vertex adjacent to alpha on
+//      p2 (omega could be theta). If mu and omega are distinct, and are not adjacent, then orient
+//      alpha o-> gamma as alpha -> gamma.
+//
+// MARK VOCABULARY. Zhang writes an edge as <mark at X>--<mark at Y>, so `o-o` is a circle at
+// both ends, `o-*` a circle at the first end and anything at the second, `-o` a tail at the
+// first end and a circle at the second, `o->` a circle at the first end and an arrowhead at
+// the second, and a bare `-` an UNDIRECTED edge -- tail at both ends, which is how this module
+// already represents one (see the MARK RULE note in the header).
+//
+// NOTE ON R8. Zhang's R8 writes a TAIL at the near end (it turns `o->` into `->`). It is NOT
+// the rule this module previously called R8; that one writes an ARROWHEAD at the far end and is
+// now named `ruleArrowheadAtDescendant`.
+//
+// NOTE ON THE PATH SEARCHES. R5, R9 and R10 all ask for the existence of a path with local
+// constraints (unshielded consecutive triples, p.d. steps). Such a search is exponential in
+// the worst case, so it is bounded: PATH_SEARCH_BUDGET caps the number of edges examined, and
+// the depth is capped at the node count. When the budget is exhausted the search returns
+// "no path", which is the SAFE direction -- the rule then fails to fire and nothing is
+// oriented. A rule that fails to fire is incomplete; a rule that fires wrongly is unsound.
+// ---------------------------------------------------------------------------
+
+/** A bound on the path searches below, so a dense graph cannot make a rule run forever. */
+const PATH_SEARCH_BUDGET = 20000;
+
+/** The edge {a,b} carries a circle at BOTH ends (Zhang's `o-o`). */
+function isCircleCircle(g: EdgeMap, a: number, b: number): boolean {
+  return markAt(g, a, b) === "circle" && markAt(g, b, a) === "circle";
+}
+
+/** The edge {a,b} is undirected: a tail at both ends (Zhang's bare `-`). */
+function isUndirected(g: EdgeMap, a: number, b: number): boolean {
+  return markAt(g, a, b) === "tail" && markAt(g, b, a) === "tail";
+}
+
+/**
+ * Zhang Definition 10: the step u -> v is potentially directed, i.e. the edge between u and v
+ * is "not into u" (u carries no arrowhead) and "not out of v" (v carries no tail).
+ */
+function isPdStep(g: EdgeMap, u: number, v: number): boolean {
+  return markAt(g, u, v) !== "arrowhead" && markAt(g, v, u) !== "tail";
+}
+
+/**
+ * R5's antecedent search: an uncovered circle path from `a` to `b`, or null.
+ *
+ * "Circle path" (Def 10, special case): every edge on the path is `o-o`.
+ * "Uncovered" (Def 9): every consecutive triple on the path is unshielded.
+ * R5 adds the two wrap-around conditions that make the CYCLE <a,...,b,a> uncovered: `a` is
+ * non-adjacent to the second-to-last node and `b` is non-adjacent to the second node.
+ *
+ * Returns the path as node indices (including both endpoints) or null.
+ */
+function findUncoveredCirclePath(g: EdgeMap, a: number, b: number, d: number): number[] | null {
+  // BFS over path LENGTH, so the witness found is the SHORTEST one. That is the same choice
+  // pcalg's minUncovCircPath makes, and it keeps the set of edges turned undirected as small
+  // as the rule allows: a longer witness would orient MORE edges, and while each application
+  // of R5 is sound, the minimal witness is the one the rule is stated over.
+  let frontier: number[][] = [[a]];
+  let budget = PATH_SEARCH_BUDGET;
+  while (frontier.length > 0) {
+    const next: number[][] = [];
+    for (const path of frontier) {
+      const last = path[path.length - 1]!;
+      for (const nb of neighborsOf(g, last)) {
+        if (budget-- <= 0) return null;
+        if (path.includes(nb)) continue;
+        if (!isCircleCircle(g, last, nb)) continue;
+        if (path.length >= 2) {
+          const prev = path[path.length - 2]!;
+          if (isAdj(g, prev, nb)) continue; // every consecutive triple must be unshielded
+        }
+        const extended = [...path, nb];
+        if (nb === b) {
+          // The cycle's two wrap-around triples: (theta, b, a) and (b, a, gamma).
+          const gamma = extended[1]!;
+          const theta = extended[extended.length - 2]!;
+          if (extended.length >= 4 && !isAdj(g, a, theta) && !isAdj(g, b, gamma)) return extended;
+          continue; // b is the endpoint: the path ends here
+        }
+        if (extended.length < d) next.push(extended);
+      }
+    }
+    frontier = next;
+  }
+  return null;
+}
+
+/**
+ * Is there an uncovered potentially directed path from `from` to `to` whose SECOND node is
+ * `second`?
+ *
+ * "p.d." (Def 10): every step is not into its tail and not out of its head.
+ * "Uncovered" (Def 9): every consecutive triple on the path is unshielded.
+ *
+ * `second === to` is the single-edge case (the path is just the edge from--to), which has no
+ * consecutive triple and is therefore uncovered. R10 needs it: "mu could be beta".
+ */
+function uncoveredPdPathExists(
+  g: EdgeMap,
+  from: number,
+  to: number,
+  second: number,
+  d: number,
+): boolean {
+  if (from === second || !isAdj(g, from, second)) return false;
+  if (!isPdStep(g, from, second)) return false;
+  if (to === second) return true;
+  const path: number[] = [from, second];
+  const onPath = new Set<number>([from, second]);
+  let budget = PATH_SEARCH_BUDGET;
+  const walk = (): boolean => {
+    const last = path[path.length - 1]!;
+    for (const next of neighborsOf(g, last)) {
+      if (budget-- <= 0) return false;
+      if (onPath.has(next)) continue;
+      if (!isPdStep(g, last, next)) continue;
+      if (path.length >= 2) {
+        const prev = path[path.length - 2]!;
+        if (isAdj(g, prev, next)) continue; // every consecutive triple must be unshielded
+      }
+      path.push(next);
+      onPath.add(next);
+      if (next === to) return true;
+      if (path.length < d && walk()) return true;
+      path.pop();
+      onPath.delete(next);
+    }
+    return false;
+  };
+  return walk();
+}
+
+/**
+ * R5: for every remaining circle-circle edge, an uncovered circle path makes that edge AND
+ * every edge on the path undirected.
+ */
+function ruleR5(g: EdgeMap, d: number): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const [alpha, beta] of [
+      [rec.u, rec.v],
+      [rec.v, rec.u],
+    ] as const) {
+      if (!isCircleCircle(g, alpha, beta)) continue;
+      const path = findUncoveredCirclePath(g, alpha, beta, d);
+      if (path === null) continue;
+      if (setMark(g, alpha, beta, "tail")) changed = true;
+      if (setMark(g, beta, alpha, "tail")) changed = true;
+      for (let i = 0; i + 1 < path.length; i++) {
+        const u = path[i]!;
+        const v = path[i + 1]!;
+        if (setMark(g, u, v, "tail")) changed = true;
+        if (setMark(g, v, u, "tail")) changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
+/** R6: an undirected edge at beta turns beta's circle toward gamma into a tail. */
+function ruleR6(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const [beta, gamma] of [
+      [rec.u, rec.v],
+      [rec.v, rec.u],
+    ] as const) {
+      if (markAt(g, beta, gamma) !== "circle") continue; // beta o-* gamma
+      let hasUndirected = false;
+      for (const alpha of neighborsOf(g, beta)) {
+        if (isUndirected(g, alpha, beta)) {
+          hasUndirected = true;
+          break;
+        }
+      }
+      if (!hasUndirected) continue;
+      if (setMark(g, beta, gamma, "tail")) changed = true;
+    }
+  }
+  return changed;
+}
+
+/**
+ * R7: alpha -o beta o-* gamma with alpha, gamma non-adjacent turns beta's circle toward
+ * gamma into a tail.
+ */
+function ruleR7(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const [beta, gamma] of [
+      [rec.u, rec.v],
+      [rec.v, rec.u],
+    ] as const) {
+      if (markAt(g, beta, gamma) !== "circle") continue; // beta o-* gamma
+      for (const alpha of neighborsOf(g, beta)) {
+        if (alpha === gamma) continue;
+        if (markAt(g, alpha, beta) !== "tail") continue; // alpha -o beta
+        if (markAt(g, beta, alpha) !== "circle") continue;
+        if (isAdj(g, alpha, gamma)) continue; // alpha, gamma must be non-adjacent
+        if (setMark(g, beta, gamma, "tail")) changed = true;
+        break;
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * R8: alpha -> beta -> gamma or alpha -o beta -> gamma, with alpha o-> gamma, turns the
+ * circle at alpha into a tail -- the edge becomes alpha -> gamma.
+ */
+function ruleR8(g: EdgeMap): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const [alpha, gamma] of [
+      [rec.u, rec.v],
+      [rec.v, rec.u],
+    ] as const) {
+      if (markAt(g, alpha, gamma) !== "circle") continue; // alpha o-> gamma
+      if (markAt(g, gamma, alpha) !== "arrowhead") continue;
+      for (const beta of neighborsOf(g, alpha)) {
+        if (beta === gamma) continue;
+        if (markAt(g, alpha, beta) !== "tail") continue; // alpha -> beta, or alpha -o beta
+        const atBeta = markAt(g, beta, alpha);
+        if (atBeta !== "arrowhead" && atBeta !== "circle") continue;
+        if (markAt(g, beta, gamma) !== "tail") continue; // beta -> gamma
+        if (markAt(g, gamma, beta) !== "arrowhead") continue;
+        if (setMark(g, alpha, gamma, "tail")) changed = true;
+        break;
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * R9: alpha o-> gamma, with an uncovered p.d. path from alpha to gamma whose second node is
+ * non-adjacent to gamma, turns the circle at alpha into a tail.
+ */
+function ruleR9(g: EdgeMap, d: number): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const [alpha, gamma] of [
+      [rec.u, rec.v],
+      [rec.v, rec.u],
+    ] as const) {
+      if (markAt(g, alpha, gamma) !== "circle") continue; // alpha o-> gamma
+      if (markAt(g, gamma, alpha) !== "arrowhead") continue;
+      for (const beta of neighborsOf(g, alpha)) {
+        if (beta === gamma) continue;
+        if (!isPdStep(g, alpha, beta)) continue;
+        if (isAdj(g, beta, gamma)) continue; // gamma and beta must be non-adjacent
+        if (!uncoveredPdPathExists(g, alpha, gamma, beta, d)) continue;
+        if (setMark(g, alpha, gamma, "tail")) changed = true;
+        break;
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * R10: alpha o-> gamma with two parents beta -> gamma <- theta, and two uncovered p.d. paths
+ * from alpha (one to beta, one to theta) whose first steps land on distinct, non-adjacent
+ * vertices, turns the circle at alpha into a tail.
+ */
+function ruleR10(g: EdgeMap, d: number): boolean {
+  let changed = false;
+  for (const rec of g.values()) {
+    for (const [alpha, gamma] of [
+      [rec.u, rec.v],
+      [rec.v, rec.u],
+    ] as const) {
+      if (markAt(g, alpha, gamma) !== "circle") continue; // alpha o-> gamma
+      if (markAt(g, gamma, alpha) !== "arrowhead") continue;
+      const parents: number[] = [];
+      for (const x of neighborsOf(g, gamma)) {
+        if (markAt(g, x, gamma) === "tail" && markAt(g, gamma, x) === "arrowhead") parents.push(x);
+      }
+      if (parents.length < 2) continue;
+      // `fired` is LOCAL to this edge, and it must be declared OUTSIDE the beta/theta loops:
+      // the intent is "orient this edge at most once, then stop trying the other parent
+      // pairs". Using the shared `changed` flag instead would make the breaks below skip the
+      // remaining (alpha,gamma) pairs as soon as ANY earlier edge was oriented, so only one
+      // edge per call would ever be done -- and the result would depend on iteration order
+      // rather than on the rule.
+      let fired = false;
+      for (const beta of parents) {
+        for (const theta of parents) {
+          if (beta === theta) continue;
+          for (const mu of neighborsOf(g, alpha)) {
+            if (!uncoveredPdPathExists(g, alpha, beta, mu, d)) continue;
+            for (const omega of neighborsOf(g, alpha)) {
+              if (omega === mu) continue;
+              if (isAdj(g, mu, omega)) continue;
+              if (!uncoveredPdPathExists(g, alpha, theta, omega, d)) continue;
+              if (setMark(g, alpha, gamma, "tail")) changed = true;
+              fired = true;
+              break;
+            }
+            if (fired) break;
+          }
+          if (fired) break;
+        }
+        if (fired) break;
+      }
+    }
+  }
+  return changed;
+}
+
 /**
  * Ancestral completion, standing in for R9/R10: a circle is resolved only when the alternative
  * would create a directed or almost-directed cycle, so every completion here is forced.
@@ -929,22 +1314,77 @@ function completeAncestral(g: EdgeMap, d: number): boolean {
   return changed;
 }
 
+/**
+ * The orientation rules, as individually switchable ids.
+ *
+ * WHY THIS EXISTS. Every one of these rules is applied inside one fixpoint loop, and the
+ * rules INTERACT: on a hand-built graph, `completeAncestral` and R2 can fire on exactly the
+ * same configuration as R8 or R9. A test that asserts "the graph came out oriented" then
+ * passes even when the rule it names is deleted -- it is testing the fixpoint, not the rule.
+ * That is not a hypothetical: the mutation sweep in
+ * packages/prediction-engine/reconciliation/_mutation_sweep_r5_r10.mjs caught exactly that
+ * for R8.
+ *
+ * pcalg's `udag2pag` has the same switch (`rules = c(TRUE, TRUE, ...)`) and the same reason.
+ * Exposing it here means each rule can be exercised on its own, which is the only way a test
+ * can say anything specific about THAT rule.
+ */
+export type OrientationRule =
+  | "R1"
+  | "R2"
+  | "R3"
+  | "R4"
+  | "descendantArrowhead"
+  | "R5"
+  | "R6"
+  | "R7"
+  | "R8"
+  | "R9"
+  | "R10"
+  | "ancestralCompletion";
+
+/** Every rule id, in the order the fixpoint applies them. */
+export const ALL_ORIENTATION_RULES: readonly OrientationRule[] = [
+  "R1",
+  "R2",
+  "R3",
+  "R4",
+  "descendantArrowhead",
+  "R5",
+  "R6",
+  "R7",
+  "R8",
+  "R9",
+  "R10",
+  "ancestralCompletion",
+];
+
 function applyOrientationRules(
   g: EdgeMap,
   sepsets: ReadonlyMap<string, readonly number[]>,
   d: number,
+  enabled?: ReadonlySet<OrientationRule>,
 ): void {
+  const on = (rule: OrientationRule): boolean => enabled === undefined || enabled.has(rule);
   let changed = true;
   let guard = 0;
   while (changed && guard < 500) {
     guard++;
     changed = false;
-    if (ruleR1(g)) changed = true;
-    if (ruleR2(g)) changed = true;
-    if (ruleR3(g)) changed = true;
-    if (ruleR4(g, sepsets, d)) changed = true;
-    if (ruleR8(g)) changed = true;
-    if (completeAncestral(g, d)) changed = true;
+    if (on("R1") && ruleR1(g)) changed = true;
+    if (on("R2") && ruleR2(g)) changed = true;
+    if (on("R3") && ruleR3(g)) changed = true;
+    if (on("R4") && ruleR4(g, sepsets, d)) changed = true;
+    if (on("descendantArrowhead") && ruleArrowheadAtDescendant(g)) changed = true;
+    // Zhang (2008) R5-R10. R5 first, because R6 and R7 consume the undirected edges it
+    // produces; R8-R10 then complete the tails R0-R4 leave behind.
+    if (on("R5") && ruleR5(g, d)) changed = true;
+    if (on("R6") && ruleR6(g)) changed = true;
+    if (on("R7") && ruleR7(g)) changed = true;
+    if (on("R8") && ruleR8(g)) changed = true;
+    if (on("R9") && ruleR9(g, d)) changed = true;
+    if (on("R10") && ruleR10(g, d)) changed = true;
+    if (on("ancestralCompletion") && completeAncestral(g, d)) changed = true;
   }
   if (guard >= 500) throw new Error("fci: orientation rules did not reach a fixpoint");
 }
@@ -952,15 +1392,20 @@ function applyOrientationRules(
 /**
  * Apply collider orientation (R0) and Zhang's rules to a supplied PAG and return the closed PAG.
  * Exposed so each rule can be exercised directly on a hand-built graph; `fci` uses the same code.
+ *
+ * @param rules when given, ONLY these rules are applied. R0 (collider orientation) always
+ *              runs, because it is the orientation of the sepsets rather than a rule that
+ *              competes with the others.
  */
 export function orientPag(
   d: number,
   edges: readonly FciEdge[],
   sepsets: ReadonlyMap<string, readonly number[]> = new Map(),
+  rules?: readonly OrientationRule[],
 ): FciEdge[] {
   const g = toEdgeMap(edges, d);
   orientColliders(g, sepsets, d);
-  applyOrientationRules(g, sepsets, d);
+  applyOrientationRules(g, sepsets, d, rules === undefined ? undefined : new Set(rules));
   return fromEdgeMap(g);
 }
 

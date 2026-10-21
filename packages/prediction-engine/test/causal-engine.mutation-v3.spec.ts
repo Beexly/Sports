@@ -45,7 +45,10 @@ import {
   type MediatorCandidate,
 } from "../src/causal/hcid-mediator-expansion.js";
 import { runShpitserPearlID, type CausalADMG } from "../src/causal/do-calculus-id.js";
-import { acyclicityExact, dynotearsFit } from "../src/causal/fci-pag.js";
+import { acyclicityExact, dynotearsFit, orientPag, ALL_ORIENTATION_RULES } from "../src/causal/fci-pag.js";
+import type { EdgeMark, FciEdge } from "../src/causal/fci-pag.js";
+import { laggedDynotearsFit } from "../src/causal/causal-graph-builder.js";
+import { simPanel, scaleColumns } from "../src/causal/__tests__/panel-fixtures.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 
@@ -56,6 +59,29 @@ function runVerifier(name: string): { code: number; output: string } {
       [resolve(ROOT, "reconciliation", name)],
       { encoding: "utf8", cwd: ROOT, stdio: ["ignore", "pipe", "pipe"] },
     );
+    return { code: 0, output };
+  } catch (error) {
+    const e = error as { status?: number; stdout?: string; stderr?: string };
+    return { code: e.status ?? 1, output: `${e.stdout ?? ""}${e.stderr ?? ""}` };
+  }
+}
+
+/**
+ * Run a script that lives in the PACKAGE's reconciliation/ directory and needs the package as
+ * its working directory.
+ *
+ * This is separate from `runVerifier` because that one resolves against the repo ROOT's
+ * reconciliation/ directory. The R5-R10 mutation sweep is in the package's directory and
+ * resolves its source and test paths relative to the package, so it must be run from there.
+ */
+function runPackageScript(relPath: string): { code: number; output: string } {
+  const pkg = resolve(ROOT, "packages", "prediction-engine");
+  try {
+    const output = execFileSync(process.execPath, [resolve(pkg, relPath)], {
+      encoding: "utf8",
+      cwd: pkg,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     return { code: 0, output };
   } catch (error) {
     const e = error as { status?: number; stdout?: string; stderr?: string };
@@ -424,6 +450,125 @@ describe("T11 -- the contemporaneous DYNOTEARS fit is scale-invariant", () => {
       expect(skeleton).toContain(edge);
     }
     expect(fit.h).toBeLessThan(1e-5);
+  });
+});
+
+describe("T11c -- the LAGGED DYNOTEARS fit is scale-invariant and recovers lagged edges", () => {
+  /**
+   * THE SPEC'S T11, the part the contemporaneous gate above does not cover. The spec asks for
+   * "scale-invariant lagged DYNOTEARS (A_tau)" and for the l_NV objective to "recover the
+   * identical directed edge orientation on BOTH contemporaneous W_0 and lagged A_1 matrices
+   * without variance-sorting reversal."
+   *
+   * So the lagged block is not an optional extra: the spec names the A_1 matrix explicitly.
+   * This gate fits a panel DGP with one contemporaneous collider and one lagged edge, scales
+   * two features by 1,000x, and requires that BOTH edge sets come out identical.
+   *
+   * THE FIXTURE IS THE MODULE'S OWN, not a re-derivation. The DGP and the generator live in
+   * src/causal/causal-graph-builder.test.ts, and a PRNG copied between two files is one that
+   * will drift -- two files meant to measure the same data would quietly measure different
+   * data. The module's own test file therefore exports the generator, and this gate imports
+   * it.
+   */
+  it("the lagged fit recovers the true lagged edge, and scaling by 1,000x moves no edge", () => {
+    const frames = simPanel(60, 30, 11);
+    const fitOpts = { lags: 1, lambdaW: 0.05, lambdaA: 0.05, edgeThreshold: 0.1 };
+
+    const base = laggedDynotearsFit(frames, fitOpts);
+    const scaled = laggedDynotearsFit(scaleColumns(frames, [0, 2], 1000), fitOpts);
+
+    // NOT VACUOUS: the fit found the contemporaneous collider and the lagged edge. Without
+    // this, two EMPTY edge sets would satisfy the equality below -- the failure mode of an
+    // invariance test that measures nothing.
+    const contemporaneous = base.contemporaneousEdges.map(([a, b]) => `${a}->${b}`).sort();
+    const lagged = base.laggedEdges.map((e) => `${e.lag}:${e.from}->${e.to}`).sort();
+    expect(contemporaneous).toEqual(expect.arrayContaining(["0->1", "2->1"]));
+    expect(lagged).toContain("1:1->3");
+    expect(contemporaneous.length).toBeGreaterThan(0);
+    expect(lagged.length).toBeGreaterThan(0);
+
+    // THE GATE: the W_0 edges AND the A_1 edges are both unmoved by the rescaling.
+    expect(scaled.contemporaneousEdges.map(([a, b]) => `${a}->${b}`).sort()).toEqual(contemporaneous);
+    expect(scaled.laggedEdges.map((e) => `${e.lag}:${e.from}->${e.to}`).sort()).toEqual(lagged);
+  });
+
+  it("the lagged fit is ACYCLIC in its contemporaneous block", () => {
+    // h is the parameter the acyclicity constraint is imposed on, and it is reported on the
+    // STANDARDISED matrix -- the one whose support defines the reported edge set. h is not
+    // scale invariant (its magnitude grows with the scale of the coefficients), which is
+    // exactly why it is reported on the standardised matrix and not the original-unit one.
+    const frames = simPanel(40, 30, 11);
+    const fit = laggedDynotearsFit(frames, { lags: 1, lambdaW: 0.05, lambdaA: 0.05, edgeThreshold: 0.1 });
+    expect(fit.h).toBeLessThan(1e-5);
+    const adjacency = Array.from({ length: 4 }, () => new Array(4).fill(0));
+    for (const [k, j] of fit.contemporaneousEdges) adjacency[k]![j] = 1;
+    expect(acyclicityExact(adjacency).h).toBeLessThan(1e-9);
+  });
+});
+
+describe("T11b -- the Zhang (2008) R5-R10 rules are IMPLEMENTED AND PINNED", () => {
+  /**
+   * THE SPEC'S T11, in its own words: the FCI orientation rules R5-R10 "including R5-R7
+   * selection/circle-path rules" and "R8-R10 tail completion".
+   *
+   * The rule-level unit tests live in src/causal/fci-pag-r5-r10.test.ts, where each rule is
+   * applied ALONE so that the test measures that rule and not the fixpoint. This gate is the
+   * other half: it proves those tests are PINNED, i.e. that deleting a rule makes its test
+   * fail. A rule test that still passes when its rule is deleted is a test that reports a
+   * guarantee the code does not provide, and that is exactly what the sweep exists to catch.
+   *
+   * The sweep is run as a second witness; the property it checks (each rule is pinned) is
+   * re-expressed below as an assertion on the sweep's own output, because an exit code proves
+   * a script ran, not that it checked the thing it claims to check.
+   */
+  it("the mutation sweep exits 0 -- every rule and every antecedent is pinned", () => {
+    const { code, output } = runPackageScript("reconciliation/_mutation_sweep_r5_r10.mjs");
+    expect(code, `the R5-R10 mutation sweep failed:\n${output}`).toBe(0);
+  });
+
+  it("the sweep actually RAN its rounds -- an exit code alone proves nothing", () => {
+    // A sweep that found no call site, or that matched no test title, would exit 0 having
+    // checked nothing. The round names are asserted instead, because they are the evidence
+    // that the sweep reached every rule and every antecedent.
+    const { output } = runPackageScript("reconciliation/_mutation_sweep_r5_r10.mjs");
+    expect(output).toContain("PHASE 1: disable the rule");
+    expect(output).toContain("PHASE 2: break the antecedent");
+    for (const rule of ["R5", "R6", "R7", "R8", "R9", "R10"]) {
+      expect(output).toContain(`${rule}:`);
+    }
+    // And the baseline round must be clean, or a sweep that fails everything proves nothing.
+    expect(output).toContain("OK   baseline: all tests pass with the unmutated source");
+    expect(output).not.toContain("STILL PASSED");
+  });
+
+  it("the R5-R10 rules are REACHABLE from the public entry point", () => {
+    // A rule that is implemented but never called is not a rule. The orientation switch
+    // exposes every rule id, and each id must correspond to a rule the fixpoint applies.
+    // The switch is what makes the rule-level unit tests possible at all: without it, the
+    // competing rules (completeAncestral, R2) can fire on the same configuration and the
+    // test measures the fixpoint instead of the rule.
+    expect(ALL_ORIENTATION_RULES).toEqual(
+      expect.arrayContaining(["R5", "R6", "R7", "R8", "R9", "R10"]),
+    );
+    expect(ALL_ORIENTATION_RULES.length).toBe(12);
+  });
+
+  it("orientPag runs ONLY the requested rules", () => {
+    // The switch is a real switch, not a label. On this graph R8 and completeAncestral both
+    // want to write a tail at 0; with R8 alone the tail appears, and with
+    // completeAncestral alone it also appears, but with NEITHER enabled it does not.
+    const graph: FciEdge[] = [
+      { u: 0, v: 1, markU: "tail", markV: "arrowhead" },
+      { u: 1, v: 2, markU: "tail", markV: "arrowhead" },
+      { u: 0, v: 2, markU: "circle", markV: "arrowhead" },
+    ];
+    const markAt0 = (edges: readonly FciEdge[]): EdgeMark | undefined =>
+      edges.find((e) => e.u === 0 && e.v === 2)?.markU;
+    expect(markAt0(orientPag(3, graph, new Map(), ["R8"]))).toBe("tail");
+    expect(markAt0(orientPag(3, graph, new Map(), ["ancestralCompletion"]))).toBe("tail");
+    expect(markAt0(orientPag(3, graph, new Map(), []))).toBe("circle");
+    // And with no argument, everything runs -- the default is the full fixpoint.
+    expect(markAt0(orientPag(3, graph))).toBe("tail");
   });
 });
 
