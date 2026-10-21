@@ -124,6 +124,81 @@ function* walk(dir) {
   }
 }
 
+/**
+ * The SQL STATEMENT a read site belongs to.
+ *
+ * A read site is a line matching `FROM lit.<reasoning table>`. The
+ * question "is this query a report, an aggregate, a flag reconcile or
+ * a delete?" is a question about the QUERY, and the query is the
+ * statement -- from the first SQL keyword at or before the read site
+ * through the statement's end.
+ *
+ * The end is the closing semicolon of the statement, or the end of
+ * the file. The start is the last line at or before the read site
+ * that begins a statement: SELECT, WITH, UPDATE, DELETE or INSERT.
+ */
+/**
+ * The SQL QUERY a read site belongs to.
+ *
+ * A read site is a line matching `FROM lit.<reasoning table>`. The
+ * question "is this query a report, an aggregate, a flag reconcile or
+ * a delete?" is a question about the QUERY.
+ *
+ * THE QUERY IS THE STRING LITERAL it lives in. In TypeScript and
+ * JavaScript the SQL is a template literal or a quoted string; in a
+ * .sql file it is a semicolon-delimited statement. Scanning backwards
+ * for "the last SQL keyword" does NOT work -- it stops at a nested
+ * `SELECT 1` inside a subquery, which is not the start of the query.
+ *
+ * So: find the literal containing the read site with a small state
+ * machine that skips comments and handles escapes, and use its text.
+ */
+function sqlQueryAround(text, offset, isSqlFile) {
+  if (isSqlFile) {
+    const before = text.lastIndexOf(";", offset);
+    const after = text.indexOf(";", offset);
+    return text.slice(before + 1, after === -1 ? text.length : after + 1);
+  }
+  let i = 0;
+  while (i < text.length) {
+    const c = text[i];
+    // Skip comments, so a quote inside a comment cannot open a literal.
+    if ((c === "-" && text[i + 1] === "-") || (c === "/" && text[i + 1] === "/")) {
+      const j = text.indexOf("\n", i);
+      i = j === -1 ? text.length : j;
+      continue;
+    }
+    if (c === "/" && text[i + 1] === "*") {
+      const j = text.indexOf("*/", i + 2);
+      i = j === -1 ? text.length : j + 2;
+      continue;
+    }
+    if (c === "`" || c === '"' || c === "'") {
+      const quote = c;
+      let j = i + 1;
+      while (j < text.length) {
+        if (text[j] === "\\") {
+          j += 2;
+          continue;
+        }
+        if (text[j] === quote) break;
+        // A single- or double-quoted string does not span lines, so an
+        // unterminated one ends at the newline.
+        if (quote !== "`" && text[j] === "\n") break;
+        j += 1;
+      }
+      const end = j < text.length ? j + 1 : text.length;
+      if (offset > i && offset < end) {
+        return text.slice(i + 1, j);
+      }
+      i = end;
+      continue;
+    }
+    i += 1;
+  }
+  return "";
+}
+
 const inserts = [];
 const selects = [];
 
@@ -177,6 +252,7 @@ for (const file of walk(root)) {
   const READS_PREMISE = new RegExp(`FROM\\s+(?:${REASONING_TABLES.join("|")})`, "i");
   if (READS_PREMISE.test(text)) {
     const lines = text.split("\n");
+    const isSqlFile = rel.endsWith(".sql");
     lines.forEach((line, i) => {
       if (READS_PREMISE.test(line)) {
         // The window has to be wide enough to reach the filter, and
@@ -188,35 +264,143 @@ for (const file of walk(root)) {
         //
         // 30 lines back and 30 forward covers the longest comment
         // block in the repo's literature queries.
-        const window = lines.slice(Math.max(0, i - 30), i + 30).join("\n");
+        // THE STATEMENT, NOT THE WINDOW.
+        //
+        // The exemptions below are questions about a QUERY -- "does it
+        // report the class distribution?", "does it return only
+        // aggregates?", "is it a DELETE?". Answering them about a
+        // 60-LINE WINDOW answers them about the NEIGHBOURS too.
+        //
+        // That is how a class report sitting next to a reasoning read
+        // got reported as a gap, and how a reasoning read sitting next
+        // to a `premise_key` mention got exempted. Both are false
+        // gaps, and a false gap is as bad as a missed one -- it
+        // teaches the reader to ignore the check.
+        //
+        // So each read site is analysed as the STATEMENT it belongs
+        // to: from the first SQL keyword at or before it, through the
+        // statement's end.
+        const statement = sqlQueryAround(
+          text,
+          lines.slice(0, i).join("\n").length + (lines[i] ?? "").indexOf("FROM"),
+          isSqlFile,
+        );
+        //
+        // The comments are STRIPPED before the predicates look at the
+        // statement. A .sql file can carry a forty-line comment banner
+        // between two statements, and a predicate anchored at the start
+        // of the statement would then be reading the banner instead of
+        // the SQL.
+        const sql = statement
+          .replace(/--[^\n]*/g, "")
+          .replace(/\/\*[\s\S]*?\*\//g, "")
+          .trim();
+        // The class filter is still looked for in the WINDOW, not the
+        // statement: a filter can sit in a CTE well above the FROM
+        // that reads the table, outside the statement's own keyword
+        // range, and 30 lines back covers the longest comment block
+        // in the repo's literature queries.
+        //
+        // The class filter is looked for IN THE QUERY -- in a CTE well
+        // above the FROM, or in a WHERE below it, but still in the
+        // same query. A filter in a NEIGHBOURING query does not filter
+        // this one, so a window would let a real leak hide behind its
+        // neighbour's filter.
         const hasFilter =
-          /record_class\s*=\s*'CITABLE_VERIFIED'/i.test(window) &&
-          /status\s*=\s*'ACTIVE'/i.test(window);
+          /record_class\s*=\s*'CITABLE_VERIFIED'/i.test(sql) &&
+          /status\s*=\s*'ACTIVE'/i.test(sql);
         // A query that GROUPS BY record_class, or SELECTs it, is a
         // REPORT of the class distribution, not a reasoning read. It
         // sees every premise on purpose, to show how many are citable.
-        const isClassReport =
-          /group\s+by[\s\S]{0,80}record_class/i.test(window) ||
-          /select[\s\S]{0,200}record_class[\s\S]{0,120}from\s+lit\.premise/i.test(window);
+        //
+        // The tell is a GROUP BY record_class -- a reasoning read
+        // never groups by the class, because it has already filtered
+        // on it.
+        //
+        // A REPORT of the class distribution. It sees every premise on
+        // purpose, to show how many are citable.
+        //
+        // The tell is that the query SELECTS record_class (or an alias
+        // of it) and GROUPS BY it -- possibly by ordinal, as
+        // `GROUP BY 1, 2` does. A reasoning read never groups by the
+        // class, because it has already filtered on the class.
+        //
+        // So the test is: does the query project the class column and
+        // group the result? Either spelling of the grouping counts.
+        const selectsClass = /\brecord_class\b/i.test(sql);
+        const groupsBy =
+          /group\s+by\s+[\s\S]{0,60}record_class/i.test(sql) ||
+          /group\s+by\s+[\d\s,]+/i.test(sql);
+        const isClassReport = selectsClass && groupsBy;
         // A query that returns only AGGREGATES (count(*), min, max)
         // cannot leak a premise into a reasoning path: it returns
-        // numbers about the table, not premises from it. Such a site
-        // is a report, whatever its SELECT list looks like.
+        // numbers about the table, not premises from it.
         const isAggregateOnly =
-          !/\b(premise_key|premise_id|numeric_value|evidence_quote|p\.(id|title|numeric_value))\b/i.test(
-            window,
-          );
-        // A site that only UPDATES a flag derived from the edge set
-        // is not reading a reasoning number: it is reconciling a
-        // boolean. The edge set is already class-filtered at its own
-        // read sites.
+          /SELECT\s+count\s*\(\s*\*\s*\)/i.test(sql) &&
+          !/\b(numeric_value|evidence_quote|mechanism_quote)\b/i.test(sql);
+        // A site whose statement is an UPDATE is not a READ SITE.
+        //
+        // It RECONCILES a flag, or it RETIRES an edge -- it does not
+        // return a premise to a reasoning path. The statements that
+        // match here are:
+        //
+        //   UPDATE lit.causal_edge SET status='retired' ... EXISTS
+        //     (SELECT 1 FROM lit.premise p WHERE p.record_class <> ...)
+        //   UPDATE lit.premise_score SET promoted = EXISTS (... FROM
+        //     lit.causal_edge ...)
+        //
+        // The first RETIRES edges whose premise is no longer class-A.
+        // That is the class filter being ENFORCED, in the opposite
+        // direction: it removes the edges rather than filtering them
+        // at read time.
+        //
+        // An UPDATE is excluded only when it returns no reasoning
+        // number. If it SELECTs a numeric_value or a residual, it is
+        // not a reconcile and the site is reported.
         const isFlagReconcile =
-          /UPDATE\s+lit\.(premise_score|causal_edge)/i.test(window) &&
-          !/SELECT\s+[\s\S]{0,200}(numeric_value|activation_score|mean_residual|residual)/i.test(
-            window,
+          /^\s*UPDATE\b/i.test(sql) &&
+          !/\bSELECT\s+(?!1\b)[\s\S]{0,200}\b(numeric_value|activation_score|mean_residual|residual|evidence_quote|mechanism_quote)\b/i.test(
+            sql,
           );
+        // A DELETE is not a READ SITE.
+        //
+        // A DELETE matches the read pattern because the statement
+        // NAMES a reasoning table. But a delete cannot leak a premise
+        // into a reasoning path: it can only take one out.
+        //
+        // The three that show up here are all DELETEs, and all three
+        // are deliberate:
+        //
+        //   DELETE FROM lit.premise WHERE premise_key LIKE 'test:%'
+        //     removes the fixtures the class filter is proved against
+        //   DELETE FROM lit.premise WHERE premise_key = 'test:...'
+        //     removes one fixture the constraint is proved against
+        //   DELETE FROM lit.residual
+        //     resets the graded state so a re-run is a clean
+        //     measurement, not an accumulation
+        //
+        // A delete that RETURNED a premise would be a read; none of
+        // these do, and the guard below still requires the statement
+        // to select nothing.
+        const isFixtureDelete =
+          /^\s*DELETE\s+FROM\s+lit\.[a-z_]+/i.test(sql) &&
+          !/\bRETURNING\b/i.test(sql);
+        //
+        // A COMMENTED-OUT query is not a query.
+        //
+        // The .sql files carry their verification queries in a comment
+        // block, so the reader can paste them into psql. Once the
+        // comments are stripped there is no SQL left -- and a line
+        // that names lit.premise inside a comment is DOCUMENTATION,
+        // not a read site. Reporting it would be a false gap.
+        const isCommentedOut = sql.length === 0;
         const exempt =
-          EXEMPT_FILES.has(rel) || isClassReport || isAggregateOnly || isFlagReconcile;
+          EXEMPT_FILES.has(rel) ||
+          isCommentedOut ||
+          isClassReport ||
+          isAggregateOnly ||
+          isFlagReconcile ||
+          isFixtureDelete;
         selects.push({ rel, line: i + 1, hasFilter, exempt, isClassReport, isAggregateOnly });
       }
     });
