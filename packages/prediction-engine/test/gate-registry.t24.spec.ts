@@ -5,13 +5,13 @@ import { describe, expect, it } from "vitest";
 const ROOT = resolve(import.meta.dirname, "..", "..", "..");
 const REGISTRY_PATH = join(ROOT, "reconciliation", "gate_registry.json");
 
-describe("GAP-24: 37-Gate Registry Verification", () => {
-  it("gate_registry.json exists and contains exactly 37 validated integrity gates", () => {
+describe("GAP-24: 38-Gate Registry Verification", () => {
+  it("gate_registry.json exists and contains exactly 38 validated integrity gates", () => {
     expect(existsSync(REGISTRY_PATH), "reconciliation/gate_registry.json must exist").toBe(true);
     const raw = readFileSync(REGISTRY_PATH, "utf8");
     const parsed = JSON.parse(raw);
     expect(Array.isArray(parsed.gates)).toBe(true);
-    expect(parsed.gates.length).toBe(37);
+    expect(parsed.gates.length).toBe(38);
   });
 
   it("every gate entry has id, name, file:line, checks description, default state, and fails closed", () => {

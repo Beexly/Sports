@@ -372,6 +372,16 @@
       "tier": "compile_time_type_brand",
       "enforcement": "typescript_type_system",
       "fail_closed": true
+    },
+    {
+      "id": "GATE-38",
+      "name": "g0EntityTemporalTruth",
+      "file": "packages/prediction-engine/src/behavioral/dyadic-trust-engine.ts:160",
+      "checks": "Guarantees zero-ghost-roster and live point-in-time entity continuity, rejecting stale cross-season bindings with REFUSED_L0_STALE_ENTITY_BINDING",
+      "default_state": true,
+      "tier": "roster_continuity_firewall",
+      "enforcement": "runtime_roster_gate",
+      "fail_closed": true
     }
   ]
 }

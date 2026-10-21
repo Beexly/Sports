@@ -17,6 +17,13 @@ export interface RouteTreeVector {
   readonly choiceOptionRouteRate: number;
   readonly firstReadQuickGameShare: number;
   readonly contestedCatchRate: number;
+  // Extended 12-D tactical dimensions (optional for backward compatibility)
+  readonly inlineTightSplitRate?: number;
+  readonly widePerimeterIsoRate?: number;
+  readonly shallowCrossDragRate?: number;
+  readonly intermediateDigCurlRate?: number;
+  readonly seamPostRate?: number;
+  readonly verticalGoFadeRate?: number;
 }
 
 export interface ReceiverCandidate {
@@ -48,6 +55,12 @@ export function computeCosineIsomorphism(a: RouteTreeVector, b: RouteTreeVector)
     a.choiceOptionRouteRate,
     a.firstReadQuickGameShare,
     a.contestedCatchRate,
+    a.inlineTightSplitRate ?? 0.0,
+    a.widePerimeterIsoRate ?? 0.0,
+    a.shallowCrossDragRate ?? 0.0,
+    a.intermediateDigCurlRate ?? 0.0,
+    a.seamPostRate ?? 0.0,
+    a.verticalGoFadeRate ?? 0.0,
   ];
   const vB = [
     b.slotSnapRate,
@@ -56,6 +69,12 @@ export function computeCosineIsomorphism(a: RouteTreeVector, b: RouteTreeVector)
     b.choiceOptionRouteRate,
     b.firstReadQuickGameShare,
     b.contestedCatchRate,
+    b.inlineTightSplitRate ?? 0.0,
+    b.widePerimeterIsoRate ?? 0.0,
+    b.shallowCrossDragRate ?? 0.0,
+    b.intermediateDigCurlRate ?? 0.0,
+    b.seamPostRate ?? 0.0,
+    b.verticalGoFadeRate ?? 0.0,
   ];
 
   let dot = 0.0;
@@ -79,7 +98,7 @@ export function computeCosineIsomorphism(a: RouteTreeVector, b: RouteTreeVector)
 export function computeRoleIsomorphismTargetReallocation(
   injuredPlayer: { readonly name: string; readonly routeVector: RouteTreeVector; readonly vacatedTargetShare: number },
   activeReceivers: readonly ReceiverCandidate[],
-  etaTrust = 0.8,
+  etaTrust = 1.0,
 ): readonly ReallocationTransferResult[] {
   if (activeReceivers.length === 0) return [];
 

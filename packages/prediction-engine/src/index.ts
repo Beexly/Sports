@@ -5198,3 +5198,72 @@ export type {
   WordTripleExtraction,
   SynapticAssimilationResult,
 } from "./learning/word-synapse-plasticity.js";
+
+// Phase V Moonshot Architecture (v6.0 Omni-Cognitive World Model)
+export {
+  evaluateSymbolicAST,
+  evaluateJacobianAnalytical,
+  evaluateJacobianFiniteDiff,
+  compileLatexToSymbolicAST,
+  OmniVaultHarvester,
+} from "./ingest/omni-vault-harvester.js";
+export type {
+  VaultSourceType,
+  SymbolicExprNode,
+  CompiledFormulaDescriptor,
+} from "./ingest/omni-vault-harvester.js";
+
+export {
+  MultivariateMarkedHawkesEngine,
+} from "./behavioral/network-hawkes-dyads.js";
+export type {
+  MarkedEvent,
+  DyadicHawkesParams,
+  DyadicHawkesState,
+  CoverageShellContext,
+} from "./behavioral/network-hawkes-dyads.js";
+
+export {
+  AvHubertSidelineAffectEngine,
+} from "./perception/av-hubert-sideline-affect.js";
+export type {
+  BroadcastVideoCutaway,
+  HeuEmotionClass,
+  FacialActionUnits,
+  VisemePhonemeSequence,
+  AffectiveEmbedding,
+  CrossModalAgreementResult,
+} from "./perception/av-hubert-sideline-affect.js";
+
+export {
+  applyOrthogonalInPlaceTTTUpdate,
+  verifySubspaceOrthogonality,
+  TttReHarnessMemorySubstrate,
+} from "./learning/ttt-reharness-memory.js";
+export type {
+  BehavioralSynapseTriple,
+  ReHarnessSkillRevision,
+  SlotMemoryEntry,
+} from "./learning/ttt-reharness-memory.js";
+
+export {
+  ContinuousTimeCausalPfn,
+  CausalPomdpSimulator,
+} from "./causal/continuous-time-cpfn.js";
+export type {
+  ContinuousIntervention,
+  ObservationSchedule,
+  CausalTrajectoryEvaluation,
+  CausalPomdpState,
+  AlphaVectorBound,
+} from "./causal/continuous-time-cpfn.js";
+
+export {
+  CausalBeamTransferEngine,
+} from "./causal/causal-beam-transfer.js";
+export type {
+  PortableCausalBeam,
+  TargetDomainId,
+  BeamTransferResult,
+} from "./causal/causal-beam-transfer.js";
+
