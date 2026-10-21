@@ -253,6 +253,27 @@ const ALLOWLISTED_DEFINITION_BLOCKS = new Map([
 
 const ALLOWLISTED_DEFINITION_LINES = new Map([
   [
+    // THE NEGATED RISK-READING REFUSAL in the semiparametric estimator. It
+    // reads "... is not a positive risk difference, so it has no risk-ratio
+    // reading" -- every occurrence of "no risk" is inside a NEGATION, and the
+    // sentence exists precisely to DENY that the estimand carries a
+    // risk-ratio reading.
+    //
+    // Allowlisted rather than reworded, for the same reason as the
+    // risk-disclosure footer below: the obvious "fix" (say "lacks a
+    // risk-ratio reading") is a wording change to a THROWN ERROR MESSAGE in
+    // order to satisfy a regex, and the scanner is substring-based with no
+    // negation handling. Rewording a refusal so a substring scanner accepts
+    // it is the same inversion as stripping a disclaimer -- the guardrail
+    // would be shaping the code to fit itself.
+    //
+    // This is a per-FILE, per-LINE allowlist entry, so the exemption is
+    // scoped to the one throw statement. "no risk" as a CLAIM anywhere else
+    // -- in a marketing surface, in a draft, in copy -- still hits.
+    "packages/prediction-engine/src/causal/semiparametric-estimand-solver.ts",
+    [/^\s*`semiparametric: the estimate \(\$\{estimate\.estimand\}\) is not a positive risk difference/],
+  ],
+  [
     "apps/web/lib/workflows/draft-review-fixtures.ts",
     [
       /^\s*const unsafeOutcomeClaim\s*=/,
@@ -294,6 +315,63 @@ const LOCK_SAFE_CONTEXT =
 const LOCKFILE_SAFE_CONTEXT =
   /\b(?:package-lock\.json|npm-shrinkwrap\.json|yarn\.lock|pnpm-lock\.ya?ml|composer\.lock|Gemfile\.lock|Cargo\.lock|poetry\.lock|Pipfile\.lock)\b/gi;
 
+// A ".lock" FILE EXTENSION. A lock file is a lock file in every language
+// that has one, and this guard scans `packages/`, where the mutation
+// sweeps keep their own lock files (_t6_sweep.lock and friends). The
+// extension is a filename convention, not the betting-slang sense.
+//
+// Narrow on purpose: the pattern requires the dot-EXTENSION form, so a
+// sentence that merely ends a word in ".lock" is not matched, and the
+// blank-then-recheck means a residual standalone "lock" on the same line
+// still hits.
+const LOCK_EXTENSION_SAFE_CONTEXT = /\.[a-z0-9_-]*lock\b/gi;
+
+// A LOCK AS AN IDENTIFIER. Same class as the lockfile names above: a
+// concurrency primitive is named "lock" in every codebase that has one, and
+// the guard is scanning `packages/` -- which is where the mutation sweeps
+// live. "const LOCK = ...", "existsSync(LOCK)", "rmSync(LOCK)" are
+// engineering prose, not a claim that something is a guaranteed pick.
+//
+// This is scoped to the identifier form ONLY: a bare word-boundary "LOCK"
+// or "lock" is not matched, so "this is a lock" still hits. The pattern
+// requires the identifier shape (a word boundary, the token, and a
+// non-word character or end after it), which the betting-slang usages never
+// have -- "a lock!", "lock of the day", "the lock" all end the token with
+// punctuation or a space that this does not accept.
+//
+// Added 2026-10-21, measured: the trust gate reported 24 hits on this tree
+// before this change, every one of them a mutation sweep's LOCK constant.
+// The sweeps are the repo's own CI gates, so a guard that flags them is a
+// guard that cannot be run on the repo it guards.
+const LOCK_IDENTIFIER_SAFE_CONTEXT = /\bLOCK\b(?=\s*[,;)\]}=]|\s*(?:\?\?|\|\||&&|==|=>|\+|\.|\)|;|,))/g;
+
+// A LOCK AS A CONCURRENCY PRIMITIVE, IN PROSE. The identifier form above
+// covers "const LOCK = ..." and "existsSync(LOCK)". This covers the English
+// around it: "another sweep holds the lock", "the owner is alive and the
+// lock is fresh", "a stale sweep lock".
+//
+// Same reasoning as the identifier form and the temporal-sense form
+// (LOCK_SAFE_CONTEXT, which exempts "at lock" and "lock time"): a mutex is
+// called a lock in every codebase that has one, and this guard scans
+// `packages/`, which is where the mutation sweeps live. "the lock" in a
+// concurrency sentence is not a claim that a pick is guaranteed.
+//
+// The anchors are what keep this narrow. Each alternative requires a
+// concurrency word IMMEDIATELY before "lock" -- holds/holding/held/hold,
+// owner/owns/own, stale, mutex, advisory, acquiring/acquire/release/
+// released, unlock -- so "the lock of the day", "I picked that lock", and
+// "a lock is a sure thing" are untouched and still hit. The blank-then-
+// recheck means a residual standalone "lock" on the same line still hits
+// too.
+//
+// The "sweep" alternative is there because the mutation sweeps say "a stale
+// SWEEP lock" -- the noun between the anchor and "lock" is the thing being
+// locked, and the anchor is still "stale". The optional
+// (?:sweep\s+)? keeps the pattern from needing to know every possible
+// modifier.
+const LOCK_CONCURRENCY_PROSE_SAFE_CONTEXT =
+  /\b(?:holds?|holding|held|hold|owner|owns?|owned|own|stale|mutex|advisory|acquir(?:e|es|ing)|acquired|releas(?:e|es|ing|ed)|released|unlock(?:ed|s)?|interleav(?:e|es|ing))\s+(?:(?:sweep|file|mutex|advisory|process|thread|job|task)\s+)?(?:the\s+|a\s+|an\s+|its\s+|their\s+|this\s+|that\s+)?lock\b/gi;
+
 // Proper nouns and engineering idioms that contain "lock" but are not betting
 // slang. Root memory docs (STEP 4b) are in scope and carry verbatim social-post
 // digests, where an NFL quarterback's surname — Drew Lock, a real passer — is a
@@ -332,13 +410,56 @@ const LOCKFILE_SAFE_CONTEXT =
 // recheck still applies, so a residual standalone "lock" on the same line
 // (e.g. "Lock 0.52 — a lock") still hits.
 //
-// KNOWN GAP, NOT INTRODUCED HERE: "I locked in on that bet" is NOT caught —
-// `BANNED_PHRASES` matches `lock` with a word boundary, and `locked` is a
-// different token. Confirmed pre-existing on unpatched `af23ffc76`. Left alone
-// deliberately: widening the ban is a separate decision from this false
-// positive, and belongs in its own PR with its own evidence.
+// SCOPED TO THE ROOT MEMORY DOCS, AND WHY (2026-10-21).
+//
+// These three forms are QUOTED DATA: a leaderboard row that this platform
+// pasted from someone else's table. The forms above them in this constant
+// are PROPER NOUNS and ENGINEERING PROSE ("Drew Lock", "D. Lock",
+// "server-side lock", the QB-roster parenthetical) — those are legitimate in
+// ANY file, because a marketing surface may legitimately name a player, and
+// the roster parenthetical is a shape, not a quotation.
+//
+// The stat-table forms are different in kind, and this is what the audit
+// found. Applied tree-wide, `\bLock\s+\d+\.\d+` is not a narrow exemption --
+// it is a FREE PASS for any public copy that contains a surname and a
+// decimal. Measured on this tree before the fix:
+//
+//   "We locked in on that bet at Lock 2.77."   -> PASSED (code 0)
+//
+// That is betting slang in a marketing surface, and the guard did not flag
+// it. The blank-then-recheck did not save it either, because the line's only
+// "lock" WAS the surname-plus-decimal form. (A line with a residual
+// standalone "lock" still hits -- "Our model says Lock 2.77 and it is a
+// lock for the day" is flagged -- so the hole is specifically a line whose
+// only "lock" is this form.)
+//
+// The sibling rule for the SAME class of exemption, isVerbatimSocialDigestLine,
+// is already scoped to SCAN_FILES for exactly this reason, and its comment
+// says why: "a marketing surface never legitimately carries a dated @handle
+// digest line, so this cannot be used to smuggle 'lock' into public copy."
+// The stat-table forms deserve the same scope. Without it, the narrower
+// rule's stated guarantee is false.
+//
+// The repo's own test already asserted the correct behaviour and was FAILING
+// because of this: scripts/guardrails/trust-gate.test.mjs asserts that the
+// same digest line is exempt in AGENTS.md and STILL FLAGGED in scanned
+// source. That test and this guard's stat-table form both landed in the same
+// commit (f251d230c), the test was born failing, and it was never observed
+// because CI does not run node:test files in this tree. The test was RIGHT.
+//
+// So: the stat-table forms are applied ONLY in the root memory docs. The
+// proper-noun and roster forms stay unscoped, because they are legitimate
+// anywhere.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT =
-  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d|\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\//gi;
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
+
+// The QUOTED-LEADERBOARD forms, scoped to the root memory docs (see above).
+// The slash-list form is in this group because it is a QUOTED table shape
+// ("Cousins/Lock/Prescott/Watson") -- a leaderboard row pasted from someone
+// else's table, not a claim. It was unscoped before, which let a marketing
+// surface carry the surname list; it is now scoped with the other two.
+const LOCK_STAT_TABLE_SAFE_CONTEXT =
+  /\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\//gi;
 
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in
@@ -538,7 +659,19 @@ function scanText(text, relPath) {
           subject = subject
             .replace(LOCK_SAFE_CONTEXT, " ")
             .replace(LOCKFILE_SAFE_CONTEXT, " ")
+            .replace(LOCK_EXTENSION_SAFE_CONTEXT, " ")
+            .replace(LOCK_IDENTIFIER_SAFE_CONTEXT, " ")
+            .replace(LOCK_CONCURRENCY_PROSE_SAFE_CONTEXT, " ")
             .replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
+          // The QUOTED-LEADERBOARD forms are applied ONLY in the root memory
+          // docs, for the reason in the constant's comment: they are quoted
+          // data, and applying them tree-wide let a marketing surface say
+          // "We locked in on that bet at Lock 2.77." and pass. The
+          // proper-noun forms above stay unscoped -- they are legitimate
+          // anywhere.
+          if (SCAN_FILES.includes(relNorm)) {
+            subject = subject.replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
+          }
         } else if (
           entry.claim === "banned.guaranteed-outcome" &&
           relNorm === GUARANTEED_UPSTREAM_FIELD_FILE

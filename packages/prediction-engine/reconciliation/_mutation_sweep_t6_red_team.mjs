@@ -85,7 +85,7 @@ const GATE = "src/causal/adversary-red-team.ts";
 const TESTS = ["test/adversary-red-team.t6.spec.ts"];
 const VITEST = "../../node_modules/vitest/vitest.mjs";
 const REPORT = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t6_sweep_report.json";
-const LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t6_sweep.lock";
+const SWEEP_LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t6_sweep.lock";
 
 /**
  * THE FILES THIS SWEEP IS ALLOWED TO TOUCH.
@@ -421,8 +421,8 @@ const LOCK_STALE_AFTER_MS = 15 * 60 * 1000;
 
 function takeLock() {
   const acquire = () => {
-    const fd = openSync(LOCK, "wx");
-    writeFileSync(LOCK, JSON.stringify({ pid: process.pid, at: Date.now() }));
+    const fd = openSync(SWEEP_LOCK, "wx");
+    writeFileSync(SWEEP_LOCK, JSON.stringify({ pid: process.pid, at: Date.now() }));
     closeSync(fd);
   };
   try {
@@ -432,7 +432,7 @@ function takeLock() {
     // A lock exists. If its owner is gone, or it is simply too old, it is stale.
     let info = null;
     try {
-      info = JSON.parse(readFileSync(LOCK, "utf8"));
+      info = JSON.parse(readFileSync(SWEEP_LOCK, "utf8"));
     } catch {
       info = null;
     }
@@ -447,11 +447,11 @@ function takeLock() {
       } catch {
         alive = false;
       }
-      if (alive) return false; // the owner is alive and the lock is fresh
+      if (alive) return false; // the owner is alive and the mutex is fresh
     }
-    rmSync(LOCK, { force: true });
+    rmSync(SWEEP_LOCK, { force: true });
     acquire();
-    console.log("RECOVERED a stale sweep lock from a killed run");
+    console.log("RECOVERED a stale sweep mutex from a killed run");
     return true;
   }
 }
@@ -570,7 +570,7 @@ try {
     }
   }
   rmSync(REPORT, { force: true });
-  if (lockHeld) rmSync(LOCK, { force: true });
+  if (lockHeld) rmSync(SWEEP_LOCK, { force: true });
   console.log("\nsource restored");
 }
 

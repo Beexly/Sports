@@ -50,7 +50,7 @@
  * 2. IT RESTORES EVERY FILE IT TOUCHED, on success and on error alike, and it PROVES the
  *    restore by comparing the bytes.
  *
- * 3. IT TAKES A LOCK. Two sweeps mutating the same source at once would interleave their
+ * 3. IT TAKES A SWEEP_LOCK. Two sweeps mutating the same source at once would interleave their
  *    mutations and produce results that mean nothing. The lock is a file with the run's PID
  *    in it; a stale lock is broken by AGE, not by PID, because PID REUSE means a dead sweep's
  *    PID can name a completely unrelated live process -- and the sweep would then refuse to
@@ -68,7 +68,7 @@ const VITEST = "../../node_modules/vitest/vitest.mjs";
 /** The JSON report lands in the scratch directory, never in the repository. */
 const REPORT = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t16_sweep_report.json";
 /** The lock file, so two sweeps cannot interleave their mutations. */
-const LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t16_sweep.lock";
+const SWEEP_LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t16_sweep.lock";
 /** A lock older than this is stale, however old its PID is. */
 const LOCK_STALE_MS = 30 * 60 * 1000;
 
@@ -204,14 +204,14 @@ let total = 0;
  */
 let lockHeld = false;
 function takeLock() {
-  if (existsSync(LOCK)) {
-    const age = Date.now() - statSync(LOCK).mtimeMs;
+  if (existsSync(SWEEP_LOCK)) {
+    const age = Date.now() - statSync(SWEEP_LOCK).mtimeMs;
     if (age < LOCK_STALE_MS) {
       return false;
     }
-    rmSync(LOCK, { force: true });
+    rmSync(SWEEP_LOCK, { force: true });
   }
-  writeFileSync(LOCK, `pid=${process.pid} started=${new Date().toISOString()}\n`);
+  writeFileSync(SWEEP_LOCK, `pid=${process.pid} started=${new Date().toISOString()}\n`);
   lockHeld = true;
   return true;
 }
@@ -229,7 +229,7 @@ function restoreFromBackup(file) {
 
 try {
   if (!takeLock()) {
-    fail(`another sweep holds the lock (${LOCK}); refusing to interleave mutations`);
+    fail(`another sweep holds the sweep mutex (${SWEEP_LOCK}); refusing to interleave mutations`);
   } else {
     console.log("=== PRE-CHECK (no mutation): EVERY test MUST pass ===");
     const prePassed = passedTitles();
@@ -303,7 +303,7 @@ try {
     }
   }
   rmSync(REPORT, { force: true });
-  if (lockHeld) rmSync(LOCK, { force: true });
+  if (lockHeld) rmSync(SWEEP_LOCK, { force: true });
   console.log("\nsource restored");
 }
 

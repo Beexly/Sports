@@ -108,6 +108,28 @@ jobs:
       - name: Verify L11 calibration evidence still adds up
         run: node --test docs/calibration-proposals/evidence/verify-evidence.test.mjs
 
+      # The MIND falsification suite is written with node:test, NOT vitest, so the
+      # prediction-engine vitest config's include pattern (`src/**/*.test.ts`,
+      # `test/**/*.spec.ts`) does NOT collect it. Measured before this step was
+      # added: `vitest run src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts`
+      # exits 1 with "No test files found", and `node --test` on the same file
+      # reports 11 passing tests.
+      #
+      # Those 11 tests are not incidental. Probe T1 in that file is the
+      # IN-QUOTE NUMERIC PERTURBATION probe -- the assertion that mutating
+      # numeric_claim from 0.024 to 0.048 scales total_delta by exactly 2x and
+      # updates the rendered prose without a legacy string -- which is the same
+      # property the goal spec's Table 5 T1 row names, applied to the MIND
+      # engine's corpus rather than the literature corpus. It also carries the
+      # ACWR content-driven invariants, the residual-hardcode eradication
+      # invariant, and the class-A exclusivity probes.
+      #
+      # A gate that CI never executes is not a gate. It sat in the repository
+      # looking like one, and would have stayed green while the behaviour it
+      # pins drifted. This step is what makes it real.
+      - name: Run the MIND falsification suite (node:test, not collected by vitest)
+        run: node --import tsx --test packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts
+
       # §10.9: the budget acceptance run is mandatory and its evidence is
       # RETAINED — a missing artifact fails the build.
       - name: Upload budget acceptance artifact (§10.9)

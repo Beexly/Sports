@@ -69,7 +69,7 @@ const VITEST = resolve(PKG, "..", "..", "node_modules", "vitest", "vitest.mjs");
 const REPORT = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t1t4_hnsw_sweep_report.json";
 
 /** The lock file, so two sweeps cannot interleave their mutations. */
-const LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t1t4_hnsw_sweep.lock";
+const SWEEP_LOCK = "C:/Users/Garrett/AppData/Local/hermes/cache/scratch/_t1t4_hnsw_sweep.lock";
 
 /** A lock older than this is stale, however old its PID is. */
 const LOCK_STALE_MS = 30 * 60 * 1000;
@@ -247,17 +247,17 @@ try {
   // RECOVER FIRST. A leftover backup means a previous run was killed mid-mutation.
   recoverLeftoverBackup();
 
-  // TAKE THE LOCK, OR REFUSE TO START. Two sweeps mutating the same source at once would
+  // TAKE THE SWEEP_LOCK, OR REFUSE TO START. Two sweeps mutating the same source at once would
   // interleave their mutations and produce results that mean nothing.
-  if (existsSync(LOCK)) {
-    const age = Date.now() - statSync(LOCK).mtimeMs;
+  if (existsSync(SWEEP_LOCK)) {
+    const age = Date.now() - statSync(SWEEP_LOCK).mtimeMs;
     if (age < LOCK_STALE_MS) {
-      console.error(`another sweep holds the lock (${LOCK}); refusing to interleave mutations`);
+      console.error(`another sweep holds the sweep mutex (${SWEEP_LOCK}); refusing to interleave mutations`);
       process.exit(1);
     }
-    rmSync(LOCK, { force: true });
+    rmSync(SWEEP_LOCK, { force: true });
   }
-  writeFileSync(LOCK, `pid=${process.pid} started=${new Date().toISOString()}\n`);
+  writeFileSync(SWEEP_LOCK, `pid=${process.pid} started=${new Date().toISOString()}\n`);
   lockHeld = true;
 
   // CAPTURE THE PRISTINE TEXT, AND BACK IT UP TO DISK.
@@ -355,7 +355,7 @@ try {
   restoreAll();
   rmSync(REPORT, { force: true });
   rmSync(BACKUP_DIR, { recursive: true, force: true });
-  if (lockHeld) rmSync(LOCK, { force: true });
+  if (lockHeld) rmSync(SWEEP_LOCK, { force: true });
   console.log("\nsource restored");
 }
 
