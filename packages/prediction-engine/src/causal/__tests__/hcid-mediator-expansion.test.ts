@@ -173,7 +173,7 @@ describe("HCID and the ID-EnablingEdges algorithm", () => {
       [{ signalId: "SharperMarketShare", node: "SharperMarketShare", tValid: 1, sampleCount: 500 }],
       // The E-value is the spec's SECOND activation condition, so the
       // expansion only activates when it is supplied and it passes.
-      { eValue: 4.2 },
+      { eValue: 4.2, ciEValue: 4.2 },
     );
     expect(report.hedges.length).toBeGreaterThan(0);
     expect(report.commonEdges.length).toBeGreaterThan(0);
@@ -223,7 +223,7 @@ describe("the gate's refusal names the measurement", () => {
         { signalId: "SharperMarketShare", node: "SharperMarketShare", tValid: 1, sampleCount: 500 },
       ],
       // Both of the spec's activation conditions.
-      eValue: 4.2, positivity: 1 });
+      eValue: 4.2, ciEValue: 4.2, positivity: 1 });
     expect(verdict.publishable).toBe(false);
     expect(verdict.refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
     // The hedge was found.
@@ -307,7 +307,7 @@ describe("the adversary review gates the activation", () => {
       new Set(["PublicShare"]),
       bowArc as never,
       [mediator],
-      { eValue: 4.2 },
+      { eValue: 4.2, ciEValue: 4.2 },
     );
     expect(report.eValuePasses).toBe(true);
     expect(report.activating).toHaveLength(1);
@@ -359,7 +359,7 @@ describe("the adversary review gates the activation", () => {
       new Set(["PublicShare"]),
       bowArc as never,
       [mediator],
-      { eValue: 1.35 },
+      { eValue: 1.35, ciEValue: 1.35 },
     );
     expect(at.activating).toHaveLength(1);
     const below = planHedgeBreakage(

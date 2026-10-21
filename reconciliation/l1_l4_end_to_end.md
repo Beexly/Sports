@@ -2049,3 +2049,110 @@ gate FAILS** when a dead export exists. It copies the auditor into a
 temporary directory, drops a dead threshold export in, and requires
 the output to name it and the verdict to be `T12 GATE FAIL`. The real
 auditor and the real constants are untouched.
+
+## The spec's section 4.5 gap: the E-value was measured by nobody, and the expansion could never activate.
+
+The goal spec names this defect: *"the live retrieval/intervention
+path called evaluateCausalClaimGate before computing the residual
+contrast and E-value."* It is worse than an ordering gap.
+
+**`literature-retrieval.ts` passed `null` for the E-value.**
+
+    const expansion = finalizeExpansion(g3.expansion_attempts, null, opts?.minEValue);
+
+`null` fails the E-value floor. The floor fails, the conjunction
+fails, `activating` is empty, and **no mediator expansion could ever
+activate in production**. The whole HCID mechanism -- the thing that
+turns "I cannot answer this" into "measure THIS and then you can" --
+was dead at runtime.
+
+The comment above that line read like a design decision:
+
+    "The E-value is NULL on this path: the gate refused before any
+     estimate was computed, so there is no effect to be robust or
+     fragile. And an unmeasured robustness is not a passed one, so
+     NO expansion activates on this path."
+
+**That was true of the GATE and false of the PATH.** The gate refuses
+because the effect is not IDENTIFIED. That says nothing about whether
+the measured contrast is ROBUST -- two different properties. And the
+residuals were RIGHT THERE: `treated` and `control` were split three
+lines above the gate call. The contrast could be measured, so it IS
+measured, and the measurement is handed to the gate.
+
+### What changed
+
+**`computeMeasuredEValueFromResiduals`** (hcid-mediator-expansion.ts).
+A residual contrast is a difference in MEANS; an E-value needs a
+RATIO. The bridge is the standardized difference d, and exp(0.91 * d)
+is the approximate risk ratio it corresponds to (VanderWeele & Ding
+2017, Annals of Internal Medicine 167(4):268-274, Table 2). The
+E-value formulas are NOT re-derived -- they come from the engine's
+canonical `eValue()` and `eValueForCi()` in `e-value.js`, so the
+repository has ONE E-value definition rather than two that can drift.
+
+It returns null below 30 observations per arm (the standard error of
+d is then too wide for the bound to mean anything) and on a degenerate
+spread. A null return is an UNMEASURED robustness, which fails the
+gate -- the honest outcome.
+
+**The live path measures before it gates.** The contrast is measured
+from the live residual arms, and the point and CI E-values are passed
+into `evaluateCausalClaim` and into `finalizeExpansion`.
+
+### The CI floor was missing too
+
+The spec's G4 is a CONJUNCTION over TWO numbers: the point E-value
+must clear 1.35 AND the CI E-value must clear 1.10. The publishable
+path in literature-retrieval.ts already enforced both -- and its CI
+floor was a bare `1.1` literal, while the expansion path had no CI
+number at all.
+
+So an expansion whose point estimate was far from the null but whose
+CONFIDENCE BOUND was nowhere near it activated on the strength of the
+point estimate alone.
+
+Now:
+- `MIN_EXPANSION_CI_E_VALUE = 1.10` is a named, exported, GATED
+  constant, and both places that decide "is this robust enough" use
+  it (the bare `1.1` and the bare `1.35` literals are gone).
+- `planHedgeBreakage` and `finalizeExpansion` both enforce the
+  conjunction, and report the two halves separately
+  (`pointEValuePasses`, `ciEValuePasses`) so a reader can see WHICH
+  one failed.
+- A null CI E-value fails the conjunction, for the same reason a null
+  point E-value does.
+
+### MUTATIONS, both caught
+
+    the CI floor is never checked                 -> RED, 2 failed
+    the live path drops the measured E-value     -> RED, 1 failed
+      (expected 0 to be greater than 0 -- the
+       expansion_activating_mediators list was
+       empty, which is the original defect)
+
+### Six existing tests were asserting the OLD, wrong behavior
+
+They asserted that a point E-value ALONE activates an expansion --
+which is the behaviour the spec forbids. They now supply both
+numbers. The change is in the production code, and the tests were
+updated to match the corrected gate, not the other way round.
+
+### A mock DB that miscounted its own arms
+
+The live-path test found a bug in the test harness: `makeDb` split
+the residual rows into arms at a HARD-CODED 20, so a caller passing a
+40/40 list got 20 treated and 60 control -- silently, with no
+error. The split is now driven by the caller. The residuals also
+needed SPREAD: a constant residual per arm gives a pooled SD of zero,
+and a contrast with no spread is a division by zero.
+
+    tsc                                        64 errors, down from 74 at
+                                              baseline, zero new signatures
+    prediction-engine                          981 passed | 2 skipped (983 files)
+                                              7531 passed | 4 skipped (7535 tests)
+                                              EXIT 0
+    threshold auditor                          T12 GATE PASS; MIN_EXPANSION_E_VALUE,
+                                              MIN_EXPANSION_CI_E_VALUE and
+                                              MIN_E_VALUE_ARM_SAMPLES all seen
+                                              as GATED

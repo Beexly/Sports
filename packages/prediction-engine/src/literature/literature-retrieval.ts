@@ -31,7 +31,12 @@ import {
 import { pillarsForSignal, type LiteraturePillar } from "./literature-pillars.js";
 import { vectorLiteral } from "./literature-index-builder.js";
 import { evaluateCausalClaim, finalizeExpansion } from "../causal/causal-claim-gate.js";
-import type { MediatorCandidate } from "../causal/hcid-mediator-expansion.js";
+import {
+  computeMeasuredEValueFromResiduals,
+  MIN_EXPANSION_CI_E_VALUE,
+  MIN_EXPANSION_E_VALUE,
+  type MediatorCandidate,
+} from "../causal/hcid-mediator-expansion.js";
 import { eValue, eValueForCi } from "../causal/e-value.js";
 import type { CausalADMG, NodeId } from "../causal/do-calculus-id.js";
 
@@ -989,6 +994,53 @@ export async function runInterventionTest(
   // reported as 0 -- and the n < minN check below refuses anyway.
   const positivity = all.length > 0 ? treated.length / all.length : 0;
 
+  // ====================================================================
+  // THE MEASURED E-VALUE, BEFORE THE GATE.
+  //
+  // THE DEFECT THIS FIXES.
+  //
+  // The gate needs an E-value to decide whether a mediator expansion
+  // may activate -- the spec's G4 is a CONJUNCTION over the point
+  // E-value and the CI E-value, and BOTH must clear their floors.
+  //
+  // This path used to pass NOTHING. The refusal branch below called
+  // `finalizeExpansion(g3.expansion_attempts, null, ...)`, so the
+  // E-value was always null, so the conjunction always failed, so NO
+  // mediator expansion could EVER activate in production. The entire
+  // HCID mechanism -- the thing that turns "I cannot answer this"
+  // into "measure THIS and then you can" -- was dead at runtime, and
+  // the code said so in a comment that read like a design decision:
+  //
+  //   "The E-value is NULL on this path: the gate refused before any
+  //    estimate was computed, so there is no effect to be robust or
+  //    fragile."
+  //
+  // That was true of the GATE and false of the PATH. The gate refuses
+  // because the effect is not IDENTIFIED; that says nothing about
+  // whether the measured contrast is ROBUST. And the residuals are
+  // RIGHT HERE -- `treated` and `control` were split three lines
+  // above. The contrast can be measured, so it IS measured, and the
+  // measurement is handed to the gate.
+  //
+  // The measurement is the spec's:
+  // `computeMeasuredEValueFromResiduals`, which turns the residual
+  // contrast into a standardized difference, then into an approximate
+  // risk ratio (VanderWeele & Ding 2017, Table 2), then into an
+  // E-value via the engine's CANONICAL e-value.ts.
+  //
+  // IT MAY BE NULL, AND THAT IS HONEST. Below 30 observations per arm
+  // the standard error is too wide for the bound to mean anything. A
+  // null E-value then fails the conjunction, and the expansion is
+  // reported as breaking the hedge but FRAGILE -- which is exactly
+  // what "we do not know" should say.
+  // ====================================================================
+  const measuredContrast = computeMeasuredEValueFromResiduals(
+    treated.map((r) => r.residual),
+    control.map((r) => r.residual),
+  );
+  const measuredEValue = measuredContrast?.measuredEValue ?? null;
+  const measuredCiEValue = measuredContrast?.measuredCiEValue ?? null;
+
   const g3 = evaluateCausalClaim({
     y: [edge.effect_signal],
     x: [edge.cause_signal],
@@ -996,6 +1048,14 @@ export async function runInterventionTest(
     graph: opts?.graph ?? null,
     mediators: opts?.mediators ?? [],
     positivity,
+    // THE MEASURED E-VALUES, handed to the gate.
+    //
+    // These are the effect the expansion would estimate, measured
+    // from the live residual arms -- not a constant, and not null.
+    eValue: measuredEValue,
+    ciEValue: measuredCiEValue,
+    minEValue: opts?.minEValue ?? MIN_EXPANSION_E_VALUE,
+    minCiEValue: opts?.minEValueCi ?? MIN_EXPANSION_CI_E_VALUE,
   });
   if (!g3.publishable) {
     // THE EXPANSION PLAN, FINALIZED.
@@ -1007,14 +1067,31 @@ export async function runInterventionTest(
     // the activation decision -- which needs the E-value -- is
     // finished here.
     //
-    // The E-value is NULL on this path: the gate refused before any
-    // estimate was computed, so there is no effect to be robust or
-    // fragile. And an unmeasured robustness is not a passed one, so
-    // NO expansion activates on this path. The attempts are still
-    // reported, because "this measurement would break the hedge" is
-    // the actionable fact, and the fact that it is not ACTIVATED
-    // without an E-value is equally actionable.
-    const expansion = finalizeExpansion(g3.expansion_attempts, null, opts?.minEValue);
+    // THE EXPANSION PLAN, FINALIZED -- WITH THE MEASURED E-VALUE.
+    //
+    // This used to pass `null` for the E-value, which meant the
+    // conjunction always failed and NO expansion could ever activate
+    // in production. The residuals were already split into `treated`
+    // and `control` three lines above the gate call, and the
+    // contrast was measured above that; passing null threw the
+    // measurement away.
+    //
+    // The measured E-value and CI E-value now go in, and the
+    // conjunction decides. If the contrast was too small to measure,
+    // they are null, the conjunction fails, and the expansion is
+    // reported as breaking the hedge but FRAGILE -- which is the
+    // honest answer to "we do not know".
+    //
+    // The attempts are still reported either way, because "this
+    // measurement would break the hedge" is the actionable fact, and
+    // the fact that it is not ACTIVATED is equally actionable.
+    const expansion = finalizeExpansion(
+      g3.expansion_attempts,
+      measuredEValue,
+      opts?.minEValue ?? MIN_EXPANSION_E_VALUE,
+      measuredCiEValue,
+      opts?.minEValueCi ?? MIN_EXPANSION_CI_E_VALUE,
+    );
     return {
       verdict: "INCONCLUSIVE",
       edge_key: edgeKey,
@@ -1204,14 +1281,17 @@ export async function runInterventionTest(
   // control arm. That is a rate ratio, it is defined whenever the
   // control rate is strictly between 0 and 1, and it is what the
   // E-value is actually defined for.
-  const minEValue = opts?.minEValue ?? 1.35;
+  const minEValue = opts?.minEValue ?? MIN_EXPANSION_E_VALUE;
   // The spec's G4 is a CONJUNCTION over TWO numbers with TWO
   // thresholds: the point E-value must clear 1.35, and the
   // confidence-interval E-value must clear 1.10. The CI floor is
   // lower on purpose -- it is a floor on a bound, not a central
   // claim. Before this, the CI's threshold did not exist and the
   // point's was applied to the wrong quantity.
-  const minEValueCi = opts?.minEValueCi ?? 1.1;
+  // The CI floor is the SAME constant the expansion path uses. It was
+  // a bare 1.1 here and a named constant there, so the two places
+  // that decide "is this robust enough" could disagree.
+  const minEValueCi = opts?.minEValueCi ?? MIN_EXPANSION_CI_E_VALUE;
   // The spec's third G4 conjunct: |Delta_placebo| <= 0.005.
   const maxPlaceboDelta = opts?.maxPlaceboDelta ?? MAX_PLACEBO_DELTA;
 

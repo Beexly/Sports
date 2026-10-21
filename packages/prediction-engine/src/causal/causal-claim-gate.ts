@@ -51,6 +51,7 @@ import {
 import {
   planHedgeBreakage,
   MIN_EXPANSION_E_VALUE,
+  MIN_EXPANSION_CI_E_VALUE,
   type MediatorCandidate,
   type MediatorAttempt,
 } from "./hcid-mediator-expansion.js";
@@ -142,6 +143,22 @@ export interface CausalClaimQuery {
   readonly eValue?: number | null;
   /** The E-value floor for activating an expansion. The spec's is 1.35. */
   readonly minEValue?: number;
+  /**
+   * The CI E-value of the effect being claimed.
+   *
+   * The spec's G4 is a CONJUNCTION over TWO numbers: the point
+   * E-value must clear 1.35 and the CI E-value must clear 1.10. The
+   * expansion path checked only the first, so an expansion whose
+   * confidence bound was nowhere near the null activated on the
+   * strength of its point estimate alone.
+   *
+   * When it is null or absent, the conjunction FAILS -- the same
+   * rule as the point E-value, for the same reason: an unmeasured
+   * robustness is not a robustness that passed.
+   */
+  readonly ciEValue?: number | null;
+  /** The CI E-value floor for activating an expansion. The spec's is 1.10. */
+  readonly minCiEValue?: number;
 
   /**
    * The PROXIMAL data, when the caller has a treatment-inducing proxy
@@ -676,6 +693,8 @@ export function evaluateCausalClaim(query: CausalClaimQuery): CausalClaimVerdict
   const report = planHedgeBreakage(y, x, graph, query.mediators ?? [], {
     eValue: query.eValue ?? null,
     ...(query.minEValue === undefined ? {} : { minEValue: query.minEValue }),
+    ciEValue: query.ciEValue ?? null,
+    ...(query.minCiEValue === undefined ? {} : { minCiEValue: query.minCiEValue }),
   });
   const enabling = report.commonEdges;
   const activating = report.activating;
@@ -827,19 +846,33 @@ export function finalizeExpansion(
   attempts: readonly MediatorAttempt[],
   eValue: number | null,
   minEValue = MIN_EXPANSION_E_VALUE,
+  ciEValue: number | null = null,
+  minCiEValue = MIN_EXPANSION_CI_E_VALUE,
 ): {
   readonly activating: readonly MediatorAttempt[];
   readonly breaksHedgeButFragile: readonly MediatorAttempt[];
   readonly eValuePasses: boolean;
+  readonly pointEValuePasses: boolean;
+  readonly ciEValuePasses: boolean;
 } {
   const breaks = attempts.filter((a) => a.eligible && a.breaksHedge);
   // A robustness that could not be measured is not a robustness that
   // passed.
-  const eValuePasses = eValue !== null && eValue >= minEValue;
+  //
+  // THE CONJUNCTION. The spec's G4 has TWO numbers and TWO floors:
+  // the point E-value must clear 1.35 AND the CI E-value must clear
+  // 1.10. This function checked only the first, so a call that
+  // supplied a point E-value and no CI E-value activated an
+  // expansion whose confidence bound was never measured.
+  const pointEValuePasses = eValue !== null && eValue >= minEValue;
+  const ciEValuePasses = ciEValue !== null && ciEValue >= minCiEValue;
+  const eValuePasses = pointEValuePasses && ciEValuePasses;
   return {
     activating: eValuePasses ? breaks : [],
     breaksHedgeButFragile: eValuePasses ? [] : breaks,
     eValuePasses,
+    pointEValuePasses,
+    ciEValuePasses,
   };
 }
 

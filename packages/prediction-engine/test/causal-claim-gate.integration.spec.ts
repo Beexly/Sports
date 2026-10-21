@@ -209,8 +209,11 @@ describe("G3_INT_03 -- a mediator expansion that breaks the hedge, with a suffic
       graph: BOW_ARC,
       positivity: 1,
       mediators: [candidate],
-      // A ROBUST effect: above the spec's 1.35 floor.
+      // A ROBUST effect: above the spec's 1.35 floor, and above the
+      // CI floor of 1.10. The spec's G4 is a CONJUNCTION over both
+      // numbers, so both are supplied.
       eValue: 4.2,
+      ciEValue: 4.2,
     });
 
     // The hedge was broken by the expansion...
@@ -238,7 +241,7 @@ describe("G3_INT_03 -- a mediator expansion that breaks the hedge, with a suffic
     // So the activation is decided by finalizeExpansion, and this test
     // exercises BOTH stages: the attempt list from stage 1, and the
     // decision from stage 2.
-    const final = finalizeExpansion(verdict.expansion_attempts, 4.2);
+    const final = finalizeExpansion(verdict.expansion_attempts, 4.2, undefined, 4.2);
     expect(final.eValuePasses).toBe(true);
     expect(final.activating.length).toBeGreaterThan(0);
     expect(final.activating.map((a) => a.node)).toContain("M");
@@ -277,7 +280,7 @@ describe("G3_INT_04 -- a mediator expansion that breaks the hedge but is FRAGILE
     expect(verdict.expansion_attempts.length).toBeGreaterThan(0);
     expect(verdict.expansion_attempts[0]!.breaksHedge).toBe(true);
     // But the effect is too fragile to publish, so NOTHING activates.
-    const final = finalizeExpansion(verdict.expansion_attempts, 1.18);
+    const final = finalizeExpansion(verdict.expansion_attempts, 1.18, undefined, 1.18);
     expect(final.eValuePasses).toBe(false);
     expect(final.activating.length).toBe(0);
     // And the broken-but-fragile attempt is REPORTED, not dropped --

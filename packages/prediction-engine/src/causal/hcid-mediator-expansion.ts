@@ -56,6 +56,7 @@ import {
   type NodeId,
   type IDResult,
 } from "./do-calculus-id.js";
+import { eValue, eValueForCi } from "./e-value.js";
 
 /**
  * A signal that could serve as a mediator.
@@ -89,6 +90,142 @@ export const MIN_MEDIATOR_SAMPLES = 30;
 
 /** The spec's E-value floor for an activated mediator expansion. */
 export const MIN_EXPANSION_E_VALUE = 1.35;
+
+/**
+ * The spec's CI E-value floor for an activated mediator expansion.
+ *
+ * The spec's G4 is a CONJUNCTION over TWO numbers: the POINT E-value
+ * must clear 1.35, and the CONFIDENCE-INTERVAL E-value must clear
+ * 1.10. The CI floor is lower on purpose -- it is a floor on a BOUND,
+ * not a central claim -- and the publishable path in
+ * literature-retrieval.ts already enforces exactly this conjunction.
+ *
+ * The expansion path did not have the second number at all, so the
+ * conjunction was a single number wearing two hats.
+ */
+export const MIN_EXPANSION_CI_E_VALUE = 1.10;
+
+/**
+ * The minimum observations PER ARM before a residual contrast can be
+ * turned into an E-value.
+ *
+ * The spec's floor is 30. Below it the standard error of the
+ * standardized difference is too wide for the CI bound to say
+ * anything, and an E-value computed from it would be a number without
+ * a meaning.
+ */
+export const MIN_E_VALUE_ARM_SAMPLES = 30;
+
+/**
+ * The VanderWeele & Ding (2017) conversion from a standardized mean
+ * difference to an approximate risk ratio.
+ *
+ * Their Table 2: for a continuous outcome, a standardized difference
+ * of d corresponds to an approximate risk ratio of exp(0.91 * d). The
+ * E-value is then computed from that ratio by the canonical
+ * `eValue()` in e-value.js -- so there is ONE E-value formula in this
+ * repository, not two.
+ */
+export const VD_SD_TO_RR_FACTOR = 0.91;
+
+/** The two-sided 95% normal quantile. */
+export const Z_975 = 1.96;
+
+/**
+ * What a residual contrast measures.
+ *
+ * The contrast is a difference in MEANS (the residual scale), and the
+ * E-value needs a RATIO. The standardized difference d is the bridge:
+ * it is scale-free, and exp(0.91 * d) is the approximate risk ratio
+ * that d corresponds to.
+ */
+export interface ResidualContrastStats {
+  readonly treatedMean: number;
+  readonly controlMean: number;
+  readonly pooledSd: number;
+  readonly nTreated: number;
+  readonly nControl: number;
+  /** The standardized mean difference. */
+  readonly standardizedDifference: number;
+  /** Its standard error. */
+  readonly standardError: number;
+  /** The approximate risk ratio the point difference corresponds to. */
+  readonly pointRiskRatio: number;
+  /** The approximate risk ratio the CI lower bound corresponds to. */
+  readonly ciLowerRiskRatio: number;
+  /** The E-value of the point estimate. */
+  readonly measuredEValue: number | null;
+  /** The E-value of the confidence-interval bound closest to the null. */
+  readonly measuredCiEValue: number | null;
+}
+
+/**
+ * MEASURE the E-value of a residual contrast.
+ *
+ * VanderWeele & Ding (2017), Annals of Internal Medicine 167(4):268-274,
+ * Tables 1 and 2: a standardized mean difference d corresponds to an
+ * approximate risk ratio of exp(0.91 * d), and the E-value of a risk
+ * ratio RR >= 1 is RR + sqrt(RR * (RR - 1)). The E-value of the
+ * confidence interval is the E-value of the bound closest to the null.
+ *
+ * The E-value formulas are NOT re-derived here. They come from
+ * `eValue()` and `eValueForCi()` in e-value.js, so the engine has one
+ * E-value definition rather than two that can drift apart.
+ *
+ * Returns null when the contrast cannot support an E-value:
+ *
+ *   - an arm with fewer than MIN_E_VALUE_ARM_SAMPLES observations.
+ *     The standard error of d is then too wide for the CI bound to
+ *     mean anything, and an E-value computed from it would be a
+ *     number without a meaning.
+ *   - a degenerate spread (a pooled SD of zero, or a non-finite one).
+ *     The contrast would be a division by zero.
+ *
+ * A null return is NOT a passed E-value. It is an unmeasured one, and
+ * an unmeasured robustness is not a robustness that passed.
+ */
+export function computeMeasuredEValueFromResiduals(
+  treatedResiduals: readonly number[],
+  controlResiduals: readonly number[],
+): ResidualContrastStats | null {
+  const n1 = treatedResiduals.length;
+  const n0 = controlResiduals.length;
+  if (n1 < MIN_E_VALUE_ARM_SAMPLES || n0 < MIN_E_VALUE_ARM_SAMPLES) {
+    return null;
+  }
+  const mean1 = treatedResiduals.reduce((a, b) => a + b, 0) / n1;
+  const mean0 = controlResiduals.reduce((a, b) => a + b, 0) / n0;
+  const var1 = treatedResiduals.reduce((acc, v) => acc + (v - mean1) ** 2, 0) / (n1 - 1);
+  const var0 = controlResiduals.reduce((acc, v) => acc + (v - mean0) ** 2, 0) / (n0 - 1);
+  const pooledSd = Math.sqrt(
+    ((n1 - 1) * var1 + (n0 - 1) * var0) / (n1 + n0 - 2),
+  );
+  if (!Number.isFinite(pooledSd) || pooledSd <= 1e-8) return null;
+
+  const d = Math.abs(mean1 - mean0) / pooledSd;
+  const standardError = Math.sqrt(
+    (n1 + n0) / (n1 * n0) + (d * d) / (2 * (n1 + n0)),
+  );
+  const dLower = Math.max(0, d - Z_975 * standardError);
+  const rrPoint = Math.exp(VD_SD_TO_RR_FACTOR * d);
+  const rrLower = Math.exp(VD_SD_TO_RR_FACTOR * dLower);
+
+  return {
+    treatedMean: mean1,
+    controlMean: mean0,
+    pooledSd,
+    nTreated: n1,
+    nControl: n0,
+    standardizedDifference: d,
+    standardError,
+    pointRiskRatio: rrPoint,
+    ciLowerRiskRatio: rrLower,
+    // The canonical formulas. rrPoint >= 1 always (d >= 0), and
+    // rrLower >= 1 too, so eValue() never has to invert.
+    measuredEValue: eValue(rrPoint),
+    measuredCiEValue: eValueForCi(rrLower, rrLower),
+  };
+}
 
 /** One collected hedge and the edges that might break it. */
 export interface CollectedHedge {
@@ -151,8 +288,32 @@ export interface HedgeBreakageReport {
   readonly eValue: number | null;
   /** The floor the E-value was judged against. The spec's is 1.35. */
   readonly minEValue: number;
-  /** Whether the E-value passed the floor. */
+  /**
+   * The CI E-value the activation was judged against. Null when
+   * unknown.
+   *
+   * The spec's G4 is a CONJUNCTION over two numbers, so this is not
+   * optional decoration: a report that says "the E-value passed"
+   * without saying whether the CI bound passed is a report about
+   * half the gate.
+   */
+  readonly ciEValue: number | null;
+  /** The floor the CI E-value was judged against. The spec's is 1.10. */
+  readonly minCiEValue: number;
+  /**
+   * Whether BOTH E-values passed their floors.
+   *
+   * This is the spec's conjunction. When the CI E-value is not
+   * supplied, it is treated as NOT PASSED -- a robustness that could
+   * not be measured is not a robustness that passed, and treating
+   * "unknown" as "fine" is the same defect as a threshold that is
+   * exported and never checked.
+   */
   readonly eValuePasses: boolean;
+  /** Whether the POINT E-value passed its floor. Reported separately. */
+  readonly pointEValuePasses: boolean;
+  /** Whether the CI E-value passed its floor. Reported separately. */
+  readonly ciEValuePasses: boolean;
 }
 
 /**
@@ -304,6 +465,22 @@ export function planHedgeBreakage(
     readonly eValue?: number | null;
     /** The E-value floor. The spec's is 1.35. */
     readonly minEValue?: number;
+    /**
+     * The CI E-value of the effect the expansion would estimate.
+     *
+     * The spec's G4 is a CONJUNCTION: the point E-value must clear
+     * 1.35 AND the CI E-value must clear 1.10. The CI floor is lower
+     * on purpose -- it is a floor on a BOUND, not a central claim.
+     *
+     * When it is null or absent, the conjunction FAILS. The expansion
+     * is then reported as breaking the hedge but fragile, which is
+     * the honest state: the point estimate is robust but the
+     * confidence bound was not measured, so the claim is not
+     * publishable.
+     */
+    readonly ciEValue?: number | null;
+    /** The CI E-value floor. The spec's is 1.10. */
+    readonly minCiEValue?: number;
   },
 ): HedgeBreakageReport {
   setMediatorValidityPool(candidates);
@@ -330,7 +507,25 @@ export function planHedgeBreakage(
   // per attempt.
   const minE = opts?.minEValue ?? MIN_EXPANSION_E_VALUE;
   const eValue = opts?.eValue ?? null;
-  const eValuePasses = eValue !== null && eValue >= minE;
+  const minCiE = opts?.minCiEValue ?? MIN_EXPANSION_CI_E_VALUE;
+  const ciEValue = opts?.ciEValue ?? null;
+
+  // THE CONJUNCTION. Both numbers, both floors.
+  //
+  // The point E-value says "how strong would confounding have to be
+  // to explain the POINT estimate away". The CI E-value says the same
+  // about the BOUND closest to the null -- and the bound is the
+  // honest number, because a point estimate can be far from its own
+  // interval.
+  //
+  // Before this, the expansion path checked the point number alone,
+  // so an expansion whose CI bound was nowhere near the null
+  // activated as long as its point estimate was far enough from it.
+  // The publishable path in literature-retrieval.ts already enforced
+  // both; the expansion path did not.
+  const pointEValuePasses = eValue !== null && eValue >= minE;
+  const ciEValuePasses = ciEValue !== null && ciEValue >= minCiE;
+  const eValuePasses = pointEValuePasses && ciEValuePasses;
 
   // An expansion that breaks the hedge but cannot pass the adversary
   // review is still REPORTED -- as an attempt that breaks the hedge
@@ -349,7 +544,11 @@ export function planHedgeBreakage(
     breaksHedgeButFragile: eValuePasses ? [] : breaksHedge,
     eValue,
     minEValue: minE,
+    ciEValue,
+    minCiEValue: minCiE,
     eValuePasses,
+    pointEValuePasses,
+    ciEValuePasses,
   };
 }
 

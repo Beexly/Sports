@@ -30,12 +30,27 @@ import {
  * would reach a statistical PASS if the gate did not stop it first.
  * That is the point: the gate must be what makes the difference.
  */
-function makeDb(opts?: { readonly residuals?: number[]; readonly cause?: string; readonly effect?: string }) {
+function makeDb(opts?: {
+  readonly residuals?: number[];
+  readonly cause?: string;
+  readonly effect?: string;
+  /**
+   * How many rows land in the TREATED arm.
+   *
+   * The split used to be hard-coded at 20, so a caller passing a
+   * different number of residual rows got a different split than it
+   * asked for -- and a 40/40 list became 20 treated and 60 control.
+   * That is exactly the kind of silent miscount that makes a test
+   * measure something other than what it says.
+   */
+  readonly treatedCount?: number;
+}) {
   const inserted: Array<{ sql: string; params: unknown[] }> = [];
   const residuals = opts?.residuals ?? [
     ...Array(20).fill(0.4),
     ...Array(20).fill(-0.4),
   ];
+  const treatedCount = opts?.treatedCount ?? 20;
   const db = {
     query: async (sql: string, params: unknown[] = []) => {
       if (sql.includes("FROM lit.causal_edge")) {
@@ -62,14 +77,14 @@ function makeDb(opts?: { readonly residuals?: number[]; readonly cause?: string;
             // of 1, an E-value of 1, and no effect to be robust
             // about. The test would then be measuring the gate
             // refusing everything, not the gate working.
-            outcome_correct: i < 20 ? i % 10 !== 0 : i % 10 === 0,
+            outcome_correct: i < treatedCount ? i % 10 !== 0 : i % 10 === 0,
             // The treated rows must be STRICTLY above doValue and the
             // control rows STRICTLY below it. The split test is
             // `activation_score >= doValue`, so a control row exactly at
             // doValue would land in the treated arm and leave the
             // control arm empty -- the test would then stop for the
             // wrong reason and prove nothing.
-            activation_score: i < 20 ? 0.9 : 0.0001,
+            activation_score: i < treatedCount ? 0.9 : 0.0001,
             similarity: 0.5,
           })),
         };
@@ -612,5 +627,113 @@ describe("the shock path carries the measurement plan", () => {
     expect(res.g3_conclusion).toBe("CAUSAL");
     expect(res.expansion_activating_mediators).toHaveLength(0);
     expect(res.expansion_breaks_hedge_but_fragile).toHaveLength(0);
+  });
+});
+
+/**
+ * THE LIVE EXPANSION PATH.
+ *
+ * The tests above prove the gate REFUSES an unidentified effect. This
+ * one proves the OTHER half: that a mediator expansion which breaks
+ * the hedge, and whose measured contrast is robust, actually ACTIVATES
+ * through the real intervention path.
+ *
+ * IT COULD NOT, BEFORE THIS COMMIT.
+ *
+ * The live path called `finalizeExpansion(g3.expansion_attempts,
+ * null, ...)` -- so the E-value was always null, so the conjunction
+ * always failed, so NO expansion could ever activate in production.
+ * The whole HCID mechanism -- the thing that turns "I cannot answer
+ * this" into "measure THIS and then you can" -- was dead at runtime,
+ * behind a comment that read like a design decision.
+ *
+ * The E-value is now MEASURED from the live residual arms before the
+ * gate, and handed to it. This test is the proof that it reaches the
+ * gate: if the measurement is dropped, or the null is passed again,
+ * this test fails.
+ */
+describe("the live expansion path -- a measured E-value activates the expansion", () => {
+  it("ACTIVATES a mediator that breaks the hedge, when the measured contrast is robust", async () => {
+    // 40 treated and 40 control rows: above the 30-per-arm floor, so
+    // the E-value is MEASURABLE (not merely measurable in principle).
+    //
+    // THE RESIDUALS HAVE SPREAD. A constant residual per arm gives a
+    // pooled SD of ZERO, and a contrast with no spread is a division
+    // by zero -- the measurement returns null and nothing activates.
+    // The spread is what makes the contrast real.
+    const residuals = [
+      ...Array.from({ length: 40 }, (_, i) => 0.5 + 0.02 * ((i % 7) - 3)),
+      ...Array.from({ length: 40 }, (_, i) => -0.5 + 0.02 * ((i % 5) - 2)),
+    ];
+    const { db } = makeDb({ residuals, treatedCount: 40 });
+
+    // A bow-arc: the effect is not identified, so the gate refuses --
+    // and the refusal is where the expansion plan comes from.
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph: {
+        nodes: ["Scheme", "PassEPA"],
+        directed: [["Scheme", "PassEPA"]],
+        bidirected: [["Scheme", "PassEPA"]],
+      },
+      mediators: [
+        {
+          signalId: "MarketShare",
+          node: "MarketShare",
+          tValid: 1,
+          sampleCount: 500,
+        },
+      ],
+    });
+
+    // The gate refused -- the hedge is real.
+    expect(res.g3_refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
+    // AND THE EXPANSION ACTIVATED. This is the assertion that was
+    // impossible before: the live path passed a null E-value, so the
+    // conjunction always failed and this list was always empty.
+    expect(res.expansion_activating_mediators.length).toBeGreaterThan(0);
+    expect(res.expansion_activating_mediators).toContain("MarketShare");
+    // And nothing was left in the fragile bucket -- the same attempt
+    // cannot be both.
+    expect(res.expansion_breaks_hedge_but_fragile).toHaveLength(0);
+  });
+
+  it("does NOT activate when the contrast is too small to measure", async () => {
+    // 20 per arm: BELOW the 30-per-arm floor, so the E-value is null
+    // and the conjunction FAILS.
+    //
+    // This is the honest outcome. "We do not know" must not be
+    // reported as "it is fine" -- and the refusal must still say
+    // WHICH measurement would work, so the report is actionable.
+    const residuals = [
+      ...Array.from({ length: 20 }, (_, i) => 0.5 + 0.02 * ((i % 7) - 3)),
+      ...Array.from({ length: 20 }, (_, i) => -0.5 + 0.02 * ((i % 5) - 2)),
+    ];
+    const { db } = makeDb({ residuals, treatedCount: 20 });
+
+    const res = await runInterventionTest(db, "edge1", 0.001, {
+      graph: {
+        nodes: ["Scheme", "PassEPA"],
+        directed: [["Scheme", "PassEPA"]],
+        bidirected: [["Scheme", "PassEPA"]],
+      },
+      mediators: [
+        {
+          signalId: "MarketShare",
+          node: "MarketShare",
+          tValid: 1,
+          sampleCount: 500,
+        },
+      ],
+    });
+
+    expect(res.g3_refusal_code).toBe("REFUSED_G3_NON_IDENTIFIABLE_HEDGE");
+    // NOTHING activated -- the contrast was not measurable.
+    expect(res.expansion_activating_mediators).toHaveLength(0);
+    // But the attempt that breaks the hedge is REPORTED, as the
+    // fragile kind. "This measurement would make the question
+    // answerable, but the answer would be fragile" is a materially
+    // different statement from "this measurement would make the
+    // question answerable", and the reader needs both.
+    expect(res.expansion_breaks_hedge_but_fragile.length).toBeGreaterThan(0);
   });
 });

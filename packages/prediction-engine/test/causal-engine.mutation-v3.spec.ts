@@ -40,6 +40,8 @@ import {
   MIN_EXPANSION_E_VALUE,
   MIN_MEDIATOR_SAMPLES,
   planHedgeBreakage,
+  computeMeasuredEValueFromResiduals,
+  MIN_EXPANSION_CI_E_VALUE,
   type MediatorCandidate,
 } from "../src/causal/hcid-mediator-expansion.js";
 import { runShpitserPearlID, type CausalADMG } from "../src/causal/do-calculus-id.js";
@@ -92,6 +94,22 @@ const BOW: CausalADMG = {
   directed: [["X", "Y"]],
   bidirected: [["X", "Y"]],
 };
+
+
+/** A deterministic 24-bit LCG, so every number below is reproducible. */
+function makeRng(seed: number): () => number {
+  let st = seed >>> 0;
+  return () => {
+    st = (Math.imul(st, 1664525) + 12345) >>> 0;
+    return (st >>> 8) / 16777216;
+  };
+}
+
+function gaussian(rand: () => number): number {
+  const u1 = Math.max(rand(), 1e-12);
+  const u2 = rand();
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
 
 describe("T9 -- the live E-value hedge-breakage gate", () => {
   /**
@@ -158,7 +176,7 @@ describe("T9 -- the live E-value hedge-breakage gate", () => {
       new Set(["X"]),
       BOW,
       [candidate()],
-      { eValue: 4.2 },
+      { eValue: 4.2, ciEValue: 4.2 },
     );
     expect(report.eValuePasses).toBe(true);
     expect(report.activating.length).toBeGreaterThan(0);
@@ -167,6 +185,107 @@ describe("T9 -- the live E-value hedge-breakage gate", () => {
 
   it("the E-value floor is the spec's 1.35", () => {
     expect(MIN_EXPANSION_E_VALUE).toBe(1.35);
+  });
+
+  it("a FRAGILE CI does not activate, even when the POINT E-value passes", () => {
+    // THE SPEC'S G4 IS A CONJUNCTION.
+    //
+    //   point E-value  >= 1.35   AND   CI E-value  >= 1.10
+    //
+    // The expansion path checked only the FIRST. So an expansion whose
+    // point estimate was far from the null but whose CONFIDENCE BOUND
+    // was nowhere near it activated on the strength of the point
+    // estimate alone.
+    //
+    // The CI floor is lower on purpose -- it is a floor on a BOUND,
+    // not a central claim -- but it is a floor, and it was not
+    // applied.
+    const report = planHedgeBreakage(
+      new Set(["Y"]),
+      new Set(["X"]),
+      BOW,
+      [candidate()],
+      // The point clears 1.35 comfortably; the CI bound does not
+      // clear 1.10.
+      { eValue: 4.2, ciEValue: 1.02 },
+    );
+    expect(report.pointEValuePasses).toBe(true);
+    expect(report.ciEValuePasses).toBe(false);
+    expect(report.eValuePasses).toBe(false);
+    expect(report.activating.length).toBe(0);
+    // And it is reported as the fragile kind, not dropped.
+    expect(report.breaksHedgeButFragile.length).toBeGreaterThan(0);
+  });
+
+  it("an UNMEASURED CI E-value does not activate either", () => {
+    // A robustness that could not be measured is not a robustness
+    // that passed. The point E-value is present; the CI is not.
+    const report = planHedgeBreakage(
+      new Set(["Y"]),
+      new Set(["X"]),
+      BOW,
+      [candidate()],
+      { eValue: 4.2, ciEValue: null },
+    );
+    expect(report.pointEValuePasses).toBe(true);
+    expect(report.ciEValuePasses).toBe(false);
+    expect(report.eValuePasses).toBe(false);
+    expect(report.activating.length).toBe(0);
+  });
+
+  it("the CI floor is the spec's 1.10", () => {
+    expect(MIN_EXPANSION_CI_E_VALUE).toBe(1.10);
+    // And it is the boundary: exactly 1.10 passes, just under fails.
+    const at = planHedgeBreakage(
+      new Set(["Y"]),
+      new Set(["X"]),
+      BOW,
+      [candidate()],
+      { eValue: 4.2, ciEValue: 1.1 },
+    );
+    expect(at.activating.length).toBeGreaterThan(0);
+    const below = planHedgeBreakage(
+      new Set(["Y"]),
+      new Set(["X"]),
+      BOW,
+      [candidate()],
+      { eValue: 4.2, ciEValue: 1.0999 },
+    );
+    expect(below.activating.length).toBe(0);
+  });
+
+  it("the measured E-value of a residual contrast is computed, and is null below the sample floor", () => {
+    // THE MEASUREMENT.
+    //
+    // A residual contrast is a difference in MEANS; an E-value needs a
+    // RATIO. The bridge is the standardized difference d, and
+    // exp(0.91 * d) is the approximate risk ratio it corresponds to
+    // (VanderWeele & Ding 2017, Table 2).
+    const rand = makeRng(9);
+    const treated = Array.from({ length: 40 }, () => 0.5 + 0.05 * gaussian(rand));
+    const control = Array.from({ length: 40 }, () => 0.05 * gaussian(rand));
+    const measured = computeMeasuredEValueFromResiduals(treated, control);
+    expect(measured).not.toBeNull();
+    expect(measured!.nTreated).toBe(40);
+    expect(measured!.nControl).toBe(40);
+    // A real contrast gives a real E-value, well above 1.
+    expect(measured!.measuredEValue!).toBeGreaterThan(1.35);
+    // And the CI bound is BELOW the point estimate -- that is the
+    // whole reason the CI floor is separate.
+    expect(measured!.measuredCiEValue!).toBeLessThan(measured!.measuredEValue!);
+    // The ratio is exp(0.91 * d), exactly.
+    expect(measured!.pointRiskRatio).toBeCloseTo(
+      Math.exp(0.91 * measured!.standardizedDifference),
+      10,
+    );
+    // Below 30 observations per arm, there is no E-value. Not a
+    // small one -- none.
+    expect(
+      computeMeasuredEValueFromResiduals(
+        treated.slice(0, 29),
+        control.slice(0, 29),
+      ),
+    ).toBeNull();
   });
 
   it("a mediator with too few samples is NOT eligible", () => {
@@ -178,7 +297,7 @@ describe("T9 -- the live E-value hedge-breakage gate", () => {
       new Set(["X"]),
       BOW,
       [candidate({ sampleCount: MIN_MEDIATOR_SAMPLES - 1 })],
-      { eValue: 4.2 },
+      { eValue: 4.2, ciEValue: 4.2 },
     );
     const attempt = report.attempts[0]!;
     expect(attempt.eligible).toBe(false);
