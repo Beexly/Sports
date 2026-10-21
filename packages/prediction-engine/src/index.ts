@@ -5165,3 +5165,36 @@ export type {
   BenchmarkOutcome,
 } from "./enterprise/universal-world-model-sdk.js";
 
+
+// Components 11-13: Dyadic Trust, Role Isomorphism & Synaptic Plasticity
+export {
+  verifyRosterContinuityGate,
+  computeDyadicTrustState,
+  CANONICAL_2026_ROSTER_BINDINGS,
+  ARCHETYPE_AARON_RODGERS,
+} from "./behavioral/dyadic-trust-engine.js";
+export type {
+  PlayerRosterBinding,
+  QbBehavioralArchetype,
+  DyadicPlayImpulse,
+  MultimodalDiscourseImpulse,
+  DyadicTrustState,
+} from "./behavioral/dyadic-trust-engine.js";
+
+export {
+  computeCosineIsomorphism,
+  computeRoleIsomorphismTargetReallocation,
+} from "./causal/role-isomorphism-realloc.js";
+export type {
+  RouteTreeVector,
+  ReceiverCandidate,
+  ReallocationTransferResult,
+} from "./causal/role-isomorphism-realloc.js";
+
+export {
+  WordSynapsePlasticityEngine,
+} from "./learning/word-synapse-plasticity.js";
+export type {
+  WordTripleExtraction,
+  SynapticAssimilationResult,
+} from "./learning/word-synapse-plasticity.js";
