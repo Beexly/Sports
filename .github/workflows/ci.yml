@@ -130,6 +130,60 @@ jobs:
       - name: Run the MIND falsification suite (node:test, not collected by vitest)
         run: node --import tsx --test packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts
 
+      # THE OTHER node:test GUARDRAILS. Twenty suites, 322 assertions, and until this
+      # step was added NONE of them had ever gated a commit.
+      #
+      # The pattern is the one the MIND step above already established: the
+      # prediction-engine vitest config's include patterns (`src/**/*.test.ts`,
+      # `test/**/*.spec.ts`) do NOT collect `node:test` files, so `npm test` skips
+      # them entirely. A guard that CI never executes is not a gate -- it sits in the
+      # repository looking like one and stays green while the behaviour it pins
+      # drifts. That is the SAME failure mode as the class-A guard, the canonical AST
+      # (private to a script), and the 7.099 CRPS bar (in three documents, enforced
+      # nowhere).
+      #
+      # MEASURED, not assumed: every one of these twenty was run individually and
+      # exits 0 today. They are added as a MATRIX rather than one long `node --test`
+      # invocation so that a failure names the suite that broke instead of pointing at
+      # a wall of TAP output, and so a slow suite cannot mask a fast one.
+      #
+      # The list is a MATRIX OF MATRICES: every file is listed explicitly, so a new
+      # guardrail suite is NOT picked up automatically. That is deliberate -- a suite
+      # that fails on its first appearance should be added here on purpose, after it
+      # has been seen green, rather than silently becoming a gate the day it is
+      # written.
+      - name: Run the node:test guardrail ${{ matrix.suite }}
+        run: node --test ${{ matrix.suite }}
+        strategy:
+          fail-fast: false
+          matrix:
+            suite:
+              - scripts/ai/build-call-site-inventory.test.mjs
+              - scripts/db/prune-usage.test.mjs
+              - scripts/edge-lab/freeze-model-hash.test.mjs
+              - scripts/factors/index.test.mjs
+              - scripts/guardrails/commercial-copy-scan.test.mjs
+              - scripts/guardrails/dependency-audit.test.mjs
+              - scripts/guardrails/ingestion-source-clearance.test.mjs
+              - scripts/guardrails/no-unsupported-performance-claims.test.mjs
+              - scripts/guardrails/node-container-parity.test.mjs
+              - scripts/guardrails/node-version-parity.test.mjs
+              - scripts/guardrails/sealed-holdout-open-scan.test.mjs
+              - scripts/guardrails/trust-gate.test.mjs
+              - scripts/lib/node-runtime-pin.test.mjs
+              - scripts/nova/convergence-inventory.test.mjs
+              - scripts/nova/multihead-inventory.test.mjs
+              - scripts/nova/nova-intelligence.test.mjs
+              - scripts/nova/source-runtime.test.mjs
+              - scripts/ops/cron-matrix-from-vercel.test.mjs
+              - scripts/ops/free-auto-settle.test.mjs
+              - scripts/__tests__/cv-no-synthetic-rng.test.mjs
+
+      # The seven `apps/mobile/tests/*.test.js` suites are NOT in the matrix: they
+      # fail today, and a red suite is not a gate. They are excluded here on purpose
+      # rather than left to fail the build, and their status is recorded in
+      # handoff/NODE_TEST_SUITES_IN_CI.md.
+
       # §10.9: the budget acceptance run is mandatory and its evidence is
       # RETAINED — a missing artifact fails the build.
       - name: Upload budget acceptance artifact (§10.9)
