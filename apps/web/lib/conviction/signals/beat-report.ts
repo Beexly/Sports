@@ -241,3 +241,41 @@ export function createBeatReportSignal(deps: BeatReportDeps): SignalFn {
     };
   };
 }
+
+/**
+ * C-417 — the real loader, built on stored Signal rows.
+ *
+ * Pass `live: true` (the operator switch this module never flips) to let the
+ * signal vote. Default stays false so an unflagged factory never gates a pick.
+ * `loadPlayerNames` is optional; without it, items stay player-less and
+ * therefore cannot corroborate — honest silence, not a guessed match.
+ */
+export function createBeatReportSignalFromStore(
+  options: {
+    readonly live?: boolean;
+    readonly now?: () => Date;
+    readonly loadPlayerNames?: () => Promise<readonly string[]>;
+    readonly dbArg?: unknown;
+  } = {},
+): SignalFn {
+  const live = options.live ?? false;
+  return createBeatReportSignal({
+    live,
+    loadWireForGame: async (_gameId, teams) => {
+      const { loadBeatReportWireFromStore } = await import("@/lib/news/wire-store");
+      let playerNames: readonly string[] | undefined;
+      if (options.loadPlayerNames) {
+        try {
+          playerNames = await options.loadPlayerNames();
+        } catch {
+          playerNames = undefined;
+        }
+      }
+      return loadBeatReportWireFromStore(teams, {
+        now: options.now?.() ?? new Date(),
+        playerNames,
+        dbArg: options.dbArg,
+      });
+    },
+  });
+}

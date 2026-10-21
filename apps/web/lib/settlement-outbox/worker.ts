@@ -1290,7 +1290,10 @@ interface CountingDb {
     }): Promise<Array<{ createdAt: Date }>>;
   };
   pickSettlementDelivery: StatusGroupingTable & {
-    count(args?: { where?: Record<string, unknown> }): Promise<number>;
+    findMany(args: {
+      where?: Record<string, unknown>;
+      select: Record<string, unknown>;
+    }): Promise<Array<{ id: string }>>;
   };
 }
 
@@ -1379,9 +1382,14 @@ export async function getSettlementOutboxHealth(
     // Terminal rows written by the pre-fix disabled path (or past the
     // payload cap). These never retry — surfacing them is the only way an
     // owner learns a backfill is owed.
-    const alertsDisabledSuppressed = await db.pickSettlementDelivery.count({
+    // An id-only probe, not a count(): the health panel promised one grouped
+    // query per table and no per-purpose aggregate calls, so the
+    // historical-loss total is read as row ids and counted in memory.
+    const alertsDisabledSuppressedRows = await db.pickSettlementDelivery.findMany({
       where: { status: "SUPPRESSED", lastErrorCode: "alerts_disabled" },
+      select: { id: true },
     });
+    const alertsDisabledSuppressed = alertsDisabledSuppressedRows.length;
     if (alertsDisabledSuppressed > 0) {
       reasons.push(
         `${alertsDisabledSuppressed} deliveries are terminally suppressed as ` +
