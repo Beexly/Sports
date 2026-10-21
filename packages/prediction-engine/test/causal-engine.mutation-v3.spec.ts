@@ -600,6 +600,55 @@ describe("T11b -- the Zhang (2008) R5-R10 rules are IMPLEMENTED AND PINNED", () 
   });
 });
 
+describe("T13 -- the proximal bridge on an UNBREAKABLE bow-arc", () => {
+  /**
+   * THE SPEC'S T13, verbatim from Table 5:
+   *
+   *   "Proximal Negative-Control Identification on Unbreakable Bow-Arc: When X -> Y, X <-> Y has
+   *    0 mediators on X -> Y, verifies RKHS Fredholm bridge solver recovers E[Y | do(X=x)] via
+   *    proxies (Z, W) when kappa(K_WZ) <= 50 and refuses when ill-posed."
+   *
+   * The behaviour is exercised in test/proximal-bridge-id.t13.spec.ts, which builds the
+   * spec's graph (a bow-arc with no mediator that can break it) and drives it through the
+   * GATE, not just the solver -- because the question is not "can the solver solve a proximal
+   * problem" but "does the engine reach for it when the ordinary path has failed, and does it
+   * publish the result under the right label".
+   *
+   * This gate is the PR-BLOCKING half: it proves that suite is PINNED. A gate that can be
+   * deleted without a test noticing is a gate that is not there.
+   */
+  it("the T13 mutation sweep exits 0 -- the proximal route and every refusal are pinned", () => {
+    const { code, output } = runPackageScript("reconciliation/_mutation_sweep_t13_proximal.mjs");
+    expect(code, `the T13 mutation sweep failed:\n${output}`).toBe(0);
+  });
+
+  it("the T13 sweep actually RAN its rounds -- an exit code alone proves nothing", () => {
+    const { output } = runPackageScript("reconciliation/_mutation_sweep_t13_proximal.mjs");
+    expect(output).toContain("PHASE 1: disable the route");
+    expect(output).toContain("OK   baseline: all 5 tests pass");
+    expect(output).not.toContain("STILL PASSED");
+  });
+
+  it("the T13 gate file exists and exercises the bow-arc with 0 mediators", () => {
+    // The gate is only meaningful if the scenario is the SPEC's scenario. A test that
+    // exercises a chain would pass while the unbreakable bow-arc went untested, so the
+    // scenario is asserted on the source of the gate itself: the bow-arc graph (X -> Y with
+    // X <-> Y), the proximal formula label, and the refusal of an ill-posed bridge.
+    const src = readFileSync(
+      resolve(ROOT, "packages/prediction-engine/test/proximal-bridge-id.t13.spec.ts"),
+      "utf8",
+    );
+    // THE GRAPH: the bow-arc, with a bidirected edge and NO mediator that can break it.
+    expect(src).toContain('bidirected: [["X", "Y"]]');
+    expect(src).toContain('directed: [["X", "Y"]]');
+    // THE FORMULA LABEL: the proximal number is published under its own name.
+    expect(src).toContain("PROXIMAL_BRIDGE");
+    expect(src).toContain("proximal g-formula");
+    // THE REFUSAL: an ill-posed bridge is refused, not published.
+    expect(src).toContain("PROXIMAL_CONDITION_NUMBER_EXCEEDS_LIMIT");
+  });
+});
+
 describe("T12 -- the zero-unenforced-constants gate", () => {
   it("the auditor exits 0", () => {
     const { code, output } = runVerifier("_audit_unenforced_thresholds.mjs");
