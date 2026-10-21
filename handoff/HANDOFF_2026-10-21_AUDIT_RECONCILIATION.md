@@ -577,12 +577,15 @@ wrote **zero** files. Its investigation was not preserved, so the lead above is 
    checks, default state, and whether it blocks at mint, at read, or only in audit. The
    inventory already exists. This is the cheapest unbuilt thing in the audit and it makes
    every other gap checkable.
-4. **Bring the owner ONE decision, not many.** The `/api/picks` gate (§5), the NGS prose on
-   the public board (§9), and the `PUBLIC_PICKS_ENABLED` default (§14) are all the *same*
-   question: **should the public picks board be dark when its gate is not explicitly
-   opened, and what may it say?** The blast radius is now measured and narrow (unset
-   environments only — production explicitly sets the variable). The answer is **one line**
-   in `platform-config.ts:166` plus the mint-time read in `process-sport.ts`.
+4. **Settle GAP-21 with ONE command, then one line of code.** Run
+   `printenv PUBLIC_PICKS_ENABLED PUBLIC_PICKS` in the production environment. The founder's
+   law is already recorded (`docs/ops/OPEN_LEDGER.md`: *"Explicit YES only"*, and
+   `PUBLIC_PICKS_ENABLED true → false` as a law-enforcement action) — **the default for an
+   unset variable is OFF, and `platform-config.ts:166` does not implement it.** Which of
+   the two variable names is truthy decides whether the fix is an env change or a code
+   change; the decision table is in `GAP21_PUBLIC_PICKS_ENABLED_READERS.md` §6b. **Either
+   way, also reconcile `board-surfaces.ts:58` to read ONE name** — a gate opened by a
+   different variable than the one that governs it is not one gate.
 
 **Two newly-verified things a next agent should not re-derive:** the T15 NGS leak is
 **not currently live** in production (zero markers in the live body), and the
@@ -631,9 +634,37 @@ local code.**
 is conditional, not currently live.** The earlier record of it as a live exposure was
 overstated.
 
-**Not changed, deliberately** — flipping the default and consulting the gate at mint time
-both change *what gets published*, which is a product posture decision, not an audit
-finding. The blast radius is now measured and narrow.
+**THE FOUNDER ALREADY DECIDED — and the code diverges from that decision.**
+`docs/ops/OPEN_LEDGER.md` (the live operator ledger) records, verbatim:
+
+```
+- Explicit YES only: LIVE_BOARD · PUBLISH_LEDGER · public picks ladder · Phase C · #226
+- 2026-07-30: `PERFORMANCE_STATS_ENABLED` true → false. `PUBLIC_PICKS_ENABLED` true → false.
+  Both were live in violation of founder law.
+```
+
+**So the default for an unset variable is OFF — that is the recorded decision, and
+`platform-config.ts:166` does not implement it.** An earlier version of this record called
+it "the owner's call"; **that was wrong**, and this is the correction.
+
+**Not changed here, for a reason about VERIFICATION, not permission:** the audit cannot
+observe the production environment's two variable names. Live shows the board ON, and the
+"PUBLIC_PICKS ON" hint comes from `board-surfaces.ts:58` —
+`truthy(env["PUBLIC_PICKS"]) || truthy(env["PUBLIC_PICKS_ENABLED"])` — so **one of the two
+names is truthy, and which one is not observable from outside the deployment.** If it is the
+*short* name, the default is the bug. If it is the *long* name, the founder's flip was undone
+by an environment change and the default is not implicated. **Those need different
+responses, and only one is a code change** — so the next agent should run the one command
+that settles it (`printenv PUBLIC_PICKS_ENABLED PUBLIC_PICKS` in the production env); the
+decision table is in `GAP21_PUBLIC_PICKS_ENABLED_READERS.md` §6b.
+
+**A second defect, one level up:** `board-surfaces.ts` reads `PUBLIC_PICKS ||
+PUBLIC_PICKS_ENABLED` while every other reader reads `PUBLIC_PICKS_ENABLED` only. **A gate
+that can be opened by a different variable than the one that governs it is not one gate.**
+Reconciling them to a single name is correct in both cases and is safe in both.
+
+**Also not changed** — consulting the gate at mint time changes *what gets published*, and
+the founder's recorded decision governs the *gate*, not the *mint path*.
 
 **What was added:** `test/public-picks-enabled-readers.t21.spec.ts` (4 tests) that pin the
 table, require exactly one ON reader, and **fail if a ninth reader is added**. The mutation

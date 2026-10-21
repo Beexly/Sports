@@ -32,6 +32,60 @@ route that serves the board asks `platform-config` (ON when unset). The honesty 
 decides whether a public commitment exists asks its own parser (OFF when unset). Same
 variable, same process, opposite answers.
 
+## 1b. THE FOUNDER ALREADY DECIDED THIS — the decision is RECORDED, and the code diverges from it
+
+`docs/ops/OPEN_LEDGER.md` — the live operator ledger — says, verbatim:
+
+```
+- Explicit YES only: LIVE_BOARD · PUBLISH_LEDGER · public picks ladder · Phase C · #226
+```
+
+and, under **Law enforcement log**:
+
+```
+- 2026-07-30: `PERFORMANCE_STATS_ENABLED` true → false. `PUBLIC_PICKS_ENABLED` true → false.
+  Both were live in violation of founder law.
+```
+
+**This is not an open product question.** The founder's law is **"Explicit YES only"**, and
+`PUBLIC_PICKS_ENABLED` was flipped `true → false` on 2026-07-30 *as a law-enforcement action*,
+because the flag being on was itself a violation. **The correct default for an UNSET
+variable is therefore OFF — it is what the founder decided, and it is what
+`platform-config.ts:166` does not do.**
+
+**So the defect is not "one reader disagrees with seven".** It is: **the one reader that
+gates the live board contradicts a recorded founder decision, and it is the only reader
+whose default says "yes" when nobody said anything.**
+
+### The production reading, against that law
+
+Live on 2026-10-21: `canExposePublicPicks = true`, `GSE_PICKS` is `live_public`, `/api/picks`
+returns **200 with 5 real picks**, and the operator hint reads *"PUBLIC_PICKS ON"*.
+
+That hint comes from `board-surfaces.ts:58` —
+`truthy(env["PUBLIC_PICKS"]) || truthy(env["PUBLIC_PICKS_ENABLED"])` — which is a **strict**
+reader. So **one of the two variable names is truthy in production.** Which one is not
+observable from outside the deployment.
+
+**The two possibilities, and why the second one is the dangerous one:**
+
+- **`PUBLIC_PICKS_ENABLED` is truthy.** Then the founder's 2026-07-30 flip has been
+  *undone* — an environment change, not a code change. The default is not implicated.
+- **`PUBLIC_PICKS` (the SHORT name) is truthy, and `PUBLIC_PICKS_ENABLED` is UNSET.** Then
+  `board-surfaces.ts` sees the short name and says ON, while `platform-config.ts:166` sees
+  `PUBLIC_PICKS_ENABLED` **unset** and falls back to its `true` default — **and the board
+  stays on because nobody set the founder's variable at all.**
+
+**The second case is the founder's law being violated by the DEFAULT, and it is exactly the
+failure the 2026-07-30 enforcement entry was written to stop.** `board-surfaces.ts` reads a
+*different variable name* than `platform-config.ts` does, so the two can disagree about the
+same decision — which is the same class of bug as the eight-reader divergence itself, one
+level up.
+
+**This cannot be settled from outside the deployment.** It is settled by reading the
+production environment's two variables. **That is the one command the next agent needs to
+run**, and §6 gives it.
+
 ## 2. Everything else in the repo already says the outlier is wrong
 
 | source | what it says |
@@ -90,18 +144,37 @@ is conditional, not currently live.** It is reachable in code, but it is not fir
 production today. The earlier record of it as a live exposure was overstated, and this
 corrects that.
 
-## 4. What was NOT changed, and why
+## 4. What was NOT changed, and why — CORRECTED
 
-**Row 1's default was not flipped.** It is the **owner's** call, for two reasons:
+**An earlier version of this record said the default was "the owner's call". That was
+wrong, and §1b is the correction.** The founder's law is **recorded**: *"Explicit YES only"*, and
+`PUBLIC_PICKS_ENABLED` was flipped `true → false` on 2026-07-30 *as a law-enforcement action*.
+**The default for an unset variable is OFF — that is the decision that was made, and
+`platform-config.ts:166` does not implement it.**
 
-1. **It is a behavioural change to a live public surface.** `canExposePublicPicks` decides
-   whether the public board is served. An unconfigured deployment that currently serves
-   picks would go dark. The blast radius is now *known* (unset-variable environments only),
-   but "should an unconfigured deployment serve a public board" is a product posture, not an
-   audit finding.
-2. **The repository already has a failing test that encodes the intended answer.** The right
-   move is to make the failing test pass — which is a deliberate act with a visible
-   consequence — not to have the audit make it silently.
+**So this is not a posture question, and it is not the audit's to decide.** But it is still
+not flipped *here*, for one reason that is about **verification, not permission**:
+
+**The audit cannot observe the production environment's two variable names.** Live shows
+`canExposePublicPicks = true`; the "PUBLIC_PICKS ON" hint proves one of
+`PUBLIC_PICKS` / `PUBLIC_PICKS_ENABLED` is truthy; **which one is not observable from
+outside the deployment.** If it is the *short* name, then flipping the default is exactly
+the fix — the founder's variable is unset, the default kept the board on, and the default is
+the bug. If it is the *long* name, then the founder's 2026-07-30 flip has been **undone by
+an environment change**, and flipping the default would change nothing while masking the
+real event.
+
+**Those two cases need different responses, and only one of them is a code change.** So the
+audit's job here is to make the case *unambiguous* and hand the next agent the one command
+that settles it (§6) — not to guess.
+
+**The second half of GAP-21** — *"the gate is never consulted at mint time; `isPublished`
+defaults true"* (`packages/db/prisma/schema.prisma:550`; `canExposePublicPicks` appears
+**zero** times in `packages/ingestion-pipeline/src/process-sport.ts`) — is **also not
+changed**, for the same reason: it changes what gets **published**, and the founder's
+recorded decision governs the *gate*, not the *mint path*. Mint-time consultation is a
+**behavioural change to what the platform publishes**; it needs the same reading of the law,
+applied to a second surface, by the same person who wrote the ledger.
 
 The **second half** of GAP-21 — *"the public-picks gate is never consulted at mint time;
 `isPublished` defaults true"* (`packages/db/prisma/schema.prisma:550`:
@@ -155,6 +228,34 @@ supposed to catch was wrong**, and the third time the mutation check found it.
 
 **Either way the test added here makes the answer visible in CI**, and the red
 `public-picks-gate-parity` test is the thing to look at while deciding.
+
+## 6b. THE ONE COMMAND THAT SETTLES IT
+
+Read the production environment's two variables. One of them is truthy, and the founder's
+law names only one of them.
+
+```
+# In the production environment (Vercel project env, or the deploy host):
+printenv PUBLIC_PICKS_ENABLED PUBLIC_PICKS
+```
+
+**Then:**
+
+| what it shows | what it means | what to do |
+|---|---|---|
+| `PUBLIC_PICKS_ENABLED=true` (and/or `PUBLIC_PICKS` unset) | the founder's 2026-07-30 flip has been **undone by an environment change** | **not a code bug.** Restore the founder's value: set `PUBLIC_PICKS_ENABLED=false` in the production env, per the ledger's law-enforcement entry. Do **not** change the default as a substitute. |
+| `PUBLIC_PICKS_ENABLED` unset, `PUBLIC_PICKS=true` | **the founder's law is being violated by the DEFAULT**, and by the two-names-one-decision split | **the code fix:** `platform-config.ts:166` → `parseBool(process.env["PUBLIC_PICKS_ENABLED"], false)`, and reconcile `board-surfaces.ts:58` to read **one** name. Then unset `PUBLIC_PICKS` in the environment. |
+
+**Either way the change is small and the reasoning is already done.** What was missing was
+the *observation*, and this is it.
+
+**The second half of the split — two variable names for one decision — is a defect
+independent of the default.** `board-surfaces.ts` reads `PUBLIC_PICKS || PUBLIC_PICKS_ENABLED`;
+every other reader reads `PUBLIC_PICKS_ENABLED` only. **A gate that can be opened by a
+different variable than the one that governs it is not one gate.** Reconciling them to a
+single name is correct in both cases above, and is safe in both.
+
+---
 
 ## 7. Verification
 

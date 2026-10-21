@@ -222,6 +222,20 @@ describe("GAP-21: the PUBLIC_PICKS_ENABLED reader table", () => {
     ).toEqual([]);
   });
 
+  it("the FOUNDER'S recorded law is still in the ledger -- the default must not drift from it", () => {
+    // The decision is RECORDED, so this is not an open product question:
+    // "Explicit YES only", and PUBLIC_PICKS_ENABLED was flipped true -> false on
+    // 2026-07-30 as a law-enforcement action because the flag being on was itself
+    // a violation. The default for an UNSET variable is therefore OFF.
+    //
+    // If this assertion ever fails, the ledger was rewritten -- and whoever did it
+    // needs to know that platform-config.ts:166 disagrees with it. The audit found
+    // the disagreement; this test keeps it from being forgotten.
+    const ledger = readFileSync(join(ROOT, "docs", "ops", "OPEN_LEDGER.md"), "utf8");
+    expect(ledger).toContain("Explicit YES only");
+    expect(ledger).toContain("PUBLIC_PICKS_ENABLED` true → false");
+  });
+
   it("the docs the divergence contradicts are still in place -- so the conflict stays visible", () => {
     // If these are edited to match the code, this test fails and someone has
     // to look at whether the reconciliation happened or the docs drifted.
