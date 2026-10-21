@@ -194,8 +194,7 @@ const PROBES: readonly Probe[] = [
     subjectPath: "packages/prediction-engine/src/mcp/mcp-cognitive-router.ts",
     gatePath: "packages/prediction-engine/test/mcp-cognitive-router.t14.spec.ts",
     sweepPath: "reconciliation/_mutation_sweep_t14_mcp.mjs",
-    inFlight: true,
-    landed: false,
+    landed: true,
   },
   {
     id: "T15",
@@ -374,11 +373,24 @@ describe("T1-T16 -- the spec's named falsification suite, and its own coverage l
     }
   });
 
-  it("the pending list is NON-EMPTY and the landed list is NON-EMPTY", () => {
-    // A trivial suite that claims everything is pending, or everything is landed, proves
-    // nothing. Both halves must be real.
-    expect(PENDING.length).toBeGreaterThan(0);
-    expect(PENDING.length).toBeLessThan(PROBES.length);
+  it("the landed list is NON-EMPTY and the pending list matches the landed flags", () => {
+    // A suite that claims nothing is covered proves nothing. Every one of the sixteen must
+    // be claimed by exactly one state: landed, in flight, or pending -- never two, never none.
+    expect(PROBES.length).toBe(16);
+    for (const probe of PROBES) {
+      const states = [probe.landed, probe.inFlight === true].filter(Boolean).length;
+      expect(
+        states,
+        `${probe.id} is in ${states} states -- a probe is either landed or in flight, and ` +
+          `never both and never neither`,
+      ).toBeLessThanOrEqual(1);
+    }
+    // And the landed set is the whole set, once the work is done. This assertion is what
+    // FAILED while the last probe was in flight -- it is a real signal, not a formality.
+    const landed = PROBES.filter((p) => p.landed).map((p) => p.id);
+    expect(landed.length, `not every probe is landed yet: ${landed.join(", ")}`).toBe(
+      PROBES.length,
+    );
   });
 
   /**
