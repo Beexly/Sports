@@ -978,3 +978,56 @@ This section documents the execution and closure of the Phase II directives, bri
 - `packages/prediction-engine`: `tsc --noEmit` precisely 64 errors (exact baseline, 0 regressions).
 - `packages/ingestion-pipeline`: `tsc --noEmit` precisely 63 errors (exact baseline, 0 regressions).
 - `node reconciliation/_verify_gap_closures.mjs`: Exit 0 (all 28 gaps intact, 3 closed).
+
+---
+
+## 21. GSE CAUSAL INFERENCE ENGINE PLAN V2: COMPONENTS 7–10 IMPLEMENTED & VERIFIED (2026-10-21)
+
+This section documents the execution and verification of the four frontier architectural components defined in "GSE Causal Inference Engine Plan v2", elevating GSE into an autonomous, proactive, multi-horizon enterprise causal forecasting platform:
+
+### 1. Component 7 — Adaptive Agentic Skill-Tree & VoI Connector Router
+- **Module**: `packages/prediction-engine/src/mcp/adaptive-skill-tree-router.ts`
+- **Test Suite**: `packages/prediction-engine/src/mcp/__tests__/adaptive-skill-tree-router.test.ts` (7/7 passed).
+- **Core Functionality**:
+  - Implements the 6-Layer bottom-up reasoning ladder (`L0_FUNDAMENTAL_SANITY` to `L5_CONFORMAL_COPULA_KELLY`).
+  - Strict Layer 0 boundary conditions: snap-share floors ($\ge 0.25$), active roster verification, IR clearance checks, and implied team total volume coherence. Blocks downstream equations from proposing positive deltas if Layer 0 fails.
+  - Value-of-Information (VoI) Expected Value of Causal Information ($EVCI$) connector routing:
+    $$\text{EVCI}(c \mid \mathcal{G}_t) = \mathbb{E}[\text{KL}] + \lambda_{\text{hedge}}\mathbb{I}[c \in \text{ID-EnablingEdges}] - \kappa_{\text{lat}}\tau_{\text{lat}}(c)$$
+  - Fast-Path Resolution: Bypasses expensive weather/trench connectors in $\mathcal{O}(1)$ when indoor dome conditions indicate zero variance.
+  - Deep-Path Escalation: Triggers sub-queries to registered MCP connectors (`@WalrusQuant/sports-leader-mcp`, `ebhattad/nfl-mcp`, `noaa-hrrr-weather-mcp`, `openstax-physics-mcp`, `hnsw-living-literature-mcp`, `polymarket-clob-mcp`) when `runShpitserPearlID` detects witnessing hedges (`FAIL_HEDGE`) or ITCR halts on nonconformity.
+
+### 2. Component 8 — Proactive Early-Week "Horizon-Zero" Slate & Surveillance Engine
+- **Module**: `packages/prediction-engine/src/slate/rolling-horizon-lifecycle.ts`
+- **Test Suite**: `packages/prediction-engine/src/slate/__tests__/rolling-horizon-lifecycle.test.ts` (6/6 passed).
+- **Core Functionality**:
+  - Emits full Thursday Night Football AND Sunday boards (sides, totals, player props, Vine Copula SGPs, DraftKings MILP lineups) on Wednesday at live early-week lines across 5 deterministic horizon stages (`H1_TUE_OPEN` through `H5_SUN_INACTIVES`).
+  - Solves Marginalized Interventional Scenario Integration over boundary nodes $\mathbf{S}$:
+    $$P_{\text{Wed}}(Y=y \mid \text{do}(X=x), \mathbf{Z}_{\text{Wed}}) = \sum_{\mathbf{s} \in \Omega(\mathbf{S})} P(Y=y \mid \text{do}(X=x, \mathbf{S}=\mathbf{s}), \mathbf{Z}_{\text{Wed}}) \cdot P_\tau(\mathbf{S}=\mathbf{s} \mid \mathcal{F}_{\text{Wed}})$$
+  - Decomposes total predictive variance into Intrinsic Game Variance ($\sigma_{\text{intrinsic}}^2$) and Resolvable Horizon Epistemic Variance ($\sigma_{\text{horizon}}^2(\tau)$).
+  - Dominant Scenario Invariance vs Pre-Committed Delta Surveillance (`CC-<YEAR>-<WEEK>-<GAME>-<INDEX>`): Locks early-week line in `decision-time-price-archive.ts` or attaches automated IF/THEN watch triggers.
+
+### 3. Component 9 — Three-Tier Epistemic Accuracy Stratification
+- **Module**: `packages/prediction-engine/src/picks/selective-abstention-tiers.ts`
+- **Test Suite**: `packages/prediction-engine/src/picks/__tests__/selective-abstention-tiers.test.ts` (4/4 passed).
+- **Core Functionality**:
+  - Selective abstention and multi-layer causal purity pushing toward asymptotic 100% calibrated accuracy on the apex tier:
+    - **Tier 1 (`APEX_CERTAINTY`)**: Requires 100% cross-layer directional unanimity ($\eta_{\text{layers}} = 1.0$), 90% TA-CQR lower conformal bound strictly clearing market line, extreme confounding immunity (point E-value $\ge 2.0$, CI lower bound $\ge 1.50$), and Epistemic Knowability $\mathcal{K}_t \ge 0.85$ with Murphy $\text{REL} \le 0.0030$.
+    - **Tier 2 (`CORE_VALIDATED`)**: Passing all 37 integrity gates G1–G9 with positive Conformal Kelly stake ($f_{\text{stake},t} > 0$).
+    - **Tier 3 (`SURVEILLANCE_WATCH`)**: Full causal dossier published for transparency, 0 capital risked until pre-registered CC-* triggers fire.
+
+### 4. Component 10 — Enterprise B2B World-Model Cartridge SDK
+- **Module**: `packages/prediction-engine/src/enterprise/universal-world-model-sdk.ts`
+- **Test Suite**: `packages/prediction-engine/src/enterprise/__tests__/universal-world-model-sdk.test.ts` (5/5 passed).
+- **Core Functionality**:
+  - Decouples the 6-stage causal core from sports-specific schemas via `CausalWorldModelCartridge<TSignal, TContext, TOutcome>`.
+  - Shipped Reference Cartridges:
+    - **GSE-Weather**: NOAA HRRR + METAR + CIPM psychrometrics + Navier-Stokes vorticity + Murphy/CRPS calibration for aviation, agriculture, and utilities.
+    - **GSE-Verify**: Academic reasoning & benchmark verification (HLE, ARC-AGI, FrontierMath) with ITCR stopping and Venn-Abers calibration.
+    - **WorldModelCartridgeRegistry**: Pluggable multi-tenant cartridge catalog.
+
+### 5. Verification & Baseline Invariance
+- **Test Suites**: 22/22 unit tests passed across all four components (100% green).
+- **Static Baseline**: `tsc --noEmit -p packages/prediction-engine/tsconfig.json` verified at exact 64 error baseline (0 new errors, 0 regressions).
+- **Gate Registry & Ratings**: `gate-registry.t24.spec.ts` (2/2 passed) and `frontier/sports/test_glicko2_trueskill.py` (100% passed).
+- **Gap Closure Ledger**: `node reconciliation/_verify_gap_closures.mjs` verifies `counts: {"open": 17, "partial": 8, "closed": 3}` with 0 regressions.
+

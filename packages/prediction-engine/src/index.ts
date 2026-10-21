@@ -5021,5 +5021,91 @@ export type {
   CompileBatch,
 } from "./bridge/non-stat-situational-compiler.js";
 
+// Component 7: Adaptive Agentic Skill-Tree & VoI Connector Router
+export {
+  REASONING_LAYERS,
+  REGISTERED_MCP_CONNECTORS,
+  DEFAULT_EVCI_CONFIG,
+  validateLayer0Fundamentals,
+  computeEvciForConnector,
+  executeAdaptiveEscalationLadder,
+} from "./mcp/adaptive-skill-tree-router.js";
+export type {
+  ReasoningLayerId,
+  Layer0FundamentalInput,
+  Layer0ValidationResult,
+  Layer1MarketInput,
+  Layer2SituationalInput,
+  Layer3TrackingInput,
+  Layer4CausalSynthesisInput,
+  Layer5ConformalInput,
+  ConnectorDefinition,
+  EvciEvaluation,
+  EvciRouterConfig,
+  EscalationLadderResult,
+  FullEscalationQuery,
+} from "./mcp/adaptive-skill-tree-router.js";
+
+// Component 8: Proactive Early-Week "Horizon-Zero" Slate & Surveillance Engine
+export {
+  HORIZON_STAGES,
+  computeMarginalizedScenarioIntegration,
+  evaluateEarlyWeekLockRule,
+  evaluateSurveillanceDelta,
+  lockEarlyWeekBoardPrice,
+} from "./slate/rolling-horizon-lifecycle.js";
+export type {
+  HorizonStage,
+  MarketType,
+  SurveillanceStatus,
+  ConditionalCommitmentRule,
+  EarlyWeekBoardEntry,
+  BoundaryScenario,
+  MarginalizedScenarioIntegrationResult,
+  EarlyWeekDecisionRuleInput,
+  EarlyWeekDecisionRuleOutput,
+  SurveillanceTriggerEvent,
+  LockWednesdayPriceOptions,
+} from "./slate/rolling-horizon-lifecycle.js";
+
+// Component 9: Three-Tier Epistemic Accuracy Stratification
+export {
+  APEX_THRESHOLDS,
+  classifyEpistemicTier,
+} from "./picks/selective-abstention-tiers.js";
+export type {
+  EpistemicTier,
+  CandidateLayerDirections,
+  EpistemicCandidate,
+  ApexChecklistBreakdown,
+  EpistemicClassificationResult,
+} from "./picks/selective-abstention-tiers.js";
+
+// Component 10: Enterprise B2B World-Model Cartridge SDK
+export {
+  GSEWeatherCartridge,
+  GSEVerifyCartridge,
+  WorldModelCartridgeRegistry,
+} from "./enterprise/universal-world-model-sdk.js";
+export type {
+  EnterpriseVerticalId,
+  BitemporalWatermark,
+  IngestedSignals,
+  InterventionalQuery,
+  InterventionalDistribution,
+  MarketAnchor,
+  CalibratedDecision,
+  CartridgeSettledObservation,
+  SettlementFeedbackDelta,
+  CausalWorldModelCartridge,
+  WeatherSignal,
+  WeatherContext,
+  WeatherForecastOutcome,
+  BenchmarkSignal,
+  BenchmarkContext,
+  BenchmarkOutcome,
+} from "./enterprise/universal-world-model-sdk.js";
+
+
 
 
