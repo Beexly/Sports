@@ -797,8 +797,10 @@ files **0 errors**; `packages/prediction-engine` **8,576 passed / 0 failed** (99
 
 ### A `tsc` trap in this worktree that WILL bite the next agent
 
-`node_modules/@sports/prediction-engine` is a **symlink to the MAIN checkout**
-(`C:/Users/Garrett/Sports/packages/prediction-engine`), not to this worktree. So
+`node_modules/@sports/prediction-engine` is a **Windows JUNCTION pointing at the MAIN checkout**
+(`C:/Users/Garrett/Sports/packages/prediction-engine`), not to this worktree. (Python's
+`os.path.islink` returns **False** for a junction, so it looks like a real directory --
+`os.path.isjunction` is the check, and `readlink` still gives the target.) So
 `apps/web`'s `tsc` resolves `@sports/prediction-engine` to the **other** tree's source and
 **cannot see any change made here** — it reported four false `TS2305` errors for the new
 G7 export. Re-running with a temporary tsconfig whose `paths` point at
@@ -909,3 +911,29 @@ does not measure the audit.**
    mint-time read. See `GAP21_PUBLIC_PICKS_ENABLED_READERS.md` section 6b.
 4. **GAP-24** -- still no gate registry. **This ledger is the closest thing that exists, and
    it covers GAPS, not GATES.**
+
+---
+
+## 19. Three facts about THIS repo that change how a change is judged here
+
+**1. `main` HAS NO BRANCH PROTECTION AND NO RULESETS.** Measured against the GitHub API:
+`/repos/Beexly/Sports/branches/main/protection` -> `{"message":"Branch not protected"}`, and
+`/repos/Beexly/Sports/rulesets` -> `[]`. **So "the commit is pushed" is not protection** --
+anyone can push to `main`, and the 12 `ci.yml` jobs are the gate *by hand*, with nothing
+enforcing that they ran. **For this audit that means:** the branch is the deliverable, CI is
+the only reviewer, and **CI is the ONLY typecheck you will ever get** (see section 17 -- the
+local one in this worktree cannot see prediction-engine changes at all).
+
+**2. A BACKGROUND TEST RUN NEEDS `< /dev/null`.** A `background=true` vitest run started
+without it exits **1** with a 19-byte log reading `stdin is not a tty` -- and that is NOT a
+test failure. It happened here: the same suite reported `PE_EXIT=1` from the background
+process and **8,576 passed / 0 failed** from the same suite run with `< /dev/null` and the
+JSON reporter. **The exit code of a background run that never started is indistinguishable
+from a failing suite if you do not read the log.** Read the log; do not trust the code.
+
+**3. THE WORKTREE'S `node_modules/@sports/*` ARE JUNCTIONS TO THE MAIN CHECKOUT.** Not
+symlinks -- junctions, which is why `ln -s` is not the fix and why `os.path.islink` lies
+about them. The consequence is section 17's tsc trap, and it is worth restating because it
+is invisible until it bites: **`apps/web`'s local `tsc` cannot see any change made to
+`packages/prediction-engine` in this worktree.** Always verify a cross-package change with
+a tsconfig whose `paths` point at the local sources -- or let CI do it.
