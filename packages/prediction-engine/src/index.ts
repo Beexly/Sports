@@ -4834,3 +4834,23 @@ export {
   type CollectedHedge,
   type HedgeBreakageReport,
 } from "./causal/hcid-mediator-expansion.js";
+
+// G7 -- the calibration-drift circuit breaker. Exported so the LIVE publish path
+// can consult it: a module nothing can import is not a gate.
+export {
+  g7CircuitBreaker,
+  g7VerdictForFamily,
+  g7HaltedGroupKeys,
+  g7HaltNote,
+  g7DriftVerdict,
+  marketFamilyKey,
+  G7_DEFAULT_OPTIONS,
+  G7_MIN_FAMILY_SAMPLES,
+  G7_NOISE_SIGMA,
+} from "./learning/g7-circuit-breaker.js";
+export type {
+  SettledObservation,
+  G7FamilyVerdict,
+  G7CircuitBreakerReport,
+  G7DriftVerdict,
+} from "./learning/g7-circuit-breaker.js";
