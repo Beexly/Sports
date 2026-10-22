@@ -76,6 +76,13 @@ PATTERNS = [
     (re.compile(r"https://discord(?:app)?\.com/api/webhooks/\d+/[A-Za-z0-9_\-]+"), "[REDACTED_DISCORD_WEBHOOK]"),
     (re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
     (re.compile(r"\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b"), "[REDACTED_JWT]"),
+    (re.compile(r"(?i)aws_secret_access_key\s*[=:]\s*[A-Za-z0-9/+=]{40}"), "[REDACTED_AWS_SECRET]"),
+    (re.compile(r"\bglpat-[A-Za-z0-9_\-]{20,}\b"), "[REDACTED_GITLAB_TOKEN]"),
+    (re.compile(r"\bnpm_[A-Za-z0-9]{36}\b"), "[REDACTED_NPM_TOKEN]"),
+    (re.compile(r"\bSK[0-9a-f]{32}\b"), "[REDACTED_TWILIO_KEY]"),
+    (re.compile(r"\bSG\.[A-Za-z0-9_\-]{22}\.[A-Za-z0-9_\-]{22}\b"), "[REDACTED_SENDGRID_KEY]"),
+    (re.compile(r"\bhf_[A-Za-z0-9]{30,}\b"), "[REDACTED_HF_TOKEN]"),
+    (re.compile(r"[?&]sig=[A-Za-z0-9%]{20,}"), "[REDACTED_AZURE_SAS]"),
     (re.compile(r"\b[a-f0-9]{32,}\b"), "[REDACTED_HEX]"),
 ]
 

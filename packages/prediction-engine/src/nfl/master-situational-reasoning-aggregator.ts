@@ -78,7 +78,10 @@ export const PROBABILITY_MOVEMENT_CAP = 0.12;
 export interface OrthogonalizationResult {
   totalProbabilityDelta: number;
   rawUnshrunkDelta: number;
+  /** The precision-weighted sum that the cap is actually applied to. */
   shrunkUncappedDelta: number;
+  /** Sum of residual*shrink before precision weights; not the capped value. */
+  shrunkUnweightedDelta: number;
   capApplied: boolean;
   familyResiduals: Record<FamilyName, number | null>;
   familyRawDeltas: Record<FamilyName, number | null>;
@@ -155,7 +158,7 @@ export function orthogonalizeAndShrink(
   const normalizedWeights = {} as Record<FamilyName, number>;
   const notes: string[] = [];
   let rawUnshrunkDelta = 0;
-  let shrunkUncappedDelta = 0;
+  let shrunkUnweightedDelta = 0;
 
   const variances: number[] = [];
   const residualizedShrunk: number[] = [];
@@ -179,7 +182,7 @@ export function orthogonalizeAndShrink(
     familyResiduals[name] = residual;
     withinFamilyShrinkFactors[name] = shrink;
     rawUnshrunkDelta += aggregate.raw;
-    shrunkUncappedDelta += residual * shrink;
+    shrunkUnweightedDelta += residual * shrink;
     variances.push(Math.max(aggregate.varianceValue, 1e-9));
     residualizedShrunk.push(residual * shrink);
   }
@@ -209,7 +212,8 @@ export function orthogonalizeAndShrink(
   return {
     totalProbabilityDelta,
     rawUnshrunkDelta,
-    shrunkUncappedDelta,
+    shrunkUncappedDelta: weightedSum,
+    shrunkUnweightedDelta,
     capApplied,
     familyResiduals,
     familyRawDeltas,
@@ -241,6 +245,13 @@ const SENSITIVE_PATTERNS: RegExp[] = [
   /https:\/\/discord(?:app)?\.com\/api\/webhooks\/\d+\/[A-Za-z0-9_-]+/g,
   /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/g,
   /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g,
+  /aws_secret_access_key\s*[=:]\s*[A-Za-z0-9/+=]{40}/gi,
+  /\bglpat-[A-Za-z0-9_-]{20,}\b/g,
+  /\bnpm_[A-Za-z0-9]{36}\b/g,
+  /\bSK[0-9a-f]{32}\b/g,
+  /\bSG\.[A-Za-z0-9_-]{22}\.[A-Za-z0-9_-]{22}\b/g,
+  /\bhf_[A-Za-z0-9]{30,}\b/g,
+  /[?&]sig=[A-Za-z0-9%]{20,}/g,
   /\bLTAI[A-Za-z0-9]{16,24}\b/g,
   /\b[a-f0-9]{32,}\b/g,
 ];
@@ -490,8 +501,12 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
       totalProbabilityDelta: result.orthogonalization.totalProbabilityDelta,
       rawUnshrunkDelta: result.orthogonalization.rawUnshrunkDelta,
       shrunkUncappedDelta: result.orthogonalization.shrunkUncappedDelta,
+      shrunkUnweightedDelta: result.orthogonalization.shrunkUnweightedDelta,
       capApplied: result.orthogonalization.capApplied,
       familyResiduals: result.orthogonalization.familyResiduals,
+      familyRawDeltas: result.orthogonalization.familyRawDeltas,
+      withinFamilyShrinkFactors: result.orthogonalization.withinFamilyShrinkFactors,
+      normalizedWeights: result.orthogonalization.normalizedWeights,
       precisionDiagonalWeights: result.orthogonalization.precisionDiagonalWeights,
       independentEdgeDecision: result.independentEdgeDecision,
       publishAllowed: result.publishAllowed,

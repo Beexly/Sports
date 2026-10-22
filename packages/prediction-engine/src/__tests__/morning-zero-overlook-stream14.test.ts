@@ -259,6 +259,12 @@ describe("Stream 14E — orthogonalizer and master overlay (RT-03 & RT-04)", () 
     expect(Object.values(r.familyResiduals).every((v) => v !== null)).toBe(true);
     expect(Object.keys(r.precisionDiagonalWeights).length).toBe(6);
     expect(Object.values(r.normalizedWeights).reduce((s, v) => s + v, 0)).toBeCloseTo(1, 6);
+    const recomputed = (Object.keys(r.familyResiduals) as (keyof typeof r.familyResiduals)[]).reduce(
+      (s, f) => s + (r.familyResiduals[f] ?? 0) * r.withinFamilyShrinkFactors[f] * r.normalizedWeights[f],
+      0,
+    );
+    expect(r.shrunkUncappedDelta).toBeCloseTo(recomputed, 9);
+    expect(r.shrunkUnweightedDelta).not.toBeCloseTo(r.shrunkUncappedDelta, 6);
     expect(r.capApplied).toBe(true);
     expect(Math.abs(r.totalProbabilityDelta)).toBeCloseTo(PROBABILITY_MOVEMENT_CAP, 9);
   });

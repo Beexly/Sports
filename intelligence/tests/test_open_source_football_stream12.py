@@ -129,6 +129,13 @@ def test_grok_sanitizer_catches_major_provider_patterns_and_binary():
         ("-----BEGIN " + "RSA PRIVATE KEY-----"): "[REDACTED_PRIVATE_KEY]",
         "eyJ" + "f" * 12 + "." + "g" * 12 + "." + "h" * 12: "[REDACTED_JWT]",
         "LTAI" + "i" * 20: "[REDACTED_ALIBABA_KEY]",
+        "aws_secret_access_key = " + "A" * 40: "[REDACTED_AWS_SECRET]",
+        "glpat-" + "j" * 24: "[REDACTED_GITLAB_TOKEN]",
+        "npm_" + "k" * 36: "[REDACTED_NPM_TOKEN]",
+        "SK" + "a1" * 16: "[REDACTED_TWILIO_KEY]",
+        "SG." + "l" * 22 + "." + "m" * 22: "[REDACTED_SENDGRID_KEY]",
+        "hf_" + "n" * 34: "[REDACTED_HF_TOKEN]",
+        "https://x.blob.core.windows.net/c?sv=2021&sig=" + "o" * 30: "[REDACTED_AZURE_SAS]",
     }
     for raw, marker in samples.items():
         clean, n = module.sanitize(raw)
