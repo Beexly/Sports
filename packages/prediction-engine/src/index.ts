@@ -5341,6 +5341,13 @@ export {
 } from "./evaluation/known-answer-series.js";
 
 export {
+  expectedSeasonGoals,
+  gammaPoissonPosterior,
+  jeffreysGoalPrior,
+} from "./models/gamma-poisson-goals.js";
+export { hillSaturation } from "./models/hill-saturation.js";
+
+export {
   POLYMARKET_PUBLISH_HOLD,
   VENDORED_POLYMARKET_SDKS,
   polymarketPublishAllowed,
