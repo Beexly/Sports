@@ -135,3 +135,26 @@ def ceiling_closeness(game_peak: float, ceiling: float | None) -> float | None:
     if not math.isfinite(game_peak) or game_peak < 0:
         return None
     return game_peak / ceiling
+
+
+KTD_SEPARATION_EPS = 0.01
+
+
+def kinetic_translation_deficit(
+    s_max: float, s_cut: float, mean_separation_yards: float
+) -> float | None:
+    """Combine cut-speed loss divided by in-game separation at the throw.
+
+    Formula from usufalbaz/nfl-big-data-bowl-2027-ktd (MIT):
+    (S_max - S_cut) / (mean separation_at_pass_forward + 0.01).
+    Units are yards/second over yards. A larger score means more Combine
+    speed was given up at the cut per yard of game separation. This does
+    not repeat that repo's Spearman or ROC numbers.
+    """
+    values = (s_max, s_cut, mean_separation_yards)
+    if not all(math.isfinite(v) and v >= 0 for v in values):
+        return None
+    denom = mean_separation_yards + KTD_SEPARATION_EPS
+    if denom == 0:
+        return None
+    return (s_max - s_cut) / denom

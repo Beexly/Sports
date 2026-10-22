@@ -86,3 +86,12 @@ def test_combine_ceiling_binds_only_when_the_game_exceeds_the_drill():
     assert ceiling_closeness(9.6, ceiling) == pytest.approx(9.6 / 9.4)
     assert combine_speed_ceiling([]) is None
     assert exceedance_rate([9.0], None) is None
+
+
+def test_kinetic_translation_deficit_uses_the_mit_formula():
+    from intelligence.vision.bdb2027_kinematics import kinetic_translation_deficit
+
+    # (9.0 - 6.5) / (2.0 + 0.01)
+    assert kinetic_translation_deficit(9.0, 6.5, 2.0) == pytest.approx(2.5 / 2.01)
+    assert kinetic_translation_deficit(9.0, 6.5, -1.0) is None
+    assert kinetic_translation_deficit(float("nan"), 6.5, 2.0) is None

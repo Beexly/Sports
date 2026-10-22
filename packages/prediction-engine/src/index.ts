@@ -5333,6 +5333,8 @@ export {
   exceedanceRate,
 } from "./tracking/combine-ceiling.js";
 
+export { kineticTranslationDeficit } from "./tracking/kinetic-translation-deficit.js";
+
 export {
   POLYMARKET_PUBLISH_HOLD,
   VENDORED_POLYMARKET_SDKS,
