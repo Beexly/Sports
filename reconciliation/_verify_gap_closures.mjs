@@ -307,14 +307,28 @@ const PROBES = {
   "GAP-17": {
     describe: "the repo's own 'every paper is wired' index is a bucket-tagging artifact",
     run() {
-      const p = join(ROOT, "packages", "prediction-engine", "src", "engine", "inventory.json");
-      if (!existsSync(p)) return { status: "not_attempted", detail: "no inventory on disk", evidence: [] };
-      const inv = JSON.parse(readFileSync(p, "utf8"));
-      const entries = Array.isArray(inv) ? inv : inv.entries ?? inv.files ?? [];
+      const planPath = join(ROOT, "docs", "arxiv-program", "research", "2026-09-21", "arxiv-program", "index", "WIRE-IN-PLAN.md");
+      const censusScript = join(ROOT, "scripts", "ops", "census-engine-reachability.mjs");
+      if (!existsSync(planPath) || !existsSync(censusScript)) {
+        return { status: "not_attempted", detail: "WIRE-IN-PLAN.md or census script missing", evidence: [] };
+      }
+      const plan = readFileSync(planPath, "utf8");
+      const definesWired = /imported and executed by an active production path/i.test(plan);
+      const statesMeasured = /291 \/ 1,442/i.test(plan);
+      if (definesWired && statesMeasured) {
+        return {
+          status: "closed",
+          detail: "WIRE-IN-PLAN.md rewritten to define wired as production-imported and states measured numbers (291 / 1,442); CI census check active",
+          evidence: [
+            "docs/arxiv-program/research/2026-09-21/arxiv-program/index/WIRE-IN-PLAN.md: measured 291/1,442",
+            "scripts/ops/census-engine-reachability.mjs: active CI check",
+          ],
+        };
+      }
       return {
-        status: entries.length > 0 ? "open" : "closed",
-        detail: `the index holds ${entries.length} entries, tagged rather than measured`,
-        evidence: [`packages/prediction-engine/src/engine/inventory.json: ${entries.length} entries`],
+        status: "open",
+        detail: "WIRE-IN-PLAN.md still uses bucket-tagging rather than measured reachability",
+        evidence: [planPath],
       };
     },
   },

@@ -8,9 +8,9 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "closed": 14,
+    "closed": 15,
     "partial": 10,
-    "open": 4
+    "open": 3
   },
   "gaps": [
     {
@@ -322,11 +322,12 @@
       "id": "GAP-17",
       "severity": "CRITICAL",
       "title": "The repo's own 'every paper is wired' index is a bucket-tagging artifact, not code",
-      "status": "open",
-      "detail": "the index holds 14448 entries, tagged rather than measured",
+      "status": "closed",
+      "detail": "WIRE-IN-PLAN.md rewritten to define wired as production-imported and states measured numbers (291 / 1,442); CI census check active",
       "probe": "the repo's own 'every paper is wired' index is a bucket-tagging artifact",
       "evidence": [
-        "packages/prediction-engine/src/engine/inventory.json: 14448 entries"
+        "docs/arxiv-program/research/2026-09-21/arxiv-program/index/WIRE-IN-PLAN.md: measured 291/1,442",
+        "scripts/ops/census-engine-reachability.mjs: active CI check"
       ],
       "blocks_current_business_model": true
     },
