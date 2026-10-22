@@ -154,3 +154,31 @@ export function yardsBetweenTackleAttempts(yardsAtMiss: number, yardsAtNext: num
   if (!Number.isFinite(yardsAtMiss) || !Number.isFinite(yardsAtNext)) throw new Error("yards must be finite");
   return yardsAtNext - yardsAtMiss;
 }
+
+/** NFL field width is 160 feet. This is a position check. "Forced" was not defined by NGS. */
+export const NFL_FIELD_WIDTH_YARDS = 160 / 3;
+
+export function isPastSideline(y: number, fieldWidthYards = NFL_FIELD_WIDTH_YARDS): boolean {
+  if (!Number.isFinite(y) || !Number.isFinite(fieldWidthYards) || fieldWidthYards <= 0) {
+    throw new Error("y and field width must be finite, and width must be positive");
+  }
+  return y < 0 || y > fieldWidthYards;
+}
+
+/** Closest defender at the tackle frame. This is an engine definition of "initiating", not an NGS rule. */
+export function initiatingDefenderIndex(
+  carrier: { x: number; y: number },
+  defenders: readonly { x: number; y: number }[],
+): number {
+  if (defenders.length === 0) throw new Error("at least one defender is required");
+  let best = 0;
+  let bestDist = Infinity;
+  defenders.forEach((defender, i) => {
+    const dist = Math.hypot(defender.x - carrier.x, defender.y - carrier.y);
+    if (dist < bestDist) {
+      best = i;
+      bestDist = dist;
+    }
+  });
+  return best;
+}

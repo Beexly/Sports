@@ -5,6 +5,8 @@ import {
   isChaseDown,
   isGroupTackle,
   isOpenField,
+  isPastSideline,
+  initiatingDefenderIndex,
   missedTackleRateBand,
   tackleApproach,
   tackleEfficiency,
@@ -31,5 +33,8 @@ describe("tackle probability derivatives", () => {
     expect(blockersBetween({ x: 0, y: 0 }, { x: 10, y: 0 }, [{ x: 5, y: 0 }, { x: 5, y: 4 }], 1)).toBe(1);
     expect(encircleQuadrants([0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2])).toBe(4);
     expect(tackleYardsSaved(8, 3)).toBe(5);
+    expect(isPastSideline(-0.1)).toBe(true);
+    expect(isPastSideline(20)).toBe(false);
+    expect(initiatingDefenderIndex({ x: 0, y: 0 }, [{ x: 9, y: 0 }, { x: 2, y: 0 }])).toBe(1);
   });
 });

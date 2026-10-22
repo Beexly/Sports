@@ -5349,7 +5349,9 @@ export { hillSaturation } from "./models/hill-saturation.js";
 export { seriesWinProbability } from "./models/series-win.js";
 export { smoothLabel } from "./models/label-smoothing.js";
 export { attentionWeights } from "./models/scaled-dot-product.js";
-export { gradCamMap } from "./models/grad-cam.js";
+export { gradCamMap, guidedBackpropGate, guidedGradCam } from "./models/grad-cam.js";
+export { builderHmacSignature } from "./markets/builder-hmac.js";
+export { gaussianNeighborWeights, perplexity } from "./evaluation/neighbor-conditional.js";
 export {
   COVERAGE_SCHEMES,
   coverageFamily,
@@ -5377,6 +5379,9 @@ export {
   tacklePlayPoints,
   tackleYardsSaved,
   yardsBetweenTackleAttempts,
+  isPastSideline,
+  initiatingDefenderIndex,
+  NFL_FIELD_WIDTH_YARDS,
 } from "./nfl/tackle-probability.js";
 export {
   MARCEL_SEASON_WEIGHTS,

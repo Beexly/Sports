@@ -16,7 +16,7 @@ A group tackle is three or more defenders. Efficiency is successful tackles over
 
 ## Not published, so not filled in
 
-Open-field radius. Chase-down yard minimum. Blocker corridor width. Those functions take the missing number as an argument. Primary tackler ("initiating") and forced-out-of-bounds were named and not defined. They are listed in `TACKLE_DERIVATIVES` and have no function.
+Open-field radius. Chase-down yard minimum. Blocker corridor width. Those functions take the missing number as an argument. "Primary tackler" is the closest defender at the tackle frame. That is an engine definition, not an NGS rule. Out of bounds is a position check against a 160-foot field. "Forced" was not defined.
 
 Their 2024 team results were not remeasured. The model weights were not published, so a probability itself is not in this file.
 

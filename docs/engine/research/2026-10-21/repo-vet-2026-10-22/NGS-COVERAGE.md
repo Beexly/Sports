@@ -19,6 +19,6 @@ Alammar, 2018, is CC BY-NC-SA. The post was read. Its text was not copied. The a
 - `packages/prediction-engine/src/nfl/coverage-scheme.ts`: the eight classes, defender-minus-offense deltas, the 10 Hz speed correction, the mean ensemble, PCA-origin uniqueness, and the neighbor-mismatch review rate.
 - `packages/prediction-engine/src/models/label-smoothing.ts`: Müller, Kornblith, and Hinton, 2019. Epsilon is a caller input. NGS did not publish theirs.
 - `packages/prediction-engine/src/models/scaled-dot-product.ts`: softmax of the scaled dot product.
-- `packages/prediction-engine/src/models/grad-cam.ts`: channel weight is the mean gradient, then ReLU. Guided Grad-CAM is not included.
+- `packages/prediction-engine/src/models/grad-cam.ts`: channel weight is the mean gradient, then ReLU. Guided Grad-CAM is that map times the guided-backprop signal.
 
-t-SNE was not reimplemented. The operational piece from that section is the neighbor mismatch rate, which flags a play for review and does not relabel it.
+The 2D t-SNE embedding was not optimized. The neighbor conditional and its perplexity are in `packages/prediction-engine/src/evaluation/neighbor-conditional.ts`. The mismatch rate still flags a play for review and does not relabel it.
