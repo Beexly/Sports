@@ -1,0 +1,473 @@
+import {
+  approveErc20,
+  approveErc1155ForAll,
+  type CollateralReturnPlanResponse,
+  type ConvertWorkflow,
+  convert,
+  type ExecuteCollateralReturnPlanRequest,
+  executeCollateralReturnPlan,
+  type FetchTradingApprovalsStateRequest,
+  fetchTradingApprovalsState,
+  type HorizontalMergeWorkflow,
+  type HorizontalSplitWorkflow,
+  horizontalMerge,
+  horizontalSplit,
+  mergePositions,
+  type PrepareConvertRequest,
+  type PrepareErc20ApprovalRequest,
+  type PrepareErc20TransferRequest,
+  type PrepareErc1155ApprovalForAllRequest,
+  type PrepareHorizontalMergeRequest,
+  type PrepareHorizontalSplitRequest,
+  type PrepareMergePositionsRequest,
+  type PrepareRedeemPositionsRequest,
+  type PrepareSplitPositionRequest,
+  planCollateralReturn,
+  prepareConvert,
+  prepareHorizontalMerge,
+  prepareHorizontalSplit,
+  redeemPositions,
+  setupTradingApprovals,
+  splitPosition,
+  type TradingApprovalsState,
+  transferErc20,
+} from '../actions';
+import type {
+  BaseClient,
+  BasePublicClient,
+  BaseSecureClient,
+} from '../clients';
+import type { RequestOptions } from '../request-options';
+import type { TransactionHandle } from '../types';
+
+export type PublicWalletActions = {
+  /**
+   * Reads the approvals a wallet is missing for supported trading workflows.
+   *
+   * Reads the wallet's current approval state. Recent grants and revocations
+   * may take time to appear. It does not require a signer or submit
+   * transactions. Trading setup re-checks approvals before preparing them.
+   *
+   * @throws {@link FetchTradingApprovalsStateError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const state = await client.fetchTradingApprovalsState({
+   *   user: '0x1234…',
+   * });
+   * ```
+   */
+  fetchTradingApprovalsState(
+    request: FetchTradingApprovalsStateRequest,
+    options?: RequestOptions,
+  ): Promise<TradingApprovalsState>;
+};
+
+export type SecureWalletActions = {
+  /**
+   * Converts NO into YES for all other conditions.
+   * Derives the event and NO condition index from the market's condition ID.
+   * Includes Other unless converting NO(Other).
+   * Requires PositionManager operator approval for the Router; approvals are not submitted automatically.
+   * Signs and submits; call the returned handle's wait() to confirm.
+   * @throws {@link ConvertError} Thrown on failure.
+   */
+  convert(request: PrepareConvertRequest): Promise<TransactionHandle>;
+  /**
+   * Prepares a workflow: Converts NO into YES for all other conditions.
+   * Derives the event and NO condition index from the market's condition ID.
+   * Includes Other unless converting NO(Other).
+   * Requires PositionManager operator approval for the Router; approvals are not submitted automatically.
+   * Preparing does not sign or submit; advance the workflow to execute it.
+   * @throws {@link PrepareConvertError} Thrown on failure.
+   */
+  prepareConvert(request: PrepareConvertRequest): Promise<ConvertWorkflow>;
+  /**
+   * Splits pUSD into YES for every condition, including Other.
+   * Uses the event containing the supplied market condition.
+   * Requires pUSD spending approval for the Router; approvals are not submitted automatically.
+   * Signs and submits; call the returned handle's wait() to confirm.
+   * @throws {@link HorizontalSplitError} Thrown on failure.
+   */
+  horizontalSplit(
+    request: PrepareHorizontalSplitRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Prepares a workflow: Splits pUSD into YES for every condition, including Other.
+   * Uses the event containing the supplied market condition.
+   * Requires pUSD spending approval for the Router; approvals are not submitted automatically.
+   * Preparing does not sign or submit; advance the workflow to execute it.
+   * @throws {@link PrepareHorizontalSplitError} Thrown on failure.
+   */
+  prepareHorizontalSplit(
+    request: PrepareHorizontalSplitRequest,
+  ): Promise<HorizontalSplitWorkflow>;
+  /**
+   * Merges equal YES amounts from every condition, including Other, into pUSD.
+   * Uses the event containing the supplied market condition.
+   * Requires PositionManager operator approval for the Router; approvals are not submitted automatically.
+   * Signs and submits; call the returned handle's wait() to confirm.
+   * @throws {@link HorizontalMergeError} Thrown on failure.
+   */
+  horizontalMerge(
+    request: PrepareHorizontalMergeRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Prepares a workflow: Merges equal YES amounts from every condition, including Other, into pUSD.
+   * Uses the event containing the supplied market condition.
+   * Requires PositionManager operator approval for the Router; approvals are not submitted automatically.
+   * Preparing does not sign or submit; advance the workflow to execute it.
+   * @throws {@link PrepareHorizontalMergeError} Thrown on failure.
+   */
+  prepareHorizontalMerge(
+    request: PrepareHorizontalMergeRequest,
+  ): Promise<HorizontalMergeWorkflow>;
+
+  /**
+   * Reads the approvals a wallet is missing for supported trading workflows.
+   *
+   * Reads the authenticated account's wallet approval state. Recent grants
+   * and revocations may take time to appear. It does not submit transactions.
+   * Trading setup re-checks approvals before preparing them.
+   *
+   * @throws {@link FetchTradingApprovalsStateError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const state = await client.fetchTradingApprovalsState();
+   * ```
+   */
+  fetchTradingApprovalsState(
+    options?: RequestOptions,
+  ): Promise<TradingApprovalsState>;
+  /**
+   * Sets up the approvals required for trading and supported position lifecycle workflows.
+   *
+   * @throws {@link SetupTradingApprovalsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * await client.setupTradingApprovals();
+   * ```
+   */
+  setupTradingApprovals(): Promise<void>;
+  /**
+   * Approves ERC-20 token spending for the authenticated account.
+   *
+   * @throws {@link ApproveErc20Error}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const handle = await client.approveErc20({
+   *   amount: 'max',
+   *   spenderAddress: '0x1234…',
+   *   tokenAddress: '0x5678…',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  approveErc20(
+    request: PrepareErc20ApprovalRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Approves or revokes ERC-1155 operator access for the authenticated account.
+   *
+   * @throws {@link ApproveErc1155ForAllError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const handle = await client.approveErc1155ForAll({
+   *   operatorAddress: '0x1234…',
+   *   tokenAddress: '0x5678…',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  approveErc1155ForAll(
+    request: PrepareErc1155ApprovalForAllRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Transfers ERC-20 tokens from the authenticated account.
+   *
+   * @throws {@link TransferErc20Error}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const handle = await client.transferErc20({
+   *   amount: 1n,
+   *   recipientAddress: client.account.signer,
+   *   tokenAddress: client.environment.contracts.collateralToken,
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  transferErc20(
+    request: PrepareErc20TransferRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Splits collateral into positions.
+   *
+   * @throws {@link SplitPositionError}
+   * Thrown on failure.
+   *
+   * @example Split a market by condition ID.
+   * ```ts
+   * const handle = await client.splitPosition({
+   *   amount: 1n,
+   *   conditionId: '0x123…',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   *
+   * @example Split a combo by legs.
+   * ```ts
+   * const handle = await client.splitPosition({
+   *   amount: 1n,
+   *   legs: ['123', '456'],
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  splitPosition(
+    request: PrepareSplitPositionRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Merges complementary positions back into collateral.
+   *
+   * @throws {@link MergePositionsError}
+   * Thrown on failure.
+   *
+   * @example Merge a market by condition ID.
+   * ```ts
+   * const handle = await client.mergePositions({
+   *   amount: 'max',
+   *   conditionId: '0x123…',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   *
+   * @example Merge a combo by legs.
+   * ```ts
+   * const handle = await client.mergePositions({
+   *   amount: 'max',
+   *   legs: ['123', '456'],
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  mergePositions(
+    request: PrepareMergePositionsRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Redeems held positions for a market or a specific position by ID.
+   *
+   * @throws {@link RedeemPositionsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * // Redeem a market by condition ID.
+   * const handle = await client.redeemPositions({
+   *   conditionId: '0x123…',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   *
+   * @example Redeem a market by market ID.
+   * ```ts
+   * const handle = await client.redeemPositions({
+   *   marketId: '12345',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   *
+   * @example Redeem a Polymarket V2 position by position ID.
+   * ```ts
+   * const handle = await client.redeemPositions({
+   *   positionId: '123',
+   * });
+   *
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  redeemPositions(
+    request: PrepareRedeemPositionsRequest,
+  ): Promise<TransactionHandle>;
+  /**
+   * Plans a collateral return for the authenticated account.
+   *
+   * The returned plan is an inspectable artifact: review the collateral it
+   * releases, the inputs it consumes, and the residual-position impact, and
+   * apply any application-specific limits before executing it with
+   * {@link SecureWalletActions.executeCollateralReturnPlan | executeCollateralReturnPlan}.
+   * A truncated plan is one executable chunk of a larger return; execute and
+   * confirm it before requesting the next plan.
+   *
+   * @throws {@link PlanCollateralReturnError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * let plan: CollateralReturnPlanResponse;
+   *
+   * do {
+   *   plan = await client.planCollateralReturn();
+   *
+   *   // Inspect the return and residual-position impact, and apply any
+   *   // application-specific limits before signing.
+   *   const handle = await client.executeCollateralReturnPlan({ plan });
+   *   await handle.wait();
+   * } while (plan.truncated);
+   * ```
+   */
+  planCollateralReturn(): Promise<CollateralReturnPlanResponse>;
+  /**
+   * Executes a collateral return plan for the authenticated account.
+   *
+   * Execution signs and submits the exact call carried by the plan; nothing is
+   * recomputed on the client, and no approval transactions are run implicitly.
+   * Confirmation stays explicit through the returned handle's `wait()`.
+   *
+   * If wallet state changed since the plan was created, the service rejects
+   * the submission; request a fresh plan and execute that instead.
+   *
+   * @throws {@link ExecuteCollateralReturnPlanError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const plan = await client.planCollateralReturn();
+   *
+   * const handle = await client.executeCollateralReturnPlan({ plan });
+   * const outcome = await handle.wait();
+   *
+   * // outcome.transactionHash: TxHash
+   * ```
+   */
+  executeCollateralReturnPlan(
+    request: ExecuteCollateralReturnPlanRequest,
+  ): Promise<TransactionHandle>;
+};
+
+function publicWalletActions(client: BaseClient): PublicWalletActions {
+  return {
+    fetchTradingApprovalsState: fetchTradingApprovalsState.bind(null, client),
+  };
+}
+
+export function walletActions(client: BasePublicClient): PublicWalletActions;
+export function walletActions(client: BaseSecureClient): SecureWalletActions;
+export function walletActions(
+  client: BaseClient,
+): PublicWalletActions | SecureWalletActions {
+  const actions = publicWalletActions(client);
+
+  if (client.isPublicClient()) {
+    return actions;
+  }
+
+  return {
+    ...actions,
+    fetchTradingApprovalsState: (options?: RequestOptions) =>
+      fetchTradingApprovalsState(
+        client,
+        { user: client.account.wallet },
+        options,
+      ),
+    setupTradingApprovals: setupTradingApprovals.bind(null, client),
+    approveErc20: approveErc20.bind(null, client),
+    approveErc1155ForAll: approveErc1155ForAll.bind(null, client),
+    transferErc20: transferErc20.bind(null, client),
+    convert: convert.bind(null, client),
+    prepareConvert: prepareConvert.bind(null, client),
+    horizontalSplit: horizontalSplit.bind(null, client),
+    prepareHorizontalSplit: prepareHorizontalSplit.bind(null, client),
+    horizontalMerge: horizontalMerge.bind(null, client),
+    prepareHorizontalMerge: prepareHorizontalMerge.bind(null, client),
+    splitPosition: splitPosition.bind(null, client),
+    mergePositions: mergePositions.bind(null, client),
+    redeemPositions: redeemPositions.bind(null, client),
+    planCollateralReturn: planCollateralReturn.bind(null, client),
+    executeCollateralReturnPlan: executeCollateralReturnPlan.bind(null, client),
+  };
+}
+
+// Public collateral-return model types surfaced alongside the bound methods.
+export type {
+  CollateralReturnOperation,
+  CollateralReturnOperationKind,
+  CollateralReturnPlanResponse,
+  CollateralReturnPositionAmount,
+  CollateralReturnPositionSummary,
+  CollateralReturnRouterCall,
+  ConvertWorkflow,
+  Erc20TradingApproval,
+  Erc1155TradingApproval,
+  ExecuteCollateralReturnPlanRequest,
+  FetchTradingApprovalsStateRequest,
+  HorizontalMergeWorkflow,
+  HorizontalSplitWorkflow,
+  NegRiskWorkflow,
+  PrepareConvertRequest,
+  PrepareHorizontalMergeRequest,
+  PrepareHorizontalSplitRequest,
+  TradingApprovalRequirements,
+  TradingApprovalsState,
+} from '../actions';
+// Error unions and runtime `isError` guards for every action bound above.
+// Surfaced at the root entry point through `export * from './decorators'`.
+// Keep this list in sync with the methods on SecureWalletActions.
+export {
+  ApproveErc20Error,
+  ApproveErc1155ForAllError,
+  CollateralReturnKnownOperationKind,
+  ConvertError,
+  ExecuteCollateralReturnPlanError,
+  FetchTradingApprovalsStateError,
+  HorizontalMergeError,
+  HorizontalSplitError,
+  MergePositionsError,
+  PlanCollateralReturnError,
+  PrepareConvertError,
+  PrepareHorizontalMergeError,
+  PrepareHorizontalSplitError,
+  RedeemPositionsError,
+  SetupTradingApprovalsError,
+  SplitPositionError,
+  TransferErc20Error,
+} from '../actions';

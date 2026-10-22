@@ -1,0 +1,38 @@
+{
+  "name": "@polymarket/types",
+  "version": "0.3.0",
+  "description": "Shared TypeScript types for the Polymarket SDK.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Polymarket/ts-sdk",
+    "directory": "packages/types"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "type-fest": "^5.5.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.2"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

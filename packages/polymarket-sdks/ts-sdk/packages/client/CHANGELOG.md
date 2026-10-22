@@ -1,0 +1,800 @@
+# @polymarket/client
+
+## 0.14.0
+
+### Minor Changes
+
+- c05ca40, f059b22: Add optional equity market status (`open`, `closed`, `unknown`) to spot/TWAP updates and snapshots; omission means not stated, never open. Status describes the provider's instrument. Spot status-only updates may repeat the price timestamp with `isCarriedForward: true`; do not deduplicate by timestamp alone. Older unstated spot frames retain the last stated snapshot status. Snapshots carry status at batch level and may retain an older closing price; TWAP status changes with a new price.
+- 8e79e95: Breaking dependency migration: `@polymarket/types@0.3.0` removes `neverthrow` re-exports and `unwrap`. Await SDK requests directly (`await service.get(path)` replaces `await unwrap(service.get(path))`); service promises return parsed data, with `{ responseType: "raw" }` for a response object. Add `neverthrow` as your own dependency for any remaining imports.
+- 0b23abe, b268185: Add `closed: 'any'` for market/event discovery while preserving open-only defaults, and scalar/array `listEvents` protocol-version filters (one or two supported values; repeated query parameters; retained in continuation/query-bound cursors). Omission keeps the server default of CTF v1 events.
+- aeed79a, 3025be9: Add experimental custom `fetch` and per-read `signal`, `retries`, and `timeout` controls. Default to two retries per request and a 30-second HTTP timeout including RPC; pagination requests have independent budgets. Set timeout in milliseconds or `false` to disable it.
+- caceac5, f6ab0ec, 23cf0b3: Add experimental `predictions` through `https://api.defi.polymarket.com` with `POLYMARKET_CLIENT` metadata; preserve gateway errors and never automatically retry prediction mutations.
+- 3bc5493: Breaking 0.x: `SplitActivity`, `MergeActivity` and `RedeemActivity` include Combo variants (`isCombo: true`, `ComboConditionId`, optional titles, no `slug`/`eventSlug`). Add `!activity.isCombo` to SPLIT/MERGE/REDEEM guards before accessing market URLs. Parsed ordinary rows use `isCombo: false`; ordinary object construction may omit it. Combo presentation metadata is optional; trade/redemption `outcome` and `outcomeIndex` preserve zero and normalize blank labels/index `999` to `undefined`. Automatic redemption remains REDEEM; `listComboActivity` is unchanged.
+- 3d93028: Add one-shot authenticated order heartbeats with mismatch-ID recovery (`OrderHeartbeatMismatchError` retains `RequestRejectedError` inheritance and its own runtime name). The first accepted send enables API-key-wide timeout cancellation with no disarm operation. Callers own scheduling and ID serialization; cancellation after expiry is best effort.
+- 8ae8885: Add Router v2 neg-risk workflows by market condition ID; low-level helpers retain explicit protocol event IDs.
+- ef3d314: Add optional oracle event/request IDs, market resolution status, and discovery filters for these fields and protocol version, with pagination and backend ID-count limits.
+- 8d0ecfb, bffb030, 66b441d: Add filtered/sorted reward-market cursor pagination (preserving selections, supported 24-hour volume keys, no removed tag-exclusion filter, ISO 8601 dates), current maker rebates by date/address (decimal-string amounts; empty results become `[]`), and direct outcome-asset reference lookup by decimal asset/condition selectors with nullable metadata.
+- a2ebe7c, 84e07ef, bdcfad0, d79941a: Extend experimental Perps with fill instrument filters and ADL/liquidation details, portfolio available order margin/fee tier/position ADL index, and instrument UI live time/logos (advisory, not trading eligibility). Preserve server event horizons as `eventTimestamp: EpochMilliseconds | null` independently of send time; zero becomes `null`, and synthetic recovery invents no horizon.
+- 3fd2412: Normalize native/upstream rejection envelopes and expose extensible known rejection codes, preserving transport fallbacks.
+
+### Patch Changes
+
+- d62a171: Automatic pagination throws `UnexpectedResponseError` on missing or repeated continuation cursors after yielding fetched pages, preventing restart/loops.
+- d64b285: Wallet-anchored closed-position queries for tokens, value, price or unrealized PnL use realized-PnL ordering. Preserve filters/sort on replay; discard rejected obsolete cursors and start a new first page manually.
+- 70fb500: Continue internal-transfer history past full millisecond pages only after verifying the overlap is complete, without duplicates or skipped rows.
+- d54c900, 24ec298: Normalize `gameStartTime` on new-market events/notifications to ISO 8601, empty values to `null`, and impossible dates/times to validation failures. Deliver user order websocket `INVALID` and `CANCELED_*` statuses instead of dropping them.
+- 911574f, edf336f: Add optional native/sponsored earnings breakdowns and sponsored queries without changing defaults; retain taker-tier upgrade notifications (previous/current tier, rebate basis points and snapshot date).
+- Update `@polymarket/bindings` to `0.14.0` and `@polymarket/types` to `0.3.0`.
+
+## 0.13.0
+
+### Minor Changes
+
+- ea1237e: Read indexed trading approvals from the configured data endpoint, with no RPC fallback. Recent changes may lag; setup still checks on chain. Incomplete snapshots raise `UnexpectedResponseError`.
+- 61f140f, d0be2fd, bbbcb20: Add 60-second equity TWAPs, Chainlink/Pyth provider selection, subscription confirmations, and price source metadata. Cached history resets when the source changes.
+- b824569, 95766f8: Add Perps chase and TWAP execution lifecycles.
+- 2eea382, d004008: Add Perps GTD orders and trailing stop losses with activation events.
+- 04af7cc, d918f6a: Add public and authenticated Perps position snapshots and public registration lookup.
+- 1e0b3dd: Expose Perps close-only state, settlement records, display labels, and settlement flags on trades and fills.
+- ab1e3b2: Add `position_deleveraged` notifications. Exhaustive notification handlers must handle this variant; Perps remains experimental.
+- 1a2e9ca, 8d7fccc: Add position acquisition time (`firstEntryAt`, epoch milliseconds) and `PositionSortBy.Price`. Redeemable and closed listings retain their existing ordering.
+- 5976187: Add `expectedSettlementTime` and `settlementTimeBasis` as earliest settlement estimates, not guaranteed deadlines.
+- 0c64cfb: Add quantities to position TP/SL triggers for partial exits; omission still closes the full position.
+- 2111cdf: Add a case-insensitive position `title` filter, preserved across pages and cursor replay (up to 200 Unicode characters).
+
+### Patch Changes
+
+- 98adafb: Add ordered batch Perps leverage updates with per-instrument rejection results.
+- ae8b4e8: Emit server notification resync signals with the catch-up sequence and timestamp. Backfill and deduplicate by notification ID.
+- fcbe83c: Accept current terminal Perps order statuses so valid terminal updates resolve placement.
+- c7b7e1f: Parse HTTP-date `Retry-After` headers into nonnegative whole seconds. Retry policy is unchanged.
+- Update `@polymarket/bindings` to `0.13.0`.
+
+## 0.12.0
+
+### Minor Changes
+
+- 348977a: Add `REDEEMABLE_LOST` and `MERGEABLE` to `PositionStatus` as `listPositions` filters. `REDEEMABLE_LOST` lists still-held zero-payout positions and requires `user`, so a request without one now fails locally with `UserInputError`. `MERGEABLE` lists live complementary pairs a wallet can merge back to collateral, sorted by `TOKENS` by default. Without `user` it falls back to the broader `OPEN` listing. Rows still report only `OPEN`, `REDEEMABLE`, or `CLOSED`, so `Position.status` is now typed as `PositionRowStatus`. Lost rows report `REDEEMABLE` and mergeable rows report `OPEN`.
+- 2393b48: Type known Perps cancellation rejections while preserving unrecognized identifiers, and retry transient `order_in_flight` results with configurable bounded backoff.
+
+  When a later cancellation attempt fails, throw `PerpsCancelRetryError` with the last received results in original request order, the pending request indexes, and the underlying cause. Earlier confirmed outcomes remain available; pending entries describe the previous attempt and must be reconciled if the retry's response was lost. Initial-attempt failures keep their existing error types.
+
+- a56f27f: `listComments` pages through a whole thread by server cursor when the read has no `holdersOnly` or `getPositions` and sorts by nothing, `id` or `createdAt`; the first page keeps today's newest-first order. Cursors carry the parent, order and direction they were minted for and are rejected before any request when reused for a different query. Reads with those options or another order stay on offset pages under the existing 200 cap, and cursors saved from earlier versions keep working with the same arguments. Adds `ListCommentsKeysetResponseSchema` to the bindings.
+
+  `listEvents` cursors likewise carry the query they were minted for and are rejected before any request when reused for a different one; cursors saved from earlier versions keep working with the same arguments.
+
+- efbb2bf: Stop automatic comment and search pagination normally at the supported depth, returning the final accessible page with `limitReached: true` when more items may exist. `hasMore` retains that meaning; the flag indicates unknown completeness, not proof of missing rows. Comment pages start at offset 200 at most, while `search` serves up to 100 pages. Explicitly following a cursor past either limit throws the new `PaginationLimitError` before any request, and the pages already returned stay valid. `firstPage()` consistently rejects its promise when cursor validation fails. Page fullness for `listComments` counts top-level comments only, since replies ride along in the same page. The by-address comments limit is a hard stop with no range filters to retrieve the remaining comments.
+- e7b7af1: Add owner-signed Perps internal transfers and normalized transfer history.
+
+  Preserve submillisecond transfers at history page boundaries. If a full
+  millisecond cannot be paged safely, report an error instead of omitting records.
+
+- f3ba735: Add Perps Builder Codes with explicit owner-signed fee approval and revocation.
+  Approving a builder updates the session's attribution after confirmation; revoking
+  clears it after confirmation. Approval versions are managed internally.
+  Approval requires an explicit `maxFeeRate`, while the builder address defaults
+  to the session's selected builder.
+
+  An optional builder address at session setup reads the trader's saved approval.
+  The lower of the approved maximum and builder cap applies consistently to single
+  orders, batches, and TP/SL exits. Missing or revoked approval disables attribution
+  without failing setup. The selected builder remains available for approval.
+  New approvals refresh the builder cap
+  and replace the session rate after confirmation. Setup never creates consent.
+
+  Preserve builder terms on orders and expose `builderFee` and `totalFee` on fills;
+  `fee` continues to mean the exchange fee. Legacy responses normalize to zero
+  builder fee. Existing untagged order signatures are unchanged.
+
+  Expose typed builder earnings reporting and opt-in builder receipts through the
+  existing session iterator with `includeBuilderFills`. This extends the experimental
+  `PerpsSessionEvent` union with `builderFill`. Historical reconciliation remains
+  application-owned. Failed consent submissions are not automatically retried.
+
+### Patch Changes
+
+- 5e30528: Accept account trades without a transaction hash so a fill without one does not invalidate the entire page. Missing and empty hashes normalize to `undefined`; populated hashes are unchanged.
+- a195c64: Preserve each sport's `name` on sports-list and event responses.
+- 62035dc: Route splitting, merging, and redeeming positions solely by market version: `v1` uses CTF and `v2` uses Protocol V2. Raise `UnexpectedResponseError` when the version or selected protocol's IDs are missing.
+- 54337ed: Support `CONDITIONAL-V2` balance and allowance reads and refreshes. Use the Protocol
+  V2 position selector for both allowance checks and post-approval refreshes when
+  automatically recovering a Protocol V2 sell order. Export `AssetType` from
+  `@polymarket/client` for explicit balance and allowance calls.
+- Updated dependencies [5e30528]
+- Updated dependencies [348977a]
+- Updated dependencies [2393b48]
+- Updated dependencies [a56f27f]
+- Updated dependencies [a195c64]
+- Updated dependencies [e7b7af1]
+- Updated dependencies [54337ed]
+- Updated dependencies [f3ba735]
+  - @polymarket/bindings@0.12.0
+
+## 0.11.0
+
+### Minor Changes
+
+- 23b2cb0: Add authenticated PolyBolt price streams through `client.subscribe()`, using
+  production automatically: `prices.crypto`, `prices.crypto.twap`, and
+  `prices.equity`. Subscriptions include history snapshots and live updates with
+  exact decimal prices, share connections, and reconnect automatically.
+  Event `seq` values are scoped to one channel on one WebSocket connection and
+  reset after reconnecting. Subscriptions with more than 64 filters use multiple
+  connections, so their sequence values may interleave in the merged stream.
+
+  Crypto topics require explicit canonical USD symbols such as `btcusd`;
+  `btc/usd` and `btcusdt` are rejected. TWAP uses a fixed 60-second window with
+  no window input. Returned TWAP events retain `windowSeconds: 60`.
+  Server rejections use `RequestRejectedError` with a machine-readable `code`.
+
+  Legacy RTDS price topics remain deprecated for compatibility, with removal
+  planned one month after the 0.11.0 release. Migrating from Binance USDT prices
+  changes the quote currency to USD as well as the feed source. The 30-second
+  TWAP has no replacement in the new streams. See the [migration guide](https://docs.polymarket.com/api-reference/live-data/migrating-from-rtds#migrate-sdks-to-polybolt).
+
+### Patch Changes
+
+- d7ee164: Re-export the `OrderPostStatus` enum from `@polymarket/client`, so consumers can compare `AcceptedOrderResponse.status` without importing from `@polymarket/bindings/clob`.
+- 43409a7: Include explicit EIP712Domain types in authentication, deposit wallet order and batch, and Perps signing payloads for wallets that require complete typed data.
+- Updated dependencies [23b2cb0]
+  - @polymarket/bindings@0.11.0
+
+## 0.10.0
+
+### Minor Changes
+
+- 6e3ae8d: **Breaking**: migrate `listBuilderLeaderboard` and `fetchBuilderVolume` to their v2 contracts. Builder rankings now use server cursors and normalized `BuilderStanding` rows; builder volume returns complete date buckets as `BuilderVolumePoint` rows. Replace `timePeriod` with `window` or `interval`, and use `bucketLimit` to bound volume buckets.
+- 8befd1f: Add the core pieces for the data `/v2` surface: `/v2` envelope schemas (paginated list with server-minted branded cursors, and single-object including null answers), a `withRateLimitRetry` pipeline helper that honors server-requested delays, and the `MIGRATION` activity type with its `MigrationActivity` variant. All additive — no existing API shape changes.
+- 7b68c7a: **Breaking**: the feed surfaces are fully replaced — same names, new contracts. `listActivity`, `listComboActivity`, `listPositions`, and `listComboPositions` now serve exact cursor pagination with automatic rate-limit retry and the `condition`-id vocabulary. `conditionId` filters validate the service's shared selector cap client-side: at most 20 distinct ids per request (case-insensitive dedupe first), so an oversized list fails typed instead of as a service 400. `listPositions` bundles the whole lifecycle behind `status` (`OPEN`/`REDEEMABLE`/`CLOSED`) with `redeemable`/`mergeable` flags and fee-exclusive entry economics on every row — `listClosedPositions` and `listMarketPositions` are removed (use `listPositions` with `status`/a `conditionId` anchor). Every windowed method takes one `window` option (`'full' | { start?, end? }`, epoch seconds or `Date`) replacing raw `start`/`end`. Money, size, price, and PnL fields normalize to `DecimalString` (the wire's JSON numbers are stringified without loss at their 6-decimal grain, matching the v1 SDK surface), `endDate` is a typed `IsoCalendarDateString`, and `ComboPositionStatus` gains `Redeemable` (sole-value filter, also tolerated on rows); the `Activity` union, `Position`, `ComboPosition`, and `ComboActivity` rows are strict and normalized (epoch ms, empty-string/999-sentinel absence as `undefined`, `assetId` canonical with deprecated `tokenId` alias). Combo activity rows carry `positionId` on every row while dropping `transactionAt`/`logIndex`/`moduleId`. Request vocabularies are exported enums: trade direction reuses `OrderSide` (the standalone `Side` type is removed), and `SortDirection`, `TradeFilterType`, `PositionFilterType`, `PositionSortBy`, `ComboPositionSortBy`, and `TipSide` join `PositionStatus`/`ComboPositionStatus`. On the secure client, `listPositions` always binds the authenticated wallet (the `user: null` opt-out is removed); list a market's holders through a public client instead.
+- 12935c4: **Breaking**: migrate `listMarketHolders` to its cursor-paginated `/v2` contract, using condition IDs, normalized holder fields, and optional position economics.
+- d64f383: **Breaking**: migrate open-interest and live-volume reads to their v2 contracts. Replace `listOpenInterest` with `fetchOpenInterest`, use condition and event identifiers, and expose cumulative taker volume explicitly.
+- 0df4f2b: **Breaking**: migrate `fetchPortfolioValue` to its `/v2` contract, returning one `PortfolioValue` with a decimal-string value and accepting `conditionIds` instead of the legacy `market` filter. Add `fetchUserStats` with decimal-string money, size, and PnL fields, and remove `fetchTradedMarketCount`; use `fetchUserStats().tradedMarketCount` for the exact distinct-market count. The accounting snapshot download remains available unchanged.
+- 454c772: **Breaking**: replace `fetchPriceHistory` with cursor-paginated `listPriceHistory`, using token IDs, strict time selections, second-based bucket widths, and normalized price points.
+- cb664fb: Add `fetchResolutions` for non-paginated resolution lifecycle lookups by question, condition, or event. Resolution rows normalize identity, lifecycle, oracle, payout, and finality fields, while unset wire sentinels become omitted SDK fields.
+- 7992375: **Breaking**: migrate trader leaderboard reads to the cursor-paginated v2 contract, add a separate by-wallet standing method, and add biggest-winner pagination with explicit market and Combo variants.
+- 7ed1af9: **Breaking**: `listTrades` is fully replaced — same name, new contract. It now serves exact continuation signals (`hasMore`/server-minted `nextCursor` — no page-size probing), re-sends the original filters with every page, has no offset vocabulary (`pageSize` default 100, max 1000 rejected-not-clamped), retries transient rate limits after the server-requested delay, and accepts partial `filterType`/`filterAmount` (the service fills the other half in). The `Trade` row is strict and normalized (numbers for `size`/`price`, epoch milliseconds, empty-string and unknown-sentinel absence as `undefined`). Following the service's naming remap, the request filter is `conditionId` (the wire's `condition`/`condition_id` — the old `market` key no longer exists upstream) and the row field parsed is `condition_id`. Bindings gain the reusable data envelope parsers (`dataPageSchema`, `dataEnvelopeSchema`) that turn the service's paginated envelope straight into the SDK page shape.
+- d320dfa: Add `fetchUserPnl` and `fetchUserVolume` with normalized decimal-string amounts, cumulative PnL metadata, shared time-window inputs, and authenticated-wallet defaults.
+
+### Patch Changes
+
+- 5bdc101: Expose the yearly builder-volume bucket as `BuilderVolumeInterval.Year` while preserving the wire value `all`.
+- b56a0a8: Normalize resolution timestamps, transaction metadata, and payout values into canonical SDK types.
+- 6e5c293: Expose question, groupItemTitle, sportsMarketType, line, and outcomes on combo leg markets returned by listComboPositions and listComboActivity.
+- e7882e8: Normalize protocol v2 market condition IDs for position and portfolio-value reads, share canonicalization in bindings, and clarify activity and trade history windows.
+- Updated dependencies [5bdc101]
+- Updated dependencies [b56a0a8]
+- Updated dependencies [6e3ae8d]
+- Updated dependencies [6e5c293]
+- Updated dependencies [8befd1f]
+- Updated dependencies [7b68c7a]
+- Updated dependencies [12935c4]
+- Updated dependencies [d64f383]
+- Updated dependencies [e7882e8]
+- Updated dependencies [0df4f2b]
+- Updated dependencies [454c772]
+- Updated dependencies [cb664fb]
+- Updated dependencies [7992375]
+- Updated dependencies [7ed1af9]
+- Updated dependencies [d320dfa]
+  - @polymarket/bindings@0.10.0
+
+## 0.9.0
+
+### Minor Changes
+
+- 8a26d28: Accept protocol-neutral `assetId` inputs when estimating, preparing, creating, and placing market and limit orders, infer Polymarket V2 routing from the structured position-ID namespace, and retain `tokenId` as a deprecated input alias.
+- 1fb4dd9: Add `fetchTradingApprovalsState` for reading a wallet's missing trading approvals without a signer or transaction workflow. Export the approval requirement types, and report malformed approval-check results as `UnexpectedResponseError` in both read and setup workflows.
+
+  Secure account read methods now reject invalid request values—including `null`, arrays, primitives, and `user: null`—with `UserInputError` instead of silently defaulting the wallet or throwing a raw error.
+
+- 4486dee: Expose each market's Combo eligibility status as `market.state.comboStatus`,
+  while passing newly introduced status values through as strings.
+- 74ad47b: Expose protocol versions on markets and events.
+- 01438a1: Remove legacy AMM-era fields that the API no longer returns: `marketMakerAddress`, `ammType`, `fpmmLive`, `volumeAmm`, `volume24hrAmm`, `volume1wkAmm`, `volume1moAmm`, `volume1yrAmm`, and `liquidityAmm` from the raw market schema, `liquidityAmm` from the raw event schema, `volumeAmm` from `MarketMetrics`, and `liquidityAmm` from `EventMetrics`. Also remove the internal `pagerDutyNotificationEnabled` market field and `requiresTranslation` from market, event, series, and tag models, and drop the `marketMakerAddresses` filter from `listMarkets`. Responses that still carry any of these fields keep parsing; the values are ignored.
+- 1a47d73: Return from `revokeSessionKey` once the session key is removed from the active-key registry instead of waiting for on-chain confirmation. The method now returns `Promise<void>`, and `RevokeSessionKeyResult` has been removed.
+
+### Patch Changes
+
+- 6558f22: Allow session-key authorization and revocation relayer submissions up to five minutes to accommodate synchronous validation and broadcast processing.
+- 663d79b: Preserve each team's `ordering` value on event and team-list responses.
+- Updated dependencies [8a26d28]
+- Updated dependencies [663d79b]
+- Updated dependencies [4486dee]
+- Updated dependencies [74ad47b]
+- Updated dependencies [01438a1]
+  - @polymarket/bindings@0.9.0
+
+## 0.8.1
+
+### Patch Changes
+
+- 4fa74dc: Fix session-key authorization expiry at 180 days and remove `validUntil` from the public request.
+
+## 0.8.0
+
+### Minor Changes
+
+- a8dba73: Expose pending Combo market status and avoid using pending markets when discovering live RFQ legs.
+- a1959b6: Add protocol-neutral `assetId` fields across CLOB reads, filters, and realtime events, and `conditionId` fields across CLOB reads and realtime events, while retaining deprecated `tokenId`, `tokenIds`, and `market` compatibility aliases.
+- 5c18246: Add protocol-neutral `assetId` and `conditionId` fields to Data API responses while retaining deprecated identifier aliases.
+- efbd77b: Support splitting, merging, and redeeming ordinary Polymarket V2 positions through the existing market position lifecycle APIs; allow position-ID redemption for binary, negative-risk, and Combo positions; and consistently name low-level CTF and Router transaction builders.
+- 851bff4: Include the PolyV2 binary and negative-risk modules in the protocol-neutral trading approval workflow.
+
+### Patch Changes
+
+- 2fd5cc5: Normalize empty live-volume market identifiers to null.
+- Updated dependencies [a8dba73]
+- Updated dependencies [a1959b6]
+- Updated dependencies [5c18246]
+- Updated dependencies [2fd5cc5]
+  - @polymarket/bindings@0.8.0
+
+## 0.7.0
+
+### Minor Changes
+
+- dda4398: Support filtering combo positions by one or multiple statuses.
+- d754986: Type notification payloads: `Notification` is now a discriminated union on the new `NotificationType` enum, `owner` is the branded `ApiKey`, and each notification kind carries a typed `payload` instead of `unknown`.
+
+  At runtime, notification kinds unknown to this SDK version are omitted from `fetchNotifications`, while recognized kinds whose payloads do not match their schemas reject the entire response.
+
+  Malformed combo condition IDs, question IDs, EVM addresses, and transaction hashes now report schema validation failures instead of escaping parsing as raw errors.
+
+- 6e4f59b: RateLimitError now exposes the Poly-RateLimit-\* state reported with a rejection, and clients accept an onRateLimitUpdate listener that receives per-signer rate-limit state (bucket, remaining, reset, tier, warning) whenever a response reports it.
+- e3d2fba: Accept position IDs when estimating, preparing, creating, and placing market and limit orders, routing position-backed orders through Exchange V3 signing and trading approvals while preserving token-ID order compatibility.
+- 0db340d: Add scoped Deposit Wallet session-key authorization, active-key fetching, revocation, and ordinary SecureClient support for authorized session signers. Known scopes have enum members, while newer scope strings remain accepted and preserved for forward compatibility. Authorizations default to `ALL` when scopes are omitted.
+
+### Patch Changes
+
+- aae2882: RequestRejectedError now exposes a typed restriction distinguishing matching-engine restarts (HTTP 425) from post-only mode (HTTP 503), its retryAfter value falls back to the retry_after_seconds response field when the Retry-After header is absent, and batch post-only rejections map to the post_only_mode order error code instead of unknown. The SDK still does not retry automatically.
+- f02c309: Keep unrestricted RFQ salt generation local and reject CLOB order salts that
+  cannot be serialized exactly as JavaScript numbers.
+- 625fc27: Accept order prices with insignificant floating-point drift from a valid tick-grid value, while continuing to reject materially off-grid prices. Calculate limit and market order amounts with exact fixed-point arithmetic to avoid unintended rounding caused by floating-point noise.
+- Updated dependencies [aae2882]
+- Updated dependencies [d754986]
+- Updated dependencies [ccd6ef4]
+- Updated dependencies [0db340d]
+  - @polymarket/bindings@0.7.0
+  - @polymarket/types@0.2.0
+
+## 0.6.0
+
+### Minor Changes
+
+- 050331b: Add requester-side combo RFQ support: `client.requestComboQuote(...)`, `client.acceptComboQuote(...)`, and `client.waitForComboFill(...)`, plus the `fetchRfqStatus` action in `@polymarket/client/actions`. Requests authenticate with the client's Builder API Key (`builderApiKey(...)` or `remoteBuilderSigning(...)`), and winning quotes are self-contained JSON values that may be persisted or routed between processes before acceptance. SELL quotes expose exact post-fee collateral proceeds as `netReceive`. Business outcomes such as no quotes, a maker declining, or an expired acceptance window are returned as result values; gateway rejections throw the new `RfqRequestRejectedError` with a classified `RfqRejectionCode`.
+- dd427eb: Expose PolyV2 position IDs alongside CTF token IDs on normalized market outcomes, preserve the deprecated market-level position ID array for compatibility, and introduce protocol-neutral condition ID APIs while retaining `CtfConditionId`, `CtfConditionIdSchema`, `OptionalCtfConditionIdSchema`, and `toCtfConditionId` as deprecated compatibility aliases.
+
+### Patch Changes
+
+- f2f1817: Return `null` when a token has no last trade.
+- Updated dependencies [f2f1817]
+- Updated dependencies [050331b]
+- Updated dependencies [dd427eb]
+  - @polymarket/bindings@0.6.0
+
+## 0.5.0
+
+### Minor Changes
+
+- fb81779: Add perps auto-cancel (dead man's switch) support. `PerpsSession.armAutoCancel` schedules a signed one-shot cancel-all at a future time (at least 5 seconds ahead), `disarmAutoCancel` clears the schedule without firing, and `fetchAutoCancelStatus` reads the account's auto-cancel status, including the deadline (`null` when unarmed) and daily trigger usage. Arming past the daily trigger limit is rejected with the new `AutoCancelDailyLimitError`.
+
+### Patch Changes
+
+- 93df9d5: Internal refactor: Exchange v3 order construction helpers now live in the exchange module. No behavior change.
+- f6d1542: Prevent Perps `placeOrder` from missing private order updates that arrive before the command acknowledgement. High-level placement now generates a client order ID when callers omit it.
+- Updated dependencies [fb81779]
+- Updated dependencies [4c56d7b]
+  - @polymarket/bindings@0.5.0
+
+## 0.4.0
+
+### Minor Changes
+
+- 5a6b56c: Cache market configuration, platform fees, and builder fee rates used to prepare repeated orders. If cached tick metadata rejects a limit or protected price, the SDK fetches current metadata and validates once more before returning the input error. Unprotected market orders now derive price, tick size, and exchange selection from one live order-book response. Order-book tick sizes are normalized to supported numeric values. `maxSpend` is now documented as an estimated all-in spend target based on recently resolved fees rather than a strict cap.
+
+### Patch Changes
+
+- 4911f43: Add Perps session support for adjusting isolated position margin.
+- Updated dependencies [2ba6be3]
+- Updated dependencies [5a6b56c]
+  - @polymarket/bindings@0.4.0
+
+## 0.3.0
+
+### Minor Changes
+
+- 0bb6a4b: Add typed 30-second and 60-second Chainlink TWAP realtime subscriptions.
+- 40dc38d: Add Perps account notifications support: `session.listNotifications()` with SDK-owned keyset pagination (including a `sinceSeq` backfill bound pinned across pages), `session.fetchUnreadNotificationsCount()`, `session.markNotificationsRead()` by ids or `upTo` a notification, and the `notifications` session WebSocket channel emitting typed `notification` events.
+
+### Patch Changes
+
+- ca595ec: listActivity now returns all activity types by default, including deposits and withdrawals. The endpoint excludes DEPOSIT and WITHDRAWAL rows unless excludeDepositsWithdrawals=false and strips both values from the type filter, so the SDK now always opts out and the type filter alone decides which rows come back. Previously those rows never appeared, even when requested explicitly.
+- 11afc3d: Validate Chainlink TWAP subscription input at the public subscribe boundary.
+- dbd6f53: Stop populating `Page.totalCount` from the per-response `count` on cursor-paginated endpoints (open orders, account trades, earnings, builder lists). That value was the current page's item count, not a total across all pages.
+- 5c56abd: RequestRejectedError and RateLimitError now expose retryAfter, populated from the Retry-After response header, so callers can honor server-provided backoff.
+- 2f02252: Deposit-wallet gasless and collateral-return submits now self-heal nonce mismatches: when the relayer rejects a batch with the on-chain nonce in the error, the batch is re-signed with that nonce and resubmitted once.
+- c092352: Migrate Perps fills pagination to the API-native cursor and add a fills time sort direction option.
+- 4ddf659: Expose the granular Combos RFQ quote-validation error codes.
+- Updated dependencies [0bb6a4b]
+- Updated dependencies [28813f6]
+- Updated dependencies [7463938]
+- Updated dependencies [40dc38d]
+- Updated dependencies [c092352]
+- Updated dependencies [4ddf659]
+  - @polymarket/bindings@0.3.0
+
+## 0.3.0-beta.1
+
+### Minor Changes
+
+- 40dc38d: Add Perps account notifications support: `session.listNotifications()` with SDK-owned keyset pagination (including a `sinceSeq` backfill bound pinned across pages), `session.fetchUnreadNotificationsCount()`, `session.markNotificationsRead()` by ids or `upTo` a notification, and the `notifications` session WebSocket channel emitting typed `notification` events.
+
+### Patch Changes
+
+- 2f02252: Deposit-wallet gasless and collateral-return submits now self-heal nonce mismatches: when the relayer rejects a batch with the on-chain nonce in the error, the batch is re-signed with that nonce and resubmitted once.
+- c092352: Migrate Perps fills pagination to the API-native cursor and add a fills time sort direction option.
+- Updated dependencies [40dc38d]
+- Updated dependencies [c092352]
+  - @polymarket/bindings@0.3.0-beta.1
+
+## 0.3.0-beta.0
+
+### Minor Changes
+
+- 0bb6a4b: Add typed 30-second and 60-second Chainlink TWAP realtime subscriptions.
+
+### Patch Changes
+
+- dbd6f53: Stop populating `Page.totalCount` from the per-response `count` on cursor-paginated endpoints (open orders, account trades, earnings, builder lists). That value was the current page's item count, not a total across all pages.
+- 5c56abd: RequestRejectedError and RateLimitError now expose retryAfter, populated from the Retry-After response header, so callers can honor server-provided backoff.
+- 4ddf659: Expose the granular Combos RFQ quote-validation error codes.
+- Updated dependencies [0bb6a4b]
+- Updated dependencies [28813f6]
+- Updated dependencies [7463938]
+- Updated dependencies [4ddf659]
+  - @polymarket/bindings@0.3.0-beta.0
+
+## 0.2.0
+
+### Minor Changes
+
+- e3aafe4: Add `isolatedOnly` to `PerpsInstrument`, indicating whether the instrument supports only isolated margin.
+- 3ae2f13: Add `client.waitForOrderFillSettlement(order)`, which waits until every fill listed in an order response reaches a terminal settlement outcome and returns the settlement transaction hashes. Matched order responses are no longer guaranteed to include `transactionsHashes`; use this method to obtain hashes reliably. `ClobTrade.status` is now typed as the shared `TradeStatus` enum instead of a bare string.
+
+### Patch Changes
+
+- dd8733f: Add Collateral Return plan/execute support: `planCollateralReturn` returns an inspectable plan and `executeCollateralReturnPlan` signs and submits the plan's exact Router call for Deposit Wallet, Safe, and Proxy accounts, returning a transaction handle.
+- 04ed7b2: Fix offset-paginated list methods silently stopping after the first page when `pageSize` reached the server's limit cap.
+
+  - `pageSize` is now validated per endpoint and rejects values above the cap with `UserInputError`: 500 for `listPositions`, `listActivity`, `listMarketPositions`; 100 for `listTags`, `listComments`, `listCommentsByUserAddress`, `listTeams`, `listMarketClarifications`; 50 for `listClosedPositions`, `listBuilderLeaderboard`, `listTraderLeaderboard`, `listSeries`; 10,000 for `listTrades`.
+  - Requests fetch exactly `pageSize` rows instead of probing with `pageSize + 1`. A full page reports `hasMore: true`; when a collection ends exactly on a page boundary, the final page is empty.
+
+- 9b13de2: Accept withdrawal statuses introduced after a client release instead of failing the response parse. Known statuses now live in the `PerpsKnownWithdrawalStatus` enum, which adds the `failed` status the withdrawal contract already includes, and `PerpsWithdrawalStatus` is widened so unrecognized statuses flow through as plain strings.
+- e628321: Reject limit and protected market order prices that are not a multiple of the market tick size. Previously, prices within the tick's decimal allowance but off the tick grid (for example `0.007` on a `0.005` tick market) passed client-side validation and were rejected by the exchange after signing.
+- Updated dependencies [dd8733f]
+- Updated dependencies [e3aafe4]
+- Updated dependencies [d29c369]
+- Updated dependencies [9b13de2]
+- Updated dependencies [3ae2f13]
+  - @polymarket/bindings@0.2.0
+
+## 0.1.0
+
+### Minor Changes
+
+- 7c76b5a: Add confirmed combo trade broadcasts to RFQ quoter sessions.
+- 15597df: Bootstrap beta prerelease publishing.
+- de391df: Graduate the SDK to the stable 0.x release line, mark Perps APIs as experimental, and remove deprecated compatibility APIs.
+- 1903b61: Expose `parentEventId` on `Event` so child events such as sports "more markets" events link back to their parent event. The value is normalized to the same `EventId` type as `Event.id`.
+- 9b0e018: Add reduce-only support for normal Perps orders.
+- b20773a: Add Perps SDK support with public market data reads/subscriptions, credential-backed private sessions, account reads, trading commands, approvals, deposits, withdrawals, and Perps bindings.
+
+### Patch Changes
+
+- 369cd11: Default `createSecureClient` to the signer's current deterministic Deposit Wallet when no wallet is provided, deploying it when needed while preserving explicit EOA and existing wallet behavior.
+- 369cd11: Make `setupTradingApprovals` idempotent by checking existing ERC-20 allowances and ERC-1155 operator approvals before submitting transactions. The method now waits internally and returns a deprecated compatibility handle for callers that still call `wait()`.
+- 77fdb6e: Document order book level ordering and custom market subscription events.
+- dccac9d: Add a `conditionId` alias to the CLOB order book, open order, trade, and builder trade shapes, carrying the same value as `market`, and mark `market` deprecated. `market` on these types holds a CTF condition id; `conditionId` names it consistently with the rest of the SDK. Additive and non-breaking: both fields are emitted.
+- 2e091ef: Support CLOB order tick sizes `0.005` and `0.0025`.
+- 7649a5e: Parse Combo lifecycle activity from the canonical API `type` field instead of the legacy `side` verb.
+- 9233e69: Add Combo activity pagination with normalized activity types, server-cursor Combo position pagination, Combo position sync request fields, and Combo position outcome/redeemable fields.
+- b2e487f: Normalize Combo data field names to use wallet, amount, and payout consistently with the existing activity and portfolio surfaces, and brand Combo activity row IDs.
+- 84335f8: Add `listComboMarkets` for fetching Combo market catalog entries with typed response bindings and SDK-owned pagination.
+- d134853: Add support for redeeming full combo position balances by position ID.
+- b982460: Add `RESOLVED_PARTIAL` to `ComboPositionStatus`. The data API emits this terminal status for combo positions that fully resolve at a fractional on-chain payout (e.g. a voided/50-50 leg). Without it, the zod schema rejected the response and combo-positions parsing failed.
+- 6516128: Add support for splitting and merging combo positions by legs, including `amount: 'max'` for combo merge.
+- ebd7b86: Point Combos RFQ endpoints at the new production domains: `combos-rfq-api.polymarket.com` (REST) and `combos-rfq-gateway-quoter.polymarket.com` (quoter WebSocket).
+- 02ad8fa: Add distinct CTF and combo condition ID brands, keeping the previous condition ID exports as deprecated CTF aliases.
+- 638bcc9: Default new Perps sessions to a one-week credential expiry when no custom `expiresIn` is provided.
+- b03e211: Map unknown builder fee responses to `UserInputError`.
+- d00d70f: Accept copied `/event/{slug}` market URLs when fetching markets by URL.
+- c188742: Default `listEvents` to open events when `closed` is omitted.
+- 04bbc46: Align wallet action error unions with gasless transaction failure paths for non-EOA accounts.
+- 3b9ef1d: Handle legacy multi-outcome markets in market responses. `listMarkets` now omits markets that cannot be represented by the binary `Market` model instead of aborting the whole page, and `fetchMarket` fails with a typed `UnexpectedResponseError` instead of a raw `TypeError`.
+- 72dbe7b: Normalize empty-string decimal fields from order and trade responses: order `makingAmount`/`takingAmount` map `""` to `"0"`, and maker order `feeRateBps` maps `""` to `null`, matching py-sdk behavior.
+- ba70f93: Surface missing trade and position market icons as null instead of an empty string.
+- a2688db: Add `maxPrice` and `minPrice` protection fields to market order requests.
+- 6082a3e: Make pagination request cursor inputs infer the branded pagination cursor type.
+- 1182ebb: Improve the Perps public SDK surface with explicit request types, root exports, and TSDoc examples.
+- d230d3a: Preserve `groupItemTitle` on normalized market responses.
+- 700acc9: Publish `expectPrivateKey` from `@polymarket/types` and republish the client against the corrected types package.
+- e8c3230: Export `PriceHistoryInterval` from `@polymarket/client`.
+- d731b5b: Add `listMarketClarifications` for reading market clarification text, with SDK-owned offset pagination and market/event/state/question/tx filters.
+- 8790a22: Normalize empty-string optional decimal fields on streamed market and trade events to null (for example a trade's `feeRateBps` and a price change's `bestBid`/`bestAsk`), so consumers never receive `''` where a decimal string or null is expected.
+- e8abc2a: Return branded decimal string types from CLOB price read helpers instead of widening validated decimal strings to plain strings.
+- ea844f3: Strengthen CLOB batch price read result types so midpoint, price, and spread lookups are keyed by `TokenId`. `fetchPrices` now returns partial `OrderSide` records containing decimal strings, while `fetchMidpoints` and `fetchSpreads` return token ID keyed decimal strings.
+- 66fb8a8: Drop unknown WebSocket frames without closing the connection. Frames that fail to parse — new frame types, malformed known frames, or known frames carrying values the SDK does not model — are silently discarded on every stream, and subsequent events keep flowing. In particular, the RFQ quoter session no longer fails with `TransportError` on an unrecognized or unreadable frame: the frame is dropped, the session stays open, and a caller waiting on an unreadable acknowledgement fails through its acknowledgement timeout. Well-formed but uncorrelated RFQ errors still fail the session.
+- e60eefc: Type CLOB cancellation results with a branded `OrderId`. `CancelOrdersResponse` now exposes `canceled` as `OrderId[]` and keys `notCanceled` by `OrderId` across `cancelOrder`, `cancelOrders`, `cancelMarketOrders`, and `cancelAll`. Runtime values and wire shapes are unchanged; the new `OrderId` type, `toOrderId`, and `OrderIdSchema` are exported from `@polymarket/bindings`.
+- 0f25328: Remove the unreleased `QUOTE_VALIDATION_TIMEOUT_INTERNAL` member from `RfqKnownErrorCode`. The gateway now reports quote-validation timeouts as `SERVICE_UNAVAILABLE`; gateways still emitting the internal code during rollout flow through the open `RfqErrorCode` type as plain strings.
+- 55d0ecf: Allow GTD limit order expirations exactly 60 seconds in the future and document using an additional latency buffer.
+- c6e0285: Parse RFQ quote rejections that use the `SUBMISSION_WINDOW_CLOSED` gateway error code.
+- 6e0f923: Add repository metadata required for npm trusted publishing provenance validation.
+- 3d4b073: Require GTD limit order expirations to be at least 3 minutes in the future.
+- d1fcc5f: Harden RFQ quoter WebSocket handling for unknown and malformed inbound frames.
+- 3bbdb26: Restore account trade listing to the legacy endpoint and parse legacy epoch-seconds timestamps correctly.
+- f5fa4fd: Clean up Deposit Wallet deployment after the beacon factory upgrade by preserving deployed legacy UUPS wallets and defaulting new deployments to beacon wallets.
+- 766d709: Fix legacy Proxy wallet gasless execution and add live Safe and Proxy wallet coverage.
+- e7a8858: Drop unsupported tag/series request params and response fields, and normalize related tag id fields to camelCase.
+- 6516128: Add `listComboPositions` for fetching combo positions with typed response bindings and SDK-owned pagination.
+- b0181de: Mark public action entry point helpers as low-level functions and point consumers to client instance APIs.
+- 0dc6339: Declare Node.js 24 as the minimum supported runtime for published SDK packages.
+- d8f3aed: Align Perps session account pagination cursor decode failures with the rest of the SDK by throwing `UserInputError`.
+- 4c7ac45: Add `session.fetchStats()` for Perps account stats.
+- cf34be0: Add Perps session support for cancelling all open orders.
+- 81114f9: Normalize Perps trading commands to match the rest of the SDK: place and modify orders now use `OrderSide`, place, modify, and cancel return per-item acknowledgement unions, and leverage and margin updates return `void` while throwing `RequestRejectedError` when rejected. Clean up the `PerpsInstrument` type, including a typed `PerpsFundingInterval` string format.
+- 0f8cb2b: Fix Perps session command signing to match backend MessagePack hashes and surface top-level WebSocket error acknowledgements as request rejections.
+- 1f27825: Remove Perps modify order methods from the session API, rename Perps cancel order return types from acknowledgements to results, and stop exporting raw response schema names from Perps and CLOB bindings.
+- 578890d: Remove the degenerate `instrumentType` filter from `fetchPerpsInstruments` requests.
+- d28b989: Remove unsupported Perps margin updates and return the leverage update result.
+- e2ce4f9: Tighten Perps order request input types and validation for time-in-force-specific price and post-only constraints.
+- 91c9e63: Normalize Perps order reads to expose `side: OrderSide` instead of upstream `buy`.
+- fc9d5c7: Make Perps session `placeOrder` wait for the first matching orders update, rename ack-only batch placement to `postOrders`, normalize Perps order entity ids as `id`, and type order statuses with `PerpsOrderStatus`.
+- b434b43: Support Perps fills frames containing a list of fills.
+- 5708113: Forward repeated Perps balance and portfolio ticks instead of deduplicating unchanged payloads.
+- a282c35: Add Perps TP/SL order metadata, lifecycle events, unified `placeOrder` TP/SL placement, and `placePositionTpSl` with position-side inference. Remove unsupported Perps margin updates and return the leverage update result.
+- 1e707cd: Support Perps trades frames containing a list of trades.
+- 9ac8027: Update the production RFQ quoter WebSocket URL.
+- e1e5808: Add maker-side RFQ WebSocket support.
+- 3a8d59a: chore: configure packages for public beta release.
+- 5b81c3d: Resolve closed markets when preparing market position redemptions.
+- e8584aa: Remove the retired CLOB v1 Neg Risk Adapter from `setupTradingApprovals` and `prepareTradingApprovals`. The setup flow no longer grants a MAX collateral allowance or ERC-1155 approval-for-all to the retired adapter; all current exchanges, collateral adapters, and the auto-redeem operator remain approved.
+- aeec7ff: Clear cached RFQ quoter sessions immediately after unexpected websocket disconnects.
+- 90e76a4: Support new Combos RFQ websocket error codes for balance, allowance, and pre-execution reservation failures.
+- 30aef9d: Expose RFQ error identifiers and signature-validation error codes to quoter clients.
+- 14d50f2: Update the RFQ quoter WebSocket URL.
+- b57a13a: Define RFQ quoter WebSocket behavior for uncorrelated error frames.
+- e41ec20: Retry rejected JSON-RPC `eth_call` batches by recursively splitting them into smaller batches.
+- 9a1f0e5: Reject whitespace-only search queries and trim leading or trailing search input.
+- d37bde4: Add a typed `SearchSort` enum for supported search sort fields and reject unsupported search sort values.
+- 11818ef: Omit market filters from broad user websocket subscriptions so all-market streams receive trade events.
+- feead94: Model activity trades as an `isCombo`-discriminated union so Combo trade activity rows parse without binary market metadata.
+- d045298: Allow activity market icons to be null when the Data API returns sparse historical rows without an icon URL.
+- 50d56ce: Harden RFQ quoter sessions:
+
+  - Unknown error codes no longer fail the session; they flow through as plain strings via the now-open `RfqErrorCode` type (known codes moved to `RfqKnownErrorCode`).
+  - Unsolicited connection loss now fails in-flight operations and the session iterator with the new `ConnectionLostError`, carrying the close `code` and `reason`.
+
+- c056ec6: Wait for gasless relayer transactions to reach confirmed state before resolving transaction handles.
+- d144ca9: chore: empty changeset to test new release workflow
+- 2067f38: Allow `createSecureClient` authentication to accept an explicit `nonce: 0`, matching the documented default nonce behavior.
+- Updated dependencies [7c76b5a]
+- Updated dependencies [77fdb6e]
+- Updated dependencies [dccac9d]
+- Updated dependencies [2e091ef]
+- Updated dependencies [7649a5e]
+- Updated dependencies [9233e69]
+- Updated dependencies [b2e487f]
+- Updated dependencies [84335f8]
+- Updated dependencies [b982460]
+- Updated dependencies [02ad8fa]
+- Updated dependencies [15597df]
+- Updated dependencies [3b9ef1d]
+- Updated dependencies [72dbe7b]
+- Updated dependencies [ba70f93]
+- Updated dependencies [6082a3e]
+- Updated dependencies [d230d3a]
+- Updated dependencies [700acc9]
+- Updated dependencies [d731b5b]
+- Updated dependencies [8790a22]
+- Updated dependencies [ea844f3]
+- Updated dependencies [7633fad]
+- Updated dependencies [de391df]
+- Updated dependencies [e60eefc]
+- Updated dependencies [0f25328]
+- Updated dependencies [1903b61]
+- Updated dependencies [c6e0285]
+- Updated dependencies [6e0f923]
+- Updated dependencies [3bbdb26]
+- Updated dependencies [e7a8858]
+- Updated dependencies [6516128]
+- Updated dependencies [0dc6339]
+- Updated dependencies [4c7ac45]
+- Updated dependencies [cf34be0]
+- Updated dependencies [81114f9]
+- Updated dependencies [330af57]
+- Updated dependencies [1f27825]
+- Updated dependencies [d28b989]
+- Updated dependencies [e2ce4f9]
+- Updated dependencies [91c9e63]
+- Updated dependencies [7f7eefe]
+- Updated dependencies [b20773a]
+- Updated dependencies [b434b43]
+- Updated dependencies [a282c35]
+- Updated dependencies [1e707cd]
+- Updated dependencies [e1e5808]
+- Updated dependencies [3a8d59a]
+- Updated dependencies [0809105]
+- Updated dependencies [90e76a4]
+- Updated dependencies [feead94]
+- Updated dependencies [d045298]
+- Updated dependencies [50d56ce]
+- Updated dependencies [d144ca9]
+  - @polymarket/bindings@0.1.0
+  - @polymarket/types@0.1.0
+
+## 0.1.0-beta.18
+
+### Patch Changes
+
+- 66fb8a8: Drop unknown WebSocket frames without closing the connection. Frames that fail to parse — new frame types, malformed known frames, or known frames carrying values the SDK does not model — are silently discarded on every stream, and subsequent events keep flowing. In particular, the RFQ quoter session no longer fails with `TransportError` on an unrecognized or unreadable frame: the frame is dropped, the session stays open, and a caller waiting on an unreadable acknowledgement fails through its acknowledgement timeout. Well-formed but uncorrelated RFQ errors still fail the session.
+- e8584aa: Remove the retired CLOB v1 Neg Risk Adapter from `setupTradingApprovals` and `prepareTradingApprovals`. The setup flow no longer grants a MAX collateral allowance or ERC-1155 approval-for-all to the retired adapter; all current exchanges, collateral adapters, and the auto-redeem operator remain approved.
+- Updated dependencies [7633fad]
+  - @polymarket/bindings@0.1.0-beta.16
+
+## 0.1.0-beta.17
+
+### Patch Changes
+
+- 8790a22: Normalize empty-string optional decimal fields on streamed market and trade events to null (for example a trade's `feeRateBps` and a price change's `bestBid`/`bestAsk`), so consumers never receive `''` where a decimal string or null is expected.
+- e8abc2a: Return branded decimal string types from CLOB price read helpers instead of widening validated decimal strings to plain strings.
+- ea844f3: Strengthen CLOB batch price read result types so midpoint, price, and spread lookups are keyed by `TokenId`. `fetchPrices` now returns partial `OrderSide` records containing decimal strings, while `fetchMidpoints` and `fetchSpreads` return token ID keyed decimal strings.
+- 0f25328: Remove the unreleased `QUOTE_VALIDATION_TIMEOUT_INTERNAL` member from `RfqKnownErrorCode`. The gateway now reports quote-validation timeouts as `SERVICE_UNAVAILABLE`; gateways still emitting the internal code during rollout flow through the open `RfqErrorCode` type as plain strings.
+- b434b43: Support Perps fills frames containing a list of fills.
+- 1e707cd: Support Perps trades frames containing a list of trades.
+- 50d56ce: Harden RFQ quoter sessions:
+
+  - Unknown error codes no longer fail the session; they flow through as plain strings via the now-open `RfqErrorCode` type (known codes moved to `RfqKnownErrorCode`).
+  - Unsolicited connection loss now fails in-flight operations and the session iterator with the new `ConnectionLostError`, carrying the close `code` and `reason`.
+
+- Updated dependencies [8790a22]
+- Updated dependencies [ea844f3]
+- Updated dependencies [0f25328]
+- Updated dependencies [b434b43]
+- Updated dependencies [1e707cd]
+- Updated dependencies [50d56ce]
+  - @polymarket/bindings@0.1.0-beta.15
+
+## 0.1.0-beta.16
+
+### Patch Changes
+
+- b982460: Add `RESOLVED_PARTIAL` to `ComboPositionStatus`. The data API emits this terminal status for combo positions that fully resolve at a fractional on-chain payout (e.g. a voided/50-50 leg). Without it, the zod schema rejected the response and combo-positions parsing failed.
+- Updated dependencies [b982460]
+  - @polymarket/bindings@0.1.0-beta.14
+
+## 0.1.0-beta.15
+
+### Patch Changes
+
+- 7649a5e: Parse Combo lifecycle activity from the canonical API `type` field instead of the legacy `side` verb.
+- Updated dependencies [7649a5e]
+  - @polymarket/bindings@0.1.0-beta.13
+
+## 0.1.0-beta.14
+
+### Patch Changes
+
+- 9233e69: Add Combo activity pagination with normalized activity types, server-cursor Combo position pagination, Combo position sync request fields, and Combo position outcome/redeemable fields.
+- b2e487f: Normalize Combo data field names to use wallet, amount, and payout consistently with the existing activity and portfolio surfaces, and brand Combo activity row IDs.
+- Updated dependencies [9233e69]
+- Updated dependencies [b2e487f]
+  - @polymarket/bindings@0.1.0-beta.12
+
+## 0.1.0-beta.13
+
+### Minor Changes
+
+- 9b0e018: Add reduce-only support for normal Perps orders.
+
+### Patch Changes
+
+- 1182ebb: Improve the Perps public SDK surface with explicit request types, root exports, and TSDoc examples.
+- d731b5b: Add `listMarketClarifications` for reading market clarification text, with SDK-owned offset pagination and market/event/state/question/tx filters.
+- 766d709: Fix legacy Proxy wallet gasless execution and add live Safe and Proxy wallet coverage.
+- d8f3aed: Align Perps session account pagination cursor decode failures with the rest of the SDK by throwing `UserInputError`.
+- cf34be0: Add Perps session support for cancelling all open orders.
+- 578890d: Remove the degenerate `instrumentType` filter from `fetchPerpsInstruments` requests.
+- 5b81c3d: Resolve closed markets when preparing market position redemptions.
+- c056ec6: Wait for gasless relayer transactions to reach confirmed state before resolving transaction handles.
+- Updated dependencies [d731b5b]
+- Updated dependencies [cf34be0]
+  - @polymarket/bindings@0.1.0-beta.11
+
+## 0.1.0-beta.12
+
+### Patch Changes
+
+- 3d4b073: Require GTD limit order expirations to be at least 3 minutes in the future.
+- 4c7ac45: Add `session.fetchStats()` for Perps account stats.
+- a282c35: Add Perps TP/SL order metadata, lifecycle events, unified `placeOrder` TP/SL placement, and `placePositionTpSl` with position-side inference. Remove unsupported Perps margin updates and return the leverage update result.
+- Updated dependencies [4c7ac45]
+- Updated dependencies [a282c35]
+  - @polymarket/bindings@0.1.0-beta.10
+
+## 0.1.0-beta.11
+
+### Patch Changes
+
+- 2e091ef: Support CLOB order tick sizes `0.005` and `0.0025`.
+- 6082a3e: Make pagination request cursor inputs infer the branded pagination cursor type.
+- d28b989: Remove unsupported Perps margin updates and return the leverage update result.
+- 91c9e63: Normalize Perps order reads to expose `side: OrderSide` instead of upstream `buy`.
+- Updated dependencies [2e091ef]
+- Updated dependencies [6082a3e]
+- Updated dependencies [d28b989]
+- Updated dependencies [91c9e63]
+  - @polymarket/bindings@0.1.0-beta.9
+
+## 0.1.0-beta.10
+
+### Patch Changes
+
+- f5fa4fd: Clean up Deposit Wallet deployment after the beacon factory upgrade by preserving deployed legacy UUPS wallets and defaulting new deployments to beacon wallets.
+
+## 0.1.0-beta.9
+
+### Patch Changes
+
+- 638bcc9: Default new Perps sessions to a one-week credential expiry when no custom `expiresIn` is provided.
+- d230d3a: Preserve `groupItemTitle` on normalized market responses.
+- 700acc9: Publish `expectPrivateKey` from `@polymarket/types` and republish the client against the corrected types package.
+- e8c3230: Export `PriceHistoryInterval` from `@polymarket/client`.
+- 81114f9: Normalize Perps trading commands to match the rest of the SDK: place and modify orders now use `OrderSide`, place, modify, and cancel return per-item acknowledgement unions, and leverage and margin updates return `void` while throwing `RequestRejectedError` when rejected. Clean up the `PerpsInstrument` type, including a typed `PerpsFundingInterval` string format.
+- 0f8cb2b: Fix Perps session command signing to match backend MessagePack hashes and surface top-level WebSocket error acknowledgements as request rejections.
+- 1f27825: Remove Perps modify order methods from the session API, rename Perps cancel order return types from acknowledgements to results, and stop exporting raw response schema names from Perps and CLOB bindings.
+- e2ce4f9: Tighten Perps order request input types and validation for time-in-force-specific price and post-only constraints.
+- fc9d5c7: Make Perps session `placeOrder` wait for the first matching orders update, rename ack-only batch placement to `postOrders`, normalize Perps order entity ids as `id`, and type order statuses with `PerpsOrderStatus`.
+- 5708113: Forward repeated Perps balance and portfolio ticks instead of deduplicating unchanged payloads.
+- d37bde4: Add a typed `SearchSort` enum for supported search sort fields and reject unsupported search sort values.
+- Updated dependencies [d230d3a]
+- Updated dependencies [700acc9]
+- Updated dependencies [81114f9]
+- Updated dependencies [1f27825]
+- Updated dependencies [e2ce4f9]
+- Updated dependencies [7f7eefe]
+  - @polymarket/bindings@0.1.0-beta.8
+  - @polymarket/types@0.1.0-beta.4
+
+## 0.1.0-beta.8
+
+### Minor Changes
+
+- 7c76b5a: Add confirmed combo trade broadcasts to RFQ quoter sessions.
+- b20773a: Add Perps SDK support with public market data reads/subscriptions, credential-backed private sessions, account reads, trading commands, approvals, deposits, withdrawals, and Perps bindings.
+
+### Patch Changes
+
+- 30aef9d: Expose RFQ error identifiers and signature-validation error codes to quoter clients.
+- Updated dependencies [7c76b5a]
+- Updated dependencies [330af57]
+- Updated dependencies [b20773a]
+  - @polymarket/bindings@0.1.0-beta.7
+
+## 0.1.0-beta.7
+
+### Minor Changes
+
+- 1903b61: Expose `parentEventId` on `Event` so child events such as sports "more markets" events link back to their parent event. The value is normalized to the same `EventId` type as `Event.id`.
+
+### Patch Changes
+
+- 3b9ef1d: Handle legacy multi-outcome markets in market responses. `listMarkets` now omits markets that cannot be represented by the binary `Market` model instead of aborting the whole page, and `fetchMarket` fails with a typed `UnexpectedResponseError` instead of a raw `TypeError`.
+- 72dbe7b: Normalize empty-string decimal fields from order and trade responses: order `makingAmount`/`takingAmount` map `""` to `"0"`, and maker order `feeRateBps` maps `""` to `null`, matching py-sdk behavior.
+- ba70f93: Surface missing trade and position market icons as null instead of an empty string.
+- a2688db: Add `maxPrice` and `minPrice` protection fields to market order requests.
+- 90e76a4: Support new Combos RFQ websocket error codes for balance, allowance, and pre-execution reservation failures.
+- e41ec20: Retry rejected JSON-RPC `eth_call` batches by recursively splitting them into smaller batches.
+- 11818ef: Omit market filters from broad user websocket subscriptions so all-market streams receive trade events.
+- feead94: Model activity trades as an `isCombo`-discriminated union so Combo trade activity rows parse without binary market metadata.
+- Updated dependencies [3b9ef1d]
+- Updated dependencies [72dbe7b]
+- Updated dependencies [ba70f93]
+- Updated dependencies [1903b61]
+- Updated dependencies [90e76a4]
+- Updated dependencies [feead94]
+  - @polymarket/bindings@0.1.0-beta.6
+
+## 0.1.0-beta.6
+
+### Patch Changes
+
+- ebd7b86: Point Combos RFQ endpoints at the new production domains: `combos-rfq-api.polymarket.com` (REST) and `combos-rfq-gateway-quoter.polymarket.com` (quoter WebSocket).
+
+## 0.1.0-beta.5
+
+### Patch Changes
+
+- 84335f8: Add `listComboMarkets` for fetching Combo market catalog entries with typed response bindings and SDK-owned pagination.
+- c6e0285: Parse RFQ quote rejections that use the `SUBMISSION_WINDOW_CLOSED` gateway error code.
+- Updated dependencies [84335f8]
+- Updated dependencies [c6e0285]
+  - @polymarket/bindings@0.1.0-beta.5
+
+## 0.1.0-beta.4
+
+### Patch Changes
+
+- 02ad8fa: Add distinct CTF and combo condition ID brands, keeping the previous condition ID exports as deprecated CTF aliases.
+- 9ac8027: Update the production RFQ quoter WebSocket URL.
+- 9a1f0e5: Reject whitespace-only search queries and trim leading or trailing search input.
+- Updated dependencies [02ad8fa]
+- Updated dependencies [0809105]
+  - @polymarket/bindings@0.1.0-beta.4
+
+## 0.1.0-beta.3
+
+### Patch Changes
+
+- 369cd11: Default `createSecureClient` to the authenticated signer's current deterministic Deposit Wallet when no wallet is provided. The client now derives the current Deposit Wallet at runtime, deploys it when needed, and preserves explicit EOA and existing wallet behavior.
+- 369cd11: Make `setupTradingApprovals` idempotent by checking existing ERC-20 allowances and ERC-1155 operator approvals before submitting transactions. The method now waits internally and returns a deprecated compatibility handle for callers that still call `wait()`.
+- 77fdb6e: Document order book level ordering and custom market subscription events.
+- d134853: Add support for redeeming full combo position balances by position ID.
+- 6516128: Add support for splitting and merging combo positions by legs, including `amount: 'max'` for combo merge.
+- b03e211: Map unknown builder fee responses to `UserInputError`.
+- d00d70f: Accept copied `/event/{slug}` market URLs when fetching markets by URL.
+- c188742: Default `listEvents` to open events when `closed` is omitted.
+- 04bbc46: Align wallet action error unions with gasless transaction failure paths for non-EOA accounts.
+- 55d0ecf: Allow GTD limit order expirations exactly 60 seconds in the future and document using an additional latency buffer.
+- 6e0f923: Add repository metadata required for npm trusted publishing provenance validation.
+- d1fcc5f: Harden RFQ quoter WebSocket handling for unknown and malformed inbound frames.
+- 3bbdb26: Restore account trade listing to the legacy endpoint and parse legacy epoch-seconds timestamps correctly.
+- e7a8858: Drop unsupported tag/series request params and response fields, and normalize related tag id fields to camelCase.
+- 6516128: Add `listComboPositions` for fetching combo positions with typed response bindings and SDK-owned pagination.
+- b0181de: Mark public action entry point helpers as low-level functions and point consumers to client instance APIs.
+- 0dc6339: Declare Node.js 24 as the minimum supported runtime for published SDK packages.
+- e1e5808: Add maker-side RFQ WebSocket support.
+- aeec7ff: Clear cached RFQ quoter sessions immediately after unexpected websocket disconnects.
+- 14d50f2: Update the RFQ quoter WebSocket URL.
+- b57a13a: Define RFQ quoter WebSocket behavior for uncorrelated error frames.
+- d045298: Allow activity market icons to be null when the Data API returns sparse historical rows without an icon URL.
+- 2067f38: Allow `createSecureClient` authentication to accept an explicit `nonce: 0`, matching the documented default nonce behavior.
+- Updated dependencies [77fdb6e]
+- Updated dependencies [6e0f923]
+- Updated dependencies [3bbdb26]
+- Updated dependencies [e7a8858]
+- Updated dependencies [6516128]
+- Updated dependencies [0dc6339]
+- Updated dependencies [e1e5808]
+- Updated dependencies [d045298]
+  - @polymarket/bindings@0.1.0-beta.3
+  - @polymarket/types@0.1.0-beta.3
+
+## 0.1.0-beta.2
+
+### Patch Changes
+
+- 3a8d59a: chore: configure packages for public beta release.
+- Updated dependencies [3a8d59a]
+  - @polymarket/bindings@0.1.0-beta.2
+  - @polymarket/types@0.1.0-beta.2
+
+## 0.1.0-beta.1
+
+### Patch Changes
+
+- d144ca9: chore: empty changeset to test new release workflow
+- Updated dependencies [d144ca9]
+  - @polymarket/bindings@0.1.0-beta.1
+  - @polymarket/types@0.1.0-beta.1
+
+## 0.1.0-beta.0
+
+### Minor Changes
+
+- 15597df: Bootstrap beta prerelease publishing.
+
+### Patch Changes
+
+- Updated dependencies [15597df]
+  - @polymarket/bindings@0.1.0-beta.0
+  - @polymarket/types@0.1.0-beta.0

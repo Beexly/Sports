@@ -1,0 +1,106 @@
+{
+  "name": "@polymarket/client",
+  "version": "0.14.0",
+  "description": "The Polymarket TypeScript client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Polymarket/ts-sdk",
+    "directory": "packages/client"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    },
+    "./actions": {
+      "types": "./dist/actions/index.d.ts",
+      "default": "./dist/actions/index.js"
+    },
+    "./ethers-v5": {
+      "types": "./dist/ethers-v5.d.ts",
+      "default": "./dist/ethers-v5.js"
+    },
+    "./privy": {
+      "types": "./dist/privy.d.ts",
+      "default": "./dist/privy.js"
+    },
+    "./viem": {
+      "types": "./dist/viem.d.ts",
+      "default": "./dist/viem.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "node": [
+        "./dist/node.d.ts"
+      ],
+      "actions": [
+        "./dist/actions/index.d.ts"
+      ],
+      "ethers-v5": [
+        "./dist/ethers-v5.d.ts"
+      ],
+      "privy": [
+        "./dist/privy.d.ts"
+      ],
+      "viem": [
+        "./dist/viem.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@privy-io/node": "^0.15.0",
+    "ethers-v5": "npm:ethers@^5.8.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.2",
+    "viem": "^2.46.3"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@privy-io/node": "^0.15.0",
+    "ethers-v5": "^5.8.0",
+    "viem": "^2.46.3"
+  },
+  "peerDependenciesMeta": {
+    "@privy-io/node": {
+      "optional": true
+    },
+    "ethers-v5": {
+      "optional": true
+    },
+    "viem": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@msgpack/msgpack": "^3.1.3",
+    "@polymarket/bindings": "workspace:*",
+    "@polymarket/types": "workspace:*",
+    "it-merge": "^3.0.14",
+    "it-pushable": "^3.2.3",
+    "ky": "^1.14.3",
+    "ox": "^0.14.16",
+    "zod": "^4.3.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -5332,6 +5332,12 @@ export {
   combineSpeedCeiling,
   exceedanceRate,
 } from "./tracking/combine-ceiling.js";
+
+export {
+  POLYMARKET_PUBLISH_HOLD,
+  VENDORED_POLYMARKET_SDKS,
+  polymarketPublishAllowed,
+} from "./markets/polymarket-sdks.js";
 export type {
   FlashMlaConfig,
   FlashMlaCompressionSummary,

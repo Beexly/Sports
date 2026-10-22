@@ -1,0 +1,756 @@
+import { ApiKeySchema } from '@polymarket/bindings';
+import type { ApiKeyCreds } from '@polymarket/bindings/clob';
+import { WalletType } from '@polymarket/bindings/gamma';
+import {
+  type EvmAddress,
+  expectEvmAddress,
+  expectEvmSignature,
+} from '@polymarket/types';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
+import { version } from '../package.json';
+import { createPublicClient, createSecureClient } from './clients';
+import { forkEnvironmentConfig, production } from './environments';
+import { RequestAbortedError, TransportError, UserInputError } from './errors';
+import { ServiceClient } from './ServiceClient';
+import type { ApiKeyAuthorization, Signer } from './types';
+import {
+  deriveBeaconDepositWalletAddress,
+  deriveProxyWalletAddress,
+  deriveSafeWalletAddress,
+  deriveUupsDepositWalletAddress,
+  SignerType,
+} from './wallet';
+
+const rpcRoot = 'http://localhost:4014';
+const relayerRoot = 'http://localhost:4015';
+const clobRoot = 'http://localhost:4016';
+const server = setupServer();
+const signerAddress = expectEvmAddress(
+  '0x0000000000000000000000000000000000000001',
+);
+
+const environment = forkEnvironmentConfig({
+  name: 'test',
+  clob: { rest: clobRoot },
+  relayer: { rest: relayerRoot },
+  rpc: rpcRoot,
+});
+
+const credentials: ApiKeyCreds = {
+  key: ApiKeySchema.parse('key'),
+  passphrase: 'passphrase',
+  secret: 'secret',
+};
+
+const apiKey: ApiKeyAuthorization = {
+  get isBuilderKey() {
+    return false;
+  },
+  get supportGasless() {
+    return true;
+  },
+  authorize() {
+    return Promise.resolve({ RELAYER_API_KEY: 'key' });
+  },
+};
+
+const signer: Signer = {
+  getAddress() {
+    return Promise.resolve(signerAddress);
+  },
+  signMessage() {
+    throw new Error('Unexpected signMessage call');
+  },
+  signTypedData() {
+    throw new Error('Unexpected signTypedData call');
+  },
+  sendTransaction() {
+    throw new Error('Unexpected sendTransaction call');
+  },
+};
+
+describe('predictions gateway service', () => {
+  it('validates read controls before dispatch and snapshots paginator controls', async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => {
+      throw new TypeError('read dispatch observed');
+    });
+    const client = createPublicClient({ fetch });
+    await expect(
+      client.fetchSportsMarketTypes({ retries: 6 }),
+    ).rejects.toBeInstanceOf(UserInputError);
+    expect(() => client.listTrades({}, { retries: -1 })).toThrow(
+      UserInputError,
+    );
+    await expect(
+      client.fetchMidpoints([{ assetId: '1' }], { retries: 1.5 }),
+    ).rejects.toBeInstanceOf(UserInputError);
+    expect(fetch).not.toHaveBeenCalled();
+
+    const options = { retries: 0 };
+    const trades = client.listTrades({ pageSize: 1 }, options);
+    options.retries = 5;
+    await expect(trades.firstPage()).rejects.toBeInstanceOf(TransportError);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await expect(
+      client.fetchMidpoints([{ assetId: '1' }], { retries: 0 }),
+    ).rejects.toBeInstanceOf(TransportError);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+  it('generates metadata once per client and overrides only prediction headers', async () => {
+    const expected = `@polymarket/client@${version}:nodejs@${process.versions.node}`;
+    const failure = new Error('request headers observed');
+    const requests: Request[] = [];
+    const fetch = vi.fn<typeof globalThis.fetch>(async (input) => {
+      if (input instanceof Request) requests.push(input);
+      throw failure;
+    });
+    const client = createPublicClient({
+      fetch,
+      environment: forkEnvironmentConfig({
+        name: 'metadata',
+        predictions: {
+          rest: 'https://api-defi-staging.polymarket.dev',
+          headers: {
+            polymarket_client: 'environment override',
+            'x-environment': 'retained',
+          },
+        },
+      }),
+    });
+    try {
+      vi.stubGlobal('Bun', { version: '1.2.3' });
+      for (const method of ['get', 'post', 'patch', 'del'] as const) {
+        const options = {
+          headers: {
+            POLYMARKET_CLIENT: 'request override',
+            'x-request': 'retained',
+          },
+        };
+        const result =
+          method === 'get'
+            ? client.predictions.get('/metadata', { ...options, retries: 0 })
+            : client.predictions[method]('/metadata', options);
+        await expect(result).rejects.toMatchObject({ cause: failure });
+        const request = requests.at(-1);
+        expect(request?.headers.get('POLYMARKET_CLIENT')).toBe(expected);
+        expect(request?.headers.get('x-environment')).toBe('retained');
+        expect(request?.headers.get('x-request')).toBe('retained');
+        expect(request?.url).toBe(
+          'https://api-defi-staging.polymarket.dev/metadata',
+        );
+      }
+      for (const service of [
+        client.clob,
+        client.gamma,
+        client.data,
+        client.relayer,
+        client.perps,
+      ]) {
+        await expect(
+          service.get('/direct', { retries: 0 }),
+        ).rejects.toMatchObject({
+          cause: failure,
+        });
+        expect(requests.at(-1)?.headers.has('POLYMARKET_CLIENT')).toBe(false);
+      }
+      const controller = new AbortController();
+      controller.abort('cancelled');
+      await expect(
+        client.predictions.get('/metadata', { signal: controller.signal }),
+      ).rejects.toMatchObject({
+        name: 'RequestAbortedError',
+        cause: 'cancelled',
+      });
+      expect(fetch).toHaveBeenCalledTimes(9);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+  it('dispatches every verb through custom fetch to the production gateway', async () => {
+    const failure = new Error('custom fetch stopped at the transport boundary');
+    const observedRequests: Request[] = [];
+    const fetch = vi.fn<typeof globalThis.fetch>(async (input) => {
+      if (input instanceof Request) observedRequests.push(input.clone());
+      throw failure;
+    });
+    const client = createPublicClient({ fetch });
+    const predictions = client.predictions;
+    const extended = client.extend(() => ({ predictionService: predictions }));
+
+    expect(predictions).toBeInstanceOf(ServiceClient);
+    expect(extended.predictions).toBe(predictions);
+    expect(extended.predictionService).toBe(predictions);
+    expect(client.clob).toBeInstanceOf(ServiceClient);
+    expect(client.gamma).toBeInstanceOf(ServiceClient);
+    expect(client.data).toBeInstanceOf(ServiceClient);
+    expect(client.relayer).toBeInstanceOf(ServiceClient);
+    const controller = new AbortController();
+    for (const operation of [
+      () => predictions.get('/ping', { signal: controller.signal, retries: 0 }),
+      () => predictions.post('/endpoint', { json: { value: 1 } }),
+      () => predictions.patch('/endpoint', { json: { value: 2 } }),
+      () => predictions.del('/endpoint'),
+    ]) {
+      await expect(operation()).rejects.toMatchObject({
+        name: TransportError.name,
+        cause: failure,
+      });
+    }
+    expect(fetch).toHaveBeenCalledTimes(4);
+    const requests = observedRequests;
+    expect(requests.map((request) => request.url)).toEqual([
+      'https://api.defi.polymarket.com/ping',
+      'https://api.defi.polymarket.com/endpoint',
+      'https://api.defi.polymarket.com/endpoint',
+      'https://api.defi.polymarket.com/endpoint',
+    ]);
+    expect(requests.map((request) => request.method)).toEqual([
+      'GET',
+      'POST',
+      'PATCH',
+      'DELETE',
+    ]);
+    expect(await requests[1]?.text()).toBe('{"value":1}');
+    expect(await requests[2]?.text()).toBe('{"value":2}');
+    controller.abort();
+    expect(requests[0]?.signal.aborted).toBe(true);
+  });
+
+  it('merges gateway environment headers and respects pre-dispatch cancellation', async () => {
+    const failure = new Error('custom fetch stopped at the transport boundary');
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => {
+      throw failure;
+    });
+    const base = forkEnvironmentConfig({
+      name: 'gateway-base',
+      predictions: {
+        headers: { 'x-base': 'base', 'x-override': 'base' },
+      },
+    });
+    const fork = forkEnvironmentConfig(
+      {
+        name: 'gateway-fork',
+        predictions: {
+          rest: 'https://api-defi-staging.polymarket.dev',
+          headers: { 'x-override': 'fork' },
+        },
+      },
+      base,
+    );
+    const client = createPublicClient({
+      environment: fork,
+      fetch,
+    });
+    await expect(
+      client.predictions.get('/ping', {
+        retries: 0,
+        headers: { 'x-request': 'request' },
+      }),
+    ).rejects.toMatchObject({ cause: failure });
+    const request = fetch.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe('https://api-defi-staging.polymarket.dev/ping');
+    expect(request.headers.get('x-base')).toBe('base');
+    expect(request.headers.get('x-override')).toBe('fork');
+    expect(request.headers.get('x-request')).toBe('request');
+    expect(production.predictions.rest).toBe('https://api.defi.polymarket.com');
+    const controller = new AbortController();
+    controller.abort('superseded');
+    await expect(
+      client.predictions.get('/ping', {
+        signal: controller.signal,
+      }),
+    ).rejects.toMatchObject({
+      name: RequestAbortedError.name,
+      cause: 'superseded',
+    });
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('public client HTTP reads', () => {
+  it('cancels new public reads before transport when the signal is already aborted', async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>();
+    const client = createPublicClient({ fetch });
+    const controller = new AbortController();
+    controller.abort('query disposed');
+    for (const read of [
+      () =>
+        client.fetchTokenReferences(
+          { assetIds: ['123'] },
+          { signal: controller.signal },
+        ),
+      () =>
+        client.listRewardMarkets({}, { signal: controller.signal }).firstPage(),
+    ]) {
+      await expect(async () => read()).rejects.toMatchObject({
+        name: 'RequestAbortedError',
+        cause: 'query disposed',
+      });
+    }
+    expect(fetch).not.toHaveBeenCalled();
+  });
+});
+
+describe('secure client gasless wallet setup', () => {
+  beforeAll(() => {
+    server.listen({ onUnhandledRequest: 'bypass' });
+  });
+
+  afterEach(() => {
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  it('deploys the default deposit wallet when it is not yet deployed', async () => {
+    const expectedWallet = deriveBeaconDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    const legacyWallet = deriveUupsDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockDepositWalletDeployments([
+      { wallet: legacyWallet, deployed: false },
+      { wallet: expectedWallet, deployed: false },
+    ]);
+    const submit = mockDeployDepositWallet();
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+    });
+
+    expect(submit.called).toBe(true);
+    expect(submit.transactionFetches).toBe(2);
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: expectedWallet,
+      walletType: WalletType.DEPOSIT_WALLET,
+    });
+  });
+
+  it('defaults createSecureClient without a wallet param to the beacon deposit wallet', async () => {
+    const expectedWallet = deriveBeaconDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    const legacyWallet = deriveUupsDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockDepositWalletDeployments([
+      { wallet: legacyWallet, deployed: false },
+      { wallet: expectedWallet, deployed: true },
+    ]);
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+    });
+
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: expectedWallet,
+      walletType: WalletType.DEPOSIT_WALLET,
+    });
+  });
+
+  it('defaults createSecureClient without a wallet param to an existing legacy deposit wallet', async () => {
+    const expectedWallet = deriveUupsDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockDepositWalletDeployments([{ wallet: expectedWallet, deployed: true }]);
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+    });
+
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: expectedWallet,
+      walletType: WalletType.DEPOSIT_WALLET,
+    });
+  });
+
+  it('verifies an explicit deposit wallet before returning the secure client', async () => {
+    const expectedWallet = deriveBeaconDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    const deployedWallet = mockDeployedWallet(expectedWallet);
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+      wallet: expectedWallet,
+    });
+
+    expect(deployedWallet.called).toBe(true);
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: expectedWallet,
+      walletType: WalletType.DEPOSIT_WALLET,
+    });
+  });
+
+  it('keeps an explicit EOA wallet bound to the EOA', async () => {
+    mockApiKeys();
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+      wallet: signerAddress,
+    });
+
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: signerAddress,
+      walletType: WalletType.EOA,
+    });
+  });
+
+  it('accepts an explicit zero nonce for fresh authentication', async () => {
+    const signingSigner: Signer = {
+      ...signer,
+      signTypedData(payload) {
+        expect(payload.message.nonce).toBe(0);
+        return Promise.resolve(expectEvmSignature(`0x${'1'.repeat(130)}`));
+      },
+    };
+
+    server.use(
+      http.post(`${clobRoot}/auth/api-key`, ({ request }) => {
+        expect(request.headers.get('POLY_NONCE')).toBe('0');
+
+        return HttpResponse.json({
+          apiKey: credentials.key,
+          passphrase: credentials.passphrase,
+          secret: credentials.secret,
+        });
+      }),
+    );
+
+    const client = await createSecureClient({
+      environment,
+      nonce: 0,
+      signer: signingSigner,
+      wallet: signerAddress,
+    });
+
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: signerAddress,
+      walletType: WalletType.EOA,
+    });
+  });
+
+  it('keeps an explicit deployed Safe wallet bound to the Safe', async () => {
+    const safeWallet = deriveSafeWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockAccountWalletDeployed(safeWallet, true);
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+      wallet: safeWallet,
+    });
+
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: safeWallet,
+      walletType: WalletType.GNOSIS_SAFE,
+    });
+  });
+
+  it('keeps an explicit deployed proxy wallet bound to the proxy', async () => {
+    const proxyWallet = deriveProxyWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockAccountWalletDeployed(proxyWallet, true);
+
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+      wallet: proxyWallet,
+    });
+
+    expect(client.account).toEqual({
+      signer: signerAddress,
+      signerType: SignerType.OWNER,
+      wallet: proxyWallet,
+      walletType: WalletType.POLY_PROXY,
+    });
+  });
+
+  it('rejects an explicit Safe wallet with no deployed code', async () => {
+    const safeWallet = deriveSafeWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockAccountWalletDeployed(safeWallet, false);
+
+    await expect(
+      createSecureClient({
+        apiKey,
+        credentials,
+        environment,
+        signer,
+        wallet: safeWallet,
+      }),
+    ).rejects.toMatchObject({
+      message: expect.stringContaining('does not exist'),
+      name: 'UserInputError',
+    });
+  });
+
+  it('rejects an explicit undeployed deposit wallet that is not the current one', async () => {
+    const currentWallet = deriveBeaconDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    const legacyWallet = deriveUupsDepositWalletAddress(
+      signerAddress,
+      environment.walletDerivation,
+    );
+    mockApiKeys();
+    mockUndeployedWallet(legacyWallet);
+
+    await expect(
+      createSecureClient({
+        apiKey,
+        credentials,
+        environment,
+        signer,
+        wallet: legacyWallet,
+      }),
+    ).rejects.toMatchObject({
+      message: `Wallet ${legacyWallet} does not match the expected Deposit Wallet ${currentWallet} for this signer, nor a deployed wallet address.`,
+      name: 'UserInputError',
+    });
+  });
+
+  it('does not shut down terminal managers when closing subscriptions', async () => {
+    mockApiKeys();
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      signer,
+      wallet: signerAddress,
+    });
+    const perpsShutdown = vi.fn(() => Promise.resolve());
+    const rfqShutdown = vi.fn(() => Promise.resolve());
+    client.webSockets.perpsSession.shutdown = perpsShutdown;
+    client.webSockets.rfqQuoter.shutdown = rfqShutdown;
+
+    await client.closeSubscriptions();
+
+    expect(perpsShutdown).not.toHaveBeenCalled();
+    expect(rfqShutdown).not.toHaveBeenCalled();
+  });
+
+  it('shuts down terminal managers when ending authentication', async () => {
+    mockApiKeys();
+    server.use(
+      http.delete(`${clobRoot}/auth/api-key`, () => HttpResponse.json('OK')),
+    );
+    const failure = new TypeError('gateway dispatch observed');
+    const gatewayRequests: Request[] = [];
+    const fetch = vi.fn<typeof globalThis.fetch>(async (input, init) => {
+      if (
+        input instanceof Request &&
+        input.url.startsWith(environment.predictions.rest)
+      ) {
+        gatewayRequests.push(input);
+        throw failure;
+      }
+      return globalThis.fetch(input, init);
+    });
+    const client = await createSecureClient({
+      apiKey,
+      credentials,
+      environment,
+      fetch,
+      signer,
+      wallet: signerAddress,
+    });
+    const perpsShutdown = vi.fn(() => Promise.resolve());
+    const rfqShutdown = vi.fn(() => Promise.resolve());
+    client.webSockets.perpsSession.shutdown = perpsShutdown;
+    client.webSockets.rfqQuoter.shutdown = rfqShutdown;
+
+    expect(client.predictions).toBeInstanceOf(ServiceClient);
+    await expect(client.predictions.del('/cancel-all')).rejects.toMatchObject({
+      name: TransportError.name,
+      cause: failure,
+    });
+    const publicClient = await client.endAuthentication();
+    expect(publicClient.predictions).toBeInstanceOf(ServiceClient);
+    await expect(
+      publicClient.predictions.del('/cancel-all'),
+    ).rejects.toMatchObject({ name: TransportError.name, cause: failure });
+    expect(gatewayRequests).toHaveLength(2);
+    for (const request of gatewayRequests) {
+      expect(request.headers.get('POLYMARKET_CLIENT')).toBe(
+        `@polymarket/client@${version}:nodejs@${process.versions.node}`,
+      );
+      expect(request.url).toBe(`${environment.predictions.rest}/cancel-all`);
+      expect(request.headers.has('POLY_API_KEY')).toBe(false);
+      expect(request.headers.has('POLY_SIGNATURE')).toBe(false);
+      expect(request.headers.has('RELAYER_API_KEY')).toBe(false);
+    }
+    expect(() => client.predictions).toThrow(
+      'This client has ended authentication',
+    );
+
+    expect(perpsShutdown).toHaveBeenCalledTimes(1);
+    expect(rfqShutdown).toHaveBeenCalledTimes(1);
+  });
+});
+
+function mockApiKeys() {
+  server.use(
+    http.get(`${clobRoot}/auth/api-keys`, () =>
+      HttpResponse.json({ apiKeys: [credentials.key] }),
+    ),
+  );
+}
+
+function mockAccountWalletDeployed(wallet: EvmAddress, deployed: boolean) {
+  server.use(
+    http.get(`${relayerRoot}/deployed`, ({ request }) => {
+      const url = new URL(request.url);
+
+      expect(url.searchParams.get('address')).toBe(wallet);
+
+      return HttpResponse.json({ deployed });
+    }),
+  );
+}
+
+function mockUndeployedWallet(expectedWallet: EvmAddress) {
+  server.use(
+    http.get(`${relayerRoot}/deployed`, ({ request }) => {
+      const url = new URL(request.url);
+
+      expect(url.searchParams.get('address')).toBe(expectedWallet);
+      expect(url.searchParams.get('type')).toBe('WALLET');
+
+      return HttpResponse.json({ deployed: false });
+    }),
+  );
+}
+
+function mockDepositWalletDeployments(
+  deployments: Array<{ wallet: EvmAddress; deployed: boolean }>,
+) {
+  server.use(
+    http.get(`${relayerRoot}/deployed`, ({ request }) => {
+      const url = new URL(request.url);
+      const address = expectEvmAddress(url.searchParams.get('address') ?? '');
+      const deployment = deployments.find(
+        ({ wallet }) => wallet.toLowerCase() === address.toLowerCase(),
+      );
+
+      expect(url.searchParams.get('type')).toBe('WALLET');
+      expect(deployment).toBeDefined();
+
+      return HttpResponse.json({ deployed: deployment?.deployed ?? false });
+    }),
+  );
+}
+
+function mockDeployDepositWallet() {
+  const state = { called: false, transactionFetches: 0 };
+  const transactionId = '00000000-0000-0000-0000-000000000001';
+  const transactionHash = `0x${'1'.repeat(64)}`;
+
+  server.use(
+    http.post(`${relayerRoot}/submit`, () => {
+      state.called = true;
+
+      return HttpResponse.json({
+        state: 'STATE_MINED',
+        transactionHash,
+        transactionID: transactionId,
+      });
+    }),
+    http.get(`${relayerRoot}/v1/account/transactions/${transactionId}`, () => {
+      state.transactionFetches += 1;
+
+      return HttpResponse.json({
+        state:
+          state.transactionFetches === 1 ? 'STATE_MINED' : 'STATE_CONFIRMED',
+        transaction_hash: transactionHash,
+        transaction_id: transactionId,
+      });
+    }),
+  );
+
+  return state;
+}
+
+function mockDeployedWallet(expectedWallet: EvmAddress) {
+  const state = { called: false };
+
+  server.use(
+    http.get(`${relayerRoot}/deployed`, ({ request }) => {
+      state.called = true;
+      const url = new URL(request.url);
+
+      expect(url.searchParams.get('address')).toBe(expectedWallet);
+      expect(url.searchParams.get('type')).toBe('WALLET');
+
+      return HttpResponse.json({ deployed: true });
+    }),
+  );
+
+  return state;
+}

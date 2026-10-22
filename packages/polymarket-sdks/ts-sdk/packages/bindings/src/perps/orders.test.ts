@@ -1,0 +1,525 @@
+import { describe, expect, it } from 'vitest';
+import {
+  FetchPerpsOrdersResponseSchema,
+  PerpsAccountFillSchema,
+  PerpsAccountFillUpdateSchema,
+  PerpsCancelOrderResultSchema,
+  PerpsKnownCancelOrderErrorCode,
+  PerpsOrderSchema,
+  PerpsOrderUpdateSchema,
+  PerpsPostOrderAckSchema,
+  PerpsTpSlOrderFieldsSchema,
+} from './orders';
+
+const baseFill = {
+  trade_id: 1,
+  order_id: 2,
+  instrument_id: 6,
+  side: 'long',
+  price: '1',
+  quantity: '2',
+  taker: true,
+  fee: '0.01',
+  fee_asset: 'USDC',
+  previous_size: '0',
+  previous_entry_price: '0',
+  pnl: '0',
+  liquidation: false,
+  adl: false,
+  timestamp: 1_700_000_000_000,
+};
+
+describe('PerpsAccountFillSchema', () => {
+  it('derives signed total fees without losing decimal precision', () => {
+    const fill = PerpsAccountFillSchema.parse({
+      ...baseFill,
+      hash: '0x',
+      fee: '-9007199254740993.00000000000000000001',
+      builder_fee: '0.00000000000000000002',
+    });
+    expect(fill.totalFee).toBe('-9007199254740992.99999999999999999999');
+  });
+
+  it('adds legacy fee defaults without inventing builder identity', () => {
+    const fill = PerpsAccountFillSchema.parse({ ...baseFill, hash: '0x' });
+    expect(fill).toMatchObject({
+      builderFee: '0',
+      totalFee: '0.01',
+    });
+    expect(fill).not.toHaveProperty('builder');
+  });
+
+  it('normalizes placeholder hashes to undefined', () => {
+    const fill = PerpsAccountFillSchema.parse({
+      ...baseFill,
+      hash: '0x',
+    });
+
+    expect(fill.hash).toBeUndefined();
+  });
+});
+
+describe('PerpsPostOrderAckSchema', () => {
+  it('normalizes mixed post order acknowledgements', () => {
+    const acks = [
+      PerpsPostOrderAckSchema.parse({
+        coid: '0123456789abcdef0123456789abcdef',
+        oid: 123,
+        status: 'ok',
+      }),
+      PerpsPostOrderAckSchema.parse({
+        coid: 'fedcba9876543210fedcba9876543210',
+        error: 'insufficient_margin',
+        status: 'err',
+      }),
+    ];
+
+    expect(acks).toEqual([
+      {
+        clientOrderId: '0123456789abcdef0123456789abcdef',
+        orderId: 123,
+        status: 'ok',
+      },
+      {
+        clientOrderId: 'fedcba9876543210fedcba9876543210',
+        error: 'insufficient_margin',
+        status: 'err',
+      },
+    ]);
+  });
+
+  it('requires order id for accepted post order acknowledgements', () => {
+    expect(() => PerpsPostOrderAckSchema.parse({ status: 'ok' })).toThrow();
+  });
+});
+
+describe('PerpsOrderSchema', () => {
+  it('accepts GTD in REST and compact private updates', () => {
+    const fields = {
+      buy: true,
+      tif: 'gtd',
+      ro: false,
+      status: 'order_expired',
+    };
+    const rest = PerpsOrderSchema.parse({
+      ...fields,
+      order_id: 1,
+      instrument_id: 1,
+      price: '100.50',
+      quantity: '10',
+      post_only: true,
+      resting_quantity: '9',
+      filled_quantity: '1',
+      created_timestamp: 1700000000000,
+      updated_timestamp: 1700000060000,
+    });
+    const update = PerpsOrderUpdateSchema.parse({
+      ...fields,
+      oid: 1,
+      iid: 1,
+      p: '100.50',
+      qty: '10',
+      po: true,
+      rest: '9',
+      fill: '1',
+      cts: 1700000000000,
+      uts: 1700000060000,
+    });
+    expect(update).toEqual(rest);
+    expect(rest.timeInForce).toBe('gtd');
+  });
+  // REST cancel_reason_status and WS order_status_from_reason at perpetuals 5a6d080.
+  it.each([
+    'order_already_terminal',
+    'sweep_cap_exceeded',
+    'resting_order_limit_exceeded',
+    'below_min_notional',
+    'instrument_disabled',
+    'instrument_close_only',
+    'instrument_settled',
+    'insufficient_margin_at_fill',
+    'mark_price_unavailable',
+  ])('preserves %s in history and private updates', (status) => {
+    const history = {
+      order_id: 123,
+      instrument_id: 1,
+      buy: true,
+      price: '100.000000000000000001',
+      quantity: '2',
+      tif: 'gtc',
+      post_only: false,
+      ro: false,
+      status,
+      resting_quantity: '0',
+      filled_quantity: '0.000000000000000001',
+      created_timestamp: 1_700_000_000_000,
+      updated_timestamp: 1_700_000_000_001,
+      client_order_id: '0123456789abcdef0123456789abcdef',
+    };
+    const update = {
+      oid: history.order_id,
+      iid: history.instrument_id,
+      buy: history.buy,
+      p: history.price,
+      qty: history.quantity,
+      tif: history.tif,
+      po: history.post_only,
+      ro: history.ro,
+      status,
+      rest: history.resting_quantity,
+      fill: history.filled_quantity,
+      cts: history.created_timestamp,
+      uts: history.updated_timestamp,
+      coid: history.client_order_id,
+    };
+    const orders = FetchPerpsOrdersResponseSchema.parse([
+      { ...history, order_id: 122, status: 'filled' },
+      history,
+    ]);
+    expect(orders.map((order) => order.status)).toEqual(['filled', status]);
+    expect(orders[1]).toEqual(PerpsOrderUpdateSchema.parse(update));
+    expect(orders[1]).toMatchObject({
+      clientOrderId: history.client_order_id,
+      price: history.price,
+      filledQuantity: history.filled_quantity,
+    });
+    expect(
+      FetchPerpsOrdersResponseSchema.safeParse([
+        { ...history, status: 'unsupported_status' },
+      ]).success,
+    ).toBe(false);
+    expect(
+      PerpsOrderUpdateSchema.safeParse({
+        ...update,
+        status: 'unsupported_status',
+      }).success,
+    ).toBe(false);
+  });
+
+  it('normalizes order status and side', () => {
+    const order = PerpsOrderSchema.parse({
+      buy: true,
+      created_timestamp: 1_700_000_000_000,
+      filled_quantity: '1',
+      instrument_id: 1,
+      order_id: 123,
+      post_only: false,
+      price: '100',
+      quantity: '2',
+      resting_quantity: '1',
+      ro: true,
+      status: 'partial',
+      tif: 'gtc',
+      updated_timestamp: 1_700_000_000_000,
+    });
+
+    expect(order).toMatchInlineSnapshot(`
+      {
+        "clientOrderId": undefined,
+        "createdTimestamp": 1700000000000,
+        "filledQuantity": "1",
+        "id": 123,
+        "instrumentId": 1,
+        "postOnly": false,
+        "price": "100",
+        "quantity": "2",
+        "reduceOnly": true,
+        "restingQuantity": "1",
+        "side": "BUY",
+        "status": "partial",
+        "timeInForce": "gtc",
+        "tpSl": undefined,
+        "updatedTimestamp": 1700000000000,
+      }
+    `);
+  });
+});
+
+describe('PerpsOrderUpdateSchema', () => {
+  it('normalizes order update side', () => {
+    const order = PerpsOrderUpdateSchema.parse({
+      buy: false,
+      coid: '0123456789abcdef0123456789abcdef',
+      cts: 1_700_000_000_000,
+      fill: '0',
+      iid: 1,
+      oid: 123,
+      p: '100',
+      po: false,
+      qty: '2',
+      rest: '2',
+      ro: true,
+      status: 'open',
+      tif: 'gtc',
+      uts: 1_700_000_000_000,
+    });
+
+    expect(order).toMatchInlineSnapshot(`
+      {
+        "clientOrderId": "0123456789abcdef0123456789abcdef",
+        "createdTimestamp": 1700000000000,
+        "filledQuantity": "0",
+        "id": 123,
+        "instrumentId": 1,
+        "postOnly": false,
+        "price": "100",
+        "quantity": "2",
+        "reduceOnly": true,
+        "restingQuantity": "2",
+        "side": "SELL",
+        "status": "open",
+        "timeInForce": "gtc",
+        "tpSl": undefined,
+        "updatedTimestamp": 1700000000000,
+      }
+    `);
+  });
+});
+
+describe('PerpsCancelOrderResultSchema', () => {
+  it('normalizes cancel order result identifiers', () => {
+    const result = PerpsCancelOrderResultSchema.parse({
+      coid: '0123456789abcdef0123456789abcdef',
+      oid: 123,
+      status: 'ok',
+    });
+
+    expect(result).toEqual({
+      clientOrderId: '0123456789abcdef0123456789abcdef',
+      orderId: 123,
+      status: 'ok',
+    });
+  });
+
+  it('allows accepted cancel order results without an order id', () => {
+    const result = PerpsCancelOrderResultSchema.parse({ status: 'ok' });
+
+    expect(result.status).toBe('ok');
+    expect(result.orderId).toBeUndefined();
+  });
+
+  it.each(
+    Object.values(PerpsKnownCancelOrderErrorCode),
+  )('types the %s rejection identifier', (error) => {
+    const result = PerpsCancelOrderResultSchema.parse({ error, status: 'err' });
+
+    expect(result).toEqual({
+      clientOrderId: undefined,
+      error,
+      orderId: undefined,
+      status: 'err',
+    });
+  });
+
+  it('preserves cancellation rejection identifiers introduced after release', () => {
+    const result = PerpsCancelOrderResultSchema.parse({
+      error: 'unknown_error_code_18',
+      oid: 123,
+      status: 'err',
+    });
+
+    expect(result).toEqual({
+      clientOrderId: undefined,
+      error: 'unknown_error_code_18',
+      orderId: 123,
+      status: 'err',
+    });
+  });
+
+  it.each([
+    { status: 'err' },
+    { error: '', status: 'err' },
+  ])('rejects a cancellation rejection without an identifier: %j', (value) => {
+    expect(() => PerpsCancelOrderResultSchema.parse(value)).toThrow();
+  });
+
+  it('normalizes TP/SL metadata', () => {
+    const order = PerpsOrderSchema.parse({
+      order_id: 123,
+      instrument_id: 1,
+      buy: false,
+      price: '0',
+      quantity: '0',
+      tif: 'ioc',
+      post_only: false,
+      ro: true,
+      status: 'armed',
+      resting_quantity: '0',
+      filled_quantity: '0',
+      created_timestamp: 1_700_000_000_000,
+      updated_timestamp: 1_700_000_000_001,
+      tpsl: {
+        kind: 'sl',
+        scope: 'position',
+        trp: '90.00',
+        armed_qty: '0',
+        slip_bps: 0,
+      },
+    });
+
+    expect(order.tpSl).toMatchInlineSnapshot(`
+      {
+        "activationPrice": undefined,
+        "armedQuantity": "0",
+        "kind": "sl",
+        "parentOrderId": undefined,
+        "scope": "position",
+        "slippageBps": 0,
+        "trailingActive": undefined,
+        "trailingAnchor": undefined,
+        "trailingBps": undefined,
+        "triggerPrice": "90.00",
+      }
+    `);
+  });
+});
+
+it.each([
+  false,
+  true,
+])('preserves exact trailing metadata and active=%s', (active) => {
+  expect(
+    PerpsTpSlOrderFieldsSchema.parse({
+      kind: 'sl',
+      scope: 'position',
+      trp: '0',
+      trail_bps: 200,
+      act: '105.0000000000000000000000001',
+      trail_anchor: '0',
+      trail_active: active,
+    }),
+  ).toMatchObject({
+    trailingBps: 200,
+    activationPrice: '105.0000000000000000000000001',
+    trailingAnchor: '0',
+    trailingActive: active,
+    triggerPrice: '0',
+  });
+});
+
+describe('settlement account fills', () => {
+  it.each([
+    {},
+    { settlement: false },
+    { settlement: true },
+  ])('preserves REST and WS flags: %j', (metadata) => {
+    const expanded = PerpsAccountFillSchema.parse({
+      ...baseFill,
+      hash: '0x',
+      ...metadata,
+    });
+    const compact = PerpsAccountFillUpdateSchema.parse({
+      tid: 1,
+      oid: 2,
+      iid: 6,
+      side: 'long',
+      p: '1',
+      qty: '2',
+      taker: true,
+      fee: '0.01',
+      fea: 'USDC',
+      psz: '0',
+      pep: '0',
+      pnl: '0',
+      liq: false,
+      adl: false,
+      ts: 1700000000000,
+      ...metadata,
+    });
+    expect(expanded.settlement).toBe(metadata.settlement ?? false);
+    expect(compact.settlement).toBe(expanded.settlement);
+    expect(compact.totalFee).toBe(expanded.totalFee);
+  });
+});
+
+const compactFill = {
+  tid: 1,
+  oid: 2,
+  iid: 6,
+  side: 'long',
+  p: '100',
+  qty: '2',
+  taker: true,
+  fee: '0.01',
+  fea: 'USDC',
+  psz: '0',
+  pep: '0',
+  pnl: '0',
+  liq: true,
+  ts: 1_700_000_000_000,
+};
+
+describe('Perps fill liquidation and auto-deleveraging', () => {
+  it('keeps the liquidation mark distinct from the accounting price on reads and updates', () => {
+    const details = {
+      liquidated_user: '0x1111111111111111111111111111111111111111',
+      mark: '9007199254740993.00000001',
+      method: 'backstop',
+    };
+    const fills = [
+      PerpsAccountFillSchema.parse({
+        ...baseFill,
+        hash: '0x',
+        price: '100',
+        liquidation: true,
+        adl: false,
+        liquidation_details: details,
+      }),
+      PerpsAccountFillUpdateSchema.parse({
+        ...compactFill,
+        adl: false,
+        liquidation_details: details,
+      }),
+    ];
+    for (const fill of fills) {
+      expect(fill.price).toBe('100');
+      expect(fill.adl).toBe(false);
+      expect(fill.liquidationDetails).toEqual({
+        liquidatedUser: details.liquidated_user,
+        mark: details.mark,
+        method: 'backstop',
+      });
+    }
+  });
+
+  it('retains ADL fills without fabricating liquidation details or identity', () => {
+    const adl = PerpsAccountFillUpdateSchema.parse({
+      ...compactFill,
+      liq: false,
+      adl: true,
+    });
+    expect(adl.adl).toBe(true);
+    expect(adl.liquidationDetails).toBeUndefined();
+    const liquidation = PerpsAccountFillSchema.parse({
+      ...baseFill,
+      hash: '0x',
+      adl: false,
+      liquidation_details: { mark: '100.1', method: 'market' },
+    });
+    expect(liquidation.liquidationDetails?.liquidatedUser).toBeUndefined();
+  });
+
+  it('rejects absent ADL and malformed liquidation details on both wire shapes', () => {
+    const { adl: _adl, ...missingAdl } = baseFill;
+    for (const [schema, fill] of [
+      [PerpsAccountFillSchema, { ...missingAdl, hash: '0x' }],
+      [PerpsAccountFillUpdateSchema, compactFill],
+    ] as const) {
+      expect(schema.safeParse(fill).success).toBe(false);
+      for (const details of [
+        { method: 'backstop' },
+        { mark: '100' },
+        { mark: '100', method: 'auction' },
+        { mark: 'NaN', method: 'backstop' },
+      ]) {
+        expect(
+          schema.safeParse({
+            ...fill,
+            adl: false,
+            liquidation_details: details,
+          }).success,
+        ).toBe(false);
+      }
+    }
+  });
+});

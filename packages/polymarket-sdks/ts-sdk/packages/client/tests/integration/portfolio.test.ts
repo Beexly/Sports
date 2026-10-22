@@ -1,0 +1,634 @@
+import {
+  ComboPositionSortBy,
+  ComboPositionStatus,
+  PositionSortBy,
+  PositionStatus,
+  SortDirection,
+  UserInputError,
+  UserPnlFidelity,
+  UserPnlInterval,
+} from '@polymarket/client';
+import { expectPresent, isSameEvmAddress } from '@polymarket/types';
+import { afterEach, type MockInstance, vi } from 'vitest';
+import { describe, expect, it } from './fixtures';
+import { expectNonEmptyPage, expectPageWindow } from './helpers';
+
+const TEST_USER = '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b';
+const UNKNOWN_WALLET = '0x00000000000000000000000000000000000000aa';
+const TEST_CONDITION_ID =
+  '0x7ad403c3508f8e3912940fd1a913f227591145ca0614074208e0b962d5fcc422';
+
+describe('Portfolio', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  for (const prefix of ['01', '02']) {
+    it(`normalizes v2 portfolio condition IDs (${prefix})`, async ({
+      publicClient,
+    }) => {
+      const structuralId = `0x${prefix}${'ab'.repeat(30)}`;
+      const canonicalId = `${structuralId}00`;
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      await publicClient
+        .listPositions({ conditionId: structuralId, pageSize: 1 })
+        .firstPage();
+      await publicClient
+        .listPositions({
+          user: TEST_USER,
+          conditionId: [structuralId, canonicalId],
+          pageSize: 1,
+        })
+        .firstPage();
+      const value = await publicClient.fetchPortfolioValue({
+        user: TEST_USER,
+        conditionIds: [structuralId, canonicalId],
+      });
+
+      expect(value.wallet).toBe(TEST_USER);
+      const positionsRequests = dataRequests(fetchSpy, '/v2/positions');
+      expect(positionsRequests).toHaveLength(2);
+      for (const request of positionsRequests) {
+        expect(request.get('condition_id')).toBe(canonicalId);
+      }
+      const valueRequests = dataRequests(fetchSpy, '/v2/value');
+      expect(valueRequests).toHaveLength(1);
+      expect(valueRequests[0]?.get('condition')).toBe(canonicalId);
+    });
+  }
+
+  describe('listPositions', () => {
+    it('validates title length in Unicode characters before any request', ({
+      publicClient,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+      for (const title of [
+        'x'.repeat(200),
+        '😀'.repeat(200),
+        ' '.repeat(201),
+      ]) {
+        expect(() =>
+          publicClient.listPositions({ user: TEST_USER, title }),
+        ).not.toThrow();
+      }
+      for (const title of ['x'.repeat(201), '😀'.repeat(201), 123]) {
+        expect(() =>
+          publicClient.listPositions({
+            user: TEST_USER,
+            title: title as string,
+          }),
+        ).toThrow(UserInputError);
+      }
+      expect(fetchSpy).not.toHaveBeenCalled();
+    });
+
+    it('keeps title filters on every page and cursor replay', async ({
+      publicClient,
+    }) => {
+      const title = 'WiLl%';
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+      const pages = publicClient.listPositions({
+        user: TEST_USER,
+        title,
+        pageSize: 1,
+      });
+      const first = await pages.firstPage().then(expectNonEmptyPage);
+      expect(first.nextCursor).toBeDefined();
+      const replay = pages.from(expectPresent(first.nextCursor));
+      for await (const page of replay) {
+        expect(page.items.length).toBeGreaterThan(0);
+        expect(
+          page.items.every((position) =>
+            position.title?.toLowerCase().includes('will'),
+          ),
+        ).toBe(true);
+        break;
+      }
+      const requests = dataRequests(fetchSpy, '/v2/positions');
+      expect(requests).toHaveLength(2);
+      expect(requests[0]?.get('title')).toBe(title);
+      expect(requests[1]?.get('title')).toBe(title);
+      expect(requests[1]?.has('cursor')).toBe(true);
+    });
+
+    it('preserves raw title patterns for market anchors and omits blank titles', async ({
+      publicClient,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+      const title = ' BiTcOiN%_ ';
+      await publicClient
+        .listPositions({ conditionId: TEST_CONDITION_ID, title, pageSize: 1 })
+        .firstPage();
+      await publicClient
+        .listPositions({ user: TEST_USER, title: ' '.repeat(201), pageSize: 1 })
+        .firstPage();
+      const requests = dataRequests(fetchSpy, '/v2/positions');
+      expect(requests).toHaveLength(2);
+      expect(requests[0]?.get('title')).toBe(title);
+      expect(requests[1]?.has('title')).toBe(false);
+    });
+
+    it('lists positions for a wallet', async ({ publicClient }) => {
+      const paginator = publicClient.listPositions({
+        user: TEST_USER,
+        pageSize: 100,
+      });
+      const result = await paginator.firstPage().then(expectNonEmptyPage);
+
+      expect(result.items.length).toBeGreaterThan(0);
+      await expectPageWindow(paginator, result, 99);
+      expect(result.items[0]).toEqual(
+        expect.objectContaining({
+          conditionId: expect.any(String),
+          wallet: TEST_USER,
+        }),
+      );
+    });
+
+    it('defaults secure clients to the authenticated wallet', async ({
+      depositWalletAddress,
+      secureClientWithDepositWallet,
+    }) => {
+      const result = await secureClientWithDepositWallet
+        .listPositions({ pageSize: 1 })
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      expect(result.items[0]?.wallet).toSatisfy((wallet) =>
+        isSameEvmAddress(wallet, depositWalletAddress),
+      );
+    });
+
+    it('rejects invalid secure client input', ({
+      secureClientWithDepositWallet,
+    }) => {
+      for (const request of [null, [], 'invalid', { user: null }]) {
+        expect(() =>
+          secureClientWithDepositWallet.listPositions(request as never),
+        ).toThrow(UserInputError);
+      }
+    });
+
+    for (const sortDirection of [SortDirection.Asc, SortDirection.Desc]) {
+      it(`sorts positions by price (${sortDirection}) across pages`, async ({
+        publicClient,
+      }) => {
+        const fetchSpy = vi.spyOn(globalThis, 'fetch');
+        const pages = publicClient.listPositions({
+          user: TEST_USER,
+          sortBy: PositionSortBy.Price,
+          sortDirection,
+          pageSize: 5,
+        });
+        let pageCount = 0;
+
+        for await (const page of pages) {
+          expect(page.items.length).toBeGreaterThan(1);
+          const prices = page.items.map((position) =>
+            Number(position.currentPrice),
+          );
+          const ordered = [...prices].sort((left, right) =>
+            sortDirection === SortDirection.Asc ? left - right : right - left,
+          );
+          expect(prices).toEqual(ordered);
+          pageCount += 1;
+          if (pageCount === 2) break;
+        }
+
+        expect(pageCount).toBe(2);
+        const requests = dataRequests(fetchSpy, '/v2/positions');
+        expect(requests).toHaveLength(2);
+        for (const request of requests) {
+          expect(request.get('sort_by')).toBe('PRICE');
+          expect(request.get('sort_direction')).toBe(sortDirection);
+        }
+        expect(requests[1]?.get('cursor')).toBeTruthy();
+      });
+    }
+  });
+
+  describe('listPositions status arms', () => {
+    it('lists closed positions via status', async ({ publicClient }) => {
+      const result = await publicClient
+        .listPositions({
+          user: TEST_USER,
+          status: PositionStatus.Closed,
+          pageSize: 50,
+        })
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      expect(result.items.length).toBeGreaterThan(0);
+      for (const position of result.items) {
+        expect(position.status).toBe(PositionStatus.Closed);
+        expect(position.wallet).toBe(TEST_USER);
+      }
+    });
+
+    it('lists REDEEMABLE_LOST positions as zero-payout REDEEMABLE rows', async ({
+      publicClient,
+    }) => {
+      // Holds lost positions as of 2026-09-24; TEST_USER has none.
+      const user = '0x2005d16a84ceefa912d4e380cd32e7ff827875ea';
+      const result = await publicClient
+        .listPositions({
+          user,
+          status: PositionStatus.RedeemableLost,
+          pageSize: 50,
+        })
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      for (const position of result.items) {
+        expect(position.status).toBe(PositionStatus.Redeemable);
+        expect(position.wallet).toBe(user);
+        expect(position.redeemable).toBe(true);
+        expect(Number(position.currentSize)).toBeGreaterThan(0);
+        expect(Number(position.currentPrice)).toBe(0);
+        expect(Number(position.currentValue)).toBe(0);
+      }
+    });
+
+    it('lists MERGEABLE positions as live mergeable OPEN rows', async ({
+      publicClient,
+    }) => {
+      const result = await publicClient
+        .listPositions({
+          user: TEST_USER,
+          status: PositionStatus.Mergeable,
+          pageSize: 50,
+        })
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      for (const position of result.items) {
+        expect(position.status).toBe(PositionStatus.Open);
+        expect(position.wallet).toBe(TEST_USER);
+        expect(position.mergeable).toBe(true);
+        expect(position.redeemable).toBe(false);
+        expect(Number(position.currentSize)).toBeGreaterThan(0);
+      }
+    });
+
+    it('rejects REDEEMABLE_LOST without a wallet', ({ publicClient }) => {
+      expect(() =>
+        publicClient.listPositions({
+          conditionId: TEST_CONDITION_ID,
+          status: PositionStatus.RedeemableLost,
+        }),
+      ).toThrow(UserInputError);
+    });
+  });
+
+  describe('listComboPositions', () => {
+    it('lists combo positions for a wallet', async ({ publicClient }) => {
+      const paginator = publicClient.listComboPositions({
+        user: TEST_USER,
+        pageSize: 1,
+        sortBy: ComboPositionSortBy.FirstEntry,
+      });
+      const result = await paginator.firstPage().then(expectNonEmptyPage);
+
+      await expectPageWindow(paginator, result, 1);
+      expect(result.items[0]).toEqual(
+        expect.objectContaining({
+          conditionId: expect.any(String),
+          positionId: expect.any(String),
+          outcomeLabel: expect.any(String),
+          redeemable: expect.any(Boolean),
+          wallet: TEST_USER,
+          realizedPayoutUsdc: expect.any(String),
+          grossEntryCostUsdc: expect.any(String),
+          entryFeesUsdc: expect.any(String),
+        }),
+      );
+
+      const market = expectPresent(
+        expectPresent(expectPresent(result.items[0]).legs[0]).market,
+      );
+      expect(market).toMatchObject({
+        question: expect.any(String),
+        groupItemTitle: expect.any(String),
+        sportsMarketType: expect.any(String),
+        outcomes: expect.any(Array),
+      });
+      expect(market.line === null || typeof market.line === 'number').toBe(
+        true,
+      );
+
+      const filtered = await publicClient
+        .listComboPositions({
+          user: TEST_USER,
+          pageSize: 1,
+          conditionId: result.items[0].conditionId,
+        })
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      expect(filtered.items[0].conditionId).toBe(result.items[0].conditionId);
+    });
+
+    it('filters by one status', async ({ publicClient }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      const result = await publicClient
+        .listComboPositions({
+          user: TEST_USER,
+          pageSize: 10,
+          status: ComboPositionStatus.ResolvedWin,
+        })
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      for (const position of result.items) {
+        expect(position.status).toBe(ComboPositionStatus.ResolvedWin);
+      }
+
+      const requests = comboPositionRequests(fetchSpy);
+      expect(requests).toHaveLength(1);
+      expect(expectPresent(requests[0]).getAll('status')).toEqual([
+        ComboPositionStatus.ResolvedWin,
+      ]);
+    });
+
+    it('serializes multiple statuses once and retains them across pages', async ({
+      publicClient,
+    }) => {
+      const statuses = [
+        ComboPositionStatus.ResolvedWin,
+        ComboPositionStatus.ResolvedPartial,
+        ComboPositionStatus.ResolvedLoss,
+      ] as const;
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      const paginator = publicClient.listComboPositions({
+        user: TEST_USER,
+        pageSize: 1,
+        status: statuses,
+      });
+      const firstPage = await paginator.firstPage().then(expectNonEmptyPage);
+      const secondPage = await paginator
+        .from(firstPage.nextCursor)
+        .firstPage()
+        .then(expectNonEmptyPage);
+
+      for (const position of [...firstPage.items, ...secondPage.items]) {
+        expect(statuses).toContain(position.status);
+      }
+
+      const requests = comboPositionRequests(fetchSpy);
+      expect(requests).toHaveLength(2);
+
+      for (const request of requests) {
+        expect(request.getAll('status')).toEqual([statuses.join(',')]);
+      }
+
+      expect(expectPresent(requests[0]).get('cursor')).toBeNull();
+      expect(expectPresent(requests[1]).get('cursor')).toBe(
+        firstPage.nextCursor,
+      );
+    });
+
+    it('rejects invalid status filters before transport', ({
+      publicClient,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+      const invalidStatuses = [
+        `${ComboPositionStatus.Open},${ComboPositionStatus.Partial}`,
+        [],
+        [ComboPositionStatus.Open, 'UNKNOWN'],
+      ];
+
+      for (const status of invalidStatuses) {
+        expect(() =>
+          publicClient.listComboPositions({
+            user: TEST_USER,
+            status: status as never,
+          }),
+        ).toThrow(UserInputError);
+      }
+
+      expect(fetchSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('fetchPortfolioValue', () => {
+    it('fetches wallet value', async ({ publicClient }) => {
+      const result = await publicClient.fetchPortfolioValue({
+        user: TEST_USER,
+      });
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          wallet: TEST_USER,
+          value: expect.any(String),
+        }),
+      );
+    });
+
+    it('sends condition filters with the canonical query key', async ({
+      publicClient,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      await publicClient.fetchPortfolioValue({
+        user: TEST_USER,
+        conditionIds: [TEST_CONDITION_ID],
+      });
+
+      const [request] = dataRequests(fetchSpy, '/v2/value');
+      expect(request?.get('condition')).toBe(TEST_CONDITION_ID);
+      expect(request?.has('condition_id')).toBe(false);
+      expect(request?.has('market')).toBe(false);
+    });
+
+    it('defaults secure clients to the authenticated wallet', async ({
+      depositWalletAddress,
+      secureClientWithDepositWallet,
+    }) => {
+      const result = await secureClientWithDepositWallet.fetchPortfolioValue();
+
+      expect(result.wallet).toSatisfy((wallet) =>
+        isSameEvmAddress(wallet, depositWalletAddress),
+      );
+    });
+  });
+
+  describe('fetchUserStats', () => {
+    it('fetches profile and lifetime trading stats', async ({
+      publicClient,
+    }) => {
+      const result = await publicClient
+        .fetchUserStats({
+          user: TEST_USER,
+        })
+        .then(expectPresent);
+      const pnl = expectPresent(result.allTimePnl);
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          wallet: TEST_USER,
+          tradedMarketCount: expect.any(Number),
+          biggestWin: expect.any(String),
+          views: expect.any(Number),
+          joinDate: expect.any(Number),
+        }),
+      );
+      expect(pnl).toEqual(
+        expect.objectContaining({
+          timestamp: expect.any(Number),
+          sourceBlock: expect.any(Number),
+          realizedPnl: expect.any(String),
+          volume: expect.any(String),
+          volumeUsdc: expect.any(String),
+          tradeCount: expect.any(Number),
+        }),
+      );
+    });
+
+    it('keeps an unknown user as null', async ({ publicClient }) => {
+      const result = await publicClient.fetchUserStats({
+        user: UNKNOWN_WALLET,
+      });
+
+      expect(result).toBeNull();
+    });
+
+    it('defaults secure clients to the authenticated wallet', async ({
+      depositWalletAddress,
+      secureClientWithDepositWallet,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      await secureClientWithDepositWallet.fetchUserStats();
+
+      const [request] = dataRequests(fetchSpy, '/v2/user-stats');
+      expect(request?.get('user')).toSatisfy(
+        (user) => user !== null && isSameEvmAddress(user, depositWalletAddress),
+      );
+    });
+  });
+
+  describe('fetchUserPnl', () => {
+    it('fetches a cumulative PnL series', async ({ publicClient }) => {
+      const result = await publicClient.fetchUserPnl({
+        user: TEST_USER,
+        interval: UserPnlInterval.OneWeek,
+        fidelity: UserPnlFidelity.ThreeHours,
+      });
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          wallet: TEST_USER,
+          interval: UserPnlInterval.OneWeek,
+          fidelity: UserPnlFidelity.ThreeHours,
+          sourceFidelity: expect.any(String),
+          points: expect.any(Array),
+        }),
+      );
+      expect(result.points.length).toBeGreaterThan(0);
+      expect(result.points[0]).toEqual(
+        expect.objectContaining({
+          timestamp: expect.any(Number),
+          realizedPnl: expect.any(String),
+          volume: expect.any(String),
+          tradeCount: expect.any(Number),
+        }),
+      );
+    });
+
+    it('defaults secure clients to the authenticated wallet', async ({
+      depositWalletAddress,
+      secureClientWithDepositWallet,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      await secureClientWithDepositWallet.fetchUserPnl({
+        interval: UserPnlInterval.OneDay,
+      });
+
+      const [request] = dataRequests(fetchSpy, '/v2/user-pnl');
+      expect(request?.get('user')).toSatisfy(
+        (user) => user !== null && isSameEvmAddress(user, depositWalletAddress),
+      );
+    });
+  });
+
+  describe('fetchUserVolume', () => {
+    it('fetches volume for a window using canonical query keys', async ({
+      publicClient,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+      const result = await publicClient.fetchUserVolume({
+        user: TEST_USER,
+        window: { start: 1_788_134_400, end: 1_788_220_800 },
+      });
+
+      expect(result).toEqual({
+        volume: expect.any(String),
+        volumeUsdc: expect.any(String),
+        tradeCount: expect.any(Number),
+      });
+
+      const [request] = dataRequests(fetchSpy, '/v2/user-volume');
+      expect(request?.get('start')).toBe('1788134400');
+      expect(request?.get('end')).toBe('1788220800');
+    });
+
+    it('defaults secure clients to the authenticated wallet', async ({
+      depositWalletAddress,
+      secureClientWithDepositWallet,
+    }) => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      await secureClientWithDepositWallet.fetchUserVolume();
+
+      const [request] = dataRequests(fetchSpy, '/v2/user-volume');
+      expect(request?.get('user')).toSatisfy(
+        (user) => user !== null && isSameEvmAddress(user, depositWalletAddress),
+      );
+    });
+  });
+
+  describe('downloadAccountingSnapshot', () => {
+    it('downloads the accounting snapshot archive', async ({
+      publicClient,
+    }) => {
+      const result = await publicClient.downloadAccountingSnapshot({
+        user: TEST_USER,
+      });
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.size).toBeGreaterThan(0);
+      expect(result.type).toBe('application/zip');
+    });
+
+    it('defaults secure clients to the authenticated wallet', async ({
+      secureClientWithDepositWallet,
+    }) => {
+      const result =
+        await secureClientWithDepositWallet.downloadAccountingSnapshot();
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.size).toBeGreaterThan(0);
+      expect(result.type).toBe('application/zip');
+    });
+  });
+});
+
+function comboPositionRequests(
+  fetchSpy: MockInstance<typeof fetch>,
+): URLSearchParams[] {
+  return dataRequests(fetchSpy, '/v2/positions/combos');
+}
+
+function dataRequests(
+  fetchSpy: MockInstance<typeof fetch>,
+  pathname: string,
+): URLSearchParams[] {
+  return fetchSpy.mock.calls
+    .map(([input]) => (input instanceof Request ? input.url : String(input)))
+    .filter((url) => new URL(url).pathname === pathname)
+    .map((url) => new URL(url).searchParams);
+}

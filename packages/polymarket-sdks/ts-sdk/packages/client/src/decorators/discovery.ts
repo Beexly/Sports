@@ -1,0 +1,791 @@
+import type { ComboMarket } from '@polymarket/bindings/combos';
+import type {
+  Comment,
+  Event,
+  Market,
+  MarketClarification,
+  PublicProfile,
+  RelatedTag,
+  Series,
+  SportsMarketTypesResponse,
+  SportsMetadata,
+  Tag,
+  TagReference,
+  Team,
+} from '@polymarket/bindings/gamma';
+import {
+  type FetchCommentsByIdRequest,
+  type FetchEventRequest,
+  type FetchEventTagsRequest,
+  type FetchMarketRequest,
+  type FetchMarketTagsRequest,
+  type FetchPublicProfileRequest,
+  type FetchRelatedTagResourcesRequest,
+  type FetchRelatedTagsRequest,
+  type FetchSeriesRequest,
+  type FetchTagRequest,
+  fetchCommentsById,
+  fetchEvent,
+  fetchEventTags,
+  fetchMarket,
+  fetchMarketTags,
+  fetchPublicProfile,
+  fetchRelatedTagResources,
+  fetchRelatedTags,
+  fetchSeries,
+  fetchSportsMarketTypes,
+  fetchTag,
+  type ListComboMarketsRequest,
+  type ListCommentsByUserAddressRequest,
+  type ListCommentsRequest,
+  type ListEventsRequest,
+  type ListMarketClarificationsRequest,
+  type ListMarketsRequest,
+  type ListSeriesRequest,
+  type ListTagsRequest,
+  type ListTeamsRequest,
+  listComboMarkets,
+  listComments,
+  listCommentsByUserAddress,
+  listEvents,
+  listMarketClarifications,
+  listMarkets,
+  listSeries,
+  listSports,
+  listTags,
+  listTeams,
+  type SearchRequest,
+  type SearchResults,
+  search,
+} from '../actions';
+import type {
+  BaseClient,
+  BasePublicClient,
+  BaseSecureClient,
+} from '../clients';
+import type { Paginated } from '../pagination';
+import type { RequestOptions } from '../request-options';
+
+export type DiscoveryActions = {
+  /**
+   * Lists events.
+   *
+   * Defaults to open events. Pass `closed: true` for closed events or
+   * `closed: 'any'` for either state; no identifier filter is required.
+   * Optionally filter by protocol with `version: ProtocolVersion.V1` or
+   * `ProtocolVersion.V2`, or pass both in an array to include both protocols.
+   * Arrays accept one or two values. Omitting `version` uses the current server
+   * default of CTF events (v1).
+   *
+   * @remarks
+   * Cursors continue the exact query they were minted for and are rejected for
+   * a different one before any request. Cursors saved from earlier versions
+   * keep working with the same arguments.
+   *
+   * @throws {@link ListEventsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listEvents({
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Event[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listEvents({
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Event[]
+   * }
+   * ```
+   */
+  listEvents(
+    request?: ListEventsRequest,
+    options?: RequestOptions,
+  ): Paginated<Event[]>;
+
+  /**
+   * Fetches an event.
+   *
+   * @throws {@link FetchEventError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const event = await client.fetchEvent({
+   *   id: '123',
+   * });
+   *
+   * const eventBySlug = await client.fetchEvent({
+   *   slug: 'presidential-election-2028',
+   * });
+   *
+   * const eventByUrl = await client.fetchEvent({
+   *   url: 'https://polymarket.com/event/presidential-election-2028',
+   * });
+   * ```
+   */
+  fetchEvent(
+    request: FetchEventRequest,
+    options?: RequestOptions,
+  ): Promise<Event>;
+
+  /**
+   * Fetches an event's tags.
+   *
+   * @throws {@link FetchEventTagsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const tags = await client.fetchEventTags({
+   *   id: '123',
+   * });
+   * ```
+   */
+  fetchEventTags(
+    request: FetchEventTagsRequest,
+    options?: RequestOptions,
+  ): Promise<TagReference[]>;
+
+  /**
+   * Lists markets.
+   *
+   * Defaults to open markets. Pass `closed: true` for closed markets or
+   * `closed: 'any'` for either state. The latter requires a non-empty `ids`,
+   * `slug`, `clobTokenIds`, `positionIds`, `conditionIds`, or `questionIds` filter.
+   *
+   * @remarks
+   * Legacy multi-outcome markets cannot be represented by the binary
+   * {@link Market} model and are omitted from results.
+   *
+   * Select one protocol with `version`, or pass both protocol versions in an array.
+   * Arrays accept one or two values. Omitting `version` uses the current server
+   * default of CTF markets (v1). Filter v2 markets by `resolutionStatus`, `requestIds`, or
+   * `onchainEventIds`. Each ID filter accepts at most 100 values. V1 markets
+   * use the separate `umaResolutionStatus` filter.
+   *
+   * @throws {@link ListMarketsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listMarkets({
+   *   closed: false,
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Market[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listMarkets({
+   *   closed: false,
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Market[]
+   * }
+   * ```
+   */
+  listMarkets(
+    request?: ListMarketsRequest,
+    options?: RequestOptions,
+  ): Paginated<Market[]>;
+
+  /**
+   * Lists markets available for Combos.
+   *
+   * @throws {@link ListComboMarketsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listComboMarkets({
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: ComboMarket[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listComboMarkets({
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: ComboMarket[]
+   * }
+   * ```
+   *
+   * @example
+   * Omit markets the caller has already displayed:
+   * ```ts
+   * const paginator = client.listComboMarkets({
+   *   exclude: ['0x4cd77d456c83e7d8c569a8fb8f6396c3f40154f657e6d970733e2b1b6a7110ff'],
+   *   pageSize: 10,
+   * });
+   * ```
+   */
+  listComboMarkets(
+    request?: ListComboMarketsRequest,
+    options?: RequestOptions,
+  ): Paginated<ComboMarket[]>;
+
+  /**
+   * Fetches a market.
+   *
+   * @remarks
+   * Legacy multi-outcome markets cannot be represented by the binary
+   * {@link Market} model, so fetching one fails with an
+   * `UnexpectedResponseError`.
+   *
+   * @throws {@link FetchMarketError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const market = await client.fetchMarket({
+   *   id: '12345',
+   * });
+   *
+   * const marketBySlug = await client.fetchMarket({
+   *   slug: 'some-market-slug',
+   * });
+   *
+   * const marketByUrl = await client.fetchMarket({
+   *   url: 'https://polymarket.com/event/some-market-slug',
+   * });
+   * ```
+   */
+  fetchMarket(
+    request: FetchMarketRequest,
+    options?: RequestOptions,
+  ): Promise<Market>;
+
+  /**
+   * Fetches a market's tags.
+   *
+   * @throws {@link FetchMarketTagsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const tags = await client.fetchMarketTags({
+   *   id: '12345',
+   * });
+   * ```
+   */
+  fetchMarketTags(
+    request: FetchMarketTagsRequest,
+    options?: RequestOptions,
+  ): Promise<TagReference[]>;
+
+  /**
+   * Lists series.
+   *
+   * @throws {@link ListSeriesError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listSeries({
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Series[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listSeries({
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Series[]
+   * }
+   * ```
+   */
+  listSeries(
+    request?: ListSeriesRequest,
+    options?: RequestOptions,
+  ): Paginated<Series[]>;
+
+  /**
+   * Fetches a series.
+   *
+   * @throws {@link FetchSeriesError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const series = await client.fetchSeries({
+   *   id: '123',
+   * });
+   * ```
+   */
+  fetchSeries(
+    request: FetchSeriesRequest,
+    options?: RequestOptions,
+  ): Promise<Series>;
+
+  /**
+   * Lists market clarifications — notes that resolve ambiguity in how a market
+   * settles.
+   *
+   * @throws {@link ListMarketClarificationsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const paginator = client.listMarketClarifications({
+   *   marketId: '512038',
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: MarketClarification[]
+   * }
+   * ```
+   */
+  listMarketClarifications(
+    request?: ListMarketClarificationsRequest,
+    options?: RequestOptions,
+  ): Paginated<MarketClarification[]>;
+
+  /**
+   * Lists tags.
+   *
+   * @throws {@link ListTagsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listTags({
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Tag[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listTags({
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Tag[]
+   * }
+   * ```
+   */
+  listTags(
+    request?: ListTagsRequest,
+    options?: RequestOptions,
+  ): Paginated<Tag[]>;
+
+  /**
+   * Fetches a tag by id or slug.
+   *
+   * @throws {@link FetchTagError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const tag = await client.fetchTag({
+   *   slug: 'politics',
+   * });
+   * ```
+   */
+  fetchTag(request: FetchTagRequest, options?: RequestOptions): Promise<Tag>;
+
+  /**
+   * Fetches related tag relationships by id or slug.
+   *
+   * @throws {@link FetchRelatedTagsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const related = await client.fetchRelatedTags({
+   *   slug: 'politics',
+   * });
+   * ```
+   */
+  fetchRelatedTags(
+    request: FetchRelatedTagsRequest,
+    options?: RequestOptions,
+  ): Promise<RelatedTag[]>;
+
+  /**
+   * Fetches resources linked from related tag relationships by id or slug.
+   *
+   * @throws {@link FetchRelatedTagResourcesError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const resources = await client.fetchRelatedTagResources({
+   *   slug: 'politics',
+   * });
+   * ```
+   */
+  fetchRelatedTagResources(
+    request: FetchRelatedTagResourcesRequest,
+    options?: RequestOptions,
+  ): Promise<Tag[]>;
+
+  /**
+   * Runs a public full-text search.
+   *
+   * `keepClosedMarkets` is an hour window for including recently closed markets
+   * when searching active events.
+   *
+   * Search serves up to 100 pages. If more results may exist at that boundary,
+   * automatic iteration yields the page with `limitReached: true` and stops
+   * normally, keeping `hasMore` true. Explicitly following its cursor throws
+   * {@link PaginationLimitError} before any request. Completeness is unknown.
+   *
+   * @throws {@link SearchError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.search({
+   *   q: 'election',
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items.events: Event[]
+   *   // page.items.tags: SearchTag[]
+   *   // page.items.profiles: Profile[]
+   * }
+   * ```
+   */
+  search(
+    request: SearchRequest,
+    options?: RequestOptions,
+  ): Paginated<SearchResults>;
+
+  /**
+   * Lists available sports metadata.
+   *
+   * @throws {@link ListSportsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const sports = await client.listSports();
+   * ```
+   */
+  listSports(options?: RequestOptions): Promise<SportsMetadata[]>;
+
+  /**
+   * Fetches the available market types grouped by sport.
+   *
+   * @throws {@link FetchSportsMarketTypesError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const marketTypes = await client.fetchSportsMarketTypes();
+   * ```
+   */
+  fetchSportsMarketTypes(
+    options?: RequestOptions,
+  ): Promise<SportsMarketTypesResponse>;
+
+  /**
+   * Lists teams.
+   *
+   * @throws {@link ListTeamsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listTeams({
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Team[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listTeams({
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Team[]
+   * }
+   * ```
+   */
+  listTeams(
+    request?: ListTeamsRequest,
+    options?: RequestOptions,
+  ): Paginated<Team[]>;
+
+  /**
+   * Fetches a public profile by wallet address.
+   *
+   * @throws {@link FetchPublicProfileError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const profile = await client.fetchPublicProfile({
+   *   address: '0x1234...',
+   * });
+   * ```
+   */
+  fetchPublicProfile(
+    request: FetchPublicProfileRequest,
+    options?: RequestOptions,
+  ): Promise<PublicProfile | null>;
+
+  /**
+   * Lists comments for an event or series.
+   *
+   * @remarks
+   * Without `order`, pages are newest first and `ascending` is ignored. With
+   * `order` (`id` or `createdAt`), pages are ascending unless `ascending` is
+   * `false`.
+   *
+   * Reads without `holdersOnly` or `getPositions` and with one of those orders
+   * page through the whole thread. Their cursors continue that exact query and
+   * are rejected for a different parent, order or direction.
+   *
+   * Reads with `holdersOnly`, `getPositions` or another order serve pages up to
+   * offset 200. Automatic iteration yields the last accessible full page with
+   * `limitReached: true` and stops normally; `hasMore` stays true because
+   * completeness cannot be established. Explicitly following its cursor throws
+   * {@link PaginationLimitError} before any request. Cursors saved from earlier
+   * versions keep working with the same arguments.
+   *
+   * `pageSize` counts top-level comments; replies ride along in the same page.
+   * A thread ending exactly on a page boundary may return one final empty page.
+   *
+   * @throws {@link ListCommentsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listComments({
+   *   parentEntityId: '123',
+   *   parentEntityType: CommentParentEntityType.Event,
+   *   pageSize: 20,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Comment[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listComments({
+   *   parentEntityId: '123',
+   *   parentEntityType: CommentParentEntityType.Event,
+   *   pageSize: 20,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Comment[]
+   * }
+   * ```
+   */
+  listComments(
+    request: ListCommentsRequest,
+    options?: RequestOptions,
+  ): Paginated<Comment[]>;
+
+  /**
+   * Fetches a comment thread by comment id.
+   *
+   * @throws {@link FetchCommentsByIdError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const thread = await client.fetchCommentsById({
+   *   id: '456',
+   *   getPositions: true,
+   * });
+   * ```
+   */
+  fetchCommentsById(
+    request: FetchCommentsByIdRequest,
+    options?: RequestOptions,
+  ): Promise<Comment[]>;
+
+  /**
+   * Lists comments written by a wallet address.
+   *
+   * @remarks
+   * Pages starting past offset 200 are not served. Automatic iteration yields
+   * the last accessible full page with `limitReached: true` and stops normally;
+   * `hasMore` stays true because completeness cannot be established. Explicitly
+   * following its cursor throws {@link PaginationLimitError} before any request.
+   *
+   * This is a hard stop for this listing: there are no range filters to
+   * retrieve the remaining comments.
+   *
+   * @throws {@link ListCommentsByUserAddressError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listCommentsByUserAddress({
+   *   address: '0x1234...',
+   *   pageSize: 10,
+   *   order: 'createdAt',
+   *   ascending: false,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Comment[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listCommentsByUserAddress({
+   *   address: '0x1234...',
+   *   pageSize: 10,
+   *   order: 'createdAt',
+   *   ascending: false,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Comment[]
+   * }
+   * ```
+   */
+  listCommentsByUserAddress(
+    request: ListCommentsByUserAddressRequest,
+    options?: RequestOptions,
+  ): Paginated<Comment[]>;
+};
+
+export function discoveryActions(client: BasePublicClient): DiscoveryActions;
+export function discoveryActions(client: BaseSecureClient): DiscoveryActions;
+export function discoveryActions(client: BaseClient): DiscoveryActions {
+  return {
+    listEvents: listEvents.bind(null, client),
+    fetchEvent: fetchEvent.bind(null, client),
+    fetchEventTags: fetchEventTags.bind(null, client),
+    listMarkets: listMarkets.bind(null, client),
+    listComboMarkets: listComboMarkets.bind(null, client),
+    fetchMarket: fetchMarket.bind(null, client),
+    fetchMarketTags: fetchMarketTags.bind(null, client),
+    listSeries: listSeries.bind(null, client),
+    fetchSeries: fetchSeries.bind(null, client),
+    listMarketClarifications: listMarketClarifications.bind(null, client),
+    listTags: listTags.bind(null, client),
+    fetchTag: fetchTag.bind(null, client),
+    fetchRelatedTags: fetchRelatedTags.bind(null, client),
+    fetchRelatedTagResources: fetchRelatedTagResources.bind(null, client),
+    search: search.bind(null, client),
+    listSports: listSports.bind(null, client),
+    fetchSportsMarketTypes: fetchSportsMarketTypes.bind(null, client),
+    listTeams: listTeams.bind(null, client),
+    fetchPublicProfile: fetchPublicProfile.bind(null, client),
+    listComments: listComments.bind(null, client),
+    fetchCommentsById: fetchCommentsById.bind(null, client),
+    listCommentsByUserAddress: listCommentsByUserAddress.bind(null, client),
+  };
+}
+
+// Error unions and runtime `isError` guards for every action bound above.
+// Surfaced at the root entry point through `export * from './decorators'`.
+// Keep this list in sync with the methods on DiscoveryActions.
+export {
+  FetchCommentsByIdError,
+  FetchEventError,
+  FetchEventTagsError,
+  FetchMarketError,
+  FetchMarketTagsError,
+  FetchPublicProfileError,
+  FetchRelatedTagResourcesError,
+  FetchRelatedTagsError,
+  FetchSeriesError,
+  FetchSportsMarketTypesError,
+  FetchTagError,
+  ListComboMarketsError,
+  ListCommentsByUserAddressError,
+  ListCommentsError,
+  ListEventsError,
+  ListMarketsError,
+  ListSeriesError,
+  ListSportsError,
+  ListTagsError,
+  ListTeamsError,
+  SearchError,
+} from '../actions';

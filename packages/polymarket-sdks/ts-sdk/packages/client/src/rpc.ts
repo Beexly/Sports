@@ -1,0 +1,417 @@
+import type { EvmAddress, HexString } from '@polymarket/types';
+import ky from 'ky';
+import {
+  RequestAbortedError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+} from './errors';
+import {
+  assertNotAborted,
+  DEFAULT_REQUEST_TIMEOUT_MS,
+  type Fetch,
+  type RequestOptions,
+  withAbort,
+} from './request-options';
+
+export type EthCallRequest = {
+  to: EvmAddress;
+  data: HexString;
+};
+
+export type EthEstimateGasRequest = {
+  data?: HexString;
+  from?: EvmAddress;
+  gasPrice?: bigint;
+  to: EvmAddress;
+  value?: bigint;
+};
+
+export type JsonRpcError = {
+  code: number;
+  message: string;
+  data?: unknown;
+};
+
+type JsonRpcSuccess<TResult> = {
+  jsonrpc: '2.0';
+  id: number;
+  result: TResult;
+};
+
+type JsonRpcFailure = {
+  jsonrpc: '2.0';
+  id: number | null;
+  error: JsonRpcError;
+};
+
+type JsonRpcResponse<TResult> = JsonRpcSuccess<TResult> | JsonRpcFailure;
+
+export type JsonRpcClientConfig = {
+  fetch?: Fetch;
+  url: string;
+};
+
+/** @internal */
+export class JsonRpcClient {
+  readonly #fetch: Fetch | undefined;
+  readonly #url: string;
+
+  constructor({ fetch, url }: JsonRpcClientConfig) {
+    this.#fetch = fetch;
+    this.#url = url;
+  }
+
+  async ethCall(
+    request: EthCallRequest,
+    options?: RequestOptions,
+  ): Promise<HexString> {
+    const response = await this.#post<HexString>(
+      {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_call',
+        params: [{ to: request.to, data: request.data }, 'latest'],
+      },
+      options,
+    );
+
+    if ('error' in response) {
+      throw new RequestRejectedError(
+        `JSON-RPC eth_call failed: ${response.error.message}`,
+        { cause: response.error, status: 200 },
+      );
+    }
+
+    if (typeof response.result !== 'string') {
+      throw new UnexpectedResponseError(
+        'Expected JSON-RPC eth_call result to be a hex string',
+      );
+    }
+
+    if (!isRpcHexString(response.result)) {
+      throw new UnexpectedResponseError(
+        'Expected JSON-RPC eth_call result to be a hex string',
+      );
+    }
+
+    return response.result;
+  }
+
+  async ethCallBatch(
+    requests: readonly EthCallRequest[],
+    options?: RequestOptions,
+  ): Promise<HexString[]> {
+    if (requests.length === 0) {
+      return [];
+    }
+
+    return this.#ethCallBatchWithSplit(requests, options);
+  }
+
+  async ethEstimateGas(
+    request: EthEstimateGasRequest,
+    options?: RequestOptions,
+  ): Promise<bigint> {
+    const call: Record<string, string> = { to: request.to };
+
+    if (request.data !== undefined) {
+      call.data = request.data;
+    }
+
+    if (request.from !== undefined) {
+      call.from = request.from;
+    }
+
+    if (request.gasPrice !== undefined) {
+      call.gasPrice = toRpcQuantity(request.gasPrice);
+    }
+
+    if (request.value !== undefined) {
+      call.value = toRpcQuantity(request.value);
+    }
+
+    const response = await this.#post<HexString>(
+      {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_estimateGas',
+        params: [call],
+      },
+      options,
+    );
+
+    if ('error' in response) {
+      throw new RequestRejectedError(
+        `JSON-RPC eth_estimateGas failed: ${response.error.message}`,
+        { cause: response.error, status: 200 },
+      );
+    }
+
+    return BigInt(expectRpcHexResult(response.result, 'eth_estimateGas'));
+  }
+
+  async #ethCallBatchWithSplit(
+    requests: readonly EthCallRequest[],
+    options?: RequestOptions,
+  ): Promise<HexString[]> {
+    if (requests.length === 1) {
+      return [await this.ethCall(requests[0] as EthCallRequest, options)];
+    }
+
+    try {
+      return await this.#postEthCallBatch(requests, options);
+    } catch (error) {
+      if (!(error instanceof RequestRejectedError) || error.status < 500) {
+        throw error;
+      }
+
+      const midpoint = Math.ceil(requests.length / 2);
+      const [left, right] = await Promise.all([
+        this.#ethCallBatchWithSplit(requests.slice(0, midpoint), options),
+        this.#ethCallBatchWithSplit(requests.slice(midpoint), options),
+      ]);
+
+      return [...left, ...right];
+    }
+  }
+
+  async #postEthCallBatch(
+    requests: readonly EthCallRequest[],
+    options?: RequestOptions,
+  ): Promise<HexString[]> {
+    const responses = await this.#postBatch<HexString>(
+      requests.map((request, index) => ({
+        jsonrpc: '2.0',
+        id: index + 1,
+        method: 'eth_call',
+        params: [{ to: request.to, data: request.data }, 'latest'],
+      })),
+      options,
+    );
+
+    const responsesById = new Map<number, JsonRpcResponse<HexString>>();
+
+    for (const response of responses) {
+      if ('error' in response && response.id === null) {
+        throw new RequestRejectedError(
+          `JSON-RPC eth_call failed: ${response.error.message}`,
+          { cause: response.error, status: 200 },
+        );
+      }
+
+      if (response.id !== null) {
+        responsesById.set(response.id, response);
+      }
+    }
+
+    return requests.map((_, index) => {
+      const id = index + 1;
+      const response = responsesById.get(id);
+
+      if (response === undefined) {
+        throw new UnexpectedResponseError(
+          'Expected JSON-RPC batch response for every request',
+        );
+      }
+
+      if ('error' in response) {
+        throw new RequestRejectedError(
+          `JSON-RPC eth_call failed: ${response.error.message}`,
+          { cause: response.error, status: 200 },
+        );
+      }
+
+      return expectRpcHexResult(response.result);
+    });
+  }
+
+  async #post<TResult>(
+    json: unknown,
+    options?: RequestOptions,
+  ): Promise<JsonRpcResponse<TResult>> {
+    assertNotAborted(options?.signal);
+    let response: Response;
+
+    try {
+      response = await withAbort(
+        ky.post(this.#url, {
+          fetch: this.#fetch,
+          signal: options?.signal,
+          timeout: options?.timeout ?? DEFAULT_REQUEST_TIMEOUT_MS,
+          json,
+          throwHttpErrors: false,
+        }),
+        options?.signal,
+      );
+    } catch (error) {
+      if (error instanceof RequestAbortedError) throw error;
+      throw TransportError.fromError(error);
+    }
+
+    if (!response.ok) {
+      throw new RequestRejectedError(
+        `JSON-RPC request to ${this.#url} failed with status ${response.status}`,
+        { status: response.status },
+      );
+    }
+
+    let body: unknown;
+
+    try {
+      body = await withAbort(response.json(), options?.signal);
+    } catch (error) {
+      if (error instanceof RequestAbortedError) throw error;
+      throw new UnexpectedResponseError(
+        'Expected JSON-RPC response body to be JSON',
+        { cause: error },
+      );
+    }
+
+    if (!isJsonRpcResponse<TResult>(body)) {
+      throw new UnexpectedResponseError('Unexpected JSON-RPC response shape');
+    }
+
+    return body;
+  }
+
+  async #postBatch<TResult>(
+    json: unknown,
+    options?: RequestOptions,
+  ): Promise<JsonRpcResponse<TResult>[]> {
+    assertNotAborted(options?.signal);
+    let response: Response;
+
+    try {
+      response = await withAbort(
+        ky.post(this.#url, {
+          fetch: this.#fetch,
+          signal: options?.signal,
+          timeout: options?.timeout ?? DEFAULT_REQUEST_TIMEOUT_MS,
+          json,
+          throwHttpErrors: false,
+        }),
+        options?.signal,
+      );
+    } catch (error) {
+      if (error instanceof RequestAbortedError) throw error;
+      throw TransportError.fromError(error);
+    }
+
+    if (!response.ok) {
+      throw new RequestRejectedError(
+        `JSON-RPC request to ${this.#url} failed with status ${response.status}`,
+        { status: response.status },
+      );
+    }
+
+    let body: unknown;
+
+    try {
+      body = await withAbort(response.json(), options?.signal);
+    } catch (error) {
+      if (error instanceof RequestAbortedError) throw error;
+      throw new UnexpectedResponseError(
+        'Expected JSON-RPC response body to be JSON',
+        { cause: error },
+      );
+    }
+
+    if (
+      !Array.isArray(body) ||
+      !body.every((value) => isJsonRpcResponse<TResult>(value))
+    ) {
+      throw new UnexpectedResponseError('Unexpected JSON-RPC response shape');
+    }
+
+    return body;
+  }
+}
+
+/** @internal */
+export function isJsonRpcContractRevert(error: unknown): boolean {
+  if (
+    !(error instanceof RequestRejectedError) ||
+    !isJsonRpcError(error.cause)
+  ) {
+    return false;
+  }
+
+  const message = [
+    error.cause.message,
+    stringifyJsonRpcErrorData(error.cause.data),
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  return (
+    (error.cause.code === 3 ||
+      error.cause.code === -32_000 ||
+      error.cause.code === -32_003 ||
+      error.cause.code === -32_015 ||
+      error.cause.code === -32_603) &&
+    (message.includes('execution reverted') ||
+      message.includes('revert') ||
+      message.includes('invalid opcode'))
+  );
+}
+
+function isJsonRpcResponse<TResult>(
+  value: unknown,
+): value is JsonRpcResponse<TResult> {
+  if (!isRecord(value) || value.jsonrpc !== '2.0') {
+    return false;
+  }
+
+  if ('error' in value) {
+    return isJsonRpcError(value.error);
+  }
+
+  return 'result' in value;
+}
+
+function isJsonRpcError(value: unknown): value is JsonRpcError {
+  return (
+    isRecord(value) &&
+    typeof value.code === 'number' &&
+    typeof value.message === 'string'
+  );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isRpcHexString(value: string): value is HexString {
+  return /^0x[a-fA-F0-9]*$/.test(value);
+}
+
+function expectRpcHexResult(value: unknown, method = 'eth_call'): HexString {
+  if (typeof value !== 'string' || !isRpcHexString(value)) {
+    throw new UnexpectedResponseError(
+      `Expected JSON-RPC ${method} result to be a hex string`,
+    );
+  }
+
+  return value;
+}
+
+function toRpcQuantity(value: bigint): HexString {
+  return `0x${value.toString(16)}` as HexString;
+}
+
+function stringifyJsonRpcErrorData(data: unknown): string {
+  if (data === undefined) {
+    return '';
+  }
+
+  if (typeof data === 'string') {
+    return data;
+  }
+
+  try {
+    return JSON.stringify(data);
+  } catch {
+    return '';
+  }
+}

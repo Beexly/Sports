@@ -1,0 +1,448 @@
+import type { GatewayErrorCode } from '@polymarket/bindings';
+
+export {
+  type GatewayErrorCode,
+  GatewayKnownErrorCode,
+} from '@polymarket/bindings';
+
+import type { PerpsCancelOrderResult } from '@polymarket/bindings/perps';
+
+export {
+  type RealtimeErrorCode,
+  RealtimeKnownErrorCode,
+} from '@polymarket/bindings/subscriptions';
+
+import { PolymarketError } from '@polymarket/types';
+import type { ZodError } from 'zod';
+import type { RateLimitUpdate } from './rate-limit';
+import {
+  formatInputZodError,
+  formatResponseZodError,
+  type ResponseValidationContext,
+} from './validation';
+
+/**
+ * Error thrown when an action input fails SDK validation before a request is
+ * sent.
+ */
+export class UserInputError extends PolymarketError {
+  override name = 'UserInputError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+
+  static fromZodError(error: ZodError): UserInputError {
+    return new UserInputError(formatInputZodError(error), {
+      cause: error,
+    });
+  }
+}
+
+/**
+ * Error thrown when pagination would pass the deepest page the service serves
+ * for a list.
+ *
+ * Some list endpoints cap how far an offset-paginated read may go and reject
+ * requests past the cap. The SDK throws this before sending such a request;
+ * the pages already returned stay valid, but whether more items exist past
+ * the cap cannot be established. Automatic iteration stops normally on a page
+ * with `limitReached: true`; explicitly resuming past the cap still throws.
+ */
+export class PaginationLimitError extends PolymarketError {
+  override name = 'PaginationLimitError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+}
+
+/**
+ * Error thrown when a service response does not match the action's expected
+ * response shape.
+ */
+export class UnexpectedResponseError extends PolymarketError {
+  override name = 'UnexpectedResponseError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+
+  static fromZodError(
+    error: ZodError,
+    context: ResponseValidationContext,
+  ): UnexpectedResponseError {
+    return new UnexpectedResponseError(formatResponseZodError(error, context), {
+      cause: error,
+    });
+  }
+}
+
+/**
+ * Error thrown when the SDK cannot complete a request because of a network or
+ * runtime transport failure.
+ */
+export class TransportError extends PolymarketError {
+  override name = 'TransportError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+
+  static fromError(error: unknown): TransportError {
+    return new TransportError(
+      error instanceof Error ? error.message : 'Request failed',
+      {
+        cause: error,
+      },
+    );
+  }
+}
+
+/**
+ * Error thrown when a caller cancels a read through its AbortSignal.
+ *
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export class RequestAbortedError extends PolymarketError {
+  override name = 'RequestAbortedError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+}
+
+/**
+ * WebSocket close codes defined by RFC 6455 and the IANA WebSocket Close Code
+ * Number registry. Codes 4000-4999 are reserved for application use and are
+ * intentionally not modeled here.
+ */
+export enum WebSocketKnownCloseCode {
+  NormalClosure = 1000,
+  GoingAway = 1001,
+  ProtocolError = 1002,
+  UnsupportedData = 1003,
+  /** Synthesized locally when the peer closed without a status code. */
+  NoStatusReceived = 1005,
+  /** Synthesized locally when the connection dropped without a close frame. */
+  AbnormalClosure = 1006,
+  InvalidFramePayload = 1007,
+  PolicyViolation = 1008,
+  MessageTooBig = 1009,
+  InternalError = 1011,
+  ServiceRestart = 1012,
+  TryAgainLater = 1013,
+}
+
+/**
+ * A WebSocket close code. Codes enumerated in
+ * {@link WebSocketKnownCloseCode} are defined by RFC 6455; other values, such
+ * as application-defined 4000-4999 codes, flow through as plain numbers.
+ */
+export type WebSocketCloseCode = WebSocketKnownCloseCode | (number & {});
+
+export type ConnectionLostErrorOptions = {
+  /** WebSocket close code reported for the lost connection. */
+  code: WebSocketCloseCode;
+  /** Close reason provided by the peer. Empty when none was sent. */
+  reason: string;
+};
+
+/**
+ * Error thrown when a live connection ends without the SDK requesting it.
+ */
+export class ConnectionLostError extends PolymarketError {
+  override name = 'ConnectionLostError' as const;
+
+  readonly code: WebSocketCloseCode;
+  readonly reason: string;
+
+  constructor(
+    message: string,
+    options: ErrorOptions & ConnectionLostErrorOptions,
+  ) {
+    super(message, options);
+    this.code = options.code;
+    this.reason = options.reason;
+  }
+}
+
+/**
+ * Trading restriction reported by the venue while orders cannot be placed
+ * normally. The SDK does not retry automatically; callers decide how to
+ * react, honoring {@link RequestRejectedError.retryAfter} when provided.
+ */
+export enum TradingRestriction {
+  /** The matching engine is restarting and rejects order requests until it is back. */
+  RESTARTING = 'restarting',
+  /** Cancels and post-only orders are accepted; other orders are rejected. */
+  POST_ONLY = 'post_only',
+}
+
+export type RequestRejectedErrorOptions = {
+  status: number;
+  /**
+   * Machine-readable error code from the response body, when the service
+   * provided one.
+   */
+  code?: GatewayErrorCode;
+  /**
+   * Server-requested delay in seconds before retrying, when the response
+   * provided one.
+   */
+  retryAfter?: number;
+  /**
+   * Trading restriction that caused the rejection, when the response
+   * identified one.
+   */
+  restriction?: TradingRestriction;
+};
+
+/**
+ * Error thrown when a service responds with a non-success status other than
+ * rate limiting.
+ */
+export class RequestRejectedError extends PolymarketError {
+  override name: 'RequestRejectedError' | 'OrderHeartbeatMismatchError' =
+    'RequestRejectedError';
+
+  readonly status: number;
+  /**
+   * Machine-readable error code from the response body, when the service
+   * provided one.
+   */
+  readonly code?: GatewayErrorCode;
+  /**
+   * Server-requested delay in seconds before retrying, when the response
+   * provided one.
+   */
+  readonly retryAfter?: number;
+  /**
+   * Trading restriction that caused the rejection, when the response
+   * identified one.
+   */
+  readonly restriction?: TradingRestriction;
+
+  constructor(
+    message: string,
+    options: ErrorOptions & RequestRejectedErrorOptions,
+  ) {
+    super(message, options);
+    this.status = options.status;
+    this.code = options.code;
+    this.retryAfter = options.retryAfter;
+    this.restriction = options.restriction;
+  }
+}
+
+/**
+ * An order heartbeat used a stale ID. Retry explicitly with heartbeatId and retain
+ * the new ID from the successful response. A rejected send does not refresh the deadline.
+ */
+export class OrderHeartbeatMismatchError extends RequestRejectedError {
+  override name = 'OrderHeartbeatMismatchError' as const;
+
+  /** Currently expected ID. It can be empty after a legacy heartbeat. */
+  readonly heartbeatId: string;
+
+  constructor(heartbeatId: string) {
+    super('Invalid Heartbeat ID', { status: 400 });
+    this.heartbeatId = heartbeatId;
+  }
+}
+
+export type RateLimitErrorOptions = {
+  /**
+   * Server-requested delay in seconds before retrying, when the response
+   * provided one.
+   */
+  retryAfter?: number;
+  /**
+   * Rate-limit state reported with the rejection, when the response provided
+   * it.
+   */
+  rateLimit?: RateLimitUpdate;
+};
+
+/**
+ * Error thrown when the service rejects a request because the rate limit has
+ * been exceeded.
+ */
+export class RateLimitError extends PolymarketError {
+  override name = 'RateLimitError' as const;
+
+  /**
+   * Server-requested delay in seconds before retrying, when the response
+   * provided one.
+   */
+  readonly retryAfter?: number;
+  /**
+   * Rate-limit state reported with the rejection, when the response provided
+   * it.
+   */
+  readonly rateLimit?: RateLimitUpdate;
+
+  constructor(
+    message: string,
+    options: ErrorOptions & RateLimitErrorOptions = {},
+  ) {
+    super(message, options);
+    this.retryAfter = options.retryAfter;
+    this.rateLimit = options.rateLimit;
+  }
+}
+
+/**
+ * Error thrown when an async wait operation exceeds its allotted polling time.
+ */
+export class TimeoutError extends PolymarketError {
+  override name = 'TimeoutError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+}
+
+/**
+ * Error thrown when an operation is interrupted through an abort signal.
+ */
+export class OperationAbortedError extends PolymarketError {
+  override name = 'OperationAbortedError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+
+  static fromReason(reason: unknown): OperationAbortedError {
+    return new OperationAbortedError('Operation was aborted.', {
+      cause: reason,
+    });
+  }
+}
+
+/**
+ * Error thrown when a submitted transaction reaches a terminal failure state.
+ */
+export class TransactionFailedError extends PolymarketError {
+  override name = 'TransactionFailedError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+}
+
+/**
+ * Error thrown when the user cancels a required wallet signing action.
+ */
+export class CancelledSigningError extends PolymarketError {
+  override name = 'CancelledSigningError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+
+  static fromError(error: Error): CancelledSigningError {
+    return new CancelledSigningError(error.message, {
+      cause: error,
+    });
+  }
+}
+
+/**
+ * Error thrown when there is not enough resting market liquidity to satisfy the
+ * requested execution semantics.
+ */
+export class InsufficientLiquidityError extends PolymarketError {
+  override name = 'InsufficientLiquidityError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+}
+
+/**
+ * Error thrown when arming auto-cancel is rejected because the account has
+ * reached its daily auto-cancel trigger limit. Arming is rejected until the
+ * daily counter resets at the next UTC midnight; clearing an existing
+ * schedule is always allowed.
+ *
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export class AutoCancelDailyLimitError extends PolymarketError {
+  override name = 'AutoCancelDailyLimitError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+}
+
+/**
+ * Details retained when a Perps cancellation retry fails.
+ *
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsCancelRetryErrorOptions = {
+  /** Last received per-order outcomes, in the original request order. */
+  results: readonly PerpsCancelOrderResult[];
+  /** Zero-based original request positions retried in the failed attempt. */
+  pendingIndexes: readonly number[];
+};
+
+/**
+ * Error thrown when a Perps cancellation retry fails after per-order results
+ * have already been received. The original failure is available as `cause`.
+ *
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export class PerpsCancelRetryError extends PolymarketError {
+  override name = 'PerpsCancelRetryError' as const;
+
+  /** Last received per-order outcomes, in the original request order. */
+  readonly results: readonly PerpsCancelOrderResult[];
+  /**
+   * Zero-based original request positions retried in the failed attempt.
+   * Their retained rejections are historical: a transport failure can conceal
+   * completion, so these results do not establish the current order state.
+   */
+  readonly pendingIndexes: readonly number[];
+
+  constructor(
+    message: string,
+    options: ErrorOptions & PerpsCancelRetryErrorOptions,
+  ) {
+    super(message, options);
+    this.results = [...options.results];
+    this.pendingIndexes = [...options.pendingIndexes];
+  }
+}
+
+/**
+ * Error thrown when the SDK cannot produce a required signature or
+ * authentication payload.
+ */
+export class SigningError extends PolymarketError {
+  override name = 'SigningError' as const;
+
+  constructor(message: string, options: ErrorOptions = {}) {
+    super(message, options);
+  }
+
+  static fromError(error: unknown, message?: string): SigningError {
+    const msg =
+      message ?? (error instanceof Error ? error.message : 'Signing failed');
+    return new SigningError(msg, { cause: error });
+  }
+}
+
+export function makeErrorGuard<
+  // biome-ignore lint/suspicious/noExplicitAny: constructor rest args require any[]
+  TClasses extends ReadonlyArray<new (...args: any[]) => unknown>,
+>(
+  ...classes: TClasses
+): { isError(error: unknown): error is InstanceType<TClasses[number]> } {
+  return {
+    isError(error: unknown): error is InstanceType<TClasses[number]> {
+      return classes.some((c) => error instanceof c);
+    },
+  };
+}
