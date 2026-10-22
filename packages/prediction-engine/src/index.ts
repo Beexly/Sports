@@ -4549,3 +4549,8 @@ export {
   fetchUpcomingWindows,
   type GameWindow,
 } from "./watch/watch-scheduler.js";
+
+export {
+  computeDefensiveTargetShares,
+  type DefensiveTargetShare,
+} from "./expected-metrics/defensive-target-share.js";
