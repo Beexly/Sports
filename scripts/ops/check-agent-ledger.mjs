@@ -44,7 +44,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const DEFAULT_LEDGER = join(REPO_ROOT, "docs", "ops", "AGENT_LEDGER.md");
 
 export const OWNERS = ["hermes", "copilot", "browser", "claude", "founder", "—"];
-export const STATUSES = ["OPEN", "CLAIMED", "BLOCKED", "UNPUSHED", "DONE", "CANCELLED"];
+export const STATUSES = ["OPEN", "CLAIMED", "BLOCKED", "ON HOLD", "UNPUSHED", "DONE", "CANCELLED"];
 
 const BEGIN = "<!-- LEDGER:BEGIN -->";
 const END = "<!-- LEDGER:END -->";
@@ -304,11 +304,34 @@ export function validate(rows, opts = {}) {
     const unowned = row.owner === "—";
     const hasEvidence = row.evidence !== "—" && row.evidence !== "";
 
+    // SLA watch (C-373): non-fatal warnings, reported alongside violations but
+    // never failing the guard. A CLAIMED row that reports progress with no
+    // evidence, or an OPEN row that carries evidence but no owner, is work whose
+    // state cannot be chased — visible, so an operator resolves it, but not
+    // build-breaking. Collected only when opts.warnings is an array; validate()
+    // stays pure by default so existing callers see no behavior change.
+    if (Array.isArray(opts.warnings)) {
+      if (row.status === "CLAIMED" && !hasEvidence) {
+        opts.warnings.push(`${where}: CLAIMED with no evidence — SLA watch, not a violation; post evidence or revert to OPEN`);
+      } else if (row.status === "OPEN" && unowned && hasEvidence) {
+        opts.warnings.push(`${where}: OPEN with evidence but no owner — orphaned work; claim it or park it`);
+      }
+    }
+
     switch (row.status) {
       case "OPEN":
         // An OPEN row may name an intended owner (an assignment) or none at all.
         // CLAIMED is the signal that work has actually begun, so OPEN carries no
         // ownership requirement in either direction.
+        break;
+
+      case "ON HOLD":
+        // Parked work still has a name on it and still has a reopen condition.
+        // A park with no owner is unreachable (nobody answers for it); a park
+        // with no reason is a silent kill — relitigation is exactly what the
+        // Evidence column exists to prevent.
+        if (unowned) violations.push(`${where}: ON HOLD requires an Owner — parked work still has a name on it`);
+        if (!hasEvidence) violations.push(`${where}: ON HOLD requires a reason in Evidence — who parked it and what reopens it`);
         break;
 
       case "CLAIMED":
@@ -407,17 +430,18 @@ export function checkLedgerFile(path = DEFAULT_LEDGER, opts = {}) {
 
 /** Same as checkLedgerFile, but also reports which SHAs could not be checked. */
 export function inspectLedgerFile(path = DEFAULT_LEDGER, opts = {}) {
-  if (!existsSync(path)) return { violations: [`ledger not found at ${path}`], rows: [], unverified: [] };
+  if (!existsSync(path)) return { violations: [`ledger not found at ${path}`], rows: [], unverified: [], warnings: [] };
   const { rows, errors } = parseLedger(readFileSync(path, "utf8"));
   const unverified = [];
-  const violations = [...errors, ...validate(rows, { ...opts, unverified })];
-  return { violations, rows, unverified };
+  const warnings = [];
+  const violations = [...errors, ...validate(rows, { ...opts, unverified, warnings })];
+  return { violations, rows, unverified, warnings };
 }
 
 // CLI
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   const target = process.argv[2] ? resolve(process.argv[2]) : DEFAULT_LEDGER;
-  const { violations, rows, unverified } = inspectLedgerFile(target);
+  const { violations, rows, unverified, warnings } = inspectLedgerFile(target);
   if (unverified.length > 0) {
     // Never silent: a run that verified less than it appears to must say so,
     // otherwise a green line reads as "every DONE is proven" when it is not.
@@ -435,6 +459,14 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     for (const v of violations) console.error(`  ${v}`);
     console.error("\nSee the Rules section of docs/ops/AGENT_LEDGER.md.");
     process.exit(1);
+  }
+  if (warnings.length > 0) {
+    // Non-fatal: state that cannot be chased is visible to the operator but
+    // does not block the build. That asymmetry is the point — a warning must
+    // never be the thing that hides a violation, and a violation must never
+    // degrade into a warning.
+    console.warn(`[agent-ledger] SLA watch — ${warnings.length} warning(s):`);
+    for (const w of warnings) console.warn(`  ${w}`);
   }
   const byStatus = STATUSES.map((s) => `${s}=${rows.filter((r) => r.status === s).length}`).join(" ");
   const coverage = unverified.length > 0 ? ` [${unverified.length} SHA(s) unverified]` : "";
