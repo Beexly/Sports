@@ -12,12 +12,12 @@ shape tests and an incorrect body count. The evidence is in
 | X records with an individually named, falsifiable test | **0 / 80** |
 | X themes exercised by one function-level test | 8 / 8 |
 | OSF posts fetched | 24 / 24 |
-| OSF posts with an independent equation-level audit | **24 / 24** audited (138 claims; 18 mismatch claims open) |
+| OSF posts with an independent equation-level audit | **20 / 24 valid** (out_3 mis-mapped; 18 mismatch claims open) |
 | vitest tests | 49 passed; ~43 behavioral, ~6 shape-only |
 | pytest tests | 7 passed; 5 behavioral, 2 accounting |
 | P0 bugs found in deep review | 7 |
 | P0 bugs fixed | 7 |
-| P1 findings open | 15 |
+| P1 findings open | 21 |
 
 The build is behaviorally tested at the module level. It is not tested at the record
 or post level, and this report no longer claims otherwise.
@@ -104,6 +104,7 @@ vitest (3 files)
 6. `rawUnshrunkDelta` is now recomputable from `familyRawDeltas` (11.9 exactly).
 7. `shrunkUncappedDelta` now equals the precision-weighted sum the cap uses
    (0.970584…); the old 8.665 is preserved as `shrunkUnweightedDelta`.
+8. HFA constants corrected to the post's 2.85 / -0.7 / 0.4 (were 2.6 / 0.4 / 2.1).
 
 ## 7. Remaining P1 (not done)
 

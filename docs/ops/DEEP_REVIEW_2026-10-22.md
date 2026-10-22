@@ -40,7 +40,7 @@ and its output line are quoted. Gates not met are listed at the end, not hidden.
 | 27 | shrunkUncappedDelta=8.665 | recompute residual×shrink×weight | **FALSE before fix** | recompute 0.9706; 8.665 was unweighted; split into two fields |
 | 28 | precision 2000 | code `1/(0.0004+0.0001)` | PROVEN (assumption) | `DEFAULT_FAMILY_VARIANCE=0.0004`, λ=1e-4 |
 | 29 | 80/80 records represented | count record-named tests | **FALSE** | 0/80 named; 8 theme tests |
-| 30 | 24/24 posts verified | audit files | **FALSE (verified≠audited)** | 24/24 audited; 18 mismatch claims open |
+| 30 | 24/24 posts verified | audit files | **FALSE** | 20/24 valid audits; out_3 mis-mapped 4 posts; 18 mismatch claims open |
 | 31 | 625 posts mined | `grep -rIl "625 posts"` | **UNVERIFIABLE** | only the audit block itself |
 | 32 | "orthogonalized" | code review `:176-202` | **FALSE label** | market-only residualization |
 | 33 | "epistemic variance" | code `coverage-scheme.ts:430` | **FALSE label** | deterministic head variance |
@@ -77,7 +77,7 @@ and its output line are quoted. Gates not met are listed at the end, not hidden.
 9. **Epistemic variance false label.** `coverage-scheme.ts:430`.
 10. **Grad-CAM false label.** `coverage-scheme.ts:645-666`.
 11. **0/80 record-level assertions.** 8 theme tests only.
-12. **OSF audit complete but mismatched.** 24/24 posts, 138 claims, 18 mismatch claims unadjudicated.
+12. **OSF audit partly invalid.** 20/24 valid; out_3 audited Post numbers 5/6/7/23 but read files 05/06/07/23 (different posts), so its 4 posts are invalid. 18 mismatch claims unadjudicated.
 13. **Warehouse not reproducible.** 96 files/1.92 GB, no per-file manifest.
 14. **`inputHash` not recomputable from the record.** Inputs not stored.
 15. **`fast_pbp_loader` edge cases.** Negative/zero weeks admitted; duplicates kept;
@@ -91,7 +91,19 @@ and its output line are quoted. Gates not met are listed at the end, not hidden.
 20. **No feed schema/version field.**
 21. **No retry/backoff** on nflverse/OSF downloads.
 22. **No declared downstream consumer** for any feed.
-    (8–22 = 15 findings; 8–15 are the core correctness set.)
+    28. **HFA regime constants were not the post's.** Post #11 publishes 2.85 / -0.7 / 0.4;
+    code used 2.6 / 0.4 / 2.1. Fixed to the published values; test asserts 2.85 and 0.4.
+29. **xFG feature set differs.** Post #15 uses GW_FG_Att and Precip; code uses dome and
+    altitude. The quadratic kink matches; the regressors do not.
+30. **RERUN is OLS, post is LOESS.** `computeRerunPunterMetric` uses ordinary least
+    squares; Post #17 uses local regression. No era adjustment.
+31. **Rest semantics differ.** Post #18 measures within-game drive rest; code uses
+    between-game rest days.
+32. **xPass is single-stage logistic; post is xgboost→Stan two-stage** with team effects.
+33. **WR1 method differs.** Post #2 ranks by air yards and raw mean EPA; code applies
+    EB shrinkage to pre-computed inputs.
+
+(8–33 = 26 findings; 8–15 core correctness, 28–33 doc-code drift.)
 
 ### P2 — open (5)
 
@@ -110,7 +122,7 @@ and its output line are quoted. Gates not met are listed at the end, not hidden.
 | X records with a passing named assertion | **0 / 80** |
 | X themes exercised | 8 / 8 |
 | OSF posts fetched | 24 / 24 |
-| OSF posts with an independent audit | **24 / 24** (18 mismatch claims open) |
+| OSF posts with an independent audit | **20 / 24 valid** (out_3 mis-mapped; 18 mismatch claims open) |
 | vitest | 49 passed; behavioral count **not mutation-certified** |
 | pytest | 7 passed |
 | Sanitizer providers caught | **21 / 22** (pk_live excluded) |
