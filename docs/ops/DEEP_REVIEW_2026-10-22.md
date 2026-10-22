@@ -73,15 +73,14 @@ and its output line are quoted. Gates not met are listed at the end, not hidden.
 
 ### P1 — open (15)
 
-8. **Orthogonality false.** Only market projection removed (`:176-184`).
-9. **Epistemic variance false label.** `coverage-scheme.ts:430`.
-10. **Grad-CAM false label.** `coverage-scheme.ts:645-666`.
+8. **Orthogonality false — FIXED in Stream 15.** Cholesky whitening (`L L^T = Sigma_reg`), GLS weights, `familyWhitenedResiduals`; test reconstructs L L^T to 1e-10.
+9. **Epistemic variance false label — FIXED in Stream 15.** `headDisagreementVariance` primary, `uncertaintyEstimationMethod`, alias retained; bootstrap method supported.
+10. **Grad-CAM label — FIXED in Stream 15.** Outer ReLU + guided-backprop double gate, normalized [0,1]; test asserts bounds.
 11. **0/80 record-level assertions.** 8 theme tests only.
 12. **OSF audit partly invalid.** 20/24 valid; out_3 audited Post numbers 5/6/7/23 but read files 05/06/07/23 (different posts), so its 4 posts are invalid. 18 mismatch claims unadjudicated.
 13. **Warehouse not reproducible.** 96 files/1.92 GB, no per-file manifest.
-14. **`inputHash` not recomputable from the record.** Inputs not stored.
-15. **`fast_pbp_loader` edge cases.** Negative/zero weeks admitted; duplicates kept;
-    string season silently empties.
+14. **`inputHash` not recomputable — FIXED in Stream 15.** `canonicalInputs` + `canonicalInputsHash` embedded; sha256(canonicalizeJson) test.
+15. **`fast_pbp_loader` edge cases — FIXED in Stream 15.** Non-integer/out-of-range weeks rejected; rows coerced/validated/deduped; `filterKnownAt` validates and dedupes too.
 16. **18.7 MB single JSONL line.** `user_batch_ingest.jsonl` max record = 18,706,039 B.
 17. **CRLF/hash semantics.** Worktree sha256 ≠ committed blob for user_batch
     (`395cc470…` vs `5d1d3ce0…`); `.gitattributes` sets LF but the file was not

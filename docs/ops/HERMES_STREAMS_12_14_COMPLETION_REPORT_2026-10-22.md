@@ -17,7 +17,7 @@ shape tests and an incorrect body count. The evidence is in
 | pytest tests | 7 passed; 5 behavioral, 2 accounting |
 | P0 bugs found in deep review | 7 |
 | P0 bugs fixed | 7 |
-| P1 findings open | 21 |
+| P1 findings open | 16 |
 
 The build is behaviorally tested at the module level. It is not tested at the record
 or post level, and this report no longer claims otherwise.
@@ -116,6 +116,12 @@ vitest (3 files)
 6. Add a warehouse file manifest with per-file sha256.
 7. Make `inputHash` recomputable from the feed record.
 8. Harden `fast_pbp_loader` against negative/NA/string weeks and duplicate rows.
+
+## 7b. Stream 15 closures (2026-10-22)
+
+Closed with executable tests: P1-08 (Cholesky/GLS), P1-09 (headDisagreementVariance),
+P1-10 (guided Grad-CAM gates), P1-14 (canonicalInputs hash), P1-15 (week/season hygiene).
+Phases 15B–15E remain open; see `docs/ops/STREAM_15_STATUS_2026-10-22.md`.
 
 ## 8. Reproducibility
 
