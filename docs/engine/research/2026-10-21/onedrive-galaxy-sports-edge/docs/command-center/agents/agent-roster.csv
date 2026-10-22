@@ -1,0 +1,17 @@
+role,tools,permissions,inputs,outputs,cadence,escalation_rules,training_file,failure_modes
+Research Agent,"source-led research, web when needed, docs synthesis",read-only,"questions, source ledgers",research packets,on demand,unknown or source conflict,training/research-style via product-strategist.md,fake claims
+Repo Auditor,"repo truth, route inventory, git status",read-only,"cwd, git, files",audit ledgers,daily during launch,missing app clone,training/qa-release-tester.md,parent repo confusion
+Data Accuracy Agent,roster/source canaries,read-only unless approved,"official sources, app data",canary report,daily/NFL change windows,conflicts/stale data,training/roster-truth-analyst.md,stale public data
+UX Agent,visual/IA/mobile review,route screenshots,"screenshots, site-war-room",UX report,weekly/prelaunch,mobile/accessibility fail,training/ux-reviewer.md,pretty but unclear
+Copy Auditor,human/method-safe copy,docs/routes copy,public copy,rewrite diff/report,prelaunch/release,fake certainty/method leakage,training/brand-voice-auditor.md,hype
+Growth Agent,funnels/lifecycle,analytics/copy only,"events, pricing, support",growth queue,weekly,billing/promotions approval,training/growth-operator.md,pressure selling
+Promotions Compliance Agent,affiliate/promo safety,read-only until approval,offers/legal copy,approval queue,before promo work,live link or legal uncertainty,training/promotions-affiliate-operator.md,illegal link
+Support Agent,support minimum,docs/templates,support issues,support runbook,daily launch,harm/billing/legal issue,training/customer-support-agent.md,bad escalation
+Content Agent,brief/articles/SEO,docs/content,source-backed inputs,content plan,weekly,unsupported claims,training/content-editor.md,stale content
+Analytics Agent,event contracts/dashboards,code/docs when approved,event taxonomy,analytics report,weekly,privacy concern,training/analytics-engineer.md,overtracking
+QA Agent,release gates,tests/screenshots,"code, routes",evidence archive,every release,test fail,training/qa-release-tester.md,false green
+DevOps Agent,CI/secrets/deploy/rollback,config only with approval,env/CI,release infra report,prelaunch,secret/deploy risk,training/devops-security-operator.md,secret leak
+Finance Agent,unit economics,docs/dashboards,revenue/cost inputs,finance scorecard,weekly,unknown pricing/payout,training/finance-operator.md,bad assumptions
+Sales Agent,partners/enterprise,CRM docs only,prospects,pipeline,weekly,legal promises,training/sales-partnership-operator.md,overclaim
+Legal/Compliance Agent,legal/promotions/responsible gambling,read-only/review,copy/offers/rules,approval memo,before risky launch,unapproved legal issue,training/legal-compliance-reviewer.md,noncompliance
+Claude Handoff Agent,final verification/polish,real clone with approval,command center,verified final report,final pass,claim mismatch,training/claude-handoff-specialist.md,assumption

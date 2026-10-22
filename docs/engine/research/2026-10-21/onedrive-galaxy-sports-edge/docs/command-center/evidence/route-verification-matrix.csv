@@ -1,0 +1,19 @@
+route,status,verified_against_real_app,notes
+/,500,yes,Rendered production error card; server log shows Prisma gateDecision auth failure.
+/board,500,yes,Rendered Next error due Prisma gateDecision auth failure.
+/methodology,200,yes,Static methodology page renders; public copy preserves proprietary weights boundary.
+/pricing,200,yes,Pricing renders on desktop/mobile; checkout/live Stripe not verified.
+/promotions,200,yes,Public route renders safe empty state and disclosure language.
+/brief,200,yes,Brief route renders and screenshots captured.
+/contact,200,yes,Route responds.
+/faq,200,yes,Route responds.
+/performance,200,yes,Route responds.
+/picks,200,yes,Mobile screenshot captured; desktop screenshot timed out at load wait.
+/cockpit,307,yes,"Redirected/gated; middleware protects dashboard/admin, cockpit appears page-level gated."
+/api/promotions,500,yes,Prisma promotion auth failure with invalid local database credentials.
+/api/board/state,500,yes,Prisma gateDecision auth failure.
+/api/health,503,yes,Health degraded because local database credentials for sports failed.
+/api/calibration,200,yes,prod-probe passed this endpoint.
+/journal/rss.xml,200,yes,prod-probe passed RSS.
+/api/picks?check=public-picks-gate,503,yes,"Gate behavior accepted by prod-probe, but endpoint still degraded from DB auth."
+/api/performance?check=performance-gate,503,yes,"Gate behavior accepted by prod-probe, but endpoint still degraded from DB auth."

@@ -1,0 +1,45 @@
+{
+  "as_of": "2026-06-09",
+  "visual_north_star": "Premium sports intelligence command center: cinematic, restrained, readable, fast.",
+  "colors": {
+    "ink": "#061014",
+    "field": "#071d18",
+    "signal": "#44f2a1",
+    "pulse": "#7dd3fc",
+    "pressure": "#fbbf24",
+    "risk": "#fb7185",
+    "surface": "rgba(255,255,255,0.07)",
+    "border": "rgba(255,255,255,0.14)",
+    "text_primary": "#f6faf8",
+    "text_secondary": "#a7b5b2"
+  },
+  "typography": {
+    "display": "tight but readable, no negative letter spacing",
+    "body": "plain human, high contrast, 16px minimum for body",
+    "data": "tabular numbers for ratings, odds-like data, receipts"
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96
+  ],
+  "radius": {
+    "cards": 8,
+    "controls": 8,
+    "pills": 999
+  },
+  "motion": {
+    "fast": "120ms",
+    "standard": "180ms",
+    "reveal": "260ms",
+    "max_nonessential": "400ms",
+    "easing": "cubic-bezier(.2,.8,.2,1)",
+    "reduced_motion": "replace movement with opacity/focus state"
+  }
+}

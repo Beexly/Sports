@@ -1,0 +1,85 @@
+{
+  "as_of": "2026-06-09",
+  "purpose": "A route and component contract for making every GSE item readable, teachable, trustworthy, and action-oriented within 10 seconds.",
+  "applies_to": [
+    "rating_cards",
+    "player_cards",
+    "player_rows",
+    "track_record_receipts",
+    "daily_brief_items",
+    "promotion_cards",
+    "support_articles",
+    "alerts",
+    "watchlist_items",
+    "error_states",
+    "empty_states"
+  ],
+  "required_layers": [
+    {
+      "id": "plain_title",
+      "requirement": "Use a human readable title, not an internal filename, API object, model key, or JSON label.",
+      "acceptance": "A new user can name what the item is without opening a tooltip."
+    },
+    {
+      "id": "one_line_summary",
+      "requirement": "Summarize the item in one plain-English sentence.",
+      "acceptance": "The summary explains why the item matters now."
+    },
+    {
+      "id": "status_badges",
+      "requirement": "Show freshness, risk, confidence, tier, source state, or availability badges when relevant.",
+      "acceptance": "The user can distinguish current, stale, risky, locked, and unavailable states visually and textually."
+    },
+    {
+      "id": "visual_body",
+      "requirement": "Use a table, chart, comparison, timeline, ranked list, or scannable cards instead of raw JSON.",
+      "acceptance": "Raw JSON is hidden from normal users and only available behind founder/admin debug affordances."
+    },
+    {
+      "id": "how_to",
+      "requirement": "Attach a how-to drawer, tooltip, lesson link, motion explainer, or Galaxy Studios video where the item is proprietary or non-obvious.",
+      "acceptance": "The user can learn the item without leaving the page."
+    },
+    {
+      "id": "source_trust",
+      "requirement": "Expose public-safe source freshness, receipt, or limitation context without revealing founder methodology.",
+      "acceptance": "The user knows how fresh the signal is and what not to overread."
+    },
+    {
+      "id": "next_action",
+      "requirement": "Provide one primary next action and optional secondary action.",
+      "acceptance": "The item never dead-ends unless it is an intentional legal/compliance block."
+    }
+  ],
+  "normal_user_no_go": [
+    "raw_json_first_screen",
+    "internal_file_names_as_labels",
+    "unexplained_subcategories",
+    "methodology_formula_exposure",
+    "fake_certainty",
+    "sportsbook_style_urgency",
+    "autoplay_video_without_user_intent",
+    "motion_without_reduced_motion_fallback"
+  ],
+  "preferred_visual_patterns": {
+    "simple_fact": "summary_card",
+    "many_records": "sortable_table_with_mobile_cards",
+    "change_over_time": "timeline_or_sparkline",
+    "comparison": "side_by_side_compare",
+    "uncertainty": "risk_ladder",
+    "source_status": "freshness_badge",
+    "locked_depth": "preview_plus_upgrade_reason",
+    "debug_data": "admin_only_json_drawer"
+  },
+  "analytics_events": [
+    "help_opened",
+    "video_started",
+    "how_to_completed",
+    "raw_json_debug_opened",
+    "table_sorted",
+    "item_saved",
+    "compare_used",
+    "source_clicked",
+    "next_action_clicked"
+  ]
+}

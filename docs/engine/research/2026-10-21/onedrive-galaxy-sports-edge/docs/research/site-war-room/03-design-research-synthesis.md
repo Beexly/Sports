@@ -1,0 +1,33 @@
+# Design Research Synthesis
+
+As of: 2026-06-09
+
+| Reference | URL | Teaches | Borrow | Avoid |
+| --- | --- | --- | --- | --- |
+| web.dev Core Web Vitals | https://web.dev/articles/vitals | Performance must be judged by user-centric LCP/INP/CLS, not just aesthetic polish. | Use budgets and route gates. | Do not add cinematic weight that hurts INP/LCP. |
+| web.dev INP | https://web.dev/inp/ | Responsiveness is a stable Core Web Vital and should target <=200ms at p75. | Keep interactions light, defer heavy motion. | Avoid expensive client-side animation on first screens. |
+| W3C WCAG 2.2 | https://www.w3.org/TR/WCAG22/ | Accessibility is a stable W3C standard; design must keep keyboard, focus, contrast, headings, and cognitive clarity. | Build accessibility gates into every route. | Do not treat accessibility as a post-design patch. |
+| Apple Human Interface Guidelines - Motion | https://developer.apple.com/design/human-interface-guidelines/motion | Motion should convey status, feedback, instruction, and respect accessibility settings. | Use purposeful signal motion and reduced-motion fallbacks. | Avoid decorative animation that competes with comprehension. |
+| Bloomberg UX | https://www.bloomberg.com/ux/ | Complex data products need interaction design, visualization, and prototyping discipline. | Borrow concealed complexity and dense-but-scan-ready layouts. | Do not copy terminal aesthetics literally. |
+| Bloomberg Terminal UX story | https://www.bloomberg.com/company/stories/how-bloomberg-terminal-ux-designers-conceal-complexity/ | Advanced users need power, but complexity should be progressively exposed. | Use founder/pro/internal drilldowns while keeping public surfaces simple. | Do not expose method internals to look smart. |
+| ESPN navigation guide | https://www.espn.com/espn/news/story/_/id/5474529 | Sports users value fast personalization by sport/team/player. | Use saved teams/players/watchlists and score-like signal rails. | Do not create a maze of sports tabs. |
+| The Athletic App Store | https://apps.apple.com/us/app/the-athletic-all-sports-news/id1135216317 | Premium sports products sell follow-your-favorites and clean coverage. | Borrow personalization and ad-free premium trust. | Do not become article-only. |
+| Webby 2025 winners | https://www.webbyawards.com/press/press-releases/29th-annual-webby-awards-announce-2025-winners/ | Award-winning web work rewards distinct voice, strong interaction, and memorable positioning. | Use as ambition benchmark, not a design to copy. | Do not copy winning layouts/assets. |
+| Awwwards | https://www.awwwards.com/ | Premium web design rewards craft, motion, typography, and distinct visual identity. | Borrow discipline around visual contrast and transitions. | Do not sacrifice performance or readability for awards aesthetics. |
+
+## GSE Visual Doctrine
+
+Sports-native command center, not generic SaaS. Use signal, pressure, risk, freshness, movement, and receipts as visual primitives. Favor sharp hierarchy over decoration.
+
+## Interaction Doctrine
+
+Motion should orient, confirm, and explain. Avoid decorative motion. Respect reduced motion.
+
+## IA Doctrine
+
+Fewer doors, stronger doors. Home, Rating, Player Lab, Track Record, Pricing, Brief, Support, Account, Founder-only.
+
+## Anti-Patterns
+
+Casino/tout colors, fake certainty, dense tables without summaries, raw JSON, hidden CTAs, jargon, autoplay-heavy video, long methodology blocks, source-weight leakage.
+

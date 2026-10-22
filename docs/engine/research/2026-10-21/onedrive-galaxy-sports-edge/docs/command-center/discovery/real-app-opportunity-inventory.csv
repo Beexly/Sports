@@ -1,0 +1,11 @@
+id,bucket,title,current_app_evidence,why_it_matters,owner,duplicate_classification,first_action,build_card
+DISC-REAL-001,Fix,Homepage runtime recovery,/ is 500,First impression is currently broken.,Website / DevOps,EXTENSION,Fix DB dependency or safe fallback.,BUILD-REALAPP-001
+DISC-REAL-002,Fix,Board degraded state,/board and /api/board/state are 500,Core intelligence surface cannot break on DB auth.,Product / Data,EXTENSION,Catch DB failures and render safe state.,BUILD-REALAPP-003
+DISC-REAL-003,Fix,Promotions API fail-closed behavior,/api/promotions is 500 while page shell is safe,Affiliate surfaces require trust and compliance.,Promotions,EXTENSION,Return safe empty approved list on DB failure.,BUILD-REALAPP-005
+DISC-REAL-004,Build,Roster canary harness,No player records found for canaries,Avoid stale sports intelligence claims.,Roster Truth,EXTENSION,Create source-backed canary or remove scope.,BUILD-REALAPP-007
+DISC-REAL-005,Build,GSE Rating and Player Lab surface decision,Routes missing,Product promise must match app reality.,Product Strategy,EXTENSION,Decide route build vs launch-scope removal.,BUILD-REALAPP-008
+DISC-REAL-006,Polish,10-second homepage narrative,Home cannot be evaluated because it errors,Users must understand value immediately.,Brand / UX,EXTENSION,Rebuild after runtime fix.,BUILD-REALAPP-016
+DISC-REAL-007,Teach,Galaxy Studios help overlay,FAQ/contact exist; per-item help not universal,Complex proprietary system needs inline teaching.,Support / UX,EXTENSION,Add help affordance to priority surfaces.,BUILD-REALAPP-015
+DISC-REAL-008,Protect,Public method leakage release gate,Methodology copy safe; private constants exist,Protect moat while building trust.,Legal / Rating,EXTENSION,Automate public bundle scan.,BUILD-REALAPP-014
+DISC-REAL-009,Measure,Launch event proof,Analytics not verified,Growth cannot be managed blind.,Analytics,EXTENSION,Add smoke-proved event taxonomy.,BUILD-REALAPP-019
+DISC-REAL-010,Surprise,Weekly autopsy and proof receipts,Performance/brief routes respond,Turns trust into a product habit.,Product / Content,EXTENSION,Prototype as content-product bridge.,BUILD-REALAPP-024
