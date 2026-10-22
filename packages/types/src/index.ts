@@ -875,6 +875,17 @@ export interface PublicPick {
   selection: string;
   line: number;
   /**
+   * C-354: the publish-time LOCK captured when the bet terms were frozen
+   * write-once at creation. `clvLockPrice` is the locked odds (MONEYLINE),
+   * `clvLockLine` the locked points (SPREAD/TOTAL). The card's displayed
+   * price/line is this lock, never a number parsed from `selection`, and
+   * `line` (the live/moved column) is only the fallback. Optional: rows
+   * minted before the lock existed carry neither, and absence omits the
+   * price/line slot rather than showing a wrong number.
+   */
+  clvLockPrice?: number | null;
+  clvLockLine?: number | null;
+  /**
    * Opening -> current line movement for SPREAD/TOTAL picks, from the game's
    * first-ingestion opening line. Gated by canSeeLineMovement (Pro+): the API
    * returns null for viewers without the entitlement, and for MONEYLINE picks

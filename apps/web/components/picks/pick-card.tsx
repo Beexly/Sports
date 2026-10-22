@@ -81,6 +81,13 @@ export function PickCard({
 
   const isFeatured = pick.isFeatured;
 
+  // C-354: the card's displayed price/line is the publish-time LOCK, never a
+  // number embedded in the selection string. clvLockPrice is the locked odds,
+  // clvLockLine the locked points; `line` is the live/moved column and only
+  // a fallback. Absence (no lock, line 0) omits the slot entirely.
+  const priceShown = pick.clvLockPrice ?? (pick.line !== 0 ? pick.line : null);
+  const lineShown = pick.clvLockLine ?? (pick.line !== 0 ? pick.line : null);
+
   return (
     <article
       className={[
@@ -144,14 +151,22 @@ export function PickCard({
           >
             {NO_BOOK_PRICE_LABEL}
           </p>
+        ) : pick.pickType === "SPREAD" ? null : pick.pickType === "TOTAL" ? (
+          /* C-354: the displayed line is the publish-time lock (clvLockLine)
+             when the row carries one; `line` is the live/moved column and
+             only the fallback. */
+          lineShown !== null && (
+            <p className="mt-0.5 text-xs text-ion-1" data-testid="card-line">
+              Line: {lineShown > 0 ? "+" : ""}{lineShown}
+            </p>
+          )
         ) : (
-          /* SPREAD's chosen-side number already lives in `selection` (e.g.
-             "Away Favs -6.0"). `line` is stored in HOME-team perspective for
-             settlement, so rendering it raw here would contradict the selection
-             for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */
-          pick.line !== 0 && pick.pickType !== "SPREAD" && (
-            <p className="mt-0.5 text-xs text-ion-1">
-              Line: {pick.line > 0 ? "+" : ""}{pick.line}
+          /* MONEYLINE: the displayed price is the publish-time lock
+             (clvLockPrice) when present, else the `line` fallback — the
+             selection string is never parsed for a number (C-354). */
+          priceShown !== null && (
+            <p className="mt-0.5 text-xs text-ion-1" data-testid="card-price">
+              Line: {priceShown > 0 ? "+" : ""}{priceShown}
             </p>
           )
         )}
