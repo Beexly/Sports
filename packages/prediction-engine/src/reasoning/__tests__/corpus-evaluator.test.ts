@@ -218,4 +218,40 @@ describe("Corpus Literature Evaluator — Runtime Verification & Integration Sui
     assert.ok(withNegativeShift.rankingP < baseline.rankingP, "Negative corpus adjustment must decrease rankingP");
     assert.notEqual(withPositiveShift.rankingScore, baseline.rankingScore, "Ranking score must change when corpus adjustment is applied");
   });
+
+  it("Proof Req 5: Premise Registry invocation (GAP-18) — Voronoi pocket control, Kelly uncertainty, and multi-book consensus models are evaluated", () => {
+    const fixtureContext: GameContext = {
+      homeTeam: "KC",
+      awayTeam: "BAL",
+      venue: "Arrowhead Stadium",
+      restDaysHome: 7,
+      restDaysAway: 7,
+      weather: "Clear, 72F",
+      marketLine: -3.0,
+      marketImpliedProbability: 0.585,
+      outcome: "KC",
+      decisionTimestamp: "2026-10-18T17:00:00.000Z",
+      decisionWindowMs: 86400000,
+      olContinuityDelta: 0.35,
+      dlContinuityDelta: -0.15,
+    };
+
+    const evalResult = evaluateFullCorpus(fixtureContext);
+    assert.ok(evalResult.registeredPremises, "CorpusEvaluation must include registeredPremises");
+    
+    // 1. Voronoi Pocket Control
+    const { voronoiPocket } = evalResult.registeredPremises;
+    assert.ok(voronoiPocket.pocketIntegrityRadiusYards > 0, "Pocket integrity radius must be positive");
+    assert.ok(voronoiPocket.trenchControlScore >= 0 && voronoiPocket.trenchControlScore <= 1, "Trench control score in [0, 1]");
+
+    // 2. Kelly Uncertainty
+    const { kellyResult } = evalResult.registeredPremises;
+    assert.ok(typeof kellyResult.unconstrainedKelly === "number", "Unconstrained Kelly must be numeric");
+    assert.ok(kellyResult.optimalStakeFraction >= 0, "Optimal stake fraction must be non-negative");
+
+    // 3. Multi-Book Consensus
+    const { consensusResult } = evalResult.registeredPremises;
+    assert.ok(consensusResult.fairProbability > 0 && consensusResult.fairProbability < 1, "Consensus fair probability in (0, 1)");
+    assert.ok(consensusResult.consensusEntropy > 0, "Consensus entropy must be positive");
+  });
 });

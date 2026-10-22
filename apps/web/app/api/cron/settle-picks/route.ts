@@ -37,6 +37,7 @@ import {
   freezeSlateCommitments,
   computeScheduledWindow,
   drainPendingTeamGameLogs,
+  runSettlementLearningLoop,
   type SlateFreezeResult,
 } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -232,6 +233,55 @@ export async function GET(request: Request) {
     captureError(drainErr, { path: "settle-picks", stage: "outbox-drain" });
   }
 
+  // ── 5b. Continual Learning & Recalibration Loop (GAP-08) ──────────────────
+  let continualLearning = null;
+  try {
+    const recentSettled = await db.pick.findMany({
+      where: {
+        result: { in: ["WIN", "LOSS"] },
+        settledAt: { gte: new Date(Date.now() - 24 * 3600 * 1000) },
+      },
+      select: {
+        id: true,
+        gameId: true,
+        sport: true,
+        pickType: true,
+        selection: true,
+        trueProb: true,
+        rankingP: true,
+        marketFairProb: true,
+        result: true,
+        settledAt: true,
+        clvLockPrice: true,
+      },
+      take: 200,
+      orderBy: { settledAt: "desc" },
+    });
+    if (recentSettled.length > 0) {
+      continualLearning = await runSettlementLearningLoop(
+        recentSettled.map((p) => ({
+          pickId: p.id,
+          gameId: p.gameId,
+          sport: p.sport,
+          pickType: p.pickType,
+          selection: p.selection,
+          trueProb: p.trueProb,
+          rankingP: p.rankingP ?? undefined,
+          marketFairProb: p.marketFairProb ?? undefined,
+          result: p.result as "WIN" | "LOSS",
+          settledAt: p.settledAt ? p.settledAt.toISOString() : new Date().toISOString(),
+          clvLockPrice: p.clvLockPrice ?? null,
+        })),
+      );
+    }
+  } catch (loopErr) {
+    console.warn(
+      `[cron:settle-picks] continual learning loop failed: ${
+        loopErr instanceof Error ? loopErr.message : loopErr
+      }`,
+    );
+  }
+
   const advisories: string[] = [];
   if (paidSupplement && paidSupplement.failedSports.length > 0) {
     advisories.push(
@@ -305,6 +355,7 @@ export async function GET(request: Request) {
     advisories,
     freeze,
     alertDrain,
+    continualLearning,
     requestedSport: requestedSport ?? null,
   });
 }
