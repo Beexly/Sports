@@ -21,13 +21,14 @@
  *   WOULD_VOID        postponed/cancelled on the board; the cycle should void it
  *   NO_FREE_SPORT_MAP the sport has no free scores adapter
  *
- * Auth: Bearer CRON_SECRET (lib/ops/ops-auth.ts). Read-only. no-store.
+ * Auth: opsReadAuthError (F-32/C-420) — Bearer CRON_SECRET, or Bearer
+ * OPS_READ_SECRET once the founder sets it. Read-only. no-store.
  */
 
 import { db } from "@sports/db";
 import { selectGradingLine } from "@sports/prediction-engine";
 import { jsonNoStore } from "@/lib/api/no-store";
-import { hasOpsAuth } from "@/lib/ops/ops-auth";
+import { opsReadAuthError } from "@/lib/cron/authorize";
 import { fetchScoresMultiSource } from "@/lib/data-sources/multi-source-scores";
 import { ODDS_KEY_TO_FREE } from "@/lib/data-sources/free-settlement-runner";
 import {
@@ -129,9 +130,8 @@ export function candidateFinalsFor(pick: PendingPick, finals: readonly TrustedFi
 }
 
 export async function GET(request: Request) {
-  if (!hasOpsAuth(request)) {
-    return jsonNoStore({ ok: false, error: "unauthorized" }, { status: 401 });
-  }
+  const denied = opsReadAuthError(request);
+  if (denied) return denied;
 
   const url = new URL(request.url);
   const sportFilter = url.searchParams.get("sport")?.trim() || null;

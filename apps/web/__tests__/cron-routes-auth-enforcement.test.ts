@@ -66,6 +66,11 @@ describe("cron route auth enforcement", () => {
     // test — that is the state the route runs in when it is actually live.
     // The route still denies before any backtest work, so nothing executes.
     process.env["BACKTEST_HARNESS_ENABLED"] = "true";
+    // /api/cron/feature-recipe-backtest has the same shape: while
+    // FEATURE_RECIPE_BACKTEST_ENABLED is off, GET is a documented no-op
+    // BEFORE auth. Turn it on so the auth branch is exercised; the route
+    // still denies unauthenticated callers before any feature work runs.
+    process.env["FEATURE_RECIPE_BACKTEST_ENABLED"] = "true";
   });
 
   afterEach(() => {

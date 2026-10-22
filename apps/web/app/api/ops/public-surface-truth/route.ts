@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // "unknown" rather than "deliberately off". The gate itself stays in
 // public-surface-gate.ts for the same reason.
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
+import { hasOpsAuth } from "@/lib/ops/ops-auth";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
@@ -73,7 +74,6 @@ import {
   freeSpineWithinSla,
   resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
-import { timingSafeEqual } from "node:crypto";
 import {
   oddsApiKeyPresence,
   rundownApiKeyPresence,
@@ -169,20 +169,6 @@ const MAIN_FEATURE_MARKERS = [
   "generate-signal-slate",
   "signal-board-launch-path",
 ] as const;
-
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
 
 /**
  * 2026-09-19: read-only observability field. odds_line_snapshots silently

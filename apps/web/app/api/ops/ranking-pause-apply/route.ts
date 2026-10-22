@@ -3,18 +3,20 @@
  *
  * POST { enabled: true|false, groups?: string[] }
  *
- * Auth: Bearer CRON_SECRET ONLY. `cronAuthError(request)` with no options
- * resolves to mode "bearer_only" (GSE-SEC-016), so the spoofable `x-vercel-cron`
- * header does NOT authorize here — and must never be allowed to: this POST
- * mutates durable ranking-pause state, and lib/cron/authorize.ts reserves the
- * "dual" mode for read-only health probes. Do not add `{ mode: "dual" }` here.
+ * Auth: GET reads use opsReadAuthError (F-32/C-420): Bearer CRON_SECRET, or
+ * Bearer OPS_READ_SECRET once the founder sets it — read-only, no mutation.
+ * POST { enabled: true|false, groups?: string[] } mutates durable ranking-pause
+ * state and keeps `cronAuthError(request)` with no options (bearer_only,
+ * GSE-SEC-016): the spoofable `x-vercel-cron` header does NOT authorize here,
+ * and OPS_READ_SECRET must NEVER authorize a POST — a leaked read credential
+ * must not fire a mutation. Do not add `{ mode: "dual" }` here.
  * (This header previously described dual auth; the code has never granted it.)
  *
  * Does NOT flip PERFORMANCE_STATS / maps / PROVEN.
  */
 
 import { NextResponse } from "next/server";
-import { cronAuthError } from "@/lib/cron/authorize";
+import { cronAuthError, opsReadAuthError } from "@/lib/cron/authorize";
 import {
   persistRankingPauseApply,
   loadRankingPauseApply,
@@ -28,7 +30,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
-  const denied = cronAuthError(request);
+  const denied = opsReadAuthError(request);
   if (denied) return denied;
   const snap = await loadRankingPauseApply();
   const plan = await loadProvenPathPlan();

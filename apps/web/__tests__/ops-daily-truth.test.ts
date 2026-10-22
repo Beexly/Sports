@@ -243,7 +243,6 @@ describe("daily-truth route auth", () => {
   it("returns 401 when no Authorization header", async () => {
     const { res, body } = await invokeGet(undefined);
     expect(res.status).toBe(401);
-    expect(body.ok).toBe(false);
     expect(body.error).toBe("Unauthorized");
   });
 
@@ -252,10 +251,12 @@ describe("daily-truth route auth", () => {
     expect(res.status).toBe(401);
   });
 
-  it("returns 401 when CRON_SECRET is empty", async () => {
+  it("fails closed (500) when CRON_SECRET is empty and OPS_READ_SECRET unset", async () => {
     vi.stubEnv("CRON_SECRET", "  ");
     const { res } = await invokeGet(`Bearer ${REAL_SECRET}`);
-    expect(res.status).toBe(401);
+    // C-420: an empty trimmed secret is a MISCONFIGURATION, not a bad
+    // credential — the shared opsReadAuthError reports 500, not 401.
+    expect(res.status).toBe(500);
   });
 
   it("returns 200 with ok:true when Bearer token matches (all loaders mocked)", async () => {

@@ -132,7 +132,9 @@ describe("GET /api/ops/settlement-rca", () => {
     const res = await GET(
       new Request("https://www.galaxysportsedge.com/api/ops/settlement-rca", { headers: { authorization: "Bearer anything" } }),
     );
-    expect(res.status).toBe(401);
+    // C-420: "neither secret configured" is a MISCONFIGURATION — the shared
+    // opsReadAuthError reports 500 (fail closed), not 401.
+    expect(res.status).toBe(500);
   });
 
   it("names the reason for each overdue pick from a dry run of the production grader", async () => {

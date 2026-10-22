@@ -3,8 +3,8 @@
  * loaders that ALREADY exist. No invented fields; every number carries its
  * denominator and an honest `null` + reason when unmeasurable.
  *
- * Gating: Bearer CRON_SECRET via the SAME timing-safe pattern used by
- * apps/web/app/api/ops/public-surface-truth/route.ts (hasOpsAuth).
+ * Gating: opsReadAuthError (F-32/C-420) — Bearer CRON_SECRET, or Bearer
+ * OPS_READ_SECRET once the founder sets it in Vercel. Read-only surface.
  *
  * NOT wired into vercel.json crons here — the owner wires the cron schedule
  * when prod is back (prepare-not-flip).
@@ -13,9 +13,9 @@
  */
 
 import { NextResponse } from "next/server";
-import { timingSafeEqual } from "node:crypto";
 import { db, isStubMode } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { opsReadAuthError } from "@/lib/cron/authorize";
 import {
   loadSettlementHealth,
   SETTLEMENT_DEFAULT_GRACE_HOURS,
@@ -28,25 +28,6 @@ import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-
-/**
- * Timing-safe Bearer CRON_SECRET check — mirrors hasOpsAuth in
- * public-surface-truth/route.ts exactly. Returns true only when the header
- * is `Authorization: Bearer <CRON_SECRET>` and the two are equal-length.
- */
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
 
 /** Canonical, non-seed pick filter shared by the last-24h and lifetime counts. */
 const CANONICAL_NON_SEED = {
@@ -65,12 +46,8 @@ const SETTLED_RESULTS: ("WIN" | "LOSS" | "PUSH")[] = ["WIN", "LOSS", "PUSH"];
  * string — nothing is ever fabricated or zero-filled.
  */
 export async function GET(request: Request) {
-  if (!hasOpsAuth(request)) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401, headers: { "Cache-Control": "no-store" } },
-    );
-  }
+  const denied = opsReadAuthError(request);
+  if (denied) return denied;
 
   const now = new Date();
   const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);

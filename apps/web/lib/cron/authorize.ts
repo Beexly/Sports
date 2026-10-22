@@ -4,6 +4,7 @@ import {
   authorizeCronSecret,
   type CronAuthMatched,
 } from "@sports/util";
+import { hasOpsAuth } from "@/lib/ops/ops-auth";
 
 /**
  * Shared cron authorization (HTTP SoT).
@@ -125,4 +126,39 @@ export function authorizeCronRequest(
     return { ok: false, status: 401, matched: null, error: "Unauthorized" };
   }
   return { ok: true, status: 200, matched: result.matched };
+}
+
+/**
+ * Read-only ops surfaces share ONE credential rule (F-32/C-420):
+ * Bearer CRON_SECRET, or Bearer OPS_READ_SECRET once the founder sets it in
+ * Vercel (lib/ops/ops-auth.ts). Mutation crons NEVER accept OPS_READ_SECRET —
+ * the cronAuthError family above checks only CRON_SECRET/CRON_SECRET_PREVIOUS,
+ * so a leaked read credential cannot fire a cron. hasOpsAuth fails closed
+ * when no secret is configured.
+ */
+export function hasOpsReadAuth(request: Request): boolean {
+  return hasOpsAuth(request);
+}
+
+/**
+ * Returns null when authorized; else 500 when NEITHER read secret is
+ * configured (misconfiguration — fail closed, distinguishable from a wrong
+ * credential) or 401 when a secret exists but this bearer is not it.
+ */
+export function opsReadAuthError(request: Request): NextResponse | null {
+  if (hasOpsReadAuth(request)) return null;
+  const configured =
+    process.env["CRON_SECRET"]?.trim() || process.env["OPS_READ_SECRET"]?.trim();
+  // no-store on both failure shapes: auth-failure responses on read ops
+  // surfaces are never cacheable (surface discipline the RCA route carried).
+  if (!configured) {
+    return NextResponse.json(
+      { error: "No ops read secret configured" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401, headers: { "Cache-Control": "no-store" } },
+  );
 }
