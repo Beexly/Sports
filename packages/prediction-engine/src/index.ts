@@ -5362,7 +5362,7 @@ export {
   speedFromDisplacement,
   correctedAcceleration,
 } from "./nfl/coverage-scheme.js";
-export { keyNumberMass, NFL_KEY_NUMBERS } from "./nfl/key-number-mass.js";
+export { keyNumberMass, NFL_KEY_NUMBERS as NFL_KEY_NUMBER_MASS_MAP } from "./nfl/key-number-mass.js";
 export {
   GROUP_TACKLE_MIN,
   MISSED_TACKLE_RATE_BAND,
@@ -5437,5 +5437,40 @@ export type {
   ProbeEvaluationScore,
   ContrastivePpcResult,
 } from "./continual/harness2-propose-probe-compose.js";
-
-
+export * from "./forecasting/2505-15918-llm-bayesian-network-priors.js";
+export * from "./continual/2602-18266-model-smc-discovery.js";
+export * from "./decision/aa-decision-index-gate.js";
+export * from "./decision/2608-23885-phantom-optima-rto-audit.js";
+export * from "./forecasting/2610-16680-free-prob-particle-resampling.js";
+export * from "./continual/2608-11690-continual-drift-plasticity.js";
+export * from "./nfl/ngs-contextual-reconstructed.js";
+export {
+  evaluateDecisionTimeRepricing,
+  evaluatePreventDefenseRegime,
+  evaluateCompoundScheduleFatigueSpot,
+  evaluateDomeColdWindTransition,
+  parseBetSlipMetadata,
+} from "./game-context.js";
+export {
+  evaluateTimeoutPreserveVsIceValue,
+  evaluateCoachChallengeEV,
+  evaluateEndOfHalfClockBoundary,
+} from "./tactical/nfl-fourth-down-engine.js";
+export {
+  TOOMRE_TL,
+  teagContraction,
+  falsifiabilityFloorHolds,
+  gaussianCollapseWeight,
+  toomreTorsion,
+  multiScaleRefinementHolds,
+  evaluateTeagEpistemicContraction,
+  evaluateMultiScaleRefinementResidual,
+  evaluateDriftAdvectionPhaseTransition,
+  computePhysicsInformedSobolSensitivity,
+  runCounterfactualSelfInterrogation,
+} from "./reasoning/introspective-meta-reasoner.js";
+export {
+  evaluateAbnormalSituationManagement,
+  evaluateVolveDualHeadAnomalyGate,
+  evaluateLifecycleDataQualityGate,
+} from "./enterprise/universal-world-model-sdk.js";

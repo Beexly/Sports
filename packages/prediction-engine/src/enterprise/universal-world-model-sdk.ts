@@ -679,3 +679,87 @@ export class WorldModelCartridgeRegistry {
     }));
   }
 }
+
+// ============================================================================
+// Stream 9: Life-Safety CBST Cartridge, Abnormal Situation Management (arXiv:2608.19819),
+// Volve Dual-Head Anomaly Gate (arXiv:2608.05685), & 6-Pillar Lifecycle DQA (arXiv:2609.31191)
+// ============================================================================
+
+export interface AbnormalSituationInput {
+  readonly residualZScore: number;
+  readonly sensorConcordance: number;
+  readonly consecutiveViolationFrames: number;
+}
+
+export function evaluateAbnormalSituationManagement(input: {
+  readonly residualZScore: number;
+  readonly sensorConcordance: number;
+  readonly consecutiveViolationFrames: number;
+}): {
+  readonly state: "NORMAL" | "DEGRADED_ADVISORY" | "ABNORMAL_CONTAINMENT" | "EMERGENCY_SHUTDOWN";
+  readonly humanEscalationRequired: boolean;
+} {
+  if (input.residualZScore >= 4.0 && input.consecutiveViolationFrames >= 3) {
+    return { state: "EMERGENCY_SHUTDOWN", humanEscalationRequired: true };
+  }
+  if (input.residualZScore >= 2.8 || input.sensorConcordance < 0.65) {
+    return { state: "ABNORMAL_CONTAINMENT", humanEscalationRequired: true };
+  }
+  if (input.residualZScore >= 1.8) {
+    return { state: "DEGRADED_ADVISORY", humanEscalationRequired: false };
+  }
+  return { state: "NORMAL", humanEscalationRequired: false };
+}
+
+export function evaluateVolveDualHeadAnomalyGate(input: {
+  readonly supervisedAnomalyProb: number;
+  readonly unsupervisedReconstructionScore: number;
+  readonly alertThreshold?: number;
+}): {
+  readonly concordance: number;
+  readonly verifiedAnomalyAlert: boolean;
+  readonly regime: "CONFIRMED_ANOMALY" | "UNVERIFIED_DRIFT" | "NOMINAL";
+} {
+  const thresh = input.alertThreshold ?? 0.7;
+  const concordance = Number(
+    Math.max(0, 1 - Math.abs(input.supervisedAnomalyProb - input.unsupervisedReconstructionScore)).toFixed(4),
+  );
+  const maxScore = Math.max(input.supervisedAnomalyProb, input.unsupervisedReconstructionScore);
+  const verifiedAnomalyAlert = maxScore >= thresh && concordance >= 0.7;
+  const regime = verifiedAnomalyAlert
+    ? "CONFIRMED_ANOMALY"
+    : maxScore >= thresh
+      ? "UNVERIFIED_DRIFT"
+      : "NOMINAL";
+  return { concordance, verifiedAnomalyAlert, regime };
+}
+
+export function evaluateLifecycleDataQualityGate(pillars: {
+  readonly completeness: number;
+  readonly consistency: number;
+  readonly timeliness: number;
+  readonly lineage: number;
+  readonly driftStability: number;
+  readonly labelConcordance: number;
+}): {
+  readonly bottleneckScore: number;
+  readonly meanScore: number;
+  readonly passesLifecycleGate: boolean;
+} {
+  const vals = [
+    pillars.completeness,
+    pillars.consistency,
+    pillars.timeliness,
+    pillars.lineage,
+    pillars.driftStability,
+    pillars.labelConcordance,
+  ];
+  const bottleneckScore = Number(Math.min(...vals).toFixed(4));
+  const meanScore = Number((vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(4));
+  return {
+    bottleneckScore,
+    meanScore,
+    passesLifecycleGate: bottleneckScore >= 0.75 && meanScore >= 0.82,
+  };
+}
+

@@ -25,6 +25,8 @@ export type TargetDomainId =
   | "GSE_GRID_TRANSFORMER_CASCADE"
   | "GSE_LOGISTICS_PORT_REROUTE"
   | "GSE_WEATHER_MESOSCALE"
+  | "GSE_CLINICAL_ICU_SEPSIS"
+  | "GSE_INDUSTRIAL_VOLVE_ASM"
   | "GSE_VERIFY_BENCHMARK";
 
 export interface BeamTransferResult {
@@ -78,13 +80,49 @@ export class CausalBeamTransferEngine {
         baseEValuePoint: 1.42,
       },
     ],
+    [
+      "BEAM_SIGMA_4",
+      {
+        beamId: "BEAM_SIGMA_4",
+        name: "Clinical ICU Hemodynamic & Sepsis Decompensation Early-Warning Beam",
+        coreParents: [
+          "acute_chronic_physiological_load_ratio",
+          "lactate_clearance_velocity_deficit",
+          "autonomic_hrv_collapse_z",
+          "multi_organ_coupling_hazard",
+        ],
+        discardedEmbodimentParents: ["stadium_turf_type", "helmet_accelerometer_mount"],
+        invariantMechanismDsl: "Hazard_Sepsis = sigmoid(beta_load * ACWR + beta_lac * LactateDeficit + beta_hrv * HRV_Collapse)",
+        realizedSourceEffect: +0.812,
+        sourceDomain: "NFL_BIOMETRIC_FATIGUE_COLLAPSE",
+        baseEValuePoint: 1.56,
+      },
+    ],
+    [
+      "BEAM_SIGMA_5",
+      {
+        beamId: "BEAM_SIGMA_5",
+        name: "Industrial Abnormal Situation Management & Volve Dual-Head Anomaly Beam (arXiv:2608.19819 / 2608.05685)",
+        coreParents: [
+          "supervised_anomaly_probability",
+          "unsupervised_reconstruction_residual",
+          "cross_sensor_concordance",
+          "consecutive_violation_frames",
+        ],
+        discardedEmbodimentParents: ["sportsbook_tick_interval", "stadium_wind_anemometer"],
+        invariantMechanismDsl: "ASM_State = DualHeadGate(p_sup, r_unsup, concordance) * EscalationHazard(frames >= 3)",
+        realizedSourceEffect: +0.884,
+        sourceDomain: "GSE_MULTI_FEED_INTEGRITY_GATE",
+        baseEValuePoint: 1.62,
+      },
+    ],
   ]);
 
   /**
    * Transfers a portable causal beam zero-shot into a target sport or B2B enterprise cartridge.
    */
   public transferBeamZeroShot(
-    beamId: "BEAM_SIGMA_2" | "BEAM_SIGMA_3",
+    beamId: "BEAM_SIGMA_2" | "BEAM_SIGMA_3" | "BEAM_SIGMA_4" | "BEAM_SIGMA_5",
     targetDomain: TargetDomainId,
   ): BeamTransferResult {
     const beam = this.beamRegistry.get(beamId);

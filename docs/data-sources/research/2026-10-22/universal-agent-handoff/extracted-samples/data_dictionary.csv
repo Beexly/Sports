@@ -1,0 +1,144 @@
+table,column,type,unit,source,description
+nfl_id_crosswalk.csv,nfl_id,integer,id,nflverse players / rosters (CC BY 4.0),NFL GSIS IT player id. Same id the Big Data Bowl uses as nfl_id (nflverse players.nfl_id = rosters.gsis_it_id). Primary key.
+nfl_id_crosswalk.csv,gsis_id,string,id,nflverse players / rosters (CC BY 4.0),"NFL GSIS id, format 00-0000000. Key for nflverse play-by-play, stats, participation, injuries and depth charts. Unique."
+nfl_id_crosswalk.csv,display_name,string,,nflverse players / rosters (CC BY 4.0),Player name as listed by nflverse.
+nfl_id_crosswalk.csv,position,string,,nflverse players / rosters (CC BY 4.0),Position as listed by the NFL (nflverse players table; roster position when the player is not in that table).
+nfl_id_crosswalk.csv,position_group,string,,nflverse players / rosters (CC BY 4.0),"Position group as listed by the NFL (QB, RB, WR, TE, OL, DL, LB, DB, SPEC). Empty for some roster-only players."
+nfl_id_crosswalk.csv,birth_date,date,YYYY-MM-DD,nflverse players / rosters (CC BY 4.0),Birth date sourced from the NFL by nflverse. Other sources may differ.
+nfl_id_crosswalk.csv,college_name,string,,nflverse players / rosters (CC BY 4.0),"College, usually the last one attended."
+nfl_id_crosswalk.csv,entry_year,integer,year,nflverse weekly_rosters (CC BY 4.0),"Year the player first became eligible to play in the NFL (NFL roster feed, latest roster row)."
+nfl_id_crosswalk.csv,rookie_season,integer,year,nflverse players / rosters (CC BY 4.0),Season nflverse records as the player's rookie season.
+nfl_id_crosswalk.csv,last_season,integer,year,nflverse players / rosters (CC BY 4.0),Last season nflverse records the player as active.
+nfl_id_crosswalk.csv,draft_club,string,team,nflverse weekly_rosters (CC BY 4.0),Team that drafted the player (NFL roster feed). Empty if undrafted.
+nfl_id_crosswalk.csv,draft_number,integer,overall pick,nflverse weekly_rosters (CC BY 4.0),Overall draft pick number (NFL roster feed). Empty if undrafted.
+nfl_id_crosswalk.csv,esb_id,string,id,nflverse players / rosters (CC BY 4.0),Elias Sports Bureau id.
+nfl_id_crosswalk.csv,smart_id,string,id,nflverse players / rosters (CC BY 4.0),NFL SMART id (hashed ESB id) used in raw NFL play-by-play.
+nfl_id_crosswalk.csv,pfr_id,string,id,nflverse players / rosters (CC BY 4.0),Pro Football Reference player id (identifier only; no PFR data is included).
+nfl_id_crosswalk.csv,pff_id,string,id,nflverse players / rosters (CC BY 4.0),Pro Football Focus player id (identifier only).
+nfl_id_crosswalk.csv,otc_id,string,id,nflverse players / rosters (CC BY 4.0),Over The Cap player id (identifier only).
+nfl_id_crosswalk.csv,espn_id,string,id,nflverse players / rosters (CC BY 4.0),ESPN player id.
+nfl_id_crosswalk.csv,sportradar_id,string,id,nflverse players / rosters (CC BY 4.0),Sportradar player UUID (latest nflverse season roster that lists it).
+nfl_id_crosswalk.csv,sleeper_id,string,id,nflverse players / rosters (CC BY 4.0),Sleeper player id (latest nflverse season roster that lists it).
+nfl_id_crosswalk.csv,yahoo_id,string,id,nflverse players / rosters (CC BY 4.0),Yahoo player id (latest nflverse season roster that lists it).
+nfl_id_crosswalk.csv,rotowire_id,string,id,nflverse players / rosters (CC BY 4.0),RotoWire player id (latest nflverse season roster that lists it).
+nfl_id_crosswalk.csv,fantasy_data_id,string,id,nflverse players / rosters (CC BY 4.0),FantasyData player id (latest nflverse season roster that lists it).
+nfl_id_crosswalk.csv,nfl_id_source,string,,derived,players = nfl_id taken from the nflverse players table; rosters = filled from 2021-2025 season or 2023-2025 weekly rosters (gsis_it_id).
+rookie_classes_2023_2025.csv,nfl_id,integer,id,nflverse players / rosters (CC BY 4.0),"GSIS IT id, joins to the competition nfl_id. Empty if nflverse has no IT id for the player."
+rookie_classes_2023_2025.csv,gsis_id,string,id,nflverse weekly_rosters (CC BY 4.0),NFL GSIS id. Primary key of this table.
+rookie_classes_2023_2025.csv,display_name,string,,nflverse players / rosters (CC BY 4.0),Player name.
+rookie_classes_2023_2025.csv,entry_year,integer,year,nflverse weekly_rosters (CC BY 4.0),"Year the player first became eligible to play in the NFL: 2023, 2024 or 2025. Defines the class."
+rookie_classes_2023_2025.csv,drafted,boolean,,derived,True when draft_number is present.
+rookie_classes_2023_2025.csv,draft_club,string,team,nflverse weekly_rosters (CC BY 4.0),Team that drafted the player. Empty if undrafted.
+rookie_classes_2023_2025.csv,draft_number,integer,overall pick,nflverse weekly_rosters (CC BY 4.0),Overall draft pick. Empty if undrafted.
+rookie_classes_2023_2025.csv,position,string,,nflverse players / rosters (CC BY 4.0),"NFL position (players table, else latest roster)."
+rookie_classes_2023_2025.csv,position_group,string,,nflverse players / rosters (CC BY 4.0),NFL position group; derived from position with the players table's own mapping when missing.
+rookie_classes_2023_2025.csv,college_name,string,,nflverse players / rosters (CC BY 4.0),College.
+rookie_classes_2023_2025.csv,birth_date,date,YYYY-MM-DD,nflverse players / rosters (CC BY 4.0),Birth date sourced from the NFL by nflverse.
+rookie_classes_2023_2025.csv,first_roster_season,integer,year,nflverse weekly_rosters (CC BY 4.0),First 2023-2025 season in which the player appears on an nflverse weekly roster (regular or postseason). Empty if never listed.
+rookie_classes_2023_2025.csv,first_team,string,team,nflverse weekly_rosters (CC BY 4.0),Team on that first weekly roster row.
+rookie_classes_2023_2025.csv,first_status,string,code,nflverse weekly_rosters (CC BY 4.0),"Roster status on that first weekly roster row (ACT active, DEV practice squad, RES reserve, INA inactive, CUT, and others; see nflverse roster status dictionary)."
+rookie_classes_2023_2025.csv,latest_team,string,team,nflverse weekly_rosters (CC BY 4.0),Team on the player's latest 2023-2025 weekly roster row.
+rookie_classes_2023_2025.csv,latest_status,string,code,nflverse weekly_rosters (CC BY 4.0),Roster status on that latest weekly roster row.
+rookie_classes_2023_2025.csv,seasons_in_window,integer,seasons,derived,"Seasons from entry_year through 2025 (3, 2 or 1). Equals the player's row count in the season table."
+rookie_classes_2023_2025.csv,seasons_with_snap,integer,seasons,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Seasons with at least one regular-season snap on any unit.
+rookie_classes_2023_2025.csv,reg_games_with_snap,integer,games,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season games with at least one snap, 2023-2025 total."
+rookie_classes_2023_2025.csv,reg_off_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season offensive snaps, 2023-2025 total."
+rookie_classes_2023_2025.csv,reg_def_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season defensive snaps, 2023-2025 total."
+rookie_classes_2023_2025.csv,reg_st_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season special-teams snaps, 2023-2025 total."
+rookie_classes_2023_2025.csv,reg_games_first_snap,integer,games,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season games in which the player was on the field for his team's first offensive or first defensive scrimmage snap (a proxy for games started), 2023-2025 total."
+rookie_classes_2023_2025.csv,weeks_on_weekly_roster,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Regular-season weeks listed on any team's weekly roster, any status, 2023-2025 total."
+rookie_classes_2023_2025.csv,weeks_status_dev,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Of those, weeks listed with status DEV (practice squad)."
+rookie_classes_2023_2025.csv,weeks_status_res,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Of those, weeks listed with status RES (reserve lists, for example injured reserve)."
+rookie_classes_2023_2025.csv,injury_weeks_out,integer,weeks,nflverse injuries (CC BY 4.0),"Regular-season weeks with game status Out on the official injury report, 2023-2025 total."
+rookie_class_seasons_2023_2025.csv,nfl_id,integer,id,nflverse players / rosters (CC BY 4.0),"GSIS IT id, joins to the competition nfl_id."
+rookie_class_seasons_2023_2025.csv,gsis_id,string,id,nflverse weekly_rosters (CC BY 4.0),"NFL GSIS id. (gsis_id, season) is the primary key."
+rookie_class_seasons_2023_2025.csv,display_name,string,,nflverse players / rosters (CC BY 4.0),Player name.
+rookie_class_seasons_2023_2025.csv,entry_year,integer,year,nflverse weekly_rosters (CC BY 4.0),Class: first NFL-eligible year (2023-2025).
+rookie_class_seasons_2023_2025.csv,season,integer,year,,"NFL season (2023, 2024 or 2025). One row per season from entry_year through 2025, including seasons with no NFL activity."
+rookie_class_seasons_2023_2025.csv,season_number,integer,,derived,season - entry_year + 1 (1 = rookie season).
+rookie_class_seasons_2023_2025.csv,teams,string,team list,nflverse weekly_rosters (CC BY 4.0),"Teams with a regular-season weekly roster row this season, in order of first appearance, separated by ';'. Empty if not listed."
+rookie_class_seasons_2023_2025.csv,primary_team,string,team,nflverse weekly_rosters (CC BY 4.0),Team with the most regular-season roster weeks this season (ties go to the later team).
+rookie_class_seasons_2023_2025.csv,roster_position,string,,nflverse weekly_rosters (CC BY 4.0),Most frequent position on this season's weekly roster rows.
+rookie_class_seasons_2023_2025.csv,weeks_on_weekly_roster,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Regular-season weeks listed on a weekly roster (any status). Weekly rosters cover each team's 17 game weeks, not bye weeks."
+rookie_class_seasons_2023_2025.csv,weeks_status_act,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Weeks listed with status ACT (active roster). A roster snapshot, not game-day actives."
+rookie_class_seasons_2023_2025.csv,weeks_status_ina,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Weeks listed with status INA (under contract, inactive)."
+rookie_class_seasons_2023_2025.csv,weeks_status_res,integer,weeks,nflverse weekly_rosters (CC BY 4.0),Weeks listed with status RES (reserve lists such as injured reserve).
+rookie_class_seasons_2023_2025.csv,weeks_status_dev,integer,weeks,nflverse weekly_rosters (CC BY 4.0),Weeks listed with status DEV (practice squad).
+rookie_class_seasons_2023_2025.csv,weeks_status_other,integer,weeks,nflverse weekly_rosters (CC BY 4.0),"Weeks listed with any other status (CUT, RET, EXE, SUS and similar). The five status columns sum to weeks_on_weekly_roster."
+rookie_class_seasons_2023_2025.csv,games_with_snap,integer,games,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season games with at least one offensive, defensive or special-teams snap."
+rookie_class_seasons_2023_2025.csv,games_first_snap,integer,games,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Regular-season games where the player was on the field for his team's first offensive or first defensive scrimmage snap. Proxy for games started.
+rookie_class_seasons_2023_2025.csv,off_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Regular-season offensive scrimmage snaps (see README for the counting rule).
+rookie_class_seasons_2023_2025.csv,def_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Regular-season defensive scrimmage snaps.
+rookie_class_seasons_2023_2025.csv,st_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),"Regular-season special-teams snaps (kickoffs, punts, field goals, extra points, including kicks nullified by a live-ball penalty)."
+rookie_class_seasons_2023_2025.csv,team_off_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),His team's offensive scrimmage snaps in the games where he had at least one snap (denominator for off_snap_pct).
+rookie_class_seasons_2023_2025.csv,team_def_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),His team's defensive scrimmage snaps in the games where he had at least one snap.
+rookie_class_seasons_2023_2025.csv,team_st_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Special-teams plays in the games where he had at least one snap.
+rookie_class_seasons_2023_2025.csv,off_snap_pct,float,share 0-1,derived,off_snaps / team_off_snaps. Empty when he had no snaps.
+rookie_class_seasons_2023_2025.csv,def_snap_pct,float,share 0-1,derived,def_snaps / team_def_snaps. Empty when he had no snaps.
+rookie_class_seasons_2023_2025.csv,st_snap_pct,float,share 0-1,derived,st_snaps / team_st_snaps. Empty when he had no snaps.
+rookie_class_seasons_2023_2025.csv,post_games_with_snap,integer,games,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Postseason games with at least one snap (same season).
+rookie_class_seasons_2023_2025.csv,post_off_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Postseason offensive snaps.
+rookie_class_seasons_2023_2025.csv,post_def_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Postseason defensive snaps.
+rookie_class_seasons_2023_2025.csv,post_st_snaps,integer,snaps,derived: FTN participation via nflverse (CC BY-SA 4.0) joined to nflverse play-by-play (CC BY 4.0),Postseason special-teams snaps.
+rookie_class_seasons_2023_2025.csv,injury_report_weeks,integer,weeks,nflverse injuries (CC BY 4.0),Regular-season weeks the player appears on the official injury report (any practice or game status).
+rookie_class_seasons_2023_2025.csv,injury_weeks_out,integer,weeks,nflverse injuries (CC BY 4.0),Weeks with game status Out.
+rookie_class_seasons_2023_2025.csv,injury_weeks_doubtful,integer,weeks,nflverse injuries (CC BY 4.0),Weeks with game status Doubtful.
+rookie_class_seasons_2023_2025.csv,injury_weeks_questionable,integer,weeks,nflverse injuries (CC BY 4.0),Weeks with game status Questionable.
+rookie_class_seasons_2023_2025.csv,injury_most_listed,string,,nflverse injuries (CC BY 4.0),Most frequently listed primary injury this season. Empty if never listed.
+rookie_class_seasons_2023_2025.csv,has_stat_row,boolean,,"nflverse stats_player, regular season (CC BY 4.0)",True if nflverse stats_player has a regular-season row for the player-season (players with no recorded statistic have none).
+rookie_class_seasons_2023_2025.csv,stat_games,integer,games,"nflverse stats_player, regular season (CC BY 4.0)",Games in which nflverse recorded any statistic for the player (stats_player 'games'). Not the same as games_with_snap: linemen without a recorded stat are absent.
+rookie_class_seasons_2023_2025.csv,completions,integer,passes,"nflverse stats_player, regular season (CC BY 4.0)",Pass completions. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,attempts,integer,passes,"nflverse stats_player, regular season (CC BY 4.0)",Pass attempts. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,passing_yards,integer,yards,"nflverse stats_player, regular season (CC BY 4.0)",Passing yards. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,passing_tds,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Passing touchdowns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,passing_interceptions,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Interceptions thrown. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,sacks_suffered,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Sacks taken. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,passing_epa,float,EPA,"nflverse stats_player, regular season (CC BY 4.0)",Total expected points added on dropbacks (nflfastR model). Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,carries,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Rushing attempts. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,rushing_yards,integer,yards,"nflverse stats_player, regular season (CC BY 4.0)",Rushing yards. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,rushing_tds,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Rushing touchdowns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,rushing_epa,float,EPA,"nflverse stats_player, regular season (CC BY 4.0)",Total expected points added on carries. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,targets,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Pass targets. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,receptions,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Receptions. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,receiving_yards,integer,yards,"nflverse stats_player, regular season (CC BY 4.0)",Receiving yards. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,receiving_tds,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Receiving touchdowns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,receiving_epa,float,EPA,"nflverse stats_player, regular season (CC BY 4.0)",Total expected points added on targets. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,target_share,float,share 0-1,"nflverse stats_player, regular season (CC BY 4.0)",Share of team targets (nflverse definition). Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,air_yards_share,float,share 0-1,"nflverse stats_player, regular season (CC BY 4.0)",Share of team air yards (nflverse definition). Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_tackles_solo,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Solo tackles. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_tackle_assists,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Assisted tackles. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_tackles_for_loss,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Tackles for loss. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_sacks,float,sacks,"nflverse stats_player, regular season (CC BY 4.0)",Sacks (half sacks possible). Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_qb_hits,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Quarterback hits. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_interceptions,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Interceptions. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_pass_defended,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Passes defended. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_fumbles_forced,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Forced fumbles. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,def_tds,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Defensive touchdowns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,special_teams_tds,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Special-teams touchdowns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,punt_returns,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Punt returns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,punt_return_yards,integer,yards,"nflverse stats_player, regular season (CC BY 4.0)",Punt return yards. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,kickoff_returns,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Kickoff returns. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,kickoff_return_yards,integer,yards,"nflverse stats_player, regular season (CC BY 4.0)",Kickoff return yards. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,fg_made,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Field goals made. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,fg_att,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Field goals attempted. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,pat_made,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Extra points made. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,pat_att,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Extra points attempted. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,penalties,integer,count,"nflverse stats_player, regular season (CC BY 4.0)",Accepted penalties charged to the player. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,penalty_yards,integer,yards,"nflverse stats_player, regular season (CC BY 4.0)",Penalty yards charged. Regular season. Empty when has_stat_row is false.
+rookie_class_seasons_2023_2025.csv,fantasy_points_ppr,float,points,"nflverse stats_player, regular season (CC BY 4.0)","Fantasy points, PPR scoring (nflverse definition). Regular season. Empty when has_stat_row is false."
+coverage.csv,entry_year,integer,year,derived,Class.
+coverage.csv,season,integer,year,derived,Season.
+coverage.csv,position_group,string,,derived,Position group (UNKNOWN if not derivable).
+coverage.csv,players,integer,players,derived,Players in the class (one season row each).
+coverage.csv,drafted,integer,players,derived,"Of those, drafted."
+coverage.csv,with_public_nfl_id,integer,players,derived,"Of those, with a public nfl_id."
+coverage.csv,on_weekly_roster,integer,players,derived,"Of those, listed on a regular-season weekly roster that season."
+coverage.csv,with_reg_snap,integer,players,derived,"Of those, with at least one regular-season snap that season."
+coverage.csv,with_stat_row,integer,players,derived,"Of those, with an nflverse regular-season stats row that season."
+provenance.csv,tag,string,,derived,nflverse-data release tag.
+provenance.csv,file,string,,derived,Release asset file name.
+provenance.csv,url,string,URL,derived,Public download URL used by the build.
+provenance.csv,bytes,integer,bytes,derived,File size at build time.
+provenance.csv,sha256,string,hash,derived,SHA-256 of the file at build time. nflverse refreshes some files; validate_dataset.py reports any change.
+provenance.csv,licence,string,,derived,Licence governing the file.
+provenance.csv,attribution,string,,derived,Required attribution.

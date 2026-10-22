@@ -277,3 +277,96 @@ export function evaluateFourthDownDecision(state: FourthDownGameState): FourthDo
     expectedPointsAdvantage: Number(epDelta.toFixed(3)),
   };
 }
+
+export function evaluateTimeoutPreserveVsIceValue(input: {
+  readonly fieldGoalDistanceYards: number;
+  readonly halfSecondsRemaining: number;
+  readonly scoreDifferential: number;
+  readonly timeoutsRemaining: number;
+}): {
+  readonly preserveTimeoutWpValue: number;
+  readonly iceKickerMakeProbDelta: number;
+  readonly netPreserveAdvantageWp: number;
+  readonly recommendation: "PRESERVE_TIMEOUT" | "ICE_NEUTRAL";
+} {
+  if (input.timeoutsRemaining <= 0) {
+    return {
+      preserveTimeoutWpValue: 0,
+      iceKickerMakeProbDelta: 0,
+      netPreserveAdvantageWp: 0,
+      recommendation: "ICE_NEUTRAL",
+    };
+  }
+  // Icing a kicker on 52+ yd attempts gives a +0.011 practice-swing warmup lift to the kicker; otherwise -0.004 noise
+  const iceKickerMakeProbDelta = input.fieldGoalDistanceYards >= 52 ? +0.011 : -0.004;
+  const closeGame = Math.abs(input.scoreDifferential) <= 8;
+  const clockWindow = input.halfSecondsRemaining >= 35 && input.halfSecondsRemaining <= 210;
+  const preserveTimeoutWpValue = closeGame && clockWindow ? 0.054 : closeGame ? 0.022 : 0.008;
+  const netPreserveAdvantageWp = Number((preserveTimeoutWpValue + 0.35 * iceKickerMakeProbDelta).toFixed(4));
+  return {
+    preserveTimeoutWpValue: Number(preserveTimeoutWpValue.toFixed(4)),
+    iceKickerMakeProbDelta,
+    netPreserveAdvantageWp,
+    recommendation: netPreserveAdvantageWp >= 0.01 ? "PRESERVE_TIMEOUT" : "ICE_NEUTRAL",
+  };
+}
+
+export function evaluateCoachChallengeEV(input: {
+  readonly callCategory: "BOUNDARY_CATCH" | "SPOT_OF_BALL" | "CATCH_FUMBLE" | "PASS_INTERFERENCE";
+  readonly winProbSwingIfOverturned: number;
+  readonly quarter: 1 | 2 | 3 | 4;
+  readonly halfSecondsRemaining: number;
+  readonly scoreDifferential: number;
+  readonly empiricalOverturnProbOverride?: number;
+}): {
+  readonly overturnProb: number;
+  readonly timeoutShadowCostWp: number;
+  readonly expectedNetWp: number;
+  readonly shouldChallenge: boolean;
+} {
+  const baseRates: Record<typeof input.callCategory, number> = {
+    BOUNDARY_CATCH: 0.54,
+    CATCH_FUMBLE: 0.39,
+    SPOT_OF_BALL: 0.31,
+    PASS_INTERFERENCE: 0.14,
+  };
+  const overturnProb = input.empiricalOverturnProbOverride ?? baseRates[input.callCategory];
+  const highLeverageClock =
+    (input.quarter === 2 || input.quarter === 4) &&
+    input.halfSecondsRemaining <= 240 &&
+    Math.abs(input.scoreDifferential) <= 10;
+  const timeoutShadowCostWp = highLeverageClock ? 0.048 : input.quarter >= 3 ? 0.024 : 0.011;
+  const expectedNetWp = Number(
+    (overturnProb * input.winProbSwingIfOverturned - (1 - overturnProb) * timeoutShadowCostWp).toFixed(4),
+  );
+  return {
+    overturnProb,
+    timeoutShadowCostWp,
+    expectedNetWp,
+    shouldChallenge: expectedNetWp > 0.005,
+  };
+}
+
+export function evaluateEndOfHalfClockBoundary(input: {
+  readonly yardline100: number;
+  readonly halfSecondsRemaining: number;
+  readonly offenseTimeouts: number;
+  readonly receivesSecondHalfKickoff: boolean;
+}): {
+  readonly doubleDipAvailable: boolean;
+  readonly opponentCounterScoreRiskWp: number;
+  readonly optimalClockRunoffSeconds: number;
+} {
+  const doubleDipAvailable = input.receivesSecondHalfKickoff && input.halfSecondsRemaining <= 150;
+  const leaveTime = Math.max(0, input.halfSecondsRemaining - 28 * (3 - Math.min(input.offenseTimeouts, 3)));
+  const opponentCounterScoreRiskWp = Number(
+    (leaveTime > 45 ? Math.min(0.18, ((leaveTime - 35) / 120) * 0.14) : 0.015).toFixed(4),
+  );
+  const optimalClockRunoffSeconds = Math.min(input.halfSecondsRemaining, Math.max(0, input.halfSecondsRemaining - 18));
+  return {
+    doubleDipAvailable,
+    opponentCounterScoreRiskWp,
+    optimalClockRunoffSeconds,
+  };
+}
+

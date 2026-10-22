@@ -108,3 +108,84 @@ export function insituMeasureGate(
   }
   return { accept: true, reason: "ok", condition: cond };
 }
+
+/**
+ * Push a 3x3 world position covariance matrix Sigma_XYZ into 2x2 pixel covariance:
+ * Sigma_uv = J * Sigma_XYZ * J^T
+ */
+export function pushWorldCovarianceToImage2D(
+  j: readonly (readonly number[])[],
+  sigmaWorld3x3: readonly (readonly number[])[],
+): [[number, number], [number, number]] {
+  const jSigma: number[][] = [
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
+  for (let r = 0; r < 2; r++) {
+    for (let c = 0; c < 3; c++) {
+      jSigma[r][c] =
+        j[r][0] * sigmaWorld3x3[0][c] +
+        j[r][1] * sigmaWorld3x3[1][c] +
+        j[r][2] * sigmaWorld3x3[2][c];
+    }
+  }
+  const s00 = jSigma[0][0] * j[0][0] + jSigma[0][1] * j[0][1] + jSigma[0][2] * j[0][2];
+  const s01 = jSigma[0][0] * j[1][0] + jSigma[0][1] * j[1][1] + jSigma[0][2] * j[1][2];
+  const s10 = jSigma[1][0] * j[0][0] + jSigma[1][1] * j[0][1] + jSigma[1][2] * j[0][2];
+  const s11 = jSigma[1][0] * j[1][0] + jSigma[1][1] * j[1][1] + jSigma[1][2] * j[1][2];
+  return [
+    [s00, s01],
+    [s10, s11],
+  ];
+}
+
+/**
+ * Pull a 2x2 pixel covariance matrix back to a Tikhonov-regularized 3x3 world precision/covariance:
+ * Sigma_world = (J^T * Sigma_uv^-1 * J + ridgeLambda * I_3)^-1
+ */
+export function pullImageCovarianceToWorld3D(
+  j: readonly (readonly number[])[],
+  sigmaUv2x2: readonly (readonly number[])[],
+  ridgeLambda = 1e-3,
+): number[][] | null {
+  const det2 = sigmaUv2x2[0][0] * sigmaUv2x2[1][1] - sigmaUv2x2[0][1] * sigmaUv2x2[1][0];
+  if (!Number.isFinite(det2) || Math.abs(det2) <= 1e-15 || !(ridgeLambda > 0)) return null;
+  const invUv = [
+    [sigmaUv2x2[1][1] / det2, -sigmaUv2x2[0][1] / det2],
+    [-sigmaUv2x2[1][0] / det2, sigmaUv2x2[0][0] / det2],
+  ];
+  // Precision P = J^T * invUv * J + ridgeLambda * I_3
+  const p = [
+    [ridgeLambda, 0, 0],
+    [0, ridgeLambda, 0],
+    [0, 0, ridgeLambda],
+  ];
+  for (let a = 0; a < 3; a++) {
+    for (let b = 0; b < 3; b++) {
+      let sum = 0;
+      for (let r1 = 0; r1 < 2; r1++) {
+        for (let r2 = 0; r2 < 2; r2++) {
+          sum += j[r1][a] * invUv[r1][r2] * j[r2][b];
+        }
+      }
+      p[a][b] += sum;
+    }
+  }
+  const c00 = p[1][1] * p[2][2] - p[1][2] * p[2][1];
+  const c01 = -(p[1][0] * p[2][2] - p[1][2] * p[2][0]);
+  const c02 = p[1][0] * p[2][1] - p[1][1] * p[2][0];
+  const c10 = -(p[0][1] * p[2][2] - p[0][2] * p[2][1]);
+  const c11 = p[0][0] * p[2][2] - p[0][2] * p[2][0];
+  const c12 = -(p[0][0] * p[2][1] - p[0][1] * p[2][0]);
+  const c20 = p[0][1] * p[1][2] - p[0][2] * p[1][1];
+  const c21 = -(p[0][0] * p[1][2] - p[0][2] * p[1][0]);
+  const c22 = p[0][0] * p[1][1] - p[0][1] * p[1][0];
+  const det3 = p[0][0] * c00 + p[0][1] * c01 + p[0][2] * c02;
+  if (!Number.isFinite(det3) || Math.abs(det3) <= 1e-18) return null;
+  return [
+    [c00 / det3, c10 / det3, c20 / det3],
+    [c01 / det3, c11 / det3, c21 / det3],
+    [c02 / det3, c12 / det3, c22 / det3],
+  ];
+}
+

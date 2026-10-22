@@ -151,3 +151,39 @@ def evaluate_wr_prop_with_pocket_penalty(
         "decision": decision,
         "gate_reason": gate_reason,
     }
+
+def evaluate_ratf_net_two_path_intermittent(
+    p_active_regime: float,
+    mu_jump_path: float,
+    mu_smooth_path: float,
+    intermittency_ratio: float = 0.0,
+) -> dict:
+    """OpenAlex W7223035214: RATF-Net regime-adaptive two-path intermittent forecaster."""
+    p = min(max(float(p_active_regime), 0.0), 1.0)
+    gate = min(max(p * (1.0 + 0.25 * max(0.0, float(intermittency_ratio) - 0.5)), 0.0), 1.0)
+    y_hat = gate * float(mu_jump_path) + (1.0 - gate) * float(mu_smooth_path)
+    return {
+        "gate_probability": round(gate, 4),
+        "forecast": round(y_hat, 4),
+        "regime": "INTERMITTENT_JUMP" if gate >= 0.5 else "SMOOTH_CONTINUOUS",
+    }
+
+
+def evaluate_seven_model_jump_contingency(hazards: list[float], weights: list[float] | None = None) -> dict:
+    """OpenAlex W7222995921: 7-model stochastic contingency & jump hazard synthesis."""
+    if not hazards:
+        return {"composite_hazard": 0.0, "survival_prob": 1.0, "dominant_model_index": -1}
+    k = len(hazards)
+    w = weights if (weights and len(weights) == k) else [1.0 / k] * k
+    w_sum = sum(max(0.0, x) for x in w) or 1.0
+    w_norm = [max(0.0, x) / w_sum for x in w]
+    comp = sum(w_norm[i] * max(0.0, float(hazards[i])) for i in range(k))
+    import math as _m
+    surv = _m.exp(-comp)
+    dom = max(range(k), key=lambda i: w_norm[i] * max(0.0, float(hazards[i])))
+    return {
+        "composite_hazard": round(comp, 4),
+        "survival_prob": round(surv, 4),
+        "dominant_model_index": int(dom),
+    }
+

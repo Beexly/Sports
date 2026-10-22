@@ -178,3 +178,20 @@ def _run_tests() -> None:
 
 if __name__ == "__main__":
     _run_tests()
+
+# Re-export BDB 2027 10 Hz Combine & Game Kinematic Suite + Allen ITL (arXiv:2004.04147)
+from .bdb2027_kinematics import (  # noqa: E402,F401
+    Interval,
+    allen_relation,
+    ceiling_closeness,
+    combine_speed_ceiling,
+    compute_biomechanical_load_hazard,
+    compute_cod_curvature_retention,
+    compute_decel_reaccel_asymmetry,
+    compute_first_step_burst_latency,
+    compute_kinematic_derivatives_10hz,
+    evaluate_itl_complex_event,
+    exceedance_rate,
+    kinetic_translation_deficit,
+)
+

@@ -1260,3 +1260,147 @@ export function computeSovereignSignalPlaneContribution(
   };
 }
 
+// ============================================================================
+// Stream 4: Layer-2 Situational Corpus Gap Remediation & Decision-Time Re-Pricing
+// ============================================================================
+
+export interface DecisionTimeRepricingInput {
+  readonly openFairProb: number;
+  readonly decisionFairProb: number;
+  readonly modelTrueProb: number;
+  readonly newsShockDeltaProb?: number;
+}
+
+export interface DecisionTimeRepricingResult {
+  readonly edgeVsOpen: number;
+  readonly edgeVsDecisionLine: number;
+  readonly steamAbsorbedFraction: number;
+  readonly staleSteamFadeRecommended: boolean;
+  readonly action: "PUBLISH_LIVE_EDGE" | "PASS_STALE_STEAM" | "FADE_OVERREACTION";
+}
+
+export function evaluateDecisionTimeRepricing(input: DecisionTimeRepricingInput): DecisionTimeRepricingResult {
+  const edgeVsOpen = Number((input.modelTrueProb - input.openFairProb).toFixed(4));
+  const edgeVsDecisionLine = Number((input.modelTrueProb - input.decisionFairProb).toFixed(4));
+  const move = input.decisionFairProb - input.openFairProb;
+  const shock = input.newsShockDeltaProb ?? move;
+  const steamAbsorbedFraction =
+    Math.abs(shock) > 1e-6 ? Number(Math.min(Math.max(move / shock, 0), 2.5).toFixed(4)) : 1.0;
+  const staleSteamFadeRecommended = Math.abs(move) >= 0.035 && steamAbsorbedFraction > 1.35 && edgeVsDecisionLine < 0;
+  const action =
+    edgeVsDecisionLine >= 0.02
+      ? "PUBLISH_LIVE_EDGE"
+      : staleSteamFadeRecommended
+        ? "FADE_OVERREACTION"
+        : "PASS_STALE_STEAM";
+  return {
+    edgeVsOpen,
+    edgeVsDecisionLine,
+    steamAbsorbedFraction,
+    staleSteamFadeRecommended,
+    action,
+  };
+}
+
+export interface PreventDefenseRegimeResult {
+  readonly preventActive: boolean;
+  readonly underneathCompletionLift: number;
+  readonly deepExplosiveSuppression: number;
+  readonly trailingPassRateLift: number;
+  readonly clockBleedSecondsPerPlay: number;
+}
+
+export function evaluatePreventDefenseRegime(
+  scoreDifferential: number,
+  gameSecondsRemaining: number,
+): PreventDefenseRegimeResult {
+  const absLead = Math.abs(scoreDifferential);
+  const preventActive = absLead >= 14 && gameSecondsRemaining <= 600 && gameSecondsRemaining > 0;
+  if (!preventActive) {
+    return {
+      preventActive: false,
+      underneathCompletionLift: 0,
+      deepExplosiveSuppression: 0,
+      trailingPassRateLift: 0,
+      clockBleedSecondsPerPlay: 0,
+    };
+  }
+  const intensity = Math.min(1.5, (absLead - 10) / 14) * Math.min(1.2, (600 - gameSecondsRemaining) / 300 + 0.4);
+  return {
+    preventActive: true,
+    underneathCompletionLift: Number((0.114 * intensity).toFixed(4)),
+    deepExplosiveSuppression: Number((-0.42 * Math.min(intensity, 1.2)).toFixed(4)),
+    trailingPassRateLift: Number((0.182 * intensity).toFixed(4)),
+    clockBleedSecondsPerPlay: Number((-6.5 * Math.min(intensity, 1.2)).toFixed(2)),
+  };
+}
+
+export interface CompoundScheduleFatigueInput {
+  readonly consecutiveRoadGames: number;
+  readonly priorGameOvertimeOrMnf: boolean;
+  readonly timeZonesCrossed: number;
+  readonly restDaysDelta: number;
+}
+
+export function evaluateCompoundScheduleFatigueSpot(input: CompoundScheduleFatigueInput): {
+  readonly compoundFatigueActive: boolean;
+  readonly q4DefensiveEpaPenalty: number;
+  readonly pointSpreadPenalty: number;
+} {
+  const compoundFatigueActive =
+    input.consecutiveRoadGames >= 2 && (input.priorGameOvertimeOrMnf || input.timeZonesCrossed >= 2);
+  if (!compoundFatigueActive) {
+    return { compoundFatigueActive: false, q4DefensiveEpaPenalty: 0, pointSpreadPenalty: 0 };
+  }
+  const tzFactor = 1 + 0.18 * Math.max(0, input.timeZonesCrossed - 1);
+  const restFactor = 1 + 0.12 * Math.max(0, -input.restDaysDelta);
+  const q4DefensiveEpaPenalty = Number((0.065 * tzFactor * restFactor).toFixed(4));
+  const pointSpreadPenalty = Number((-1.85 * tzFactor * restFactor).toFixed(2));
+  return { compoundFatigueActive: true, q4DefensiveEpaPenalty, pointSpreadPenalty };
+}
+
+export function evaluateDomeColdWindTransition(input: {
+  readonly isDomeTeamOnRoadOutdoors: boolean;
+  readonly temperatureF: number;
+  readonly windMph: number;
+}): {
+  readonly transitionActive: boolean;
+  readonly completionRateDelta: number;
+  readonly epaPerDropbackDelta: number;
+  readonly totalPointsDelta: number;
+} {
+  if (!input.isDomeTeamOnRoadOutdoors || (input.temperatureF > 40 && input.windMph < 13)) {
+    return { transitionActive: false, completionRateDelta: 0, epaPerDropbackDelta: 0, totalPointsDelta: 0 };
+  }
+  const coldExcess = Math.max(0, (40 - input.temperatureF) / 15);
+  const windExcess = Math.max(0, (input.windMph - 12) / 10);
+  const severity = Math.min(2.0, coldExcess + windExcess + 0.5 * coldExcess * windExcess);
+  return {
+    transitionActive: severity > 0,
+    completionRateDelta: Number((-0.048 * severity).toFixed(4)),
+    epaPerDropbackDelta: Number((-0.072 * severity).toFixed(4)),
+    totalPointsDelta: Number((-2.8 * severity).toFixed(2)),
+  };
+}
+
+export function parseBetSlipMetadata(rawSlipText: string): {
+  readonly americanOdds: number | null;
+  readonly lineValue: number | null;
+  readonly impliedProb: number | null;
+  readonly isSameGameParlay: boolean;
+} {
+  const oddsMatch = rawSlipText.match(/(?:^|\s)([+-]\d{3,4})(?:\s|$)/);
+  const lineMatch = rawSlipText.match(/(?:[+-]?\d+\.5)\b/);
+  const americanOdds = oddsMatch ? Number.parseInt(oddsMatch[1], 10) : null;
+  const lineValue = lineMatch ? Number.parseFloat(lineMatch[0]) : null;
+  let impliedProb: number | null = null;
+  if (americanOdds !== null && americanOdds !== 0) {
+    impliedProb =
+      americanOdds > 0
+        ? Number((100 / (americanOdds + 100)).toFixed(4))
+        : Number((Math.abs(americanOdds) / (Math.abs(americanOdds) + 100)).toFixed(4));
+  }
+  const isSameGameParlay = /\b(SGP|Same Game Parlay)\b/i.test(rawSlipText);
+  return { americanOdds, lineValue, impliedProb, isSameGameParlay };
+}
+

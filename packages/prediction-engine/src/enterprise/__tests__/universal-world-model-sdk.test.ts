@@ -6,6 +6,10 @@ import {
   GSEVerifyCartridge,
   WorldModelCartridgeRegistry,
   ItcrTrace,
+  evaluateAbnormalSituationManagement,
+  evaluateVolveDualHeadAnomalyGate,
+  evaluateLifecycleDataQualityGate,
+  CausalBeamTransferEngine,
 } from "../../index.js";
 
 describe("Universal World Model SDK & Cartridges (Component 10)", () => {
@@ -140,5 +144,39 @@ describe("Universal World Model SDK & Cartridges (Component 10)", () => {
       },
     ]);
     expect(feedback.brierScore).toBeGreaterThanOrEqual(0);
+  });
+
+  it("evaluates Abnormal Situation Management (arXiv:2608.19819), Volve Dual-Head Anomaly Gate (arXiv:2608.05685), and Lifecycle DQA (arXiv:2609.31191)", () => {
+    const asmEmergency = evaluateAbnormalSituationManagement({
+      residualZScore: 4.5,
+      sensorConcordance: 0.5,
+      consecutiveViolationFrames: 4,
+    });
+    expect(asmEmergency.state).toBe("EMERGENCY_SHUTDOWN");
+    expect(asmEmergency.humanEscalationRequired).toBe(true);
+
+    const volve = evaluateVolveDualHeadAnomalyGate({
+      supervisedAnomalyProb: 0.85,
+      unsupervisedReconstructionScore: 0.8,
+      alertThreshold: 0.7,
+    });
+    expect(volve.verifiedAnomalyAlert).toBe(true);
+    expect(volve.regime).toBe("CONFIRMED_ANOMALY");
+
+    const dqa = evaluateLifecycleDataQualityGate({
+      completeness: 0.92,
+      consistency: 0.88,
+      timeliness: 0.85,
+      lineage: 0.9,
+      driftStability: 0.84,
+      labelConcordance: 0.86,
+    });
+    expect(dqa.passesLifecycleGate).toBe(true);
+
+    const beamEngine = new CausalBeamTransferEngine();
+    const beam4 = beamEngine.transferBeamZeroShot("BEAM_SIGMA_4", "GSE_CLINICAL_ICU_SEPSIS");
+    expect(beam4.transferStatus).toBe("ZERO_SHOT_VALIDATED");
+    const beam5 = beamEngine.transferBeamZeroShot("BEAM_SIGMA_5", "GSE_INDUSTRIAL_VOLVE_ASM");
+    expect(beam5.transferStatus).toBe("ZERO_SHOT_VALIDATED");
   });
 });

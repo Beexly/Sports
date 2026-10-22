@@ -61,9 +61,9 @@
       "detail": "a TS call site exists and no Python duplicate remains",
       "probe": "the TypeScript Sovereign Signal Plane has zero call sites",
       "evidence": [
-        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
-        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
-        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
+        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({\r",
+        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {\r",
+        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
         "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
       ],
@@ -109,7 +109,7 @@
       "detail": "the Reasoning Engine output is wired directly into rankingP via corpusWeight: 1.0 in process-sport.ts",
       "probe": "the Reasoning Engine output is computed, stored, displayed -- and never used",
       "evidence": [
-        "packages/prediction-engine/src/index.ts:4614:  evaluateMindReasoning,\r",
+        "packages/prediction-engine/src/index.ts:4614:  evaluateMindReasoning,",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:4:  evaluateMindReasoning,",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:60:    const res = evaluateMindReasoning(seaAtDenCtx);",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:146:    const resultFull = evaluateMindReasoning(seaAtDenCtx, fullCorpus);",
@@ -164,9 +164,9 @@
       "detail": "the duplication is resolved; canonical weights reside in TypeScript constant",
       "probe": "Sovereign Signal Plane weights are duplicated across a TS constant and a DB config",
       "evidence": [
-        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
-        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
-        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
+        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({\r",
+        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {\r",
+        "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
         "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
       ],
