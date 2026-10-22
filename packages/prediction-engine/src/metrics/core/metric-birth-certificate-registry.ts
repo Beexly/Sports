@@ -12,7 +12,7 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     internalName: "avg_separation_expected",
     metricId: "avg-separation-expected",
     protectedComponents: ["minimum qualification floor", "week 0 exclusion", "point-in-time enforcement"],
-    publicExposure: "none",
+    publicExposure: "hidden",
     publicName: "Per-Player Average Separation Expected",
     sourceRightsRequired: ["internal modeling"],
     status: "SHADOW",
