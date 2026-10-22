@@ -44,6 +44,7 @@ type RawRow = {
   readonly pickType: string | null;
   readonly tier: string | null;
   readonly modelVersion: string | null;
+  readonly bookmakerCount?: number | null;
   readonly game?: { readonly commenceTime?: Date | null; readonly sport?: { readonly key?: string | null } | null } | null;
 };
 
@@ -57,6 +58,9 @@ function toSummaryPickRow(r: RawRow): SummaryPickRow {
     settledAt: r.settledAt ?? null,
     generatedAt: r.generatedAt ?? null,
     commenceTime: r.game?.commenceTime ?? null,
+    // C-352: without this the whole population collapses into model-signal and
+    // the bettable record disappears from the public surface.
+    bookmakerCount: r.bookmakerCount ?? null,
   };
 }
 
@@ -98,6 +102,7 @@ export async function rebuildPerformanceSummaries(
       pickType: true,
       tier: true,
       modelVersion: true,
+      bookmakerCount: true,
       game: { select: { commenceTime: true, sport: { select: { key: true } } } },
     },
   })) as readonly RawRow[];

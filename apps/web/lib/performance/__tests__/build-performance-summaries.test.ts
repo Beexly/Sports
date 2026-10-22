@@ -6,6 +6,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildPerformanceSummaries,
+  decodeLaneModelVersion,
   type SummaryPickRow,
 } from "@/lib/performance/build-performance-summaries";
 import { winRatePct } from "@/lib/format/stat";
@@ -36,11 +37,14 @@ describe("buildPerformanceSummaries — the shape /performance reads", () => {
     ]);
     const all = built.rows.filter((r) => r.period === "all-time");
     expect(all).toHaveLength(1);
+    // C-352: the row's modelVersion carries its lane. These fixtures carry no
+    // bookmakerCount, so they decode to the model-signal lane — a row with no
+    // stored-price evidence can never strengthen the bettable record.
     expect(all[0]).toMatchObject({
       sport: "baseball_mlb",
       pickType: "MONEYLINE",
       tier: "A",
-      modelVersion: "v5.2.7",
+      modelVersion: "v5.2.7|model-signal",
       totalPicks: 4,
       wins: 2,
       losses: 1,
@@ -50,6 +54,10 @@ describe("buildPerformanceSummaries — the shape /performance reads", () => {
       // against winRatePct rather than a literal so the unit cannot drift back to a
       // fraction: the first version of this stored 0.6667 here, wrong by 100x.
       winRate: winRatePct(2, 1),
+    });
+    expect(decodeLaneModelVersion(all[0].modelVersion)).toEqual({
+      modelVersion: "v5.2.7",
+      lane: "model-signal",
     });
     expect(built.rows.filter((r) => r.period === "2026-09")).toHaveLength(1);
   });

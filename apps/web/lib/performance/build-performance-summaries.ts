@@ -48,6 +48,15 @@ export interface SummaryPickRow {
   readonly settledAt: Date | null;
   readonly generatedAt: Date | null;
   readonly commenceTime: Date | null;
+  /**
+   * The C-352 lane split: >= 1 stored bookmaker price = book-priced, 0 = the
+   * model-signal record. Missing/null counts as no stored price evidence —
+   * the audit's own convention — so an unknown row can only land in the lane
+   * displayed as not bettable, never in the bettable hero. (Same asymmetry as
+   * every other public gate here: uncertainty costs us a claim we would have
+   * made, never hands us one.)
+   */
+  readonly bookmakerCount?: number | null;
 }
 
 export interface PerformanceSummaryRow {
@@ -80,6 +89,58 @@ export interface BuiltPerformanceSummaries {
 
 const DECIDED = new Set(["WIN", "LOSS", "PUSH"]);
 
+// ---- C-352 lanes -----------------------------------------------------------
+//
+// The schema is law-protected (no new columns, no migrations), so the lane
+// rides INSIDE the summary row's modelVersion as a suffix the page decodes.
+// The summary table is a display artifact rebuilt wholesale by
+// rebuildPerformanceSummaries (flag-gated, transactional replace), so an
+// encoded modelVersion there is data plumbing, not a model identity change:
+// MODEL_VERSION itself is untouched and nothing in the picks table changes.
+
+export const BOOK_PRICED_LANE = "book-priced";
+export const MODEL_SIGNAL_LANE = "model-signal";
+export type PerformanceLane = typeof BOOK_PRICED_LANE | typeof MODEL_SIGNAL_LANE;
+
+const LANE_SEPARATOR = "|";
+
+/** The base modelVersion plus its lane, the string persisted in the summary table. */
+export function encodeLaneModelVersion(
+  modelVersion: string,
+  lane: PerformanceLane,
+): string {
+  return `${modelVersion}${LANE_SEPARATOR}${lane}`;
+}
+
+/**
+ * Decode a summary row's modelVersion into its base version and lane.
+ *
+ * A row with no lane marker (persisted before the lane existed) decodes to the
+ * model-signal lane: it carries no stored-price evidence, and a no-evidence row
+ * must never strengthen the bettable record.
+ */
+export function decodeLaneModelVersion(encoded: string): {
+  modelVersion: string;
+  lane: PerformanceLane;
+} {
+  const idx = encoded.lastIndexOf(LANE_SEPARATOR);
+  const tail = idx >= 0 ? encoded.slice(idx + 1) : "";
+  if (tail === BOOK_PRICED_LANE) {
+    return { modelVersion: encoded.slice(0, idx), lane: BOOK_PRICED_LANE };
+  }
+  return {
+    modelVersion: idx >= 0 ? encoded.slice(0, idx) : encoded,
+    lane: MODEL_SIGNAL_LANE,
+  };
+}
+
+/** The lane a graded pick belongs to, from its stored bookmaker coverage. */
+function laneOf(bookmakerCount: number | null | undefined): PerformanceLane {
+  return bookmakerCount != null && Number.isFinite(bookmakerCount) && bookmakerCount >= 1
+    ? BOOK_PRICED_LANE
+    : MODEL_SIGNAL_LANE;
+}
+
 function periodOf(settledAt: Date | null): string | null {
   if (!(settledAt instanceof Date) || !Number.isFinite(settledAt.getTime())) return null;
   const y = settledAt.getUTCFullYear();
@@ -107,13 +168,18 @@ export function buildPerformanceSummaries(
     pickType: string | null,
     tier: string | null,
     modelVersion: string,
+    lane: PerformanceLane,
     period: string,
     result: string,
   ) => {
-    const id = [sport, pickType ?? "", tier ?? "", modelVersion, period].join("|");
+    // The lane is part of the key AND the persisted modelVersion: book-priced
+    // and model-signal rows for the same version are different records (the
+    // audit's whole point — summing them produced the lying 53.2% headline).
+    const encoded = encodeLaneModelVersion(modelVersion, lane);
+    const id = [sport, pickType ?? "", tier ?? "", encoded, period].join("|");
     const b =
       buckets.get(id) ??
-      { key: { sport, league: null, pickType, tier, modelVersion, period }, wins: 0, losses: 0, pushes: 0 };
+      { key: { sport, league: null, pickType, tier, modelVersion: encoded, period }, wins: 0, losses: 0, pushes: 0 };
     if (result === "WIN") b.wins += 1;
     else if (result === "LOSS") b.losses += 1;
     else b.pushes += 1;
@@ -134,9 +200,10 @@ export function buildPerformanceSummaries(
       skipped.unkeyable += 1;
       continue;
     }
-    add(row.sport, row.pickType, row.tier, row.modelVersion, "all-time", row.result);
+    const lane = laneOf(row.bookmakerCount);
+    add(row.sport, row.pickType, row.tier, row.modelVersion, lane, "all-time", row.result);
     const period = periodOf(row.settledAt);
-    if (period) add(row.sport, row.pickType, row.tier, row.modelVersion, period, row.result);
+    if (period) add(row.sport, row.pickType, row.tier, row.modelVersion, lane, period, row.result);
   }
 
   const out: PerformanceSummaryRow[] = [];

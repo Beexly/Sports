@@ -23,7 +23,8 @@ describe("states matrix — locked/withheld reads deliberate, never broken", () 
     expect(page).toContain("WithheldStat");
     expect(page).toContain("opens at {floor} settled");
     // The withheld branch replaces the bare dash at text-5xl, not the caption dashes.
-    expect(page).toMatch(/publishedOverallWinRate !== null \? \(\s*formatPercent/);
+    // (C-352: the hero rate is the book-priced lane's, so the symbol is the lane's.)
+    expect(page).toMatch(/publishedBookWinRate !== null \? \(\s*formatPercent/);
   });
 
   it("pick card: LockedValue only for unentitled; entitled-with-null gets neutral MissingValue", () => {

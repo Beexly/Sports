@@ -19,12 +19,23 @@ import {
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
+import {
+  decodeLaneModelVersion,
+  BOOK_PRICED_LANE,
+  MODEL_SIGNAL_LANE,
+} from "@/lib/performance/build-performance-summaries";
 import { publicRateOrNull } from "@/lib/ledger/display-guard";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 // Reads settled picks and calibration state from the database on every request
 // (.claude/rules/nextjs-caching.md): never let Next memoise this page.
 export const dynamic = "force-dynamic";
+
+// C-352: the break-even the record is judged at. 52.4% is the hold-adjusted
+// line a bettor must clear, not the coin-flip 50% — passing VerdictLine the
+// 0.5 default would flatter a sub-market record with a verdict word it has
+// not earned.
+const BREAKEVEN_THRESHOLD = 0.524;
 
 export const metadata: Metadata = {
   title: "Calibration Report: Settled-Pick Audit Trail",
@@ -197,7 +208,32 @@ export default async function PerformancePage() {
   const allTimeSummaries = summaries.filter((s) => s.period === "all-time");
   const recentSummaries = summaries.filter((s) => s.period !== "all-time");
   const overall = aggregateOverall(summaries);
-  const bySport = groupBySport(allTimeSummaries);
+
+  // C-352 lanes: the published record is the BOOK lane (rows that carried at
+  // least one stored bookmaker price). Model-signal rows stay in the record in
+  // their own lane, labelled not bettable, and never lift the hero — summing
+  // the two is the lying 53.2% headline the 2026-09-14 audit caught.
+  const laneOfSummary = (s: PerformanceSummary) =>
+    decodeLaneModelVersion(s.modelVersion).lane;
+  const bookAllTime = allTimeSummaries.filter(
+    (s) => laneOfSummary(s) === BOOK_PRICED_LANE,
+  );
+  const signalAllTime = allTimeSummaries.filter(
+    (s) => laneOfSummary(s) === MODEL_SIGNAL_LANE,
+  );
+  const bookOverall = aggregateOverall(bookAllTime);
+  const signalOverall = aggregateOverall(signalAllTime);
+  // Coverage: book-priced picks of the full settled record.
+  const storedPriceN = bookOverall.totalPicks;
+  const settledRecordN = bookOverall.totalPicks + signalOverall.totalPicks;
+  const bookWilsonBand = wilsonInterval(
+    bookOverall.wins,
+    bookOverall.wins + bookOverall.losses,
+  );
+  const bookRecent = recentSummaries.filter(
+    (s) => laneOfSummary(s) === BOOK_PRICED_LANE,
+  );
+  const bySport = groupBySport(bookAllTime);
   const computedAt = latestComputedAt(summaries);
   const modelVersion = latestModelVersion(summaries);
 
@@ -246,12 +282,21 @@ export default async function PerformancePage() {
     );
   // overall.winRate is already winRatePct(overall.wins, overall.losses); withhold
   // it below the floor so the headline never publishes a thin-sample rate.
-  const publishedOverallWinRate = rateOrNull(
-    "all-time win rate",
-    overall.wins,
-    overall.losses,
-    overall.totalPicks,
-    insufficientSample ? null : overall.winRate,
+  // The hero is the BOOK lane (C-352): the model-signal lane is rendered
+  // separately as not bettable and is never summed into this number.
+  const publishedBookWinRate = rateOrNull(
+    "book-priced all-time win rate",
+    bookOverall.wins,
+    bookOverall.losses,
+    bookOverall.totalPicks,
+    insufficientSample ? null : bookOverall.winRate,
+  );
+  const publishedSignalWinRate = rateOrNull(
+    "model-signal all-time win rate",
+    signalOverall.wins,
+    signalOverall.losses,
+    signalOverall.totalPicks,
+    insufficientSample ? null : signalOverall.winRate,
   );
 
   const SPORT_DISPLAY_NAMES: Record<string, string> = {
@@ -345,7 +390,9 @@ export default async function PerformancePage() {
                     <dt className="text-ion-2">Model version</dt>
                     <dd>
                       <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
-                        {modelVersion ?? STAT_PLACEHOLDER}
+                        {modelVersion
+                          ? decodeLaneModelVersion(modelVersion).modelVersion
+                          : STAT_PLACEHOLDER}
                       </code>
                     </dd>
                   </div>
@@ -359,21 +406,24 @@ export default async function PerformancePage() {
               </section>
 
               <section className="mb-12">
-                <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
+                <div
+                  data-testid="performance-book-priced-lane"
+                  className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon"
+                >
                   <div className="border-b border-mineral px-6 py-4">
                     <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
-                      All-Time Overall
+                      All-Time Record — book-priced picks
                     </h2>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
                     <OverallStat
                       label="Win Rate"
                       value={
-                        publishedOverallWinRate !== null ? (
-                          formatPercent(publishedOverallWinRate)
+                        publishedBookWinRate !== null ? (
+                          formatPercent(publishedBookWinRate)
                         ) : insufficientSample ? (
                           <WithheldStat
-                            settled={overall.totalPicks}
+                            settled={bookOverall.totalPicks}
                             floor={minSettledFloor}
                           />
                         ) : (
@@ -381,25 +431,25 @@ export default async function PerformancePage() {
                         )
                       }
                       accent={
-                        publishedOverallWinRate !== null
-                          ? winRateToneClass(publishedOverallWinRate)
+                        publishedBookWinRate !== null
+                          ? winRateToneClass(publishedBookWinRate)
                           : "text-ion-2"
                       }
                       large
                     />
                     <OverallStat
                       label="Wins"
-                      value={formatCount(overall.wins)}
+                      value={formatCount(bookOverall.wins)}
                       accent="text-verify"
                     />
                     <OverallStat
                       label="Losses"
-                      value={formatCount(overall.losses)}
+                      value={formatCount(bookOverall.losses)}
                       accent="text-alert"
                     />
                     <OverallStat
                       label="Pushes"
-                      value={formatCount(overall.pushes)}
+                      value={formatCount(bookOverall.pushes)}
                       accent="text-ion-2"
                     />
                   </div>
@@ -407,17 +457,99 @@ export default async function PerformancePage() {
                     <p className="text-xs text-ion-2">
                       Based on{" "}
                       <span className={NUMERIC_TEXT_CLASS}>
-                        {formatCount(overall.totalPicks)}
+                        {formatCount(bookOverall.totalPicks)}
                       </span>{" "}
-                      finished live-engine picks. Win rate excludes pushes.
+                      finished live-engine picks that carried a bookmaker price.
+                      Win rate excludes pushes.
+                      {bookWilsonBand && (
+                        <>
+                          {" · "}
+                          <span className={NUMERIC_TEXT_CLASS}>
+                            95% band {formatWilsonPct(bookWilsonBand, 0)}
+                          </span>
+                          {" · break-even 52.4%"}
+                        </>
+                      )}
                     </p>
                     <VerdictLine
-                      wins={overall.wins}
-                      losses={overall.losses}
+                      wins={bookOverall.wins}
+                      losses={bookOverall.losses}
                       minSample={minSettledFloor}
+                      threshold={BREAKEVEN_THRESHOLD}
                     />
                   </div>
                 </div>
+
+                {/* The model-signal lane stays in the record — labelled, not
+                    summed, and never presented as something to bet. */}
+                <div
+                  data-testid="performance-model-signal-lane"
+                  className="mt-4 rounded-2xl border border-mineral bg-eclipse/40 p-5"
+                >
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-sm font-bold text-ion-white">
+                      Model-signal record
+                    </h3>
+                    <span className="rounded bg-caution/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
+                      not bettable
+                    </span>
+                  </div>
+                  <p className="text-xs text-ion-2">
+                    Published from the model signal with no bookmaker price
+                    behind it. Kept in the record for honesty; never counted in
+                    the headline above.
+                  </p>
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                    <div className="rounded-lg bg-verify/10 py-2">
+                      <p className="text-xs text-ion-2">W</p>
+                      <p className={`text-lg font-bold text-verify ${NUMERIC_TEXT_CLASS}`}>
+                        {formatCount(signalOverall.wins)}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-alert/10 py-2">
+                      <p className="text-xs text-ion-2">L</p>
+                      <p className={`text-lg font-bold text-alert ${NUMERIC_TEXT_CLASS}`}>
+                        {formatCount(signalOverall.losses)}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-titanium/60 py-2">
+                      <p className="text-xs text-ion-2">P</p>
+                      <p className={`text-lg font-bold text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+                        {formatCount(signalOverall.pushes)}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-center text-xs text-ion-2">
+                    <span className={NUMERIC_TEXT_CLASS}>
+                      {formatCount(signalOverall.totalPicks)}
+                    </span>{" "}
+                    settled picks
+                    {publishedSignalWinRate !== null && (
+                      <>
+                        {" · "}
+                        <span className={NUMERIC_TEXT_CLASS}>
+                          {formatPercent(publishedSignalWinRate)}
+                        </span>{" "}
+                        win rate (excl. pushes)
+                      </>
+                    )}
+                  </p>
+                </div>
+
+                <p
+                  data-testid="performance-coverage-line"
+                  className="mt-4 text-center text-xs text-ion-2"
+                >
+                  <span className={NUMERIC_TEXT_CLASS}>
+                    {formatCount(storedPriceN)}
+                  </span>{" "}
+                  of{" "}
+                  <span className={NUMERIC_TEXT_CLASS}>
+                    {formatCount(settledRecordN)}
+                  </span>{" "}
+                  settled rows carry a stored price. The record above is judged
+                  on the priced lane only.
+                </p>
               </section>
 
               {bySport.size > 0 && (
@@ -451,7 +583,7 @@ export default async function PerformancePage() {
                 </section>
               )}
 
-              {recentSummaries.length > 0 && (
+              {bookRecent.length > 0 && (
                 <section className="mb-12">
                   <h2 className="mb-5 text-xl font-bold text-ion-white">
                     Recent periods
@@ -484,7 +616,7 @@ export default async function PerformancePage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {recentSummaries.slice(0, 30).map((s, i) => {
+                        {bookRecent.slice(0, 30).map((s, i) => {
                           const wr = rateOrNull(
                             "period win rate",
                             s.wins,
