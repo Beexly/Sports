@@ -7,5 +7,6 @@ describe("key number mass", () => {
     expect(mass[3]).toBeCloseTo(0.4);
     expect(mass[7]).toBeCloseTo(0.4);
     expect(mass[10]).toBeCloseTo(0.2);
+    expect(keyNumberMass([-3.5], [3, 4])[4]).toBe(1);
   });
 });

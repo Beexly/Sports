@@ -8,6 +8,10 @@
 
 export const NFL_KEY_NUMBERS = [1, 2, 3, 4, 6, 7, 10, 14] as const;
 
+function roundHalfAwayFromZero(value: number): number {
+  return Math.sign(value) * Math.round(Math.abs(value));
+}
+
 export function keyNumberMass(
   margins: readonly number[],
   keys: readonly number[] = NFL_KEY_NUMBERS,
@@ -17,7 +21,7 @@ export function keyNumberMass(
   if (margins.some((m) => !Number.isFinite(m))) throw new Error("margins must be finite");
   const out: Record<number, number> = {};
   for (const k of keys) {
-    const hits = margins.filter((m) => Math.abs(Math.round(m)) === k).length;
+    const hits = margins.filter((m) => Math.abs(roundHalfAwayFromZero(m)) === k).length;
     out[k] = hits / margins.length;
   }
   return out;

@@ -5360,6 +5360,7 @@ export {
   meanClassProbabilities,
   neighborLabelMismatch,
   speedFromDisplacement,
+  correctedAcceleration,
 } from "./nfl/coverage-scheme.js";
 export { keyNumberMass, NFL_KEY_NUMBERS } from "./nfl/key-number-mass.js";
 export {

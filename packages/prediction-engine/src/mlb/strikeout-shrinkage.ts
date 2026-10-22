@@ -33,6 +33,7 @@ export function marcelWeightedRate(
       throw new Error("season counts are invalid");
     }
     const weight = MARCEL_SEASON_WEIGHTS[row.seasonsAgo];
+    if (weight === undefined) throw new Error("Marcel weights cover this season and the two before it");
     strikeouts += weight * row.strikeouts;
     battersFaced += weight * row.battersFaced;
   }

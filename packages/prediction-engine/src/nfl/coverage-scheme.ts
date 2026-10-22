@@ -51,6 +51,23 @@ export function speedFromDisplacement(displacementYards: number): number {
   return displacementYards * 10;
 }
 
+/** Zoo correction: scale reported acceleration by (displacement / speed) / 0.1. */
+export function correctedAcceleration(
+  reportedAcceleration: number,
+  displacementYards: number,
+  reportedSpeed: number,
+): number {
+  if (![reportedAcceleration, displacementYards, reportedSpeed].every(Number.isFinite)) {
+    throw new Error("acceleration inputs must be finite");
+  }
+  if (displacementYards < 0 || reportedSpeed < 0) throw new Error("displacement and speed must be non-negative");
+  if (reportedSpeed === 0) {
+    if (displacementYards === 0) return 0;
+    throw new Error("speed is zero while displacement is not");
+  }
+  return reportedAcceleration * (displacementYards / reportedSpeed) / 0.1;
+}
+
 export function meanClassProbabilities(models: readonly (readonly number[])[]): number[] {
   if (models.length === 0) throw new Error("at least one model output is required");
   const width = models[0].length;

@@ -11,7 +11,7 @@ export function gaussianNeighborWeights(distances: readonly number[], sigma: num
   if (distances.length === 0) throw new Error("at least one distance is required");
   if (!Number.isFinite(sigma) || sigma <= 0) throw new Error("sigma must be finite and positive");
   if (distances.some((d) => !Number.isFinite(d) || d < 0)) throw new Error("distances must be finite and non-negative");
-  const weights = distances.map((d) => Math.exp(-(d * d) / (2 * sigma * sigma)));
+  const weights = distances.map((d) => (d === 0 ? 0 : Math.exp(-(d * d) / (2 * sigma * sigma))));
   const sum = weights.reduce((a, b) => a + b, 0);
   if (sum === 0) throw new Error("neighbor weights collapsed to zero");
   return weights.map((w) => w / sum);

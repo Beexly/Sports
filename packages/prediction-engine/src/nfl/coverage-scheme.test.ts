@@ -6,6 +6,7 @@ import {
   meanClassProbabilities,
   neighborLabelMismatch,
   speedFromDisplacement,
+  correctedAcceleration,
 } from "./coverage-scheme.js";
 
 describe("coverage scheme", () => {
@@ -19,6 +20,7 @@ describe("coverage scheme", () => {
       dsy: -1,
     });
     expect(speedFromDisplacement(0.4)).toBeCloseTo(4);
+    expect(correctedAcceleration(10, 0.4, 2)).toBeCloseTo(20);
     const averaged = meanClassProbabilities([[0.8, 0.2], [0.4, 0.6]]);
     expect(averaged[0]).toBeCloseTo(0.6);
     expect(averaged[1]).toBeCloseTo(0.4);
