@@ -1,39 +1,51 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import type { RankingPauseDurableSnap } from "@/lib/ops/ranking-pause-durable";
 
 /**
- * Companion to selective-publish-runtime-stampede.test.ts.
+ * Companion to selective-publish-runtime-stampede.test.ts and
+ * ops-durable-read-latch.test.ts.
  *
  * The stampede fix caches the in-flight PROMISE instead of the resolved value.
  * The hazard that introduces is a cached REJECTED promise: left in the slot it
- * would poison every later caller for the life of the isolate. The durable
- * loaders swallow their own DB errors, so the realistic rejection here is the
- * dynamic `import()` failing (a chunk-load error on a cold Vercel lambda) or
- * the durable module throwing on load — which is why these tests reject at the
- * loader boundary rather than at the DB.
+ * would poison every later caller for the life of the isolate. The realistic
+ * rejection here is the dynamic `import()` failing (a chunk-load error on a
+ * cold Vercel lambda) or the durable module throwing on load — which is why
+ * these tests reject at the reader boundary rather than at the DB.
  *
- * Required behaviour: the failed slot is dropped, the batch degrades to `null`
- * (exactly what the pre-fix try/catch produced), and the NEXT request retries
- * instead of being pinned to the failure. Pre-fix the failure was cached as
- * `null` forever — a transient blip cost the isolate its durable plan until
- * redeploy.
+ * Required behaviour: a failed flight degrades to `null` (no caller ever
+ * rejects), the failed slot is NOT latched, and the next request after the
+ * documented failure-backoff window retries and succeeds. The backoff
+ * (DURABLE_FAILURE_BACKOFF_MS = 5s) is deliberate, not a latch: it bounds the
+ * serial re-reads during an outage, and ops-durable-read-latch.test.ts pins it
+ * from the outside with the same PAST_BACKOFF_MS convention used here.
+ *
+ * WIRING NOTE: the runtime deliberately reads the durable controls through
+ * `readProvenPathPlan` / `readRankingPauseApply` — the ONE readers whose
+ * status union lets the cache distinguish absence from unavailability
+ * (proven-path-durable.ts: "Prefer readProvenPathPlan anywhere the answer is
+ * stored, cached"). `loadProvenPathPlan` / `loadRankingPauseApply` are lossy
+ * wrappers over those readers, so the mocks here stub the readers. An earlier
+ * draft of this suite stubbed the wrappers instead, so every read in it hit an
+ * undefined export and degraded to null.
  */
 
 const mocks = vi.hoisted(() => ({
-  loadProvenPathPlan: vi.fn(),
-  loadRankingPauseApply: vi.fn(),
+  readProvenPathPlan: vi.fn(),
+  readRankingPauseApply: vi.fn(),
 }));
 
 vi.mock("@/lib/ops/proven-path-durable", () => ({
   PROVEN_PATH_SCOPE: "ops.calibration.proven-path",
-  loadProvenPathPlan: mocks.loadProvenPathPlan,
+  readProvenPathPlan: mocks.readProvenPathPlan,
+  loadProvenPathPlan: vi.fn(),
   persistProvenPathPlan: vi.fn(),
 }));
 
 vi.mock("@/lib/ops/ranking-pause-durable", () => ({
   RANKING_PAUSE_DURABLE_SCOPE: "ops.ranking.pause-apply",
-  loadRankingPauseApply: mocks.loadRankingPauseApply,
+  readRankingPauseApply: mocks.readRankingPauseApply,
+  loadRankingPauseApply: vi.fn(),
   persistRankingPauseApply: vi.fn(),
 }));
 
@@ -60,41 +72,56 @@ const PAUSE: RankingPauseDurableSnap = {
   note: "test snap",
 };
 
+/** Must exceed DURABLE_FAILURE_BACKOFF_MS (5s) in selective-publish-runtime. */
+const PAST_BACKOFF_MS = 6_000;
+
 beforeEach(() => {
+  vi.useFakeTimers();
   clearSelectiveRuntimeCaches();
-  mocks.loadProvenPathPlan.mockReset().mockResolvedValue(PLAN);
-  mocks.loadRankingPauseApply.mockReset().mockResolvedValue(PAUSE);
+  mocks.readProvenPathPlan
+    .mockReset()
+    .mockResolvedValue({ status: "ok", plan: PLAN });
+  mocks.readRankingPauseApply
+    .mockReset()
+    .mockResolvedValue({ status: "ok", snap: PAUSE });
+});
+
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 describe("selective-publish runtime: a failed load never poisons the cache", () => {
-  it("a rejected plan read degrades to null, then the NEXT request retries and succeeds", async () => {
-    mocks.loadProvenPathPlan.mockRejectedValueOnce(new Error("chunk load failed"));
+  it("a rejected plan read degrades to null, then the next request after the backoff retries and succeeds", async () => {
+    mocks.readProvenPathPlan.mockRejectedValueOnce(new Error("chunk load failed"));
 
     // Degrades exactly as before — the public board never 500s on a durable blip.
     await expect(getCachedProvenPathPlan()).resolves.toBeNull();
 
     // Pre-fix the failure was cached as `null` for the life of the isolate, so
     // the plan stayed lost until redeploy. A cached REJECTED promise would be
-    // worse still: every later caller would reject.
-    mocks.loadProvenPathPlan.mockResolvedValue(PLAN);
+    // worse still: every later caller would reject. The backoff bounds the
+    // retries during the outage; past the window the read retries.
+    mocks.readProvenPathPlan.mockResolvedValue({ status: "ok", plan: PLAN });
+    vi.advanceTimersByTime(PAST_BACKOFF_MS);
     await expect(getCachedProvenPathPlan()).resolves.toBe(PLAN);
-    expect(mocks.loadProvenPathPlan).toHaveBeenCalledTimes(2);
+    expect(mocks.readProvenPathPlan).toHaveBeenCalledTimes(2);
   });
 
-  it("a rejected pause read degrades to null, then recovers on the next request", async () => {
-    mocks.loadRankingPauseApply.mockRejectedValueOnce(new Error("chunk load failed"));
+  it("a rejected pause read degrades to null, then recovers on the next request after the backoff", async () => {
+    mocks.readRankingPauseApply.mockRejectedValueOnce(new Error("chunk load failed"));
 
     await expect(getCachedRankingPauseDurable()).resolves.toBeNull();
 
-    mocks.loadRankingPauseApply.mockResolvedValue(PAUSE);
+    mocks.readRankingPauseApply.mockResolvedValue({ status: "ok", snap: PAUSE });
+    vi.advanceTimersByTime(PAST_BACKOFF_MS);
     await expect(getCachedRankingPauseDurable()).resolves.toBe(PAUSE);
-    expect(mocks.loadRankingPauseApply).toHaveBeenCalledTimes(2);
+    expect(mocks.readRankingPauseApply).toHaveBeenCalledTimes(2);
   });
 
   it("a successful load IS still cached (the retry path must not disable memoisation)", async () => {
     await expect(getCachedProvenPathPlan()).resolves.toBe(PLAN);
     await expect(getCachedProvenPathPlan()).resolves.toBe(PLAN);
-    expect(mocks.loadProvenPathPlan).toHaveBeenCalledTimes(1);
+    expect(mocks.readProvenPathPlan).toHaveBeenCalledTimes(1);
   });
 
   it("a rejected flight resolves EVERY caller sharing it to null — none of them rejects", async () => {
@@ -102,18 +129,14 @@ describe("selective-publish runtime: a failed load never poisons the cache", () 
     // only post-fix: 200 picks now share ONE promise, so if that promise were
     // ever handed out un-caught a single durable blip would reject all 200 map
     // callbacks and turn /api/picks into a 500 instead of an unfiltered board.
-    //
-    // HARNESS NOTE (why there is no query count here): this file mocks the
-    // dynamically-imported durable modules, and Vitest resolves a mocked
-    // `import()` one continuation at a time — callers here are therefore NOT
-    // genuinely concurrent, and a call COUNT measured in this file is an
-    // artifact: it reads 1 both before and after the fix, so it would prove
-    // nothing. The count proof lives in
+    // The runtime's own single-flight collapses the 200 callers onto one
+    // in-flight read; the rejection is caught inside it, so all 200 settle.
+    // (The count proof for the single-flight itself lives in
     // selective-publish-runtime-stampede.test.ts, which mocks `@sports/db` and
-    // lets the real durable modules load: pre-fix 400 queries, post-fix 2.
+    // lets the real durable modules run: pre-fix 400 queries, post-fix 2.)
     let reject!: (error: Error) => void;
     const gate = new Promise<ProvenPathPlan | null>((_, r) => (reject = r));
-    mocks.loadProvenPathPlan.mockImplementation(() => gate);
+    mocks.readProvenPathPlan.mockImplementation(() => gate);
 
     const inFlight = Promise.all(Array.from({ length: 200 }, () => getCachedProvenPathPlan()));
     reject(new Error("chunk load failed"));
@@ -122,8 +145,10 @@ describe("selective-publish runtime: a failed load never poisons the cache", () 
     expect(results).toHaveLength(200);
     expect(results.every((r) => r === null)).toBe(true);
 
-    // …and the failed slot is still dropped, so the next request retries.
-    mocks.loadProvenPathPlan.mockResolvedValue(PLAN);
+    // …and the failed slot is still dropped, so the next request after the
+    // backoff retries.
+    mocks.readProvenPathPlan.mockResolvedValue({ status: "ok", plan: PLAN });
+    vi.advanceTimersByTime(PAST_BACKOFF_MS);
     await expect(getCachedProvenPathPlan()).resolves.toBe(PLAN);
   });
 });
