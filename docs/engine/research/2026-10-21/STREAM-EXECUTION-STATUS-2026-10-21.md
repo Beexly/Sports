@@ -13,7 +13,7 @@ Measured. Not a claim that Streams 1-9 are empirically closed.
 
 ## Not done, and not marked done
 
-- Stream 1 situational corpus merge: the "(2).md" source named in the plan was not on disk. No 80-record corpus was invented.
+- Stream 1 situational corpus: the Downloads file named `(2).md` is the 80-heading X-search corpus (sha256 5ac20711b19d). It is banked under `docs/engine/research/2026-10-21/downloads-2026-10-21/`. The file already on this branch is a different 25-heading synthesis whose title says 80. Records were not re-fetched from X.
 - Stream 2 paper dossier: not fetched this cycle. Titles were not invented.
 - Stream 4 situational call sites were not stubbed into game-context.ts.
 - Streams 6-8 were not implemented as untested engine theater.
