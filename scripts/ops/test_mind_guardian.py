@@ -211,7 +211,7 @@ def test_detects_openai_style_key():
 
 
 def test_detects_a_postgres_connection_string():
-    assert is_sensitive("c.txt", "postgresql://user:hunter2@db.internal:5432/db")
+    assert is_sensitive("c.txt", "postgresql://user:hunter2@db.internal:5432/db")  # scan_sensitive: allow db.url.with-password
 
 
 def test_detects_an_assignment_style_password():
@@ -401,7 +401,7 @@ def test_a_sensitive_file_is_not_indexed_into_memory(repo: Path):
     g = MindGuardian(repo_root=repo, watch_dirs=[repo / "Downloads"],
                      today="2026-10-12", memory_db=db)
     (repo / "Downloads" / "secret.txt").write_text(
-        "postgresql://u:p@h:5432/db", encoding="utf-8"
+        "postgresql://u:p@h:5432/db", encoding="utf-8"  # scan_sensitive: allow db.url.with-password
     )
     g.scan_once()
     conn = sqlite3.connect(str(db))

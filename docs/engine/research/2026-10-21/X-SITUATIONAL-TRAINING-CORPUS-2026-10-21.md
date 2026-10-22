@@ -677,3 +677,12 @@ is 8/8 theme groups, not 80 separately named tests.
 
 **Gap 4 — Freshness.** The corpus is a 2026-10-21 snapshot. Source links have not been
 re-fetched since promotion, so link rot and deleted posts are not measured here.
+
+
+### Correction — 2026-10-22 deep review
+
+The "625 posts mined" figure in the audit above has **no independent source**. It
+appears only in this block and its twin in CONTEXT-LOCATOR. Searches of Downloads and
+the mining workspace return zero occurrences. Treat **80 records** as the substantiated
+count and **625 as unverified**. Do not cite 625 until a mining log with 625 distinct
+post IDs is produced.

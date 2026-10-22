@@ -223,7 +223,6 @@ export function orthogonalizeAndShrink(
 }
 
 const SENSITIVE_PATTERNS: RegExp[] = [
-  /\bsk-[A-Za-z0-9_-]{16,}\b/g,
   /\bghp_[A-Za-z0-9]{20,}\b/g,
   /\bgithub_pat_[A-Za-z0-9_]{20,}\b/g,
   /\bAKIA[0-9A-Z]{16}\b/g,
@@ -231,6 +230,17 @@ const SENSITIVE_PATTERNS: RegExp[] = [
   /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g,
   /\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}\b/g,
   /\bpostgres(?:ql)?:\/\/[^\s"']+/gi,
+  /\bsk_live_[A-Za-z0-9]{20,}\b/g,
+  /\brk_live_[A-Za-z0-9]{20,}\b/g,
+  /\bwhsec_[A-Za-z0-9]{24,}\b/g,
+  /\bsk-proj-[A-Za-z0-9_-]{20,}\b/g,
+  /\bsk-ant-[A-Za-z0-9_-]{20,}\b/g,
+  /\bsk-[A-Za-z0-9_-]{16,}\b/g,
+  /\bAIza[0-9A-Za-z_-]{30,}\b/g,
+  /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/g,
+  /https:\/\/discord(?:app)?\.com\/api\/webhooks\/\d+\/[A-Za-z0-9_-]+/g,
+  /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/g,
+  /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g,
   /\bLTAI[A-Za-z0-9]{16,24}\b/g,
   /\b[a-f0-9]{32,}\b/g,
 ];

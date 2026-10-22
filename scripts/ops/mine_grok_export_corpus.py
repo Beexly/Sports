@@ -38,7 +38,6 @@ ASSET = "prod-mc-asset-server"
 REFUSED = ("prod-mc-auth", "prod-mc-billing")
 
 PATTERNS = [
-    (re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"), "[REDACTED_API_KEY]"),
     (re.compile(r"\bghp_[A-Za-z0-9]{20,}\b"), "[REDACTED_GITHUB_TOKEN]"),
     (re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"), "[REDACTED_GITHUB_TOKEN]"),
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "[REDACTED_AWS_KEY]"),
@@ -46,6 +45,17 @@ PATTERNS = [
     (re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"), "[REDACTED_EMAIL]"),
     (re.compile(r"\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}\b"), "[REDACTED_PHONE]"),
     (re.compile(r"\bpostgres(?:ql)?://[^\s\"']+", re.I), "[REDACTED_CONNECTION_STRING]"),
+    (re.compile(r"\bsk_live_[A-Za-z0-9]{20,}\b"), "[REDACTED_STRIPE_KEY]"),
+    (re.compile(r"\brk_live_[A-Za-z0-9]{20,}\b"), "[REDACTED_STRIPE_KEY]"),
+    (re.compile(r"\bwhsec_[A-Za-z0-9]{24,}\b"), "[REDACTED_STRIPE_WEBHOOK]"),
+    (re.compile(r"\bsk-proj-[A-Za-z0-9_\-]{20,}\b"), "[REDACTED_OPENAI_KEY]"),
+    (re.compile(r"\bsk-ant-[A-Za-z0-9_\-]{20,}\b"), "[REDACTED_ANTHROPIC_KEY]"),
+    (re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"), "[REDACTED_API_KEY]"),
+    (re.compile(r"\bAIza[0-9A-Za-z_\-]{30,}\b"), "[REDACTED_GOOGLE_KEY]"),
+    (re.compile(r"\bxox[baprs]-[A-Za-z0-9\-]{20,}\b"), "[REDACTED_SLACK_TOKEN]"),
+    (re.compile(r"https://discord(?:app)?\.com/api/webhooks/\d+/[A-Za-z0-9_\-]+"), "[REDACTED_DISCORD_WEBHOOK]"),
+    (re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
+    (re.compile(r"\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b"), "[REDACTED_JWT]"),
     (re.compile(r"\bLTAI[A-Za-z0-9]{16,24}\b"), "[REDACTED_ALIBABA_KEY]"),
     (re.compile(r"\b[a-f0-9]{32,}\b"), "[REDACTED_HEX]"),
 ]
@@ -81,6 +91,22 @@ def flatten(value, depth: int = 0) -> str:
     return str(value)
 
 
+BINARY_MAGIC = (b"\x89PNG", b"ID3", b"PK\x03\x04", b"\xff\xd8\xff", b"GIF8", b"%PDF", b"RIFF", b"OggS", b"fLaC")
+
+
+def is_binary(data: bytes) -> bool:
+    """True for media/archive/document bytes that are not conversation text."""
+    if any(data.startswith(m) for m in BINARY_MAGIC):
+        return True
+    sample = data[:4096]
+    if b"\x00" in sample:
+        return True
+    if not sample:
+        return False
+    nonprint = sum(1 for b in sample if b < 9 or 13 < b < 32)
+    return nonprint / len(sample) > 0.10
+
+
 def decode(raw: bytes) -> str:
     text = None
     for enc in ("utf-8", "utf-16", "latin-1"):
@@ -112,7 +138,7 @@ def extract_all() -> dict:
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
     INDEX_PATH.unlink(missing_ok=True)
 
-    entries, bodies, non_bodies, refused = [], 0, 0, 0
+    entries, bodies, binary_bodies, non_bodies, refused = [], 0, 0, 0, 0
     raw_bytes = sanitized_chars = redactions = 0
 
     with zipfile.ZipFile(ZIP_PATH) as zf:
@@ -131,14 +157,38 @@ def extract_all() -> dict:
                 entries.append(record)
                 continue
             raw = zf.read(info)
-            clean, red = sanitize(decode(raw))
             bid = body_id(name)
+            if is_binary(raw):
+                # Media/document asset, not a conversation body. Record its
+                # hash and size; never decode it as text (the first pass did,
+                # which mislabeled 1,056 assets as bodies).
+                digest = hashlib.sha256(raw).hexdigest()
+                with INDEX_PATH.open("a", encoding="utf-8") as fh:
+                    fh.write(json.dumps({
+                        "recordType": "grok_export_asset",
+                        "bodyKind": "binary",
+                        "id": bid,
+                        "sourcePath": name,
+                        "rawBytes": len(raw),
+                        "textChars": 0,
+                        "sha256": digest,
+                        "redactions": 0,
+                        "bodyPath": None,
+                        "excerpt": "",
+                    }, ensure_ascii=False) + "\n")
+                binary_bodies += 1
+                raw_bytes += len(raw)
+                record.update({"disposition": "binary-body", "id": bid, "sha256": digest})
+                entries.append(record)
+                continue
+            clean, red = sanitize(decode(raw))
             body_file = BODY_DIR / f"{bid}.txt"
             body_file.write_text(clean, encoding="utf-8", newline="\n")
             digest = hashlib.sha256(clean.encode("utf-8")).hexdigest()
             with INDEX_PATH.open("a", encoding="utf-8") as fh:
                 fh.write(json.dumps({
                     "recordType": "grok_export_body",
+                    "bodyKind": "text",
                     "id": bid,
                     "sourcePath": name,
                     "rawBytes": len(raw),
@@ -161,6 +211,9 @@ def extract_all() -> dict:
         "zipBytes": ZIP_PATH.stat().st_size,
         "zipSha256": sha256_file(ZIP_PATH),
         "entriesTotal": len(entries),
+        "assetEntries": bodies + binary_bodies,
+        "textBodies": bodies,
+        "binaryBodies": binary_bodies,
         "bodiesExtracted": bodies,
         "nonBodyEntries": non_bodies,
         "refusedServiceEntries": refused,
@@ -188,11 +241,15 @@ def verify_deep() -> int:
     with zipfile.ZipFile(ZIP_PATH) as zf:
         infos = zf.infolist()
         asset_bodies = [i for i in infos if ASSET in i.filename.lower() and i.filename.endswith("/content")]
+        zip_hashes = {i.filename: hashlib.sha256(zf.read(i)).hexdigest() for i in asset_bodies}
     if manifest["entriesTotal"] != len(infos):
         print(f"VERIFY FAIL: entry count drift {manifest['entriesTotal']} vs {len(infos)}")
         return 1
-    if manifest["bodiesExtracted"] != len(asset_bodies):
-        print(f"VERIFY FAIL: body count drift {manifest['bodiesExtracted']} vs {len(asset_bodies)}")
+    if manifest.get("assetEntries") != len(asset_bodies):
+        print(f"VERIFY FAIL: asset count drift {manifest.get('assetEntries')} vs {len(asset_bodies)}")
+        return 1
+    if manifest["textBodies"] + manifest["binaryBodies"] != len(asset_bodies):
+        print("VERIFY FAIL: text+binary does not equal asset entries")
         return 1
     lines = [l for l in INDEX_PATH.read_text(encoding="utf-8").split("\n") if l.strip()]
     if len(lines) != len(asset_bodies):
@@ -201,6 +258,10 @@ def verify_deep() -> int:
     mismatches = 0
     for line in lines:
         rec = json.loads(line)
+        if rec.get("bodyKind") == "binary":
+            if zip_hashes.get(rec["sourcePath"]) != rec["sha256"]:
+                mismatches += 1
+            continue
         path = REPO / rec["bodyPath"]
         if not path.is_file() or sha256_file(path) != rec["sha256"]:
             mismatches += 1
@@ -215,9 +276,9 @@ def verify_deep() -> int:
         print(f"VERIFY FAIL: {hits} credential-shaped strings in index excerpts")
         return 1
     print(
-        "VERIFY OK entries={} bodies={} non_bodies={} refused={} redactions={} sha256_mismatches=0".format(
-            len(infos), len(asset_bodies), manifest["nonBodyEntries"],
-            manifest["refusedServiceEntries"], manifest["redactions"],
+        "VERIFY OK entries={} assets={} text_bodies={} binary_bodies={} non_bodies={} refused={} redactions={} sha256_mismatches=0".format(
+            len(infos), len(asset_bodies), manifest["textBodies"], manifest["binaryBodies"],
+            manifest["nonBodyEntries"], manifest["refusedServiceEntries"], manifest["redactions"],
         )
     )
     return 0
@@ -232,7 +293,8 @@ def main() -> int:
     m = extract_all()
     print(json.dumps({
         "entries": m["entriesTotal"],
-        "bodies": m["bodiesExtracted"],
+        "text_bodies": m["textBodies"],
+        "binary_bodies": m["binaryBodies"],
         "non_bodies": m["nonBodyEntries"],
         "refused": m["refusedServiceEntries"],
         "body_mb": round(m["bodyRawBytes"] / 1e6, 1),

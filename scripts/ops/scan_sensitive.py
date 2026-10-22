@@ -45,6 +45,13 @@ _ALI = "LT" + "AI"
 RULES.append(("alibaba.access-key", re.compile(r"\b" + _ALI + r"[A-Za-z0-9]{16,24}\b")))
 _HF = "hf_"
 RULES.append(("huggingface.token", re.compile(r"\b" + _HF + r"[A-Za-z0-9]{30,}\b")))
+RULES.extend([
+    ("stripe.restricted.live", re.compile(r"\brk_live_[A-Za-z0-9]{20,}\b")),
+    ("stripe.webhook", re.compile(r"\bwhsec_[A-Za-z0-9]{24,}\b")),
+    ("google.api-key", re.compile(r"\bAIza[0-9A-Za-z_\-]{30,}\b")),
+    ("discord.webhook", re.compile(r"https://discord(?:app)?\.com/api/webhooks/\d+/[A-Za-z0-9_\-]+")),
+    ("jwt", re.compile(r"\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b")),
+])
 
 SKIP_NAMES = {
     ".env",
@@ -93,12 +100,36 @@ def scan_path(path: Path) -> list[str]:
         text = path.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         return [f"unreadable:{exc}"]
+    # Inline allowlist for deliberate test fixtures: a line carrying
+    # `scan_sensitive: allow` is not scanned. Everything else is.
+    text = "\n".join(line for line in text.splitlines() if "scan_sensitive: allow" not in line)
     return find_secrets(text)
+
+
+DEFAULT_PATHS = [
+    "brain/feeds/2026-10-22",
+    "intelligence/ingestion",
+    "intelligence/vision",
+    "scripts/ops",
+    "packages/prediction-engine/src/nfl",
+]
+SCAN_SUFFIXES = {".py", ".ts", ".js", ".json", ".jsonl", ".md", ".txt", ".yml", ".yaml", ".sh"}
+
+
+def expand(paths: list[str]) -> list[Path]:
+    files: list[Path] = []
+    for raw in paths:
+        path = Path(raw)
+        if path.is_dir():
+            files.extend(p for p in path.rglob("*") if p.is_file() and p.suffix in SCAN_SUFFIXES)
+        else:
+            files.append(path)
+    return sorted(set(files))
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Scan files for high-confidence secrets")
-    parser.add_argument("--paths", nargs="*", default=[])
+    parser.add_argument("--paths", nargs="*", default=None)
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     if args.self_test:
@@ -109,8 +140,8 @@ def main(argv: list[str] | None = None) -> int:
         print("scan_sensitive self-test passed")
         return 0
     failed = 0
-    for raw in args.paths:
-        path = Path(raw)
+    paths = expand(args.paths if args.paths is not None else DEFAULT_PATHS)
+    for path in paths:
         if not path.is_file():
             print(f"MISSING {path}")
             failed += 1
@@ -122,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     if failed:
         print(f"scan_sensitive: {failed} file(s) failed")
         return 1
-    print(f"scan_sensitive: clean ({len(args.paths)} files)")
+    print(f"scan_sensitive: clean ({len(paths)} files, default_paths={args.paths is None})")
     return 0
 
 

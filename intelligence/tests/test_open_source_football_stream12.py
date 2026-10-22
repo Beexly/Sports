@@ -110,6 +110,29 @@ def test_grok_export_manifest_accounts_for_every_entry():
         pytest.skip("grok export manifest not built yet")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["entriesTotal"] == 1807
-    assert manifest["bodiesExtracted"] == 1727
+    assert manifest["assetEntries"] == 1727
+    assert manifest["textBodies"] == 652
+    assert manifest["binaryBodies"] == 1075
+    assert manifest["textBodies"] + manifest["binaryBodies"] == manifest["assetEntries"]
     assert manifest["noDataFiltered"] is True
     assert len(manifest["entries"]) == manifest["entriesTotal"]
+
+
+def test_grok_sanitizer_catches_major_provider_patterns_and_binary():
+    module = load_module("scripts/ops/mine_grok_export_corpus.py", "mine_grok_export_corpus")
+    samples = {
+        "sk_live_" + "a" * 24: "[REDACTED_STRIPE_KEY]",
+        "sk-proj-" + "b" * 24: "[REDACTED_OPENAI_KEY]",
+        "sk-ant-" + "c" * 24: "[REDACTED_ANTHROPIC_KEY]",
+        "AIza" + "d" * 35: "[REDACTED_GOOGLE_KEY]",
+        "xoxb-" + "e" * 24: "[REDACTED_SLACK_TOKEN]",
+        ("-----BEGIN " + "RSA PRIVATE KEY-----"): "[REDACTED_PRIVATE_KEY]",
+        "eyJ" + "f" * 12 + "." + "g" * 12 + "." + "h" * 12: "[REDACTED_JWT]",
+        "LTAI" + "i" * 20: "[REDACTED_ALIBABA_KEY]",
+    }
+    for raw, marker in samples.items():
+        clean, n = module.sanitize(raw)
+        assert marker in clean, f"{marker} not applied to {raw[:12]}"
+        assert n >= 1
+    assert module.is_binary(b"\x89PNG\r\n\x1a\n" + b"\x00" * 32) is True
+    assert module.is_binary(b"plain conversation text") is False
