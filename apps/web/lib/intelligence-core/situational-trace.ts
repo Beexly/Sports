@@ -96,25 +96,45 @@ export function runSituationalTrace(
       failReason: "no market probability strictly inside (0,1) from the spine",
     };
   }
-  const evalResult: SituationalEval = interpretSituation(
-    {
-      homeTeam: ctx.homeTeam ?? "selection-A",
-      awayTeam: ctx.awayTeam ?? "selection-B",
-      venue: "unspecified",
-      restDaysHome: ctx.situation.restDaysHome ?? 7,
-      restDaysAway: ctx.situation.restDaysAway ?? 7,
-      weather:
-        ctx.situation.weatherImpact != null
-          ? `impact:${ctx.situation.weatherImpact}`
-          : "unspecified",
-      marketLine: ctx.market.line ?? null,
-      marketImpliedProbability: marketProb,
-      outcome: ctx.selection,
-      decisionTimestamp: new Date().toISOString(),
-      decisionWindowMs: 15 * 60 * 1000,
-    },
-    toTraceObservations(ctx, reasoning),
-  );
+  let evalResult: SituationalEval;
+  try {
+    evalResult = interpretSituation(
+      {
+        homeTeam: ctx.homeTeam ?? "selection-A",
+        awayTeam: ctx.awayTeam ?? "selection-B",
+        venue: "unspecified",
+        restDaysHome: ctx.situation.restDaysHome ?? 7,
+        restDaysAway: ctx.situation.restDaysAway ?? 7,
+        weather:
+          ctx.situation.weatherImpact != null
+            ? `impact:${ctx.situation.weatherImpact}`
+            : "unspecified",
+        marketLine: ctx.market.line ?? null,
+        marketImpliedProbability: marketProb,
+        outcome: ctx.selection,
+        decisionTimestamp: new Date().toISOString(),
+        decisionWindowMs: 15 * 60 * 1000,
+      },
+      toTraceObservations(ctx, reasoning),
+    );
+  } catch (err) {
+    // Fail-open by contract (header): a trace failure MUST NOT break the pick
+    // path. interpretSituation can THROW (not just return !ok) — e.g. the
+    // mind-corpus loader raising when the literature artifact is not shipped
+    // in a deployment — and an uncaught throw here previously killed the
+    // entire runIntelligence path. Record the reason, degrade, never block.
+    return {
+      ok: false,
+      divergence: null,
+      signalImplied: null,
+      consistencyPassed: null,
+      consistencyViolations: [],
+      activeSignals: [],
+      dormantSignals: [],
+      reasoningTrace: null,
+      failReason: err instanceof Error ? err.message : String(err),
+    };
+  }
   if (!evalResult.ok) {
     return {
       ok: false,

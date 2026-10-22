@@ -148,9 +148,26 @@ let cachedMindRecords: readonly MindRecord[] | null = null;
  * Resolves candidate paths for MIND_CORPUS_3000.jsonl.
  */
 export function findMindCorpusPaths(): string[] {
+  const relCandidates = [
+    "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl",
+    "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl",
+  ];
+  // Walk UP from cwd before anything else: the corpus is COMMITTED at the
+  // repo root, but processes run from workspace subdirectories (apps/web in
+  // CI and in vitest), where a bare cwd-relative resolve misses it. From
+  // apps/web the committed copy sits three levels up.
+  const walked: string[] = [];
+  let dir = process.cwd();
+  for (let depth = 0; depth < 6; depth++) {
+    for (const rel of relCandidates) {
+      walked.push(path.resolve(dir, rel));
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
   const candidates = [
-    path.resolve(process.cwd(), "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl"),
-    path.resolve(process.cwd(), "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
+    ...walked,
     path.resolve(process.cwd(), "../prediction-engine/data/MIND_CORPUS_3000.jsonl"),
     "C:/Users/Garrett/Sports/packages/prediction-engine/data/MIND_CORPUS_3000.jsonl",
     "C:/Users/Garrett/Sports/docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl",
