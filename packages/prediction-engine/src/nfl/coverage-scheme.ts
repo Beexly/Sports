@@ -385,12 +385,22 @@ export function computeCnnAttentionPlayEmbedding(
 export interface EnsembleOptions {
   /** 5 head matrices of shape [embeddingDim][8], supplied by the caller. */
   headMatrices?: readonly (readonly (readonly number[])[])[];
+  /** Bootstrap or MC-dropout posterior heads. When supplied, the method is bootstrap_posterior. */
+  mcDropoutOrBootstrapHeads?: readonly (readonly (readonly number[])[])[];
   seed?: number;
 }
 
+export type UncertaintyEstimationMethod =
+  | "deterministic_head_disagreement"
+  | "bootstrap_posterior";
+
 export interface CoverageClassification {
   meanClassProbabilities: number[];
+  /** Primary field: dispersion across the supplied heads. Deterministic unless bootstrap heads are supplied. */
+  headDisagreementVariance: number[];
+  /** @deprecated Use headDisagreementVariance. Alias kept for one release. */
   epistemicVariance: number[];
+  uncertaintyEstimationMethod: UncertaintyEstimationMethod;
   perModelProbabilities: number[][];
   predictedScheme: CoverageScheme;
   predictedProbability: number;
@@ -413,10 +423,16 @@ export function classifyCoverageEnsemble(
   const d = playEmbedding.length;
   if (d === 0 || playEmbedding.some((v) => !Number.isFinite(v))) throw new Error("play embedding must be finite");
   const { seed = 1303 } = options;
+  const bootstrapHeads = options.mcDropoutOrBootstrapHeads;
   const heads =
+    bootstrapHeads ??
     options.headMatrices ??
     Array.from({ length: 5 }, (_, m) => deterministicChannelProjection(d, COVERAGE_SCHEMES.length, seed + m));
-  if (heads.length !== 5) throw new Error("the ensemble requires exactly five heads");
+  if (!bootstrapHeads && heads.length !== 5) throw new Error("the ensemble requires exactly five heads");
+  if (bootstrapHeads && heads.length < 2) throw new Error("bootstrap posterior requires at least two heads");
+  const uncertaintyEstimationMethod: UncertaintyEstimationMethod = bootstrapHeads
+    ? "bootstrap_posterior"
+    : "deterministic_head_disagreement";
   const perModelProbabilities = heads.map((head) => {
     if (head.length !== d) throw new Error("head matrix row count must equal embedding dimension");
     const logits = head[0]!.map((_, c) => {
@@ -427,7 +443,7 @@ export function classifyCoverageEnsemble(
     return softmax(logits);
   });
   const meanProbs = meanClassProbabilities(perModelProbabilities);
-  const epistemicVariance = Array.from({ length: meanProbs.length }, (_, c) => {
+  const headDisagreementVariance = Array.from({ length: meanProbs.length }, (_, c) => {
     const column = perModelProbabilities.map((row) => row[c]!);
     const mu = column.reduce((s, v) => s + v, 0) / column.length;
     return column.reduce((s, v) => s + (v - mu) ** 2, 0) / Math.max(column.length - 1, 1);
@@ -439,12 +455,15 @@ export function classifyCoverageEnsemble(
   const predictedScheme = COVERAGE_SCHEMES[bestIndex]!;
   return {
     meanClassProbabilities: meanProbs,
-    epistemicVariance,
+    headDisagreementVariance,
+    epistemicVariance: headDisagreementVariance,
+    uncertaintyEstimationMethod,
     perModelProbabilities,
     predictedScheme,
     predictedProbability: meanProbs[bestIndex]!,
     coverageFamily: coverageFamily(predictedScheme),
-    ensembleDisagreement: epistemicVariance.reduce((s, v) => s + v, 0) / epistemicVariance.length,
+    ensembleDisagreement:
+      headDisagreementVariance.reduce((s, v) => s + v, 0) / headDisagreementVariance.length,
   };
 }
 
@@ -640,7 +659,8 @@ export function attributeCoverageHighlights(
   );
   const classIndex = COVERAGE_SCHEMES.indexOf(classification.predictedScheme);
   if (classIndex < 0) throw new Error("predicted scheme is not a known coverage class");
-  const gate = meanHead.map((row) => Math.max(0, row[classIndex]!));
+  const gradient = meanHead.map((row) => row[classIndex]!);
+  const gate = gradient.map((g) => Math.max(0, g));
   const projection = deterministicChannelProjection(8, d, 1301);
   const guidedGradCam: number[] = [];
   const perFrame: HighlightAttribution[] = [];
@@ -655,10 +675,20 @@ export function attributeCoverageHighlights(
         for (let c = 0; c < 8; c += 1) {
           for (let k = 0; k < d; k += 1) emb[k] = emb[k]! + pair[c]! * projection[c]![k]!;
         }
-        let score = 0;
-        for (let k = 0; k < d; k += 1) score += emb[k]! * gate[k]!;
+        // Guided Grad-CAM for a linear head: outer ReLU on the activation and
+        // guided backprop keeps only channels where A_k > 0 AND dY/dA_k > 0.
+        let gradCamSum = 0;
+        let guidedNormSq = 0;
+        for (let k = 0; k < d; k += 1) {
+          const activation = emb[k]! * gradient[k]!;
+          const gradCam = Math.max(0, activation);
+          const guided = activation > 0 && gradient[k]! > 0 ? gradient[k]! : 0;
+          gradCamSum += gradCam;
+          guidedNormSq += guided * guided;
+        }
+        const score = gradCamSum * Math.sqrt(guidedNormSq);
         row.push(score);
-        frameMass += Math.abs(score);
+        frameMass += score;
       }
       attribution.push(row);
     }
@@ -666,9 +696,20 @@ export function attributeCoverageHighlights(
     guidedGradCam.push(weighted);
     perFrame.push({ frameIndex: t, alphaWeight: alpha[t]!, attribution });
   }
+  // Normalize guided Grad-CAM per frame into [0,1]; normalize each frame's
+  // pair attributions across defenders into [0,1].
+  const normalize = (values: readonly number[]): number[] => {
+    const max = Math.max(...values, 0);
+    return max > 0 ? values.map((v) => v / max) : values.map(() => 0);
+  };
+  const guidedNormalized = normalize(guidedGradCam);
+  for (const frame of perFrame) {
+    const max = Math.max(...frame.attribution.flat(), 0);
+    if (max > 0) frame.attribution = frame.attribution.map((row) => row.map((v) => v / max));
+  }
   let peakFrame = 0;
   for (let t = 1; t < T; t += 1) {
-    if (guidedGradCam[t]! > guidedGradCam[peakFrame]!) peakFrame = t;
+    if (guidedNormalized[t]! > guidedNormalized[peakFrame]!) peakFrame = t;
   }
   const rankedPairs = perFrame
     .flatMap((f) =>
@@ -689,9 +730,9 @@ export function attributeCoverageHighlights(
     peakFrame,
     peakFrameWeight: alpha[peakFrame]!,
     rankedPairs,
-    gradcamByFrame: guidedGradCam,
+    gradcamByFrame: guidedNormalized,
     guidedBackpropGate: gate,
-    guidedGradCam,
+    guidedGradCam: guidedNormalized,
   };
 }
 
@@ -715,6 +756,9 @@ export interface NgsAwsPipelineResult {
     predictedScheme: CoverageScheme;
     predictedProbability: number;
     coverageFamily: "man" | "zone";
+    headDisagreementVariance: number[];
+    uncertaintyEstimationMethod: UncertaintyEstimationMethod;
+    /** @deprecated Use headDisagreementVariance. */
     epistemicVariance: number[];
     ensembleDisagreement: number;
   };
@@ -760,6 +804,8 @@ export function runNgsAwsCnnAttentionCoveragePipeline(input: NgsAwsPipelineInput
       predictedScheme: classification.predictedScheme,
       predictedProbability: classification.predictedProbability,
       coverageFamily: classification.coverageFamily,
+      headDisagreementVariance: classification.headDisagreementVariance,
+      uncertaintyEstimationMethod: classification.uncertaintyEstimationMethod,
       epistemicVariance: classification.epistemicVariance,
       ensembleDisagreement: classification.ensembleDisagreement,
     },

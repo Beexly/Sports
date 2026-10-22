@@ -73,21 +73,41 @@ def _read_csv(path: Path, columns: Sequence[str] | None, filters):
     return pd.read_csv(path, usecols=usecols, low_memory=False)
 
 
+MAX_WEEK = 22
+MIN_SEASON = 1999
+MAX_SEASON = 2100
+
+
+def _require_int(value, label: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{label} must be an integer, got {type(value).__name__}={value!r}")
+    return value
+
+
+def _validate_season_week(season, week) -> tuple[int, int]:
+    season = _require_int(season, "season")
+    week = _require_int(week, "week")
+    if not (MIN_SEASON <= season <= MAX_SEASON):
+        raise ValueError(f"season must be {MIN_SEASON}..{MAX_SEASON}, got {season}")
+    if not (1 <= week <= MAX_WEEK):
+        raise ValueError(f"week must be 1..{MAX_WEEK}, got {week}")
+    return season, week
+
+
 def _as_of_cutoff(as_of):
-    """Normalise as_of into (max_season, max_week) inclusive bounds."""
+    """Normalise as_of into (max_season, max_week); reject invalid weeks/types."""
     if as_of is None:
         return None, None
     if isinstance(as_of, (tuple, list)) and len(as_of) == 2:
-        season, week = as_of
-        return int(season), int(week)
+        return _validate_season_week(as_of[0], as_of[1])
     text = str(as_of)
     if text.isdigit():
-        return int(text), 18
+        return _validate_season_week(int(text), MAX_WEEK)
     try:
         stamp = datetime.fromisoformat(text.replace("Z", "+00:00"))
     except ValueError as exc:
         raise ValueError(f"as_of must be (season, week), a season, or an ISO date: {exc}") from exc
-    return stamp.year, 18
+    return _validate_season_week(stamp.year, MAX_WEEK)
 
 
 def load_pbp(
@@ -151,10 +171,36 @@ def load_pbp(
             | ((frame["season"] == as_of_season) & (frame["week"] < as_of_week))
         ]
 
+    # Strict week/season hygiene: numeric coercion, range rejection, dedupe.
+    invalid_rows = 0
+    duplicate_rows = 0
+    if "season" in frame.columns and "week" in frame.columns and len(frame):
+        frame = frame.copy()
+        frame["season"] = pd.to_numeric(frame["season"], errors="coerce")
+        frame["week"] = pd.to_numeric(frame["week"], errors="coerce")
+        invalid = (
+            frame["season"].isna()
+            | frame["week"].isna()
+            | (frame["season"] < MIN_SEASON)
+            | (frame["season"] > MAX_SEASON)
+            | (frame["week"] < 1)
+            | (frame["week"] > MAX_WEEK)
+        )
+        invalid_rows = int(invalid.sum())
+        frame = frame[~invalid]
+        frame["season"] = frame["season"].astype(int)
+        frame["week"] = frame["week"].astype(int)
+    if {"game_id", "play_id"}.issubset(frame.columns) and len(frame):
+        before_dedupe = len(frame)
+        frame = frame.drop_duplicates(subset=["game_id", "play_id"], keep="first")
+        duplicate_rows = before_dedupe - len(frame)
+
     return frame.reset_index(drop=True), {
         "files": [str(f.relative_to(REPO)) for f in files],
         "rows_read": rows_before,
         "rows": len(frame),
+        "invalid_rows_removed": invalid_rows,
+        "duplicate_rows_removed": duplicate_rows,
         "as_of": [as_of_season, as_of_week] if as_of_season is not None else None,
         "columns": list(frame.columns),
     }

@@ -44,12 +44,38 @@ export function filterKnownAt<T extends KnownAtRecord>(
   const cutoff = Date.parse(asOf);
   if (!Number.isFinite(cutoff)) throw new Error(`asOf is not an ISO timestamp: ${asOf}`);
   const admitted: T[] = [];
+  const seen = new Set<string>();
   let excluded = 0;
   for (const record of records) {
     const stamp = Date.parse(record.knownAt);
     if (!Number.isFinite(stamp)) {
       excluded += 1;
       continue;
+    }
+    // Optional season/week hygiene when the record carries them.
+    const season = record["season"];
+    const week = record["week"];
+    if (season !== undefined || week !== undefined) {
+      if (
+        !Number.isInteger(season) ||
+        !Number.isInteger(week) ||
+        (season as number) < 1999 ||
+        (season as number) > 2100 ||
+        (week as number) < 1 ||
+        (week as number) > 22
+      ) {
+        throw new RangeError(`record ${record.knownAt} has invalid season/week: ${String(season)}/${String(week)}`);
+      }
+    }
+    const gameId = record["gameId"];
+    const playId = record["playId"];
+    if (gameId !== undefined && playId !== undefined) {
+      const key = `${String(gameId)}:${String(playId)}`;
+      if (seen.has(key)) {
+        excluded += 1;
+        continue;
+      }
+      seen.add(key);
     }
     if (stamp <= cutoff) admitted.push(record);
     else excluded += 1;

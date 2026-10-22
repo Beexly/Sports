@@ -34,7 +34,14 @@
 import { createHash } from "node:crypto";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
-import { equalCorrelationShrinkFactor, variance, mean } from "./osf-math-core.js";
+import {
+  dot,
+  equalCorrelationShrinkFactor,
+  invertMatrix,
+  matVec,
+  mean,
+  variance,
+} from "./osf-math-core.js";
 import type { QbEpaGiniInput } from "./osf-qb-volatility-and-prospects.js";
 import { computeQbEpaGiniAndVolOe } from "./osf-qb-volatility-and-prospects.js";
 import type { TeamEpaObservation } from "./osf-team-ability-hfa-and-ewma.js";
@@ -85,6 +92,9 @@ export interface OrthogonalizationResult {
   capApplied: boolean;
   familyResiduals: Record<FamilyName, number | null>;
   familyRawDeltas: Record<FamilyName, number | null>;
+  /** L^-1 applied to the shrunk residuals; cross-family correlation removed. */
+  familyWhitenedResiduals: Record<FamilyName, number | null>;
+  correlationMatrixSource: "default" | "caller";
   withinFamilyShrinkFactors: Record<FamilyName, number>;
   precisionDiagonalWeights: Record<FamilyName, number>;
   normalizedWeights: Record<FamilyName, number>;
@@ -95,6 +105,54 @@ export interface OrthogonalizationResult {
 
 /** Documented default measurement variance for a scalar family delta. */
 export const DEFAULT_FAMILY_VARIANCE = 0.0004; // sd = 0.02 probability points
+
+/**
+ * Prior cross-family correlation matrix, in FAMILY_NAMES order. These are
+ * priors, not estimates: pressure/coverage and coverage/qbSkill are the
+ * strongest expected overlaps. Callers with measured correlations pass
+ * `correlationMatrix`. The matrix is positive definite (checked by Cholesky).
+ */
+export const DEFAULT_SIX_FAMILY_CORRELATION_MATRIX: readonly (readonly number[])[] = [
+  [1.0, 0.18, 0.12, 0.22, 0.2, 0.05],
+  [0.18, 1.0, 0.1, 0.08, 0.06, 0.02],
+  [0.12, 0.1, 1.0, 0.15, 0.12, 0.03],
+  [0.22, 0.08, 0.15, 1.0, 0.25, 0.04],
+  [0.2, 0.06, 0.12, 0.25, 1.0, 0.06],
+  [0.05, 0.02, 0.03, 0.04, 0.06, 1.0],
+];
+
+/** Lower-triangular Cholesky factor L with L L^T = matrix. Throws if not PD. */
+export function choleskyDecompose(matrix: readonly (readonly number[])[]): number[][] {
+  const n = matrix.length;
+  if (n === 0 || matrix.some((row) => row.length !== n)) throw new Error("Cholesky requires a square matrix");
+  const L: number[][] = Array.from({ length: n }, () => new Array<number>(n).fill(0));
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j <= i; j += 1) {
+      let sum = matrix[i]![j]!;
+      for (let k = 0; k < j; k += 1) sum -= L[i]![k]! * L[j]![k]!;
+      if (i === j) {
+        if (!(sum > 0)) throw new Error(`matrix is not positive definite at ${i}`);
+        L[i]![j] = Math.sqrt(sum);
+      } else {
+        L[i]![j] = sum / L[j]![j]!;
+      }
+    }
+  }
+  return L;
+}
+
+/** Solves L y = b by forward substitution. */
+export function forwardSubstitute(L: readonly (readonly number[])[], b: readonly number[]): number[] {
+  const n = L.length;
+  if (b.length !== n) throw new Error("forwardSubstitute dimension mismatch");
+  const y = new Array<number>(n).fill(0);
+  for (let i = 0; i < n; i += 1) {
+    let sum = b[i]!;
+    for (let j = 0; j < i; j += 1) sum -= L[i]![j]! * y[j]!;
+    y[i] = sum / L[i]![i]!;
+  }
+  return y;
+}
 
 /**
  * The Layer-1 market projection. A one-row cross-section cannot estimate a
@@ -139,7 +197,11 @@ function familyAggregate(delta: FamilyDelta): { raw: number; varianceValue: numb
 export function orthogonalizeAndShrink(
   familyDeltas: FamilyDeltas,
   marketAnchorProb: number,
-  options: { lambda?: number; rho?: number } = {},
+  options: {
+    lambda?: number;
+    rho?: number;
+    correlationMatrix?: readonly (readonly number[])[];
+  } = {},
 ): OrthogonalizationResult {
   if (!(marketAnchorProb > 0 && marketAnchorProb < 1)) {
     throw new Error("marketAnchorProb must be strictly between 0 and 1");
@@ -187,19 +249,40 @@ export function orthogonalizeAndShrink(
     residualizedShrunk.push(residual * shrink);
   }
 
-  // Precision weights: diagonal of (Sigma + lambda I)^-1, normalized.
-  const precisions = variances.map((v) => 1 / (v + lambda));
-  const precisionTotal = precisions.reduce((s, v) => s + v, 0);
+  // Cholesky-whitened GLS: Sigma_reg = D C D + lambda I; L L^T = Sigma_reg.
+  // y = L^-1 r removes cross-family collinearity; weights = Sigma_reg^-1 1,
+  // normalized. This is a precision solve, not a diagonal approximation.
+  const correlation = options.correlationMatrix ?? DEFAULT_SIX_FAMILY_CORRELATION_MATRIX;
+  if (correlation.length !== FAMILY_NAMES.length || correlation.some((row) => row.length !== FAMILY_NAMES.length)) {
+    throw new Error("correlationMatrix must be 6x6 in FAMILY_NAMES order");
+  }
+  for (let i = 0; i < correlation.length; i += 1) {
+    if (Math.abs(correlation[i]![i]! - 1) > 1e-12) throw new Error("correlationMatrix diagonal must be 1");
+    for (let j = 0; j < i; j += 1) {
+      if (Math.abs(correlation[i]![j]! - correlation[j]![i]!) > 1e-12) {
+        throw new Error("correlationMatrix must be symmetric");
+      }
+    }
+  }
+  const sd = variances.map((v) => Math.sqrt(v));
+  const sigmaReg = correlation.map((row, i) =>
+    row.map((value, j) => value * sd[i]! * sd[j]! + (i === j ? lambda : 0)),
+  );
+  const cholesky = choleskyDecompose(sigmaReg);
+  const sigmaInverse = invertMatrix(sigmaReg);
+  const rawWeights = matVec(sigmaInverse, new Array<number>(FAMILY_NAMES.length).fill(1));
+  const weightTotal = rawWeights.reduce((s, v) => s + v, 0);
   FAMILY_NAMES.forEach((name, i) => {
-    const normalized = precisions[i]! / precisionTotal;
-    precisionDiagonalWeights[name] = 1 / (variances[i]! + lambda);
-    normalizedWeights[name] = normalized;
+    precisionDiagonalWeights[name] = sigmaInverse[i]![i]!;
+    normalizedWeights[name] = rawWeights[i]! / weightTotal;
   });
-
-  let weightedSum = 0;
-  FAMILY_NAMES.forEach((_, i) => {
-    weightedSum += residualizedShrunk[i]! * normalizedWeights[FAMILY_NAMES[i]!]!;
+  const whitened = forwardSubstitute(cholesky, residualizedShrunk);
+  const familyWhitenedResiduals = {} as Record<FamilyName, number | null>;
+  FAMILY_NAMES.forEach((name, i) => {
+    familyWhitenedResiduals[name] = familyResiduals[name] === null ? null : whitened[i]!;
   });
+  const normalizedVector = FAMILY_NAMES.map((name) => normalizedWeights[name]!);
+  const weightedSum = dot(normalizedVector, residualizedShrunk);
 
   const capApplied = Math.abs(weightedSum) > PROBABILITY_MOVEMENT_CAP;
   const totalProbabilityDelta = Math.sign(weightedSum) * Math.min(Math.abs(weightedSum), PROBABILITY_MOVEMENT_CAP);
@@ -217,6 +300,8 @@ export function orthogonalizeAndShrink(
     capApplied,
     familyResiduals,
     familyRawDeltas,
+    familyWhitenedResiduals,
+    correlationMatrixSource: options.correlationMatrix ? "caller" : "default",
     withinFamilyShrinkFactors,
     precisionDiagonalWeights,
     normalizedWeights,
@@ -255,6 +340,23 @@ const SENSITIVE_PATTERNS: RegExp[] = [
   /\bLTAI[A-Za-z0-9]{16,24}\b/g,
   /\b[a-f0-9]{32,}\b/g,
 ];
+
+/** Deterministic JSON: object keys sorted at every depth, arrays preserved. */
+export function canonicalizeJson(value: unknown): string {
+  const normalize = (input: unknown): unknown => {
+    if (Array.isArray(input)) return input.map(normalize);
+    if (input && typeof input === "object") {
+      const out: Record<string, unknown> = {};
+      for (const key of Object.keys(input as Record<string, unknown>).sort()) {
+        out[key] = normalize((input as Record<string, unknown>)[key]);
+      }
+      return out;
+    }
+    if (typeof input === "number" && Object.is(input, -0)) return 0;
+    return input;
+  };
+  return JSON.stringify(normalize(value));
+}
 
 /** Removes credential-shaped tokens. The scrub is idempotent. */
 export function scrubSensitive(input: unknown): unknown {
@@ -483,21 +585,21 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     mark("8:validateFeatureAgainstMisleadingStats", false, "no feature under test supplied");
   }
 
-  const hash = createHash("sha256")
-    .update(
-      JSON.stringify({
-        familyDeltas: input.familyDeltas,
-        marketAnchorProb: input.marketAnchorProb,
-        independentEdgeDecision: input.independentEdgeDecision,
-      }),
-    )
-    .digest("hex");
+  const canonicalInputs = {
+    familyDeltas: input.familyDeltas,
+    marketAnchorProb: input.marketAnchorProb,
+    independentEdgeDecision: input.independentEdgeDecision,
+  };
+  const hash = createHash("sha256").update(canonicalizeJson(canonicalInputs)).digest("hex");
   const streamId = "stream14e:master-situational-reasoning";
   const computedAt = new Date().toISOString();
   result.feedRecord = emitMindFeedRecord(
     streamId,
     hash,
     {
+      schemaVersion: "gse-mind-feed-v2.0",
+      canonicalInputs,
+      canonicalInputsHash: hash,
       totalProbabilityDelta: result.orthogonalization.totalProbabilityDelta,
       rawUnshrunkDelta: result.orthogonalization.rawUnshrunkDelta,
       shrunkUncappedDelta: result.orthogonalization.shrunkUncappedDelta,
@@ -505,6 +607,8 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
       capApplied: result.orthogonalization.capApplied,
       familyResiduals: result.orthogonalization.familyResiduals,
       familyRawDeltas: result.orthogonalization.familyRawDeltas,
+      familyWhitenedResiduals: result.orthogonalization.familyWhitenedResiduals,
+      correlationMatrixSource: result.orthogonalization.correlationMatrixSource,
       withinFamilyShrinkFactors: result.orthogonalization.withinFamilyShrinkFactors,
       normalizedWeights: result.orthogonalization.normalizedWeights,
       precisionDiagonalWeights: result.orthogonalization.precisionDiagonalWeights,
