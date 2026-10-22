@@ -8,33 +8,36 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "open": 13,
-    "partial": 7,
-    "closed": 8
+    "closed": 12,
+    "open": 9,
+    "partial": 7
   },
   "gaps": [
     {
       "id": "GAP-01",
       "severity": "CRITICAL",
       "title": "Oct-18 published picks are clamped into a fixed window, not the engine's output",
-      "status": "open",
-      "detail": "the clamp is still in the publisher",
+      "status": "closed",
+      "detail": "the clamp is gone from the publisher",
       "probe": "published picks are clamped into a fixed window, not the engine's output",
-      "evidence": [
-        "scripts/publish_late_sun_mon_live_free.py:498:            true_prob = max(0.6020, min(0.6160, sig_attr[\"trueProb\"]))",
-        "scripts/publish_late_sun_mon_live_free.py:503:            confidence = max(66, min(69, sig_attr[\"confidence\"]))"
-      ],
+      "evidence": [],
       "blocks_current_business_model": true
     },
     {
       "id": "GAP-02",
       "severity": "CRITICAL",
       "title": "The walk-forward emission gate is closed on the path that produces nothing and absent on the path that published",
-      "status": "open",
-      "detail": "the Python publisher still references NO walk-forward gate",
+      "status": "closed",
+      "detail": "the publisher now consults the gate",
       "probe": "the walk-forward emission gate is closed on the path that produces nothing",
       "evidence": [
-        "scripts/publish_late_sun_mon_live_free.py: 0 references to the gate"
+        "scripts/publish_late_sun_mon_live_free.py:498:            # GAP-02: Consult walk-forward emission gate",
+        "scripts/publish_late_sun_mon_live_free.py:499:            walk_forward_gate_file = os.path.join(REPO_ROOT, \"packages\", \"ingestion-pipeline\", \"walk-forward-gate.json\")",
+        "scripts/publish_late_sun_mon_live_free.py:500:            emission_gate_passed = False",
+        "scripts/publish_late_sun_mon_live_free.py:501:            if os.path.exists(walk_forward_gate_file):",
+        "scripts/publish_late_sun_mon_live_free.py:503:                    with open(walk_forward_gate_file, \"r\", encoding=\"utf-8\") as wf:",
+        "scripts/publish_late_sun_mon_live_free.py:504:                        emission_gate_passed = json.load(wf).get(\"passed\", False)",
+        "scripts/publish_late_sun_mon_live_free.py:506:                    emission_gate_passed = False"
       ],
       "blocks_current_business_model": true
     },
@@ -221,28 +224,10 @@
       "id": "GAP-09",
       "severity": "MEDIUM",
       "title": "The market fair probability for most published Week 6 picks is the placeholder 0.5000",
-      "status": "open",
-      "detail": "raw_edge is still derived in the publish path",
+      "status": "closed",
+      "detail": "the placeholder derivation is gone",
       "probe": "the market fair probability for most published picks is the placeholder",
-      "evidence": [
-        "scripts/publish_late_sun_mon_live_free.py:499:            raw_edge = round(true_prob - play[\"market_fair_prob\"], 4)",
-        "scripts/publish_late_sun_mon_live_free.py:500:            shrunk_edge = round(raw_edge * 0.65, 4)",
-        "scripts/publish_late_sun_mon_live_free.py:519:                \"trueEvScore\": round(raw_edge * 100, 2),",
-        "scripts/publish_late_sun_mon_live_free.py:538:                    \"rawEdge\": raw_edge,",
-        "scripts/sync_week6_db.py:254:    raw_edge = round(true_prob - market_fair_prob, 4)",
-        "scripts/sync_week6_db.py:255:    shrunk_edge = round(raw_edge * 0.82, 4)",
-        "scripts/sync_week6_db.py:256:    expected_clv = round(raw_edge * 0.75, 4)",
-        "scripts/sync_week6_db.py:257:    edge_score = round(max(0.0, min(100.0, 50.0 + 180.0 * raw_edge)), 1)",
-        "scripts/sync_week6_db.py:258:    confidence = int(round(max(50.0, min(95.0, 50.0 + 175.0 * raw_edge))))",
-        "scripts/sync_week6_db.py:267:        \"rawEdge\": raw_edge,",
-        "scripts/sync_week6_db.py:755:            raw_edge = sig_attr[\"rawEdge\"]",
-        "scripts/sync_week6_db.py:766:                f\"signalPlane14Keys={sig_attr['signalPlaneDeltaProb']:+.4f} -> trueProb={true_prob:.4f} ({raw_edge*100:+.2f}% raw edge, \"",
-        "scripts/sync_week6_db.py:781:                \"trueEvScore\": round(raw_edge * 100, 2),",
-        "scripts/sync_week6_db.py:800:                    \"rawEdge\": raw_edge,",
-        "scripts/sync_week6_db.py:831:                print(f\"    => trueProb = {true_prob:.4f} ({true_prob*100:.2f}%), rawEdge = {raw_edge:+.4f} ({raw_edge*100:+.2f}%), EdgeIdx = {edge_score}/100, Score = {confidence}/100\\n\")",
-        "scripts/sync_week6_db.py:862:                print(f\"  Published {play['matchup']} -> {play['selection']} (trueProb={true_prob:.4f}, RawEdge={raw_edge*100:+.2f}%, EdgeIdx={edge_score}, Conf={confidence}/100, SigDelta={sig_attr['signalPlaneDeltaProb']:+.4f}, ContDelta={sig_attr['continuityDeltaProb']:+.4f})\")",
-        "scripts/sync_week6_db.py:883:                print(f\"  Inserted & Published {play['matchup']} -> {play['selection']} (EdgeIdx={edge_score}, RawEdge={raw_edge*100:+.2f}%)\")"
-      ],
+      "evidence": [],
       "blocks_current_business_model": true
     },
     {
@@ -326,15 +311,10 @@
       "id": "GAP-16",
       "severity": "LOW",
       "title": "Published copy is generated from a separate hardcoded reason table, not from the engine's factor breakdown",
-      "status": "open",
-      "detail": "a separate reason path still exists",
+      "status": "closed",
+      "detail": "the separate reason path is gone",
       "probe": "published copy is generated from a separate hardcoded reason table",
-      "evidence": [
-        "scripts/publish_late_sun_mon_live_free.py:508:            full_reasoning = play[\"reasoning\"]",
-        "scripts/publish_late_sun_mon_live_free.py:532:                \"reasoningTrace\": full_reasoning,",
-        "scripts/publish_late_sun_mon_live_free.py:598:                    full_reasoning, full_reasoning, json.dumps(fb), pid",
-        "scripts/publish_late_sun_mon_live_free.py:619:                    pick_grade, play[\"risk_level\"], full_reasoning, full_reasoning, json.dumps(fb)"
-      ],
+      "evidence": [],
       "blocks_current_business_model": false
     },
     {
