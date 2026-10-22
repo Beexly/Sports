@@ -17,6 +17,11 @@
  *     and the tests all assert the same constants.
  */
 
+import {
+  BGE_M3_CONTEXT_TOKENS,
+  clampPromptToContext,
+} from "../inference/deepseek-recipe-budget.js";
+
 /** The embedding model id. */
 export const LITERATURE_EMBEDDING_MODEL = "baai/bge-m3";
 
@@ -134,8 +139,9 @@ export function openRouterEmbedder(opts?: {
   return async (text: string): Promise<EmbeddingResult> => {
     const key = opts?.apiKey ?? process.env.OPENROUTER_API_KEY2 ?? process.env.OPENROUTER_API_KEY3 ?? process.env.OPENROUTER_API_KEY;
     if (!key) return { ok: false, error: "no OpenRouter API key" };
-    const body = text.trim();
-    if (!body) return { ok: false, error: "empty text" };
+    const trimmed = text.trim();
+    if (!trimmed) return { ok: false, error: "empty text" };
+    const capped = clampPromptToContext(trimmed, BGE_M3_CONTEXT_TOKENS);
     try {
       const res = await doFetch("https://openrouter.ai/api/v1/embeddings", {
         method: "POST",
@@ -145,7 +151,7 @@ export function openRouterEmbedder(opts?: {
           "HTTP-Referer": "https://github.com/Beexly/Sports",
           "X-Title": "GSE literature index",
         },
-        body: JSON.stringify({ model, input: body }),
+        body: JSON.stringify({ model, input: capped.text }),
       });
       if (!res.ok) {
         return { ok: false, error: `embedding HTTP ${res.status}` };
