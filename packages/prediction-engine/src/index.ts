@@ -1422,6 +1422,10 @@ export {
   DRIVES_MODEL_VERSION,
   buildEpCalibration,
   buildWpCalibration,
+  computeAvgSeparationExpected,
+  AVG_SEPARATION_MODEL_VERSION,
+  AVG_SEPARATION_FEATURE_KEYS,
+  MIN_QUALIFYING_WEEKS,
 } from "./expected-metrics/index.js";
 export type {
   LinearModel,
@@ -1454,6 +1458,8 @@ export type {
   DrivePlay,
   Drive,
   DriveResult,
+  AvgSeparationWindowType,
+  AvgSeparationExpectedResult,
 } from "./expected-metrics/index.js";
 
 // Model Promotion Gate ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pure eligibility evaluator (paired-Brier EB-LCB +

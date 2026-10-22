@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["ngs weekly mean separation"],
+    failureModes: ["catch-frame inference", "false team rankings"],
+    family: "receiving",
+    forbiddenInputs: ["catch frame single measurements", "team context", "coverage collisions"],
+    formulaClass: "linear",
+    formulaSummary: "Player weekly mean separation vs unweighted player average over same window.",
+    historicalPrecedent: [{ name: "NGS Separation", reason: "Standard contextual receiving signal." }],
+    internalName: "avg_separation_expected",
+    metricId: "avg-separation-expected",
+    protectedComponents: ["minimum qualification floor", "week 0 exclusion", "point-in-time enforcement"],
+    publicExposure: "none",
+    publicName: "Per-Player Average Separation Expected",
+    sourceRightsRequired: ["internal modeling"],
+    status: "SHADOW",
+    targetQuestion: "Does the receiver create baseline separation independently of target volume?",
+    targetVariable: "receiver weekly separation",
+    validationMethods: ["mae", "rmse"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
