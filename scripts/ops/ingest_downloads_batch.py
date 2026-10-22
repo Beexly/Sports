@@ -177,11 +177,14 @@ def ingest_file(path: Path) -> list[dict]:
     return [record("binary", str(path), None, data, None, 0, "binary file, text not invented")]
 
 
-def run(paths: list[str]) -> dict:
-    FEED_PATH.parent.mkdir(parents=True, exist_ok=True)
-    MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-    FEED_PATH.unlink(missing_ok=True)
+def run(paths: list[str], feed_path: Path = FEED_PATH, manifest_path: Path = MANIFEST_PATH) -> dict:
+    feed_path = feed_path if feed_path.is_absolute() else REPO / feed_path
+    manifest_path = manifest_path if manifest_path.is_absolute() else REPO / manifest_path
+    feed_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    feed_path.unlink(missing_ok=True)
     records, failures = [], []
+    paths = list(dict.fromkeys(paths))
     for raw in paths:
         path = Path(raw)
         if not path.is_file():
@@ -192,7 +195,7 @@ def run(paths: list[str]) -> dict:
         except Exception as exc:
             failures.append({"path": raw, "error": f"{type(exc).__name__}: {exc}"})
             continue
-        with FEED_PATH.open("a", encoding="utf-8") as fh:
+        with feed_path.open("a", encoding="utf-8") as fh:
             for rec in recs:
                 fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
         records.extend(recs)
@@ -206,19 +209,21 @@ def run(paths: list[str]) -> dict:
         "textChars": sum(r["textChars"] for r in records),
         "redactions": sum(r["redactions"] for r in records),
         "failures": failures,
-        "feedPath": str(FEED_PATH.relative_to(REPO)),
+        "feedPath": str(feed_path.relative_to(REPO)),
         "index": [{k: v for k, v in r.items() if k != "text"} for r in records],
     }
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest
 
 
-def verify() -> int:
-    if not FEED_PATH.is_file() or not MANIFEST_PATH.is_file():
+def verify(feed_path: Path = FEED_PATH, manifest_path: Path = MANIFEST_PATH) -> int:
+    feed_path = feed_path if feed_path.is_absolute() else REPO / feed_path
+    manifest_path = manifest_path if manifest_path.is_absolute() else REPO / manifest_path
+    if not feed_path.is_file() or not manifest_path.is_file():
         print("VERIFY FAIL: feed or manifest missing")
         return 1
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    lines = [l for l in FEED_PATH.read_text(encoding="utf-8").split("\n") if l.strip()]
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    lines = [l for l in feed_path.read_text(encoding="utf-8").split("\n") if l.strip()]
     if len(lines) != manifest["records"]:
         print(f"VERIFY FAIL: feed lines {len(lines)} != manifest {manifest['records']}")
         return 1
@@ -247,10 +252,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--verify", action="store_true")
     ap.add_argument("--paths", nargs="*", default=None)
+    ap.add_argument("--feed", default=None)
+    ap.add_argument("--manifest", default=None)
     args = ap.parse_args()
     if args.verify:
-        return verify()
-    m = run(args.paths if args.paths is not None else DEFAULT_PATHS)
+        return verify(Path(args.feed) if args.feed else FEED_PATH, Path(args.manifest) if args.manifest else MANIFEST_PATH)
+    m = run(args.paths if args.paths is not None else DEFAULT_PATHS, Path(args.feed) if args.feed else FEED_PATH, Path(args.manifest) if args.manifest else MANIFEST_PATH)
     print(json.dumps({
         "sources": m["sourceFiles"], "records": m["records"],
         "kinds": m["kinds"], "text_chars": m["textChars"],
