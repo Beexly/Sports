@@ -159,3 +159,13 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Average Separation Expected (SHADOW)
+export {
+  computeAvgSeparationExpected,
+  AVG_SEPARATION_MODEL_VERSION,
+  AVG_SEPARATION_FEATURE_KEYS,
+  MIN_QUALIFYING_WEEKS,
+  type WindowType as AvgSeparationWindowType,
+  type AvgSeparationExpectedResult,
+} from "./avg-separation-expected.js";

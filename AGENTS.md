@@ -18428,3 +18428,7 @@ Method note (Lane A): posts were filed on DISPLAYED detail-page times after 9:08
 ### Method and endpoint note (Lane A addendum)
 
 Lane A: 321 steps, task completed 2026-10-21T23:31:12Z; manifest delivered after the main filing (the return-request run completed 23:46 UTC). Read-only throughout: no likes, reposts, replies, follows, DMs, bookmarks or posts were made.
+
+### 2026-10-21 (Jules)
+
+- Q31: Implemented the `avg-separation-expected` SHADOW metric module inside `packages/prediction-engine/src/expected-metrics/` consuming weekly mean separation covariates. Strict point-in-time boundaries and a minimum qualification floor were enforced according to Garrett's Fleet Standards.
