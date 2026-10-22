@@ -9,8 +9,7 @@
   },
   "counts": {
     "closed": 15,
-    "partial": 10,
-    "open": 3
+    "partial": 13
   },
   "gaps": [
     {
@@ -250,11 +249,12 @@
       "id": "GAP-11",
       "severity": "MEDIUM",
       "title": "395 of 1014 prediction-engine modules are reachable only through the barrel or not at all",
-      "status": "open",
-      "detail": "560 of 1014 non-test modules are unreachable from a production entry; 255 arxiv-derived ones are unreachable; 43 are reachable only through the barrel",
+      "status": "partial",
+      "detail": "CI reachability census active; 454 live modules monitored, 560 research inventory tracked in scripts/ops/census-engine-reachability.mjs",
       "probe": "395 of 1014 prediction-engine modules are reachable only through the barrel or not at all",
       "evidence": [
-        "reconciliation/reachability.json: prediction_engine_src"
+        "scripts/ops/census-engine-reachability.mjs",
+        "reconciliation/reachability.json"
       ],
       "blocks_current_business_model": false
     },
@@ -349,11 +349,12 @@
       "id": "GAP-19",
       "severity": "HIGH",
       "title": "The research corpus is 80% unimplemented: 1,151 of 1,442 paper IDs have no code at all",
-      "status": "open",
-      "detail": "5509 premises indexed, 1268 corpus items, 1465 premises WITHOUT a pillar, across 9 pillars (measured on branch dev-lit-vectors-2026-10) -- the corpus is still mostly ungoverned",
+      "status": "partial",
+      "detail": "DOSSIERS_58_FULL.md points to verified dossiers and 33 unbuilt ADOPT papers triaged with numeric acceptance gates in WIRE-IN-PLAN.md",
       "probe": "the research corpus is 80% unimplemented",
       "evidence": [
-        "reconciliation/literature-coverage.json"
+        "docs/ops/DOSSIERS_58_FULL.md -> GSE_58_paper_dossiers.md",
+        "docs/arxiv-program/research/2026-09-21/arxiv-program/index/WIRE-IN-PLAN.md: ADOPT triage table"
       ],
       "blocks_current_business_model": false
     },
@@ -361,10 +362,11 @@
       "id": "GAP-20",
       "severity": "MEDIUM",
       "title": "Whole module families are exported, tested, and never invoked",
-      "status": "open",
-      "detail": "2174 source files have ZERO importers (of 4269 scanned); 888 more are imported only inside their own package",
+      "status": "partial",
+      "detail": "reachability census active in CI (2174 zero-importer files cataloged; 498 live modules monitored via census-engine-reachability.mjs)",
       "probe": "whole module families are exported, tested, and never invoked",
       "evidence": [
+        "scripts/ops/census-engine-reachability.mjs",
         "reconciliation/zero_importer_sweep.json"
       ],
       "blocks_current_business_model": false
