@@ -5326,6 +5326,12 @@ export {
   scheduleMarketEmissionCount,
   evaluateDSparkSpeculation,
 } from "./inference/deepinfer-dspark-speculator.js";
+
+export {
+  ceilingCloseness,
+  combineSpeedCeiling,
+  exceedanceRate,
+} from "./tracking/combine-ceiling.js";
 export type {
   FlashMlaConfig,
   FlashMlaCompressionSummary,

@@ -102,3 +102,36 @@ def evaluate_itl_complex_event(intervals: list[Interval], relation: str) -> bool
     if len(intervals) < 2:
         return False
     return allen_relation(intervals[0], intervals[1]) == relation
+
+
+def combine_speed_ceiling(drill_speeds: list[float]) -> float | None:
+    """Max finite speed in a Combine drill. None if the drill has no samples.
+
+    Prior art, not copied code: conormalone/BDB27 README asks whether a
+    10 Hz Combine ceiling binds in NFL games. That repo has no licence.
+    This is an original definition. It does not claim Combine predicts
+    NFL success.
+    """
+    finite = [s for s in drill_speeds if math.isfinite(s) and s >= 0]
+    if not finite:
+        return None
+    return max(finite)
+
+
+def exceedance_rate(game_speeds: list[float], ceiling: float | None) -> float | None:
+    """Share of in-game samples strictly above the Combine ceiling."""
+    if ceiling is None or not math.isfinite(ceiling) or ceiling <= 0:
+        return None
+    finite = [s for s in game_speeds if math.isfinite(s) and s >= 0]
+    if not finite:
+        return None
+    return sum(1 for s in finite if s > ceiling) / len(finite)
+
+
+def ceiling_closeness(game_peak: float, ceiling: float | None) -> float | None:
+    """Game peak / Combine ceiling. Above 1 means the game exceeded the drill."""
+    if ceiling is None or not math.isfinite(ceiling) or ceiling <= 0:
+        return None
+    if not math.isfinite(game_peak) or game_peak < 0:
+        return None
+    return game_peak / ceiling

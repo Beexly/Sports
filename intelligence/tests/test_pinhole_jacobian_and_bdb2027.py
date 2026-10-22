@@ -4,12 +4,15 @@ import pytest
 
 from vision.bdb2027_kinematics import (
     allen_relation,
+    ceiling_closeness,
+    combine_speed_ceiling,
     compute_biomechanical_load_hazard,
     compute_cod_curvature_retention,
     compute_decel_reaccel_asymmetry,
     compute_first_step_burst_latency,
     compute_kinematic_derivatives_10hz,
     evaluate_itl_complex_event,
+    exceedance_rate,
     Interval,
 )
 from vision.pinhole_jacobian import image_jacobian_2x3, insitu_measure_gate, project_pinhole
@@ -74,3 +77,12 @@ def test_allen_relations():
     assert allen_relation(Interval(0, 2), Interval(1, 3)) == "overlaps"
     assert evaluate_itl_complex_event([Interval(0, 1), Interval(1, 2)], "meets") is True
     assert evaluate_itl_complex_event([Interval(0, 1)], "meets") is False
+
+
+def test_combine_ceiling_binds_only_when_the_game_exceeds_the_drill():
+    ceiling = combine_speed_ceiling([8.0, 9.4, 9.1])
+    assert ceiling == 9.4
+    assert exceedance_rate([9.0, 9.5, 9.6, 8.2], ceiling) == 0.5
+    assert ceiling_closeness(9.6, ceiling) == pytest.approx(9.6 / 9.4)
+    assert combine_speed_ceiling([]) is None
+    assert exceedance_rate([9.0], None) is None
