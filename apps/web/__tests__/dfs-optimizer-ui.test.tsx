@@ -68,9 +68,15 @@ afterEach(() => {
   canned = null;
 });
 
+/**
+ * The component's DFS_SLATE default fallback was deliberately removed (the
+ * pool is passed in; an unpriced lineup is never dressed as priced), so the
+ * suite passes the fixture slate explicitly. The labeling + unpriced-slate
+ * contract is covered by dfs-customer-data-contract.
+ */
 function renderWithResult(r: GenResult) {
   canned = r;
-  render(<DfsOptimizer />);
+  render(<DfsOptimizer slate={DFS_SLATE} salaryIsReal slateLabel="Sample Slate" />);
   fireEvent.click(screen.getByRole("button", { name: /generate lineups/i }));
   act(() => {
     vi.runAllTimers();
@@ -108,7 +114,7 @@ describe("DfsOptimizer UI — partial notice + cap meter", () => {
 
   it("initial: invites an explicit Generate press, never auto-shows fictional lineups", () => {
     canned = fullResult();
-    render(<DfsOptimizer />);
+    render(<DfsOptimizer slate={DFS_SLATE} salaryIsReal slateLabel="Sample Slate" />);
     expect(screen.queryByText(/Lineup 1/)).toBeNull();
     expect(screen.getByText(/press generate/i)).toBeTruthy();
   });
