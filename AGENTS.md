@@ -18428,3 +18428,5 @@ Method note (Lane A): posts were filed on DISPLAYED detail-page times after 9:08
 ### Method and endpoint note (Lane A addendum)
 
 Lane A: 321 steps, task completed 2026-10-21T23:31:12Z; manifest delivered after the main filing (the return-request run completed 23:46 UTC). Read-only throughout: no likes, reposts, replies, follows, DMs, bookmarks or posts were made.
+## Jules Updates
+- (2026-10-21) Added Pass Defense Fragility expected-metric module `pass-defense-fragility-profile.ts`. Registered in `metric-birth-certificate-registry.ts` as a SHADOW metric. Extended nflverse mapper strictly to support required pass play features.

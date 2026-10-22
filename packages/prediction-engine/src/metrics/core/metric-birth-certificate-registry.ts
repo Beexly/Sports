@@ -2,6 +2,30 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["pbp complete_pass", "pbp passing_yards", "pbp pass_touchdown", "pbp interception", "pbp sack", "pbp qb_spike", "expected points added (engine own)"],
+    failureModes: [
+      "evaluating fragility on fewer than 50 dropbacks or 3 distinct games makes the percentile noise",
+      "reading the nflverse epa referee column instead of the engine's own EPA",
+      "ranking INT rate with the same sign as the other axes (more INTs is less fragile)",
+      "inventing a composite rather than computing the uniform mean of axis percentiles"
+    ],
+    family: "team",
+    forbiddenInputs: ["player tracking data", "prop lines", "closing market odds", "nflverse raw epa column"],
+    formulaClass: "composite_score",
+    formulaSummary: "A deterministic rank-normalized composite of 7 passing defense axes (EPA/db, Success Rate, Y/A, Comp%, Passer Rating, Pass TD%, INT%) across valid windows.",
+    historicalPrecedent: [{ name: "Pass Defense Fragility Profile", reason: "Multiple axes combined prevent hiding systemic weakness behind a single counting stat." }],
+    internalName: "pass_defense_fragility_shadow",
+    metricId: "pass-defense-fragility",
+    protectedComponents: ["INT rate percentile inversion", "distinct game floor", "dropback volume floor"],
+    publicExposure: "hidden",
+    publicName: "Pass Defense Fragility",
+    sourceRightsRequired: ["public play-by-play statistics only"],
+    status: "SHADOW",
+    targetQuestion: "How holistically fragile is a pass defense against multiple dimensions of efficiency?",
+    targetVariable: "pass defense fragility composite percentile",
+    validationMethods: ["walk_forward"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",

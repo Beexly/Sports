@@ -1368,6 +1368,13 @@ export {
   fitLogistic,
   predictLogistic,
   computeExpectedMetricSchemaHash,
+
+  computePassDefenseFragility,
+  PASS_DEFENSE_FRAGILITY_VERSION,
+  type FragilityPassPlay,
+  type FragilityWindowType,
+  type PassDefenseFragilityProfile,
+
   rollupByPlayer,
   fitExpectedCompletionModel,
   predictCompletionProbability,
