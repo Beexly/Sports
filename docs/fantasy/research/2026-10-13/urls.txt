@@ -1,0 +1,34 @@
+# PFR 2025 NFL data manifest for Galaxy Sports Engine
+# Run:  python fetch_pfr_tables.py --urls urls.txt --out ./pfr_csv
+# Cloudflare tokens (?__cf_chl_f_tk=...) stripped; script strips them again defensively.
+
+# --- Team + player season tables (batch 1) ---
+https://www.pro-football-reference.com/years/2025/
+https://www.pro-football-reference.com/years/2025/passing.htm
+https://www.pro-football-reference.com/years/2025/rushing.htm
+https://www.pro-football-reference.com/years/2025/receiving_advanced.htm
+https://www.pro-football-reference.com/years/2025/defense_advanced.htm
+https://www.pro-football-reference.com/years/2025/fantasy.htm
+https://www.pro-football-reference.com/years/2025/redzone-passing.htm
+https://www.pro-football-reference.com/years/2025/redzone-rushing.htm
+https://www.pro-football-reference.com/years/2025/redzone-receiving.htm
+https://www.pro-football-reference.com/years/2025/rushing_advanced.htm
+https://www.pro-football-reference.com/years/2025/passing_advanced.htm
+https://www.pro-football-reference.com/years/2025/opp.htm
+https://www.pro-football-reference.com/years/2025/fantasy-points-against-RB.htm
+https://www.pro-football-reference.com/years/2025/fantasy-points-against-TE.htm
+https://www.pro-football-reference.com/years/2025/fantasy-points-against-QB.htm
+https://www.pro-football-reference.com/years/2025/fantasy-points-against-WR.htm
+
+# --- Draft / combine / leaders / schedule / misc (batch 2) ---
+https://www.pro-football-reference.com/draft/2026-combine.htm
+https://www.pro-football-reference.com/draft/2025-combine.htm
+https://www.pro-football-reference.com/draft/2024-combine.htm
+https://www.pro-football-reference.com/draft/2023-combine.htm
+https://www.pro-football-reference.com/years/2026/draft.htm
+https://www.pro-football-reference.com/leaders/
+https://www.pro-football-reference.com/years/2025/games.htm
+https://www.pro-football-reference.com/years/2025/preseason_odds.htm
+https://www.pro-football-reference.com/years/2025/ol_penalties.htm
+https://www.pro-football-reference.com/years/2025/penalties.htm
+https://www.pro-football-reference.com/years/2025/splits.htm

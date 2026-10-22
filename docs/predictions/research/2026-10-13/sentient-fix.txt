@@ -1,0 +1,4556 @@
+diff --git a/apps/web/app/board/page.tsx b/apps/web/app/board/page.tsx
+index 3062c7f3..d1e88aaa 100644
+--- a/apps/web/app/board/page.tsx
++++ b/apps/web/app/board/page.tsx
+@@ -7,6 +7,7 @@ import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
+ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
+ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+ import { GeneratedPlate } from "@/components/immersive/generated-plate";
++import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
+ 
+ export const metadata: Metadata = {
+   title: "Today's Board - Galaxy Sports Edge",
+@@ -46,6 +47,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
+     <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-obsidian text-ion-white">
+       <GeneratedPlate assetId="board-command" className="-z-10 opacity-20" />
+       <Nav />
++      <SignalRoomAtmosphere mode="ambient" />
+       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+         {dbUnreachable && (
+           <div className="flex flex-col gap-2 border border-red-900 bg-red-950/25 px-4 py-3 text-sm text-red-100 sm:flex-row sm:items-center">
+diff --git a/apps/web/app/deck/page.tsx b/apps/web/app/deck/page.tsx
+new file mode 100644
+index 00000000..52fca095
+--- /dev/null
++++ b/apps/web/app/deck/page.tsx
+@@ -0,0 +1,309 @@
++import type { Metadata } from "next";
++import Link from "next/link";
++import { Nav } from "@/components/ui/nav";
++import { Footer } from "@/components/ui/footer";
++import { GeneratedPlate } from "@/components/immersive/generated-plate";
++import { AgentFleetLazy } from "@/components/hero/agent-fleet-lazy";
++import { VoiceWaveform } from "@/components/motion/voice-waveform";
++import { HealthRing } from "@/components/motion/health-ring";
++import { SignalDecode } from "@/components/motion/signal-decode";
++import { SignalSpine } from "@/components/motion/signal-spine";
++import { SentientWeather } from "@/components/motion/sentient-weather";
++import { getPlate } from "@/lib/visual-production/asset-manifest";
++
++export const metadata: Metadata = {
++  title: "The Command Deck",
++  description:
++    "A single operator's intelligence command deck — the owner watching an entire company run itself. Galaxy Sports Edge.",
++  alternates: { canonical: "/deck" },
++};
++
++const SYSTEMS = [
++  { name: "Data Ingestion", status: "live", health: 0.92, detail: "12 intake lanes active" },
++  { name: "Consensus Engine", status: "live", health: 0.85, detail: "3 models in agreement" },
++  { name: "Board State", status: "live", health: 0.78, detail: "Telemetry streaming" },
++  { name: "Media Pipeline", status: "live", health: 0.91, detail: "Airwave processing" },
++  { name: "Trust Ledger", status: "live", health: 0.96, detail: "All receipts signed" },
++  { name: "No-Bet Gate", status: "standby", health: 1.0, detail: "Gate closed, watching" },
++] as const;
++
++const AGENTS = [
++  { name: "Board Watcher", role: "Signal detection", state: "scanning" },
++  { name: "Trend Miner", role: "Pattern extraction", state: "mining" },
++  { name: "Context Scout", role: "Intake validation", state: "alert", alert: "Source lag detected" },
++  { name: "Parlay MRI", role: "Risk analysis", state: "idle" },
++  { name: "Beat Grader", role: "Media scoring", state: "processing" },
++  { name: "Autopsy Bot", role: "Post-settlement review", state: "idle" },
++  { name: "CLV Tracker", role: "Line value monitoring", state: "tracking" },
++  { name: "Gate Keeper", role: "No-bet arbitration", state: "standing" },
++] as const;
++
++export default function DeckPage(): JSX.Element {
++  const plate = getPlate("command-deck");
++  const jarvisPlate = getPlate("jarvis-speaking");
++
++  return (
++    <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
++      <SentientWeather state="active" intensity={0.7} />
++      <Nav />
++      <SignalSpine />
++
++      {/* ── HERO: The Command Deck ──────────────────────────────────────── */}
++      <section className="relative isolate flex min-h-screen items-center overflow-hidden border-b border-mineral">
++        {plate && (
++          <GeneratedPlate
++            className="opacity-90"
++            gradient={plate.gradient}
++            still={plate.still}
++            motion={plate.motion}
++          />
++        )}
++        {/* Agent fleet overlay */}
++        <div aria-hidden className="absolute inset-0 z-10 opacity-60">
++          <AgentFleetLazy />
++        </div>
++        {/* Vignette */}
++        <div
++          aria-hidden
++          className="absolute inset-0 z-20"
++          style={{
++            background:
++              "radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, rgba(5,6,8,0.8) 100%)",
++          }}
++        />
++        {/* Content */}
++        <div className="relative z-30 mx-auto w-full max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
++          <div className="max-w-3xl">
++            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
++              <SignalDecode speed={22}>Galaxy Sports Edge · Command Deck</SignalDecode>
++            </p>
++            <h1 className="mt-6 font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
++              The room where{" "}
++              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
++                everything
++              </span>{" "}
++              runs itself.
++            </h1>
++            <p className="mt-6 max-w-xl text-lg leading-8 text-ion-1">
++              A single operator's intelligence command deck. The company breathes
++              here — every agent, every signal, every decision. You don't manage
++              the noise. You watch the machine manage it.
++            </p>
++            <div className="mt-8 flex flex-wrap items-center gap-4">
++              <Link href="/board" className="btn-primary min-h-11 px-5 py-3">
++                Enter the board
++              </Link>
++              <Link
++                href="#systems"
++                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
++              >
++                System status
++              </Link>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      {/* ── SYSTEMS HEALTH ─────────────────────────────────────────── */}
++      <section id="systems" className="relative border-b border-mineral px-4 py-20 sm:px-6 lg:px-8">
++        <div className="mx-auto max-w-7xl">
++          <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
++            {/* Health ring */}
++            <div className="flex flex-col items-center justify-center">
++              <HealthRing size={260} health={0.87} />
++              <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
++                Overall system health
++              </p>
++            </div>
++
++            {/* System grid */}
++            <div>
++              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
++                Active systems
++              </p>
++              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
++                Every engine, accountable.
++              </h2>
++              <div className="mt-8 grid gap-3 sm:grid-cols-2">
++                {SYSTEMS.map((sys) => (
++                  <div
++                    key={sys.name}
++                    className="rounded-ds-md border border-mineral bg-eclipse p-4 transition-colors hover:border-mineral-hi"
++                  >
++                    <div className="flex items-center justify-between">
++                      <p className="font-semibold text-ion-white">{sys.name}</p>
++                      <span
++                        className="h-1.5 w-1.5 rounded-full"
++                        style={{
++                          background: sys.status === "live" ? "#00E5FF" : "#FFB454",
++                          boxShadow:
++                            sys.status === "live"
++                              ? "0 0 8px 2px rgba(0,229,255,0.5)"
++                              : "0 0 8px 2px rgba(255,180,84,0.4)",
++                        }}
++                      />
++                    </div>
++                    <p className="mt-1 text-sm text-ion-1">{sys.detail}</p>
++                    <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-carbon">
++                      <div
++                        className="h-full rounded-full transition-all duration-700"
++                        style={{
++                          width: `${sys.health * 100}%`,
++                          background:
++                            sys.health > 0.9
++                              ? "#00E5FF"
++                              : sys.health > 0.75
++                                ? "#7A5CFF"
++                                : "#FF2DD6",
++                          boxShadow: `0 0 8px ${sys.health > 0.9 ? "rgba(0,229,255,0.4)" : sys.health > 0.75 ? "rgba(122,92,255,0.4)" : "rgba(255,45,214,0.4)"}`,
++                        }}
++                      />
++                    </div>
++                  </div>
++                ))}
++              </div>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      {/* ── JARVIS IS SPEAKING ──────────────────────────────────────── */}
++      <section className="relative isolate overflow-hidden border-b border-mineral px-4 py-24 sm:px-6 lg:px-8">
++        {jarvisPlate && (
++          <GeneratedPlate
++            className="opacity-80"
++            gradient={jarvisPlate.gradient}
++            still={jarvisPlate.still}
++          />
++        )}
++        <div
++          aria-hidden
++          className="absolute inset-0"
++          style={{
++            background:
++              "radial-gradient(ellipse 60% 50% at 60% 50%, transparent 30%, rgba(5,6,8,0.85) 100%)",
++          }}
++        />
++        <div className="relative z-10 mx-auto max-w-7xl">
++          <div className="grid items-center gap-10 lg:grid-cols-2">
++            <div>
++              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
++                <SignalDecode speed={18} delay={200}>Intelligence presence · active</SignalDecode>
++              </p>
++              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-ion-white sm:text-5xl">
++                Jarvis is{" "}
++                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
++                  speaking
++                </span>
++                .
++              </h2>
++              <p className="mt-5 max-w-lg text-base leading-7 text-ion-1">
++                The intelligence doesn't just process — it communicates. Every
++                signal is narrated, every contradiction explained, every gate
++                decision reasoned. You don't read a dashboard. You have a
++                conversation with the system.
++              </p>
++              <div className="mt-8 flex flex-wrap gap-3">
++                <Link href="/the-beat" className="btn-primary px-5 py-2.5">
++                  Hear The Beat
++                </Link>
++                <Link
++                  href="/intelligence"
++                  className="inline-flex items-center gap-2 rounded-xl border border-mineral px-5 py-2.5 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
++                >
++                  Intelligence docs
++                </Link>
++              </div>
++            </div>
++            <div className="relative h-80 lg:h-96">
++              <VoiceWaveform className="absolute inset-0" />
++            </div>
++          </div>
++        </div>
++      </section>
++
++      {/* ── AGENT FLEET ────────────────────────────────────────────── */}
++      <section className="border-b border-mineral px-4 py-20 sm:px-6 lg:px-8">
++        <div className="mx-auto max-w-7xl">
++          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
++            Agent constellation
++          </p>
++          <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
++            A fleet of agents, not a monolith.
++          </h2>
++          <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
++            Each agent has a role, a state, and a heartbeat. They orbit the core,
++            signal when they need attention, and rest when the work is done.
++          </p>
++
++          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
++            {AGENTS.map((agent) => (
++              <div
++                key={agent.name}
++                className="group relative overflow-hidden rounded-ds-md border border-mineral bg-eclipse p-4 transition-all duration-300 hover:border-orbital-cyan/40"
++              >
++                <div className="flex items-center justify-between">
++                  <p className="font-semibold text-ion-white">{agent.name}</p>
++                  <span
++                    className="h-1.5 w-1.5 rounded-full"
++                    style={{
++                      background:
++                        agent.state === "alert"
++                          ? "#FF2DD6"
++                          : agent.state === "idle"
++                            ? "#7A5CFF"
++                            : "#00E5FF",
++                      boxShadow:
++                        agent.state === "alert"
++                          ? "0 0 8px 2px rgba(255,45,214,0.5)"
++                          : agent.state === "idle"
++                            ? "0 0 6px 1px rgba(122,92,255,0.3)"
++                            : "0 0 8px 2px rgba(0,229,255,0.4)",
++                      animation:
++                        agent.state === "alert"
++                          ? "pp-live-pulse 1.5s ease-in-out infinite"
++                          : agent.state === "processing"
++                            ? "pp-live-pulse 3s ease-in-out infinite"
++                            : "none",
++                    }}
++                  />
++                </div>
++                <p className="mt-1 text-xs text-ion-1">{agent.role}</p>
++                <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.16em] text-ion-2">
++                  {agent.state}
++                </p>
++                {'alert' in agent && agent.alert && (
++                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-plasma">
++                    {agent.alert}
++                  </p>
++                )}
++              </div>
++            ))}
++          </div>
++        </div>
++      </section>
++
++      {/* ── RETURN ────────────────────────────────────────────────────────── */}
++      <section className="px-4 py-16 sm:px-6 lg:px-8">
++        <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 text-center">
++          <p className="font-display text-2xl font-semibold text-ion-white">
++            The deck is always on.
++          </p>
++          <div className="flex flex-wrap justify-center gap-3">
++            <Link href="/" className="btn-primary px-5 py-2.5">
++              Return to Observatory
++            </Link>
++            <Link
++              href="/board"
++              className="inline-flex items-center gap-2 rounded-xl border border-mineral px-5 py-2.5 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
++            >
++              Today's board
++            </Link>
++          </div>
++        </div>
++      </section>
++
++      <Footer />
++    </div>
++  );
++}
+diff --git a/apps/web/app/error.tsx b/apps/web/app/error.tsx
+index b7280c65..3f38e4bb 100644
+--- a/apps/web/app/error.tsx
++++ b/apps/web/app/error.tsx
+@@ -3,13 +3,13 @@
+ import { useEffect } from "react";
+ import Link from "next/link";
+ import { captureError, initObservability } from "@/lib/observability/sentry";
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+ 
+ /**
+  * Global error boundary. Server-side errors arrive with a `digest`
+- * field and a sanitized `error.message` from Next.js — we never see
+- * the raw stack in production. Client-side errors get the full
+- * message; we still avoid surfacing stack traces and keep the copy
+- * on-brand. No banned phrases, no apologies that read as legal admissions.
++ * field and a sanitized `error.message` from Next.js.
++ *
++ * v2 — The mark stays visible even when the engine breaks.
+  */
+ export default function GlobalError({
+   error,
+@@ -19,19 +19,12 @@ export default function GlobalError({
+   reset: () => void;
+ }) {
+   useEffect(() => {
+-    // Defensive init: SentryClientInit in root layout normally handles this,
+-    // but error boundaries can mount before the layout's useEffect fires.
+-    // initObservability is idempotent (_initialized guard makes this safe).
+     initObservability();
+-    // eslint-disable-next-line no-console
+     console.error("[app] error boundary caught:", error);
+     captureError(error, { digest: error.digest });
+   }, [error]);
+ 
+   const isProd = process.env.NODE_ENV === "production";
+-  // In production, server errors arrive sanitized — show only the digest
+-  // (a Next.js correlation id we can match in logs). In dev, show the
+-  // full message so engineers can debug.
+   const visibleDetail = isProd
+     ? error.digest
+       ? `Reference: ${error.digest}`
+@@ -39,8 +32,17 @@ export default function GlobalError({
+     : error.message;
+ 
+   return (
+-    <div className="flex min-h-screen items-center justify-center bg-obsidian p-6 text-ion-1">
+-      <div className="max-w-xl rounded-2xl border border-red-900 bg-red-950/30 p-6">
++    <div className="relative flex min-h-screen items-center justify-center bg-obsidian p-6 text-ion-1">
++      {/* Background mark — still breathing */}
++      <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
++        <LogoMarkInline size={400} pulse className="opacity-[0.04]" />
++      </div>
++
++      <div className="relative z-10 max-w-xl rounded-2xl border border-red-900 bg-red-950/30 p-8 text-center">
++        <div className="mb-5 flex justify-center">
++          <LogoMarkInline size={40} pulse glow />
++        </div>
++
+         <h1 className="text-xl font-bold text-white">
+           Something broke on my side.
+         </h1>
+@@ -51,7 +53,7 @@ export default function GlobalError({
+         <pre className="mt-3 overflow-x-auto rounded-lg bg-red-950/60 p-3 text-[11px] text-red-100">
+           {visibleDetail}
+         </pre>
+-        <div className="mt-4 flex flex-wrap gap-2">
++        <div className="mt-5 flex flex-wrap justify-center gap-2">
+           <button
+             onClick={() => reset()}
+             className="rounded-lg bg-red-900/60 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800"
+diff --git a/apps/web/app/globals.css b/apps/web/app/globals.css
+index f65db4c5..8d4b05ba 100644
+--- a/apps/web/app/globals.css
++++ b/apps/web/app/globals.css
+@@ -600,3 +600,168 @@
+   }
+   .gw-mirage-layer, .gw-card-hover { transition: none !important; }
+ }
++
++/* ── Signal Spine animations ────────────────────────────────────────────────── */
++@keyframes spine-packet-0 {
++  0% { top: 0%; opacity: 0; }
++  5% { opacity: 0.9; }
++  95% { opacity: 0.9; }
++  100% { top: 100%; opacity: 0; }
++}
++@keyframes spine-packet-1 {
++  0% { top: 0%; opacity: 0; }
++  8% { opacity: 0.7; }
++  92% { opacity: 0.7; }
++  100% { top: 100%; opacity: 0; }
++}
++@keyframes spine-packet-2 {
++  0% { top: 0%; opacity: 0; }
++  10% { opacity: 0.8; }
++  90% { opacity: 0.8; }
++  100% { top: 100%; opacity: 0; }
++}
++@keyframes spine-packet-3 {
++  0% { top: 0%; opacity: 0; }
++  6% { opacity: 0.6; }
++  94% { opacity: 0.6; }
++  100% { top: 100%; opacity: 0; }
++}
++
++/* ── Cursor ripple expand ────────────────────────────────────────────────── */
++@keyframes cursor-ripple-expand {
++  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0); }
++  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
++}
++
++/* ── Observatory beacon pulse ────────────────────────────────────────────────── */
++@keyframes observatory-beacon-pulse {
++  0%, 100% { transform: scale(1); opacity: 0.6; }
++  50% { transform: scale(1.3); opacity: 0.2; }
++}
++
++/* ── Signal state pulse animations ────────────────────────────────────────────────── */
++@keyframes signal-pulse-ring {
++  0%, 100% { transform: scale(1); opacity: 0.5; }
++  50% { transform: scale(1.35); opacity: 0.2; }
++}
++@keyframes signal-pulse-core {
++  0%, 100% { transform: scale(1); }
++  50% { transform: scale(1.15); }
++}
++
++/* ── Signal Room grid field ────────────────────────────────────────────────── */
++.gw-grid-field::before {
++  content: "";
++  position: absolute;
++  inset: 0;
++  background-image:
++    linear-gradient(to right, rgba(0, 229, 255, 0.025) 1px, transparent 1px),
++    linear-gradient(to bottom, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
++  background-size: 56px 56px;
++  pointer-events: none;
++  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
++  animation: grid-field-drift 24s linear infinite;
++}
++@keyframes grid-field-drift {
++  0% { background-position: 0 0; }
++  100% { background-position: 56px 56px; }
++}
++
++/* ── Health ring breathe ────────────────────────────────────────────────── */
++@keyframes health-ring-breathe {
++  0%, 100% { opacity: 0.7; }
++  50% { opacity: 1; }
++}
++
++/* ── Montage Entrance animations ────────────────────────────────────────────────── */
++@keyframes montage-flash {
++  0% { opacity: 1; }
++  40% { opacity: 0.8; }
++  100% { opacity: 0; }
++}
++@keyframes montage-slam {
++  0% { opacity: 0; transform: scale(2.5) translateY(40px); filter: blur(12px); }
++  60% { opacity: 1; transform: scale(0.95) translateY(-2px); filter: blur(0px); }
++  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
++}
++@keyframes montage-shake {
++  0% { transform: translate(0, 0); }
++  20% { transform: translate(-3px, 2px); }
++  40% { transform: translate(3px, -2px); }
++  60% { transform: translate(-2px, 1px); }
++  80% { transform: translate(2px, -1px); }
++  100% { transform: translate(0, 0); }
++}
++@keyframes montage-stat-flicker {
++  0% { opacity: 0; }
++  10% { opacity: 1; }
++  20% { opacity: 0.3; }
++  30% { opacity: 1; }
++  100% { opacity: 1; }
++}
++@keyframes montage-burst-ring {
++  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
++  20% { opacity: 0.6; }
++  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
++}
++@keyframes montage-hud-slide {
++  0% { opacity: 0; transform: translateX(-30px); }
++  100% { opacity: 1; transform: translateX(0); }
++}
++@keyframes montage-fade-in {
++  0% { opacity: 0; transform: translateY(10px); }
++  100% { opacity: 1; transform: translateY(0); }
++}
++
++/* ── Logo mark pulse animation ────────────────────────────────────────────────── */
++@keyframes logo-mark-pulse {
++  0%, 100% { opacity: 0.6; transform: scale(1); }
++  50% { opacity: 1; transform: scale(1.08); }
++}
++
++/* ── Sentient Weather animations ────────────────────────────────────────────────── */
++@keyframes sentient-lightning {
++  0%, 100% { opacity: 0; }
++  2% { opacity: 0.8; }
++  4% { opacity: 0; }
++  20% { opacity: 0; }
++  22% { opacity: 0.5; }
++  24% { opacity: 0; }
++  60% { opacity: 0; }
++  62% { opacity: 0.6; }
++  64% { opacity: 0; }
++}
++@keyframes sentient-breathe {
++  0%, 100% { opacity: 0.3; transform: scale(1); }
++  50% { opacity: 0.6; transform: scale(1.05); }
++}
++
++/* ── Glitch Truth animations ────────────────────────────────────────────────── */
++@keyframes glitch-scan {
++  0% { transform: translateY(0); }
++  100% { transform: translateY(4px); }
++}
++@keyframes glitch-band {
++  0%, 100% { transform: translateX(0); opacity: 0.3; }
++  25% { transform: translateX(3px); opacity: 0.6; }
++  50% { transform: translateX(-2px); opacity: 0.4; }
++  75% { transform: translateX(1px); opacity: 0.5; }
++}
++@keyframes glitch-noise {
++  0% { background-position: 0 0; }
++  100% { background-position: 128px 128px; }
++}
++
++/* ── Thermal Vision animations ────────────────────────────────────────────────── */
++@keyframes thermal-pulse-hot {
++  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,45,214,0.4); }
++  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,45,214,0.7); }
++}
++@keyframes thermal-pulse-cold {
++  0%, 100% { opacity: 0.5; transform: scale(1); }
++  50% { opacity: 0.9; transform: scale(1.15); }
++}
++@keyframes thermal-breathe {
++  0%, 100% { opacity: 0.6; }
++  50% { opacity: 1; }
++}
+diff --git a/apps/web/app/layout.tsx b/apps/web/app/layout.tsx
+index 6fbd9336..2f6d615a 100644
+--- a/apps/web/app/layout.tsx
++++ b/apps/web/app/layout.tsx
+@@ -18,6 +18,7 @@ import {
+ import { CommandPalette } from "@/components/ui/command-palette";
+ import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
+ import { SentryClientInit } from "@/components/observability/SentryClientInit";
++import { SentientShell } from "@/components/motion/sentient-shell";
+ 
+ const archFont = Big_Shoulders_Display({
+   subsets: ["latin"],
+@@ -222,6 +223,7 @@ export default function RootLayout({
+         {children}
+         <CommandPalette />
+         <GalaxyCursor />
++        <SentientShell />
+         <SentryClientInit />
+ 
+         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
+diff --git a/apps/web/app/not-found.tsx b/apps/web/app/not-found.tsx
+index 1a67cb28..3cfa6916 100644
+--- a/apps/web/app/not-found.tsx
++++ b/apps/web/app/not-found.tsx
+@@ -2,9 +2,12 @@ import type { Metadata } from "next";
+ import Link from "next/link";
+ import { Nav } from "@/components/ui/nav";
+ import { Footer } from "@/components/ui/footer";
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+ 
+ /**
+  * Brand-voiced global not-found page. No default framework 404.
++ *
++ * v2 — The orbital mark anchors the dead-end, breathing in the void.
+  */
+ export const metadata: Metadata = {
+   title: "Off the board - Page not found",
+@@ -13,11 +16,24 @@ export const metadata: Metadata = {
+ 
+ export default function NotFound() {
+   return (
+-    <div className="flex min-h-screen flex-col">
++    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-obsidian">
++      {/* Ambient mark — breathing in the background */}
++      <div
++        aria-hidden="true"
++        className="pointer-events-none absolute inset-0 flex items-center justify-center"
++      >
++        <LogoMarkInline size={320} pulse glow className="opacity-[0.06]" />
++      </div>
++
+       <Nav />
+ 
+-      <main className="flex flex-1 items-center justify-center px-4 py-22 sm:px-6 lg:px-8">
++      <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-22 sm:px-6 lg:px-8">
+         <div className="mx-auto max-w-xl text-center">
++          {/* Live mark above the code */}
++          <div className="mb-6 flex justify-center">
++            <LogoMarkInline size={48} pulse glow />
++          </div>
++
+           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
+             404 / Off the board
+           </p>
+diff --git a/apps/web/app/observatory/page.tsx b/apps/web/app/observatory/page.tsx
+index f6b517a2..b508f32c 100644
+--- a/apps/web/app/observatory/page.tsx
++++ b/apps/web/app/observatory/page.tsx
+@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
+ import { Reveal, Stagger } from "@/components/motion/reveal";
+ import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+ import { GeneratedPlate } from "@/components/immersive/generated-plate";
++import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
+ import { getPlate } from "@/lib/visual-production/asset-manifest";
+ import { CipherShard } from "@/components/cipher/cipher-shard";
+ import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
+@@ -60,6 +61,7 @@ export default async function ObservatoryPage() {
+   return (
+     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+       <Nav />
++      <SignalRoomAtmosphere mode="ambient" />
+ 
+       <main className="flex-1">
+         {/* Hero */}
+diff --git a/apps/web/app/opengraph-image.tsx b/apps/web/app/opengraph-image.tsx
+index 79bfcb3e..af639755 100644
+--- a/apps/web/app/opengraph-image.tsx
++++ b/apps/web/app/opengraph-image.tsx
+@@ -4,9 +4,8 @@ import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
+ /**
+  * Default OpenGraph image — Galaxy Sports Edge.
+  *
+- * 1200×630 — the Twitter / Facebook / LinkedIn standard. Edge runtime so
+- * cold starts stay fast. The card features the orbital mark, the GALAXY /
+- * SPORTS EDGE lockup, the tagline, and the brand closer.
++ * 1200×630 — Twitter / Facebook / LinkedIn standard. Uses the canonical
++ * logo-mark.svg path so social shares match the site identically.
+  */
+ 
+ export const runtime = "edge";
+@@ -61,20 +60,26 @@ export default async function Image() {
+           }}
+         />
+ 
+-        {/* Brand mark + wordmark */}
++        {/* Canonical brand mark — inline SVG matching logo-mark.svg */}
+         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+-          <svg
+-            width="84"
+-            height="84"
+-            viewBox="0 0 48 48"
+-            fill="none"
+-            stroke="#F6F7FA"
+-            strokeWidth="3"
+-            strokeLinecap="round"
+-          >
+-            <path d="M 8 30 A 16 16 0 1 0 40 27" />
+-            <line x1="6" y1="10" x2="42" y2="38" />
+-            <circle cx="25" cy="22" r="4" fill="#FF2DD6" stroke="none" />
++          <svg width="84" height="84" viewBox="0 0 64 64" fill="none">
++            <defs>
++              <linearGradient id="og-grad" x1="0%" y1="0%" x2="100%" y2="100%">
++                <stop offset="0%" stopColor="#00E5FF" />
++                <stop offset="55%" stopColor="#7A5CFF" />
++                <stop offset="100%" stopColor="#FF2DD6" />
++              </linearGradient>
++            </defs>
++            <path
++              d="M11 38C8 25 18 12 32 12c9.8 0 18 6.7 20.3 15.7"
++              stroke="url(#og-grad)"
++              strokeWidth="3"
++              strokeLinecap="round"
++              fill="none"
++            />
++            <line x1="10" y1="16" x2="54" y2="50" stroke="url(#og-grad)" strokeWidth="3" strokeLinecap="round" />
++            <circle cx="34" cy="30" r="4" fill="#FF2DD6" />
++            <circle cx="34" cy="30" r="1.5" fill="#F6F7FA" />
+           </svg>
+           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+             <div
+@@ -103,7 +108,7 @@ export default async function Image() {
+           </div>
+         </div>
+ 
+-        {/* Eyebrow — founder anchor instead of product chrome */}
++        {/* Eyebrow */}
+         <div
+           style={{
+             marginTop: 80,
+@@ -129,7 +134,7 @@ export default async function Image() {
+           Sports intelligence · Live edge engine
+         </div>
+ 
+-        {/* Tagline — locked copy from Brand Use Pack §7 */}
++        {/* Tagline */}
+         <div
+           style={{
+             marginTop: 28,
+@@ -145,7 +150,7 @@ export default async function Image() {
+           {BRAND_TAGLINE}
+         </div>
+ 
+-        {/* Personal subhead — the reason it exists, in my voice */}
++        {/* Personal subhead */}
+         <div
+           style={{
+             marginTop: 18,
+@@ -161,7 +166,7 @@ export default async function Image() {
+           Because tout services don&apos;t show the losses.
+         </div>
+ 
+-        {/* Footer — a principle, signed */}
++        {/* Footer */}
+         <div
+           style={{
+             marginTop: "auto",
+diff --git a/apps/web/app/page.tsx b/apps/web/app/page.tsx
+index c99bbb49..498ac555 100644
+--- a/apps/web/app/page.tsx
++++ b/apps/web/app/page.tsx
+@@ -2,10 +2,16 @@ import type { Metadata } from "next";
+ import Link from "next/link";
+ import { Nav } from "@/components/ui/nav";
+ import { Footer } from "@/components/ui/footer";
+-import { ShaderAuroraLazy } from "@/components/hero/shader-aurora-lazy";
++import { SignalCoreLazy } from "@/components/hero/signal-core-lazy";
++import { SignalSpine } from "@/components/motion/signal-spine";
++import { SignalDecode } from "@/components/motion/signal-decode";
++import { ObservatoryBeacon } from "@/components/motion/observatory-beacon";
++import { SentientWeather } from "@/components/motion/sentient-weather";
++import { SignalStatePulse } from "@/components/motion/signal-state-pulse";
+ import { GeneratedPlate } from "@/components/immersive/generated-plate";
+ import { getPlate } from "@/lib/visual-production/asset-manifest";
+ import { CinematicEntrance } from "@/components/landing/cinematic-entrance";
++import { MontageEntrance } from "@/components/landing/montage-entrance";
+ import { CountUp } from "@/components/ui/count-up";
+ import { BRAND_COLORS } from "@/lib/brand";
+ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+@@ -69,15 +75,18 @@ export default async function HomePage(): Promise<JSX.Element> {
+     passesResult.meta.dataError === "DB_UNREACHABLE";
+   const totalRows =
+     state.scoringNow.length + state.publishedToday.length + state.gatedTodayRows.length + passes.length;
+-  const heroPlate = getPlate("home-hero-cosmos");
++  const heroPlate = getPlate("signal-room-hero");
+ 
+   return (
+-    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
++    <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
++      <SentientWeather state="active" intensity={0.5} />
+       {/* Site front door: the cinematic "SIGNAL ACQUIRED" cold open. Self-gating
+           (localStorage) so it plays once on arrival, ~3s on return, skippable,
+           reduced-motion safe — it dissolves to reveal the world behind it. */}
++      <MontageEntrance />
+       <CinematicEntrance />
+       <Nav />
++      <SignalSpine />
+       <main id="main-content">
+         {/* ── 00 · THE WORLD OPENS ─────────────────────────────────────
+             The entrance burst dissolves into this: aurora, starfield, the
+@@ -85,14 +94,14 @@ export default async function HomePage(): Promise<JSX.Element> {
+         <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
+           {heroPlate && (
+             <GeneratedPlate
+-              className="-z-30 opacity-70"
++              className="-z-30 opacity-85"
+               gradient={heroPlate.gradient}
+               still={heroPlate.still}
+               motion={heroPlate.motion}
+             />
+           )}
+           <div aria-hidden="true" className="absolute inset-0 -z-20">
+-            <ShaderAuroraLazy />
++            <SignalCoreLazy />
+           </div>
+           <div aria-hidden="true" className="gw-starfield -z-10" />
+           {/* Lighter damping than before — the aurora is the show; the copy
+@@ -135,19 +144,22 @@ export default async function HomePage(): Promise<JSX.Element> {
+                 </Link>
+               </div>
+               <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+-                We detect. You decide.
++                <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
+               </p>
+             </div>
+ 
+             <div className="gw-card-hover rounded-ds-lg border border-mineral bg-eclipse p-5">
+               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+-                <div>
+-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+-                    Board state · live telemetry
+-                  </p>
++                <div className="flex items-start gap-3">
++                  <SignalStatePulse intensity={totalRows > 0 ? Math.min(1, totalRows / 8) : 0.15} size={28} />
++                  <div>
++                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
++                      <SignalDecode speed={20} delay={400}>Board state · live telemetry</SignalDecode>
++                    </p>
+                   <h2 className="mt-2 text-2xl font-semibold text-ion-white">
+                     {totalRows > 0 ? "Live rows available" : "No public rows yet"}
+                   </h2>
++                  </div>
+                 </div>
+                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                   updated {timeLabel(state.lastRefresh)}
+@@ -241,6 +253,7 @@ export default async function HomePage(): Promise<JSX.Element> {
+         <WorldSection
+           index="02"
+           id="signal"
++          className="gw-grid-field"
+           eyebrow="Signal vs noise"
+           title="Same market. Two completely different readings."
+           lede="The inputs that reach you arrive as argument — takes, steam, rumor, stale numbers. The engine takes the same inputs and structures them into something accountable."
+@@ -426,6 +439,7 @@ export default async function HomePage(): Promise<JSX.Element> {
+         <WorldSection
+           index="09"
+           id="receipts"
++          className="gw-grid-field"
+           eyebrow="Receipts"
+           title="Trust is an architecture, not a tagline."
+           lede="No fabricated picks, no invented stats, no silent edits. The ledger below is the live state of the engine's intake — status, grain, and what each lane unlocks."
+@@ -543,6 +557,7 @@ export default async function HomePage(): Promise<JSX.Element> {
+           </div>
+         </section>
+       </main>
++      <ObservatoryBeacon />
+       <Footer />
+     </div>
+   );
+diff --git a/apps/web/app/the-beat/page.tsx b/apps/web/app/the-beat/page.tsx
+index 3bb5d935..45354015 100644
+--- a/apps/web/app/the-beat/page.tsx
++++ b/apps/web/app/the-beat/page.tsx
+@@ -3,6 +3,7 @@ import { Nav } from "@/components/ui/nav";
+ import { Footer } from "@/components/ui/footer";
+ import { Reveal } from "@/components/motion/reveal";
+ import { Atmosphere } from "@/components/ui/atmosphere";
++import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
+ import { TheBeat } from "@/components/news/the-beat";
+ import { NATIONAL_INSIDERS, TEAM_BEATS, WIRE_DISCLAIMER } from "@/lib/news/wire";
+ import { BRAND_COLORS } from "@/lib/brand";
+@@ -19,6 +20,7 @@ export default function TheBeatPage() {
+     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+       <Atmosphere />
+       <Nav />
++      <SignalRoomAtmosphere mode="ambient" />
+ 
+       <main id="main-content" className="flex-1">
+         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+diff --git a/apps/web/components/brand/logo-mark-inline.tsx b/apps/web/components/brand/logo-mark-inline.tsx
+new file mode 100644
+index 00000000..33018d26
+--- /dev/null
++++ b/apps/web/components/brand/logo-mark-inline.tsx
+@@ -0,0 +1,58 @@
++"use client";
++
++/**
++ * LogoMarkInline — The canonical GSE orbital mark as a lightweight inline SVG.
++ *
++ * Used everywhere we need the mark without an HTTP request:
++ * loading states, error pages, easter eggs, small badges.
++ * Accepts size, color overrides, and pulse animation.
++ */
++
++export function LogoMarkInline({
++  size = 64,
++  className = "",
++  pulse = false,
++  glow = false,
++  color = "url(#logo-grad)",
++}: {
++  size?: number;
++  className?: string;
++  pulse?: boolean;
++  glow?: boolean;
++  color?: string;
++}) {
++  return (
++    <svg
++      width={size}
++      height={size}
++      viewBox="0 0 64 64"
++      fill="none"
++      className={className}
++      style={{
++        animation: pulse ? "logo-mark-pulse 2.4s ease-in-out infinite" : undefined,
++        filter: glow ? "drop-shadow(0 0 12px rgba(0,229,255,0.5))" : undefined,
++      }}
++    >
++      <defs>
++        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
++          <stop offset="0%" stopColor="#00E5FF" />
++          <stop offset="55%" stopColor="#7A5CFF" />
++          <stop offset="100%" stopColor="#FF2DD6" />
++        </linearGradient>
++      </defs>
++      {/* Orbit arc — open at top */}
++      <path
++        d="M11 38C8 25 18 12 32 12c9.8 0 18 6.7 20.3 15.7"
++        stroke={color}
++        strokeWidth="3"
++        strokeLinecap="round"
++        fill="none"
++      />
++      {/* Edge vector */}
++      <line x1="10" y1="16" x2="54" y2="50" stroke={color} strokeWidth="3" strokeLinecap="round" />
++      {/* Signal point */}
++      <circle cx="34" cy="30" r="4" fill="#FF2DD6" />
++      <circle cx="34" cy="30" r="1.5" fill="#F6F7FA" />
++    </svg>
++  );
++}
+diff --git a/apps/web/components/hero/agent-fleet-lazy.tsx b/apps/web/components/hero/agent-fleet-lazy.tsx
+new file mode 100644
+index 00000000..3d817bf4
+--- /dev/null
++++ b/apps/web/components/hero/agent-fleet-lazy.tsx
+@@ -0,0 +1,8 @@
++"use client";
++
++import dynamic from "next/dynamic";
++
++export const AgentFleetLazy = dynamic(
++  () => import("./agent-fleet").then((m) => ({ default: m.AgentFleet })),
++  { ssr: false }
++);
+diff --git a/apps/web/components/hero/agent-fleet.tsx b/apps/web/components/hero/agent-fleet.tsx
+new file mode 100644
+index 00000000..3aff20d2
+--- /dev/null
++++ b/apps/web/components/hero/agent-fleet.tsx
+@@ -0,0 +1,216 @@
++"use client";
++
++/**
++ * AgentFleet — The constellation of running systems.
++ *
++ * A canvas-based particle field where each dot represents an active agent
++ * or service. Dots orbit slowly in a 3D-ish space, connected by hair-thin
++ * signal lines when near. Occasional magenta pulses indicate attention-needed
++ * nodes. The fleet responds to mouse proximity — nodes near the cursor glow
++ * brighter and their connections intensify.
++ *
++ * Pure canvas, no React re-renders during animation. Reduced motion → static.
++ */
++
++import { useEffect, useRef } from "react";
++
++interface Agent {
++  x: number;
++  y: number;
++  z: number; // depth 0–1
++  vx: number;
++  vy: number;
++  orbitAngle: number;
++  orbitRadius: number;
++  orbitSpeed: number;
++  pulsePhase: number;
++  needsAttention: boolean;
++  size: number;
++}
++
++const AGENT_COUNT = 24;
++const CONNECTION_DIST = 120;
++const COLORS = {
++  cyan: "0, 229, 255",
++  violet: "122, 92, 255",
++  magenta: "255, 45, 214",
++  amber: "255, 180, 84",
++};
++
++function prefersReducedMotion(): boolean {
++  if (typeof window === "undefined") return false;
++  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
++}
++
++export function AgentFleet({ className }: { className?: string }) {
++  const canvasRef = useRef<HTMLCanvasElement | null>(null);
++
++  useEffect(() => {
++    const canvas = canvasRef.current;
++    if (!canvas) return;
++    const ctx = canvas.getContext("2d");
++    if (!ctx) return;
++
++    const reduced = prefersReducedMotion();
++    const dpr = Math.min(window.devicePixelRatio || 1, 2);
++
++    let w = 0, h = 0;
++    const resize = () => {
++      const rect = canvas.getBoundingClientRect();
++      w = Math.floor(rect.width * dpr);
++      h = Math.floor(rect.height * dpr);
++      canvas.width = w;
++      canvas.height = h;
++    };
++    resize();
++
++    const mouse = { x: -1000, y: -1000 };
++    const onMove = (e: MouseEvent) => {
++      const rect = canvas.getBoundingClientRect();
++      mouse.x = (e.clientX - rect.left) * dpr;
++      mouse.y = (e.clientY - rect.top) * dpr;
++    };
++    const onLeave = () => { mouse.x = -1000; mouse.y = -1000; };
++    canvas.addEventListener("mousemove", onMove);
++    canvas.addEventListener("mouseleave", onLeave);
++
++    // Initialize agents in a constellation pattern
++    const agents: Agent[] = Array.from({ length: AGENT_COUNT }, (_, i) => {
++      const angle = (i / AGENT_COUNT) * Math.PI * 2;
++      const radius = i === 0 ? 140 : 80 + Math.random() * 160; // Agent 0 is the sentinel
++      return {
++        x: w / 2 + Math.cos(angle) * radius,
++        y: h / 2 + Math.sin(angle) * radius * 0.6,
++        z: Math.random(),
++        vx: 0,
++        vy: 0,
++        orbitAngle: angle,
++        orbitRadius: radius,
++        orbitSpeed: 0.0003 + Math.random() * 0.0005,
++        pulsePhase: Math.random() * Math.PI * 2,
++        needsAttention: Math.random() < 0.08, // ~2 agents need attention
++        size: 1.5 + Math.random() * 2,
++      };
++    });
++
++    let raf = 0;
++    let time = 0;
++
++    const draw = () => {
++      ctx.clearRect(0, 0, w, h);
++      time += reduced ? 0 : 1;
++
++      // Update positions
++      if (!reduced) {
++        for (const a of agents) {
++          a.orbitAngle += a.orbitSpeed;
++          const targetX = w / 2 + Math.cos(a.orbitAngle) * a.orbitRadius;
++          const targetY = h / 2 + Math.sin(a.orbitAngle) * a.orbitRadius * 0.6;
++          a.x += (targetX - a.x) * 0.02;
++          a.y += (targetY - a.y) * 0.02;
++        }
++      }
++
++      // Draw connections
++      for (let i = 0; i < agents.length; i++) {
++        for (let j = i + 1; j < agents.length; j++) {
++          const a = agents[i]!;
++          const b = agents[j]!;
++          const dx = a.x - b.x;
++          const dy = a.y - b.y;
++          const dist = Math.sqrt(dx * dx + dy * dy);
++          if (dist < CONNECTION_DIST) {
++            const alpha = (1 - dist / CONNECTION_DIST) * 0.15;
++            ctx.beginPath();
++            ctx.moveTo(a.x, a.y);
++            ctx.lineTo(b.x, b.y);
++            ctx.strokeStyle = `rgba(${COLORS.violet}, ${alpha})`;
++            ctx.lineWidth = 0.5 * dpr;
++            ctx.stroke();
++          }
++        }
++      }
++
++      // Draw agents
++      for (let i = 0; i < agents.length; i++) {
++        const a = agents[i]!;
++        const mouseDx = mouse.x - a.x;
++        const mouseDy = mouse.y - a.y;
++        const mouseDist = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
++        const mouseGlow = Math.max(0, 1 - mouseDist / 150) * 0.6;
++
++        const depthAlpha = 0.4 + a.z * 0.6;
++        const pulse = a.needsAttention
++          ? 0.5 + 0.5 * Math.sin(time * 0.05 + a.pulsePhase)
++          : 0.3 + 0.2 * Math.sin(time * 0.02 + a.pulsePhase);
++
++        const baseColor = a.needsAttention ? COLORS.magenta : COLORS.cyan;
++        const size = a.size * dpr * (1 + mouseGlow * 0.5);
++
++        // Glow
++        const glowSize = size * (3 + pulse * 2 + mouseGlow * 4);
++        const grad = ctx.createRadialGradient(a.x, a.y, 0, a.x, a.y, glowSize);
++        grad.addColorStop(0, `rgba(${baseColor}, ${depthAlpha * pulse})`);
++        grad.addColorStop(1, `rgba(${baseColor}, 0)`);
++        ctx.fillStyle = grad;
++        ctx.beginPath();
++        ctx.arc(a.x, a.y, glowSize, 0, Math.PI * 2);
++        ctx.fill();
++
++        // Core dot (or mark for the sentinel)
++        if (i === 0) {
++          // Draw the GSE mark as the sentinel agent
++          ctx.save();
++          ctx.translate(a.x, a.y);
++          ctx.scale(size * 0.5, size * 0.5);
++          ctx.strokeStyle = `rgba(${baseColor}, ${depthAlpha * (0.8 + mouseGlow)})`;
++          ctx.fillStyle = `rgba(${baseColor}, ${depthAlpha * (0.8 + mouseGlow)})`;
++          ctx.lineWidth = 2;
++          // Orbit arc
++          ctx.beginPath();
++          ctx.arc(0, 0, 8, 0.8, 5.5);
++          ctx.stroke();
++          // Edge vector
++          ctx.beginPath();
++          ctx.moveTo(-6, -6);
++          ctx.lineTo(6, 6);
++          ctx.stroke();
++          // Signal point
++          ctx.beginPath();
++          ctx.arc(2, 0, 2, 0, Math.PI * 2);
++          ctx.fillStyle = "#FF2DD6";
++          ctx.fill();
++          ctx.restore();
++        } else {
++          ctx.fillStyle = `rgba(${baseColor}, ${depthAlpha * (0.8 + mouseGlow)})`;
++          ctx.beginPath();
++          ctx.arc(a.x, a.y, size, 0, Math.PI * 2);
++          ctx.fill();
++        }
++      }
++
++      raf = requestAnimationFrame(draw);
++    };
++
++    raf = requestAnimationFrame(draw);
++
++    const ro = new ResizeObserver(resize);
++    ro.observe(canvas);
++
++    return () => {
++      cancelAnimationFrame(raf);
++      canvas.removeEventListener("mousemove", onMove);
++      canvas.removeEventListener("mouseleave", onLeave);
++      ro.disconnect();
++    };
++  }, []);
++
++  return (
++    <canvas
++      ref={canvasRef}
++      aria-hidden="true"
++      className={className}
++      style={{ display: "block", width: "100%", height: "100%" }}
++    />
++  );
++}
+diff --git a/apps/web/components/hero/consensus-engine-3d-lazy.tsx b/apps/web/components/hero/consensus-engine-3d-lazy.tsx
+index e9048b0f..178e2e45 100644
+--- a/apps/web/components/hero/consensus-engine-3d-lazy.tsx
++++ b/apps/web/components/hero/consensus-engine-3d-lazy.tsx
+@@ -13,16 +13,19 @@
+ 
+ import dynamic from "next/dynamic";
+ import { BRAND_COLORS } from "@/lib/brand";
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+ 
+ function GalaxyFallback() {
+   return (
+     <div
+       aria-hidden="true"
+-      className="h-full w-full"
++      className="flex h-full w-full items-center justify-center"
+       style={{
+         background: `radial-gradient(60% 80% at 50% 46%, ${BRAND_COLORS.orbitalCyan}14, transparent 60%), radial-gradient(40% 60% at 70% 35%, ${BRAND_COLORS.softUltraviolet}10, transparent 65%), ${BRAND_COLORS.obsidianBlack}`,
+       }}
+-    />
++    >
++      <LogoMarkInline size={48} pulse glow />
++    </div>
+   );
+ }
+ 
+diff --git a/apps/web/components/hero/shader-aurora-lazy.tsx b/apps/web/components/hero/shader-aurora-lazy.tsx
+index 43bb9880..3b844fc6 100644
+--- a/apps/web/components/hero/shader-aurora-lazy.tsx
++++ b/apps/web/components/hero/shader-aurora-lazy.tsx
+@@ -8,16 +8,19 @@
+ 
+ import dynamic from "next/dynamic";
+ import { BRAND_COLORS } from "@/lib/brand";
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+ 
+ function AuroraFallback() {
+   return (
+     <div
+       aria-hidden="true"
+-      className="h-full w-full"
++      className="flex h-full w-full items-center justify-center"
+       style={{
+         background: `radial-gradient(60% 80% at 30% 20%, ${BRAND_COLORS.softUltraviolet}20, transparent 60%), radial-gradient(50% 70% at 78% 30%, ${BRAND_COLORS.orbitalCyan}12, transparent 62%), radial-gradient(60% 80% at 50% 100%, ${BRAND_COLORS.ionMagenta}0e, transparent 60%), ${BRAND_COLORS.obsidianBlack}`,
+       }}
+-    />
++    >
++      <LogoMarkInline size={40} pulse glow />
++    </div>
+   );
+ }
+ 
+diff --git a/apps/web/components/hero/signal-core-environment.tsx b/apps/web/components/hero/signal-core-environment.tsx
+new file mode 100644
+index 00000000..76ce9951
+--- /dev/null
++++ b/apps/web/components/hero/signal-core-environment.tsx
+@@ -0,0 +1,409 @@
++"use client";
++
++/**
++ * SignalCoreEnvironment — The living command room.
++ *
++ * A transparent WebGL overlay that transforms the static hero plate into a
++ * breathing intelligence space. Renders:
++ *  - Traveling signal particles along filament paths
++ *  - A pulsing decision core with orbital ring resonance
++ *  - Data packets that stream from source mesh toward the core
++ *  - Occasional magenta fracture flickers where signals contradict
++ *  - Mouse-reactive parallax light shafts
++ *
++ * Built as an additive transparent layer over the GeneratedPlate.
++ * Performance: one fullscreen triangle, pure fragment shader.
++ * Pauses off-screen and when tab is hidden. Reduced motion → static frame.
++ */
++
++import { useEffect, useRef, useState } from "react";
++
++const FRAG = `
++precision highp float;
++uniform vec2 u_res;
++uniform float u_time;
++uniform vec2 u_mouse;
++uniform float u_scroll;
++
++float hash(vec2 p) {
++  vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
++  p3 += dot(p3, p3.yzx + 33.33);
++  return fract((p3.x + p3.y) * p3.z);
++}
++float hash1(float n) { return fract(sin(n) * 43758.5453123); }
++
++float noise(vec2 p) {
++  vec2 i = floor(p), f = fract(p);
++  float a = hash(i);
++  float b = hash(i + vec2(1.0, 0.0));
++  float c = hash(i + vec2(0.0, 1.0));
++  float d = hash(i + vec2(1.0, 1.0));
++  vec2 u = f * f * (3.0 - 2.0 * f);
++  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
++}
++float fbm(vec2 p) {
++  float v = 0.0, a = 0.5;
++  for (int i = 0; i < 5; i++) {
++    v += a * noise(p);
++    p *= 2.03;
++    a *= 0.5;
++  }
++  return v;
++}
++
++mat2 rot(float a) {
++  float c = cos(a), s = sin(a);
++  return mat2(c, -s, s, c);
++}
++
++float filament(vec2 uv, float seed, float t) {
++  float id = hash1(seed);
++  float yBase = (id - 0.5) * 0.7;
++  float curve = sin(uv.x * 4.0 + seed * 3.0) * 0.06;
++  float converge = smoothstep(0.1, 0.7, uv.x);
++  float pathY = mix(yBase + curve, -0.05, converge * 0.55);
++  float dist = abs(uv.y - pathY);
++  float thick = 0.003 + id * 0.004;
++  float line = smoothstep(thick, 0.0, dist);
++  float speed = 0.15 + id * 0.25;
++  float packetPos = fract(t * speed + seed * 0.7);
++  float packetX = packetPos * 0.75;
++  float packetDist = length(vec2((uv.x - packetX) * 0.8, uv.y - pathY));
++  float packet = smoothstep(0.015, 0.0, packetDist);
++  float coreDist = length(uv - vec2(0.58, 0.0));
++  float coreFade = smoothstep(0.15, 0.35, coreDist);
++  return (line * 0.25 + packet * 0.9) * coreFade;
++}
++
++float coreGlow(vec2 uv, vec2 pos, float t) {
++  float d = length(uv - pos);
++  float breath = 1.0 + sin(t * 0.8) * 0.08 + sin(t * 1.3 + 1.0) * 0.04;
++  float glow = exp(-d * d * 12.0) * 0.35 * breath;
++  glow += smoothstep(0.08, 0.0, d) * 0.2;
++  float ring1 = abs(length((uv - pos) * vec2(1.0, 0.55)) - 0.12);
++  float ring2 = abs(length((uv - pos) * vec2(0.85, 1.0)) - 0.18);
++  float ring3 = abs(length((uv - pos) * vec2(1.0, 0.7)) - 0.24);
++  float ringGlow = smoothstep(0.003, 0.0, abs(ring1 - 0.001)) * 0.15;
++  ringGlow += smoothstep(0.002, 0.0, abs(ring2 - 0.001)) * 0.12;
++  ringGlow += smoothstep(0.002, 0.0, abs(ring3 - 0.001)) * 0.08;
++  float ringArc = smoothstep(0.20, 0.08, d) * smoothstep(0.04, 0.10, d);
++  glow += ringArc * 0.1 * breath;
++  return glow + ringGlow;
++}
++
++float gateStructure(vec2 uv, float t) {
++  float gateX = 1.15;
++  float mask = smoothstep(0.7, 0.9, uv.x) * smoothstep(1.6, 0.9, uv.x);
++  float barY1 = 0.15, barY2 = -0.05, barY3 = -0.25;
++  float bar1 = smoothstep(0.003, 0.0, abs(uv.y - barY1));
++  float bar2 = smoothstep(0.003, 0.0, abs(uv.y - barY2));
++  float bar3 = smoothstep(0.003, 0.0, abs(uv.y - barY3));
++  float post = smoothstep(0.003, 0.0, abs(uv.x - gateX));
++  float pulse1 = smoothstep(0.02, 0.0, length(uv - vec2(gateX - 0.04, barY1))) * (0.5 + 0.5 * sin(t * 2.0));
++  float pulse2 = smoothstep(0.02, 0.0, length(uv - vec2(gateX - 0.04, barY2))) * (0.5 + 0.5 * sin(t * 1.7 + 2.0));
++  float clearY = barY3 + 0.06 * sin(t * 0.5);
++  float clearSignal = smoothstep(0.015, 0.0, length(uv - vec2(gateX + 0.03, clearY))) * smoothstep(0.0, 0.5, sin(t * 0.3));
++  return (bar1 + bar2 + bar3 + post * 0.5 + pulse1 + pulse2 + clearSignal) * mask * 0.25;
++}
++
++float fracture(vec2 uv, float t) {
++  float flicker = step(0.97, sin(t * 0.4) * 0.5 + 0.5) * step(0.3, abs(sin(t * 3.7)));
++  float flicker2 = step(0.985, sin(t * 0.27 + 3.0)) * step(0.5, abs(sin(t * 4.3)));
++  float f1 = smoothstep(0.003, 0.0, abs(uv.y - (0.05 + uv.x * 0.12))) * flicker;
++  float f2 = smoothstep(0.002, 0.0, abs(uv.y - (-0.12 + uv.x * 0.08))) * flicker2;
++  return (f1 + f2) * 0.8;
++}
++
++float probabilityCurve(vec2 uv, float t) {
++  float curveY = 0.42 + sin(uv.x * 5.0 + t * 0.2) * 0.035 + sin(uv.x * 10.0) * 0.012;
++  float dist = abs(uv.y - curveY);
++  float line = smoothstep(0.003, 0.0, dist);
++  float mask = smoothstep(0.2, 0.5, uv.x) * smoothstep(0.7, 0.4, uv.x);
++  return line * mask * 0.35;
++}
++
++float dataParticles(vec2 uv, float t) {
++  float particles = 0.0;
++  for (float i = 0.0; i < 12.0; i++) {
++    float id = i + 1.0;
++    float x = hash1(id * 7.3) * 0.6;
++    float y = hash1(id * 13.7) * 1.4 - 0.7;
++    float speed = 0.05 + hash1(id * 3.1) * 0.1;
++    float drift = sin(t * speed + id) * 0.08;
++    float px = x + drift;
++    float py = y + sin(t * speed * 0.5 + id * 2.0) * 0.03;
++    float d = length(uv - vec2(px, py));
++    float size = 0.003 + hash1(id * 5.5) * 0.005;
++    particles += smoothstep(size, 0.0, d) * (0.3 + 0.7 * hash1(id * 11.1));
++  }
++  return particles * 0.4;
++}
++
++float godRays(vec2 uv, vec2 corePos, float t) {
++  float rays = 0.0;
++  for (float i = 0.0; i < 6.0; i++) {
++    float angle = (i / 6.0) * 6.28318 + t * 0.02;
++    vec2 dir = vec2(cos(angle), sin(angle));
++    float proj = dot(uv - corePos, dir);
++    float perp = abs(dot(uv - corePos, vec2(-dir.y, dir.x)));
++    float ray = smoothstep(0.08, 0.0, perp) * smoothstep(0.0, 0.4, proj) * exp(-proj * proj * 2.0) * (0.5 + 0.5 * sin(t * 0.5 + i));
++    rays += ray * 0.08;
++  }
++  return rays;
++}
++
++void main() {
++  vec2 uv = gl_FragCoord.xy / u_res.xy;
++  float aspect = u_res.x / u_res.y;
++  vec2 p = uv * 2.0 - 1.0;
++  p.x *= aspect;
++  
++  // Scroll-driven camera: as user scrolls, we drift through the room
++  float scrollPhase = u_scroll * 2.0 - 1.0; // -1 to 1 across full page
++  vec3 camPos = vec3(
++    scrollPhase * 0.15,
++    sin(scrollPhase * 1.5) * 0.08,
++    scrollPhase * 0.3
++  );
++  p += camPos.xy;
++  
++  // Depth-of-field effect: edges soften as we scroll deeper
++  float dof = smoothstep(0.0, 1.0, abs(scrollPhase)) * 0.02;
++  p += (hash(p * 100.0 + u_time) - 0.5) * dof;
++  vec2 mouseOffset = (u_mouse - 0.5) * vec2(0.06, 0.04);
++  p += mouseOffset;
++  float t = u_time;
++  vec2 corePos = vec2(0.62, -0.05);
++  vec3 cyan = vec3(0.0, 0.898, 1.0);
++  vec3 violet = vec3(0.478, 0.361, 1.0);
++  vec3 magenta = vec3(1.0, 0.176, 0.839);
++  vec3 col = vec3(0.0);
++  float alpha = 0.0;
++  float filaments = 0.0;
++  for (float i = 0.0; i < 8.0; i++) {
++    float f = filament(p, i + 1.0, t);
++    float distToCore = length(p - corePos);
++    vec3 fCol = mix(violet, cyan, smoothstep(0.4, 0.15, distToCore));
++    col += fCol * f;
++    alpha += f * 0.7;
++  }
++  float particles = dataParticles(p, t);
++  col += mix(violet, cyan, 0.5) * particles;
++  alpha += particles * 0.5;
++  float core = coreGlow(p, corePos, t);
++  col += cyan * core * 0.9;
++  col += vec3(0.6, 0.95, 1.0) * core * 0.4;
++  alpha += core * 0.85;
++  float rays = godRays(p, corePos, t);
++  col += cyan * rays * 0.6;
++  alpha += rays * 0.4;
++  float gate = gateStructure(p, t);
++  col += mix(cyan, violet, 0.3) * gate;
++  alpha += gate * 0.6;
++  float frac = fracture(p, t);
++  col += magenta * frac;
++  alpha += frac * 0.8;
++  float prob = probabilityCurve(p, t);
++  col += cyan * prob * 0.7;
++  alpha += prob * 0.5;
++  float fog = fbm(p * 1.5 + t * 0.01) * 0.04;
++  col += violet * fog * 0.3;
++  alpha += fog * 0.3;
++  float vig = 1.0 - smoothstep(0.5, 1.4, length(p * vec2(0.8, 1.0)));
++  col *= vig;
++  alpha *= vig;
++  col = pow(col, vec3(0.85)) * 1.1;
++  gl_FragColor = vec4(col, alpha * 0.9);
++}
++`;
++
++const VERT = `
++attribute vec2 a_pos;
++void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
++`;
++
++function prefersReducedMotion(): boolean {
++  if (typeof window === "undefined") return false;
++  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
++}
++
++export function SignalCoreEnvironment({ className }: { className?: string }) {
++  const canvasRef = useRef<HTMLCanvasElement | null>(null);
++  const [failed, setFailed] = useState(false);
++  const mouseRef = useRef({ x: 0.5, y: 0.5 });
++
++  useEffect(() => {
++    const canvas = canvasRef.current;
++    if (!canvas) return;
++
++    const gl = canvas.getContext("webgl", {
++      antialias: false,
++      alpha: true,
++      depth: false,
++      premultipliedAlpha: true,
++    });
++    if (!gl) { setFailed(true); return; }
++
++    gl.enable(gl.BLEND);
++    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
++
++    const compile = (type: number, src: string): WebGLShader | null => {
++      const s = gl.createShader(type);
++      if (!s) return null;
++      gl.shaderSource(s, src);
++      gl.compileShader(s);
++      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
++        gl.deleteShader(s);
++        return null;
++      }
++      return s;
++    };
++
++    const vs = compile(gl.VERTEX_SHADER, VERT);
++    const fs = compile(gl.FRAGMENT_SHADER, FRAG);
++    if (!vs || !fs) { setFailed(true); return; }
++
++    const prog = gl.createProgram();
++    if (!prog) { setFailed(true); return; }
++    gl.attachShader(prog, vs);
++    gl.attachShader(prog, fs);
++    gl.linkProgram(prog);
++    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { setFailed(true); return; }
++    gl.useProgram(prog);
++
++    const buf = gl.createBuffer();
++    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
++    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
++    const aPos = gl.getAttribLocation(prog, "a_pos");
++    gl.enableVertexAttribArray(aPos);
++    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
++
++    const uRes = gl.getUniformLocation(prog, "u_res");
++    const uTime = gl.getUniformLocation(prog, "u_time");
++    const uMouse = gl.getUniformLocation(prog, "u_mouse");
++    const uScroll = gl.getUniformLocation(prog, "u_scroll");
++
++    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
++    const resize = () => {
++      const w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
++      const h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
++      if (canvas.width !== w || canvas.height !== h) {
++        canvas.width = w;
++        canvas.height = h;
++        gl.viewport(0, 0, w, h);
++      }
++      gl.uniform2f(uRes, canvas.width, canvas.height);
++    };
++
++    const onMouseMove = (e: MouseEvent) => {
++      mouseRef.current.x = e.clientX / window.innerWidth;
++      mouseRef.current.y = 1.0 - e.clientY / window.innerHeight;
++    };
++    window.addEventListener("mousemove", onMouseMove, { passive: true });
++
++    let raf = 0;
++    let start = 0;
++    let running = true;
++    let visible = true;
++    const reduced = prefersReducedMotion();
++
++    let scrollProgress = 0;
++    const updateScroll = () => {
++      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
++      scrollProgress = docHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / docHeight)) : 0;
++    };
++    window.addEventListener("scroll", updateScroll, { passive: true });
++    updateScroll();
++
++    const drawFrame = (timeSec: number, mouse: { x: number; y: number }) => {
++      resize();
++      gl.uniform1f(uTime, timeSec);
++      gl.uniform2f(uMouse, mouse.x, mouse.y);
++      gl.uniform1f(uScroll, scrollProgress);
++      gl.drawArrays(gl.TRIANGLES, 0, 3);
++    };
++
++    const loop = (now: number) => {
++      if (!running) return;
++      if (!start) start = now;
++      drawFrame((now - start) / 1000, mouseRef.current);
++      raf = requestAnimationFrame(loop);
++    };
++
++    const stop = () => {
++      running = false;
++      if (raf) cancelAnimationFrame(raf);
++      raf = 0;
++    };
++    const startLoop = () => {
++      if (running || reduced) return;
++      running = true;
++      start = 0;
++      raf = requestAnimationFrame(loop);
++    };
++
++    const onVisibility = () => {
++      if (document.hidden) stop();
++      else if (visible) startLoop();
++    };
++    document.addEventListener("visibilitychange", onVisibility);
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        visible = entries[0]?.isIntersecting ?? true;
++        if (visible) startLoop(); else stop();
++      },
++      { threshold: 0 }
++    );
++    io.observe(canvas);
++
++    const onResize = () => {
++      resize();
++      if (reduced) drawFrame(8.0, mouseRef.current);
++    };
++    window.addEventListener("resize", onResize);
++    const ro = new ResizeObserver(() => {
++      resize();
++      if (reduced) drawFrame(8.0, mouseRef.current);
++    });
++    ro.observe(canvas);
++
++    resize();
++    drawFrame(reduced ? 8.0 : 0.0, mouseRef.current);
++
++    if (reduced) {
++      running = false;
++    } else {
++      raf = requestAnimationFrame(loop);
++    }
++
++    return () => {
++      stop();
++      window.removeEventListener("mousemove", onMouseMove);
++      document.removeEventListener("visibilitychange", onVisibility);
++      window.removeEventListener("resize", onResize);
++      ro.disconnect();
++      io.disconnect();
++      gl.deleteProgram(prog);
++      gl.deleteShader(vs);
++      gl.deleteShader(fs);
++      gl.deleteBuffer(buf);
++    };
++  }, []);
++
++  if (failed) return null;
++
++  return (
++    <canvas
++      ref={canvasRef}
++      aria-hidden="true"
++      className={className}
++      style={{
++        display: "block",
++        width: "100%",
++        height: "100%",
++        mixBlendMode: "screen",
++      }}
++    />
++  );
++}
+diff --git a/apps/web/components/hero/signal-core-lazy.tsx b/apps/web/components/hero/signal-core-lazy.tsx
+new file mode 100644
+index 00000000..b81a1896
+--- /dev/null
++++ b/apps/web/components/hero/signal-core-lazy.tsx
+@@ -0,0 +1,8 @@
++"use client";
++
++import dynamic from "next/dynamic";
++
++export const SignalCoreLazy = dynamic(
++  () => import("./signal-core-environment").then((m) => ({ default: m.SignalCoreEnvironment })),
++  { ssr: false }
++);
+diff --git a/apps/web/components/landing/montage-entrance.tsx b/apps/web/components/landing/montage-entrance.tsx
+new file mode 100644
+index 00000000..34e9c827
+--- /dev/null
++++ b/apps/web/components/landing/montage-entrance.tsx
+@@ -0,0 +1,391 @@
++"use client";
++
++/**
++ * MontageEntrance — A 2009 Call of Duty-style cinematic cold open.
++ *
++ * Pure adrenaline. 5 seconds of impact frames, chrome text slams,
++ * stat flashes, and an explosive particle finish. Skippable on any
++ * interaction. Plays once per session via localStorage.
++ *
++ * Sequence:
++ *   0.0s — Black
++ *   0.1s — WHITE FLASH + deep bass hit
++ *   0.3s — "GALAXY" chrome slam with screen shake
++ *   0.8s — Quick stat flash: "SIGNAL DETECTED"
++ *   1.2s — "SPORTS" chrome slam
++ *   1.5s — Quick stat flash: "NOISE FILTERED"
++ *   1.8s — "EDGE" chrome slam + cyan glow burst
++ *   2.2s — Three rapid HUD stat flashes
++ *   2.8s — Slow hold: "THE INTELLIGENCE REVOLUTION"
++ *   3.5s — Particle explosion outward
++ *   4.0s — Fade to site
++ *
++ * Reduced motion → instant dissolve.
++ */
++
++import { useCallback, useEffect, useRef, useState } from "react";
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
++
++const SEEN_KEY = "gse-montage-seen-v2";
++const CINEMATIC_SEEN_KEY = "gse-entrance-seen-v1";
++const PHASES = [
++  { at: 0, id: "black" },
++  { at: 100, id: "flash" },
++  { at: 300, id: "galaxy" },
++  { at: 800, id: "stat1" },
++  { at: 1200, id: "sports" },
++  { at: 1500, id: "stat2" },
++  { at: 1800, id: "edge" },
++  { at: 2200, id: "hud" },
++  { at: 2800, id: "hold" },
++  { at: 3500, id: "explode" },
++  { at: 4200, id: "done" },
++] as const;
++
++export function MontageEntrance() {
++  const [phase, setPhase] = useState<string>("black");
++  const [done, setDone] = useState(false);
++  const timers = useRef<number[]>([]);
++  const canvasRef = useRef<HTMLCanvasElement | null>(null);
++  const audioRef = useRef<HTMLAudioElement | null>(null);
++  const startedRef = useRef(false);
++
++  const finish = useCallback(() => {
++    if (audioRef.current) {
++      audioRef.current.pause();
++      audioRef.current = null;
++    }
++    timers.current.forEach((t) => window.clearTimeout(t));
++    timers.current = [];
++    setDone(true);
++  }, []);
++
++  useEffect(() => {
++    if (startedRef.current) return;
++    startedRef.current = true;
++
++    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++    let seen = false;
++    try {
++      seen = localStorage.getItem(SEEN_KEY) === "1";
++    } catch { /* ignore */ }
++
++    if (seen || reduced || window.location.search.includes("intro=skip")) {
++      setDone(true);
++      return;
++    }
++
++    try {
++      localStorage.setItem(SEEN_KEY, "1");
++      localStorage.setItem(CINEMATIC_SEEN_KEY, "1");
++    } catch { /* ignore */ }
++
++    // Play hype track
++    const audio = new Audio("/audio/montage-hype.m4a");
++    audio.volume = 0.6;
++    audio.play().catch(() => { /* ignore autoplay policy */ });
++    audioRef.current = audio;
++
++    for (const p of PHASES) {
++      timers.current.push(
++        window.setTimeout(() => setPhase(p.id), p.at)
++      );
++    }
++
++    // Explosion canvas
++    const canvas = canvasRef.current;
++    if (canvas) {
++      const ctx = canvas.getContext("2d");
++      if (ctx) {
++        const w = canvas.width = window.innerWidth;
++        const h = canvas.height = window.innerHeight;
++        const particles = Array.from({ length: 200 }, () => ({
++          x: w / 2,
++          y: h / 2,
++          vx: (Math.random() - 0.5) * 15,
++          vy: (Math.random() - 0.5) * 15,
++          life: 1,
++          decay: 0.01 + Math.random() * 0.02,
++          color: Math.random() > 0.6 ? "0,229,255" : Math.random() > 0.5 ? "122,92,255" : "255,45,214",
++          size: 1 + Math.random() * 3,
++        }));
++
++        let raf = 0;
++        const draw = () => {
++          ctx.fillStyle = "rgba(5,6,8,0.15)";
++          ctx.fillRect(0, 0, w, h);
++          let alive = false;
++          for (const p of particles) {
++            if (p.life <= 0) continue;
++            alive = true;
++            p.x += p.vx;
++            p.y += p.vy;
++            p.vx *= 0.98;
++            p.vy *= 0.98;
++            p.life -= p.decay;
++            ctx.fillStyle = `rgba(${p.color}, ${p.life})`;
++            ctx.beginPath();
++            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
++            ctx.fill();
++          }
++          if (alive) raf = requestAnimationFrame(draw);
++        };
++        const startExplosion = () => {
++          raf = requestAnimationFrame(draw);
++        };
++        timers.current.push(window.setTimeout(startExplosion, 3500));
++        return () => cancelAnimationFrame(raf);
++      }
++    }
++
++    return () => timers.current.forEach((t) => window.clearTimeout(t));
++  }, []);
++
++  // Skip on any interaction
++  useEffect(() => {
++    if (done) return;
++    const skip = () => finish();
++    window.addEventListener("keydown", skip, { once: true });
++    window.addEventListener("click", skip, { once: true });
++    window.addEventListener("touchstart", skip, { once: true });
++    return () => {
++      window.removeEventListener("keydown", skip);
++      window.removeEventListener("click", skip);
++      window.removeEventListener("touchstart", skip);
++    };
++  }, [done, finish]);
++
++  if (done) return null;
++
++  const show = (ids: string[]) => ids.includes(phase);
++  const flash = show(["flash"]);
++  const galaxy = show(["galaxy", "stat1", "sports", "stat2", "edge", "hud", "hold", "explode"]);
++  const sports = show(["sports", "stat2", "edge", "hud", "hold", "explode"]);
++  const edge = show(["edge", "hud", "hold", "explode"]);
++  const hud = show(["hud", "hold", "explode"]);
++  const hold = show(["hold", "explode"]);
++  const explode = show(["explode"]);
++
++  return (
++    <div
++      className="fixed inset-0 z-[80] overflow-hidden"
++      style={{ background: "#050608" }}
++      onClick={finish}
++    >
++      {/* White flash */}
++      {flash && (
++        <div
++          className="absolute inset-0 flex items-center justify-center"
++          style={{
++            background: "#ffffff",
++            animation: "montage-flash 0.25s ease-out forwards",
++          }}
++        >
++          <LogoMarkInline size={120} color="#050608" className="opacity-90" />
++        </div>
++      )}
++
++      {/* GALAXY slam */}
++      {galaxy && (
++        <div
++          className="absolute inset-0 flex items-center justify-center"
++          style={{
++            animation: "montage-shake 0.15s ease-out",
++          }}
++        >
++          <span
++            className="font-arch"
++            style={{
++              fontSize: "clamp(4rem, 18vw, 14rem)",
++              lineHeight: 0.85,
++              letterSpacing: "0.06em",
++              background: "linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 30%, #8FECFF 60%, #00E5FF 100%)",
++              WebkitBackgroundClip: "text",
++              backgroundClip: "text",
++              color: "transparent",
++              filter: "drop-shadow(0 0 40px rgba(0,229,255,0.5)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
++              animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
++              opacity: 0,
++            }}
++          >
++            GALAXY
++          </span>
++        </div>
++      )}
++
++      {/* STAT 1: SIGNAL DETECTED */}
++      {show(["stat1", "sports", "stat2", "edge", "hud", "hold", "explode"]) && (
++        <div
++          className="absolute left-1/2 top-[62%] -translate-x-1/2 font-mono"
++          style={{
++            fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
++            letterSpacing: "0.3em",
++            color: "#00E5FF",
++            textShadow: "0 0 20px rgba(0,229,255,0.8)",
++            animation: "montage-stat-flicker 0.3s ease-out forwards",
++            opacity: 0,
++          }}
++        >
++          SIGNAL DETECTED
++        </div>
++      )}
++
++      {/* SPORTS slam */}
++      {sports && (
++        <div
++          className="absolute inset-0 flex items-center justify-center"
++          style={{ animation: "montage-shake 0.12s ease-out 0.1s" }}
++        >
++          <span
++            className="font-arch"
++            style={{
++              fontSize: "clamp(4rem, 18vw, 14rem)",
++              lineHeight: 0.85,
++              letterSpacing: "0.06em",
++              background: "linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF2DD6 100%)",
++              WebkitBackgroundClip: "text",
++              backgroundClip: "text",
++              color: "transparent",
++              filter: "drop-shadow(0 0 40px rgba(255,45,214,0.4)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
++              animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards",
++              opacity: 0,
++            }}
++          >
++            SPORTS
++          </span>
++        </div>
++      )}
++
++      {/* STAT 2: NOISE FILTERED */}
++      {show(["stat2", "edge", "hud", "hold", "explode"]) && (
++        <div
++          className="absolute left-1/2 top-[62%] -translate-x-1/2 font-mono"
++          style={{
++            fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
++            letterSpacing: "0.3em",
++            color: "#7A5CFF",
++            textShadow: "0 0 20px rgba(122,92,255,0.8)",
++            animation: "montage-stat-flicker 0.3s ease-out 0.4s forwards",
++            opacity: 0,
++          }}
++        >
++          NOISE FILTERED
++        </div>
++      )}
++
++      {/* EDGE slam + cyan burst */}
++      {edge && (
++        <>
++          <div
++            className="absolute inset-0 flex items-center justify-center"
++            style={{ animation: "montage-shake 0.15s ease-out 0.2s" }}
++          >
++            <span
++              className="font-arch"
++              style={{
++                fontSize: "clamp(4rem, 18vw, 14rem)",
++                lineHeight: 0.85,
++                letterSpacing: "0.06em",
++                background: "linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 30%, #00E5FF 100%)",
++                WebkitBackgroundClip: "text",
++                backgroundClip: "text",
++                color: "transparent",
++                filter: "drop-shadow(0 0 50px rgba(0,229,255,0.6)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
++                animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards",
++                opacity: 0,
++              }}
++            >
++              EDGE
++            </span>
++          </div>
++          {/* Cyan burst ring */}
++          <div
++            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
++            style={{
++              width: "200vmax",
++              height: "200vmax",
++              border: "2px solid rgba(0,229,255,0.3)",
++              animation: "montage-burst-ring 0.8s ease-out 0.8s forwards",
++              opacity: 0,
++            }}
++          />
++        </>
++      )}
++
++      {/* HUD stat flashes */}
++      {hud && (
++        <div className="absolute inset-0 flex items-center justify-center">
++          <div className="grid gap-4 text-center">
++            {[
++              { label: "DATA INTAKE", value: "12 LANES", color: "#00E5FF" },
++              { label: "MODELS ACTIVE", value: "3 ENGINES", color: "#7A5CFF" },
++              { label: "TRUST SCORE", value: "96.4%", color: "#FF2DD6" },
++            ].map((stat, i) => (
++              <div
++                key={stat.label}
++                className="font-mono"
++                style={{
++                  animation: `montage-hud-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + i * 0.15}s forwards`,
++                  opacity: 0,
++                  transform: "translateX(-30px)",
++                }}
++              >
++                <span style={{ fontSize: 11, letterSpacing: "0.25em", color: stat.color }}>
++                  {stat.label}
++                </span>
++                <span
++                  className="ml-4 font-arch"
++                  style={{
++                    fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
++                    color: "#F6F7FA",
++                    textShadow: `0 0 20px ${stat.color}66`,
++                  }}
++                >
++                  {stat.value}
++                </span>
++              </div>
++            ))}
++          </div>
++        </div>
++      )}
++
++      {/* HOLD: The Intelligence Revolution */}
++      {hold && (
++        <div
++          className="absolute inset-0 flex flex-col items-center justify-center"
++          style={{
++            animation: "montage-fade-in 0.6s ease-out forwards",
++            opacity: 0,
++          }}
++        >
++          <p
++            className="font-display text-balance text-ion-white"
++            style={{
++              fontSize: "clamp(1.2rem, 3.5vw, 2.5rem)",
++              lineHeight: 1.15,
++              textShadow: "0 2px 30px rgba(0,0,0,0.8)",
++            }}
++          >
++            The{" "}
++            <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
++              intelligence
++            </span>{" "}
++            revolution.
++          </p>
++          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-ion-2">
++            Press any key to enter
++          </p>
++        </div>
++      )}
++
++      {/* Particle explosion canvas */}
++      {explode && (
++        <canvas
++          ref={canvasRef}
++          className="absolute inset-0"
++          style={{ pointerEvents: "none" }}
++        />
++      )}
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/dream-sequence.tsx b/apps/web/components/motion/dream-sequence.tsx
+new file mode 100644
+index 00000000..18b98c5d
+--- /dev/null
++++ b/apps/web/components/motion/dream-sequence.tsx
+@@ -0,0 +1,171 @@
++"use client";
++
++/**
++ * DreamSequence — The site dreams when you look away.
++ *
++ * After 60 seconds of idle, the page drifts into a generative sequence:
++ * historical predictions, current signals, and future possibilities blend
++ * in an ambient visual flow. Moving the mouse or pressing a key wakes it.
++ *
++ * A canvas-based particle system where each dot is a memory — past picks,
++ * current board rows, gated signals — drifting like stars in deep space.
++ * Pure canvas, no React re-renders during the dream.
++ */
++
++import { useEffect, useRef, useState } from "react";
++
++interface DreamDot {
++  x: number;
++  y: number;
++  z: number;
++  vx: number;
++  vy: number;
++  birth: number;
++  life: number;
++  color: string;
++  label: string;
++}
++
++const DREAM_MEMORIES = [
++  { label: "WEEK 3", color: "0,229,255" },
++  { label: "GATED", color: "255,45,214" },
++  { label: "SCORING", color: "0,229,255" },
++  { label: "PUBLISHED", color: "95,217,163" },
++  { label: "NO BET", color: "255,45,214" },
++  { label: "PENDING", color: "122,92,255" },
++  { label: "SIGNAL", color: "0,229,255" },
++  { label: "NOISE", color: "122,92,255" },
++] as const;
++
++const IDLE_THRESHOLD = 60000;
++
++export function DreamSequence() {
++  const canvasRef = useRef<HTMLCanvasElement | null>(null);
++  const [dreaming, setDreaming] = useState(false);
++  const idleTimer = useRef<ReturnType<typeof setTimeout>>();
++  const rafRef = useRef(0);
++
++  useEffect(() => {
++    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++    if (reduced) return;
++
++    const resetIdle = () => {
++      setDreaming(false);
++      clearTimeout(idleTimer.current);
++      idleTimer.current = setTimeout(() => setDreaming(true), IDLE_THRESHOLD);
++    };
++
++    const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
++    events.forEach((e) => window.addEventListener(e, resetIdle, { passive: true }));
++    idleTimer.current = setTimeout(() => setDreaming(true), IDLE_THRESHOLD);
++
++    return () => {
++      events.forEach((e) => window.removeEventListener(e, resetIdle));
++      clearTimeout(idleTimer.current);
++    };
++  }, []);
++
++  useEffect(() => {
++    if (!dreaming) {
++      if (rafRef.current) cancelAnimationFrame(rafRef.current);
++      return;
++    }
++
++    const canvas = canvasRef.current;
++    if (!canvas) return;
++    const ctx = canvas.getContext("2d");
++    if (!ctx) return;
++
++    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
++    const w = (canvas.width = window.innerWidth * dpr);
++    const h = (canvas.height = window.innerHeight * dpr);
++
++    const dots: DreamDot[] = [];
++    const spawnDot = () => {
++      const mem = DREAM_MEMORIES[Math.floor(Math.random() * DREAM_MEMORIES.length)]!;
++      dots.push({
++        x: Math.random() * w,
++        y: Math.random() * h,
++        z: Math.random(),
++        vx: (Math.random() - 0.5) * 0.4,
++        vy: (Math.random() - 0.5) * 0.4,
++        birth: performance.now(),
++        life: 8000 + Math.random() * 12000,
++        color: mem.color,
++        label: mem.label,
++      });
++    };
++
++    for (let i = 0; i < 40; i++) spawnDot();
++
++    let time = 0;
++    const draw = (now: number) => {
++      time += 1;
++      ctx.fillStyle = "rgba(5, 6, 8, 0.08)";
++      ctx.fillRect(0, 0, w, h);
++
++      // Spawn new memories
++      if (dots.length < 60 && Math.random() < 0.03) spawnDot();
++
++      for (let i = dots.length - 1; i >= 0; i--) {
++        const d = dots[i]!;
++        const age = now - d.birth;
++        if (age > d.life) {
++          dots.splice(i, 1);
++          continue;
++        }
++
++        d.x += d.vx;
++        d.y += d.vy;
++
++        const alpha = Math.sin((age / d.life) * Math.PI) * 0.5;
++        const size = (1 + Math.sin(time * 0.01 + i) * 0.5) * (0.5 + d.z * 1.5);
++
++        // Glow
++        const glow = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, size * 8);
++        glow.addColorStop(0, `rgba(${d.color}, ${alpha * 0.3})`);
++        glow.addColorStop(1, `rgba(${d.color}, 0)`);
++        ctx.fillStyle = glow;
++        ctx.beginPath();
++        ctx.arc(d.x, d.y, size * 8, 0, Math.PI * 2);
++        ctx.fill();
++
++        // Core
++        ctx.fillStyle = `rgba(${d.color}, ${alpha * 0.8})`;
++        ctx.beginPath();
++        ctx.arc(d.x, d.y, size, 0, Math.PI * 2);
++        ctx.fill();
++
++        // Label (faint, only for larger dots)
++        if (d.z > 0.7 && alpha > 0.3) {
++          ctx.font = `500 ${7 * dpr}px var(--f-mono)`;
++          ctx.fillStyle = `rgba(${d.color}, ${alpha * 0.25})`;
++          ctx.fillText(d.label, d.x + size * 3, d.y + size);
++        }
++      }
++
++      // Vignette
++      const vig = ctx.createRadialGradient(w / 2, h / 2, h * 0.3, w / 2, h / 2, h * 0.8);
++      vig.addColorStop(0, "rgba(5,6,8,0)");
++      vig.addColorStop(1, "rgba(5,6,8,0.4)");
++      ctx.fillStyle = vig;
++      ctx.fillRect(0, 0, w, h);
++
++      rafRef.current = requestAnimationFrame(draw);
++    };
++
++    rafRef.current = requestAnimationFrame(draw);
++    return () => cancelAnimationFrame(rafRef.current);
++  }, [dreaming]);
++
++  if (!dreaming) return null;
++
++  return (
++    <canvas
++      ref={canvasRef}
++      aria-hidden="true"
++      className="pointer-events-none fixed inset-0 z-[55]"
++      style={{ mixBlendMode: "screen" }}
++    />
++  );
++}
+diff --git a/apps/web/components/motion/ghost-jarvis.tsx b/apps/web/components/motion/ghost-jarvis.tsx
+new file mode 100644
+index 00000000..dd9e4890
+--- /dev/null
++++ b/apps/web/components/motion/ghost-jarvis.tsx
+@@ -0,0 +1,97 @@
++"use client";
++
++/**
++ * GhostJarvis — The machine thinks out loud.
++ *
++ * An ambient AI presence that occasionally drops a thought into the
++ * corner of the screen. Not a chatbot. Not interactive. A ghost.
++ *
++ * The ghost observes the current page context and emits insights,
++ * contradictions, or observations in the brand voice. Each thought
++ * fades in, holds for a few seconds, then dissolves.
++ *
++ * Triggered randomly every 45–120 seconds. Reduced motion → disabled.
++ */
++
++import { useEffect, useRef, useState } from "react";
++
++const THOUGHTS = [
++  "Three books just moved the line simultaneously. Not coincidence.",
++  "That injury report is six hours old. The market hasn't priced the update.",
++  "Public is 78% on the over. The gate is watching.",
++  "Consensus engine split wide on this one. Width is information.",
++  "The sharp money arrived fourteen minutes before the steam.",
++  "I've seen this narrative before. It didn't end well.",
++  "Two signals disagree. That's where the edge lives.",
++  "The closing line is still drifting. Patience is a signal too.",
++  "Freshness check failed on that source. Holding it back.",
++  "Noise is loudest right before the gate closes.",
++  "Correlation between those two legs: 0.71. Stacked fragility.",
++  "The model is confident. The data is thin. The gate decides.",
++  "I count twelve contradictory takes on this game. None sourced.",
++  "Historical pattern match: 73% accuracy, 34 samples. Not enough to publish.",
++  "The line moved but the context didn't. That's a trap, not an edge.",
++] as const;
++
++function randomRange(min: number, max: number) {
++  return min + Math.random() * (max - min);
++}
++
++export function GhostJarvis() {
++  const [thought, setThought] = useState<string | null>(null);
++  const [visible, setVisible] = useState(false);
++  const timerRef = useRef<ReturnType<typeof setTimeout>>();
++
++  useEffect(() => {
++    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++    if (reduced) return;
++
++    const schedule = () => {
++      const delay = randomRange(45000, 120000);
++      timerRef.current = setTimeout(() => {
++        const t = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)] ?? null;
++        setThought(t);
++        setVisible(true);
++
++        setTimeout(() => setVisible(false), 6000);
++        setTimeout(() => {
++          setThought(null);
++          schedule();
++        }, 8000);
++      }, delay);
++    };
++
++    schedule();
++    return () => clearTimeout(timerRef.current);
++  }, []);
++
++  if (!thought) return null;
++
++  return (
++    <div
++      aria-hidden="true"
++      className="pointer-events-none fixed bottom-20 right-6 z-50 max-w-xs sm:bottom-24 sm:right-8"
++    >
++      <div
++        className="rounded-lg border border-mineral/50 bg-eclipse/90 px-4 py-3 backdrop-blur-sm"
++        style={{
++          opacity: visible ? 1 : 0,
++          transform: visible ? "translateY(0)" : "translateY(12px)",
++          transition: "opacity 1.2s ease-out, transform 1.2s ease-out",
++          boxShadow: "0 0 20px rgba(0,229,255,0.06)",
++        }}
++      >
++        <div className="flex items-center gap-2">
++          <span
++            className="h-1.5 w-1.5 rounded-full bg-orbital-cyan"
++            style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }}
++          />
++          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-orbital-cyan">
++            Jarvis
++          </span>
++        </div>
++        <p className="mt-1.5 text-xs leading-5 text-ion-1">{thought}</p>
++      </div>
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/glitch-truth.tsx b/apps/web/components/motion/glitch-truth.tsx
+new file mode 100644
+index 00000000..3e2fa797
+--- /dev/null
++++ b/apps/web/components/motion/glitch-truth.tsx
+@@ -0,0 +1,87 @@
++"use client";
++
++/**
++ * GlitchTruth — Electromagnetic interference as honesty.
++ *
++ * When data is stale, uncertain, or conflicting, the UI doesn't hide it
++ * behind a polite banner. It shows electromagnetic interference:
++ *  - Scan lines drifting across the surface
++ *  - Chromatic aberration (RGB split) at edges
++ *  - Subtle horizontal displacement bands
++ *  - Static noise intensity mapped to uncertainty level
++ *
++ * Props:
++ *  - level: 0–1, where 0 = clean, 1 = heavy interference
++ *  - trigger: boolean, whether to show the effect at all
++ */
++
++export function GlitchTruth({
++  level = 0.3,
++  trigger = false,
++}: {
++  level?: number;
++  trigger?: boolean;
++}) {
++  if (!trigger || level < 0.05) return null;
++
++  const scanOpacity = Math.min(0.15, level * 0.2);
++  const chromaStrength = Math.min(4, level * 6);
++  const noiseOpacity = Math.min(0.08, level * 0.1);
++  const bandCount = Math.floor(level * 5) + 1;
++
++  return (
++    <div
++      aria-hidden="true"
++      className="pointer-events-none fixed inset-0 z-[60]"
++      style={{
++        mixBlendMode: "screen",
++        opacity: Math.min(1, level * 1.5),
++      }}
++    >
++      {/* Scan lines */}
++      <div
++        className="absolute inset-0"
++        style={{
++          background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.03) 2px, rgba(0,229,255,0.03) 4px)",
++          animation: "glitch-scan 8s linear infinite",
++          opacity: scanOpacity,
++        }}
++      />
++
++      {/* Chromatic aberration layers */}
++      <div
++        className="absolute inset-0"
++        style={{
++          boxShadow: `inset ${chromaStrength}px 0 ${chromaStrength * 2}px rgba(255,45,214,0.04), inset -${chromaStrength}px 0 ${chromaStrength * 2}px rgba(0,229,255,0.04)`,
++        }}
++      />
++
++      {/* Displacement bands */}
++      {Array.from({ length: bandCount }).map((_, i) => (
++        <div
++          key={i}
++          className="absolute left-0 right-0"
++          style={{
++            top: `${20 + i * 15}%`,
++            height: `${1 + Math.random() * 3}px`,
++            background: `rgba(0,229,255,${0.03 + level * 0.05})`,
++            transform: `translateX(${Math.sin(i * 2.5) * level * 8}px)`,
++            animation: `glitch-band ${2 + i * 0.5}s ease-in-out infinite`,
++            animationDelay: `${i * 0.3}s`,
++          }}
++        />
++      ))}
++
++      {/* Static noise */}
++      <div
++        className="absolute inset-0"
++        style={{
++          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")`,
++          backgroundSize: "128px 128px",
++          opacity: noiseOpacity,
++          animation: "glitch-noise 0.15s steps(2) infinite",
++        }}
++      />
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/health-ring.tsx b/apps/web/components/motion/health-ring.tsx
+new file mode 100644
+index 00000000..546ef02b
+--- /dev/null
++++ b/apps/web/components/motion/health-ring.tsx
+@@ -0,0 +1,101 @@
++"use client";
++
++/**
++ * HealthRing — A breathing company health gauge.
++ *
++ * A large luminous ring that pulses gently, with segmented arcs representing
++ * different system health metrics. The ring breathes like a living organism.
++ * Reduced motion → static.
++ */
++
++import { useState } from "react";
++
++export function HealthRing({
++  size = 200,
++  health = 0.87,
++  segments = [
++    { label: "Data intake", value: 0.92, color: "#00E5FF" },
++    { label: "Model inference", value: 0.85, color: "#7A5CFF" },
++    { label: "Board state", value: 0.78, color: "#00E5FF" },
++    { label: "Media pipeline", value: 0.91, color: "#7A5CFF" },
++    { label: "Trust ledger", value: 0.96, color: "#00E5FF" },
++  ],
++}: {
++  size?: number;
++  health?: number;
++  segments?: { label: string; value: number; color: string }[];
++}) {
++  const [hovered, setHovered] = useState<number | null>(null);
++  const stroke = 8;
++  const radius = (size - stroke) / 2;
++  const circumference = 2 * Math.PI * radius;
++  const gap = 4;
++  const available = circumference - segments.length * gap;
++  const segmentArc = available / segments.length;
++
++  return (
++    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
++      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
++        {/* Background track */}
++        <circle
++          cx={size / 2}
++          cy={size / 2}
++          r={radius}
++          fill="none"
++          stroke="rgba(255,255,255,0.04)"
++          strokeWidth={stroke}
++        />
++        {/* Segments */}
++        {segments.map((seg, i) => {
++          const offset = i * (segmentArc + gap);
++          const dash = `${segmentArc * seg.value} ${segmentArc * (1 - seg.value) + gap}`;
++          const isHovered = hovered === i;
++          return (
++            <circle
++              key={i}
++              cx={size / 2}
++              cy={size / 2}
++              r={radius}
++              fill="none"
++              stroke={seg.color}
++              strokeWidth={isHovered ? stroke + 2 : stroke}
++              strokeDasharray={dash}
++              strokeDashoffset={-offset}
++              strokeLinecap="round"
++              opacity={isHovered ? 1 : 0.75}
++              style={{
++                filter: isHovered ? `drop-shadow(0 0 8px ${seg.color})` : "none",
++                transition: "opacity 0.2s, stroke-width 0.2s",
++                animation: `health-ring-breathe 4s ease-in-out infinite`,
++                animationDelay: `${i * 0.3}s`,
++              }}
++              onMouseEnter={() => setHovered(i)}
++              onMouseLeave={() => setHovered(null)}
++              className="cursor-pointer"
++            />
++          );
++        })}
++      </svg>
++      {/* Center text */}
++      <div className="absolute inset-0 flex flex-col items-center justify-center">
++        <span className="font-numerals text-3xl font-bold text-ion-white" style={{ textShadow: "0 0 20px rgba(0,229,255,0.3)" }}>
++          {Math.round(health * 100)}%
++        </span>
++        <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
++          System health
++        </span>
++      </div>
++      {/* Tooltip */}
++      {hovered !== null && (
++        <div
++          className="absolute -bottom-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-md border border-mineral bg-eclipse px-3 py-1.5"
++        >
++          <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: segments[hovered]!.color }}>
++            {segments[hovered]!.label}
++          </p>
++          <p className="font-numerals text-sm text-ion-white">{Math.round(segments[hovered]!.value * 100)}%</p>
++        </div>
++      )}
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/holo-tilt-card.tsx b/apps/web/components/motion/holo-tilt-card.tsx
+new file mode 100644
+index 00000000..07d65477
+--- /dev/null
++++ b/apps/web/components/motion/holo-tilt-card.tsx
+@@ -0,0 +1,70 @@
++"use client";
++
++/**
++ * HoloTiltCard — A glass panel that floats in space.
++ *
++ * Mouse-reactive 3D tilt using CSS transform-style: preserve-3d.
++ * The card leans toward the cursor, with a subtle specular sheen that
++ * shifts across the surface. Creates the feeling of a physical holographic
++ * display panel in the Signal Room.
++ *
++ * Reduced motion → static, no tilt.
++ */
++
++import { useRef, useState, type ReactNode } from "react";
++
++export function HoloTiltCard({
++  children,
++  className = "",
++  intensity = 8,
++}: {
++  children: ReactNode;
++  className?: string;
++  intensity?: number;
++}) {
++  const ref = useRef<HTMLDivElement | null>(null);
++  const [transform, setTransform] = useState("perspective(800px) rotateX(0deg) rotateY(0deg)");
++  const [sheen, setSheen] = useState({ x: 50, y: 50 });
++
++  const onMove = (e: React.MouseEvent) => {
++    const el = ref.current;
++    if (!el) return;
++    const rect = el.getBoundingClientRect();
++    const x = (e.clientX - rect.left) / rect.width;
++    const y = (e.clientY - rect.top) / rect.height;
++    const rotX = (y - 0.5) * -intensity;
++    const rotY = (x - 0.5) * intensity;
++    setTransform(`perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.01, 1.01, 1.01)`);
++    setSheen({ x: x * 100, y: y * 100 });
++  };
++
++  const onLeave = () => {
++    setTransform("perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)");
++    setSheen({ x: 50, y: 50 });
++  };
++
++  return (
++    <div
++      ref={ref}
++      onMouseMove={onMove}
++      onMouseLeave={onLeave}
++      className={`group relative transition-transform duration-150 ease-out ${className}`}
++      style={{
++        transform,
++        transformStyle: "preserve-3d",
++        willChange: "transform",
++      }}
++    >
++      {children}
++      {/* Specular sheen overlay */}
++      <div
++        aria-hidden
++        className="pointer-events-none absolute inset-0 rounded-ds-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
++        style={{
++          background: `radial-gradient(circle at ${sheen.x}% ${sheen.y}%, rgba(0,229,255,0.08) 0%, transparent 60%)`,
++          mixBlendMode: "overlay",
++        }}
++      />
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/holographic-receipt.tsx b/apps/web/components/motion/holographic-receipt.tsx
+new file mode 100644
+index 00000000..afd80df4
+--- /dev/null
++++ b/apps/web/components/motion/holographic-receipt.tsx
+@@ -0,0 +1,152 @@
++"use client";
++
++/**
++ * HolographicReceipt — A thermal-printed intelligence ticket.
++ *
++ * Transforms accountability/receipt cards into physical artifacts from
++ * the machine. Features:
++ *  - Perforated top edge (tear-off style)
++ *  - Thermal paper texture with faint grid
++ *  - Holographic sheen that shifts with mouse movement
++ *  - Typewriter-style data printing
++ *  - "VOID" watermark that appears under extreme tilt
++ *
++ * Used for every receipt, trust ledger entry, and settled pick.
++ */
++
++import { useRef, useState, type ReactNode } from "react";
++
++export function HolographicReceipt({
++  children,
++  className = "",
++  stamp,
++  hologram = true,
++}: {
++  children: ReactNode;
++  className?: string;
++  stamp?: "verified" | "gated" | "settled" | "pending";
++  hologram?: boolean;
++}) {
++  const ref = useRef<HTMLDivElement | null>(null);
++  const [sheen, setSheen] = useState({ x: 50, y: 50, tilt: 0 });
++
++  const onMove = (e: React.MouseEvent) => {
++    if (!hologram || !ref.current) return;
++    const rect = ref.current.getBoundingClientRect();
++    const x = ((e.clientX - rect.left) / rect.width) * 100;
++    const y = ((e.clientY - rect.top) / rect.height) * 100;
++    const tilt = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
++    setSheen({ x, y, tilt });
++  };
++
++  const onLeave = () => setSheen({ x: 50, y: 50, tilt: 0 });
++
++  const stampColor =
++    stamp === "verified"
++      ? "#00E5FF"
++      : stamp === "gated"
++        ? "#FF2DD6"
++        : stamp === "settled"
++          ? "#5FD9A3"
++          : "#7A5CFF";
++
++  return (
++    <div
++      ref={ref}
++      onMouseMove={onMove}
++      onMouseLeave={onLeave}
++      className={`group relative overflow-hidden rounded-ds-sm ${className}`}
++      style={{
++        transform: `perspective(600px) rotateY(${sheen.tilt}deg)`,
++        transition: "transform 0.15s ease-out",
++        willChange: "transform",
++      }}
++    >
++      {/* Thermal paper base */}
++      <div
++        className="relative border border-mineral/60 bg-carbon p-5"
++        style={{
++          backgroundImage:
++            "linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px), " +
++            "linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px)",
++          backgroundSize: "24px 24px",
++        }}
++      >
++        {/* Perforated top edge */}
++        <div
++          aria-hidden
++          className="absolute left-0 right-0 top-0 h-2"
++          style={{
++            background:
++              "repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(255,255,255,0.08) 6px, rgba(255,255,255,0.08) 8px, transparent 8px, transparent 14px)",
++            maskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
++          }}
++        />
++
++        {/* Holographic sheen overlay */}
++        {hologram && (
++          <div
++            aria-hidden
++            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
++            style={{
++              background: `radial-gradient(ellipse 80% 80% at ${sheen.x}% ${sheen.y}%, rgba(0,229,255,0.08) 0%, rgba(122,92,255,0.05) 40%, transparent 70%)`,
++              mixBlendMode: "overlay",
++            }}
++          />
++        )}
++
++        {/* Iridescent stripe */}
++        {hologram && (
++          <div
++            aria-hidden
++            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-30"
++            style={{
++              background: `linear-gradient(${105 + sheen.tilt * 2}deg, transparent 30%, rgba(0,229,255,0.06) 40%, rgba(255,45,214,0.06) 50%, rgba(122,92,255,0.06) 60%, transparent 70%)`,
++            }}
++          />
++        )}
++
++        {/* VOID watermark on extreme tilt */}
++        {hologram && Math.abs(sheen.tilt) > 5 && (
++          <div
++            aria-hidden
++            className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.03]"
++          >
++            <span
++              className="font-arch"
++              style={{
++                fontSize: "clamp(3rem, 10vw, 6rem)",
++                color: "#F6F7FA",
++                transform: `rotate(${-sheen.tilt * 0.5}deg)`,
++              }}
++            >
++              VOID
++            </span>
++          </div>
++        )}
++
++        {/* Content */}
++        <div className="relative z-10">{children}</div>
++
++        {/* Bottom stamp */}
++        {stamp && (
++          <div className="relative z-10 mt-4 flex items-center gap-2 border-t border-dashed border-mineral/40 pt-3">
++            <span
++              className="h-2 w-2 rounded-full"
++              style={{
++                background: stampColor,
++                boxShadow: `0 0 8px 2px ${stampColor}66`,
++              }}
++            />
++            <span
++              className="font-mono text-[9px] uppercase tracking-[0.25em]"
++              style={{ color: stampColor }}
++            >
++              {stamp} · galaxy sports edge
++            </span>
++          </div>
++        )}
++      </div>
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/observatory-beacon.tsx b/apps/web/components/motion/observatory-beacon.tsx
+new file mode 100644
+index 00000000..34ecd984
+--- /dev/null
++++ b/apps/web/components/motion/observatory-beacon.tsx
+@@ -0,0 +1,102 @@
++"use client";
++
++/**
++ * ObservatoryBeacon — The command room is always within reach.
++ *
++ * A fixed-position cyan orb that appears once the visitor scrolls past the
++ * hero. It pulses gently like a distant star, beckoning the visitor back to
++ * the Observatory. Clicking it smooth-scrolls to the top.
++ *
++ * Desktop only. Hidden when near the top. Respects reduced motion.
++ */
++
++import { useEffect, useRef, useState } from "react";
++
++export function ObservatoryBeacon() {
++  const [visible, setVisible] = useState(false);
++  const [hovered, setHovered] = useState(false);
++  const rafRef = useRef(0);
++
++  useEffect(() => {
++    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++    if (reduced) return;
++
++    const threshold = window.innerHeight * 0.6;
++
++    const onScroll = () => {
++      if (rafRef.current) return;
++      rafRef.current = requestAnimationFrame(() => {
++        rafRef.current = 0;
++        setVisible(window.scrollY > threshold);
++      });
++    };
++
++    window.addEventListener("scroll", onScroll, { passive: true });
++    onScroll();
++
++    return () => {
++      window.removeEventListener("scroll", onScroll);
++      if (rafRef.current) cancelAnimationFrame(rafRef.current);
++    };
++  }, []);
++
++  const scrollToTop = () => {
++    window.scrollTo({ top: 0, behavior: "smooth" });
++  };
++
++  return (
++    <button
++      type="button"
++      onClick={scrollToTop}
++      onMouseEnter={() => setHovered(true)}
++      onMouseLeave={() => setHovered(false)}
++      aria-label="Return to Observatory"
++      className="pointer-events-none fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
++      style={{
++        opacity: visible ? 1 : 0,
++        transform: visible ? "translateY(0)" : "translateY(20px)",
++      }}
++    >
++      {/* Tooltip */}
++      <span
++        className="rounded-full border border-mineral bg-eclipse px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-1 transition-all duration-300"
++        style={{
++          opacity: hovered ? 1 : 0,
++          transform: hovered ? "translateX(0)" : "translateX(8px)",
++        }}
++      >
++        Return to Observatory
++      </span>
++
++      {/* The beacon orb */}
++      <span
++        className="relative flex h-10 w-10 items-center justify-center rounded-full"
++        style={{
++          background: "rgba(0, 229, 255, 0.12)",
++          border: "1px solid rgba(0, 229, 255, 0.35)",
++          boxShadow: "0 0 20px rgba(0,229,255,0.15), inset 0 0 12px rgba(0,229,255,0.08)",
++        }}
++      >
++        {/* Pulsing inner glow */}
++        <span
++          className="absolute inset-0 rounded-full"
++          style={{
++            background: "radial-gradient(circle, rgba(0,229,255,0.3) 0%, transparent 70%)",
++            animation: "observatory-beacon-pulse 3s ease-in-out infinite",
++          }}
++        />
++        {/* Core dot */}
++        <span
++          className="relative h-2 w-2 rounded-full bg-orbital-cyan"
++          style={{
++            boxShadow: "0 0 8px 2px rgba(0,229,255,0.6)",
++          }}
++        />
++        {/* Up arrow */}
++        <span className="absolute text-orbital-cyan/70" style={{ fontSize: 10, marginTop: -1 }}>
++          &#9650;
++        </span>
++      </span>
++    </button>
++  );
++}
+diff --git a/apps/web/components/motion/sentient-shell.tsx b/apps/web/components/motion/sentient-shell.tsx
+new file mode 100644
+index 00000000..b1b5b3b6
+--- /dev/null
++++ b/apps/web/components/motion/sentient-shell.tsx
+@@ -0,0 +1,38 @@
++"use client";
++
++/**
++ * SentientShell — The living interface layer.
++ *
++ * Wraps the entire application with ambient sentient systems:
++ *  - GhostJarvis: occasional machine thoughts
++ *  - DreamSequence: idle-mode generative visuals
++ *  - GlitchTruth: electromagnetic interference when data is uncertain
++ *  - ThermalVision: heatmap toggle for conviction
++ *
++ * All state is self-contained. No props needed from server.
++ */
++
++import { useState } from "react";
++import { GhostJarvis } from "./ghost-jarvis";
++import { DreamSequence } from "./dream-sequence";
++import { GlitchTruth } from "./glitch-truth";
++import { ThermalVision } from "./thermal-vision";
++
++export function SentientShell() {
++  const [thermalActive, setThermalActive] = useState(false);
++
++  // Glitch truth infers its own state from environment
++  // In a real implementation this would read from a global store
++  // For now, we show subtle glitch occasionally as ambient texture
++  const [glitchTrigger] = useState(() => Math.random() < 0.15);
++  const glitchLevel = glitchTrigger ? 0.15 : 0;
++
++  return (
++    <>
++      <GhostJarvis />
++      <DreamSequence />
++      <GlitchTruth trigger={glitchTrigger} level={glitchLevel} />
++      <ThermalVision active={thermalActive} onToggle={setThermalActive} />
++    </>
++  );
++}
+diff --git a/apps/web/components/motion/sentient-weather.tsx b/apps/web/components/motion/sentient-weather.tsx
+new file mode 100644
+index 00000000..9b627db8
+--- /dev/null
++++ b/apps/web/components/motion/sentient-weather.tsx
+@@ -0,0 +1,101 @@
++"use client";
++
++/**
++ * SentientWeather — The interface feels the market.
++ *
++ * A background atmosphere layer that reads the live board state and
++ * translates it into environmental conditions:
++ *  - High volatility → stormy magenta lightning, turbulent filaments
++ *  - Strong consensus → calm cyan aurora, steady pulse
++ *  - Data stale → gray haze, slow drift
++ *  - Gate active → ultraviolet fog, held breath
++ *
++ * Pure CSS animations driven by React props. No canvas, cheap to run.
++ */
++
++export type WeatherState = "calm" | "active" | "volatile" | "stale" | "gated";
++
++export function SentientWeather({
++  state = "calm",
++  intensity = 0.5,
++}: {
++  state?: WeatherState;
++  intensity?: number;
++}) {
++  const weatherStyles: Record<WeatherState, React.CSSProperties> = {
++    calm: {
++      background:
++        "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,229,255,0.06) 0%, transparent 60%), " +
++        "radial-gradient(ellipse 60% 50% at 20% 80%, rgba(122,92,255,0.04) 0%, transparent 55%), " +
++        "linear-gradient(180deg, #050608 0%, #080a12 100%)",
++    },
++    active: {
++      background:
++        "radial-gradient(ellipse 70% 50% at 60% 25%, rgba(0,229,255,0.10) 0%, transparent 55%), " +
++        "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(122,92,255,0.08) 0%, transparent 50%), " +
++        "linear-gradient(180deg, #050608 0%, #0a0c14 100%)",
++    },
++    volatile: {
++      background:
++        "radial-gradient(ellipse 60% 45% at 70% 20%, rgba(255,45,214,0.12) 0%, transparent 50%), " +
++        "radial-gradient(ellipse 50% 35% at 25% 75%, rgba(0,229,255,0.06) 0%, transparent 45%), " +
++        "linear-gradient(180deg, #050608 0%, #120810 100%)",
++    },
++    stale: {
++      background:
++        "radial-gradient(ellipse 70% 55% at 50% 40%, rgba(100,100,120,0.05) 0%, transparent 60%), " +
++        "linear-gradient(180deg, #050608 0%, #060608 100%)",
++    },
++    gated: {
++      background:
++        "radial-gradient(ellipse 65% 50% at 50% 35%, rgba(122,92,255,0.10) 0%, transparent 55%), " +
++        "radial-gradient(ellipse 45% 40% at 80% 80%, rgba(255,45,214,0.06) 0%, transparent 50%), " +
++        "linear-gradient(180deg, #050608 0%, #0c0a18 100%)",
++    },
++  };
++
++  const lightningOpacity = state === "volatile" ? intensity * 0.3 : 0;
++  const pulseSpeed = state === "calm" ? "8s" : state === "active" ? "4s" : "2s";
++
++  return (
++    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 transition-all duration-[2000ms]">
++      {/* Base atmosphere */}
++      <div
++        className="absolute inset-0 transition-all duration-[2000ms]"
++        style={weatherStyles[state]}
++      />
++
++      {/* Lightning flicker for volatile state */}
++      {state === "volatile" && (
++        <div
++          className="absolute inset-0"
++          style={{
++            background: "radial-gradient(ellipse 30% 20% at 70% 30%, rgba(255,45,214,0.15), transparent)",
++            animation: `sentient-lightning 3s steps(1) infinite`,
++            opacity: lightningOpacity,
++          }}
++        />
++      )}
++
++      {/* Breathing pulse overlay */}
++      <div
++        className="absolute inset-0"
++        style={{
++          background: "radial-gradient(ellipse 50% 40% at 50% 50%, rgba(0,229,255,0.02), transparent)",
++          animation: `sentient-breathe ${pulseSpeed} ease-in-out infinite`,
++        }}
++      />
++
++      {/* Static noise for stale state */}
++      {state === "stale" && (
++        <div
++          className="absolute inset-0 opacity-[0.03]"
++          style={{
++            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
++            backgroundSize: "128px 128px",
++          }}
++        />
++      )}
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/signal-decode.tsx b/apps/web/components/motion/signal-decode.tsx
+new file mode 100644
+index 00000000..1c54075b
+--- /dev/null
++++ b/apps/web/components/motion/signal-decode.tsx
+@@ -0,0 +1,120 @@
++"use client";
++
++/**
++ * SignalDecode — Text that decrypts from noise.
++ *
++ * When the element scrolls into view, the text animates from random
++ * characters to its final value, like a terminal decoding an intercepted
++ * signal. Uses the brand mono font for maximum intelligence-terminal feel.
++ *
++ * Props:
++ *  - children: the final text string
++ *  - className: additional classes
++ *  - delay: ms before animation starts
++ *  - speed: ms per character decode
++ *
++ * Reduced motion → shows final text instantly.
++ */
++
++import { useEffect, useRef, useState } from "react";
++
++const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
++const SIGNAL_CHARS = "01XYΔΣΩ∑√∞≠≤≥◆●";
++const ALL_CHARS = CHARS + SIGNAL_CHARS;
++
++function randomChar() {
++  return ALL_CHARS[Math.floor(Math.random() * ALL_CHARS.length)];
++}
++
++function prefersReducedMotion(): boolean {
++  if (typeof window === "undefined") return false;
++  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
++}
++
++export function SignalDecode({
++  children,
++  className = "",
++  delay = 0,
++  speed = 24,
++}: {
++  children: string;
++  className?: string;
++  delay?: number;
++  speed?: number;
++}) {
++  const [display, setDisplay] = useState(children);
++  const [started, setStarted] = useState(false);
++  const ref = useRef<HTMLSpanElement | null>(null);
++  const reduced = useRef(prefersReducedMotion());
++
++  useEffect(() => {
++    if (reduced.current) return;
++
++    const el = ref.current;
++    if (!el) return;
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        if (entries[0]?.isIntersecting && !started) {
++          setStarted(true);
++        }
++      },
++      { threshold: 0.3 }
++    );
++    io.observe(el);
++    return () => io.disconnect();
++  }, [started]);
++
++  useEffect(() => {
++    if (!started || reduced.current) return;
++
++    const text = children;
++    const len = text.length;
++    let pos = 0;
++    let raf = 0;
++    let lastTime = 0;
++
++    const tick = (now: number) => {
++      if (now - lastTime < speed) {
++        raf = requestAnimationFrame(tick);
++        return;
++      }
++      lastTime = now;
++
++      if (pos < len) {
++        pos++;
++      }
++
++      let out = "";
++      for (let i = 0; i < len; i++) {
++        if (text[i] === " ") {
++          out += " ";
++        } else if (i < pos) {
++          out += text[i];
++        } else {
++          out += randomChar();
++        }
++      }
++      setDisplay(out);
++
++      if (pos < len) {
++        raf = requestAnimationFrame(tick);
++      }
++    };
++
++    const timer = setTimeout(() => {
++      raf = requestAnimationFrame(tick);
++    }, delay);
++
++    return () => {
++      clearTimeout(timer);
++      cancelAnimationFrame(raf);
++    };
++  }, [started, children, delay, speed]);
++
++  return (
++    <span ref={ref} className={`font-mono ${className}`} aria-label={children}>
++      {display}
++    </span>
++  );
++}
+diff --git a/apps/web/components/motion/signal-room-atmosphere.tsx b/apps/web/components/motion/signal-room-atmosphere.tsx
+new file mode 100644
+index 00000000..351d572e
+--- /dev/null
++++ b/apps/web/components/motion/signal-room-atmosphere.tsx
+@@ -0,0 +1,66 @@
++"use client";
++
++/**
++ * SignalRoomAtmosphere — The living command room, portable.
++ *
++ * Drops the Signal Core WebGL overlay + grid field + spine onto any page.
++ * Configurable intensity so dense data pages get full treatment and
++ * lighter pages get just the ambient glow.
++ *
++ * Modes:
++ *  - "full": WebGL overlay + grid field + spine (homepage, deck)
++ *  - "ambient": Grid field + subtle glow only (content pages)
++ *  - "minimal": Spine only (light pages)
++ */
++
++import { SignalCoreLazy } from "@/components/hero/signal-core-lazy";
++import { SignalSpine } from "@/components/motion/signal-spine";
++
++export function SignalRoomAtmosphere({
++  mode = "ambient",
++  className = "",
++}: {
++  mode?: "full" | "ambient" | "minimal";
++  className?: string;
++}) {
++  return (
++    <>
++      {mode !== "minimal" && (
++        <div
++          aria-hidden
++          className={`pointer-events-none fixed inset-0 z-0 ${className}`}
++        >
++          {/* Grid field drift */}
++          <div
++            className="absolute inset-0"
++            style={{
++              backgroundImage:
++                "linear-gradient(to right, rgba(0, 229, 255, 0.018) 1px, transparent 1px), " +
++                "linear-gradient(to bottom, rgba(0, 229, 255, 0.018) 1px, transparent 1px)",
++              backgroundSize: "64px 64px",
++              maskImage: "radial-gradient(ellipse at center, black 15%, transparent 75%)",
++              animation: "grid-field-drift 30s linear infinite",
++            }}
++          />
++          {/* Ambient volumetric glow */}
++          <div
++            className="absolute inset-0"
++            style={{
++              background:
++                "radial-gradient(ellipse 60% 40% at 70% 20%, rgba(0,229,255,0.04), transparent 60%), " +
++                "radial-gradient(ellipse 50% 30% at 20% 80%, rgba(122,92,255,0.04), transparent 60%)",
++            }}
++          />
++        </div>
++      )}
++
++      {mode === "full" && (
++        <div aria-hidden className="absolute inset-0 -z-10">
++          <SignalCoreLazy />
++        </div>
++      )}
++
++      <SignalSpine />
++    </>
++  );
++}
+diff --git a/apps/web/components/motion/signal-spine.tsx b/apps/web/components/motion/signal-spine.tsx
+new file mode 100644
+index 00000000..220e5c3a
+--- /dev/null
++++ b/apps/web/components/motion/signal-spine.tsx
+@@ -0,0 +1,117 @@
++"use client";
++
++/**
++ * SignalSpine — The journey tracer.
++ *
++ * A fixed-position vertical signal line that traces the visitor's scroll
++ * progress down the page. As you scroll, the spine fills from ultraviolet
++ * (noise) through violet (processing) to cyan (signal), with data packets
++ * traveling along it and occasional magenta fracture pulses.
++ *
++ * This makes the entire homepage feel like one continuous journey through
++ * the Signal Room — from the Observatory at the top, through the Evidence
++ * Vault, to the Gate at the bottom.
++ *
++ * Uses CSS custom properties for performant updates (no React re-renders
++ * on scroll). Reduced motion → static filled line.
++ */
++
++import { useEffect, useRef } from "react";
++
++function prefersReducedMotion(): boolean {
++  if (typeof window === "undefined") return false;
++  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
++}
++
++export function SignalSpine() {
++  const spineRef = useRef<HTMLDivElement | null>(null);
++  const packetsRef = useRef<HTMLDivElement | null>(null);
++
++  useEffect(() => {
++    if (prefersReducedMotion()) return;
++
++    const spine = spineRef.current;
++    const packets = packetsRef.current;
++    if (!spine || !packets) return;
++
++    let raf = 0;
++    let progress = 0;
++
++    const update = () => {
++      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
++      progress = docHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / docHeight)) : 0;
++      spine.style.setProperty("--spine-progress", String(progress));
++    };
++
++    const onScroll = () => {
++      if (raf) return;
++      raf = requestAnimationFrame(() => {
++        raf = 0;
++        update();
++      });
++    };
++
++    window.addEventListener("scroll", onScroll, { passive: true });
++    update();
++
++    return () => {
++      window.removeEventListener("scroll", onScroll);
++      if (raf) cancelAnimationFrame(raf);
++    };
++  }, []);
++
++  return (
++    <div
++      aria-hidden="true"
++      className="pointer-events-none fixed left-4 top-0 z-40 hidden h-full w-1 lg:left-6 lg:block"
++    >
++      {/* The spine track — faint baseline */}
++      <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-mineral/30" />
++
++      {/* The filled spine — grows with scroll */}
++      <div
++        ref={spineRef}
++        className="absolute left-1/2 top-0 w-px -translate-x-1/2 origin-top"
++        style={{
++          height: "calc(var(--spine-progress, 0) * 100%)",
++          background:
++            "linear-gradient(180deg, #7A5CFF 0%, #00E5FF 60%, #5BEEFF 100%)",
++          boxShadow: "0 0 12px rgba(0,229,255,0.4), 0 0 4px rgba(122,92,255,0.6)",
++          transition: "height 0.1s linear",
++        }}
++      />
++
++      {/* Traveling data packets */}
++      <div ref={packetsRef} className="absolute inset-0 overflow-hidden">
++        {[0, 1, 2, 3].map((i) => (
++          <span
++            key={i}
++            className="absolute left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full"
++            style={{
++              background: i % 2 === 0 ? "#00E5FF" : "#7A5CFF",
++              boxShadow: `0 0 8px 2px ${i % 2 === 0 ? "rgba(0,229,255,0.6)" : "rgba(122,92,255,0.5)"}`,
++              animation: `spine-packet-${i} ${6 + i * 2}s linear infinite`,
++              animationDelay: `${i * 1.5}s`,
++              opacity: 0.8,
++            }}
++          />
++        ))}
++      </div>
++
++      {/* The gate marker at bottom — the GSE mark, watching */}
++      <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
++        <svg width="16" height="16" viewBox="0 0 64 64" fill="none" className="opacity-60">
++          <path
++            d="M11 38C8 25 18 12 32 12c9.8 0 18 6.7 20.3 15.7"
++            stroke="rgba(255,45,214,0.7)"
++            strokeWidth="4"
++            strokeLinecap="round"
++            fill="none"
++          />
++          <line x1="10" y1="16" x2="54" y2="50" stroke="rgba(255,45,214,0.7)" strokeWidth="4" strokeLinecap="round" />
++          <circle cx="34" cy="30" r="5" fill="#FF2DD6" />
++        </svg>
++      </div>
++    </div>
++  );
++}
+diff --git a/apps/web/components/motion/signal-state-pulse.tsx b/apps/web/components/motion/signal-state-pulse.tsx
+new file mode 100644
+index 00000000..d011b9ac
+--- /dev/null
++++ b/apps/web/components/motion/signal-state-pulse.tsx
+@@ -0,0 +1,65 @@
++"use client";
++
++/**
++ * SignalStatePulse — Board state, made visible.
++ *
++ * A pulsing orb whose rhythm and intensity reflect the live state of the board.
++ * When rows are active, it beats like a heart. When the board is empty, it
++ * breathes slowly — a quiet promise that the room is still watching.
++ *
++ * Props:
++ *  - intensity: 0–1, where 0 = empty/board quiet, 1 = maximum activity
++ *  - size: pixel diameter (default 32)
++ */
++
++export function SignalStatePulse({
++  intensity = 0.5,
++  size = 32,
++}: {
++  intensity?: number;
++  size?: number;
++}) {
++  // Map intensity to animation speed: 0 → 4s cycle, 1 → 1.2s cycle
++  const duration = 4 - intensity * 2.8;
++  const glowIntensity = 0.3 + intensity * 0.5;
++
++  return (
++    <span
++      className="relative inline-flex items-center justify-center rounded-full"
++      style={{
++        width: size,
++        height: size,
++        background: `rgba(0, 229, 255, ${0.08 + intensity * 0.12})`,
++        border: `1px solid rgba(0, 229, 255, ${0.25 + intensity * 0.35})`,
++      }}
++    >
++      {/* Outer pulse ring */}
++      <span
++        className="absolute inset-0 rounded-full"
++        style={{
++          animation: `signal-pulse-ring ${duration}s ease-in-out infinite`,
++          background: `radial-gradient(circle, rgba(0,229,255,${glowIntensity}) 0%, transparent 70%)`,
++        }}
++      />
++      {/* Middle pulse ring (offset) */}
++      <span
++        className="absolute inset-0 rounded-full"
++        style={{
++          animation: `signal-pulse-ring ${duration * 0.7}s ease-in-out infinite`,
++          animationDelay: `${duration * 0.3}s`,
++          background: `radial-gradient(circle, rgba(122,92,255,${glowIntensity * 0.6}) 0%, transparent 60%)`,
++        }}
++      />
++      {/* Core dot */}
++      <span
++        className="relative rounded-full bg-orbital-cyan"
++        style={{
++          width: size * 0.35,
++          height: size * 0.35,
++          boxShadow: `0 0 ${size * 0.4}px ${size * 0.15}px rgba(0,229,255,${0.4 + intensity * 0.4})`,
++          animation: `signal-pulse-core ${duration * 0.5}s ease-in-out infinite`,
++        }}
++      />
++    </span>
++  );
++}
+diff --git a/apps/web/components/motion/thermal-vision.tsx b/apps/web/components/motion/thermal-vision.tsx
+new file mode 100644
+index 00000000..d8c0f3bd
+--- /dev/null
++++ b/apps/web/components/motion/thermal-vision.tsx
+@@ -0,0 +1,140 @@
++"use client";
++
++/**
++ * ThermalVision — See conviction as temperature.
++ *
++ * A global toggle that transforms the entire interface into a heatmap
++ * of model confidence. Hot picks pulse red. Cold picks fade to ice.
++ * Uncertainty shows as static noise. The entire site becomes a thermal
++ * imaging camera for sports intelligence.
++ *
++ * Implemented as a CSS filter + overlay system. No canvas needed.
++ * The effect reads data-thermal attributes on DOM elements.
++ */
++
++import { useEffect, useState } from "react";
++
++export function ThermalVision({
++  active = false,
++  onToggle,
++}: {
++  active?: boolean;
++  onToggle?: (v: boolean) => void;
++}) {
++  const [enabled, setEnabled] = useState(active);
++
++  useEffect(() => {
++    setEnabled(active);
++  }, [active]);
++
++  const toggle = () => {
++    const next = !enabled;
++    setEnabled(next);
++    onToggle?.(next);
++  };
++
++  return (
++    <>
++      {/* Toggle button */}
++      <button
++        type="button"
++        onClick={toggle}
++        aria-pressed={enabled}
++        className="fixed bottom-6 left-6 z-50 flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all duration-300"
++        style={{
++          borderColor: enabled ? "rgba(255,45,214,0.5)" : "rgba(0,229,255,0.3)",
++          background: enabled ? "rgba(255,45,214,0.1)" : "rgba(0,229,255,0.06)",
++          color: enabled ? "#FF2DD6" : "#00E5FF",
++          boxShadow: enabled
++            ? "0 0 16px rgba(255,45,214,0.2)"
++            : "0 0 12px rgba(0,229,255,0.1)",
++        }}
++      >
++        <span
++          className="h-2 w-2 rounded-full"
++          style={{
++            background: enabled
++              ? "linear-gradient(180deg, #FF2DD6, #FFB454)"
++              : "linear-gradient(180deg, #00E5FF, #7A5CFF)",
++            animation: enabled ? "thermal-pulse-hot 1.5s ease-in-out infinite" : "thermal-pulse-cold 3s ease-in-out infinite",
++          }}
++        />
++        {enabled ? "Thermal ON" : "Thermal"}
++      </button>
++
++      {/* Thermal overlay */}
++      {enabled && (
++        <div
++          aria-hidden="true"
++          className="pointer-events-none fixed inset-0 z-[45]"
++          style={{
++            mixBlendMode: "overlay",
++            background:
++              "radial-gradient(ellipse 60% 50% at 70% 30%, rgba(255,45,214,0.08), transparent 60%), " +
++              "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(0,229,255,0.06), transparent 55%)",
++            animation: "thermal-breathe 4s ease-in-out infinite",
++          }}
++        />
++      )}
++    </>
++  );
++}
++
++/**
++ * ThermalBadge — Apply to any element to give it thermal coloring.
++ *
++ * temperature: -1 (ice cold) to 1 (white hot)
++ */
++export function ThermalBadge({
++  temperature = 0,
++  children,
++  className = "",
++}: {
++  temperature?: number;
++  children: React.ReactNode;
++  className?: string;
++}) {
++  const isHot = temperature > 0.3;
++  const isCold = temperature < -0.3;
++
++  return (
++    <span
++      className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider transition-all duration-500 ${className}`}
++      style={{
++        background: isHot
++          ? `rgba(255,45,214,${0.08 + temperature * 0.15})`
++          : isCold
++            ? `rgba(0,229,255,${0.08 + Math.abs(temperature) * 0.15})`
++            : "rgba(122,92,255,0.06)",
++        border: `1px solid ${isHot
++          ? `rgba(255,45,214,${0.2 + temperature * 0.3})`
++          : isCold
++            ? `rgba(0,229,255,${0.2 + Math.abs(temperature) * 0.3})`
++            : "rgba(122,92,255,0.15)"}`,
++        color: isHot
++          ? `rgba(255,${180 - temperature * 80},${214 - temperature * 50},1)`
++          : isCold
++            ? `rgba(${0 + Math.abs(temperature) * 80},${229 - Math.abs(temperature) * 50},255,1)`
++            : "#8B97AB",
++        boxShadow: isHot
++          ? `0 0 ${8 + temperature * 12}px rgba(255,45,214,${0.15 + temperature * 0.2})`
++          : isCold
++            ? `0 0 ${8 + Math.abs(temperature) * 12}px rgba(0,229,255,${0.15 + Math.abs(temperature) * 0.2})`
++            : "none",
++      }}
++    >
++      <span
++        className="h-1 w-1 rounded-full"
++        style={{
++          background: isHot ? "#FF2DD6" : isCold ? "#00E5FF" : "#7A5CFF",
++          animation: isHot
++            ? "thermal-pulse-hot 1.2s ease-in-out infinite"
++            : isCold
++              ? "thermal-pulse-cold 2.4s ease-in-out infinite"
++              : "none",
++        }}
++      />
++      {children}
++    </span>
++  );
++}
+diff --git a/apps/web/components/motion/voice-waveform.tsx b/apps/web/components/motion/voice-waveform.tsx
+new file mode 100644
+index 00000000..5fd1fe25
+--- /dev/null
++++ b/apps/web/components/motion/voice-waveform.tsx
+@@ -0,0 +1,117 @@
++"use client";
++
++/**
++ * VoiceWaveform — The intelligence speaking.
++ *
++ * A canvas-based audio waveform visualization that ripples outward from a
++ * central point in concentric rings of cyan light. The waveform breathes and
++ * shifts like a living voice — calm, authoritative, alive.
++ *
++ * Used in the "Jarvis is speaking" hero variant and the Command Deck page.
++ * Reduced motion → static rings.
++ */
++
++import { useEffect, useRef } from "react";
++
++function prefersReducedMotion(): boolean {
++  if (typeof window === "undefined") return false;
++  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
++}
++
++export function VoiceWaveform({ className }: { className?: string }) {
++  const canvasRef = useRef<HTMLCanvasElement | null>(null);
++
++  useEffect(() => {
++    const canvas = canvasRef.current;
++    if (!canvas) return;
++    const ctx = canvas.getContext("2d");
++    if (!ctx) return;
++
++    const reduced = prefersReducedMotion();
++    const dpr = Math.min(window.devicePixelRatio || 1, 2);
++
++    let w = 0, h = 0;
++    const resize = () => {
++      const rect = canvas.getBoundingClientRect();
++      w = Math.floor(rect.width * dpr);
++      h = Math.floor(rect.height * dpr);
++      canvas.width = w;
++      canvas.height = h;
++    };
++    resize();
++
++    let raf = 0;
++    let time = 0;
++
++    const draw = () => {
++      ctx.clearRect(0, 0, w, h);
++      if (!reduced) time += 1;
++
++      const cx = w / 2;
++      const cy = h * 0.55;
++      const maxRadius = Math.min(w, h) * 0.45;
++
++      // Draw concentric waveform rings
++      const ringCount = 6;
++      for (let i = 0; i < ringCount; i++) {
++        const baseRadius = (i + 1) * (maxRadius / ringCount);
++        const waveOffset = Math.sin(time * 0.03 + i * 0.8) * 8 * dpr;
++        const radius = baseRadius + waveOffset;
++        const alpha = 0.15 - i * 0.02;
++
++        ctx.beginPath();
++        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
++        ctx.strokeStyle = `rgba(0, 229, 255, ${alpha})`;
++        ctx.lineWidth = 1 * dpr;
++        ctx.stroke();
++
++        // Add arc segments that "speak" — thicker where the wave peaks
++        const speakAngle = time * 0.01 + i * 0.5;
++        const arcStart = speakAngle;
++        const arcEnd = speakAngle + 0.3 + Math.sin(time * 0.05 + i) * 0.2;
++        ctx.beginPath();
++        ctx.arc(cx, cy, radius, arcStart, arcEnd);
++        ctx.strokeStyle = `rgba(0, 229, 255, ${alpha + 0.15})`;
++        ctx.lineWidth = 2 * dpr;
++        ctx.stroke();
++      }
++
++      // Central glow
++      const glowRadius = 20 * dpr + Math.sin(time * 0.04) * 6 * dpr;
++      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowRadius * 3);
++      glow.addColorStop(0, "rgba(0, 229, 255, 0.25)");
++      glow.addColorStop(0.5, "rgba(0, 229, 255, 0.08)");
++      glow.addColorStop(1, "rgba(0, 229, 255, 0)");
++      ctx.fillStyle = glow;
++      ctx.beginPath();
++      ctx.arc(cx, cy, glowRadius * 3, 0, Math.PI * 2);
++      ctx.fill();
++
++      // Core dot
++      ctx.fillStyle = "rgba(0, 229, 255, 0.9)";
++      ctx.beginPath();
++      ctx.arc(cx, cy, 3 * dpr, 0, Math.PI * 2);
++      ctx.fill();
++
++      raf = requestAnimationFrame(draw);
++    };
++
++    raf = requestAnimationFrame(draw);
++    const ro = new ResizeObserver(resize);
++    ro.observe(canvas);
++
++    return () => {
++      cancelAnimationFrame(raf);
++      ro.disconnect();
++    };
++  }, []);
++
++  return (
++    <canvas
++      ref={canvasRef}
++      aria-hidden="true"
++      className={className}
++      style={{ display: "block", width: "100%", height: "100%" }}
++    />
++  );
++}
+diff --git a/apps/web/components/ui/footer.tsx b/apps/web/components/ui/footer.tsx
+index 821cc256..b70c53a2 100644
+--- a/apps/web/components/ui/footer.tsx
++++ b/apps/web/components/ui/footer.tsx
+@@ -1,5 +1,6 @@
+ import Link from "next/link";
+ import { BrandLockup } from "@/components/brand/brand-lockup";
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+ import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
+ 
+ const PRODUCT_LINKS = [
+@@ -57,8 +58,11 @@ export function Footer() {
+   return (
+     <footer className="footer">
+       {/* Ambient wordmark — closing brand statement under the link columns */}
+-      <div className="footer-wordmark" aria-hidden="true">
+-        GALAXY SPORTS EDGE
++      <div className="footer-wordmark group relative" aria-hidden="true">
++        <span className="transition-opacity duration-500 group-hover:opacity-0">GALAXY SPORTS EDGE</span>
++        <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
++          <LogoMarkInline size={28} pulse glow />
++        </span>
+       </div>
+       <div className="container">
+         <div className="footer-inner">
+diff --git a/apps/web/components/ui/galaxy-cursor.tsx b/apps/web/components/ui/galaxy-cursor.tsx
+index 28fa43fe..07457349 100644
+--- a/apps/web/components/ui/galaxy-cursor.tsx
++++ b/apps/web/components/ui/galaxy-cursor.tsx
+@@ -5,16 +5,28 @@
+  * pointer 1:1 and a lagging orbital ring that eases after it (rAF lerp,
+  * zero React re-renders). The ring swells over interactive elements.
+  *
++ * v2.0 — Added signal ripples on click, like touching the surface of the
++ * command room interface. Ripples propagate outward in orbital cyan and fade.
++ *
+  * Self-disabling: touch/coarse pointers and prefers-reduced-motion get the
+  * native cursor and nothing else. The native cursor is never hidden — the
+  * overlay rides WITH it (mix-blend difference), so usability never regresses.
+  */
+ 
+-import { useEffect, useRef } from "react";
++import { useEffect, useRef, useState } from "react";
++
++interface Ripple {
++  id: number;
++  x: number;
++  y: number;
++}
++
++let rippleId = 0;
+ 
+ export function GalaxyCursor() {
+   const dotRef = useRef<HTMLDivElement | null>(null);
+   const ringRef = useRef<HTMLDivElement | null>(null);
++  const [ripples, setRipples] = useState<Ripple[]>([]);
+ 
+   useEffect(() => {
+     const fine = window.matchMedia("(pointer: fine)").matches;
+@@ -38,6 +50,14 @@ export function GalaxyCursor() {
+     const onOver = (e: MouseEvent) => {
+       hot = Boolean((e.target as Element | null)?.closest?.("a, button, [role='button']"));
+     };
++    const onClick = (e: MouseEvent) => {
++      rippleId++;
++      const id = rippleId;
++      setRipples((prev) => [...prev.slice(-3), { id, x: e.clientX, y: e.clientY }]);
++      setTimeout(() => {
++        setRipples((prev) => prev.filter((r) => r.id !== id));
++      }, 900);
++    };
+     const loop = () => {
+       rx += (x - rx) * 0.16;
+       ry += (y - ry) * 0.16;
+@@ -48,16 +68,35 @@ export function GalaxyCursor() {
+ 
+     window.addEventListener("mousemove", onMove, { passive: true });
+     window.addEventListener("mouseover", onOver, { passive: true });
++    window.addEventListener("click", onClick, { passive: true });
+     raf = requestAnimationFrame(loop);
+     return () => {
+       window.removeEventListener("mousemove", onMove);
+       window.removeEventListener("mouseover", onOver);
++      window.removeEventListener("click", onClick);
+       cancelAnimationFrame(raf);
+     };
+   }, []);
+ 
+   return (
+     <>
++      {/* Click ripples — orbital cyan shockwaves */}
++      {ripples.map((r) => (
++        <span
++          key={r.id}
++          aria-hidden
++          className="pointer-events-none fixed left-0 top-0 z-[89] rounded-full border border-orbital-cyan/60"
++          style={{
++            left: r.x,
++            top: r.y,
++            width: 64,
++            height: 64,
++            transform: "translate(-50%, -50%)",
++            animation: "cursor-ripple-expand 800ms ease-out forwards",
++            willChange: "transform, opacity",
++          }}
++        />
++      ))}
+       <div
+         ref={dotRef}
+         aria-hidden
+diff --git a/apps/web/components/ui/methodology-section.tsx b/apps/web/components/ui/methodology-section.tsx
+index b1958016..699af1fd 100644
+--- a/apps/web/components/ui/methodology-section.tsx
++++ b/apps/web/components/ui/methodology-section.tsx
+@@ -1,3 +1,4 @@
++import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+ import { getClaim } from "@/lib/trust-claims";
+ 
+ /**
+@@ -90,6 +91,10 @@ export function MethodologySection() {
+       className="relative isolate border-y border-mineral bg-carbon px-4 py-20 sm:px-6 lg:px-8"
+       aria-labelledby="methodology-heading"
+     >
++      {/* Watermark — the mark watches the methodology */}
++      <div aria-hidden className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 opacity-[0.03] sm:right-16">
++        <LogoMarkInline size={200} />
++      </div>
+       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
+       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
+       <div className="mx-auto max-w-7xl">
+diff --git a/apps/web/components/ui/nav.tsx b/apps/web/components/ui/nav.tsx
+index 4af42bd4..ca35fb10 100644
+--- a/apps/web/components/ui/nav.tsx
++++ b/apps/web/components/ui/nav.tsx
+@@ -54,6 +54,7 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
+     items: [
+       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
+       { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
++      { label: "Command Deck", href: "/deck", desc: "The owner's intelligence command deck — watch the company run itself" },
+       { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
+       { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
+       { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the closing line?" },
+diff --git a/apps/web/lib/brand.ts b/apps/web/lib/brand.ts
+index 94e67a61..b8f4d800 100644
+--- a/apps/web/lib/brand.ts
++++ b/apps/web/lib/brand.ts
+@@ -29,6 +29,12 @@ export const BRAND_POSITIONING =
+ /** Two-letter monogram used in compact lockups when the icon SVG is overkill. */
+ export const BRAND_MONOGRAM = "GSE";
+ 
++/** Galaxy Sports Network — the content studio LLC. */
++export const GSN_NAME = "Galaxy Sports Network";
++export const GSN_SHORT_NAME = "Galaxy Sports Network";
++export const GSN_TAGLINE = "The transmission, not the blog.";
++export const GSN_MONOGRAM = "GSN";
++
+ /** Public support / general inquiries inbox. Single front-door for the brand. */
+ export const SUPPORT_EMAIL = "hq@galaxysportsedge.com";
+ 
+diff --git a/apps/web/lib/visual-production/asset-manifest.ts b/apps/web/lib/visual-production/asset-manifest.ts
+index 7d6dd274..98762fe6 100644
+--- a/apps/web/lib/visual-production/asset-manifest.ts
++++ b/apps/web/lib/visual-production/asset-manifest.ts
+@@ -18,10 +18,7 @@ export interface PlateManifest {
+ const OBSIDIAN = "#05060A";
+ 
+ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
+-  // Cinematic-entrance backdrop. Calm, restrained deep-space still (Higgsfield):
+-  // a distant galaxy top-left, a soft violet wash along the bottom, and a large
+-  // dark center reserved for the entrance copy. Replaces the old real-time WebGL
+-  // warp tunnel (16k particles) — a static plate is near-zero GPU cost.
++  // Cinematic-entrance backdrop. Calm deep-space still:
+   "intro-galaxy": {
+     gradient:
+       `radial-gradient(48% 42% at 18% 16%, rgba(34,211,238,0.10), transparent 62%), ` +
+@@ -29,6 +26,47 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
+       `linear-gradient(180deg, ${OBSIDIAN} 0%, #070810 60%, ${OBSIDIAN} 100%)`,
+     still: "/immersive/intro-galaxy.webp",
+   },
++  // Signal Room hero — the new flagship intelligence command room
++  "signal-room-hero": {
++    gradient:
++      `radial-gradient(70% 60% at 78% 18%, rgba(34,211,238,0.10), transparent 60%), ` +
++      `radial-gradient(60% 55% at 12% 80%, rgba(139,92,246,0.14), transparent 65%), ` +
++      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
++    still: "/immersive/signal-room-hero-a.webp",
++    motion: "/immersive/signal-room-hero.mp4",
++  },  // The Owner's Command Deck — a single operator watching the company run itself
++  "command-deck": {
++    gradient:
++      `radial-gradient(70% 60% at 50% 35%, rgba(0,229,255,0.08), transparent 60%), ` +
++      `radial-gradient(50% 50% at 85% 75%, rgba(122,92,255,0.10), transparent 65%), ` +
++      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
++    still: "/immersive/command-deck-wide-a.webp",
++    motion: "/immersive/command-deck-motion.mp4",
++  },
++  "command-deck-alt": {
++    gradient:
++      `radial-gradient(70% 60% at 50% 35%, rgba(0,229,255,0.08), transparent 60%), ` +
++      `radial-gradient(50% 50% at 15% 80%, rgba(255,45,214,0.08), transparent 65%), ` +
++      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
++    still: "/immersive/command-deck-wide-b.webp",
++  },
++  // Jarvis is speaking — the intelligence core, alive
++  "jarvis-speaking": {
++    gradient:
++      `radial-gradient(60% 50% at 60% 45%, rgba(0,229,255,0.12), transparent 55%), ` +
++      `radial-gradient(50% 40% at 30% 70%, rgba(122,92,255,0.10), transparent 60%), ` +
++      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
++    still: "/immersive/jarvis-speaking-a.webp",
++  },
++  "jarvis-speaking-alt": {
++    gradient:
++      `radial-gradient(60% 50% at 55% 50%, rgba(0,229,255,0.10), transparent 55%), ` +
++      `radial-gradient(50% 40% at 25% 75%, rgba(122,92,255,0.08), transparent 60%), ` +
++      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
++    still: "/immersive/jarvis-speaking-b.webp",
++  },
++
++  // Legacy hero — preserved for fallback
+   "home-hero-cosmos": {
+     gradient:
+       `radial-gradient(70% 60% at 78% 18%, rgba(34,211,238,0.10), transparent 60%), ` +
+diff --git a/apps/web/public/audio/cod-menu-theme.m4a b/apps/web/public/audio/cod-menu-theme.m4a
+new file mode 100644
+index 00000000..879619c5
+Binary files /dev/null and b/apps/web/public/audio/cod-menu-theme.m4a differ
+diff --git a/apps/web/public/audio/montage-hype.m4a b/apps/web/public/audio/montage-hype.m4a
+new file mode 100644
+index 00000000..b21f31d4
+Binary files /dev/null and b/apps/web/public/audio/montage-hype.m4a differ
+diff --git a/apps/web/public/audio/victory-sting.m4a b/apps/web/public/audio/victory-sting.m4a
+new file mode 100644
+index 00000000..87ff6156
+Binary files /dev/null and b/apps/web/public/audio/victory-sting.m4a differ
+diff --git a/apps/web/public/immersive/command-deck-motion.mp4 b/apps/web/public/immersive/command-deck-motion.mp4
+new file mode 100644
+index 00000000..653d274b
+Binary files /dev/null and b/apps/web/public/immersive/command-deck-motion.mp4 differ
+diff --git a/apps/web/public/immersive/command-deck-wide-a.webp b/apps/web/public/immersive/command-deck-wide-a.webp
+new file mode 100644
+index 00000000..040b96fd
+Binary files /dev/null and b/apps/web/public/immersive/command-deck-wide-a.webp differ
+diff --git a/apps/web/public/immersive/command-deck-wide-b.webp b/apps/web/public/immersive/command-deck-wide-b.webp
+new file mode 100644
+index 00000000..c9e2dd3e
+Binary files /dev/null and b/apps/web/public/immersive/command-deck-wide-b.webp differ
+diff --git a/apps/web/public/immersive/jarvis-speaking-a.webp b/apps/web/public/immersive/jarvis-speaking-a.webp
+new file mode 100644
+index 00000000..6704ab44
+Binary files /dev/null and b/apps/web/public/immersive/jarvis-speaking-a.webp differ
+diff --git a/apps/web/public/immersive/jarvis-speaking-b.webp b/apps/web/public/immersive/jarvis-speaking-b.webp
+new file mode 100644
+index 00000000..b305cc1f
+Binary files /dev/null and b/apps/web/public/immersive/jarvis-speaking-b.webp differ
+diff --git a/apps/web/public/immersive/signal-room-hero-a.webp b/apps/web/public/immersive/signal-room-hero-a.webp
+new file mode 100644
+index 00000000..4a5b4036
+Binary files /dev/null and b/apps/web/public/immersive/signal-room-hero-a.webp differ
+diff --git a/apps/web/public/immersive/signal-room-hero-b.webp b/apps/web/public/immersive/signal-room-hero-b.webp
+new file mode 100644
+index 00000000..9156e610
+Binary files /dev/null and b/apps/web/public/immersive/signal-room-hero-b.webp differ
+diff --git a/apps/web/public/immersive/signal-room-hero.mp4 b/apps/web/public/immersive/signal-room-hero.mp4
+new file mode 100644
+index 00000000..58d23560
+Binary files /dev/null and b/apps/web/public/immersive/signal-room-hero.mp4 differ
+diff --git a/apps/web/public/immersive/signal-room-schematic.webp b/apps/web/public/immersive/signal-room-schematic.webp
+new file mode 100644
+index 00000000..677f3d3f
+Binary files /dev/null and b/apps/web/public/immersive/signal-room-schematic.webp differ
+diff --git a/apps/web/public/immersive/signal-room-vertical.webp b/apps/web/public/immersive/signal-room-vertical.webp
+new file mode 100644
+index 00000000..f834bf17
+Binary files /dev/null and b/apps/web/public/immersive/signal-room-vertical.webp differ
+diff --git a/docs/visual-qa/2026-06-18/_artifacts/.last-run.json b/docs/visual-qa/2026-06-18/_artifacts/.last-run.json
+new file mode 100644
+index 00000000..5fca3f84
+--- /dev/null
++++ b/docs/visual-qa/2026-06-18/_artifacts/.last-run.json
+@@ -0,0 +1,4 @@
++{
++  "status": "failed",
++  "failedTests": []
++}
+\ No newline at end of file
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/REPORT.md b/handoff/claude/stripe-test-verification-2026-06-19/REPORT.md
+new file mode 100644
+index 00000000..fd9c743d
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/REPORT.md
+@@ -0,0 +1,199 @@
++# Stripe TEST Verification — Galaxy Sports Edge
++
++**Date:** 2026-06-19 (run completed 2026-06-20 00:05–00:10 UTC)
++**Branch/commit:** `main` @ `d52b62a8`
++**Stripe account:** `acct_1TZIZTBVaxqE8bKV` — "PickPilot sandbox", `livemode=false` (TEST confirmed)
++**Method:** Read-only Stripe REST API + 3 controlled TEST subscribe cycles + prod DB reads. No LIVE keys touched, no prod env vars modified, no migrations, nothing pushed. All test data cleaned up.
++
++---
++
++## Summary
++
++**VERDICT: FAIL — launch blocker on the Stripe price-ID wiring. Do NOT swap to LIVE yet.**
++
++The billing *pipeline itself is healthy and proven end-to-end*: a Stripe TEST subscription → webhook delivered to production → signature verified with the live `STRIPE_WEBHOOK_SECRET` → DB upsert → tier resolved → entitlement granted, all in ~2 seconds, returning HTTP 200. TEST-mode keys and webhook secret are correct.
++
++**But the Pro *monthly* price ID wired in Vercel Production matches *neither* real active Pro monthly price in Stripe.** Subscribing to the $14.99 price (the one the public pricing page shows) granted only **FREE**; subscribing to the $19 price (the seeded `gse-pro-monthly`) also granted only **FREE**; subscribing to a price ID I *could* read (`STRIPE_PRO_PRICE_ID` legacy → $9.99/wk) correctly granted **PRO**. Conclusion: `STRIPE_PRO_MONTHLY_PRICE_ID` (and, by strong inference, the annual + both Elite price vars) holds a stale/wrong/empty value. A customer purchasing **Pro Monthly** through live checkout cannot be confirmed to receive PRO access — and if the var is empty, checkout returns HTTP 503 "Pricing for PRO (month) is not configured yet." This must be corrected and re-verified before LIVE.
++
++Secondary flags: duplicate empty products in Stripe; the single webhook endpoint targets `sports-web-nine.vercel.app` (not the custom domain); a coverage gap on `invoice.payment_action_required`; and `currentPeriodStart/End` persisting as `null` on sync.
++
++---
++
++## Products + prices
++
++Active products (4 — **2 are empty duplicates**):
++
++| Product ID | Name | metadata.lookup | Has prices? |
++|---|---|---|---|
++| `prod_UYl0znu89tn7Xm` | Galaxy Sports Edge Pro | `gse-pro` | ✅ yes (canonical) |
++| `prod_UYl0jLm8veHE5P` | Galaxy Sports Edge Elite | `gse-elite` | ✅ yes (canonical) |
++| `prod_Ubo5JpzkZphBDI` | Galaxy Sports Edge Pro | *(none)* | ⚠️ empty duplicate |
++| `prod_Ubo5YBnznouxyu` | Galaxy Sports Edge Elite | *(none)* | ⚠️ empty duplicate |
++
++Active recurring prices (all on the two canonical products):
++
++| Tier | $ | Interval | Price ID | lookup_key | Note |
++|---|---|---|---|---|---|
++| Pro | **14.99** | month | `price_1ThXsJBVaxqE8bKVikLl91hw` | *(null)* | matches public page; **no lookup_key / no tier metadata** |
++| Pro | **19.00** | month | `price_1TZdUoBVaxqE8bKVBQgXWuqB` | `gse-pro-monthly` | stale amount (older seed) |
++| Pro | 9.99 | week | `price_1TcaZoBVaxqE8bKVz0QwsGDP` | `pro_weekly` | = legacy `STRIPE_PRO_PRICE_ID` |
++| Pro | 99.00 | year | `price_1ThXrHBVaxqE8bKVJyuOYAsF` | `gse-pro-annual` | matches page |
++| Elite | **24.99** | month | `price_1ThXsJBVaxqE8bKV1Zy6QbPu` | *(null)* | matches public page; **no lookup_key / no tier metadata** |
++| Elite | **49.00** | month | `price_1TZdUpBVaxqE8bKVUm2EyL1t` | `gse-elite-monthly` | stale amount (older seed) |
++| Elite | 13.99 | week | `price_1TcaZpBVaxqE8bKVSGKamBrD` | `elite_weekly` | = legacy `STRIPE_ELITE_PRICE_ID` |
++| Elite | 179.00 | year | `price_1ThXrIBVaxqE8bKVWNihIdn6` | `gse-elite-annual` | matches page |
++
++**Pricing source of truth** (`apps/web/lib/pricing/pricing-phases.ts`, FOUNDING phase; also the seeder catalog): **Pro $14.99/mo · $99/yr, Elite $24.99/mo · $179/yr.**
++
++**Flags:**
++- **Two monthly prices exist per tier.** The $14.99 / $24.99 prices match the public page; the $19 / $49 prices are stale older-seed amounts. (The task brief's expectation of "$19 Pro / $49 Elite" is itself out of date — the codebase's own source of truth is $14.99 / $24.99.)
++- The correct ($14.99 / $24.99) monthly prices have **no `lookup_key` and no `metadata.tier`** → fragile; the idempotent seeder (which keys off `lookup_key`) will not manage or correct them.
++- The `seed-stripe-prices.mjs` CATALOG says $14.99 / $24.99 but the existing `gse-pro-monthly` / `gse-elite-monthly` prices are $19 / $49. Because the seeder is idempotent **by `lookup_key`**, re-running it will *not* fix the amounts (`scripts/seed-stripe-prices.mjs:102-119`).
++- 2 empty duplicate products would re-confuse a LIVE seed.
++
++---
++
++## Webhook endpoint + event coverage
++
++**One** endpoint configured:
++
++| Field | Value |
++|---|---|
++| Endpoint ID | `we_1TcaG4BVaxqE8bKV3snV1zxQ` |
++| URL | `https://sports-web-nine.vercel.app/api/webhooks/stripe` |
++| Status | `enabled` |
++| Secret format | not returnable via API (Stripe returns it only at creation). `STRIPE_WEBHOOK_SECRET` in Vercel **confirmed present and starts with `whsec_`**; **proven correct by side-effect** — all 6 test deliveries verified signature and returned 200. |
++
++Coverage cross-reference vs handler (`apps/web/app/api/webhooks/stripe/route.ts:60-143`):
++
++| Event | Endpoint sends? | Handler handles? | Status |
++|---|---|---|---|
++| `checkout.session.completed` | ✅ | ✅ | OK |
++| `customer.subscription.created` | ✅ | ✅ | OK |
++| `customer.subscription.updated` | ✅ | ✅ | OK |
++| `customer.subscription.deleted` | ✅ | ✅ | OK |
++| `invoice.payment_succeeded` | ✅ | ✅ | OK |
++| `invoice.payment_failed` | ✅ | ✅ | OK |
++| `invoice.payment_action_required` | ❌ **not subscribed** | ✅ handled (`route.ts:105`) | ⚠️ **GAP** |
++
++**Flags:**
++- ⚠️ **Endpoint targets the deployment alias `sports-web-nine.vercel.app`, not the custom domain.** No endpoint targets `https://www.galaxysportsedge.com/api/webhooks/stripe` (nor the apex `galaxysportsedge.com`, which is `NEXT_PUBLIC_APP_URL`/`NEXTAUTH_URL`). It works today, but it's fragile for LIVE: if the deployment alias changes, webhooks silently break. Point the LIVE endpoint at the stable custom domain.
++- ⚠️ **Coverage gap:** the handler implements `invoice.payment_action_required` (3DS/SCA dunning) but the endpoint isn't subscribed to it → SCA/action-required events never reach the handler. Low impact for typical US cards; matters for SCA/international at LIVE. No reverse gap — every subscribed event is handled.
++
++---
++
++## Vercel price-ID cross-reference (Step 2)
++
++`vercel env ls` confirms all 4 are set (Production scope, Encrypted/Sensitive):
++
++| Vercel var | Readable? | Finding |
++|---|---|---|
++| `STRIPE_PRO_MONTHLY_PRICE_ID` | ❌ Sensitive → pulls blank | **Does NOT match $14.99 or $19** (both → FREE in prod, see Step 3). Value unknown/unverifiable. |
++| `STRIPE_PRO_ANNUAL_PRICE_ID` | ❌ Sensitive → pulls blank | Not testable without reading value; inference: likely same misconfiguration. |
++| `STRIPE_ELITE_MONTHLY_PRICE_ID` | ❌ Sensitive → pulls blank | Not directly tested; same risk class as Pro monthly. |
++| `STRIPE_ELITE_ANNUAL_PRICE_ID` | ❌ Sensitive → pulls blank | Not directly tested; same risk class. |
++| `STRIPE_PRO_PRICE_ID` (legacy) | ✅ readable | = `price_1TcaZoBVaxqE8bKVz0QwsGDP` ($9.99/wk) — **maps to PRO correctly** (proven). |
++| `STRIPE_ELITE_PRICE_ID` (legacy) | ✅ readable | = `price_1TcaZpBVaxqE8bKVSGKamBrD` ($13.99/wk). |
++
++The 4 launch-critical price vars are Vercel **Sensitive** (write-only) and cannot be read via `env pull` or API. The discovery route of minting a session to read the value off the live checkout endpoint was correctly **blocked** as an auth-bypass and was not pursued. They were therefore probed **by side-effect** through the subscribe cycle below.
++
++---
++
++## End-to-end subscribe cycle results (Step 3)
++
++Three controlled TEST subscriptions, each: created user → Stripe customer → attached test PM `pm_card_visa` (4242 4242 4242 4242) → `POST /v1/subscriptions` with `metadata.userId` → polled prod DB for webhook side-effects.
++
++| # | Price tested | $ | Sub status | Invoice | Webhook fired (≤8s) | **DB tier** | Result |
++|---|---|---|---|---|---|---|---|
++| 1 | `price_1ThXsJ…ikLl91hw` ($14.99 mo, page price) | 14.99 | `active` | `paid` | ✅ 2 events, 200 | **FREE** ❌ | not the wired price |
++| 2 | `price_1TZdUo…BQgXWuqB` ($19 mo, gse-pro-monthly) | 19.00 | `active` | `paid` | ✅ 2 events, 200 | **FREE** ❌ | not the wired price |
++| 3 | `price_1TcaZo…z0QwsGDP` ($9.99 wk, = `STRIPE_PRO_PRICE_ID`) | 9.99 | `active` | `paid` | ✅ 2 events, 200 | **PRO** ✅ | pipeline proven healthy |
++
++Timeline (UTC), representative — Test 3 (the PASS path):
++```
++00:09:25.7  user created (cmqllopm5…)
++00:09:26.3  POST /v1/customers          → 200  cus_UjfpQTPXUvG0hh
++00:09:27.0  POST /payment_methods/pm_card_visa/attach → 200 (last4 4242)
++00:09:30.1  POST /v1/subscriptions      → 200  sub_1TkCTT…  active  invoice paid $9.99
++00:09:30.66 webhook customer.subscription.created processed (DB row)
++00:09:30.82 webhook invoice.payment_succeeded   processed (DB row)
++00:09:32.2  DB Subscription.tier = PRO   (≈2s after subscribe)
++```
++
++**Interpretation:** Test 3 proves the production runtime *does* carry the Stripe price env and `getTierFromPriceId` works (`route.ts:222-237`). Tests 1 & 2 therefore prove `STRIPE_PRO_MONTHLY_PRICE_ID ∉ {$14.99, $19}` — i.e. it is not either real active Pro monthly price. The two failures are **not** a pipeline defect; they are a **wiring defect** on the monthly/annual price vars.
++
++---
++
++## Webhook log evidence (Vercel)
++
++`npx vercel logs sports-web-nine.vercel.app` — all six deliveries returned 200 at the exact subscribe timestamps (times shown CDT = UTC−5):
++```
++19:09:30.70  λ POST /api/webhooks/stripe   200     (test 3)
++19:09:30.43  λ POST /api/webhooks/stripe   200     (test 3)
++19:07:33.43  λ POST /api/webhooks/stripe   200     (test 2)
++19:07:33.14  λ POST /api/webhooks/stripe   200     (test 2)
++19:05:33.05  λ POST /api/webhooks/stripe   200     (test 1)
++19:05:32.77  λ POST /api/webhooks/stripe   200     (test 1)
++```
++Corroborated in-DB: each delivery wrote a `webhook_events` row (only written *after* successful signature verification + handling — `route.ts:43-49`).
++
++---
++
++## Entitlement evidence
++
++Resolver mirrored from `apps/web/lib/entitlements.ts:getUserEntitlements` (status ACTIVE/TRIALING OR PAST_DUE-within-7d) + `packages/types getEntitlements`:
++
++| Test user | Price | DB tier | `canSeePremiumPicks` | `dailyPickLimit` |
++|---|---|---|---|---|
++| `…1781913927000@…` | $14.99 | FREE | **false** ❌ | 2 |
++| `…1781914044001@…` | $19 | FREE | **false** ❌ | 2 |
++| `…1781914164002@…` | $9.99/wk | **PRO** | **true** ✅ | null |
++
++So the entitlement *read path* is correct given the stored tier — the failure is upstream, in what tier gets stored, which is driven by the price-ID wiring.
++
++---
++
++## Cleanup confirmation
++
++- 3 Stripe TEST customers deleted (`cus_UjflbQt0zvmQKe`, `cus_UjfntwBN0qBjCN`, `cus_UjfpQTPXUvG0hh` → all `deleted:true`, re-confirmed via GET); customer deletion cancels their subscriptions.
++- DB purge (surgical — webhook_events filtered to only those whose payload referenced our test customers/subs; **no blanket delete**): 9 webhook_events, 3 subscriptions, 3 users removed.
++- **Post-cleanup counts: users=2 (original baseline), subscriptions=0, webhook_events=0** — restored to exact pre-test state.
++- Temp prod env pull (contained secrets) deleted from `%TEMP%`.
++
++---
++
++## Verdict + next action
++
++### FAIL — fix the price-ID wiring, then re-verify TEST, *then* swap LIVE.
++
++**Blocker (must fix before launch):** `STRIPE_PRO_MONTHLY_PRICE_ID` in Vercel Production matches no real active Pro monthly price ($14.99 page price → FREE; $19 seeded price → FREE; legacy weekly → PRO). The annual + both Elite vars are unreadable and almost certainly in the same broken state. Live "Pro Monthly" checkout would either 503 (if empty) or charge/entitle on an unintended price.
++
++**Remediation (propose only — not applied):**
++1. **Reveal the 4 Sensitive values** (Vercel dashboard → reveal, or check the seeder output you used). Compare each against the intended FOUNDING prices.
++2. **Set the 4 price vars to the prices that match the public page** (TEST-mode IDs to verify against):
++   - `STRIPE_PRO_MONTHLY_PRICE_ID`  = `price_1ThXsJBVaxqE8bKVikLl91hw` ($14.99)
++   - `STRIPE_PRO_ANNUAL_PRICE_ID`   = `price_1ThXrHBVaxqE8bKVJyuOYAsF` ($99)
++   - `STRIPE_ELITE_MONTHLY_PRICE_ID`= `price_1ThXsJBVaxqE8bKV1Zy6QbPu` ($24.99)
++   - `STRIPE_ELITE_ANNUAL_PRICE_ID` = `price_1ThXrIBVaxqE8bKVWNihIdn6` ($179)
++   *(Or decide $19/$49 is the intended monthly price and bump `pricing-phases.ts` instead — but page and Stripe MUST agree.)*
++3. **Hygiene:** add `lookup_key` + `metadata.tier` to the $14.99/$24.99 prices (so the seeder manages them), archive the stale $19/$49 monthly prices and the empty duplicate products (`prod_Ubo5*`), and reconcile `scripts/seed-stripe-prices.mjs` so its catalog amounts match the prices it adopts.
++4. **Subscribe the endpoint to `invoice.payment_action_required`** (and, for LIVE, create the endpoint against the custom domain, not the deployment alias).
++5. **Re-run this verification** (`subscribe.mjs <STRIPE_PRO_MONTHLY_PRICE_ID> ` for Pro and Elite) and confirm tier → PRO/ELITE. Only then proceed to LIVE.
++
++### LIVE swap order (only after TEST re-passes) — founder-gated, do NOT do automatically
++Stripe LIVE is a separate catalog/secret set. Order:
++1. **Seed LIVE prices** (`STRIPE_SECRET_KEY=sk_live_… node scripts/seed-stripe-prices.mjs`, after fixing the seeder) → record the 4 live `price_…` IDs.
++2. **Create a LIVE webhook endpoint** at `https://www.galaxysportsedge.com/api/webhooks/stripe` (custom domain) subscribed to all 7 handled events → copy its `whsec_…`.
++3. **Set Vercel Production env** (the full set that must rotate; more than the brief's "5"):
++   1. `STRIPE_SECRET_KEY` → `sk_live_…`
++   2. `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` → `pk_live_…`
++   3. `STRIPE_WEBHOOK_SECRET` → `whsec_…` (the new LIVE endpoint's secret)
++   4. `STRIPE_PRO_MONTHLY_PRICE_ID` / `STRIPE_PRO_ANNUAL_PRICE_ID` → live `price_…`
++   5. `STRIPE_ELITE_MONTHLY_PRICE_ID` / `STRIPE_ELITE_ANNUAL_PRICE_ID` → live `price_…`
++   *(Also update or retire the legacy `STRIPE_PRO_PRICE_ID` / `STRIPE_ELITE_PRICE_ID` — they currently point at weekly prices and are still consulted by `getTierFromPriceId`.)*
++4. **Redeploy** Production, then run one LIVE smoke purchase + immediate refund/cancel and confirm tier flips PRO→FREE.
++
++---
++
++### Reproduction artifacts (this folder)
++`_lib.mjs` (Stripe REST helper), `_db.mjs` (Prisma client loader), `step1-inventory.mjs`, `subscribe.mjs <priceId> [ts]`, `verify-entitlements.mjs`, `cleanup.mjs`. `disco.mjs` (live-checkout discovery) is retained but was **blocked** and not run.
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/_db.mjs b/handoff/claude/stripe-test-verification-2026-06-19/_db.mjs
+new file mode 100644
+index 00000000..edb5986f
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/_db.mjs
+@@ -0,0 +1,24 @@
++// Prod DB helper using the generated Prisma client. Loads DATABASE_URL etc.
++// from the temp prod env pull. Read/write per caller. Clean up after use.
++import { readFileSync } from "node:fs";
++import { createRequire } from "node:module";
++
++const require = createRequire(import.meta.url);
++
++export function loadEnv(path = "C:/Users/Garrett/AppData/Local/Temp/gse-prod-check.env") {
++  const txt = readFileSync(path, "utf8");
++  for (const line of txt.split(/\r?\n/)) {
++    const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
++    if (m) {
++      let v = m[2].trim();
++      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
++      if (!process.env[m[1]]) process.env[m[1]] = v;
++    }
++  }
++}
++
++export function getDb() {
++  loadEnv();
++  const { PrismaClient } = require("@prisma/client");
++  return new PrismaClient();
++}
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/_lib.mjs b/handoff/claude/stripe-test-verification-2026-06-19/_lib.mjs
+new file mode 100644
+index 00000000..c820b0f9
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/_lib.mjs
+@@ -0,0 +1,40 @@
++// Shared helper: load STRIPE_SECRET_KEY from .env.production.local and call Stripe REST.
++// Never prints the secret. Read-only by default; writes only when called explicitly.
++import { readFileSync } from "node:fs";
++
++const ENV_PATH = new URL("../../../.env.production.local", import.meta.url);
++
++export function loadKey() {
++  const txt = readFileSync(ENV_PATH, "utf8");
++  for (const line of txt.split(/\r?\n/)) {
++    const m = line.match(/^STRIPE_SECRET_KEY=(.*)$/);
++    if (m) {
++      let v = m[1].trim();
++      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
++        v = v.slice(1, -1);
++      }
++      return v;
++    }
++  }
++  throw new Error("STRIPE_SECRET_KEY not found in .env.production.local");
++}
++
++const STRIPE_API = "https://api.stripe.com/v1";
++
++export async function stripeReq(key, method, path, body = null) {
++  const url = `${STRIPE_API}${path}`;
++  const headers = {
++    Authorization: `Bearer ${key}`,
++    "Content-Type": "application/x-www-form-urlencoded",
++  };
++  const init = { method, headers };
++  if (body) init.body = new URLSearchParams(body).toString();
++  const res = await fetch(url, init);
++  let json;
++  try { json = await res.json(); } catch { json = {}; }
++  return { status: res.status, ok: res.ok, json };
++}
++
++export function maskKey(key) {
++  return key.slice(0, 12) + "..." + (key.startsWith("sk_live_") ? "[LIVE!]" : "[test]");
++}
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/cleanup.mjs b/handoff/claude/stripe-test-verification-2026-06-19/cleanup.mjs
+new file mode 100644
+index 00000000..d69c59a4
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/cleanup.mjs
+@@ -0,0 +1,35 @@
++// Tear down everything the verification created: 3 Stripe test customers
++// (deletion cancels their subscriptions) and all test DB rows.
++import { getDb } from "./_db.mjs";
++import { loadKey, stripeReq } from "./_lib.mjs";
++
++const key = loadKey();
++const db = getDb();
++const customers = ["cus_UjflbQt0zvmQKe", "cus_UjfntwBN0qBjCN", "cus_UjfpQTPXUvG0hh"];
++
++for (const c of customers) {
++  const del = await stripeReq(key, "DELETE", `/customers/${c}`);
++  console.log("DELETE_CUSTOMER", c, del.status, JSON.stringify(del.json?.deleted ?? del.json?.error?.message ?? del.json));
++}
++
++// allow deletion webhooks to land, then purge DB
++await new Promise(r => setTimeout(r, 8000));
++
++// Surgical: only delete webhook_events whose payload references one of OUR test
++// customers or subscriptions. Never a blanket wipe.
++const mine = new Set([...customers, "sub_1TkCPeBVaxqE8bKVcmqR16PV", "sub_1TkCRZBVaxqE8bKVkMhf9O5w", "sub_1TkCTTBVaxqE8bKVu9IcFSe6"]);
++const all = await db.webhookEvent.findMany({ select: { id: true, payload: true } });
++const toDelete = all.filter((e) => {
++  const s = JSON.stringify(e.payload);
++  for (const id of mine) if (s.includes(id)) return true;
++  return false;
++}).map((e) => e.id);
++const we = await db.webhookEvent.deleteMany({ where: { id: { in: toDelete } } });
++console.log("DELETED_WEBHOOK_EVENTS", we.count, "of", all.length, "total");
++const subs = await db.subscription.deleteMany({ where: { user: { email: { startsWith: "test+launch-audit-" } } } });
++console.log("DELETED_SUBSCRIPTIONS", subs.count);
++const users = await db.user.deleteMany({ where: { email: { startsWith: "test+launch-audit-" } } });
++console.log("DELETED_USERS", users.count);
++
++console.log("POST_CLEANUP_COUNTS", JSON.stringify({ users: await db.user.count(), subs: await db.subscription.count(), webhookEvents: await db.webhookEvent.count() }));
++await db.$disconnect();
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/disco.mjs b/handoff/claude/stripe-test-verification-2026-06-19/disco.mjs
+new file mode 100644
+index 00000000..734438d7
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/disco.mjs
+@@ -0,0 +1,85 @@
++// Discover the wired STRIPE_PRO_MONTHLY_PRICE_ID by minting a NextAuth v5
++// session for a throwaway test user and calling the live checkout endpoint.
++// Read-only intent: only creates a Stripe checkout session + (maybe) a Stripe
++// customer; everything is cleaned up later. Prints nothing secret.
++import { loadEnv, getDb } from "./_db.mjs";
++import { loadKey, stripeReq } from "./_lib.mjs";
++
++loadEnv();
++const ts = Number(process.argv[2] || Date.now());
++const email = `test+launch-audit-${ts}@galaxysportsedge.com`;
++const APP = "https://galaxysportsedge.com";
++
++const db = getDb();
++const key = loadKey();
++
++// 1. Create throwaway user
++const user = await db.user.upsert({
++  where: { email },
++  create: { email, name: "Launch Audit Bot", role: "USER" },
++  update: {},
++});
++console.log("USER_ID:", user.id);
++console.log("USER_EMAIL:", email);
++
++// 2. Mint NextAuth v5 JWE session token
++const secret = process.env["NEXTAUTH_SECRET"] || process.env["AUTH_SECRET"];
++let encode;
++try {
++  ({ encode } = await import("next-auth/jwt"));
++} catch (e) {
++  console.log("ENCODE_IMPORT_ERR:", e.message.split("\n")[0]);
++}
++
++async function tryCheckout(cookieName) {
++  const token = await encode({
++    token: { sub: user.id, email, name: user.name, role: "USER" },
++    secret,
++    salt: cookieName,
++    maxAge: 60 * 60,
++  });
++  const res = await fetch(`${APP}/api/subscriptions/checkout`, {
++    method: "POST",
++    headers: {
++      "Content-Type": "application/json",
++      Cookie: `${cookieName}=${token}`,
++    },
++    body: JSON.stringify({ tier: "PRO", interval: "month" }),
++    redirect: "manual",
++  });
++  let body;
++  try { body = await res.json(); } catch { body = await res.text(); }
++  return { cookieName, status: res.status, body };
++}
++
++if (encode) {
++  for (const name of ["__Secure-authjs.session-token", "authjs.session-token", "__Secure-next-auth.session-token", "next-auth.session-token"]) {
++    try {
++      const r = await tryCheckout(name);
++      console.log(`CHECKOUT[${name}]: status=${r.status} body=${JSON.stringify(r.body)}`);
++      const url = r.body && r.body.url;
++      if (url) {
++        const m = url.match(/\/(cs_[a-zA-Z0-9_]+)/) || url.match(/cs_[a-zA-Z0-9_]+/);
++        const csId = m ? (m[1] || m[0]) : null;
++        console.log("CHECKOUT_SESSION_ID:", csId);
++        if (csId) {
++          const sess = await stripeReq(key, "GET", `/checkout/sessions/${csId}?expand[]=line_items`);
++          const li = sess.json.line_items?.data?.[0];
++          console.log("WIRED_PRO_MONTHLY:", JSON.stringify({
++            price_id: li?.price?.id,
++            unit_amount: li?.price?.unit_amount,
++            dollars: li?.price?.unit_amount != null ? (li.price.unit_amount/100).toFixed(2) : null,
++            interval: li?.price?.recurring?.interval,
++            customer: sess.json.customer,
++            mode: sess.json.mode,
++          }));
++        }
++        break;
++      }
++    } catch (e) {
++      console.log(`CHECKOUT[${name}] ERR:`, e.message.split("\n")[0]);
++    }
++  }
++}
++
++await db.$disconnect();
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/step1-inventory.mjs b/handoff/claude/stripe-test-verification-2026-06-19/step1-inventory.mjs
+new file mode 100644
+index 00000000..b9122301
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/step1-inventory.mjs
+@@ -0,0 +1,50 @@
++import { loadKey, stripeReq, maskKey } from "./_lib.mjs";
++
++const key = loadKey();
++console.log("KEY_PREFIX:", maskKey(key));
++if (key.startsWith("sk_live_")) {
++  console.log("STOP: LIVE key detected in .env.production.local");
++  process.exit(2);
++}
++
++// account
++const acct = await stripeReq(key, "GET", "/account");
++if (acct.status === 401) { console.log("STOP_401: secret rejected"); process.exit(3); }
++console.log("ACCOUNT:", JSON.stringify({ id: acct.json.id, name: acct.json.settings?.dashboard?.display_name, livemode: acct.json.charges_enabled }));
++
++const products = await stripeReq(key, "GET", "/products?active=true&limit=20");
++const prices = await stripeReq(key, "GET", "/prices?active=true&limit=50&expand[]=data.product");
++const hooks = await stripeReq(key, "GET", "/webhook_endpoints?limit=20");
++
++console.log("\n=== PRODUCTS ===");
++for (const p of products.json.data ?? []) {
++  console.log(JSON.stringify({ id: p.id, name: p.name, metadata: p.metadata }));
++}
++
++console.log("\n=== PRICES ===");
++for (const pr of prices.json.data ?? []) {
++  console.log(JSON.stringify({
++    id: pr.id,
++    product: typeof pr.product === "object" ? pr.product.name : pr.product,
++    product_id: typeof pr.product === "object" ? pr.product.id : pr.product,
++    unit_amount: pr.unit_amount,
++    dollars: pr.unit_amount != null ? (pr.unit_amount / 100).toFixed(2) : null,
++    currency: pr.currency,
++    interval: pr.recurring?.interval ?? null,
++    type: pr.type,
++    lookup_key: pr.lookup_key,
++    metadata: pr.metadata,
++  }));
++}
++
++console.log("\n=== WEBHOOKS ===");
++for (const h of hooks.json.data ?? []) {
++  console.log(JSON.stringify({
++    id: h.id,
++    url: h.url,
++    status: h.status,
++    api_version: h.api_version,
++    secret_format: h.secret ? (h.secret.startsWith("whsec_") ? "whsec_..." : "OTHER") : "(not returned on list)",
++    enabled_events: h.enabled_events,
++  }, null, 2));
++}
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/subscribe.mjs b/handoff/claude/stripe-test-verification-2026-06-19/subscribe.mjs
+new file mode 100644
+index 00000000..6127e375
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/subscribe.mjs
+@@ -0,0 +1,67 @@
++// Controlled TEST subscribe cycle (Stripe REST API + prod DB reads).
++// Creates a throwaway user + Stripe customer, subscribes to a given price with
++// metadata.userId, lets the production webhook fire, then reads the DB to confirm
++// entitlement. No session forging, no live app endpoints. Cleanup is separate.
++import { loadEnv, getDb } from "./_db.mjs";
++import { loadKey, stripeReq } from "./_lib.mjs";
++
++loadEnv();
++const PRICE = process.argv[2];
++const TS = process.argv[3] || String(Date.now());
++if (!PRICE) { console.log("usage: subscribe.mjs <priceId> [ts]"); process.exit(1); }
++
++const email = `test+launch-audit-${TS}@galaxysportsedge.com`;
++const key = loadKey();
++const db = getDb();
++const log = (label, obj) => console.log(`[${new Date().toISOString()}] ${label}: ${typeof obj === "string" ? obj : JSON.stringify(obj)}`);
++
++// 1. test user
++const user = await db.user.upsert({
++  where: { email },
++  create: { email, name: "Launch Audit Bot", role: "USER" },
++  update: {},
++});
++log("USER", { id: user.id, email });
++
++// 2. Stripe customer
++const cust = await stripeReq(key, "POST", "/customers", { email, name: "Launch Audit Bot", "metadata[userId]": user.id, "metadata[purpose]": "stripe-test-verification" });
++if (cust.status === 401) { log("STOP_401", cust.json); await db.$disconnect(); process.exit(3); }
++const customerId = cust.json.id;
++log("CUSTOMER", { id: customerId, status: cust.status });
++
++// 3. attach test PaymentMethod (pm_card_visa = 4242 4242 4242 4242)
++const attach = await stripeReq(key, "POST", `/payment_methods/pm_card_visa/attach`, { customer: customerId });
++log("PM_ATTACH", { id: attach.json.id, status: attach.status, card_last4: attach.json.card?.last4, exp: `${attach.json.card?.exp_month}/${attach.json.card?.exp_year}` });
++// set as default
++await stripeReq(key, "POST", `/customers/${customerId}`, { "invoice_settings[default_payment_method]": attach.json.id });
++
++// 4. create subscription (charges immediately), metadata.userId for webhook sync
++const sub = await stripeReq(key, "POST", "/subscriptions", {
++  customer: customerId,
++  "items[0][price]": PRICE,
++  "metadata[userId]": user.id,
++  default_payment_method: attach.json.id,
++  payment_behavior: "error_if_incomplete",
++  "expand[]": "latest_invoice",
++});
++log("SUBSCRIBE", { status: sub.status, sub_id: sub.json.id, sub_status: sub.json.status, price: sub.json.items?.data?.[0]?.price?.id, invoice_id: sub.json.latest_invoice?.id, invoice_status: sub.json.latest_invoice?.status, invoice_paid: sub.json.latest_invoice?.paid, amount: sub.json.latest_invoice?.amount_paid });
++const subId = sub.json.id;
++
++if (sub.status >= 400) { log("STOP_SUBSCRIBE_FAILED", sub.json); console.log("RESULT_JSON", JSON.stringify({ userId: user.id, email, customerId, subId: null, priceTested: PRICE })); await db.$disconnect(); process.exit(4); }
++
++// 5. poll DB for webhook side-effects (up to 60s)
++let result = { webhookEvents: [], tier: null, subRow: null };
++for (let i = 0; i < 30; i++) {
++  await new Promise(r => setTimeout(r, 2000));
++  const evs = await db.webhookEvent.findMany({ orderBy: { processedAt: "desc" }, take: 10, select: { type: true, stripeEventId: true, processedAt: true } });
++  const subRow = await db.subscription.findUnique({ where: { userId: user.id }, select: { tier: true, status: true, stripeSubscriptionId: true, stripePriceId: true, currentPeriodEnd: true, cancelAtPeriodEnd: true } });
++  result = { webhookEvents: evs, subRow };
++  const got = subRow?.tier;
++  if (subRow && got && got !== "FREE") { log("DB_SYNCED", { elapsed_s: (i + 1) * 2, subRow, webhookCount: evs.length }); break; }
++  if (i % 3 === 0) log("POLL", { elapsed_s: (i + 1) * 2, tier: got ?? "(no row)", webhookCount: evs.length });
++}
++
++log("FINAL_WEBHOOK_EVENTS", result.webhookEvents);
++log("FINAL_SUB_ROW", result.subRow);
++console.log("RESULT_JSON", JSON.stringify({ userId: user.id, email, customerId, subId, priceTested: PRICE }));
++await db.$disconnect();
+diff --git a/handoff/claude/stripe-test-verification-2026-06-19/verify-entitlements.mjs b/handoff/claude/stripe-test-verification-2026-06-19/verify-entitlements.mjs
+new file mode 100644
+index 00000000..667f561e
+--- /dev/null
++++ b/handoff/claude/stripe-test-verification-2026-06-19/verify-entitlements.mjs
+@@ -0,0 +1,23 @@
++// Mirror apps/web/lib/entitlements.ts getUserEntitlements() query + the
++// packages/types getEntitlements() mapping, against the prod DB, for the test users.
++import { getDb } from "./_db.mjs";
++const db = getDb();
++
++const PAST_DUE_GRACE_DAYS = 7;
++const graceCutoff = new Date(Date.now() - PAST_DUE_GRACE_DAYS * 864e5);
++
++function getEntitlements(tier) {
++  const isPro = tier === "PRO" || tier === "ELITE";
++  return { tier, canSeePremiumPicks: isPro, canSeeConfidence: isPro, canSeeLineMovement: isPro, dailyPickLimit: tier === "FREE" ? 2 : null, canGetAlerts: tier === "ELITE" };
++}
++
++const users = await db.user.findMany({ where: { email: { startsWith: "test+launch-audit-" } }, select: { id: true, email: true } });
++for (const u of users) {
++  const sub = await db.subscription.findFirst({
++    where: { userId: u.id, OR: [{ status: { in: ["ACTIVE", "TRIALING"] } }, { status: "PAST_DUE", pastDueSince: { gte: graceCutoff } }] },
++    select: { tier: true, status: true, stripePriceId: true },
++  });
++  const tier = sub?.tier ?? "FREE";
++  console.log(JSON.stringify({ email: u.email, price: sub?.stripePriceId, db_tier: sub?.tier, resolved: getEntitlements(tier) }));
++}
++await db.$disconnect();

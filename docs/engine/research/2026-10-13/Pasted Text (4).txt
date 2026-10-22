@@ -1,0 +1,161 @@
+# Session Record — Navier–Stokes Sandbox, Filament Cartoons, BKM Clock Lab, and TG Census
+
+**Standing rules (applied throughout):** no Millennium claim; a prescribed filament stack is a cartoon, never an Euler or NS solution; every number from a saved script; cartoon and PDE output labeled separately; Prodi–Serrin never claimed from stack arithmetic; a run matching Brachet, Hou, or OpenAI is a control, not a result; modified systems labeled as modified.
+
+**Scope note.** This is a complete record of every phase, decision, result, correction, and artifact. It does not reproduce raw tool transcripts or sub-agent logs word for word. Tables are generated from the saved JSON.
+
+---
+
+## 1. Origin (2026-10-03/04)
+
+- Five earlier notes (01–05) defined a stage ladder with local strain laws. Two laws, σ = cA/k and σ = cA, disagreed. Both are cartoons.
+- Three-inequality gate: (1) σ_n > νk_n² at every stage; (2) ΣΔt_n < ∞; (3) Σe_n < ∞. Diagnostics: BKM integral and persistence as N grows.
+
+## 2. The three instruments (2026-10-05)
+
+- **Biot–Savart ladder** (`biot_savart_ladder.py`): σ_{n+1} = Σ_{j≤n} A_j/(1−λ^{−(n+1−j)})². Inviscid: BS survives 15 stages. Viscous: BS survives to layer 6 (cA/k to 2, cA to 3). The kernel resists mild viscosity better than either local law.
+- **Seed split** (`seed_split.py`): bump seed leakage is exactly 0. Gaussian leakage is erfc(1/(w√2)), never zero.
+- **Polymer damper** (`polymer_damper.py`): Oldroyd-B arrests at layers 1–2. FENE-P only delays.
+
+## 3. Campaign (note 09)
+
+- 6,400 configs. Window: λ³ < G < λ^{(β+4)/2}, nonempty for β > 2. 160/166 persist at N=96.
+
+## 4. Stress tests and recheck (notes 10–11)
+
+- Amplitude depletion closes the window at N=96. Sheet kernel widens it. Back-reaction ran as a no-op in the first pass.
+- Recheck corrected back-reaction to 70/207 clean (not the first pass's 119). Depletion is form-dependent: amplitude form 0/187, cumulative form 56/115.
+- Bug ledger: kernel mask zeroed self-layer; energy boundary is λ^{(β+4)/2}, not λ^{(β+2)/2}.
+
+## 5. Research integration (note 12)
+
+- The stage ladder maps onto the Córdoba–Martínez–Zoroa cascade. The smooth-forcing hurdle is the open step.
+
+## 6. Self-consistent alignment (note 13)
+
+- ω = A_n (corrected from A·k). Clean fraction 76% at N=96. The effect renormalizes the coupling rather than closing the window.
+
+## 7. 100k zoo (note 14)
+
+- 100,640 rows; 92,640 unique configs, 2,376 mechanisms. Best single mechanism: sheet + none + newtonian + noop, 75.0% clean at N=64.
+- Aggregates: kernel sheet 30.3%, alignment none 15.3%, viscosity power_law 19.5%.
+
+## 8. N=256 / N=512 verification (note 15)
+
+- Window narrows 3–5×. "none" alignment dies at N=256. Self-consistent falls from 76% to 7%. Corrected back-reaction 0% clean.
+- Constructive sheet + sqrt_cumul + carreau + noop: 50% clean at N=256 and N=512.
+
+## 9. Rate race (note 16)
+
+- Exact Euler factorial ladder dies under any fixed ν (exponential damping beats linear gain). Frequency growth loglog x, const, or 1/j opens the window; linear does not.
+
+## 10. Polylog gate (note 17)
+
+- x_j = j²x_{j−1}, log k_j = log log(2+x_{j−1}). All four conditions pass at ν ≤ 3.45e−13 over 60 stages.
+- Classification: back-reaction (forces α budget) > viscosity > depletion (renormalizes) > pressure Hessian (weakest).
+
+## 11. FULL_CHRONICLE.md
+
+- Written from start to note 17, then extended. Current size: 49,116 bytes. It contains the full phase record, Test 4, the BKM lab, and the addenda.
+
+## 12. Test 4 (control, swap, stack ODE)
+
+- **Control (exact-stage ODE, sim/stage.py unmodified, paper scales): PASS** at x_prev ∈ {4,8,16,32}. a2/a 0.999921→1.000000, β₂x_tar² 1.002193→1.000001.
+- **Swap (frequency schedule log k = log log(2+x) only): FAIL.** β₂x_tar² = 1.028093 at x_prev=4 and 1.010053 at x_prev=8, both outside 1e−2. a2/a and m·Mv sign pass. Tolerance is not retuned.
+- **Stack ODE (CARTOON):** input cross-checks exact (259,573; 84.8%; 96.3%; Kelvin 3.34). No stage n ≥ 1 decays at ν ∈ {1e−2, 1e−6, 1e−15}. Stage 0 decays trivially (σ₀ = 0).
+- Boundary: next step needs a divergence-free velocity field. Nothing invented.
+
+## 13. NS state-of-field survey (user attachment, 2026-10-07)
+
+- Unforced 3D NS open as of Oct 2026. OpenAI forced blowup (Sep 2026) is not the unforced problem. AIX Global unforced claim is unverified. Chen–Hou–Huang 2025 is a rigorous axisymmetric Euler blowup. Tao's 2016 no-go constrains energy methods.
+- BKM is the central clock. Modified systems must be labeled modified.
+
+## 14. BKM lab — solver and calibration (`ns3d.py`)
+
+- Vorticity-form pseudospectral NS, 2/3 dealias, RK4, no force term.
+- Calibration against user baselines: TG 32³ ν=0.01 t=0.75 → E 0.1194, Z 0.3787, wmax 1.7181 (given 0.119 / 0.379 / 1.72). 16³ Re sweep at t=0.4 matches 0.122 / 0.377 / 0.378 with falling max.
+- Timestep: dt=0.04 matches dt=0.01 exactly at 16³ (E 0.1220, Z 0.3720, wmax 1.9015).
+
+**Bug ledger (solver):**
+1. FFT axes were (1,2,3); correct is (2,3,4), because the component axis is 1.
+2. Point evaluation lacked the 1/N^{3/2} ortho factor (Γ was about 181× too large).
+3. Frozen-per-record loop advection broke the audit. Fixed by stepwise advection.
+4. Per-case ν needs shape (B,1,1,1,1).
+5. Record cadence used `s % 10`; corrected to explicit `RECORD_AT`.
+
+## 15. The 100-draw BKM audit (`bkm_draws.py`, `bkm_audit.py`, `bkm_fits.py`)
+
+- Primary grid: 16³, ν=0.025 (Re=40, at 16³ ceiling), dt=0.04, T=0.76, 19 steps. Draws seeded 101–200, energy in shells 2 ≤ |k| ≤ 4, E=0.125.
+- Audit diagnosis across three advection versions: trilinear, spectral frozen-per-step, stage-consistent. Residuals did not change. The 16³ failures come from the 2/3 dealias truncating the nonlinear tail (u×ω reaches k=8 > 5.33). This is a real truncation force, not machinery error.
+- Re-run of the 60 failures at 32³, ν=0.01 (Re=100), with dealias bound 10.67 > 8.
+- **Result: 64 pass, 36 stopped. Rising max in 67 draws. I(0.76) ∈ [2.629, 4.076], all finite. Survivors (clock diverges): 0.**
+- Fits (`bkm_fits.py`): one divergence fit (draw 40, log model, claimed T=4.76) is outside the 5-point window and is not a candidate.
+
+## 16. Controls (`bkm_controls.py`)
+
+- Stretching deleted (analytic e^{−νk²t}): I_end 2.803, monotone falling.
+- Two viscosities, draws 0–9: ν=0.025 → I 3.007, 2/10 rising. ν=0.05 → I 2.685, 0/10 rising. Growth is viscosity-driven, a viscous transient.
+- Two-grid consistency, draws 0–4: 16³ mean I 2.951, 32³ mean I 3.366. Both finite.
+
+## 17. Open-seeds run (`bkm_eight.py`, `bkm_filter_check.py`)
+
+- Set identification from `bkm_100_final.json`: 32 draws are audit-clean and still rising at t=0.76. The handoff's "eight" came from `bkm_fits.json`, computed before the 32³ reruns. Struck seeds 155 and 188 are excluded. The other six struck IDs are not in the true set. 30 seeds were run (8 at 16³, 22 at 32³).
+- **Result: all 30 turned over.** t_turn ∈ [0.2, 2.2]. Zero reached t=5 still rising, so no second grid or Hou–Li time-stepping run was triggered.
+- Circulation residual above 0.5: 28 STOPPED-FORCE. Residual ≤ 0.5: 2 TURNOVER (seeds 149 and 153).
+- Long transients carried I up to 10.2 and finite. R reached about 0.48–0.50 before turning over. ‖∇ξ‖∞ grew to 9–12 (TG control 2.87).
+- Hou–Li reproduced on actual seeds: product tail 8.9–12.8% under the sharp mask, 0.10–0.54% under Hou–Li. The k₀=4 shell values from the handoff (2.8% and nothing) did not reproduce from a full random shell and are not copied.
+- Checkpoint/resume added so runs survive app suspension.
+
+## 18. Taylor–Green census (`tg_sweep.py`, `tg_driver.sh`, `tg_aggregate.py`)
+
+- Grid: 100 ν values (Re 20→2000 logspaced) × 20 amplitudes (0.5→2) × 5 swirl seeds (0→0.5) = 10,000 runs. 16³, T=0.2, dt=0.04, 5 steps.
+- Progress: 29/40 chunks, 7,500 runs. Rising maxima: 247 (3.3%). NaN: 0.
+- Bins: Re≤40 (resolved) 0/1,250. 40<Re≤200 25/4,000 (0.62%). 200<Re≤800 222/2,250 (9.87%).
+- Largest ratio: 1.00298 at Re=544, amp 2.0, swirl 0.5. Every rise sits above Re=40, under-resolved at 16³.
+- Eleven chunks (29–39) remain. A driver process was running at the time of this record.
+- Earlier interim (4,000 runs): 12 rising, all in 200<Re≤800.
+
+## 19. Coordination and handoffs
+
+- Agent-run chunk ranges were assigned to sub-agents. Several timed out at their budgets. Completions were verified against files on disk.
+- Cross-session copy at `/var/minis/shared/ns_lab/`. Workspace is per-session, which is why the other agent saw none of it until the copy was made.
+- Seed manifest: draw seeds 101–200; swirl seeds {0, 0.125, 0.25, 0.375, 0.5}; ν grid as above.
+
+## 20. Corrections made during the session
+
+1. Two-grid comparison used stale two-point records. Replaced with full five-record data.
+2. The Hou–Li labels were inverted in one pass. Fixed; physics unchanged.
+3. An earlier "all 100 pass" statement was wrong. Correct count: 64 pass.
+4. The seed-list problem was a per-session workspace, not a missing file.
+5. Eight and 32 were conflated. The true audit-clean rising set is 32; 30 were run after exclusions.
+6. Two driver timeouts were caused by budget settings. Budgets were lowered and pacing added.
+7. The `tg_sweep_summary.json` file collided with the chunk glob. Fixed the glob in `tg_aggregate.py`.
+
+## 21. Standing open items
+
+- Finish TG chunks 29–39 (11 remaining).
+- Re-run `tg_aggregate.py` and write the final census table.
+- Run `bkm_object.py` on the strongest audit-clean draw.
+- No open BKM seed remains. All 30 closed by turnover.
+
+## 22. Artifact index
+
+| Artifact | Role |
+|---|---|
+| FULL_CHRONICLE.md | Phase record, Test 4, BKM lab, addenda |
+| SESSION_RECORD.md | This document |
+| ns3d.py | Spectral NS solver, calibrated |
+| bkm_draws.py / bkm_audit.py / bkm_fits.py | 100-draw audit and fits |
+| bkm_rerun_failed.py | Failed-draw re-run (superseded by 32³ rerun) |
+| bkm_controls.py | Stretching-deleted, two-viscosity, two-grid controls |
+| bkm_eight.py | Open-seeds run, checkpoints, table |
+| bkm_filter_check.py | Hou–Li vs sharp filter |
+| tg_sweep.py / tg_driver.sh / tg_aggregate.py | TG census |
+| bkm_100_final.json / bkm_eight.json / tg_sweep_*.json | Data |
+| test4_*.py / test4_*.json / test4_report.md | Test 4 |
+| stack_cartoon_ode.py / test4_stack_cartoon.json | Cartoon stack ODE |
+| /var/minis/shared/ns_lab/ | Cross-session copy |
+
+## 23. Standing result
+
+No divergent BKM clock in any of the 100 random draws. No second-grid candidate among the 30 open seeds. The TG census shows rising maxima only above Re = 40 at 16³, and never in the resolved band. The filament stack remains a cartoon. No Millennium claim.

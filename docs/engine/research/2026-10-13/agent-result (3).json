@@ -1,0 +1,456 @@
+{
+  "targets": [
+    {
+      "target": "Lin 1991 weighted Jensen-Shannon (4.1)",
+      "url": "https://www.cise.ufl.edu/~anand/sp06/jensen-shannon.pdf",
+      "status": "BODY_FETCHED; OCR text; no HTTP code surfaced",
+      "page_footer": "Printed footer 147 not exposed by rendered body",
+      "equation_quote": "(4.1) is present in the fetched paper body but OCR mangles the surrounding K/L boundedness display; the nearby text states that K(p1,p2) <= 1 and L(p1,p2) <= 2.",
+      "latex_transcription": "K(p_1,p_2) = sum_x p_1(x) log[p_1(x)/(p_1(x)+p_2(x))] <= 1; the PDF OCR also places L(p_1,p_2) <= 2 near the (4.1) marker.",
+      "context_around": [
+        "Thus, the variational distance serves as an upper bound to both the K and L divergences.",
+        "The K and L divergences have several other desirable properties.",
+        "They are also finite and semibounded.",
+        "(4.1) [OCR placement is interleaved with the display]",
+        "K(p_1,p_2) <= 1 and L(p_1,p_2) <= 2.",
+        "The second inequality can be easily derived from (3.9).",
+        "The bound for K(p_1,p_2) follows directly from its definition (3.1).",
+        "From the equality given in (3.8), we have ..."
+      ],
+      "log_base": "base 2 explicitly stated",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated in fetched body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "equation content yes; journal-footer clear no",
+      "notes": "The fetched replacement is a legal PDF body but does not expose the journal footer; therefore this is not a full journal clear."
+    },
+    {
+      "target": "Lin 1991 generalized Jensen-Shannon (5.1)",
+      "url": "https://www.cise.ufl.edu/~anand/sp06/jensen-shannon.pdf",
+      "status": "BODY_FETCHED; OCR text; no HTTP code surfaced",
+      "page_footer": "Printed footer 149 not exposed by rendered body",
+      "equation_quote": "Let p1,...,pn be n probability distributions with weights pi1,...,pin. (5.1) defines the generalized Jensen-Shannon divergence.",
+      "latex_transcription": "JS_pi(p_1,...,p_n) = H(sum_{i=1}^n pi_i p_i) - sum_{i=1}^n pi_i H(p_i).",
+      "context_around": [
+        "The Jensen-Shannon divergence can be generalized to provide such a measure for any finite number of distributions.",
+        "This is useful for the study of decision problems with more than two classes involved.",
+        "Let p_1, p_2, ..., p_n be n probability distributions with weights pi_1, ..., pi_n, respectively.",
+        "The generalized Jensen-Shannon divergence can be defined as",
+        "JS_pi(p_1,...,p_n) = H(sum_{i=1}^n pi_i p_i) - sum_{i=1}^n pi_i H(p_i) (5.1)",
+        "where pi=(pi_1,...,pi_n).",
+        "Consider a decision problem with n classes.",
+        "The Bayesian error for n classes can be written as ..."
+      ],
+      "log_base": "base 2 explicitly stated",
+      "weights": "yes",
+      "n_dist": "N_DIST_YES",
+      "version": "not stated in fetched body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "yes",
+      "notes": "The source states the logarithmic base 2 is used throughout; weights and n-distribution form are explicit."
+    },
+    {
+      "target": "Herbrich 2000 large-margin rank boundaries",
+      "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2005/08/icml_ranking.pdf",
+      "status": "WRONG_PAPER; fetched body is Burges et al. Learning to Rank using Gradient Descent",
+      "page_footer": "No Herbrich chapter footer",
+      "equation_quote": "The fetched PDF is RankNet, not Herbrich, so the requested hinge loss and printed pair constraint are absent.",
+      "latex_transcription": "UNOBTAINED; do not substitute RankNet logistic pair probability.",
+      "context_around": [
+        "The paper title is Learning to Rank using Gradient Descent.",
+        "It cites Herbrich et al. (2000) in its introduction.",
+        "Its displayed equations are RankNet equations, not the requested chapter.",
+        "No Herbrich pair constraint was found.",
+        "No Herbrich hinge loss was found."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "Replacement search was attempted after the ordered block; no opened legal PDF containing the requested Herbrich equation was found.",
+      "failed_fetches": [
+        {
+          "url": "https://direct.mit.edu/books/edited-volume/3871/chapter/125548/Large-Margin-Rank-Boundaries-for-Ordinal-Regression",
+          "status": "PAYWALL/wrong chapter landing page"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2005/08/icml_ranking.pdf",
+          "status": "WRONG_PAPER: Burges RankNet"
+        }
+      ]
+    },
+    {
+      "target": "DPO equation (7)",
+      "url": "https://ar5iv.labs.arxiv.org/html/2305.18290",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in HTML conversion",
+      "equation_quote": "The DPO policy objective is printed as equation (7).",
+      "latex_transcription": "L_DPO(pi_theta; pi_ref) = -E_{(x,y_w,y_l)~D}[ log sigma( beta log(pi_theta(y_w|x)/pi_ref(y_w|x)) - beta log(pi_theta(y_l|x)/pi_ref(y_l|x)) ) ].",
+      "context_around": [
+        "Now that we have the probability of human preference data in terms of the optimal policy rather than the reward model, we can formulate a maximum likelihood objective for a parametrized policy pi_theta.",
+        "Analogous to the reward modeling approach, our policy objective becomes:",
+        "L_DPO(pi_theta; pi_ref) = -E[...]",
+        "(7)",
+        "This way, we fit an implicit reward using an alternative parameterization.",
+        "Its optimal policy is simply pi_theta.",
+        "The procedure is equivalent to fitting a reparametrized Bradley-Terry model."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated in fetched body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "yes",
+      "notes": "The companion arXiv PDF also returned a body; no independent printed-page cross-check was found."
+    },
+    {
+      "target": "PPO clipped surrogate equation (7)",
+      "url": "https://arxiv.org/pdf/1707.06347",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in markdown conversion",
+      "equation_quote": "(7) L^CLIP(theta) is the clipped surrogate objective.",
+      "latex_transcription": "L^CLIP(theta) = E_hat_t[min(r_t(theta) A_hat_t, clip(r_t(theta),1-epsilon,1+epsilon) A_hat_t)].",
+      "context_around": [
+        "3 Clipped Surrogate Objective",
+        "Let r_t(theta) denote the probability ratio.",
+        "TRPO maximizes a surrogate objective.",
+        "L^CLIP(theta) = E_hat_t[min(...)]",
+        "(7)",
+        "epsilon is a hyperparameter, say epsilon=0.2.",
+        "The second term clips the probability ratio.",
+        "The final objective is a lower bound on the unclipped objective."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "arXiv:1707.06347v2 explicitly in fetched PDF",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "yes",
+      "notes": "The ar5iv companion was attempted but returned only a conversion stub; the PDF body is the usable page source."
+    },
+    {
+      "target": "LoRA equation (3)",
+      "url": "https://ar5iv.labs.arxiv.org/html/2106.09685",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in HTML conversion",
+      "equation_quote": "(3) gives the modified forward pass h = W0x + Wx = W0x + BAx.",
+      "latex_transcription": "h = W_0 x + Delta W x = W_0 x + B A x.",
+      "context_around": [
+        "During training, W0 is frozen and does not receive gradient updates.",
+        "A and B contain trainable parameters.",
+        "Both W0 and W=BA are multiplied with the same input.",
+        "For h=W0x, our modified forward pass yields:",
+        "h = W0x + Wx = W0x + BAx (3).",
+        "The reparametrization is illustrated in Figure 1."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "Version 2 explicitly stated in ar5iv body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "yes",
+      "notes": "The PDF companion also contains the same equation; no independent printed-page cross-check was found."
+    },
+    {
+      "target": "Kelly 1956 optimal fraction / f-star",
+      "url": "https://archive.org/download/bstj35-4-917/bstj35-4-917.pdf",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in markdown conversion",
+      "equation_quote": "The fetched paper does not print the requested f-star notation. It prints the equivalent optimal-fraction conditions and G_max.",
+      "latex_transcription": "(1 + ell) = 2q; (1 - ell) = 2p; G_max = 1 + p log p + q log q = R.",
+      "context_around": [
+        "Let us maximize G with respect to ell.",
+        "The maximum value ... is obtained by putting Yi=(Y/X)Xi.",
+        "Thus we put",
+        "(1+ell)=2q",
+        "(1-ell)=2p",
+        "G_max = 1 + p log p + q log q = R.",
+        "This is the rate of transmission as defined by Shannon."
+      ],
+      "log_base": "base 2 explicitly stated for G",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated in fetched body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "The source gives ell, not an f-star label; do not relabel it as printed f-star."
+    },
+    {
+      "target": "Murphy 1973 Brier decomposition",
+      "url": "https://journals.ametsoc.org/view/journals/apme/12/4/1520-0450_1973_012_0595_anvpot_2_0_co_2.xml",
+      "status": "ABSTRACT_NOT_A_PAGE; HTML metadata/abstract only",
+      "page_footer": "Journal metadata identifies Volume 12 Issue 4 and article pages 595 onward, but the equation page body was not exposed",
+      "equation_quote": "The fetched body contains the abstract but not BS = REL - RES + UNC.",
+      "latex_transcription": "UNOBTAINED; requested equation not present in fetched body.",
+      "context_around": [
+        "A new vector partition of the probability, or Brier, score (PS) is formulated.",
+        "The nature and properties of this partition are described.",
+        "The relationships between the terms in this partition ...",
+        "The fetched page is an HTML journal landing/abstract body.",
+        "The requested printed decomposition was not present."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "Required footer 595 is identified by the URL/metadata, but the equation itself was not fetched."
+    },
+    {
+      "target": "Endres and Schindelin square-root JS metric",
+      "url": "https://doi.org/10.1109/TIT.2003.813506",
+      "status": "FETCH_FAILED; no output page body",
+      "page_footer": "not obtained",
+      "equation_quote": "No theorem body was retrieved.",
+      "latex_transcription": "UNOBTAINED.",
+      "context_around": [
+        "The DOI scrape did not produce a page file in the batch result.",
+        "No theorem text was available for quotation."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not obtained",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "A replacement search/open attempt is required for a legal PDF containing the theorem.",
+      "failed_fetches": [
+        {
+          "url": "https://doi.org/10.1109/TIT.2003.813506",
+          "status": "FETCH_FAILED/no page body"
+        }
+      ]
+    },
+    {
+      "target": "Gibbs and Candes ACI recursion",
+      "url": "https://ar5iv.labs.arxiv.org/html/2106.00170",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in HTML conversion",
+      "equation_quote": "(2) alpha_{t+1} := alpha_t + gamma(alpha - err_t). The paper also prints the weighted alternative as (3).",
+      "latex_transcription": "alpha_{t+1} = alpha_t + gamma(alpha - err_t).",
+      "context_around": [
+        "Let alpha_1 denote our initial estimate.",
+        "Recursively define the sequence of miscoverage events err_t.",
+        "Then, fixing a step size parameter gamma>0 we consider the simple online update.",
+        "alpha_{t+1} := alpha_t + gamma(alpha - err_t). (2)",
+        "We refer to this algorithm as adaptive conformal inference.",
+        "A natural alternative is alpha_{t+1}=alpha_t+gamma(alpha-sum_{s=1}^t w_s err_s). (3)",
+        "The weights satisfy sum_{s=1}^t w_s=1."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "yes for alternative (3); no for (2)",
+      "n_dist": "no",
+      "version": "arXiv:2106.00170v3 explicitly in PDF body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "yes",
+      "notes": "This is the ACI source; it is not a GRPO source."
+    },
+    {
+      "target": "GRPO group-relative advantage",
+      "url": "https://arxiv.org/pdf/2402.03300",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in markdown conversion",
+      "equation_quote": "The fetched DeepSeekMath body states that outcome supervision normalizes group rewards and sets token advantages to the normalized group-relative reward; the exact displayed objective is equation (3) in the body.",
+      "latex_transcription": "A_hat_{i,t} = (r_i - mean(r))/std(r) for outcome supervision; the body states this optimizes the objective defined in equation (3).",
+      "context_around": [
+        "For each question q, a group of sampled outputs is scored by a reward model.",
+        "The rewards are normalized by subtracting the group average and dividing by the group standard deviation.",
+        "Outcome supervision provides a normalized reward at the end of each output.",
+        "It sets the advantages of all tokens in output oi as A_hat_{i,t}=(r_i-mean(r))/std(r).",
+        "This optimizes the objective defined in equation (3)."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated in fetched body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "yes",
+      "notes": "The PDF body returned; equation extraction is partly OCR/markdown-corrupted, so the advantage statement is quoted rather than a fabricated full objective."
+    },
+    {
+      "target": "Cai verifier backward/forward correction",
+      "url": "https://arxiv.org/pdf/2510.00915",
+      "status": "BODY_FETCHED; OCR/markdown text; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in markdown conversion",
+      "equation_quote": "(3) backward correction: R_hat_b=(R_tilde-rho_0)/(1-rho_0-rho_1). The forward section defines h_t=w_{R_tilde} G_t and chooses weights so its expectation aligns with the clean gradient.",
+      "latex_transcription": [
+        "The verifier channel is defined with FP rate rho_0 and FN rate rho_1.",
+        "PGBC inverts the noise process to compute an unbiased estimator.",
+        "Theorem 3.3 gives R_hat_b=(R_tilde-rho_0)/(1-rho_0-rho_1) (3).",
+        "It is an unbiased estimator of the true reward.",
+        "PGFC directly modifies the policy-gradient estimator.",
+        "It reweights the score function G_t under the noisy reward.",
+        "The weights are chosen so the expected update is parallel to the clean gradient."
+      ],
+      "context_around": "UNSPECIFIED",
+      "log_base": "no",
+      "weights": "no",
+      "n_dist": "arXiv:2510.00915v4 explicitly in fetched body",
+      "version": "CITED_BY NOT_FOUND",
+      "cross_check": "NO_CONTRADICTION",
+      "contradiction": "yes",
+      "matches_landed_form": "The supplied target label Cai verifier matches this source; do not confuse it with GRPO itself."
+    },
+    {
+      "target": "TimeSoccer token NLL",
+      "url": "https://arxiv.org/pdf/2510.00915",
+      "status": "WRONG_TARGET_LABEL; fetched PDF is Cai verifier, not TimeSoccer",
+      "page_footer": "not applicable",
+      "equation_quote": "The supplied URL arXiv:2510.00915 is Reinforcement Learning with Verifiable yet Noisy Rewards under Imperfect Verifiers; no TimeSoccer token-NLL equation is present.",
+      "latex_transcription": "UNOBTAINED.",
+      "context_around": [
+        "The fetched title is Reinforcement Learning with Verifiable yet Noisy Rewards under Imperfect Verifiers.",
+        "The body discusses verifier rewards, backward correction, and forward correction.",
+        "No TimeSoccer title or token-NLL equation was found."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "arXiv:2510.00915v4",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "The source block has no TimeSoccer URL; a replacement search is required."
+    },
+    {
+      "target": "Kalman 1960 recursion",
+      "url": "https://www.cs.unc.edu/~welch/kalman/media/pdf/Kalman1960.pdf",
+      "status": "NOT_FOUND; fetched body says requested URL was not found",
+      "page_footer": "not obtained",
+      "equation_quote": "No recursion was available.",
+      "latex_transcription": "UNOBTAINED.",
+      "context_around": [
+        "Not Found.",
+        "The requested URL was not found on this server."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not obtained",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "The HTML companion returned the same not-found response.",
+      "failed_fetches": [
+        {
+          "url": "https://www.cs.unc.edu/~welch/kalman/media/pdf/Kalman1960.pdf",
+          "status": "404/NOT_FOUND"
+        },
+        {
+          "url": "https://www.cs.unc.edu/~welch/kalman/kalmanPaper.html",
+          "status": "404/NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "target": "Romer fourth-down Bellman comparison",
+      "url": "https://www.nber.org/papers/w9024",
+      "status": "NBER_METADATA_PAGE; main PDF source failed",
+      "page_footer": "NBER metadata page; no printed article footer",
+      "equation_quote": "The NBER page identifies the paper but does not expose the Bellman comparison equation.",
+      "latex_transcription": "UNOBTAINED.",
+      "context_around": [
+        "It’s Fourth Down and What Does the Bellman Equation Say? A Dynamic Programming Analysis of Football Strategy.",
+        "Working Paper 9024.",
+        "The paper uses play-by-play accounts of NFL games and dynamic programming.",
+        "The fetched NBER page is metadata, not the paper body."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "no",
+      "notes": "The supplied Berkeley PDF returned 404; NBER was opened as required but is metadata only.",
+      "failed_fetches": [
+        {
+          "url": "https://eml.berkeley.edu/~dromer/papers/JPE_April05.pdf",
+          "status": "404/NOT_FOUND"
+        },
+        {
+          "url": "https://www.nber.org/papers/w9024",
+          "status": "metadata page; no equation body"
+        }
+      ]
+    },
+    {
+      "target": "Shafer and Vovk include rule",
+      "url": "https://jmlr.org/papers/volume9/shafer08a/shafer08a.pdf",
+      "status": "BODY_FETCHED; no HTTP code surfaced",
+      "page_footer": "Printed page footer not exposed in markdown conversion",
+      "equation_quote": "The fetched tutorial body discusses including the new example in fitting the regression line, but the requested standalone include rule was not isolated with a printed equation number.",
+      "latex_transcription": "A(B,z) uses the calibration sample; the passage says the new example may be included among the examples used to estimate the regression line.",
+      "context_around": [
+        "We can use the error in this prediction as a nonconformity measure.",
+        "We can obtain other nonconformity measures by using other methods to estimate a line.",
+        "Alternatively, we can include the new example as one of the examples used to estimate the least-squares line or some other regression line.",
+        "It is natural to write (x_n,y_n) for the new example.",
+        "a_n and b_n designate coefficients calculated from all n examples."
+      ],
+      "log_base": "UNSPECIFIED",
+      "weights": "no",
+      "n_dist": "no",
+      "version": "not stated in fetched body",
+      "cross_check": "CITED_BY NOT_FOUND",
+      "contradiction": "NO_CONTRADICTION",
+      "matches_landed_form": "partial",
+      "notes": "The source body was fetched, but the requested printed include rule/page could not be identified without a page-image/PDF layout extraction."
+    }
+  ],
+  "GAP_LIST": [
+    {
+      "target": "Herbrich 2000",
+      "next_url": "https://www.asc.ohio-state.edu/lee.2272/mss/tr873.pdf",
+      "reason": "ordered block exhausted; search replacement attempt returned no opened Herbrich PDF containing the pair hinge; this is the next legal PDF result to inspect"
+    },
+    {
+      "target": "Endres and Schindelin",
+      "next_url": "https://www.researchgate.net/publication/3083137_Divergence_measures_based_on_the_Shannon_entropy",
+      "reason": "DOI fetch failed; next replacement must be a legal PDF/HTML theorem page, not an abstract"
+    },
+    {
+      "target": "TimeSoccer",
+      "next_url": "https://arxiv.org/pdf/2510.00915",
+      "reason": "the supplied URL is Cai verifier, so a TimeSoccer-specific replacement search is required"
+    },
+    {
+      "target": "Kalman 1960",
+      "next_url": "https://www.cs.unc.edu/~welch/kalman/kalmanPaper.html",
+      "reason": "both supplied Kalman URLs returned NOT_FOUND"
+    }
+  ],
+  "CITED_BY": {
+    "Lin 1991 weighted Jensen-Shannon (4.1)": "CITED_BY NOT_FOUND",
+    "Lin 1991 generalized Jensen-Shannon (5.1)": "CITED_BY NOT_FOUND",
+    "Herbrich 2000 large-margin rank boundaries": "CITED_BY NOT_FOUND",
+    "DPO equation (7)": "CITED_BY NOT_FOUND",
+    "PPO clipped surrogate equation (7)": "CITED_BY NOT_FOUND",
+    "LoRA equation (3)": "CITED_BY NOT_FOUND",
+    "Kelly 1956 optimal fraction / f-star": "CITED_BY NOT_FOUND",
+    "Murphy 1973 Brier decomposition": "CITED_BY NOT_FOUND",
+    "Endres and Schindelin square-root JS metric": "CITED_BY NOT_FOUND",
+    "Gibbs and Candes ACI recursion": "CITED_BY NOT_FOUND",
+    "GRPO group-relative advantage": "CITED_BY NOT_FOUND",
+    "Cai verifier backward/forward correction": "NO_CONTRADICTION",
+    "TimeSoccer token NLL": "CITED_BY NOT_FOUND",
+    "Kalman 1960 recursion": "CITED_BY NOT_FOUND",
+    "Romer fourth-down Bellman comparison": "CITED_BY NOT_FOUND",
+    "Shafer and Vovk include rule": "CITED_BY NOT_FOUND"
+  }
+}

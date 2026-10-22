@@ -1,0 +1,3180 @@
+{
+ "generated_utc": "2026-10-14T02:36:24.077370+00:00",
+ "sport": "football/nfl",
+ "week": 5,
+ "season": 2026,
+ "byes": [
+  "KC",
+  "CAR"
+ ],
+ "games_requested": 15,
+ "cards_emitted": 15,
+ "games": [
+  {
+   "game_id": "TB-DAL-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "DAL.epa_facets",
+     "value": {
+      "team": "DAL",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 229,
+      "pass_epa": 43.317,
+      "rush_epa": -6.274,
+      "turnover_epa": -7.592,
+      "turnover_n": 2,
+      "success_rate": 0.5328,
+      "air_yards_per_att": 7.86,
+      "wpa": 0.92,
+      "cpoe_mean": 6.308,
+      "xyac_mean": 5.41,
+      "comp_air_epa": 52.959,
+      "comp_yac_epa": -13.426,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "TB.epa_facets",
+     "value": {
+      "team": "TB",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 250,
+      "pass_epa": -33.751,
+      "rush_epa": -4.161,
+      "turnover_epa": -29.072,
+      "turnover_n": 7,
+      "success_rate": 0.436,
+      "air_yards_per_att": 9.68,
+      "wpa": -1.313,
+      "cpoe_mean": -0.771,
+      "xyac_mean": 6.08,
+      "comp_air_epa": 49.103,
+      "comp_yac_epa": -55.02,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol DAL: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol TB: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "DAL.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "TB.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol DAL: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol TB: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "TB",
+   "home": "DAL",
+   "matchup": "TB@DAL",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\TB@DAL-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 69,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 73
+   }
+  },
+  {
+   "game_id": "PHI-JAX-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "JAX.epa_facets",
+     "value": {
+      "team": "JAX",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 228,
+      "pass_epa": 19.789,
+      "rush_epa": 5.841,
+      "turnover_epa": -8.815,
+      "turnover_n": 2,
+      "success_rate": 0.5439,
+      "air_yards_per_att": 9.05,
+      "wpa": 0.408,
+      "cpoe_mean": 8.624,
+      "xyac_mean": 5.0,
+      "comp_air_epa": 52.068,
+      "comp_yac_epa": -22.157,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "PHI.epa_facets",
+     "value": {
+      "team": "PHI",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 225,
+      "pass_epa": -6.387,
+      "rush_epa": -2.983,
+      "turnover_epa": -22.711,
+      "turnover_n": 5,
+      "success_rate": 0.4267,
+      "air_yards_per_att": 7.64,
+      "wpa": 0.946,
+      "cpoe_mean": 6.249,
+      "xyac_mean": 5.53,
+      "comp_air_epa": 44.034,
+      "comp_yac_epa": -43.263,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol JAX: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol PHI: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "JAX.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "PHI.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol JAX: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol PHI: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "PHI",
+   "home": "JAX",
+   "matchup": "PHI@JAX",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\PHI@JAX-card.md",
+    "thesis": "Attrition Edge",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 77
+   }
+  },
+  {
+   "game_id": "CHI-GB-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "GB.epa_facets",
+     "value": {
+      "team": "GB",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 249,
+      "pass_epa": 4.597,
+      "rush_epa": -23.764,
+      "turnover_epa": -21.78,
+      "turnover_n": 4,
+      "success_rate": 0.4217,
+      "air_yards_per_att": 8.69,
+      "wpa": 0.006,
+      "cpoe_mean": -10.121,
+      "xyac_mean": 5.11,
+      "comp_air_epa": 77.251,
+      "comp_yac_epa": -67.176,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CHI.epa_facets",
+     "value": {
+      "team": "CHI",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 271,
+      "pass_epa": 30.561,
+      "rush_epa": -4.219,
+      "turnover_epa": -6.158,
+      "turnover_n": 4,
+      "success_rate": 0.476,
+      "air_yards_per_att": 7.41,
+      "wpa": 0.526,
+      "cpoe_mean": 5.038,
+      "xyac_mean": 5.46,
+      "comp_air_epa": 46.802,
+      "comp_yac_epa": -22.17,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol GB: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol CHI: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "GB.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CHI.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol GB: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol CHI: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "CHI",
+   "home": "GB",
+   "matchup": "CHI@GB",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\CHI@GB-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 69,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 92
+   }
+  },
+  {
+   "game_id": "HOU-TEN-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "TEN.epa_facets",
+     "value": {
+      "team": "TEN",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 208,
+      "pass_epa": -11.904,
+      "rush_epa": -1.478,
+      "turnover_epa": -13.023,
+      "turnover_n": 3,
+      "success_rate": 0.4567,
+      "air_yards_per_att": 6.34,
+      "wpa": -0.564,
+      "cpoe_mean": 1.476,
+      "xyac_mean": 5.14,
+      "comp_air_epa": 31.252,
+      "comp_yac_epa": -38.566,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "HOU.epa_facets",
+     "value": {
+      "team": "HOU",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 269,
+      "pass_epa": -1.953,
+      "rush_epa": -15.731,
+      "turnover_epa": -6.996,
+      "turnover_n": 2,
+      "success_rate": 0.4461,
+      "air_yards_per_att": 9.53,
+      "wpa": -0.393,
+      "cpoe_mean": -2.684,
+      "xyac_mean": 5.1,
+      "comp_air_epa": 55.253,
+      "comp_yac_epa": -45.924,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol TEN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol HOU: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "TEN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "HOU.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol TEN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol HOU: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "HOU",
+   "home": "TEN",
+   "matchup": "HOU@TEN",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\HOU@TEN-card.md",
+    "thesis": "Attrition Edge",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 75
+   }
+  },
+  {
+   "game_id": "CIN-MIA-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "MIA.epa_facets",
+     "value": {
+      "team": "MIA",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 234,
+      "pass_epa": -2.993,
+      "rush_epa": -20.299,
+      "turnover_epa": -11.224,
+      "turnover_n": 4,
+      "success_rate": 0.3846,
+      "air_yards_per_att": 10.13,
+      "wpa": -0.327,
+      "cpoe_mean": -8.052,
+      "xyac_mean": 6.04,
+      "comp_air_epa": 35.277,
+      "comp_yac_epa": -31.18,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CIN.epa_facets",
+     "value": {
+      "team": "CIN",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 241,
+      "pass_epa": 12.541,
+      "rush_epa": -3.911,
+      "turnover_epa": -11.576,
+      "turnover_n": 2,
+      "success_rate": 0.4564,
+      "air_yards_per_att": 6.39,
+      "wpa": 0.685,
+      "cpoe_mean": 3.364,
+      "xyac_mean": 5.48,
+      "comp_air_epa": 31.626,
+      "comp_yac_epa": -7.299,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol MIA: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol CIN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "MIA.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CIN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol MIA: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol CIN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "CIN",
+   "home": "MIA",
+   "matchup": "CIN@MIA",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\CIN@MIA-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 59
+   }
+  },
+  {
+   "game_id": "LV-NE-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "NE.epa_facets",
+     "value": {
+      "team": "NE",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 232,
+      "pass_epa": -9.215,
+      "rush_epa": -15.183,
+      "turnover_epa": -34.156,
+      "turnover_n": 8,
+      "success_rate": 0.4224,
+      "air_yards_per_att": 9.06,
+      "wpa": -0.415,
+      "cpoe_mean": 3.417,
+      "xyac_mean": 5.58,
+      "comp_air_epa": 54.899,
+      "comp_yac_epa": -64.982,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "LV.epa_facets",
+     "value": {
+      "team": "LV",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 250,
+      "pass_epa": 21.48,
+      "rush_epa": -19.291,
+      "turnover_epa": -19.448,
+      "turnover_n": 4,
+      "success_rate": 0.436,
+      "air_yards_per_att": 8.5,
+      "wpa": 0.964,
+      "cpoe_mean": 4.106,
+      "xyac_mean": 4.99,
+      "comp_air_epa": 62.033,
+      "comp_yac_epa": -38.286,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol NE: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol LV: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "NE.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "LV.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol NE: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol LV: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "LV",
+   "home": "NE",
+   "matchup": "LV@NE",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\LV@NE-card.md",
+    "thesis": "Narrative Fog",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 69
+   }
+  },
+  {
+   "game_id": "MIN-NO-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "NO.epa_facets",
+     "value": {
+      "team": "NO",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 284,
+      "pass_epa": 7.463,
+      "rush_epa": -1.989,
+      "turnover_epa": -35.416,
+      "turnover_n": 7,
+      "success_rate": 0.4754,
+      "air_yards_per_att": 7.68,
+      "wpa": 0.013,
+      "cpoe_mean": 4.527,
+      "xyac_mean": 5.34,
+      "comp_air_epa": 51.989,
+      "comp_yac_epa": -22.197,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "MIN.epa_facets",
+     "value": {
+      "team": "MIN",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 229,
+      "pass_epa": -3.577,
+      "rush_epa": -13.17,
+      "turnover_epa": -8.562,
+      "turnover_n": 2,
+      "success_rate": 0.3843,
+      "air_yards_per_att": 8.01,
+      "wpa": 0.196,
+      "cpoe_mean": -5.503,
+      "xyac_mean": 6.42,
+      "comp_air_epa": 32.545,
+      "comp_yac_epa": -31.213,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol NO: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol MIN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "NO.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "MIN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol NO: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol MIN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "MIN",
+   "home": "NO",
+   "matchup": "MIN@NO",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\MIN@NO-card.md",
+    "thesis": "Silent Shuffle",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 62
+   }
+  },
+  {
+   "game_id": "CLE-NYJ-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "NYJ.epa_facets",
+     "value": {
+      "team": "NYJ",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 260,
+      "pass_epa": 27.682,
+      "rush_epa": -19.017,
+      "turnover_epa": -4.704,
+      "turnover_n": 1,
+      "success_rate": 0.4577,
+      "air_yards_per_att": 7.36,
+      "wpa": 0.204,
+      "cpoe_mean": 10.932,
+      "xyac_mean": 5.63,
+      "comp_air_epa": 31.978,
+      "comp_yac_epa": 9.217,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "CLE.epa_facets",
+     "value": {
+      "team": "CLE",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 320,
+      "pass_epa": 24.991,
+      "rush_epa": -26.519,
+      "turnover_epa": -24.13,
+      "turnover_n": 5,
+      "success_rate": 0.4688,
+      "air_yards_per_att": 6.54,
+      "wpa": 0.796,
+      "cpoe_mean": 1.401,
+      "xyac_mean": 5.77,
+      "comp_air_epa": 21.589,
+      "comp_yac_epa": 5.9,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol NYJ: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol CLE: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "NYJ.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "CLE.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol NYJ: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol CLE: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "CLE",
+   "home": "NYJ",
+   "matchup": "CLE@NYJ",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\CLE@NYJ-card.md",
+    "thesis": "Narrative Fog",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 74
+   }
+  },
+  {
+   "game_id": "IND-PIT-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "PIT.epa_facets",
+     "value": {
+      "team": "PIT",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 342,
+      "pass_epa": -17.058,
+      "rush_epa": -1.925,
+      "turnover_epa": -18.65,
+      "turnover_n": 7,
+      "success_rate": 0.4591,
+      "air_yards_per_att": 9.34,
+      "wpa": 0.19,
+      "cpoe_mean": -4.022,
+      "xyac_mean": 5.64,
+      "comp_air_epa": 96.171,
+      "comp_yac_epa": -89.946,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "IND.epa_facets",
+     "value": {
+      "team": "IND",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 241,
+      "pass_epa": -11.822,
+      "rush_epa": 5.065,
+      "turnover_epa": -28.778,
+      "turnover_n": 6,
+      "success_rate": 0.4813,
+      "air_yards_per_att": 6.57,
+      "wpa": 0.729,
+      "cpoe_mean": -0.586,
+      "xyac_mean": 5.4,
+      "comp_air_epa": 18.342,
+      "comp_yac_epa": -13.356,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol PIT: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol IND: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "PIT.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "IND.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol PIT: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol IND: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "IND",
+   "home": "PIT",
+   "matchup": "IND@PIT",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\IND@PIT-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "matchup",
+     "on_field"
+    ],
+    "facts": 76
+   }
+  },
+  {
+   "game_id": "NYG-WSH-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "WSH.epa_facets",
+     "value": {
+      "team": "WSH",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 0,
+      "pass_epa": null,
+      "rush_epa": null,
+      "turnover_epa": null,
+      "turnover_n": 0,
+      "success_rate": null,
+      "air_yards_per_att": null,
+      "wpa": null,
+      "cpoe_mean": null,
+      "xyac_mean": null,
+      "comp_air_epa": null,
+      "comp_yac_epa": null,
+      "source": "missing-rows",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true
+     },
+     "fired": false,
+     "source": "missing-rows",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "NYG.epa_facets",
+     "value": {
+      "team": "NYG",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 242,
+      "pass_epa": 2.324,
+      "rush_epa": -9.827,
+      "turnover_epa": -7.787,
+      "turnover_n": 2,
+      "success_rate": 0.4421,
+      "air_yards_per_att": 8.7,
+      "wpa": 0.153,
+      "cpoe_mean": -5.162,
+      "xyac_mean": 5.19,
+      "comp_air_epa": 41.809,
+      "comp_yac_epa": -35.659,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol WSH: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol NYG: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "WSH.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "MISSING-ROWS",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "NYG.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 17,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 17,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 17,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 17,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol WSH: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol NYG: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "NYG",
+   "home": "WSH",
+   "matchup": "NYG@WSH",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\NYG@WSH-card-REFUSED.md",
+    "thesis": "FIXTURE NOT CONFIRMED",
+    "conviction": 0,
+    "domains": 0,
+    "facts": 0
+   }
+  },
+  {
+   "game_id": "DEN-LAC-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "LAC.epa_facets",
+     "value": {
+      "team": "LAC",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 240,
+      "pass_epa": -10.869,
+      "rush_epa": -22.961,
+      "turnover_epa": -28.725,
+      "turnover_n": 6,
+      "success_rate": 0.425,
+      "air_yards_per_att": 9.48,
+      "wpa": -0.902,
+      "cpoe_mean": -4.221,
+      "xyac_mean": 5.3,
+      "comp_air_epa": 39.881,
+      "comp_yac_epa": -40.633,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DEN.epa_facets",
+     "value": {
+      "team": "DEN",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 231,
+      "pass_epa": -3.016,
+      "rush_epa": -5.842,
+      "turnover_epa": -16.248,
+      "turnover_n": 4,
+      "success_rate": 0.4416,
+      "air_yards_per_att": 5.86,
+      "wpa": 0.582,
+      "cpoe_mean": -2.647,
+      "xyac_mean": 5.84,
+      "comp_air_epa": 16.057,
+      "comp_yac_epa": -17.193,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol LAC: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol DEN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "LAC.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DEN.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol LAC: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol DEN: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "DEN",
+   "home": "LAC",
+   "matchup": "DEN@LAC",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\DEN@LAC-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 75,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 88
+   }
+  },
+  {
+   "game_id": "DET-ARI-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "ARI.epa_facets",
+     "value": {
+      "team": "ARI",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 267,
+      "pass_epa": 16.721,
+      "rush_epa": -8.206,
+      "turnover_epa": 3.123,
+      "turnover_n": 2,
+      "success_rate": 0.4757,
+      "air_yards_per_att": 6.13,
+      "wpa": 0.312,
+      "cpoe_mean": 3.773,
+      "xyac_mean": 5.11,
+      "comp_air_epa": 31.719,
+      "comp_yac_epa": -11.231,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "DET.epa_facets",
+     "value": {
+      "team": "DET",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 265,
+      "pass_epa": 35.478,
+      "rush_epa": -6.644,
+      "turnover_epa": -5.24,
+      "turnover_n": 1,
+      "success_rate": 0.5396,
+      "air_yards_per_att": 6.76,
+      "wpa": 0.546,
+      "cpoe_mean": 3.052,
+      "xyac_mean": 4.99,
+      "comp_air_epa": 42.546,
+      "comp_yac_epa": 1.537,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol ARI: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol DET: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "ARI.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "DET.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol ARI: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol DET: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "DET",
+   "home": "ARI",
+   "matchup": "DET@ARI",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\DET@ARI-card.md",
+    "thesis": "Attrition Edge",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 57
+   }
+  },
+  {
+   "game_id": "SF-SEA-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "SEA.epa_facets",
+     "value": {
+      "team": "SEA",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 239,
+      "pass_epa": 30.707,
+      "rush_epa": -20.802,
+      "turnover_epa": -23.95,
+      "turnover_n": 4,
+      "success_rate": 0.4854,
+      "air_yards_per_att": 6.99,
+      "wpa": 0.543,
+      "cpoe_mean": 5.895,
+      "xyac_mean": 5.55,
+      "comp_air_epa": 41.84,
+      "comp_yac_epa": -12.662,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "SF.epa_facets",
+     "value": {
+      "team": "SF",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 215,
+      "pass_epa": 59.112,
+      "rush_epa": -3.628,
+      "turnover_epa": -4.574,
+      "turnover_n": 1,
+      "success_rate": 0.5628,
+      "air_yards_per_att": 7.51,
+      "wpa": 1.462,
+      "cpoe_mean": 6.276,
+      "xyac_mean": 5.17,
+      "comp_air_epa": 35.782,
+      "comp_yac_epa": 15.304,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol SEA: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol SF: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "SEA.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "SF.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol SEA: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol SF: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "SF",
+   "home": "SEA",
+   "matchup": "SF@SEA",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\SF@SEA-card.md",
+    "thesis": "Trench Funnel",
+    "conviction": 75,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 92
+   }
+  },
+  {
+   "game_id": "BAL-ATL-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "ATL.epa_facets",
+     "value": {
+      "team": "ATL",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 244,
+      "pass_epa": -34.619,
+      "rush_epa": 2.545,
+      "turnover_epa": -46.088,
+      "turnover_n": 8,
+      "success_rate": 0.459,
+      "air_yards_per_att": 4.87,
+      "wpa": -0.84,
+      "cpoe_mean": -7.95,
+      "xyac_mean": 6.33,
+      "comp_air_epa": -0.386,
+      "comp_yac_epa": -16.977,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "BAL.epa_facets",
+     "value": {
+      "team": "BAL",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 244,
+      "pass_epa": 30.478,
+      "rush_epa": 1.082,
+      "turnover_epa": -8.059,
+      "turnover_n": 2,
+      "success_rate": 0.5205,
+      "air_yards_per_att": 10.43,
+      "wpa": 1.463,
+      "cpoe_mean": 7.219,
+      "xyac_mean": 5.67,
+      "comp_air_epa": 61.142,
+      "comp_yac_epa": -22.51,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol ATL: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol BAL: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "ATL.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "BAL.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 29,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 29,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol ATL: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol BAL: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "BAL",
+   "home": "ATL",
+   "matchup": "BAL@ATL",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\BAL@ATL-card.md",
+    "thesis": "Ballistics Window",
+    "conviction": 69,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "environmental",
+     "market",
+     "on_field"
+    ],
+    "facts": 61
+   }
+  },
+  {
+   "game_id": "BUF-LAR-2026-w5",
+   "bet_type": "CARD",
+   "facts": [
+    {
+     "signal": "LAR.epa_facets",
+     "value": {
+      "team": "LAR",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 0,
+      "pass_epa": null,
+      "rush_epa": null,
+      "turnover_epa": null,
+      "turnover_n": 0,
+      "success_rate": null,
+      "air_yards_per_att": null,
+      "wpa": null,
+      "cpoe_mean": null,
+      "xyac_mean": null,
+      "comp_air_epa": null,
+      "comp_yac_epa": null,
+      "source": "missing-rows",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true
+     },
+     "fired": false,
+     "source": "missing-rows",
+     "license": "nflverse CC-BY-4.0"
+    },
+    {
+     "signal": "BUF.epa_facets",
+     "value": {
+      "team": "BUF",
+      "season": 2026,
+      "before_week": 5,
+      "plays": 244,
+      "pass_epa": 36.679,
+      "rush_epa": 5.845,
+      "turnover_epa": -17.276,
+      "turnover_n": 5,
+      "success_rate": 0.5123,
+      "air_yards_per_att": 10.28,
+      "wpa": 1.496,
+      "cpoe_mean": 4.453,
+      "xyac_mean": 5.44,
+      "comp_air_epa": 58.927,
+      "comp_yac_epa": -19.597,
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "point_in_time": true,
+      "note": "Sum/mean of play-level facts on this team's offensive plays before the named week (EPA, SR, air yards, WPA, CPOE, XYAC). Not a win probability."
+     },
+     "fired": true,
+     "source": "real",
+     "license": "nflverse CC-BY-4.0"
+    }
+   ],
+   "gaps": [
+    "ol LAR: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "ol BUF: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+    "tau: no live win probability; refused a 0.5 stand-in",
+    "weather: not fetched for this run",
+    "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+    "market priors: no odds row on the slate event"
+   ],
+   "trace_label": "INVALID",
+   "trace_depth": "ReasoningDepth.L1",
+   "checklist": {
+    "qb_behavior": "DATA-GAP",
+    "coaching_scheme": "DATA-GAP",
+    "offensive_line": "CLEAR",
+    "trust_signals": "UNCHECKED",
+    "scheme_matchup": "NOTHING-MATERIAL"
+   },
+   "levels": [],
+   "mint": "withhold",
+   "pick": null,
+   "confidence": null,
+   "probability_before_calibration": null,
+   "probability_after_calibration": null,
+   "causal_chain": [
+    {
+     "id": "derived:observed-facts",
+     "links": [
+      {
+       "cause": "LAR.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "MISSING-ROWS",
+       "load_bearing": false,
+       "breaking_conditions": []
+      },
+      {
+       "cause": "BUF.epa_facets",
+       "mechanism": "observed before kickoff",
+       "outcome": "context for the ranked board (no directional claim at this depth)",
+       "verification": "REAL",
+       "load_bearing": false,
+       "breaking_conditions": []
+      }
+     ]
+    }
+   ],
+   "ranked_board": {
+    "candidates": [
+     {
+      "play": "TOTAL",
+      "rank": 1,
+      "conviction": 17,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "SPREAD",
+      "rank": 2,
+      "conviction": 17,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     },
+     {
+      "play": "MONEYLINE",
+      "rank": 3,
+      "conviction": 17,
+      "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+      "status": "SCHEMATIC",
+      "has_directional_claim": false,
+      "note": "ranked regardless of mint action; a trace does not mint a probability"
+     }
+    ],
+    "conviction": 17,
+    "conviction_basis": "chain coverage: observed facts / (observed + named gaps); not a win probability",
+    "breaking_conditions": [
+     {
+      "id": "gap:0",
+      "text": "ol LAR: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:1",
+      "text": "ol BUF: injury report for season 2026 week 5 is not in the file. Published weeks: [1, 2, 3, 4]. Unpublished weeks are a gap, not an empty injury list.",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:2",
+      "text": "tau: no live win probability; refused a 0.5 stand-in",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:3",
+      "text": "weather: not fetched for this run",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     },
+     {
+      "id": "gap:4",
+      "text": "market priors: no ESPN odds row matched this matchup (game not listed or odds not posted)",
+      "metric": "",
+      "op": "",
+      "threshold": null,
+      "verifiable": false,
+      "met": null,
+      "note": "named gap; unverifiable at this run"
+     }
+    ],
+    "mint_action": "withhold",
+    "mint_reason": "analyze() returned INVALID; no probability was substituted",
+    "never_terminal_note": "published even when mint withholds or passes; PASS is never the terminal state"
+   },
+   "note": "Withheld. analyze() returned INVALID; no probability was substituted. The ranked board below is still emitted; a withhold is not a terminal silence.",
+   "away": "BUF",
+   "home": "LAR",
+   "matchup": "BUF@LAR",
+   "analyst_card": {
+    "path": "C:\\Users\\Garrett\\Sports\\docs\\predictions\\research\\2026-10-14\\BUF@LAR-card.md",
+    "thesis": "Narrative Fog",
+    "conviction": 62,
+    "domains": [
+     "biophysical",
+     "cognitive",
+     "dfs",
+     "market",
+     "on_field"
+    ],
+    "facts": 61
+   }
+  }
+ ],
+ "gaps": [],
+ "note": "every game reasoned and ranked; withhold/pass are mint actions on the board, never silence"
+}

@@ -1,0 +1,30 @@
+{
+ "gap-conformal-sport": {
+  "query": "all:\"conformal prediction\" AND (all:football OR all:soccer OR all:sport OR all:betting)",
+  "total": null,
+  "entries": [],
+  "error": "HTTP Error 429: Unknown Error"
+ },
+ "gap-skellam-nfl": {
+  "query": "all:Skellam AND (all:\"American football\" OR all:NFL OR all:\"point difference\")",
+  "total": null,
+  "entries": [],
+  "error": "The read operation timed out"
+ },
+ "gap-qb-shift": {
+  "query": "all:quarterback AND (all:\"covariate shift\" OR all:\"distribution shift\" OR all:conformal)",
+  "total": null,
+  "entries": [],
+  "error": "The read operation timed out"
+ },
+ "gap-clv-denominator": {
+  "query": "all:\"closing line value\" AND (all:betting OR all:sportsbook)",
+  "total": 0,
+  "entries": []
+ },
+ "gap-ncaaf-calibration": {
+  "query": "all:\"college football\" AND (all:calibration OR all:conformal OR all:\"prediction interval\")",
+  "total": 0,
+  "entries": []
+ }
+}

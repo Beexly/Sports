@@ -1,0 +1,170 @@
+ch based on condi-
+tional independencies (details of which will not concern
+us here), to ﬁnd the skeleton of the PAG P, followed
+by an orientation phase based on a set of graphical
+rules, detailed in Table 11. Inspection reveals a cer-
+tain hierarchy in which rules can trigger which others,
+reﬂected in the structure of Algorithm 1.
+R0a
+If X ⊥⊥Y | Z, then X −⧹
+⧸−Y , Sep(X, Y ) ←Z.
+R0b
+If
+X ∗−∗Z ◦−∗Y
+and
+X −⧹
+⧸−Y ,
+then
+if
+Z /∈Sep(X, Y ), then X ∗→Z ←∗Y .
+R1
+If X ∗→Z ◦−∗Y , and X −⧹
+⧸−Y , then Z −→Y .
+R2a
+If Z −→X ∗→Y and Z ∗−◦Y , then Z ∗→Y .
+R2b
+If Z ∗→X −→Y and Z ∗−◦Y , then Z ∗→Y .
+R3
+If X ∗→Z ←∗Y , X ∗−◦W ◦−∗Y , X −⧹
+⧸−Y ,
+and W ∗−◦Z, then W ∗→Z.
+R4a
+If u = ⟨X, .., Zk, Z, Y ⟩is a discriminating path
+between X and Y for Z, and Z ◦−∗Y , then if
+Z ∈Sep(X, Y ), then Z −→Y .
+R4b
+Idem, if Z /∈Sep(X, Y ) then Zk ←→Z ←→Y .
+R5
+If u = ⟨Z, X, .., W, Y, Z, X⟩is an uncov. circle
+path, then Z −−Y (idem for all edges on u).
+R6
+If X −−Z ◦−∗Y , then orient as Z −−∗Y .
+R7
+If X −−◦Z ◦−∗Y , and X −⧹
+⧸−Y , then Z −−∗Y .
+R8a
+If Z −→X −→Y and Z ◦→Y , then Z −→Y .
+R8b
+If Z −−◦X −→Y and Z ◦→Y , then Z −→Y .
+R9
+If Z ◦→Y , u = ⟨Z, X, W, .., Y ⟩is an uncov.
+p.d. path, and X −⧹
+⧸−Y , then Z −→Y .
+R10
+If Z ◦→Y , X −→Y ←−W, u1 = ⟨Z, S, .., X⟩
+and u2 = ⟨Z, V, .., W⟩are uncov. p.d. paths,
+(possibly with S = X and/or V = W), then if
+S −⧹
+⧸−V , then Z −→Y .
+Table 1: Orientation rules of augmented FCI
+Starting from the fully ◦−◦connected graph in line
+1, R0a eliminates all edges between conditionally in-
+dependent nodes to obtain the skeleton of P with only
+◦−◦edges (line 4). Then rules R0b-R4b obtain all
+invariant arrowheads (as well as some tails).
+Rules
+R5 −R10 then suﬃce to identify all and only the re-
+maining invariant tails. For example, in Figure 1, the
+arrowheads at C from A and B are identiﬁed by R0b,
+and the tailmark at B −→F follows from R9.
+1We follow the numbering from (Zhang, 2008a). The
+metasymbol ∗stands for an arbitrary edge mark, and
+X −⧹
+⧸−Y explicitly indicates the absence of an edge between
+X and Y in the PAG P; see also Figures 2 and 3.
+
+<<<PAGE 4>>>
+Input
+: independence oracle for V
+Output : complete PAG P over V
+1: P ←fully ◦−◦connected graph over V
+2: for all {X, Y } ∈V do
+3:
+search in some clever way for a X ⊥⊥Y | Z
+4:
+P ←R0a (eliminate X −⧹
+⧸−Y )
+5:
+record Sep(X, Y ) ←Z
+6: end for
+7: P ←R0b (unshielded colliders)
+8: repeat P ←R1 −R4b until ﬁnished
+9: P ←R5
+(uncovered circle paths)
+10: repeat P ←R6 −R7 until ﬁnished
+11: repeat P ←R8a−R10 until ﬁnished
+Algorithm 1: Augmented FCI algorithm
+3
+Inference from causal logic
+Note: we use X, Y , Z, etc. to denote disjoint (sets
+of) observed variables, and S to denote the (possibly
+empty) set of selection nodes in a causal DAG GC.
+3.1
+Logical rules from minimal independence
+There is a well-known, fundamental connection be-
+tween minimal (in)dependencies and causal relations:
+Lemma 2. If a node Z changes an (in)dependence
+relation between X and Y in a causal DAG, then:
+1. X ⊥⊥Y | W ∪[Z]
+⊢
+Z ⇒(X ∪Y ∪W ∪S),
+2. X ⊥⊥
+⧸Y | W ∪[Z]
+⊢
+Z ⇒
+⧹(X ∪Y ∪W ∪S).
+with special case X ⊥⊥Y | [W ∪Z] ⊢Z ⇒(X∪Y ∪S).
+This means that, using X ⇒
+⧹Y
+def
+= ¬(X ⇒Y ), we can
+translate observed minimal (in)dependencies directly
+into logical statements about causal relations:
+Lemma 3. For observed minimal (in)dependencies
+between nodes in a causal DAG GC:
+1. X ⊥⊥Y | [W ∪Z] ⊢Z ⇒X ∨Z ⇒Y
+∨Z ⇒S
+2. X ⊥⊥
+⧸Y | W ∪[Z] ⊢Z ⇒
+⧹X ∧Z ⇒
+⧹Y
+∧
+Z ⇒
+⧹W ∧Z ⇒
+⧹S
+By establishing which minimal (in)dependencies hold
+in a distribution, a list L can be compiled of logical
+statements of the form:
+1:
+Z ⇒X ∨Z ⇒Y
+∨Z ⇒S
+2:
+X ⇒
+⧹Y
+3:
+Y ⇒X ∨Y ⇒W ∨Y ⇒S, etc.
+Each line states a truth, for one speciﬁc node, about
+the causal relations it has with one or more others.
+New statements can be inferred by substituting the
+subject of one line in another, and then reduce by using
+the three causal properties from Proposition 1.
+To illustrate the inference process in deriving (new)
+causal information, consider these two examples:
+Example 1.
+Suppose in a causal system GC both
+X ⊥⊥Y | [Z] and X ⊥⊥
+⧸U | W ∪[Z] have been observed,
+for some Z ∈Z. Then this corresponds to
+1:
+Z ⇒X ∨Z ⇒Y
+∨Z ⇒S
+2:
+Z ⇒
+⧹X ∧Z ⇒
+⧹U
+∧Z ⇒
+⧹S
+∧Z ⇒
+⧹W
+Using (2:) to eliminate Z ⇒X and Z ⇒S from (1:)
+t

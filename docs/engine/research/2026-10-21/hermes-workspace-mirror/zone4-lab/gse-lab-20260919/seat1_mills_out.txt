@@ -1,0 +1,46 @@
+ season          model   n   rmse  spearman
+   2024    pooled(0.5) 149 13.129     0.446
+   2024 weighted(0.75) 149 13.274     0.429
+   2024 pass-only(1.0) 149 13.407     0.407
+   2025    pooled(0.5) 151 13.858     0.295
+   2025 weighted(0.75) 151 13.694     0.322
+   2025 pass-only(1.0) 151 13.623     0.340
+=== split-weight train folds (2019-2023 mean Spearman by w) ===
+w
+0.30    0.2832
+0.35    0.2949
+0.40    0.3020
+0.45    0.3079
+0.50    0.3151
+0.55    0.3163
+0.60    0.3150
+0.65    0.3159
+0.70    0.3143
+0.75    0.3115
+0.80    0.3094
+0.85    0.3044
+0.90    0.3009
+w* = 0.55
+
+=== frozen-w test (per season + pooled) ===
+2024: w*=0.55 SP 0.4429 | pooled SP 0.4461 | lift -0.0032
+2025: w*=0.55 SP 0.3049 | pooled SP 0.2950 | lift +0.0099
+POOLED TEST: w* SP 0.3674 vs pooled SP 0.3665 -> lift +0.0008 (kill >= +0.05: FAIL)
+
+=== 2025 walk-forward CRPS (W2-W18, prior-week fits) ===
+ season method   n      rmse  spearman verdict
+   2023    raw 150 13.071818  0.354007     NaN
+   2023    adj 150 13.643750  0.312547    NULL
+   2023    mkt 150 12.528512  0.413944     NaN
+   2024    raw 149 13.215275  0.432291     NaN
+   2024    adj 149 13.276740  0.440011    NULL
+   2024    mkt 149 11.694611  0.598125     NaN
+   2025    raw 151 13.854889  0.274766     NaN
+   2025    adj 151 13.860692  0.299055    NULL
+   2025    mkt 151 12.245390  0.489956     NaN
+
+0/3 seasons pass the pre-registered kill line
+n games: 256 (n team-games: 512)
+CRPS adj (DAVE 2025 walk-forward): 8.239  mean sd 10.36
+CRPS close (market):               7.195  mean sd 11.82
+locked fleet close CRPS: 7.109 | locked DAVE k=8: 7.500 (n~1,871, 2019-2025)

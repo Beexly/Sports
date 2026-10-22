@@ -1,0 +1,52 @@
+=== MARKET CALIBRATION: de-vigged home implied prob vs outcome (2019-2025) ===
+{'bin': '0.30-0.40', 'n': 644, 'implied': 0.3528, 'realized': 0.3478, 'wil95': [np.float64(0.311), np.float64(0.3846)], 'brier': 0.2242}
+{'bin': '0.40-0.50', 'n': 700, 'implied': 0.4461, 'realized': 0.4271, 'wil95': [np.float64(0.3905), np.float64(0.4638)], 'brier': 0.2439}
+{'bin': '0.50-0.60', 'n': 831, 'implied': 0.5545, 'realized': 0.5319, 'wil95': [np.float64(0.498), np.float64(0.5658)], 'brier': 0.2498}
+{'bin': '0.60-0.70', 'n': 1044, 'implied': 0.6483, 'realized': 0.6169, 'wil95': [np.float64(0.5874), np.float64(0.6463)], 'brier': 0.2368}
+{'bin': '0.70-0.85', 'n': 1151, 'implied': 0.7647, 'realized': 0.7758, 'wil95': [np.float64(0.7518), np.float64(0.7999)], 'brier': 0.1719}
+{'bin': '0.85-1.00', 'n': 219, 'implied': 0.881, 'realized': 0.9178, 'wil95': [np.float64(0.8814), np.float64(0.9542)], 'brier': 0.0761}
+OVERALL: Brier 0.2110  logloss 0.6093  mean overround 1.0273
+home implied 20-30% bin: realized 0.2520 on n=381 (bias present)
+
+=== REST DIFFERENTIAL (home_rest - away_rest -> home margin) ===
+{'bucket': 'away -2 or more', 'n': 729, 'mean_home_margin': 0.99}
+{'bucket': 'away -1..home +1', 'n': 5617, 'mean_home_margin': 2.28}
+{'bucket': 'home +2..+4', 'n': 277, 'mean_home_margin': 3.61}
+{'bucket': 'home +5 or more', 'n': 361, 'mean_home_margin': 2.98}
+slope: +0.167 pts per rest-day differential
+
+=== SURFACE (scoring only; injuries NOT_RUN) ===
+grass {'games': 4194, 'mean_total': 43.16, 'sd_total': 13.89}
+artificial {'games': 2790, 'mean_total': 45.71, 'sd_total': 14.39}
+
+=== PRIMETIME (Thu / Sun 8pm+ / Mon) vs Sun-day ===
+primetime {'games': 1245, 'mean_total': 45.04, 'sd_abs_margin': 9.2}
+sun_day {'games': 5349, 'mean_total': 44.07, 'sd_abs_margin': 9.25}
+
+=== DIVISION GAMES (folk wisdom: closer, lower scoring) ===
+division {'games': 2699, 'mean_abs_margin': 11.36, 'mean_total': 43.25}
+non-division {'games': 4285, 'mean_abs_margin': 11.66, 'mean_total': 44.76}
+
+=== REFEREE CREWS: penalty yards per game (crews n>=30) ===
+crews with n>=30: 20
+lightest: [{'referee': 'Bill Vinovich', 'games': 111, 'mean_pen': 88.2}, {'referee': 'Alan Eck', 'games': 49, 'mean_pen': 90.9}, {'referee': 'Brad Allen', 'games': 109, 'mean_pen': 92.9}]
+heaviest: [{'referee': 'Ronald Torbert', 'games': 31, 'mean_pen': 108.7}, {'referee': 'Alex Kemp', 'games': 112, 'mean_pen': 109.1}, {'referee': 'Shawn Hochuli', 'games': 109, 'mean_pen': 109.5}]
+crew spread (max-min mean pen-yds/game): 21.3 (FLAG: thin-market totals angle)
+
+=== PENALTY PERSISTENCE: team-game pen-yds W1-8 -> W9-18 ===
+Traceback (most recent call last):
+  File "C:\workspace\gse-lab-20260919\new_areas_mills.py", line 168, in <module>
+    team_pen = pens_all.groupby(["game_id", "penalty_team"]).penalty_yards.sum().rename("pen").reset_index()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Garrett\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pandas\util\_decorators.py", line 336, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Garrett\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pandas\core\frame.py", line 10835, in groupby
+    return DataFrameGroupBy(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Garrett\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pandas\core\groupby\groupby.py", line 1095, in __init__
+    grouper, exclusions, obj = get_grouper(
+                               ^^^^^^^^^^^^
+  File "C:\Users\Garrett\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pandas\core\groupby\grouper.py", line 901, in get_grouper
+    raise KeyError(gpr)
+KeyError: 'penalty_team'

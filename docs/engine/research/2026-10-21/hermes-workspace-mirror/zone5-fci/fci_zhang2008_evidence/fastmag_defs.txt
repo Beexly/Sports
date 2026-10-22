@@ -1,0 +1,39 @@
+Definition B.1. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be uncovered if for every 1 ≤i ≤n −1,
+vi−1 and vi+1 are not adjacent.
+Definition B.2. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be potentially directed (p.d.) from v0
+to vn if for every 1 ≤i ≤n, the edge between vi−1 and vi is neither vi−1 ←∗vi nor vi−1 ∗−vi.
+Definition B.3. In a PMG, a path π is a circle path if every edge on the path is of the form ◦−◦.
+The additional rules provided by Zhang (2007) are:
+R5 For every a ◦−◦b if there is an uncovered circle path π = ⟨a, c, . . . , d, b⟩for a, b such that a, d are
+not adjacent and b, c are not adjacent, then orient a ◦−◦b and all the edges on π as undirected
+edges;
+R6 If a −b ◦−∗c, then orient b ◦−∗c as b −∗c;
+R7 If a −◦b ◦−∗c, and a, c are not adjacent, then orient b ◦−∗c as b −∗c;
+R8 If a →b →c or a −◦b →c, and a ◦→c, then orient a ◦→c as a →c.
+R9 If a ◦→c, and π = ⟨a, b, . . . , c⟩is an uncovered p.d. path from a to c such that b and c are not
+adjacent, then orient a ◦→c as a →c.
+R10 Suppose a ◦→c and b →c ←d, π1 is an uncovered p.d. path from a to b, and π2 is an uncovered
+p.d. path from a to d. Let x be the vertex adjacent to a on π1, and y be the vertex adjacent to
+a on π2. If x and y are distinct, and are not adjacent, then orient a ◦→c as a →c.
+B.3
+Construct PAG given parametrizing set
+We define [S] to be the set of all MAGs that have the parameterizing set S, so given a MAG G, [G] =
+[S(G)] and naturally we can define PS to denote the PAG that characterizes the Markov equivalence
+class [S] in the same manner as Definition 3.1. Since the parameterizing sets also characterise [G], we
+can also compute PS given such a set S. Now we demonstrate how to achieve this. The method relies
+much on Zhang (2007) and Ali et al. (2005).
+Given a MAG, the algorithm to construct the PAG begins with a graph P that has the same adjacencies
+as G and only one kind of edge ◦−◦. Then exhaustively apply the orientation rules.
+Instead of a MAG G, suppose now we are only given a parameterizing set S (we may not necessarily
+know G). We will show that with a slight change of the above rules, we are able to identify all the
+invariant arrow heads in PS.
+Firstly notice that we can obtain adjacencies from S, so we can construct the initial graph P as Zhang
+(2007) does. Also notice that only R0 and R4 require information from graphs, so it is sufficient to
+construct replacements for these two rules. The originals are:
+R0 For every unshielded triple of vertices (a, b, c), if it is an unshielded collider in G, then orient the
+triple as a ∗→b ←∗c.
+R4 If π = ⟨d, . . . , a, b, c⟩is a discriminating path between d and c for b in P, and b ◦−∗c; then if
+the edge b →c is present in G, orient b ◦−∗c as b →c; otherwise, orient the triple (a, b, c) as
+a ↔b ↔c.
+Our adapted rules are:
+34

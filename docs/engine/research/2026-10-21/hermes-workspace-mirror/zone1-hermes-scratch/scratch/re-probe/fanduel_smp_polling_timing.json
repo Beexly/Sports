@@ -1,0 +1,43 @@
+{
+  "endpoint": "POST https://smp.{STATE}.sportsbook.fanduel.com/api/sports/fixedodds/readonly/v1/getMarketPrices?priceHistory=0|1",
+  "observed": "112 calls on one FanDuel NCAAF page load; fired in pairs with ~5,110 ms cadence",
+  "matches_bundle_config": {
+    "refreshTimeInMs": 5000,
+    "batchSize": 70,
+    "priceHistoryPollingConfig": {
+      "refreshTimeInMs": 60000,
+      "batchSize": 70
+    }
+  },
+  "bundle_source": "static/js/dependencies.08c2f6fe50103040.js module 68078: u=\"/api/sports/fixedodds/readonly/v1/getMarketPrices\"; fetchSmp posts {marketIds:t} with host RN.SMP, requiresApplicationKey, requiresCohort",
+  "hosts_from_bundle": {
+    "prod": "https://smp.{STATE}.sportsbook.fanduel.com",
+    "canada": "https://smp.{STATE}.sportsbook.fanduel.ca",
+    "cert": "https://smp.{STATE}.sportsbook.cert.fndl.dev"
+  },
+  "auth_headers": {
+    "x-application": "FhMFpcPWXMeyZxOx (application key, same value used as _ak= query param elsewhere)",
+    "cohort": "x-cc / x-ccs header, base64(cohortName), only when pricing cohort active",
+    "region": "X-Sportsbook-Region style header via requiresRegion (not set on SMP call)"
+  },
+  "delta_ms_sample": [
+    9,
+    5140,
+    5,
+    5162,
+    7,
+    5141,
+    8,
+    5131,
+    5,
+    5120,
+    2,
+    6788,
+    20,
+    11059,
+    4,
+    5177,
+    3,
+    5145
+  ]
+}

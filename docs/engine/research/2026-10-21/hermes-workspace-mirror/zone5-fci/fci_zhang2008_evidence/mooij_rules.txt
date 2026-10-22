@@ -1,0 +1,629 @@
+
+<<<PAGE 6>>>
+Proposition 4 Let G be a DMG, and let P be a DPAG
+that contains G, and such that all unshielded triples in
+P have been oriented according to FCI rule R0 (Zhang,
+2008b) using IMσ(G). For two nodes i̸ = j ∈P: If
+• there is a directed path from i to j in P, or
+• there exist uncovered possibly directed paths (see
+Deﬁnition 13) from i to j in P of the form i, u, . . . , j
+and i, v, . . . , j such that u, v are distinct non-
+adjacent nodes in P,
+then i ∈ANG(j), i.e., i is ancestor of j according to G.
+As an example, from the (complete) DPAG in Figure 2 it
+follows that X2 ∈ANG(X4), and X2 ∈ANG(X7).
+Zhang (2006, p. 137) provides a sound and complete cri-
+terion to read off deﬁnite non-ancestors from a complete
+DPAG, assuming acyclicity. We can directly extend this
+criterion to DPAGs and DMGs:
+Proposition 5 Let G be a DMG, and let P be a DPAG
+that contains G. For two nodes i̸ = j ∈P: if there is no
+possibly directed path from i to j in P then i /∈ANG(j).
+As an example, from the DPAG in Figure 2 we can read
+off that X8 cannot be ancestor of X1 in G, nor the other
+way around. However, X3 ◦−◦X6 →X7 is a possibly
+directed path in the DPAG, and so X3 may be (and in this
+case is) ancestor of X7 in G.
+3.6
+IDENTIFIABLE NON-CONFOUNDED
+PAIRS
+While in ADMGs and DMGs confounding is indicated
+by bidirected edges, in DPAGs confounding can also
+“hide” behind directed edges. The following notion is
+of key importance in this regard:
+Deﬁnition 4 (Zhang (2008a)) A directed edge i →j in
+a DMAG is said to be visible if there is a node k not
+adjacent to j, such that either there is an edge between
+k and i that is into i, or there is a collider path between
+k and i that is into i and every collider on the path is
+a parent of j. Otherwise i →j is said to be invisible.
+The same notion applies to a DPAG, but is then called
+deﬁnitely visible (and its negation possibly invisible).
+For example, in the DPAG in Figure 2, edge X6 →X7
+is deﬁnitely visible (by virtue of X2 →X6), as are all
+edges X2 →{X3, X4, X5, X6} (by virtue of X8 ◦→
+X2, or X9 ◦→X2).
+The notion of (in)visibility is closely related with con-
+founding, as shown in Lemma 9 and 10 in Zhang
+(2008a). To generalize this, we make use of the follow-
+ing Lemma.
+Lemma 1 Let P be a DPAG that contains DMG G, and
+let k ∗→i be an edge in P that is into i. Then there
+exists an inducing walk in G between k and i that is into
+i. If k ↔i in P, then there exists an inducing walk in G
+between k and i that is both into k and into i.
+This allows us to generalize Lemma 9 in (Zhang, 2008a)
+to the cyclic setting (with almost identical proof).
+Lemma 2 Let P be a DPAG, and i →j a directed edge
+in P. If i →j is deﬁnitely visible in P, then for all
+DMGs G contained in P, there exists no inducing walk
+between i and j in G that is into i.
+This provides us with a sufﬁcient condition to read off
+unconfounded pairs of nodes from DPAGs:
+Proposition 6 Let P be a DMAG and G be a DMG con-
+tained in P. Let i̸ = j be two nodes in P. If i and j are
+not adjacent in P, or if there is a directed edge i →j
+in P that is deﬁnitely visible in P, then i ↔j is absent
+from G.
+For example, from the DPAG in Figure 2 one can infer
+that there is no bidirected edge X2 ↔X7 in the under-
+lying DMG G, as the two nodes are not adjacent in the
+DPAG, and also that there is no bidirected edge between
+X2 and any node in {X3, X4, X5, X6} in G, as all these
+edges are deﬁnitely visible in the DPAG.
+3.7
+IDENTIFYING DIRECT (NON-)CAUSES
+Contrary to DMGs, a directed edge in a DPAG does not
+necessarily correspond with a direct causal relation. The
+following proposition provides sufﬁcient conditions to
+identify the absence of a directed edge from the DPAG.
+Proposition 7 Let P be a DPAG that contains a DMG
+G. For two nodes i̸ = j in P, if i ←∗j in P, or i and j
+are not adjacent in P, then i →j is not present in G.
+The following proposition was inspired by Theorem 3 in
+Borboudakis et al. (2012) and provides sufﬁcient condi-
+tions to conclude the presence of a directed edge from
+the DPAG.
+Proposition 8 Let P be a DPAG that contains a DMG
+G. For two nodes i̸ = j in P, if i →j in P and:
+(i) there does not exist a possibly directed path from i
+to j in P that avoids the edge i →j, or
+(ii) if there is no inducing walk between i and j in
+G that is both into i and j (for example, because
+i →j is deﬁnitely visible in P), and for all ver-
+tices k such that there is a possibly directed path
+i ∗−−∗k ∗−−∗j from i to j in P, the edge k →j is
+
+<<<PAGE 13>>>
+tween any pair of nodes if and only if the two nodes are
+adjacent in the DMAG or DPAG.
+One often identiﬁes a DPAG with the set of all DMAGs
+that have the same skeleton as the DPAG, have an arrow-
+head (tail) on each edge mark for which the DPAG has an
+arrowhead (tail) at that corresponding edge mark, and for
+each circle in the DPAG, have either an arrowhead or a
+tail at the corresponding edge mark. We then say that the
+DPAG contains these DMAGs. Since each ADMG in-
+duces a unique DMAG, we can say that a DPAG contains
+an ADMG if and only if it contains the DMAG induced
+by it.6
+We also make use of the following deﬁnition (Zhang,
+2008b):
+Deﬁnition 13 A path v0, e1, v1, . . . , vn between nodes
+v0 and vn in a DPAG P is called a possibly directed
+path from v0 to vn if for each i = 1, . . . , n, the edge ei
+between vi−1 and vi is not into vi−1 (i.e., is of the form
+vi−1 ◦−◦vi, vi−1 ◦→vi, or vi−1 →vi). The path is
+called uncovered if every subsequent triple is unshielded,
+i.e., vi and vi−2 are not adjacent in P for i = 2, . . . , n.
+A.2
+FAST CAUSAL INFERENCE (FCI)
+When given as input an independence model IM(H) of a
+DMAG H, FCI outputs a DPAG PFCI(IM(H)) that con-
+tains H and is maximally informative (Zhang, 2008b),
+i.e., each edge mark that is identiﬁable from the indepen-
+dence model of H is oriented as such in the DPAG. This
+DPAG is often referred to as the complete DPAG for H.
+The following key result seems to be generally known
+in the ﬁeld, although we could not easily ﬁnd a proof in
+the literature.7 The proof we provide here is due to Jiji
+Zhang [private communication].
+Proposition 11 Two MAGs H1, H2 are d-Markov equiv-
+alent if and only if PFCI(IMd(H1)) = PFCI(IMd(H2)).
+Proof. We only give a proof for the “if” implication, the
+“only if” implication being obvious. Ali et al. (2009)
+showed that two MAGs are Markov equivalent if and
+only if they have the same skeletons and colliders with
+order. This implies that colliders with order in any MAG
+are invariant in the corresponding Markov equivalence
+class and, by the soundness and arrowhead completeness
+of FCI, these will appear as colliders in the correspond-
+ing PAG. Consider two MAGs H1 and H2 that are not
+6In Deﬁnition 2, we propose to extend this to the notion that
+a DPAG contains a DMG.
+7For DMAGs and POIPGs, this was already known for
+an earlier version of FCI; see Corollary 6.4.1 in Spirtes et al.
+(2000) and the proof in Spirtes and Verma (1992).
+Markov equivalent. If they have different skeletons, their
+corresponding PAGs are not identical. If they do have the
+same skeletons, then there must be at least one collider
+with order in H1 that is not a collider with order in H2,
+or vice versa. By Lemma 3.13 in Ali et al. (2009), this
+would imply that there is at least one collider with order
+in H1 that is not a collider in H2, or vice versa. Hence,
+because of the soundness and arrowhead completeness
+of FCI, their corresponding PAGs are not identical.
+□
+Another important property of the FCI algorithm that we
+use is the following. It was stated in a different but equiv-
+alent formulation by Ali et al. (Lemma 4.1, 2005).
+Lemma 4 (Lemma A.1 in (Zhang, 2008b)) Let H be a
+MAG and denote by P = PFCI(IM(H)) the correspond-
+ing complete PAG output by FCI. Then for any three dis-
+tinct vertices a, b, c: if a ∗→b ◦−−∗c in P, then a ∗→c in
+P; furthermore, if a →b ◦−−∗c in P, then a ↔c is not
+in P.
+Since this property is about arrowhead completeness, it
+already holds for the DPAG constructed in the ﬁrst stage
+of the FCI algorithm, after running the arrowhead orien-
+tation rules R0–R4, but before running the tail orienta-
+tion rules R5–R10.
+A.3
+STRUCTURAL CAUSAL MODELS (SCMs)
+In this subsection we state some of the basic deﬁnitions
+and results regarding Structural Causal Models. Struc-
+tural Causal Models (SCMs), also known as Structural
+Equation Models (SEMs), were introduced a century ago
+by (Wright, 1921) and popularized in AI by Pearl (2009).
+We follow here the treatment in Bongers et al. (2020) be-
+cause it deals with cycles in a rigorous way.
+Deﬁnition 14 A Structural Causal Model (SCM) is a tu-
+ple M = ⟨I, J , X, E, f, PE⟩of:
+(i) a ﬁnite index set I for the endogenous variables in
+the model;
+(ii) a ﬁnite index set J for the latent exogenous vari-
+ables in the model (disjoint from I);
+(iii) a product of standard measurable spaces X
+=
+Q
+i∈I Xi, which deﬁne the domains of the endoge-
+nous variables;
+(iv) a product of standard measurable spaces E
+=
+Q
+j∈J Ej, which deﬁne the domains of the exoge-
+nous variables;
+(v) a measurable function f : X × E →X, the causal
+mechanism;
+(vi) a product probability measure PE = Q
+j∈J PEj on
+E specifying the exogenous distribution.
+
+<<<PAGE 17>>>
+of the acyclic arrowhead completeness of FCI, there
+must be an arrowhead i ←∗j in PFCI(IMd(Gacy)) =
+PFCI(IMσ(G)). Tail completeness is proved similarly.
+To prove Markov completeness:
+Proposition 2 im-
+plies both IMσ(G1) = IMd(Gacy
+1
+) and IMσ(G2) =
+IMd(Gacy
+2
+). From the acyclic Markov completeness of
+FCI (Proposition 11 in the Supplementary Material), it
+then follows that Gacy
+1
+must be d-Markov equivalent to
+Gacy
+2
+, and hence G1 must be σ-Markov equivalent to G2.
+Alternatively, the statement of this theorem can be seen
+to be a special case of Theorem 2, applied with the triv-
+ial background knowledge Ψ(G) = 1 for all DMGs
+G, to Φ : G 7→PFCI(IMσ(G)), combined with the
+known (acyclic) soundness and completeness results of
+FCI (Zhang, 2008b).
+Note here that the trivial back-
+ground knowledge Ψ(G) = 1 satisﬁes Assumption 1 as
+follows immediately from Proposition 3.
+□
+Proposition 4 Let G be a DMG, and let P be a DPAG
+that contains G, and such that all unshielded triples in
+P have been oriented according to FCI rule R0 (Zhang,
+2008b) using IMσ(G). For two nodes i̸ = j ∈P: If
+• there is a directed path from i to j in P, or
+• there exist uncovered possibly directed paths (see
+Deﬁnition 13) from i to j in P of the form i, u, . . . , j
+and i, v, . . . , j such that u, v are distinct non-
+adjacent nodes in P,
+then i ∈ANG(j), i.e., i is ancestor of j according to G.
+Proof of Proposition 4 If there is a directed path from i
+to j in P, say v1 →· · · →vn with v1 = i and vn = j,
+then vm ∈ANG(vm+1) for all m = 1, . . . , n −1. Hence
+i ∈ANG(j).
+Otherwise, assume that there exist uncovered possibly
+directed paths from i to j in P of the form i, u, . . . , j and
+i, v, . . . , j such that u, v are distinct and non-adjacent
+in P. If i ∈ANG(u), the path i, u, . . . , j must actu-
+ally correspond with a directed path from i to j in G,
+because otherwise it would contain unshielded colliders
+that were not oriented, contradicting the assumptions. If
+i /∈ANG(u) instead, one obtains that i ∈ANG(v) to
+avoid an unshielded collider u ∗→i ←∗v in P that was
+not oriented. Hence the path i, v, . . . , j must correspond
+with a directed path from i to j in G, because other-
+wise it would contain unshielded colliders that were not
+oriented, contradicting the assumptions. In both cases,
+i ∈ANG(j).
+□
+Proposition 5 Let G be a DMG, and let P be a DPAG
+that contains G. For two nodes i̸ = j ∈P: if there is no
+possibly directed path from i to j in P then i /∈ANG(j).
+Proof of Proposition 5 If i ∈ANG(j), then the directed
+path from i to j must correspond with a possibly directed
+path in P.
+□
+Lemma 1 Let P be a DPAG that contains DMG G, and
+let k ∗→i be an edge in P that is into i. Then there
+exists an inducing walk in G between k and i that is into
+i. If k ↔i in P, then there exists an inducing walk in G
+between k and i that is both into k and into i.
+Proof of Lemma 1 If k ∗→i in P, then there exists
+an inducing walk between k and i in G because k and
+i are adjacent in P and P contains G. If this inducing
+walk were out of i, it would be of the form k . . . ∗→
+un ←un−1 ←· · · ←u1 ←i, where un is the ﬁrst
+collider on the walk that one encounters when following
+the directed edges out of i. un must be ancestor of i or k
+in G, and it cannot be ancestor of k (because then i would
+be ancestor of k, contradicting the orientation k ∗→i in
+P), hence it must be ancestor of i. Thus there exists a
+walk k . . . ∗→un →· · · →i in G where we replaced
+the subwalk un ←un−1 ←· · · ←i by a directed path
+from un to i. It is clear that this is an inducing path in G
+between k and i that is into i.
+If k ↔i in P, then by similar reasoning, we obtain an
+inducing path in G between k and i that is into k as well
+as into i.
+□
+Lemma 2 Let P be a DPAG, and i →j a directed edge
+in P. If i →j is deﬁnitely visible in P, then for all
+DMGs G contained in P, there exists no inducing walk
+between i and j in G that is into i.
+Proof of Lemma 2 Suppose G is a DMG contained in
+P. Then i ∈ANG(j) and there exists an inducing walk
+between i and j in G. We will prove the contrapositive.
+Assume that there exists an inducing walk in G between
+i and j that is into i. Let k be another vertex in P.
+If k ∗→i in P, then there is an inducing walk between k
+and i in G that is into i by Lemma 1.
+If there is a collider path π in P from k to i that is into
+i and such that every non-endpoint vertex on the walk is
+parent of j in P, then there is an inducing walk between
+k and i in G that is into i. For each pair of adjacent ver-
+tices (vi, vi+1) on π, Lemma 1 gives the existence of an
+inducing walk in G between vi and vi+1 that is into vi+1,
+and also into vi unless possibly vi = k. Because each
+vertex other than k on π is ancestor in G of j, all these
+inducing walks can be concatenated into one inducing
+walk in G between k and i that is into i.
+Concatenating the inducing walk between k and i that is
+into i with the inducing walk between i and j that is into
+
+<<<PAGE 18>>>
+i we obtain an inducing walk between k and j (note that
+i becomes a collider that is ancestor of j) in G. Hence
+k and j are adjacent in P. Since this holds for all k, the
+directed edge i →j in P cannot be deﬁnitely visible. □
+Proposition 6 Let P be a DMAG and G be a DMG con-
+tained in P. Let i̸ = j be two nodes in P. If i and j are
+not adjacent in P, or if there is a directed edge i →j
+in P that is deﬁnitely visible in P, then i ↔j is absent
+from G.
+Proof of Proposition 6 If i and j are not adjacent in P,
+then there is no inducing path between i and j in G by
+assumption, and in particular, this rules out the presence
+of the bidirected edge i ↔j in G.
+If i →j in P is deﬁnitely visible, by Lemma 2, there
+cannot be a bidirected edge i ↔j in any DMG contained
+in P.
+□
+Proposition 7 Let P be a DPAG that contains a DMG
+G. For two nodes i̸ = j in P, if i ←∗j in P, or i and j
+are not adjacent in P, then i →j is not present in G.
+Proof of Proposition 7 If i ←∗j in P, then i /∈ANG(j)
+and hence i →j cannot be present in G. If i and j are not
+adjacent in P, then i →j cannot be present in G because
+this would be an inducing path between i and j.
+□
+Proposition 8 Let P be a DPAG that contains a DMG
+G. For two nodes i̸ = j in P, if i →j in P and:
+(i) there does not exist a possibly directed path from i
+to j in P that avoids the edge i →j, or
+(ii) if there is no inducing walk between i and j in
+G that is both into i and j (for example, because
+i →j is deﬁnitely visible in P), and for all ver-
+tices k such that there is a possibly directed path
+i ∗−−∗k ∗−−∗j from i to j in P, the edge k →j is
+deﬁnitely visible in the DPAG P∗obtained from P
+by replacing the edge between k and j by k →j,
+then i →j is present in G.
+Proof of Proposition 8 (i) Suppose i →j in P. We
+prove the contrapositive. Assume i →j is absent from
+G. Because i ∈ANG(j) by assumption, there must be a
+directed path from i to j in G that does not contain the
+edge i →j. This corresponds with a possibly directed
+path in P that avoids the edge i →j.
+(ii) Suppose i →j in P. There must be an inducing walk
+π between i and j in G that is into j by Lemma 1. Each
+collider on π is ancestor of j (because it is ancestor of i
+or j by deﬁnition, and i is ancestor of j). By assumption
+(or by Lemma 2 if i →j is deﬁnitely visible in P), this
+inducing walk must be out of i.
+We now show that π cannot contain any colliders under
+the assumptions made. For the sake of contradiction, as-
+sume that π contained one or more colliders. Denote the
+collider closest to i on π by k. Since π is out of i and k
+is the collider on π closest to i, π must start as a directed
+walk i →· · · →k. This is an inducing walk between
+i and k, and since i ∈ANG(k), it corresponds with a
+possibly directed path i ∗−−∗k in P. The subwalk of π
+between k and j is an inducing walk in G between k and
+j that is both into k and into j, since each collider on it
+is ancestor of j and each non-endpoint non-collider only
+points to nodes in the same strongly connected compo-
+nent. Since k ∈ANG(j), this corresponds with a possi-
+bly directed path k ∗−−∗j in P. It also implies that P∗,
+obtained from P by replacing the edge between k and j
+by the directed edge k →j, contains G. By Lemma 2
+applied to P∗, k →j cannot be deﬁnitely visible in P∗.
+We have arrived at a contradiction with the assumption.
+Hence, the inducing walk π cannot contain any colliders.
+If it consisted of multiple edges, it would be of the form
+i →k′ →· · · →j, where now k′̸ = j is the vertex
+on π next to i, and all non-endpoint noncolliders would
+point to nodes in the same strongly connected compo-
+nent. Hence k′ and j would lie in the same strongly
+connected component of G. Again, note that this results
+in a possibly directed path i ∗−−∗k′ ∗−−∗j in P, and
+means that P∗obtained from P by replacing the edge be-
+tween k′ and j by the directed edge →j, contains G. By
+Lemma 2 applied to P∗, there exists no inducing walk in
+G between k′ and j that is into k′, because k′ →j must
+be deﬁnitely visible in P∗by assumption. This contra-
+dicts the existence of a directed path k′ ←· · · ←j in
+G.
+Hence, the inducing walk π in G must consist of a single
+edge, and is necessarily of the form i →j.
+□
+Proposition 9 Let G be a DMG and denote by P =
+PFCI(IMσ(G)) the corresponding complete DPAG out-
+put by FCI. Let i̸ = j be two nodes in P. If j ∈SCG(i),
+then i ◦−◦j in P, and for all nodes k: k →i in P iff
+k →j in P, and k ↔i in P iff k ↔j in P, and k ◦→i
+in P iff k ◦→j in P.
+Proof of Proposition 9 Since no pair of nodes within a
+strongly connected component of G can be σ-separated,
+each strongly connected component of G ends up as a
+fully-connected component in P. For two nodes i̸ = j
+in the same strongly connected component of G, there
+exists an acycliﬁcation of G in which i →j and another
+one in which i ←j, and hence the edge between i and j
+in P must be oriented as i ◦−◦j. From Lemma 4 it then
+directly follows that for any third node k, k ∗→i ∈P if
+and only if k ∗→j ∈P. If k ↔i ∈P, then k ◦→j /∈P,
+
+<<<PAGE 19>>>
+otherwise i ↔k ◦→j would violate Lemma 4. Also, if
+k ↔i ∈P, then k →j /∈P, otherwise k →j ◦−◦i
+would violate Lemma 4.
+Hence, we have shown that for all i̸ = j with i ∈SCG(j),
+i ◦−◦j ∈P and for all k:
+(
+k ∗→i ∈P ⇐⇒k ∗→j ∈P, and
+k ↔i ∈P ⇐⇒k ↔j ∈P.
+(∗)
+Note that this will already hold for the DPAG ˜P con-
+structed by the ﬁrst (arrowhead orientation) stage of FCI,
+i.e., after rules R0–R4 of the FCI algorithm (the only
+ones that can orient arrow heads) have been completed.
+It remains to show that if k →i in P for a third node k,
+then k →j in P as well (ruling out k ◦→j). We will
+consider all FCI rules that can orient a tail at k →i in the
+absence of selection bias, i.e., FCI rules R1, R4a, R8a,
+R9, and R10 in (Zhang, 2008b), and show that each of
+them implies also a tail at k on the edge to j, i.e., k →j
+(rules R5–R7 and R8b can be ignored in the absence of
+selection bias). Below we use P′ to denote an intermedi-
+ate DPAG obtained so far by FCI during the orientation
+stage, which ultimately results in the completely oriented
+DPAG P.
+We will use the fact that there is a natural ordering in
+these orientation rules: R1 and R4a are part of the ar-
+rowhead orientation stage and complete ﬁrst. Then, all
+instances of R9 can be executed, after which R8a and
+R10 are triggered repeatedly until completion. The lat-
+ter follows from the fact that rules R8a (or R8b) and
+R10 can only orient an edge x ◦→y into x →y, which
+can never introduce a new instance that satisﬁes the pat-
+tern of R9 but did not already satisfy the pattern of R9
+before. We will assume (without loss of generality) that
+FCI makes use of this particular ordering in the proof
+below.
+Rule R1: if m ∗→k ◦−−∗i in P′ and m and i are not
+adjacent, then orient m ∗→k →i. Suppose that k ◦−−∗i
+in P′ can been oriented by R1. By (∗), this means that
+k ∗→j will be in ˜P. If k ◦→j would have remained un-
+oriented in ˜P, then by Lemma 4 applied to m ∗→k ◦→j,
+there must be an edge m ∗→j in ˜P. But then there must
+also be an edge m ∗→i in ˜P, again by Lemma 4. This
+contradicts that m and i are not adjacent in P′. Hence
+k →j must have been oriented in ˜P.
+Rule R4a: if π = ⟨x, m1, . . . , mn, k, i⟩is a discrimi-
+nating path for k in P′ and k ◦−−∗i is in P′, and if
+k ∈SepSet(x, i), then orient k →i. First note that j
+cannot be part of the discriminating path π, as i ◦−◦j
+in ˜P. By (∗), all nodes ms and k also have an edge into
+j in ˜P with either a tail or circle mark at the other end.
+So we have x ∗→m1 →j in ˜P or x ∗→m1 ◦→j
+in ˜P.
+If x and j were adjacent in ˜P, then the edge
+between them must be of the form x ∗→j (either be-
+cause of Lemma 4 if m1 ◦→j, or because of FCI rule
+R2b if m1 →j), which would imply that also x ∗→i
+in ˜P by (∗), contradicting the antecedent of rule R4a.
+Now, by induction each edge between ms and j (for
+s = 1, . . . , n) will have been oriented as ms →j in ˜P.
+Indeed, ﬁrst R1 can orient x ∗→m1 →j, which means
+that x ∗→m1 ←∗m2 ∗→j is a discriminating path for
+m2. Suppose x ∗→m1(↔. . . ms−1) ←∗ms ∗−−∗j
+is a discriminating path for ms with s < n.
+Now
+ms ↔j cannot be in ˜P, because if it were, ms ↔i
+would also be in ˜P by (∗), contrary the antecedent of
+R4a. Hence ms ∈SepSet(x, j), and so the edge be-
+tween ms and j can be oriented as ms →j by R4a,
+which means that x ∗→m1(↔. . . ms) ←∗ms+1 ∗−−∗j
+must be a discriminating path for ms+1. Hence, π′ =
+⟨x, m1, . . . , mn, k, j⟩is also a discriminating path for k
+in ˜P, and again k ↔j cannot be in ˜P (otherwise k ↔i
+in ˜P), and so the edge between k and j can be oriented
+by R4a, resulting in k →j in ˜P.
+Rule R9: if k ◦→i in P′, and π = ⟨k, m1, . . . , mn, i⟩
+is an uncovered possibly directed path in P′ from k to i
+such that m1 and i are not adjacent in P′, then orient
+k →i.
+First note that all nodes on π must be ancestor in G of
+i, and i must be non-ancestor in G of all other nodes on
+π. Indeed, for any DMAG H contained in P′, each node
+ml must be a non-collider on π (all unshielded colliders
+have already been oriented by rule R0 in P′ by assump-
+tion, and there cannot be any on π since π is possibly
+directed). If ml →ml+1 in H, then there must be a di-
+rected path ml →ml+1 →· · · →mn →i in H; if
+ml →ml−1 in H, then there must be a directed path
+ml →ml−1 →· · · →m1 →k →i in H. In both
+cases, ml ∈ANH(i), and i /∈ANH(ml). Since this
+holds for any DMAG H contained in P′, it also holds
+for all DMAGs induced by acycliﬁcations of G. Hence,
+by Proposition 3, ml ∈ANG(i), and i /∈ANG(ml). This
+also implies (by the arrowhead completeness of FCI) that
+there must be an arrowhead on the edge mn ∗→i in P′.
+By (∗), k ∗→j will be in P. Both m1 and mn−1 are
+not adjacent to j in P. This follows from the fact that j
+cannot be ancestor of either of these nodes m1, mn−1 in
+G, for then i would also be ancestor in G of that node.
+Therefore an edge between m1 (or mn−1) and j in P
+would have to be into j by the arrowhead completeness
+of FCI, and so by (∗) there would also be an edge m1 ∗→
+i (or mn−1 ∗→i) in P, contrary the antecedent of R9.
+By (∗), also mn ∗→j in P′. This edge cannot be mn ↔
+j, because that would mean that also mi ↔i in P′ by
+(∗), a contradiction. Therefore π′ = ⟨k, m1, . . . , mn, j⟩
+
+<<<PAGE 20>>>
+is also an uncovered possibly directed path from k to j in
+P′, and m1 and j are not adjacent in P′, so k ◦→j can
+be oriented as k →j by R9.
+Finally, the two remaining rules, R8a and R10, will be
+considered together in order to be able to make use of a
+proof by induction. We will assume that in P′, rules R1,
+R4a and R9 have already been exhaustively applied.
+Rule R8a: if k ◦→i and k →m →i in P′, then orient
+k →i.
+Rule R10: if k ◦→i and u1 →i ←u2 in P′,
+π1 = ⟨k, m1, . . . , u1⟩is an uncovered possibly directed
+path from k to u1 in P′ and π2 = ⟨k, m2, . . . , u2⟩is an
+uncovered possibly directed path from k to u2 in P′, such
+that m1 and m2 are distinct and not adjacent, then orient
+k →i.
+By (∗), if rule R8a triggers in P′, then also k ∗→j and
+m ∗→j in P. Furthermore, if rule R10 triggers in P′,
+then also k ∗→j, u1 ∗→j and u2 ∗→j in P. As the
+arrowhead stage has already completed by the time R8a
+and R10 are executed, that means these will be present
+as edges into j in P′ as well.
+We now proceed by contradiction. Assume, for the sake
+of contradiction, that R8a or R10 triggers to orient some
+k ◦→i in P′ as k →i, but the corresponding edge k ◦→
+j (with j ∈SCG(i)) remains unoriented in P. Consider
+the ﬁrst edge k →i for which this situation occurs (in the
+sequence of orientations performed by FCI during this
+last part of the orientation phase).
+If k ◦→i can be oriented by rule R8a, then the edge
+m →i is already present in P′ at that point. If the tail
+on that edge was oriented by one of the rules R1, R4a
+or R9, also m →j will have been oriented in P′ at this
+point, as we have shown. Otherwise, the tail of m →i
+must have been oriented by rule R8a or rule R10. By
+assumption, the corresponding edge m ◦→j does not
+remain unoriented in P, and therefore after ﬁnitely many
+applications of rules R8a and R10, it will have been ori-
+ented as m →j in P′. In both cases, the edge m →j
+will be present in P′ at some point, and then rule R8a
+can also be used to orient k ◦→j as k →j, contradict-
+ing the assumption that k ◦→j remains unoriented in
+P.
+Hence k ◦→i must have been oriented by rule R10. The
+edges u1 →i and u2 →i must then already be present
+in P′ at that point. By similar reasoning as before, we
+conclude that also u1 →i and u2 →i must be present in
+P′ at some point, and then rule R10 can also be used to
+orient k ◦→j as k →j, again contradicting the assump-
+tion.
+Therefore, it cannot happen that R8a or R10 can be used
+to orient k ◦→i as k →i, but that the corresponding
+edge k ◦→j (with j ∈SCG(i)) will not get oriented as
+k →j in P.
+Summarizing, whenever FCI orients a tail mark at k on
+an edge into i, it will also orient all tail marks at k on the
+edges into j for all j ∈SCG(i).
+□
+Proposition 10 Let G be a DMG and denote by P =
+PFCI(IMσ(G)) the corresponding complete DPAG out-
+put by FCI. Let i̸ = j be two nodes in P. If there is an
+edge i ◦−◦j in P, and all nodes k for which k ∗→i is in
+P also have an edge of the same type k ∗→j (i.e., the two
+edge marks at k are the same) in P, then there exists a
+DMG ˜G with j ∈SC ˜G(i) that is σ-Markov equivalent to
+G, but also a DMG H with j /∈SCH(i) that is σ-Markov
+equivalent to G.
+Proof of Proposition 10 We ﬁrst show that there is a
+DMAG H that is σ-Markov equivalent to G which has
+i →j. We construct H by starting from the so-called ar-
+rowhead augmented graph (Zhang, 2006) of P, in which
+each edge x ◦→y in P is oriented as x →y, followed
+by an orientation of the remaining circle component into
+an arbitrary DAG such that no unshielded colliders are
+introduced. By Lemma 4.3.6 in (Zhang, 2006), this pro-
+cedure yields a DMAG H in P (note that we assumed
+no selection bias), and hence σ-Markov equivalent to
+G.
+Orienting the circle component (which is chordal
+by Lemma 4.3.7 in (Zhang, 2006)) can be achieved by
+choosing i →j as the top two root nodes in the partial
+ordering for the DAG, and propagating the Meek rules
+(Meek, 1995a) to orient the rest of the circle component
+into a DAG with no unshielded colliders (see also the
+discussion of “Meek’s Algorithm” on pages 120–121 of
+(Zhang, 2006)). The resulting DMAG H has no other ar-
+rowheads at i and j other than the ones already present
+in P, in combination with the directed edge i →j.
+We now create a DMG ˜G out of H by adding an addi-
+tional edge j →i, thereby creating a single non-trivial
+strongly connected component containing only the nodes
+{i, j}.
+This follows from the fact that if there exists
+another node in SC ˜G(i) as a result of adding the edge
+j →i to H, then there must now be a directed path
+j →i →· · · →k →j in ˜G. However, this edge k →j
+cannot be part of the original circle component contain-
+ing i ◦−◦j in P, for then by construction it would have
+been oriented as j →k, and if k →j was already an in-
+variant arrowhead in P then by assumption there would
+also be an invariant arrowhead on k ∗→i in P, which
+would imply the existence of an (almost) directed cycle
+i →· · · →k in combination with k ∗→i in the DMAG
+H, which is impossible by deﬁnition.
+As ﬁnal step in the proof we show that the DMAG H

@@ -1,0 +1,111 @@
+{
+  "wind": {
+    "0-14": {
+      "attempts": 66528,
+      "completion": 0.6456,
+      "completion_wilson": [
+        0.642,
+        0.6493
+      ],
+      "yards_per_attempt": 10.962,
+      "adot_gt20_share": 0.1037,
+      "epa_per_dropback": 0.0422,
+      "dropbacks": 75336
+    },
+    "15-19": {
+      "attempts": 6928,
+      "completion": 0.6306,
+      "completion_wilson": [
+        0.6192,
+        0.6419
+      ],
+      "yards_per_attempt": 10.644,
+      "adot_gt20_share": 0.0996,
+      "epa_per_dropback": -0.023,
+      "dropbacks": 7883
+    },
+    ">=20": {
+      "attempts": 1796,
+      "completion": 0.6225,
+      "completion_wilson": [
+        0.5998,
+        0.6446
+      ],
+      "yards_per_attempt": 10.818,
+      "adot_gt20_share": 0.0896,
+      "epa_per_dropback": 0.0248,
+      "dropbacks": 2053
+    }
+  },
+  "cold": {
+    "cold_games": 29,
+    "cold_epa_per_dropback": -0.053,
+    "mid_epa_per_dropback": 0.0333,
+    "cold_completion": 0.6279,
+    "mid_completion": 0.6404
+  },
+  "rain_fumble": "NOT_RUN (no column)",
+  "roof": {
+    "outdoors": {
+      "games": 5115,
+      "mean_total": 43.22,
+      "sd_total": 14.13
+    },
+    "closed": {
+      "games": 591,
+      "mean_total": 46.83,
+      "sd_total": 13.4
+    },
+    "open": {
+      "games": 128,
+      "mean_total": 46.73,
+      "sd_total": 13.51
+    }
+  },
+  "rz_tensor": {
+    "1-2": {
+      "n_plays": 5087,
+      "td_rate": 0.4244
+    },
+    "3-5": {
+      "n_plays": 5399,
+      "td_rate": 0.3136
+    },
+    "6-10": {
+      "n_plays": 8795,
+      "td_rate": 0.1767
+    },
+    "11-15": {
+      "n_plays": 18537,
+      "td_rate": 0.053
+    },
+    "16-20": {
+      "n_plays": 10384,
+      "td_rate": 0.0634
+    }
+  },
+  "fourth_down_tensor": {
+    "1": {
+      "n_plays": 3082,
+      "conversion_rate": 0.4504
+    },
+    "2-3": {
+      "n_plays": 3979,
+      "conversion_rate": 0.1759
+    },
+    "4-6": {
+      "n_plays": 5988,
+      "conversion_rate": 0.0698
+    },
+    "7-30": {
+      "n_plays": 13375,
+      "conversion_rate": 0.0203
+    }
+  },
+  "sigma_ladder": {
+    "early_w1_4_sd": 9.072,
+    "late_w5_18_sd": 9.282,
+    "n_early": 1686,
+    "n_late": 5298
+  }
+}

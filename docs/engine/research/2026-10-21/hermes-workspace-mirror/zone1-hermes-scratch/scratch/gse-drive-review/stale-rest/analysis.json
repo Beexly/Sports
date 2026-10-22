@@ -1,0 +1,653 @@
+{
+ "claude/sports-prediction-platform-6F7Wa": {
+  "ahead": 16,
+  "scope_cmp_files": [
+   "packages/ingestion-pipeline/package.json",
+   "packages/ingestion-pipeline/src/__tests__/process-sport.test.ts",
+   "packages/ingestion-pipeline/src/__tests__/settle-picks.test.ts",
+   "packages/ingestion-pipeline/src/index.ts",
+   "packages/ingestion-pipeline/src/process-sport.ts",
+   "packages/ingestion-pipeline/src/settle-picks.ts",
+   "packages/ingestion-pipeline/tsconfig.json",
+   "packages/ingestion-pipeline/vitest.config.ts",
+   "packages/prediction-engine/package.json",
+   "packages/prediction-engine/src/__tests__/game-context.test.ts",
+   "packages/prediction-engine/src/__tests__/scoring.test.ts",
+   "packages/prediction-engine/src/constants.ts",
+   "packages/prediction-engine/src/game-context.ts",
+   "packages/prediction-engine/src/index.ts",
+   "packages/prediction-engine/src/scoring.ts",
+   "packages/prediction-engine/tsconfig.json"
+  ],
+  "rows": [
+   [
+    "packages/ingestion-pipeline/package.json",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/__tests__/process-sport.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/__tests__/settle-picks.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/process-sport.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/settle-picks.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/tsconfig.json",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/vitest.config.ts",
+    "branch-has",
+    "main-has",
+    "landed-on-main (identical blob)"
+   ],
+   [
+    "packages/prediction-engine/package.json",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/scoring.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/constants.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/game-context.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/scoring.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/tsconfig.json",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 22,
+  "only_branch": [
+   "packages/ingestion-pipeline/src/__tests__/settle-picks.test.ts",
+   "packages/ingestion-pipeline/src/settle-picks.ts"
+  ],
+  "only_main_n": 2397,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 1,
+  "main_has_branch_scope_identical": 1
+ },
+ "claude/keen-ptolemy-d0pbK": {
+  "ahead": 48,
+  "scope_cmp_files": [
+   "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+   "packages/prediction-engine/src/index.ts",
+   "packages/prediction-engine/src/pick-sources.ts"
+  ],
+  "rows": [
+   [
+    "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/pick-sources.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 26,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+   "packages/prediction-engine/src/pick-sources.ts"
+  ],
+  "only_main_n": 2393,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "claude/keen-ptolemy-d0pbK-codex": {
+  "ahead": 49,
+  "scope_cmp_files": [
+   "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+   "packages/prediction-engine/src/index.ts",
+   "packages/prediction-engine/src/pick-sources.ts"
+  ],
+  "rows": [
+   [
+    "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/pick-sources.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 26,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+   "packages/prediction-engine/src/pick-sources.ts"
+  ],
+  "only_main_n": 2393,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "claude/keen-ptolemy-d0pbK-audit": {
+  "ahead": 50,
+  "scope_cmp_files": [
+   "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+   "packages/prediction-engine/src/index.ts",
+   "packages/prediction-engine/src/pick-sources.ts"
+  ],
+  "rows": [
+   [
+    "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/pick-sources.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 26,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+   "packages/prediction-engine/src/pick-sources.ts"
+  ],
+  "only_main_n": 2393,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "claude/magical-volta-yiUwL": {
+  "ahead": 59,
+  "scope_cmp_files": [
+   "packages/ingestion-pipeline/package.json",
+   "packages/ingestion-pipeline/src/__tests__/source-snapshot.test.ts",
+   "packages/ingestion-pipeline/src/index.ts",
+   "packages/ingestion-pipeline/src/process-sport.ts",
+   "packages/ingestion-pipeline/src/source-snapshot.ts",
+   "packages/ingestion-pipeline/vitest.config.ts",
+   "packages/prediction-engine/package.json",
+   "packages/prediction-engine/src/__tests__/evidence-readiness-matrix.test.ts",
+   "packages/prediction-engine/src/__tests__/game-context.test.ts",
+   "packages/prediction-engine/src/__tests__/kelly.test.ts",
+   "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+   "packages/prediction-engine/src/__tests__/poisson.test.ts",
+   "packages/prediction-engine/src/__tests__/readiness-gates.test.ts",
+   "packages/prediction-engine/src/__tests__/scoring.test.ts",
+   "packages/prediction-engine/src/__tests__/settlement.test.ts",
+   "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+   "packages/prediction-engine/src/game-context.ts",
+   "packages/prediction-engine/src/index.ts",
+   "packages/prediction-engine/src/kelly.ts",
+   "packages/prediction-engine/src/readiness.ts",
+   "packages/prediction-engine/src/scoring.ts"
+  ],
+  "rows": [
+   [
+    "packages/ingestion-pipeline/package.json",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/__tests__/source-snapshot.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/process-sport.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/src/source-snapshot.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/ingestion-pipeline/vitest.config.ts",
+    "branch-has",
+    "main-has",
+    "landed-on-main (identical blob)"
+   ],
+   [
+    "packages/prediction-engine/package.json",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/evidence-readiness-matrix.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/kelly.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/poisson.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/readiness-gates.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/scoring.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/settlement.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/game-context.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/kelly.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/readiness.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/scoring.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 30,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+   "packages/prediction-engine/src/__tests__/readiness-gates.test.ts"
+  ],
+  "only_main_n": 2389,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 1,
+  "main_has_branch_scope_identical": 1
+ },
+ "claude/magical-volta-wXkx2": {
+  "ahead": 48,
+  "scope_cmp_files": [
+   "packages/prediction-engine/src/__tests__/evidence-readiness-matrix-gaps.test.ts",
+   "packages/prediction-engine/src/__tests__/game-context-functions.test.ts",
+   "packages/prediction-engine/src/__tests__/game-context.test.ts",
+   "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+   "packages/prediction-engine/src/__tests__/readiness.test.ts",
+   "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts"
+  ],
+  "rows": [
+   [
+    "packages/prediction-engine/src/__tests__/evidence-readiness-matrix-gaps.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/game-context-functions.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/readiness.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 30,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/evidence-readiness-matrix-gaps.test.ts",
+   "packages/prediction-engine/src/__tests__/game-context-functions.test.ts",
+   "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+   "packages/prediction-engine/src/__tests__/readiness.test.ts"
+  ],
+  "only_main_n": 2391,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "claude/laughing-wozniak-gyryjx": {
+  "ahead": 27,
+  "scope_cmp_files": [
+   "packages/prediction-engine/src/__tests__/model-promoter.test.ts",
+   "packages/prediction-engine/src/__tests__/oos-split.test.ts",
+   "packages/prediction-engine/src/index.ts",
+   "packages/prediction-engine/src/model-promoter.ts",
+   "packages/prediction-engine/src/oos-split.ts"
+  ],
+  "rows": [
+   [
+    "packages/prediction-engine/src/__tests__/model-promoter.test.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/__tests__/oos-split.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/index.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/model-promoter.ts",
+    "branch-has",
+    "main-missing",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/oos-split.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 102,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/bankroll.test.ts",
+   "packages/prediction-engine/src/__tests__/calibration-drift.test.ts",
+   "packages/prediction-engine/src/__tests__/consensus-view.test.ts",
+   "packages/prediction-engine/src/__tests__/contest-scoring.test.ts",
+   "packages/prediction-engine/src/__tests__/edge-significance.test.ts",
+   "packages/prediction-engine/src/__tests__/model-promoter.test.ts",
+   "packages/prediction-engine/src/__tests__/narrative-signal.test.ts",
+   "packages/prediction-engine/src/__tests__/performance-analytics.test.ts",
+   "packages/prediction-engine/src/__tests__/responsible-gaming.test.ts",
+   "packages/prediction-engine/src/bankroll.ts",
+   "packages/prediction-engine/src/calibration-drift.ts",
+   "packages/prediction-engine/src/consensus-view.ts",
+   "packages/prediction-engine/src/contest-scoring.ts",
+   "packages/prediction-engine/src/edge-significance.ts",
+   "packages/prediction-engine/src/model-promoter.ts",
+   "packages/prediction-engine/src/narrative-signal.ts",
+   "packages/prediction-engine/src/performance-analytics.ts",
+   "packages/prediction-engine/src/responsible-gaming.ts"
+  ],
+  "only_main_n": 2333,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "codex/galaxy-dynasty-studio-rescue-v2": {
+  "ahead": 21,
+  "scope_cmp_files": [],
+  "rows": [],
+  "branch_scope_n": 98,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/bankroll.test.ts",
+   "packages/prediction-engine/src/__tests__/calibration-drift.test.ts",
+   "packages/prediction-engine/src/__tests__/consensus-view.test.ts",
+   "packages/prediction-engine/src/__tests__/contest-scoring.test.ts",
+   "packages/prediction-engine/src/__tests__/edge-significance.test.ts",
+   "packages/prediction-engine/src/__tests__/narrative-signal.test.ts",
+   "packages/prediction-engine/src/__tests__/performance-analytics.test.ts",
+   "packages/prediction-engine/src/__tests__/responsible-gaming.test.ts",
+   "packages/prediction-engine/src/bankroll.ts",
+   "packages/prediction-engine/src/calibration-drift.ts",
+   "packages/prediction-engine/src/consensus-view.ts",
+   "packages/prediction-engine/src/contest-scoring.ts",
+   "packages/prediction-engine/src/edge-significance.ts",
+   "packages/prediction-engine/src/narrative-signal.ts",
+   "packages/prediction-engine/src/performance-analytics.ts",
+   "packages/prediction-engine/src/responsible-gaming.ts"
+  ],
+  "only_main_n": 2335,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "jarvis/os-foundation-fable5-v1": {
+  "ahead": 21,
+  "scope_cmp_files": [],
+  "rows": [],
+  "branch_scope_n": 72,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/bankroll.test.ts",
+   "packages/prediction-engine/src/__tests__/calibration-drift.test.ts",
+   "packages/prediction-engine/src/__tests__/consensus-view.test.ts",
+   "packages/prediction-engine/src/__tests__/contest-scoring.test.ts",
+   "packages/prediction-engine/src/__tests__/edge-significance.test.ts",
+   "packages/prediction-engine/src/__tests__/narrative-signal.test.ts",
+   "packages/prediction-engine/src/__tests__/performance-analytics.test.ts",
+   "packages/prediction-engine/src/__tests__/responsible-gaming.test.ts",
+   "packages/prediction-engine/src/bankroll.ts",
+   "packages/prediction-engine/src/calibration-drift.ts",
+   "packages/prediction-engine/src/consensus-view.ts",
+   "packages/prediction-engine/src/contest-scoring.ts",
+   "packages/prediction-engine/src/edge-significance.ts",
+   "packages/prediction-engine/src/narrative-signal.ts",
+   "packages/prediction-engine/src/performance-analytics.ts",
+   "packages/prediction-engine/src/responsible-gaming.ts"
+  ],
+  "only_main_n": 2361,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "claude/launch-review-fixes": {
+  "ahead": 14,
+  "scope_cmp_files": [
+   "packages/prediction-engine/src/__tests__/probability-calibration.test.ts",
+   "packages/prediction-engine/src/probability-calibration.ts"
+  ],
+  "rows": [
+   [
+    "packages/prediction-engine/src/__tests__/probability-calibration.test.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ],
+   [
+    "packages/prediction-engine/src/probability-calibration.ts",
+    "branch-has",
+    "main-has",
+    "UNIQUE-vs-main-and-motif"
+   ]
+  ],
+  "branch_scope_n": 133,
+  "only_branch": [
+   "packages/prediction-engine/src/__tests__/bankroll.test.ts",
+   "packages/prediction-engine/src/__tests__/calibration-drift.test.ts",
+   "packages/prediction-engine/src/__tests__/consensus-view.test.ts",
+   "packages/prediction-engine/src/__tests__/contest-scoring.test.ts",
+   "packages/prediction-engine/src/__tests__/edge-significance.test.ts",
+   "packages/prediction-engine/src/__tests__/narrative-signal.test.ts",
+   "packages/prediction-engine/src/__tests__/performance-analytics.test.ts",
+   "packages/prediction-engine/src/__tests__/responsible-gaming.test.ts",
+   "packages/prediction-engine/src/bankroll.ts",
+   "packages/prediction-engine/src/calibration-drift.ts",
+   "packages/prediction-engine/src/consensus-view.ts",
+   "packages/prediction-engine/src/contest-scoring.ts",
+   "packages/prediction-engine/src/edge-significance.ts",
+   "packages/prediction-engine/src/narrative-signal.ts",
+   "packages/prediction-engine/src/performance-analytics.ts",
+   "packages/prediction-engine/src/responsible-gaming.ts"
+  ],
+  "only_main_n": 2300,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "fix/overnight-codex-feature-gates-260524": {
+  "ahead": null,
+  "scope_cmp_files": [],
+  "rows": [],
+  "branch_scope_n": 0,
+  "only_branch": [],
+  "only_main_n": 2417,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ },
+ "codex/autonomy-release-command-center-2026-05-28": {
+  "ahead": null,
+  "scope_cmp_files": [],
+  "rows": [],
+  "branch_scope_n": 0,
+  "only_branch": [],
+  "only_main_n": 2417,
+  "branch_has_intelligence": false,
+  "motif_has_branch_scope_identical": 0,
+  "main_has_branch_scope_identical": 0
+ }
+}

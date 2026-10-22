@@ -1,0 +1,420 @@
+{
+  "job": "Ship a local-shop Autonomous Revenue Engine: turn one shop photo or URL into a credible 3D/product/UI asset pipeline, then sell the result as a fast website, mockup, turntable, configurator, or quote-ready equipment experience. The practical split is AI for first-pass geometry/texture and technical libraries for CAD truth, lighting, motion, web delivery, and embedded UI.",
+  "clones": [
+    {
+      "name": "fal + Hyper3D Rodin",
+      "url": "https://fal.ai/models/fal-ai/hyper3d/rodin",
+      "what_they_ship": "An API-hosted image- or text-to-3D generator producing realistic, production-ready assets, with Unity, Unreal, and Maya-oriented outputs.",
+      "features": [
+        {
+          "value": "Image-to-3D and text-to-3D input"
+        },
+        {
+          "value": "Multi-view concat mode and feature-fusion mode"
+        },
+        {
+          "value": "Optional HighPack add-on for 4K textures"
+        },
+        {
+          "value": "fal queue/SDK integration and usage-based inference"
+        }
+      ],
+      "pipeline": "Normalize one shop/product photo, send it to Rodin through fal, request the best candidate, download the asset, then clean scale/origin/materials in Blender and render a controlled orbit. Use additional views when the object has hidden sides.",
+      "pricing": "$0.40 per Rodin generation on the fetched fal page; fal also describes per-output Serverless pricing and compute from $1.89 for H100/H200/B200 GPUs.",
+      "clone_this": "Ship a one-button image-to-3D job this week: upload photo -> Rodin -> GLB -> Blender camera orbit plus three hero renders. It is the fastest credible one-photo turntable path.",
+      "beat_this": "Beat the generic generator with a shop-specific validation pass: preserve logo, color, dimensions, and camera framing; provide a human-approved before/after contact sheet. Do not copy proprietary code or UI; if source terms include a Commons Clause, treat it as non-copyable and build the integration around the API.",
+      "money_move": "A Woodlands operator photographs a signature service chair, display case, or product, generates a 15-second orbit and a polished hero image this week, and sells a $299-$799 Google Business/site refresh bundle with a booking CTA and an upsell for a monthly seasonal-render pack."
+    },
+    {
+      "name": "Hyper3D",
+      "url": "https://hyper3d.ai",
+      "what_they_ship": "A browser workspace for image/text-to-3D, editing, AI texturing, video previews, avatars, and HDRI/environment generation.",
+      "features": [
+        {
+          "value": "Image, sketch, or illustration to 3D"
+        },
+        {
+          "value": "Partial region edits and low-poly optimization"
+        },
+        {
+          "value": "Image-to-video motion preview"
+        },
+        {
+          "value": "OmniCraft HDRIs for lighting and rendering"
+        }
+      ],
+      "pipeline": "Use Rodin for geometry, OmniCraft for a branded studio/environment light, AI Texture for surface variants, then create a short motion preview before committing to Blender output.",
+      "pricing": "Free to start with free credits; enterprise features include SSO, workspaces, audit controls, and collaboration. No fixed paid price was shown on the fetched landing page.",
+      "clone_this": "Clone the productized sequence, not the whole editor: reference upload, three lighting presets, one region correction, and an orbit/video preview.",
+      "beat_this": "Beat it with local-shop templates that know salon, barbershop, spa, and equipment vocabulary. Do not copy the closed workspace; if a source license has a Commons Clause, use it only as inspiration and keep your implementation independent.",
+      "money_move": "Offer a same-day 'signature service visual' package: one photo becomes a lit 3D hero, a dark luxury variant, and a vertical social clip linked to online booking."
+    },
+    {
+      "name": "3D AI Studio",
+      "url": "https://www.3daistudio.com",
+      "what_they_ship": "A broad browser toolkit for text-to-3D, image-to-3D, AI texturing, remeshing, image/video generation, and 3D viewing.",
+      "features": [
+        {
+          "value": "Instant text-to-3D and image-to-3D"
+        },
+        {
+          "value": "AI texture generation"
+        },
+        {
+          "value": "Automated retopology/remesh tool"
+        },
+        {
+          "value": "50+ additional AI and 3D tools"
+        }
+      ],
+      "pipeline": "Use it as a rapid asset lab: generate several candidates from the same photo, texture the strongest one, remesh for a lighter web asset, and export a presentable model for orbit rendering.",
+      "pricing": "Free credits and no-card testing; fetched page showed Basic at $12/month billed annually for 1,000 credits and another plan at $23/month billed annually for 3,500 credits.",
+      "clone_this": "Clone the credit-metered workflow and remesh checkpoint so every client job has a low-poly web version and a high-quality render version.",
+      "beat_this": "Beat it by exposing confidence and edit history instead of hiding failures. Avoid copying its proprietary product or assets; apply Commons Clause caution whenever a dependency is source-available but commercially restricted.",
+      "money_move": "Use the low monthly tier to create five sample makeovers for Woodlands merchants, then sell a paid '3D menu/product gallery' to the shop whose render gets the most local engagement."
+    },
+    {
+      "name": "Alpha3D",
+      "url": "https://alpha3d.io",
+      "what_they_ship": "An end-to-end asset pipeline that continues beyond generation through retopology, UV unwrap, texture, rig, and export, with REST jobs, webhooks, and idempotency keys.",
+      "features": [
+        {
+          "value": "Image-to-3D and text-to-3D"
+        },
+        {
+          "value": "Retopology, UV unwrap, texturing, rigging, and export"
+        },
+        {
+          "value": "GLB/GLTF and STL conversion"
+        },
+        {
+          "value": "Async REST jobs, webhooks, and idempotency keys"
+        }
+      ],
+      "pipeline": "Photo or URL-derived reference -> async generation -> production processing -> GLB for web and STL when useful -> Blender lighting/orbit -> web embed.",
+      "pricing": "The fetched page says the lowest-stakes entry is a €5 Tester; paid-plan assets are yours under a private commercial license, and conversion to another format costs 12 credits.",
+      "clone_this": "Clone the state machine: queued, generated, retopologized, UV'd, textured, exported, approved. That makes a one-photo service reliable instead of a one-off AI demo.",
+      "beat_this": "Beat it with a visible human QA gate for scale, logos, and mechanical interfaces. Do not copy its pipeline implementation; check Commons Clause and other license restrictions before reusing source.",
+      "money_move": "Charge a Woodlands equipment vendor for a 'catalog rescue': turn one existing product photo into a GLB PDP asset, a print-ready STL preview where appropriate, and a 360-degree sales-team link."
+    },
+    {
+      "name": "Kaedim",
+      "url": "https://www.kaedim3d.com",
+      "what_they_ship": "A production service that turns sketches, reference packs, product photos, briefs, and art direction into inspectable 3D assets with revision and markup loops.",
+      "features": [
+        {
+          "value": "Starts from product photos, sketches, reference packs, or briefs"
+        },
+        {
+          "value": "Team inspection and markup"
+        },
+        {
+          "value": "Unlimited revisions are promoted on the fetched page"
+        },
+        {
+          "value": "High-quality production positioning and case studies"
+        }
+      ],
+      "pipeline": "Submit a clear photo/brief, receive a model, mark geometry/material issues, revise, then hand the approved asset to Blender or a web viewer.",
+      "pricing": "No public fixed price was shown on the fetched page; it positions the service for production teams and highlights savings case studies.",
+      "clone_this": "Clone the review loop immediately: every generated asset gets a checklist for silhouette, brand marks, dimensions, materials, and hidden-side assumptions before it reaches a client.",
+      "beat_this": "Beat a human-service queue on speed and local context: generate first pass automatically, reserve human review for high-value geometry. Do not copy Kaedim's service or assets; Commons Clause restrictions are a reason to avoid source reuse.",
+      "money_move": "Sell a '48-hour equipment proof' to a Woodlands contractor: photograph the machine, create an inspectable model and annotated approval round, then upsell a quote page and buyer-facing orbit."
+    },
+    {
+      "name": "Hunyuan3D 2",
+      "url": "https://github.com/Tencent-Hunyuan/Hunyuan3D-2",
+      "what_they_ship": "An open research/implementation repo with separate shape generation and texture synthesis components for high-resolution textured assets, plus Hunyuan3D-Studio.",
+      "features": [
+        {
+          "value": "Two-stage bare-mesh then texture pipeline"
+        },
+        {
+          "value": "Flow-based diffusion-transformer shape generation"
+        },
+        {
+          "value": "High-resolution textured assets"
+        },
+        {
+          "value": "Fast model releases and local inference code"
+        }
+      ],
+      "pipeline": "Run locally on suitable GPU infrastructure, generate geometry first, texture second, then validate topology and materials in Blender; use it when API cost or data locality matters.",
+      "pricing": "Open-source repository; no hosted price was shown. Compute, setup, and model-license obligations remain the operator's responsibility.",
+      "clone_this": "Clone the explicit two-stage pipeline and make texture regeneration independent from geometry regeneration, so a client can change finish without rebuilding the form.",
+      "beat_this": "Beat it with a simpler hosted fallback and a shop-photo QA rubric. Do not assume the repo grants unrestricted commercial copying; inspect its license and any model terms, including Commons Clause implications.",
+      "money_move": "Use a local workstation to turn sensitive commercial interiors or equipment photos into private draft assets, then sell confidentiality as part of a premium Woodlands visualization sprint."
+    },
+    {
+      "name": "Microsoft TRELLIS.2",
+      "url": "https://microsoft.github.io/TRELLIS.2/",
+      "what_they_ship": "A 4B-parameter image-to-3D system using structured latents to produce high-resolution, fully textured assets with arbitrary topology and PBR attributes.",
+      "features": [
+        {
+          "value": "High quality, resolution, and efficiency"
+        },
+        {
+          "value": "Arbitrary topology handling"
+        },
+        {
+          "value": "Base color, roughness, metallic, and opacity modeling"
+        },
+        {
+          "value": "Minimal pre- and post-processing with mesh/O-Voxel conversion"
+        }
+      ],
+      "pipeline": "Feed a clean hero photo, generate a PBR asset, preserve roughness/metallic/opacity maps, then relight it in Blender for accurate product ads and web previews.",
+      "pricing": "The fetched project page presents a research model and does not list hosted pricing.",
+      "clone_this": "Clone the PBR-first contract: deliver base color, roughness, metallic, and opacity separately so the same asset can be relit, recolored, and rendered for multiple campaigns.",
+      "beat_this": "Beat it with CAD anchors and measurement callouts; AI topology is not proof of mechanical accuracy. Do not copy Microsoft source/model assets without license review; Commons Clause is a stop sign where applicable.",
+      "money_move": "Create a premium 'material truth' ad for a Woodlands fixture or machine: show brushed metal, glass, and transparent parts under controlled lights, then sell the asset as a reusable seasonal campaign base."
+    },
+    {
+      "name": "Cylindo",
+      "url": "https://www.cylindo.com",
+      "what_they_ship": "A structured product-visualization platform for product-accurate imagery, configurable variants, web AR, lifestyle scenes, and catalog-scale AI/3D content.",
+      "features": [
+        {
+          "value": "Every-angle product detail"
+        },
+        {
+          "value": "Web-native AR from the product page"
+        },
+        {
+          "value": "Real-product configuration of fabrics, finishes, and layouts"
+        },
+        {
+          "value": "AI-generated scenes and reusable 3D rooms"
+        }
+      ],
+      "pipeline": "Capture or reconstruct the product once, attach structured variant data, render PDP angles and lifestyle scenes, then expose AR/configuration from the page.",
+      "pricing": "The fetched site directs visitors to Receive pricing/Book a demo; no public price was shown.",
+      "clone_this": "Clone the asset-as-catalog idea: one approved model feeds hero, angles, lifestyle, variants, and AR instead of separate Photoshop files.",
+      "beat_this": "Beat enterprise tooling with a narrow local-shop SKU pack and a 24-hour turnaround. Do not copy platform code or proprietary content; check Commons Clause when evaluating any source-available component.",
+      "money_move": "A Woodlands furniture, salon-fixture, or cabinetry operator supplies one URL and a few photos; sell a conversion-focused PDP with finish swatches, orbit, room scene, and 'book measurement' CTA."
+    },
+    {
+      "name": "Threekit",
+      "url": "https://www.threekit.com",
+      "what_they_ship": "A visual commerce and quoting platform that connects product rules to CPQ/ERP, validates configurations, and produces on-the-spot proposals.",
+      "features": [
+        {
+          "value": "Rules-based valid configuration"
+        },
+        {
+          "value": "Voice-note proposal agent"
+        },
+        {
+          "value": "Price book, margin, lead-time, and CPQ/order-entry workflow"
+        },
+        {
+          "value": "150+ manufacturer positioning"
+        }
+      ],
+      "pipeline": "Extract product options from a URL/spec sheet, model valid combinations in a rules table, attach price/margin/lead-time, then generate a visual quote and submit to order entry.",
+      "pricing": "Custom quote; the fetched pricing page says price varies by use case, number of products, brand, scope, and scale.",
+      "clone_this": "Clone the rules-before-render mechanic: every visual option must map to a valid SKU, price, margin, and lead time before the customer sees a buy button.",
+      "beat_this": "Beat it by serving one local operator with a spreadsheet/import-first setup. Do not copy its proprietary CPQ or agent; Commons Clause and commercial terms must be checked before reusing code.",
+      "money_move": "Turn one Woodlands equipment URL into a quote assistant: a rep uploads a voice note, the engine returns three valid packages with renders and margin, and the operator charges setup plus a per-quote fee."
+    },
+    {
+      "name": "Needle Engine + Theatre.js",
+      "url": "https://needle.tools",
+      "what_they_ship": "Needle ships browser-first 3D product pages, configurators, WebAR, PBR/material workflows, HDR lighting, scene streaming, and responsive HTML integration; Theatre.js adds browser motion-design sequencing and graph editing.",
+      "features": [
+        {
+          "value": "WebXR/WebAR without an app store"
+        },
+        {
+          "value": "PBR including transmission, sheen, and anisotropy"
+        },
+        {
+          "value": "FastHDR/lightmapping and scene/file splitting"
+        },
+        {
+          "value": "Theatre.js keyframes, dope sheet, graph editor, easing, camera/light/shader control"
+        }
+      ],
+      "pipeline": "Export optimized GLB from Blender, lightmap or use HDRI, split scenes into loadable chunks, embed with responsive HTML, and use Theatre.js-style timelines for the orbit, hotspot reveal, and CTA transition.",
+      "pricing": "Needle is free for personal projects; the fetched page says Go Pro for commercial use with no watermark, deployment anywhere, and team features. Theatre.js pricing was not shown.",
+      "clone_this": "Clone the 3D landing-page pattern: hero orbit, scroll-linked camera, two hotspots, a material toggle, and a booking CTA, with lazy-loaded assets.",
+      "beat_this": "Beat it with generated shop-specific copy and a measurable CTA instead of a technology showcase. Do not copy Needle/Theatre source blindly; check their licenses and Commons Clause restrictions before commercial reuse.",
+      "money_move": "Launch a Woodlands shop's URL as a premium interactive homepage this week: 3D hero above the fold, service hotspots, AR/photo proof, and booking conversion tracking; sell maintenance for new campaigns."
+    },
+    {
+      "name": "Blender MCP + Poly Haven",
+      "url": "https://github.com/ahujasid/blender-mcp",
+      "what_they_ship": "An open-source MCP bridge that lets AI clients prompt Blender for object creation, materials, lighting, camera setup, Python execution, Hyper3D/Hunyuan generation, and Poly Haven asset retrieval.",
+      "features": [
+        {
+          "value": "Natural-language Blender control"
+        },
+        {
+          "value": "Claude, ChatGPT, Gemini, Cursor, VSCode, and Ollama support"
+        },
+        {
+          "value": "Material, studio-light, and camera commands"
+        },
+        {
+          "value": "Poly Haven HDRIs, textures, and models plus AI 3D integrations"
+        }
+      ],
+      "pipeline": "Photo/URL -> AI asset -> Blender MCP scene script -> Poly Haven CC0 HDRI/material -> camera orbit and render batch -> export GLB/MP4/JPG.",
+      "pricing": "Blender MCP is free/open source; Poly Haven's fetched page says its HDRIs, textures, and models are 100% free under CC0. Blender itself is not priced here.",
+      "clone_this": "Clone the deterministic Blender script: clear scene, import asset, assign scale, load one CC0 HDRI, create three lights/camera presets, keyframe 360 degrees, render thumbnails.",
+      "beat_this": "Beat Photoshop with repeatability and editable 3D outputs, and beat a $99/month Blender-only workflow with a guided automation layer. Do not copy GPL/MIT/other source without checking its exact license; Commons Clause means no direct commercial copying.",
+      "money_move": "Photograph one Woodlands shop object, run the prompt-driven scene build, and sell a same-day 'hero + 360 + social vertical' bundle. Poly Haven's CC0 library keeps the environment-cost story simple."
+    },
+    {
+      "name": "FreeCAD ecosystem",
+      "url": "https://www.freecad.org",
+      "what_they_ship": "FreeCAD is an open-source parametric 3D modeler for constrained sketches, dimension edits, professional design, CAM/CNC, robotics, furniture, and 3D printing; its library/add-ons repositories extend reusable parts and workbenches.",
+      "features": [
+        {
+          "value": "Parametric, constraint-driven geometry"
+        },
+        {
+          "value": "Modify dimensions and extract design details"
+        },
+        {
+          "value": "Multiplatform and no licensing fees/vendor lock-in"
+        },
+        {
+          "value": "FreeCAD-library and FreeCAD-addons ecosystems"
+        }
+      ],
+      "pipeline": "Use AI only to identify parts and estimate dimensions from the photo; rebuild critical interfaces parametrically in FreeCAD, export a CAD-accurate reference, and use Blender only for materials, lighting, and motion.",
+      "pricing": "Free and open source; the fetched site explicitly says no licensing fees and no vendor lock-in. FreeCAD-Bundle is a read-only historical archive and is no longer used to build FreeCAD.",
+      "clone_this": "Clone the 'truth layer': a small parametric template for counter, shelf, machine enclosure, or service chair with editable dimensions and named attachment points.",
+      "beat_this": "Beat AI-only meshes on mechanical credibility by labeling measured, inferred, and decorative geometry. Do not copy add-on code or bundled assets without each repository's license review; Commons Clause can prohibit the intended commercial reuse.",
+      "money_move": "A Woodlands operator photographs equipment and sells an annotated CAD-accurate replacement/installation visual: dimensions, clearances, access side, and a rendered quote page that reduces site-visit friction."
+    },
+    {
+      "name": "Godot + LVGL",
+      "url": "https://godotengine.org",
+      "what_they_ship": "Godot is a free MIT-licensed cross-platform 2D/3D/XR engine; LVGL is a lightweight MIT embedded UI ecosystem with responsive layouts, 2D rendering, glTF/OpenGL 3D, multilingual text, and small memory needs.",
+      "features": [
+        {
+          "value": "Godot 2D/3D, Web, console, and XR targets"
+        },
+        {
+          "value": "Godot MIT license with no royalties"
+        },
+        {
+          "value": "LVGL flex/grid-like layout and 100+ style properties"
+        },
+        {
+          "value": "LVGL glTF 3D rendering and roughly 32kB RAM minimum described on the fetched repo"
+        }
+      ],
+      "pipeline": "Use Godot for a web/desktop interactive quote or showroom prototype; use LVGL when the same product UI must run on a small control panel. Feed both with the approved GLB and a shared product-state JSON.",
+      "pricing": "Godot is free/open source under MIT; LVGL is MIT for commercial projects, with free Community/Evaluation tiers and a paid/pro ecosystem described on its site.",
+      "clone_this": "Clone the shared-state mechanic: one variant/configuration JSON drives the web 3D viewer, quote UI, and embedded LVGL control screen.",
+      "beat_this": "Beat a static mockup by making the quote, dimensions, state, and camera selection interactive. Do not assume every addon is MIT; verify repository licenses and Commons Clause restrictions before copying.",
+      "money_move": "Sell a clickable Woodlands equipment selector that lets a buyer choose finish/accessories, see the orbit update, and request a quote; reuse the same state model for an installer tablet or kiosk."
+    },
+    {
+      "name": "React Bits",
+      "url": "https://reactbits.dev",
+      "what_they_ship": "A library of 165+ customizable animated React components/backgrounds, visual editors, four JS/TS plus CSS/Tailwind variants, and AI-ready prompts.",
+      "features": [
+        {
+          "value": "Animated text, backgrounds, and UI components"
+        },
+        {
+          "value": "JS/CSS, TS/CSS, JS/Tailwind, and TS/Tailwind options"
+        },
+        {
+          "value": "Visual editors and copy-ready installation"
+        },
+        {
+          "value": "Free library with a separate Pro offering"
+        }
+      ],
+      "pipeline": "Export the Blender orbit as a lightweight video or GLB, wrap it in React Bits hero/scroll components, and connect animation completion to booking, quote, or lead capture.",
+      "pricing": "The fetched page says the free library is free forever; React Bits Pro is offered for complete pages, product UI, and tools, but no price was shown in the fetched content.",
+      "clone_this": "Clone the conversion layer: animated hero, trust badges, before/after slider, orbit thumbnail rail, and one sticky booking CTA.",
+      "beat_this": "Beat pretty components with local proof, load-speed budgets, and a real business CTA. Do not copy components outside their license terms; Commons Clause restrictions must be respected.",
+      "money_move": "Turn a Woodlands shop's weak homepage into a polished one-page mockup using the existing URL, one photo, and a 3D orbit; charge for the launch page and monthly offer swaps."
+    },
+    {
+      "name": "8th Wall",
+      "url": "https://8thwall.org",
+      "what_they_ship": "An open-source-oriented WebAR/XR toolkit with XR Engine, 8th Wall Desktop, utilities, examples, and deploy-anywhere workflows without app-store dependence.",
+      "features": [
+        {
+          "value": "Web and native AR features"
+        },
+        {
+          "value": "Desktop XR game engine"
+        },
+        {
+          "value": "Open-source tools and example projects"
+        },
+        {
+          "value": "Commercial use of distributed engine binary under a limited-use license described in the FAQ"
+        }
+      ],
+      "pipeline": "Create a lightweight GLB from the photo pipeline, place it in a WebAR scene, add an in-room scale/placement CTA, and publish to the operator's domain.",
+      "pricing": "The fetched page says 8th Wall is free to use with no login requirement; licensing differs between MIT open-source components and the distributed engine binary's limited-use terms.",
+      "clone_this": "Clone the QR-to-AR handoff: scan, place the shop product/equipment at scale, show one measurable callout, then open booking or quote.",
+      "beat_this": "Beat novelty AR with a useful decision: fit, clearance, finish, or placement. Do not copy the engine binary or assume all components share one license; check the FAQ and Commons Clause implications.",
+      "money_move": "Give a Woodlands customer a QR code that places a chair, fixture, or display in their room; use the interaction to collect a quote request and sell the operator a measurable AR campaign."
+    }
+  ],
+  "steals": [
+    {
+      "value": "Make the asset a reusable source of truth: one approved model should generate hero image, angle renders, orbit video, lifestyle scene, variants, AR, and UI rather than separate Photoshop files."
+    },
+    {
+      "value": "Separate geometry generation from texture/material regeneration; this makes finish changes cheap and protects approved forms."
+    },
+    {
+      "value": "Use an explicit confidence/QA rubric: measured CAD, photo-inferred geometry, and decorative AI guesses must be labeled differently."
+    },
+    {
+      "value": "Use PBR maps and named lighting presets so the same asset can be relit for luxury, clinical, industrial, or seasonal campaigns."
+    },
+    {
+      "value": "Put a rules layer before the CTA: configuration must resolve to valid parts, price, margin, lead time, and quote output."
+    },
+    {
+      "value": "Ship browser-first: lazy-load the GLB, keep HTML accessible, and use a 360 orbit plus two hotspots before attempting a full configurator."
+    },
+    {
+      "value": "Productize review: generated, processed, approved, published, and measured are separate states with an audit trail."
+    },
+    {
+      "value": "Use CC0 Poly Haven HDRIs/textures/models to make fast renders look expensive without licensing friction."
+    },
+    {
+      "value": "Sell the business outcome this week: a photo/URL becomes a bookable page, a quote, a room-fit proof, or a conversion asset—not merely a mesh."
+    }
+  ],
+  "do_not_copy": [
+    {
+      "value": "Do not present an AI mesh as CAD-accurate. Rebuild critical dimensions, interfaces, clearances, and moving parts parametrically in FreeCAD or verify them manually."
+    },
+    {
+      "value": "Do not promise hidden-side truth from one photo; request additional views or label occluded geometry as inferred."
+    },
+    {
+      "value": "Do not copy proprietary SaaS UI, datasets, model weights, generated showcase assets, or source code without checking exact license and commercial terms."
+    },
+    {
+      "value": "Commons Clause is a hard warning: if a source is covered by it or similar source-available restrictions, do not copy it into a commercial product; reimplement the mechanic independently or use a properly licensed API."
+    },
+    {
+      "value": "Do not use a $99/month Blender workflow as the product. Blender is the production tool; the sellable product is the repeatable intake, QA, asset library, orbit render, web CTA, and revenue measurement."
+    },
+    {
+      "value": "Do not build a slow cinematic demo before proving the one-photo -> approved asset -> booking/quote loop."
+    },
+    {
+      "value": "Do not ship unoptimized 4K textures, unbounded scene graphs, or a heavy 3D hero that hides the phone CTA; create web and render-quality versions."
+    },
+    {
+      "value": "Do not imply that 'free', MIT, CC0, a hosted free tier, and a commercial model license mean the same thing; verify each dependency, model, binary, and generated-asset term."
+    }
+  ]
+}

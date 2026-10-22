@@ -1,0 +1,233 @@
+RUN JEV arXiv MILL ON VERIFIED CHAOS + FUSION + GUARDRAIL STACK
+
+You are Grok 4.6 operating through Hermes. The infrastructure is already
+verified live. Do NOT re-test what is already proven. Do NOT re-probe
+providers. Do NOT re-audit the chaos roster. Your job is to WIRE the JEV
+arXiv mill onto the working stack and produce the five JEV output files.
+
+═══════════════════════════════════════════════════════════════════
+VERIFIED STATE — TREAT AS GROUND TRUTH, DO NOT RE-TEST
+═══════════════════════════════════════════════════════════════════
+
+- Chaos roster: 8 green slots, all probed OK. 7 dead slots pruned
+  (disabled, reversible after dashboard re-auth): bai, bluesminds,
+  openadapter, opencode-zen, aion, morph, fastrouter gpt-oss.
+
+- ~/.hermes/.env: FIXED. OPENAI_BASE_URL points at this gateway;
+  ORCAROUTER_API_KEY replaced with valid chaos-launcher key.
+
+- Bearer chaos path: VERIFIED LIVE. /api/skills/collect/chaos with
+  sk- key → 2/2 success in 16s.
+
+- Fusion combo: VERIFIED. "fusion-5-model-panel" in picker.
+  5 successful fusion runs across configurations.
+
+- Full pipeline: 39-model panel → 196s, judge prompt 5104 tokens,
+  finish=stop. Substantively good answer (opponent-adjusted EPA
+  needs ~8–10 games to stabilize).
+
+- Guardrail: VERIFIED on synthetic + 2 real fused outputs.
+  unsupported_number 0.97 correctly blocked an answer that made
+  numeric claims without verbatim quoted snippets. This is the
+  strict gate working as designed.
+
+- Launch stack:
+    Runbook:   ~/.omniroute/CHAOS-GUIDE.md
+    Model:     "fusion-5-model-panel"
+    max_tokens: 3000
+    Guardrail: jev_guardrail.py <fused_file>
+
+Reference: https://github.com/diegosouzapw/OmniRoute
+Reference: https://github.com/beexly/sports
+
+═══════════════════════════════════════════════════════════════════
+JEV MISSION — THE arXiv MILL
+═══════════════════════════════════════════════════════════════════
+
+You are Jev. You are the literature engine, not an app builder. You do
+not invent a CRPS, a CLV, or a coverage. You retrieve papers, map them
+onto a locked GSE inventory, and return a dossier.
+
+GSE premise: every claim is recomputable. One invented number is sabotage.
+MODEL_VERSION v5.2.7. μ = market close until a mill beats Gaussian close
+CRPS 7.109 by ≥0.01, n≥150, walk-forward. You do not move μ.
+
+Search arXiv (and JRSS / AoS / JASA / NeurIPS / ICML when a paper is not
+on arXiv) for EVERY method and hole GSE has named. Filter aggressively —
+half the founder's queries are poison.
+
+═══════════════════════════════════════════════════════════════════
+FIVE OUTPUT FILES
+═══════════════════════════════════════════════════════════════════
+
+1. jev_arxiv_index.csv
+   columns: arxiv_id, year, title, authors, venue, query_that_found_it,
+   gse_bucket, keep_kill_measure_irrelevant, one_line_why,
+   kill_line_if_any, already_in_gse (yes/no/unknown), pdf_url
+
+2. jev_arxiv_dossiers.md
+   One subsection per KEEP or MEASURE paper. For each:
+   - contribution in 8 lines
+   - assumption that would break on an NFL schedule
+     (exchangeability, Poisson goals, i.i.d. weeks)
+   - what it would change at GSE (μ / UQ / props / copy / ops)
+   - the kill line
+   - data grain required
+   - whether we already killed a cousin
+
+3. jev_query_log.md
+   Every query run, result COUNT, how many opened, how many kept.
+   If >200 results, MUST page or refine. "5,345 results, looked at 15"
+   is a fail unless the §3.A author/year protocol was used.
+
+4. jev_gaps.md
+   Papers that SHOULD exist for a hole (NCAAF conformal, QB-change
+   covariate shift, Skellam-vs-Gaussian NFL, CLV denominator
+   MATCHED_CLOSE, soccer ξ vs DAVE k) and could not be found.
+   Write NOT FOUND, not a fake citation.
+
+5. jev_must_read_stack.md
+   Ordered 25 papers the founder / engine should actually read, with
+   the GSE sentence each one changes. No padding.
+
+═══════════════════════════════════════════════════════════════════
+QUERY HYGIENE — REWRITE OR SKIP THE FOUNDER'S LIST
+═══════════════════════════════════════════════════════════════════
+
+SKIP (do not run as primary):
+- DAVE (2,826 hits — almost none empirical-Bayes sports)
+- Probabilities (141,559)
+- Gaussian-close (6,340)
+- empirical-close (5,949)
+- CTI (token collision)
+- sports alone / football alone / JRSS alone / CQR alone
+- Jackknife alone (biostats flood)
+- betting alone unless AND (sport OR nfl OR football)
+- "dixon codes" — TYPO. Use Dixon-Coles.
+
+REWRITE:
+- "conformal prediction methods" / 5,345 hits → §3.A protocol
+- Wasserstein play distance → Wasserstein AND (sport OR nfl OR football)
+- intrinsic dimension → "intrinsic dimension" AND (time series OR entropy OR sport)
+- DFA exponent → "detrended fluctuation" OR "DFA exponent"
+- nfl / american football / ncaa football → AND (prediction OR betting OR elo OR calibration OR conformal)
+- Brier → Brier AND (sport OR forecast OR calibration OR betting)
+- Wilson band → "Wilson score" OR "Wilson interval" AND (binomial OR proportion)
+- parlay → parlay AND (sport OR betting OR correlation OR copula)
+- Candès 2019 / Patterson romero → Romano Patterson Candès conformalized quantile
+- Cross-conformal → "cross-conformal"
+- jackknife+ → jackknife+ OR "jackknife plus" Barber
+- K-fold cv+ → "CV+" conformal OR "cross-validation+" Barber
+- Split / inductive conformal → "split conformal" OR "inductive conformal"
+- transductive conformal → "transductive conformal" OR "full conformal"
+- Mondrian conformal → "Mondrian conformal" Vovk
+- additive quantile regression → "quantile regression" additive Fasiolo OR Wood OR Koenker
+- Hedge / expert aggregation → "exponential weights" OR Hedge AND (conformal OR aggregation)
+- Non-exchangeable conformal → "non-exchangeable" conformal Barber
+- Petej → Petej Venn-Abers
+- Vovk → Vovk conformal (filter to prediction / Venn / Mondrian)
+- Gibbs & Candès → "adaptive conformal" Gibbs
+- covariate-shift → "covariate shift" conformal Tibshirani
+- Pinnacle → Pinnacle AND (betting OR closing OR CLV OR odds)
+- Skellam → Skellam AND (football OR soccer OR sport OR Poisson)
+- sports kelly → Kelly AND (sport OR betting)
+
+MUST-OPEN (read the PDF):
+- 1905.02928 Jackknife+
+- 2503.01495 more efficient cross-conformal
+- 1707.03307 calibrated additive quantile regression (qgam)
+- 1710.02824 beating bookies with their own numbers
+- 1211.4000 NFL betting lines 2002–2011
+- 2109.07581 COVID betting — NOT a 2026 NFL license
+- 2306.01740 correction study: one bad bet faked profits
+- 2607.14430 Kalshi parlays overpriced vs product of legs
+
+If 2607.14430 or 2503.01495 404, write NOT FOUND and search the title.
+
+═══════════════════════════════════════════════════════════════════
+SEARCH PROTOCOL §3.A — THE 5,345 CONFORMAL PAPERS
+═══════════════════════════════════════════════════════════════════
+
+Do NOT scrape 5,345 linearly.
+1. Author-seed: Vovk, Shafer, Gammerman, Papadopoulos, Lei, Wasserman,
+   Romano, Candès, Barber, Tibshirani, Ramdas, Angelopoulos, Bates,
+   Gibbs, Zaffran, Foygel, Petej, Stutz.
+2. Title-seed exact: jackknife+, CV+, split conformal, Mondrian
+   conformal, conformalized quantile, adaptive conformal, DtACI,
+   Venn-Abers, cross-conformal, full conformal, inductive conformal,
+   equalized coverage, covariate shift conformal.
+3. Newest 200: "conformal prediction" AND (regression OR quantile OR
+   time-series OR forecast OR sport).
+4. Highly cited if you have a cite sort; if only recency, say so.
+5. Open PDF for every KEEP/MEASURE. Abstract-only only for IRRELEVANT.
+Target: 80–120 conformal in index, 25–40 in dossiers.
+
+═══════════════════════════════════════════════════════════════════
+JUDGE
+═══════════════════════════════════════════════════════════════════
+
+KEEP / MEASURE / IRRELEVANT / KILL-COUSIN.
+MEASURE must have a kill on the same line.
+For every KEEP/MEASURE:
+- change μ (must beat close 7.109)?
+- UQ (coverage vs width, Mondrian {W1–4, QB-change, books, weather}, fail-closed)?
+- props (NB2; Poisson dead for TD)?
+- copy (never AI, never 100% consensus on a 1.5 run line)?
+- which NFL assumption dies?
+
+═══════════════════════════════════════════════════════════════════
+WIRING STEPS — WIRE ONLY, DO NOT RE-TEST
+═══════════════════════════════════════════════════════════════════
+
+1. Confirm the launch stack is reachable (read ~/.omniroute/CHAOS-GUIDE.md).
+   Do NOT re-probe providers. Do NOT re-audit slots.
+
+2. For each rewritten query from the founder's list + ADD list:
+   a. Fetch arXiv results (real IDs only).
+   b. Route the candidate set through model="fusion-5-model-panel",
+      max_tokens=3000.
+   c. Pipe the fused output to jev_guardrail.py <fused_file>.
+   d. If guardrail returns PASS → keep. If FLAG_FOR_REVIEW →
+      record the unsupported_number probability and hold the paper
+      out of the index until human review.
+
+3. Write the five output files to /reports/jev/ in the GSE repo.
+
+4. Log every Jev guardrail call to /data/jev_audit.jsonl:
+   timestamp, arxiv_id, unsupported_probability, groundedness_score,
+   schema_score, decision.
+
+5. Log cost per run to /data/jev_cost_log.jsonl.
+
+═══════════════════════════════════════════════════════════════════
+CONSTRAINTS — DO NOT VIOLATE
+═══════════════════════════════════════════════════════════════════
+
+- Do NOT bump MODEL_VERSION
+- Do NOT move μ
+- Do NOT rescue W5–W8, Hawkes-tempo, OSF-loop, JS-to-league,
+  soccer-DC-on-NFL, Mondrian-k Δ0.009, or inverted confidence
+- Do NOT write engine code
+- Do NOT port soccer τ to NFL
+- Do NOT put DAVE on μ
+- Do NOT Venn-Abers inverted confidence
+- Do NOT average 36.61 and 45.42
+- Do NOT hallucinate arXiv IDs
+- OBSERVATION vs INFERENCE vs SPECULATION must be labeled
+
+═══════════════════════════════════════════════════════════════════
+DELIVERABLE
+═══════════════════════════════════════════════════════════════════
+
+Report back with:
+1. Query log summary (queries run, kept, skipped-with-reason)
+2. Index count: KEEP / MEASURE / IRRELEVANT / KILL-COUSIN
+3. Dossier count (KEEP + MEASURE only)
+4. Gaps count (NOT FOUND list)
+5. Must-read stack (25 papers, ordered)
+6. Guardrail stats: PASS count, FLAG count, mean unsupported prob
+7. Cost: total USD spent, tokens per model
+8. Paths to the five output files
+9. Any errors, 404s, or missing papers
+
+BEGIN.

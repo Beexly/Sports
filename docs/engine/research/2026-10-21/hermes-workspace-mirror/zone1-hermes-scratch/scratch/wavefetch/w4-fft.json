@@ -1,0 +1,841 @@
+[
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "batting table: Plate Appearances",
+  "formula_name": "batting table: Plate Appearances",
+  "verbatim": "When available, we use actual plate appearances from play-by-play game accounts. Otherwise estimated using AB + BB + HBP + SF + SH, which excludes catcher interferences."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "Batting Average (BA)",
+  "formula_name": "Batting Average (BA)",
+  "verbatim": "Hits/At Bats"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "On-Base Percentage (OBP)",
+  "formula_name": "On-Base Percentage (OBP)",
+  "verbatim": "(H + BB + HBP)/(At Bats + BB + HBP + SF)"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "Slugging Percentage (SLG)",
+  "formula_name": "Slugging Percentage (SLG)",
+  "verbatim": "Total Bases/At Bats or (1B + 2*2B + 3*3B + 4*HR)/AB"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "Total Bases (TB)",
+  "formula_name": "Total Bases (TB)",
+  "verbatim": "Singles + 2 x Doubles + 3 x Triples + 4 x Home Runs."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "Balls In Play (BIP)",
+  "formula_name": "Balls In Play (BIP)",
+  "verbatim": "At Bats - SO - HR + Sac Flies"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Earned Run Average (ERA)",
+  "formula_name": "Earned Run Average (ERA)",
+  "verbatim": "9 * ER / IP"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "WHIP",
+  "formula_name": "WHIP",
+  "verbatim": "(BB + H)/IP"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Batting Average on Balls In Play (BAbip)",
+  "formula_name": "Batting Average on Balls In Play (BAbip)",
+  "verbatim": "(Hits - Home Runs)/(At Bats - SO - HR + Sac Flies)"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Hits per 9 IP (H9)",
+  "formula_name": "Hits per 9 IP (H9)",
+  "verbatim": "9 x H / IP"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Home Runs per 9 IP (HR9)",
+  "formula_name": "Home Runs per 9 IP (HR9)",
+  "verbatim": "9 x HR / IP"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Bases On Balls per 9 IP (BB9)",
+  "formula_name": "Bases On Balls per 9 IP (BB9)",
+  "verbatim": "9 x BB / IP"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Strikeouts per 9 IP (SO9)",
+  "formula_name": "Strikeouts per 9 IP (SO9)",
+  "verbatim": "9 x SO / IP"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+  "context": "Strikeouts / Base On Balls (SO/W)",
+  "formula_name": "Strikeouts / Base On Balls (SO/W)",
+  "verbatim": "SO/W or SO/BB"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+  "context": "Expected Statistics",
+  "formula_name": "Expected Statistics",
+  "verbatim": "By looking at the exit velocity and launch angle of each batted ball, a Hit Probability is assigned based on the outcomes of comparable historic balls in play."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+  "context": "Expected season metrics",
+  "formula_name": "Expected season metrics",
+  "verbatim": "Accumulate the expected outcomes of each batted ball with actual strikeouts, walks and hit by pitches to produce xBA, xSLG and xwOBA."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+  "context": "Sprint Speed",
+  "formula_name": "Sprint Speed",
+  "verbatim": "Sprint Speed is “feet per second in a player’s fastest one-second window” on individual plays."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+  "context": "Sprint Speed seasonal average",
+  "formula_name": "Sprint Speed seasonal average",
+  "verbatim": "The best of these runs, approximately two-thirds, are averaged for a player’s seasonal average."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.linestarapp.com/Projections",
+  "context": "LineStar projection table",
+  "formula_name": "LineStar projection table",
+  "verbatim": "Value displayed as an X multiplier (for example, 3.5X); no underlying formula is stated on the assigned page."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.rotogrinders.com/",
+  "context": "RotoGrinders prop evaluation example",
+  "formula_name": "RotoGrinders prop evaluation example",
+  "verbatim": "The line of 4.5 compares favorably based on our MLB simulations. The prop projects to hit 72.81% of the time based on the assumptions, and that represents an 11.27% edge."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.fangraphs.com/leaders/major-league",
+  "context": "https://www.fangraphs.com/leaders/major-league",
+  "formula_name": "https://www.fangraphs.com/leaders/major-league",
+  "verbatim": "No explicit mathematical formula is displayed on the assigned pages."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.fangraphs.com/projections.aspx",
+  "context": "https://www.fangraphs.com/projections.aspx",
+  "formula_name": "https://www.fangraphs.com/projections.aspx",
+  "verbatim": "'On-Pace - Every Game Played' represents a player's current season stats pro-rated for the remaining games in the season if they were to play in every single remaining game."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.fangraphs.com/projections.aspx",
+  "context": "https://www.fangraphs.com/projections.aspx",
+  "formula_name": "https://www.fangraphs.com/projections.aspx",
+  "verbatim": "'On-Pace - Games Played %' represents a player's current season stats prorated for the remaining games in the season if they were to play the same percentage of total games they have already played this season."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://nextgenstats.nfl.com/stats/rushing",
+  "context": "NFL rushing qualification note",
+  "formula_name": "NFL rushing qualification note",
+  "verbatim": "Minimum 5 Attempts (10 Rush Attempts, Multiplied By Number of Weeks, Divided By 2)"
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+  "context": "NBA VORP tooltip",
+  "formula_name": "NBA VORP tooltip",
+  "verbatim": "Multiply by 2.70 to convert to wins over replacement."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.oddsshopper.com/",
+  "context": "OddsShopper devigging/EV",
+  "formula_name": "OddsShopper devigging/EV",
+  "verbatim": "No verbatim formula published on assigned homepage; site says custom devigging and +EV strategies."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.pickfinder.app/",
+  "context": "PickFinder EV+ board",
+  "formula_name": "PickFinder EV+ board",
+  "verbatim": "No verbatim formula published; described as every price against a devigged fair line, ranked by edge."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.sabersim.com/dfs/draftkings",
+  "context": "SaberSim contest optimization",
+  "formula_name": "SaberSim contest optimization",
+  "verbatim": "No verbatim formula published; “Simulate your contests thousands of times”."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.pro-football-reference.com/years/2025/",
+  "context": "PFR displays derived rates/indices as table values but does not show calculation formulas in the captured page text.",
+  "formula_name": "PFR displays derived rates/indices as table values but does not show calculation formulas in the captured page text.",
+  "verbatim": "No verbatim formula visible on assigned pages."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.nflsavant.com/",
+  "context": "NFL/Savant passing leader card",
+  "formula_name": "NFL/Savant passing leader card",
+  "verbatim": "EPA/play = Expected Points Added per dropback/play (definition shown: how much a QB raises or lowers his team’s scoring expectation on each pass play)."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.nflsavant.com/",
+  "context": "NFL/Savant NGS rushing card",
+  "formula_name": "NFL/Savant NGS rushing card",
+  "verbatim": "Rushing Yards Over Expected per attempt = actual yards minus what an average back would gain from the same situation."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://www.nflsavant.com/",
+  "context": "NFL/Savant pass-rush card",
+  "formula_name": "NFL/Savant pass-rush card",
+  "verbatim": "Pressure % = share of opposing dropbacks where this defender recorded a sack or QB hit."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://rbsdm.com/stats/",
+  "context": "RBSDM Pass Over Expected table",
+  "formula_name": "RBSDM Pass Over Expected table",
+  "verbatim": "Pass Over Expected Difference = Actual − Expected (displayed as Difference)."
+ },
+ {
+  "source_file": "09-12 (1).json",
+  "source_url": "https://rbsdm.com/stats/",
+  "context": "RBSDM Series Success table",
+  "formula_name": "RBSDM Series Success table",
+  "verbatim": "Series Conv % = series conversion results divided into TD, 1st Down, FG, Punt and TO outcome percentages (as displayed; no further equation text visible)."
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "Minimum playing-time qualification on Statcast leaderboards.",
+  "formula_name": "Qualifier",
+  "verbatim": "* Qualifiers: 2.1 PA per team game for batters, 1.25 PA per team game for pitchers."
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "Definition attached to EV50 table header.",
+  "formula_name": "EV50",
+  "verbatim": "For a batter, EV50 is an average of the hardest 50% of his batted balls. For a pitcher it is the average of his softest 50% of batted balls allowed."
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+  "context": "Definition and inclusion method shown in Sprint Speed explainer; page text is truncated after “seasonal”.",
+  "formula_name": "Sprint Speed",
+  "verbatim": "feet per second in a player’s seasonal average; the best of these runs, approximately two-thirds, are averaged for a player’s seasonal ..."
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://www.linestarapp.com/Projections",
+  "context": "LineStar expresses projected point value relative to player salary.",
+  "formula_name": "Value",
+  "verbatim": "ValueProjection/Salary"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://www.nflsavant.com/",
+  "context": "Featured QB query labels the metric EPA per dropback and displays Passer EPA/play.",
+  "formula_name": "EPA per dropback",
+  "verbatim": "EPA / play"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://www.pro-football-reference.com/years/2025/opp.htm",
+  "context": "Column labels shown in opposition table; fetched page does not provide calculation definitions.",
+  "formula_name": "PFR displayed rate metrics",
+  "verbatim": "Y/P; Y/A; NY/A; Sc%; TO%; EXP"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://docs.polymarket.com/",
+  "context": "The pages expose prices/odds and a fee field but do not state a calculation formula.",
+  "formula_name": "",
+  "verbatim": "No explicit formula is published in the three fetched pages."
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://arxiv.org/pdf/2210.16315",
+  "context": "Proper scoring rules for probability vectors; corresponding divergences are KL and squared error.",
+  "formula_name": "Log-loss and Brier score",
+  "verbatim": "phi^LL(S,Y) := - sum_{k=1}^K Y_k log S_k;  phi^BS(S,Y) := sum_{k=1}^K (S_k - Y_k)^2"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://arxiv.org/pdf/2210.16315",
+  "context": "The terms are calibration loss CL, grouping loss GL, and irreducible loss IL.",
+  "formula_name": "Calibration/grouping/irreducible decomposition",
+  "verbatim": "E[d_phi(S,Y)] = E[d_phi(S,C)] + E[d_phi(C,Q)] + E[d_phi(Q,Y)]"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://arxiv.org/pdf/2205.11454",
+  "context": "Bins are formed after applying the lens output transformation; d compares average lensed outputs and targets.",
+  "formula_name": "GECE histogram estimator",
+  "verbatim": "GECE(g) = sum_{B in mathbb{B}} (|B|/|mathbb{B}|) d(gbar_B, ybar_B)"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://arxiv.org/pdf/2205.11454",
+  "context": "A non-metric distance for Likert-style confidence intervals; error occurs when mean label lies outside [l,h].",
+  "formula_name": "Inter-interval distance",
+  "verbatim": "d_[l,h](g, ybar) = max(0, max(l - ybar, ybar - h))"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://arxiv.org/pdf/2406.04068",
+  "context": "The first bracket is the sharpness gap and the second term is calibration error; L2 ECE is the ECE induced by a Bregman divergence.",
+  "formula_name": "Bregman divergence and decomposition",
+  "verbatim": "d_phi(x,y) = phi(x) - phi(y) - nabla phi(y)^T(x-y); E[d_phi(Z,X)] = [E phi(Z) - E phi(E[Z|X])] + E[d_phi(E[Z|X],X)]"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "A and B are fitted by maximum likelihood; f_i is the uncalibrated classifier output.",
+  "formula_name": "Platt sigmoid",
+  "verbatim": "p(y_i=1|f_i) = 1/(1 + exp(A f_i + B))"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "Non-parametric stepwise non-decreasing calibration mapping.",
+  "formula_name": "Isotonic regression objective",
+  "verbatim": "minimize sum_i (y_i - fhat_i)^2 subject to fhat_i >= fhat_j whenever f_i >= f_j"
+ },
+ {
+  "source_file": "09-12 (2).json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "T is learned by minimizing log_loss on a hold-out calibration set and does not change the argmax accuracy.",
+  "formula_name": "Temperature scaling",
+  "verbatim": "softmax(z/T)"
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.linestarapp.com/Projections",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No projection formula exposed in fetched HTML.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.linestarapp.com/Ownership",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Own Diff is displayed as a column; formula not disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.linestarapp.com/Props",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Displayed edge examples include +9% and +4%; confidence examples “63% conf” and “54% conf”; calculation formula not disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.linestarapp.com/SalaryComparison",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Negative section states percentage uses “the baseline reference from the minimum salary from each site.” Exact equation not disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.linestarapp.com/SalaryChanges",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Compares current salary with “last appearance”; no equation disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.linestarapp.com/DailyDashboard",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No formulas disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.rotowire.com/daily/nfl/optimizer.php",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Uses weekly NFL projections, salary cap rules, player matchups, salary caps, roster restrictions and stacking.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.rotowire.com/daily/nfl/optimizer.php",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "FAQ wording: 'simulates performance to calculate the most projected fantasy points for each spot.' No explicit formula is given.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.sabersim.com/dfs/draftkings",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "'simulates every game thousands of times, play-by-play'",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.sabersim.com/dfs/draftkings",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "'Whenever something changes, a new set of sims automatically run.'",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.sabersim.com/dfs/draftkings",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Contest Sims simulate contests thousands of times to find the most profitable lineups for each contest; no explicit ROI formula is provided.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Tables are explicitly labeled year-by-year batting averages and totals; no formulas shown.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.fangraphs.com/leaders/major-league",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No formulas displayed",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.fangraphs.com/projections.aspx",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Default links expose sortdir=desc and pageitems=30; no formulas shown",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.pro-football-reference.com/years/2025/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "MoV,SoS,SRS,OSRS,DSRS displayed without formulas",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Page descriptions define PER league average 15, WS/48, BPM/OBPM/DBPM/VORP; no full formulas",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.hockey-reference.com/leagues/NHL_2026.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No formulas displayed",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.sports-reference.com/cfb/years/2025-schedule.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No projection or calculation method",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.oddsshopper.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Portfolio EV is described as diversified +EV strategies with custom devigging and backtested data.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.oddsshopper.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Arbitrage is described as exploiting sportsbook odds differences for guaranteed-profit opportunities; no equation is shown.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.outlier.bet/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The site links calculators for parlay payout, PrizePicks EV, odds conversion, expected value, Kelly Criterion, and no-vig fair odds; no formulas are printed on the homepage.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://props.cash/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The page uses the phrase 'expected value' and describes analyzing how often other props hit when a player's line goes over; no formula is disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://playerprops.ai/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No prediction formula is disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://playerprops.ai/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The page links to a bets calculator but does not show its equations.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.pickfinder.app/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No formula is disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.pickfinder.app/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The Pro plan describes every price against a devigged fair line, ranked by edge; the calculation itself is not shown.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://dailyfantasyfuel.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The site labels tools '+EV Optimizer' and describes odds-difference/value analysis; no EV formula is shown.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://dailyfantasyfuel.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No DFS scoring or projection equation is disclosed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The page defines EV50 in its table help text: for a batter, EV50 is an average of the hardest 50% of batted balls; for a pitcher it is the average of the softest 50% of batted balls allowed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The page labels the rate metrics LA SwSp%, Hard Hit %, Brls/BBE %, and Brls/PA %, but does not display calculation formulas.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Qualifier text: 2.1 PA per team game for batters and 1.25 PA per team game for pitchers.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/statcast",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "EV50 help text states that it averages the hardest 50% of a batter's batted balls or softest 50% of a pitcher's batted balls allowed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/leaderboard/statcast",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Qualifiers shown: 2.1 PA per team game for batters and 1.25 PA per team game for pitchers.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.nflsavant.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The homepage displays metric labels and units/denominators such as EPA/tgt, EPA/play, EPA/att, Air yds/tgt, YAC/rec, Rec yds/g, and Rec TD/g; it does not display formulas.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://rbsdm.com/stats/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Visible table labels use EPA/play, SR, and pass EPA; the fetched page does not show their formulas.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://rbsdm.com/stats/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The page displays a Garbage-Time WP Filter with default 0% and an Exclude turnovers filter.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://the-odds-api.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "A request is defined as live/upcoming games for a sport, market and bookmaker region; each request counts against plan usage quota.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://docs.polymarket.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Documentation navigation exposes Prices & Orderbook, Negative Risk and Resolution concepts, but this page does not state formulas.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://gamma-api.polymarket.com/events",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Example market description says an event can resolve Yes/No according to a stated sports condition; one example says an uncompleted game resolves 50-50.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://gamma-api.polymarket.com/events",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Outcome prices are supplied as probabilities-like decimal prices (e.g. outcomePrices values between 0 and 1); no calculation formula is supplied.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://sportsbook.draftkings.com/leagues/football/nfl",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Moneyline explanation: negative number is stake needed to win $100; positive amount is winnings on a $100 bet, plus returned stake.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://sportsbook.draftkings.com/leagues/football/nfl",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Spread explanation: favorite must win by indicated points; underdog bet pays if it loses by fewer than points or wins; decimal avoids a push.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://sportsbook.draftkings.com/leagues/football/nfl",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Totals are over/under on combined score; live odds shift continuously and lock at wager time.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.footballguys.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Custom rankings adjust to a league’s exact scoring and roster settings.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://www.footballguys.com/",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "No calculation formula for rankings/projections is stated on the homepage.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://arxiv.org/abs/2210.16315",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Exact page wording: 'Proper scoring rule theory shows that given the calibration loss, the missing piece to characterize individual errors is the grouping loss.'",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://arxiv.org/abs/2205.11454",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "The abstract explicitly identifies the metric family as 'a generalization of Expected Calibration Error (ECE)' but gives no displayed formula on the assigned page.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://arxiv.org/abs/2406.04068",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Definition verbatim: 'A machine learning model is calibrated if its predicted probability for an outcome matches the observed frequency for that outcome conditional on the model prediction.'",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://arxiv.org/abs/2406.04068",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Uses a 'calibration-based decomposition of Bregman divergences'; exact decomposition formula is not displayed on the assigned abstract page.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://github.com/aperezlebel/beyond_calibration",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "README describes src/partitioning.py: 'main partitioning algorithm (implemented in the cluster_evaluate function). It partitions the feature space in each level set and returns the bins' region scores, counts, and average confidence scores.'",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Reliability diagram: x-axis is average predicted probability in each bin; y-axis is fraction of positives in that bin.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Sigmoid wording/formula: `p(y_i=1|f_i)=1/(1+exp(A f_i+B))`; A and B are fitted by maximum likelihood.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Isotonic objective: `∑_{i=1}^n (y_i−f^i)^2`, subject to `f^i≥f^j whenever f_i≥f_j`.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "",
+  "formula_name": "",
+  "verbatim": "Temperature scaling: for n classes, modifies softmax with temperature T: `softmax(z/T)`.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://github.com/nflverse/nfl_data_py",
+  "context": "downcast",
+  "formula_name": "downcast",
+  "verbatim": "Converts float64 columns to float32, reducing memory usage by ~30%; will slow down initial load speed ~50%.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://github.com/nflverse/nfl_data_py",
+  "context": "Seasonal receiving metrics",
+  "formula_name": "Seasonal receiving metrics",
+  "verbatim": "The page labels the listed fields as calculated market-share statistics but provides no calculation formulas.",
+  "methodology": "The page labels the listed fields as calculated market-share statistics but provides no calculation formulas."
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://github.com/nflverse/nfl_data_py",
+  "context": "Market-share metric references",
+  "formula_name": "Market-share metric references",
+  "verbatim": "The README links wopr to an NBC Sports article and dom to a PFF article; no formula is printed on the fetched page.",
+  "methodology": "The README links wopr to an NBC Sports article and dom to a PFF article; no formula is printed on the fetched page."
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "Statcast glossary",
+  "formula_name": "Statcast glossary",
+  "verbatim": "For a batter, EV50 is an average of the hardest 50% of his batted balls. For a pitcher it is the average of his softest 50% of batted balls allowed.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "context": "Statcast qualifier note",
+  "formula_name": "Statcast qualifier note",
+  "verbatim": "Qualifiers: 2.1 PA per team game for batters, 1.25 PA per team game for pitchers.",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "scikit-learn calibration documentation",
+  "formula_name": "scikit-learn calibration documentation",
+  "verbatim": "p(y_i=1|f_i)=1/(1+exp(A f_i+B))",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "scikit-learn calibration documentation",
+  "formula_name": "scikit-learn calibration documentation",
+  "verbatim": "∑_{i=1}^n (y_i−f^i)^2",
+  "methodology": ""
+ },
+ {
+  "source_file": "09-12.json",
+  "source_url": "https://scikit-learn.org/stable/modules/calibration.html",
+  "context": "scikit-learn calibration documentation",
+  "formula_name": "scikit-learn calibration documentation",
+  "verbatim": "softmax(z/T)",
+  "methodology": ""
+ }
+]

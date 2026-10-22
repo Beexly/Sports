@@ -1,0 +1,347 @@
+{
+  "demo": true,
+  "note": "Free sandbox sample (truncated). Get a free API key for full data: https://puntersedge.online/api?utm_source=demo_api&utm_medium=sandbox",
+  "signup_url": "https://puntersedge.online/api?utm_source=demo_api&utm_medium=sandbox",
+  "shape": "Sandbox teaser: 3 races, 5 runners, best 3 prices, wrapped in this envelope. GET /v1/racing/next-to-go returns a bare array of full race objects. race_id matches, so anything you build here extends to /v1/racing/price-history, /results and /closing-lines.",
+  "as_of": "2026-10-18T08:55:26Z",
+  "races": [
+    {
+      "race_id": "3fc9e5f6-79c5-434d-804b-8befa0c85cca",
+      "venue": "Temora",
+      "race_number": 6,
+      "category": "greyhound",
+      "start_time": "2026-10-18T08:57:00Z",
+      "country": "AU",
+      "books_quoting": 15,
+      "runners": [
+        {
+          "name": "Second To None",
+          "number": 1,
+          "bookmakers": [
+            {
+              "key": "pointsbetau",
+              "win_price": 16.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Temora/race/117331194"
+            },
+            {
+              "key": "playup",
+              "win_price": 16.0,
+              "source_url": "https://www.playup.com.au/betting/racing/race/286350"
+            },
+            {
+              "key": "sportsbet",
+              "win_price": 15.0,
+              "source_url": "https://www.sportsbet.com.au/greyhound-racing/australia-nz/temora/race-6-11055108"
+            }
+          ]
+        },
+        {
+          "name": "Lumeah Jolie",
+          "number": 2,
+          "bookmakers": [
+            {
+              "key": "bet365",
+              "win_price": 15.0
+            },
+            {
+              "key": "playup",
+              "win_price": 15.0,
+              "source_url": "https://www.playup.com.au/betting/racing/race/286350"
+            },
+            {
+              "key": "betgold",
+              "win_price": 15.0
+            }
+          ]
+        },
+        {
+          "name": "Aston Rowe",
+          "number": 3,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 91.0,
+              "source_url": "https://www.betright.com.au/racing/temora/6/64086763/win"
+            },
+            {
+              "key": "ladbrokes_au",
+              "win_price": 81.0,
+              "source_url": "https://www.ladbrokes.com.au/racing/temora/366997f6-4e4e-4e67-ac79-fd3bce39a453"
+            },
+            {
+              "key": "bet365",
+              "win_price": 81.0
+            }
+          ]
+        },
+        {
+          "name": "Tiggy Yana",
+          "number": 4,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 13.0,
+              "source_url": "https://www.betright.com.au/racing/temora/6/64086763/win"
+            },
+            {
+              "key": "playup",
+              "win_price": 12.0,
+              "source_url": "https://www.playup.com.au/betting/racing/race/286350"
+            },
+            {
+              "key": "tab",
+              "win_price": 12.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/TEMORA/TEM/G/6"
+            }
+          ]
+        },
+        {
+          "name": "Flying Gecko",
+          "number": 6,
+          "bookmakers": [
+            {
+              "key": "bet365",
+              "win_price": 3.2
+            },
+            {
+              "key": "tab",
+              "win_price": 3.2,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/TEMORA/TEM/G/6"
+            },
+            {
+              "key": "ladbrokes_au",
+              "win_price": 3.1,
+              "source_url": "https://www.ladbrokes.com.au/racing/temora/366997f6-4e4e-4e67-ac79-fd3bce39a453"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "race_id": "066bd2ae-86d1-481b-8c40-60088d9d03dd",
+      "venue": "Sale",
+      "race_number": 7,
+      "category": "greyhound",
+      "start_time": "2026-10-18T09:00:00Z",
+      "country": "AU",
+      "books_quoting": 15,
+      "runners": [
+        {
+          "name": "Here Comes Jojo",
+          "number": 1,
+          "bookmakers": [
+            {
+              "key": "ladbrokes_au",
+              "win_price": 4.2,
+              "source_url": "https://www.ladbrokes.com.au/racing/sale/127b758e-536f-4e8d-a128-1bdcc6a0989a"
+            },
+            {
+              "key": "neds",
+              "win_price": 4.2,
+              "source_url": "https://www.neds.com.au/racing/sale/127b758e-536f-4e8d-a128-1bdcc6a0989a"
+            },
+            {
+              "key": "betdeluxe",
+              "win_price": 3.9,
+              "source_url": "https://www.betdeluxe.com.au/racing/Greyhound/AUS/Sale/850764/7/12208198"
+            }
+          ]
+        },
+        {
+          "name": "Dr. Leviate",
+          "number": 2,
+          "bookmakers": [
+            {
+              "key": "pointsbetau",
+              "win_price": 17.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Sale/race/117200780"
+            },
+            {
+              "key": "betright",
+              "win_price": 17.0,
+              "source_url": "https://www.betright.com.au/racing/sale/7/64086658/win"
+            },
+            {
+              "key": "tab",
+              "win_price": 17.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/SALE/SAL/G/7"
+            }
+          ]
+        },
+        {
+          "name": "Peaky Avenger",
+          "number": 3,
+          "bookmakers": [
+            {
+              "key": "unibet",
+              "win_price": 41.0,
+              "source_url": "https://www.unibet.com.au/racing#/event/202610180900.G.AUS.sale.7"
+            },
+            {
+              "key": "betdeluxe",
+              "win_price": 41.0,
+              "source_url": "https://www.betdeluxe.com.au/racing/Greyhound/AUS/Sale/850764/7/12208198"
+            },
+            {
+              "key": "pointsbetau",
+              "win_price": 41.0,
+              "source_url": "https://pointsbet.com.au/racing/Greyhound/AUS/Sale/race/117200780"
+            }
+          ]
+        },
+        {
+          "name": "Paw Olympus",
+          "number": 4,
+          "bookmakers": [
+            {
+              "key": "tab",
+              "win_price": 3.6,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/SALE/SAL/G/7"
+            },
+            {
+              "key": "palmerbet",
+              "win_price": 3.5,
+              "source_url": "https://www.palmerbet.com/racing/greyhound/18-10-2026/sale/7"
+            },
+            {
+              "key": "playup",
+              "win_price": 3.5,
+              "source_url": "https://www.playup.com.au/betting/racing/race/282446"
+            }
+          ]
+        },
+        {
+          "name": "Paw Palmer",
+          "number": 5,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 4.0,
+              "source_url": "https://www.betright.com.au/racing/sale/7/64086658/win"
+            },
+            {
+              "key": "tab",
+              "win_price": 3.9,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/SALE/SAL/G/7"
+            },
+            {
+              "key": "betgold",
+              "win_price": 3.8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "race_id": "ed0466c1-fafd-4610-8a02-b58cb3d8289b",
+      "venue": "Kellerberrin",
+      "race_number": 7,
+      "category": "harness",
+      "start_time": "2026-10-18T09:00:00Z",
+      "country": "AU",
+      "books_quoting": 15,
+      "runners": [
+        {
+          "name": "Lady Aquila",
+          "number": 1,
+          "bookmakers": [
+            {
+              "key": "bet365",
+              "win_price": 126.0
+            },
+            {
+              "key": "tab",
+              "win_price": 126.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/KELLERBERRIN/KLL/H/7"
+            },
+            {
+              "key": "betright",
+              "win_price": 126.0,
+              "source_url": "https://www.betright.com.au/racing/kellerberrin/7/64086515/win"
+            }
+          ]
+        },
+        {
+          "name": "Midnight Reunion",
+          "number": 2,
+          "bookmakers": [
+            {
+              "key": "betgold",
+              "win_price": 51.0
+            },
+            {
+              "key": "playup",
+              "win_price": 51.0,
+              "source_url": "https://www.playup.com.au/betting/racing/race/281548"
+            },
+            {
+              "key": "betright",
+              "win_price": 51.0,
+              "source_url": "https://www.betright.com.au/racing/kellerberrin/7/64086515/win"
+            }
+          ]
+        },
+        {
+          "name": "Sweet Louanne",
+          "number": 3,
+          "bookmakers": [
+            {
+              "key": "betright",
+              "win_price": 3.1,
+              "source_url": "https://www.betright.com.au/racing/kellerberrin/7/64086515/win"
+            },
+            {
+              "key": "sportsbet",
+              "win_price": 3.0,
+              "source_url": "https://www.sportsbet.com.au/harness-racing/australia-nz/kellerberrin/race-7-11051712"
+            },
+            {
+              "key": "betdeluxe",
+              "win_price": 3.0,
+              "source_url": "https://www.betdeluxe.com.au/racing/Harness/AUS/Kellerberrin/849798/7/12194359"
+            }
+          ]
+        },
+        {
+          "name": "Shadrach",
+          "number": 4,
+          "bookmakers": [
+            {
+              "key": "tab",
+              "win_price": 81.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/KELLERBERRIN/KLL/H/7"
+            },
+            {
+              "key": "boostbet",
+              "win_price": 67.0
+            },
+            {
+              "key": "betgold",
+              "win_price": 67.0
+            }
+          ]
+        },
+        {
+          "name": "Thirtythree Tricks",
+          "number": 5,
+          "bookmakers": [
+            {
+              "key": "boostbet",
+              "win_price": 51.0
+            },
+            {
+              "key": "tab",
+              "win_price": 51.0,
+              "source_url": "https://www.tab.com.au/racing/2026-10-18/KELLERBERRIN/KLL/H/7"
+            },
+            {
+              "key": "betgold",
+              "win_price": 51.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cached": false
+}

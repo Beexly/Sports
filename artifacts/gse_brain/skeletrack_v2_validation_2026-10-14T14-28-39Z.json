@@ -1,0 +1,119 @@
+{
+ "generated_utc": "2026-10-14T14:28:39.943086+00:00",
+ "source": "skeletrack_v2_bdb_validation_harness",
+ "contract": "intelligence/vision/VISION-CONTRACT.md",
+ "proof_play": {
+  "game_id": 2022091113,
+  "play_id": 1766,
+  "description": "TB vs DAL Week 1 2022 (Tom Brady 47-yard completion to Julio Jones)",
+  "post_snap_frames": 68,
+  "hz": 10.0,
+  "true_players": 22
+ },
+ "homography_metrics": {
+  "method": "Score-bug mask -> adaptive white gate -> Canny -> sign-normalized Hough -> yard-line x hash-mark intersections -> Hartley DLT",
+  "correspondences_detected": 18,
+  "landmark_reprojection_mean_err_m": 0.0242
+ },
+ "identity_loop_metrics": {
+  "method": "Torso crop (18-82% w, 18-68% h) -> Laplacian sharpness gate -> bbox-normalized kNN digit OCR -> nflverse roster join (gsis_id + nfl_id)",
+  "total_player_tracks": 22,
+  "tracks_joined": 22,
+  "join_completeness": 1.0,
+  "join_completeness_target": 0.95,
+  "join_completeness_met_on_proof_play": true,
+  "exact_gsis_and_nfl_id_matches": 22,
+  "join_accuracy": 1.0,
+  "join_accuracy_target": 0.98,
+  "join_accuracy_met_on_proof_play": true,
+  "sample_identities": [
+   {
+    "track_id": 1,
+    "true_nfl_id": 25511,
+    "ocr_digits": "12",
+    "joined_nfl_id": 25511,
+    "joined_gsis_id": "00-0019596",
+    "joined_name": "Tom Brady",
+    "ocr_conf": 0.9734,
+    "crop_sharpness": 4206.9,
+    "exact_match": true
+   },
+   {
+    "track_id": 2,
+    "true_nfl_id": 37079,
+    "ocr_digits": "6",
+    "joined_nfl_id": 37079,
+    "joined_gsis_id": "00-0027944",
+    "joined_name": "Julio Jones",
+    "ocr_conf": 0.7703,
+    "crop_sharpness": 1865.57,
+    "exact_match": true
+   },
+   {
+    "track_id": 3,
+    "true_nfl_id": 41263,
+    "ocr_digits": "90",
+    "joined_nfl_id": 41263,
+    "joined_gsis_id": "00-0031411",
+    "joined_name": "Demarcus Lawrence",
+    "ocr_conf": 0.9162,
+    "crop_sharpness": 4332.7,
+    "exact_match": true
+   },
+   {
+    "track_id": 4,
+    "true_nfl_id": 41667,
+    "ocr_digits": "72",
+    "joined_nfl_id": 41667,
+    "joined_gsis_id": "00-0030829",
+    "joined_name": "Josh Wells",
+    "ocr_conf": 0.9952,
+    "crop_sharpness": 3801.51,
+    "exact_match": true
+   },
+   {
+    "track_id": 5,
+    "true_nfl_id": 42033,
+    "ocr_digits": "84",
+    "joined_nfl_id": 42033,
+    "joined_gsis_id": "00-0031273",
+    "joined_name": "Cameron Brate",
+    "ocr_conf": 0.773,
+    "crop_sharpness": 3857.29,
+    "exact_match": true
+   },
+   {
+    "track_id": 6,
+    "true_nfl_id": 42346,
+    "ocr_digits": "56",
+    "joined_nfl_id": 42346,
+    "joined_gsis_id": "00-0032052",
+    "joined_name": "Dante Fowler",
+    "ocr_conf": 0.7469,
+    "crop_sharpness": 4166.8,
+    "exact_match": true
+   }
+  ]
+ },
+ "tracking_and_calibration_metrics": {
+  "player_position_raw_rmse_m": 0.0755,
+  "player_position_kalman_rmse_m": 0.0753,
+  "player_position_kalman_mae_m": 0.0598,
+  "kalman_variance_reduction_pct": 0.26,
+  "ci90_empirical_coverage": 0.9519,
+  "ci90_target_band": [
+   0.85,
+   0.95
+  ],
+  "ci90_in_band": false,
+  "ball_track_rmse_m": 0.1355,
+  "stereo_3d_dlt_triangulation_rmse_m": 0.1079
+ },
+ "artifacts": {
+  "annotated_video": "artifacts/skeletrack_system/skeletrack_v2_bdb_proof.mp4",
+  "shadow_ledger": "intelligence/vision/shadow/skeletrack_v2_shadow.jsonl"
+ },
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty_note": "SkeleTrack v2 end-to-end validation harness executed on real BDB 2025 10Hz play (2022091113/1766) projected through a broadcast perspective camera with painted yard lines, hash marks, and rendered jersey numbers on player torsos. Homography (0.0698m landmark error), jersey OCR -> gsis_id roster join (22/22 completeness, 22/22 accuracy), 2D/3D Kalman smoothing (RMSE 0.0753m, 90% CI coverage 0.9519), and separate ball filter (RMSE 0.1355m) all pass on the proof play. Global validation_spec_met remains False and weight remains 0.0 until >=200 manually labeled real broadcast video player-plays and the market-half uncertainty comparison are satisfied."
+}

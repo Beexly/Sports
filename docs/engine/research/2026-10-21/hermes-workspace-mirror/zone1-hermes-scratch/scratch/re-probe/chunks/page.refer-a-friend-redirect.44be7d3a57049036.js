@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkunderdog_react=self.webpackChunkunderdog_react||[]).push([["3056"],{19195:function(e,t,o){o.r(t),o.d(t,{default:()=>u});var r=o(75271);let u=()=>((0,r.useEffect)(()=>{window.location.replace("https://app.underdogsports.com/m/rules/promotions")},[]),null)}}]);
+//# sourceMappingURL=page.refer-a-friend-redirect.44be7d3a57049036.js.map

@@ -1,0 +1,940 @@
+[
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/package.json",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 7,
+  "n_main_only": 7,
+  "branch_only_sample": [
+   "    \"@sports/types\": \"*\"",
+   "    \"build\": \"tsc\",",
+   "    \"test:watch\": \"vitest\",",
+   "    \"typecheck\": \"tsc --noEmit\"",
+   "  \"main\": \"./dist/index.js\",",
+   "  \"types\": \"./dist/index.d.ts\","
+  ],
+  "main_only_sample": [
+   "    \"@sports/crypto\": \"*\"",
+   "    \"@sports/types\": \"*\",",
+   "    \"test:watch\": \"vitest\"",
+   "    \"typecheck\": \"tsc --noEmit\","
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/src/__tests__/process-sport.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 264,
+  "n_main_only": 1239,
+  "branch_only_sample": [
+   "        awayTeam: \"Miami Heat\",",
+   "        data: expect.objectContaining({ status: \"FAILED\" }),",
+   "        data: expect.objectContaining({ status: \"SUCCESS\" }),",
+   "        homeTeam: \"Boston Celtics\",",
+   "        sport: \"basketball_nba\",",
+   "      \"Boston Celtics\","
+  ],
+  "main_only_sample": [
+   "              awayTeamName: \"Tampa Bay Rays\",",
+   "              commenceTime: kickoff,",
+   "              event: { externalId: \"espn:nfl:1\", commenceTime: new Date(T_STARTED) },",
+   "              externalId: \"odds-api-1\","
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/src/__tests__/settle-picks.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 2,
+  "n_main_only": 798,
+  "branch_only_sample": [
+   "export type { SettlePicksResult, SettlePicksSummary } from \"./settle-picks.js\";",
+   "export { settlePicks } from \"./settle-picks.js\";"
+  ],
+  "main_only_sample": [
+   "  ArchiveStalenessCheckArgs,",
+   "  ArchiveStalenessReport,",
+   "  BASEBALL_COMMENCE_MATCH_MS,",
+   "  CFOV_GATE,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/src/process-sport.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 63,
+  "n_main_only": 1116,
+  "branch_only_sample": [
+   "            `${logPrefix} ${sport.key} series detected: ${game.homeTeam} vs ${game.awayTeam} ` +",
+   "            `(${playoffContext.seriesHomeWins}-${playoffContext.seriesAwayWins}, ` +",
+   "            `elimination=${playoffContext.isEliminationGame})`",
+   "          ...pickUpdateData,",
+   "          // Re-evaluate featured status on each refresh when promotion is enabled.",
+   "          `${logPrefix} Playoff context failed for ${game.externalId}: ` +"
+  ],
+  "main_only_sample": [
+   "                        gameId: pick.gameId,",
+   "                        pickType: pick.pickType,",
+   "                      gameId_pickType: {",
+   "                      },"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/src/settle-picks.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/tsconfig.json",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 1,
+  "n_main_only": 2,
+  "branch_only_sample": [
+   "  \"exclude\": [\"node_modules\", \"dist\", \"src/**/*.test.ts\"]"
+  ],
+  "main_only_sample": [
+   "    \"lib\": [\"ES2022\", \"DOM\"],",
+   "  \"exclude\": [\"node_modules\", \"dist\"]"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/ingestion-pipeline/vitest.config.ts",
+  "kind": "EQUAL",
+  "n_branch_only": 0,
+  "n_main_only": 0,
+  "branch_only_sample": [],
+  "main_only_sample": [],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/package.json",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 4,
+  "branch_only_sample": [
+   "    \"build\": \"tsc\",",
+   "  \"main\": \"./dist/index.js\",",
+   "  \"types\": \"./dist/index.d.ts\",",
+   "  }"
+  ],
+  "main_only_sample": [
+   "    \"fast-check\": \"^3.23.2\",",
+   "  \"description\": \"Core sports prediction engine and model execution\"",
+   "  \"main\": \"./src/index.ts\",",
+   "  \"types\": \"./src/index.ts\","
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 256,
+  "n_main_only": 105,
+  "branch_only_sample": [
+   "          desperationMultiplier: 1.4,",
+   "          desperationMultiplier: 1.7,",
+   "          desperationMultiplier: 1.9, // max desperation \u2192 min reliability",
+   "          seriesDeficit: 1,",
+   "          seriesDeficit: 2,",
+   "          trailingTeam: \"AWAY\","
+  ],
+  "main_only_sample": [
+   "      bookmakerCoverageMax: 1,",
+   "      currentSpread: -4.5,",
+   "      currentSpread: -8,",
+   "      currentTotal: 46,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/src/__tests__/scoring.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 2,
+  "n_main_only": 232,
+  "branch_only_sample": [
+   "    expect(picks[0]?.modelVersion).toBe(\"v6.0.0\");",
+   "  it(\"modelVersion is v6.0.0\", () => {"
+  ],
+  "main_only_sample": [
+   "            bookmaker,",
+   "            market: \"TOTALS\" as const,",
+   "            overPrice: -110,",
+   "            total: index < 3 ? 47.5 : 48.5,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/src/constants.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 8,
+  "n_main_only": 29,
+  "branch_only_sample": [
+   "  // Direct score contribution from series deficit / desperation.",
+   "  // Historical form signals (ATS/H2H/venue) are discounted proportionally",
+   "  // in playoff series with heightened intensity and adjusted game plans.",
+   "  // to desperationMultiplier, since regular-season trends are less reliable",
+   "  // \u2500\u2500 Playoff/series context (v6) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+   "  PLAYOFF_CONTEXT_COMPONENT_MAX: 8,"
+  ],
+  "main_only_sample": [
+   "// 0.45 real book fair) + fixed evidence shrink \u03b1=0.88; pick-card priced badge.",
+   "// Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.",
+   "// Dual-objective selective retained. Maps/PERFORMANCE_STATS still OFF.",
+   "// ET wall-clock ticker fragments; 12h start skew on series match."
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/src/game-context.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 88,
+  "n_main_only": 42,
+  "branch_only_sample": [
+   "            impact: clampedScore > 0 ? \"positive\" : \"negative\",",
+   "            name: \"Playoff Series Context\",",
+   "            weight: clampedScore,",
+   "      : score - 1;",
+   "      ? clamp(score + 3, 0, MAX)",
+   "      clampedScore !== 0"
+  ],
+  "main_only_sample": [
+   "    venueFormScore,",
+   "  // \"unknown\" \u2014 see the HONESTY GATE note above; callers must pass a real age.",
+   "  // 2-game diff yields magnitude \u2248 0.667 (~two-thirds of max, rounds to 3 of 5)",
+   "  // 9. Data quality"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 3,
+  "n_main_only": 3379,
+  "branch_only_sample": [
+   "  // v6",
+   "  computePlayoffContextScore,",
+   "export { calculatePickResult } from \"./settlement.js\";"
+  ],
+  "main_only_sample": [
+   "  // Serialization: lets the filter survive a serverless cold start instead of being",
+   "  // compile error.",
+   "  // exports a function of that name with identical semantics (divide",
+   "  // internal use; the barrel surfaces exactly one to avoid a duplicate-export"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/src/scoring.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 76,
+  "n_main_only": 648,
+  "branch_only_sample": [
+   "          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? spreadOdds.length,",
+   "          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? totalOdds.length,",
+   "        : \"Near fair value \u2014 minimal pricing edge\",",
+   "        ? `Market price appears ${Math.abs(pctEdge)}% overvalued`",
+   "        ? `Model estimates +${pctEdge}% edge vs market price`",
+   "      .filter((o) => o.overPrice !== undefined)"
+  ],
+  "main_only_sample": [
+   "                : \"negative\",",
+   "                ? \"positive\"",
+   "              : \"negative\",",
+   "              : independentEdge.shrunkEdge > 0"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "path": "packages/prediction-engine/tsconfig.json",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 2,
+  "n_main_only": 1,
+  "branch_only_sample": [
+   "  \"exclude\": [\"node_modules\", \"dist\", \"src/**/*.test.ts\"]"
+  ],
+  "main_only_sample": [
+   "  \"exclude\": [\"node_modules\", \"dist\", \"**/*.test.ts\"]"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK",
+  "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK",
+  "path": "packages/prediction-engine/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 3348,
+  "branch_only_sample": [
+   "// v6 \u2014 Poisson model (helper module, not yet wired into scoring)",
+   "// v6 \u2014 bankroll math helpers. Exported for future model work; not wired to",
+   "export { calculatePickResult } from \"./settlement.js\";",
+   "export { extractPickSources } from \"./pick-sources.js\";"
+  ],
+  "main_only_sample": [
+   "  // Serialization: lets the filter survive a serverless cold start instead of being",
+   "  // compile error.",
+   "  // exports a function of that name with identical semantics (divide",
+   "  // internal use; the barrel surfaces exactly one to avoid a duplicate-export"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK",
+  "path": "packages/prediction-engine/src/pick-sources.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-codex",
+  "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-codex",
+  "path": "packages/prediction-engine/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 3348,
+  "branch_only_sample": [
+   "// v6 \u2014 Poisson model (helper module, not yet wired into scoring)",
+   "// v6 \u2014 bankroll math helpers. Exported for future model work; not wired to",
+   "export { calculatePickResult } from \"./settlement.js\";",
+   "export { extractPickSources } from \"./pick-sources.js\";"
+  ],
+  "main_only_sample": [
+   "  // Serialization: lets the filter survive a serverless cold start instead of being",
+   "  // compile error.",
+   "  // exports a function of that name with identical semantics (divide",
+   "  // internal use; the barrel surfaces exactly one to avoid a duplicate-export"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-codex",
+  "path": "packages/prediction-engine/src/pick-sources.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-audit",
+  "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-audit",
+  "path": "packages/prediction-engine/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 3348,
+  "branch_only_sample": [
+   "// v6 \u2014 Poisson model (helper module, not yet wired into scoring)",
+   "// v6 \u2014 bankroll math helpers. Exported for future model work; not wired to",
+   "export { calculatePickResult } from \"./settlement.js\";",
+   "export { extractPickSources } from \"./pick-sources.js\";"
+  ],
+  "main_only_sample": [
+   "  // Serialization: lets the filter survive a serverless cold start instead of being",
+   "  // compile error.",
+   "  // exports a function of that name with identical semantics (divide",
+   "  // internal use; the barrel surfaces exactly one to avoid a duplicate-export"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-audit",
+  "path": "packages/prediction-engine/src/pick-sources.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/ingestion-pipeline/package.json",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 6,
+  "branch_only_sample": [
+   "    \"@sports/types\": \"*\"",
+   "    \"test\": \"vitest run\"",
+   "    \"vitest\": \"^4.1.7\"",
+   "  }"
+  ],
+  "main_only_sample": [
+   "    \"@sports/crypto\": \"*\"",
+   "    \"@sports/types\": \"*\",",
+   "    \"test\": \"vitest run\",",
+   "    \"test:watch\": \"vitest\""
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/ingestion-pipeline/src/__tests__/source-snapshot.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 63,
+  "n_main_only": 24,
+  "branch_only_sample": [
+   "    // Arrays are returned as-is, but JSON.stringify still calls the replacer",
+   "    // Verify the hash is different from a non-stable serialization that",
+   "    // might have keys in a different order",
+   "    // on each element \u2014 so object elements inside arrays also get key-sorted.",
+   "    const a = stableStringify({ z: 1, a: 2, m: 3 });",
+   "    const b = stableStringify({ a: 2, m: 3, z: 1 });"
+  ],
+  "main_only_sample": [
+   "    // Stub must be far smaller than a real payload would be.",
+   "    const stub = snapshotPayloadFor(\"hash-only\", raw) as Record<string, unknown>;",
+   "    expect(JSON.stringify(stub).length).toBeLessThan(JSON.stringify(raw).length + 200);",
+   "    expect(resolveSnapshotMode({ NODE_ENV: \"development\" })).toBe(\"db-full\");"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/ingestion-pipeline/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 800,
+  "branch_only_sample": [
+   "export type { SourceSnapshotInput } from \"./source-snapshot\";",
+   "export type { SportConfig, ProcessSportResult } from \"./process-sport\";",
+   "export { processSport } from \"./process-sport\";",
+   "export { recordSourceSnapshot } from \"./source-snapshot\";"
+  ],
+  "main_only_sample": [
+   "  ArchiveStalenessCheckArgs,",
+   "  ArchiveStalenessReport,",
+   "  BASEBALL_COMMENCE_MATCH_MS,",
+   "  CFOV_GATE,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/ingestion-pipeline/src/process-sport.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 48,
+  "n_main_only": 1081,
+  "branch_only_sample": [
+   "          ...pickUpdateData,",
+   "          // Re-evaluate featured status on each refresh when promotion is enabled.",
+   "          awayPrice: odds.awayPrice,",
+   "          awaySpreadPrice: odds.awaySpreadPrice,",
+   "          bookmaker: odds.bookmaker,",
+   "          drawPrice: odds.drawPrice,"
+  ],
+  "main_only_sample": [
+   "                        gameId: pick.gameId,",
+   "                        pickType: pick.pickType,",
+   "                      gameId_pickType: {",
+   "                      },"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/ingestion-pipeline/src/source-snapshot.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 3,
+  "n_main_only": 25,
+  "branch_only_sample": [
+   "      payload: JSON.parse(payloadText),",
+   "export function stableStringify(value: unknown): string {",
+   "import { db } from \"@sports/db\";"
+  ],
+  "main_only_sample": [
+   "      payload: snapshotPayloadFor(mode, JSON.parse(payloadText)) as Prisma.InputJsonValue,",
+   "    _mode: \"hash-only\",",
+   "    _note: \"Raw payload omitted to protect storage; SHA-256 hash + byte count are retained for audit.\",",
+   "  // Hash + byte count are ALWAYS computed from the full payload \u2014 integrity is"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/ingestion-pipeline/vitest.config.ts",
+  "kind": "EQUAL",
+  "n_branch_only": 0,
+  "n_main_only": 0,
+  "branch_only_sample": [],
+  "main_only_sample": [],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/package.json",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 4,
+  "branch_only_sample": [
+   "    \"@sports/types\": \"*\",",
+   "    \"vite\": \"^6.4.2\"",
+   "    \"vitest\": \"^4.1.7\"",
+   "  }"
+  ],
+  "main_only_sample": [
+   "    \"@sports/types\": \"*\"",
+   "    \"fast-check\": \"^3.23.2\",",
+   "    \"vitest\": \"^2.1.1\"",
+   "  \"description\": \"Core sports prediction engine and model execution\""
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/evidence-readiness-matrix.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 60,
+  "n_main_only": 20,
+  "branch_only_sample": [
+   "        evidence(\"DIVISION_CONTEXT\", {",
+   "        evidence(\"ODDS\"), // keep market.odds active so critical list is empty",
+   "        evidence(\"ODDS\", { activationStatus: \"BLOCKED_LOW_TRUST\" }),",
+   "        evidence(\"ODDS\", { activationStatus: \"BLOCKED_MISSING_SOURCE\" }),",
+   "        evidence(\"ODDS\", { activationStatus: \"BLOCKED_SMALL_SAMPLE\" }),",
+   "        evidence(\"ODDS\", { activationStatus: \"BLOCKED_STALE\" }),"
+  ],
+  "main_only_sample": [
+   "      edgeLabVerdict: { logitPoolVerdict: \"FIRE_NOTHING\", tunedTau: null },",
+   "      edgeLabVerdict: { logitPoolVerdict: \"MODEL_ADDS_INFORMATION\", tunedTau: 0.02 },",
+   "      edgeLabVerdict: { logitPoolVerdict: \"MODEL_ADDS_INFORMATION\", tunedTau: null },",
+   "      evidence: trueEvReadyEvidence,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 315,
+  "n_main_only": 105,
+  "branch_only_sample": [
+   "    // 0 bookmakers, 180 min stale, no markets = 0 quality",
+   "    // 10 books = 40pts, 0min = 30pts freshness, no markets = 0 \u2192 70 quality",
+   "    // 4 wins out of 10 = 40%",
+   "    // 5 books = 20pts coverage, 90min = 0 freshness, 1 market = 10pts \u2192 ~30 quality",
+   "    // 5 wins out of 10 = 50%",
+   "    // 5W\u20135L = 50% ATS \u2014 falls in the neutral zone (43\u201357%), score=0, factor=null"
+  ],
+  "main_only_sample": [
+   "      bookmakerCoverageMax: 1,",
+   "      currentSpread: -4.5,",
+   "      currentSpread: -8,",
+   "      currentTotal: 46,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/kelly.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 2,
+  "n_main_only": 2,
+  "branch_only_sample": [
+   "import { MODEL_VERSION } from \"../constants\";",
+   "} from \"../kelly\";"
+  ],
+  "main_only_sample": [
+   "import { MODEL_VERSION } from \"../constants.js\";",
+   "} from \"../kelly.js\";"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/poisson.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 10,
+  "n_main_only": 1,
+  "branch_only_sample": [
+   "    expect(poissonCdf(-1, -1)).toBe(0);",
+   "    expect(poissonCdf(-2, 0)).toBe(0);",
+   "    expect(poissonCdf(0, 0)).toBe(1);",
+   "    expect(poissonCdf(5, 0)).toBe(1);",
+   "    expect(poissonPmf(3, Infinity)).toBe(0);",
+   "    expect(poissonPmf(3, NaN)).toBe(0);"
+  ],
+  "main_only_sample": [
+   "} from \"../poisson.js\";"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/readiness-gates.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/scoring.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 213,
+  "n_main_only": 233,
+  "branch_only_sample": [
+   "            activationStatus: \"SHADOW_ONLY\",",
+   "            fetchedAt: new Date(),",
+   "            freshnessStatus: \"FRESH\",",
+   "            isBootstrap: false,",
+   "            signalKey: \"officials\",",
+   "            signalKey: \"player_avail\","
+  ],
+  "main_only_sample": [
+   "            bookmaker,",
+   "            market: \"TOTALS\" as const,",
+   "            overPrice: -110,",
+   "            total: index < 3 ? 47.5 : 48.5,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/settlement.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 42,
+  "n_main_only": 98,
+  "branch_only_sample": [
+   "      \"FUTURES\" as \"MONEYLINE\",",
+   "      \"Kansas City Chiefs\",",
+   "      0,",
+   "      21,",
+   "      28,",
+   "      NFL"
+  ],
+  "main_only_sample": [
+   "      // @ts-expect-error \u2014 deliberately unsupported pickType at runtime",
+   "      calculatePickResult(\"PARLAY\", \"Team A\", 0, \"Team A\", 21, 17, \"americanfootball_nfl\", VIS),",
+   "      const awayResult = calculatePickResult(\"SPREAD\", \"Away Team\", line, \"Home Team\", homeScore, awayScore, NFL, VIS);",
+   "      const homeResult = calculatePickResult(\"SPREAD\", \"Home Team\", line, \"Home Team\", homeScore, awayScore, NFL, VIS);"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 208,
+  "n_main_only": 103,
+  "branch_only_sample": [
+   "            activationStatus: \"ACTIVE\",",
+   "            activationStatus: \"BLOCKED_MISSING_SOURCE\",",
+   "            fetchedAt: new Date(),",
+   "            freshnessStatus: \"FRESH\",",
+   "            isBootstrap: false,",
+   "            signalKey: \"milestones\","
+  ],
+  "main_only_sample": [
+   "        awayAtsForm: atsBucket(15),",
+   "        awayAtsFormAway: atsBucket(9),",
+   "        headToHeadForm: atsBucket(6),",
+   "        homeAtsForm: atsBucket(20),"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/game-context.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 14,
+  "n_main_only": 38,
+  "branch_only_sample": [
+   "  // Normalize: 2-game diff = half score, 3+-game diff = full signal",
+   "  if (!atsFormAtVenue || atsFormAtVenue.sampleSize < MIN_SAMPLE) {",
+   "  if (!form || form.sampleSize < MIN_SAMPLE) {",
+   "  if (!h2hForm || h2hForm.sampleSize < MIN_SAMPLE) {",
+   "  if (decided === 0) return { score: 0, atsPct: null, factor: null };",
+   "  if (decided === 0) return { score: 0, factor: null };"
+  ],
+  "main_only_sample": [
+   "  // \"unknown\" \u2014 see the HONESTY GATE note above; callers must pass a real age.",
+   "  // 2-game diff yields magnitude \u2248 0.667 (~two-thirds of max, rounds to 3 of 5)",
+   "  // Defensive: the |diff| >= 2 gate above forces |sideScore| >= 3.33, which",
+   "  // Gate on DECIDED games (wins + losses), NOT total sample size. sampleSize"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 18,
+  "n_main_only": 3363,
+  "branch_only_sample": [
+   "// v6 \u2014 Poisson model (helper module, not yet wired into scoring)",
+   "// v6 \u2014 bankroll math helpers. Exported for future model work; not wired to",
+   "export * from \"./constants\";",
+   "export type { GameContextInput, GameContextScores, AtsFormBucket } from \"./game-context\";",
+   "export type { KellyStake, StakeInput } from \"./kelly\";",
+   "export type { PickSignalSnapshotData } from \"./signal-snapshot\";"
+  ],
+  "main_only_sample": [
+   "  // Serialization: lets the filter survive a serverless cold start instead of being",
+   "  // compile error.",
+   "  // exports a function of that name with identical semantics (divide",
+   "  // internal use; the barrel surfaces exactly one to avoid a duplicate-export"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/kelly.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 25,
+  "n_main_only": 63,
+  "branch_only_sample": [
+   "    `Based on ${Math.round(fairProb * 100)}% fair-value probability at ` +",
+   "    fairProbability: fairProb,",
+   "  /** Bankroll sizing lens in units (0.0 \u2013 MAX_UNITS_PER_PICK). */",
+   "  /** Final stake as % of bankroll (= fullKellyPercent \u00d7 KELLY_FRACTION, clamped). */",
+   "  /** The fair-value win probability used in the computation. */",
+   "  // FactorBreakdown carries the canonical numeric edge implicitly via"
+  ],
+  "main_only_sample": [
+   "    `Based on an estimated ${Math.round(estimatedFairProb * 100)}% fair-value ` +",
+   "    `probability (illustrative, derived from edge score) at ` +",
+   "    estimatedFairProbability: estimatedFairProb,",
+   "   * 0.25u rounding, so \u2014 unlike `units` \u2014 it is intentionally neither clamped"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/readiness.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 12,
+  "n_main_only": 42,
+  "branch_only_sample": [
+   "    bootstrapMode: true,",
+   "    canApplyCalibrationAdjustments:  false,",
+   "    error: `${featureName} is disabled in bootstrap mode.`,",
+   "    hint: \"Set the appropriate environment flag to enable this feature. See .env.example for the bootstrap progression guide.\",",
+   "   * Always false \u2014 confidence weight adjustments require explicit human review",
+   "   * This constant gate makes the calibration boundary explicit and auditable."
+  ],
+  "main_only_sample": [
+   "      \"Founder-gated closed (e.g. PUBLIC_PICKS_ENABLED / PERFORMANCE_STATS_ENABLED). Not bootstrap history mode \u2014 see /api/ops/public-surface-truth gates.\",",
+   "      bootstrapMode: true,",
+   "      error: `${featureName} is disabled in bootstrap mode.`,",
+   "      hint: \"Set the appropriate environment flag to enable this feature. See .env.example for the bootstrap progression guide.\","
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "path": "packages/prediction-engine/src/scoring.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 68,
+  "n_main_only": 627,
+  "branch_only_sample": [
+   "          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? spreadOdds.length,",
+   "          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? totalOdds.length,",
+   "        : \"Near fair value \u2014 minimal pricing edge\",",
+   "        ? `Market price appears ${Math.abs(pctEdge)}% overvalued`",
+   "        ? `Model estimates +${pctEdge}% edge vs market price`",
+   "      .filter((o) => o.overPrice !== undefined)"
+  ],
+  "main_only_sample": [
+   "                : \"negative\",",
+   "                ? \"positive\"",
+   "              : \"negative\",",
+   "              : independentEdge.shrunkEdge > 0"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "path": "packages/prediction-engine/src/__tests__/evidence-readiness-matrix-gaps.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "path": "packages/prediction-engine/src/__tests__/game-context-functions.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 97,
+  "n_main_only": 105,
+  "branch_only_sample": [
+   "        currentSpread: -5.5,",
+   "        homeAtsForm: { wins: 15, losses: 10, pushes: 0, sampleSize: 25 },",
+   "        openingSpread: -3.5,",
+   "        restDaysAway: 1,",
+   "        restDaysHome: 4,",
+   "      \"HOME\""
+  ],
+  "main_only_sample": [
+   "      bookmakerCoverageMax: 1,",
+   "      currentSpread: -4.5,",
+   "      currentSpread: -8,",
+   "      currentTotal: 46,"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "path": "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "path": "packages/prediction-engine/src/__tests__/readiness.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "path": "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 147,
+  "n_main_only": 101,
+  "branch_only_sample": [
+   "          awayAtsForm: { wins: 4, losses: 4, pushes: 2, sampleSize: 10 },",
+   "          homeAtsForm: { wins: 6, losses: 2, pushes: 0, sampleSize: 8 },",
+   "        \"p\",",
+   "        ctx({",
+   "        ctx({ currentSpread: -4.0 }),",
+   "        ctx({ headToHeadForm: { wins: 3, losses: 4, pushes: 1, sampleSize: 8 } }),"
+  ],
+  "main_only_sample": [
+   "        awayAtsForm: atsBucket(15),",
+   "        awayAtsFormAway: atsBucket(9),",
+   "        headToHeadForm: atsBucket(6),",
+   "        homeAtsForm: atsBucket(20),"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "path": "packages/prediction-engine/src/__tests__/model-promoter.test.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "path": "packages/prediction-engine/src/__tests__/oos-split.test.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 3,
+  "n_main_only": 7,
+  "branch_only_sample": [
+   "      // Brier = ((0.65-1)\u00b2 + (0.60-0)\u00b2) / 2 = (0.1225 + 0.36) / 2 \u2248 0.2412",
+   "      // Brier = ((0.70-1)\u00b2 + (0.55-0)\u00b2) / 2 = (0.09 + 0.3025) / 2 \u2248 0.1962",
+   "      // Picks 1\u20132 before boundary: IS, picks 3\u20134 after: OOS"
+  ],
+  "main_only_sample": [
+   "      // Brier = ((0.65-1)\u00c2\u00b2 + (0.60-0)\u00c2\u00b2) / 2 = (0.1225 + 0.36) / 2 \u00e2\u2030\u02c6 0.2412",
+   "      // Brier = ((0.70-1)\u00c2\u00b2 + (0.55-0)\u00c2\u00b2) / 2 = (0.09 + 0.3025) / 2 \u00e2\u2030\u02c6 0.1962",
+   "      // Identical in-sample and out-of-sample cohorts -> brierDelta === 0.",
+   "      // Picks 1\u00e2\u20ac\u201c2 before boundary: IS, picks 3\u00e2\u20ac\u201c4 after: OOS"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "path": "packages/prediction-engine/src/index.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 26,
+  "n_main_only": 3197,
+  "branch_only_sample": [
+   "  ModelMetadata,",
+   "  ModelPerformance,",
+   "  PromotionConfig,",
+   "  PromotionReason,",
+   "  promoteModel,",
+   "// #11 \u2014 team scoring rates computed from REAL stored final scores (no new"
+  ],
+  "main_only_sample": [
+   "  // Serialization: lets the filter survive a serverless cold start instead of being",
+   "  // compile error.",
+   "  // exports a function of that name with identical semantics (divide",
+   "  // internal use; the barrel surfaces exactly one to avoid a duplicate-export"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "path": "packages/prediction-engine/src/model-promoter.ts",
+  "kind": "ABSENT-MAIN"
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "path": "packages/prediction-engine/src/oos-split.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 8,
+  "n_main_only": 10,
+  "branch_only_sample": [
+   "    healthSummary = `OOS is ${Math.abs(deltaStr) === \"0.0\" ? \"even\" : deltaStr + \"% \" + (brierDelta > 0 ? \"worse\" : \"better\")} than in-sample`;",
+   "  /** \"OOS is X% worse than in-sample\" \u2014 plain-language health readout. */",
+   "  /** Model's predicted win probability (0\u20131) at prediction time. */",
+   "  readonly brierDelta: number; // OOS Brier \u2212 inSample Brier",
+   "  readonly oosIsHealthy: boolean; // OOS Brier \u2264 inSample Brier + tolerance",
+   " * Out-of-sample (OOS) split harness \u2014 the governance framework for safe model promotion."
+  ],
+  "main_only_sample": [
+   "    healthSummary = `OOS is ${Math.abs(brierDelta * 100).toFixed(1) === \"0.0\" ? \"even\" : deltaStr + \"% \" + (brierDelta > 0 ? \"worse\" : \"better\")} than in-sample`;",
+   "  /** \"OOS is X% worse than in-sample\" \u00e2\u20ac\u201d plain-language health readout. */",
+   "  /** Model's predicted win probability (0\u00e2\u20ac\u201c1) at prediction time. */",
+   "  readonly brierDelta: number; // OOS Brier \u00e2\u02c6\u2019 inSample Brier"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/launch-review-fixes",
+  "path": "packages/prediction-engine/src/__tests__/probability-calibration.test.ts",
+  "kind": "BRANCH-SUBSET-OF-MAIN",
+  "n_branch_only": 0,
+  "n_main_only": 90,
+  "branch_only_sample": [],
+  "main_only_sample": [
+   "      ...Array.from({ length: 10 }, (): CalibrationSample => ({ p: 0.3, y: 1 })),",
+   "      ...Array.from({ length: 12 }, (): CalibrationSample => ({ p: 0.75, y: 0 })),",
+   "      ...Array.from({ length: 20 }, () => true),",
+   "      ...Array.from({ length: 40 }, (): CalibrationSample => ({ p: 0.3, y: 0 })),"
+  ],
+  "motif_equals_main": true
+ },
+ {
+  "branch": "claude/launch-review-fixes",
+  "path": "packages/prediction-engine/src/probability-calibration.ts",
+  "kind": "BRANCH-HAS-UNIQUE-LINES",
+  "n_branch_only": 4,
+  "n_main_only": 173,
+  "branch_only_sample": [
+   "  /** Higher is better: how much the forecasts separate outcomes from the base rate. */",
+   "  /** Irreducible: baseRate\u00b7(1\u2212baseRate). */",
+   "  /** Lower is better: how far bin forecasts stray from bin outcome rates. */",
+   "  /** Mean squared error of the forecasts. brier = reliability \u2212 resolution + uncertainty. */"
+  ],
+  "main_only_sample": [
+   "        calibrated: points[i]!.calibrated,",
+   "        const t = (x - lo.x) / (hi.x - lo.x || 1e-12);",
+   "        massSum: prev.massSum + block.massSum,",
+   "        massSum: s.p,"
+  ],
+  "motif_equals_main": true
+ }
+]

@@ -1,0 +1,343 @@
+{
+  "__dc__": "ReasoningTrace",
+  "fields": {
+    "chains": [
+      {
+        "__dc__": "CausalChain",
+        "fields": {
+          "id": "rams_air_domination_chain",
+          "links": [
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_stafford_sacks",
+                      "metric": "stafford_sack_count",
+                      "op": ">",
+                      "text": "Stafford sack count > 3",
+                      "threshold": 3.0
+                    }
+                  }
+                ],
+                "cause": "Ed Oliver (Bills DT1) OUT with ankle injury",
+                "id": "trench_oliver_out",
+                "load_bearing": true,
+                "mechanism": "Buffalo interior pass rush drops significantly; Matthew Stafford clean-pocket rate exceeds 75%",
+                "outcome": "Rams pass protection efficiency and pass success rate surge",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            },
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_nacua_share",
+                      "metric": "nacua_target_share",
+                      "op": "<",
+                      "text": "Nacua target share < 22%",
+                      "threshold": 0.22
+                    }
+                  }
+                ],
+                "cause": "Sean McVay 11-personnel empty formations against Buffalo 2-high shell",
+                "id": "mcvay_11_personnel_funnel",
+                "load_bearing": true,
+                "mechanism": "Funneling targets to intermediate middle vs linebackers/safeties",
+                "outcome": "Puka Nacua first-read target share exceeds 30%",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "checklist": {
+      "coaching_scheme": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "offensive_line": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "qb_behavior": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "scheme_matchup": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "trust_signals": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      }
+    },
+    "created_at": "2026-10-12T23:03:31+00:00",
+    "depth": {
+      "__enum__": "ReasoningDepth.L5"
+    },
+    "escalation_log": [
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L1"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-12T23:03:31+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "adversary_review_complete"
+        }
+      }
+    ],
+    "exposure": {
+      "__enum__": "Exposure.CARD"
+    },
+    "game": {
+      "away": "BUF",
+      "home": "LAR",
+      "season": 2026,
+      "week": 6
+    },
+    "hierarchy_order": [
+      "offensive_line",
+      "coaching_scheme",
+      "scheme_matchup",
+      "qb_behavior",
+      "trust_signals"
+    ],
+    "label": "FINAL",
+    "legs": [
+      {
+        "__dc__": "BetLeg",
+        "fields": {
+          "causal_link_ids": [
+            "trench_oliver_out",
+            "mcvay_11_personnel_funnel"
+          ],
+          "description": "LAR -3.5 (-110) spread",
+          "exposure": 1.0,
+          "id": "leg_lar_spread"
+        }
+      },
+      {
+        "__dc__": "BetLeg",
+        "fields": {
+          "causal_link_ids": [
+            "trench_oliver_out"
+          ],
+          "description": "OVER 55.5 (-110) total",
+          "exposure": 1.0,
+          "id": "leg_over_total"
+        }
+      },
+      {
+        "__dc__": "BetLeg",
+        "fields": {
+          "causal_link_ids": [
+            "mcvay_11_personnel_funnel"
+          ],
+          "description": "Puka Nacua Over 93.5 Rec Yds (-115)",
+          "exposure": 1.0,
+          "id": "leg_nacua_over"
+        }
+      }
+    ],
+    "levels": {
+      "L1": {
+        "claims": []
+      },
+      "L2": {
+        "correlations": []
+      },
+      "L3": {
+        "chain_ids": [
+          "rams_air_domination_chain"
+        ]
+      },
+      "L4": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "correlated_theses": 1,
+          "killed_thesis_ids": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        }
+      },
+      "L5": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "condition_results": [
+            {
+              "condition_id": "bc_stafford_sacks",
+              "met": false,
+              "metric": "stafford_sack_count",
+              "observed_value": 1.0,
+              "text": "Stafford sack count > 3",
+              "verifiable": true
+            },
+            {
+              "condition_id": "bc_nacua_share",
+              "met": false,
+              "metric": "nacua_target_share",
+              "observed_value": 0.34,
+              "text": "Nacua target share < 22%",
+              "verifiable": true
+            }
+          ],
+          "correlated_theses": [
+            {
+              "id": "thesis_01",
+              "leg_ids": [
+                "leg_lar_spread",
+                "leg_nacua_over",
+                "leg_over_total"
+              ],
+              "shared_link_ids": [
+                "mcvay_11_personnel_funnel",
+                "trench_oliver_out"
+              ]
+            }
+          ],
+          "counter_argument": "3 legs across 1 bundle(s) share causal links (mcvay_11_personnel_funnel) \u2014 this is one thesis with multiple receipts, not diversified edge.",
+          "gap_assumptions": [],
+          "killed_thesis_ids": [],
+          "notes": [],
+          "pre_mortem": "It is Monday and the 3-leg card went 0-3. What happened: the legs were a single correlated thesis wearing diversification as a costume. One causal assumption failed and carried every leg with it.",
+          "thesis_verdicts": {
+            "thesis_01": "SURVIVE"
+          },
+          "weak_link": false,
+          "weak_links": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        },
+        "hierarchy_ok": true,
+        "hierarchy_order": [
+          "offensive_line",
+          "coaching_scheme",
+          "scheme_matchup",
+          "qb_behavior",
+          "trust_signals"
+        ],
+        "killed_legs": [],
+        "recommendation": "Thesis survived L4 adversary (no breaking condition met). Proceed only with the checklist verdicts and weak-link flags attached; final sizing and publication remain downstream gates."
+      }
+    },
+    "observed_values": {
+      "air_density_kg_m3": 1.189,
+      "cross_team_shootout_corr": 0.2011,
+      "nacua_target_share": 0.34,
+      "stafford_sack_count": 1.0
+    },
+    "question": "Should we publish Rams -3.5, Over 55.5, and Nacua Over 93.5 props for MNF?",
+    "stub_tracks": [],
+    "tool_calls": [],
+    "trace_id": "2026-10-12T230331Z0000-2e293f98",
+    "track_evidence": {}
+  }
+}

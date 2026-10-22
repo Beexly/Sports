@@ -1,0 +1,11 @@
+SO-001: $19 product, Stripe 6oUdRb, $0 sales (cold X @SignaL_OriginHQ).
+§
+MONEY 2026-09-04: FULL HANDOFF = C:\Users\Garrett\AUTONOMY_HANDOFF_2026-09-04.md (READ FIRST). WF -$668.59+fees; Speedy $340 due; GSN.Cards scans not owned; FB: Needoh $10 x4 + Caminero PSA10 $625 (comp ~$480); control=chrome-wf port 9222; Gmail+FB in, WF/CashApp/Fiverr/Upwork out.
+§
+GSE doctrine: never beat the market. Spec Sports/docs/PROPRIETARY_METRICS_REPRODUCTION_STRATEGY.md. CALIBRATION TRUTH (measured by me 2026-09-30, 1,823 settled prod picks w/ independentEdge.trueProb): Brier 0.2484 vs 0.2500 coin-flip — only 0.0016 better in SCORE. BUT RANKING is genuinely monotone: low(<0.55)=43.4% win n364, mid=58.2% n737, high(>0.65)=61.8% n722 — 18.4pt spread. The model DISCRIMINATES; numbers are INFLATED (says 0.618 avg, reality 0.5666, ~5.2pt overconfident). Fix = calibration map, NOT a rebuild. Never call GSE 'no better than random'; never call it calibrated. pick_proof_receipts.modelProb 0 of 2,213 (unwired) BUT picks.factorBreakdown->independentEdge->trueProb has 1,823 settled values — the live probability source. Row counts: signals 118,462 / game_signals 5,170 / injuries 6,812 / snap_counts 31,100 / team_game_efficiency 666. WORKTREE TRAP: root node_modules/@sports/* SYMLINK to a stale checkout (C:/Users/Garrett/packages @ 724bfc71a) → 'X is not a function'; fix = alias each @sports package ROOT in apps/web/vitest.config.ts. No root vitest config: always `cd apps/web`. typescript NOT installed locally — CI is the only typecheck.
+§
+Neon: PROD = gse-postgres/summer-brook-99380762; sports-db/wild-tooth-31983487 orphan. Read-only: neonctl hermes_ro role (needs --role-name). Tables are snake_case with camelCase cols — quote camelCase in SQL. Never print conn strings.
+§
+WebOperator: bridge LIVE, drive node AppData/Local/hermes/scratch/wo-call.js <tool> [args_json]. browser_extract takes {refs} only (@eN refs).
+§
+OpenCode Zen fixed 2026-10-07: dead manual pool key (oc_sk_72ba, priority=0) → removed via `hermes auth remove opencode-zen f5dc3b`. Real base_url https://opencode.ai/zen/v1 (/inference/... 404s). opencode.ai tests need browser UA (Cloudflare 1010).

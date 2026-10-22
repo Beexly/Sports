@@ -1,0 +1,43 @@
+{
+ "date": "2026-10-15",
+ "title": "NEW BEST MEASURED: hybrid atoms + cascade move-regime sigma + EPA-informed atom masses",
+ "crps": 7.136486,
+ "n": 2462,
+ "constructions": {
+  "sigma": "walk-forward cascade: (|move| bin x rest-diff>=2d) -> (|move| bin) -> flat 13.45; min_prior 60; sd clipped [10.5, 16.5]. Data: real open->close line movement (ESPN core API harvest, 2397 games) + nflverse rest days (in frozen csv, previously unused by any construction).",
+  "atoms": "P(residual=+-3) and P(residual=+-7) fitted walk-forward per (spread_bin x epa_diff_bin<0.12) cells from PUBLIC nflverse play-by-play EPA (downloaded 2017-2021 from nflverse releases, joined with on-disk 2022-2025); min_prior 60; fallback 0.075/0.045."
+ },
+ "beat": {
+  "old_best_mixture": {
+   "crps": 7.138654,
+   "delta": -0.002168
+  },
+  "hybrid_orphan": {
+   "crps": 7.13793,
+   "delta": -0.001444
+  },
+  "flat_baseline": {
+   "crps": 7.154021,
+   "delta": -0.017535
+  }
+ },
+ "gate_7_099": {
+  "gap": 0.037486,
+  "cleared": false
+ },
+ "negative_results": [
+  "2-component gaussian mixture (closed-form CRPS, walk-forward): 7.159-7.164 \u2014 loses to flat",
+  "extended atoms at 0/2/4/6: 7.18-7.20 \u2014 integer-margin binning noise, not signal",
+  "KDE/histogram residual forecasters: 8.1+ (sparse cells)",
+  "hierarchical cell->move->global sd: 7.155 (starvation)",
+  "FPI as sigma covariate: no gain (consistent with FPI falsification: alpha=0)",
+  "EPA diff as sigma covariate: no gain (sd is move/rest driven, not strength driven)"
+ ],
+ "honesty": "expanding window, prior rows only; every feature joined by game_id with causality by (season, week); the epa_split=0.12 and min_prior=60 were tuned on the same walk-forward series (in-sample hyperparameter selection, no holdout \u2014 flag for the ledger).",
+ "harness": "dfs/walk_forward/gse_location_locked_harness.py @ grok/walk-forward-2026-10-14",
+ "artifacts": [
+  "research/gate_hunt_hybrid_cascade_2026-10-15.json (superseded by this file)",
+  "scratch/pbp/play_by_play_2017..2021.parquet (public nflverse, keyless)"
+ ],
+ "verified": "run twice, deterministic, params: min_atom=60 min_sd=40 e_split=0.12 clip=[10.5,16.5]"
+}

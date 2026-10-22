@@ -1,0 +1,710 @@
+{
+ "_meta": {
+  "source": "client-side static analysis of app.underdogsports.com webpack bundle",
+  "hosts": {
+   "app": "https://app.underdogsports.com",
+   "api": "https://api.underdogfantasy.com",
+   "stats": "https://stats.underdogfantasy.com",
+   "auth": "https://login.underdogsports.com/oauth/token"
+  },
+  "url_composition": "host + ('/' + underdogAPIVersion or '/v1') + path; host=apiEndpoint, or statsEndpoint when underdogAPIEndpoint=='stats' (module 63149)"
+ },
+ "endpoints": [
+  {
+   "method": "GET",
+   "path": "/v1/over_under_lines",
+   "host": "api",
+   "request": {
+    "query": {
+     "appearance_ids": "string[]",
+     "over_under_ids": "string[]",
+     "sport_id": "string"
+    }
+   },
+   "response": {
+    "data.over_under_lines[]": [
+     "id",
+     "contract_url",
+     "contract_terms_url",
+     "display_mode",
+     "expires_at",
+     "live_event",
+     "live_event_stat",
+     "non_discounted_stat_value",
+     "options[]",
+     "over_under{}",
+     "over_under_id",
+     "provider_id",
+     "provider_type",
+     "rank",
+     "sort_by",
+     "stable_id",
+     "stat_value",
+     "status",
+     "updated_at"
+    ],
+    "over_under_option{}": [
+     "id",
+     "choice",
+     "choice_display",
+     "choice_id",
+     "lookup_id",
+     "odds{fantasy:{type,multiplier},prediction}",
+     "payout_multiplier",
+     "rfq_combinable",
+     "selection_header",
+     "selection_subheader",
+     "status",
+     "type"
+    ],
+    "over_under{}": [
+     "id",
+     "appearance_stat{id,appearance_id,display_stat,graded_by,pickem_stat_id,stat}",
+     "boost{id,boost_type,color,coming_soon_enabled,contentful_info_id,description,display_title,expired_at,icon,payout_style_id,payout_type,text_color}",
+     "category",
+     "display_mode(default|moneyline|spread|table)",
+     "has_alternates",
+     "multi_provider",
+     "option_priority",
+     "prediction_market",
+     "scoring_type_id",
+     "team_divider",
+     "title"
+    ]
+   },
+   "evidence": "699 chunk (d=); entry.app sJ maps t.data.over_under_lines; mappers modules 1799/36513/80850 in 1265 chunk"
+  },
+  {
+   "method": "GET",
+   "path": "/beta/v2/live_over_under_lines",
+   "host": "api",
+   "request": {
+    "query": {
+     "appearance_ids": "string[]",
+     "sport_id": "string"
+    }
+   },
+   "response": {
+    "shape": "over_under_line[] live variant; merged with /v1/over_under_lines by lH() using sourceEndpoint tags"
+   },
+   "evidence": "699 chunk (s=); entry.app lK/lH"
+  },
+  {
+   "method": "GET",
+   "path": "/v1/knockouts/markets",
+   "host": "api",
+   "request": {
+    "query": {
+     "over_under_option_id": "string"
+    }
+   },
+   "response": {
+    "knockout_markets[]": [
+     "id",
+     "over_under_option_id",
+     "threshold_probability",
+     "payout_multiplier",
+     "status('available'|...)"
+    ],
+    "max_odds_display": "number",
+    "match_details": {
+     "side": "string"
+    }
+   },
+   "evidence": "page.pick-em and page.pick-em-knockout (module 8233 call; 67657 hook reads data.knockout_markets and data.max_odds_display; m() reads data.match_details.side)"
+  },
+  {
+   "method": "GET",
+   "path": "/v1/lobbies/content/market_price_history",
+   "host": "api",
+   "request": {
+    "query": {
+     "chart_type": "'ranked_market'",
+     "target_id": "matchId",
+     "target_type": "matchType",
+     "over_under_option_id": "string"
+    }
+   },
+   "response": {
+    "series[]": [
+     "key (e.g. '<side>__<option>')",
+     "name",
+     "styles{display,active_indicator,legend_position,legend_color,series_color{default{light_mode_color,dark_mode_color},fill{to,opacity},threshold{value,above_color,below_color}}}"
+    ],
+    "data.timepoints[]": "ISO datetime",
+    "data.series_values": "{seriesKey:(number|null)[]}"
+   },
+   "evidence": "page.pick-em-knockout module 14504 (c=, mappers h/p/f)"
+  },
+  {
+   "method": "GET",
+   "path": "/v3/over_unders/{overUnderId}/alternate_projections",
+   "host": "api",
+   "request": {
+    "path": {
+     "overUnderId": "string"
+    },
+    "query": {}
+   },
+   "response": {
+    "data.projections[]": [
+     "id",
+     "stable_id",
+     "is_main",
+     "stat_value",
+     "options[] (over_under_option)"
+    ]
+   },
+   "evidence": "699 (P=); entry.app sQ maps e.data.projections via sC"
+  },
+  {
+   "method": "GET",
+   "path": "/v1/power_ups/{powerUpId}/restricted_over_unders/{overUnderId}",
+   "host": "api",
+   "request": {
+    "path": [
+     "powerUpId",
+     "overUnderId"
+    ],
+    "query": {
+     "over_under_line_id": "string"
+    }
+   },
+   "response": {
+    "data.over_under_line": "over_under_line (must be discounted else error)"
+   },
+   "evidence": "entry.app sP"
+  },
+  {
+   "method": "GET",
+   "path": "/power_ups/{powerUpId}/options",
+   "host": "api",
+   "request": {
+    "path": {
+     "powerUpId": "string"
+    }
+   },
+   "response": {
+    "data": [
+     "appearances[]",
+     "games[]",
+     "entry_eligible_lines[] (over_under_line[])",
+     "entry_eligible_sport_ids[]",
+     "selection_eligible_lines[] (over_under_line[])",
+     "selection_eligible_sport_ids[]",
+     "players[]",
+     "solo_games[]"
+    ]
+   },
+   "evidence": "entry.app sO + sD destructure"
+  },
+  {
+   "method": "GET",
+   "path": "/v1/user/power_ups/{powerUpId}",
+   "host": "api",
+   "request": {
+    "path": {
+     "powerUpId": "string"
+    }
+   },
+   "response": {
+    "data.power_up": [
+     "id",
+     "current_max_payout_multiplier",
+     "initial_max_payout_multiplier",
+     "loss_count",
+     "unboosted_power_up_multiplier"
+    ]
+   },
+   "evidence": "entry.app sx + adapter toDomainStrict(e.data.power_up); mapper module 52502"
+  },
+  {
+   "method": "GET",
+   "path": "/v1/lobbies/scaffolds/{home|matches|players|rewards|sport_groups|sports}",
+   "host": "api",
+   "request": {
+    "query": {
+     "ct_token": "'w2'",
+     "include_prediction_markets": "'true'",
+     "...": "provider/scaffold params (filter_id, sport_group_filter_id, page)"
+    },
+    "config_map": {
+     "home": "/lobbies/scaffolds/home",
+     "match": "/lobbies/scaffolds/matches",
+     "players": "/lobbies/scaffolds/players",
+     "rewards": "/lobbies/scaffolds/rewards",
+     "sport_groups": "/lobbies/scaffolds/sport_groups",
+     "sports": "/lobbies/scaffolds/sports"
+    }
+   },
+   "response": {
+    "zod_schema": "{key, sections:[{key,title,subtitle?,content_type,view_type,primary_content,style:{layout:horizontal|vertical,scroll:default|sticky},data_source?:{path,url}}], options?:{header?:{title,bg_color_light_mode,bg_color_dark_mode},header_v2?:{title}}, fetched_at:ISO}"
+   },
+   "evidence": "entry.app uq map + scaffold zod adapter (ue/ur)"
+  },
+  {
+   "method": "GET",
+   "path": "/lobby (v1) and /v2/lobby",
+   "host": "api",
+   "request": {
+    "query": {
+     "sport_id": "optional (v2 only)"
+    }
+   },
+   "response": {
+    "data": "lobby payload stored as {data:t.data}"
+   },
+   "evidence": "entry.app sf/sg"
+  },
+  {
+   "method": "GET",
+   "path": "/v2/pickem_search/search_results",
+   "host": "api",
+   "request": {
+    "query": {
+     "sport_id": "UPPERCASE sport id or null",
+     "algolia_object_id": "string"
+    }
+   },
+   "response": {
+    "data": [
+     "appearances[]",
+     "games[]",
+     "opened_lines_count",
+     "over_under_lines[]",
+     "players[]",
+     "solo_games[]",
+     "trending_players[]"
+    ]
+   },
+   "evidence": "699 O=; entry.app sL destructure"
+  },
+  {
+   "method": "GET",
+   "path": "/v3/entry_slips/estimate",
+   "host": "api",
+   "request": {
+    "query": {
+     "estimate_request_id": "string (poll continuation)",
+     "features[]": "string[]",
+     "fee": "string?",
+     "fee_source": "string",
+     "options": "indices-style array: options[i][id], options[i][power_up_id], options[i][type]",
+     "power_up_id": "string?"
+    },
+    "headers": {
+     "UD-User-ID": "only when userId supplied (anonymous quote path)"
+    },
+    "paramSerializerOptions": {
+     "arrayFormat": "indices"
+    }
+   },
+   "response": {
+    "data.status": "'pending' (poll) | resolved",
+    "data.estimate_request_id": "string",
+    "data.async_config": {
+     "polling_interval_seconds": "number",
+     "timeout_seconds": "number",
+     "wait_seconds": "number"
+    },
+    "data.subscriptions": "any",
+    "data.errors[]": "any[]",
+    "data.flex": "object?",
+    "data.odds / unmodified_odds / combo_fantasy_component_odds": "object?",
+    "data.max_fee / max_multiplier / max_prediction_selection_count / max_selection_count / min_fee / min_selection_count": "number",
+    "data.pool_styles[]": "{entryRole,maxFee,rake,styleId,totalFees}",
+    "data.combinability_rules": "any[]",
+    "data.predictions_quote": "{fees,promo_bonus_payout,removed_bonus_stake,total_cost,total_quantity,winning_payout}"
+   },
+   "evidence": "699 i=; entry.app sN + poller sj + normalizer a0"
+  },
+  {
+   "method": "POST",
+   "path": "/v2/entry_requests",
+   "host": "api",
+   "request": {
+    "query": {
+     "features[]": "string[]"
+    },
+    "json": {
+     "combo_fantasy_price_expected": "optional",
+     "confirmed": "true?",
+     "estimate_request_id": "string?",
+     "flex_losses": "optional (maxLosses)",
+     "pickem_pool_style_id": "string?",
+     "fee": "string",
+     "fee_source": "string",
+     "idempotency_id": "string",
+     "options[]": "{id,power_up_id,type}",
+     "power_up_id": "string?",
+     "prediction_contract_quantity": "string?",
+     "price_expected": "string?"
+    }
+   },
+   "response": {
+    "data": [
+     "id",
+     "async_config{polling_interval_seconds,timeout_seconds,wait_seconds}",
+     "contract_count_computed_fractional",
+     "detail",
+     "idempotency_id",
+     "odds_computed",
+     "odds_expected",
+     "reject_reason",
+     "status",
+     "title"
+    ]
+   },
+   "evidence": "699 n=; destructure of e?.data in 1265"
+  },
+  {
+   "method": "GET",
+   "path": "/v2/entry_requests/{idempotencyId}",
+   "host": "api",
+   "request": {
+    "path": {
+     "idempotencyId": "string"
+    },
+    "signal": "AbortSignal"
+   },
+   "response": {
+    "shape": "same as POST /v2/entry_requests; polled after async_config.wait_seconds"
+   },
+   "evidence": "699 o=; 1265 u().pollEntryRequest"
+  },
+  {
+   "method": "POST",
+   "path": "/v5/entry_slips",
+   "host": "api",
+   "request": {
+    "query": {
+     "confirmed": "true?",
+     "features[]": "string[]"
+    },
+    "json": {
+     "entry_slip": {
+      "fee": "string",
+      "fee_source": "string",
+      "options[]": "selection ids/objects",
+      "total_multiplier": "number",
+      "power_up_id": "string?",
+      "insured": "boolean",
+      "pickem_pool_style_id": "string?"
+     }
+    }
+   },
+   "response": {
+    "shape": "entry slip / entry request envelope"
+   },
+   "evidence": "1265 l= and module 57396"
+  },
+  {
+   "method": "GET",
+   "path": "/v10/user/active_entry_slips",
+   "host": "api",
+   "request": {
+    "query": {
+     "page": "number"
+    }
+   },
+   "response": {
+    "data": [
+     "appearances[]",
+     "entry_slips[]",
+     "over_under_options[]",
+     "over_under_lines[]",
+     "over_unders[]",
+     "games[]",
+     "players[]",
+     "providers{}",
+     "solo_games[]"
+    ],
+    "meta": "pagination"
+   },
+   "evidence": "699 T=; entry.app nn reducer destructures data+meta (query-key strings still say v9)"
+  },
+  {
+   "method": "GET",
+   "path": "/v10/user/settled_entry_slips",
+   "host": "api",
+   "request": {
+    "query": {
+     "page": "number"
+    }
+   },
+   "response": {
+    "shape": "identical envelope to /v10/user/active_entry_slips"
+   },
+   "evidence": "699 y="
+  },
+  {
+   "method": "GET",
+   "path": "/v7/entry_slips/{entrySlipShareId}/share",
+   "host": "api",
+   "request": {
+    "path": {
+     "entrySlipShareId": "string"
+    }
+   },
+   "response": {
+    "data": [
+     "active{over_under_lines[]}",
+     "appearances[]",
+     "entry_slip{}",
+     "games[]",
+     "over_under_options[]",
+     "over_unders[]",
+     "players[]",
+     "shared{over_under_lines[]}",
+     "solo_games[]"
+    ]
+   },
+   "evidence": "699 c= (query-key tag says v6); page.pick-em rB normalizer"
+  },
+  {
+   "method": "POST",
+   "path": "/v2/entry_slips/{entrySlipId}/share_link",
+   "host": "api",
+   "request": {
+    "path": {
+     "entrySlipId": "string"
+    }
+   },
+   "response": {
+    "shape": "share link payload"
+   },
+   "evidence": "699 l="
+  },
+  {
+   "method": "POST",
+   "path": "/entry_slips/{entrySlipIdOrFantasyComponentId}/cancellation",
+   "host": "api",
+   "request": {
+    "path": [
+     "entrySlipId (699/entry.app)",
+     "fantasyComponentId (3864)"
+    ]
+   },
+   "response": {
+    "shape": "cancellation result (UI toasts 'Canceled')"
+   },
+   "evidence": "699 A=, 3864 ef=, entry.app"
+  },
+  {
+   "method": "GET",
+   "path": "/v4/entry_slips/payout_outcome",
+   "host": "api",
+   "request": {
+    "query": {
+     "features[]": "string[]",
+     "fee_source": "string",
+     "options": "array",
+     "power_up_id": "string|null"
+    }
+   },
+   "response": {
+    "shape": "payout matrix keyed by pick count (rendered table)"
+   },
+   "evidence": "687 chunk l=, rules-general chunk"
+  },
+  {
+   "method": "GET+POST",
+   "path": "/v1/entry_slips/{entrySlipId}/cash_out_requests",
+   "host": "api",
+   "request": {
+    "path": {
+     "entrySlipId": "string"
+    }
+   },
+   "response": {
+    "cash_out fields": [
+     "availability",
+     "cash_out_selections_hash",
+     "channel",
+     "display_text",
+     "estimate_request_id",
+     "odds",
+     "payout",
+     "payout_minimum",
+     "total_fees"
+    ]
+   },
+   "evidence": "entry.app cash-out mapper; 3864 saga"
+  },
+  {
+   "method": "GET",
+   "path": "/user/entry_slip_limits",
+   "host": "api",
+   "request": {},
+   "response": {
+    "item": [
+     "id",
+     "max_fee",
+     "max_appearance_fee",
+     "sport_id",
+     "user_override"
+    ]
+   },
+   "confidence": "medium - mapper a1 in entry.app matches this shape but its call alias was not resolvable in minified output",
+   "evidence": "699 m=; entry.app a1"
+  },
+  {
+   "method": "GET",
+   "path": "/v2/pickem_pool_styles",
+   "host": "stats (https://stats.underdogfantasy.com)",
+   "request": {},
+   "response": {
+    "data.pickem_pool_styles[] (v1 shape)": [
+     "id",
+     "title",
+     "active",
+     "default",
+     "fees",
+     "prize_percentage",
+     "options[] {id,entry_count,fee,insured_payout_option{id,max_fee,min_multiplier,multiplier,selection_count},max_entries,payout_option{...same},prizes:{feeKey:{default{max_payout,avg_payout},insured{max_payout,avg_payout}}},prize_percentage,selection_count}"
+    ]
+   },
+   "evidence": "699 I=; entry.app a5 + nr"
+  },
+  {
+   "method": "GET",
+   "path": "/v3/pickem_pool_styles",
+   "host": "stats (https://stats.underdogfantasy.com)",
+   "request": {},
+   "response": {
+    "data.pickem_pool_styles[] (v2 shape)": [
+     "id",
+     "active",
+     "default",
+     "base_fee",
+     "fees",
+     "max_fee",
+     "prize_per_point",
+     "rake",
+     "title",
+     "total_fees"
+    ]
+   },
+   "evidence": "699 R=; entry.app a8 + na"
+  },
+  {
+   "method": "GET",
+   "path": "/pickem_pools/{pickEmPoolId}/leaderboard",
+   "host": "api",
+   "request": {
+    "path": {
+     "pickEmPoolId": "string"
+    },
+    "query": {
+     "page": "number"
+    }
+   },
+   "response": {
+    "data.pickem_pool_leaderboard[]": "rows",
+    "data.meta": "pagination"
+   },
+   "evidence": "699 S= re-keys response; query key a4.leaderboard"
+  },
+  {
+   "method": "GET",
+   "path": "/user/pickem_pools/entry_slips/{entrySlipId}",
+   "host": "api",
+   "request": {
+    "path": {
+     "entrySlipId": "string"
+    }
+   },
+   "response": {
+    "shape": "user pool entry / leaderboard row payload"
+   },
+   "evidence": "699 u=; query key a4.userLeaderboard"
+  },
+  {
+   "method": "GET",
+   "path": "/picks/{pickId}/swaps",
+   "host": "api",
+   "request": {
+    "path": {
+     "pickId": "string"
+    }
+   },
+   "response": {
+    "shape": "swap rows (player in/out)"
+   },
+   "evidence": "945 chunk i="
+  },
+  {
+   "method": "PATCH",
+   "path": "/user/gameplay_settings",
+   "host": "api",
+   "request": {
+    "json": {
+     "gameplay_settings": {
+      "payout_default": "string",
+      "auto_accept_projection_changes": "boolean",
+      "auto_accept_prediction_market_projection_changes": "'always'|'never'",
+      "prediction_odds_change_tolerance": "number?",
+      "global_odds_format": "string?",
+      "user_pm_banner_prompted_at": "timestamp?",
+      "user_prompted_at": "timestamp?"
+     }
+    }
+   },
+   "response": {
+    "shape": "updated user.gameplay_settings (same keys surfaced on GET /user)"
+   },
+   "evidence": "699 k="
+  },
+  {
+   "method": "POST",
+   "path": "/v1/authorizations/pusher_channels",
+   "host": "api",
+   "request": {
+    "transport": "pusher-js private channel auth (ajax)",
+    "headers": [
+     "Authorization: Bearer",
+     "client-device-id"
+    ],
+    "body": "channel_name + socket_id"
+   },
+   "response": {
+    "shape": "pusher auth signature"
+   },
+   "evidence": "2890 chunk h=; channel private-user-{userId}; estimate event carries estimate_request_id; app keys/clusters 038c354984811c43f658/us2, 20a471bda08375856801/us3, d65207c183930ff953dc/mt1"
+  },
+  {
+   "method": "GET",
+   "path": "/v2/predictions_suitability_questionnaire",
+   "host": "api",
+   "request": {},
+   "response": {
+    "shape": "questionnaire items {position, question} shown as compliance gate before predictions entry"
+   },
+   "evidence": "699 GET /predictions_suitability_questionnaire with underdogAPIVersion v2; POST /user/predictions_suitability_questionnaire"
+  }
+ ],
+ "client_routes_not_api": {
+  "path": "/pick-em/{pageType}/{sportId}",
+  "pageType": [
+   "higher-lower",
+   "tokens",
+   "search"
+  ],
+  "query": {
+   "filter_id": "string",
+   "filter_type": "Custom|MarketGroup|PickemStat",
+   "match_id": "string",
+   "match_type": "string",
+   "selected_id": "string",
+   "selected_type": "string",
+   "sport_group_filter_id": "string",
+   "sport_group_id": "uuid"
+  },
+  "other_pages": [
+   "/pick-em/live",
+   "/pick-em/active",
+   "/pick-em/completed",
+   "/pick-em-knockout"
+  ]
+ }
+}

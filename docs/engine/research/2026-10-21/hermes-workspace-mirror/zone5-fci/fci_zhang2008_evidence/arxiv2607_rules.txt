@@ -1,0 +1,71 @@
+
+<<<PAGE 45>>>
+D
+Additional Technical Details for LoCaLS
+D.1
+Orientation Rules
+Let Sepsets denote the collection of all conditional independence relations identified during the
+local learning process.
+A separator Sepset(X, Y ) between two variables X and Y recorded in
+Sepsets implies that there is no edge between X and Y in the learned graph.
+(Zhang, 2008) presented sound and complete orientation rules for learning a PAG. These rules
+are summarized as Algorithm 3.
+Algorithm 3 OrientPAG
+Input: A PAG P and a collection of separating sets Sepsets.
+Output: The oriented PAG P.
+1: Initialize P with the current skeleton and existing edge marks.
+2: ▷Apply any of the following rules whenever its antecedent is satisfied.
+3: repeat
+4:
+Rule 1. If X∗→Y ◦−∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient the
+triple as X∗→Y →Z.
+5:
+Rule 2. If X →Y ∗→Z or X∗→Y →Z, and X ∗−◦Z, then orient X ∗−◦Z as X∗→Z.
+6:
+Rule 3.
+If X∗→Y ←∗Z, X ∗−◦W ◦−∗Z, W ∗−◦Y , Sepset(X, Z) ∈Sepsets, and
+W ∈Sepset(X, Z), then orient W ∗−◦Y as W∗→Y .
+7:
+Rule 4.
+8:
+if there exists a discriminating path π = ⟨W, . . . , X, Y, Z⟩between W and Z for Y , Y ◦−∗Z,
+and Sepset(W, Z) ∈Sepsets then
+9:
+if Y ∈Sepset(W, Z) then
+10:
+Orient Y ◦−∗Z as Y →Z.
+11:
+else
+12:
+Orient the triple ⟨X, Y, Z⟩as X ↔Y ↔Z.
+13:
+end if
+14:
+end if
+15:
+Rule 5.
+For every remaining edge X ◦−◦Y , if there exists an uncovered circle path
+p = ⟨X, Z, . . . , W, Y ⟩between X and Y such that Sepset(X, W) ∈Sepsets and Y
+∈
+Sepset(X, W), and Sepset(Y, Z) ∈Sepsets and X ∈Sepset(Y, Z), then orient X ◦−◦Y
+and every edge on p as undirected edges.
+16:
+Rule 6. If X −Y ◦−∗Z, then orient Y ◦−∗Z as Y −∗Z.
+17:
+Rule 7. If X −◦Y ◦−∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient Y ◦−∗Z
+as Y −∗Z.
+18:
+Rule 8. If X →Y →Z or X −◦Y →Z, and X◦→Z, then orient X◦→Z as X →Z.
+19:
+Rule 9. If X◦→Z, and p = ⟨X, Y, W, . . . , Z⟩is an uncovered potentially directed path from
+X to Z such that Sepset(Z, Y ) ∈Sepsets and X ∈Sepset(Z, Y ), then orient X◦→Z as
+X →Z.
+20:
+Rule 10. Suppose X◦→Z, Y →Z ←W, π1 is an uncovered potentially directed path from
+X to Y , and π2 is an uncovered potentially directed path from X to W. Let U be the vertex
+adjacent to X on π1 (U could be Y ) and let V be the vertex adjacent to X on π2 (V could
+be W). If U and V are distinct, Sepset(U, V ) ∈Sepsets, and X ∈Sepset(U, V ), then orient
+X◦→Z as X →Z.
+21: until no rule can further orient any edge mark in P
+22: return P.
+45

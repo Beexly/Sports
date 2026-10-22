@@ -1,0 +1,1133 @@
+
+
+==========================================================================================
+#### SOURCE: Zhang (2012) "A Logical Characterization of Constraint-Based Causal Discovery" (arXiv 1202.3711)
+URL: https://arxiv.org/pdf/1202.3711
+
+--- [uncovered potentially directed \(p\.d\.\) path] @7988 ---
+iscriminating path for Z if
+X is not adjacent to Y , and every node between X
+and Y is a collider along u, and is a parent of Y . In a
+PAG P (see below), a path u = ⟨V0, . . . , Vn+1⟩is said
+to be an uncovered potentially directed (p.d.) path, if
+each successive triple along u is unshielded, and no
+edge Vi ∗−∗Vi+1 has an arrowhead at Vi or a tail at
+Vi+1. If all edges on u are of the form ◦−◦, then the
+path is called an uncovered circle path.
+2.2
+Causal models and ancestral graphs
+A popular and intuitive way of representing a causal
+system is in the form of a causal DAG GC, where
+the arrows represent direct causal interactions between
+variables in a system (Pearl, 2000; Zhang, 2008b). We
+say there is a causal relation X ⇒Y , iﬀthere is a
+directed path from X to Y in GC. Absence of such
+a path is denoted X ⇒
+⧹Y . The following properties
+follow readily from this deﬁnition
+Proposition 1. Causal relations in a DAG GC are:
+irreﬂexive : X ⇒X
+⊢false
+acyclic
+: X ⇒Y
+⊢Y ⇒
+⧹X
+transitive : (X ⇒Y ) ∧(Y ⇒Z) ⊢X ⇒Z
+Other deﬁnitions are possible, for example we may
+want to allow for non-recursive re
+
+--- [uncovered circle path] @8212 ---
+rected (p.d.) path, if
+each successive triple along u is unshielded, and no
+edge Vi ∗−∗Vi+1 has an arrowhead at Vi or a tail at
+Vi+1. If all edges on u are of the form ◦−◦, then the
+path is called an uncovered circle path.
+2.2
+Causal models and ancestral graphs
+A popular and intuitive way of representing a causal
+system is in the form of a causal DAG GC, where
+the arrows represent direct causal interactions between
+variables in a system (Pearl, 2000; Zhang, 2008b). We
+say there is a causal relation X ⇒Y , iﬀthere is a
+directed path from X to Y in GC. Absence of such
+a path is denoted X ⇒
+⧹Y . The following properties
+follow readily from this deﬁnition
+Proposition 1. Causal relations in a DAG GC are:
+irreﬂexive : X ⇒X
+⊢false
+acyclic
+: X ⇒Y
+⊢Y ⇒
+⧹X
+transitive : (X ⇒Y ) ∧(Y ⇒Z) ⊢X ⇒Z
+Other deﬁnitions are possible, for example we may
+want to allow for non-recursive relations (feedback)
+or include threshold eﬀects.
+Such extensions imply
+
+<<<PAGE 3>>>
+that the causal system is not faithful to a causal DAG,
+which may impact the conclusions in this article.
+When some variables in the causal 
+
+--- [uncovered circle path] @14140 ---
+Y } ∈V do
+3:
+search in some clever way for a X ⊥⊥Y | Z
+4:
+P ←R0a (eliminate X −⧹
+⧸−Y )
+5:
+record Sep(X, Y ) ←Z
+6: end for
+7: P ←R0b (unshielded colliders)
+8: repeat P ←R1 −R4b until ﬁnished
+9: P ←R5
+(uncovered circle paths)
+10: repeat P ←R6 −R7 until ﬁnished
+11: repeat P ←R8a−R10 until ﬁnished
+Algorithm 1: Augmented FCI algorithm
+3
+Inference from causal logic
+Note: we use X, Y , Z, etc. to denote disjoint (sets
+of) observed variables, and S to denote the (possibly
+empty) set of selection nodes in a causal DAG GC.
+3.1
+Logical rules from minimal independence
+There is a well-known, fundamental connection be-
+tween minimal (in)dependencies and causal relations:
+Lemma 2. If a node Z changes an (in)dependence
+relation between X and Y in a causal DAG, then:
+1. X ⊥⊥Y | W ∪[Z]
+⊢
+Z ⇒(X ∪Y ∪W ∪S),
+2. X ⊥⊥
+⧸Y | W ∪[Z]
+⊢
+Z ⇒
+⧹(X ∪Y ∪W ∪S).
+with special case X ⊥⊥Y | [W ∪Z] ⊢Z ⇒(X∪Y ∪S).
+This means that, using X ⇒
+⧹Y
+def
+= ¬(X ⇒Y ), we can
+translate observed minimal (in)dependencies directly
+into logical statements about causal relations:
+Lemma 3. For observed minimal (in)dependencies
+between nodes
+
+--- [uncovered circle path] @37556 ---
+on bias. That all nodes with identiﬁable
+selection bias have this form follows from the fact that
+only rules R5 −R7 can produce undirected edges on
+nodes (corresponding to identiﬁable selection).
+The
+uncovered circle path from R5 already has this form;
+R6 can be ignored when identifying new nodes, and R7
+can only produce undirected edges on transitive chains
+connecting two distinct circle-path components.
+Corollary 11
+Proof. R8a and R8b do not take (in)dependence in-
+formation as input, but only need lemma 1 to combine
+two relations already found as a result of cases (1)-(4).
+The tail from rule R6 only signiﬁes that Z ⇒S, which
+will be found as case (3), by corollary 10.
+Lemma 12
+Proof sketch. We know from lemmas 7 and 9 that all
+orientation rules are covered by some combination of
+minimal independencies and subsequent dependencies.
+From the graphical description, we see that the rules
+orient tails/arrowheads between adjacent nodes that
+either involve a noncollider between two nonadjacent
+nodes, (and are therefore part of all minimal condi-
+tional independencies between the two), or 
+
+
+==========================================================================================
+#### SOURCE: "A fast score-based search algorithm for maximal ancestral graphs" (arXiv 2402.04777)
+URL: https://arxiv.org/pdf/2402.04777
+
+--- [Definition B\.1] @74436 ---
+
+Orientation rules for invariant tails
+Let partially mixed graphs (PMGs) denote the intermediate graphs obtained during orientation of
+PAGs.
+We need the following definitions first.
+33
+
+<<<PAGE 34>>>
+Definition B.1. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be uncovered if for every 1 ≤i ≤n −1,
+vi−1 and vi+1 are not adjacent.
+Definition B.2. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be potentially directed (p.d.) from v0
+to vn if for every 1 ≤i ≤n, the edge between vi−1 and vi is neither vi−1 ←∗vi nor vi−1 ∗−vi.
+Definition B.3. In a PMG, a path π is a circle path if every edge on the path is of the form ◦−◦.
+The additional rules provided by Zhang (2007) are:
+R5 For every a ◦−◦b if there is an uncovered circle path π = ⟨a, c, . . . , d, b⟩for a, b such that a, d are
+not adjacent and b, c are not adjacent, then orient a ◦−◦b and all the edges on π as undirected
+edges;
+R6 If a −b ◦−∗c, then orient b ◦−∗c as b −∗c;
+R7 If a −◦b ◦−∗c, and a, c are not adjacent, then orient b ◦−∗c as b −∗c;
+R8 If a →b →c or a −◦b →c, and a ◦→c, then orient a ◦→c as a →c.
+R9 If a ◦→c, and π = ⟨a, b, . . . , c⟩is an uncovered p.d. path from a to c such that b and c are not
+adjacent, then orient a ◦→c as a →c.
+R10 Suppose a ◦→c and b →c ←d, π1 is an uncovered p.d. path from a to b, and π2 is an uncovered
+p.d. path from a to d. Let x be the vertex adjacent to a on π1, and y be the vertex adjac
+
+--- [Definition B\.2] @74570 ---
+
+PAGs.
+We need the following definitions first.
+33
+
+<<<PAGE 34>>>
+Definition B.1. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be uncovered if for every 1 ≤i ≤n −1,
+vi−1 and vi+1 are not adjacent.
+Definition B.2. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be potentially directed (p.d.) from v0
+to vn if for every 1 ≤i ≤n, the edge between vi−1 and vi is neither vi−1 ←∗vi nor vi−1 ∗−vi.
+Definition B.3. In a PMG, a path π is a circle path if every edge on the path is of the form ◦−◦.
+The additional rules provided by Zhang (2007) are:
+R5 For every a ◦−◦b if there is an uncovered circle path π = ⟨a, c, . . . , d, b⟩for a, b such that a, d are
+not adjacent and b, c are not adjacent, then orient a ◦−◦b and all the edges on π as undirected
+edges;
+R6 If a −b ◦−∗c, then orient b ◦−∗c as b −∗c;
+R7 If a −◦b ◦−∗c, and a, c are not adjacent, then orient b ◦−∗c as b −∗c;
+R8 If a →b →c or a −◦b →c, and a ◦→c, then orient a ◦→c as a →c.
+R9 If a ◦→c, and π = ⟨a, b, . . . , c⟩is an uncovered p.d. path from a to c such that b and c are not
+adjacent, then orient a ◦→c as a →c.
+R10 Suppose a ◦→c and b →c ←d, π1 is an uncovered p.d. path from a to b, and π2 is an uncovered
+p.d. path from a to d. Let x be the vertex adjacent to a on π1, and y be the vertex adjacent to
+a on π2. If x and y are distinct, and are not adjacent, then orient a ◦→c as a →c.
+B.3
+Construct PAG given parametrizing set
+We
+
+--- [Definition B\.3] @74766 ---
+nt.
+Definition B.2. In a PMG, a path π = ⟨v0, . . . , vn⟩is said to be potentially directed (p.d.) from v0
+to vn if for every 1 ≤i ≤n, the edge between vi−1 and vi is neither vi−1 ←∗vi nor vi−1 ∗−vi.
+Definition B.3. In a PMG, a path π is a circle path if every edge on the path is of the form ◦−◦.
+The additional rules provided by Zhang (2007) are:
+R5 For every a ◦−◦b if there is an uncovered circle path π = ⟨a, c, . . . , d, b⟩for a, b such that a, d are
+not adjacent and b, c are not adjacent, then orient a ◦−◦b and all the edges on π as undirected
+edges;
+R6 If a −b ◦−∗c, then orient b ◦−∗c as b −∗c;
+R7 If a −◦b ◦−∗c, and a, c are not adjacent, then orient b ◦−∗c as b −∗c;
+R8 If a →b →c or a −◦b →c, and a ◦→c, then orient a ◦→c as a →c.
+R9 If a ◦→c, and π = ⟨a, b, . . . , c⟩is an uncovered p.d. path from a to c such that b and c are not
+adjacent, then orient a ◦→c as a →c.
+R10 Suppose a ◦→c and b →c ←d, π1 is an uncovered p.d. path from a to b, and π2 is an uncovered
+p.d. path from a to d. Let x be the vertex adjacent to a on π1, and y be the vertex adjacent to
+a on π2. If x and y are distinct, and are not adjacent, then orient a ◦→c as a →c.
+B.3
+Construct PAG given parametrizing set
+We define [S] to be the set of all MAGs that have the parameterizing set S, so given a MAG G, [G] =
+[S(G)] and naturally we can define PS to denote the PAG that characterizes the Markov equivalence
+
+
+--- [R5 For every] @74915 ---
+en vi−1 and vi is neither vi−1 ←∗vi nor vi−1 ∗−vi.
+Definition B.3. In a PMG, a path π is a circle path if every edge on the path is of the form ◦−◦.
+The additional rules provided by Zhang (2007) are:
+R5 For every a ◦−◦b if there is an uncovered circle path π = ⟨a, c, . . . , d, b⟩for a, b such that a, d are
+not adjacent and b, c are not adjacent, then orient a ◦−◦b and all the edges on π as undirected
+edges;
+R6 If a −b ◦−∗c, then orient b ◦−∗c as b −∗c;
+R7 If a −◦b ◦−∗c, and a, c are not adjacent, then orient b ◦−∗c as b −∗c;
+R8 If a →b →c or a −◦b →c, and a ◦→c, then orient a ◦→c as a →c.
+R9 If a ◦→c, and π = ⟨a, b, . . . , c⟩is an uncovered p.d. path from a to c such that b and c are not
+adjacent, then orient a ◦→c as a →c.
+R10 Suppose a ◦→c and b →c ←d, π1 is an uncovered p.d. path from a to b, and π2 is an uncovered
+p.d. path from a to d. Let x be the vertex adjacent to a on π1, and y be the vertex adjacent to
+a on π2. If x and y are distinct, and are not adjacent, then orient a ◦→c as a →c.
+B.3
+Construct PAG given parametrizing set
+We define [S] to be the set of all MAGs that have the parameterizing set S, so given a MAG G, [G] =
+[S(G)] and naturally we can define PS to denote the PAG that characterizes the Markov equivalence
+class [S] in the same manner as Definition 3.1. Since the parameterizing sets also characterise [G], we
+can also compute PS given such a set S. Now w
+
+
+==========================================================================================
+#### SOURCE: "Discovering Cyclic Causal Models in Psychological Research" (OSF)
+URL: https://files.osf.io/v1/resources/qb9t3/providers/osfstorage/64e4a0273fc43d2741e58f0b?format=pdf&action=download&direct&version=2
+
+--- [\(v\) For every \(remaining\)] @130821 ---
+ then orient D
+B ad
+D
+B.
+(iv) If u = ⟨D, ..., A, B,C⟩is a discriminating path between D and C for B, and B
+C;
+then if B ∈Sepset⟨D,C⟩, orient B
+C as B
+C; otherwise orient the triple ⟨A, B,C⟩
+as A
+B
+C.
+(v) For every (remaining) A
+B, if there is an uncovered circle path p = ⟨A,C, ..., D, B⟩
+between A and B such that A, D are not adjacent and B,C are not adjacent, then orient
+A
+B and every edge on p as undirected edges (—).
+(vi) If A — B
+C (A and C may or may not be adjacent), then orient B
+C as B
+C.
+(vii) If A
+B
+C and A,C are not adjacent, then orient B
+C ad B
+C.
+(viii) If A
+B
+C or A
+B
+C, and A
+C, orient A
+C as A
+C.
+(ix) If A
+C, and p = ⟨A, B, D, ...,C⟩is an uncovered potentially directed path from A to C
+such that C and B are not adjacent, then orient A
+C as A
+C.
+(x) Suppose A
+C, B
+C
+D, p1 is an uncovered potentially directed path from A to B, and
+p2 is an uncovered potentially directed path from A to D. Let m be the vertex adjacent to
+A on p1 (m could be B), and w be the vertex adjacent to A on p2 (w could be D). If m and
+w are distinct, and are not adjacent, then orient A
+D as A
+D.
+
+
+
+--- [\(vi\) If] @131045 ---
+) A
+B, if there is an uncovered circle path p = ⟨A,C, ..., D, B⟩
+between A and B such that A, D are not adjacent and B,C are not adjacent, then orient
+A
+B and every edge on p as undirected edges (—).
+(vi) If A — B
+C (A and C may or may not be adjacent), then orient B
+C as B
+C.
+(vii) If A
+B
+C and A,C are not adjacent, then orient B
+C ad B
+C.
+(viii) If A
+B
+C or A
+B
+C, and A
+C, orient A
+C as A
+C.
+(ix) If A
+C, and p = ⟨A, B, D, ...,C⟩is an uncovered potentially directed path from A to C
+such that C and B are not adjacent, then orient A
+C as A
+C.
+(x) Suppose A
+C, B
+C
+D, p1 is an uncovered potentially directed path from A to B, and
+p2 is an uncovered potentially directed path from A to D. Let m be the vertex adjacent to
+A on p1 (m could be B), and w be the vertex adjacent to A on p2 (w could be D). If m and
+w are distinct, and are not adjacent, then orient A
+D as A
+D.
+
+<<<PAGE 51>>>
+DISCOVERING CYCLIC CAUSAL MODELS
+51
+Appendix C
+CCI Details
+Algorithm 3 Cyclic Causal Inference (CCI)
+Input: A conditional independent oracle for a distribution P, satisfying global directed Markov
+property and 
+
+--- [\(vi\) If] @135179 ---
+r all 1 ≤i ≤n −1, and we have O1
+On, then orient O1
+On as
+O1
+On.
+(v) If we have the sequence of vertices ⟨O1, ..., On⟩such that Oi
+Oi+1 with 1 ≤i ≤n −1,
+and we have O1
+On, then orient O1
+On as O1
+On.
+(vi) If we have Ok
+Oi,
+there exists a non-potentially 2-triangulated path Q
+=
+⟨Oi, O j, Ol, ..., Ok⟩such that Ok
+Oi is not potentially 2-triangulated w.r.t.
+Oj, and
+O j
+Oi
+Ok is an unshielded non-v-structure, then orient Ok
+Oi as Ok
+Oi.
+(vii) Suppose we have Oi
+Ok, Oi
+Ok
+Ol, a non-potentially 2-triangulated path Q
+1 from
+Oi to O j, and a non-potentially 2-triangulated path Q
+2 from Oi to Ol. Let Om be a
+vertex adjacent to Oi on Q
+1, and let On be the vertex adjacent to Oi on Q
+2. If fur-
+ther Om
+Oi
+On is an unshielded non-v-structure and Oi
+Ok is not potentially 2-
+triangulated w.r.t. both On and Om, then orient Oi
+Ok as Oi
+Ok.
+
+<<<PAGE 53>>>
+DISCOVERING CYCLIC CAUSAL MODELS
+53
+Appendix D
+Coefficient Matrices (B) Used in Simulation
+In this appendix, we present the weight matrices B that were used in the simulation. There are eight
+matrices in total, with each matrix corresponding to a sp
+
+--- [\(vii\) If] @131123 ---
+ B such that A, D are not adjacent and B,C are not adjacent, then orient
+A
+B and every edge on p as undirected edges (—).
+(vi) If A — B
+C (A and C may or may not be adjacent), then orient B
+C as B
+C.
+(vii) If A
+B
+C and A,C are not adjacent, then orient B
+C ad B
+C.
+(viii) If A
+B
+C or A
+B
+C, and A
+C, orient A
+C as A
+C.
+(ix) If A
+C, and p = ⟨A, B, D, ...,C⟩is an uncovered potentially directed path from A to C
+such that C and B are not adjacent, then orient A
+C as A
+C.
+(x) Suppose A
+C, B
+C
+D, p1 is an uncovered potentially directed path from A to B, and
+p2 is an uncovered potentially directed path from A to D. Let m be the vertex adjacent to
+A on p1 (m could be B), and w be the vertex adjacent to A on p2 (w could be D). If m and
+w are distinct, and are not adjacent, then orient A
+D as A
+D.
+
+<<<PAGE 51>>>
+DISCOVERING CYCLIC CAUSAL MODELS
+51
+Appendix C
+CCI Details
+Algorithm 3 Cyclic Causal Inference (CCI)
+Input: A conditional independent oracle for a distribution P, satisfying global directed Markov
+property and faithfulness conditions w.r.t. a directed graph G with vertex set V. (V = O ∪L
+
+
+==========================================================================================
+#### SOURCE: Andrews et al. (2020) UAI supplement "On the Completeness of Causal Discovery in the Presence of Latent Confounders and Selection Bias"
+URL: http://proceedings.mlr.press/v108/andrews20a/andrews20a-supp.pdf
+
+--- [R10 Suppose] @3497 ---
+E 2>>>
+FCI with Tiered Background Knowledge
+R9 If α◦→γ, and π = ⟨α, β, θ, . . . , γ⟩is an uncovered
+potentially directed path from α to γ such that
+γ and β are not adjacent, then orient α◦→γ as
+α →γ.
+R10 Suppose α◦→γ, β →γ ←θ, π1 is an uncovered
+potentially directed path from α to β, and π2 is
+an uncovered potentially directed path from α to
+θ. Let µ be the vertex adjacent to α on π1 (µ
+could be β), and ω be the vertex adjacent to α on
+π2 (ω could be θ). If µ and ω are distinct and not
+adjacent, then orient α◦→γ as α →γ.
+5.3
+Proofs
+Let G = (O, E) be a MAG where the variables may be
+partitioned into three distinct subsets O = A∪B∪W .
+Lemma 1 proves the necessary and suﬃcient graphical
+constraint for G to satisfy the exogenous background
+knowledge ebkA
+B.
+Lemma 1. Let G = (O, E) be a MAG and A, B, and
+W be three disjoint sets of variables that partition O.
+G violates ebkA
+B if and only if there exists A ∈A and
+B ∈B such that A ↔B or B →A in G.
+(⇒) If G violates ebkA
+B then there exists A ∈A and
+B ∈B such that A ↔B or B →A in G.
+If G violates ebkA
+B, then there exists A ∈A and B ∈
+B such that A and B are adjacent and A is not an
+ancestor of B. Therefore, A ↔B or B →A in G.
+(⇐) If there exists A ∈A and B ∈B such that A ↔B
+or B →A in G then G violates ebkA
+B.
+If there exists A ∈A and 
+
+--- [R9 ] @3341 ---
+β ∈sepset(θ, γ), orient β ◦−∗γ as β →γ; oth-
+erwise orient the triple ⟨α, β, γ⟩as α ↔β ↔γ.
+R8 If α →β →γ or α −◦β →γ, and α◦→γ, orient
+α◦→γ as α →γ.
+
+<<<PAGE 2>>>
+FCI with Tiered Background Knowledge
+R9 If α◦→γ, and π = ⟨α, β, θ, . . . , γ⟩is an uncovered
+potentially directed path from α to γ such that
+γ and β are not adjacent, then orient α◦→γ as
+α →γ.
+R10 Suppose α◦→γ, β →γ ←θ, π1 is an uncovered
+potentially directed path from α to β, and π2 is
+an uncovered potentially directed path from α to
+θ. Let µ be the vertex adjacent to α on π1 (µ
+could be β), and ω be the vertex adjacent to α on
+π2 (ω could be θ). If µ and ω are distinct and not
+adjacent, then orient α◦→γ as α →γ.
+5.3
+Proofs
+Let G = (O, E) be a MAG where the variables may be
+partitioned into three distinct subsets O = A∪B∪W .
+Lemma 1 proves the necessary and suﬃcient graphical
+constraint for G to satisfy the exogenous background
+knowledge ebkA
+B.
+Lemma 1. Let G = (O, E) be a MAG and A, B, and
+W be three disjoint sets of variables that partition O.
+G violates ebkA
+B if and only if there exists A ∈A and
+B ∈B such that A ↔B or B →A in G.
+(⇒) If G violates ebkA
+B then there exists A ∈A and
+B ∈B such that A ↔B or B →A in G.
+If G violates ebkA
+B, then there exists A ∈A and B ∈
+B such that A and B are adjacent and A is not an
+
+
+
+==========================================================================================
+#### SOURCE: Teny et al., "A Kernel-based Approach for Learning Causal Graphs From Continuous Data" thesis
+URL: https://etheses.whiterose.ac.uk/id/eprint/29129/7/Teny_thesis_Deposit.pdf
+
+--- [R5: For every] @61100 ---
+the skeleton
+R4: if u = ⟨θ, ..., α, β, γ⟩is a discriminating path between θ and γ for β, and β ◦––∗γ;
+then if β ∈Sepset(θ, γ), orient β ◦––∗γ as β →γ; otherwise orient the triple ⟨α, β, γ⟩as
+α ↔β ↔γ.
+R5: For every (remaining) α ◦––◦β, if there is an uncovered circle path p = ⟨α, γ, ..., θ, β⟩
+between α and β s.t. α, θ are not adjacent and β, γ are not adjacent, then orient α ◦––◦β
+and every edge on p as undirected edges (––).
+R6: If α––◦β ◦––∗γ (α and γ may or may not be adjacent), then orient β ◦––∗γ as β––∗γ.
+R7: If α––◦β ◦––∗γ and α, γ are not adjacent, then orient β ◦––∗γ as β––∗γ.
+R8: If α →β →γ or α––◦β →γ, and α◦→γ , orient α◦→γ as α →γ.
+R9: If α◦→γ, and p = ⟨α, β, θ, ..., γ⟩is an uncovered p.d. path from α to γ such that γ
+and β are not adjacent, then orient α◦→γ as α →γ.
+R10: Suppose α◦→γ, β →γ ←θ, p1 is an uncovered p.d. path from α to β, and p2 is an
+uncovered p.d. path from α to θ. Let µ be the vertex adjacent to α on p1 (µ could be β),
+23
+
+<<<PAGE 42>>>
+Chapter 2: Literature Review
+and ω be the vertex adjacent to α on p2 (ω could be θ). If µ and ω are distinct, and are
+not adjacent, then orient α◦→γ as α →γ.
+Figure 2.13: FCI Orientation Rule
+2.5.4
+Really Fast Causal In
+
+--- [R6:] @61330 ---
+–◦β, if there is an uncovered circle path p = ⟨α, γ, ..., θ, β⟩
+between α and β s.t. α, θ are not adjacent and β, γ are not adjacent, then orient α ◦––◦β
+and every edge on p as undirected edges (––).
+R6: If α––◦β ◦––∗γ (α and γ may or may not be adjacent), then orient β ◦––∗γ as β––∗γ.
+R7: If α––◦β ◦––∗γ and α, γ are not adjacent, then orient β ◦––∗γ as β––∗γ.
+R8: If α →β →γ or α––◦β →γ, and α◦→γ , orient α◦→γ as α →γ.
+R9: If α◦→γ, and p = ⟨α, β, θ, ..., γ⟩is an uncovered p.d. path from α to γ such that γ
+and β are not adjacent, then orient α◦→γ as α →γ.
+R10: Suppose α◦→γ, β →γ ←θ, p1 is an uncovered p.d. path from α to β, and p2 is an
+uncovered p.d. path from α to θ. Let µ be the vertex adjacent to α on p1 (µ could be β),
+23
+
+<<<PAGE 42>>>
+Chapter 2: Literature Review
+and ω be the vertex adjacent to α on p2 (ω could be θ). If µ and ω are distinct, and are
+not adjacent, then orient α◦→γ as α →γ.
+Figure 2.13: FCI Orientation Rule
+2.5.4
+Really Fast Causal Inference (RFCI)
+Really Fast Causal Inference (RFCI) is a constraint-based structure learning algorithm
+for learning PAGs. RFCI is much faster than FCI because it applies fewer conditional
+independence tests than FCI [20]. RFCI appl
+
+--- [R7:] @61417 ---
+ θ are not adjacent and β, γ are not adjacent, then orient α ◦––◦β
+and every edge on p as undirected edges (––).
+R6: If α––◦β ◦––∗γ (α and γ may or may not be adjacent), then orient β ◦––∗γ as β––∗γ.
+R7: If α––◦β ◦––∗γ and α, γ are not adjacent, then orient β ◦––∗γ as β––∗γ.
+R8: If α →β →γ or α––◦β →γ, and α◦→γ , orient α◦→γ as α →γ.
+R9: If α◦→γ, and p = ⟨α, β, θ, ..., γ⟩is an uncovered p.d. path from α to γ such that γ
+and β are not adjacent, then orient α◦→γ as α →γ.
+R10: Suppose α◦→γ, β →γ ←θ, p1 is an uncovered p.d. path from α to β, and p2 is an
+uncovered p.d. path from α to θ. Let µ be the vertex adjacent to α on p1 (µ could be β),
+23
+
+<<<PAGE 42>>>
+Chapter 2: Literature Review
+and ω be the vertex adjacent to α on p2 (ω could be θ). If µ and ω are distinct, and are
+not adjacent, then orient α◦→γ as α →γ.
+Figure 2.13: FCI Orientation Rule
+2.5.4
+Really Fast Causal Inference (RFCI)
+Really Fast Causal Inference (RFCI) is a constraint-based structure learning algorithm
+for learning PAGs. RFCI is much faster than FCI because it applies fewer conditional
+independence tests than FCI [20]. RFCI applies the conditional independence tests on a
+smaller number of variables but its output 
+
+--- [uncovered circle path] @61150 ---
+riminating path between θ and γ for β, and β ◦––∗γ;
+then if β ∈Sepset(θ, γ), orient β ◦––∗γ as β →γ; otherwise orient the triple ⟨α, β, γ⟩as
+α ↔β ↔γ.
+R5: For every (remaining) α ◦––◦β, if there is an uncovered circle path p = ⟨α, γ, ..., θ, β⟩
+between α and β s.t. α, θ are not adjacent and β, γ are not adjacent, then orient α ◦––◦β
+and every edge on p as undirected edges (––).
+R6: If α––◦β ◦––∗γ (α and γ may or may not be adjacent), then orient β ◦––∗γ as β––∗γ.
+R7: If α––◦β ◦––∗γ and α, γ are not adjacent, then orient β ◦––∗γ as β––∗γ.
+R8: If α →β →γ or α––◦β →γ, and α◦→γ , orient α◦→γ as α →γ.
+R9: If α◦→γ, and p = ⟨α, β, θ, ..., γ⟩is an uncovered p.d. path from α to γ such that γ
+and β are not adjacent, then orient α◦→γ as α →γ.
+R10: Suppose α◦→γ, β →γ ←θ, p1 is an uncovered p.d. path from α to β, and p2 is an
+uncovered p.d. path from α to θ. Let µ be the vertex adjacent to α on p1 (µ could be β),
+23
+
+<<<PAGE 42>>>
+Chapter 2: Literature Review
+and ω be the vertex adjacent to α on p2 (ω could be θ). If µ and ω are distinct, and are
+not adjacent, then orient α◦→γ as α →γ.
+Figure 2.13: FCI Orientation Rule
+2.5.4
+Really Fast Causal Inference (RFCI)
+Really Fast Causal Inference (RFCI)
+
+
+==========================================================================================
+#### SOURCE: Ben György et al. NeurIPS 2020 "High-recall causal discovery for autocorrelated time series with arbitrary summary statistics" supplement
+URL: https://proceedings.neurips.cc/paper/2020/file/94e70705efae423efda1088614128d0b-Supplemental.pdf
+
+--- [R10] @7839 ---
+d Possible-D-Sep(A, B, M′). This removes all
+false links. Fourth, all previous orientations are undone, R0 is applied once more and then followed
+by exhaustive application of the ten rules R1 through R10. Tests of CI are preferentially made given
+smaller conditioning sets S, i.e., FCI ﬁrst tests sets with |S| = p = 0, then those with |S| = p = 1
+and so on.
+S3
+LPCMCI-PAGs
+Section 3.2 introduced middle marks and LPCMCI-PAGs. We here give a more formal deﬁnition of
+these notions. Recall that we assume the absence of selection variables.
+Deﬁnition S3 (LPCMCI-PAGs). Consider a simple graph C(G) over the same set of variables as
+M(G) with edges of the type →
+∗, ↔
+∗, ◦→
+∗, and ◦−◦
+∗
+where the wildcard ‘∗’ can stand for the ﬁve
+possible middle marks ‘?’, ‘L’, ‘R’, ‘!’, or ‘’ (empty). Such C(G) is a LPCMCI-PAG for G with respect
+2
+
+<<<PAGE 3>>>
+to total order < if for any probability distribution P that is Markov relative and faithful to G the
+following seven conditions hold:
+1. If A∗→
+∗B in C(G), then B /∈an(A, G).
+2. If A→
+∗B in C(G), then A ∈an(B, G).
+3. If A /∈adj(B, C(G)), then A /∈adj(B, M(G)).
+4. If A∗−∗
+L B in C(G) for A < B, then B /∈an(A, G) or there is no S ⊆pa(A, M(G)) that
+m-se
+
+--- [R10] @13898 ---
+to An: If for all k = 1, . . . , n−1
+ia) Ak→
+∗Ak+1 or ib) SAk+1Ak−1 is weakly minimal and Ak ∈SAk+1Ak−1 (with the convention
+A0 = An), then mark the edge between A1 and An for orientation as A1→
+∗An.
+R10′: For all A◦→
+∗D for which a) there is Bn→
+∗D←
+∗Cm, b) an uncovered potentially directed
+path pB from A ≡B0 to Bn through B1, . . . , Bn−1 (in this order), c) an uncovered potentially
+directed path pC from A ≡C0 to Cm through C1, . . . , Cm−1 (in this order) such that d) B1 and
+C1 are not adjacent: If i) SB1C1 is weakly minimal and A ∈SB1C1, ii) for all k = 0, . . . , n −2
+iia) Bk+1→
+∗Bk+2 or iib) SBk+2Bk is weakly minimal and Bk+1 ∈SBk+2Bk, and iii) for all
+k = 0, . . . , m −2 iiia) Ck+1→
+∗Ck+2 or iiib) SCk+2Ck is weakly minimal and Ck+1 ∈SCk+2Ck,
+then mark the edge between A and D for orientation as A→
+∗D.
+These rules orient edge marks. They are complemented by the following two rules for updating
+middle marks:
+APR: (ancestor-parent-rule, see Lemma 1) Replace all edges A→
+! B by A→B, all edges A→
+L B with
+A > B by A→B, and all edges A→
+R B with A < B by A→B.
+MMR: (middle-mark-rule) Replace all edges A∗→
+? B with A < B by A∗→
+L B, all edges A∗→
+? B with
+A > B by A∗→
+R B, all edges
+
+--- [R10] @18091 ---
+nd Xj
+t as well as ‘R’ and ‘L’ swapped
+16:
+remove all edges that are marked for removal from C(G)
+17:
+if any edge has been removed in line 16 then
+18:
+run Alg. S4 using [APR, MMR, R8′, R2′, R1′, R9′, R10′], orient lagged links only
+19:
+let p = 0
+20:
+else increase p to p + 1
+21: until there are no other middle marks than ‘!’ or ‘’ (empty)
+22: run Alg. S4 using [APR, MMR, R8′, R2′, R1′, R0′d, R0′c, R3′, R4, R9′, R10′, R0′b, R0′a]
+23: return C(G), Imin(·, ·), SepSet(·, ·)
+found insigniﬁcant) before other edges are tested, see lines 2, 4 and the indentation of line 16. To be
+precise: All autodependency links are tested ﬁrst, followed by cross links starting with lag τ = 0
+and moving to lag τ = τmax in steps of one. This ordering does not depend on the ordering of the
+N time series variables Xj and does therefore not introduce order-dependence in the sense studied
+in [Colombo and Maathuis, 2014]. The algorithm converges once all middle marks in C(G) are ‘!’
+or empty. By means of the APR rule (see Lemma 1 or Sect. S4) all edges with a tail mark will then
+have an empty middle mark, i.e., they cannot be m-separated and do not need further testing. Line 11
+updates a memory for keeping track
+
+--- [R10] @18305 ---
+lagged links only
+19:
+let p = 0
+20:
+else increase p to p + 1
+21: until there are no other middle marks than ‘!’ or ‘’ (empty)
+22: run Alg. S4 using [APR, MMR, R8′, R2′, R1′, R0′d, R0′c, R3′, R4, R9′, R10′, R0′b, R0′a]
+23: return C(G), Imin(·, ·), SepSet(·, ·)
+found insigniﬁcant) before other edges are tested, see lines 2, 4 and the indentation of line 16. To be
+precise: All autodependency links are tested ﬁrst, followed by cross links starting with lag τ = 0
+and moving to lag τ = τmax in steps of one. This ordering does not depend on the ordering of the
+N time series variables Xj and does therefore not introduce order-dependence in the sense studied
+in [Colombo and Maathuis, 2014]. The algorithm converges once all middle marks in C(G) are ‘!’
+or empty. By means of the APR rule (see Lemma 1 or Sect. S4) all edges with a tail mark will then
+have an empty middle mark, i.e., they cannot be m-separated and do not need further testing. Line 11
+updates a memory for keeping track of the minimum test statistic value across all previous CI tests
+for a given pair of variables (the memory is initialized to plus inﬁnity when line 1 of Algorithm 1 is
+executed). These values are used to sort Ssea
+
+--- [R10] @55192 ---
+−1→
+∗Ak∗−∗
+∗Ak+1 together
+with ia) or from ib) for k = 2, . . . , n −1 (in this order) we further conclude Ak→
+∗Ak+1. This gives
+A1 ∈an(An, G), a contradiction to the assumption. Hence A1 ∈an(An, G).
+R10′: Application of the ﬁrst part of Lemma 2 to the unshielded triple B1∗−∗
+∗A∗−∗
+∗C1 gives A ∈
+an({B1, C1}, G). Say, without loss of generality, A ∈an(B1, G). By successive application
+of Lemma 2 to the unshielded triple Bk→
+∗Bk+1∗−∗
+∗Bk+2 together with ia) or from ib) for k =
+0, . . . , n −2 (in this order) we further conclude Bk+1→
+∗Bk+2. This shows that A ∈an(D, G).
+APR: These are the replacements speciﬁed in Lemma 1, which was already proven above.
+MMR: This follows immediately from the causal meaning of middle marks ‘L’, ‘R’, and ‘!’ given in
+Deﬁnition S3.
+□
+Lemma S8 (Symbolic middle mark update). Middle marks can be updated by the symbolic rules
+‘?’ + ‘∗’ = ‘∗’, ‘∗’ + ‘’ = ‘’ and ‘L’ + ‘R’ = ‘!’.
+Proof of Lemma S8. The ﬁrst rule follows since the middle mark ‘?’ does not make any statement,
+hence it is consistent with all other middle marks. The second rule follows since the statement made
+by the empty middle mark ‘’ implies the statements made by all other middle marks. The th
+
+--- [R10] @63516 ---
+pply due to the assumption of no selection variables. Completeness then
+follows since the orientation applied in line 27 of Algorithm S3 contain the FCI orientation rules R0
+through R4 and R8 through R10 as special cases.
+□
+Theorem 3 (LPCMCI is order-independent). The output of LPCMCI does not depend on the order
+of the N time series variables Xj (the j-indices may be permuted).
+15
+
+<<<PAGE 16>>>
+Proof of Theorem 3. Both Algorithms S2 and S3 remove edges only after the for-loop over ordered
+pairs has been completed. The ordering of ordered pairs imposed by the outer for-loop is order-
+independent. Note that the sets Ssearch, S1
+search and S2
+search are ordered by means of Imin. Since
+this is an order-independent ordering, the break commands do not introduce order-dependence. The
+application of orientation rules is order-independent by construction of Algorithm S4: Orientations
+and removals are only applied once the rule has been exhaustively applied, and conﬂicts are removed
+by means of the conﬂict mark ‘x’. Lastly, as discussed at the end of Sec. S5, also the decision of
+whether a node is in a separating sets are made in an order-independent way.
+□
+S9
+Further numerical experiments
+
+
+==========================================================================================
+#### SOURCE: Diepen et al. (2023) "Beyond the Markov Equivalence Class"
+URL: https://proceedings.mlr.press/v213/diepen23a/diepen23a.pdf
+
+--- [R8] @26583 ---
+t the possible parents towards the effect j.
+Lemma 4 The parent orientation rule is sound under Assumption 2.
+After running the CDC and the parent orientation rule, we will again run rules R1-R4’ and R8-
+R10 of the FCI algorithm, as described in Zhang (2008), until no new orientations are made. Here,
+R4’ implies that if there is a discriminating path between i and j for k, and k ◦−◦j or k◦→j in
+the graph, then we orient k →j. This is a simpler version of R4 from the standard FCI orientation
+procedure and is sufficient since the orientations triggered by the second part of R4 are invariant
+in all MAGs in the same equivalence class by Proposition 2 (Zhang, 2008). In conclusion, given a
+PAG P provided by (oracle) FCI, supposing that for an incompletely oriented edge we have i◦→j
+or i ◦−◦j and a CAS Z, we find that the CDC triggers with implication i →j. Then, the following
+orientation rules apply:
+RC1 (CDC) Orient the edge between i and j in P as i →j.
+RC2 (parent orientation rule) For all z ∈adjP(j) ∩Z, orient z →j.
+RC3 (FCI) Propagate standard FCI orientation rules R1-R4’,R8-R10 until
+
+--- [R8] @27471 ---
+tation rules apply:
+RC1 (CDC) Orient the edge between i and j in P as i →j.
+RC2 (parent orientation rule) For all z ∈adjP(j) ∩Z, orient z →j.
+RC3 (FCI) Propagate standard FCI orientation rules R1-R4’,R8-R10 until exhaustion.
+In our implementation, for each incompletely oriented edge, we run RC1 and, if this rule trig-
+gers, we also run RC2 and RC3. We call this procedure, in which we first apply the FCI algorithm
+and then run the rules RC1-RC3, the FCI-CDC algorithm. The FCI-CDC algorithm outputs an
+overcomplete PAG and is sound, as shown below. In the overcomplete PAG, each invariant edge
+mark is also present in the MAG of the underlying causal graph, and each variant edge mark is also
+present in the corresponding PAG.
+Theorem 5 Under Assumptions 1 and 2, and assuming oracle independence test results, the FCI-
+CDC algorithm is sound.
+We present which additional orientations are found in Figure 1(c) by the rules RC1-RC3 after
+running the FCI algorithm. The edge A →B is first discovered after testing the CDC on the pair
+(A, B) with deconfounding set {D} and applying rule RC1. The pare
+
+--- [R8] @47398 ---
+2, and assuming oracle independence test results, the FCI-
+CDC algorithm is sound.
+Proof Lemmas 1 and 4 show that RC1 and RC2 are sound. Furthermore, FCI is sound, and the
+orientation rules R1-R4 and R8-10 are sound. Note that in all MAG instances M in the equivalence
+class represented by the output PAG P of the FCI algorithm, the colliders on discriminating paths in
+all graphs are invariant by Proposition 2 in (Zhang, 2008). Therefore, orientation rule R4’ is sound
+when applying it only on (overcomplete) PAGs. Hence, the orientation rule RC3 is sound. This
+shows that the complete procedure FCI-CDC is sound.
+In Proposition 6.41, Peters et al. (2017) show that if i →j in a directed acyclic graph G, and
+there exists an adjustment set Z for (i, j), then paG(j)\{i}, is also an adjustment set. We can show
+similar results for deconfounding sets in MAGs.
+Lemma 6 If i →j in a MAG G, and there exists a deconfounding set Z for (i, j), then paG(j)\{i},
+is also a deconfounding set.
+Proof Note that paG(j) \ {i} ⊆I \ desG(j). Suppose that there is a path into both i and j. Then
+this path is of the
+
+--- [R10] @26587 ---
+e possible parents towards the effect j.
+Lemma 4 The parent orientation rule is sound under Assumption 2.
+After running the CDC and the parent orientation rule, we will again run rules R1-R4’ and R8-
+R10 of the FCI algorithm, as described in Zhang (2008), until no new orientations are made. Here,
+R4’ implies that if there is a discriminating path between i and j for k, and k ◦−◦j or k◦→j in
+the graph, then we orient k →j. This is a simpler version of R4 from the standard FCI orientation
+procedure and is sufficient since the orientations triggered by the second part of R4 are invariant
+in all MAGs in the same equivalence class by Proposition 2 (Zhang, 2008). In conclusion, given a
+PAG P provided by (oracle) FCI, supposing that for an incompletely oriented edge we have i◦→j
+or i ◦−◦j and a CAS Z, we find that the CDC triggers with implication i →j. Then, the following
+orientation rules apply:
+RC1 (CDC) Orient the edge between i and j in P as i →j.
+RC2 (parent orientation rule) For all z ∈adjP(j) ∩Z, orient z →j.
+RC3 (FCI) Propagate standard FCI orientation rules R1-R4’,R8-R10 until exh
+
+--- [R10] @27474 ---
+ion rules apply:
+RC1 (CDC) Orient the edge between i and j in P as i →j.
+RC2 (parent orientation rule) For all z ∈adjP(j) ∩Z, orient z →j.
+RC3 (FCI) Propagate standard FCI orientation rules R1-R4’,R8-R10 until exhaustion.
+In our implementation, for each incompletely oriented edge, we run RC1 and, if this rule trig-
+gers, we also run RC2 and RC3. We call this procedure, in which we first apply the FCI algorithm
+and then run the rules RC1-RC3, the FCI-CDC algorithm. The FCI-CDC algorithm outputs an
+overcomplete PAG and is sound, as shown below. In the overcomplete PAG, each invariant edge
+mark is also present in the MAG of the underlying causal graph, and each variant edge mark is also
+present in the corresponding PAG.
+Theorem 5 Under Assumptions 1 and 2, and assuming oracle independence test results, the FCI-
+CDC algorithm is sound.
+We present which additional orientations are found in Figure 1(c) by the rules RC1-RC3 after
+running the FCI algorithm. The edge A →B is first discovered after testing the CDC on the pair
+(A, B) with deconfounding set {D} and applying rule RC1. The parent 
+
+
+==========================================================================================
+#### SOURCE: "Structural Causal Bandits under Markov Equivalence" (causalai.net r122.pdf)
+URL: https://causalai.net/r122.pdf
+
+--- [uncovered circle path] @75070 ---
+nted according to Lem. 6 conforms to Q.
+Lemma 24 (Lemma 2 in Wang et al. (2024a)). Let Q be a PMG obtained from some valid local transformations from
+a PAG P and the orientation rules. If there is an uncovered circle path p = ⟨V1, V2, · · · , Vn⟩, n ≥3 in Q, then any two
+non-consecutive vertices are not adjacent (minimal circle path).
+B. Experiments
+We provide the detailed experimental settings in the main paper and present the results of additional experiments.
+B.1. Experiment Details
+We consider three strategies for selecting arms: POMISs, DMISs, and Brute-force, combined with two prominent MAB
+solvers: Thompson Sampling (TS) (Thompson, 1933; Chapelle and Li, 2011; Agrawal and Goyal, 2012; Kaufmann et al.,
+2012) and Kullback-Leibler Upper Confidence Bound (KL-UCB) (Garivier and Cappé, 2011; Cappé et al., 2013). In the
+Brute-force strategy, all combinations of arms S
+X⊆V\{Y } XX are evaluated. The SCM representing the target system as
+follows:
+S1 =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fA
+= UA ∧UAC
+fB
+= C ∨((1 −UB) ∧UBY )
+fC
+= A ∨((1 −UC) ∧UAC)
+fD
+= Y ∧UD
+fY
+= [(1 −B) ∨{(1 −C) ∧(1 −UBY )}] 
+
+--- [uncovered circle path] @102531 ---
+ion that Z /∈An(Y )MX for all MAGs M ∈[P].
+(②X and Z are in the same bucket). Suppose that X and Z are in the same bucket. Let V1(= X) ◦−◦V2(= X′) ◦−◦
+· · ·◦−◦Vn−1(= Z′)◦−◦Vn(= Z) be an arbitrary non-uncovered circle path between X and Z in P. By the definition of an
+uncovered circle path, such a path must include at least one non-uncovered triple ⟨Vi, Vi+1, Vi+2⟩on the circle path. The
+existence of an edge between Vi ◦−◦Vi+2 would induce an uncovered circle path V1 ◦−◦· · ·◦−◦Vi ◦−◦Vi+2 ◦−◦· · ·◦−◦Vn.
+To avoid this, X and Z must be adjacent, and furthermore, the edge connecting X and Z must appear as a circle edge
+X ◦−◦Z by Lem. 11.
+The existence of the edge X ◦−◦Z implies that there must be edges X ◦−◦Vi for all 3 ≤i ≤n −1, or Z ◦−◦Vi for
+all 2 ≤i ≤n −2 by chordality. In the former case, we orient the subgraph of P over {V1, · · · , Vn} following a similar
+approach to the proof of Lemma 7.6 in Maathuis and Colombo (2015). We begin by selecting a vertex V2 and orient all
+edges incident to V2 as directed into V2. Since the subgraph is chordal and V2 is simplicial, this orientation do
+
+--- [uncovered circle path] @102599 ---
+ bucket). Suppose that X and Z are in the same bucket. Let V1(= X) ◦−◦V2(= X′) ◦−◦
+· · ·◦−◦Vn−1(= Z′)◦−◦Vn(= Z) be an arbitrary non-uncovered circle path between X and Z in P. By the definition of an
+uncovered circle path, such a path must include at least one non-uncovered triple ⟨Vi, Vi+1, Vi+2⟩on the circle path. The
+existence of an edge between Vi ◦−◦Vi+2 would induce an uncovered circle path V1 ◦−◦· · ·◦−◦Vi ◦−◦Vi+2 ◦−◦· · ·◦−◦Vn.
+To avoid this, X and Z must be adjacent, and furthermore, the edge connecting X and Z must appear as a circle edge
+X ◦−◦Z by Lem. 11.
+The existence of the edge X ◦−◦Z implies that there must be edges X ◦−◦Vi for all 3 ≤i ≤n −1, or Z ◦−◦Vi for
+all 2 ≤i ≤n −2 by chordality. In the former case, we orient the subgraph of P over {V1, · · · , Vn} following a similar
+approach to the proof of Lemma 7.6 in Maathuis and Colombo (2015). We begin by selecting a vertex V2 and orient all
+edges incident to V2 as directed into V2. Since the subgraph is chordal and V2 is simplicial, this orientation does not create
+any uncovered colliders in the subgraph. We then remov
+
+
+==========================================================================================
+#### SOURCE: arXiv 2607.19866 "Local Causal Structure Learning in the Presence of Latent Variables"
+URL: https://arxiv.org/pdf/2607.19866
+
+--- [Rule 5\.] @132600 ---
+Y, Z⟩between W and Z for Y , Y ◦−∗Z,
+and Sepset(W, Z) ∈Sepsets then
+9:
+if Y ∈Sepset(W, Z) then
+10:
+Orient Y ◦−∗Z as Y →Z.
+11:
+else
+12:
+Orient the triple ⟨X, Y, Z⟩as X ↔Y ↔Z.
+13:
+end if
+14:
+end if
+15:
+Rule 5.
+For every remaining edge X ◦−◦Y , if there exists an uncovered circle path
+p = ⟨X, Z, . . . , W, Y ⟩between X and Y such that Sepset(X, W) ∈Sepsets and Y
+∈
+Sepset(X, W), and Sepset(Y, Z) ∈Sepsets and X ∈Sepset(Y, Z), then orient X ◦−◦Y
+and every edge on p as undirected edges.
+16:
+Rule 6. If X −Y ◦−∗Z, then orient Y ◦−∗Z as Y −∗Z.
+17:
+Rule 7. If X −◦Y ◦−∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient Y ◦−∗Z
+as Y −∗Z.
+18:
+Rule 8. If X →Y →Z or X −◦Y →Z, and X◦→Z, then orient X◦→Z as X →Z.
+19:
+Rule 9. If X◦→Z, and p = ⟨X, Y, W, . . . , Z⟩is an uncovered potentially directed path from
+X to Z such that Sepset(Z, Y ) ∈Sepsets and X ∈Sepset(Z, Y ), then orient X◦→Z as
+X →Z.
+20:
+Rule 10. Suppose X◦→Z, Y →Z ←W, π1 is an uncovered potentially directed path from
+X to Y , and π2 is an uncovered potentially directed path from X to W. Let U be the vertex
+adjacent to X on π1 (U coul
+
+--- [Rule 6\.] @132889 ---
+, Z, . . . , W, Y ⟩between X and Y such that Sepset(X, W) ∈Sepsets and Y
+∈
+Sepset(X, W), and Sepset(Y, Z) ∈Sepsets and X ∈Sepset(Y, Z), then orient X ◦−◦Y
+and every edge on p as undirected edges.
+16:
+Rule 6. If X −Y ◦−∗Z, then orient Y ◦−∗Z as Y −∗Z.
+17:
+Rule 7. If X −◦Y ◦−∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient Y ◦−∗Z
+as Y −∗Z.
+18:
+Rule 8. If X →Y →Z or X −◦Y →Z, and X◦→Z, then orient X◦→Z as X →Z.
+19:
+Rule 9. If X◦→Z, and p = ⟨X, Y, W, . . . , Z⟩is an uncovered potentially directed path from
+X to Z such that Sepset(Z, Y ) ∈Sepsets and X ∈Sepset(Z, Y ), then orient X◦→Z as
+X →Z.
+20:
+Rule 10. Suppose X◦→Z, Y →Z ←W, π1 is an uncovered potentially directed path from
+X to Y , and π2 is an uncovered potentially directed path from X to W. Let U be the vertex
+adjacent to X on π1 (U could be Y ) and let V be the vertex adjacent to X on π2 (V could
+be W). If U and V are distinct, Sepset(U, V ) ∈Sepsets, and X ∈Sepset(U, V ), then orient
+X◦→Z as X →Z.
+21: until no rule can further orient any edge mark in P
+22: return P.
+45
+
+<<<PAGE 46>>>
+D.2
+Update Waitlist
+Algorithm 4 Upd
+
+--- [Rule 7\.] @132944 ---
+W) ∈Sepsets and Y
+∈
+Sepset(X, W), and Sepset(Y, Z) ∈Sepsets and X ∈Sepset(Y, Z), then orient X ◦−◦Y
+and every edge on p as undirected edges.
+16:
+Rule 6. If X −Y ◦−∗Z, then orient Y ◦−∗Z as Y −∗Z.
+17:
+Rule 7. If X −◦Y ◦−∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient Y ◦−∗Z
+as Y −∗Z.
+18:
+Rule 8. If X →Y →Z or X −◦Y →Z, and X◦→Z, then orient X◦→Z as X →Z.
+19:
+Rule 9. If X◦→Z, and p = ⟨X, Y, W, . . . , Z⟩is an uncovered potentially directed path from
+X to Z such that Sepset(Z, Y ) ∈Sepsets and X ∈Sepset(Z, Y ), then orient X◦→Z as
+X →Z.
+20:
+Rule 10. Suppose X◦→Z, Y →Z ←W, π1 is an uncovered potentially directed path from
+X to Y , and π2 is an uncovered potentially directed path from X to W. Let U be the vertex
+adjacent to X on π1 (U could be Y ) and let V be the vertex adjacent to X on π2 (V could
+be W). If U and V are distinct, Sepset(U, V ) ∈Sepsets, and X ∈Sepset(U, V ), then orient
+X◦→Z as X →Z.
+21: until no rule can further orient any edge mark in P
+22: return P.
+45
+
+<<<PAGE 46>>>
+D.2
+Update Waitlist
+Algorithm 4 UpdateWaitlist
+Input: Target variable T, current graph ˆP,
+
+--- [Rule 9\.] @133116 ---
+orient Y ◦−∗Z as Y −∗Z.
+17:
+Rule 7. If X −◦Y ◦−∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient Y ◦−∗Z
+as Y −∗Z.
+18:
+Rule 8. If X →Y →Z or X −◦Y →Z, and X◦→Z, then orient X◦→Z as X →Z.
+19:
+Rule 9. If X◦→Z, and p = ⟨X, Y, W, . . . , Z⟩is an uncovered potentially directed path from
+X to Z such that Sepset(Z, Y ) ∈Sepsets and X ∈Sepset(Z, Y ), then orient X◦→Z as
+X →Z.
+20:
+Rule 10. Suppose X◦→Z, Y →Z ←W, π1 is an uncovered potentially directed path from
+X to Y , and π2 is an uncovered potentially directed path from X to W. Let U be the vertex
+adjacent to X on π1 (U could be Y ) and let V be the vertex adjacent to X on π2 (V could
+be W). If U and V are distinct, Sepset(U, V ) ∈Sepsets, and X ∈Sepset(U, V ), then orient
+X◦→Z as X →Z.
+21: until no rule can further orient any edge mark in P
+22: return P.
+45
+
+<<<PAGE 46>>>
+D.2
+Update Waitlist
+Algorithm 4 UpdateWaitlist
+Input: Target variable T, current graph ˆP, processed set Donelist.
+Output: Updated set Waitlist.
+1: Initialize Waitlist ←∅.
+2: for each variable V in ˆP do
+3:
+if V has a potentially anterior path to T in ˆP then
+4:
+
+--- [Rule 10\.] @133300 ---
+→Z as X →Z.
+19:
+Rule 9. If X◦→Z, and p = ⟨X, Y, W, . . . , Z⟩is an uncovered potentially directed path from
+X to Z such that Sepset(Z, Y ) ∈Sepsets and X ∈Sepset(Z, Y ), then orient X◦→Z as
+X →Z.
+20:
+Rule 10. Suppose X◦→Z, Y →Z ←W, π1 is an uncovered potentially directed path from
+X to Y , and π2 is an uncovered potentially directed path from X to W. Let U be the vertex
+adjacent to X on π1 (U could be Y ) and let V be the vertex adjacent to X on π2 (V could
+be W). If U and V are distinct, Sepset(U, V ) ∈Sepsets, and X ∈Sepset(U, V ), then orient
+X◦→Z as X →Z.
+21: until no rule can further orient any edge mark in P
+22: return P.
+45
+
+<<<PAGE 46>>>
+D.2
+Update Waitlist
+Algorithm 4 UpdateWaitlist
+Input: Target variable T, current graph ˆP, processed set Donelist.
+Output: Updated set Waitlist.
+1: Initialize Waitlist ←∅.
+2: for each variable V in ˆP do
+3:
+if V has a potentially anterior path to T in ˆP then
+4:
+Add V to Waitlist.
+5:
+end if
+6: end for
+7: Remove all variables in Donelist from Waitlist.
+8: return Waitlist.
+The selective update in Algorithm 4 does not change the completeness arg

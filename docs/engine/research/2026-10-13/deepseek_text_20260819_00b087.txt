@@ -1,0 +1,17 @@
+entry = {
+  pick_id,
+  protocol_id,
+  placement_time,
+  lock_odds_over,
+  lock_odds_under,
+  model_prob,
+  market_no_vig,
+  close_time,
+  close_odds_over,
+  close_odds_under,
+  outcome,
+  previous_entry_hash,
+  nonce
+}
+
+entry_hash = SHA-256(canonical_json(entry) || previous_entry_hash)

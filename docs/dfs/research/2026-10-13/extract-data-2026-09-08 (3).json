@@ -1,0 +1,132 @@
+{
+  "domain": "oddsjam.com",
+  "domain_citation": "https://oddsjam.com/",
+  "extracted_formulas": [
+    {
+      "name": "Arbitrage opportunity and stake-distribution calculation (calculateArbitrage)",
+      "name_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+      "reconstruction": "For each American-odds price, the bundle converts positive odds with price/100+1 and negative odds with 100/abs(price)+1. It converts those decimal odds to implied probability (1/decimal odds), sums the implied probabilities, and classifies the set as an arbitrage when the sum is below 1. It allocates a default total stake of 1,000 in proportion to each bet’s implied probability, then computes each bet’s potential profit, total expected profit, ROI, and arbitrage margin.",
+      "reconstruction_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+      "components": [
+        {
+          "name": "Decimal odds for positive American price: price/100 + 1",
+          "name_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+          "weight": 1,
+          "weight_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+        },
+        {
+          "name": "Decimal odds for negative American price: 100/abs(price) + 1",
+          "name_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+          "weight": 1,
+          "weight_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+        },
+        {
+          "name": "Implied probability: 1 / decimal odds",
+          "name_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+          "weight": 1,
+          "weight_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+        },
+        {
+          "name": "Arbitrage test: total implied probability < 1",
+          "name_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+          "weight": 1,
+          "weight_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+        },
+        {
+          "name": "Default total stake r = 1e3",
+          "name_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+          "weight": 1000,
+          "weight_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+        }
+      ],
+      "raw_snippets": [
+        {
+          "value": "calculateArbitrage\",0,function(e,r=1e3){let t=e.map(e=>{var r;let t=(r=e.price)>0?r/100+1:100/Math.abs(r)+1;return{bet:e,decimalOdds:t,impliedProbability:1/t,stakeAmount:0,potentialProfit:0}}),a=t.reduce((e,r)=>e+r.impliedProbability,0),s=Number(((1-a)*100).toFixed(2)),i=(1-a)/a*100;return t.forEach(e=>{e.stakeAmount=e.impliedProbability/a*r,e.potentialProfit=e.stakeAmount*e.decimalOdds-r}),{isArbitrage:a<1,totalImpliedProbability:a,expectedProfit:i*r,expectedROI:i,expectedArbMargin:s,betDistribution:t}}",
+          "value_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+        }
+      ],
+      "source_file": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js",
+      "source_file_citation": "https://oddsjam.com/_next/static/chunks/0s76mfohqjm42.js"
+    }
+  ],
+  "api_intelligence": {
+    "endpoints": [
+      {
+        "value": "https://oddsjam.com/api/build-time",
+        "value_citation": "https://oddsjam.com/api/build-time"
+      },
+      {
+        "value": "https://oddsjam.com/api/backend/sportsbooks?state=NJ",
+        "value_citation": "https://oddsjam.com/api/backend/sportsbooks?state=NJ"
+      },
+      {
+        "value": "https://oddsjam.com/api/backend/detect_state",
+        "value_citation": "https://oddsjam.com/api/backend/detect_state"
+      },
+      {
+        "value": "https://oddsjam.com/api/backend/auth/user",
+        "value_citation": "https://oddsjam.com/api/backend/auth/user"
+      },
+      {
+        "value": "https://oddsjam.com/api/backend/learncenter?categoryName=Updates&first=1",
+        "value_citation": "https://oddsjam.com/"
+      },
+      {
+        "value": "https://oddsjam.com/api/backend/promotions?state=NJ",
+        "value_citation": "https://oddsjam.com/"
+      },
+      {
+        "value": "POST https://oddsjam.com/api/backend/e",
+        "value_citation": "https://oddsjam.com/_next/static/chunks/0c3bzi_hnpi~6.js"
+      },
+      {
+        "value": "POST https://oddsjam.com/api/backend/user/increment-one-click-bet-count",
+        "value_citation": "https://oddsjam.com/_next/static/chunks/0c3bzi_hnpi~6.js"
+      }
+    ],
+    "openapi_spec": "NOT CONFIRMED — /openapi.json and /swagger.json returned the OddsJam HTML application shell rather than an OpenAPI document.",
+    "openapi_spec_citation": "https://oddsjam.com/openapi.json",
+    "graphql_endpoint": "NOT CONFIRMED — /graphql returned the HTML application shell; the bundle contains an api-dev GraphQL URI, but a direct request to that URI returned HTTP 403 and introspection was not enabled.",
+    "graphql_endpoint_citation": "https://oddsjam.com/_next/static/chunks/0c3bzi_hnpi~6.js",
+    "sample_response": "{\"buildTime\":\"2026-09-04T17:17:47.985Z\"}",
+    "sample_response_citation": "https://oddsjam.com/api/build-time",
+    "status": "PARTIALLY CONFIRMED — public JSON routes and the API product page are confirmed; no public OpenAPI document or introspection-enabled GraphQL endpoint was confirmed.",
+    "status_citation": "https://oddsjam.com/odds-api"
+  },
+  "pricing_ios": "NOT CONFIRMED — exact IAP tiers were not present in the allowed OddsJam pages. The homepage HTML exposes Apple smart-banner app-id 6448072108, but the App Store pricing page is outside the permitted source set.",
+  "pricing_ios_citation": "https://oddsjam.com/",
+  "pricing_android": "NOT CONFIRMED — no exact Google Play subscription or IAP tiers were present in the allowed OddsJam pages.",
+  "pricing_android_citation": "https://oddsjam.com/",
+  "product_limit": "Live arbitrage, middle, and positive-EV access is gated to a 24-hour window for the Platinum plan; the client bundle’s upgrade copy says the plan unlocks those bets “for 24 hours.” The subscription page also says sportsbooks may cut a bettor’s maximum stake and recommends capping a stake at $300 per side.",
+  "product_limit_citation": "https://oddsjam.com/_next/static/chunks/0v~1q75gzz8k_.js",
+  "customer_pain": [
+    {
+      "quote": "Some books will eventually cut your max bet, and we are not going to pretend otherwise.",
+      "quote_citation": "https://oddsjam.com/subscribe",
+      "source": "https://oddsjam.com/subscribe",
+      "source_citation": "https://oddsjam.com/subscribe",
+      "date": "NOT DATED on the allowed page",
+      "date_citation": "https://oddsjam.com/subscribe"
+    }
+  ],
+  "data_supply_chain": [
+    {
+      "value": "100+ sportsbooks supplying real-time odds, including player props and alternate markets; the API page also describes injury, schedule, ranking, and score data.",
+      "value_citation": "https://oddsjam.com/odds-api"
+    },
+    {
+      "value": "Named sportsbook/exchange sources shown by OddsJam: DraftKings, FanDuel, BetMGM, Caesars, ESPN BET, Fanatics, BetRivers, Bet365, Hard Rock Bet, Novig, ProphetX, Pinnacle, Circa, and Fliff.",
+      "value_citation": "https://oddsjam.com/subscribe"
+    },
+    {
+      "value": "SharpSports API endpoint (https://api.sharpsports.io/v1/context) is present in the homepage-loaded JavaScript configuration; OddsJam does not publicly label it as a data supplier on the fetched pages.",
+      "value_citation": "https://oddsjam.com/_next/static/chunks/0c3bzi_hnpi~6.js"
+    }
+  ],
+  "discovery_metadata": {
+    "method": "Homepage HTML and client-side JavaScript bundle extraction, robots.txt and sitemap inspection, API-route observation, and targeted checks of /openapi.json, /swagger.json, /graphql, /docs, and /help.",
+    "method_citation": "https://oddsjam.com/",
+    "found_at": "https://oddsjam.com/sitemap.xml",
+    "found_at_citation": "https://oddsjam.com/sitemap.xml"
+  }
+}

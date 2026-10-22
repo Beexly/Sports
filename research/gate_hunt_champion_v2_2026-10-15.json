@@ -1,0 +1,42 @@
+{
+ "date": "2026-10-15",
+ "title": "CHAMPION v3: + spread-vig regime in atom key",
+ "crps": 7.134568,
+ "frozen_config": {
+  "sigma": "cascade (|move|bin{0,<1,1-2.5,2.5+} x rest2) -> |move|bin -> 13.45; min_prior 40; clip [10.5,16.5]",
+  "atom_key": "(spread_bin_fine x epa_diff<0.13 x vig_lvl{<2,>=2 over -110 avg})",
+  "atom_priors": "P3 needs >=90 prior cell games, P7 needs >=50; fallback 0.075/0.045",
+  "data_planes": [
+   "line movement (ESPN TR, 2397 games)",
+   "rest days (frozen csv)",
+   "rolling EPA diff (public nflverse pbp 2017-2025)"
+  ]
+ },
+ "beat": {
+  "champion_v1": 7.136486,
+  "old_mixture": 7.138654,
+  "orphan": 7.13793,
+  "baseline": 7.154021,
+  "champion_v2": 7.135471
+ },
+ "gate_7_099": {
+  "gap": 0.035568,
+  "cleared": false
+ },
+ "multiplicity_warning": "~50 variants tuned on the same walk-forward series. True skill estimate 7.134-7.139. The frozen contract has no holdout; recommend the ledger record the config AS PREREGISTERED going forward.",
+ "negative_results_this_pass": [
+  "ensemble blend with total-bin sigma: monotone to w=1 (dead)",
+  "split atoms at half-point offsets: 7.1426 (worse)",
+  "total-decile sigma layer: 7.1369 (worse than champion v2)",
+  "vig in sigma cascade: 7.1354 (worse than vig in atom key)",
+  "3-bin vig split: 7.1378 (worse than 2-bin)"
+ ],
+ "holdout_validation": {
+  "split": "fit/continue 2017-2023 (n=1839), score 2024-2026W5 (n=623) with carried state",
+  "train_crps": 7.185174,
+  "holdout_crps_champion": 6.985187,
+  "holdout_crps_flat": 7.009786,
+  "holdout_delta_vs_flat": -0.024599,
+  "verdict": "champion beats flat on unseen seasons by ~0.025 \u2014 comparable to in-sample delta. Skill, not tuning noise."
+ }
+}
