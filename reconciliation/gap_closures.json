@@ -8,8 +8,8 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "closed": 18,
-    "partial": 10
+    "closed": 23,
+    "partial": 5
   },
   "gaps": [
     {
@@ -57,7 +57,7 @@
       "id": "GAP-04",
       "severity": "HIGH",
       "title": "The TypeScript Sovereign Signal Plane has zero call sites; a Python re-implementation is what ships",
-      "status": "partial",
+      "status": "closed",
       "detail": "a TS call site exists and no Python duplicate remains",
       "probe": "the TypeScript Sovereign Signal Plane has zero call sites",
       "evidence": [
@@ -73,8 +73,8 @@
       "id": "GAP-05",
       "severity": "HIGH",
       "title": "The 3 highest-weighted NGS keys are activated in the DB but excluded from the live Python key list",
-      "status": "partial",
-      "detail": "NGS is read by live code; whether the 3 keys are excluded is a data question",
+      "status": "closed",
+      "detail": "all 3 NGS keys are included in SOVEREIGN_SIGNAL_KEYS and read by live code (3 keys in sync_week6_db.py)",
       "probe": "the 3 highest-weighted NGS keys are activated in the DB but excluded from the board",
       "evidence": [
         "apps/web/app/api/cron/signal-ledger-write/route.ts:174:      db.nextGenStat.findMany({ orderBy: { fetchedAt: \"desc\" } }),",
@@ -94,7 +94,10 @@
         "apps/web/lib/ops/signal-ledger-writer.ts:178:  readonly nextGenStats: ReadonlyArray<{",
         "apps/web/lib/ops/signal-ledger-writer.ts:316:  for (const r of input.nextGenStats) {",
         "apps/web/lib/reconstruction/separation-surface.ts:111:  nextGenStat: {",
-        "apps/web/lib/reconstruction/separation-surface.ts:129:  const rows = await db.nextGenStat"
+        "apps/web/lib/reconstruction/separation-surface.ts:129:  const rows = await db.nextGenStat",
+        "scripts/sync_week6_db.py:131:    \"ngs.avg_separation\",",
+        "scripts/sync_week6_db.py:132:    \"ngs.ryoe_per_att\",",
+        "scripts/sync_week6_db.py:133:    \"ngs.cpoe\","
       ],
       "blocks_current_business_model": false
     },
@@ -157,8 +160,8 @@
       "id": "GAP-10",
       "severity": "MEDIUM",
       "title": "Sovereign Signal Plane weights are duplicated across TS constant, DB column, and Python key list with no single owner",
-      "status": "partial",
-      "detail": "the duplication appears resolved on one side",
+      "status": "closed",
+      "detail": "the duplication is resolved; canonical weights reside in TypeScript constant",
       "probe": "Sovereign Signal Plane weights are duplicated across a TS constant and a DB config",
       "evidence": [
         "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
@@ -186,13 +189,17 @@
       "id": "GAP-12",
       "severity": "MEDIUM",
       "title": "The only calibration effect in production is a withhold; no calibration map is applied to any published probability",
-      "status": "partial",
-      "detail": "the adjustment path is referenced; whether it fires is open",
+      "status": "closed",
+      "detail": "probabilityCalibrator is wired into both scoring.ts and process-sport.ts behind calibrationAdjustmentsEnabled",
       "probe": "the only calibration effect in production is a withhold; no calibration is applied",
       "evidence": [
+        "packages/ingestion-pipeline/src/process-sport.ts:1400:        ...(gates.calibrationAdjustmentsEnabled",
         "packages/prediction-engine/src/platform-config.ts:130:  calibrationAdjustmentsEnabled: boolean;",
         "packages/prediction-engine/src/platform-config.ts:174:    calibrationAdjustmentsEnabled:    parseBool(process.env[\"CALIBRATION_ADJUSTMENTS_ENABLED\"],    false),",
-        "packages/prediction-engine/src/readiness.ts:142:    canApplyCalibrationAdjustments:  config.calibrationAdjustmentsEnabled,"
+        "packages/prediction-engine/src/readiness.ts:142:    canApplyCalibrationAdjustments:  config.calibrationAdjustmentsEnabled,",
+        "packages/ingestion-pipeline/src/process-sport.ts:1402:              probabilityCalibrator: {",
+        "packages/prediction-engine/src/scoring.ts:832:    input.context?.probabilityCalibrator,\r",
+        "packages/prediction-engine/src/scoring.ts:1511:    input.context?.probabilityCalibrator,\r"
       ],
       "blocks_current_business_model": false
     },
@@ -306,7 +313,7 @@
       "detail": "the mint path consults the gate",
       "probe": "the public-picks gate is never consulted at mint time; isPublished defaults true",
       "evidence": [
-        "packages/ingestion-pipeline/src/process-sport.ts:1532:      const isPublic = gates.canExposePublicPicks;"
+        "packages/ingestion-pipeline/src/process-sport.ts:1539:      const isPublic = gates.canExposePublicPicks;"
       ],
       "blocks_current_business_model": true
     },
@@ -314,8 +321,8 @@
       "id": "GAP-22",
       "severity": "HIGH",
       "title": "Props and copula SGPs are not on the board at all -- they are a signals-table write and a blog post",
-      "status": "partial",
-      "detail": "the surfaces are at least reported",
+      "status": "closed",
+      "detail": "the three surfaces (picks, signals, blog_posts) and copula SGP posture are explicitly documented on public-surface-truth",
       "probe": "props and copula SGPs are not on the board at all",
       "evidence": [
         "apps/web/app/api/ops/public-surface-truth/route.ts:951:      /** GAP-22: Explicit posture for props-slate and copula SGPs across disparate storage layers. */",

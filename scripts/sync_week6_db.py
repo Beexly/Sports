@@ -128,6 +128,9 @@ SOVEREIGN_SIGNAL_KEYS = (
     "cognitive.coach_speak_delta",
     "cognitive.scheme_shift",
     "cognitive.tendency_break",
+    "ngs.avg_separation",
+    "ngs.ryoe_per_att",
+    "ngs.cpoe",
 )
 
 TOTAL_UNDER_ALIGNED_KEYS = {
