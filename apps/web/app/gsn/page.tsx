@@ -35,11 +35,15 @@ export default async function GSNPage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
-                {transmission.illustrative ? null : <span className="live-dot" />}
+                {transmission.source === "board" && !transmission.illustrative ? <span className="live-dot" /> : null}
                 Galaxy Sports Network
                 {transmission.illustrative ? (
                   <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
                     · methodology structure
+                  </span>
+                ) : transmission.source === "unavailable" ? (
+                  <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                    · unavailable
                   </span>
                 ) : (
                   <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
@@ -74,7 +78,7 @@ export default async function GSNPage() {
             <Reveal>
               <GSNTransmission transmission={transmission} />
               <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
-                Source · {transmission.source === "board" ? "board snapshot" : "methodology structure"}
+                Source · {transmission.source === "board" ? "board snapshot" : transmission.source === "unavailable" ? "unavailable" : "methodology structure"}
                 {transmission.illustrative ? " · no fabricated track-record numbers" : ""}
               </p>
             </Reveal>
@@ -90,7 +94,8 @@ export default async function GSNPage() {
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ion-1">
                 This transmission is built from the current board state when published reads exist;
-                otherwise it ships the full methodology structure so the product never goes empty.
+                when the read fails or finds nothing, it says so plainly instead of shipping
+                structure it did not produce.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link href="/observatory" className="btn btn-primary">

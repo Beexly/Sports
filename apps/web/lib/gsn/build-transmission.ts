@@ -3,19 +3,35 @@
  * Always returns a complete Transmission — never a teaser.
  *
  * Board-sourced: uses publishedToday / gatedTodayRows / scoringNow labels only.
- * Methodology: full structure when board is empty/suppressed/unreachable.
+ * C-351: empty, demo-suppressed, data-error, and load-failed all return an
+ * explicit unavailable Transmission (empty counts, no methodology or sample
+ * content) — a failed read says it failed.
  * Never invents edge %, ROI, or win-rate claims.
  */
 
 import { loadBoardState, type BoardStatePayload, type BoardStateRow } from "@/lib/board/state";
 import type { Transmission, TransmissionSegment } from "./transmission";
-import { SAMPLE_TRANSMISSION } from "./transmission";
 
 function codeFromDate(d = new Date()): string {
   const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
   const dd = String(d.getUTCDate()).padStart(2, "0");
   const yy = String(d.getUTCFullYear()).slice(-2);
   return `${mm} · ${dd} · ${yy}`;
+}
+
+/**
+ * C-351 — the explicit unavailable Transmission. Zero invented counts by
+ * construction: empty summary, empty segments, illustrative false.
+ */
+export function unavailableTransmission(now = new Date(), reason: "empty-board" | "suppressed-demo" | "data-error" | "load-failed"): Transmission {
+  return {
+    illustrative: false,
+    source: "unavailable",
+    unavailableReason: reason,
+    code: codeFromDate(now),
+    summary: [],
+    segments: [],
+  };
 }
 
 function rowLabel(row: BoardStateRow): string {
@@ -35,13 +51,14 @@ export async function buildDailyTransmission(
     const scoringN = scoringNow.length;
     const total = pubN + passN + scoringN;
 
-    if (total === 0 || board.meta.suppressedDemoData || board.meta.dataError) {
-      return {
-        ...SAMPLE_TRANSMISSION,
-        code: codeFromDate(now),
-        source: "methodology",
-        illustrative: true,
-      };
+    if (board.meta.suppressedDemoData) {
+      return unavailableTransmission(now, "suppressed-demo");
+    }
+    if (board.meta.dataError) {
+      return unavailableTransmission(now, "data-error");
+    }
+    if (total === 0) {
+      return unavailableTransmission(now, "empty-board");
     }
 
     const segments: TransmissionSegment[] = [
@@ -122,11 +139,6 @@ export async function buildDailyTransmission(
       segments,
     };
   } catch {
-    return {
-      ...SAMPLE_TRANSMISSION,
-      code: codeFromDate(now),
-      source: "methodology",
-      illustrative: true,
-    };
+    return unavailableTransmission(now, "load-failed");
   }
 }

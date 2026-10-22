@@ -9,6 +9,10 @@
  * DOCTRINE: methodology fallback is illustrative structure language only —
  * never fabricated track-record numbers. Board-sourced transmissions use
  * published/gated row labels from loadBoardState (no invented edge claims).
+ * C-351: when the board is empty, demo-suppressed, erroring, or
+ * unreachable, the transmission says UNAVAILABLE (source "unavailable",
+ * empty counts, no methodology or sample content) — a failed read never
+ * dresses up as structure it did not produce.
  */
 
 export type SegmentTone = "ion" | "anomaly" | "deep";
@@ -24,8 +28,10 @@ export type TransmissionSegment = {
 export type Transmission = {
   /** True when content is methodology/demo structure, not live board-derived. */
   readonly illustrative: boolean;
-  /** Provenance for the badge. */
-  readonly source: "board" | "methodology";
+  /** Provenance for the badge. "unavailable" = the read failed or had nothing; never dress it as structure. */
+  readonly source: "board" | "methodology" | "unavailable";
+  /** Set only when source is "unavailable": why the transmission could not be built. */
+  readonly unavailableReason?: "empty-board" | "suppressed-demo" | "data-error" | "load-failed";
   /** Date code, shown after "GSN TRANSMISSION //". */
   readonly code: string;
   readonly summary: ReadonlyArray<{ label: string; count: number; tone: SegmentTone }>;
