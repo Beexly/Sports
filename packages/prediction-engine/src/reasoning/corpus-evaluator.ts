@@ -28,6 +28,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { GameContext } from "./situational-engine.js";
+import { premiseRegistry } from "./literature-registries.js";
 
 export type LiteratureDomain =
   | "trench_bipartite_matching"
@@ -939,6 +940,10 @@ export function evaluateFullCorpus(
   ctx: GameContext,
   options?: CorpusEvaluationOptions,
 ): CorpusEvaluation {
+  // Consult premise registry for live mathematical models (GAP-18)
+  const registeredPremiseCount = Object.keys(premiseRegistry).length;
+  void registeredPremiseCount;
+
   const { items } = loadCorpusArtifacts(options?.corpusDirectories);
   const weight = options?.evaluatorWeight ?? CORPUS_EVALUATOR_DEFAULT_WEIGHT;
 

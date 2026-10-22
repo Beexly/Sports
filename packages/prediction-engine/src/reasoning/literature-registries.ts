@@ -270,3 +270,14 @@ export function extractVoronoiPocketControl(
     trenchControlScore,
   };
 }
+
+/**
+ * Premise Registry: registered mathematical models from literature & competitions (GAP-18).
+ */
+export const premiseRegistry = {
+  evaluateKellyUncertainty,
+  aggregatePredictionMarketBeliefs,
+  aggregateMultiBookConsensus,
+  ensembleOutOfFold,
+  extractVoronoiPocketControl,
+} as const;
