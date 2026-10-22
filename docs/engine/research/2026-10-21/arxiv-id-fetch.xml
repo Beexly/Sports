@@ -1,0 +1,460 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/z9lWjwFvZ6sAc1dcO+EIym5skHU</id>
+  <title>arXiv Query: search_query=&amp;id_list=2609.04014,2004.04147,2608.17248,2505.15918,2602.18266,2402.18563,2402.10835,2608.23885,2610.16680,2608.11690,2604.01913,2610.13909,2609.06219,2605.27689,2311.16083,2608.19819,2608.05685,2609.31191&amp;start=0&amp;max_results=30</title>
+  <updated>2026-10-22T04:30:32Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=30&amp;id_list=2609.04014,2004.04147,2608.17248,2505.15918,2602.18266,2402.18563,2402.10835,2608.23885,2610.16680,2608.11690,2604.01913,2610.13909,2609.06219,2605.27689,2311.16083,2608.19819,2608.05685,2609.31191" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>30</opensearch:itemsPerPage>
+  <opensearch:totalResults>18</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2602.18266v2</id>
+    <title>A Probabilistic Framework for LLM-Based Model Discovery</title>
+    <updated>2026-06-24T13:59:14Z</updated>
+    <link href="https://arxiv.org/abs/2602.18266v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.18266v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automated methods for discovering mechanistic simulator models from observational data offer a promising path toward accelerating scientific progress. Such methods often take the form of agentic-style iterative workflows that repeatedly propose and revise candidate models by imitating human discovery processes. However, existing LLM-based approaches typically implement such workflows via hand-crafted heuristic procedures, without an explicit probabilistic formulation. We recast model discovery as probabilistic inference, i.e., as sampling from an unknown distribution over mechanistic models capable of explaining the data. This perspective provides a unified way to reason about model proposal, refinement, and selection within a single inference framework. As a concrete instantiation of this view, we introduce ModelSMC, an algorithm based on Sequential Monte Carlo sampling. ModelSMC represents candidate models as particles which are iteratively proposed and refined by an LLM, and weighted using likelihood-based criteria. Experiments on real-world scientific systems illustrate that this formulation discovers models with interpretable mechanisms and improves posterior predictive checks. More broadly, this perspective provides a probabilistic lens for understanding and developing LLM-based approaches to model discovery.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-20T14:49:53Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Stefan Wahl</name>
+    </author>
+    <author>
+      <name>Raphaela Schenk</name>
+    </author>
+    <author>
+      <name>Ali Farnoud</name>
+    </author>
+    <author>
+      <name>Jakob H. Macke</name>
+    </author>
+    <author>
+      <name>Daniel Gedon</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.01913v1</id>
+    <title>The Rank and Gradient Lost in Non-stationarity: Sample Weight Decay for Mitigating Plasticity Loss in Reinforcement Learning</title>
+    <updated>2026-04-02T11:29:46Z</updated>
+    <link href="https://arxiv.org/abs/2604.01913v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.01913v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deep reinforcement learning (RL) suffers from plasticity loss severely due to the nature of non-stationarity, which impairs the ability to adapt to new data and learn continually. Unfortunately, our understanding of how plasticity loss arises, dissipates, and can be dissolved remains limited to empirical findings, leaving the theoretical end underexplored.To address this gap, we study the plasticity loss problem from the theoretical perspective of network optimization. By formally characterizing the two culprit factors in online RL process: the non-stationarity of data distributions and the non-stationarity of targets induced by bootstrapping, our theory attributes the loss of plasticity to two mechanisms: the rank collapse of the Neural Tangent Kernel (NTK) Gram matrix and the $Θ(\frac{1}{k})$ decay of gradient magnitude. The first mechanism echoes prior empirical findings from the theoretical perspective and sheds light on the effects of existing methods, e.g., network reset, neuron recycle, and noise injection. Against this backdrop, we focus primarily on the second mechanism and aim to alleviate plasticity loss by addressing the gradient attenuation issue, which is orthogonal to existing methods. We propose Sample Weight Decay -- a lightweight method to restore gradient magnitude, as a general remedy to plasticity loss for deep RL methods based on experience replay. In experiments, we evaluate the efficacy of \methodName upon TD3, \myadded{Double DQN} and SAC with SimBa architecture in MuJoCo, \myadded{ALE} and DeepMind Control Suite tasks. The results demonstrate that \methodName effectively alleviates plasticity loss and consistently improves learning performance across various configurations of deep RL algorithms, UTD, network architectures, and environments, achieving SOTA performance on challenging DMC Humanoid tasks.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-02T11:29:46Z</published>
+    <arxiv:comment>ICLR</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zihao Wu</name>
+    </author>
+    <author>
+      <name>Hongyao Tang</name>
+    </author>
+    <author>
+      <name>Yi Ma</name>
+    </author>
+    <author>
+      <name>Jiashun Liu</name>
+    </author>
+    <author>
+      <name>Yan Zheng</name>
+    </author>
+    <author>
+      <name>Jianye Hao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.05685v2</id>
+    <title>Grounded Well-Condition Anomaly Detection on the Volve Field: Constructed Labels, a Baseline, and a Dual-Head Model</title>
+    <updated>2026-08-12T01:37:53Z</updated>
+    <link href="https://arxiv.org/abs/2608.05685v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.05685v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Most public benchmarks for machine-condition monitoring come from test rigs, where faults are induced on purpose and every event is known. Real production fields rarely offer that. They give you sensor histories with no fault log attached, which is exactly the situation where an anomaly-detection method has to invent its own labels, and where quiet assumptions can slip in unnoticed. We work with the open Volve field data released by Equinor and take two things seriously that such datasets usually skip. First, we build anomaly labels that are not just patterns in the numbers but are checked against what the field's own engineering documents say can physically go wrong, and we release the reasoning behind every label. Second, we test whether those constructed labels are learnable at all, using both an unsupervised baseline and a small dual-head model that marks when an event happens and what kind it is, an idea we carry over from earlier work on defect detection in metal parts. The results are honest. An unsupervised detector that never sees the labels still lands on the same regions our rules flagged, which tells us the labels are not arbitrary. A compact supervised model recovers event presence and event type well across wells it has never seen, and locates events in time only roughly. We report what worked, what did not, and every assumption in between. The dataset, grounded labels, per-label provenance, baseline scores, trained model, and code are released publicly under CC-BY-NC-SA 4.0.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-06T07:21:37Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Gospel Bassey</name>
+    </author>
+    <author>
+      <name>Samuel Bassey</name>
+    </author>
+    <author>
+      <name>Vincent Fakiyesi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2311.16083v1</id>
+    <title>BERT Goes Off-Topic: Investigating the Domain Transfer Challenge using Genre Classification</title>
+    <updated>2023-11-27T18:53:31Z</updated>
+    <link href="https://arxiv.org/abs/2311.16083v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2311.16083v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While performance of many text classification tasks has been recently improved due to Pre-trained Language Models (PLMs), in this paper we show that they still suffer from a performance gap when the underlying distribution of topics changes. For example, a genre classifier trained on \textit{political} topics often fails when tested on documents about \textit{sport} or \textit{medicine}. In this work, we quantify this phenomenon empirically with a large corpus and a large set of topics. Consequently, we verify that domain transfer remains challenging both for classic PLMs, such as BERT, and for modern large models, such as GPT-3. We also suggest and successfully test a possible remedy: after augmenting the training dataset with topically-controlled synthetic texts, the F1 score improves by up to 50\% for some topics, nearing on-topic training results, while others show little to no improvement. While our empirical results focus on genre classification, our methodology is applicable to other classification tasks such as gender, authorship, or sentiment classification. The code and data to replicate the experiments are available at https://github.com/dminus1/genre</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-11-27T18:53:31Z</published>
+    <arxiv:comment>Published at EMNLP'2023</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Dmitri Roussinov</name>
+    </author>
+    <author>
+      <name>Serge Sharoff</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2402.10835v5</id>
+    <title>Time Series Forecasting with LLMs: Understanding and Enhancing Model Capabilities</title>
+    <updated>2024-12-28T06:31:51Z</updated>
+    <link href="https://arxiv.org/abs/2402.10835v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2402.10835v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) have been applied in many fields and have developed rapidly in recent years. As a classic machine learning task, time series forecasting has recently been boosted by LLMs. Recent works treat large language models as \emph{zero-shot} time series reasoners without further fine-tuning, which achieves remarkable performance. However, there are some unexplored research problems when applying LLMs for time series forecasting under the zero-shot setting. For instance, the LLMs' preferences for the input time series are less understood. In this paper, by comparing LLMs with traditional time series forecasting models, we observe many interesting properties of LLMs in the context of time series forecasting. First, our study shows that LLMs perform well in predicting time series with clear patterns and trends, but face challenges with datasets lacking periodicity. This observation can be explained by the ability of LLMs to recognize the underlying period within datasets, which is supported by our experiments. In addition, the input strategy is investigated, and it is found that incorporating external knowledge and adopting natural language paraphrases substantially improve the predictive performance of LLMs for time series. Overall, our study contributes insight into LLMs' advantages and limitations in time series forecasting under different conditions.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-02-16T17:15:28Z</published>
+    <arxiv:comment>Accepted by SIGKDD Explorations Newsletter</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Hua Tang</name>
+    </author>
+    <author>
+      <name>Chong Zhang</name>
+    </author>
+    <author>
+      <name>Mingyu Jin</name>
+    </author>
+    <author>
+      <name>Qinkai Yu</name>
+    </author>
+    <author>
+      <name>Zhenting Wang</name>
+    </author>
+    <author>
+      <name>Xiaobo Jin</name>
+    </author>
+    <author>
+      <name>Yongfeng Zhang</name>
+    </author>
+    <author>
+      <name>Mengnan Du</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.17248v1</id>
+    <title>Information fusion and machine learning for sensitivity analysis using physics knowledge and experimental data</title>
+    <updated>2026-08-18T01:07:59Z</updated>
+    <link href="https://arxiv.org/abs/2608.17248v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.17248v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>When computational models (either physics-based or data-driven) are used for the sensitivity analysis of engineering systems, the sensitivity estimate is affected by the accuracy and uncertainty of the model. This paper considers global sensitivity analysis (GSA) for situations where both a physics-based model and experimental observations are available, and investigates physics-informed machine learning strategies to effectively combine the two sources of information in order to maximize the accuracy of the sensitivity estimate. Two representative machine learning (ML) techniques are considered, namely, deep neural networks (DNN) and Gaussian process (GP) modeling, and two strategies for incorporating physics knowledge within these techniques are investigated, namely: (i) incorporating loss functions in the ML models to enforce physics constraints, and (ii) pre-training and updating the ML model using simulation and experimental data respectively. Four different models are built for each type (DNN and GP), and the uncertainties in these models are included in the Sobol indices computation. The DNN-based models, with many degrees of freedom in terms of model parameters and training options, are found to result in smaller bounds on the sensitivity estimates when compared to the GP-based models. The proposed methods are illustrated for additive manufacturing and lake temperature modeling examples.</summary>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-18T01:07:59Z</published>
+    <arxiv:comment>Reliability Engineering &amp; System Safety</arxiv:comment>
+    <arxiv:primary_category term="cs.CE"/>
+    <arxiv:journal_ref>Reliab. Eng. Syst. Saf. 214, 107712 (2021)</arxiv:journal_ref>
+    <author>
+      <name>Berkcan Kapusuzoglu</name>
+    </author>
+    <author>
+      <name>Sankaran Mahadevan</name>
+    </author>
+    <arxiv:doi>10.1016/j.ress.2021.107712</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.ress.2021.107712" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.15918v3</id>
+    <title>Extracting Probabilistic Knowledge from Large Language Models for Bayesian Network Parameterization</title>
+    <updated>2026-09-15T19:56:08Z</updated>
+    <link href="https://arxiv.org/abs/2505.15918v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.15918v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this work, we evaluate the potential of Large Language Models (LLMs) in building Bayesian Networks (BNs) by approximating domain expert priors. LLMs have demonstrated potential as factual knowledge bases; however, their capability to generate probabilistic knowledge about real-world events remains understudied. We explore utilizing the probabilistic knowledge inherent in LLMs to derive probability estimates for statements regarding events and their relationships within a BN. Using LLMs in this context allows for the parameterization of BNs, enabling probabilistic modeling within specific domains. Our experiments on eighty publicly available Bayesian Networks, from healthcare to finance, demonstrate that querying LLMs about the conditional probabilities of events provides meaningful results when compared to baselines, including random and uniform distributions, as well as approaches based on next-token generation probabilities. We explore how these LLM-derived distributions can serve as expert priors to refine distributions extracted from data, especially when data is scarce. Overall, this work introduces a promising strategy for automatically constructing Bayesian Networks by combining probabilistic knowledge extracted from LLMs with real-world data. Additionally, we establish the first comprehensive baseline for assessing LLM performance in extracting probabilistic knowledge.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-21T18:15:05Z</published>
+    <arxiv:comment>41 pages. Updated to the TMLR camera-ready version, including the final acknowledgments</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Transactions on Machine Learning Research (05/2026)</arxiv:journal_ref>
+    <author>
+      <name>Aliakbar Nafar</name>
+    </author>
+    <author>
+      <name>Kristen Brent Venable</name>
+    </author>
+    <author>
+      <name>Zijun Cui</name>
+    </author>
+    <author>
+      <name>Parisa Kordjamshidi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.13909v1</id>
+    <title>Revisiting Tabular Deep Regression: Objectives and the Limits of Global Early Stopping</title>
+    <updated>2026-10-09T17:49:32Z</updated>
+    <link href="https://arxiv.org/abs/2610.13909v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.13909v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While deep learning models for tabular data have recently received significant research attention, the choice of objective functions for regression tasks remains an understudied degree of freedom. Several lines of research offer alternatives to the standard Mean Squared Error (MSE), but differences in datasets, backbones, and evaluation protocols make their practical benefits difficult to compare. In this work, we address this gap by performing a systematic re-evaluation of regression objectives across a broad collection of established tabular datasets and multiple neural backbones. Our comparison reveals that many proposed objectives provide limited or inconsistent gains over a properly tuned MSE baseline, while quantile loss yields consistent aggregate improvements over MSE across the tested backbones. We then identify a limitation that remains even with this strong objective: regions with different levels of target noise can reach their best predictive performance at different training epochs. Consequently, a single global early-stopping checkpoint can impose a compromise between uncertainty regions, even when the objective can represent heteroskedastic target distributions. Motivated by this limitation, we introduce a heteroskedasticity-aware extension of quantile loss that uses input-dependent label smoothing as a potential remedy and improves over quantile loss on several backbones. Overall, our results provide a modern empirical picture of regression objectives for tabular deep learning and highlight how differences in optimal stopping times across uncertainty regions can limit the effectiveness of global early stopping. The code is available at https://github.com/yandex-research/tabular-regression.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-09T17:49:32Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Danil Rudenko</name>
+    </author>
+    <author>
+      <name>Georgii Bulgakov</name>
+    </author>
+    <author>
+      <name>Nikolay Kartashev</name>
+    </author>
+    <author>
+      <name>Ivan Rubachev</name>
+    </author>
+    <author>
+      <name>Daniil Krasylnikov</name>
+    </author>
+    <author>
+      <name>Artem Babenko</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.04147v2</id>
+    <title>Slicing and dicing soccer: automatic detection of complex events from spatio-temporal data</title>
+    <updated>2020-04-10T07:30:55Z</updated>
+    <link href="https://arxiv.org/abs/2004.04147v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.04147v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The automatic detection of events in sport videos has im-portant applications for data analytics, as well as for broadcasting andmedia companies. This paper presents a comprehensive approach for de-tecting a wide range of complex events in soccer videos starting frompositional data. The event detector is designed as a two-tier system thatdetectsatomicandcomplex events. Atomic events are detected basedon temporal and logical combinations of the detected objects, their rel-ative distances, as well as spatio-temporal features such as velocity andacceleration. Complex events are defined as temporal and logical com-binations of atomic and complex events, and are expressed by meansof a declarative Interval Temporal Logic (ITL). The effectiveness of theproposed approach is demonstrated over 16 different events, includingcomplex situations such as tackles and filtering passes. By formalizingevents based on principled ITL, it is possible to easily perform reason-ing tasks, such as understanding which passes or crosses result in a goalbeing scored. To counterbalance the lack of suitable, annotated publicdatasets, we built on an open source soccer simulation engine to re-lease the synthetic SoccER (Soccer Event Recognition) dataset, whichincludes complete positional data and annotations for more than 1.6 mil-lion atomic events and 9,000 complex events. The dataset and code areavailable at https://gitlab.com/grains2/slicing-and-dicing-soccer</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-08T17:57:50Z</published>
+    <arxiv:comment>accepted at 17th International Conference on Image Analysis and Recognition ICIAR 2020</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Lia Morra</name>
+    </author>
+    <author>
+      <name>Francesco Manigrasso</name>
+    </author>
+    <author>
+      <name>Giuseppe Canto</name>
+    </author>
+    <author>
+      <name>Claudio Gianfrate</name>
+    </author>
+    <author>
+      <name>Enrico Guarino</name>
+    </author>
+    <author>
+      <name>Fabrizio Lamberti</name>
+    </author>
+    <arxiv:doi>10.1007/978-3-030-50347-5_11</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/978-3-030-50347-5_11" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2402.18563v1</id>
+    <title>Approaching Human-Level Forecasting with Language Models</title>
+    <updated>2024-02-28T18:54:18Z</updated>
+    <link href="https://arxiv.org/abs/2402.18563v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2402.18563v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Forecasting future events is important for policy and decision making. In this work, we study whether language models (LMs) can forecast at the level of competitive human forecasters. Towards this goal, we develop a retrieval-augmented LM system designed to automatically search for relevant information, generate forecasts, and aggregate predictions. To facilitate our study, we collect a large dataset of questions from competitive forecasting platforms. Under a test set published after the knowledge cut-offs of our LMs, we evaluate the end-to-end performance of our system against the aggregates of human forecasts. On average, the system nears the crowd aggregate of competitive forecasters, and in some settings surpasses it. Our work suggests that using LMs to forecast the future could provide accurate predictions at scale and help to inform institutional decision making.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-02-28T18:54:18Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Danny Halawi</name>
+    </author>
+    <author>
+      <name>Fred Zhang</name>
+    </author>
+    <author>
+      <name>Chen Yueh-Han</name>
+    </author>
+    <author>
+      <name>Jacob Steinhardt</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11690v1</id>
+    <title>Drift and Dependence: Layer-wise Information-Theoretic Bounds for Replay-Based Continual Learning</title>
+    <updated>2026-08-12T06:01:49Z</updated>
+    <link href="https://arxiv.org/abs/2608.11690v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11690v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Continual learning must absorb new tasks without erasing old ones, and replay---mixing a small buffer of past examples into current training---is among the most effective remedies for catastrophic forgetting. Yet its generalization behavior is shaped by two coupled effects that existing analyses fold into a single hypothesis-level quantity: finite memory replaces each past distribution with an empirical proxy, and repeated reuse couples the buffer, the current data, and the final hypothesis through a shared optimization trajectory. We develop a layer-wise information-theoretic framework that separates these effects at every depth. Our main result decomposes the expected generalization gap into a replay-induced representation drift and an optimization-dependence term, the latter further resolved into stability, plasticity, interaction, and residual-coupling components. Two refinements make the framework operational. A Wasserstein relaxation of the drift term, valid under support mismatch, yields a depth-dependent drift--sensitivity trade-off whose minimizer identifies which interior layer to stabilize. An SGLD instantiation of the optimization term reduces it to a trajectory-level log-determinant budget, exposing a curvature-aware gradient-alignment statistic that serves as an online diagnostic of task-wise forgetting. Controlled and benchmark experiments confirm the predicted memory scaling, the interior funnel, and the alignment signal's link to forgetting.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-12T06:01:49Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Tieliang Gong</name>
+    </author>
+    <author>
+      <name>Zhongbo Zhang</name>
+    </author>
+    <author>
+      <name>Wen Wen</name>
+    </author>
+    <author>
+      <name>Yong-Jin Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.19819v1</id>
+    <title>Large reasoning models for abnormal situation management in safety-critical industrial processes</title>
+    <updated>2026-08-20T09:13:37Z</updated>
+    <link href="https://arxiv.org/abs/2608.19819v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.19819v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automation operates safety-critical processes inside their design envelope and leaves abnormal situations to human operators. Mismanagement of these situations is a leading contributor to process-safety incidents and a hindrance to achieving autonomy. Here we show that a general-purpose large reasoning model, with no task-specific training and only the information available to an operator, manages abnormal situations at run time through a bounded, programmatically verified action interface. Across 39 abnormal situations and operating-point changes on a plant-wide industrial benchmark process, the reasoning model maintained the plant within all hard constraints in all 39, while basic regulatory control failed in 15. It matched the plant's expert-engineered advanced control and diagnosed the root-cause fault in 15 of 15 safety-critical situations. Three independently developed models spanning a thirty-fold cost range exceeded the baseline. In a fully auditable evaluation, these results demonstrate run-time abnormal situation management without a human in the loop.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-20T09:13:37Z</published>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Khalid Alhazmi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.04014v1</id>
+    <title>InSituMeasure: Probing Situated Measurement Grounding in Industrial Scenes with Multimodal Large Language Models</title>
+    <updated>2026-09-03T15:54:21Z</updated>
+    <link href="https://arxiv.org/abs/2609.04014v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.04014v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>For trained operators, gauge reading requires little specialized knowledge, low cognitive effort, and high repeatability. Yet Multimodal Large Language Models (MLLMs) remain unreliable in continuous-valued measurement despite strong results on general multimodal benchmarks. Existing benchmarks expose this weakness but isolate measurement from realistic, knowledge-grounded settings, with limited situated context, specialized instruments, real-world noise, and matched diagnostic annotations, reducing realism and constraining root-cause analysis. We introduce InSituMeasure to evaluate situated measurement grounding. It contains 2,922 real industrial monitoring scenes across eight functional categories of professional engineering instruments, with dense gauge-attribute annotations and noise tags for failure diagnosis. We define metrics for numerical accuracy under predefined tolerances and unit consistency, rejection of fake or unanswerable tasks, and alignment between model failures and annotated error factors. Across 24 state-of-the-art MLLMs, the best model reaches only 25.7\% joint value-unit accuracy and 51.8\% confidence-diagnosis F1, revealing a substantial gap between general multimodal competence and reliable situated measurement. Further analysis identifies failures from text-induced shortcuts, overconfident responses, and authentic industrial noise, including mixed disturbances, viewpoint deviation, occlusion, and environmental interference.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T15:54:21Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Chao Shen</name>
+    </author>
+    <author>
+      <name>Xinyuan Li</name>
+    </author>
+    <author>
+      <name>Yunfan Zhou</name>
+    </author>
+    <author>
+      <name>Jianguo Yao</name>
+    </author>
+    <author>
+      <name>Haibing Guan</name>
+    </author>
+    <author>
+      <name>Zhihai Wang</name>
+    </author>
+    <author>
+      <name>Xijun Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.27689v2</id>
+    <title>Test-Time Collective Action: Proxy-Based Perturbations for Correcting Algorithmic Harms</title>
+    <updated>2026-08-07T23:16:49Z</updated>
+    <link href="https://arxiv.org/abs/2605.27689v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.27689v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>When machine learning systems under-perform for particular subgroups, affected users typically have no way to correct these disparities without relying on platform-level fixes. Existing approaches to algorithmic fairness rely on provider-centric approaches to correct these failures, leaving users with no external lever when faced with harm. Recent work in Algorithmic Collective Action shows that coordinated users can steer an algorithmic system toward a collective goal, but the existing mechanisms require the provider to retrain on the collective's modified data which users may not have control over. We propose Test-Time Collective Action (TTCA), a framework through which a group of users who share query access to the platform, can correct disparities affecting under-served subgroup without participating in the platform's training loop. We implement this through a proxy-based mechanism where the collective pools query access to a black-box API to extract a proxy of the platform, then optimizes a per-class universal perturbation against the proxy. Each member applies this perturbation to their own inputs at submission time, requiring no cooperation from the platform. We empirically evaluate the mechanism on CIFAR-10, CIFAR-100, and FairFace, showing that modestly-sized collectives close most of the subgroup accuracy gap, transfer across architectures (a small proxy can attack a larger platform), and improve worst-group accuracy, equal-opportunity gap, and disparate impact. A query-budget analysis comparing a per-user black-box attack baseline shows that pooling is cheaper than each subgroup member attacking alone. Test-time collective action thus offers corrective intervention to users when platform-side remediation is unavailable or delayed.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-26T21:09:12Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Meghana Bhange</name>
+    </author>
+    <author>
+      <name>Ulrich Aïvodji</name>
+    </author>
+    <author>
+      <name>Elliot Creager</name>
+    </author>
+    <arxiv:doi>10.1609/aies.v9i1.43152</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1609/aies.v9i1.43152" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06219v1</id>
+    <title>Closing the Long-Short View Gap in Sequential Recommendation without Cached History</title>
+    <updated>2026-09-05T18:33:03Z</updated>
+    <link href="https://arxiv.org/abs/2609.06219v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06219v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sequential recommenders are typically trained on long user histories to capture rich behavioral signals, yet serving with training-length sequences is often impractical due to real-time efficiency constraints. Directly using only recent behaviors leads to a severe performance drop. To bridge this gap, existing approaches compress user histories into persistent per-user states, storing and retrieving them at inference time; while effective, they impose non-trivial infrastructure overhead and offer little remedy in cold-start scenarios. In this paper, we empirically identify two structural flaws rooted in geometric properties and dataset sparsity, and propose a novel two-stage framework to close the long-short-view performance gap. Specifically, in the first stage, we replace the commonly used dot-product with angular similarity scoring and leverage a modified softmax to counter prefix position bias. In the second stage, we fine-tune only bias and LayerNorm components, which are universal to standard sequential backbones, for further improvement. Both stages are guided by carefully designed learning objectives. Extensive experiments on two representative backbones across three public datasets demonstrate the effectiveness of our proposed framework.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-05T18:33:03Z</published>
+    <arxiv:comment>Accepted at CIKM 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Lingfeng Shi</name>
+    </author>
+    <author>
+      <name>Chengkai Huang</name>
+    </author>
+    <author>
+      <name>Lina Yao</name>
+    </author>
+    <author>
+      <name>James Caverlee</name>
+    </author>
+    <arxiv:doi>10.1145/3799682.3841065</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3799682.3841065" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.23885v1</id>
+    <title>A tale of perfect fit and phantom optima: how data-driven models can fail in real-time optimization</title>
+    <updated>2026-08-24T22:51:30Z</updated>
+    <link href="https://arxiv.org/abs/2608.23885v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.23885v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Real-time optimization (RTO) relies on process models to locate economically optimal operating conditions. Because developing first-principles models requires significant process knowledge, data-driven alternatives are increasingly attractive. Modern machine-learning models can fit historical plant data accurately and often pass standard validation tests. Whether such models can be trusted for economic optimization, however, remains unclear. We investigate this question using a vinyl acetate monomer benchmark process with a unique, well-conditioned economic optimum. We train a structured hybrid model that combines known mass balances and thermodynamics with a neural-network closure for unknown kinetics, and a fully data-driven neural ordinary differential equation (ODE) model. Both models reproduce plant measurements accurately and exhibit little variation in predictions across random initializations. Yet their economic optima differ substantially from that of the plant. Where the plant returns a single optimum on multistart search, the trained models return many phantom optima. We further show that the training optimizer alone can be yet another source of error. Even with noise-free data and initialization at weights that recover the plant optimum, stochastic gradient training can drift to weights that yield substantially worse RTO solutions. The identified model is thus an artifact of the training optimizer as well as the data. These results demonstrate that a good predictive fit of all available measurements does not guarantee reliable economic performance. A data-driven model for RTO should at least be required to recover the optimum on a decision-oriented benchmark like the one developed here before being considered for plant testing and application.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-24T22:51:30Z</published>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Prithvi Dake</name>
+    </author>
+    <author>
+      <name>Rahul Bindlish</name>
+    </author>
+    <author>
+      <name>James B. Rawlings</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.31191v1</id>
+    <title>Rethinking Data Quality for AI-Driven Systems: Evidence from Practitioner Interviews</title>
+    <updated>2026-09-25T12:22:26Z</updated>
+    <link href="https://arxiv.org/abs/2609.31191v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.31191v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Data quality research has usually treated data as an input that is stored, processed, and validated. In AI-driven software-intensive systems, data also shapes model behavior, evaluation, and lawful use. Empirical evidence remains limited on how practitioners define, assess, and manage quality under these conditions. We interviewed 16 practitioners from nine organizations and analyzed the transcripts using reflexive thematic analysis and developed six themes from participants' accounts. In AI systems, traceability shifted from modular debugging to attributing model behavior, while using models as quality assessors introduced circularity. Agent context and memory became data objects, and synthetic and pseudo-labeled data made authenticity a quality concern. In foundation-model development, lawfulness became a gate for training data, while representativeness was judged through coverage of situations in which the system must behave safely. Prior ML research examines many of these problems separately. Our study provides a practitioner-grounded account of how they are encountered together as an engineering and organizational concern. We also interpret five recurring conditions as helping explain how the themes relate to reduced trust in data and AI outcomes. We synthesize these findings through lifecycle assurance: a conceptual framing focused on producing evidence that data can support a specific AI claim when its influence may be embedded in model behavior, model-based judgments, or agent actions.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-25T12:22:26Z</published>
+    <arxiv:comment>This is a preprint version and the final version will appear in the proceedings of PROFES 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Hariharan Gopinath</name>
+    </author>
+    <author>
+      <name>Jan Bosch</name>
+    </author>
+    <author>
+      <name>Helena Holmström Olsson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.16680v1</id>
+    <title>Spectral Costs of Multinomial and Residual Resampling in High-Dimensional Particle Ensembles: A Free-Probability Analysis</title>
+    <updated>2026-10-12T12:22:07Z</updated>
+    <link href="https://arxiv.org/abs/2610.16680v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.16680v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Resampling is the standard remedy against weight degeneracy in particle filters, yet its effect on the spectrum of the particle second-moment matrix is poorly understood. We study a single resampling step for a d-dimensional ensemble of N particles with d/N -&gt; c. For any unbiased scheme, the resampled empirical second-moment matrix dominates its pre-resampling counterpart in conditional convex order, while the conditional mean is preserved; the excess second spectral moment equals the Frobenius energy of the resampling perturbation. For multinomial resampling, the empirical count law converges to the mixed-Poisson law determined by the limiting weight law. For residual resampling, the count law is determined by the joint limit of floor-fraction pairs: we classify all residual limits of weight sequences converging to delta_1 in law as a one-parameter family between the deterministic identity and the full multinomial count law. Each count law feeds a common covariance-side spectral map, yielding exact consequences: a closed-form zero-eigenvalue mass, a rank-and-spectral-gap transition with a universal lower edge benchmark, computable regular edges, unbounded right support, and scheme-specific second-moment costs. The effective sample size determines one bulk statistic but cannot determine the limiting spectrum. Pre-registered numerical experiments confirm the theory at every level.</summary>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-12T12:22:07Z</published>
+    <arxiv:comment>25 pages, 5 figures. This is a preprint of an article submitted to IEEE TPS, and a version has been posted on engrXiv</arxiv:comment>
+    <arxiv:primary_category term="math.ST"/>
+    <author>
+      <name>Deming Song</name>
+    </author>
+    <author>
+      <name>Chi Kin Lam</name>
+    </author>
+  </entry>
+</feed>
