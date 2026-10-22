@@ -5336,6 +5336,11 @@ export {
 export { kineticTranslationDeficit } from "./tracking/kinetic-translation-deficit.js";
 
 export {
+  knownAnswerSeries,
+  recoverPlantedSlope,
+} from "./evaluation/known-answer-series.js";
+
+export {
   POLYMARKET_PUBLISH_HOLD,
   VENDORED_POLYMARKET_SDKS,
   polymarketPublishAllowed,
