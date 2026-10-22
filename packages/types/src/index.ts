@@ -624,33 +624,34 @@ export interface GameContextInput {
    *
    * THE GAP THIS CLOSES. The corpus evaluator has been in the repo since
    * 2026-10-17 and its output reaches `process-sport.ts:1454` as
-   * `factorBreakdown.situationalReading.corpusSituationalShift`. It never
-   * reached a probability: `ranking-prob.ts` declares `corpusAdjustment` and
-   * `corpusWeight` (defaulting corpusWeight to 0.0, "unpromoted") and NO
-   * production caller ever passed either. The Reasoning Engine computed a
-   * belief and threw it away.
+   * `factorBreakdown.situationalReading.corpusSituationalShift`.
    *
-   * This field carries the shift to the ranking path so the seam can be
-   * closed. The WEIGHT stays 0 until the promotion gate is actually run.
+   * Under the WIRE-FIRST SEQUENCING and THE STACK doctrines, Layer 2 situational
+   * reasoning shifts the ranking probability (`rankingP`) directly over the
+   * market baseline.
    *
    * LAWS:
    * - ABSENT = UNCHANGED. No adjustment means byte-identical output.
-   * - The weight is a SEPARATE field and defaults to 0. A shift with no
-   *   weight does nothing, which is the current honest state.
-   * - The shift is a RANKING adjustment, not a probability claim. It cannot
+   * - The shift is a RANKING adjustment, not a market probability claim. It cannot
    *   move `trueProb`, `rawEdge`, or `shrunkEdge`.
    */
   corpusAdjustment?: number | null;
   /**
    * Weight applied to `corpusAdjustment` in the ranking path.
    *
-   * DEFAULT 0.0 — UNPROMOTED. The corpus evaluator's own promotion gate
-   * (corpus-evaluator.ts:26-29) requires "N >= 500 settled games and delta
-   * Brier >= 0.002" on a pre-registered holdout. Until that pre-registration
-   * has actually been run and passed, this weight stays 0 and the corpus
-   * changes nothing.
+   * Unshackled under the wire-first doctrine: defaults to 1.0 when a verified
+   * `corpusSituationalShift` is active, or scaled by the evaluator weight.
    */
   corpusWeight?: number | null;
+  // Situational split features (Factor A6, A23, A27, and empirical coaching biases)
+  altitudeFt?: number | null;
+  venueAltitudeFeet?: number | null;
+  refereeCrewFlagsPerGame?: number | null;
+  refereeName?: string | null;
+  coachAggressivenessScore?: number | null;
+  primaryPersonnelGrouping?: "ELEVEN_11" | "TWELVE_12" | "TWENTY_ONE_21" | "JUMBO_HEAVY" | null;
+  offensiveLineRunBlockGrade?: number | null;
+  opponentDefensiveFrontSevenGrade?: number | null;
   // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
   // "strict": only books whose over/under prices DISCRIMINATE
   // (overPrice !== underPrice) count as consensus votes; equal-juice books

@@ -61,8 +61,8 @@
       "detail": "a TS call site exists and no Python duplicate remains",
       "probe": "the TypeScript Sovereign Signal Plane has zero call sites",
       "evidence": [
-        "packages/prediction-engine/src/game-context.ts:1009:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
-        "packages/prediction-engine/src/game-context.ts:1085:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
+        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
+        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
         "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
@@ -237,8 +237,8 @@
       "detail": "the duplication appears resolved on one side",
       "probe": "Sovereign Signal Plane weights are duplicated across a TS constant and a DB config",
       "evidence": [
-        "packages/prediction-engine/src/game-context.ts:1009:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
-        "packages/prediction-engine/src/game-context.ts:1085:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
+        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
+        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
         "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
         "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
@@ -250,7 +250,7 @@
       "severity": "MEDIUM",
       "title": "395 of 1014 prediction-engine modules are reachable only through the barrel or not at all",
       "status": "partial",
-      "detail": "CI reachability census active; 454 live modules monitored, 560 research inventory tracked in scripts/ops/census-engine-reachability.mjs",
+      "detail": "CI reachability census active; 498 live modules monitored, 567 research inventory tracked in scripts/ops/census-engine-reachability.mjs",
       "probe": "395 of 1014 prediction-engine modules are reachable only through the barrel or not at all",
       "evidence": [
         "scripts/ops/census-engine-reachability.mjs",
@@ -379,7 +379,7 @@
       "detail": "the mint path consults the gate",
       "probe": "the public-picks gate is never consulted at mint time; isPublished defaults true",
       "evidence": [
-        "packages/ingestion-pipeline/src/process-sport.ts:1533:      const isPublic = gates.canExposePublicPicks;"
+        "packages/ingestion-pipeline/src/process-sport.ts:1532:      const isPublic = gates.canExposePublicPicks;"
       ],
       "blocks_current_business_model": true
     },

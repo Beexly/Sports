@@ -200,5 +200,47 @@ describe("computeGameContext — orchestrator", () => {
     expect(scores.dispersionScore).toBe(-5);
     expect(scores.factors.some((f) => f.name === "Multi-Book Dispersion Penalty")).toBe(true);
   });
+
+  it("applies high-altitude environmental fatigue decay for extreme elevation venues (Factor A6)", () => {
+    const denverInput: GameContextInput = {
+      altitudeFt: 5280,
+    };
+    const home = computeGameContext(denverInput, "SPREAD", "HOME");
+    expect(home.altitudeScore).toBe(2);
+    expect(home.factors.some((f) => f.name === "High-Altitude Venue Fatigue")).toBe(true);
+
+    const away = computeGameContext(denverInput, "SPREAD", "AWAY");
+    expect(away.altitudeScore).toBe(-2);
+  });
+
+  it("evaluates officiating crew penalty elasticity on totals (Factor A27)", () => {
+    const heavyFlagsInput: GameContextInput = {
+      refereeCrewFlagsPerGame: 14.5,
+      refereeName: "Clete Blakeman",
+    };
+    const under = computeGameContext(heavyFlagsInput, "TOTAL", "UNDER");
+    expect(under.refereeCrewScore).toBe(2);
+    expect(under.factors.some((f) => f.name === "Officiating Crew Tendency")).toBe(true);
+  });
+
+  it("evaluates red zone personnel grouping leverage (12-personnel jumbo run leverage)", () => {
+    const personnelInput: GameContextInput = {
+      primaryPersonnelGrouping: "TWELVE_12",
+      offensiveLineRunBlockGrade: 85,
+      opponentDefensiveFrontSevenGrade: 60,
+    };
+    const scores = computeGameContext(personnelInput, "SPREAD", "HOME");
+    expect(scores.personnelScore).toBeGreaterThanOrEqual(1);
+    expect(scores.factors.some((f) => f.name === "Personnel Grouping Leverage")).toBe(true);
+  });
+
+  it("evaluates coaching 4th-down aggressiveness situational edge", () => {
+    const coachInput: GameContextInput = {
+      coachAggressivenessScore: 0.85,
+    };
+    const scores = computeGameContext(coachInput, "SPREAD", "HOME");
+    expect(scores.coachingScore).toBe(1);
+    expect(scores.factors.some((f) => f.name === "Coaching Situational Tendency")).toBe(true);
+  });
 });
 

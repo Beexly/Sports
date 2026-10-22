@@ -916,6 +916,12 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (ngsTrackingScore > 1) contextClauses.push("favorable NGS tracking efficiency");
   else if (ngsTrackingScore < -1) contextClauses.push("NGS tracking deficit");
   if (dispersionScore < -2) contextClauses.push("market dispersion uncertainty");
+  if ((ctx?.altitudeScore ?? 0) > 0) contextClauses.push("high-altitude environmental advantage");
+  else if ((ctx?.altitudeScore ?? 0) < 0) contextClauses.push("high-altitude fatigue exposure");
+  if ((ctx?.refereeCrewScore ?? 0) > 0) contextClauses.push("favorable officiating crew tendency");
+  else if ((ctx?.refereeCrewScore ?? 0) < 0) contextClauses.push("adverse officiating crew tendency");
+  if ((ctx?.personnelScore ?? 0) > 0) contextClauses.push("heavy red-zone personnel grouping leverage");
+  if ((ctx?.coachingScore ?? 0) > 0) contextClauses.push("aggressive coaching situational edge");
 
   const contextNote = contextClauses.length > 0
     ? ` Context: ${contextClauses.join(", ")}.`
@@ -1589,6 +1595,12 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   if (ngsTrackingScore > 1) contextClauses.push("favorable NGS tracking efficiency");
   else if (ngsTrackingScore < -1) contextClauses.push("NGS tracking deficit");
   if (dispersionScore < -2) contextClauses.push("market dispersion uncertainty");
+  if ((ctx?.altitudeScore ?? 0) > 0) contextClauses.push("high-altitude environmental advantage");
+  else if ((ctx?.altitudeScore ?? 0) < 0) contextClauses.push("high-altitude fatigue exposure");
+  if ((ctx?.refereeCrewScore ?? 0) > 0) contextClauses.push("favorable officiating crew tendency");
+  else if ((ctx?.refereeCrewScore ?? 0) < 0) contextClauses.push("adverse officiating crew tendency");
+  if ((ctx?.personnelScore ?? 0) > 0) contextClauses.push("heavy red-zone personnel grouping leverage");
+  if ((ctx?.coachingScore ?? 0) > 0) contextClauses.push("aggressive coaching situational edge");
   if (rank.priced) contextClauses.push("independent model edge priced into ranking");
   const contextNote = contextClauses.length > 0
     ? ` Context: ${contextClauses.join(", ")}.`

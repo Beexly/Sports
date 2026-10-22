@@ -1378,19 +1378,18 @@ export async function processSport(
         olContinuityDelta: dynamicCtx?.gameContext.olContinuityDelta ?? null,
         dlContinuityDelta: dynamicCtx?.gameContext.dlContinuityDelta ?? null,
         dbContinuityDelta: dynamicCtx?.gameContext.dbContinuityDelta ?? null,
+        altitudeFt: dynamicCtx?.gameContext.altitudeFt ?? null,
+        coachAggressivenessScore: dynamicCtx?.gameContext.coachAggressivenessDelta != null
+          ? 0.50 + dynamicCtx.gameContext.coachAggressivenessDelta
+          : null,
         situationalReading: dynamicCtx?.situationalReading ?? null,
         // LIT-2 CORPUS ADJUSTMENT. The Layer-2 corpus evaluator's situational
-        // shift for this game, carried onto the context so the ranking path
-        // can use it.
-        //
-        // The WEIGHT is deliberately absent (and therefore 0). The corpus
-        // evaluator's own promotion gate (corpus-evaluator.ts:26-29) requires
-        // N >= 500 settled games and delta Brier >= 0.002 on a pre-registered
-        // holdout. Until that has actually been run and passed, this shift
-        // changes nothing downstream. Carrying it is not the same as
-        // believing it.
+        // shift for this game, wired directly into ranking probability (The Stack: Base + Reasoning).
         ...(dynamicCtx?.situationalReading?.corpusSituationalShift != null
-          ? { corpusAdjustment: dynamicCtx.situationalReading.corpusSituationalShift }
+          ? {
+              corpusAdjustment: dynamicCtx.situationalReading.corpusSituationalShift,
+              corpusWeight: 1.0,
+            }
           : {}),
         ...(independentFairValues.length > 0
           ? { independentFairValues }
