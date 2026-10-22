@@ -68,3 +68,30 @@ Root: `~/workspace/situational-mining/` (4.5 MB total). Pass 1 (index-level) the
 7. **Nothing here is killed.** Items carry current status, not verdicts. A "parked," "dead," or "refused" status is a fact about today with its reason recorded — the reason is what you reason from.
 
 *End of locator. Compiled from the same 2026-10-21 mining passes as Situational Context v2; sizes verified on disk at compile time.*
+
+
+---
+
+## Inventory & 4-Point Gap Audit (2026-10-22, Stream 13B / RT-01)
+
+**Inventory.** 625 posts were mined from X via Grok `x_search`; 80 were promoted to
+records across 8 themes (Records 1.1–8.10), 10,406 words in this file. The remaining
+545 posts are indexed in the mining workspace but are not yet promoted to rules.
+
+**Gap 1 — Coverage.** 80/625 = 12.8% of mined posts are promoted. The 545 unpromoted
+posts are not evidence for any function until they are read and mapped; they are
+counted here rather than silently treated as covered.
+
+**Gap 2 — Numeric grounding.** X posts rarely publish fitted constants. Where the
+corpus states a number (+0.19, +0.21, -0.04, 2-8 SU, 8.5 points, 15-20%, 48%/94%,
+r=0.08/0.35) the implementation uses it verbatim. Where no number is published the
+function requires the value as an argument; no constant was invented to fill a gap.
+
+**Gap 3 — Verification.** All 8 themes are mapped to 10 live functions in
+`packages/prediction-engine/src/nfl/x-situational-80-rules.ts` and exercised by the
+Record-group test (`ngs-aws-cnn-attention-and-x80-stream13.test.ts`). 80/80 records
+are represented by their theme's function; individual record-to-assertion granularity
+is 8/8 theme groups, not 80 separately named tests.
+
+**Gap 4 — Freshness.** The corpus is a 2026-10-21 snapshot. Source links have not been
+re-fetched since promotion, so link rot and deleted posts are not measured here.

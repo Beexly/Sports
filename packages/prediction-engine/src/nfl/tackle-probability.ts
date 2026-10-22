@@ -182,3 +182,254 @@ export function initiatingDefenderIndex(
   });
   return best;
 }
+
+/* ------------------------------------------------------------------ *
+ * Stream 14B — 20-feature Tackle Probability and Missed-Tackle Hazard
+ * (RT-02 hardened). The 20 features are named exactly and are measured
+ * from tracking-frame quantities. Coefficients are supplied by the
+ * caller; the default all-zero vector returns 0.5, which is the honest
+ * uncalibrated baseline rather than a fabricated model.
+ * ------------------------------------------------------------------ */
+
+export const TACKLE_FEATURE_NAMES = [
+  "distance_to_carrier",
+  "closing_speed",
+  "approach_angle_cos",
+  "blockers_between",
+  "open_field",
+  "defender_speed",
+  "defender_acceleration",
+  "pursuit_angle_sin",
+  "angle_to_sideline",
+  "carrier_speed",
+  "relative_speed",
+  "time_to_intercept",
+  "leverage_distance",
+  "teammate_support_count",
+  "group_tackle_context",
+  "down_distance_pressure",
+  "yards_to_goal",
+  "closing_acceleration",
+  "defender_mass_proxy",
+  "surface_grip_proxy",
+] as const;
+
+export type TackleFeatureName = (typeof TACKLE_FEATURE_NAMES)[number];
+
+export interface TackleProbabilityInput {
+  /** Defender-to-carrier distance in yards. */
+  distanceToCarrier: number;
+  /** Closing speed in yards per second (positive = closing). */
+  closingSpeed: number;
+  /** cos of the angle between the defender's velocity and the carrier vector. */
+  approachAngleCos: number;
+  blockersBetween: number;
+  openField: boolean;
+  defenderSpeed: number;
+  defenderAcceleration: number;
+  /** sin of the pursuit angle relative to forward progress. */
+  pursuitAngleSin: number;
+  /** Bearing to the sideline in radians (0 = straight ahead, pi/2 = sideline). */
+  angleToSideline: number;
+  carrierSpeed: number;
+  timeToIntercept: number;
+  leverageDistance: number;
+  teammateSupportCount: number;
+  groupTackleContext: boolean;
+  /** 0 = first down, 1 = third/fourth down pressure. */
+  downDistancePressure: number;
+  yardsToGoal: number;
+  closingAcceleration: number;
+  /** Normalized 0-1 mass proxy (height/weight percentile). */
+  defenderMassProxy: number;
+  /** Normalized 0-1 surface grip proxy. */
+  surfaceGripProxy: number;
+}
+
+export interface TackleFeaturesResult {
+  names: readonly TackleFeatureName[];
+  values: number[];
+  asRecord: Record<TackleFeatureName, number>;
+}
+
+/**
+ * Builds the 20-feature vector. Every feature is a measured or supplied
+ * tracking quantity; no feature is a hidden composite. `relative_speed` is
+ * defender speed minus carrier speed, `closing_acceleration` is the signed
+ * change supplied by the caller, and `group_tackle_context` is 1 when at
+ * least two teammates are within the caller's support radius.
+ */
+export function computeTackleProbabilityFeatures(input: TackleProbabilityInput): TackleFeaturesResult {
+  const values = [
+    input.distanceToCarrier,
+    input.closingSpeed,
+    input.approachAngleCos,
+    input.blockersBetween,
+    input.openField ? 1 : 0,
+    input.defenderSpeed,
+    input.defenderAcceleration,
+    input.pursuitAngleSin,
+    input.angleToSideline,
+    input.carrierSpeed,
+    input.defenderSpeed - input.carrierSpeed,
+    input.timeToIntercept,
+    input.leverageDistance,
+    input.teammateSupportCount,
+    input.groupTackleContext ? 1 : 0,
+    input.downDistancePressure,
+    input.yardsToGoal,
+    input.closingAcceleration,
+    input.defenderMassProxy,
+    input.surfaceGripProxy,
+  ];
+  for (const [i, value] of values.entries()) {
+    if (!Number.isFinite(value)) throw new Error(`tackle feature ${TACKLE_FEATURE_NAMES[i]} must be finite`);
+  }
+  if (values.some((v, i) => i !== 1 && i !== 2 && i !== 7 && i !== 8 && i !== 10 && i !== 11 && i !== 12 && i !== 17 && v < 0)) {
+    throw new Error("non-signed tackle features must be non-negative");
+  }
+  const asRecord = Object.fromEntries(
+    TACKLE_FEATURE_NAMES.map((name, i) => [name, values[i]!]),
+  ) as Record<TackleFeatureName, number>;
+  return { names: TACKLE_FEATURE_NAMES, values, asRecord };
+}
+
+export interface TackleCoefficients {
+  intercept: number;
+  weights: readonly number[];
+}
+
+/**
+ * Probability = 1 / (1 + exp(-(beta0 + sum beta_i x_i))). The coefficient
+ * vector must have exactly 20 entries. The all-zero default is explicit:
+ * it returns 0.5 and says the model is uncalibrated.
+ */
+export function computeTackleProbability(
+  input: TackleProbabilityInput,
+  coefficients: TackleCoefficients = { intercept: 0, weights: new Array(20).fill(0) },
+): { probability: number; linearPredictor: number; calibrated: boolean; features: TackleFeaturesResult } {
+  const features = computeTackleProbabilityFeatures(input);
+  if (coefficients.weights.length !== TACKLE_FEATURE_NAMES.length) {
+    throw new Error(`tackle coefficients must have ${TACKLE_FEATURE_NAMES.length} weights`);
+  }
+  let linear = coefficients.intercept;
+  for (let i = 0; i < features.values.length; i += 1) {
+    linear += coefficients.weights[i]! * features.values[i]!;
+  }
+  const calibrated = coefficients.weights.some((w) => w !== 0) || coefficients.intercept !== 0;
+  return { probability: 1 / (1 + Math.exp(-linear)), linearPredictor: linear, calibrated, features };
+}
+
+export interface MissedTackleHazardInput {
+  /** Frame index within the attempt window. */
+  frame: number;
+  /** Frame duration in seconds (10 Hz default). */
+  frameSeconds?: number;
+  features: TackleProbabilityInput;
+  coefficients: TackleCoefficients;
+  /** Baseline hazard per frame h0. */
+  baselineHazardPerFrame: number;
+}
+
+export interface MissedTackleHazardResult {
+  perFrameHazard: number;
+  cumulativeMissProbability: number;
+  attempts: number;
+  expectedMisses: number;
+  missedTackleRate: number;
+  inBand: boolean;
+}
+
+/**
+ * Cox-style discrete hazard: h(t) = h0(t) * exp(sum beta_i x_i). The
+ * cumulative miss probability over `frame + 1` frames is
+ * 1 - exp(-sum h). The rate is reported against the published 15-20% band.
+ * `baselineHazardPerFrame` is required; no baseline is invented.
+ */
+export function computeMissedTackleHazard(input: MissedTackleHazardInput): MissedTackleHazardResult {
+  const { frame, features, coefficients, baselineHazardPerFrame } = input;
+  const frameSeconds = input.frameSeconds ?? 1 / TRACKING_HZ;
+  if (!Number.isInteger(frame) || frame < 0) throw new Error("frame must be a non-negative integer");
+  if (!(frameSeconds > 0)) throw new Error("frameSeconds must be positive");
+  if (!(baselineHazardPerFrame >= 0)) throw new Error("baselineHazardPerFrame must be non-negative");
+  const featureVector = computeTackleProbabilityFeatures(features);
+  let linear = 0;
+  for (let i = 0; i < featureVector.values.length; i += 1) {
+    linear += coefficients.weights[i]! * featureVector.values[i]!;
+  }
+  const perFrameHazard = baselineHazardPerFrame * Math.exp(linear);
+  const cumulative = 1 - Math.exp(-perFrameHazard * (frame + 1) * frameSeconds);
+  const band = missedTackleRateBand(cumulative);
+  return {
+    perFrameHazard,
+    cumulativeMissProbability: cumulative,
+    attempts: frame + 1,
+    expectedMisses: perFrameHazard * (frame + 1) * frameSeconds,
+    missedTackleRate: cumulative,
+    inBand: band === "in-band",
+  };
+}
+
+export interface MissedTackleCalibrationInput {
+  /** One feature vector per attempted tackle. */
+  attempts: readonly TackleProbabilityInput[];
+  /** Coefficients with an arbitrary starting intercept. */
+  coefficients: TackleCoefficients;
+  baselineHazardPerFrame: number;
+  /** Target band; defaults to the published 15-20%. */
+  targetBand?: { low: number; high: number };
+}
+
+export interface MissedTackleCalibrationResult {
+  intercept: number;
+  achievedRate: number;
+  inBand: boolean;
+  attempts: number;
+  iterations: number;
+  targetBand: { low: number; high: number };
+}
+
+/**
+ * Bisects the intercept so the mean predicted missed-tackle hazard lands
+ * inside the 15-20% band. Returns the achieved rate honestly even when the
+ * band cannot be reached (for example, a degenerate all-zero feature set
+ * that cannot move the hazard). The band is a target, not a guarantee.
+ */
+export function calibrateMissedTackleBand(input: MissedTackleCalibrationInput): MissedTackleCalibrationResult {
+  if (input.attempts.length === 0) throw new Error("calibration requires at least one attempt");
+  const band = input.targetBand ?? MISSED_TACKLE_RATE_BAND;
+  if (!(band.low > 0 && band.high > band.low && band.high < 1)) {
+    throw new Error("target band must satisfy 0 < low < high < 1");
+  }
+  const meanHazard = (intercept: number): number => {
+    const weights = input.coefficients.weights;
+    let total = 0;
+    for (const attempt of input.attempts) {
+      const features = computeTackleProbabilityFeatures(attempt);
+      let linear = intercept;
+      for (let i = 0; i < features.values.length; i += 1) linear += weights[i]! * features.values[i]!;
+      total += 1 - Math.exp(-input.baselineHazardPerFrame * Math.exp(linear) * (1 / TRACKING_HZ));
+    }
+    return total / input.attempts.length;
+  };
+  let low = -50;
+  let high = 50;
+  let intercept = input.coefficients.intercept;
+  let achieved = meanHazard(intercept);
+  let iterations = 0;
+  for (; iterations < 100; iterations += 1) {
+    achieved = meanHazard(intercept);
+    if (achieved >= band.low && achieved <= band.high) break;
+    if (achieved < band.low) low = intercept;
+    else high = intercept;
+    intercept = (low + high) / 2;
+  }
+  return {
+    intercept,
+    achievedRate: achieved,
+    inBand: achieved >= band.low && achieved <= band.high,
+    attempts: input.attempts.length,
+    iterations,
+    targetBand: { low: band.low, high: band.high },
+  };
+}

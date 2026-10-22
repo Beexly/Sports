@@ -5474,3 +5474,99 @@ export {
   evaluateVolveDualHeadAnomalyGate,
   evaluateLifecycleDataQualityGate,
 } from "./enterprise/universal-world-model-sdk.js";
+
+/* Streams 12–14 (2026-10-22). Explicit named exports so a duplicate barrel
+ * name cannot silently shadow an existing symbol. */
+
+export {
+  computeQbEpaGiniAndVolOe,
+  classifyGunslingerVsGameManager,
+  decomposeQbAgingAndSchemeSupport,
+  evaluateNflDraftPickSurplusValue,
+  evaluateProspectScoutingLinguisticProfile,
+} from "./nfl/osf-qb-volatility-and-prospects.js";
+export {
+  estimateMultilevelTeamEpaAbility,
+  computeRollingAndEwmaEpa,
+  predictGameWinLogisticEwma,
+  evaluateDynamicHomeFieldAdvantage,
+  blendEspnFpiAnd538EloPredictions,
+} from "./nfl/osf-team-ability-hfa-and-ewma.js";
+export {
+  evaluateDefenseAgainstWr1,
+  evaluateDefensiveDriveRestImpact,
+  evaluatePenaltyStabilityAndPredictiveWeight,
+  computeExpectedPassAndProe,
+} from "./nfl/osf-defense-penalties-and-proe.js";
+export {
+  computeReceiverExpectedFantasyPoints,
+  evaluateReceivingByPositionCurve,
+  evaluateBivariateTargetHeatmapKde,
+  evaluateSpatialCompletionSurfaceGam,
+} from "./nfl/osf-receiving-xfp-and-spatial-surfaces.js";
+export {
+  SEVEN_OUTCOMES,
+  computeNflfastrSevenOutcomeEp,
+  computeMonotonicGbdtWinProb,
+  computeExpectedFieldGoalMetric,
+  computeRerunPunterMetric,
+} from "./nfl/osf-special-teams-ep-wp-and-cv.js";
+export {
+  PAIR_CHANNELS,
+  engineerTrackingFramePairTensor,
+  computeFrameEmbeddingsPermInvariant,
+  computeCnnAttentionPlayEmbedding,
+  classifyCoverageEnsemble,
+  discoverCoverageGlobalStructure,
+  attributeCoverageHighlights,
+  runNgsAwsCnnAttentionCoveragePipeline,
+} from "./nfl/coverage-scheme.js";
+export {
+  computeLeverageAdjustedEpa,
+  computeNeutralScriptBaselineAndProe,
+  evaluateRedZoneAndTwoMinuteSplits,
+  evaluateDecisionBranchWp,
+  evaluatePersonnelBoxPassInteraction,
+  evaluateBackupQbReceiverDecoupling,
+  evaluatePlayerSpecificWeatherInteraction,
+  evaluateOffensiveLineAttritionCluster,
+  evaluateMarketMoveInformationCompleteness,
+  validateFeatureAgainstMisleadingStats,
+} from "./nfl/x-situational-80-rules.js";
+export {
+  TACKLE_FEATURE_NAMES,
+  computeTackleProbabilityFeatures,
+  computeTackleProbability,
+  computeMissedTackleHazard,
+  calibrateMissedTackleBand,
+} from "./nfl/tackle-probability.js";
+export {
+  computeClobMicroPrice,
+  fitLeadLagTransferEntropy,
+  simulateExecutionShortfall,
+} from "./markets/polymarket-sdks.js";
+export { attachNflscraprPbpBaselines } from "./ingestion/nflscrapr-contract.js";
+export {
+  filterKnownAt,
+  evaluateRewardBalancePassHeavy,
+  evaluateMisleadingMinimum,
+  evaluateProspectLinguisticBias,
+  evaluateRollingScheduleVolatility,
+  evaluateAgingCurvesByPosition,
+} from "./nfl/universal-handoff-warehouse-priors.js";
+export {
+  SECOND_WAVE_ARXIV_IDS,
+  bayesianReverseTokenLogitUpdate,
+  llmEmbeddingTabularForecaster,
+  evaluateSecondWaveArxivSituationalModels,
+} from "./forecasting/llm-probability-and-hybrid-forecasters.js";
+export {
+  FAMILY_NAMES,
+  PROBABILITY_MOVEMENT_CAP,
+  DEFAULT_FAMILY_VARIANCE,
+  projectOntoMarket,
+  orthogonalizeAndShrink,
+  scrubSensitive,
+  emitMindFeedRecord,
+  runMasterSituationalReasoningOverlay,
+} from "./nfl/master-situational-reasoning-aggregator.js";

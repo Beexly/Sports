@@ -1,0 +1,74 @@
+{
+  "record_type": "osf_runtime_feed",
+  "generated_utc": "2026-10-22T17:46:31.394196+00:00",
+  "source": "nflverse play-by-play (CC-BY 4.0)",
+  "seasons": [
+    2024
+  ],
+  "families": [
+    {
+      "family": "qb_volatility",
+      "residual": 0.024421,
+      "standardized_residual": 0.015376,
+      "precision_weight": 0.999874,
+      "normalized_weight": 0.200328,
+      "movement": 0.00308
+    },
+    {
+      "family": "team_ability",
+      "residual": 0.012442,
+      "standardized_residual": 0.009871,
+      "precision_weight": 0.999968,
+      "normalized_weight": 0.200346,
+      "movement": 0.001978
+    },
+    {
+      "family": "defense_penalties_proe",
+      "residual": null,
+      "standardized_residual": null,
+      "precision_weight": 0.0,
+      "normalized_weight": 0.0,
+      "movement": 0.0
+    },
+    {
+      "family": "receiving_xfp",
+      "residual": 10.94916,
+      "standardized_residual": 1.112226,
+      "precision_weight": 0.992078,
+      "normalized_weight": 0.198766,
+      "movement": 0.221072
+    },
+    {
+      "family": "special_teams_ep_wp",
+      "residual": -0.026945,
+      "standardized_residual": -0.021624,
+      "precision_weight": 0.999528,
+      "normalized_weight": 0.200258,
+      "movement": -0.00433
+    },
+    {
+      "family": "situational",
+      "residual": 0.008148,
+      "standardized_residual": 0.004634,
+      "precision_weight": 0.999747,
+      "normalized_weight": 0.200302,
+      "movement": 0.000928
+    }
+  ],
+  "family_count": 6,
+  "total_precision_weight": 4.991195,
+  "uncapped_probability_movement": 0.222728,
+  "probability_cap": 0.12,
+  "capped_probability_movement": 0.12,
+  "cap_bound": true,
+  "sources": [
+    {
+      "season": 2024,
+      "path": "data\\nflverse\\pbp\\play_by_play_2024.csv",
+      "bytes": 99483794,
+      "sha256": "6ae564c2c49378ec531303292966caee596982278b9fcdad9c9dd0a0dc16bfa7",
+      "downloaded": false,
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv"
+    }
+  ]
+}
