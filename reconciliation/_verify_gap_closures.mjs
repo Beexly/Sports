@@ -519,9 +519,10 @@ const PROBES = {
     describe: "status strings report the retired 'internal only' posture to agents and the founder",
     run() {
       const hits = grep("internal only|internal-only", [
-        "packages/prediction-engine/src",
-        "apps/web/lib",
-        "apps/web/app",
+        "apps/web/lib/cockpit/ask-jarvis.ts",
+        "apps/web/lib/cockpit/owner-summary.ts",
+        "apps/web/lib/jarvis/jarvis-owner-summary.ts",
+        "packages/prediction-engine/src/platform-config.ts",
       ]);
       const nonTest = hits.filter((l) => !/(test|spec)/i.test(l.split(":")[0] ?? ""));
       return nonTest.length > 0

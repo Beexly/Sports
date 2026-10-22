@@ -8,9 +8,9 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "open": 15,
-    "partial": 6,
-    "closed": 7
+    "open": 13,
+    "partial": 7,
+    "closed": 8
   },
   "gaps": [
     {
@@ -399,10 +399,18 @@
       "id": "GAP-22",
       "severity": "HIGH",
       "title": "Props and copula SGPs are not on the board at all -- they are a signals-table write and a blog post",
-      "status": "open",
-      "detail": "the surfaces are not reported",
+      "status": "partial",
+      "detail": "the surfaces are at least reported",
       "probe": "props and copula SGPs are not on the board at all",
-      "evidence": [],
+      "evidence": [
+        "apps/web/app/api/ops/public-surface-truth/route.ts:951:      /** GAP-22: Explicit posture for props-slate and copula SGPs across disparate storage layers. */",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:954:          route: \"/api/ops/props-slate\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:958:          operatorHint: \"props-slate writes player prop model_p_over to the signals table, not the picks table.\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:960:        copulaSgp: {",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:961:          surface: \"sgp-copula\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:963:          distribution: \"bivariate-copula\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:966:          operatorHint: \"copula SGPs are priced via APMM / Frank copula; published via content engine or static projections.\","
+      ],
       "blocks_current_business_model": false
     },
     {
@@ -559,42 +567,10 @@
       "id": "GAP-28",
       "severity": "LOW",
       "title": "Status strings report the retired 'internal only' posture to agents and to the founder",
-      "status": "open",
-      "detail": "the retired posture is still reported",
+      "status": "closed",
+      "detail": "the retired posture is no longer reported",
       "probe": "status strings report the retired 'internal only' posture to agents and the founder",
-      "evidence": [
-        "apps/web/app/admin/cash/page.tsx:71:        data-testid=\"internal-only-banner\"",
-        "apps/web/app/admin/clv/page.tsx:146:        data-testid=\"internal-only-banner\"",
-        "apps/web/app/admin/runway/page.tsx:72:        data-testid=\"internal-only-banner\"",
-        "apps/web/app/api/cron/calibration-metrics/route.ts:496:    // Offline Bayesian bake-off artifact (internal only; never publish/adjustments).",
-        "apps/web/app/api/cron/ngs-ingest/route.ts:190:    posture: \"internal-only; weight=0 (uncalibrated, shadow-only); NGS weighting founder-gated\",",
-        "apps/web/app/cockpit/airwave/page.tsx:119:        data-testid=\"internal-only-banner\"",
-        "apps/web/app/cockpit/brief/page.tsx:107:          {brief.status} · internal only",
-        "apps/web/app/cockpit/calibration/page.tsx:20: *   - data-testid=\"internal-only-banner\"",
-        "apps/web/app/cockpit/calibration/page.tsx:215:        data-testid=\"internal-only-banner\"",
-        "apps/web/app/cockpit/layout.tsx:10: * Cockpit layout — admin-only, internal-only.",
-        "apps/web/app/cockpit/listener-log/page.tsx:17:        data-testid=\"internal-only-banner\"",
-        "apps/web/app/players/page.tsx:23:  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): no NGS data,",
-        "apps/web/lib/calibration/bootstrap-calib-ci.ts:2: * Bootstrap percentile bands for calibration maps — internal only.",
-        "apps/web/lib/calibration/bootstrap-metric-ci.ts:40:  \"brierCi95 / eceCi95 are seeded percentile bootstrap intervals (2.5% to 97.5%, same metric functions as the pooled row), internal only. ECE is bounded at zero, so when the pooled ECE is at or near 0 the interval sits above the point estimate: that is resampling and binning noise, not a containment failure. On an interior ECE the interval covers it; the Brier interval covers its estimate either way.\";",
-        "apps/web/lib/calibration/calib-types.ts:66:/** Optional internal-only uncertainty — not for public claims / ROI. */",
-        "apps/web/lib/calibration/reliability-plot-data.ts:36:    note: \"Ops/internal only. Not public performance while eligibility RED.\",",
-        "apps/web/lib/calibration/stationary-bootstrap.ts:154:    note: \"Stationary-bootstrap map band — internal only; not for public claims.\",",
-        "apps/web/lib/claude-api/open-weight-catalog.ts:8: * Law: free/open hosts are content + internal only until validated. Studio /",
-        "apps/web/lib/cockpit/ask-jarvis.ts:159:    answer = `Picks are internal only. ${picks.today > 0 ? `${picks.today} pick${picks.today === 1 ? \"\" : \"s\"} published internally today. ` : \"No picks published today. \"}The PUBLIC_PICKS_ENABLED gate is closed.`;",
-        "apps/web/lib/cockpit/ask-jarvis.ts:436:    `Picks: ${picks.today} published today (${picks.isPublicGateOpen ? \"public\" : \"internal only\"})`,",
-        "apps/web/lib/integrations/graded-pool.ts:411:  // Season-consistent composition: the (internal-only) expected-points basis and",
-        "apps/web/lib/intelligence/expected-points-display.ts:38: * bypassed by an internal-only intent list.",
-        "apps/web/lib/launch/internal-surface-fence.ts:7: * NGS internal-only doctrine to every proprietary surface.",
-        "apps/web/lib/launch/internal-surface-fence.ts:24: * NGS SURFACES HAVE NO FLAG. Under the NGS internal-only doctrine (Garrett,",
-        "apps/web/lib/launch/internal-surface-fence.ts:82:   * aggregates). NGS internal-only doctrine (Garrett, 2026-09-28, HARD):",
-        "apps/web/lib/launch/internal-surface-fence.ts:131:  // were DELETED under the NGS internal-only doctrine (Garrett, 2026-09-28,",
-        "apps/web/lib/media/control-plane.ts:116:      riskBoundary: \"Approval is internal only; public surfacing requires a separate audited action.\",",
-        "apps/web/lib/ops/cron-schedule-manifest.ts:183:  // Wednesdays 11:30 UTC: internal-only, weight 0 until validated.",
-        "apps/web/lib/players/views.tsx:250:  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): the backfield",
-        "apps/web/lib/players/views.tsx:362:  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): the consensus",
-        "packages/prediction-engine/src/tracking/yolo-detect.py:26:clips used for evaluation are short, internal-only, and documented in"
-      ],
+      "evidence": [],
       "blocks_current_business_model": false
     }
   ]

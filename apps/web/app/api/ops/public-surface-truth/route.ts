@@ -948,6 +948,24 @@ export async function GET(request: Request) {
         designPreviewOnly: productBoards.designPreviewOnly,
         operatorHint: productBoards.operatorHint,
       },
+      /** GAP-22: Explicit posture for props-slate and copula SGPs across disparate storage layers. */
+      boardVerticalSurfaces: {
+        propsSlate: {
+          route: "/api/ops/props-slate",
+          enabled: process.env["PROPS_SLATE_ENABLED"] === "1",
+          storageTarget: "signals",
+          isPublishedPicksTarget: false,
+          operatorHint: "props-slate writes player prop model_p_over to the signals table, not the picks table.",
+        },
+        copulaSgp: {
+          surface: "sgp-copula",
+          engineModule: "packages/prediction-engine/src/parlay/apmm-market-maker.ts",
+          distribution: "bivariate-copula",
+          storageTarget: "blog_posts | static",
+          isPublishedPicksTarget: false,
+          operatorHint: "copula SGPs are priced via APMM / Frank copula; published via content engine or static projections.",
+        },
+      },
       aciPosture: aciPublicPosture(),
       ...(await (async () => {
         const surface = await loadProvenPathSurface();
