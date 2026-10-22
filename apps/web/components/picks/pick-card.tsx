@@ -6,7 +6,8 @@ import type {
   FactorBreakdown,
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
-import { LocalTime } from "@/components/ui/local-time";
+import { formatCentralDateTime } from "@/lib/time/central";
+import { isRealInstant } from "@/lib/time/local-time";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
@@ -113,11 +114,12 @@ export function PickCard({
       {/* Matchup */}
       <div>
         <p className="text-xs text-ion-1">
-          <LocalTime
-            iso={pick.game.commenceTime}
-            format="kickoff"
-            label="Kickoff"
-          />
+          Kickoff:{" "}
+          <time dateTime={pick.game.commenceTime}>
+            {isRealInstant(pick.game.commenceTime)
+              ? formatCentralDateTime(pick.game.commenceTime)
+              : "Unavailable"}
+          </time>
         </p>
         <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">

@@ -73,9 +73,12 @@ afterEach(() => {
 
 describe("the homepage freshness stamp pins an explicit zone", () => {
   it("MethodologySection renders a labelled Central stamp, not a bare UTC wall clock", () => {
-    // The suite runs with the same UTC default the production Node runtime has,
-    // so this render is byte-for-byte the one a visitor's browser receives.
-    expect(Intl.DateTimeFormat().resolvedOptions().timeZone).toBe("UTC");
+    // The stamp pins Central explicitly (formatCentralTime), so the render is
+    // byte-for-byte identical for every visitor whatever zone the Node runtime
+    // runs in. It is deliberately NOT asserted against this process's own
+    // resolvedOptions().timeZone: with the zone explicit, that env value is
+    // irrelevant (this suite previously assumed a UTC host, which broke on
+    // Central-time hosts for no doctrinal reason).
 
     const html = renderToStaticMarkup(
       <MethodologySection

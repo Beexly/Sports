@@ -6,8 +6,8 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { LocalTime } from "@/components/ui/local-time";
 import { isRealInstant } from "@/lib/time/local-time";
+import { formatCentralTime } from "@/lib/time/central";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { boardMarketLabel } from "@/lib/board/market-label";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
@@ -29,23 +29,23 @@ export const metadata: Metadata = {
 // Reads live board state per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
-/**
- * Board timestamps resolve on the VIEWER's clock via <LocalTime>.
+/*
+ * Board timestamps read CENTRAL and say so.
  *
- * This is a server component, so formatting the instant during server render
- * would bake in the SERVER's zone — UTC on Vercel — and print a UTC clock face
- * with no zone label at all. Measured on production 2026-09-13: /api/board/state
- * reported lastRefresh 18:06:07Z and the page rendered "Last refresh 6:06 PM".
- * It was 1:06 PM in Central. Five hours wrong, and nothing on the page said
- * which zone it meant, so a reader could not even correct for it.
- *
- * Only the ISO instant crosses the boundary now; <LocalTime> resolves the
- * wall clock after mount, in the viewer's own zone, and says which zone it
- * used. An unparseable instant renders "Unavailable" rather than a guess.
+ * Founder, 2026-09-12: "all times should be from CST central time." This is a
+ * server component, so formatting with no explicit timeZone bakes in the
+ * SERVER's zone — UTC on Vercel. Measured on production 2026-09-13:
+ * /api/board/state reported lastRefresh 18:06:07Z and the page rendered
+ * "Last refresh 6:06 PM" when it was 1:06 PM Central — five hours wrong, with
+ * no zone label anywhere on the page. An explicit timeZone (America/Chicago,
+ * DST-honoring, via lib/time/central) makes the wall clock agree between the
+ * server render and every viewer, and the CT suffix says which zone it means.
+ * An unparseable instant renders "Unavailable" rather than a guess.
  */
+const CT_SUFFIX = " CT";
 function timeLabel(value: string): ReactNode {
   if (!isRealInstant(value)) return "Unavailable";
-  return <LocalTime iso={value} format="stamp" label="Last refresh" />;
+  return `${formatCentralTime(value)}${CT_SUFFIX}`;
 }
 
 export default async function BoardPage(): Promise<JSX.Element> {

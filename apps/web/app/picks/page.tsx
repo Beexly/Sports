@@ -6,7 +6,8 @@ import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { LocalTime } from "@/components/ui/local-time";
+import { centralDateKey, formatCentralTime } from "@/lib/time/central";
+import { isRealInstant } from "@/lib/time/local-time";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
@@ -171,7 +172,7 @@ async function fetchPicks(
         meta: {
           tier: "FREE",
           total: 0,
-          date: date ?? new Date().toISOString().split("T")[0]!,
+          date: date ?? centralDateKey(),
         },
         bootstrap: {
           // The API error body's `hint` is an operator diagnostic naming closed
@@ -247,7 +248,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   const metaDate =
     picksResult.status === "fulfilled"
       ? picksResult.value.meta.date
-      : (date ?? new Date().toISOString().split("T")[0]!);
+      : (date ?? centralDateKey());
   // Daily-limit transparency straight off the API meta (read-only — the server
   // owns these numbers). totalAvailableToday counts the FULL published slate for
   // this view (free + premium, respecting the active sport filter); the free
@@ -646,9 +647,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
 function SlateBar({ slate }: { slate: DailySlate }) {
   const record = slate.recentRecord;
-  // The instant resolves on the viewer's clock via <LocalTime> below: only
-  // the ISO string crosses the server/client boundary, never a wall clock
-  // formatted in whatever zone this server happens to run in.
+  // The stamp reads CENTRAL explicitly (founder, 2026-09-12: all times should
+  // be from CST central time) and says so with the CT suffix — the same labelled,
+  // deterministic idiom as the board's freshness stamp. A failed parse renders
+  // "Unavailable" rather than a guessed clock.
   const lastUpdatedIso = slate.lastUpdatedAt ?? null;
   return (
     <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(194,46,26,0.12)]">
@@ -682,7 +684,10 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {lastUpdatedIso && (
           <div className="ml-auto flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(255,77,46,0.6)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated <LocalTime iso={lastUpdatedIso} format="stamp" label="Last updated" /></span>          </div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
+              Updated {isRealInstant(lastUpdatedIso) ? `${formatCentralTime(lastUpdatedIso)} CT` : "Unavailable"}
+            </span>
+          </div>
         )}
       </div>
 
