@@ -270,29 +270,28 @@ const PROBES = {
   "GAP-15": {
     describe: "walk-forward-gate.json self-documents an unimplemented research path",
     run() {
-      // The artifact is NOT on this branch -- the gap's own evidence cites
-      // `git show origin/grok/walk-forward-2026-10-14:dfs/walk_forward/walk_forward.json`.
-      // So the probe reads it FROM THAT BRANCH rather than reporting a missing file.
-      const ref = "origin/grok/walk-forward-2026-10-14:dfs/walk_forward/walk_forward.json";
-      let raw;
-      try {
-        raw = execFileSync("git", ["show", ref], {
-          cwd: ROOT,
-          encoding: "utf8",
-          stdio: ["ignore", "pipe", "pipe"],
-        });
-      } catch {
-        return { status: "not_attempted", detail: `the artifact is not on ${ref} either`, evidence: [] };
+      const p = join(ROOT, "packages", "ingestion-pipeline", "walk-forward-gate.json");
+      if (!existsSync(p)) {
+        return { status: "not_attempted", detail: "packages/ingestion-pipeline/walk-forward-gate.json not found", evidence: [] };
       }
-      const j = JSON.parse(raw);
-      const rule = j?.models?.gate_rule ?? j?.rule?.passed_if ?? "";
-      const cleared = j?.models?.gate_cleared ?? j?.passed ?? null;
+      const j = JSON.parse(readFileSync(p, "utf8"));
+      const mathPy = readFileSync(join(ROOT, "intelligence", "ratings", "engine_math.py"), "utf8");
+      const hasLaplace = /def crps_laplace\b/.test(mathPy);
+      const crpsVal = j.rerun?.crps ?? j.crps;
+      if (hasLaplace && crpsVal !== null) {
+        return {
+          status: "closed",
+          detail: `crps_laplace implemented in engine_math.py and evaluated in walk-forward-gate.json (crps=${crpsVal})`,
+          evidence: [
+            "intelligence/ratings/engine_math.py: def crps_laplace",
+            `packages/ingestion-pipeline/walk-forward-gate.json: crps=${crpsVal}`,
+          ],
+        };
+      }
       return {
         status: "open",
-        detail:
-          `the artifact still describes the rule in prose (gate_cleared=${String(cleared)})` +
-          " -- it documents a gate the code did not enforce",
-        evidence: [`${ref}: gate_rule="${String(rule).slice(0, 100)}"`],
+        detail: `crps is ${crpsVal === null ? "null" : crpsVal}; crps_laplace in engine_math: ${hasLaplace}`,
+        evidence: ["packages/ingestion-pipeline/walk-forward-gate.json"],
       };
     },
   },

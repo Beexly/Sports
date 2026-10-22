@@ -274,6 +274,15 @@ def crps_gaussian(mu, sd, x):
     z = (x - mu) / sd
     return sd * (z * (2 * norm_cdf(z) - 1) + 2 * phi_pdf(z) - 1 / math.sqrt(math.pi))
 
+def crps_laplace(mu, b, x):
+    """Analytic CRPS for Laplace(mu, b) (Gneiting & Raftery 2007).
+    CRPS(Laplace(mu, b), x) = b * (|z| + exp(-|z|) - 0.75) where z = (x - mu) / b.
+    """
+    if b <= 0:
+        raise ValueError(f"Laplace scale b must be positive, got {b}")
+    z = abs(x - mu) / b
+    return b * (z + math.exp(-z) - 0.75)
+
 def pit_histogram(mu_s, sd_s, x_s, bins=10):
     counts = [0] * bins
     for mu, sd, x in zip(mu_s, sd_s, x_s):

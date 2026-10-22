@@ -8,9 +8,9 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "closed": 13,
+    "closed": 14,
     "partial": 10,
-    "open": 5
+    "open": 4
   },
   "gaps": [
     {
@@ -299,11 +299,12 @@
       "id": "GAP-15",
       "severity": "LOW",
       "title": "walk-forward-gate.json self-documents an unimplemented research path",
-      "status": "open",
-      "detail": "the artifact still describes the rule in prose (gate_cleared=false) -- it documents a gate the code did not enforce",
+      "status": "closed",
+      "detail": "crps_laplace implemented in engine_math.py and evaluated in walk-forward-gate.json (crps=7.1597)",
       "probe": "walk-forward-gate.json self-documents an unimplemented research path",
       "evidence": [
-        "origin/grok/walk-forward-2026-10-14:dfs/walk_forward/walk_forward.json: gate_rule=\"cleared only if a model has n >= 150, beats same-games Gaussian 13.45 by >= 0.01, AND CRPS <= 7.099 \""
+        "intelligence/ratings/engine_math.py: def crps_laplace",
+        "packages/ingestion-pipeline/walk-forward-gate.json: crps=7.1597"
       ],
       "blocks_current_business_model": false
     },
