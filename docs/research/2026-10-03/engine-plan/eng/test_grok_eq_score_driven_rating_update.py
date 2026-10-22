@@ -1,24 +1,37 @@
+"""Fail-closed tests for score_driven_rating_update. Returns None on invalid input."""
+import math
 from grok_eq_score_driven_rating_update import score_driven_rating_update
 
-def test_positive_score():
-    assert abs(score_driven_rating_update(1500, 0.5, 16) - 1508) < 1e-9
 
-def test_negative_score():
-    assert abs(score_driven_rating_update(1500, -0.25, 32) - 1492) < 1e-9
+def test_positive_update():
+    res = score_driven_rating_update(1500.0, 16.0, 0.3)
+    assert res is not None
+    assert abs(res - (1500.0 + 16.0 * 0.3)) < 1e-9
 
-def test_zero_score():
-    assert abs(score_driven_rating_update(1200, 0.0) - 1200) < 1e-9
 
-def test_invalid_K():
-    assert score_driven_rating_update(1500, 0.1, -1) is None
+def test_negative_gradient():
+    res = score_driven_rating_update(1600.0, 32.0, -0.5)
+    assert res is not None
+    assert abs(res - (1600.0 + 32.0 * -0.5)) < 1e-9
 
-def test_invalid_type():
-    assert score_driven_rating_update("bad", 0.1) is None
+
+def test_none_on_none():
+    assert score_driven_rating_update(None, 16.0, 0.1) is None
+    assert score_driven_rating_update(1500.0, None, 0.1) is None
+    assert score_driven_rating_update(1500.0, 16.0, None) is None
+
+
+def test_none_on_bad_values():
+    assert score_driven_rating_update(1500.0, -1.0, 0.1) is None
+    assert score_driven_rating_update(1500.0, 0.0, 0.1) is None
+    assert score_driven_rating_update(float("nan"), 16.0, 0.1) is None
+    assert score_driven_rating_update(1500.0, 16.0, float("inf")) is None
+    assert score_driven_rating_update("bad", 16.0, 0.1) is None
+
 
 if __name__ == "__main__":
-    test_positive_score()
-    test_negative_score()
-    test_zero_score()
-    test_invalid_K()
-    test_invalid_type()
-    print("5 tests passed")
+    test_positive_update()
+    test_negative_gradient()
+    test_none_on_none()
+    test_none_on_bad_values()
+    print("4 tests passed")
