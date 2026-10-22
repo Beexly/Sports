@@ -37,9 +37,11 @@ import {
   pairedBrierLcb,
   welchOneSidedNonInferiority,
   validateWalkForwardIntegrity,
+  assertDisplaySubstantiated,
   type PromotionInput,
   type PromotionDecision,
   type PairedBrierLcbResult,
+  type DisplayClaim,
 } from "@sports/prediction-engine";
 
 export type GuardEval<T> =
@@ -333,6 +335,19 @@ export function evalClvNonInferiority(input: {
   }
 }
 
+/**
+ * Validates that any displayed performance claim satisfies the substantiation guard.
+ * Wire point for GAP-23 closure on assertDisplaySubstantiated.
+ */
+export function validateDisplayClaimSubstantiated(claim: DisplayClaim): GuardEval<{ substantiated: true }> {
+  try {
+    assertDisplaySubstantiated(claim);
+    return { ok: true, data: { substantiated: true } };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 export {
   meanBrier,
   reliabilityDiagram,
@@ -348,5 +363,6 @@ export {
   pairedBrierLcb,
   welchOneSidedNonInferiority,
   validateWalkForwardIntegrity,
+  assertDisplaySubstantiated,
 };
-export type { Interval, AbstentionConfig, StratumCoverage, PromotionInput, PromotionDecision, PairedBrierLcbResult };
+export type { Interval, AbstentionConfig, StratumCoverage, PromotionInput, PromotionDecision, PairedBrierLcbResult, DisplayClaim };

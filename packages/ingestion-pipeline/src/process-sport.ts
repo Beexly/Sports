@@ -58,6 +58,7 @@ import {
   isPlausibleEntryOdds,
   modelProbForReceipt,
   selectionIsHomeSide,
+  publicCommitPick,
 } from "@sports/prediction-engine";
 import {
   buildIndependentFairValues,
@@ -1530,6 +1531,24 @@ export async function processSport(
       });
 
       const isPublic = gates.canExposePublicPicks;
+
+      // Honor the commit-reveal integrity gate (GAP-23) when publicly committing picks
+      if (isPublic) {
+        publicCommitPick(
+          {
+            pickId: `${pick.gameId}_${pick.pickType}`,
+            sport: sport.key,
+            market: pick.pickType,
+            selection: pick.selection,
+            modelVersion: CANONICAL_MODEL_VERSION,
+            committedAt: new Date().toISOString(),
+            line: String(pick.line),
+            edgeIndex: String(pick.edgeScore),
+          },
+          run.id,
+          process.env,
+        );
+      }
 
       // The CREATE payload — shared by both fresh-mint paths below: the normal
       // empty-slot create, and the supersede create (an unpublished PENDING

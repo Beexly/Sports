@@ -9,8 +9,8 @@
   },
   "counts": {
     "open": 16,
-    "partial": 7,
-    "closed": 5
+    "partial": 6,
+    "closed": 6
   },
   "gaps": [
     {
@@ -396,7 +396,7 @@
       "detail": "the mint path consults the gate",
       "probe": "the public-picks gate is never consulted at mint time; isPublished defaults true",
       "evidence": [
-        "packages/ingestion-pipeline/src/process-sport.ts:1532:      const isPublic = gates.canExposePublicPicks;"
+        "packages/ingestion-pipeline/src/process-sport.ts:1533:      const isPublic = gates.canExposePublicPicks;"
       ],
       "blocks_current_business_model": true
     },
@@ -414,12 +414,12 @@
       "id": "GAP-23",
       "severity": "HIGH",
       "title": "Nine of 37 integrity gates are unwired, dark, or off by default",
-      "status": "partial",
-      "detail": "G7 is now WIRED (this audit); 2 of the 5 named gates still have no live CALL site",
+      "status": "closed",
+      "detail": "G7 is now WIRED (this audit); 0 of the 5 named gates still have no live CALL site",
       "probe": "nine of 37 integrity gates are unwired, dark, or off by default",
       "evidence": [
-        "assertDisplaySubstantiated: 0 live CALL site(s)",
-        "publicCommitPick: 0 live CALL site(s)",
+        "assertDisplaySubstantiated: 1 live CALL site(s)",
+        "publicCommitPick: 1 live CALL site(s)",
         "validateWalkForwardIntegrity: 1 live CALL site(s)",
         "evaluatePromotion: 2 live CALL site(s)",
         "g7CircuitBreaker: 1 live CALL site(s)"
