@@ -138,7 +138,16 @@ describe("Stream 12 — team ability, HFA, EWMA", () => {
       refereeCrowdNoiseBiasPoints: 0,
     });
     expect(Number.isFinite(h.totalPoints)).toBe(true);
-    expect(h.components.regimeBase).toBe(2.1);
+    expect(h.components.regimeBase).toBe(0.4);
+    expect(
+      evaluateDynamicHomeFieldAdvantage({
+        regime: "pre-2019",
+        timeZonesCrossed: 0,
+        altitudeFeet: 0,
+        surface: "turf",
+        refereeCrowdNoiseBiasPoints: -1,
+      }).components.regimeBase,
+    ).toBe(2.85);
   });
 
   it("pools FPI, Elo, and market in log-odds space", () => {

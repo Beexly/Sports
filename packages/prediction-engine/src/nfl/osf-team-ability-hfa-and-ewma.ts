@@ -228,10 +228,12 @@ export interface HfaResult {
  * different values.
  */
 export function evaluateDynamicHomeFieldAdvantage(input: HfaInput): HfaResult {
+  // Values as published in Post #11 (2.85 / -0.7 / 0.4). The earlier
+  // 2.6 / 0.4 / 2.1 table was not the post's and is corrected here.
   const regimeBase: Record<HfaRegime, number> = {
-    "pre-2019": 2.6,
-    "2020-attendance-restricted": 0.4,
-    "post-2021": 2.1,
+    "pre-2019": 2.85,
+    "2020-attendance-restricted": -0.7,
+    "post-2021": 0.4,
   };
   if (!(input.regime in regimeBase)) throw new Error("unknown HFA regime");
   if (!Number.isFinite(input.timeZonesCrossed) || input.timeZonesCrossed < 0) {
