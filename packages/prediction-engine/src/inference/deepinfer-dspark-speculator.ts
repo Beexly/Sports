@@ -116,6 +116,23 @@ export function calculateDynamicDraftLength(
 }
 
 /**
+ * DSpark's confidence schedule, applied to how many markets one game may emit.
+ *
+ * DeepInfer's README contracts the draft horizon when the target is uncertain
+ * and expands it when the target is confident. A sportsbook slate is the same
+ * shape: a coin-flip game does not get five correlated tickets. Binary entropy
+ * is the uncertainty. An invalid probability emits nothing.
+ *
+ * This does not claim a measured latency win. There is no draft model here.
+ */
+export function scheduleMarketEmissionCount(probability: number, maxMarkets = 5): number {
+  if (!Number.isFinite(probability) || probability <= 0 || probability >= 1) return 0;
+  const entropy =
+    -probability * Math.log2(probability) - (1 - probability) * Math.log2(1 - probability);
+  return calculateDynamicDraftLength(entropy, 1, maxMarkets);
+}
+
+/**
  * Executes DSpark speculative decoding acceptance check across draft proposals.
  * Uses Leviathan-style acceptance probability: alpha = min(1, p(x) / q(x)).
  */

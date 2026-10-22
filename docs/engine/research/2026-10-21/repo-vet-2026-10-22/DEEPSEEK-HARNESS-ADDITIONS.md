@@ -22,4 +22,15 @@ Harness² Propose-Probe-Compose is already in `packages/prediction-engine/src/co
 
 `deepseek-recipe` documents `resolve_max_tokens`: refuse a prompt that does not fit the context, and do not leave generation uncapped. The thinking-mode defaults (65536 and 131072) would raise GSE cost, so they are ceilings only when a caller asks for them. A `costCeiling` keeps free-tier calls small.
 
-That check is on the one live paid call in the prediction engine: `openRouterEmbedder` now clamps input to the bge-m3 context (8192 tokens, counted at 2 chars/token so the request is shorter, not longer) before it hits OpenRouter. Test: `deepseek-recipe-budget.test.ts`, 3 passed.
+## What the first pass missed
+
+The CUDA repos were correctly left out. The miss was treating "cannot run the kernel" as "nothing in the idea transfers."
+
+DeepInfer's README does not require a GPU to use the schedule: when the target is uncertain, shorten the speculative block; when it is confident, lengthen it. That rule was already a function nobody called. It now sizes a game's market slate. A coin-flip probability emits one market. A sharp probability may emit up to five. A probability outside (0, 1) emits none. That is not a measured speedup. There is still no draft model and no SM100.
+
+Harness²'s README keeps a mutation only after a second run of the same task beats the first. The existing PPC loop scores its own checklist and can report an improvement percent from that score. `composeFromMeasuredContrast` will not adopt a mutation unless the caller passes a positive measured delta. It does not compute closing-line error or Brier. Those still have to be supplied.
+
+code-review-graph and AACR-Bench still do not change a pick. Installing a graph of this monorepo was not the efficiency win. The win was stopping a coin-flip game from printing five correlated tickets.
+
+This is not a claim that the engine now does something no system has done. The five partial gaps are still partial.
+

@@ -265,3 +265,22 @@ export function executeContrastivePpcLoop(
     relativeImprovementPercent: Number(improvement.toFixed(2)),
   };
 }
+
+/**
+ * Harness² contrast, without a self-scored checklist.
+ *
+ * The README keeps a harness mutation only when a second execution of the
+ * same task beats the first on a measured signal. A missing or non-positive
+ * delta keeps the baseline and claims no improvement. Callers must pass a
+ * real contrast (closing-line error, Brier). This function does not compute one.
+ */
+export function composeFromMeasuredContrast<T>(
+  baseline: T,
+  candidate: T,
+  measuredDelta: number | null,
+): { selected: T; adopted: boolean; claimedImprovement: number } {
+  if (measuredDelta === null || !Number.isFinite(measuredDelta) || measuredDelta <= 0) {
+    return { selected: baseline, adopted: false, claimedImprovement: 0 };
+  }
+  return { selected: candidate, adopted: true, claimedImprovement: measuredDelta };
+}

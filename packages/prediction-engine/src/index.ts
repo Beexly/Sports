@@ -5323,6 +5323,7 @@ export {
   computeFlashMlaCompression,
   evaluateEplbRouting,
   calculateDynamicDraftLength,
+  scheduleMarketEmissionCount,
   evaluateDSparkSpeculation,
 } from "./inference/deepinfer-dspark-speculator.js";
 export type {
@@ -5337,6 +5338,7 @@ export {
   applyMutationsToHarness,
   probeHarnessBehavior,
   executeContrastivePpcLoop,
+  composeFromMeasuredContrast,
 } from "./continual/harness2-propose-probe-compose.js";
 export type {
   AgentHarness,
