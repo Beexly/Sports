@@ -1,0 +1,281 @@
+{
+  "__dc__": "ReasoningTrace",
+  "fields": {
+    "chains": [
+      {
+        "__dc__": "CausalChain",
+        "fields": {
+          "id": "chain_trench",
+          "links": [
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_sacks",
+                      "metric": "stafford_sacks",
+                      "op": ">",
+                      "text": "Stafford sacks > 3",
+                      "threshold": 3.0
+                    }
+                  }
+                ],
+                "cause": "Ed Oliver (Bills DT1) OUT",
+                "id": "trench_oliver_out",
+                "load_bearing": true,
+                "mechanism": "Buffalo interior pressure drops; Stafford clean-pocket rate > 75%",
+                "outcome": "Rams offensive efficiency increases",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "checklist": {
+      "coaching_scheme": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "offensive_line": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "qb_behavior": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "scheme_matchup": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "trust_signals": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      }
+    },
+    "created_at": "2026-10-22T20:38:51+00:00",
+    "depth": {
+      "__enum__": "ReasoningDepth.L5"
+    },
+    "escalation_log": [
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L1"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-10-22T20:38:51+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "adversary_review_complete"
+        }
+      }
+    ],
+    "exposure": {
+      "__enum__": "Exposure.CARD"
+    },
+    "game": {
+      "away": "BUF",
+      "home": "LAR",
+      "season": 2026,
+      "week": 6
+    },
+    "hierarchy_order": [
+      "offensive_line",
+      "coaching_scheme",
+      "scheme_matchup",
+      "qb_behavior",
+      "trust_signals"
+    ],
+    "label": "FINAL",
+    "legs": [
+      {
+        "__dc__": "BetLeg",
+        "fields": {
+          "causal_link_ids": [
+            "trench_oliver_out"
+          ],
+          "description": "LAR -3.5 (-110)",
+          "exposure": 1.0,
+          "id": "leg_spread"
+        }
+      }
+    ],
+    "levels": {
+      "L1": {
+        "claims": []
+      },
+      "L2": {
+        "correlations": []
+      },
+      "L3": {
+        "chain_ids": [
+          "chain_trench"
+        ]
+      },
+      "L4": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "correlated_theses": 1,
+          "killed_thesis_ids": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        }
+      },
+      "L5": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "condition_results": [
+            {
+              "condition_id": "bc_sacks",
+              "met": false,
+              "metric": "stafford_sacks",
+              "observed_value": 1.0,
+              "text": "Stafford sacks > 3",
+              "verifiable": true
+            }
+          ],
+          "correlated_theses": [
+            {
+              "id": "thesis_01",
+              "leg_ids": [
+                "leg_spread"
+              ],
+              "shared_link_ids": [
+                "trench_oliver_out"
+              ]
+            }
+          ],
+          "counter_argument": "No counter-argument could be constructed from the trace: no met breaking conditions, no conflicting evidence, no data gaps, no correlated bundles. The thesis survives adversarial review on the recorded facts.",
+          "gap_assumptions": [],
+          "killed_thesis_ids": [],
+          "notes": [],
+          "pre_mortem": "It is Monday and the 1-leg card went 0-1. What happened: no single recorded falsifier explains it \u2014 the failure mode was outside the declared breaking conditions, which means the L3 chains were missing a link. Expand the chains before the next card.",
+          "thesis_verdicts": {
+            "thesis_01": "SURVIVE"
+          },
+          "weak_link": false,
+          "weak_links": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        },
+        "hierarchy_ok": true,
+        "hierarchy_order": [
+          "offensive_line",
+          "coaching_scheme",
+          "scheme_matchup",
+          "qb_behavior",
+          "trust_signals"
+        ],
+        "killed_legs": [],
+        "recommendation": "Thesis survived L4 adversary (no breaking condition met). Proceed only with the checklist verdicts and weak-link flags attached; final sizing and publication remain downstream gates."
+      }
+    },
+    "observed_values": {
+      "air_density_kg_m3": 1.1898,
+      "stafford_sacks": 1.0
+    },
+    "question": "Sovereign game evaluation for BUF @ LAR Week 6",
+    "stub_tracks": [],
+    "tool_calls": [],
+    "trace_id": "2026-10-22T203851Z0000-78a146b5",
+    "track_evidence": {}
+  }
+}

@@ -369,6 +369,16 @@ export function scrubSensitive(input: unknown): unknown {
   if (input && typeof input === "object") {
     const out: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(input as Record<string, unknown>)) {
+      // Digest allowlist: `/\b[a-f0-9]{32,}\b/g` is a credential-shape heuristic, but a
+      // bare lowercase hex digest of 32-128 chars is a SHA/MD5 digest, not a credential.
+      // P1-14 requires `canonicalInputsHash` to be readable from the JSONL record alone;
+      // without this allowlist the scrubber rewrites the digest to "[REDACTED]" and any
+      // consumer that recomputes/compares the field gets a placeholder instead of a hash.
+      const isDigestField = /^(?:canonicalInputsHash|inputHash|inputHashSha256)$/i.test(key);
+      if (isDigestField && typeof value === "string" && /^[a-f0-9]{32,128}$/i.test(value)) {
+        out[key] = value;
+        continue;
+      }
       out[key] = /token|secret|password|api[_-]?key|authorization/i.test(key) ? "[REDACTED]" : scrubSensitive(value);
     }
     return out;

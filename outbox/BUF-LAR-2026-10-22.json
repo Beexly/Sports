@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-10-22T20:39:31Z",
+  "game_id": "test_401872994",
+  "matchup": "BUF @ LAR",
+  "venue": "SoFi Stadium",
+  "market_lines": {
+    "spread": {
+      "favorite": "LAR",
+      "line": -3.5,
+      "price": -110
+    },
+    "total": {
+      "over_under": 55.5,
+      "over_price": -110,
+      "under_price": -110
+    },
+    "moneyline": {
+      "home_lar": -185,
+      "away_buf": 154
+    }
+  },
+  "aerodynamics": {
+    "air_density_kg_m3": 1.1898,
+    "stadium_type": "dome",
+    "carry_delta_yards": 2.71,
+    "temperature_c": 21.1,
+    "relative_humidity": 0.55,
+    "ballistics_assessment": "Optimal high-carry ballistic dome environment (1.190 kg/m\u00b3, +2.7 yds carry delta)"
+  },
+  "observations": {
+    "stafford_sacks": 1.0,
+    "air_density_kg_m3": 1.1898
+  },
+  "sgp_simulation": {
+    "legs": [
+      "Stafford Over 260.5 Yds",
+      "Stafford Over 1.5 TDs"
+    ],
+    "leg_probabilities": [
+      0.5622,
+      0.5511
+    ],
+    "independent_prob": 0.3098,
+    "true_copula_prob": 0.3925,
+    "joint_std_error": 0.0022,
+    "correlation_lift_pct": 26.68,
+    "z_score": 37.85,
+    "fair_american_price": 154.8,
+    "book_american_price": 1100.0
+  },
+  "jev_evaluation": null,
+  "reasoning_trace": {
+    "trace_id": "2026-10-22T203851Z0000-78a146b5",
+    "depth": "L5",
+    "label": "FINAL",
+    "breaking_conditions_met": false,
+    "correlated_bundles": 1
+  },
+  "synthesis": "**GSE CHIEF STRATEGIST \u2014 DEFINITIVE COMMAND CARD**\n**BUF @ LAR | SOVEREIGN EDGE PLAYBOOK**\n\n---\n**1 PRIMARY GAME PICK**: **LAR -3.5 (-110)**\n*Rationale*: Home dome with optimal aerodynamics (1.1898 kg/m\u00b3, +2.7 yd carry delta) establishes an offensive floor advantage. LAR\u2019s front seven and skill players operate in a low-resistance ballistic environment; the -3.5 captures quantified superiority without the moneyline premium risk. Edge: Home aerodynamics + standard spread value.\n\n**2 TOTAL LEAN**: **OVER 55.5 (-110)**\n*Rationale*: +2.7 yard carry delta + high-carry dome environment = sustained offensive drives and yardage efficiency above median. The total sits at a neutral number, but the aerodynamics-adjusted carry profile pushes expected scoring variance toward the over. Edge: Environment-driven offense.\n\n**3 SGP COMBO**: **STAFFORD OVER 260.5 YDS + OVER 1.5 TDS**\n*Rationale*: Measured alpha with 26.68% correlation lift. Independent leg probabilities (56.22%, 55.11%) converge at a true copula probability of 39.25%, but the book bundles this at +1100 American \u2014 a structural mispricing. Fair value sits at +154.8. The z-score (37.85) confirms system-validated signal dominance. Edge: Correlation arbitrage against bundle markup.\n\n**4 KEY PROP**: **STAFFORD OVER 260.5 PASSING YARDS @ FAIR PRICE 154.8**\n*Rationale*: The single-leg foundation. The SGP book price (1100.0) inflates juice across both legs; isolating the yardage prop at fair price 154.8 extracts the pure signal without bundle penalty. This is the sovereign play: dissect the correlated cluster, bet the standalone edge. Edge: Juice arbitrage + aerodynamics-aided ball flight.\n\n---\n**ADVERSARY STATUS**: Breaking conditions met = FALSE. \n**PLAY WITH PRECISION. NO DEVIATION. NO EXPLANATION.**"
+}
