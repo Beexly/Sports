@@ -5346,6 +5346,13 @@ export {
   jeffreysGoalPrior,
 } from "./models/gamma-poisson-goals.js";
 export { hillSaturation } from "./models/hill-saturation.js";
+export { seriesWinProbability } from "./models/series-win.js";
+export { keyNumberMass, NFL_KEY_NUMBERS } from "./nfl/key-number-mass.js";
+export {
+  MARCEL_SEASON_WEIGHTS,
+  betaBinomialPosteriorMean,
+  marcelWeightedRate,
+} from "./mlb/strikeout-shrinkage.js";
 export {
   alphaFromHalfLife,
   geometricAdstock,
