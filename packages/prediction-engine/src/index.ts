@@ -5532,6 +5532,10 @@ export {
   evaluateOffensiveLineAttritionCluster,
   evaluateMarketMoveInformationCompleteness,
   validateFeatureAgainstMisleadingStats,
+  X_SITUATIONAL_80_RECORD_CATALOG,
+  evaluateXSituationalRecordById,
+  type XSituationalRecord,
+  type XSituationalRecordResult,
 } from "./nfl/x-situational-80-rules.js";
 export {
   TACKLE_FEATURE_NAMES,

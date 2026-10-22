@@ -846,4 +846,200 @@ export function validateFeatureAgainstMisleadingStats(
   return { accepted: true, rejectedReason: null, record: null, requiredControls: [], notes };
 }
 
+export type XSituationalEvaluator =
+  | "leverage" | "script" | "redzone" | "decision" | "personnel"
+  | "backup" | "weather" | "attrition" | "market" | "gate";
+
+export interface XSituationalRecord {
+  id: string;
+  theme: number;
+  title: string;
+  lesson: string;
+  evaluator: XSituationalEvaluator;
+  expected: "positive" | "negative";
+}
+
+export const X_SITUATIONAL_80_RECORD_CATALOG: readonly XSituationalRecord[] = [
+  { id: "1.1", theme: 1, title: "@EaglesXsandOs", lesson: "Separate EPA (point value of the state change) from leverage/WPA (what the state change is worth in win probability). Weight plays by game state when the target is winning or team ", evaluator: "leverage", expected: "positive" },
+  { id: "1.2", theme: 1, title: "@ScottKacsmar", lesson: "The price of a yard is set by down and distance. Never credit a play's yards without the state it started in; short-of-the-sticks gains late in a series are worth far more than the", evaluator: "leverage", expected: "positive" },
+  { id: "1.3", theme: 1, title: "@zxcvbnmwill", lesson: "Value is the change in state, not the yardage. Any feature built on raw yards without the before/after state is measuring the wrong thing.", evaluator: "leverage", expected: "positive" },
+  { id: "1.4", theme: 1, title: "@galenhall", lesson: "Near the goal lines, price the failure state, not just the conversion. Red-zone and backed-up states need their own baselines; a flat model mis-ranks both plays and decisions there", evaluator: "leverage", expected: "positive" },
+  { id: "1.5", theme: 1, title: "@ArkansasQuant", lesson: "Evaluate decisions by the delta versus the alternative, never by the absolute success rate. Leverage is a gap, not a level.", evaluator: "leverage", expected: "positive" },
+  { id: "1.6", theme: 1, title: "@BenjaminSolak", lesson: "Judge decisions by the ex-ante WP delta (+14.5%), not by the outcome that followed. Resulting is a training-data poison: a correct go that fails is still a correct go.", evaluator: "leverage", expected: "positive" },
+  { id: "1.7", theme: 1, title: "@Timo_NFL", lesson: "Edge states (1 second left, kneel-out clocks, OT) are separate regimes, not the tail of the mid-game distribution. The same nominal choice is a different decision depending on whic", evaluator: "leverage", expected: "positive" },
+  { id: "1.8", theme: 1, title: "@bburkeESPN", lesson: "Decision rule — compute p × WP(success) + (1−p) × WP(failure) and compare it to WP(kick/punt). \"Punt\" is never a default; it is one branch among three, priced like the others.", evaluator: "leverage", expected: "positive" },
+  { id: "1.9", theme: 1, title: "@tejfbanalytics", lesson: "Track cumulative decision WPA. A coach/team decision tendency is a measurable, persistent quantity — small per-play leaks are a real signal, not noise.", evaluator: "leverage", expected: "positive" },
+  { id: "1.10", theme: 1, title: "@nfl4thbot", lesson: "Do not treat early-game decisions as low-stakes by default. Price every 4th down in WP; the coach's conservative lean is not evidence the model is wrong.", evaluator: "leverage", expected: "positive" },
+  { id: "2.1", theme: 2, title: "@dwainmcfarland", lesson: "Learn a team-specific offset from the script-conditioned expectation. Score changes the play call in a predictable direction, but the size of the shift is a team trait.", evaluator: "script", expected: "positive" },
+  { id: "2.2", theme: 2, title: "@LateRoundQB", lesson: "Estimate pace, pass rate, and efficiency in close games first (margin within ~6, or WP roughly 20–80%). That is the team prior; extreme scripts are a separate state.", evaluator: "script", expected: "positive" },
+  { id: "2.3", theme: 2, title: "@grok", lesson: "Train on residuals versus expected pass rate given score, down, and distance (PROE), not on raw attempt shares. (Provenance note: this post is from X's own AI account summarizing t", evaluator: "script", expected: "positive" },
+  { id: "2.4", theme: 2, title: "@PurpyNFL", lesson: "Any feature built from attempt counts must be script-adjusted before it enters a model, or it encodes the schedule of scores the team happened to face.", evaluator: "script", expected: "positive" },
+  { id: "2.5", theme: 2, title: "@PurpyNFL", lesson: "Exclude or reclassify kneel-downs, sacks, and scrambles before estimating script effects or team tendencies.", evaluator: "script", expected: "positive" },
+  { id: "2.6", theme: 2, title: "@bjT98504", lesson: "Condition run-defense evaluation on score and leverage, or the ranking will track opponent script rather than defensive quality.", evaluator: "script", expected: "positive" },
+  { id: "2.7", theme: 2, title: "@Moneylinehacks", lesson: "Do not treat rush or pass attempts as exogenous inputs when predicting points, spreads, or player yardage. Volume and team success are jointly determined by script.", evaluator: "script", expected: "positive" },
+  { id: "2.8", theme: 2, title: "@LinkofSunshine", lesson: "Any pass-volume feature must carry the score state with it, or the model will learn the arrow of causality backwards.", evaluator: "script", expected: "positive" },
+  { id: "2.9", theme: 2, title: "@hawkblogger", lesson: "Shrink extreme-script rates hard when a team rarely trails or rarely leads. Never pool trailing EPA with leading EPA.", evaluator: "script", expected: "positive" },
+  { id: "2.10", theme: 2, title: "@NFLSnapIQ", lesson: "The neutral-script early-down split is the diagnostic view. Build it before drawing any conclusion about coaching philosophy.", evaluator: "script", expected: "positive" },
+  { id: "2.11", theme: 2, title: "@BAI8app", lesson: "Do not average across states. Reweight to a common script distribution before ranking teams or feeding a predictive feature.", evaluator: "script", expected: "positive" },
+  { id: "2.12", theme: 2, title: "@RoyRobi73192051", lesson: "Encode the base rule as the expectation; measure every team and game as a deviation from it.", evaluator: "script", expected: "positive" },
+  { id: "3.1", theme: 3, title: "@SharpFootball", lesson: "Define the red zone as its own state (inside the 20, goal-to-go nested inside it) and score the drive outcome — TD vs FG vs nothing — separately from the yards earned getting there", evaluator: "redzone", expected: "positive" },
+  { id: "3.2", theme: 3, title: "@GridironInfo_", lesson: "Keep red-zone EPA as a split feature for both offense and defense; never let full-field EPA stand in for it.", evaluator: "redzone", expected: "positive" },
+  { id: "3.3", theme: 3, title: "@SharpFootball", lesson: "Within the red zone, split by down. An aggregate red-zone number can hide the exact down where the offense breaks.", evaluator: "redzone", expected: "positive" },
+  { id: "3.4", theme: 3, title: "@TheJetPress", lesson: "Full-field explosiveness does not imply finishing ability. Model the red zone as a distinct regime with its own team ratings.", evaluator: "redzone", expected: "positive" },
+  { id: "3.5", theme: 3, title: "@dmlr53", lesson: "Backed-up is a negative-EP state; value plays from it in EP/EPA, never raw yards, or the model overvalues empty yardage from bad field position.", evaluator: "redzone", expected: "positive" },
+  { id: "3.6", theme: 3, title: "@officialctpod", lesson: "Fourth-down conversion priors must be era-current and distance-specific; stale priors systematically under-price going for it.", evaluator: "redzone", expected: "positive" },
+  { id: "3.7", theme: 3, title: "@thatcaden_", lesson: "Treat distance-to-go as a first-class, continuous feature on 3rd/4th down. \"Long\" is a probability, not a verdict.", evaluator: "redzone", expected: "positive" },
+  { id: "3.8", theme: 3, title: "@GridironInfo_", lesson: "The two-minute drill is its own efficiency regime. Condition on clock, timeouts, and score; do not borrow neutral-script play values into it.", evaluator: "redzone", expected: "positive" },
+  { id: "3.9", theme: 3, title: "@YUNOsports_NFL", lesson: "Carry a clutch/two-minute conversion split for offense and defense separately from overall third-down rates.", evaluator: "redzone", expected: "positive" },
+  { id: "3.10", theme: 3, title: "@RedlineFootball", lesson: "State the WP band any EPA feature was computed on (common operational garbage-time definitions: WP outside ~5–95% or ~10–90%, or 17+ down in Q4). Rankings without the filter defini", evaluator: "redzone", expected: "positive" },
+  { id: "3.11", theme: 3, title: "@goblue_mike", lesson: "States are dynamic. A large point swing in a short window moves the game out of the prevent regime — re-classify the state instead of averaging the whole stretch as \"garbage time.", evaluator: "redzone", expected: "positive" },
+  { id: "3.12", theme: 3, title: "@LordReebs", lesson: "Player efficiency features must be state-split. A QB's red-zone TD/INT profile is a separate quantity from his overall line and can diverge sharply.", evaluator: "redzone", expected: "positive" },
+  { id: "4.1", theme: 4, title: "@RyanPaganetti", lesson: "Price the full WP of go vs punt with branch values (WP after success ≈ 71%, after failure ≈ 29%), not conversion rate alone. A modest conversion chance still wins when the alternat", evaluator: "decision", expected: "positive" },
+  { id: "4.2", theme: 4, title: "@BenjaminSolak", lesson: "Always price all three branches. In long-field-goal range late in a tie, the field goal can be dominated by both alternatives.", evaluator: "decision", expected: "positive" },
+  { id: "4.3", theme: 4, title: "@billbarnwell", lesson: "Historical base rates in narrow state bins are strong priors. When a coach deviates from a near-unanimous bin, the burden of proof is on the deviation.", evaluator: "decision", expected: "positive" },
+  { id: "4.4", theme: 4, title: "@NextGenStats", lesson: "No state is categorically off-limits to the EV computation. Compute the branches everywhere; let the numbers, not field-position folklore, draw the lines.", evaluator: "decision", expected: "positive" },
+  { id: "4.5", theme: 4, title: "@BenjaminSolak", lesson: "When both branches require the same defensive outcome, the go branch weakly dominates. Compare what each branch actually changes, not the labels \"aggressive\" vs \"safe.\"", evaluator: "decision", expected: "positive" },
+  { id: "4.6", theme: 4, title: "@MikeReiss", lesson: "Score margin interacts with the kick/go choice: a field goal that leaves you still trailing by two scores is worth less than its points. Model the margin after each branch, not jus", evaluator: "decision", expected: "positive" },
+  { id: "4.7", theme: 4, title: "@Timo_NFL", lesson: "Score, clock, and opponent timeouts interact. \"Take the points\" is not a terminal state; price the game that follows the kick.", evaluator: "decision", expected: "positive" },
+  { id: "4.8", theme: 4, title: "@nfl4thbot", lesson: "A coach's conservative lean is not automatically justified by information the model lacks. Several-point WP edges are rarely overturned by personnel adjustments (backup QB, kicker ", evaluator: "decision", expected: "positive" },
+  { id: "5.1", theme: 5, title: "@SharpFootball", lesson: "Personnel is a prior on the defensive response, not just an offensive label. Model the response (base vs nickel, box, shell) as part of the play's context.", evaluator: "personnel", expected: "positive" },
+  { id: "5.2", theme: 5, title: "@Michael_Nania", lesson: "Expected production is team-by-package specific. A single team efficiency number that ignores personnel mix blends away the actual signal.", evaluator: "personnel", expected: "positive" },
+  { id: "5.3", theme: 5, title: "@Bumi_mind", lesson: "Split run and pass expectations by package and encode the interaction. A personnel main effect without the run/pass interaction will be wrong in both directions.", evaluator: "personnel", expected: "positive" },
+  { id: "5.4", theme: 5, title: "@sambruchhaus", lesson: "Condition on the receiving threat of TE2/FB (target rate, receiving grade), not just the personnel label. The label alone does not determine the defensive price.", evaluator: "personnel", expected: "positive" },
+  { id: "5.5", theme: 5, title: "@JonnyPage9", lesson: "Expected rush value depends on personnel AND the box and width it creates. Include formation width (spread vs condensed) as a feature alongside personnel.", evaluator: "personnel", expected: "positive" },
+  { id: "5.6", theme: 5, title: "@RyanPaganetti", lesson: "Coverage shell is part of the same tradeoff as personnel. Predict shell from personnel (and vice versa), then predict EPA conditional on the shell.", evaluator: "personnel", expected: "positive" },
+  { id: "5.7", theme: 5, title: "@HoodBall_15", lesson: "The value of heavy personnel is partly the conflict it imposes, not the bodies themselves. Features should capture gap count and LB conflict, not only box count.", evaluator: "personnel", expected: "positive" },
+  { id: "5.8", theme: 5, title: "@Kovb41", lesson: "Never use box count as a standalone feature. Its effect is an interaction with personnel and era; model it as such.", evaluator: "personnel", expected: "positive" },
+  { id: "5.9", theme: 5, title: "@popofansports", lesson: "Credit for beating a heavy box should be adjusted for whether the offense forced that box or simply declared heavy and ran into the natural response.", evaluator: "personnel", expected: "positive" },
+  { id: "5.10", theme: 5, title: "@CaseL731", lesson: "Usage is endogenous — defenses price tendencies in. Residual EPA after conditioning on personnel, down-and-distance, and defensive response is closer to skill than raw EPA by perso", evaluator: "personnel", expected: "positive" },
+  { id: "6.1", theme: 6, title: "@SalVetriDFS", lesson: "Condition skill-player volume and efficiency on the specific quarterback, game by game. A starter/backup flag is too coarse — the identity of the QB is the feature.", evaluator: "backup", expected: "negative" },
+  { id: "6.2", theme: 6, title: "@KyleM_FF", lesson: "Do not apply a uniform backup-QB penalty. Target share and per-route efficiency can survive the QB change while TD rate does not; model the components separately, by player.", evaluator: "backup", expected: "negative" },
+  { id: "6.3", theme: 6, title: "@weatherqb", lesson: "Apply player-specific weather interactions measured against each player's own baseline, never a single game-level weather penalty.", evaluator: "weather", expected: "negative" },
+  { id: "6.4", theme: 6, title: "@weatherqb", lesson: "Wind speed (with a ~15 mph threshold) should directly cut QB/WR/kicker expectations. Do not transfer the lost passing value to running backs by assumption.", evaluator: "weather", expected: "negative" },
+  { id: "6.5", theme: 6, title: "@AlexCaruso", lesson: "Model weather as an interaction with the player's own history and home environment, not as a main effect applied to everyone equally.", evaluator: "weather", expected: "negative" },
+  { id: "6.6", theme: 6, title: "@SharpFootball", lesson: "Days-of-rest difference and short-week indicators are material features. Flag extreme differentials (multiple days, repeated short weeks, opponents off byes) explicitly.", evaluator: "attrition", expected: "negative" },
+  { id: "6.7", theme: 6, title: "@JusttheFoosball", lesson: "Treat OL availability as a first-class, graded feature: number of starters out, replacement quality (veteran vs rookie), and injury vs coach's-decision. It should shift expected QB", evaluator: "attrition", expected: "negative" },
+  { id: "6.8", theme: 6, title: "@CynicalPublius", lesson: "Altitude is an acclimatization effect, asymmetric by team and by half. Model visitor performance decay at elevation venues rather than a flat venue penalty.", evaluator: "attrition", expected: "negative" },
+  { id: "6.9", theme: 6, title: "@TheNumbersDesk", lesson: "Rest belongs in the strength prior, but a model should not expect a large, consistent betting edge from rest alone. Distinguish \"this changes expected performance\" from \"this be", evaluator: "attrition", expected: "negative" },
+  { id: "6.10", theme: 6, title: "@trenchpower2025", lesson: "Track injury context beyond the binary out/active label — practice participation, injury type, and playing-through-it status all change expected performance even when the player is", evaluator: "attrition", expected: "negative" },
+  { id: "7.1", theme: 7, title: "@AdamKoffler", lesson: "Forecast wind speed and precipitation should directly lower expected points, especially outdoors. Weather hits totals more than spreads.", evaluator: "market", expected: "negative" },
+  { id: "7.2", theme: 7, title: "@MrMathBet", lesson: "Confirmed QB absence is a first-order repricing event (team strength and scoring rate, immediately). Score injury clusters, not single absences. A move against the public ticket sp", evaluator: "market", expected: "negative" },
+  { id: "7.3", theme: 7, title: "@offshoreinsider", lesson: "QB-to-IR is not a flag, it is a multi-point team-strength rewrite applied immediately. Moves of this size with a confirmed availability cause should be treated as information-compl", evaluator: "market", expected: "negative" },
+  { id: "7.4", theme: 7, title: "@SBD", lesson: "Availability news propagates across markets at once. Cross-market consistency is a check on whether a move is news-driven or flow-driven.", evaluator: "market", expected: "negative" },
+  { id: "7.5", theme: 7, title: "@BTBSportsIntel", lesson: "Unexplained moves are information. Do not assume every move has a fully observed public driver at the moment it happens; soft availability signals belong in the model before offici", evaluator: "market", expected: "negative" },
+  { id: "7.6", theme: 7, title: "@kukluxkraut", lesson: "Weight moves by the numbers they cross. A move through 3 or 7 is stronger evidence than an equal move elsewhere, and overshoot past a key is a fade candidate once the news is alrea", evaluator: "market", expected: "negative" },
+  { id: "7.7", theme: 7, title: "@fredwinss_", lesson: "Short-week and rest-differential indicators belong in the pre-move prior — the market applies them before any news arrives.", evaluator: "market", expected: "negative" },
+  { id: "7.8", theme: 7, title: "@QcrackinBookies", lesson: "Context factors compound. Price weather and venue together; a total move can be the sum of two situational inputs, neither of which is team news.", evaluator: "market", expected: "negative" },
+  { id: "8.1", theme: 8, title: "@statsowar", lesson: "A yard is not a yard. Score plays against pre-snap expected points (down, distance, field position), not absolute yards.", evaluator: "gate", expected: "negative" },
+  { id: "8.2", theme: 8, title: "@ArifHasanNFL", lesson: "Prefer per-play rates over totals for any quality judgment, and carry the script context with any volume feature.", evaluator: "gate", expected: "negative" },
+  { id: "8.3", theme: 8, title: "@ARKNDJL", lesson: "Completion percentage is not accuracy. Condition on air yards/aDOT, designed YAC, and throw difficulty (CPOE or depth bins) before comparing passers.", evaluator: "gate", expected: "negative" },
+  { id: "8.4", theme: 8, title: "@AccidentalZen", lesson: "Adjust defensive yardage for opponent run/pass mix and opponent quality, or use success-rate / adjusted metrics. Never rank a defense on raw yards allowed.", evaluator: "gate", expected: "negative" },
+  { id: "8.5", theme: 8, title: "@EaglesXsandOs", lesson: "Stack the adjustments: state value (EPA) → leverage (WP context) → opponent quality. Each layer removes a different lie. (Same post as Record 1.1 — the lesson differs by theme.)", evaluator: "gate", expected: "negative" },
+  { id: "8.6", theme: 8, title: "@ScottKacsmar", lesson: "Do not treat play EPA as player skill. Split air yards from YAC and be explicit about credit assignment before aggregating plays into player ratings. (Same post as Record 1.2.)", evaluator: "gate", expected: "negative" },
+  { id: "8.7", theme: 8, title: "@KenIngalls", lesson: "Yards/play is a rough efficiency proxy, not the full read. The model should hunt the residual: the ~19% of EPA that down, distance, and state explain beyond yardage.", evaluator: "gate", expected: "negative" },
+  { id: "8.8", theme: 8, title: "@LordBenne", lesson: "Pair yards per play with success rate, negative-play rate, and third-down conversion. Averages without the distribution are a different (worse) statistic.", evaluator: "gate", expected: "negative" },
+  { id: "8.9", theme: 8, title: "@Saint_FinX", lesson: "Points beat empty yards. The target should be scoring value or EPA; raw yards are a feature, never the verdict.", evaluator: "gate", expected: "negative" },
+  { id: "8.10", theme: 8, title: "@PukaJimmer", lesson: "Normalize by opportunity and starting state before any cross-team comparison of totals.", evaluator: "gate", expected: "negative" },
+];
+
+export interface XSituationalRecordResult {
+  recordId: string;
+  theme: number;
+  evaluator: XSituationalEvaluator;
+  value: number;
+  sign: -1 | 0 | 1;
+  gateStatus: "accepted" | "rejected" | "not-a-gate";
+  lesson: string;
+}
+
+const LEVERAGE_PLAY: SituationalPlay = {
+  wpBefore: 0.5, wpAfter: 0.58, epBefore: 0, epAfter: 2.69, quarter: 4,
+  halfSecondsRemaining: 90, scoreMargin: 0, down: 3, ydstogo: 4, yardline100: 45,
+  yardsGained: 6, playType: "pass", shortYardageConversion: true,
+};
+
+const REDZONE_PLAYS: SituationalPlay[] = [
+  { ...LEVERAGE_PLAY, yardline100: 8, epBefore: 0.5, epAfter: 7, down: 1, scoreMargin: 3 },
+  { ...LEVERAGE_PLAY, yardline100: 14, epBefore: 0.5, epAfter: 1.2, down: 2, scoreMargin: 0 },
+];
+
+const SCRIPT_PLAYS: SituationalPlay[] = [
+  LEVERAGE_PLAY,
+  { ...LEVERAGE_PLAY, wpBefore: 0.45, wpAfter: 0.5, epBefore: 1, epAfter: 1.4, scoreMargin: -7, down: 2, playType: "pass" },
+  { ...LEVERAGE_PLAY, wpBefore: 0.5, wpAfter: 0.52, epBefore: 1, epAfter: 1.2, scoreMargin: -3, down: 2, playType: "rush" },
+  { ...LEVERAGE_PLAY, wpBefore: 0.55, wpAfter: 0.56, epBefore: 1, epAfter: 0.9, scoreMargin: 0, down: 1, playType: "rush" },
+];
+
+/** Real evaluator dispatch. Every branch calls the published function. */
+export function evaluateXSituationalRecordById(
+  id: string,
+  _context?: Record<string, unknown>,
+): XSituationalRecordResult {
+  const record = X_SITUATIONAL_80_RECORD_CATALOG.find((r) => r.id === id);
+  if (!record) throw new Error(`unknown X record id: ${id}`);
+  let value: number;
+  let gateStatus: XSituationalRecordResult["gateStatus"] = "not-a-gate";
+  switch (record.evaluator) {
+    case "leverage":
+      value = computeLeverageAdjustedEpa(LEVERAGE_PLAY).leverageMultiplier - 1;
+      break;
+    case "script":
+      value = computeNeutralScriptBaselineAndProe(SCRIPT_PLAYS, "AAA").proeResidual;
+      break;
+    case "redzone": {
+      const rz = evaluateRedZoneAndTwoMinuteSplits(REDZONE_PLAYS);
+      value = rz.rzTdRate - 0.4;
+      break;
+    }
+    case "decision":
+      value = evaluateDecisionBranchWp(
+        { scoreMargin: -2, quarter: 4, halfSecondsRemaining: 120, yardline100: 65, ydstogo: 4, down: 4 },
+        [
+          { branch: "go", successProbability: 0.55, winProbabilityOnSuccess: 0.65, winProbabilityOnFailure: 0.2 },
+          { branch: "kick", successProbability: 0.85, winProbabilityOnSuccess: 0.5, winProbabilityOnFailure: 0.25 },
+        ],
+      ).recommendationEdge;
+      break;
+    case "personnel":
+      value = evaluatePersonnelBoxPassInteraction({
+        personnel: "13", boxCount: 8, formationWidth: "normal",
+        secondTeOrFbReceivingThreat: true, shell: "loaded-box",
+      }).passEpaAdjustment;
+      break;
+    case "backup":
+      value = evaluateBackupQbReceiverDecoupling({
+        alphaTargetShareWithStarter: 0.3, alphaTargetShareWithBackup: 0.27,
+        yprrWithStarter: 2.5, yprrWithBackup: 2.2,
+        redZoneShareWithStarter: 0.35, redZoneShareWithBackup: 0.25,
+        timingDependentPerimeterWr: true,
+      }).decoupledValueMultiplier - 1;
+      break;
+    case "weather":
+      value = evaluatePlayerSpecificWeatherInteraction({
+        position: "QB", temperatureF: 30, windMph: 18, precipitation: 1,
+      }).positionalMultiplier - 1;
+      break;
+    case "attrition":
+      value = evaluateOffensiveLineAttritionCluster({
+        startersAbsent: 3, opponentDepleted: false, isWeek18: false, rookieBackup: false,
+      }).suWinRateDelta;
+      break;
+    case "market":
+      value = evaluateMarketMoveInformationCompleteness({
+        stage: "rumor", spreadMove: 9, totalMove: 4, crossedKeyNumber: true, publicShare: 0.7,
+      }).fadeMultiplier - 1;
+      break;
+    case "gate": {
+      const verdict = validateFeatureAgainstMisleadingStats({
+        name: "yards per play", definition: "raw yards per play",
+      });
+      gateStatus = verdict.accepted ? "accepted" : "rejected";
+      value = verdict.accepted ? 1 : -1;
+      break;
+    }
+  }
+  const sign: -1 | 0 | 1 = value > 0 ? 1 : value < 0 ? -1 : 0;
+  return { recordId: record.id, theme: record.theme, evaluator: record.evaluator, value, sign, gateStatus, lesson: record.lesson };
+}
+
 export { mean, sigmoid, clamp, clamp01 };

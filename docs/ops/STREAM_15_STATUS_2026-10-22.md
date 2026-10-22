@@ -67,13 +67,37 @@ python -m pytest intelligence/tests/test_open_source_football_stream12.py -q
 7 passed
 ```
 
-## NOT DONE — Phase 15B, 15C, 15D, 15E
+## DONE — Phase 15B (80/80 X Situational record tests)
 
-- **15B (80/80 record tests):** not implemented. The handoff's ID ranges
-  (`1.1..1.12`, `2.1..2.10`, ...) do not match the corpus, which is
-  `1.1..1.10`, `2.1..2.12`, `3.1..3.12`, `4.1..4.8`, `5.1..5.10`, `6.1..6.10`,
-  `7.1..7.8`, `8.1..8.10` (sum 80). A catalog must use the actual IDs; that
-  discrepancy is a pre-flight finding, not a reason to invent 12 records.
+- **15B:** closed. `X_SITUATIONAL_80_RECORD_CATALOG` and
+  `evaluateXSituationalRecordById` are exported from
+  `packages/prediction-engine/src/nfl/x-situational-80-rules.ts` and re-exported
+  from `packages/prediction-engine/src/index.ts`. Catalog uses the corpus's real
+  IDs — `1.1..1.10` (10), `2.1..2.12` (12), `3.1..3.12` (12), `4.1..4.8` (8),
+  `5.1..5.10` (10), `6.1..6.10` (10), `7.1..7.8` (8), `8.1..8.10` (10) = 80.
+  The handoff's suggested ranges (`1.1..1.12`, `2.1..2.10`, ...) were wrong and
+  were not used.
+- Command: `npx vitest run
+  packages/prediction-engine/src/__tests__/x-situational-80-records-complete.test.ts
+  --reporter=verbose` → `Test Files 1 passed (1)` / `Tests 80 passed (80)`;
+  0 failed, 0 skipped, 0 todo. The catalog-integrity gate (exactly 80 IDs,
+  no duplicates, exact ordering `1.1..8.10`) runs in a `beforeAll` hook so it
+  fails the file without adding a 81st test case to the reported total.
+- Second command: `npx vitest run
+  packages/prediction-engine/src/__tests__/x-situational-80-records-complete.test.ts
+  --reporter=verbose -t "Record 1.1"` → `Tests 2 passed | 78 skipped (80)`.
+  (`-t` is a substring filter, so it matches both `Record 1.1` and
+  `Record 1.10`; both pass. This is filter behaviour, not a duplicate ID.)
+- Live-aggregator wiring: `master-situational-reasoning-aggregator.ts` imports
+  `evaluateXSituationalRecordById` and the catalog from
+  `./x-situational-80-rules.js`, so the evaluator is reachable from the runtime
+  aggregation path rather than being a test-only export.
+- `tsc --noEmit -p packages/prediction-engine`: the new module and its
+  `index.ts` export introduce 0 new diagnostics (grep for `x-situational` and
+  `src/index.ts` in the error output returns no lines; the 344 remaining
+  diagnostics are pre-existing `pinhole-jacobian.ts` and peers).
+
+## NOT DONE — Phase 15C, 15D, 15E
 - **15C (OSF module rewrites + 24/24 adjudication):** not implemented. The five
   drift findings (xFG regressors, RERUN LOESS, within-game rest, two-stage xPass,
   WR1 ranking) remain open; `out_3` is still invalid.
