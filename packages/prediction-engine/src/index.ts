@@ -5361,6 +5361,24 @@ export {
 } from "./nfl/coverage-scheme.js";
 export { keyNumberMass, NFL_KEY_NUMBERS } from "./nfl/key-number-mass.js";
 export {
+  GROUP_TACKLE_MIN,
+  MISSED_TACKLE_RATE_BAND,
+  TACKLE_DERIVATIVES,
+  TACKLE_FEATURES_PER_DEFENDER,
+  blockersBetween,
+  closingSpeed,
+  encircleQuadrants,
+  isChaseDown,
+  isGroupTackle,
+  isOpenField,
+  missedTackleRateBand,
+  tackleApproach,
+  tackleEfficiency,
+  tacklePlayPoints,
+  tackleYardsSaved,
+  yardsBetweenTackleAttempts,
+} from "./nfl/tackle-probability.js";
+export {
   MARCEL_SEASON_WEIGHTS,
   betaBinomialPosteriorMean,
   marcelWeightedRate,
