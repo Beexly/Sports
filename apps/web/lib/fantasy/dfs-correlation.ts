@@ -65,10 +65,12 @@ export type SimStats = {
   readonly mean: number;
   readonly p50: number;
   readonly p90: number; // correlated ceiling realisation
+  readonly p99: number; // extreme tail ceiling realisation
   readonly ceilEV: number; // expected score in the top quintile of outcomes
   readonly stdev: number;
   readonly dupRisk: number; // 0..1 chalk/duplication proxy (higher = more duplicated)
   readonly score: number; // tournament score used for ranking
+  readonly simsRun: number; // number of simulations executed
 };
 
 export type SimOpts = {
@@ -89,7 +91,7 @@ export function duplicationRisk(lu: Lineup): number {
 }
 
 export function simulateLineups(lineups: readonly Lineup[], opts: SimOpts = {}): SimStats[] {
-  const sims = opts.sims ?? 2000;
+  const sims = opts.sims ?? 10000;
   const seed = opts.seed ?? 42;
   const ownWeight = opts.ownWeight ?? 0.1;
   const dupWeight = opts.dupWeight ?? 6;
@@ -150,10 +152,12 @@ export function simulateLineups(lineups: readonly Lineup[], opts: SimOpts = {}):
       mean: round1(mean),
       p50: round1(q(0.5)),
       p90: round1(q(0.9)),
+      p99: round1(q(0.99)),
       ceilEV: round1(ceilEV),
       stdev: round1(Math.sqrt(variance)),
       dupRisk: round2(dupRisk),
       score: round1(score),
+      simsRun: sims,
     };
   });
 }
