@@ -5338,6 +5338,13 @@ export {
   VENDORED_POLYMARKET_SDKS,
   polymarketPublishAllowed,
 } from "./markets/polymarket-sdks.js";
+
+export {
+  NFLSCRAPR_JSON_PROBE,
+  approvedPbpSource,
+  nflscraprGameJsonUrl,
+  nflscraprRegularWeeks,
+} from "./ingestion/nflscrapr-contract.js";
 export type {
   FlashMlaConfig,
   FlashMlaCompressionSummary,
