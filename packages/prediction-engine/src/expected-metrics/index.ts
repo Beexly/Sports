@@ -154,8 +154,18 @@ export {
 export {
   mapNflversePbpToExpectedMetrics,
   attachOwnEpa,
+  attachOwnEpaToFragility,
   NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS,
   type PbpRow,
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Pass defense fragility (deterministic rule; SHADOW).
+export {
+  computePassDefenseFragility,
+  PASS_DEFENSE_FRAGILITY_VERSION,
+  type FragilityPassPlay,
+  type FragilityWindowType,
+  type PassDefenseFragilityProfile,
+} from "./pass-defense-fragility-profile.js";

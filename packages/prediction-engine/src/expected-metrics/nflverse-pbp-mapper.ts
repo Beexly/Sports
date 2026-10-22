@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type FragilityPassPlay } from "./pass-defense-fragility-profile.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -62,6 +63,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
+  "week", "complete_pass", "passing_yards", "pass_touchdown", "qb_spike", "sack",
 ] as const;
 
 /** One projected pbp row record, exactly as `parseCsv` emits it. */
@@ -105,6 +107,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly fragilityPlays: readonly FragilityPassPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const fragilityPlays: FragilityPassPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -582,6 +586,23 @@ export function mapNflversePbpToExpectedMetrics(
             turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
           }
         : null;
+
+      if (playType === "pass") {
+        fragilityPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          week: num(row["week"]),
+          defteam: row["defteam"] ?? "",
+          epa: null, // attach post-fit
+          successPlay,
+          sack: bin(row["sack"]),
+          qbSpike: bin(row["qb_spike"]),
+          completePass: bin(row["complete_pass"]),
+          passingYards: numOrNull(row["passing_yards"]),
+          passTouchdown: bin(row["pass_touchdown"]),
+          interception: bin(row["interception"]),
+        });
+      }
       drivePlays.push({
         playId,
         gameId: row["game_id"] ?? "",
@@ -611,6 +632,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    fragilityPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
@@ -636,6 +658,16 @@ export function attachOwnEpa(
   epaByPlayId: ReadonlyMap<string, number>,
 ): DrivePlay[] {
   return drivePlays.map((p) => {
+    const epa = epaByPlayId.get(p.playId);
+    return epa === undefined ? { ...p } : { ...p, epa };
+  });
+}
+
+export function attachOwnEpaToFragility(
+  plays: readonly FragilityPassPlay[],
+  epaByPlayId: ReadonlyMap<string, number>,
+): FragilityPassPlay[] {
+  return plays.map((p) => {
     const epa = epaByPlayId.get(p.playId);
     return epa === undefined ? { ...p } : { ...p, epa };
   });
