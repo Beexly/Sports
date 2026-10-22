@@ -8,9 +8,9 @@
     "not_attempted": "recorded and untouched -- nobody has measured it"
   },
   "counts": {
-    "open": 16,
+    "open": 15,
     "partial": 6,
-    "closed": 6
+    "closed": 7
   },
   "gaps": [
     {
@@ -111,7 +111,7 @@
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:166:    const resultMutated = evaluateMindReasoning(seaAtDenCtx, mutatedCorpus);",
         "packages/prediction-engine/src/reasoning/mind-reasoning.ts:1194:export function evaluateMindReasoning(",
         "packages/prediction-engine/src/reasoning/situational-engine.ts:21:  evaluateMindReasoning,",
-        "packages/prediction-engine/src/reasoning/situational-engine.ts:161:  const mindEvaluation = evaluateMindReasoning(context);"
+        "packages/prediction-engine/src/reasoning/situational-engine.ts:160:  const mindEvaluation = evaluateMindReasoning(context);"
       ],
       "blocks_current_business_model": true
     },
@@ -291,15 +291,10 @@
       "id": "GAP-13",
       "severity": "MEDIUM",
       "title": "The reasoning surfaces are architecturally forbidden from ever being a pick",
-      "status": "open",
-      "detail": "the divergence-as-edge rule is still in the engine",
+      "status": "closed",
+      "detail": "the rule is gone",
       "probe": "the reasoning surfaces are architecturally forbidden from ever being a decision input",
-      "evidence": [
-        "packages/prediction-engine/src/reasoning/aggregation-trace.test.ts:128:    expect(result.data.divergenceIsEdge).toBe(false);",
-        "packages/prediction-engine/src/reasoning/aggregation-trace.test.ts:158:      \"divergenceIsEdge\",",
-        "packages/prediction-engine/src/reasoning/situational-engine.ts:74:  readonly divergenceIsEdge: false;",
-        "packages/prediction-engine/src/reasoning/situational-engine.ts:192:      divergenceIsEdge: false,"
-      ],
+      "evidence": [],
       "blocks_current_business_model": true
     },
     {
