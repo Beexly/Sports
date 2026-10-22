@@ -5347,6 +5347,18 @@ export {
 } from "./models/gamma-poisson-goals.js";
 export { hillSaturation } from "./models/hill-saturation.js";
 export { seriesWinProbability } from "./models/series-win.js";
+export { smoothLabel } from "./models/label-smoothing.js";
+export { attentionWeights } from "./models/scaled-dot-product.js";
+export { gradCamMap } from "./models/grad-cam.js";
+export {
+  COVERAGE_SCHEMES,
+  coverageFamily,
+  coverageSchemeUniqueness,
+  defenderOffenseDelta,
+  meanClassProbabilities,
+  neighborLabelMismatch,
+  speedFromDisplacement,
+} from "./nfl/coverage-scheme.js";
 export { keyNumberMass, NFL_KEY_NUMBERS } from "./nfl/key-number-mass.js";
 export {
   MARCEL_SEASON_WEIGHTS,
