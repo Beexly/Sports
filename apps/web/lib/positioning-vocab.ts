@@ -1,8 +1,8 @@
 /**
  * Positioning vocabulary — single source of truth.
  *
- * Brand rule: "We're not AI. We're math you can read." The picks and the
- * scoring engine are a deterministic system; Claude is used only in the
+ * Brand positioning: Quantitative sports intelligence. The picks and the
+ * scoring engine are a deterministic causal system; Claude is used in the
  * content/atmosphere layer (see CLAUDE.md — "AI Layer: Claude API (content
  * generation only — not source of truth)"). Copy must never frame the
  * engine or the picks themselves as AI.

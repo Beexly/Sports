@@ -9,7 +9,7 @@
  * Stage 03: Active high-EV conviction signals with Kelly sizing.
  * Stage 04: Settlement proof + Brier/CLV autopsy + Kalman feedback.
  *
- * Brand doctrine: "Math you can read. We detect. You decide."
+ * Brand doctrine: "Find the signal before the market moves. We detect. You decide."
  */
 
 // ── Types ───────────────────────────────────────────────────────────────────

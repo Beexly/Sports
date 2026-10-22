@@ -10,8 +10,8 @@
  * apps/web/lib/trust-claims.ts. The list below is a superset of the
  * registry so this script does not need to parse TypeScript.
  *
- * BS-004 brand-positioning vocabulary ("We're not AI. We're math you can
- * read.") is a special case: instead of hardcoding it here too, it is read
+ * BS-004 brand-positioning vocabulary is a special case: instead of hardcoding
+ * it here too, it is read straight from the shared JSON source of truth,
  * straight from the shared JSON source of truth,
  * apps/web/lib/positioning-vocab.json — the same list the runtime compliance
  * scanner (apps/web/lib/compliance-scanner/rules.ts) and the docs copy-scan

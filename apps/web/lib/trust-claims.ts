@@ -44,7 +44,7 @@ export type ClaimCategory =
   | "PRICING"            // billing, refund, subscription mechanics
   | "SOCIAL_PROOF"       // testimonials, user counts, badges
   | "RISK_DISCLOSURE"    // responsible-gambling, no-guarantee language
-  | "BRAND_POSITIONING"; // "We're not AI. We're math you can read." (BS-004)
+  | "BRAND_POSITIONING"; // Quantitative sports intelligence (BS-004)
 
 export type ClaimStatus =
   | "APPROVED"       // safe to render publicly
@@ -373,7 +373,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     reviewNote: "Compound certainty + financial outcome. Banned.",
   },
 
-  // ── Brand positioning (BS-004: "We're not AI. We're math you can read.") ─
+  // ── Brand positioning (BS-004: Quantitative Sports Intelligence) ─
   // The picks come from a deterministic engine, never an LLM. "AI" belongs
   // only to the content/atmosphere layer (see CLAUDE.md — "AI Layer: Claude
   // API (content generation only — not source of truth)"). Banning the

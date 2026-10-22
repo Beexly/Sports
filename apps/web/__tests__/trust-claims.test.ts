@@ -403,8 +403,7 @@ describe("Trust Claim Registry — visibility audit", () => {
       "PRICING",
       "SOCIAL_PROOF",
       "RISK_DISCLOSURE",
-      // BS-004: "We're not AI. We're math you can read." — see
-      // apps/web/lib/positioning-vocab.json.
+      // Brand positioning: see apps/web/lib/positioning-vocab.json.
       "BRAND_POSITIONING",
     ]);
     for (const claim of TRUST_CLAIMS) {

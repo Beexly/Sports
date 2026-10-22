@@ -132,4 +132,4 @@ export function Monogram({ size = 20 }: { size?: number }): React.ReactElement {
  */
 export const BRAND_TAGLINE = "Find the signal before the market moves.";
 export const BRAND_CLOSER = "We detect. You decide.";
-export const BRAND_POSITIONING_LINE = "We're not AI. We're math you can read.";
+export const BRAND_POSITIONING_LINE = "Quantitative sports intelligence.";

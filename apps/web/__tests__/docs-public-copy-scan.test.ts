@@ -167,10 +167,9 @@ describe("Docs — public-copy banned-phrase scan", () => {
           .map((h) => `  line ${h.line}: "${h.phrase}" — ${h.snippet}`)
           .join("\n");
         throw new Error(
-          `${doc} frames the engine or picks as AI (brand rule: "We're not AI. ` +
-            `We're math you can read."):\n${summary}\n` +
-            `If a phrase is referenced legitimately (e.g. documenting a forbidden term), ` +
-            `wrap it in a code-fence or backticks so the scanner can skip it.`
+          `${doc} frames the engine or picks as unverified AI marketing copy:\n${summary}\n` +
+          `If a phrase is referenced legitimately (e.g. documenting a forbidden term), ` +
+          `wrap it in a code-fence or backticks so the scanner can skip it.`
         );
       }
       expect(hits.length).toBe(0);
@@ -202,8 +201,7 @@ describe("Additional user-facing surfaces — banned-phrase + positioning scan",
           .map((h) => `  line ${h.line}: "${h.phrase}" — ${h.snippet}`)
           .join("\n");
         throw new Error(
-          `${file} frames the engine or picks as AI (brand rule: "We're not AI. ` +
-            `We're math you can read."):\n${summary}`
+          `${file} frames the engine or picks as unverified AI marketing copy:\n${summary}`
         );
       }
       expect(hits.length).toBe(0);

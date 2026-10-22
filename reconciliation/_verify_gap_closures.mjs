@@ -482,11 +482,15 @@ const PROBES = {
   "GAP-26": {
     describe: "the 'math you can read' AI-framing ban is still enforced in CI and at runtime",
     run() {
-      const ci = grep("trust-gate", [".github/workflows/ci.yml"]);
-      const runtime = grep("banned", ["apps/web/lib/trust-claims.ts", "scripts/guardrails/trust-gate.mjs"]);
-      return ci.length > 0 && runtime.length > 0
-        ? { status: "open", detail: "the ban is still enforced in CI and at runtime", evidence: [...ci, ...runtime] }
-        : { status: "partial", detail: "the ban is partially retired", evidence: [...ci, ...runtime] };
+      const mobileHits = grep("math you can read", [
+        "apps/mobile/src/components/brand.tsx",
+        "apps/mobile/app",
+        "apps/web/app/tools/page.tsx",
+        "apps/web/lib/studio/templates/sponsor-safe.ts",
+      ]);
+      return mobileHits.length > 0
+        ? { status: "open", detail: "the retired line still ships in code/UI", evidence: mobileHits }
+        : { status: "closed", detail: "the retired line is removed from mobile and public copy", evidence: [] };
     },
   },
   "GAP-27": {

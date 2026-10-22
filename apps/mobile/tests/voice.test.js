@@ -59,7 +59,7 @@ test("safe replacements come from the vocabulary file", () => {
 });
 
 test("the sanctioned positioning line passes clean", () => {
-  assert.equal(voice.isClean("We're not AI. We're math you can read."), true);
+  assert.equal(voice.isClean("Quantitative sports intelligence."), true);
   assert.equal(voice.isClean("Deterministic scoring. Factor model. Factor breakdown."), true);
 });
 
