@@ -3,10 +3,16 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
- * Source-pin test for the three segment error boundaries shipped this
- * run (stats / fantasy / intelligence). Mirrors critical-routes-shape's
+ * Source-pin test for the segment error boundaries shipped this
+ * run (stats / fantasy). Mirrors critical-routes-shape's
  * readFileSync + regex idiom — NOT render-based — so it never depends on
  * Nav / next-navigation mounting in a test environment.
+ *
+ * The /intelligence segment is NOT listed: app/intelligence was removed
+ * by the Garrett-ordered sheriff commit 89ec7c528 ("remove public
+ * /intelligence methodology pages") and no longer exists on main, so it
+ * is not a live segment and carries no boundary requirement. If a
+ * segment named intelligence returns, its boundary belongs here again.
  *
  * Each boundary must keep the shape Next.js requires (a "use client"
  * component taking { error, reset }) AND the observability + recovery
@@ -19,7 +25,6 @@ const repoRoot = resolve(__dirname, "..");
 const SEGMENT_BOUNDARIES = [
   { file: "app/stats/error.tsx", segment: "stats", recoveryHref: "/stats" },
   { file: "app/fantasy/error.tsx", segment: "fantasy", recoveryHref: "/fantasy" },
-  { file: "app/intelligence/error.tsx", segment: "intelligence", recoveryHref: "/intelligence" },
 ] as const;
 
 describe("segment error boundaries — shape and observability wiring", () => {
