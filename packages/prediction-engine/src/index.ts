@@ -5346,6 +5346,19 @@ export {
   jeffreysGoalPrior,
 } from "./models/gamma-poisson-goals.js";
 export { hillSaturation } from "./models/hill-saturation.js";
+export {
+  alphaFromHalfLife,
+  geometricAdstock,
+  hillWithSlope,
+  logisticSaturation,
+  michaelisMenten,
+} from "./models/media-transforms.js";
+export { differenceInDifferences } from "./causal/two-by-two-did.js";
+export {
+  automaticAdequacyVerdict,
+  classifyUpper,
+} from "./evaluation/evidence-band.js";
+export { reliabilityCorrectedSlope } from "./evaluation/reliability-ratio.js";
 
 export {
   POLYMARKET_PUBLISH_HOLD,
