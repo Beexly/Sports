@@ -13,6 +13,9 @@ import {
   safetyOutExplosiveBoost,
   steamExhaustionFade,
   twoSignalCellRule,
+  shipWindSpeedInteraction,
+  windSpeedKickingPoints,
+  LONG_FG_MAKE_BY_WIND,
   flatKickingEnvelope,
   fourMinuteRunPrior,
   nickelSlotSuppression,
@@ -65,5 +68,8 @@ describe("killed claims stay killed", () => {
     expect(() => fourthShortAlternative("PUNT")).toThrow(/17 of 1,018/);
     expect(fourthShortAlternative("FG")).toBeCloseTo(0.195, 3);
     expect(FOURTH_SHORT_GO_RATE).toBeCloseTo(0.694, 3);
+    expect(windSpeedKickingPoints()).toBe(0);
+    expect(LONG_FG_MAKE_BY_WIND.mphGe13).toBeCloseTo(0.5, 3);
+    expect(() => shipWindSpeedInteraction()).toThrow(/0\.485/);
   });
 });

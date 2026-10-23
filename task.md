@@ -8,7 +8,7 @@
 - [x] Mechanism bits 225, 226, 228, and 234 stay off. Jacobian weight from those bits is 1.
 - [x] Vitest `vitest.gse.config.ts` is green after the retraction.
 - [x] z3-solver 5.3.1 returns sat on the replay and unsat below the 5,000 mind floor.
-- [x] Killed claims stay refused: fingerprint, red-zone rating, 4-minute run prior, steam fade, dispersion, safety-out explosive boost, crew DPI, two-signal cell, punt-as-the-alternative.
+- [x] Killed claims stay refused: fingerprint, red-zone rating, 4-minute run prior, steam fade, dispersion, safety-out explosive boost, crew DPI, two-signal cell, punt-as-the-alternative, wind-speed kicking term.
 - [x] Nightly harness pins the z3 receipt hash. It is not a scheduled trainer.
 - [ ] 14,448-entry inventory and 50k-premise router.
 - [ ] Learned Causal-PRM, full GRPO loop, vine copula.

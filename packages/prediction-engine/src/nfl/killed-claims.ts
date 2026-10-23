@@ -191,3 +191,19 @@ export function twoSignalCellRule(): never {
     "The both-high cell is not a rule. The signals add. Publish by the summed z-score.",
   );
 }
+
+/** Outdoor field goals, 2018–2021, n=1,947. Short kicks are flat. Long kicks fall, and the interaction is not significant. */
+export const SHORT_FG_MAKE_BY_WIND = { calmLe8: 0.947, mph9to12: 0.944, mphGe13: 0.94 } as const;
+export const LONG_FG_MAKE_BY_WIND = { calmLe8: 0.667, mph9to12: 0.538, mphGe13: 0.5 } as const;
+
+/** The wind-speed interaction is not a points term. Axis (cross vs head) is still unmeasured. */
+export function windSpeedKickingPoints(): 0 {
+  return 0;
+}
+
+export function shipWindSpeedInteraction(): never {
+  throw new KilledClaimError(
+    "wind_speed_kicking_interaction",
+    "Logit interaction is -0.00120 (p=0.485). Long kicks fall from 0.667 to 0.500, but 44 attempts at 13+ mph do not price a term.",
+  );
+}

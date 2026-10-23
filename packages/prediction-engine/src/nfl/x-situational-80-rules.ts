@@ -12,6 +12,8 @@
  * baseline is not flipped into a play on the other side.
  */
 
+import { windSpeedKickingPoints } from "./killed-claims.js";
+
 export const KNEEL_MEAN_YD = -1.059;
 export const KNEEL_SD_YD = 0.498;
 export const KNEEL_RATE_PER_WINNING_GAME = 2.03;
@@ -55,7 +57,7 @@ export function evaluateMutualDefensiveAttritionTotalOverride(
 ): MutualDefensiveAttritionResult {
   const olinePenaltyNeutralizationPts = KILLED_TOTAL_BOOST;
   const hessianInteractionBoostPts = KILLED_TOTAL_BOOST;
-  const kickingEnvelopeBoostPts = KILLED_TOTAL_BOOST;
+  const kickingEnvelopeBoostPts = windSpeedKickingPoints();
   const adjustedProjectedTotal = input.baselineProjectedTotal;
   const recommendedAction = "PASS" as const;
 
