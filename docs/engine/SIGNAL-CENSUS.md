@@ -20,9 +20,17 @@ family, that row is first.
   call sites in `scoring.ts`** → DISCONNECTED, not built.
 - `L1 HEALTH` — `engine/availability-factors.ts` (2,659 bytes) on the remote. Emits
   named outages. Same: zero call sites → DISCONNECTED.
-- Next: wire both into the scoring context and quote a trail on a real Week 8 game
-  carrying the shift and the named outage. Row flips to REACHES THE TRAIL on that
-  quote, DECISION once the play moves under mutation.
+- **NOW WIRED TO THE TRAIL (2026-10-23).** `OddsInput.coachTrail` carries the
+  packet; `coachTrailFactors` is called at all three scoring sites and the note is
+  prefixed to the reasoning, ahead of every market clause. Proof quote, BAL/CIN
+  week 7 fixture:
+  `"J.Chase (WR1, Cincinnati Bengals) downtick in targets, weeks 1-3 v 4-5:
+  24.50 → 15.50 (Δ-0.09). Source: nflverse pbp receiver_player_name, fetched
+  ... Zay Flowers (WR, Baltimore Ravens) is Out — Ankle. Source: ESPN summary injuries"`
+- **NOT YET THE DECISION.** Under mutation (Questionable → Out → plus the Chase
+  downtick) the trail changes and confidence stays 50 / edge 67. The composite
+  does not read `factors[]`, so trail weight is cosmetic until it does. That is
+  the next row, not a claim to be quietly rounded up.
 
 ## Verified disconnected — the five named families
 
