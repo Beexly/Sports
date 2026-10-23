@@ -78,6 +78,24 @@ describe("consistency", () => {
     expect(scoreConsistency(wrong, kase)).toBeLessThan(1);
   });
 
+  it("accepts printed fairs that match the record", () => {
+    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, marketFairProb: 0.143, fairProbability: 0.31 } };
+    const a = { ...good, reasonText: "wind mph 14.3. Market fair: 14%, engine fair: 31%." };
+    expect(scoreConsistency(a, k)).toBe(1);
+  });
+
+  it("penalises a printed market fair that disagrees with the record", () => {
+    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, marketFairProb: 0.143 } };
+    const a = { ...good, reasonText: "wind mph 14.3. Market fair: 60%." };
+    expect(scoreConsistency(a, k)).toBeLessThan(1);
+  });
+
+  it("penalises a printed engine fair that disagrees, and allows the rounding band", () => {
+    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, fairProbability: 0.31 } };
+    expect(scoreConsistency({ ...good, reasonText: "wind mph 14.3, engine fair: 32%." }, k)).toBe(1);
+    expect(scoreConsistency({ ...good, reasonText: "wind mph 14.3, engine fair: 48%." }, k)).toBeLessThan(1);
+  });
+
   it("never goes below zero", () => {
     const awful: ReasonArtifact = {
       ...good,

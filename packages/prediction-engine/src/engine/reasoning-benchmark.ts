@@ -120,12 +120,29 @@ export function scoreConsistency(artifact: ReasonArtifact, kase: BenchmarkCase):
     score -= 0.25;
   }
 
+  // Printed fair values must match the record they came from. This is the
+  // specific check the 2026-10-23 baseline needed: the template used to print a
+  // market-derived number under the same "Fair value" label the record used for
+  // the engine's, so 103/552 rows disagreed with themselves. Tolerance is 2
+  // points because the prose rounds to whole percent.
+  // Regex LITERALS on purpose: this file is generated/edited through a shell
+  // that collapses double backslashes, and "\s" inside a string degrades to a
+  // bare "s" with no error. Literals survive it.
+  const agrees = (re: RegExp, expected: unknown): boolean | null => {
+    const m = re.exec(text);
+    if (!m || typeof expected !== "number") return null;
+    return Math.abs(Number(m[1]) - expected * 100) <= 2;
+  };
+  if (agrees(/market fair\s*:\s*(\d+)%/, kase.facts["marketFairProb"]) === false) score -= 0.25;
+  if (agrees(/engine fair\s*:\s*(\d+)%/, kase.facts["fairProbability"]) === false) score -= 0.25;
+
   for (const [key, value] of Object.entries(kase.facts)) {
+    if (key === "marketFairProb" || key === "fairProbability") continue;
     if (typeof value !== "number") continue;
     if (!text.includes(key.toLowerCase().replace(/_/g, " "))) continue;
     // A figure quoted to one decimal must match the case's own figure.
     const quoted = new RegExp(`${value.toFixed(1).replace(".", "\\.")}`).test(text);
-    const near = new RegExp(`\\b${Math.round(value)}\\b`).test(text);
+const near = new RegExp("\b" + Math.round(value) + "\b").test(text);
     if (!quoted && !near) score -= 0.25;
   }
 

@@ -44,6 +44,26 @@ export {
 // Utility: convert American odds to implied probability
 // ============================================================
 
+/**
+ * "Fair value" was ambiguous on every card: the prose printed the DE-VIGGED
+ * MARKET number while `factorBreakdown.fairProbability` stored the ENGINE's
+ * ranking probability. Two quantities, one label — and the reasoning benchmark
+ * scores the text against the stored field. Both are now named.
+ *
+ * An unpriced pick says so instead of borrowing the market figure under a model
+ * label, which is the case that made 3,211 rows unscorable.
+ */
+export function formatFairValueClause(
+  marketFairProb: number,
+  engineProb: number | null,
+): string {
+  const market = `Market fair: ${Math.round(marketFairProb * 100)}%`;
+  if (engineProb === null || !Number.isFinite(engineProb)) {
+    return `${market} (model unpriced).`;
+  }
+  return `${market}, engine fair: ${Math.round(engineProb * 100)}%.`;
+}
+
 export function americanToImpliedProbability(americanOdds: number): number {
   if (americanOdds > 0) {
     return 100 / (americanOdds + 100);
@@ -953,14 +973,15 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusClause = `When we published, it was not unanimous that ${chosenTeam} was favoured. We are on ${selection}.`;
   }
 
+  const fairValueClause = formatFairValueClause(fairProb, rank.priced ? rank.rankingP : null);
   const reasoning = isFixedLadderSpreadMarket
     ? `${chosenTeam} ${spreadDisplay}, the run line priced by ${pricedOdds.length} ` +
       `bookmaker${pricedOdds.length === 1 ? "" : "s"}. The run line is a fixed number, so book ` +
-      `agreement on it is expected and not read as a signal here. Fair value: ${Math.round(fairProb * 100)}%. ` +
+      `agreement on it is expected and not read as a signal here. ${fairValueClause} ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
-    : `${chosenTeam} ${spreadDisplay}. Fair value: ${Math.round(fairProb * 100)}%. ` +
+    : `${chosenTeam} ${spreadDisplay}. ${fairValueClause} ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
@@ -1218,8 +1239,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
-    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${pricedTotals.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+    `${direction} ${totalDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedTotals.length} ` +
+    `bookmakers. ${formatFairValueClause(fairProb, null)} ` + // totals never store a
+    // fairProbability (the record says null), so the text must not claim one
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     movementNote +
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
