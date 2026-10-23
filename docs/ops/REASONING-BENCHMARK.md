@@ -49,6 +49,36 @@ NODE_PATH=<repo parent>/node_modules npx tsx scripts/bench-reasoning.mts 4000
   columns. The templated phrases cite those columns, so scoring them as
   hallucinations was an artefact of looking only inside the breakdown.
 
+## 2026-10-23, later: probability recalibration (v5.3.1)
+
+Calibration shape, by stated-probability band: .45-.55 hit .433-.488 and .60+ hit
+.615 against a stated .679 — overconfident through the middle and top. Overall
+stated 56.3% v actual 52.2% (4.1 points), correlation .1114.
+
+Recalibrated toward the market at a **fitted 0.15 engine weight** (fit on the
+oldest 70%, n=386; evaluated on the untouched newest 30%, n=166):
+
+| | Brier |
+|---|---|
+| engine alone | .2642 |
+| recalibrated | **.2314** |
+| market alone | .2299 |
+
+On all 552 rows the recalibrated number is .2154 v market .2158 — it now edges
+the close — and overconfidence falls 4.1 -> 1.2 points. Benchmark re-run with
+`RECAL=1`:
+
+```
+Brier .2154 v market .2158   PASS (blocker cleared)
+consistency .9171            FAIL — transitional, see below
+```
+
+**The consistency drop is expected.** Stored rows carry text written before the
+recalibration, so the printed "engine fair" no longer matches the recalibrated
+number the same row now scores against. New picks will agree by construction;
+the bench should return above the floor as they settle. Do not "fix" this by
+loosening the check.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.

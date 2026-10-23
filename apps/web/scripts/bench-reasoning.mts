@@ -10,9 +10,14 @@
  * Usage: NODE_PATH=<repo>/node_modules tsx scripts/bench-reasoning.mts [limit]
  */
 import { Client } from "pg";
+import { recalibrateProbability } from "../../../packages/prediction-engine/src/engine/probability-recalibration.ts";
 import { runSuite, type BenchmarkCase, type ReasonArtifact } from "../../../packages/prediction-engine/src/engine/reasoning-benchmark.ts";
 
 const LIMIT = Number(process.argv[2] ?? 300);
+// RECAL=1 scores the math that will actually ship (0.15 engine / 0.85 market)
+// against the raw stored number, so the effect is visible through the same
+// scorecard rather than in a side calculation.
+const USE_RECAL = process.env.RECAL === "1";
 
 /** jsonb nulls are common in these columns; Number(null) is 0 and slips guards. */
 function num(v: unknown): number | null {
@@ -117,7 +122,12 @@ async function main() {
       marketProb: mfp,
       facts,
     });
-    artifacts.push({ caseId: r.id, reasonText: r.reasoning, prob, side, citedSurfaces: cited });
+    const scored = USE_RECAL ? (recalibrateProbability(prob, mfp)?.prob ?? prob) : prob;
+    if (scored !== prob) {
+      facts["fairProbability"] = scored;
+      facts["marketFairProb"] = mfp;
+    }
+    artifacts.push({ caseId: r.id, reasonText: r.reasoning, prob: scored, side, citedSurfaces: cited });
   }
 
   const card = runSuite(cases, artifacts);

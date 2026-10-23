@@ -296,7 +296,9 @@ describe("one ladder, one model version, one scale", () => {
   it("MODEL_VERSION moved past the last half-scale version", () => {
     expect(LEGACY_HALF_SCALE_THROUGH_MODEL_VERSION).toBe("v5.2.7");
     expect(MODEL_VERSION).not.toBe(LEGACY_HALF_SCALE_THROUGH_MODEL_VERSION);
-    expect(MODEL_VERSION).toBe("v5.3.0");
+    // v5.3.1 = fairProbability recalibration; the Edge Index scale is untouched,
+    // so this only ever moves forward past the half-scale era.
+    expect(MODEL_VERSION).toBe("v5.3.1");
   });
 
   it("every published pick carries the model version that defines its scale", () => {

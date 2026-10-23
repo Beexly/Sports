@@ -32,6 +32,7 @@ import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
 import { snapToPostedLine, formatPublishedLine } from "./published-line.js";
+import { recalibrateProbability } from "./engine/probability-recalibration.js";
 
 export {
   computeSovereignSignalPlaneContribution,
@@ -997,7 +998,12 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
     trueEvScore: rank.priced && independentEdge ? independentEdge.shrunkEdge : null,
-    fairProbability: rank.priced ? rank.rankingP : null,
+    // Recalibrated, not raw rankingP: measured .2532 Brier against the market's
+    // .2158 on 552 settled rows, 4.1 points overconfident, .1114 correlation.
+    // The mix puts 85% on the market (see engine/probability-recalibration.ts).
+    fairProbability: rank.priced
+      ? (recalibrateProbability(rank.rankingP, fairProb)?.prob ?? null)
+      : null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
@@ -1624,7 +1630,12 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
     trueEvScore: rank.priced && independentEdge ? independentEdge.shrunkEdge : null,
-    fairProbability: rank.priced ? rank.rankingP : null,
+    // Recalibrated, not raw rankingP: measured .2532 Brier against the market's
+    // .2158 on 552 settled rows, 4.1 points overconfident, .1114 correlation.
+    // The mix puts 85% on the market (see engine/probability-recalibration.ts).
+    fairProbability: rank.priced
+      ? (recalibrateProbability(rank.rankingP, fairProb)?.prob ?? null)
+      : null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
