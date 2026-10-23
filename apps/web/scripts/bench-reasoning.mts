@@ -146,6 +146,7 @@ async function main() {
         meanGrounding: +card.meanGrounding.toFixed(4),
         meanConsistency: +card.meanConsistency.toFixed(4),
         meanSpecificity: +card.meanSpecificity.toFixed(4),
+        meanFalsifier: +card.meanFalsifier.toFixed(4),
         meanRubric: +card.meanRubric.toFixed(2),
         brier: card.brier === null ? null : +card.brier.toFixed(4),
         marketBrier: card.marketBrier === null ? null : +card.marketBrier.toFixed(4),

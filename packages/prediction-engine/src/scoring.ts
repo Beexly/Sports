@@ -65,6 +65,31 @@ export function formatFairValueClause(
   return `${market}, engine fair: ${Math.round(engineProb * 100)}%.`;
 }
 
+/**
+ * What would prove this read wrong.
+ *
+ * A claim with no falsifier cannot be argued with, which is why the reasoning
+ * benchmark's probe cases kept scoring fluent paragraphs low: they assert and
+ * never admit a failure mode. Each clause is driven by a signal that is actually
+ * present and genuinely adverse, so this is not boilerplate — a clean pick emits
+ * nothing rather than a generic hedge.
+ *
+ * Capped at two: three falsifiers read as a hedge and dilute the strongest.
+ */
+export function buildFalsifiers(scores: {
+  readonly uncertaintyPenalty: number;
+  readonly dispersionScore: number;
+  readonly lineMovementScore: number;
+  readonly injuryScore: number;
+}): string[] {
+  const out: string[] = [];
+  if (scores.lineMovementScore < -5) out.push("the line keeps moving against us");
+  if (scores.dispersionScore < -2) out.push("the books tighten toward the far side");
+  if (scores.uncertaintyPenalty < -3) out.push("the conflicting signals resolve against us");
+  if (scores.injuryScore < -1) out.push("the availability picture worsens before kickoff");
+  return out.slice(0, 2);
+}
+
 export function americanToImpliedProbability(americanOdds: number): number {
   if (americanOdds > 0) {
     return 100 / (americanOdds + 100);
@@ -952,6 +977,14 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
 
+  const falsifiers = buildFalsifiers({
+    uncertaintyPenalty,
+    dispersionScore,
+    lineMovementScore,
+    injuryScore,
+  });
+  const falsifierNote = falsifiers.length > 0 ? ` Would be wrong if ${falsifiers.join("; ")}.` : "";
+
   const firstContextClause = contextClauses.length > 0
     ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.`
     : "";
@@ -997,10 +1030,12 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       `agreement on it is expected and not read as a signal here. ${fairValueClause} ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
+      falsifierNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
     : `${chosenTeam} ${spreadDisplay}. ${fairValueClause} ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
+      falsifierNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort = isFixedLadderSpreadMarket
@@ -1638,11 +1673,20 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
 
+  const falsifiers = buildFalsifiers({
+    uncertaintyPenalty,
+    dispersionScore,
+    lineMovementScore,
+    injuryScore,
+  });
+  const falsifierNote = falsifiers.length > 0 ? ` Would be wrong if ${falsifiers.join("; ")}.` : "";
+
   const reasoning =
     `${chosenTeam} ML (${priceDisplay}): fair value ${Math.round(fairProb * 100)}% ` +
     `across ${h2hOdds.length} bookmakers. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     contextNote +
+    falsifierNote +
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
     (rank.priced
       ? ` Ranking: ${rank.rankingScore}/100 via ${rank.source}.`

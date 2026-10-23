@@ -128,6 +128,25 @@ describe("reasoning specificity carries units", () => {
     }
   });
 
+  it("states what would prove the read wrong when a signal is adverse", () => {
+    // Dispersion is computed from marketSpreadDispersion, so the input must move
+    // that, not the score: 2.0+ pts of spread disagreement is a -5 penalty.
+    const ctx: GameContextInput = { ...RICH_CONTEXT, marketSpreadDispersion: 2.4 };
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);
+    const withFalsifier = picks.filter((p) => p.reasoning.includes("Would be wrong if"));
+    expect(withFalsifier.length).toBeGreaterThan(0);
+    expect(withFalsifier[0]!.reasoning).toContain("the books tighten toward the far side");
+    // It sits before Confidence so the claim reads, then fails, then grades.
+    expect(withFalsifier[0]!.reasoning.indexOf("Would be wrong if")).toBeLessThan(
+      withFalsifier[0]!.reasoning.indexOf("Confidence:"),
+    );
+  });
+
+  it("stays silent when nothing adverse is present", () => {
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8), AT);
+    for (const p of picks) expect(p.reasoning).not.toContain("Would be wrong if");
+  });
+
   it("falls back to the bare direction word when the days are absent", () => {
     const ctx: GameContextInput = { ...RICH_CONTEXT, restAdvantageScore: 7, restDaysHome: undefined, restDaysAway: undefined };
     const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);

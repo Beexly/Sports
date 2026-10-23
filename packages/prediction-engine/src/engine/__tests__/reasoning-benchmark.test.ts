@@ -5,6 +5,7 @@ import {
   runSuite,
   scoreCase,
   scoreConsistency,
+  scoreFalsifier,
   scoreGrounding,
   scoreSpecificity,
   type BenchmarkCase,
@@ -123,6 +124,26 @@ describe("specificity", () => {
   });
 });
 
+describe("falsifier", () => {
+  it("gives full credit for two named failure states", () => {
+    const a = { ...good, reasonText: good.reasonText + " Would be wrong if the wind drops; the line reverses." };
+    expect(scoreFalsifier(a)).toBe(1);
+  });
+
+  it("gives partial credit for one", () => {
+    const a = { ...good, reasonText: good.reasonText + " Would be wrong if the wind drops." };
+    expect(scoreFalsifier(a)).toBe(0.7);
+  });
+
+  it("does not zero a silent artifact — some reads are clean", () => {
+    expect(scoreFalsifier(good)).toBe(0.6);
+  });
+
+  it("is case-insensitive", () => {
+    expect(scoreFalsifier({ ...good, reasonText: "WOULD BE WRONG IF a; b" })).toBe(1);
+  });
+});
+
 describe("case scoring", () => {
   it("names every failure", () => {
     const bad = scoreCase({ ...good, citedSurfaces: ["invented"], prob: 0.3 }, kase);
@@ -136,7 +157,8 @@ describe("case scoring", () => {
   });
 
   it("a clean artifact scores high", () => {
-    expect(scoreCase(good, kase).rubric).toBeGreaterThan(80);
+    // Lowered from >80: a silent artifact now loses the falsifier weight.
+    expect(scoreCase(good, kase).rubric).toBeGreaterThan(70);
   });
 });
 

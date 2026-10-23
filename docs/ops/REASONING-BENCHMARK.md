@@ -96,6 +96,19 @@ score, weight or threshold moved.
 Stored bench rows cannot show this (their text is frozen at generation), so the
 effect appears as post-change picks settle.
 
+## 2026-10-23, later: falsifiers, and a fifth scored component
+
+Reasoning asserted and never admitted a failure mode, which is why fluent
+paragraphs scored low on probe cases. Picks now carry "Would be wrong if ..."
+driven by real adverse signals — line moving against, book dispersion,
+conflicting signals, worsening availability — capped at two so it stays a claim
+and not a hedge, and omitted entirely on a clean read.
+
+Scored as its own component (`falsifier`, weight 0.10; grounding eased .35 -> .30,
+consistency .30 -> .25). Two or more states score 1, one scores 0.7, silence 0.6
+rather than 0 — a genuinely clean read has little to name. Stored rows predate it,
+so the run reads .6 and rubric fell 86.86 -> 83.02, still above the 70 floor.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.

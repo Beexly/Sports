@@ -44,6 +44,7 @@ export interface ComponentScore {
   readonly grounding: number;
   readonly consistency: number;
   readonly specificity: number;
+  readonly falsifier: number;
   readonly calibration: number | null;
 }
 
@@ -55,9 +56,13 @@ export interface CaseScore extends ComponentScore {
 }
 
 export const RUBRIC_WEIGHTS = {
-  grounding: 0.35,
-  consistency: 0.3,
+  grounding: 0.3,
+  consistency: 0.25,
   specificity: 0.15,
+  // Admitting a failure mode is a reasoning property, not decoration: a claim
+  // with no falsifier cannot be argued with. Weighted below grounding because a
+  // well-grounded claim is still useful without one.
+  falsifier: 0.1,
   calibration: 0.2,
 } as const;
 
@@ -161,6 +166,18 @@ export function scoreSpecificity(artifact: ReasonArtifact, kase: BenchmarkCase):
   return Math.min(1, distinct / 3) * 0.6 + Math.min(1, numbers / 3) * 0.4;
 }
 
+/**
+ * Falsifier score. Credit falls with the number of states the artifact says would
+ * prove it wrong: two or more is full, one is partial, none is 0.6 rather than 0
+ * because a genuinely clean read has little to name.
+ */
+export function scoreFalsifier(artifact: ReasonArtifact): number {
+  const text = artifact.reasonText.toLowerCase();
+  if (!text.includes("would be wrong if")) return 0.6;
+  const states = text.split("would be wrong if")[1]?.split(";").length ?? 0;
+  return states >= 2 ? 1 : 0.7;
+}
+
 /** Calibration for one case: 1 - Brier, null when unsettled. */
 export function scoreCalibration(artifact: ReasonArtifact, kase: BenchmarkCase): number | null {
   if (kase.outcome === null) return null;
@@ -173,6 +190,7 @@ export function scoreCase(artifact: ReasonArtifact, kase: BenchmarkCase): CaseSc
   const grounding = scoreGrounding(artifact, kase);
   const consistency = scoreConsistency(artifact, kase);
   const specificity = scoreSpecificity(artifact, kase);
+  const falsifier = scoreFalsifier(artifact);
   const calibration = scoreCalibration(artifact, kase);
 
   const failures: string[] = [];
@@ -186,14 +204,23 @@ export function scoreCase(artifact: ReasonArtifact, kase: BenchmarkCase): CaseSc
   if (calibration === null) failures.push("unsettled — excluded from calibration");
 
   let weighted = grounding * RUBRIC_WEIGHTS.grounding + consistency * RUBRIC_WEIGHTS.consistency;
-  weighted += specificity * RUBRIC_WEIGHTS.specificity;
+  weighted += specificity * RUBRIC_WEIGHTS.specificity + falsifier * RUBRIC_WEIGHTS.falsifier;
   // Calibration weight is redistributed when a case is unsettled so an unsettled
   // case cannot be punished for a missing outcome.
   weighted = calibration === null
     ? weighted / (1 - RUBRIC_WEIGHTS.calibration)
     : weighted + calibration * RUBRIC_WEIGHTS.calibration;
 
-  return { caseId: kase.id, grounding, consistency, specificity, calibration, rubric: weighted * 100, failures };
+  return {
+    caseId: kase.id,
+    grounding,
+    consistency,
+    specificity,
+    falsifier,
+    calibration,
+    rubric: weighted * 100,
+    failures,
+  };
 }
 
 export interface Scorecard {
@@ -202,6 +229,7 @@ export interface Scorecard {
   readonly meanGrounding: number;
   readonly meanConsistency: number;
   readonly meanSpecificity: number;
+  readonly meanFalsifier: number;
   readonly meanRubric: number;
   readonly brier: number | null;
   readonly marketBrier: number | null;
@@ -254,6 +282,7 @@ export function runSuite(
     meanGrounding: mean(scored.map((s) => s.grounding)),
     meanConsistency: mean(scored.map((s) => s.consistency)),
     meanSpecificity: mean(scored.map((s) => s.specificity)),
+    meanFalsifier: mean(scored.map((s) => s.falsifier)),
     meanRubric: mean(scored.map((s) => s.rubric)),
     brier,
     marketBrier,
