@@ -5,6 +5,11 @@
  * not the spec's −2..−3 per event. Game-level expectation is
  * p_enter * 2.03 * −1.059 ≈ −2.15 yd, which is what crosses a .5 hook.
  * 85.2% of kneels occur at score differential > 0 (not 97%).
+ *
+ * The 2026-10-22 print of 54.6 used three terms that did not survive measurement:
+ * the offensive-line penalty on totals, the dual-ILB point boost (0 triggering
+ * games in 2025), and a flat +1.15 kicking add. Those terms stay at 0. The
+ * baseline is not flipped into a play on the other side.
  */
 
 export const KNEEL_MEAN_YD = -1.059;
@@ -40,62 +45,27 @@ export interface MutualDefensiveAttritionResult {
 }
 
 /**
- * Baranchik positive-part shrink. Canonical 2026-10-22 raw boost 6.918
- * (1.925 + 3.843 + 1.15) maps onto +6.1 so 48.5 prints 54.6.
+ * The canonical 6.918 → 6.1 shrink is the arithmetic that printed 54.6.
+ * It is not applied. Each piece of that sum was killed or parked.
  */
-const CANONICAL_RAW_BOOST = 1.925 + 3.843 + 1.15;
-const CANONICAL_SHRUNK_BOOST = 6.1;
-const POSITIVE_PART_LAMBDA = CANONICAL_SHRUNK_BOOST / CANONICAL_RAW_BOOST;
+const KILLED_TOTAL_BOOST = 0;
 
 export function evaluateMutualDefensiveAttritionTotalOverride(
   input: MutualDefensiveAttritionInput,
 ): MutualDefensiveAttritionResult {
-  const calmWeather = input.windSpeedMph <= 8.0 && input.temperatureF >= 50.0;
-  const dualHomeIlbVoid = input.homeStartingIlbOutCount >= 2;
-  const zeroSackHomePassRush = input.homePassRushSackRate < 0.045;
-  const mutualDefSpineAttrition = dualHomeIlbVoid && input.awayCb1Out;
-
-  const olinePenaltyNeutralizationPts =
-    input.awayInteriorOlOutCount >= 1 && zeroSackHomePassRush
-      ? 1.75 * Math.min(2, input.awayInteriorOlOutCount) * 0.55
-      : 0.0;
-
-  const ypaMultiplier =
-    input.homeQbYpa >= 7.5 && input.awayQbYpa >= 7.5 ? 1.22 : 1.0;
-  const hessianInteractionBoostPts = mutualDefSpineAttrition
-    ? 3.15 * ypaMultiplier
-    : 0.0;
-  const kickingEnvelopeBoostPts =
-    calmWeather && mutualDefSpineAttrition ? 1.15 : 0.0;
-
-  const rawBoost =
-    olinePenaltyNeutralizationPts +
-    hessianInteractionBoostPts +
-    kickingEnvelopeBoostPts;
-  const shrunkBoost = rawBoost > 0 ? rawBoost * POSITIVE_PART_LAMBDA : 0;
-  const adjustedProjectedTotal =
-    Math.round((input.baselineProjectedTotal + shrunkBoost) * 10) / 10;
-
-  const overridesOlineUnderLean =
-    mutualDefSpineAttrition && zeroSackHomePassRush && calmWeather;
-  const overridesSteamExhaustionFade =
-    overridesOlineUnderLean &&
-    adjustedProjectedTotal - input.marketTotalLine >= 2.5;
-  const recommendedAction =
-    adjustedProjectedTotal - input.marketTotalLine >= 2.0
-      ? "PLAY_OVER"
-      : input.marketTotalLine - adjustedProjectedTotal >= 2.0
-        ? "PLAY_UNDER"
-        : "PASS";
+  const olinePenaltyNeutralizationPts = KILLED_TOTAL_BOOST;
+  const hessianInteractionBoostPts = KILLED_TOTAL_BOOST;
+  const kickingEnvelopeBoostPts = KILLED_TOTAL_BOOST;
+  const adjustedProjectedTotal = input.baselineProjectedTotal;
+  const recommendedAction = "PASS" as const;
 
   return {
     adjustedProjectedTotal,
-    hessianInteractionBoostPts: Math.round(hessianInteractionBoostPts * 100) / 100,
-    olinePenaltyNeutralizationPts:
-      Math.round(olinePenaltyNeutralizationPts * 100) / 100,
+    hessianInteractionBoostPts,
+    olinePenaltyNeutralizationPts,
     kickingEnvelopeBoostPts,
-    overridesOlineUnderLean,
-    overridesSteamExhaustionFade,
+    overridesOlineUnderLean: false,
+    overridesSteamExhaustionFade: false,
     recommendedAction,
   };
 }
@@ -204,20 +174,10 @@ export function evaluateRookieSnapAndTargetRampOverride(input: RookieRampInput):
   readonly overrideApplied: boolean;
   readonly predictiveRouteShare: number;
 } {
-  const inflection =
-    input.week >= 6 &&
-    input.week <= 10 &&
-    input.routeParticipation >= 0.65 &&
-    input.kalmanVelocityPerWeek > 0.04 &&
-    input.bocpdRunLength <= 3;
-  const overrideApplied = inflection && input.veteranShadowedByCb1;
-  const predictiveRouteShare = overrideApplied
-    ? Math.min(0.95, input.routeParticipation + input.kalmanVelocityPerWeek)
-    : input.routeParticipation;
   return {
     player: input.player,
-    overrideApplied,
-    predictiveRouteShare: Math.round(predictiveRouteShare * 1000) / 1000,
+    overrideApplied: false,
+    predictiveRouteShare: Math.round(input.routeParticipation * 1000) / 1000,
   };
 }
 

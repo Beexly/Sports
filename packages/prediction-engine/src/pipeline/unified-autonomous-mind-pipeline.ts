@@ -229,7 +229,7 @@ export async function runUnifiedAutonomousMindPipeline(
       complementProb: 0,
       marketImpliedDeVigProb: 0.5,
       edgeVsMarket: 0,
-      publishState: overlay.totalPublishState === "PLAY" ? "PLAY" : "CANDIDATE",
+      publishState: overlay.totalPublishState,
       bitmaskSha256: bitmaskReceipt.sha256Digest,
       counts,
       mentionedActivePlayerIds: active,

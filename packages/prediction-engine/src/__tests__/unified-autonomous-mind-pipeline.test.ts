@@ -17,13 +17,13 @@ describe("unified autonomous mind pipeline", () => {
       trainerDir: join(dir, "trainer"),
     });
     expect(summary.spreadPublishState).toBe("PLAY");
-    expect(summary.totalPublishState).toBe("PLAY");
-    expect(summary.attritionOverride.adjustedProjectedTotal).toBeCloseTo(54.6, 1);
+    expect(summary.totalPublishState).toBe("PASS");
+    expect(summary.attritionOverride.adjustedProjectedTotal).toBeCloseTo(48.5, 1);
     expect(summary.propHookFlags).toEqual(["PASS_KNEELDOWN_HOOK_RISK", "PASS_KNEELDOWN_HOOK_RISK"]);
     expect(summary.totalReceipt.z3SolverStatus).toBe("sat");
     expect(summary.corpusItemsEvaluated).toBeGreaterThanOrEqual(2000);
     expect(summary.mindApplicablePrinciplesCount).toBeGreaterThan(0);
-    expect(renderPublicBoardOrSocialCard(summary.totalReceipt)).toContain("OVER 50.5");
+    expect(renderPublicBoardOrSocialCard(summary.totalReceipt)).toContain("OVER 50.5 PASS");
     expect(summary.merkleRootSha256).toMatch(/^[a-f0-9]{64}$/);
   });
 });

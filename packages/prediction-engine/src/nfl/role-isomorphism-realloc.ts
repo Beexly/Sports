@@ -1,7 +1,9 @@
 /**
  * Log-domain Sinkhorn-Knopp target reallocation.
- * Dual-ILB void + active Nickel CB funnels mass to TE1/TE2/RB and
- * suppresses the slot WR (Kyler Gordon on DeMario Douglas, 2026-10-22).
+ * Nickel-on-slot suppression and the ILB-to-tight-end funnel were measured
+ * and killed (slot share rises 6.18 points when a nickel is on; the tight-end
+ * move is 0.18 points). The flags are accepted and ignored. No player is
+ * suppressed or boosted from them.
  */
 
 export interface SinkhornRoleInput {
@@ -60,15 +62,15 @@ export function evaluateLbVoidTeRbVsSlotAbsorption(
 ): SinkhornRoleResult {
   const ilbVoid = input.homeIlb1Out && input.homeIlb2Out;
   const nickel = input.homeNickelCbActive;
-  const suppress = ilbVoid && nickel;
-  // Zones: boundary, seam, hook, flat. Roles: SLOT, TE1, TE2, RB.
-  const slotCost = suppress ? 2.4 : 0.6;
-  const seamCost = suppress ? 0.25 : 0.8;
+  void ilbVoid;
+  void nickel;
+  const slotCost = 0.6;
+  const seamCost = 0.8;
   const cost = [
     [1.2, slotCost, seamCost, 0.9],
     [0.8, seamCost, slotCost, 0.7],
     [1.4, 0.4, 0.35, 0.3],
-    [0.5, 0.9, 0.7, suppress ? 0.2 : 0.6],
+    [0.5, 0.9, 0.7, 0.6],
   ];
   const shares = sinkhornShares(cost, [0.25, 0.25, 0.25, 0.25], [0.22, 0.28, 0.22, 0.28]);
   const targetShare = {
@@ -81,10 +83,10 @@ export function evaluateLbVoidTeRbVsSlotAbsorption(
     (r) => targetShare[r] > targetShare.SLOT_WR,
   );
   return {
-    slotWrNickelSuppressionApplied: suppress && targetShare.SLOT_WR < 0.3,
+    slotWrNickelSuppressionApplied: false,
     targetShare,
-    suppressedPlayers: suppress ? [input.slotWrName] : [],
-    boostedPlayers: suppress ? [input.te1Name, input.te2Name, input.rbName] : [],
+    suppressedPlayers: [],
+    boostedPlayers: [],
     boostedRoles,
     iterations: 40,
   };

@@ -1,14 +1,14 @@
 import type { UnifiedSlateExecutionSummary } from "./unified-autonomous-mind-pipeline.ts";
 
-/** Reproduced after Word 8 bits 280 and 281 were set. Not the pre-word-8 hash. */
+/** Re-pinned after the killed total boosts were removed. The old print was 54.6. */
 export const PINNED_2026_10_22_TOTAL_RECEIPT_SHA256 =
-  "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4";
+  "6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063";
 
 export function assertPinnedReplay(summary: UnifiedSlateExecutionSummary): void {
-  if (summary.spreadPublishState !== "PLAY" || summary.totalPublishState !== "PLAY") {
+  if (summary.spreadPublishState !== "PLAY" || summary.totalPublishState !== "PASS") {
     throw new Error(`replay publish state drifted: ${summary.spreadPublishState}/${summary.totalPublishState}`);
   }
-  if (summary.attritionOverride.adjustedProjectedTotal !== 54.6) {
+  if (summary.attritionOverride.adjustedProjectedTotal !== 48.5) {
     throw new Error(`projection drifted: ${summary.attritionOverride.adjustedProjectedTotal}`);
   }
   if (summary.propHookFlags.some((f) => f !== "PASS_KNEELDOWN_HOOK_RISK") || summary.propHookFlags.length !== 2) {

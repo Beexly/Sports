@@ -61,3 +61,80 @@ export function fourMinuteRunPrior(claimedRunRate: number): number {
   }
   return FOUR_MINUTE_RUN_RATE;
 }
+
+export function questionableBurstMultiplier(): never {
+  throw new KilledClaimError(
+    "questionable_burst_haircut",
+    "2021 weeks 1–8: Questionable player-games sit +0.6% of their own peak acceleration, p=0.56 vs healthy. The tag is not a burst haircut.",
+  );
+}
+
+export function blendWinAndClv(): never {
+  throw new KilledClaimError(
+    "blend_mfp_and_confidence",
+    "Win rank is marketFairProb. CLV tag is confidence. Blending them made the test Brier worse (0.251 vs 0.241).",
+  );
+}
+
+export function singleCopulaFamily(): never {
+  throw new KilledClaimError(
+    "single_copula_family",
+    "No family wins on PIT. QB–WR1 tau is +0.385, QB–TE1 +0.307, QB–RB1 −0.020. The sign is the pairing.",
+  );
+}
+
+export function nickelSlotSuppression(): never {
+  throw new KilledClaimError(
+    "nickel_slot_suppression",
+    "A slot corner on the field raises slot target share by 6.18 points (p=1.8e-10). Suppression is the wrong sign.",
+  );
+}
+
+export function ilbTightEndFunnel(): never {
+  throw new KilledClaimError(
+    "ilb_te_funnel",
+    "An ILB being out moves tight-end target share by 0.18 points (p=0.86).",
+  );
+}
+
+export function offensiveLineTotalPenalty(): never {
+  throw new KilledClaimError(
+    "ol_penalty_on_totals",
+    "The offensive-line penalty on totals is the wrong sign, then null. It does not enter a projected total.",
+  );
+}
+
+export function bocpdRookieBreakpoint(): never {
+  throw new KilledClaimError(
+    "bocpd_rookie_breakpoint",
+    "A per-player breakpoint beats noise for 27.4% of rookies. Early share does not predict the later gain (r=−0.054).",
+  );
+}
+
+export function flatKickingEnvelope(points: number): never {
+  throw new KilledClaimError(
+    "flat_kicking_envelope",
+    `Refusing +${points} points. Calm make rates are 0.826 / 0.677 / 0.682 / 0.571 by 40–44 / 45–49 / 50–54 / 55–59. Not a flat add to the total.`,
+  );
+}
+
+export function rankForWin<T extends { readonly marketFairProb: number }>(rows: readonly T[]): T[] {
+  return [...rows].sort((a, b) => b.marketFairProb - a.marketFairProb);
+}
+
+/** Confidence is a tag for whether the price moved. It does not change the win rank. */
+export function clvTag(confidence: number): number {
+  return confidence;
+}
+
+/** A feature timestamped after the day-before lock cannot enter the price. */
+export function assertKnownByLock(knownAtIso: string, lockIso: string): void {
+  const known = Date.parse(knownAtIso);
+  const lock = Date.parse(lockIso);
+  if (!Number.isFinite(known) || !Number.isFinite(lock)) {
+    throw new Error("[FAIL-CLOSED] day-before lock requires two timestamps");
+  }
+  if (known > lock) {
+    throw new Error(`[FAIL-CLOSED] known at ${knownAtIso} is after the lock ${lockIso}`);
+  }
+}

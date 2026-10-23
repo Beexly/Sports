@@ -2,7 +2,7 @@
 
 - [x] Early-abort closed. Negative leans map into (0, 1). Corpus and mind always reached on the 2026-10-22 bundle.
 - [x] James-Stein posterior feedback on calibratedProb. Static NFL/SPREAD veto bypassed only with a v6 receipt.
-- [x] Second-order attrition prints 54.6. OVER 50.5 and CHI -3.0 are PLAY.
+- [x] Killed total terms stay at 0. The 54.6 print is withdrawn. CHI -3 stays PLAY. OVER 50.5 is PASS. Nickel does not suppress the slot. Rookie breakpoint does not bootstrap. Win rank is market fair probability. Confidence is a CLV tag.
 - [x] Kneel haircut uses the fitted -1.059 atom. Both .5 hooks flagged.
 - [x] Sinkhorn suppresses Douglas and boosts Henry / Raridon / Stevenson.
 - [x] 288-bit mask matches the locked bit list. SHA stable.

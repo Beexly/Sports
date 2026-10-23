@@ -34,3 +34,17 @@ export function assertCopulaInBounds(joint: number, us: readonly number[]): void
     throw new Error(`[FAIL-CLOSED] copula joint ${joint} outside Frechet [${lo}, ${hi}]`);
   }
 }
+
+/** Measured pairing taus. A single family for every leg is refused elsewhere. */
+export const SGP_PAIRING_TAU = {
+  QB_WR1: 0.385,
+  QB_TE1: 0.307,
+  QB_RB1: -0.02,
+} as const;
+
+export type SgpPairing = keyof typeof SGP_PAIRING_TAU;
+
+export function pairingDependence(pairing: SgpPairing): { readonly tau: number; readonly sign: "positive" | "flat" } {
+  const tau = SGP_PAIRING_TAU[pairing];
+  return { tau, sign: tau > 0.05 ? "positive" : "flat" };
+}

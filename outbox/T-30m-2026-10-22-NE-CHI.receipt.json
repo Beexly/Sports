@@ -49,13 +49,13 @@
     }
   },
   "attritionOverride": {
-    "adjustedProjectedTotal": 54.6,
-    "hessianInteractionBoostPts": 3.84,
-    "olinePenaltyNeutralizationPts": 1.93,
-    "kickingEnvelopeBoostPts": 1.15,
-    "overridesOlineUnderLean": true,
-    "overridesSteamExhaustionFade": true,
-    "recommendedAction": "PLAY_OVER"
+    "adjustedProjectedTotal": 48.5,
+    "hessianInteractionBoostPts": 0,
+    "olinePenaltyNeutralizationPts": 0,
+    "kickingEnvelopeBoostPts": 0,
+    "overridesOlineUnderLean": false,
+    "overridesSteamExhaustionFade": false,
+    "recommendedAction": "PASS"
   },
   "causalPrmReceipt": {
     "stepScores": [
@@ -143,7 +143,7 @@
     "receiptSha256": "ef623f0dd3bcf006a6562cd525211dc2f5d27308a5f96ed9f2e6d5cac9b1e733",
     "z3SolverStatus": "sat",
     "verifiedAtIso": "2026-10-22T23:45:00.000Z",
-    "ed25519SignatureHex": "f783def2c73e5249b2200e1fa45c0a3798608cd4c5a0eb015988eb48bf29ce19c3851d9e76b7e59894e23a050e400d2f918f6455dbfda03ad198cdddd8fa5e0c",
+    "ed25519SignatureHex": "f6604c5b8b3601cd84b49452c9f80a07ab38d37f7fcce57e0d048ecfc6e8963fd30f1ee918419a85948aa437593cbc23d4e1d392826c80eda819032c6bea9303",
     "verifier": "z3-solver",
     "pipelineState": "AuthorizedPublishReceipt"
   },
@@ -156,7 +156,7 @@
     "complementProb": 0.426,
     "marketImpliedDeVigProb": 0.5,
     "edgeVsMarket": 0.074,
-    "publishState": "PLAY",
+    "publishState": "PASS",
     "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
     "corpusItemsLoaded": 3143,
     "corpusItemsEvaluated": 2162,
@@ -180,10 +180,10 @@
     "sensorTempF": 56.6,
     "narrativeLine": 50.5,
     "liveBookLine": 50.5,
-    "receiptSha256": "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4",
+    "receiptSha256": "6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063",
     "z3SolverStatus": "sat",
     "verifiedAtIso": "2026-10-22T23:45:00.000Z",
-    "ed25519SignatureHex": "0e81e9a015978480bd87f40aee8e3c4f1354cbc978fc515f2faa23ae3ea99732f76757c66e2cacae2b880f9a38b5f60f8d7933d6a731b61e0050641e68470406",
+    "ed25519SignatureHex": "7ef2f4353badbab725b5025c2460a57ef4ccd8e93ba0e67fe415df03080aacef2d978dafa511bd36d0292415f9a390fa97ebfe9ef1e84b66a69f0f1bf57e5001",
     "verifier": "z3-solver",
     "pipelineState": "AuthorizedPublishReceipt"
   },
@@ -224,7 +224,7 @@
       "receiptSha256": "695459b9da78284f135913e2dc01883c42a3e3c35cc1c16b893dac0d093ebf86",
       "z3SolverStatus": "sat",
       "verifiedAtIso": "2026-10-22T23:45:00.000Z",
-      "ed25519SignatureHex": "dfb430da901d1de78d748c867976842493dc93051d1ee939257621fc0ccaaf9b5a203b1bae72d7a3470cc4d088380c64cb15df8f694f73a8c33e3b405dc0c705",
+      "ed25519SignatureHex": "34e8d39c8da2ca1e59f659d113748b1ad7a387b3e364d67efe3111650a4f7425147ab14f902300a14d759f17df579dc607f19ee0b5955afd5ef0ca3dfa704b07",
       "verifier": "z3-solver",
       "pipelineState": "AuthorizedPublishReceipt"
     },
@@ -264,19 +264,19 @@
       "receiptSha256": "c6598c362bd602e6933690303afea056ad774c31279ddf61b782ff740dc4d693",
       "z3SolverStatus": "sat",
       "verifiedAtIso": "2026-10-22T23:45:00.000Z",
-      "ed25519SignatureHex": "2b9c23e21da1f1323b2b4d0ed73daa04c310c0d290753395607e52144bd4a7a2c3a9d857003bef487484da54fc0e205137b46aae6ea0024883e5ad0c574c4201",
+      "ed25519SignatureHex": "50449687f43717b436cee41bdbc92562b9cdb643920d9e08699e428528e234781e901ebbdfb8a6d2450511350842026a2b9fea0c1a3c150a477717872b34620f",
       "verifier": "z3-solver",
       "pipelineState": "AuthorizedPublishReceipt"
     }
   ],
-  "executionLatencyMs": 1468,
-  "merkleRootSha256": "07e3db861e1b05a810211a825b90d163103592c0bd41101c7f38b2591e16dd8a",
+  "executionLatencyMs": 1605,
+  "merkleRootSha256": "f5ff8947111627ad190da4e91cc109773d27d1b4190841fe4b1538c1773f1f10",
   "corpusItemsLoaded": 3143,
   "corpusItemsEvaluated": 2162,
   "mindRecordsLoaded": 5149,
   "mindApplicablePrinciplesCount": 2967,
   "spreadPublishState": "PLAY",
-  "totalPublishState": "PLAY",
+  "totalPublishState": "PASS",
   "propHookFlags": [
     "PASS_KNEELDOWN_HOOK_RISK",
     "PASS_KNEELDOWN_HOOK_RISK"

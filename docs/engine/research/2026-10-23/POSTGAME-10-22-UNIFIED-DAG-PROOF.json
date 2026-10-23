@@ -1,14 +1,23 @@
 {
   "artifact": "POSTGAME-10-22-UNIFIED-DAG-PROOF",
   "gameId": "2026-10-22-NE-CHI",
+  "checkpointTag": "T-90m",
   "spreadPublishState": "PLAY",
-  "totalPublishState": "PLAY",
-  "adjustedProjectedTotal": 54.6,
+  "totalPublishState": "PASS",
+  "adjustedProjectedTotal": 48.5,
+  "killedTotalBoostPts": {
+    "hessianInteractionBoostPts": 0,
+    "olinePenaltyNeutralizationPts": 0,
+    "kickingEnvelopeBoostPts": 0
+  },
   "propHookFlags": [
     "PASS_KNEELDOWN_HOOK_RISK",
     "PASS_KNEELDOWN_HOOK_RISK"
   ],
-  "receiptSha256": "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4",
+  "receiptSha256": "6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063",
+  "withdrawnReceiptSha256": "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4",
+  "withdrawnAdjustedProjectedTotal": 54.6,
+  "note": "54.6 PLAY is withdrawn. Killed total terms are 0. Baseline 48.5 is PASS, not PLAY_UNDER. CHI -3 stays PLAY.",
   "spreadReceiptSha256": "ef623f0dd3bcf006a6562cd525211dc2f5d27308a5f96ed9f2e6d5cac9b1e733",
   "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
   "activeBits": [
@@ -34,7 +43,7 @@
     280,
     281
   ],
-  "merkleRootSha256": "ecbe98ef2b78085222901266b43c50636bf5f1379311d7809d33b4ccaeec200d",
+  "merkleRootSha256": "4eab04908c724b1b7126020e396779bb2c33bf5c438249f7544766c6f9fc37f1",
   "verifier": "z3-solver",
   "z3SolverStatus": "sat",
   "corpusItemsLoaded": 3143,
