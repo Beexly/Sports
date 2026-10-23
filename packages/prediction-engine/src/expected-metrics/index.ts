@@ -149,6 +149,14 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Negative-play rate (deterministic; shadow).
+export {
+  negativePlayRateByTeam,
+  NEGATIVE_PLAY_RATE_MODEL_VERSION,
+  type NegativePlayRateSplit,
+  type NegativePlayRateWindow,
+} from "./negative-play-rate.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {
