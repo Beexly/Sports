@@ -84,8 +84,9 @@ function computeLeagueRate(
     if (!includedWeeks.has(playWeek)) continue;
 
     const playType = play["play_type"];
-    if (playType !== "pass" && playType !== "run") continue;
-    if (playType === "no_play") continue; // Redundant but explicit
+    // Explicit string cast avoids typescript narrowing to exact values when dealing with Record<string, string> values in PbpRow, which triggers TS2367.
+    const pt = playType as string;
+    if (pt !== "pass" && pt !== "run") continue;
     if (play["qb_kneel"] === "1") continue;
 
     // yards_gained handling
@@ -171,8 +172,8 @@ export function negativePlayRateByTeam(
     if (!posteam) continue;
 
     const playType = play["play_type"];
-    if (playType !== "pass" && playType !== "run") continue;
-    if (playType === "no_play") continue;
+    const pt = playType as string;
+    if (pt !== "pass" && pt !== "run") continue;
     if (play["qb_kneel"] === "1") continue;
 
     let teamMap = teamData.get(posteam);

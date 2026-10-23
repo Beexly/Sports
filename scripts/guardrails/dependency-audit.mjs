@@ -96,6 +96,12 @@ const ACCEPTED = [
     reason: "Only the copy bundled inside next/node_modules is affected; it is remediated by the same next@16 major upgrade. The top-level postcss is already patched.",
     maxSeverity: "high",
   },
+  {
+    package: "@sentry/nextjs",
+    reviewBy: "2026-12-31",
+    reason: "Middleware Bypass vulnerability when using Tunnel route. We are not using Tunnel route currently, and resolving this vulnerability will require major version upgrade to v10+ which contains breaking API changes.",
+    maxSeverity: "critical",
+  },
 ];
 
 const args = new Set(process.argv.slice(2));

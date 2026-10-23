@@ -6,7 +6,7 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     failureModes: ["kneels can fake negative plays", "penalties can fake zero/negative yards"],
     family: "team",
     forbiddenInputs: ["raw private tracking coordinates"],
-    formulaClass: "deterministic_rule",
+    formulaClass: "composite_score",
     formulaSummary: "Share of a team's valid pass and run plays resulting in negative yardage, excluding kneels.",
     historicalPrecedent: [{ name: "Negative Play Rate", reason: "Negative plays kill drives; limiting them correlates heavily with winning." }],
     internalName: "negative_play_rate_shadow",
