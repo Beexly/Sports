@@ -107,6 +107,60 @@ function harvest(ctx: GameContextInput | undefined, label: string): { kase: Benc
   return { kase, arts };
 }
 
+describe("negative controls — the harness must be able to fail", () => {
+  /** Clean render, scored once, is the yardstick every mutant is measured against. */
+  const base = () => {
+    const { kase, arts } = harvest(CLEAN, "clean");
+    return { kase, art: arts[0]!, rubric: runSuite([kase], arts).meanRubric };
+  };
+
+  it("punishes a hallucinated citation", () => {
+    const { kase, art, rubric } = base();
+    const mutated = { ...art, citedSurfaces: [...art.citedSurfaces, "invented_surface"] };
+    const card = runSuite([kase], [mutated]);
+    expect(card.meanRubric).toBeLessThan(rubric);
+    expect(card.cases[0]!.failures.join(" ")).toContain("cited unloaded surface: invented_surface");
+  });
+
+  it("punishes a printed market fair that lies", () => {
+    // The harvest case carries no facts, so the check needs the true value
+    // supplied — 55% is what this fixture actually prices.
+    const { kase, art, rubric } = base();
+    const withFact = { ...kase, facts: { ...kase.facts, marketFairProb: 0.55 } };
+    expect(runSuite([withFact], [art]).meanConsistency).toBe(1);
+    const mutated = { ...art, reasonText: art.reasonText.replace(/Market fair: [0-9]+%/, "Market fair: 90%") };
+    expect(mutated.reasonText).toContain("Market fair: 90%");
+    const card = runSuite([withFact], [mutated]);
+    expect(card.meanConsistency).toBeLessThan(1);
+    expect(card.meanRubric).toBeLessThan(rubric);
+  });
+
+  it("punishes a long-shot probability on a side", () => {
+    const { kase, art, rubric } = base();
+    const card = runSuite([kase], [{ ...art, prob: 0.04 }]);
+    expect(card.cases[0]!.failures.join(" ")).toContain("only 4%");
+    expect(card.meanRubric).toBeLessThan(rubric);
+  });
+
+  it("punishes a stripped falsifier", () => {
+    const { kase, arts } = harvest(ADVERSE, "adverse");
+    const withIt = runSuite([kase], arts).meanFalsifier;
+    const stripped = arts.map((a) => ({ ...a, reasonText: a.reasonText.replace(/ Would be wrong if[^.]*\./, "") }));
+    expect(runSuite([kase], stripped).meanFalsifier).toBeLessThan(withIt);
+  });
+
+  it("a clean render outscores every mutant at once", () => {
+    const { kase, art, rubric } = base();
+    const wrecked = {
+      ...art,
+      prob: 0.04,
+      citedSurfaces: ["invented_surface"],
+      reasonText: art.reasonText.replace(/Market fair: [0-9]+%/, "Market fair: 90%"),
+    };
+    expect(runSuite([kase], [wrecked]).meanRubric).toBeLessThan(rubric - 10);
+  });
+});
+
 describe("rendered prose smoke", () => {
   it("renders picks at all (the harness would be vacuous otherwise)", () => {
     expect(scoreGame(spread(CLEAN), AT).length).toBeGreaterThan(0);

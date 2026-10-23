@@ -173,6 +173,18 @@ than bad: phrases now point at surfaces some rows never recorded, so a row sayin
 as a citation the record cannot back. The two numbers should be read together —
 before this, grounding was flattered by a vocabulary too small to miss anything.
 
+## 2026-10-23, later: negative controls
+
+A harness nobody has seen fail is a rubber stamp. Five controls now mutate real
+rendered text — hallucinated citation, lying market fair, long-shot probability,
+stripped falsifier — and a sixth wrecks all of them at once. Each must lose the
+specific component AND rubric points, and the all-at-once mutant must lose 10+.
+
+The lying-fair control immediately found a hole in the fixture: the harvest case
+carries no `facts`, so a false printed fair had nothing to disagree with and passed
+at full marks. It now supplies the true value and asserts the honest render still
+scores 1 before asserting the liar does not.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.
