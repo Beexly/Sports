@@ -62,13 +62,26 @@ async function main() {
   // never loaded still reads as a citation and lands in grounding as a miss.
   const vocab = new Map<string, string>();
   for (const r of rows) for (const k of Object.keys(r.factorBreakdown)) vocab.set(HUMANISE(k), k);
+  // Measured 2026-10-23: 600/600 stored rows matched ZERO humanised keys, because
+  // the prose never says "fair probability" — it says "Market fair", "engine
+  // fair", "books", "edge", "confidence". Numbers are saturated (526 rows already
+  // at the 4+ cap), so citations were the whole problem and the vocabulary, not
+  // the prose, was the bottleneck.
   for (const [phrase, key] of [
+    ["market fair", "marketFairProb"],
+    ["engine fair", "fairProbability"],
+    ["books", "bookmakerCount"],
     ["bookmakers", "bookmakerCount"],
     ["line moving", "lineMovementScore"],
+    ["line movement", "lineMovementScore"],
+    ["rest", "restAdvantageScore"],
+    ["edge", "edgeScore"],
+    ["confidence", "confidence"],
     ["market depth", "marketDepthScore"],
     ["consensus", "consensusScore"],
     ["data quality", "dataQualityScore"],
     ["volatility", "volatilityPenalty"],
+    ["dispersion", "dispersionScore"],
   ] as const) {
     if (!vocab.has(phrase)) vocab.set(phrase, key);
   }

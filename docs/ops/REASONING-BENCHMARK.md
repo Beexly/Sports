@@ -157,6 +157,22 @@ failed with the text visibly containing "8 books" — so the assertion looked
 insane while behaving correctly. Prefer `[0-9]` classes in this tree; they carry
 no escapes to mangle.
 
+## 2026-10-23, later: the citation vocabulary was the bottleneck
+
+Decomposed specificity on 600 stored rows instead of guessing: **600/600 matched
+zero humanised keys**, while numbers were saturated (526 rows already at the 4+
+cap). Keys humanise to "fair probability", which the prose never says — it says
+"Market fair", "engine fair", "books", "edge", "confidence". So the citation half
+was measuring the vocabulary, not the writing.
+
+Extending the phrase map: specificity **.5889 -> .9809**, rubric 85.09 -> 89.80.
+
+Grounding moves the other way, **.9855 -> .9464**, and that is informative rather
+than bad: phrases now point at surfaces some rows never recorded, so a row saying
+"rest advantage" with no `restAdvantageScore` in its breakdown is correctly read
+as a citation the record cannot back. The two numbers should be read together —
+before this, grounding was flattered by a vocabulary too small to miss anything.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.
