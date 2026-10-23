@@ -78,8 +78,11 @@ describe("client-IP boundary guard", () => {
     // "does not contain client-ip-boundary.mjs" rather than an argument-type error.
     expect(pkg.scripts["guard:client-ip"] ?? "").toContain("client-ip-boundary.mjs");
     // `npm run guardrails` is what the CI "All guardrails" job executes
-    // (.github/workflows/ci.yml, job `guardrails`).
-    expect(pkg.scripts["guardrails"] ?? "").toContain("client-ip-boundary.mjs");
+    // (.github/workflows/ci.yml, job `guardrails`). The alias delegates to
+    // run-all.mjs — the actual chain is defined there (same convention as
+    // actor-minting-boundary and aws-compatibility-index), so membership is
+    // asserted against that file below rather than against the alias string.
+    expect(pkg.scripts["guardrails"] ?? "").toContain("run-all.mjs");
     // …and the parallel runner carries the same list.
     const runAll = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
     expect(runAll).toContain("client-ip-boundary.mjs");

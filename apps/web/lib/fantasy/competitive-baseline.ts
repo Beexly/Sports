@@ -53,7 +53,7 @@ export const FANTASY_BASELINE_MODULES: readonly FantasyBaselineModule[] = [
     currentTruth: "No public projection claims are live. The page reports the gate instead of inventing numbers.",
   },
   {
-    key: "draft-cheatsheets",
+    key: "rankings-cheatsheets",
     module: "Draft and cheat sheets",
     competitorBaseline: ["Fantasy Guru / Elite Sports"],
     gseSurface: "/fantasy/draft + /fantasy/baseline",

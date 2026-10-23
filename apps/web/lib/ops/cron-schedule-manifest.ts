@@ -219,6 +219,10 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   cronEntry("/api/cron/backtest-calibration", "0 12 * * 0"),
   // Feature recipe backtest harness (Sunday 13:00 UTC).
   cronEntry("/api/cron/feature-recipe-backtest", "0 13 * * 0"),
+  // Microstructure report (S-048): CLV-vs-close microstructure summary over the
+  // recent settled window, persisted to the report store for operator reads.
+  // Daily 12:35 UTC, off the settlement (:20) and board (:32/:47) ticks.
+  cronEntry("/api/cron/microstructure-report", "35 12 * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */

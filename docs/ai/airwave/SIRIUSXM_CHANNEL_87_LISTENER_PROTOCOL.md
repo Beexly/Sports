@@ -21,18 +21,24 @@ Content focus:
 
 ---
 
-## 05:00–23:00 CT Capture Window
+## 04:00–23:00 CT Capture Window
 
 All CH87 intake is limited to:
 
-- **Start:** 05:00 Central Time
+- **Start:** 04:00 Central Time
 - **End:** 23:00 Central Time
 - **Timezone:** America/Chicago
+
+Widened from the original 05:00 start in `c5da5eb83` (the Week 6 signal-flood
+commit, which announced the 04:00 window in its title); `channel-87-schedule.ts`
+labels 05:00 the legacy window.
 
 Programming outside this window is not targeted. The `isWithinChannel87Window(hourCt)`
 function in `channel-87-schedule.ts` enforces this boundary.
 
-This is the same 18-hour window as the core Airwave airing window (`pipeline.ts`).
+The core Airwave airing window (`pipeline.ts`, `AIRING_WINDOW_CT`) remains
+05:00–23:00 (18 hours), so the CH87 capture window is one hour wider at the
+front than the airing window.
 
 ---
 

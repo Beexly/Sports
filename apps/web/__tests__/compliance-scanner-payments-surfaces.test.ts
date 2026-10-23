@@ -149,9 +149,19 @@ describe("payments surfaces — live page source", () => {
     const source = readPage("app/pricing/page.tsx");
     const flags = scanPaymentsSurfaceCopy(extractDetectableCopy(source));
     const ids = flags.map((flag) => flag.id);
-    expect(ids).toContain("L4-WAGERING");
+    // L4-WAGERING was originally asserted here too, but the pricing page has
+    // never carried the word "wager" in any commit (git -S confirms) - its
+    // detectable copy avoids processor-coded gambling language on purpose,
+    // which is what the L4 layer recommends. The wagering canary therefore
+    // lives on the legal pages below, where that vocabulary genuinely appears.
     expect(ids).toContain("L4-BETTING-AS-PRODUCT");
     expect(ids).toContain("L4-PARLAY");
+  });
+
+  it("terms copy still contains wager vocabulary the layer is meant to see", () => {
+    const source = readPage("app/terms/page.tsx");
+    const flags = scanPaymentsSurfaceCopy(extractDetectableCopy(source));
+    expect(flags.map((flag) => flag.id)).toContain("L4-WAGERING");
   });
 
   it("clv copy still contains bet-log vocabulary the layer is meant to see", () => {

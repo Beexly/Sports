@@ -118,6 +118,48 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     attribution_text: null,
     commercial_display_allowed: false,
     derived_analytics_allowed: false,
+    evidence_urls: [
+      "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
+      "https://kalshi.com/developer-agreement",
+      "https://docs.kalshi.com/welcome",
+    ],
+    model_training_allowed: false,
+    notes:
+      "Developer Agreement v1.1 (verified 2026-08-21): API use is limited to facilitating a member's " +
+      "own trading; collecting, caching, aggregating, or storing API data, and sharing it with third " +
+      "parties, requires prior written authorization (§3, §3.1; §3.5 also bans benchmarking use). " +
+      "GSE pick-confidence use is commercial derived analytics, not own-account trading - fail closed.",
+    source_id: "kalshi",
+    source_name: "Kalshi Exchange API (KalshiEx LLC)",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
+    attribution_required: true,
+    attribution_text: "Club Elo ratings via ClubElo / Lars Schiefler (clubelo.com).",
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
+    evidence_urls: [
+      "https://clubelo.com/About",
+      "http://api.clubelo.com",
+      "https://web.archive.org/web/20230117120000/http://clubelo.com/About",
+    ],
+    model_training_allowed: false,
+    notes:
+      "Permission required. A 2023-01-17 Wayback About page said calculations/rankings may be reused " +
+      "with citation, but that archive is not a live grant; the live About page is an SPA dump, not " +
+      "terms prose. Existing CSV client stays on the documented-ungated interim path until Lars " +
+      "Schiefler replies (clubelo@schiefler.com); do not treat API silence as clearance.",
+    source_id: "clubelo",
+    source_name: "ClubElo (Lars Schiefler)",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
+    attribution_required: false,
+    attribution_text: null,
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
     evidence_urls: ["https://www.scores24.live/"],
     model_training_allowed: false,
     notes: "Permission required before automation, storage, display, modeling, or derived analytics.",

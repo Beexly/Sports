@@ -138,9 +138,13 @@ const fictionBearing = (p: { src: string }): boolean =>
 const LABELED_SURFACES = new Set([
   // "the personas are fictional and the matchups are generic" in body copy.
   "airwave/page.tsx",
-  // "Running on a sample slate ... the player pool is illustrative", now
-  // derived from the feed state rather than hardcoded (fixed this commit).
-  "fantasy/dfs/page.tsx",
+  // REMOVED from this list: /fantasy/dfs used to be excepted for its hardcoded
+  // "Running on a sample slate ... the player pool is illustrative" disclosure,
+  // but the page was rewritten to render real rows or empty columns ("THE BOARD
+  // IS REAL OR IT IS EMPTY" - the DFS_SLATE fixture fallback is gone), so it no
+  // longer renders fiction and needs no exception; its remaining copy ("rather
+  // than carrying an invented number") is a negation and does not trip
+  // FICTION_COPY.
   // Renders ILLUSTRATIVE_* fixtures behind an illustrative badge.
   "fantasy/league-twin/page.tsx",
   // Title and description both say fictional/invented; validator demo.

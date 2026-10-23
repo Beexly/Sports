@@ -12,16 +12,23 @@ import { resolve, sep } from "node:path";
  * may be attacker-supplied." `lib/api/client-ip.test.ts` pins that behaviour,
  * including a case named for the bypass it closes.
  *
- * That was all true, and five routes still hand-rolled
+ * That was all true, and FOUR routes still hand-rolled
  * `x-forwarded-for.split(",")[0]` anyway:
  *
- *   api/contests/enter            8 per 60s
  *   api/waitlist                  5 per 60s
  *   api/human/roster-availability 20 per 5min
  *   api/intelligence/roster-advice 30 per 5min
  *   api/cipher/verify             8 per 10min
  *
- * The leftmost entry is whatever the caller sent, so on all five a client could
+ * (An earlier draft of this guard also named api/contests/enter. That route
+ * has never existed in this tree on any branch - no git history, and the
+ * contests paper skill is deliberately dark behind CONTESTS_PUBLIC in
+ * lib/launch/public-surface-gate.ts until the founder opens it - so the list
+ * is the four routes that actually carried the bypass. If the contests API is
+ * ever built, it must import clientIp() from the start; the aggregate scans
+ * below will meet it.)
+ *
+ * The leftmost entry is whatever the caller sent, so on all four a client could
  * put a fresh value in the header and get a fresh bucket for every request —
  * the limit was decorative. `cipher/verify` was the worst of them: it declared
  * a LOCAL `clientIp()` with the same name as the safe one, so the call site
@@ -101,11 +108,10 @@ describe("no route hand-rolls the client IP", () => {
     ).toEqual([]);
   });
 
-  it("the five routes that carried the bypass now import the shared helper", () => {
+  it("the four routes that carried the bypass now import the shared helper", () => {
     // Named explicitly so a future edit that reverts one of them fails HERE,
     // with the route named, rather than only in the aggregate assertion.
     const FIXED = [
-      "app/api/contests/enter/route.ts",
       "app/api/waitlist/route.ts",
       "app/api/human/roster-availability/route.ts",
       "app/api/intelligence/roster-advice/route.ts",

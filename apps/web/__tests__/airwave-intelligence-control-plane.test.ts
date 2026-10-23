@@ -63,9 +63,9 @@ describe("Intelligence Control Plane", () => {
       expect(plane.operatorSurface.legalAckGranted).toBe(false);
     });
 
-    it("CH87 contract window is 05:00-23:00", () => {
+    it("CH87 contract window is 04:00-23:00 (widened from the 05:00 legacy window)", () => {
       const plane = readIntelligenceControlPlane(emptyEnv);
-      expect(plane.channel87Contract.window.startHour).toBe(5);
+      expect(plane.channel87Contract.window.startHour).toBe(4);
       expect(plane.channel87Contract.window.endHour).toBe(23);
     });
 

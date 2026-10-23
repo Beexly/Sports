@@ -2,7 +2,7 @@
  * Forged X-Forwarded-For must NOT mint a fresh rate-limit bucket.
  *
  * Every proxy APPENDS the address it received the connection from, so the
- * LEFTMOST x-forwarded-for entry is whatever the caller chose to send. Five
+ * LEFTMOST x-forwarded-for entry is whatever the caller chose to send. Four
  * routes keyed their limiter on exactly that entry:
  *
  *     headers.get("x-forwarded-for").split(",")[0]
@@ -11,6 +11,12 @@
  * every request and the limit never bound. On /api/waitlist that is unbounded
  * row insertion AND one outbound Resend welcome email per unique address — real
  * spend and sender-domain reputation, days before launch.
+ *
+ * (An earlier draft of this suite also exercised api/contests/enter. That
+ * route has never existed in this tree on any branch - no git history, and the
+ * contests paper skill stays dark behind CONTESTS_PUBLIC in
+ * lib/launch/public-surface-gate.ts until the founder opens it - so the four
+ * routes below are the ones that actually carried the bypass.)
  *
  * Each case below rotates the forged leftmost entry while keeping ONE real
  * trailing address (what our edge would have appended), exhausts the route's
@@ -29,7 +35,6 @@ vi.mock("@/lib/api-entitlement", () => ({
 }));
 
 import { POST as waitlistPost } from "@/app/api/waitlist/route";
-import { POST as contestsPost } from "@/app/api/contests/enter/route";
 import { POST as cipherPost } from "@/app/api/cipher/verify/route";
 import { POST as rosterAvailabilityPost } from "@/app/api/human/roster-availability/route";
 import { POST as rosterAdvicePost } from "@/app/api/intelligence/roster-advice/route";
@@ -88,25 +93,6 @@ describe("POST /api/waitlist — forged X-Forwarded-For (5/min)", () => {
     expect((await waitlistPost(forgedRequest(url, exhausted, 99, JSON.stringify({})))).status).toBe(429);
     const other = await waitlistPost(forgedRequest(url, nextRealIp(), 0, JSON.stringify({})));
     expect(other.status).toBe(422);
-  });
-});
-
-describe("POST /api/contests/enter — forged X-Forwarded-For (8/min)", () => {
-  const url = "http://localhost/api/contests/enter";
-
-  beforeEach(() => {
-    process.env["CONTESTS_PUBLIC"] = "true";
-  });
-
-  it("counts rotating forged headers against ONE bucket and 429s the 9th", async () => {
-    const realIp = nextRealIp();
-    for (let i = 0; i < 8; i += 1) {
-      const res = await contestsPost(forgedRequest(url, realIp, i));
-      expect(res.status).toBe(400);
-    }
-    const blocked = await contestsPost(forgedRequest(url, realIp, 99));
-    expect(blocked.status).toBe(429);
-    expect(Number(blocked.headers.get("retry-after"))).toBeGreaterThan(0);
   });
 });
 
