@@ -21,6 +21,8 @@ export default defineConfig({
       "packages/prediction-engine/src/__tests__/chaos-fail-closed.test.ts",
       "packages/prediction-engine/src/__tests__/league-adapter.test.ts",
       "packages/prediction-engine/src/__tests__/historical-canary.test.ts",
+      "packages/prediction-engine/src/__tests__/killed-claims.test.ts",
+      "packages/prediction-engine/src/__tests__/nightly-harness.test.ts",
       "apps/web/lib/intelligence-core/situational-trace.wire.test.ts",
     ],
     testTimeout: 180000,

@@ -42,6 +42,21 @@ describe("fail-closed chaos", () => {
     await expect(verifyAndBrandCausalReceipt(bad)).rejects.toBeInstanceOf(NeuroSymbolicVetoError);
   });
 
+  it("vetoes a mind count under the 5000 floor", async () => {
+    const bad = { ...base(), mindRecordsLoaded: 4999 };
+    await expect(verifyAndBrandCausalReceipt(bad)).rejects.toBeInstanceOf(NeuroSymbolicVetoError);
+  });
+
+  it("vetoes an edge that is not calibrated minus market", async () => {
+    const bad = { ...base(), edgeVsMarket: 0.2 };
+    await expect(verifyAndBrandCausalReceipt(bad)).rejects.toBeInstanceOf(NeuroSymbolicVetoError);
+  });
+
+  it("vetoes a line drift above half a point", async () => {
+    const bad = { ...base(), liveBookLine: 51.5 };
+    await expect(verifyAndBrandCausalReceipt(bad)).rejects.toBeInstanceOf(NeuroSymbolicVetoError);
+  });
+
   it("refuses to render an unbranded object", () => {
     expect(() => renderPublicBoardOrSocialCard(base() as never)).toThrow(/FAIL-CLOSED/);
   });

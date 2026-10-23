@@ -11,5 +11,8 @@
 - [x] League adapters, copula bound, GRPO stub, 10-game canary.
 - [x] Vitest 14/14 green. Re-run after Z3 was actually installed.
 - [x] z3-solver 5.3.1 returns sat on the replay and unsat below the 5,000 mind floor.
+- [x] Killed claims are enforced: scheme fingerprint, cross-season red-zone rating, run-heavy 4-minute prior.
+- [x] Nightly harness pins the z3 receipt hash. Extra chaos vetoes cover mind floor, edge identity, and line drift.
+- [x] The 5,303 gap is 154 and has no item ids. The wc -l "155" note is withdrawn.
 - [ ] 14,448-entry inventory and 50k-premise router.
 - [ ] Learned Causal-PRM, full GRPO loop, vine copula, nightly harness.
