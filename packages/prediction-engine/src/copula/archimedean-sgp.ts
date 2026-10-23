@@ -12,6 +12,22 @@ export function claytonCdf(u: number, v: number, theta: number): number {
   return Math.pow(Math.max(inner, 1e-9), -1 / t);
 }
 
+/** Frank generator. theta != 0. Used for the non-Gaussian SGP joint. */
+export function frankCdf(u: number, v: number, theta: number): number {
+  const t = Math.abs(theta) < 1e-6 ? 1e-6 : theta;
+  const e = Math.exp(-t);
+  const num = (Math.exp(-t * u) - 1) * (Math.exp(-t * v) - 1);
+  return (-1 / t) * Math.log(1 + num / (e - 1));
+}
+
+/** Gumbel generator for upper-tail shootout dependence. theta >= 1. */
+export function gumbelCdf(u: number, v: number, theta: number): number {
+  const t = Math.max(1, theta);
+  const a = Math.pow(-Math.log(Math.min(Math.max(u, 1e-9), 1 - 1e-9)), t);
+  const b = Math.pow(-Math.log(Math.min(Math.max(v, 1e-9), 1 - 1e-9)), t);
+  return Math.exp(-Math.pow(a + b, 1 / t));
+}
+
 export function assertCopulaInBounds(joint: number, us: readonly number[]): void {
   const { lo, hi } = frechetHoeffding(us);
   if (joint < lo - 1e-9 || joint > hi + 1e-9) {

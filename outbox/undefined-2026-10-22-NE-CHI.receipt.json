@@ -1,0 +1,283 @@
+{
+  "gameId": "2026-10-22-NE-CHI",
+  "league": "NFL",
+  "bitmaskReceipt": {
+    "words": [
+      65556,
+      33554432,
+      4864,
+      65552,
+      16781312,
+      0,
+      16777216,
+      1111,
+      50331649
+    ],
+    "hexString": "000100140200000000001300000100100100100000000000010000000000045703000001",
+    "sha256Digest": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
+    "activeBitIndices": [
+      2,
+      4,
+      16,
+      57,
+      72,
+      73,
+      76,
+      100,
+      112,
+      140,
+      152,
+      216,
+      224,
+      225,
+      226,
+      228,
+      230,
+      234,
+      256,
+      280,
+      281
+    ],
+    "secondOrderFlags": {
+      "mutualDefSpineVoid": true,
+      "olAttritionNeutralizedByZeroRush": true,
+      "ilbVoidNickelActiveTeRbFunnel": true,
+      "calmWeatherExtendedFgYacRegime": true,
+      "qbKneeldownHookHazard": true,
+      "rookieRampVsDepletedCb1": true
+    }
+  },
+  "attritionOverride": {
+    "adjustedProjectedTotal": 54.6,
+    "hessianInteractionBoostPts": 3.84,
+    "olinePenaltyNeutralizationPts": 1.93,
+    "kickingEnvelopeBoostPts": 1.15,
+    "overridesOlineUnderLean": true,
+    "overridesSteamExhaustionFade": true,
+    "recommendedAction": "PLAY_OVER"
+  },
+  "causalPrmReceipt": {
+    "stepScores": [
+      {
+        "layer": "L0",
+        "qValueLogOdds": 1.334,
+        "stepAdvantage": 1.334,
+        "formalVerificationPassed": true,
+        "triggerReflectionRevision": false
+      },
+      {
+        "layer": "L1",
+        "qValueLogOdds": 2.668,
+        "stepAdvantage": 1.334,
+        "formalVerificationPassed": true,
+        "triggerReflectionRevision": false
+      },
+      {
+        "layer": "L2",
+        "qValueLogOdds": 4.003,
+        "stepAdvantage": 1.334,
+        "formalVerificationPassed": true,
+        "triggerReflectionRevision": false
+      },
+      {
+        "layer": "L3",
+        "qValueLogOdds": 5.337,
+        "stepAdvantage": 1.334,
+        "formalVerificationPassed": true,
+        "triggerReflectionRevision": false
+      },
+      {
+        "layer": "L4",
+        "qValueLogOdds": 6.671,
+        "stepAdvantage": 1.334,
+        "formalVerificationPassed": true,
+        "triggerReflectionRevision": false
+      },
+      {
+        "layer": "L5",
+        "qValueLogOdds": 8.005,
+        "stepAdvantage": 1.334,
+        "formalVerificationPassed": true,
+        "triggerReflectionRevision": false
+      }
+    ],
+    "trajectoryMinScore": 1.3342470605953451,
+    "listWiseRankScore": 8.673,
+    "escalationHaltedAtLayer": "L5",
+    "authorizedForCouncil": true
+  },
+  "spreadReceipt": {
+    "gameId": "2026-10-22-NE-CHI",
+    "asOfIso": "2026-10-22T23:45:00.000Z",
+    "selection": "CHI -3.0",
+    "marketType": "SPREAD",
+    "calibratedProb": 0.479098,
+    "complementProb": 0.520902,
+    "marketImpliedDeVigProb": 0.5,
+    "edgeVsMarket": -0.020902,
+    "publishState": "PLAY",
+    "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
+    "corpusItemsLoaded": 3143,
+    "corpusItemsEvaluated": 2162,
+    "mindRecordsLoaded": 5149,
+    "mindApplicablePrinciplesCount": 2967,
+    "mentionedActivePlayerIds": [
+      "CHI-QB-WILLIAMS",
+      "NE-QB-MAYE",
+      "NE-TE-HENRY",
+      "NE-RB-STEVENSON",
+      "NE-TE-RARIDON"
+    ],
+    "officialInactivePlayerIds": [
+      "CHI-LB-SANBORN",
+      "CHI-LB-EDWARDS",
+      "NE-CB-DAVIS"
+    ],
+    "narrativeWindMph": 5.1,
+    "sensorWindMph": 5.1,
+    "narrativeTempF": 56.6,
+    "sensorTempF": 56.6,
+    "narrativeLine": -3,
+    "liveBookLine": -3,
+    "receiptSha256": "ef623f0dd3bcf006a6562cd525211dc2f5d27308a5f96ed9f2e6d5cac9b1e733",
+    "z3SolverStatus": "sat",
+    "verifiedAtIso": "2026-10-22T23:45:00.000Z",
+    "ed25519SignatureHex": "e68a9d4d0567567817c3b7a85cd34e07beedc56fcc181b12bbf0c570bce3c7962c8ab81461d916b611ebdb91ea7263c97cd7cde6bc428724707b8f1d33494404",
+    "verifier": "z3-solver",
+    "pipelineState": "AuthorizedPublishReceipt"
+  },
+  "totalReceipt": {
+    "gameId": "2026-10-22-NE-CHI",
+    "asOfIso": "2026-10-22T23:45:00.000Z",
+    "selection": "OVER 50.5",
+    "marketType": "TOTAL",
+    "calibratedProb": 0.574,
+    "complementProb": 0.426,
+    "marketImpliedDeVigProb": 0.5,
+    "edgeVsMarket": 0.074,
+    "publishState": "PLAY",
+    "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
+    "corpusItemsLoaded": 3143,
+    "corpusItemsEvaluated": 2162,
+    "mindRecordsLoaded": 5149,
+    "mindApplicablePrinciplesCount": 2967,
+    "mentionedActivePlayerIds": [
+      "CHI-QB-WILLIAMS",
+      "NE-QB-MAYE",
+      "NE-TE-HENRY",
+      "NE-RB-STEVENSON",
+      "NE-TE-RARIDON"
+    ],
+    "officialInactivePlayerIds": [
+      "CHI-LB-SANBORN",
+      "CHI-LB-EDWARDS",
+      "NE-CB-DAVIS"
+    ],
+    "narrativeWindMph": 5.1,
+    "sensorWindMph": 5.1,
+    "narrativeTempF": 56.6,
+    "sensorTempF": 56.6,
+    "narrativeLine": 50.5,
+    "liveBookLine": 50.5,
+    "receiptSha256": "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4",
+    "z3SolverStatus": "sat",
+    "verifiedAtIso": "2026-10-22T23:45:00.000Z",
+    "ed25519SignatureHex": "a21ad1fcf6f094c26c232bbb64b381900f52ed957ce65d927996a9c7ab5ec2d67d154b2dd7312038aca90e7281d8eec7d559b155c2b3cd29d3388dfbd65de103",
+    "verifier": "z3-solver",
+    "pipelineState": "AuthorizedPublishReceipt"
+  },
+  "propReceipts": [
+    {
+      "gameId": "2026-10-22-NE-CHI",
+      "asOfIso": "2026-10-22T23:45:00.000Z",
+      "selection": "Caleb Williams rush 19.5 PASS_KNEELDOWN_HOOK_RISK",
+      "marketType": "PLAYER_PROP",
+      "calibratedProb": 0.47,
+      "complementProb": 0.53,
+      "marketImpliedDeVigProb": 0.5,
+      "edgeVsMarket": -0.03,
+      "publishState": "PASS",
+      "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
+      "corpusItemsLoaded": 3143,
+      "corpusItemsEvaluated": 2162,
+      "mindRecordsLoaded": 5149,
+      "mindApplicablePrinciplesCount": 2967,
+      "mentionedActivePlayerIds": [
+        "CHI-QB-WILLIAMS",
+        "NE-QB-MAYE",
+        "NE-TE-HENRY",
+        "NE-RB-STEVENSON",
+        "NE-TE-RARIDON"
+      ],
+      "officialInactivePlayerIds": [
+        "CHI-LB-SANBORN",
+        "CHI-LB-EDWARDS",
+        "NE-CB-DAVIS"
+      ],
+      "narrativeWindMph": 5.1,
+      "sensorWindMph": 5.1,
+      "narrativeTempF": 56.6,
+      "sensorTempF": 56.6,
+      "narrativeLine": 19.5,
+      "liveBookLine": 19.5,
+      "receiptSha256": "695459b9da78284f135913e2dc01883c42a3e3c35cc1c16b893dac0d093ebf86",
+      "z3SolverStatus": "sat",
+      "verifiedAtIso": "2026-10-22T23:45:00.000Z",
+      "ed25519SignatureHex": "25e0169106385c3c56f4b4c714d4ab501df0e0446cec22a7bef189890ab65f8e516937e06d6f51ad053958a3c3e45a003d012b001d7840deb10895ccd6a63405",
+      "verifier": "z3-solver",
+      "pipelineState": "AuthorizedPublishReceipt"
+    },
+    {
+      "gameId": "2026-10-22-NE-CHI",
+      "asOfIso": "2026-10-22T23:45:00.000Z",
+      "selection": "Drake Maye rush 27.5 PASS_KNEELDOWN_HOOK_RISK",
+      "marketType": "PLAYER_PROP",
+      "calibratedProb": 0.47,
+      "complementProb": 0.53,
+      "marketImpliedDeVigProb": 0.5,
+      "edgeVsMarket": -0.03,
+      "publishState": "PASS",
+      "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
+      "corpusItemsLoaded": 3143,
+      "corpusItemsEvaluated": 2162,
+      "mindRecordsLoaded": 5149,
+      "mindApplicablePrinciplesCount": 2967,
+      "mentionedActivePlayerIds": [
+        "CHI-QB-WILLIAMS",
+        "NE-QB-MAYE",
+        "NE-TE-HENRY",
+        "NE-RB-STEVENSON",
+        "NE-TE-RARIDON"
+      ],
+      "officialInactivePlayerIds": [
+        "CHI-LB-SANBORN",
+        "CHI-LB-EDWARDS",
+        "NE-CB-DAVIS"
+      ],
+      "narrativeWindMph": 5.1,
+      "sensorWindMph": 5.1,
+      "narrativeTempF": 56.6,
+      "sensorTempF": 56.6,
+      "narrativeLine": 27.5,
+      "liveBookLine": 27.5,
+      "receiptSha256": "c6598c362bd602e6933690303afea056ad774c31279ddf61b782ff740dc4d693",
+      "z3SolverStatus": "sat",
+      "verifiedAtIso": "2026-10-22T23:45:00.000Z",
+      "ed25519SignatureHex": "46fbb58daf0c880f43ab887fb20165a2123aecb8312b39c61e4ae29c0c4026115b32061fca51660100c146c316c0e354c975d80194e903792facfad5fe056a01",
+      "verifier": "z3-solver",
+      "pipelineState": "AuthorizedPublishReceipt"
+    }
+  ],
+  "executionLatencyMs": 1300,
+  "merkleRootSha256": "9021c276e4c5a0c2eb41e099aa85b1bef3ebef221bb42f49502362850342d248",
+  "corpusItemsLoaded": 3143,
+  "corpusItemsEvaluated": 2162,
+  "mindRecordsLoaded": 5149,
+  "mindApplicablePrinciplesCount": 2967,
+  "spreadPublishState": "PLAY",
+  "totalPublishState": "PLAY",
+  "propHookFlags": [
+    "PASS_KNEELDOWN_HOOK_RISK",
+    "PASS_KNEELDOWN_HOOK_RISK"
+  ]
+}

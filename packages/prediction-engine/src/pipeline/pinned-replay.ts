@@ -1,8 +1,8 @@
 import type { UnifiedSlateExecutionSummary } from "./unified-autonomous-mind-pipeline.ts";
 
-/** Reproduced twice on 2026-10-23 with z3-solver 5.3.1. Not the fallback hash. */
+/** Reproduced after Word 8 bits 280 and 281 were set. Not the pre-word-8 hash. */
 export const PINNED_2026_10_22_TOTAL_RECEIPT_SHA256 =
-  "bb33bbe33037eeed36f7eba6b7d525540a644ce185bf80791061a35b7ec27de6";
+  "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4";
 
 export function assertPinnedReplay(summary: UnifiedSlateExecutionSummary): void {
   if (summary.spreadPublishState !== "PLAY" || summary.totalPublishState !== "PLAY") {

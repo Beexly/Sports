@@ -135,7 +135,12 @@ export function buildContextualBitmask288(
 
   const qbKneeldownHookHazard =
     ctx.qbRushPropHookInDangerZone && getBit(words, 152);
-  if (qbKneeldownHookHazard) setBit(words, 230);
+  if (qbKneeldownHookHazard) {
+    setBit(words, 230);
+    // Word 8 endgame hazards from the league table. 280 kneel, 281 checkdown.
+    setBit(words, 280);
+    setBit(words, 281);
+  }
 
   const rookieRampVsDepletedCb1 =
     (getBit(words, 216) && getBit(words, 112)) ||
@@ -204,5 +209,15 @@ export const NE_CHI_20261022_BITMASK_INPUT: GameContextBitmaskInput = {
 
 /** Bits the 2026-10-22 NE @ CHI card must set. Schema-version nibble stays 0 so the locked pattern matches the autopsy table exactly. */
 export const NE_CHI_20261022_REQUIRED_BITS = [
-  2, 4, 16, 57, 72, 73, 76, 100, 112, 140, 152, 216, 224, 225, 226, 228, 230, 234, 256,
+  2, 4, 16, 57, 72, 73, 76, 100, 112, 140, 152, 216, 224, 225, 226, 228, 230, 234, 256, 280, 281,
 ] as const;
+
+/** Bits present in exactly one of the two masks. */
+export function bitmaskXorIndices(left: readonly number[], right: readonly number[]): number[] {
+  const a = new Set(left);
+  const b = new Set(right);
+  const flipped: number[] = [];
+  for (const bit of a) if (!b.has(bit)) flipped.push(bit);
+  for (const bit of b) if (!a.has(bit)) flipped.push(bit);
+  return flipped.sort((x, y) => x - y);
+}

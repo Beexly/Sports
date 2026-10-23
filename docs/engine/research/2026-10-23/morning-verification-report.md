@@ -6,10 +6,10 @@ Replay game: 2026-10-22 NE @ CHI. One call, `runUnifiedAutonomousMindPipeline` /
 
 | field | value |
 |---|---|
-| total receipt SHA-256 | `bb33bbe33037eeed36f7eba6b7d525540a644ce185bf80791061a35b7ec27de6` |
-| spread receipt SHA-256 | `2701ac8137856068a399b1e24ecb705d23c30cc293389791ba17272bbb40a0e0` |
-| bitmask SHA-256 | `55180c8b4380ae867c6461e97e2973300e61c1130e089b0f384a7e3de42ec9fc` |
-| merkle root | `e96d730296502de71d723507f9cf5087345ec81fb6a147dabad01fea0b0d1385` |
+| total receipt SHA-256 | `5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4` |
+| spread receipt SHA-256 | `ef623f0dd3bcf006a6562cd525211dc2f5d27308a5f96ed9f2e6d5cac9b1e733` |
+| bitmask SHA-256 | `91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e` |
+| merkle root | `ecbe98ef2b78085222901266b43c50636bf5f1379311d7809d33b4ccaeec200d` |
 | z3SolverStatus | `sat` |
 | verifier | `z3-solver` 5.3.1 |
 | corpus loaded / evaluated | 3143 / 2162 |

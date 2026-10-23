@@ -29,8 +29,10 @@ describe("Task D: Permanent Early-Abort & Posterior Feedback Regression Suite", 
     const result = await runIntelligence(bundleWithNegativeLeans as never);
     expect(result.situationTrace).toBeDefined();
     expect(result.situationTrace?.ok).toBe(true);
-    expect(result.situationTrace?.corpusItemsEvaluated ?? 0).toBeGreaterThanOrEqual(2000);
-    expect(result.situationTrace?.mindRecordsLoaded ?? 0).toBeGreaterThanOrEqual(5000);
+    expect(result.situationTrace?.corpusItemsLoaded ?? 0).toBeGreaterThanOrEqual(3143);
+    expect(result.situationTrace?.corpusItemsEvaluated ?? 0).toBeGreaterThanOrEqual(2162);
+    // The spec headline is 5303. The file is 5149 unique rows. Do not pad it.
+    expect(result.situationTrace?.mindRecordsLoaded).toBe(5149);
     expect(result.situationTrace?.mindApplicablePrinciplesCount ?? 0).toBeGreaterThan(0);
     expect(result.reasoning.corpusPosteriorDelta).not.toBe(0);
     expect(result.reasoning.mindPosteriorDelta).not.toBe(0);
