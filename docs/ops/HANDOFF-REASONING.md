@@ -27,9 +27,15 @@ controls proving the harness can fail. Numbers today: grounding .9464, specifici
 .9809, rubric 89.80, Brier .2154 v market .2158, `fairChecksApplied: 0` on legacy
 rows (so consistency 1.0 is "nothing disproved it", not verified).
 
-`packages/prediction-engine/src/engine/factor-narrative.ts` (+13 tests) is written
-and passing but **NOT wired and NOT committed**. It renders the engine's own
-weighted factor trail into prose.
+`engine/factor-narrative.ts` is committed and passing (13 tests) and **must not be
+wired as designed**: it narrates the MARKET factors as the reason for a pick, which
+is the exact failure this work exists to kill. It does carry the right shape —
+`narrateFactors` for weighted reasons and a collapsed `watchedSignals` clause
+("Also watching (no weight yet)") for the nine shadow families — so reuse the
+mechanism, replace the source of truth.
+
+`scoring.ts` is the real file again (+120/-12 v main), not the placeholder. Do not
+regress it.
 
 ## 3. What is actually broken — the audit finding
 
