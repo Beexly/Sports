@@ -121,6 +121,13 @@ for _r in rows:
     out_rows.append(_r)
 rows = out_rows
 
+
+# scores24 model projection + trends for THIS game (their engine's own output)
+S24C = "scores24.live rapi /localized/matches/american-football/25-10-2026-baltimore-ravens-cincinnati-bengals/prediction-conclusion-market?lang=en (payload: docs/engine/intel/kb/scores24/bal-cin-prediction-conclusion.json)"
+r(layer="L5", side="HOME", claim="scores24 model projects total over 45.5 at 1.56 for this fixture (their simulation conclusion, ingested for comparison).", value="over 45.5 @ 1.56", source=S24C, fetchedAt=F + "3:40Z", confidence="medium", crossCheck="cross-model read against GSE total projection, not against a book")
+S24T = "scores24.live rapi /localized/matches/american-football/25-10-2026-baltimore-ravens-cincinnati-bengals/trends?lang=en (payload: docs/engine/intel/kb/scores24/bal-cin-trends.html)"
+r(layer="L5", side="HOME", claim="scores24 trends feed carries a results-trend block with min/max odds for this fixture.", value="results trend block present", source=S24T, fetchedAt=F + "3:38Z", confidence="medium")
+
 out = "docs/engine/audits/2026-10-25-bal-cin.json"
 os.makedirs(os.path.dirname(out), exist_ok=True)
 open(out, "w", encoding="utf-8").write(json.dumps(rows, indent=2, ensure_ascii=False))

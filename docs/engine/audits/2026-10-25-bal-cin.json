@@ -574,5 +574,24 @@
     "source": "nflverse snap_counts_2026.csv column offense_pct (team, week; mean per week over the window)",
     "fetchedAt": "2026-10-23T12:53:20Z",
     "confidence": "high"
+  },
+  {
+    "layer": "L5",
+    "side": "HOME",
+    "claim": "scores24 model projects total over 45.5 at 1.56 for this fixture (their simulation conclusion, ingested for comparison).",
+    "value": "over 45.5 @ 1.56",
+    "crossCheck": "cross-model read against GSE total projection, not against a book",
+    "source": "scores24.live rapi /localized/matches/american-football/25-10-2026-baltimore-ravens-cincinnati-bengals/prediction-conclusion-market?lang=en (payload: docs/engine/intel/kb/scores24/bal-cin-prediction-conclusion.json)",
+    "fetchedAt": "2026-10-23T12:53:40Z",
+    "confidence": "medium"
+  },
+  {
+    "layer": "L5",
+    "side": "HOME",
+    "claim": "scores24 trends feed carries a results-trend block with min/max odds for this fixture.",
+    "value": "results trend block present",
+    "source": "scores24.live rapi /localized/matches/american-football/25-10-2026-baltimore-ravens-cincinnati-bengals/trends?lang=en (payload: docs/engine/intel/kb/scores24/bal-cin-trends.html)",
+    "fetchedAt": "2026-10-23T12:53:38Z",
+    "confidence": "medium"
   }
 ]
