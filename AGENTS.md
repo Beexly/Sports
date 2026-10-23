@@ -18788,3 +18788,59 @@ Method note: read-only lane as @GalaxySportsHQ in a fresh tab; all 11 timelines 
 - ESPN Analytics Receiver Scores (espnanalytics.com link card) — @DevyEusuf's Open Score source.
 - nflverse — chart-footer data credit on @GridironInfo_ posts.
 - Polymarket — odds source stated on @GridironInfo_ leader-odds posts.
+
+### ADDENDUM to the Fri Oct 23, 2026, 9:08 AM CDT run (second Lane B pass — corrections and fuller reads)
+
+A second, independent Lane B pass over the same window delivered after the main section landed. Its new reads are filed here; where its reads conflict with the main section, both are recorded and neither is harmonized.
+
+#### CORRECTION — Ben Volin TNF QB table (filed in the main section and in benvolin-tnf-qb-stats-table-2026.csv)
+
+- The main section assigned the table's first row (31 att, 77.4%, +9.3% CPOE, +8.1 EPA) to Caleb Williams and the second row (33 att, 66.7%, +2.8% CPOE, +14.0 EPA) to Drake Maye. The second pass cross-checked the rows against the Next Gen Stats pass charts for the same game (Maye 24/31 completions/attempts with CPOE +9.3%; Williams 22/33 with CPOE +2.8%) and against a separate total-EPA chart (Williams 14.1 vs Maye 7.9), and assigns the rows the other way: Maye — 31 att, 77.4%, +9.3% CPOE, 35 DB, +8.1 EPA, +0.23 EPA/DB, 8.9 AY/Att, 9.7% deep; Williams — 33 att, 66.7%, +2.8% CPOE, 39 DB, +14.0 EPA, +0.36 EPA/DB, 7.3 AY/Att, 3.0% deep. The post is https://x.com/BenVolin/status/2113607367954993375 (7:24 AM CDT Oct 23); the table itself states no source, and the author's own thread reply attributes the tight-window classification to Next Gen Stats. The CSV in docs/research/2026-10-23/full-tables/benvolin-tnf-qb-stats-table-2026.csv has been overwritten with the corrected assignment. The main section's original assignment stands above as the first read; this correction is the governing read because it is the one with an independent cross-check.
+
+#### EPA per Dropback inside vs outside the pocket (data: Fantasy Points Data, via @FantasyPts)
+
+- Graphic headed "ALL AROUND ELITE PASSERS — EPA/DB INSIDE AND OUTSIDE THE POCKET." Posted by @FantasyPts, 7:01 AM CDT Oct 23, https://x.com/FantasyPts/status/2113601741308526598. Source stated: @FantasyPtsData.
+- Inside the pocket: Lamar Jackson +0.355, Brock Purdy +0.332, Caleb Williams +0.324, Josh Allen +0.318, Jared Goff +0.308. Outside the pocket: Trevor Lawrence +0.845, Jameis Winston +0.745, Joe Burrow +0.582, Geno Smith +0.575, Brock Purdy +0.526. Full table in docs/research/2026-10-23/full-tables/fantasypoints-epadb-inside-outside-pocket-2026.csv. (The main section recorded this post as PARTIAL with its graphic unopened; this fuller read supersedes that flag for the graphic's values.)
+
+#### WAR Board closing rows (via @DynatyzeFF)
+
+- A closing thread post (7:44 AM CDT Oct 23, https://x.com/DynatyzeFF/status/2113612486188437565) prints WAR ranks 14–18 from a board excerpt: 14 Parker Washington +0.5 wins added, 15 Mike Evans +0.4, 16 DeVonta Smith +0.4, 17 Drake London +0.4, 18 Ja'Marr Chase +0.4 — i.e., Washington ranks above Chase on this board, as the thread's headline claimed. Further printed columns (+0.08 / 92 etc.) have headers that were not visible in the excerpt (PARTIAL). CSV in docs/research/2026-10-23/full-tables/dynatyze-war-board-wr-ranks14-18-2026.csv.
+
+#### Receiving Separation by Coverage — top rows (data: Fantasy Points Data, via @corbin_young21) — PARTIAL
+
+- Table columns as printed: RTE% / SEP SCORE / YPRR / TPRR / WIN RATE, split Man and Zone; Weeks 1–6, 2026. Posted by @corbin_young21, 7:00 AM CDT Oct 23, https://x.com/corbin_young21/status/2113601339104059666. Source stated: @FantasyPtsData.
+- Top rows read (PARTIAL — remaining ~24 rows illegible in the enlarged render): Zay Flowers — Man TPRR 0.32 / YPRR 2.67; Zone TPRR 0.30 / YPRR 4.13. Luther Burden III — Man TPRR 0.29 / YPRR 2.41; Zone TPRR 0.30 / YPRR 2.62. Full read rows in docs/research/2026-10-23/full-tables/corbin-separation-by-coverage-top-rows-fpd-2026.csv. (The main section recorded this post as PARTIAL with the image unopened; this read supplies the top rows.)
+
+#### Fuller @PFF leaderboard reads (second pass; main section marked several of these PARTIAL)
+
+- Lowest INT/ATT % since 2024 (min 750 attempts), complete as printed: Caleb Williams 1.1, Lamar Jackson 1.4, Jalen Hurts 1.4, Jared Goff 1.5, Jayden Daniels 1.5, Joe Burrow 1.5. CSV in docs/research/2026-10-23/full-tables/pff-lowest-int-per-att-since2024-2026.csv. (This is the "protector of football" graphic the main section could not read.)
+- Drake Maye over his last 4 weeks (complete): 1,198 pass yards, 14 total TDs, 2 interceptions, 118.9 passer rating.
+- Colston Loveland 1H / 2H (2H = 1 drive, as printed): catches 1 / 4, yards 11 / 47, TDs 0 / 1.
+- Bears receiving at the half vs the Patriots (complete as printed): Burden III 4/130/1, Kmet 2/20/0, Loveland 1/11/0, Odunze 1/6/0, Raymond 0/0/0, Swift 1/0/0.
+- Least first downs allowed through Week 6 (complete): Vikings 63, Bears 80, Chiefs 82, Seahawks 85, Panthers 92.
+- Most big-time throws without a turnover-worthy play, last 2 weeks (complete): Maye 8, Hurts 2, Murray 2, Goff 1, McKee 1.
+- Most plays run inside the red zone (complete): Bears 112, Cardinals 81, Bills 78, Bengals 77, Broncos 73.
+- Drive-score % (complete): lowest — Chargers 25.4%, Titans 28.1%, Eagles 29.7%, Patriots 31.6%, Cardinals 32.4%; highest — Bills 56.5%, Lions 52.8%, Cowboys 49.1%, Chiefs 47.3%, Colts 47.0%.
+- Most pass TDs without an INT on 20+ air-yard throws (complete): Burrow 5, Nix 4, Goff 4, Allen 4, Mayfield 3.
+- Lowest passer rating allowed (complete): Vikings 62.9, Broncos 73.1, Packers 73.9, Chiefs 74.1, Seahawks 75.3.
+- Highest DI pressure rate (complete): Brandon Dorlus 14.0%, Gervon Dexter Sr. 13.9%, Keeanu Benton 13.0%, Zach Allen 12.9%, Leonard Williams 12.8%.
+- Vikings defensive ranks list (complete as printed): 1st in 13 categories — scoring defense, EPA/play allowed, success rate allowed, pass success rate allowed, red zone convert rate allowed, 3rd down convert rate allowed, points per drive allowed, series convert rate allowed, completion % allowed, passer rating allowed, pass TD allowed, pressure rate, sack rate.
+- Most yards per reception allowed among CB (min 100 coverage snaps as stated in the post text): Sauce Gardner 22.5, Jaylen Watson 19.0, Carlton Davis III 18.4, Brandon Stephens 17.9, Marcus Harris 17.2.
+- Highest pass block win rate among OT (min 150 pass snaps): Jermaine Eluemunor 96.7%, Brian O'Neill 96.5%, Trent Williams 95.6%, Amarius Mims 95.0%, JC Latham 95.0%.
+- Longest active streak of consecutive snaps without allowing a pressure (among tackles): Trent Williams 115, Jordan Mailata 90, Colton McKivitz 70, Braxton Jones 59, Brian O'Neill 57, Jermaine Eluemunor 52.
+- Highest pass rating when targeted among TEs (names in printed order; no numeric ratings in the image): Travis Kelce, Mike Gesicki, Sam LaPorta, Tommy Tremble, Pat Freiermuth.
+- Most receiving yards by a Bears player this season (complete): Burden III 491, Odunze 460, Loveland 386, Kmet 238, Swift 210.
+- Most sacks by a CB (PARTIAL — at least one more CB at 2 beyond those read): Kyler Gordon 4 (asterisked; footnote not captured), Brandon Cisse 2, Dru Phillips 2.
+- CONFLICT recorded: rookie OL offensive grades. Main section (first pass): Caleb Lomu 75.1, Austin Barber 71.5, Francis Mauigoa 70.5, Kage Casey 69.3. Second pass (headed "Highest graded rookie offensive linemen"): Lomu 75.1, Barber 71.5, Vega Ioane 70.6, Travis Burke 70.5, Spencer Fano 69.2. The two reads agree on the top 2 and conflict on ranks 3–5; both stand, unresolved — the posts may be different weekly editions of the same leaderboard.
+- CONFLICT recorded: @PFF QB rankings image. Main section read a Top 10 with Brock Purdy 1st; the second pass read the "QB Rankings heading into Week 7" link post (https://x.com/PFF/status/2113280466086244816) image as 1 Josh Allen, 2 Drake Maye, 3 Lamar Jackson (PARTIAL). Both stand, unresolved.
+
+#### Fuller @NFL_Researcher reads (second pass)
+
+- Best/worst point differential per game (complete as printed): best — Chiefs +11.4, 49ers +11.2, Vikings +9.0, Jaguars +8.3, Bears +5.3, Panthers +4.6; worst — Eagles −5.2 (27th), Commanders −6.7, Titans −7.5, Cardinals −8.7, Chargers −10.2, Dolphins −12.4. CSV in docs/research/2026-10-23/full-tables/nflresearcher-point-differential-per-game-2026.csv. (The main section had this list PARTIAL.)
+- CONFLICT recorded: most yards gained per drive — main section read Bills 36.9 at rank 3; the second pass reads Bills 37.2. Chiefs 37.6 and Cowboys 37.4 agree in both. Both stand, unresolved.
+
+#### Conflicting approximate reads (both PARTIAL; neither governs)
+
+- Dynatyze QB quadrant census: Drake Maye's completion % is read as 63.9 in the main section and 65.9 in the second pass. All other quadrant values agree.
+- PattonAnalytics pre-snap alignment scatter: the two passes' approximate plotted positions differ for several QBs (e.g., the highest under-center values are read as Jordan Love ~+0.42 in the main section, and as Kirk Cousins ~+0.35 / Jared Goff ~+0.30 in the second pass; Herbert is read at ~−0.28/−0.27 in the main section and ~−0.22/−0.25 in the second pass; Maye's under-center value at ~−0.14 vs ~−0.20). The chart prints no numeric table; both approximate reads stand as PARTIAL.
+- Corbin Young man-coverage TPRR table: the second pass presents the post among its in-window TPRR finds without an ID; the main run's ID check (status 2113193648997249047 = 4:00 AM CDT Oct 22) places it pre-window, and it remains excluded on that ID-verified basis.
