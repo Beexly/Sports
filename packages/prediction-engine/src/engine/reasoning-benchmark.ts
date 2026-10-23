@@ -97,61 +97,79 @@ export function scoreGrounding(artifact: ReasonArtifact, kase: BenchmarkCase): n
 }
 
 /**
- * Internal consistency: does the artifact agree with itself and with the facts?
+ * Internal consistency FINDINGS — one labelled string per flaw.
  *
- * Penalties, each independent: probability/side disagreement, probability at
- * exactly 0.5 with a named side, a calm claim on a windy case, and a cited
- * numeric fact contradicted by the case. Starts at 1 and loses 0.25 per hit so a
- * single flaw is survivable and three is not.
+ * Labelled rather than folded into a bare penalty, because "internal
+ * inconsistency: 103" tells a reader nothing about what to fix. Causes here are
+ * separable and each is actionable on its own.
+ *
+ * Each finding costs 0.25, so one flaw is survivable and three is not.
  */
-export function scoreConsistency(artifact: ReasonArtifact, kase: BenchmarkCase): number {
-  let score = 1;
+export function consistencyFindings(
+  artifact: ReasonArtifact,
+  kase: BenchmarkCase,
+): string[] {
+  const findings: string[] = [];
   const text = artifact.reasonText.toLowerCase();
   const hasSide = artifact.side !== "PASS";
 
   if (hasSide) {
     const p = artifact.prob;
-    // `prob` is P(CHOSEN SIDE WINS) for every side, including UNDER. The engine
-    // publishes LEANS at 0.45-0.50, so a bare "must exceed 0.5" faults most of
-    // its honest output — 148 of 552 real rows on the 2026-10-23 run. 0.45 is the
-    // lean floor; below it the artifact is naming a side it does not actually
-    // favour.
-    if (!Number.isFinite(p) || p <= 0 || p >= 1) score -= 0.25;
-    else if (p < LEAN_FLOOR) score -= 0.25;
+    // `prob` is P(CHOSEN SIDE WINS) for every side, including UNDER — so a bare
+    // "must exceed 0.5" faults every honest dog. The 2026-10-23 run showed why:
+    // 100+ rows piled at 35-45%, which is just a normal underdog, not a flaw. So
+    // the test is not a floor but a DISAGREEMENT: naming a side more than 12
+    // points from the market needs to be right, and anything under 10% is a
+    // long shot however you look at it.
+    if (!Number.isFinite(p) || p <= 0 || p >= 1) findings.push("probability outside 0..1");
+    else if (p < 0.1) findings.push(`named a side at only ${(p * 100).toFixed(0)}%`);
+    else {
+      const m = kase.facts["marketFairProb"];
+      if (typeof m === "number" && Math.abs(p - m) > 0.12) {
+        findings.push(
+          `engine ${(p * 100).toFixed(0)}% v market ${(m * 100).toFixed(0)}% — big disagreement`,
+        );
+      }
+    }
   }
 
   const wind = kase.facts["wind_mph"];
   if (typeof wind === "number" && wind > 8 && CALM_WORDS.some((w) => text.includes(w))) {
-    score -= 0.25;
+    findings.push("claimed calm on a windy case");
   }
 
   // Printed fair values must match the record they came from. This is the
   // specific check the 2026-10-23 baseline needed: the template used to print a
   // market-derived number under the same "Fair value" label the record used for
-  // the engine's, so 103/552 rows disagreed with themselves. Tolerance is 2
-  // points because the prose rounds to whole percent.
-  // Regex LITERALS on purpose: this file is generated/edited through a shell
-  // that collapses double backslashes, and "\s" inside a string degrades to a
-  // bare "s" with no error. Literals survive it.
+  // the engine's, so rows disagreed with themselves. Tolerance is 2 points
+  // because the prose rounds to whole percent.
   const agrees = (re: RegExp, expected: unknown): boolean | null => {
     const m = re.exec(text);
     if (!m || typeof expected !== "number") return null;
     return Math.abs(Number(m[1]) - expected * 100) <= 2;
   };
-  if (agrees(/market fair\s*:\s*(\d+)%/, kase.facts["marketFairProb"]) === false) score -= 0.25;
-  if (agrees(/engine fair\s*:\s*(\d+)%/, kase.facts["fairProbability"]) === false) score -= 0.25;
+  if (agrees(/market fair\s*:\s*(\d+)%/, kase.facts["marketFairProb"]) === false) {
+    findings.push("printed market fair disagrees with the record");
+  }
+  if (agrees(/engine fair\s*:\s*(\d+)%/, kase.facts["fairProbability"]) === false) {
+    findings.push("printed engine fair disagrees with the record");
+  }
 
   for (const [key, value] of Object.entries(kase.facts)) {
     if (key === "marketFairProb" || key === "fairProbability") continue;
     if (typeof value !== "number") continue;
     if (!text.includes(key.toLowerCase().replace(/_/g, " "))) continue;
-    // A figure quoted to one decimal must match the case's own figure.
-    const quoted = new RegExp(`${value.toFixed(1).replace(".", "\\.")}`).test(text);
-const near = new RegExp("\b" + Math.round(value) + "\b").test(text);
-    if (!quoted && !near) score -= 0.25;
+    const quoted = new RegExp(value.toFixed(1).replace(".", "\.")).test(text);
+    const near = new RegExp(`\b${Math.round(value)}\b`).test(text);
+    if (!quoted && !near) findings.push(`figure contradicts the record: ${key}`);
   }
 
-  return Math.max(0, score);
+  return findings;
+}
+
+/** Consistency as a number: 1 less 0.25 per labelled finding, floored at 0. */
+export function scoreConsistency(artifact: ReasonArtifact, kase: BenchmarkCase): number {
+  return Math.max(0, 1 - 0.25 * consistencyFindings(artifact, kase).length);
 }
 
 /**
@@ -200,7 +218,7 @@ export function scoreCase(artifact: ReasonArtifact, kase: BenchmarkCase): CaseSc
       if (s.trim() && !loaded.has(s)) failures.push(`cited unloaded surface: ${s}`);
     }
   }
-  if (consistency < 1) failures.push("internal inconsistency");
+  failures.push(...consistencyFindings(artifact, kase));
   if (calibration === null) failures.push("unsettled — excluded from calibration");
 
   let weighted = grounding * RUBRIC_WEIGHTS.grounding + consistency * RUBRIC_WEIGHTS.consistency;

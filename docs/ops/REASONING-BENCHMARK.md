@@ -126,6 +126,24 @@ yield zero picks), a thin context clears no gate because confidence needs the fo
 buckets, and per-pick fair values must not be pinned globally or genuine renders
 score as inconsistent.
 
+## 2026-10-23, later: the side/probability rule was wrong, and the gate passes
+
+Labelled the consistency findings (bare "internal inconsistency: 103" was
+undiagnosable) and the cause distribution killed the rule: ~100 of 103 were
+"named a side at only 39-44%". A dog at 42% is not an inconsistency — it is a
+normal underdog — so a flat 0.45 floor was measuring the wrong thing.
+
+Replaced with a DISAGREEMENT test: naming a side more than 12 points from the
+market has to be right, and anything under 10% is a long shot whatever the market
+says. Result: consistency 1.0, no findings, and the run reports
+`leaderboardReady: true`.
+
+**Read that cautiously — `fairChecksApplied: 0`.** Legacy rows print neither
+"Market fair" nor "engine fair", so on this cohort the fair-value checks never
+fired and consistency is "nothing disproved it", not "everything verified". New
+picks exercise both. The bench now reports that coverage count alongside the
+score so a vacuous 1.0 cannot be mistaken for a verified one.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.

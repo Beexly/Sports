@@ -57,13 +57,22 @@ describe("consistency", () => {
     expect(scoreConsistency(calm, kase)).toBeLessThan(1);
   });
 
-  it("penalises a side the probability does not actually favour", () => {
-    // prob is P(chosen side wins) for UNDER as much as for HOME, and the lean
-    // floor is 0.45 — below that the artifact names a side it does not favour.
-    expect(scoreConsistency({ ...good, side: "UNDER", prob: 0.62 }, kase)).toBe(1);
+  it("accepts ordinary dogs — a side at 44% is not an inconsistency", () => {
     expect(scoreConsistency({ ...good, side: "UNDER", prob: 0.47 }, kase)).toBe(1);
-    expect(scoreConsistency({ ...good, side: "UNDER", prob: 0.44 }, kase)).toBeLessThan(1);
-    expect(scoreConsistency({ ...good, side: "HOME", prob: 0.44 }, kase)).toBeLessThan(1);
+    expect(scoreConsistency({ ...good, side: "UNDER", prob: 0.44 }, kase)).toBe(1);
+  });
+
+  it("penalises a big disagreement with the market", () => {
+    const k = { ...kase, facts: { ...kase.facts, marketFairProb: 0.52 } };
+    expect(scoreConsistency({ ...good, prob: 0.38 }, k)).toBeLessThan(1);
+    expect(scoreConsistency({ ...good, prob: 0.52 }, k)).toBe(1);
+    // 10 points away is inside the band.
+    expect(scoreConsistency({ ...good, prob: 0.62 }, k)).toBe(1);
+  });
+
+  it("penalises a long shot however the market prices it", () => {
+    const k = { ...kase, facts: { ...kase.facts, marketFairProb: 0.09 } };
+    expect(scoreConsistency({ ...good, prob: 0.06 }, k)).toBeLessThan(1);
   });
 
   it("accepts a 0.5 lean, which is the engine's normal output", () => {
@@ -80,8 +89,8 @@ describe("consistency", () => {
   });
 
   it("accepts printed fairs that match the record", () => {
-    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, marketFairProb: 0.143, fairProbability: 0.31 } };
-    const a = { ...good, reasonText: "wind mph 14.3. Market fair: 14%, engine fair: 31%." };
+    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, marketFairProb: 0.55, fairProbability: 0.58 } };
+    const a = { ...good, reasonText: "wind mph 14.3. Market fair: 55%, engine fair: 58%." };
     expect(scoreConsistency(a, k)).toBe(1);
   });
 
@@ -92,9 +101,9 @@ describe("consistency", () => {
   });
 
   it("penalises a printed engine fair that disagrees, and allows the rounding band", () => {
-    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, fairProbability: 0.31 } };
-    expect(scoreConsistency({ ...good, reasonText: "wind mph 14.3, engine fair: 32%." }, k)).toBe(1);
-    expect(scoreConsistency({ ...good, reasonText: "wind mph 14.3, engine fair: 48%." }, k)).toBeLessThan(1);
+    const k: BenchmarkCase = { ...kase, facts: { wind_mph: 14.3, fairProbability: 0.58 } };
+    expect(scoreConsistency({ ...good, reasonText: "wind mph 14.3, engine fair: 59%." }, k)).toBe(1);
+    expect(scoreConsistency({ ...good, reasonText: "wind mph 14.3, engine fair: 70%." }, k)).toBeLessThan(1);
   });
 
   it("never goes below zero", () => {
@@ -146,7 +155,7 @@ describe("falsifier", () => {
 
 describe("case scoring", () => {
   it("names every failure", () => {
-    const bad = scoreCase({ ...good, citedSurfaces: ["invented"], prob: 0.3 }, kase);
+    const bad = scoreCase({ ...good, citedSurfaces: ["invented"], prob: 0.05 }, kase);
     expect(bad.failures).toContain("cited unloaded surface: invented");
     expect(bad.failures.length).toBeGreaterThan(1);
   });

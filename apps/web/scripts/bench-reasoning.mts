@@ -131,6 +131,11 @@ async function main() {
   }
 
   const card = runSuite(cases, artifacts);
+  // Coverage honesty: the fair-value checks only fire on text that prints them,
+  // and legacy rows do not. A consistency of 1.0 on zero applicable checks means
+  // "nothing disproved it", not "everything verified".
+  const fairChecksApplied = artifacts.filter((a) => /market fair|engine fair/i.test(a.reasonText)).length;
+  const longShotNaming = artifacts.filter((a) => a.prob < 0.1).length;
   const failCounts = new Map<string, number>();
   for (const c of card.cases) {
     for (const f of c.failures) failCounts.set(f.replace(/: .*/, ""), (failCounts.get(f.replace(/: .*/, "")) ?? 0) + 1);
@@ -147,6 +152,8 @@ async function main() {
         meanConsistency: +card.meanConsistency.toFixed(4),
         meanSpecificity: +card.meanSpecificity.toFixed(4),
         meanFalsifier: +card.meanFalsifier.toFixed(4),
+        fairChecksApplied,
+        longShotNaming,
         meanRubric: +card.meanRubric.toFixed(2),
         brier: card.brier === null ? null : +card.brier.toFixed(4),
         marketBrier: card.marketBrier === null ? null : +card.marketBrier.toFixed(4),
