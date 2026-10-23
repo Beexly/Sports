@@ -1,63 +1,87 @@
-# LOOP — every reasoning layer goes in, books last
+# LOOP — prepare the week like a coach. Books are the last thing checked.
 
-Paste this as the recurring prompt. It is written to be run unattended, one layer
-per wakeup, and to fail loudly rather than declare victory.
+Paste this as the recurring prompt. One layer per wakeup. Written as a coaching
+week, because the failure so far is a factor pipeline that reads like a
+spreadsheet instead of a staff preparing for a game.
 
 ---
 
-## The clock — work in this order, always
+## The week
 
-L0 USAGE · L1 HEALTH · L2 MATCHUPS · L3 SITUATIONS · L4 VENUE/WEATHER/REFS ·
-L5 TRACKING/CORPUS · L6 CONFLICT ADJUDICATION · L7 THE TRAIL · L8 PRICE (books LAST)
+A staff does not start with a line. Monday morning the film is fresh and the first
+question is **who touched the ball, where, and what did the staff change** — because
+that rewrites what this team is this week. Then the training room. Then the matchup
+those two realities actually create. Then the spot. Then the field. The book gets
+walked down to the window on Friday.
 
-The books are L8. Nothing in L0–L7 may depend on a line, a price, or a market
-number. If a layer's output can only be interpreted once a price exists, that layer
-is being built wrong.
+MONDAY — L0 USAGE: who got the ball, in what situation, and what changed
+TUESDAY — L1 HEALTH: who is out, by name, and what it forces
+WEDNESDAY — L2 MATCHUPS: player v player, coach v coach, scheme v scheme, using
+              only the players health says are available
+THURSDAY — L3 SITUATIONS: stakes, division familiarity, slot, rest, history
+              L4 VENUE / WEATHER / REFS: surface, roof, wind, temperature, crew
+              L5 EVERYTHING ELSE: tracking, corpus, narrative, the rest of it
+FRIDAY — L6 ADJUDICATION: where the layers disagree, say who wins and why
+         L7 THE TRAIL: publish the read as a coaching note
+SATURDAY — L8 PRICE: PLAY / ALT / PASS-on-price over the play already chosen
 
-## Per wakeup, exactly one layer advances
+Nothing in L0–L7 may depend on a price. If a layer can only be read once a line
+exists, it is being built wrong.
 
-1. Re-read the census (`docs/engine/SIGNAL-CENSUS.md`). Pick the lowest-numbered
-   layer whose families are not all **REACHES THE DECISION**. If L(n) is complete,
-   move to L(n+1) and say so — never invent work in a later layer while an earlier
-   one is open.
-2. For each family in that layer, establish the truth first:
-   - does the producer exist? file:line
-   - does anything read it? grep, quote the call site
-   - record the CURRENT disposition before touching code
-3. Wire it so the output **reaches the published reasoning string**. Trail first is
-   acceptable; decision required to close the row.
-4. Prove it, or it did not happen:
-   - render a real pick and **quote the reasoning text** containing the family's
-     named value and its source/freshness
-   - mutate one real input (one player ruled out, one usage shift) and show the
-     reasoning AND the play moving
-   - a test that fails before the change and passes after
-5. Update the census row to REACHES THE DECISION (or REACHES ONLY THE TRAIL with
-   the reason and the next step). Commit, push, then **re-read the remote file**
-   and quote its byte size. A commit title is not proof.
+## Per wakeup
+
+1. Re-read `docs/engine/SIGNAL-CENSUS.md`. Take the lowest layer not fully
+   REACHES THE DECISION. Never open L(n+1) while L(n) is open.
+2. Establish truth before touching code: does the producer exist (file:line), does
+   anything read it (quote the call site), what is its disposition now. A file on
+   the remote with zero call sites is DISCONNECTED, not built.
+3. Wire it until the published reasoning string **contains** the layer.
+4. Prove it or it did not happen:
+   - quote the rendered trail on a **real upcoming game** — named players, the
+     usage shift or the outage, the consequence
+   - mutate one real input and show reasoning AND play move
+   - a test that fails before, passes after
+5. Update the census row, commit, push, then re-read the remote file and quote its
+   byte size.
+
+## Write like a coach, not a factor list
+
+A note is specific and consequential: **who**, **what it costs**, **what we do about
+it**, **how they answer**. "Line moved +2" is not a reason. "Their nickel is out, so
+their third receiver is a practice-squad call-up — we attack the slot on early
+downs" is. Name the man. Say the counter. The trail must be readable by someone who
+never sees the numbers.
+
+If a trail leads with `Bookmaker Consensus` or `Pricing Edge` while any of L0–L6
+exists, it is wrong however well it reads.
 
 ## Hard rules
 
-- **Missing data is a named gap, never a zero.** `0` means measured zero. An
-  unconfigured provider prints "no read" with the reason.
-- **No placeholders.** A file under 1,000 bytes where scoring.ts should be is a bug
-  report, not a commit.
-- **Never restate the market as the reason.** `Bookmaker Consensus` and
-  `Pricing Edge` are L8. If a rendered trail leads with them while L0–L6 exist, the
-  trail is wrong no matter how good it reads.
-- **Adjudicate conflicts explicitly.** When families disagree, the reasoning says
-  which won and why. Two facts listed side by side is not a decision.
-- **Fifth-track discipline stands:** any track UNCHECKED at L3+ invalidates the
-  analysis; only L5 may publish.
-- **Steelers–Browns pressure funnel is the regression case:** it must die at the
-  adversary. Keep that test green in every wakeup that touches pressure.
-- **Never fabricate.** If a source is walled, log the wall and the workaround tried.
+- Missing data is a **named gap**, never a zero. `0` means measured zero.
+- A file existing is not wiring. **Zero call sites = disconnected.**
+- No placeholders. `scoring.ts` under 1,000 bytes is a bug report.
+- Conflicts get adjudicated with a stated winner; two facts side by side is not a
+  decision.
+- Any track UNCHECKED at L3+ invalidates the analysis; only L5 may publish.
+- The Steelers–Browns pressure funnel must die at the adversary — keep that test
+  green in every wakeup that touches pressure.
+- Never fabricate. A wall gets logged with the workaround tried.
 
-## Definition of done, per layer
+## State at the last wakeup (verified, not assumed)
 
-A layer closes only when every family in it is REACHES THE DECISION, proven by a
-quoted artifact and a mutation, with the census row and the remote sha to match.
-"Built" means a reader can see it in a published trail. Storage is not wiring.
+- `scoring.ts` real at 84,140 bytes; placeholders gone.
+- `usage-factors.ts` (2,296) and `availability-factors.ts` (2,659) are on the
+  remote and referenced **zero** times in `scoring.ts` → L0 and L1 are DISCONNECTED.
+- Census: zero families reach the decision. Nothing has ever reached the trail.
+
+## Next, in order
+
+1. Wire both emitters into the scoring context so a generated trail on a real
+   Week 8 game carries the usage shift and the named outage, and quote it.
+2. Flip census L0 and L1 to REACHES THE TRAIL on that quote, then to DECISION once
+   the play moves under mutation.
+3. Advance L2 — scheme collision, player v player, coach v coach, with names — so
+   the note reads like preparation instead of a factor list.
 
 ## Report shape every wakeup
 
@@ -66,6 +90,6 @@ what blocked · next family`
 
 ## Stop condition
 
-L0–L7 all REACHES THE DECISION with proof for each, L8 demoted to PLAY / ALT /
-PASS-on-price over an already-chosen play, and three real upcoming games carrying
-full trails whose reasons are not market entries. Then say LOOP_COMPLETE.
+L0–L7 all reach the decision with proof, L8 is price-only over a chosen play, and
+three real upcoming games carry trails a coach could hand to a player. Then
+LOOP_COMPLETE.

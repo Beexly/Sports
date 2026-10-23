@@ -13,6 +13,17 @@ contains its rows, and `.worktrees/calib-boundary` has only the doctrine prose.
 Rows below are therefore re-derived from code. Where the founder's list names a
 family, that row is first.
 
+## L0 / L1 producers (added since the census opened)
+
+- `L0 USAGE` — `engine/usage-factors.ts` (2,296 bytes) on the remote. Emits who got
+  the ball, in what situation, with prior/recent share, source and freshness. **Zero
+  call sites in `scoring.ts`** → DISCONNECTED, not built.
+- `L1 HEALTH` — `engine/availability-factors.ts` (2,659 bytes) on the remote. Emits
+  named outages. Same: zero call sites → DISCONNECTED.
+- Next: wire both into the scoring context and quote a trail on a real Week 8 game
+  carrying the shift and the named outage. Row flips to REACHES THE TRAIL on that
+  quote, DECISION once the play moves under mutation.
+
 ## Verified disconnected — the five named families
 
 ### 1. Sovereign signal plane — DISPOSITIONED: no bridge exists
