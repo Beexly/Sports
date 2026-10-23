@@ -69,6 +69,21 @@ header, generated client-side. Probed webpack chunks 0–9 of
 in all). The page also loads `https://www.nfl.com/libs/playaction/api.js` — that
 shared library is the next place to look for the signing routine.
 
+## NGS client found — it is api.nfl.com, not nextgenstats
+
+The NGS app's own API client (`/dist/app.738fbeb581d2c85cb721.js`) is an axios
+instance on **`https://api.nfl.com`** with `Authorization` set from a store-held
+token, and endpoints `/api/league/schedule`, `/api/league/schedule/current`,
+`/api/league/teams`, `/league/roster`, `/stats`, `/stats/boxscore`.
+
+Token lifecycle: OAuth `grant_type=refresh_token` POST to
+`t.env.NGS_COGNITO_TOKEN_URL` with `client_id = t.env.NGS_COGNITO_ID`. Those env
+values are runtime-injected: grep for them in the static bundles finds only the
+identifiers, never the values, and chunks 0-9 contain no cognito host. The
+config must be captured from a live browser session (DevTools network on any
+signed-in NFL.com property) or from nfl.com's auth app. That capture is the
+named next step; without it the Cognito client id stays unknown.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
