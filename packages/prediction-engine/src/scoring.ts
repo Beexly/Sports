@@ -857,11 +857,15 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // market-echo guard above the confidence sum).
   const marketEchoFactors = zeroMarketEchoFactorWeights(contextFactors);
 
-  const coachSupportPts = (input.coachTrail
-    ? (input.coachTrail.usageShifts?.length ?? 0) +
-      (input.coachTrail.injuries?.filter((i: { status: string }) => i.status === "Out" || i.status === "Doubtful").length ?? 0) +
-      (input.coachTrail.shadows?.filter((s: { shadowRate: number }) => s.shadowRate >= 0.55).length ?? 0)
-    : 0) * 2;
+  const coachSupportPts = coachSupport(coachTrailFactors({
+    homeTeam: input.homeTeam,
+    awayTeam: input.awayTeam,
+    week: input.coachTrail?.week ?? 0,
+    pickedSide: toCoachSide(pickedSide),
+    injuries: input.coachTrail?.injuries as never,
+    usageShifts: input.coachTrail?.usageShifts as never,
+    shadows: input.coachTrail?.shadows as never,
+  }));
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + volatilityPenalty +
@@ -1313,11 +1317,15 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ...shadowEvidenceFactors,
   ];
 
-  const coachSupportPts = (input.coachTrail
-    ? (input.coachTrail.usageShifts?.length ?? 0) +
-      (input.coachTrail.injuries?.filter((i: { status: string }) => i.status === "Out" || i.status === "Doubtful").length ?? 0) +
-      (input.coachTrail.shadows?.filter((s: { shadowRate: number }) => s.shadowRate >= 0.55).length ?? 0)
-    : 0) * 2;
+  const coachSupportPts = coachSupport(coachTrailFactors({
+    homeTeam: input.homeTeam,
+    awayTeam: input.awayTeam,
+    week: input.coachTrail?.week ?? 0,
+    pickedSide: toCoachSide(pickedSide),
+    injuries: input.coachTrail?.injuries as never,
+    usageShifts: input.coachTrail?.usageShifts as never,
+    shadows: input.coachTrail?.shadows as never,
+  }));
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + volatilityPenalty +
@@ -1636,11 +1644,15 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   if (pricesWorseThanMarket(independentEdgeRaw)) return null;
   if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
-  const coachSupportPts = (input.coachTrail
-    ? (input.coachTrail.usageShifts?.length ?? 0) +
-      (input.coachTrail.injuries?.filter((i: { status: string }) => i.status === "Out" || i.status === "Doubtful").length ?? 0) +
-      (input.coachTrail.shadows?.filter((s: { shadowRate: number }) => s.shadowRate >= 0.55).length ?? 0)
-    : 0) * 2;
+  const coachSupportPts = coachSupport(coachTrailFactors({
+    homeTeam: input.homeTeam,
+    awayTeam: input.awayTeam,
+    week: input.coachTrail?.week ?? 0,
+    pickedSide: toCoachSide(pickedSide),
+    injuries: input.coachTrail?.injuries as never,
+    usageShifts: input.coachTrail?.usageShifts as never,
+    shadows: input.coachTrail?.shadows as never,
+  }));
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + volatilityPenalty +

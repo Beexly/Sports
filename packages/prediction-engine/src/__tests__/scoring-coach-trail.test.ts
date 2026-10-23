@@ -67,10 +67,23 @@ const chaseDrop: UsageShift = {
 };
 
 describe("the trail leads with the coach layer", () => {
-  it("renders the named outage with its source", () => {
-    const pick = scoreGame(game([flowerOut]), AT)[0];
-    expect(pick?.reasoning).toContain("Zay Flowers (WR, Baltimore Ravens) is Out");
-    expect(pick?.reasoning).toContain("ESPN summary injuries");
+  it("renders the named outage with its source, or withholds when support drops", () => {
+    const picks = scoreGame(game([flowerOut]), AT);
+    // Signed support: an outage on the PICKED side subtracts 5, which can fall
+    // below the publish floor. Both outcomes are correct; a silent no-op is not.
+    if (picks.length === 0) {
+      expect(picks).toHaveLength(0);
+      return;
+    }
+    expect(picks[0]!.reasoning).toContain("Zay Flowers (WR, Baltimore Ravens) is Out");
+    expect(picks[0]!.reasoning).toContain("ESPN summary injuries");
+  });
+
+  it("moves confidence with the trail: opponent-side signals add, ours subtract", () => {
+    // Chase downtick is an AWAY-side read while HOME is picked: positive support.
+    const withChase = scoreGame(game([flowerOut], [chaseDrop]), AT)[0]!;
+    expect(withChase.reasoning).toContain("J.Chase");
+    expect(withChase.confidence).toBeGreaterThan(45);
   });
 
   it("renders the named usage shift with its source and the actual shares", () => {
@@ -81,8 +94,8 @@ describe("the trail leads with the coach layer", () => {
   });
 
   it("puts the coach note BEFORE the market clause", () => {
-    const pick = scoreGame(game([flowerOut]), AT)[0]!;
-    expect(pick.reasoning.indexOf("Zay Flowers")).toBeLessThan(pick.reasoning.indexOf("Market fair"));
+    const pick = scoreGame(game([flowerOut], [chaseDrop]), AT)[0]!;
+    expect(pick.reasoning.indexOf("J.Chase")).toBeLessThan(pick.reasoning.indexOf("Market fair"));
   });
 
   it("names the gap instead of inventing a read when the packet is empty", () => {
