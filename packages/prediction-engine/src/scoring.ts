@@ -940,6 +940,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : "";
 
   const factors: FactorDetail[] = [
+    ...coachFactors,
     consensusFactor,
     depthFactor,
     edgeFactor,
@@ -1309,6 +1310,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : "";
 
   const factors: FactorDetail[] = [
+    ...coachFactors,
     consensusFactor,
     depthFactor,
     edgeFactor,
@@ -1711,6 +1713,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     : "";
 
   const factors: FactorDetail[] = [
+    ...coachFactors,
     consensusFactor,
     depthFactor,
     edgeFactor,
