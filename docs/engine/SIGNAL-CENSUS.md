@@ -1,5 +1,12 @@
 # Signal census — disposition every family
 
+**Lock pass (2026-10-23), verified by code not by a commit title.** Details and the insertion map are in [HANDOFF-SCORING.md](./HANDOFF-SCORING.md). Byte sizes belong to the remote re-read after the push, not to this sentence.
+
+- **L0 USAGE / L1 HEALTH / L2 SHADOW** — still emitted by `coachTrailFactors` at all three scoring sites, prepended, and summed into confidence by `coachSupport`. **REACHES THE DECISION only when** `coachOverridesStub` is true (`abs(locked.marginMean - 3) >= 3`). Below that the stub prior in `markov-simulator.ts:70` still dominates and the market side selection remains. Proof: `scoring-locked-price.test.ts`.
+- **L8 PRICE** — `engine/price-check.ts` emits `PLAY` / `ALT` / `PASS-on-price` onto `factorBreakdown.priceAction` after the lock. Gated (null, not the market's side) only when the stub is overridden. Otherwise the action is on the artifact and does not wipe the board.
+- **Home trench** — `engine/trench-continuity-factors.ts`. **REACHES THE DECISION** (confidence) when `olContinuityDelta` / `dlContinuityDelta` / `dbContinuityDelta` is a finite number. Away trench is still a gap: `dynamic-context-builder.ts:83-89` drops `awayContinuity`.
+- **Sovereign, situational/mind, web intelligence, conviction registry** — still not decision. Signatures and the missing inputs are in the handoff table. The kb is still not wired.
+
 Started 2026-10-23 on `hermes/ship-night-findings`. Every row here is grounded in a
 file:line that was opened, not in a commit title. Three dispositions only:
 
