@@ -84,6 +84,28 @@ config must be captured from a live browser session (DevTools network on any
 signed-in NFL.com property) or from nfl.com's auth app. That capture is the
 named next step; without it the Cognito client id stays unknown.
 
+## scores24 match detail — the call shape, one slug iteration from data
+
+Public page proven: `https://scores24.live/en/american-football/m-<date>-<away>-<home-or-reversed>` (the
+`m-` prefix is required; `/en/match/<slug>` is 404). The page's own hydration
+names the exact API call:
+
+```
+queryKey: { _id: "matchesShow", baseUrl: "https://scores24.live/rapi",
+            path: { sportSlug: "american-football",
+                    matchSlug: "25-10-2026-cincinnati-bengals-baltimore-ravens" },
+            query:  { lang: "en" } }
+```
+
+Both my slug candidates returned `httpStatus 404` inside a 200 page — so the true
+matchSlug comes from a listing, not guesswork. The `/rapi/search?q=` endpoint
+responds and its schema exposes a top-level **`referees`** collection (the L4
+prize) alongside players/teams/matches/leagues — it returned empty for my query
+shape, so its required params still need reading out of the bundle.
+
+Also confirmed: match pages exist for college/NFL alike under
+`/en/american-football/m-<dd-mm-yyyy>-<teams>` (seen: `m-24-10-2026-cincinnati-bearcats-texas-tech-red-raiders`).
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
