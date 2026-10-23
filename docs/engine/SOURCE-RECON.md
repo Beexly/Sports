@@ -59,6 +59,16 @@ page, read its `__REACT_QUERY_STATE__` `queryKey.url` values, take the pattern.
 The public page route is not `/en/match/<slug>` (404) — find it from a rendered
 league page. Then ingest `referees` + `expected_prediction` into L4/L5.
 
+## NGS — the 401 is an AWS SigV4 requirement, not a missing key
+
+`GET /api/league/2026/REG/lead` unauthenticated returns 401 whose body names the
+missing parameters: "Authorization header requires 'Credential' / 'Signature' /
+'SignedHeaders'" — i.e. the endpoint wants an AWS SigV4-signed Authorization
+header, generated client-side. Probed webpack chunks 0–9 of
+`nextgenstats.nfl.com/dist/*`: none contains the signer (grep AWS4-HMAC-SHA256 = 0
+in all). The page also loads `https://www.nfl.com/libs/playaction/api.js` — that
+shared library is the next place to look for the signing routine.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
