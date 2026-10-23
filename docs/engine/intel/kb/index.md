@@ -24,7 +24,7 @@ Failed fetches are kept and named — they are gaps, not zeroes.
 | usage | 1 | snap counts (L0) |
 | weather | 3 | NWS hourly forecasts + alerts (L4) |
 
-**Total: 52 ingested files, 35 fetched OK, 17 failed/kept-as-gaps, 86,760,953 bytes.**
+**Total: 52 ingested files, 35 fetched OK, 17 failed/kept-as-gaps, 86,761,225 bytes.**
 
 ## Failure inventory
 
