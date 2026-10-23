@@ -1,14 +1,15 @@
-def elo_expected_score(rating_a, rating_b, D=400.0):
-    """Guarded classic Elo expected score from Maitra et al. arXiv:2512.18013.
-    Printed: E_A = 1 / (1 + 10^{(R_B - R_A)/D})
-    Fail-closed: returns None on invalid input.
+def elo_expected_score(r_a, r_b):
+    """Guarded Elo expected score from Holý & Černý arXiv:2604.09143 eq (4).
+    E[Y_t^{(A)} | r_t^{(A)}, r_t^{(B)}] = 1 / (1 + 10^{-(r_A - r_B)/400}).
+    Fail-closed on non-finite or non-numeric inputs.
     """
+    import math
     try:
-        ra = float(rating_a)
-        rb = float(rating_b)
-        d = float(D)
-        if d <= 0.0 or not all(abs(x) < 1e9 for x in (ra, rb, d)):
+        ra = float(r_a)
+        rb = float(r_b)
+        if not (math.isfinite(ra) and math.isfinite(rb)):
             return None
-        return 1.0 / (1.0 + 10.0 ** ((rb - ra) / d))
-    except (TypeError, ValueError):
+        diff = ra - rb
+        return 1.0 / (1.0 + 10 ** (-diff / 400.0))
+    except (TypeError, ValueError, OverflowError):
         return None
