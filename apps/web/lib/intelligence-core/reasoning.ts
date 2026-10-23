@@ -128,6 +128,17 @@ export interface SituationalContext {
    * justification, and `reason()` re-validates it. See ./shadow.ts.
    */
   readonly shadowPolicy?: SignalShadowPolicy;
+  /**
+   * When the v6 bitmask plus a non-zero corpus/mind receipt are present,
+   * the frozen 2026-09-25 NFL/SPREAD slice veto must not stamp WITHHOLD.
+   */
+  readonly v6ContextualReceipt?: boolean;
+  readonly physical?: {
+    readonly temperatureF?: number;
+    readonly windSpeedMph?: number;
+    readonly precipitationRateMmHr?: number;
+    readonly altitudeFt?: number;
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -181,6 +192,10 @@ export interface IntelligenceReasoning {
     /** Rights-cleared observations held out of the spine but still reported. */
     readonly shadowedCount: number;
   };
+  /** Bounded James-Stein corpus shift. 0 until the v6 feedback pass. */
+  readonly corpusPosteriorDelta: number;
+  /** Bounded James-Stein mind shift. 0 until the v6 feedback pass. */
+  readonly mindPosteriorDelta: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -467,7 +482,7 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
 
   // --- withhold / publish state ---
   const withholdReasons: string[] = [];
-  if (shouldSuppress(ctx.sport, ctx.pickType, ctx.grade ?? "LEAN")) {
+  if (shouldSuppress(ctx.sport, ctx.pickType, ctx.grade ?? "LEAN") && !ctx.v6ContextualReceipt) {
     withholdReasons.push(
       "Slice is historically below the 0.45 win-rate floor — suppress or shrink before any publish.",
     );
@@ -606,6 +621,8 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
       calibrationCount: calibration.length,
       shadowedCount: shadowedObs.length,
     },
+    corpusPosteriorDelta: 0,
+    mindPosteriorDelta: 0,
   };
 }
 

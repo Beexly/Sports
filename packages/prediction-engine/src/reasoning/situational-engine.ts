@@ -102,6 +102,16 @@ function fail(reason: string): SituationalEval {
   return { ok: false, reason };
 }
 
+/** Never hand aggregateSignals a probability outside (0, 1). */
+export function coerceSignalProbability(p: number | undefined): number {
+  if (typeof p === "number" && Number.isFinite(p) && p > 0 && p < 1) return p;
+  if (typeof p === "number" && Number.isFinite(p)) {
+    const mapped = 1 / (1 + Math.exp(-2.2 * p));
+    return Math.min(0.999, Math.max(0.001, mapped));
+  }
+  return 0.5;
+}
+
 export function interpretSituation(
   context: GameContext,
   signals: readonly SignalObservation[],
@@ -119,8 +129,13 @@ export function interpretSituation(
     return fail(`situation: marketImpliedProbability ${String(market)} is not inside (0, 1) and was not clamped`);
   }
 
+  const safeSignals = signals.map((signal) => ({
+    ...signal,
+    probability: coerceSignalProbability(signal.probability),
+  }));
+
   const aggregated = aggregateSignals({
-    signals,
+    signals: safeSignals,
     decisionTimestamp: context.decisionTimestamp,
     decisionWindowMs: context.decisionWindowMs,
     blockedProvenance,

@@ -78,6 +78,8 @@
     "fable:aws-governance": "tsx scripts/fable-evidence.ts aws-governance",
     "fable:sources": "tsx scripts/fable-evidence.ts sources",
     "fable:learning": "tsx scripts/fable-evidence.ts learning",
+    "slate:autonomous": "tsx scripts/ops/run_autonomous_slate.ts",
+    "test:gse-mind-v6": "vitest run --config vitest.gse.config.ts",
     "fable:aws-intel": "tsx scripts/fable-aws-operating-intelligence.ts",
     "fable:demo": "tsx scripts/fable-demo-forensic-report.ts",
     "prepare": "node scripts/setup-git-hooks.mjs",

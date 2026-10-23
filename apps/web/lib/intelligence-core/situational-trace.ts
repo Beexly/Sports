@@ -20,15 +20,26 @@
 import {
   interpretSituation,
   type SituationalEval,
-  type SignalObservation as TraceObservation,
-} from "@sports/prediction-engine";
-import type { SignalFamily as TraceFamily } from "@sports/types";
+} from "../../../../packages/prediction-engine/src/reasoning/situational-engine.ts";
+import type { SignalObservation as TraceObservation } from "../../../../packages/prediction-engine/src/reasoning/aggregation-trace.ts";
 import type { SignalObservation, SituationalContext } from "./reasoning";
 import type { IntelligenceReasoning } from "./reasoning";
 
 /** The apps/web SignalFamily union mirrored onto the engine's family type. */
-function toTraceFamily(f: SignalObservation["family"]): TraceFamily {
-  return f as unknown as TraceFamily;
+function toTraceFamily(f: SignalObservation["family"]): TraceObservation["family"] {
+  return f as TraceObservation["family"];
+}
+
+/**
+ * Signed lean -> probability strictly inside (0, 1).
+ * o.lean <= 0 used to become `probability: undefined`, which aborted
+ * aggregateSignals before the corpus and mind evaluators.
+ */
+export function leanToBoundedProbability(lean: number | null | undefined): number {
+  if (lean == null || !Number.isFinite(lean)) return 0.5;
+  if (lean > 0 && lean < 1) return lean;
+  const mapped = 1 / (1 + Math.exp(-2.2 * lean));
+  return Math.min(0.999, Math.max(0.001, mapped));
 }
 
 /**
@@ -53,8 +64,7 @@ export function toTraceObservations(
       family: toTraceFamily(o.family),
       reasoningPath: o.tier === 5 ? "chatter" : "measured",
       outcome: "home_win",
-      probability:
-        o.lean != null && o.lean > 0 && o.lean < 1 ? o.lean : undefined,
+      probability: leanToBoundedProbability(o.lean),
       declaredWeight: o.trust,
       evidenceTimestamp: o.knownAt,
       provenance: [o.origin],
@@ -70,6 +80,12 @@ export interface SituationTraceResult {
   readonly activeSignals: readonly string[];
   readonly dormantSignals: readonly { signalId: string; reason: string }[];
   readonly reasoningTrace: string | null;
+  readonly corpusItemsLoaded?: number;
+  readonly corpusItemsEvaluated?: number;
+  readonly mindRecordsLoaded?: number;
+  readonly mindApplicablePrinciplesCount?: number;
+  readonly corpusSituationalShift?: number;
+  readonly mindNetSituationalAdjustment?: number;
   readonly failReason?: string;
 }
 
@@ -113,7 +129,13 @@ export function runSituationalTrace(
         marketImpliedProbability: marketProb,
         outcome: ctx.selection,
         decisionTimestamp: new Date().toISOString(),
-        decisionWindowMs: 15 * 60 * 1000,
+        // Structural observations are not market ticks. A 15-minute window
+        // was expiring week-long trench facts before the corpus ran.
+        decisionWindowMs: 7 * 24 * 60 * 60 * 1000,
+        windSpeedMph: ctx.physical?.windSpeedMph,
+        temperatureF: ctx.physical?.temperatureF,
+        precipitationRateMmHr: ctx.physical?.precipitationRateMmHr,
+        altitudeFt: ctx.physical?.altitudeFt,
       },
       toTraceObservations(ctx, reasoning),
     );
@@ -158,5 +180,11 @@ export function runSituationalTrace(
     activeSignals: d.activeSignals,
     dormantSignals: [...d.dormantSignals],
     reasoningTrace: d.reasoningTrace,
+    corpusItemsLoaded: d.corpusEvaluation.totalLoadedCount,
+    corpusItemsEvaluated: d.corpusEvaluation.itemsEvaluatedCount,
+    mindRecordsLoaded: d.mindEvaluation.totalMindRecordsLoaded,
+    mindApplicablePrinciplesCount: d.mindEvaluation.applicablePrinciples.length,
+    corpusSituationalShift: d.corpusSituationalShift,
+    mindNetSituationalAdjustment: d.mindEvaluation.netSituationalAdjustment,
   };
 }
