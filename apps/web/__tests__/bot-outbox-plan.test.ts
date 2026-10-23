@@ -59,7 +59,9 @@ describe("bot outbox planner", () => {
       "discord:pick-publication:pick-1:v5.0.0",
     ]);
     expect(items.every((item) => item.shouldPost)).toBe(true);
-    expect(items[0]?.bodyText).toContain("Published BOS @ NYK BOS -3.5 at 73% confidence");
+    expect(items[0]?.bodyText).toContain(
+      "Published BOS -3.5 at 73/100 confidence score (SOLID_PLAY)",
+    );
     expect(items[1]?.embed?.title).toBe("Published BOS -3.5 (SOLID_PLAY)");
     expect(JSON.stringify(items)).not.toMatch(/Ã¢|Ã‚|â/);
   });
@@ -81,10 +83,14 @@ describe("bot outbox planner", () => {
   });
 
   it("blocks distribution drafts when rendered bot copy fails compliance", () => {
+    // The pick line flows into the rendered body ("Published <line> at 73/100
+    // ..."); the matchup no longer does — the double-matchup rendering was a
+    // fixed defect (AGENTS.md 2026-09-15: the same side printed twice), so the
+    // poison rides the field that actually reaches the scanned copy.
     const items = planPickPublicationOutbox(
       {
         ...freePick,
-        matchup: "AI-powered BOS @ NYK",
+        line: "AI-powered BOS -3.5",
       },
       publicUrl,
     );

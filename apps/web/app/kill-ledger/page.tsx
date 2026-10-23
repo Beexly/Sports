@@ -28,7 +28,9 @@ import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
 
 export const metadata: Metadata = {
-  title: `Kill Ledger · ${BRAND_NAME}`,
+  // FE-13: the title already names the brand, so it must opt out of the root
+  // layout's "%s | BRAND" template or the brand renders twice.
+  title: { absolute: `Kill Ledger · ${BRAND_NAME}` },
   description:
     "We test the strategies this industry sells. When they fail, we publish the failure.",
   alternates: { canonical: "/kill-ledger" },
