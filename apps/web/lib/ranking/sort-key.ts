@@ -20,7 +20,7 @@
  * `confidence`, and NOBODY HAS EVER MEASURED WHAT SHARE OF ROWS THAT IS.
  * Reporting the basis is what makes that number obtainable.
  */
-export type RankingBasis = "rankingP" | "rankingScore" | "confidence";
+export type RankingBasis = "rankingP" | "rankingScore" | "marketFairProb" | "confidence";
 
 export interface RankingRead {
   readonly basis: RankingBasis;
@@ -53,6 +53,17 @@ export function readRankingKey(pick: {
       key: Math.min(1, Math.max(0, rankingScore / 100)),
     };
   }
+  // MARKET BRANCH. marketFairProb is the receipt's committed market-implied
+  // probability. Measured 2026-10-23 on prod graded rows (n=1,697): it beats
+  // confidence on ranking (Spearman +0.1845 [CI .1408,.2280] vs -0.0171), on
+  // calibration (ECE 0.0202 vs 0.1079) and on Brier (0.2364 vs 0.2744, delta
+  // 0.0380 CI [.0289,.0475]). It sits BELOW rankingP and rankingScore because
+  // those are the engine's own priced ranks, and ABOVE confidence because
+  // confidence is the branch this replaces.
+  const mfp = rec["marketFairProb"];
+  if (typeof mfp === "number" && Number.isFinite(mfp)) {
+    return { basis: "marketFairProb", key: Math.min(1, Math.max(0, mfp)) };
+  }
   return { basis: "confidence", key: conf };
 }
 
@@ -66,6 +77,7 @@ export function rankingSortKey(pick: {
 export interface RankingBasisCensus {
   readonly rankingP: number;
   readonly rankingScore: number;
+  readonly marketFairProb: number;
   readonly confidence: number;
   readonly total: number;
   /** Share of rows ordered by the anti-predictive branch, 0-1. 0 when empty. */
@@ -85,17 +97,20 @@ export function rankingBasisCensus(
 ): RankingBasisCensus {
   let rankingP = 0;
   let rankingScore = 0;
+  let marketFairProb = 0;
   let confidence = 0;
   for (const p of picks) {
     const basis = readRankingKey(p).basis;
     if (basis === "rankingP") rankingP += 1;
     else if (basis === "rankingScore") rankingScore += 1;
+    else if (basis === "marketFairProb") marketFairProb += 1;
     else confidence += 1;
   }
   const total = picks.length;
   return {
     rankingP,
     rankingScore,
+    marketFairProb,
     confidence,
     total,
     confidenceShare: total === 0 ? 0 : confidence / total,
@@ -130,6 +145,29 @@ export function readSignedEdge(pick: { readonly factorBreakdown?: unknown }): nu
   if (!edge || typeof edge !== "object") return null;
   const clv = (edge as Record<string, unknown>)["expectedClv"];
   return typeof clv === "number" && Number.isFinite(clv) ? clv : null;
+}
+
+/**
+ * Tier of a basis, lower is stronger.
+ *
+ * WHY A TIER AND NOT JUST A PER-ROW FALLBACK. The keys are not on a common scale:
+ * `confidence/100` runs 0.50-0.95 on real rows while `marketFairProb` sits near
+ * 0.50-0.60, so comparing the raw numbers lets the anti-predictive fallback beat
+ * a measured market probability on value nearly every time. Ordering the BRANCH
+ * first and the key second is what "cascade" has to mean for the market branch
+ * to do anything at all.
+ */
+export function rankingBasisTier(basis: RankingBasis): number {
+  switch (basis) {
+    case "rankingP":
+      return 0;
+    case "rankingScore":
+      return 1;
+    case "marketFairProb":
+      return 2;
+    case "confidence":
+      return 3;
+  }
 }
 
 /**
@@ -168,9 +206,12 @@ export function comparePicksByRanking(
   if (ea === null && eb !== null) return 1;
   if (ea !== null && eb !== null && ea !== eb) return eb - ea;
 
-  const ra = rankingSortKey(a);
-  const rb = rankingSortKey(b);
-  if (ra !== rb) return rb - ra;
+  const ka = readRankingKey(a);
+  const kb = readRankingKey(b);
+  const tierA = rankingBasisTier(ka.basis);
+  const tierB = rankingBasisTier(kb.basis);
+  if (tierA !== tierB) return tierA - tierB;
+  if (ka.key !== kb.key) return kb.key - ka.key;
 
   const ta = a.generatedAt ? new Date(a.generatedAt).getTime() : 0;
   const tb = b.generatedAt ? new Date(b.generatedAt).getTime() : 0;
