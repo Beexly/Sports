@@ -98,6 +98,29 @@ for nm, tgts, cp, press in pfr_rows:
       crossCheck="Tavius Robinson figures agree with ESPN injury availability (Questionable, pectoral)")
 r(layer="L0", side="HOME", claim="T.J. Hawkins report pairing: Jaylinn Hawkins (S) Questionable knee while carrying 6 targets and 2 blitzes over weeks 5-6 — the outage sits on an involved coverage body.", value=6, unit="targets", source=PFR + "; ESPN summary injuries", fetchedAt=F + "3:05Z", confidence="high")
 
+
+
+# ── Snap-share rows via nflverse snap_counts (the participation wall partially falls) ──
+SN = "nflverse snap_counts_2026.csv column offense_pct (team, week; mean per week over the window)"
+snap_rows = [
+    ("HOME", "Lamar Jackson (QB) snap share 100.0% weeks 1-3, 0% weeks 5-6 — Tyler Huntley took 100%.", "100.0 -> 0.0"),
+    ("HOME", "Zay Flowers (WR) snap share 31.0% weeks 1-3, 85.0% weeks 5-6.", "31.0 -> 85.0"),
+    ("HOME", "Rashod Bateman (WR) snap share 86.3% weeks 1-3, 55.0% weeks 5-6.", "86.3 -> 55.0"),
+    ("AWAY", "Samaje Perine (RB) snap share 33.3% weeks 1-3, 43.5% weeks 4-5.", "33.3 -> 43.5"),
+]
+for side, claim, val in snap_rows:
+    r(layer="L0", side=side, claim=claim, value=val, unit="% snaps", source=SN,
+      fetchedAt=F + "3:20Z", confidence="high",
+      crossCheck="Flowers snaps +54.3pp agrees with target share +15.3pp (pbp); Bateman -31.3pp agrees with target share drop")
+# the participation wall now covers route/alignment only
+out_rows = []
+for _r in rows:
+    if _r.get("value") == "snap share, route participation, primary alignment":
+        _r = dict(_r, value="route participation, primary alignment",
+                  wallReason="pbp_participation release carries assets only through 2025; route and alignment columns unavailable. Snap share is NO LONGER walled: nflverse snap_counts_2026.csv supplies offense_pct/defense_pct (see the snap rows above)")
+    out_rows.append(_r)
+rows = out_rows
+
 out = "docs/engine/audits/2026-10-25-bal-cin.json"
 os.makedirs(os.path.dirname(out), exist_ok=True)
 open(out, "w", encoding="utf-8").write(json.dumps(rows, indent=2, ensure_ascii=False))
