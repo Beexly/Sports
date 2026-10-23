@@ -15,9 +15,15 @@ export interface StageAResult {
 const SAMPLE_FLOOR = 30;
 const SHRUNK_FLOOR = 8;
 
+const KILLED_PREMISES: Readonly<Record<string, string>> = {
+  STEAM_EXHAUSTION_FADE: "movement does not anticipate the result (r 0.005)",
+  MUTUAL_SPINE_YAC: "the spine and YAC channel has no measured effect",
+};
+
 /**
- * Stage A: bitwise sample-floor prune. Bit 224/228 in a premise's forbidden
- * mask kills the mechanical steam-exhaustion fade (bit 140) on 2026-10-22.
+ * Stage A: bitwise sample-floor prune. Killed premises are dropped by id.
+ * Bit 224/228 in a premise's forbidden mask still kills anything else that
+ * names them.
  */
 export function stageAPrune(
   bitmask: ContextualBitmaskReceipt,
@@ -28,6 +34,11 @@ export function stageAPrune(
   const secondOrder = getBit(bitmask.words, 224) || getBit(bitmask.words, 228);
   const floor = secondOrder ? SHRUNK_FLOOR : SAMPLE_FLOOR;
   for (const p of premises) {
+    const killed = KILLED_PREMISES[p.id];
+    if (killed) {
+      pruned.push({ id: p.id, reason: killed });
+      continue;
+    }
     const missing = p.requiredMaskBits.some((b) => !getBit(bitmask.words, b));
     if (missing) {
       pruned.push({ id: p.id, reason: "required mask miss" });
@@ -47,14 +58,9 @@ export function stageAPrune(
   return { kept, pruned };
 }
 
-/** Stage D: interaction bits raise the cross-equation Jacobian weight. */
-export function stageDJacobianWeight(bitmask: ContextualBitmaskReceipt): number {
-  let w = 1;
-  if (getBit(bitmask.words, 224)) w += 0.35;
-  if (getBit(bitmask.words, 225)) w += 0.2;
-  if (getBit(bitmask.words, 226)) w += 0.15;
-  if (getBit(bitmask.words, 228)) w += 0.1;
-  return Math.round(w * 1000) / 1000;
+/** Stage D: killed interaction bits do not raise the Jacobian. */
+export function stageDJacobianWeight(_bitmask: ContextualBitmaskReceipt): number {
+  return 1;
 }
 
 export function xorBitmaskDelta(

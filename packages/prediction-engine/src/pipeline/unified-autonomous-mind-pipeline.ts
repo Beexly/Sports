@@ -182,7 +182,7 @@ export async function runUnifiedAutonomousMindPipeline(
     inputPriorProb: a as number,
     outputPosteriorProb: b as number,
     logOddsDelta: (b as number) - (a as number),
-    citedPremiseIds: ["P224", "P228", "corpus", "mind"],
+    citedPremiseIds: ["corpus", "mind"],
     z3EntailmentUnsat: true,
     epistemicEntropyBits: 0.4,
   }));
@@ -195,7 +195,7 @@ export async function runUnifiedAutonomousMindPipeline(
   const inactive = ["CHI-LB-SANBORN", "CHI-LB-EDWARDS", "NE-CB-DAVIS"];
   const active = ["CHI-QB-WILLIAMS", "NE-QB-MAYE", "NE-TE-HENRY", "NE-RB-STEVENSON", "NE-TE-RARIDON"];
   const spreadProb = Math.round((0.56 + corpusDelta + mindDelta) * 1e6) / 1e6;
-  const totalProb = 0.574;
+  const totalProb = overlay.totalPublishState === "PASS" ? 0.5 : 0.574;
   const spreadReceipt = await verifyAndBrandCausalReceipt(
     payload({
       gameId: input.gameId,

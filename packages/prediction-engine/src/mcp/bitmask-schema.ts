@@ -121,17 +121,13 @@ export function buildContextualBitmask288(
     (getBit(words, 112) || (getBit(words, 88) && getBit(words, 89)));
   if (mutualDefSpineVoid) setBit(words, 224);
 
-  const olAttritionNeutralizedByZeroRush = getBit(words, 57) && getBit(words, 76);
-  if (olAttritionNeutralizedByZeroRush) setBit(words, 225);
-
-  const ilbVoidNickelActiveTeRbFunnel =
-    (getBit(words, 72) && getBit(words, 73) && getBit(words, 100)) ||
-    (getBit(words, 88) && getBit(words, 89) && getBit(words, 116));
-  if (ilbVoidNickelActiveTeRbFunnel) setBit(words, 226);
-
-  const calmWeatherExtendedFgYacRegime =
-    getBit(words, 2) && getBit(words, 4) && !getBit(words, 10) && getBit(words, 224);
-  if (calmWeatherExtendedFgYacRegime) setBit(words, 228);
+  // Facts stay on the lower bits (OL out, low sack rate, nickel, calm air, rookie flag).
+  // These mechanism bits are not set: 225 OL neutralization, 226 TE funnel,
+  // 228 flat kicking regime, 234 rookie breakpoint. Each one was measured and killed.
+  const olAttritionNeutralizedByZeroRush = false;
+  const ilbVoidNickelActiveTeRbFunnel = false;
+  const calmWeatherExtendedFgYacRegime = false;
+  const rookieRampVsDepletedCb1 = false;
 
   const qbKneeldownHookHazard =
     ctx.qbRushPropHookInDangerZone && getBit(words, 152);
@@ -141,11 +137,6 @@ export function buildContextualBitmask288(
     setBit(words, 280);
     setBit(words, 281);
   }
-
-  const rookieRampVsDepletedCb1 =
-    (getBit(words, 216) && getBit(words, 112)) ||
-    (getBit(words, 220) && getBit(words, 96));
-  if (rookieRampVsDepletedCb1) setBit(words, 234);
 
   const nibble = LEAGUE_NIBBLE[ctx.league];
   for (let i = 0; i < 4; i++) {
@@ -209,7 +200,7 @@ export const NE_CHI_20261022_BITMASK_INPUT: GameContextBitmaskInput = {
 
 /** Bits the 2026-10-22 NE @ CHI card must set. Schema-version nibble stays 0 so the locked pattern matches the autopsy table exactly. */
 export const NE_CHI_20261022_REQUIRED_BITS = [
-  2, 4, 16, 57, 72, 73, 76, 100, 112, 140, 152, 216, 224, 225, 226, 228, 230, 234, 256, 280, 281,
+  2, 4, 16, 57, 72, 73, 76, 100, 112, 140, 152, 216, 224, 230, 256, 280, 281,
 ] as const;
 
 /** Bits present in exactly one of the two masks. */

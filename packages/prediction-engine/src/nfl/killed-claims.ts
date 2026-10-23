@@ -138,3 +138,56 @@ export function assertKnownByLock(knownAtIso: string, lockIso: string): void {
     throw new Error(`[FAIL-CLOSED] known at ${knownAtIso} is after the lock ${lockIso}`);
   }
 }
+
+/** 4th-and-short past midfield, 2018–2021, n=1,018. The alternative is the field goal, not the punt. */
+export const FOURTH_SHORT_GO_RATE = 0.694;
+export const FOURTH_SHORT_GO_WP = 0.1113;
+export const FOURTH_SHORT_FG_WP = -0.0837;
+
+export function fourthShortAlternative(choice: "PUNT" | "FG"): number {
+  if (choice === "PUNT") {
+    throw new KilledClaimError(
+      "fourth_short_punt_alternative",
+      "Punting is 17 of 1,018 decisions. GO is +0.111 wp and the field goal is -0.084.",
+    );
+  }
+  return FOURTH_SHORT_GO_WP - FOURTH_SHORT_FG_WP;
+}
+
+/** Safety out, three seasons. Base explosive rate 0.182 falls to 0.156. */
+export const SAFETY_OUT_EXPLOSIVE_DELTA = -0.0258;
+
+export function safetyOutExplosiveBoost(): never {
+  throw new KilledClaimError(
+    "safety_out_explosive_boost",
+    "Safety out cuts the explosive rate by 0.0258 (p=0.033). A cornerback being out is null (p=0.702).",
+  );
+}
+
+export function steamExhaustionFade(): never {
+  throw new KilledClaimError(
+    "steam_exhaustion_fade",
+    "Corrected corr(move, realized-open) is +0.005 (p=0.95). Movement is drift. Do not fade it.",
+  );
+}
+
+export function dispersionAsUncertainty(): never {
+  throw new KilledClaimError(
+    "dispersion_as_uncertainty",
+    "Mean cross-book spread is 0.90 points and the median is 0. Correlation with the absolute residual is 0.060 (p=0.374).",
+  );
+}
+
+export function crewDpiRating(): never {
+  throw new KilledClaimError(
+    "crew_dpi_rating",
+    "Referee DPI spread is not distinguishable from chance (chi-square p=0.50, split-half r=-0.186).",
+  );
+}
+
+export function twoSignalCellRule(): never {
+  throw new KilledClaimError(
+    "two_signal_cell_rule",
+    "The both-high cell is not a rule. The signals add. Publish by the summed z-score.",
+  );
+}

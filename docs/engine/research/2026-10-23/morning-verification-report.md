@@ -6,10 +6,10 @@ Replay game: 2026-10-22 NE @ CHI. One call, `runUnifiedAutonomousMindPipeline` /
 
 | field | value |
 |---|---|
-| total receipt SHA-256 | `6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063` |
-| spread receipt SHA-256 | `ef623f0dd3bcf006a6562cd525211dc2f5d27308a5f96ed9f2e6d5cac9b1e733` |
-| bitmask SHA-256 | `91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e` |
-| merkle root (T-90m) | `4eab04908c724b1b7126020e396779bb2c33bf5c438249f7544766c6f9fc37f1` |
+| total receipt SHA-256 | `2938220a2834d9d20386f69f4f5bff3b4eca3cb5c5354e52327dd04606b95943` |
+| spread receipt SHA-256 | `82153b76973d1c527bc22e1f61516d24ee110f1cd4bef6afd76a69fa309ac502` |
+| bitmask SHA-256 | `6c1686b4201abc664f13433b4cb330c5429495f5ddca8f61409ba8f4819835bb` |
+| merkle root (T-90m) | `7db1b4883e761e15119531af539878fed2cae568835cfeb20f2bf1e94db22a44` |
 | z3SolverStatus | `sat` |
 | verifier | `z3-solver` 5.3.1 |
 | corpus loaded / evaluated | 3143 / 2162 |
@@ -19,7 +19,7 @@ Replay game: 2026-10-22 NE @ CHI. One call, `runUnifiedAutonomousMindPipeline` /
 | props | Caleb Williams 19.5 and Drake Maye 27.5 both `PASS_KNEELDOWN_HOOK_RISK` |
 | Sinkhorn | suppression off; boosted list empty |
 
-The receipt hash is pinned to `asOf` (`2026-10-22T23:45:00.000Z`), not wall clock. Re-running the replay reproduces it. The Ed25519 signature is process-local (keypair generated at module load) and is not part of that hash. The earlier total pin `5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4` (54.6 PLAY) is withdrawn.
+The receipt hash is pinned to `asOf` (`2026-10-22T23:45:00.000Z`), not wall clock. Re-running the replay reproduces it. The Ed25519 signature is process-local (keypair generated at module load) and is not part of that hash. The earlier total pins `5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4` (54.6 PLAY) and `6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063` (mechanism bits still on) are withdrawn.
 
 Vitest: `vitest.gse.config.ts` — 11 files, 25 tests, 0 failures. Includes `early-abort-regression`, `situational-trace.wire`, `bitmask-288`, the 2026-10-22 loop, the unified pipeline, the nightly pin, chaos vetoes, killed-claim throws, league adapters, and a 10-game bitmask canary.
 
@@ -35,7 +35,7 @@ Vitest: `vitest.gse.config.ts` — 11 files, 25 tests, 0 failures. Includes `ear
 1. **z3-solver 5.3.1 is installed and is the verifier on this receipt.** It was not a dependency of the Sports tree at the start of the night. After `npm install z3-solver@5.3.1`, a direct check returned `sat` for the replay numbers and `unsat` for a mind count of 4,999 against the 5,000 floor. The same check of 5,149 against a 5,303 floor is `unsat`, which is why the headline was not adopted. If the package cannot be imported, the code falls back to the same axioms in TypeScript and still fails closed. A Z3 `unsat` after the TypeScript checker passed also throws.
 2. **Mind corpus on disk is 5,149 records, not 5,303.** Both committed copies of `MIND_CORPUS_3000.jsonl` are that length, 0 duplicates, 0 bad JSON. `wc -l` prints 5,148 because the last line has no newline, which is why the repo comments say 5,148. The spec's own Z3 snippet checks `>= 5000`, not 5,303. `5,303 − 5,149 = 154` is arithmetic against a headline. There is no manifest of 154 omitted item ids. The earlier "155" in this note was the `wc -l` gap and is withdrawn.
 3. **Kneel atom is −1.059 yd (sd 0.498), not −2 to −3 per event.** nflverse 2018–2021, n=1,694. Rate 2.03 kneels per winning game. Expected haircut is `p_enter * 2.03 * −1.059` (about −2.15 at p=1). The −2.27 figure is the nonzero-kneel aggregate (`2.03 * −1.117`). 85.2% of kneels have score differential > 0, not 97%. Both hooks still flag, because the game-level haircut crosses a .5 line inside 17.5–29.5. A per-event −2.5 would over-haircut by about 1.4 yd and was not implemented.
-4. **The 54.6 print is withdrawn.** It was 48.5 plus a positive-part shrink of the OL term, the dual-ILB hessian (0 triggering games in 2025), and a flat +1.15 kick. Those three stay at 0. The card is the baseline 48.5 with action PASS. It is not flipped to PLAY_UNDER, because the baseline is not a measured edge. CHI −3 stays PLAY. Situation bits 225, 226, 228, and 234 still light when the fixture conjunctions are true. They do not authorize a total boost, a nickel suppression, or a rookie breakpoint.
+4. **The 54.6 print is withdrawn.** It was 48.5 plus a positive-part shrink of the OL term, the dual-ILB hessian (0 triggering games in 2025), and a flat +1.15 kick. Those three stay at 0. The card is the baseline 48.5 with action PASS. It is not flipped to PLAY_UNDER, because the baseline is not a measured edge. CHI −3 stays PLAY. Mechanism bits 225, 226, 228, and 234 stay off, and they add nothing to the Jacobian. The injury and weather facts stay on their own bits. A PASS total carries the market probability, not the old 0.574 ladder.
 5. **Scheme fingerprint is not a feature.** Cycle-3 PRE-CCRS-1: cell map survived (split-half 0.433, transfer 0.688) and the defence-level fingerprint died (partial ρ 0.032, p 0.81). It is not in the bitmask or the receipt.
 
 ## Files created or modified

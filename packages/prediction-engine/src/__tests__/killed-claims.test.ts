@@ -6,6 +6,13 @@ import {
   blendWinAndClv,
   bocpdRookieBreakpoint,
   clvTag,
+  crewDpiRating,
+  dispersionAsUncertainty,
+  fourthShortAlternative,
+  FOURTH_SHORT_GO_RATE,
+  safetyOutExplosiveBoost,
+  steamExhaustionFade,
+  twoSignalCellRule,
   flatKickingEnvelope,
   fourMinuteRunPrior,
   nickelSlotSuppression,
@@ -50,5 +57,13 @@ describe("killed claims stay killed", () => {
     expect(pairingDependence("QB_RB1").sign).toBe("flat");
     expect(() => assertKnownByLock("2026-10-22T18:00:00Z", "2026-10-21T23:59:00Z")).toThrow(/FAIL-CLOSED/);
     expect(() => assertKnownByLock("2026-10-21T12:00:00Z", "2026-10-21T23:59:00Z")).not.toThrow();
+    expect(() => steamExhaustionFade()).toThrow(/0\.005/);
+    expect(() => dispersionAsUncertainty()).toThrow(/0\.90/);
+    expect(() => safetyOutExplosiveBoost()).toThrow(/0\.0258/);
+    expect(() => crewDpiRating()).toThrow(/0\.50/);
+    expect(() => twoSignalCellRule()).toThrow(/z-score/);
+    expect(() => fourthShortAlternative("PUNT")).toThrow(/17 of 1,018/);
+    expect(fourthShortAlternative("FG")).toBeCloseTo(0.195, 3);
+    expect(FOURTH_SHORT_GO_RATE).toBeCloseTo(0.694, 3);
   });
 });

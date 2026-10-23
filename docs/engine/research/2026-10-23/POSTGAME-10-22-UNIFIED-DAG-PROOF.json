@@ -10,16 +10,22 @@
     "olinePenaltyNeutralizationPts": 0,
     "kickingEnvelopeBoostPts": 0
   },
+  "mechanismBitsOff": [
+    225,
+    226,
+    228,
+    234
+  ],
   "propHookFlags": [
     "PASS_KNEELDOWN_HOOK_RISK",
     "PASS_KNEELDOWN_HOOK_RISK"
   ],
-  "receiptSha256": "6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063",
-  "withdrawnReceiptSha256": "5ed7346edf9228b48a1d5b410964bb479a3f8d122b51ef1683cc33e5a10038f4",
+  "receiptSha256": "2938220a2834d9d20386f69f4f5bff3b4eca3cb5c5354e52327dd04606b95943",
+  "withdrawnReceiptSha256": "6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063",
   "withdrawnAdjustedProjectedTotal": 54.6,
-  "note": "54.6 PLAY is withdrawn. Killed total terms are 0. Baseline 48.5 is PASS, not PLAY_UNDER. CHI -3 stays PLAY.",
-  "spreadReceiptSha256": "ef623f0dd3bcf006a6562cd525211dc2f5d27308a5f96ed9f2e6d5cac9b1e733",
-  "bitmaskSha256": "91f42501f4affa0adde9bd925da1800a955658823253a81a77d71f7b3e4b4a4e",
+  "note": "54.6 PLAY is withdrawn. Mechanism bits 225, 226, 228, 234 are off. Baseline 48.5 is PASS. CHI -3 stays PLAY.",
+  "spreadReceiptSha256": "82153b76973d1c527bc22e1f61516d24ee110f1cd4bef6afd76a69fa309ac502",
+  "bitmaskSha256": "6c1686b4201abc664f13433b4cb330c5429495f5ddca8f61409ba8f4819835bb",
   "activeBits": [
     2,
     4,
@@ -34,16 +40,12 @@
     152,
     216,
     224,
-    225,
-    226,
-    228,
     230,
-    234,
     256,
     280,
     281
   ],
-  "merkleRootSha256": "4eab04908c724b1b7126020e396779bb2c33bf5c438249f7544766c6f9fc37f1",
+  "merkleRootSha256": "7db1b4883e761e15119531af539878fed2cae568835cfeb20f2bf1e94db22a44",
   "verifier": "z3-solver",
   "z3SolverStatus": "sat",
   "corpusItemsLoaded": 3143,

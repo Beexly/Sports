@@ -2,7 +2,7 @@ import type { UnifiedSlateExecutionSummary } from "./unified-autonomous-mind-pip
 
 /** Re-pinned after the killed total boosts were removed. The old print was 54.6. */
 export const PINNED_2026_10_22_TOTAL_RECEIPT_SHA256 =
-  "6095db08e91cb1b0fe42152d838cd2665028c354b71313505bf2cebb07384063";
+  "2938220a2834d9d20386f69f4f5bff3b4eca3cb5c5354e52327dd04606b95943";
 
 export function assertPinnedReplay(summary: UnifiedSlateExecutionSummary): void {
   if (summary.spreadPublishState !== "PLAY" || summary.totalPublishState !== "PASS") {
