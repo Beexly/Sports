@@ -159,3 +159,10 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// QB Red-Zone Carry Share (SHADOW)
+export {
+  computeQbRedZoneCarryShare,
+  type QbRedZoneCarryShare,
+  type QbRedZoneCarryShareResult,
+} from "./qb-red-zone-carry-share.js";

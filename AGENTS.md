@@ -18546,3 +18546,5 @@ Method note: two read-only browser lanes as @GalaxySportsHQ (Lane A: 11 accounts
 
 - Endpoints/pages stated in the filed posts: NextGenStats passing page (nextgenstats.nfl.com/stats/passing, completion-percentage-above-expectation anchor) linked by @DevyEusuf; StatRankings (video end card: statrankings.com/ai) via @MagicSportsGuy; statsbench.com via @stats_bench's prop card footer; StickToTheModel.com via @StickToTheModel's chart footer; establishtherun.com "Snaps and Pace: Week 7" article linked by @EstablishTheRun (values behind the link, not transcribed). Data sources stated per entry above (FTN, Fantasy Points Data, nflverse/nflreadpy, nflfastR, PFF, NextGenStats, Kalshi, StatRankings, NFL Pro Fantasy, PFF/Sumer Sports) or explicitly NOT stated.
 - Filed from the two lanes' complete manifests. Lane A: completed 2026-10-22T15:30:51Z, manifest delivered in full. Lane B: completed 2026-10-22T16:38:26Z, manifest delivered in full. Read-only throughout.
+
+- **2026-10-22 (Jules)**: Implemented Q33 QB red-zone carry share metric as a SHADOW module enforcing strict point-in-time and distinct-week windowing.
