@@ -4605,5 +4605,13 @@ export {
 } from "./nfl/sgp-copula.js";
 export type { SgpPairing } from "./nfl/sgp-copula.js";
 
+export {
+  MIN_ROUTES_FOR_SURPLUS,
+  leverageSurplus,
+  leverageBand,
+  leverageNote,
+} from "./nfl/leverage-surplus.js";
+export type { LeverageBand } from "./nfl/leverage-surplus.js";
+
 export { applySituationalAdjustments, situationalExplosiveRate } from "./nfl/situational-adjustments.js";
 export type { SituationalInputs, SituationalResult } from "./nfl/situational-adjustments.js";
