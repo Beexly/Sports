@@ -1,4 +1,4 @@
-import type { UnifiedSlateExecutionSummary } from "./unified-autonomous-mind-pipeline.ts";
+import type { UnifiedSlateExecutionSummary } from "./unified-autonomous-mind-pipeline";
 
 /** Re-pinned after the killed total boosts were removed. The old print was 54.6. */
 export const PINNED_2026_10_22_TOTAL_RECEIPT_SHA256 =

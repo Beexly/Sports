@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { runReplaySlate } from "../../packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline.ts";
-import { assertPinnedReplay } from "../../packages/prediction-engine/src/pipeline/pinned-replay.ts";
+import { runReplaySlate } from "../../packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline";
+import { assertPinnedReplay } from "../../packages/prediction-engine/src/pipeline/pinned-replay";
 
 async function main(): Promise<void> {
   const cwd = resolve(process.cwd());

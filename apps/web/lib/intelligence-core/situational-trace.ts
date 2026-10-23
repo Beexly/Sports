@@ -20,8 +20,8 @@
 import {
   interpretSituation,
   type SituationalEval,
-} from "../../../../packages/prediction-engine/src/reasoning/situational-engine.ts";
-import type { SignalObservation as TraceObservation } from "../../../../packages/prediction-engine/src/reasoning/aggregation-trace.ts";
+} from "../../../../packages/prediction-engine/src/reasoning/situational-engine";
+import type { SignalObservation as TraceObservation } from "../../../../packages/prediction-engine/src/reasoning/aggregation-trace";
 import type { SignalObservation, SituationalContext } from "./reasoning";
 import type { IntelligenceReasoning } from "./reasoning";
 

@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import assert from "node:assert/strict";
-import { evaluateVisionFactors, VISION_DEFAULT_WEIGHT } from "../vision-factors.ts";
+import { evaluateVisionFactors, VISION_DEFAULT_WEIGHT } from "../vision-factors";
 
 describe("vision-factors — weight 0.0 production safety", () => {
   it("enforces zero score shift with real metrics at default weight", () => {

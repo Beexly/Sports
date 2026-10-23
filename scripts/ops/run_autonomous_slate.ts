@@ -1,5 +1,5 @@
 import { resolve } from "node:path";
-import { runReplaySlate } from "../../packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline.ts";
+import { runReplaySlate } from "../../packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline";
 
 function arg(name: string): string | undefined {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));

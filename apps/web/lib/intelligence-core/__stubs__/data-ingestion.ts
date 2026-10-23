@@ -7,4 +7,4 @@ export {
   WEIGHT_BY_GRADE,
   WEIGHT_BY_MODEL_VERSION,
   type SignalWeight,
-} from "../../../../../packages/data-ingestion/src/calibration-weights.ts";
+} from "../../../../../packages/data-ingestion/src/calibration-weights";

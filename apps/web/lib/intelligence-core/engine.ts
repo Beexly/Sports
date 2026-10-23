@@ -21,7 +21,7 @@ import {
   type MarketBelief,
 } from "./reasoning";
 import { runSituationalTrace, type SituationTraceResult } from "./situational-trace";
-import { boundedJamesSteinShift } from "../../../../packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline.ts";
+import { boundedJamesSteinShift } from "../../../../packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline";
 import type { SignalShadowPolicy } from "./shadow";
 import {
   allObservations,

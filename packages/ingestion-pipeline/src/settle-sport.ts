@@ -391,7 +391,7 @@ export async function settleSport(
         });
         sportRowId = row?.id ?? null;
       }
-      return sportRowId;
+      return sportRowId ?? null;
     };
 
 
