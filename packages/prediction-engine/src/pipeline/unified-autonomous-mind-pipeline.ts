@@ -305,6 +305,9 @@ export async function runUnifiedAutonomousMindPipeline(
     propHookFlags: overlay.qbHooks.map((h) => h.hookFlag),
   };
 
+  if (!input.checkpointTag) {
+    throw new Error("[FAIL-CLOSED] checkpointTag is required before a receipt can be written");
+  }
   const outbox = resolve(input.outboxDir ?? "outbox");
   const trainer = resolve(input.trainerDir ?? "brain/feeds/2026-10-22");
   mkdirSync(outbox, { recursive: true });
