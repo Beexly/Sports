@@ -109,6 +109,23 @@ consistency .30 -> .25). Two or more states score 1, one scores 0.7, silence 0.6
 rather than 0 — a genuinely clean read has little to name. Stored rows predate it,
 so the run reads .6 and rubric fell 86.86 -> 83.02, still above the 70 floor.
 
+## 2026-10-23, later: prose smoke suite
+
+The production bench scores STORED text, so a template change is invisible until
+new picks settle days later, and the scorecard mixes template eras meanwhile.
+`engine/__tests__/reasoning-prose-smoke.test.ts` closes that: it drives scoreGame
+over fixed clean and adverse contexts, harvests the rendered reasoning, and scores
+it through the same contract. A prose regression now fails in seconds.
+
+Calibration is excluded (no outcomes), which is stated in the file so the rubric
+is not read as forecast quality. It also pins both falsifier directions and the
+"Market fair: N%" rendering.
+
+Fixture gotchas worth keeping: `commenceTime` must be a Date (ISO strings silently
+yield zero picks), a thin context clears no gate because confidence needs the form
+buckets, and per-pick fair values must not be pinned globally or genuine renders
+score as inconsistent.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.
