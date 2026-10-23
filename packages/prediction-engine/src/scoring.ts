@@ -1032,7 +1032,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       contextNote +
       falsifierNote +
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
-    : `${chosenTeam} ${spreadDisplay}. ${fairValueClause} ` +
+    // Book count is a real, checkable surface that was missing from the spread
+    // branch entirely (only the totals branch cited books), so the prose had no
+    // evidence trail for depth on the market that carries most picks.
+    : `${chosenTeam} ${spreadDisplay} at ${pricedOdds.length} book${pricedOdds.length === 1 ? "" : "s"}. ${fairValueClause} ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       falsifierNote +

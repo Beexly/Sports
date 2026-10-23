@@ -144,6 +144,19 @@ fired and consistency is "nothing disproved it", not "everything verified". New
 picks exercise both. The bench now reports that coverage count alongside the
 score so a vacuous 1.0 cannot be mistaken for a verified one.
 
+## 2026-10-23, later: depth on the spread branch
+
+Spreads carried no book count at all — only totals cited books — so the market
+that carries most picks had no evidence trail for depth. The spread sentence now
+reads "Home Club -3.5 at 8 books." Pinned by a smoke test plus a specificity
+floor above 0.5 on a rendered spread.
+
+**Escape hazard, twice now.** A test line written as `/\d+ books/` arrived in
+the file as a literal backslash-d and a raw backspace byte, matched nothing, and
+failed with the text visibly containing "8 books" — so the assertion looked
+insane while behaving correctly. Prefer `[0-9]` classes in this tree; they carry
+no escapes to mangle.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.

@@ -120,6 +120,19 @@ describe("rendered prose smoke", () => {
     expect(card.meanRubric).toBeGreaterThanOrEqual(70);
   });
 
+  it("cites the number of books that priced the market", () => {
+    const { arts } = harvest(CLEAN, "clean");
+    // No backslash escapes at all: this file has been bitten twice by \d and
+    // \b arriving mangled, so a digit class does the same job safely.
+    const hit = arts.some((a) => a.reasonText.match(/([0-9]+) books/) !== null);
+    expect(hit).toBe(true);
+  });
+
+  it("clears the specificity floor on a rendered spread", () => {
+    const { kase, arts } = harvest(CLEAN, "clean");
+    expect(runSuite([kase], arts).meanSpecificity).toBeGreaterThan(0.5);
+  });
+
   it("names the market and engine fair values it recorded", () => {
     const { arts } = harvest(CLEAN, "clean");
     const text = arts.map((a) => a.reasonText).join(" ");
