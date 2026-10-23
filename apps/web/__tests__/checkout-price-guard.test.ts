@@ -31,7 +31,7 @@ vi.mock("stripe", () => {
   return { default: FakeStripe };
 });
 
-import { resolveCheckoutPriceId } from "@/lib/stripe";
+import { resolveCheckoutPriceId, __resetEnvPriceVerdictCache } from "@/lib/stripe";
 
 const ENV_PRO_ANNUAL = "price_env_pro_annual";
 
@@ -42,6 +42,10 @@ const PRO_YEAR_CENTS = 9900;
 function price(overrides: Record<string, unknown> = {}) {
   return {
     id: ENV_PRO_ANNUAL,
+    // Real Stripe Price objects always carry a currency; the runtime currency
+    // axis treats an absent one as malformed and fails closed. The fixture
+    // models a well-formed price, so it carries the advertised denomination.
+    currency: "usd",
     unit_amount: PRO_YEAR_CENTS,
     recurring: { interval: "year" },
     ...overrides,
@@ -56,6 +60,9 @@ describe("resolveCheckoutPriceId — env price IDs are validated, not trusted", 
   beforeEach(() => {
     stripeMock.pricesRetrieve.mockReset();
     stripeMock.pricesList.mockReset();
+    // Verdicts are cached at module scope for the TTL; without this the happy
+    // path's "match" would leak into the mismatch tests below.
+    __resetEnvPriceVerdictCache();
     process.env["STRIPE_SECRET_KEY"] = "sk_test_guard";
     errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
   });

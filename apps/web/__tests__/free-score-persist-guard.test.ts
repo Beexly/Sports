@@ -35,7 +35,14 @@ vi.mock("@/lib/data-sources/free-ingestion-run", () => ({
 }));
 vi.mock("@/lib/scraping/clearance-engine", () => ({
   // ESPN storage is cleared for the test; henrygd stays denied (GSE-SEC-050).
-  checkClearance: (req: { source_id: string }) => ({ allowed: req.source_id === "espn-public-api" }),
+  // Shape mirrors the real ClearanceResult: blocks/warnings are always arrays
+  // (the engine builds them in finalize), so a DENIED warn that renders them
+  // cannot crash the way an { allowed }-only stub did.
+  checkClearance: (req: { source_id: string }) => ({
+    allowed: req.source_id === "espn-public-api",
+    blocks: [],
+    warnings: [],
+  }),
 }));
 
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
