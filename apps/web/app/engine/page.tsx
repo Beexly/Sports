@@ -121,11 +121,17 @@ export default async function SealedEnginePage() {
               <div className="mx-auto max-w-5xl">
                 <Reveal>
                   <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
-                    01 · The sweep
+                    01 · The lock
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
-                    First, it reads the whole market.
+                    First, the projection is locked.
                   </h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+                    The game is projected before a book is allowed to choose a
+                    side. What follows is the price check: rows read, games
+                    covered, sports covered. The book prices the lock. It does
+                    not pick it.
+                  </p>
                 </Reveal>
                 <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
                   {[

@@ -76,6 +76,17 @@ Do not invent these. A producer signature is the shape the next agent should imp
 
 L3 rest / schedule / venue / H2H / NGS / biophysical injury already enter the confidence sum through `computeGameContext` when `input.context` carries them. They are not new this pass. They still do not choose the side.
 
+## Website (2026-10-23, same branch)
+
+The lock was already called at the top of the three scorers. It was not on the site.
+
+- `apps/web/components/picks/pick-card.tsx` renders `lockedMarginMean`, total band, and `priceAction` above the book bars. Book bars are labeled “Books, read after the lock.” Pro factor panel only. No weights.
+- `reasoningShort` on spread, total, and moneyline now starts with `Projection locked before the books. Price check: …` so the free teaser does not open on the book.
+- `/engine` chapter 01 no longer says the market is read first.
+- `/board` “You are here” says the projection is locked first.
+
+The Markov prior is unchanged. `markov-simulator.ts` still adds the constant 3 and the total prior 46.5. One availability weight still cannot choose the side. That wall is named in this file and is not papered over on the card.
+
 ## Next exact work
 
 1. Replace the margin prior of 3 and the total prior of 46.5 in `markov-simulator.ts` with team inputs that already exist, or add the missing inputs by name. Until `abs(marginMean - 3) >= 3` is reachable from a single real outage, most slates still take their side from book agreement. That is the wall, not a finished decision layer.
@@ -85,7 +96,7 @@ L3 rest / schedule / venue / H2H / NGS / biophysical injury already enter the co
 
 ## Insertion map (if a later edit has to be re-applied)
 
-- Helper block: `readCoachLock`, `lockSentence`, `lockFactor`, `lockedFields`, `trenchFor`, `weightSum` directly under `toCoachSide` in `scoring.ts`.
+- Helper block: `readCoachLock`, `lockSentence`, `lockTeaser`, `lockFactor`, `lockedFields`, `trenchFor`, `weightSum` directly under `toCoachSide` in `scoring.ts`.
 - Spread: `readCoachLock` is the first line of `scoreSpreadPick`. `priceLockedSpread` runs immediately after `avgSpread`. `PASS-on-price` returns null only when `coachOverridesStub`. `homeIsChosen` uses `marginSide` only in that same case.
 - Total: same pattern with `priceLockedTotal` and `totalMoved`.
 - Moneyline: `readCoachLock` then `priceLockedMoneyline`. `coachOverridesStub` returns null before `bookmakerOdds` is read.

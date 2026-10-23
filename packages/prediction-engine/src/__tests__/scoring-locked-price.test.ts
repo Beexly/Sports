@@ -86,6 +86,7 @@ describe("lock before the books", () => {
     const spread = picks.find((p) => p.pickType === "SPREAD");
     expect(spread).toBeTruthy();
     expect(spread!.reasoning.startsWith("Locked home margin")).toBe(true);
+    expect(spread!.reasoningShort.startsWith("Projection locked before the books. Price check:")).toBe(true);
     expect(spread!.reasoning.indexOf("Locked home margin")).toBeLessThan(
       spread!.reasoning.indexOf("Market fair") === -1
         ? spread!.reasoning.length

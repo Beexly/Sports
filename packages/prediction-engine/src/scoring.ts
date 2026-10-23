@@ -62,6 +62,11 @@ function lockSentence(lock: CoachLockRead): string {
   return `Locked home margin ${lock.locked.marginMean.toFixed(2)}, home score ${lock.locked.scoreMean.toFixed(2)}, hash ${lock.locked.inputHash}. `;
 }
 
+/** Public teaser. The lock is named before any book sentence. No formula. */
+function lockTeaser(action: PriceAction): string {
+  return `Projection locked before the books. Price check: ${action}. `;
+}
+
 function lockFactor(lock: CoachLockRead): FactorDetail {
   return {
     name: "Locked coach projection",
@@ -1162,10 +1167,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
       priceClause);
 
-  const reasoningShort = isFixedLadderSpreadMarket
+  const reasoningShort = lockTeaser(spreadPrice.action) + (isFixedLadderSpreadMarket
     ? `${pricedOdds.length} bookmaker${pricedOdds.length === 1 ? "" : "s"} price ${chosenTeam} ${spreadDisplay} ` +
       `on the fixed run line.` + firstContextClause
-    : `${consensusClause}` + firstContextClause;
+    : `${consensusClause}` + firstContextClause);
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -1476,6 +1481,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ` Price check: ${totalPrice.action} (${totalPrice.edgePts.toFixed(2)} pts vs locked total).`;
 
   const reasoningShort =
+    lockTeaser(totalPrice.action) +
     `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${totalDisplay}.`;
 
   const factorBreakdown: FactorBreakdown = {
@@ -1911,6 +1917,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ` Price check: ${mlPrice.action}.`;
 
   const reasoningShort =
+    lockTeaser(mlPrice.action) +
     `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 

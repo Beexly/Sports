@@ -313,6 +313,38 @@ export function PickCard({
 // Factor Breakdown Panel
 // ─────────────────────────────────────────────
 
+function finiteNum(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function CoachLockStrip({ breakdown }: { breakdown: FactorBreakdown }) {
+  const margin = finiteNum(breakdown["lockedMarginMean"]);
+  const action = breakdown["priceAction"];
+  if (margin === null || typeof action !== "string") return null;
+  const p10 = finiteNum(breakdown["lockedTotalP10"]);
+  const p90 = finiteNum(breakdown["lockedTotalP90"]);
+  const edge = finiteNum(breakdown["lockedEdgePts"]);
+  const fromLock = breakdown["coachOverridesStub"] === true;
+  return (
+    <div data-testid="coach-lock" className="mb-3 rounded-md border border-orbital-cyan/30 bg-orbital-cyan/5 p-2">
+      <p className="text-[10px] font-semibold uppercase tracking-wide text-orbital-cyan">
+        Locked projection
+      </p>
+      <p className="mt-1 font-mono text-xs text-ion-white">
+        Home margin {margin.toFixed(1)}
+        {p10 !== null && p90 !== null ? ` · total ${p10.toFixed(1)}–${p90.toFixed(1)}` : ""}
+      </p>
+      <p className="mt-1 text-[10px] leading-relaxed text-ion-2">
+        Price check: {action}
+        {edge !== null ? ` · ${edge.toFixed(1)} pts` : ""}.{" "}
+        {fromLock
+          ? "The side is the lock. The book priced it."
+          : "The lock is recorded. It did not choose the side on this card."}
+      </p>
+    </div>
+  );
+}
+
 function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
   const hasIntelligenceLayer =
     (breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore !== 0) ||
@@ -325,7 +357,36 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         Factor Breakdown
       </p>
 
-      {/* Core market score bars */}
+      <CoachLockStrip breakdown={breakdown} />
+
+      {/* Individual factors — the lock is factors[0] when scoring wrote one. */}
+      {breakdown.factors.length > 0 && (
+        <div className="mb-3 flex flex-col gap-1">
+          {breakdown.factors.map((factor, idx) => (
+            <div key={idx} className="flex items-start gap-2">
+              <span
+                className={[
+                  "mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full",
+                  factor.impact === "positive"
+                    ? "bg-verify"
+                    : factor.impact === "negative"
+                    ? "bg-alert"
+                    : "bg-ion-3",
+                ].join(" ")}
+                aria-hidden="true"
+              />
+              <span className="text-[10px] leading-relaxed text-ion-2">
+                {factor.description}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Books are the price check. They do not choose the side. */}
+      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-ion-3">
+        Books, read after the lock
+      </p>
       <div className="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
         <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
         <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
@@ -354,30 +415,6 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore < 0 && (
             <IntelChip label="Markets split" positive={false} />
           )}
-        </div>
-      )}
-
-      {/* Individual factors */}
-      {breakdown.factors.length > 0 && (
-        <div className="flex flex-col gap-1">
-          {breakdown.factors.map((factor, idx) => (
-            <div key={idx} className="flex items-start gap-2">
-              <span
-                className={[
-                  "mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full",
-                  factor.impact === "positive"
-                    ? "bg-verify"
-                    : factor.impact === "negative"
-                    ? "bg-alert"
-                    : "bg-ion-3",
-                ].join(" ")}
-                aria-hidden="true"
-              />
-              <span className="text-[10px] leading-relaxed text-ion-2">
-                {factor.description}
-              </span>
-            </div>
-          ))}
         </div>
       )}
 

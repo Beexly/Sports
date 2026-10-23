@@ -363,9 +363,10 @@ describe("scoreGame — TOTAL reasoningShort", () => {
     ).find((pick) => pick.pickType === "TOTAL");
     expect(total).toBeTruthy();
     const [direction, ...lineParts] = total!.selection.split(" ");
-    expect(total!.reasoningShort).toBe(
+    expect(total!.reasoningShort.startsWith("Projection locked before the books. Price check:")).toBe(true);
+    expect(total!.reasoningShort.endsWith(
       `${Math.round(total!.consensusPct * 100)}% of bookmakers favor ${direction} ${lineParts.join(" ")}.`,
-    );
+    )).toBe(true);
   });
 });
 
