@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["posteam", "play_type", "yards_gained", "week", "qb_kneel"],
+    failureModes: ["kneels can fake negative plays", "penalties can fake zero/negative yards"],
+    family: "team",
+    forbiddenInputs: ["raw private tracking coordinates"],
+    formulaClass: "deterministic_rule",
+    formulaSummary: "Share of a team's valid pass and run plays resulting in negative yardage, excluding kneels.",
+    historicalPrecedent: [{ name: "Negative Play Rate", reason: "Negative plays kill drives; limiting them correlates heavily with winning." }],
+    internalName: "negative_play_rate_shadow",
+    metricId: "negative-play-rate",
+    protectedComponents: [],
+    publicExposure: "hidden",
+    publicName: "Negative Play Rate",
+    sourceRightsRequired: ["public play-by-play modeling allowed"],
+    status: "SHADOW",
+    targetQuestion: "What share of this team's plays lose yardage?",
+    targetVariable: "team negative-play rate",
+    validationMethods: ["walk_forward", "drift_test"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
