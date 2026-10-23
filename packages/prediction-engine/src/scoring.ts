@@ -915,16 +915,32 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const selection = `${chosenTeam} ${spreadDisplay}`;
 
   // Build contextual reasoning clauses
+  // Clauses carry the NUMBER, not just the direction. "rest advantage" scored
+  // nothing on the reasoning benchmark's specificity component; "home 6 days
+  // rest v away 2" does. Units only appear when the value is actually present —
+  // a missing rest figure falls back to the direction word rather than a dash.
+  const restClause = (() => {
+    const h = ctx?.restDaysHome ?? null;
+    const a = ctx?.restDaysAway ?? null;
+    const both = typeof h === "number" && typeof a === "number";
+    const detail = both ? `home ${h} days rest v away ${a}` : null;
+    if (restAdvantageScore > 3) return detail ?? "rest advantage";
+    if (restAdvantageScore < -3) return detail ? `${detail} (short week)` : "rest disadvantage";
+    return null;
+  })();
   const contextClauses: string[] = [];
-  if (restAdvantageScore > 3) contextClauses.push("rest advantage");
-  else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
+  if (restClause) contextClauses.push(restClause);
   if (scheduleStressScore > 2) contextClauses.push("opponent on compressed schedule");
   else if (scheduleStressScore < -2) contextClauses.push("compressed schedule stress");
   if (headToHeadScore > 0) contextClauses.push("favorable H2H history");
   else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
   if (venueFormScore > 0) contextClauses.push("strong venue form");
-  if (lineMovementScore > 5) contextClauses.push("confirming line movement");
-  else if (lineMovementScore < -5) contextClauses.push("fading line movement");
+  const movementPts = ctx?.spreadMovementPts ?? null;
+  const moved = typeof movementPts === "number" && movementPts !== 0
+    ? ` (${Math.abs(movementPts).toFixed(1)} pts)`
+    : "";
+  if (lineMovementScore > 5) contextClauses.push(`confirming line movement${moved}`);
+  else if (lineMovementScore < -5) contextClauses.push(`fading line movement${moved}`);
   if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals noted");
   if (injuryScore > 1) contextClauses.push("biophysical injury advantage");
   else if (injuryScore < -1) contextClauses.push("biophysical injury impact");
@@ -1591,9 +1607,21 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const selection = `${chosenTeam} ML (${priceDisplay})`;
 
   // Context-aware reasoning
+  // Clauses carry the NUMBER, not just the direction. "rest advantage" scored
+  // nothing on the reasoning benchmark's specificity component; "home 6 days
+  // rest v away 2" does. Units only appear when the value is actually present —
+  // a missing rest figure falls back to the direction word rather than a dash.
+  const restClause = (() => {
+    const h = ctx?.restDaysHome ?? null;
+    const a = ctx?.restDaysAway ?? null;
+    const both = typeof h === "number" && typeof a === "number";
+    const detail = both ? `home ${h} days rest v away ${a}` : null;
+    if (restAdvantageScore > 3) return detail ?? "rest advantage";
+    if (restAdvantageScore < -3) return detail ? `${detail} (short week)` : "rest disadvantage";
+    return null;
+  })();
   const contextClauses: string[] = [];
-  if (restAdvantageScore > 3) contextClauses.push("rest advantage");
-  else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
+  if (restClause) contextClauses.push(restClause);
   if (scheduleStressScore > 2) contextClauses.push("opponent on compressed schedule");
   else if (scheduleStressScore < -2) contextClauses.push("compressed schedule stress");
   if (headToHeadScore > 0) contextClauses.push("favorable H2H history");

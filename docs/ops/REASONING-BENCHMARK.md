@@ -79,6 +79,23 @@ number the same row now scores against. New picks will agree by construction;
 the bench should return above the floor as they settle. Do not "fix" this by
 loosening the check.
 
+## 2026-10-23, later still: units in the context clauses
+
+Specificity was .5889 because every context clause named a direction and no
+quantity — "rest advantage" scores nothing the scorer can see. The clauses now
+carry the number behind the claim where the value exists:
+
+    "home 7 days rest v away 2"            (was "rest advantage")
+    "confirming line movement (2.0 pts)"    (was "confirming line movement")
+
+`computeGameContext` passes `restDaysHome`/`restDaysAway` through and derives
+`spreadMovementPts` from the opening/current spread; a missing value falls back
+to the bare word, so an absent day count never renders a dash. Prose only — no
+score, weight or threshold moved.
+
+Stored bench rows cannot show this (their text is frozen at generation), so the
+effect appears as post-change picks settle.
+
 ## Next targets, in order
 
 1. Stop printing a fair value that disagrees with the stored probability.

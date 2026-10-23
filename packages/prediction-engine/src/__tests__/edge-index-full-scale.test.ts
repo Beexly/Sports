@@ -116,6 +116,27 @@ function indexesAtHold(hold: number): number[] {
   return out;
 }
 
+describe("reasoning specificity carries units", () => {
+  it("cites the rest days behind a rest edge, not just the word", () => {
+    // Production arrives pre-scored: the score decides whether the clause fires,
+    // the days supply the unit.
+    const ctx: GameContextInput = { ...RICH_CONTEXT, restAdvantageScore: 7, restDaysHome: 7, restDaysAway: 2 };
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);
+    const withContext = picks.filter((p) => p.reasoning.includes("Context:"));
+    for (const p of withContext) {
+      expect(p.reasoning).toMatch(/home \d+ days rest v away \d+/);
+    }
+  });
+
+  it("falls back to the bare direction word when the days are absent", () => {
+    const ctx: GameContextInput = { ...RICH_CONTEXT, restAdvantageScore: 7, restDaysHome: undefined, restDaysAway: undefined };
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);
+    for (const p of picks.filter((x) => x.reasoning.includes("Context:"))) {
+      expect(p.reasoning).not.toContain("days rest");
+    }
+  });
+});
+
 describe("the published Edge Index spans its whole axis on real markets", () => {
   /**
    * The retired scale (`50 + 1000 · rawEdge`) produced 43–45 at a 1% hold and
