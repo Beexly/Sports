@@ -4,6 +4,8 @@
  * Pure Class A. No OddsInput, no market tokens.
  * 7-step loop using validated nfl-farm micro-mechanics.
  */
+import { evaluateFourthDown, STAFF_AGGRESSION } from "./fourth-down-policy.js";
+import { allocateTargets, applyShadowHaircut, type EligibleTarget } from "./sinkhorn-targets.js";
 
 export interface CoachSimInput {
   homeTeam: string;
@@ -12,6 +14,8 @@ export interface CoachSimInput {
   coachSupport: number;
   injuryDropOff?: number;
   neutralPassRate?: number;
+  staffAggression?: number;
+  shadows?: Array<{ wr: string; shadowRate: number }>;
 }
 
 export interface CoachProjection {
@@ -20,6 +24,8 @@ export interface CoachProjection {
   totalP10: number;
   totalP90: number;
   playerStats: Record<string, { mean: number; p10: number; p90: number }>;
+  fourthDownWP?: number;
+  targetShares?: Array<{ playerId: string; share: number }>;
 }
 
 // Validated constants from 36-cycle nfl-farm audit
@@ -30,27 +36,45 @@ const KNEEL_PER_WIN = 2.03;
 const FG_MAKE_50 = 0.641;
 
 export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjection {
-  // 7-step structure (full loop lands next):
-  // 1. Personnel & shell declaration
-  // 2. Play-call & 4th-down policy
-  // 3. Trench collision & pressure timing
-  // 4. Spatial target reallocation (Sinkhorn)
-  // 5. Air yards, CPOE, YAC, red-zone TD
-  // 6. Defensive stats & kicking
-  // 7. Endgame kneeldown point mass
+  // Step 2: 4th-down policy
+  const fourth = evaluateFourthDown({
+    down: 4,
+    ydstogo: 1,
+    yardline: 55,
+    scoreDiff: 0,
+    timeRemaining: 300,
+    timeouts: 2,
+    staffAggression: input.staffAggression ?? STAFF_AGGRESSION.PHI,
+  });
+
+  // Step 4: Sinkhorn target reallocation
+  const eligible: EligibleTarget[] = [
+    { playerId: "WR1", role: "WR1", baseShare: 0.28, shadowRate: 0.6 },
+    { playerId: "SLOT", role: "SLOT", baseShare: 0.18, shadowRate: 0.3 },
+    { playerId: "TE", role: "TE", baseShare: 0.14 },
+    { playerId: "RB", role: "RB", baseShare: 0.16 },
+  ];
+  const allocated = applyShadowHaircut(
+    allocateTargets(eligible),
+    input.shadows ?? [],
+  );
 
   const baseTotal = 46.5;
   const coachShift = input.coachSupport * 0.15;
   const injury = input.injuryDropOff ?? 0;
   const mean = baseTotal + coachShift - injury;
-  const kneelHaircut = KNEEL_MEAN_YD * KNEEL_PER_WIN * 0.5; // expected on winning side
+  const kneelHaircut = KNEEL_MEAN_YD * KNEEL_PER_WIN * 0.5;
 
   return {
     scoreMean: mean / 2 + 1.5,
     marginMean: 3 + coachShift + kneelHaircut * 0.1,
     totalP10: mean - 7,
     totalP90: mean + 7,
-    playerStats: {},
+    playerStats: Object.fromEntries(
+      allocated.map((a) => [a.playerId, { mean: a.share * 8, p10: a.share * 4, p90: a.share * 12 }]),
+    ),
+    fourthDownWP: fourth.wpDelta,
+    targetShares: allocated.map((a) => ({ playerId: a.playerId, share: a.share })),
   };
 }
 
