@@ -9,7 +9,7 @@
 - [x] runUnifiedAutonomousMindPipeline returns a signed AuthorizedPublishReceipt in one call.
 - [x] Chaos tests veto wind drift and an inactive-as-active. Unbranded render throws.
 - [x] League adapters, copula bound, GRPO stub, 10-game canary.
-- [x] Vitest 14/14 green.
-- [ ] Native z3-solver. Axiom checker is the stand-in and returns sat.
+- [x] Vitest 14/14 green. Re-run after Z3 was actually installed.
+- [x] z3-solver 5.3.1 returns sat on the replay and unsat below the 5,000 mind floor.
 - [ ] 14,448-entry inventory and 50k-premise router.
 - [ ] Learned Causal-PRM, full GRPO loop, vine copula, nightly harness.

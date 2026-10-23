@@ -116,39 +116,63 @@ function axiomCore(payload: RawPredictionPayload): string[] {
   return core;
 }
 
-async function tryZ3(payload: RawPredictionPayload): Promise<"sat" | "skip"> {
+async function tryZ3(payload: RawPredictionPayload): Promise<"sat" | "unsat" | "skip"> {
   try {
     const mod = (await import("z3-solver")) as {
-      init?: () => Promise<{ Context: new (name: string) => Z3Context }>;
+      init?: () => Promise<{
+        Context: new (name: string) => {
+          Solver: new () => { add: (...xs: unknown[]) => void; check: () => Promise<string> };
+          Real: { const: (name: string) => Z3Real };
+        };
+      }>;
     };
     if (!mod.init) return "skip";
     const { Context } = await mod.init();
-    const Z3 = new Context("gse_neuro_symbolic_verifier");
-    const solver = new Z3.Solver();
-    const a = Z3.Bool.const("AXIOM_BUNDLE");
-    const pCal = Z3.Real.val(payload.calibratedProb);
-    solver.add(
-      Z3.Implies(
-        a,
-        Z3.And(pCal.ge(Z3.Real.val(0.001)), pCal.le(Z3.Real.val(0.999))),
-      ),
-    );
-    const status = await solver.check(a);
-    return status === "sat" ? "sat" : "skip";
+    const { Solver, Real } = new Context("gse_neuro_symbolic_verifier");
+    const solver = new Solver();
+    const p = Real.const("p");
+    const c = Real.const("c");
+    const loaded = Real.const("loaded");
+    const evaluated = Real.const("evaluated");
+    const mind = Real.const("mind");
+    const principles = Real.const("principles");
+    const windN = Real.const("windN");
+    const windS = Real.const("windS");
+    const tempN = Real.const("tempN");
+    const tempS = Real.const("tempS");
+    const lineN = Real.const("lineN");
+    const lineB = Real.const("lineB");
+    const edge = Real.const("edge");
+    solver.add(p.eq(payload.calibratedProb), c.eq(payload.complementProb));
+    solver.add(p.ge(0.001), p.le(0.999), p.add(c).eq(1));
+    solver.add(loaded.eq(payload.corpusItemsLoaded), loaded.ge(3000));
+    solver.add(evaluated.eq(payload.corpusItemsEvaluated), evaluated.ge(2000));
+    solver.add(mind.eq(payload.mindRecordsLoaded), mind.ge(5000));
+    solver.add(principles.eq(payload.mindApplicablePrinciplesCount), principles.ge(1));
+    solver.add(windN.eq(payload.narrativeWindMph), windS.eq(payload.sensorWindMph));
+    solver.add(windN.sub(windS).le(2), windS.sub(windN).le(2));
+    solver.add(tempN.eq(payload.narrativeTempF), tempS.eq(payload.sensorTempF));
+    solver.add(tempN.sub(tempS).le(3), tempS.sub(tempN).le(3));
+    solver.add(lineN.eq(payload.narrativeLine), lineB.eq(payload.liveBookLine));
+    solver.add(lineN.sub(lineB).le(0.5), lineB.sub(lineN).le(0.5));
+    solver.add(edge.eq(payload.edgeVsMarket));
+    solver.add(p.sub(payload.marketImpliedDeVigProb).sub(edge).le(0.0001));
+    solver.add(edge.sub(p.sub(payload.marketImpliedDeVigProb)).le(0.0001));
+    const status = await solver.check();
+    if (status === "sat") return "sat";
+    if (status === "unsat") return "unsat";
+    return "skip";
   } catch {
     return "skip";
   }
 }
 
-interface Z3Context {
-  Solver: new () => {
-    add: (x: unknown) => void;
-    check: (...assumptions: unknown[]) => Promise<string>;
-  };
-  Bool: { const: (name: string) => unknown };
-  Real: { val: (n: number) => { ge: (o: unknown) => unknown; le: (o: unknown) => unknown } };
-  Implies: (a: unknown, b: unknown) => unknown;
-  And: (...xs: unknown[]) => unknown;
+interface Z3Real {
+  eq: (n: number | Z3Real) => unknown;
+  ge: (n: number | Z3Real) => unknown;
+  le: (n: number | Z3Real) => unknown;
+  add: (n: number | Z3Real) => Z3Real;
+  sub: (n: number | Z3Real) => Z3Real;
 }
 
 export async function verifyAndBrandCausalReceipt(
@@ -160,6 +184,9 @@ export async function verifyAndBrandCausalReceipt(
     throw new NeuroSymbolicVetoError(payload.gameId, "unsat", core);
   }
   const z3 = await tryZ3(payload);
+  if (z3 === "unsat") {
+    throw new NeuroSymbolicVetoError(payload.gameId, "unsat", ["Z3_NUMERIC_AXIOMS"]);
+  }
   const verifier = z3 === "sat" ? "z3-solver" : "qf-lra-axiom-checker";
   const body = JSON.stringify({ payload, verifiedAtIso, z3SolverStatus: "sat", verifier });
   const receiptSha256 = createHash("sha256").update(body).digest("hex");
