@@ -35,10 +35,76 @@ import { snapToPostedLine, formatPublishedLine } from "./published-line.js";
 import { recalibrateProbability } from "./engine/probability-recalibration.js";
 import { coachTrailFactors } from "./engine/coach-trail.js";
 import { coachSupport } from "./engine/coach-support.js";
+import { lockFromCoachPacket, lockedTotalCenter, STUB_BASE_TOTAL, type CoachLockRead } from "./engine/coach-lock.js";
+import { DOCTRINE_PLAY_GAP_PTS, priceLockedMoneyline, priceLockedSpread, priceLockedTotal, type PriceAction } from "./engine/price-check.js";
+import { trenchContinuityFactors } from "./engine/trench-continuity-factors.js";
+import type { InjuryRow } from "./engine/availability-factors.js";
+import type { ShadowRow } from "./engine/shadow-coverage-factors.js";
+import type { UsageShift } from "./engine/usage-factors.js";
 
 /** CoachTrailInput speaks HOME/AWAY only; a total maps OVER->HOME, UNDER->AWAY. */
 const toCoachSide = (s: string): "HOME" | "AWAY" =>
   s === "OVER" ? "HOME" : s === "UNDER" ? "AWAY" : (s as "HOME" | "AWAY");
+
+/** Lock before any book is read. The packet has no odds field. */
+function readCoachLock(input: OddsInput): CoachLockRead {
+  return lockFromCoachPacket({
+    homeTeam: input.homeTeam,
+    awayTeam: input.awayTeam,
+    week: input.coachTrail?.week ?? 0,
+    injuries: input.coachTrail?.injuries as readonly InjuryRow[] | undefined,
+    usageShifts: input.coachTrail?.usageShifts as readonly UsageShift[] | undefined,
+    shadows: input.coachTrail?.shadows as readonly ShadowRow[] | undefined,
+  });
+}
+
+function lockSentence(lock: CoachLockRead): string {
+  return `Locked home margin ${lock.locked.marginMean.toFixed(2)}, home score ${lock.locked.scoreMean.toFixed(2)}, hash ${lock.locked.inputHash}. `;
+}
+
+/** Public teaser. The lock is named before any book sentence. No formula. */
+function lockTeaser(action: PriceAction): string {
+  return `Projection locked before the books. Price check: ${action}. `;
+}
+
+function lockFactor(lock: CoachLockRead): FactorDetail {
+  return {
+    name: "Locked coach projection",
+    impact: "neutral",
+    weight: 0,
+    description:
+      `Home margin ${lock.locked.marginMean.toFixed(2)} is the baseline. ` +
+      `Home score ${lock.locked.scoreMean.toFixed(2)}. ` +
+      `Total band ${lock.locked.totalP10.toFixed(2)}–${lock.locked.totalP90.toFixed(2)}. ` +
+      `Hash ${lock.locked.inputHash}. ${lock.gaps.join(" ")}`,
+  };
+}
+
+function lockedFields(lock: CoachLockRead, action: PriceAction, edgePts: number | null) {
+  return {
+    lockedMarginMean: lock.locked.marginMean,
+    lockedScoreMean: lock.locked.scoreMean,
+    lockedTotalP10: lock.locked.totalP10,
+    lockedTotalP90: lock.locked.totalP90,
+    lockedInputHash: lock.locked.inputHash,
+    priceAction: action,
+    lockedEdgePts: edgePts,
+    coachOverridesStub: lock.coachOverridesStub,
+  };
+}
+
+function trenchFor(input: OddsInput, pickedSide: "HOME" | "AWAY"): FactorDetail[] {
+  return trenchContinuityFactors({
+    pickedSide,
+    olContinuityDelta: input.context?.olContinuityDelta,
+    dlContinuityDelta: input.context?.dlContinuityDelta,
+    dbContinuityDelta: input.context?.dbContinuityDelta,
+  });
+}
+
+function weightSum(factors: readonly FactorDetail[]): number {
+  return factors.reduce((sum, f) => sum + (f.weight ?? 0), 0);
+}
 
 export {
   computeSovereignSignalPlaneContribution,
@@ -642,6 +708,8 @@ function computeVolatilityPenalty(
 // ============================================================
 
 function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
+  // Class A. No book is read on this line. avgSpread comes later.
+  const coachLock = readCoachLock(input);
   const spreadOdds = input.bookmakerOdds.filter(
     (o) => o.market === "SPREADS" && o.spread !== undefined
   );
@@ -669,16 +737,31 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Pick'em guard: an all-PK board (every spread === 0) has no favored side.
   // Without this, spread===0 votes AWAY (s < 0 is false) → phantom away pick
   // with consensus 1.0. Mixed boards keep existing side selection.
-  if (spreads.every((s) => s === 0)) return null;
+  // Skipped when the coach lock has already chosen a side: 0 is a price.
+  if (!coachLock.coachOverridesStub && spreads.every((s) => s === 0)) return null;
 
   const avgSpread = spreads.reduce((a, b) => a + b, 0) / spreads.length;
+  const spreadPrice = priceLockedSpread({
+    marginMean: coachLock.locked.marginMean,
+    scoreMean: coachLock.locked.scoreMean,
+    avgSpread,
+    quotedHomeLines: spreads,
+  });
+  // The coach side is locked. A price that does not clear the doctrine gap
+  // is not published as the market's side.
+  if (coachLock.coachOverridesStub && spreadPrice.action === "PASS-on-price") return null;
 
   const homeFavoredCount = spreads.filter((s) => s < 0).length;
   const homeFavoredPct = homeFavoredCount / spreads.length;
-  const homeIsChosen = homeFavoredPct >= 0.5;
+  // Market book-agreement does not choose the side once the coach shift
+  // clears the stub prior. Until then, sign(marginMean) is the constant 3
+  // and using it would invent a home side.
+  const homeIsChosen = coachLock.coachOverridesStub
+    ? coachLock.marginSide === "HOME"
+    : homeFavoredPct >= 0.5;
   const consensusPct = homeIsChosen ? homeFavoredPct : 1 - homeFavoredPct;
 
-  if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
+  if (!coachLock.coachOverridesStub && consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
 
   // Spread dispersion — measure of line disagreement
   const spreadMean = avgSpread;
@@ -868,12 +951,14 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     homeTeamCode: input.coachTrail?.homeTeamCode,
     awayTeamCode: input.coachTrail?.awayTeamCode,
   }));
+  const trenchFactors = trenchFor(input, toCoachSide(pickedSide));
+  const trenchPts = weightSum(trenchFactors);
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
       headToHeadScore + venueFormScore + uncertaintyPenalty +
-      scheduleStressScore + injuryScore + ngsTrackingScore + dispersionScore + coachSupportPts + 10,
+      scheduleStressScore + injuryScore + ngsTrackingScore + dispersionScore + coachSupportPts + trenchPts + 10,
       0, 100
     )
   );
@@ -944,7 +1029,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : "";
 
   const factors: FactorDetail[] = [
+    lockFactor(coachLock),
     ...coachFactors,
+    ...trenchFactors,
+    spreadPrice.factor,
     consensusFactor,
     depthFactor,
     edgeFactor,
@@ -968,7 +1056,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // `worseWhenHigher` is expressed in HOME perspective: laying the home team
   // means a lower (more negative) line is worse for us; laying the away team
   // means a higher line is.
-  const publishedSpread = snapToPostedLine(avgSpread, spreads, !homeIsChosen);
+  const publishedSpread = coachLock.coachOverridesStub && spreadPrice.action === "ALT"
+    ? spreadPrice.betHomeLine
+    : snapToPostedLine(avgSpread, spreads, !homeIsChosen);
   const chosenPublishedSpread = homeIsChosen ? publishedSpread : -publishedSpread;
   const spreadDisplay =
     chosenPublishedSpread > 0
@@ -1061,14 +1151,16 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   }
 
   const fairValueClause = formatFairValueClause(fairProb, rank.priced ? rank.rankingP : null);
-  const reasoning = coachNote + (isFixedLadderSpreadMarket
+  const priceClause = ` Price check: ${spreadPrice.action} (${spreadPrice.edgePts.toFixed(2)} pts vs locked margin).`;
+  const reasoning = lockSentence(coachLock) + coachNote + (isFixedLadderSpreadMarket
     ? `${chosenTeam} ${spreadDisplay}, the run line priced by ${pricedOdds.length} ` +
       `bookmaker${pricedOdds.length === 1 ? "" : "s"}. The run line is a fixed number, so book ` +
       `agreement on it is expected and not read as a signal here. ${fairValueClause} ` +
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       falsifierNote +
-      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
+      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
+      priceClause
     // Book count is a real, checkable surface that was missing from the spread
     // branch entirely (only the totals branch cited books), so the prose had no
     // evidence trail for depth on the market that carries most picks.
@@ -1076,12 +1168,13 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
       contextNote +
       falsifierNote +
-      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`);
+      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
+      priceClause);
 
-  const reasoningShort = isFixedLadderSpreadMarket
+  const reasoningShort = lockTeaser(spreadPrice.action) + (isFixedLadderSpreadMarket
     ? `${pricedOdds.length} bookmaker${pricedOdds.length === 1 ? "" : "s"} price ${chosenTeam} ${spreadDisplay} ` +
       `on the fixed run line.` + firstContextClause
-    : `${consensusClause}` + firstContextClause;
+    : `${consensusClause}` + firstContextClause);
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -1112,6 +1205,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
+    ...lockedFields(coachLock, spreadPrice.action, spreadPrice.edgePts),
     factors,
   };
 
@@ -1154,6 +1248,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 // ============================================================
 
 function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
+  // Class A. Books are read below, after the total band exists.
+  const coachLock = readCoachLock(input);
+  const totalMoved = Math.abs(lockedTotalCenter(coachLock.locked) - STUB_BASE_TOTAL) >= DOCTRINE_PLAY_GAP_PTS;
   const totalOdds = input.bookmakerOdds.filter(
     (o) => o.market === "TOTALS" && o.total !== undefined
   );
@@ -1223,21 +1320,33 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const votingTotals = strictTiebreak
     ? pricedTotals.filter((o) => o.overPrice! !== o.underPrice!)
     : pricedTotals;
-  if (strictTiebreak && votingTotals.length === 0) return null;
+  if (!totalMoved && strictTiebreak && votingTotals.length === 0) return null;
   const overFavored = votingTotals.filter(
     (o) =>
       strictTiebreak
         ? o.overPrice! < o.underPrice!
         : o.overPrice! <= o.underPrice!,
   ).length;
-  const overFavoredPct = overFavored / votingTotals.length;
-  const overIsChosen = strictTiebreak
+  const overFavoredPct = votingTotals.length === 0 ? 0 : overFavored / votingTotals.length;
+  const juiceOver = strictTiebreak
     ? overFavoredPct > 0.5
     : overFavoredPct >= 0.5;
-  if (strictTiebreak && overFavoredPct === 0.5) return null;
+  if (!totalMoved && strictTiebreak && overFavoredPct === 0.5) return null;
+
+  const totalPrice = priceLockedTotal({
+    scoreMean: coachLock.locked.scoreMean,
+    totalP10: coachLock.locked.totalP10,
+    totalP90: coachLock.locked.totalP90,
+    avgTotal,
+    quotedTotals: totals,
+  });
+  // Stub baseTotal 46.5 does not choose over/under. Once the coach shift
+  // moves the band center by the doctrine gap, the market's juice does not.
+  if (totalMoved && totalPrice.action === "PASS-on-price") return null;
+  const overIsChosen = totalMoved ? totalPrice.side === "OVER" : juiceOver;
   const consensusPct = overIsChosen ? overFavoredPct : 1 - overFavoredPct;
 
-  if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
+  if (!totalMoved && consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
 
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
@@ -1315,8 +1424,16 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? coachFactors.slice(0, 4).map((f) => f.description).join(" ") + " "
     : "";
 
+  // Totals have no home/away side. Sign the home trench to the locked margin
+  // side, not to OVER/UNDER. Away trench is not on the packet.
+  const trenchFactors = trenchFor(input, coachLock.marginSide);
+  const trenchPts = weightSum(trenchFactors);
+
   const factors: FactorDetail[] = [
+    lockFactor(coachLock),
     ...coachFactors,
+    ...trenchFactors,
+    totalPrice.factor,
     consensusFactor,
     depthFactor,
     edgeFactor,
@@ -1325,21 +1442,11 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ...shadowEvidenceFactors,
   ];
 
-  const coachSupportPts = coachSupport(coachTrailFactors({
-    homeTeam: input.homeTeam,
-    awayTeam: input.awayTeam,
-    week: input.coachTrail?.week ?? 0,
-    pickedSide: toCoachSide(pickedSide),
-    injuries: input.coachTrail?.injuries as never,
-    usageShifts: input.coachTrail?.usageShifts as never,
-    shadows: input.coachTrail?.shadows as never,
-    homeTeamCode: input.coachTrail?.homeTeamCode,
-    awayTeamCode: input.coachTrail?.awayTeamCode,
-  }));
+  const coachSupportPts = coachSupport(coachFactors);
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + volatilityPenalty +
-      lineMovementScore + dataQualityPenalty + coachSupportPts + 10,
+      lineMovementScore + dataQualityPenalty + coachSupportPts + trenchPts + 10,
       0, 100
     )
   );
@@ -1359,7 +1466,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // only PUSH branch) can fire on the integer finals that really produce pushes.
   // A HIGHER total is worse for an OVER, a LOWER one worse for an UNDER — that
   // is how an exact tie is resolved, always against us.
-  const publishedTotal = snapToPostedLine(avgTotal, totals, overIsChosen);
+  const publishedTotal = totalMoved && totalPrice.action === "ALT"
+    ? totalPrice.betTotal
+    : snapToPostedLine(avgTotal, totals, overIsChosen);
   const totalDisplay = formatPublishedLine(publishedTotal);
   const selection = `${direction} ${totalDisplay}`;
 
@@ -1367,15 +1476,18 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
+    lockSentence(coachLock) +
     coachNote +
     `${direction} ${totalDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedTotals.length} ` +
     `bookmakers. ${formatFairValueClause(fairProb, null)} ` + // totals never store a
     // fairProbability (the record says null), so the text must not claim one
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     movementNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
+    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
+    ` Price check: ${totalPrice.action} (${totalPrice.edgePts.toFixed(2)} pts vs locked total).`;
 
   const reasoningShort =
+    lockTeaser(totalPrice.action) +
     `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${totalDisplay}.`;
 
   const factorBreakdown: FactorBreakdown = {
@@ -1394,6 +1506,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
+    ...lockedFields(coachLock, totalPrice.action, totalPrice.edgePts),
     factors,
   };
 
@@ -1549,6 +1662,16 @@ export function isQuotedBookLine(line: number, quotedLines: readonly number[]): 
 }
 
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
+  // Class A before any price. Margin points are not a win probability.
+  const coachLock = readCoachLock(input);
+  const mlPrice = priceLockedMoneyline({
+    marginMean: coachLock.locked.marginMean,
+    scoreMean: coachLock.locked.scoreMean,
+  });
+  // A coach side that cleared the stub still has no P(win). Refuse the
+  // moneyline rather than let the de-vigged price choose the side.
+  if (coachLock.coachOverridesStub) return null;
+
   // Publishing a two-way number for a three-way market overstates win
   // probability, edge and confidence, and persists that overstatement into the
   // pick proof receipt. Suppress rather than mislead.
@@ -1665,12 +1788,14 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     homeTeamCode: input.coachTrail?.homeTeamCode,
     awayTeamCode: input.coachTrail?.awayTeamCode,
   }));
+  const trenchFactors = trenchFor(input, toCoachSide(pickedSide));
+  const trenchPts = weightSum(trenchFactors);
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
       headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore +
-      injuryScore + ngsTrackingScore + dispersionScore + coachSupportPts + 10,
+      injuryScore + ngsTrackingScore + dispersionScore + coachSupportPts + trenchPts + 10,
       0, 100
     )
   );
@@ -1725,7 +1850,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     : "";
 
   const factors: FactorDetail[] = [
+    lockFactor(coachLock),
     ...coachFactors,
+    ...trenchFactors,
+    mlPrice.factor,
     consensusFactor,
     depthFactor,
     edgeFactor,
@@ -1785,6 +1913,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const falsifierNote = falsifiers.length > 0 ? ` Would be wrong if ${falsifiers.join("; ")}.` : "";
 
   const reasoning =
+    lockSentence(coachLock) +
     coachNote +
     `${chosenTeam} ML (${priceDisplay}): fair value ${Math.round(fairProb * 100)}% ` +
     `across ${h2hOdds.length} bookmakers. ` +
@@ -1794,9 +1923,11 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
     (rank.priced
       ? ` Ranking: ${rank.rankingScore}/100 via ${rank.source}.`
-      : "");
+      : "") +
+    ` Price check: ${mlPrice.action}.`;
 
   const reasoningShort =
+    lockTeaser(mlPrice.action) +
     `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
@@ -1829,6 +1960,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
+    ...lockedFields(coachLock, mlPrice.action, mlPrice.edgePts),
     factors,
   };
 
