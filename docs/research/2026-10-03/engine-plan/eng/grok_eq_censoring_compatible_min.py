@@ -1,29 +1,15 @@
-"""Guarded censoring-compatible reduction from Bladt arXiv:2610.24911 eq (4).
-
-s(x) = min_{1 <= j <= d} psi_j(x^{(j)})
-
-Missing, non-numeric, empty, or length mismatch fail closed to None.
-Does not score, mint, or write mind.jsonl.
-"""
-from __future__ import annotations
-from typing import Sequence, Callable
-
-
-def censoring_compatible_min(
-    x: Sequence[float] | None,
-    psis: Sequence[Callable[[float], float]] | None,
-) -> float | None:
-    if x is None or psis is None:
+def censoring_compatible_min(xs):
+    """Guarded censoring-compatible reduction from Bladt arXiv:2610.24911 printed eq (4).
+    s(x) = min_j ψ_j(x^{(j)}) with identity ψ; returns min of finite numeric coordinates.
+    Fail-closed on empty, non-numeric, or non-finite inputs.
+    """
+    import math
+    if not xs or not hasattr(xs, '__iter__'):
         return None
     try:
-        xv = [float(v) for v in x]
-        if len(xv) == 0 or len(psis) != len(xv):
+        vals = [float(x) for x in xs]
+        if not vals or not all(math.isfinite(v) for v in vals):
             return None
-        vals = []
-        for j, psi in enumerate(psis):
-            if not callable(psi):
-                return None
-            vals.append(float(psi(xv[j])))
-        return float(min(vals))
+        return min(vals)
     except (TypeError, ValueError, OverflowError):
         return None
