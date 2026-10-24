@@ -67,3 +67,67 @@ export function usageFactors(input: UsageInput): FactorDetail[] {
 
   return out;
 }
+
+
+/** One row of nflverse snap_counts (offense_pct/defense_pct are 0-100). */
+export interface SnapRow {
+  readonly team: string;
+  readonly week: string;
+  readonly player: string;
+  readonly position: string;
+  readonly offensePct: number;
+  readonly defensePct: number;
+}
+
+const pct = (v: number): number => Math.round(v) / 100;
+
+/**
+ * Role-change shifts from snap counts: emit when a player's share moves at least
+ * 20 percentage points between windows — the audit's role-change rule. Shares are
+ * fractions (0-1) to match UsageShift. Sourced per row.
+ */
+export function usageShiftsFromSnaps(
+  rows: readonly SnapRow[],
+  recentWeeks: readonly string[],
+  priorWeeks: readonly string[],
+  source: string,
+  fetchedAt: string,
+): UsageShift[] {
+  const out: UsageShift[] = [];
+  const byPlayer = new Map<string, SnapRow[]>();
+  for (const r of rows) {
+    const k = r.team + "|" + r.player;
+    if (!byPlayer.has(k)) byPlayer.set(k, []);
+    byPlayer.get(k)!.push(r);
+  }
+  for (const [, rs] of byPlayer) {
+    for (const side of ["offensePct", "defensePct"] as const) {
+      const avg = (w: readonly string[]) => {
+        const v = rs.filter((r) => w.includes(r.week)).map((r) => pct(r[side])).filter((x) => x > 0);
+        return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
+      };
+      const prior = avg(priorWeeks);
+      const recent = avg(recentWeeks);
+      if (prior === null) continue;
+      // Prior snaps + zero recent rows is the loudest role change there is
+      // (benched, injured, waived) — emit at 0, never skip.
+      const recentFinal = recent ?? 0;
+      const delta = Math.round((recentFinal - prior) * 100) / 100;
+      if (Math.abs(delta) < 0.2) continue;
+      const sample = rs[0]!;
+      const role = side === "offensePct" ? sample.position + " (offense snaps)" : sample.position + " (defense snaps)";
+      out.push({
+        team: sample.team,
+        player: sample.player,
+        role,
+        priorShare: prior,
+        recentShare: recentFinal,
+        delta,
+        situation: "snap share, weeks " + priorWeeks.join("/") + " v " + recentWeeks.join("/"),
+        source,
+        fetchedAt,
+      });
+    }
+  }
+  return out;
+}
