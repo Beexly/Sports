@@ -23,7 +23,7 @@ export const SOURCE_REGISTRY: readonly SourceRow[] = [
   { id: "sp-plus", status: "NOT-NFL", note: "College. 538 NFL is Elo, not SP+." },
   { id: "statmuse", status: "OPEN-HTML", note: "Ask pages render answers. JSON API host exists. Routes are not a model yet." },
   { id: "kaggle-big-data-bowl", status: "PUBLIC-CODE", note: "Tracking layer is a Kaggle dataset. Token stays with the owner. Not a headless login." },
-  { id: "espn-scoreboard", status: "WIRED", note: "Live public JSON." },
+  { id: "espn-scoreboard", status: "WIRED", note: "Public NFL scoreboard. Home comes from homeAway, not array order. A scheduled 0 is unplayed." },
   { id: "basketball-reference", status: "OPEN-HTML", note: "Sports-Reference site is open. PFR itself is behind Cloudflare." },
   { id: "baseball-reference", status: "OPEN-HTML", note: "Sports-Reference site is open." },
   { id: "hockey-reference", status: "OPEN-HTML", note: "Sports-Reference site is open." },
