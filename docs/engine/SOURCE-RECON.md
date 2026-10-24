@@ -151,6 +151,17 @@ one proven per-match data route (needs `timezone_offset=0`).
   (needs a real browser POST with the bearer token) or the site publishing the
   assignment. Named, not guessed.
 
+## scores24 route enumeration COMPLETE (2026-10-24)
+
+The rapi client exposes exactly seven per-match routes: `/lines`, `/outcomes`
+(wants rate_slug), `/prediction-conclusion-market` ✓, `/short-prediction`
+(404 for this fixture), `/alt-broadcast` (200, bookmakers array — empty for
+BAL@CIN), `/trends` ✓, `/cs-detailed-info` (Not found). **No referees or squads
+route exists in the rapi client** — that data rides `matchesShow` (route
+unfound; its own SSR 404s) or GraphQL (POST is browser-gated). The L4 crew wall
+is therefore DISPOSITIONED: named route absence + two blocked transports, with
+the browser-POST probe as the recorded next step.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
