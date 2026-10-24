@@ -7,6 +7,7 @@ import { KILLED_EDGES, mayReopen } from "./killed.js"
 import { ANCHOR_MOTION_PA_SINGLE, computeGseDwp, computeGseQptsr, computeGseSii, computeGseSpese, computeGseSva, computeGseTor } from "./metrics.js"
 import { SOURCE_REGISTRY } from "./registry.js"
 import { captainPoints, captainSalary, SHOWDOWN_CAP, underCap, withinTeamLimit } from "./lineup.js"
+import { multiplicativeDevig, powerDevig } from "./devig.js"
 import { parseEspnScoreboard } from "./espn.js"
 import { NFL_COMPETITION_ID, fixturesUrl, homeAwayScore, homeVsAway, parseScores365 } from "./scores365.js"
 import { SHIFT_FLOOR, shouldWithhold, situationalShift } from "./withhold.js"
@@ -188,5 +189,17 @@ describe("shrinkage, withhold, metrics, fence", () => {
     assert.equal(homeAwayScore(board.games[0]!), "30–24")
     assert.equal(board.games[1]!.home.score, null)
     assert.equal(homeVsAway(board.games[1]!), "BAL vs CIN")
+  })
+
+  it("de-vigs -150/+130 without raising the favorite", () => {
+    const mult = multiplicativeDevig([-150, 130])
+    const power = powerDevig([-150, 130])
+    assert.ok(Math.abs(mult[0]! - 0.5798319328) < 1e-9)
+    assert.ok(Math.abs(mult[1]! - 0.4201680672) < 1e-9)
+    assert.ok(Math.abs(power[0]! - 0.583982635) < 1e-6)
+    assert.ok(Math.abs(power[1]! - 0.416017365) < 1e-6)
+    assert.ok(power[0]! < 0.6)
+    assert.ok(Math.abs(0.584 + 0.4202 - 1) > 0.004)
+    assert.ok(0.6557 > 0.6)
   })
 })
