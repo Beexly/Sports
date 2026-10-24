@@ -59,7 +59,7 @@ Failed fetches are kept and named — they are gaps, not zeroes.
 | web-archive | 1 |  |
 | wikipedia | 1 |  |
 
-**Total: 87 ingested files, 60 fetched OK, 27 failed/kept-as-gaps, 132,903,273 bytes.**
+**Total: 87 ingested files, 59 fetched OK, 28 failed/kept-as-gaps, 103,728,796 bytes.**
 
 ## Failure inventory
 
@@ -76,6 +76,7 @@ Failed fetches are kept and named — they are gaps, not zeroes.
 - `docs/engine/intel/kb/news/feed.md` — https://ravenswire.usatoday.com/feed/
 - `docs/engine/intel/kb/news/nfl.md` — https://www.yardbarker.com/rss/nfl
 - `docs/engine/intel/kb/news/nfl-rss.md` — https://www.nfl.com/feeds-rss/nfl-rss
+- `docs/engine/intel/kb/nfl-com-cdn/index.md` — https://static.www.nfl.com/rss/rsslisting?category=team%20news
 - `docs/engine/intel/kb/nfl-com-news/articles.md` — https://www.nfl.com/feeds-rss/articles
 - `docs/engine/intel/kb/nflverse/papers.md` — https://raw.githubusercontent.com/nflverse/nfldata/main/data/papers.csv
 - `docs/engine/intel/kb/nflverse/players_2026.md` — https://github.com/nflverse/nflverse-data/releases/download/players/players_2026.csv
