@@ -7,6 +7,7 @@ import { KILLED_EDGES, mayReopen } from "./killed.js"
 import { ANCHOR_MOTION_PA_SINGLE, computeGseDwp, computeGseQptsr, computeGseSii, computeGseSpese, computeGseSva, computeGseTor } from "./metrics.js"
 import { SOURCE_REGISTRY } from "./registry.js"
 import { captainPoints, captainSalary, SHOWDOWN_CAP, underCap, withinTeamLimit } from "./lineup.js"
+import { NFL_COMPETITION_ID, fixturesUrl, parseScores365 } from "./scores365.js"
 import { SHIFT_FLOOR, shouldWithhold, situationalShift } from "./withhold.js"
 
 describe("538 team Elo", () => {
@@ -121,5 +122,28 @@ describe("shrinkage, withhold, metrics, fence", () => {
     assert.equal(underCap(40000, 10001, SHOWDOWN_CAP), false)
     assert.equal(withinTeamLimit({ CIN: 4 }, "CIN", 4), false)
     assert.equal(withinTeamLimit({ CIN: 3 }, "CIN", 4), true)
+  })
+
+  it("reads a 365Scores game and treats -1 as unplayed", () => {
+    const board = parseScores365({
+      ttl: 300,
+      lastUpdateId: 7,
+      games: [
+        {
+          id: 1,
+          competitionDisplayName: "NFL",
+          startTime: "2026-10-25T12:00:00-05:00",
+          statusText: "Scheduled",
+          homeCompetitor: { name: "Baltimore Ravens", symbolicName: "BAL", score: -1 },
+          awayCompetitor: { name: "Cincinnati Bengals", symbolicName: "CIN", score: -1 },
+        },
+      ],
+    })
+    assert.equal(board.games.length, 1)
+    assert.equal(board.games[0]!.home.score, null)
+    assert.equal(board.games[0]!.away.abbr, "CIN")
+    assert.equal(board.ttl, 300)
+    assert.match(fixturesUrl(NFL_COMPETITION_ID), /competitions=352/)
+    assert.equal(parseScores365({ ttl: 5, games: [] }).games.length, 0)
   })
 })
