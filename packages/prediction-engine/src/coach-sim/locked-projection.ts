@@ -34,6 +34,8 @@ function hashInput(input: CoachSimInput): string {
     week: input.week,
     support: input.coachSupport,
     injury: input.injuryDropOff ?? 0,
+    pass: input.neutralPassRate ?? null,
+    staff: input.staffAggression ?? null,
     shadows: (input.shadows ?? []).map((s) => s.wr + ":" + s.shadowRate).sort(),
   });
   let h = 0;

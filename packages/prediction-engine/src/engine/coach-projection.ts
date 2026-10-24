@@ -21,16 +21,12 @@ import type { ShadowRow } from "./shadow-coverage-factors.js";
 import type { UsageShift } from "./usage-factors.js";
 
 /**
- * Literal prior inside simulateCoachGame: `marginMean: 3 + coachShift + …`.
- * packages/prediction-engine/src/coach-sim/markov-simulator.ts line 70.
+ * Literal prior inside simulateCoachGame's point location: margin 3 + coachShift.
  * Not a measurement. A coach shift smaller than this does not choose a side.
  */
 export const STUB_HOME_MARGIN = 3;
 
-/**
- * Literal prior inside simulateCoachGame: `const baseTotal = 46.5`.
- * packages/prediction-engine/src/coach-sim/markov-simulator.ts line 62.
- */
+/** Location prior inside simulateCoachGame: total 46.5 + coachShift. Not a measurement. */
 export const STUB_BASE_TOTAL = 46.5;
 
 export interface CoachLockPacket {
@@ -80,10 +76,10 @@ export function projectionFromCoachPacket(packet: CoachLockPacket): CoachProject
   const coachOverridesStub = Math.abs(locked.marginMean - STUB_HOME_MARGIN) >= STUB_HOME_MARGIN;
   const gaps = [
     "injuryDropOff omitted: availability weights are confidence points, not score points (availability-factors.ts).",
-    "staffAggression omitted: not on OddsInput.coachTrail. markov-simulator.ts defaults to STAFF_AGGRESSION.PHI.",
+    "staffAggression omitted: not on OddsInput.coachTrail. The drive loop uses STAFF_AGGRESSION.PHI for both staffs, so the staff residual is zero.",
     coachOverridesStub
       ? "Coach shift moves marginMean by at least the stub prior of 3. The margin's sign is the side."
-      : "Gap: markov-simulator.ts:70 adds a constant 3 that still dominates coachSupport*0.15. The projection is recorded. It does not choose the side.",
+      : "Gap: the drive loop's location still includes the stub home margin of 3. The projection is recorded. It does not choose the side.",
   ];
   return {
     locked,
