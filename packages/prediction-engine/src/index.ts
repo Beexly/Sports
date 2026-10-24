@@ -4608,4 +4608,11 @@ export {
   rejectNarrative,
   marchenkoPasturEdges,
   flagOutsideBulk,
+  parseXPull,
+  readCoachBrief,
+  loadCoachCorpus,
+  requireCorpus,
+  personnelOnField,
+  advanceWithCorpus,
+  expectedEpaPerDropback,
 } from "./public-baseline/index.js";
