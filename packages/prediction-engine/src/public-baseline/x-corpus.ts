@@ -6,6 +6,7 @@
 import { readFileSync } from "node:fs"
 import { advanceOutcome, type MarkovState, type SituationInputs, type StepResult } from "../markov-simulator.js"
 import { markApplied, publishFromCorpus, scanNumbers, type CoachPublished, type NumberToken } from "./corpus-ledger.js"
+import { callSheet, type Call } from "./call-sheet.js"
 
 export type CoachPost = {
   account: string
@@ -72,6 +73,7 @@ export type CoachBrief = {
   }
   published: CoachPublished
   numbers: NumberToken[]
+  calls: Call[]
 }
 
 const HEADER = /^([A-Za-z0-9_]+) — (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s*$/
@@ -282,6 +284,7 @@ export function readCoachBrief(markdown: string): CoachBrief {
   const whenNot = must(measurements, "BAL:epaPerDropback:unblitzed")
   const published = publishFromCorpus(posts)
   const numbers = markApplied(scanNumbers(posts), published.sourceTokens)
+  const calls = callSheet(posts, published)
   return {
     corpusRead: true,
     coachInput: true,
@@ -292,6 +295,7 @@ export function readCoachBrief(markdown: string): CoachBrief {
     personnel: { SF: { wrActive, wrOut } },
     published,
     numbers,
+    calls,
     games: {
       "401873010": {
         gameId: "401873010",
