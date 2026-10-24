@@ -29,12 +29,13 @@ describe("marginMean responds to measured inputs", () => {
   });
 
   it("changes the total band when n changes", () => {
-    const small = simulateCoachGame(base, 40);
+    const small = simulateCoachGame(base, 8);
     const large = simulateCoachGame(base, 800);
     const narrow = small.totalP90 - small.totalP10;
     const wide = large.totalP90 - large.totalP10;
     expect(Math.abs(narrow - wide)).toBeGreaterThan(0.05);
-    expect(narrow).not.toBe(14);
+    expect(wide).not.toBe(14);
+    expect(wide).toBeGreaterThan(10);
   });
 
   it("cuts WR1's target share when that receiver is the shadowed name", () => {

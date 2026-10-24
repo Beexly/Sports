@@ -18,13 +18,17 @@
  * - Kneel uses kneelProbability. Yards do not become points.
  * - A field goal scores only inside 48–52 yards, at FG_MAKE_50 (0.641).
  *   Every other kick distance is a named gap and scores 0.
- * - Sack conversion (15.8% / 10.1%) is pinned, but no pressure frequency is.
- *   Sacks are not rolled. qb_hit is not pressure. See SIM_GAPS.pressureRate.
+ * - Sack conversion (15.8% / 10.1%) is the chance a pressure becomes a sack.
+ *   How often a dropback is pressured is no longer a blank: 16,777 of 57,524
+ *   joined dropbacks, 2023–2025. The drive uses the sack rate itself
+ *   (3,989 / 57,524) and the mean sack of -6.6 yards. It does not invent
+ *   a hurry-yard penalty for the pressures that are not sacks.
  */
 import { CONVERSION_BY_BUCKET } from "../nfl/pressure-timing.js";
 import { KNEEL_MEAN_YD, KNEEL_RATE_PER_WINNING_GAME, kneelProbability } from "../nfl/kneeldown-mass.js";
 import { evaluateFourthDown, STAFF_AGGRESSION } from "./fourth-down-policy.js";
 import { allocateTargets, applyShadowHaircut, type EligibleTarget } from "./sinkhorn-targets.js";
+import { POOLED_DROPBACK } from "../nfl/situational-reality.js";
 
 export interface CoachSimInput {
   homeTeam: string;
@@ -82,14 +86,12 @@ export function fourthDownMakeRate(ydstogo: number): number {
 }
 
 /**
- * Still not measurements.
- * pressureRate has no column on these files. qb_hit on a pass play was 0.1516
- * (n = 57,853). That is a hit, not a pressure, and it is not used.
+ * pressureRate is the participation count. The drive rolls the sack, not the hurry.
  * A completion's yards and a carry's yards are normal draws at the measured mean and sd.
  * Two-point tries are not rolled. Field goals outside 48–52 still score 0.
  */
 export const SIM_GAPS = {
-  pressureRate: null,
+  pressureRate: POOLED_DROPBACK.pressureRate,
   completionYardsSpread: "normal, measured sd",
   twoPointAttemptRate: null,
   fgMakeExcept50: null,
@@ -283,10 +285,14 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
       const pass = rand() < passRate;
       let gain: number;
       if (pass) {
-        gain =
-          rand() < MEASURED_DRIVE.completionExSack
-            ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
-            : 0;
+        if (rand() < POOLED_DROPBACK.sackRate) {
+          gain = POOLED_DROPBACK.sackYards;
+        } else {
+          gain =
+            rand() < MEASURED_DRIVE.completionExSack
+              ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
+              : 0;
+        }
       } else {
         gain = MEASURED_DRIVE.yardsPerCarry + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
       }

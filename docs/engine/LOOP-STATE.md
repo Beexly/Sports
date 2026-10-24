@@ -12,7 +12,8 @@ The 21-wakeup marker called the plan complete. That was wrong about the drive lo
 - `n` sets the total band. It is not a fixed ±7.
 - Home staff aggression is applied inside the drive (4th-down policy on the live state). Away stays PHI. At n=2,000, home staff 0.51 vs 0.94 moves the margin by about 5 points.
 - Kneel uses `kneelProbability`. Field goals score only at 48–52 yards (`FG_MAKE_50` 0.641). Sack conversion is pinned and unused: there is no pressure frequency (`SIM_GAPS.pressureRate = null`). A `qb_hit` on 15.16% of pass plays is not a pressure and is not used.
-- Pass rate, completion rate (sacks excluded), yards per completion, yards per carry, 4th-down conversion by distance, extra-point rate, and seconds per play are counted from nflverse regular-season play-by-play 2023–2025 (`MEASURED_DRIVE`). Yard draws are normal at the measured mean and standard deviation. Two-point tries are not rolled.
+- Pass rate, completion, yards, fourth-down conversion, extra points, and seconds per play are counted from play-by-play. Pressure is counted too: participation `was_pressure` on 2023–2025 dropbacks is 29.2%, and 6.9% of those dropbacks are sacks at -6.6 yards. The drive rolls the sack. It does not invent yards for a hurry that is not a sack.
+- The situational cube is `src/nfl/data/*.json`, read by `situational-reality.ts`. 11 personnel is +0.10 EPA against cover 1 and about 0 against cover 2. Play-action with motion is +0.20 against single-high and +0.04 against split safety. 2026 participation is still unpublished. 2026 quarterback pressure is the PFR week file through week 6. These cells are not a point spread. Scoring does not read them.
 
 ## Completion status of the docx items
 
