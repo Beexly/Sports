@@ -73,6 +73,13 @@ export {
 } from "./x-corpus.js"
 export type { CoachPost, CoachBrief, Availability, Measurement } from "./x-corpus.js"
 export {
+  scanNumbers,
+  publishFromCorpus,
+  markApplied,
+  correctShowdownOwnership,
+} from "./corpus-ledger.js"
+export type { NumberToken, NumberUse, CoachPublished, OwnershipPosition } from "./corpus-ledger.js"
+export {
   WP_GARBAGE_HI,
   WP_GARBAGE_LO,
   feedDest,

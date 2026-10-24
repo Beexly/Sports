@@ -4615,4 +4615,7 @@ export {
   personnelOnField,
   advanceWithCorpus,
   expectedEpaPerDropback,
+  publishFromCorpus,
+  correctShowdownOwnership,
+  scanNumbers,
 } from "./public-baseline/index.js";

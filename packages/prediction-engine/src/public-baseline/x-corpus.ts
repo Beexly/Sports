@@ -5,6 +5,7 @@
  */
 import { readFileSync } from "node:fs"
 import { advanceOutcome, type MarkovState, type SituationInputs, type StepResult } from "../markov-simulator.js"
+import { markApplied, publishFromCorpus, scanNumbers, type CoachPublished, type NumberToken } from "./corpus-ledger.js"
 
 export type CoachPost = {
   account: string
@@ -64,8 +65,13 @@ export type CoachBrief = {
       ravensEpaWithoutBlitz: number
       /** blitzRate * epaBlitzed + (1 - blitzRate) * epaUnblitzed. Weights are the post. */
       ravensExpectedEpaPerDropback: number
+      chaseTargets: number
+      chaseYards: number
+      chaseFpg: number
     }
   }
+  published: CoachPublished
+  numbers: NumberToken[]
 }
 
 const HEADER = /^([A-Za-z0-9_]+) — (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s*$/
@@ -274,6 +280,8 @@ export function readCoachBrief(markdown: string): CoachBrief {
   const blitzRate = must(measurements, "CIN:blitzRate")
   const whenBlitzed = must(measurements, "BAL:epaPerDropback:blitzed")
   const whenNot = must(measurements, "BAL:epaPerDropback:unblitzed")
+  const published = publishFromCorpus(posts)
+  const numbers = markApplied(scanNumbers(posts), published.sourceTokens)
   return {
     corpusRead: true,
     coachInput: true,
@@ -282,6 +290,8 @@ export function readCoachBrief(markdown: string): CoachBrief {
     availability,
     measurements,
     personnel: { SF: { wrActive, wrOut } },
+    published,
+    numbers,
     games: {
       "401873010": {
         gameId: "401873010",
@@ -302,6 +312,9 @@ export function readCoachBrief(markdown: string): CoachBrief {
         ravensEpaWhenBlitzed: whenBlitzed,
         ravensEpaWithoutBlitz: whenNot,
         ravensExpectedEpaPerDropback: expectedEpaPerDropback(blitzRate, whenBlitzed, whenNot),
+        chaseTargets: published.balCin.chaseTargets,
+        chaseYards: published.balCin.chaseYards,
+        chaseFpg: published.balCin.chaseFpg,
       },
     },
   }
