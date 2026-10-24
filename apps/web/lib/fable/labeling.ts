@@ -13,7 +13,7 @@ export const LabelingManifestItemSchema = z.object({
   source_id: z.string().min(1),
   prompt: z.string().min(1),
   priority: z.number().int().min(1).max(5),
-  metadata: z.record(z.union([z.string(), z.number(), z.boolean(), z.null()])).default({}),
+  metadata: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()])).default({}),
 });
 
 export const LabelingManifestSchema = z.object({
