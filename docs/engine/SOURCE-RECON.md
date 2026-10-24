@@ -139,6 +139,18 @@ than `/rapi`. Next probe: read the FRAGMENTS document list from the page and the
 `/localized/matches/{sport}/{matchSlug}/prediction-conclusion-market` remains the
 one proven per-match data route (needs `timezone_offset=0`).
 
+## scores24 falsifications (2026-10-24, second round)
+
+- GraphQL POSTs (`/graphql`, `/rapi/graphql`, `/api/graphql`) all 403 through the
+  proxy — Cloudflare blocks non-browser POSTs. GET sub-routes still work.
+- Falsified localized sub-routes on the match: `/referees`, `/squads`,
+  `/officials`, `/cs-detailed-info` — all "Not found".
+- The proven per-match routes remain: `/prediction-conclusion-market`,
+  `/trends`, `/lines`, `/outcomes` (outcomes wants a `rate_slug`).
+- Referees/crew data therefore waits on either the GraphQL-over-browser probe
+  (needs a real browser POST with the bearer token) or the site publishing the
+  assignment. Named, not guessed.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
