@@ -23,7 +23,7 @@ export type LiveGame = {
 export type ScoresBoard = {
   ttl: number
   lastUpdateId: number | null
-  paging: { previousPage: number | null; nextPage: number | null }
+  paging: { previousPage: string | null; nextPage: string | null }
   games: LiveGame[]
 }
 
@@ -86,14 +86,48 @@ export function parseScores365(payload: unknown): ScoresBoard {
       away: side(row.awayCompetitor),
     })
   }
-  const paging = body.paging && typeof body.paging === "object" ? (body.paging as Record<string, unknown>) : {}
+  const paging = (body.paging && typeof body.paging === "object" ? body.paging : {}) as Record<string, unknown>
   return {
     ttl: typeof body.ttl === "number" ? body.ttl : 0,
     lastUpdateId: typeof body.lastUpdateId === "number" ? body.lastUpdateId : null,
     paging: {
-      previousPage: typeof paging.previousPage === "number" ? paging.previousPage : null,
-      nextPage: typeof paging.nextPage === "number" ? paging.nextPage : null,
+      previousPage: typeof paging.previousPage === "string" ? paging.previousPage : null,
+      nextPage: typeof paging.nextPage === "string" ? paging.nextPage : null,
     },
     games: parsed,
   }
+}
+
+/**
+ * Follow paging.nextPage from the NFL fixtures board (competition 352) until
+ * `wantIds` are all seen or `maxPages` is exhausted. `fetchPage` is injected
+ * so tests stay offline. Competition 352 rows are the NFL window; the
+ * sports=6 /current/ pull is NCAAF and CFL and must never be tagged NFL.
+ */
+export async function fixturesWindow(
+  fetchPage: (url: string) => Promise<ScoresBoard>,
+  wantIds: ReadonlySet<number>,
+  maxPages = 6,
+): Promise<{ games: LiveGame[]; pages: number; covered: boolean }> {
+  const games: LiveGame[] = []
+  let url: string | null = fixturesUrl()
+  let pages = 0
+  let seen = new Set<number>()
+  while (url && pages < maxPages) {
+    const board = await fetchPage(url)
+    for (const g of board.games) {
+      if (!seen.has(g.id)) {
+        seen.add(g.id)
+        games.push(g)
+      }
+    }
+    pages += 1
+    const missing = [...wantIds].filter((id) => !seen.has(id))
+    if (missing.length === 0) break
+    const nxt = board.paging.nextPage
+    // numeric paging from the live payload (parallel-session verified)
+    url = typeof nxt === "number" ? `${fixturesUrl()}&page=${nxt}` : null
+  }
+  const covered = [...wantIds].every((id) => seen.has(id))
+  return { games, pages, covered }
 }

@@ -40,6 +40,7 @@ export {
   currentGamesUrl,
   fixturesUrl,
   parseScores365,
+  fixturesWindow,
   homeVsAway,
   homeAwayScore,
 } from "./scores365.js"

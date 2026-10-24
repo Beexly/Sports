@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { publicPrior, shouldWithhold, SHOWDOWN_CAP } from "@sports/prediction-engine/src/public-baseline/index.js"
+import { publicPrior, shouldWithhold, SHOWDOWN_CAP } from "@sports/prediction-engine"
 
 export const dynamic = "force-dynamic"
 
