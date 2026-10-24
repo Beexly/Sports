@@ -12,6 +12,7 @@ export type LiveSide = { name: string; abbr: string; score: number | null }
 
 export type LiveGame = {
   id: number
+  competitionId: number | null
   competition: string
   startTime: string
   status: string
@@ -19,7 +20,12 @@ export type LiveGame = {
   away: LiveSide
 }
 
-export type ScoresBoard = { ttl: number; lastUpdateId: number | null; games: LiveGame[] }
+export type ScoresBoard = {
+  ttl: number
+  lastUpdateId: number | null
+  paging: { previousPage: number | null; nextPage: number | null }
+  games: LiveGame[]
+}
 
 function qs(params: Record<string, string>): string {
   return new URLSearchParams(params).toString()
@@ -72,6 +78,7 @@ export function parseScores365(payload: unknown): ScoresBoard {
     if (typeof row.id !== "number") continue
     parsed.push({
       id: row.id,
+      competitionId: typeof row.competitionId === "number" ? row.competitionId : null,
       competition: typeof row.competitionDisplayName === "string" ? row.competitionDisplayName : "",
       startTime: typeof row.startTime === "string" ? row.startTime : "",
       status: typeof row.statusText === "string" ? row.statusText : "",
@@ -79,9 +86,14 @@ export function parseScores365(payload: unknown): ScoresBoard {
       away: side(row.awayCompetitor),
     })
   }
+  const paging = body.paging && typeof body.paging === "object" ? (body.paging as Record<string, unknown>) : {}
   return {
     ttl: typeof body.ttl === "number" ? body.ttl : 0,
     lastUpdateId: typeof body.lastUpdateId === "number" ? body.lastUpdateId : null,
+    paging: {
+      previousPage: typeof paging.previousPage === "number" ? paging.previousPage : null,
+      nextPage: typeof paging.nextPage === "number" ? paging.nextPage : null,
+    },
     games: parsed,
   }
 }
