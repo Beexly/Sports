@@ -35,7 +35,7 @@ import { snapToPostedLine, formatPublishedLine } from "./published-line.js";
 import { recalibrateProbability } from "./engine/probability-recalibration.js";
 import { coachTrailFactors } from "./engine/coach-trail.js";
 import { coachSupport } from "./engine/coach-support.js";
-import { lockFromCoachPacket, lockedTotalCenter, STUB_BASE_TOTAL, type CoachLockRead } from "./engine/coach-lock.js";
+import { projectionFromCoachPacket, projectionTotalCenter, STUB_BASE_TOTAL, type CoachProjectionRead } from "./engine/coach-projection.js";
 import { DOCTRINE_PLAY_GAP_PTS, priceLockedMoneyline, priceLockedSpread, priceLockedTotal, type PriceAction } from "./engine/price-check.js";
 import { trenchContinuityFactors } from "./engine/trench-continuity-factors.js";
 import type { InjuryRow } from "./engine/availability-factors.js";
@@ -47,8 +47,8 @@ const toCoachSide = (s: string): "HOME" | "AWAY" =>
   s === "OVER" ? "HOME" : s === "UNDER" ? "AWAY" : (s as "HOME" | "AWAY");
 
 /** Lock before any book is read. The packet has no odds field. */
-function readCoachLock(input: OddsInput): CoachLockRead {
-  return lockFromCoachPacket({
+function readCoachLock(input: OddsInput): CoachProjectionRead {
+  return projectionFromCoachPacket({
     homeTeam: input.homeTeam,
     awayTeam: input.awayTeam,
     week: input.coachTrail?.week ?? 0,
@@ -58,38 +58,38 @@ function readCoachLock(input: OddsInput): CoachLockRead {
   });
 }
 
-function lockSentence(lock: CoachLockRead): string {
-  return `Locked home margin ${lock.locked.marginMean.toFixed(2)}, home score ${lock.locked.scoreMean.toFixed(2)}, hash ${lock.locked.inputHash}. `;
+function projectionSentence(proj: CoachProjectionRead): string {
+  return `Home margin set ${proj.locked.marginMean.toFixed(2)}, home score ${proj.locked.scoreMean.toFixed(2)}, hash ${proj.locked.inputHash}. `;
 }
 
 /** Public teaser. The lock is named before any book sentence. No formula. */
 function lockTeaser(action: PriceAction): string {
-  return `Projection locked before the books. Price check: ${action}. `;
+  return `Projection set before the books. Price check: ${action}. `;
 }
 
-function lockFactor(lock: CoachLockRead): FactorDetail {
+function projectionFactor(proj: CoachProjectionRead): FactorDetail {
   return {
     name: "Locked coach projection",
     impact: "neutral",
     weight: 0,
     description:
-      `Home margin ${lock.locked.marginMean.toFixed(2)} is the baseline. ` +
-      `Home score ${lock.locked.scoreMean.toFixed(2)}. ` +
-      `Total band ${lock.locked.totalP10.toFixed(2)}–${lock.locked.totalP90.toFixed(2)}. ` +
-      `Hash ${lock.locked.inputHash}. ${lock.gaps.join(" ")}`,
+      `Home margin ${proj.locked.marginMean.toFixed(2)} is the baseline. ` +
+      `Home score ${proj.locked.scoreMean.toFixed(2)}. ` +
+      `Total band ${proj.locked.totalP10.toFixed(2)}–${proj.locked.totalP90.toFixed(2)}. ` +
+      `Hash ${proj.locked.inputHash}. ${proj.gaps.join(" ")}`,
   };
 }
 
-function lockedFields(lock: CoachLockRead, action: PriceAction, edgePts: number | null) {
+function projectionFields(proj: CoachProjectionRead, action: PriceAction, edgePts: number | null) {
   return {
-    lockedMarginMean: lock.locked.marginMean,
-    lockedScoreMean: lock.locked.scoreMean,
-    lockedTotalP10: lock.locked.totalP10,
-    lockedTotalP90: lock.locked.totalP90,
-    lockedInputHash: lock.locked.inputHash,
+    lockedMarginMean: proj.locked.marginMean,
+    lockedScoreMean: proj.locked.scoreMean,
+    lockedTotalP10: proj.locked.totalP10,
+    lockedTotalP90: proj.locked.totalP90,
+    lockedInputHash: proj.locked.inputHash,
     priceAction: action,
     lockedEdgePts: edgePts,
-    coachOverridesStub: lock.coachOverridesStub,
+    coachOverridesStub: proj.coachOverridesStub,
   };
 }
 
@@ -1029,7 +1029,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : "";
 
   const factors: FactorDetail[] = [
-    lockFactor(coachLock),
+    projectionFactor(coachLock),
     ...coachFactors,
     ...trenchFactors,
     spreadPrice.factor,
@@ -1152,7 +1152,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const fairValueClause = formatFairValueClause(fairProb, rank.priced ? rank.rankingP : null);
   const priceClause = ` Price check: ${spreadPrice.action} (${spreadPrice.edgePts.toFixed(2)} pts vs locked margin).`;
-  const reasoning = lockSentence(coachLock) + coachNote + (isFixedLadderSpreadMarket
+  const reasoning = projectionSentence(coachLock) + coachNote + (isFixedLadderSpreadMarket
     ? `${chosenTeam} ${spreadDisplay}, the run line priced by ${pricedOdds.length} ` +
       `bookmaker${pricedOdds.length === 1 ? "" : "s"}. The run line is a fixed number, so book ` +
       `agreement on it is expected and not read as a signal here. ${fairValueClause} ` +
@@ -1205,7 +1205,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
-    ...lockedFields(coachLock, spreadPrice.action, spreadPrice.edgePts),
+    ...projectionFields(coachLock, spreadPrice.action, spreadPrice.edgePts),
     factors,
   };
 
@@ -1250,7 +1250,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Class A. Books are read below, after the total band exists.
   const coachLock = readCoachLock(input);
-  const totalMoved = Math.abs(lockedTotalCenter(coachLock.locked) - STUB_BASE_TOTAL) >= DOCTRINE_PLAY_GAP_PTS;
+  const totalMoved = Math.abs(projectionTotalCenter(coachLock.locked) - STUB_BASE_TOTAL) >= DOCTRINE_PLAY_GAP_PTS;
   const totalOdds = input.bookmakerOdds.filter(
     (o) => o.market === "TOTALS" && o.total !== undefined
   );
@@ -1430,7 +1430,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const trenchPts = weightSum(trenchFactors);
 
   const factors: FactorDetail[] = [
-    lockFactor(coachLock),
+    projectionFactor(coachLock),
     ...coachFactors,
     ...trenchFactors,
     totalPrice.factor,
@@ -1476,7 +1476,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
-    lockSentence(coachLock) +
+    projectionSentence(coachLock) +
     coachNote +
     `${direction} ${totalDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedTotals.length} ` +
     `bookmakers. ${formatFairValueClause(fairProb, null)} ` + // totals never store a
@@ -1506,7 +1506,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
-    ...lockedFields(coachLock, totalPrice.action, totalPrice.edgePts),
+    ...projectionFields(coachLock, totalPrice.action, totalPrice.edgePts),
     factors,
   };
 
@@ -1850,7 +1850,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     : "";
 
   const factors: FactorDetail[] = [
-    lockFactor(coachLock),
+    projectionFactor(coachLock),
     ...coachFactors,
     ...trenchFactors,
     mlPrice.factor,
@@ -1913,7 +1913,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const falsifierNote = falsifiers.length > 0 ? ` Would be wrong if ${falsifiers.join("; ")}.` : "";
 
   const reasoning =
-    lockSentence(coachLock) +
+    projectionSentence(coachLock) +
     coachNote +
     `${chosenTeam} ML (${priceDisplay}): fair value ${Math.round(fairProb * 100)}% ` +
     `across ${h2hOdds.length} bookmakers. ` +
@@ -1960,7 +1960,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
-    ...lockedFields(coachLock, mlPrice.action, mlPrice.edgePts),
+    ...projectionFields(coachLock, mlPrice.action, mlPrice.edgePts),
     factors,
   };
 

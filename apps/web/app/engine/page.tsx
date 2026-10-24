@@ -121,7 +121,7 @@ export default async function SealedEnginePage() {
               <div className="mx-auto max-w-5xl">
                 <Reveal>
                   <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
-                    01 · The lock
+                    01 · The projection
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
                     First, the projection is locked.
@@ -129,7 +129,7 @@ export default async function SealedEnginePage() {
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
                     The game is projected before a book is allowed to choose a
                     side. What follows is the price check: rows read, games
-                    covered, sports covered. The book prices the lock. It does
+                    covered, sports covered. The book prices the projection. It does
                     not pick it.
                   </p>
                 </Reveal>

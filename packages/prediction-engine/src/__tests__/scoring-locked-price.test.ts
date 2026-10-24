@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 import { scoreGame, type OddsInput } from "../scoring";
 import type { InjuryRow } from "../engine/availability-factors";
-import { lockFromCoachPacket } from "../engine/coach-lock";
+import { projectionFromCoachPacket } from "../engine/coach-projection";
 import { priceLockedSpread } from "../engine/price-check";
 
 const AT = new Date("2026-10-23T12:00:00Z");
@@ -85,9 +85,9 @@ describe("lock before the books", () => {
     const picks = scoreGame(game([-3.5, -3.5, -3.5, -3.5, -3.5, -3.5, 3.5, 3.5]), AT);
     const spread = picks.find((p) => p.pickType === "SPREAD");
     expect(spread).toBeTruthy();
-    expect(spread!.reasoning.startsWith("Locked home margin")).toBe(true);
-    expect(spread!.reasoningShort.startsWith("Projection locked before the books. Price check:")).toBe(true);
-    expect(spread!.reasoning.indexOf("Locked home margin")).toBeLessThan(
+    expect(spread!.reasoning.startsWith("Home margin set")).toBe(true);
+    expect(spread!.reasoningShort.startsWith("Projection set before the books. Price check:")).toBe(true);
+    expect(spread!.reasoning.indexOf("Home margin set")).toBeLessThan(
       spread!.reasoning.indexOf("Market fair") === -1
         ? spread!.reasoning.length
         : spread!.reasoning.indexOf("Market fair"),
@@ -167,7 +167,7 @@ describe("price check math", () => {
   });
 
   it("locks from the trail without a book field", () => {
-    const read = lockFromCoachPacket({
+    const read = projectionFromCoachPacket({
       homeTeam: "Baltimore Ravens",
       awayTeam: "Cincinnati Bengals",
       week: 7,

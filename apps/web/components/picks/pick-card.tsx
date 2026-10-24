@@ -326,7 +326,7 @@ function CoachLockStrip({ breakdown }: { breakdown: FactorBreakdown }) {
   const edge = finiteNum(breakdown["lockedEdgePts"]);
   const fromLock = breakdown["coachOverridesStub"] === true;
   return (
-    <div data-testid="coach-lock" className="mb-3 rounded-md border border-orbital-cyan/30 bg-orbital-cyan/5 p-2">
+    <div data-testid="coach-projection" className="mb-3 rounded-md border border-orbital-cyan/30 bg-orbital-cyan/5 p-2">
       <p className="text-[10px] font-semibold uppercase tracking-wide text-orbital-cyan">
         Locked projection
       </p>
@@ -338,8 +338,8 @@ function CoachLockStrip({ breakdown }: { breakdown: FactorBreakdown }) {
         Price check: {action}
         {edge !== null ? ` · ${edge.toFixed(1)} pts` : ""}.{" "}
         {fromLock
-          ? "The side is the lock. The book priced it."
-          : "The lock is recorded. It did not choose the side on this card."}
+          ? "The side is the projection. The book priced it."
+          : "The projection is recorded. It did not choose the side on this card."}
       </p>
     </div>
   );
@@ -359,7 +359,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
 
       <CoachLockStrip breakdown={breakdown} />
 
-      {/* Individual factors — the lock is factors[0] when scoring wrote one. */}
+      {/* Individual factors — the projection is factors[0] when scoring wrote one. */}
       {breakdown.factors.length > 0 && (
         <div className="mb-3 flex flex-col gap-1">
           {breakdown.factors.map((factor, idx) => (

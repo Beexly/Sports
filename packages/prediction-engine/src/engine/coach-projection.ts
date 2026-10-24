@@ -42,7 +42,7 @@ export interface CoachLockPacket {
   readonly shadows?: readonly ShadowRow[];
 }
 
-export interface CoachLockRead {
+export interface CoachProjectionRead {
   readonly locked: LockedCoachProjection;
   /** Sum of home-perspective L0/L1/L2 weights. Positive favors the home team. */
   readonly homeSupport: number;
@@ -57,7 +57,7 @@ export interface CoachLockRead {
   readonly gaps: readonly string[];
 }
 
-export function lockFromCoachPacket(packet: CoachLockPacket): CoachLockRead {
+export function projectionFromCoachPacket(packet: CoachLockPacket): CoachProjectionRead {
   const trail = {
     homeTeam: packet.homeTeam,
     awayTeam: packet.awayTeam,
@@ -83,7 +83,7 @@ export function lockFromCoachPacket(packet: CoachLockPacket): CoachLockRead {
     "staffAggression omitted: not on OddsInput.coachTrail. markov-simulator.ts defaults to STAFF_AGGRESSION.PHI.",
     coachOverridesStub
       ? "Coach shift moves marginMean by at least the stub prior of 3. The margin's sign is the side."
-      : "Gap: markov-simulator.ts:70 adds a constant 3 that still dominates coachSupport*0.15. The lock is recorded. It does not choose the side.",
+      : "Gap: markov-simulator.ts:70 adds a constant 3 that still dominates coachSupport*0.15. The projection is recorded. It does not choose the side.",
   ];
   return {
     locked,
@@ -96,6 +96,6 @@ export function lockFromCoachPacket(packet: CoachLockPacket): CoachLockRead {
 }
 
 /** Band center of the locked total. scoreMean is the home-score stub, not this. */
-export function lockedTotalCenter(locked: Pick<LockedCoachProjection, "totalP10" | "totalP90">): number {
+export function projectionTotalCenter(locked: Pick<LockedCoachProjection, "totalP10" | "totalP90">): number {
   return (locked.totalP10 + locked.totalP90) / 2;
 }
