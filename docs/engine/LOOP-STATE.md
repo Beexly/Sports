@@ -16,6 +16,7 @@ The 21-wakeup marker called the plan complete. That was wrong about the drive lo
 - The situational cube is `src/nfl/data/*.json`, read by `situational-reality.ts`. 11 personnel is +0.10 EPA against cover 1 and about 0 against cover 2. Play-action with motion is +0.20 against single-high and +0.04 against split safety. 2026 participation is still unpublished. 2026 quarterback pressure is the PFR week file through week 6. These cells are not a point spread. Scoring does not read them.
 - Public boards, not a spread: FantasyPros week-7 and draft ECR plus 367 injuries, and Footballguys week-7 ranks including Bob Harris at quarterback. They disagree on QB1 (Purdy vs Love). `src/nfl/public-boards.ts`.
 - PFR, FTN, and RotoWire, still not a spread: 2026 quarterback pressure, pass rush, yards before contact, snaps, FTN motion by team, the week-6 DVOA table from the public article, and the week-7 lineup card. `src/nfl/site-rebuild.ts`. The PFR site itself stopped the browser. Scoring does not read it.
+- Week 7 wires, still not a spread: ESPN designations, the Thursday result, Sleeper projections against that result, week-6 snap shocks, and five RotoWire headlines. `src/nfl/week7-live.ts`. Scoring does not read it.
 
 ## Completion status of the docx items
 
