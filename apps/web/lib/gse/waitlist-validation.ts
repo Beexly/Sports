@@ -29,7 +29,7 @@ export const waitlistLeadSchema = z.object({
   email: z.string().trim().email("Enter a valid email").toLowerCase(),
   role: z.enum(WAITLIST_ROLES, {
     errorMap: () => ({ message: "Pick a role" }),
-  }),
+  } as any),
   sportInterests: z
     .array(z.string().trim().min(1).max(40))
     .min(1, "Pick at least one sport")

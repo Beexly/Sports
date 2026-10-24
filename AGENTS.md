@@ -18782,6 +18782,9 @@ Method note: read-only lane as @GalaxySportsHQ in a fresh tab; all 11 timelines 
 - Survivor reference card format: Week 7 win % alongside a usable-weeks dot matrix and peak % per team (@cmain7, ETR).
 - StatRankings model line vs market line stated as a single yardage delta (@MagicSportsGuy).
 
+### EXPECTED METRICS WORK (2026-10-24)
+- **Q36: Team Special Teams EPA**: Implemented as a SHADOW metric. It aggregates our OWN EPA over special teams plays (kickoff, punt, field goal, extra point), attributing to the posteam. Plays without a posteam are excluded and counted. Distinct from the Q8 opponent miss-luck module, this measures total team special teams execution.
+
 ### LANE A DATA ENDPOINTS NOTED
 
 - statrankings.com — @MagicSportsGuy's stated model source (@StatRankings); also the presentation credit on the Lane B PattonAnalytics alignment chart.

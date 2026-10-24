@@ -12,7 +12,8 @@ export type GseMetricFamily =
   | "environment"
   | "narrative"
   | "calibration"
-  | "decision";
+  | "decision"
+  | "expected_metric";
 
 export type GseFormulaClass =
   | "linear"
@@ -26,7 +27,8 @@ export type GseFormulaClass =
   | "gam_spline"
   | "ensemble"
   | "conformal"
-  | "composite_score";
+  | "composite_score"
+  | "deterministic_rule";
 
 export type MetricValidationMethod =
   | "mae"

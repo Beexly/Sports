@@ -159,3 +159,14 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Team Special Teams EPA (SHADOW).
+export {
+  computeTeamSpecialTeamsEpa,
+  TEAM_SPECIAL_TEAMS_EPA_VERSION,
+  type TeamSpecialTeamsEpaOutput,
+  type TeamSpecialTeamsEpaWindowOutput,
+  type TeamSpecialTeamsMetrics,
+  type SpecialTeamsPhaseMetrics,
+  type SpecialTeamsLeagueMean,
+} from "./team-special-teams-epa.js";
