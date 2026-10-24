@@ -35,4 +35,6 @@ export const SOURCE_REGISTRY: readonly SourceRow[] = [
   { id: "pickfinder", status: "IDENTITY-GATED", note: "api-v2.pickfinder.app is referenced in HTML. Routes are not a confirmed public feed." },
   { id: "fantasypros", status: "IDENTITY-GATED", note: "isPremium. Consensus pages are not the optimizer." },
   { id: "the-odds-api", status: "IDENTITY-GATED", note: "Free tier is an account the owner creates. No headless signup." },
+  { id: "365scores", status: "WIRED", note: "Public JSON. American football is sports=6. NFL competition is 352. Bare /current with no sport is an empty shell." },
+  { id: "flashscore", status: "IDENTITY-GATED", note: "Feed host is up. x-fsign rotates. Not harvested." },
 ]
